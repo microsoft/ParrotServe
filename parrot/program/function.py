@@ -20,9 +20,7 @@ class ParrotFunction:
     def __init__(self, func_body: str):
         """For semantic function, function body is just a prompt template."""
 
-    def __call__(
-        self, outputs: List[Placeholder], inputs: List[Placeholder], blocking=True
-    ):
+    def __call__(self, outputs: List[Placeholder], inputs: List[Placeholder]):
         """To call a parrot function, the inputs and outputs should all be
         placeholders, as it is needed in variable-level asynchronization."""
         pass
