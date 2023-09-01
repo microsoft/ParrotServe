@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from transformers import OPTConfig
 
-from .entity import InputMetadata
+from ..entity import InputMetadata
 
 
 class GreedySampler(nn.Module):

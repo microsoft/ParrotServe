@@ -30,7 +30,7 @@ from xformers import ops as xops
 
 from .weight_utils import hf_model_weights_iterator
 from .state_cache import StateCache
-from .entity import InputMetadata
+from ..entity import InputMetadata
 from .sampler import GreedySampler
 
 ACT_FUNC = {
