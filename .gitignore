@@ -1,0 +1,37 @@
+# Python
+__pycache__
+*.pyc
+*.egg-info
+dist
+.venv
+
+# Log
+*.log
+*.log.*
+# *.json
+*.txt
+
+# Editor
+*.swp
+
+# Other
+.DS_Store
+wandb
+output
+
+# Data
+*.pkl
+*.csv
+
+# Build
+build
+
+# VSCode
+.vscode
+
+# Misc
+tmp
+raw_data
+log
+*.pt
+*.pth
