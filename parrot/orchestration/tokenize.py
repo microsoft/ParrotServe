@@ -31,5 +31,13 @@ class TokenizedStorage:
         return self.storage[key].copy()  # Avoid modification
 
 
+def detokenize(
+    token_ids: List[int],
+    tokenizer_name: str,
+) -> str:
+    tokenizer = parrot_global_ctrl.tokenizers_table[tokenizer_name]
+    return tokenizer.decode(token_ids)
+
+
 # Singleton
 global_tokenized_storage = TokenizedStorage()

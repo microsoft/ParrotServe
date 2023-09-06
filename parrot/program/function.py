@@ -34,7 +34,7 @@ class Parameter:
 class ParameterLoc(FunctionPiece):
     """An input/output location in the function."""
 
-    var: Parameter
+    param: Parameter
 
 
 def parse_func_body(

@@ -8,4 +8,4 @@ class Dispatcher:
     def dispatch(self, session: Session):
         # TODO(chaofan): Model selection, speculative dispatching.
 
-        session.assigned_engine = parrot_global_ctrl.engines_table.values[0]
+        session.engine_name = parrot_global_ctrl.engines_table.values[0]

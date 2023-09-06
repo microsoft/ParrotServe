@@ -39,7 +39,7 @@ def test_parse_parrot_function():
     for i, piece in enumerate(tell_me_a_joke.body):
         assert isinstance(piece, expected_body[i])
         if isinstance(piece, ParameterLoc):
-            assert piece.var.is_output == expected_var_is_output[j]
+            assert piece.param.is_output == expected_var_is_output[j]
             j += 1
 
 

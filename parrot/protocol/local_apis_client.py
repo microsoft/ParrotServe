@@ -1,5 +1,6 @@
 from typing import Type, List
 import requests
+import aiohttp
 import dataclasses
 from requests.exceptions import RequestException
 from pydantic import ValidationError
@@ -46,6 +47,20 @@ def send_http_request(
     raise error
 
 
+async def async_send_http_request(
+    client_session: aiohttp.ClientSession,
+    response_cls: Type[BaseResponse],
+    http_addr: str,
+    api_url: str,
+    **kwargs,
+) -> BaseResponse:
+    url = http_addr + api_url
+    async with client_session.post(url, json=kwargs) as resp:
+        assert resp.status_code == 200, "Send http request error."
+        resp = make_response(response_cls, resp)
+        return resp
+
+
 def check_heartbeat(engine_name: str, http_addr: str) -> HeartbeatResponse:
     try:
         send_http_request(HeartbeatResponse, http_addr, "/heartbeat", retry_times=3)
@@ -71,41 +86,40 @@ def prefix_init(http_addr: str, context_id: int, tokens: List[int]) -> FillRespo
         raise e
 
 
-def fill(
-    http_addr: str, session_id: int, context_id: int, tokens: List[int]
+async def fill(
+    client_session: aiohttp.ClientSession,
+    http_addr: str,
+    session_id: int,
+    context_id: int,
+    tokens: List[int],
 ) -> FillResponse:
-    try:
-        send_http_request(
-            FillResponse,
-            http_addr,
-            "/fill",
-            retry_times=1,
-            session_id=session_id,
-            context_id=context_id,
-            tokens=tokens,
-        )
-    except BaseException as e:
-        raise e
+    return await async_send_http_request(
+        client_session,
+        FillResponse,
+        http_addr,
+        "/fill",
+        session_id=session_id,
+        context_id=context_id,
+        tokens=tokens,
+    )
 
 
-def generate(
+async def generate(
+    client_session: aiohttp.ClientSession,
     http_addr: str,
     session_id: int,
     context_id: int,
     sampling_params: SamplingParams,
 ) -> GenerationResponse:
-    try:
-        send_http_request(
-            GenerationResponse,
-            http_addr,
-            "/generate",
-            retry_times=1,
-            session_id=session_id,
-            context_id=context_id,
-            **dataclasses.asdict(sampling_params),
-        )
-    except BaseException as e:
-        raise e
+    return await async_send_http_request(
+        client_session,
+        GenerationResponse,
+        http_addr,
+        "/generate",
+        session_id=session_id,
+        context_id=context_id,
+        **dataclasses.asdict(sampling_params),
+    )
 
 
 def free_context(http_addr: str, context_id: int) -> FreeContextResponse:

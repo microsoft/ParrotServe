@@ -28,7 +28,9 @@ class Controller:
         self.function_prefix: Dict[str, Context] = {}
 
         # ---------- Heart Beat ----------
-        self._heartbeat_thread = threading.Thread(target=self._heartbeat, daemon=True)
+        self._heartbeat_thread = threading.Thread(
+            target=self._heartbeat_daemon, daemon=True
+        )
         self._heartbeat_thread.start()
 
         logger.info("Global controller started.")
@@ -100,7 +102,7 @@ class Controller:
         self.tokenizers_table[tokenizer_name] = tokenizer
         logger.info(f"Register tokenizer: {tokenizer_name}")
 
-    def _heartbeat(self):
+    def _heartbeat_daemon(self):
         heartbeat_interval = 5  # (Unit: second)
 
         while True:
