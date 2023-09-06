@@ -1,7 +1,7 @@
 import asyncio
 
 from parrot import P
-from parrot.program.function import Prefix, Constant, VariableLoc
+from parrot.program.function import Prefix, Constant, ParameterLoc
 
 
 def test_parse_parrot_function():
@@ -19,13 +19,13 @@ def test_parse_parrot_function():
 
     expected_body = [
         Prefix,
-        VariableLoc,
+        ParameterLoc,
         Constant,
-        VariableLoc,
+        ParameterLoc,
         Constant,
-        VariableLoc,
+        ParameterLoc,
         Constant,
-        VariableLoc,
+        ParameterLoc,
         Constant,
     ]
     expected_var_is_output = [
@@ -38,7 +38,7 @@ def test_parse_parrot_function():
     j = 0
     for i, piece in enumerate(tell_me_a_joke.body):
         assert isinstance(piece, expected_body[i])
-        if isinstance(piece, VariableLoc):
+        if isinstance(piece, ParameterLoc):
             assert piece.var.is_output == expected_var_is_output[j]
             j += 1
 
@@ -68,8 +68,15 @@ def test_call_parrot_function():
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
 
+    a = P.placeholder("a")
+    b = P.placeholder("b")
+    c = P.placeholder("c")
+
+    test(a, b, c=c)
+
 
 if __name__ == "__main__":
     test_parse_parrot_function()
     test_placeholder()
     test_placeholder_async()
+    test_call_parrot_function()

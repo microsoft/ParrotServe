@@ -5,11 +5,13 @@ from asyncio import Event
 class Placeholder:
     """Placeholder for context variables.
 
-    It's like "Promise[Content]" in the asynchronous programming.
+    It's like "Future" in the Python asynchronous programming.
     """
 
-    def __init__(self, name: str, content: Optional[str]):
-        self.name = name
+    _counter = 0
+
+    def __init__(self, name: Optional[str], content: Optional[str]):
+        self.name = name if name is not None else self._get_default_name()
         self.content = content
         self.ready_event: Event = Event()
         if self.content:
@@ -35,3 +37,8 @@ class Placeholder:
 
         assert self.ready
         return self.content
+
+    @classmethod
+    def _get_default_name(cls) -> str:
+        cls._counter += 1
+        return f"placeholder_{cls._counter}"
