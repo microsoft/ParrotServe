@@ -48,15 +48,15 @@ def test_placeholder():
     b = P.placeholder("b")
     b.assign("b_content")
 
-    assert a.get() == "a_content"
-    assert b.get() == "b_content"
+    assert a.content == "a_content"
+    assert b.content == "b_content"
 
 
 def test_placeholder_async():
     a = P.placeholder("a")
 
     async def main():
-        a_content = a.aget()
+        a_content = a.get()
         a.assign("a_content")
         assert await a_content == "a_content"
 

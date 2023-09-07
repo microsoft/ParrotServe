@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 import logging
 import time
 import threading
@@ -6,7 +6,6 @@ from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizer
 
 from .engine import ExecutionEngine
 from .context import Context
-from .tokenize import global_tokenized_storage
 from ..utils import get_logger
 from ..program.function import ParrotFunction
 from ..protocol import check_heartbeat, prefix_init
@@ -27,16 +26,31 @@ class Controller:
         ] = {}
         self.function_prefix: Dict[str, Context] = {}
 
+        # ---------- Control components ----------
+        self.executor: Optional["Executor"] = None
+
+        # ---------- Flag ----------
+        self._run_flag = False
+
         # ---------- Heart Beat ----------
         self._heartbeat_thread = threading.Thread(
             target=self._heartbeat_daemon, daemon=True
         )
-        self._heartbeat_thread.start()
 
+    def _check_is_run(self):
+        if self._run_flag:
+            raise RuntimeError("Controller is running now, can't register/rerun.")
+
+    def run(self):
+        self._check_is_run()
+        self._run_flag = True
+        self._heartbeat_thread.start()
         logger.info("Global controller started.")
 
     def register_engine(self, name: str, host: str, port: int, tokenizer: str):
-        if name in self.engines_table[name]:
+        self._check_is_run()
+
+        if name in self.engines_table:
             logger.error(f"Engine name {name} has been used.")
             return
 
@@ -52,10 +66,10 @@ class Controller:
         )
 
         try:
-            resp = check_heartbeat(engine.http_address)
-            assert resp.model_ready
+            resp = check_heartbeat(engine.name, engine.http_address)
         except:
             return
+        assert resp.model_ready, "Engine is not ready."
 
         engine.cached_tokens = resp.cached_tokens
         engine.running_jobs = resp.running_jobs
@@ -68,16 +82,18 @@ class Controller:
     def register_function(
         self,
         function: ParrotFunction,
-        caching_prefix: bool = True,
+        tokenized_storage: Optional["TokenizedStorage"] = None,
     ):
+        self._check_is_run()
+
         if function.name in self.functions_table:
             logger.error(f"Function name {function.name} has been used.")
             return
 
-        if caching_prefix:
+        if tokenized_storage:
             prefix_context = Context()
             for engine in self.engines_table.values():
-                prefix_tokens = global_tokenized_storage.tokenize_func_body(
+                prefix_tokens = tokenized_storage.tokenize_func_body(
                     function, engine.tokenizer
                 )
                 try:
@@ -98,12 +114,23 @@ class Controller:
         logger.info(f"Register parrot function: {function.name}")
 
     def register_tokenizer(self, tokenizer_name: str):
+        self._check_is_run()
+
+        if tokenizer_name in self.tokenizers_table:
+            logger.error(f"Tokenizer name {tokenizer_name} has been used.")
+            return
+
         tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
         self.tokenizers_table[tokenizer_name] = tokenizer
+
+        # executor=None: testing mode
+        if self.executor is not None:
+            self.executor.register_group_executor(tokenizer_name)
+
         logger.info(f"Register tokenizer: {tokenizer_name}")
 
     def _heartbeat_daemon(self):
-        heartbeat_interval = 5  # (Unit: second)
+        heartbeat_interval = 1  # (Unit: second)
 
         while True:
             disconnect_engines: List[str] = []
@@ -119,9 +146,6 @@ class Controller:
 
             for engine_name in disconnect_engines:
                 self.engines_table.pop(engine_name)
+                logger.info(f"Engine {engine_name} disconnected.")
 
             time.sleep(heartbeat_interval)
-
-
-# Singleton
-parrot_global_ctrl = Controller()

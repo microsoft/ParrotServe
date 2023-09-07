@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from queue import Queue
 from asyncio import Event
 from aiohttp import ClientSession
@@ -14,18 +14,20 @@ from ..protocol import fill, generate, SamplingParams
 session_id_manager = RecyclePool(4096)
 
 
+PIPELINE_SEND_NUM = 32
+
+
 logger = get_logger("Session")
 
 
 class Session:
     """A session represents a running promise in the executor."""
 
-    def __init__(self, promise: Promise, context: Context, detokenize_queue: Queue):
+    def __init__(self, promise: Promise, context: Context):
         # ---------- Basic info ----------
         self.session_id = session_id_manager.allocate()
         self.promise = promise
         self.context = context
-        self.detokenize_queue = detokenize_queue
 
         # ---------- Attached engine ----------
         self.engine_name: Optional[str] = None
@@ -36,6 +38,8 @@ class Session:
 
         # ---------- aiohttp session ----------
         self.client_session: ClientSession = ClientSession()
+
+        self.finish_event = Event()
 
         # NOTE(chaofan): now we use a fixed sampling_params for all sessions
         self.sampling_params = SamplingParams(
@@ -51,14 +55,12 @@ class Session:
             job = self.job_queue.get()
             if isinstance(job, GenerationJob):
                 try:
-                    resp = await generate(
+                    job.output_holder.generator = generate(
                         self.client_session,
                         self.engine.http_address,
                         self.context.context_id,
                         self.sampling_params,
                     )
-                    job.output_holder.assign(resp.gen_tokens)
-                    self.detokenize_queue.put(job.output_holder)
                 except BaseException as e:
                     # TODO(chaofan): Better error handling. Current solution (abort session) will
                     # block other sessions.
@@ -66,16 +68,55 @@ class Session:
                     break
             elif isinstance(job, FillJob):
                 try:
-                    await job.input_holder.ready_event.wait()
-                    resp = await fill(
-                        self.client_session,
-                        self.engine.http_address,
-                        self.context.context_id,
-                        job.input_holder.token_ids,
-                    )
-                    # TODO(chaofan): Pipeline filling
+                    await job.input_holder.streaming_event.wait()
+                    if job.input_holder.ready:
+                        # Has the whole data
+                        # In this case, the placeholder must be synced.
+                        resp = await fill(
+                            self.client_session,
+                            self.engine.http_address,
+                            self.context.context_id,
+                            job.input_holder.token_ids,
+                        )
+                    else:
+                        # Streaming input. Pipeling filling.
+                        assert job.input_holder.generator is not None
+                        cur_batch: List[int] = []
+
+                        # Fill the tokens per batch
+                        async for token_id in job.input_holder.generator:
+                            cur_batch.append(token_id)
+                            job.input_holder.token_ids.append(token_id)
+                            if len(cur_batch) >= PIPELINE_SEND_NUM:
+                                resp = await fill(
+                                    self.client_session,
+                                    self.engine.http_address,
+                                    self.context.context_id,
+                                    cur_batch,
+                                )
+                                assert resp.filled_tokens_num == len(
+                                    cur_batch
+                                ), "Fill failed: not all tokens are filled."
+                                cur_batch = []
+
+                        # Send the last batch
+                        if len(cur_batch) > 0:
+                            resp = await fill(
+                                self.client_session,
+                                self.engine.http_address,
+                                self.context.context_id,
+                                cur_batch,
+                            )
+                            assert resp.filled_tokens_num == len(
+                                cur_batch
+                            ), "Fill failed: not all tokens are filled."
+
+                        job.input_holder.ready_event.set()
+                        job.input_holder.sync_to_placeholder()
                 except BaseException as e:
                     # TODO(chaofan): Better error handling. Current solution (abort session) will
                     # block other sessions.
                     logger.error(f"Execute fill job error: {e}")
                     break
+
+        self.finish_event.set()

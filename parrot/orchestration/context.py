@@ -3,9 +3,6 @@ from typing import Optional
 from ..utils import RecyclePool
 
 
-context_id_manager = RecyclePool(4096)
-
-
 class Context:
     """Context represents a part of sequences cached in engines.
 
@@ -16,9 +13,11 @@ class Context:
       affect A's context.
     """
 
+    context_id_manager = RecyclePool(4096)
+
     def __init__(self, parent_context: Optional["Context"]):
-        self.context_id = context_id_manager.allocate()
+        self.context_id = Context.context_id_manager.allocate()
         self.parent_context = parent_context
 
     def __del__(self):
-        context_id_manager.free(self.context_id)
+        Context.context_id_manager.free(self.context_id)

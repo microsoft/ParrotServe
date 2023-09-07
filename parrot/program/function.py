@@ -1,4 +1,4 @@
-from typing import List, Dict, Type
+from typing import List, Dict, Type, Optional
 import regex as re
 from dataclasses import dataclass
 
@@ -51,6 +51,8 @@ def parse_func_body(
         idx = len(ret)
         ret.append(piece_cls(idx=idx, **kwargs))
 
+    last_output_loc_idx = -1
+
     for match in iterator:
         # Constant
         chunk = body_str[last_pos : match.start()]
@@ -68,10 +70,17 @@ def parse_func_body(
         ), "Output loc can't be adjacent to another loc."
         push_to_body(ParameterLoc, var=var)
 
+        if var.is_output:
+            last_output_loc_idx = len(ret) - 1
+
         last_pos = match.end()
 
-    if last_pos < len(body_str):
-        push_to_body(Constant, body_str[last_pos:])
+    # if last_pos < len(body_str):
+    #     push_to_body(Constant, body_str[last_pos:])
+
+    # NOTE(chaofan): we prune all pieces after the last output loc.
+    # The following code is also correct for last_output_loc_idx == -1.
+    ret = ret[: last_output_loc_idx + 1]
 
     return ret
 
@@ -88,6 +97,8 @@ class ParrotFunction:
         explanation for the joke above: {{explanation}}.
         ```
     """
+
+    _internal_executor: Optional["Executor"] = None
 
     def __init__(self, name: str, func_body_str: str, func_args: list):
         """For semantic function, function body is just a prompt template.
@@ -114,6 +125,8 @@ class ParrotFunction:
                 name not in bindings
             ), f"Function {self.name} got multiple values for argument {name}"
             bindings[name] = placeholder
+
+        ParrotFunction._internal_executor.submit(Promise(self, bindings))
 
 
 class Promise:

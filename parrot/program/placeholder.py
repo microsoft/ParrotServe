@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from asyncio import Event
 
 
@@ -17,6 +17,8 @@ class Placeholder:
         if self.content:
             self.ready_event.set()
 
+        self.assign_callbacks = []
+
     @property
     def ready(self) -> bool:
         return self.ready_event.is_set()
@@ -24,15 +26,11 @@ class Placeholder:
     def assign(self, content: str):
         assert self.content is None, "This placeholder is filled"
         self.content = content
-        self.ready_event.set()
 
-    def get(self):
-        while not self.ready:
-            """Blocking"""
+        for callback in self.assign_callbacks:
+            callback()
 
-        return self.content
-
-    async def aget(self):
+    async def get(self):
         await self.ready_event.wait()
 
         assert self.ready

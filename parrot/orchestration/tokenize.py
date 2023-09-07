@@ -1,15 +1,19 @@
 from typing import Dict, List
 
-from .controller import Controller, parrot_global_ctrl
+from .controller import Controller
 from ..program.function import ParrotFunction, Constant
 
 
 class TokenizedStorage:
     """Store the tokenized part of some parts of functions."""
 
-    def __init__(self):
+    def __init__(self, controller: Controller):
+        self.controller = controller
         # (Function Name, tokenizer) -> Function Body -> Token ids
         self.storage: Dict[(str, str), List[List[int]]] = {}
+
+    def tokenizer(self, tokenizer_name: str):
+        return self.controller.tokenizers_table[tokenizer_name]
 
     def tokenize_func_body(
         self,
@@ -18,7 +22,7 @@ class TokenizedStorage:
     ) -> List[int]:
         key = (function.name, tokenizer_name)
         if key not in self.storage:
-            tokenizer = parrot_global_ctrl.tokenizers_table[tokenizer_name]
+            tokenizer = self.tokenizer(tokenizer_name)
 
             tokenized: List[List[int]] = []
             for piece in function.body:
@@ -30,14 +34,14 @@ class TokenizedStorage:
 
         return self.storage[key].copy()  # Avoid modification
 
+    def tokenize(self, text: str, tokenizer_name: str) -> List[int]:
+        tokenizer = self.tokenizer(tokenizer_name)
+        return tokenizer(text)["input_ids"]
 
-def detokenize(
-    token_ids: List[int],
-    tokenizer_name: str,
-) -> str:
-    tokenizer = parrot_global_ctrl.tokenizers_table[tokenizer_name]
-    return tokenizer.decode(token_ids)
-
-
-# Singleton
-global_tokenized_storage = TokenizedStorage()
+    def detokenize(
+        self,
+        token_ids: List[int],
+        tokenizer_name: str,
+    ) -> str:
+        tokenizer = self.tokenizer(tokenizer_name)
+        return tokenizer.decode(token_ids)
