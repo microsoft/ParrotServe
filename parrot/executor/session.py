@@ -94,7 +94,7 @@ class Session:
             job = self.job_queue.get()
             job.status = JobStatus.RUNNING
 
-            logger.debug(f"Execute job: {job}")
+            logger.debug(f"Session {self.session_id} Execute job: {job}")
 
             st = time.perf_counter_ns()
 
@@ -118,6 +118,8 @@ class Session:
                         detokenize_subsession.detokenize_coroutine()
                     )
 
+                    # Start streaming
+                    job.output_holder.streaming_event.set()
                     async for token_id in generator:
                         # Routing to pipes
                         for consumer in job.output_holder.consumers:
@@ -158,7 +160,7 @@ class Session:
 
                         # Fill the tokens per batch
                         while True:
-                            token_id = await job.input_holder.pipe.get()
+                            token_id = await job.pipe.get()
 
                             if token_id != PIPE_END_TOKEN_ID:
                                 cur_batch.append(token_id)
