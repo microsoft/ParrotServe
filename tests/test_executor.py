@@ -3,7 +3,6 @@ Use `python3 -m parrot.testing.fake_server` to start a fake server.
 """
 
 import time
-import asyncio
 from parrot import P, env
 
 

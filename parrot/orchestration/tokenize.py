@@ -51,4 +51,9 @@ class TokenizedStorage:
         tokenizer_name: str,
     ) -> str:
         tokenizer = self._tokenizer(tokenizer_name)
-        return tokenizer.decode(token_ids, skip_special_tokens=True)
+        return tokenizer.decode(
+            token_ids,
+            skip_special_tokens=True,
+            spaces_between_special_tokens=False,
+            clean_up_tokenization_spaces=True,
+        )

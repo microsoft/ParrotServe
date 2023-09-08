@@ -39,8 +39,8 @@ async def fill(request: Request):
 
 @app.post("/generate")
 async def generate(request: Request):
-    generation_len = int(np.random.exponential(32) + 3)
-    gen_data = np.random.randint(10, 10000, size=(generation_len,)).tolist()
+    gen_len = int(np.random.exponential(32) + 3)
+    gen_data = np.random.randint(10, 10000, size=(gen_len,)).tolist()
 
     def generator():
         for data in gen_data:

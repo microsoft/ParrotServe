@@ -1,15 +1,15 @@
 from typing import Dict
-import asyncio
 
 from ..program.function import Promise, Constant, ParameterLoc
 from ..program.placeholder import Placeholder
 from .dispatcher import Dispatcher
 from .session import Session
-from .nodes import FillJob, GenerationJob, Tokensholder
+from .job import FillJob, GenerationJob
+from .tokens_holder import TokensHolder
 from ..orchestration.context import Context
 from ..orchestration.controller import Controller
 from ..orchestration.tokenize import TokenizedStorage
-from ..utils import get_logger
+from ..utils import get_logger, run_new_coro_in_current_loop
 
 
 logger = get_logger("Executor")
@@ -26,7 +26,7 @@ class TokenizerGroupExecutor:
         # ---------- Resources ----------
         self.tokenizer_name = tokenizer_name
         self.tokenized_storage = tokenized_storage
-        self.data_map: Dict[str, Tokensholder] = {}
+        self.data_map: Dict[str, TokensHolder] = {}
 
     def add_session(self, session: Session):
         tokenized = self.tokenized_storage.tokenize_func_body(
@@ -36,7 +36,7 @@ class TokenizerGroupExecutor:
 
         for i, piece in enumerate(session.promise.func.body):
             if isinstance(piece, Constant):
-                holder = Tokensholder(
+                holder = TokensHolder(
                     tokenizer=self.tokenizer_name,
                     tokenized_storage=self.tokenized_storage,
                 )
@@ -52,12 +52,11 @@ class TokenizerGroupExecutor:
                     job = FillJob(input_holder=holder)
             session.job_queue.put_nowait(job)
 
-        loop = asyncio.get_event_loop()
-        asyncio.run_coroutine_threadsafe(session.session_coro(), loop)
+        run_new_coro_in_current_loop(session.execute_coroutine())
 
-    def _get_data_holder(self, placeholder: Placeholder) -> Tokensholder:
+    def _get_data_holder(self, placeholder: Placeholder) -> TokensHolder:
         if placeholder.name not in self.data_map:
-            self.data_map[placeholder.name] = Tokensholder(
+            self.data_map[placeholder.name] = TokensHolder(
                 tokenizer=self.tokenizer_name,
                 tokenized_storage=self.tokenized_storage,
                 placeholder=placeholder,

@@ -1,4 +1,5 @@
 import logging
+import asyncio
 
 
 def get_logger(log_name: str, log_level: int = logging.DEBUG):
@@ -42,3 +43,8 @@ class RecyclePool:
 
         self.flags[index] = False
         self.recent_free = index
+
+
+def run_new_coro_in_current_loop(coro):
+    loop = asyncio.get_running_loop()
+    asyncio.run_coroutine_threadsafe(coro, loop)

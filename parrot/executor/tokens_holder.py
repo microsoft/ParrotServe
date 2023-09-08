@@ -1,13 +1,12 @@
 from typing import List, Optional
-from enum import Enum
-from asyncio import Event, Queue
+from asyncio import Event
 
 from ..program.placeholder import Placeholder
 from ..orchestration.tokenize import TokenizedStorage
 
 
-class Tokensholder:
-    """Placeholder stores the text while Tokensholder stores the tokenized ids.
+class TokensHolder:
+    """Placeholder stores the text while TokensHolder stores the tokenized ids.
 
     Hence it's tokenizer-related.
     """
@@ -69,65 +68,22 @@ class Tokensholder:
             )
         )
 
-    def sync_to_placeholder(self):
+    def sync_to_placeholder_partial(self, token_ids: List[int], is_last_batch: bool):
         assert self.placeholder is not None, "No placeholder"
-        assert self.ready, "Tokensholder not ready"
         assert self.tokenized_storage is not None, "No tokenized storage"
 
-        # Remove the callback to avoid infinite loop
-        # And no need to add back, since the tokenholder is ready
-        self.placeholder.assign_callbacks.remove(self.sync_from_placeholder)
-        self.placeholder.assign(
-            self.tokenized_storage.detokenize(
-                self.token_ids,
-                self.tokenizer,
-            )
+        if self.placeholder.content is None:
+            self.placeholder.content = ""
+
+        self.placeholder.content += self.tokenized_storage.detokenize(
+            token_ids,
+            self.tokenizer,
         )
+
+        if is_last_batch:
+            self.placeholder.ready_event.set()
 
     def __str__(self) -> str:
         if self.is_constant:
-            return f"[Tokensholder(Constant): {self.token_ids}]"
-        return f"[Tokensholder(Placeholder): {self.placeholder.name}]"
-
-
-class JobStatus(Enum):
-    WAITING = 1
-    RUNNING = 2
-
-
-class Job:
-    def __init__(self):
-        self.status: JobStatus = JobStatus.WAITING
-
-
-class FillJob(Job):
-    """Fill job is corresponding to the `prefill` stage in LLM.
-
-    Its mission is to fill the KV cache in the execution engine, extending the context
-    using the input tokens.
-    """
-
-    def __init__(self, input_holder: Tokensholder):
-        super().__init__()
-        self.input_holder: Tokensholder = input_holder
-        self.input_holder.consumers.append(self)
-        self.pipe: Queue[int] = Queue()
-
-    def __str__(self) -> str:
-        return f"FillJob: input={self.input_holder}"
-
-
-class GenerationJob(Job):
-    """Generation job is corresponding to the `decode` stage in LLM.
-
-    Its mission is to generate the output tokens based on certain context.
-    """
-
-    def __init__(self, output_holder: Tokensholder):
-        super().__init__()
-        self.output_holder: Tokensholder = output_holder
-        assert self.output_holder.producer is None, "Concurrent writing to a holder"
-        self.output_holder.producer = self
-
-    def __str__(self) -> str:
-        return f"GenerationJob: output={self.output_holder}"
+            return f"[TokensHolder(Constant): {self.token_ids}]"
+        return f"[TokensHolder(Placeholder): {self.placeholder.name}]"
