@@ -15,7 +15,7 @@ class Context:
 
     context_id_manager = RecyclePool(4096)
 
-    def __init__(self, parent_context: Optional["Context"]):
+    def __init__(self, parent_context: Optional["Context"] = None):
         self.context_id = Context.context_id_manager.allocate()
         self.parent_context = parent_context
 

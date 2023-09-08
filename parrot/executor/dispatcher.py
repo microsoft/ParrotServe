@@ -12,3 +12,4 @@ class Dispatcher:
         # TODO(chaofan): Model selection, speculative dispatching.
 
         session.engine_name = self.controller.engines_table.values[0]
+        session.engine = self.controller.engines_table[session.engine_name]

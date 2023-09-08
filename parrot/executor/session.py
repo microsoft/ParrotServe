@@ -1,6 +1,6 @@
 from typing import Optional, List
 from queue import Queue
-from asyncio import Event
+from asyncio import Event, BaseEventLoop
 from aiohttp import ClientSession
 
 from .nodes import Job, FillJob, GenerationJob
@@ -37,7 +37,7 @@ class Session:
         self.job_queue: Queue[Job] = Queue()
 
         # ---------- aiohttp session ----------
-        self.client_session: ClientSession = ClientSession()
+        self.client_session: Optional[ClientSession] = None
 
         self.finish_event = Event()
 
@@ -49,6 +49,9 @@ class Session:
 
     def __del__(self):
         session_id_manager.free(self.session_id)
+
+    def set_loop(self, loop: BaseEventLoop):
+        self.client_session = ClientSession(loop=loop)
 
     async def session_coro(self):
         while self.job_queue.not_empty:

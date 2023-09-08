@@ -34,9 +34,11 @@ class TokenizedStorage:
 
         return self.storage[key].copy()  # Avoid modification
 
+    # NOTE(chaofan): Ignore special tokens because we chunk the inputs.
+
     def tokenize(self, text: str, tokenizer_name: str) -> List[int]:
         tokenizer = self.tokenizer(tokenizer_name)
-        return tokenizer(text)["input_ids"]
+        return tokenizer.encode(text, add_special_tokens=False)
 
     def detokenize(
         self,
@@ -44,4 +46,4 @@ class TokenizedStorage:
         tokenizer_name: str,
     ) -> str:
         tokenizer = self.tokenizer(tokenizer_name)
-        return tokenizer.decode(token_ids)
+        return tokenizer.decode(token_ids, skip_special_tokens=True)

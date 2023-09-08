@@ -19,7 +19,7 @@ def test_check_heartbeat():
         http_addr=addr,
     )
     ed = time.perf_counter_ns()
-    print("Time Used: ", (ed - st) / 1e9)
+    print("Heartbeat Time Used: ", (ed - st) / 1e9)
 
     assert resp.model_ready == True
     assert resp.cached_tokens == 0
@@ -39,6 +39,7 @@ def test_prefix_init():
 def test_fill():
     async def main():
         async with ClientSession() as session:
+            st = time.perf_counter_ns()
             resp = await fill(
                 client_session=session,
                 http_addr=addr,
@@ -47,6 +48,8 @@ def test_fill():
                 parent_context_id=-1,
                 token_ids=[1, 2, 3],
             )
+            ed = time.perf_counter_ns()
+            print("Fill Time Used: ", (ed - st) / 1e9)
 
             assert resp.filled_tokens_num == 3
 
@@ -69,18 +72,18 @@ def test_generate():
                 sampling_params=SamplingParams(),
             ):
                 counter += 1
-                assert counter == token_id
+                # assert counter == token_id
                 # print(token_id)
                 cur_time = time.perf_counter_ns()
                 times.append((cur_time - st) / 1e9)
                 st = cur_time
 
     asyncio.run(main())
-    # print(times)
+    print("Generation Time Points: ", times)
 
 
 if __name__ == "__main__":
     test_check_heartbeat()
-    # test_prefix_init()
-    # test_fill()
-    # test_generate()
+    test_prefix_init()
+    test_fill()
+    test_generate()

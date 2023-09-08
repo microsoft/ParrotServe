@@ -26,7 +26,6 @@ def test_parse_parrot_function():
         ParameterLoc,
         Constant,
         ParameterLoc,
-        Constant,
     ]
     expected_var_is_output = [
         False,

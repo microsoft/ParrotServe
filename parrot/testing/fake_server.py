@@ -2,12 +2,19 @@ from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 import uvicorn
 import time
+import numpy as np
 
 from parrot.utils import get_logger
 
 logger = get_logger("Backend Server")
 
 app = FastAPI()
+
+
+# Constants
+
+FILL_PERTOKEN_TIME = 0.01
+DECODE_PERTOKEN_TIME = 0.001
 
 
 @app.post("/heartbeat")
@@ -23,6 +30,8 @@ async def heartbeat(request: Request):
 async def fill(request: Request):
     payload = await request.json()
     # Suppose the server will always fill all tokens
+    # Simulate the time of filling tokens
+    time.sleep(FILL_PERTOKEN_TIME * len(payload["token_ids"]))
     return {
         "filled_tokens_num": len(payload["token_ids"]),
     }
@@ -30,10 +39,13 @@ async def fill(request: Request):
 
 @app.post("/generate")
 async def generate(request: Request):
+    generation_len = int(np.random.exponential(32) + 3)
+    gen_data = np.random.randint(10, 10000, size=(generation_len,)).tolist()
+
     def generator():
-        data_list = [1, 2, 3, 4, 5]
-        for data in data_list:
-            time.sleep(0.1)
+        for data in gen_data:
+            # Simulate the time of decoding tokens
+            time.sleep(DECODE_PERTOKEN_TIME)
             yield data.to_bytes(4, "big")
 
     return StreamingResponse(generator())
@@ -47,4 +59,5 @@ async def free_context(request: Request):
 
 
 if __name__ == "__main__":
+    np.random.seed(2333)
     uvicorn.run(app, host="localhost", port=8888, log_level="info")

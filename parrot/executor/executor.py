@@ -28,13 +28,13 @@ class TokenizerGroupExecutor:
         tokenizer_name: str,
         tokenized_storage: TokenizedStorage,
     ):
+        # ---------- Resources ----------
         self.tokenizer_name = tokenizer_name
         self.tokenized_storage = tokenized_storage
         self.sessions: List[Session] = []
-
-        # Placeholder name -> Tokensholder
         self.data_map: Dict[str, Tokensholder] = {}
 
+        # ---------- Threads ----------
         self._monitoring_thread = threading.Thread(
             target=self._monitoring_daemon, daemon=True
         )
@@ -49,6 +49,7 @@ class TokenizerGroupExecutor:
 
     def add_session(self, session: Session):
         self.sessions.append(session)
+        session.set_loop(self._execute_loop)
 
         tokenized = self.tokenized_storage.tokenize_func_body(
             session.promise.func,
@@ -100,6 +101,17 @@ class TokenizerGroupExecutor:
                     new_sessions.append(session)
             self.sessions = new_sessions
 
+            for i in range(len(finished_sessions)):
+                try:
+                    free_context(
+                        self.tokenizer_name,
+                        finished_sessions[i].engine.http_address,
+                        finished_sessions[i].context.context_id,
+                    )
+                except:
+                    pass
+                del finished_sessions[i]
+
     def _execute_daemon(self):
         self._execute_loop.run_forever()
 
@@ -109,11 +121,19 @@ class Executor:
     execute them."""
 
     def __init__(self, controller: Controller, tokenized_storage: TokenizedStorage):
+        # ---------- Global components ----------
         self.controller = controller
         self.controller.executor = self
-        self.dispatcher = Dispatcher(controller)
         self.tokenized_storage = tokenized_storage
+
+        # ---------- Dispatcher ----------
+        self.dispatcher = Dispatcher(controller)
+
+        # ---------- Group executors ----------
         self.group_executors: Dict[str, TokenizerGroupExecutor] = {}
+
+        # ---------- Flag ----------
+        self._run_flag = False
 
     def register_group_executor(self, tokenizer_name: str):
         self.group_executors[tokenizer_name] = TokenizerGroupExecutor(
@@ -127,6 +147,7 @@ class Executor:
             context = Context(self.controller.function_prefix[promise.func.name])
         else:
             context = Context()
+
         session = Session(promise, context)
         self.dispatcher.dispatch(session)
         self.group_executors[session.engine_name].add_session(session)
@@ -136,3 +157,8 @@ class Executor:
     def run(self):
         for executor in self.group_executors.values():
             executor.run_daemon()
+        self._run_flag = True
+
+    @property
+    def is_running(self):
+        return self._run_flag

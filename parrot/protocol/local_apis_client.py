@@ -100,16 +100,20 @@ async def fill(
     parent_context_id: int,
     token_ids: List[int],
 ) -> FillResponse:
-    return await async_send_http_request(
-        client_session,
-        FillResponse,
-        http_addr,
-        "/fill",
-        session_id=session_id,
-        context_id=context_id,
-        parent_context_id=parent_context_id,
-        token_ids=token_ids,
-    )
+    try:
+        return await async_send_http_request(
+            client_session,
+            FillResponse,
+            http_addr,
+            "/fill",
+            session_id=session_id,
+            context_id=context_id,
+            parent_context_id=parent_context_id,
+            token_ids=token_ids,
+        )
+    except BaseException as e:
+        logger.error(f"Fill error in {http_addr} error: {e}")
+        raise e
 
 
 async def generate(
@@ -142,4 +146,5 @@ def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
             context_id=context_id,
         )
     except BaseException as e:
+        logger.error(f"Free context error in {http_addr} error: {e}")
         raise e

@@ -38,9 +38,9 @@ class ParameterLoc(FunctionPiece):
 
 
 def parse_func_body(
-    body_str: str, args_map: Dict[str, Parameter]
+    body_str: str, params_map: Dict[str, Parameter]
 ) -> List[FunctionPiece]:
-    PLACEHOLDER_REGEX = "{{[a-zA-Z_][a-zA-Z0-9_]+}}"
+    PLACEHOLDER_REGEX = "{{[a-zA-Z_][a-zA-Z0-9_]*}}"
     pattern = re.compile(PLACEHOLDER_REGEX)
     iterator = pattern.finditer(body_str)
     last_pos = 0
@@ -62,15 +62,15 @@ def parse_func_body(
             else:
                 push_to_body(Constant, text=chunk)
 
-        var_name = body_str[match.start() + 2 : match.end() - 2]
-        assert var_name in args_map, f"Parse failed: {var_name} is not defined."
-        var = args_map[var_name]
+        param_name = body_str[match.start() + 2 : match.end() - 2]
+        assert param_name in params_map, f"Parse failed: {param_name} is not defined."
+        param = params_map[param_name]
         assert not (
-            var.is_output and isinstance(ret[-1], ParameterLoc)
+            param.is_output and isinstance(ret[-1], ParameterLoc)
         ), "Output loc can't be adjacent to another loc."
-        push_to_body(ParameterLoc, var=var)
+        push_to_body(ParameterLoc, param=param)
 
-        if var.is_output:
+        if param.is_output:
             last_output_loc_idx = len(ret) - 1
 
         last_pos = match.end()
@@ -98,7 +98,8 @@ class ParrotFunction:
         ```
     """
 
-    _internal_executor: Optional["Executor"] = None
+    _controller: Optional["Controller"] = None
+    _executor: Optional["Executor"] = None
 
     def __init__(self, name: str, func_body_str: str, func_args: list):
         """For semantic function, function body is just a prompt template.
@@ -110,7 +111,7 @@ class ParrotFunction:
             Parameter(name=arg[0], is_output=arg[1]) for arg in func_args
         ]
         self.params_map = dict([(param.name, param) for param in self.params])
-        self.body: List[FunctionPiece] = parse_func_body(func_body_str, self.args_map)
+        self.body: List[FunctionPiece] = parse_func_body(func_body_str, self.params_map)
 
     def __call__(self, *args: List[Placeholder], **kwargs: Dict[str, Placeholder]):
         """Calling a parrot function will not execute it immediately.
@@ -118,7 +119,7 @@ class ParrotFunction:
 
         bindings: Dict[str, Placeholder] = {}
         for i, placeholder in enumerate(args):
-            bindings[self.params_map[i].name] = placeholder
+            bindings[self.params[i].name] = placeholder
 
         for name, placeholder in kwargs.items():
             assert (
@@ -126,11 +127,13 @@ class ParrotFunction:
             ), f"Function {self.name} got multiple values for argument {name}"
             bindings[name] = placeholder
 
-        ParrotFunction._internal_executor.submit(Promise(self, bindings))
+        assert ParrotFunction._executor is not None, "No internal executor."
+        if ParrotFunction._executor.is_running:
+            ParrotFunction._executor.submit(Promise(self, bindings))
 
 
 class Promise:
-    """Promise is a function call including the functions and bindings (var name ->
+    """Promise is a function call including the functions and bindings (param name ->
     placeholder)."""
 
     def __init__(self, func: ParrotFunction, bindings: Dict[str, Placeholder]):

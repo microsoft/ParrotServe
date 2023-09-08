@@ -30,10 +30,10 @@ class Placeholder:
         for callback in self.assign_callbacks:
             callback()
 
+        self.ready_event.set()
+
     async def get(self):
         await self.ready_event.wait()
-
-        assert self.ready
         return self.content
 
     @classmethod

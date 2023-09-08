@@ -4,8 +4,6 @@ from typing import Optional
 from .function import ParrotFunction
 from .placeholder import Placeholder
 
-from ..global_init import parrot_global_ctrl, global_tokenized_storage
-
 # Annotations of arguments when defining a parrot function.
 
 
@@ -47,9 +45,7 @@ def function(
         )
 
         if register_to_global:
-            parrot_global_ctrl.register_function(
-                parrot_func, global_tokenized_storage if caching_prefix else None
-            )
+            ParrotFunction._controller.register_function(parrot_func, caching_prefix)
 
         return parrot_func
 
