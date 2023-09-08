@@ -53,6 +53,6 @@ def test_controller_register_function():
 
 
 if __name__ == "__main__":
-    # test_controller_register_tokenizer()
-    # test_controller_register_engine()
+    test_controller_register_tokenizer()
+    test_controller_register_engine()
     test_controller_register_function()

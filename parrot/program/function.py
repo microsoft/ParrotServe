@@ -3,6 +3,10 @@ import regex as re
 from dataclasses import dataclass
 
 from .placeholder import Placeholder
+from ..utils import get_logger
+
+
+logger = get_logger("Parrot Function")
 
 
 @dataclass
@@ -127,9 +131,10 @@ class ParrotFunction:
             ), f"Function {self.name} got multiple values for argument {name}"
             bindings[name] = placeholder
 
-        assert ParrotFunction._executor is not None, "No internal executor."
-        if ParrotFunction._executor.is_running:
+        if ParrotFunction._executor is not None:
             ParrotFunction._executor.submit(Promise(self, bindings))
+        else:
+            logger.warning("Executor is not set. Not submitting the promise.")
 
 
 class Promise:

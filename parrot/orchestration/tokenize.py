@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from .controller import Controller
-from ..program.function import ParrotFunction, Constant
+from ..program.function import ParrotFunction, Constant, Prefix
 
 
 class TokenizedStorage:
@@ -12,7 +12,7 @@ class TokenizedStorage:
         # (Function Name, tokenizer) -> Function Body -> Token ids
         self.storage: Dict[(str, str), List[List[int]]] = {}
 
-    def tokenizer(self, tokenizer_name: str):
+    def _tokenizer(self, tokenizer_name: str):
         return self.controller.tokenizers_table[tokenizer_name]
 
     def tokenize_func_body(
@@ -22,12 +22,17 @@ class TokenizedStorage:
     ) -> List[int]:
         key = (function.name, tokenizer_name)
         if key not in self.storage:
-            tokenizer = self.tokenizer(tokenizer_name)
+            tokenizer = self._tokenizer(tokenizer_name)
 
             tokenized: List[List[int]] = []
             for piece in function.body:
                 if isinstance(piece, Constant):
-                    tokenized.append(tokenizer(piece.text)["input_ids"])
+                    tokenized.append(
+                        tokenizer.encode(
+                            piece.text,
+                            add_special_tokens=isinstance(piece, Prefix),
+                        )
+                    )
                 else:
                     tokenized.append([])  # Empty for var loc
             self.storage[key] = tokenized
@@ -37,7 +42,7 @@ class TokenizedStorage:
     # NOTE(chaofan): Ignore special tokens because we chunk the inputs.
 
     def tokenize(self, text: str, tokenizer_name: str) -> List[int]:
-        tokenizer = self.tokenizer(tokenizer_name)
+        tokenizer = self._tokenizer(tokenizer_name)
         return tokenizer.encode(text, add_special_tokens=False)
 
     def detokenize(
@@ -45,5 +50,5 @@ class TokenizedStorage:
         token_ids: List[int],
         tokenizer_name: str,
     ) -> str:
-        tokenizer = self.tokenizer(tokenizer_name)
+        tokenizer = self._tokenizer(tokenizer_name)
         return tokenizer.decode(token_ids, skip_special_tokens=True)

@@ -20,4 +20,5 @@ class Context:
         self.parent_context = parent_context
 
     def __del__(self):
+        # print("Context deleted.")
         Context.context_id_manager.free(self.context_id)

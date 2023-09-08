@@ -23,14 +23,14 @@ class Placeholder:
     def ready(self) -> bool:
         return self.ready_event.is_set()
 
-    def assign(self, content: str):
+    def assign(self, content: str, no_callback=False):
         assert self.content is None, "This placeholder is filled"
         self.content = content
-
-        for callback in self.assign_callbacks:
-            callback()
-
         self.ready_event.set()
+
+        if not no_callback:
+            for callback in self.assign_callbacks:
+                callback()
 
     async def get(self):
         await self.ready_event.wait()

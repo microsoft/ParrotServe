@@ -3,7 +3,14 @@ Use `python3 -m parrot.testing.fake_server` to start a fake server.
 """
 
 
-from parrot.protocol import check_heartbeat, prefix_init, fill, generate, SamplingParams
+from parrot.protocol import (
+    check_heartbeat,
+    prefix_init,
+    fill,
+    generate,
+    free_context,
+    SamplingParams,
+)
 from aiohttp import ClientSession
 import time
 import asyncio
@@ -38,20 +45,18 @@ def test_prefix_init():
 
 def test_fill():
     async def main():
-        async with ClientSession() as session:
-            st = time.perf_counter_ns()
-            resp = await fill(
-                client_session=session,
-                http_addr=addr,
-                session_id=0,
-                context_id=0,
-                parent_context_id=-1,
-                token_ids=[1, 2, 3],
-            )
-            ed = time.perf_counter_ns()
-            print("Fill Time Used: ", (ed - st) / 1e9)
+        st = time.perf_counter_ns()
+        resp = await fill(
+            http_addr=addr,
+            session_id=0,
+            context_id=0,
+            parent_context_id=-1,
+            token_ids=[1, 2, 3],
+        )
+        ed = time.perf_counter_ns()
+        print("Fill Time Used: ", (ed - st) / 1e9)
 
-            assert resp.filled_tokens_num == 3
+        assert resp.filled_tokens_num == 3
 
     asyncio.run(main())
 
@@ -62,24 +67,30 @@ def test_generate():
     async def main():
         counter = 0
         st = time.perf_counter_ns()
-        async with ClientSession() as session:
-            async for token_id in generate(
-                client_session=session,
-                http_addr=addr,
-                session_id=0,
-                context_id=0,
-                parent_context_id=-1,
-                sampling_params=SamplingParams(),
-            ):
-                counter += 1
-                # assert counter == token_id
-                # print(token_id)
-                cur_time = time.perf_counter_ns()
-                times.append((cur_time - st) / 1e9)
-                st = cur_time
+        async for token_id in generate(
+            http_addr=addr,
+            session_id=0,
+            context_id=0,
+            sampling_params=SamplingParams(),
+        ):
+            counter += 1
+            # assert counter == token_id
+            # print(token_id)
+            cur_time = time.perf_counter_ns()
+            times.append((cur_time - st) / 1e9)
+            st = cur_time
 
     asyncio.run(main())
     print("Generation Time Points: ", times)
+
+
+def test_free_context():
+    resp = free_context(
+        http_addr=addr,
+        context_id=0,
+    )
+
+    assert resp.free_tokens_num == 0
 
 
 if __name__ == "__main__":
@@ -87,3 +98,4 @@ if __name__ == "__main__":
     test_prefix_init()
     test_fill()
     test_generate()
+    test_free_context()

@@ -1,23 +1,18 @@
-from typing import List, Dict
-from queue import Queue
-import time
-import threading
+from typing import Dict
 import asyncio
 
 from ..program.function import Promise, Constant, ParameterLoc
 from ..program.placeholder import Placeholder
 from .dispatcher import Dispatcher
 from .session import Session
-from .nodes import FillJob, GenerationJob, Tokensholder, JobStatus
+from .nodes import FillJob, GenerationJob, Tokensholder
 from ..orchestration.context import Context
-from ..orchestration.engine import ExecutionEngine
 from ..orchestration.controller import Controller
 from ..orchestration.tokenize import TokenizedStorage
 from ..utils import get_logger
-from ..protocol import free_context
 
 
-log = get_logger("Executor")
+logger = get_logger("Executor")
 
 
 class TokenizerGroupExecutor:
@@ -31,26 +26,9 @@ class TokenizerGroupExecutor:
         # ---------- Resources ----------
         self.tokenizer_name = tokenizer_name
         self.tokenized_storage = tokenized_storage
-        self.sessions: List[Session] = []
         self.data_map: Dict[str, Tokensholder] = {}
 
-        # ---------- Threads ----------
-        self._monitoring_thread = threading.Thread(
-            target=self._monitoring_daemon, daemon=True
-        )
-        self._execute_thread = threading.Thread(
-            target=self._execute_daemon, daemon=True
-        )
-        self._execute_loop = asyncio.new_event_loop()
-
-    def run_daemon(self):
-        self._monitoring_thread.start()
-        self._execute_thread.start()
-
     def add_session(self, session: Session):
-        self.sessions.append(session)
-        session.set_loop(self._execute_loop)
-
         tokenized = self.tokenized_storage.tokenize_func_body(
             session.promise.func,
             self.tokenizer_name,
@@ -58,59 +36,33 @@ class TokenizerGroupExecutor:
 
         for i, piece in enumerate(session.promise.func.body):
             if isinstance(piece, Constant):
-                holder = Tokensholder()
-                holder.assign(tokenized[i])
-                session.job_queue.append(
-                    FillJob(status=JobStatus.WAITING, input_holder=holder)
+                holder = Tokensholder(
+                    tokenizer=self.tokenizer_name,
+                    tokenized_storage=self.tokenized_storage,
                 )
+                holder.assign(tokenized[i])
+                job = FillJob(input_holder=holder)
             elif isinstance(piece, ParameterLoc):
                 assert piece.param.name in session.promise.bindings
                 placeholder = session.promise.bindings[piece.param.name]
-                holder = Tokensholder(
-                    placeholder=placeholder, tokenized_storage=self.tokenized_storage
-                )
-
+                holder = self._get_data_holder(placeholder)
                 if piece.param.is_output:
-                    session.job_queue.append(
-                        GenerationJob(status=JobStatus.WAITING, output_holder=holder)
-                    )
+                    job = GenerationJob(output_holder=holder)
                 else:
-                    session.job_queue.append(
-                        FillJob(status=JobStatus.WAITING, input_holder=holder)
-                    )
+                    job = FillJob(input_holder=holder)
+            session.job_queue.put_nowait(job)
 
-        asyncio.run_coroutine_threadsafe(session.session_coro(), self._execute_loop)
+        loop = asyncio.get_event_loop()
+        asyncio.run_coroutine_threadsafe(session.session_coro(), loop)
 
     def _get_data_holder(self, placeholder: Placeholder) -> Tokensholder:
         if placeholder.name not in self.data_map:
             self.data_map[placeholder.name] = Tokensholder(
+                tokenizer=self.tokenizer_name,
+                tokenized_storage=self.tokenized_storage,
                 placeholder=placeholder,
             )
         return self.data_map[placeholder.name]
-
-    def _monitoring_daemon(self):
-        while True:
-            time.sleep(0.1)
-
-            finished_sessions: List[Session] = []
-            new_sessions: List[Session] = []
-            for session in self.sessions:
-                if session.finish_event.is_set():
-                    finished_sessions.append(session)
-                else:
-                    new_sessions.append(session)
-            self.sessions = new_sessions
-
-            for i in range(len(finished_sessions)):
-                try:
-                    free_context(
-                        self.tokenizer_name,
-                        finished_sessions[i].engine.http_address,
-                        finished_sessions[i].context.context_id,
-                    )
-                except:
-                    pass
-                del finished_sessions[i]
 
     def _execute_daemon(self):
         self._execute_loop.run_forever()
@@ -132,9 +84,6 @@ class Executor:
         # ---------- Group executors ----------
         self.group_executors: Dict[str, TokenizerGroupExecutor] = {}
 
-        # ---------- Flag ----------
-        self._run_flag = False
-
     def register_group_executor(self, tokenizer_name: str):
         self.group_executors[tokenizer_name] = TokenizerGroupExecutor(
             tokenizer_name,
@@ -150,15 +99,8 @@ class Executor:
 
         session = Session(promise, context)
         self.dispatcher.dispatch(session)
-        self.group_executors[session.engine_name].add_session(session)
+        self.group_executors[session.engine.tokenizer].add_session(session)
 
-        log.info(f"Promise {promise.func.name} created a session {session.session_id}.")
-
-    def run(self):
-        for executor in self.group_executors.values():
-            executor.run_daemon()
-        self._run_flag = True
-
-    @property
-    def is_running(self):
-        return self._run_flag
+        logger.info(
+            f"Promise {promise.func.name} created a session {session.session_id}."
+        )

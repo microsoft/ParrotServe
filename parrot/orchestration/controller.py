@@ -41,6 +41,10 @@ class Controller:
         if self._run_flag:
             raise RuntimeError("Controller is running now, can't register/rerun.")
 
+    @property
+    def is_running(self):
+        return self._run_flag
+
     def run(self):
         self._check_is_run()
         self._run_flag = True
@@ -123,6 +127,10 @@ class Controller:
         # executor=None: testing mode
         if self.executor is not None:
             self.executor.register_group_executor(tokenizer_name)
+        else:
+            logger.warning(
+                "Executor is not initialized. Not register the group executor."
+            )
 
         logger.info(f"Register tokenizer: {tokenizer_name}")
 

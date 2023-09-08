@@ -1,8 +1,9 @@
 import inspect
 from typing import Optional
 
-from .function import ParrotFunction
+from .function import ParrotFunction, logger
 from .placeholder import Placeholder
+
 
 # Annotations of arguments when defining a parrot function.
 
@@ -44,9 +45,14 @@ def function(
             func_args=func_args,
         )
 
+        # controller=None: testing mode
         if register_to_global:
-            ParrotFunction._controller.register_function(parrot_func, caching_prefix)
-
+            if ParrotFunction._controller is not None:
+                ParrotFunction._controller.register_function(
+                    parrot_func, caching_prefix
+                )
+            else:
+                logger.warning("Controller is not set. Not register the function.")
         return parrot_func
 
     return create_func

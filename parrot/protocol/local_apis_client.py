@@ -1,6 +1,7 @@
 from typing import Type, List
 import requests
 import aiohttp
+import asyncio
 import dataclasses
 from requests.exceptions import RequestException
 from pydantic import ValidationError
@@ -93,47 +94,53 @@ def prefix_init(http_addr: str, context_id: int, token_ids: List[int]) -> FillRe
 
 
 async def fill(
-    client_session: aiohttp.ClientSession,
     http_addr: str,
     session_id: int,
-    context_id: int,
-    parent_context_id: int,
     token_ids: List[int],
+    context_id: int,
+    parent_context_id: int = -1,
 ) -> FillResponse:
     try:
-        return await async_send_http_request(
-            client_session,
-            FillResponse,
-            http_addr,
-            "/fill",
-            session_id=session_id,
-            context_id=context_id,
-            parent_context_id=parent_context_id,
-            token_ids=token_ids,
+        logger.debug(
+            f"Send fill request to {http_addr}. Payload: "
+            f"session_id={session_id}, "
+            f"token_ids={token_ids}, "
+            f"context_id={context_id}, "
+            f"parent_context_id={parent_context_id}"
         )
+
+        async with aiohttp.ClientSession() as client_session:
+            return await async_send_http_request(
+                client_session,
+                FillResponse,
+                http_addr,
+                "/fill",
+                session_id=session_id,
+                context_id=context_id,
+                parent_context_id=parent_context_id,
+                token_ids=token_ids,
+            )
     except BaseException as e:
         logger.error(f"Fill error in {http_addr} error: {e}")
         raise e
 
 
 async def generate(
-    client_session: aiohttp.ClientSession,
     http_addr: str,
     session_id: int,
     context_id: int,
-    parent_context_id: int,
     sampling_params: SamplingParams,
 ):
-    async for resp in async_send_http_request_streaming(
-        client_session,
-        http_addr,
-        "/generate",
-        session_id=session_id,
-        context_id=context_id,
-        parent_context_id=parent_context_id,
-        **dataclasses.asdict(sampling_params),
-    ):
-        yield resp
+    async with aiohttp.ClientSession() as client_session:
+        async for resp in async_send_http_request_streaming(
+            client_session,
+            http_addr,
+            "/generate",
+            session_id=session_id,
+            context_id=context_id,
+            **dataclasses.asdict(sampling_params),
+        ):
+            yield resp
 
 
 def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
