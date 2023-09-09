@@ -1,6 +1,7 @@
 from typing import Optional
 
 from ..utils import RecyclePool
+from ..constants import RECYCLE_POOL_SIZE
 
 
 class Context:
@@ -13,7 +14,7 @@ class Context:
       affect A's context.
     """
 
-    context_id_manager = RecyclePool(4096)
+    context_id_manager = RecyclePool(RECYCLE_POOL_SIZE)
 
     def __init__(self, parent_context: Optional["Context"] = None):
         self.context_id = Context.context_id_manager.allocate()

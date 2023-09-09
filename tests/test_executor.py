@@ -58,11 +58,14 @@ def test_pipeline_call():
         b = P.placeholder("b")
         c = P.placeholder("c")
         d = P.placeholder("d")
+        # e = P.placeholder("e")
 
         a.assign("Apple")
         b.assign("Banana")
         test(a, b, c)
         test(b, c, d)
+
+        # e.assign(await c.get())
 
         # await asyncio.sleep(1)  # Simulate a long running task
 

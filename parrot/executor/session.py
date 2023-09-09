@@ -1,60 +1,36 @@
-from typing import Optional, List
+from typing import Optional
 from queue import Queue
-from asyncio import Queue as AsyncQueue
 import time
 
 from .job import Job, FillJob, GenerationJob, JobStatus
+from .tokens_holder import TokensHolder
 from ..orchestration.context import Context
 from ..orchestration.engine import ExecutionEngine
 from ..program.function import Promise
-from ..utils import RecyclePool, get_logger, run_new_coro_in_current_loop
 from ..protocol import fill, generate, SamplingParams
 from ..protocol import free_context
-
-
-session_id_manager = RecyclePool(4096)
-
-
-PIPELINE_SEND_CHUNK_NUM = 32
-DETOKENIZE_CHUNK_NUM = 8
-PIPE_END_TOKEN_ID = -1
+from ..utils import RecyclePool, get_logger, run_new_coro_in_current_loop
+from ..constants import RECYCLE_POOL_SIZE, PIPE_END_TOKEN_ID
 
 
 logger = get_logger("Session")
 
 
-class DetokenizeConsumer:
-    def __init__(self, sync_method):
-        self.pipe: AsyncQueue[int] = AsyncQueue()
-        self.sync_method = sync_method
-
-    async def detokenize_coroutine(self):
-        cur_batch: List[int] = []
-
-        while True:
-            token_id = await self.pipe.get()
-
-            if token_id != PIPE_END_TOKEN_ID:
-                cur_batch.append(token_id)
-
-            is_last_batch = token_id == PIPE_END_TOKEN_ID
-
-            if len(cur_batch) >= DETOKENIZE_CHUNK_NUM or (
-                len(cur_batch) != 0 and is_last_batch
-            ):
-                self.sync_method(cur_batch, is_last_batch)
-                cur_batch = []
-
-            if token_id == PIPE_END_TOKEN_ID:
-                break
+async def detokenize_coroutine(holder: TokensHolder):
+    assert holder.producer is not None, "Producer should be set."
+    async for chunk in holder.producer.detokenize_pipe.generator():
+        holder.sync_to_placeholder_partial(chunk)
+    holder.placeholder.ready_event.set()
 
 
 class Session:
     """A session represents a running promise in the executor."""
 
+    session_id_manager = RecyclePool(RECYCLE_POOL_SIZE)
+
     def __init__(self, promise: Promise, context: Context):
         # ---------- Basic info ----------
-        self.session_id = session_id_manager.allocate()
+        self.session_id = Session.session_id_manager.allocate()
         self.promise = promise
         self.context = context
 
@@ -73,7 +49,7 @@ class Session:
 
     def __del__(self):
         # print("Session deleted.")
-        session_id_manager.free(self.session_id)
+        Session.session_id_manager.free(self.session_id)
 
         try:
             resp = free_context(
@@ -111,27 +87,15 @@ class Session:
                     assert not job.output_holder.ready, "Output holder should be empty."
                     job.output_holder.token_ids = []
 
-                    detokenize_subsession = DetokenizeConsumer(
-                        job.output_holder.sync_to_placeholder_partial
-                    )
                     run_new_coro_in_current_loop(
-                        detokenize_subsession.detokenize_coroutine()
+                        detokenize_coroutine(job.output_holder)
                     )
 
                     # Start streaming
                     job.output_holder.streaming_event.set()
                     async for token_id in generator:
-                        # Routing to pipes
-                        for consumer in job.output_holder.consumers:
-                            consumer.pipe.put_nowait(token_id)
-                        detokenize_subsession.pipe.put_nowait(token_id)
-                        # Pushing to output holder
-                        job.output_holder.token_ids.append(token_id)
-
-                    # Send end signals
-                    for consumer in job.output_holder.consumers:
-                        consumer.pipe.put_nowait(PIPE_END_TOKEN_ID)
-                    detokenize_subsession.pipe.put_nowait(PIPE_END_TOKEN_ID)
+                        job.output_holder.send_token(token_id)
+                    job.output_holder.send_token(PIPE_END_TOKEN_ID)
 
                     job.output_holder.ready_event.set()
                 except BaseException as e:
@@ -156,32 +120,14 @@ class Session:
                         )
                     else:
                         # Streaming input. Pipeling filling.
-                        cur_batch: List[int] = []
-
-                        # Fill the tokens per batch
-                        while True:
-                            token_id = await job.pipe.get()
-
-                            if token_id != PIPE_END_TOKEN_ID:
-                                cur_batch.append(token_id)
-                                job.input_holder.token_ids.append(token_id)
-                            if len(cur_batch) >= PIPELINE_SEND_CHUNK_NUM or (
-                                len(cur_batch) != 0 and token_id == PIPE_END_TOKEN_ID
-                            ):
-                                resp = await fill(
-                                    self.engine.http_address,
-                                    session_id=self.session_id,
-                                    token_ids=cur_batch,
-                                    context_id=self.context.context_id,
-                                    # We don't fork new context. Hence parent_context_id=-1
-                                )
-                                assert resp.filled_tokens_num == len(
-                                    cur_batch
-                                ), "Fill failed: not all tokens are filled."
-                                cur_batch = []
-
-                            if token_id == PIPE_END_TOKEN_ID:
-                                break
+                        async for chunk in job.input_pipe.generator():
+                            resp = await fill(
+                                self.engine.http_address,
+                                session_id=self.session_id,
+                                token_ids=chunk,
+                                context_id=self.context.context_id,
+                                # We don't fork new context. Hence parent_context_id=-1
+                            )
                 except BaseException as e:
                     # TODO(chaofan): Better error handling. Current solution (abort session) will
                     # block other sessions.

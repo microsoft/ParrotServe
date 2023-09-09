@@ -68,7 +68,7 @@ class TokensHolder:
             )
         )
 
-    def sync_to_placeholder_partial(self, token_ids: List[int], is_last_batch: bool):
+    def sync_to_placeholder_partial(self, token_ids: List[int]):
         assert self.placeholder is not None, "No placeholder"
         assert self.tokenized_storage is not None, "No tokenized storage"
 
@@ -80,10 +80,20 @@ class TokensHolder:
             self.tokenizer,
         )
 
-        if is_last_batch:
-            self.placeholder.ready_event.set()
-
     def __str__(self) -> str:
         if self.is_constant:
             return f"[TokensHolder(Constant): {self.token_ids}]"
         return f"[TokensHolder(Placeholder): {self.placeholder.name}]"
+
+    def send_token(self, token_id: int):
+        assert self.streaming_event.is_set(), "This tokenholder is not streaming."
+        assert not self.ready, "This tokenholder is filled. Can't send token."
+
+        # Pushing to output holder
+        self.token_ids.append(token_id)
+
+        # Routing to pipes
+        for consumer in self.consumers:
+            consumer.input_pipe.queue.put_nowait(token_id)
+        assert self.producer is not None, "No producer"
+        self.producer.detokenize_pipe.queue.put_nowait(token_id)

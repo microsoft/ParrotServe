@@ -23,11 +23,10 @@ def send_http_request(
 ) -> BaseResponse:
     url = http_addr + api_url
     error = None
-    timeout = 3
     for _ in range(retry_times):
         try:
             try:
-                resp = requests.post(url, json=kwargs, timeout=timeout)
+                resp = requests.post(url, json=kwargs)
                 assert resp.status_code == 200
                 return make_response(response_cls, resp)
             except BaseException as e:
