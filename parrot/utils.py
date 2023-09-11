@@ -25,7 +25,7 @@ class RecyclePool:
     def allocate(self) -> int:
         """Fetch an id."""
 
-        allocated_id = 0
+        allocated_id = -1
 
         if self.recent_free >= 0:
             allocated_id = self.recent_free
@@ -35,11 +35,16 @@ class RecyclePool:
                 if not self.flags[i]:
                     allocated_id = i
                     break
+        if allocated_id == -1:
+            raise ValueError("No free id in the pool.")
         self.flags[allocated_id] = True
         return allocated_id
 
     def free(self, index: int) -> int:
         """Free an id."""
+
+        if not self.flags[index]:
+            raise ValueError("The id is already free.")
 
         self.flags[index] = False
         self.recent_free = index

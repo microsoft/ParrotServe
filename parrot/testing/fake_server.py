@@ -69,8 +69,8 @@ async def generate(request: Request):
     running_jobs += 1
     payload = await request.json()
 
-    # gen_len = int(np.random.exponential(32) + 3)
-    gen_len = 512
+    gen_len = int(np.random.exponential(32) + 3)
+    # gen_len = 512
     gen_data = np.random.randint(10, 10000, size=(gen_len,)).tolist()
 
     cached_tokens += gen_len
