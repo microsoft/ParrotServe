@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from transformers import OPTConfig
 
-from ..entity import InputMetadata
+from ..entity import IterationState
 
 
 class GreedySampler(nn.Module):
@@ -12,7 +12,7 @@ class GreedySampler(nn.Module):
         self.embd_weight = embd_weight
         self.vocab_size = config.vocab_size
 
-    def forward(self, hidden_states: torch.Tensor, metadata: InputMetadata):
+    def forward(self, hidden_states: torch.Tensor, metadata: IterationState):
         # Get last tokens
         idx = 0
         indicies: List[int] = []

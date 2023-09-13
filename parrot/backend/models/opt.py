@@ -19,19 +19,21 @@
 
 """ PyTorch inference-only OPT model. Input is flattened."""
 
-from typing import Optional, List
+from typing import Optional
 
 import torch
 from torch import nn
-import numpy as np
 from transformers import OPTConfig
 
 from xformers import ops as xops
 
 from .weight_utils import hf_model_weights_iterator
-from .state_cache import StateCache
-from ..entity import InputMetadata
+from ..mem import KVCacheStorage
+from ..entity import IterationState
 from .sampler import GreedySampler
+
+from ..kernels.discontinuous_move_tokens import discontinuous_move_tokens
+
 
 ACT_FUNC = {
     "gelu": nn.GELU(),
@@ -59,7 +61,7 @@ class OPTAttention(nn.Module):
         self,
         embed_dim: int,
         num_heads: int,
-        has_cache: bool,
+        cache_blocks_num: int,
         bias: bool = True,
     ):
         super().__init__()
@@ -74,56 +76,70 @@ class OPTAttention(nn.Module):
             )
         self.scaling = self.head_dim**-0.5
 
-        self.k_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
-        self.v_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
-        self.q_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
+        self.qkv_proj = nn.Linear(embed_dim, 3 * embed_dim, bias=bias)
         self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
 
-        self.cache = StateCache() if has_cache else None
+        self.k_cache = KVCacheStorage(
+            cache_blocks_num, num_heads, self.head_dim, self.dtype, self.device
+        )
+        self.v_cache = KVCacheStorage(
+            cache_blocks_num, num_heads, self.head_dim, self.dtype, self.device
+        )
 
     def forward(
         self,
         hidden_states: torch.Tensor,
-        metadata: InputMetadata,
+        iteration_state: IterationState,
     ) -> torch.Tensor:
         # Shape of hidden_states: [num_tokens, hidden_dims]
 
-        # get query proj
-        query_states = self.q_proj(hidden_states)
+        # get query, key, value
+        qkv_states = self.q_proj(hidden_states)
+        query_states, key_states, value_states = torch.chunk(qkv_states, 3, dim=-1)
 
-        if self.cache:
-            self.cache.put(hidden_states, metadata)
-            hidden_states = torch.empty(
-                (np.sum(metadata.lens), self.embed_dim),
-                device=hidden_states.device,
-                dtype=hidden_states.dtype,
-            )
-            self.cache.get(metadata, placeholder=hidden_states)
-            attn_bias = xops.fmha.attn_bias.BlockDiagonalMask.from_seqlens(
-                q_seqlen=metadata.prefill_lens,
-                kv_seqlen=metadata.lens,
-            )
-        else:
-            attn_bias = xops.fmha.attn_bias.BlockDiagonalCausalMask.from_seqlens(
-                metadata.lens
-            )
+        # cache new k/v
+        assert key_states.shape[0] == value_states.shape[0]
+        src_indices = torch.arange(
+            key_states.shape[0], dtype=torch.int64, device=self.device
+        )
+        discontinuous_move_tokens(
+            key_states,
+            self.k_cache.storage,
+            src_indices=src_indices,
+            dest_indices=iteration_state.allocated_index_tensor,
+        )
+        discontinuous_move_tokens(
+            value_states,
+            self.v_cache.storage,
+            src_indices=src_indices,
+            dest_indices=iteration_state.allocated_index_tensor,
+        )
 
-        key_states = self.k_proj(hidden_states)
-        value_states = self.v_proj(hidden_states)
-
-        # reshape
-        query_states = query_states.view(1, -1, self.num_heads, self.head_dim)
-        key_states = key_states.view(1, -1, self.num_heads, self.head_dim)
-        value_states = value_states.view(1, -1, self.num_heads, self.head_dim)
+        # fetch cached k/v into buffer
+        dest_indices = torch.arange(
+            iteration_state.k_buffer.shape[0], dtype=torch.int64, device=self.device
+        )
+        discontinuous_move_tokens(
+            self.k_cache.storage,
+            iteration_state.k_buffer,
+            src_indices=iteration_state.context_index_tensor,
+            dest_indices=dest_indices,
+        )
+        discontinuous_move_tokens(
+            self.v_cache.storage,
+            iteration_state.v_buffer,
+            src_indices=iteration_state.context_index_tensor,
+            dest_indices=dest_indices,
+        )
 
         attn_output = xops.memory_efficient_attention_forward(
             query_states,
-            key_states,
-            value_states,
-            attn_bias=attn_bias,
+            iteration_state.k_buffer,
+            iteration_state.v_buffer,
+            attn_bias=iteration_state.attn_bias,
             p=0.0,
             scale=self.scaling,
-            op=xops.fmha.cutlass.FwOp(),
+            op=xops.fmha.triton.FwOp(),
         )
 
         attn_output = attn_output.view(-1, self.num_heads * self.head_dim)
@@ -133,7 +149,7 @@ class OPTAttention(nn.Module):
 
 
 class OPTDecoderLayer(nn.Module):
-    def __init__(self, config: OPTConfig, has_cache: bool):
+    def __init__(self, config: OPTConfig):
         super().__init__()
         self.config = config
         self.embed_dim = config.hidden_size
@@ -141,9 +157,7 @@ class OPTDecoderLayer(nn.Module):
             embed_dim=self.embed_dim,
             num_heads=config.num_attention_heads,
             bias=config.enable_bias,
-            has_cache=has_cache,
         )
-        self.has_cache = has_cache
         self.do_layer_norm_before = config.do_layer_norm_before
         self.activation_fn = ACT_FUNC[config.activation_function]
 
@@ -159,7 +173,7 @@ class OPTDecoderLayer(nn.Module):
     def forward(
         self,
         hidden_states: torch.Tensor,
-        metadata: InputMetadata,
+        iteration_state: IterationState,
     ) -> torch.Tensor:
         # Self Attention
         residual = hidden_states
@@ -169,7 +183,7 @@ class OPTDecoderLayer(nn.Module):
 
         hidden_states = self.self_attn(
             hidden_states=hidden_states,
-            metadata=metadata,
+            metadata=iteration_state,
         )
 
         hidden_states = residual + hidden_states
@@ -236,17 +250,14 @@ class OPTDecoder(nn.Module):
             self.final_layer_norm = None
 
         self.layers = nn.ModuleList(
-            [
-                OPTDecoderLayer(config, has_cache=(i != 0))
-                for i in range(config.num_hidden_layers)
-            ]
+            [OPTDecoderLayer(config) for _ in range(config.num_hidden_layers)]
         )
 
     def forward(
         self,
         input_ids: torch.Tensor,
         positions: torch.Tensor,
-        metadata: InputMetadata,
+        iteration_state: IterationState,
     ) -> torch.Tensor:
         inputs_embeds = self.embed_tokens(input_ids)
         pos_embeds = self.embed_positions(positions)
@@ -254,19 +265,8 @@ class OPTDecoder(nn.Module):
             inputs_embeds = self.project_in(inputs_embeds)
         hidden_states = inputs_embeds + pos_embeds
 
-        pruned = False
         for layer in self.layers:
-            if not pruned and layer.has_cache:
-                idx = 0
-                indicies: List[int] = []
-                for i in range(len(metadata.seq_ids)):
-                    indicies.extend(
-                        range(idx + metadata.cached_lens[i], idx + metadata.lens[i])
-                    )
-                    idx += metadata.lens[i]
-                hidden_states = hidden_states[indicies]
-                pruned = True
-            hidden_states = layer(hidden_states, metadata)
+            hidden_states = layer(hidden_states, iteration_state)
 
         if self.final_layer_norm is not None:
             hidden_states = self.final_layer_norm(hidden_states)
@@ -284,9 +284,9 @@ class OPTModel(nn.Module):
         self,
         input_ids: torch.Tensor,
         positions: torch.Tensor,
-        metadata: InputMetadata,
+        iteration_state: IterationState,
     ) -> torch.Tensor:
-        return self.decoder(input_ids, positions, metadata)
+        return self.decoder(input_ids, positions, iteration_state)
 
 
 class OPTForCausalLM(nn.Module):
@@ -301,10 +301,10 @@ class OPTForCausalLM(nn.Module):
         self,
         input_ids: torch.Tensor,
         positions: torch.Tensor,
-        metadata: InputMetadata,
+        iteration_state: IterationState,
     ):
-        hidden_states = self.model(input_ids, positions, metadata)
-        next_tokens = self.sampler(hidden_states, metadata)
+        hidden_states = self.model(input_ids, positions, iteration_state)
+        next_tokens = self.sampler(hidden_states, iteration_state)
         return next_tokens
 
     def load_weights(
@@ -322,6 +322,24 @@ class OPTForCausalLM(nn.Module):
                 continue
             if name.startswith("decoder."):
                 name = "model." + name
+
             param = state_dict[name]
-            param.copy_(loaded_weight)
+            is_qkv_weight = False
+
+            for stride_id, att_weight_name in enumerate(["q_proj", "k_proj", "v_proj"]):
+                if att_weight_name not in name:
+                    continue
+                param = state_dict[name.replace(att_weight_name, "qkv_proj")]
+                shard_size = param.shape[0] // 3
+
+                param_slice = param.data[
+                    shard_size * stride_id : shard_size * (stride_id + 1)
+                ]
+                assert param_slice.shape == loaded_weight.shape
+                param_slice.copy_(loaded_weight)
+                is_qkv_weight = True
+                break
+
+            if not is_qkv_weight:
+                param.copy_(loaded_weight)
             # print(f"{name} loaded.")
