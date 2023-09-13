@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from transformers import OPTConfig
 
-from ..entity import IterationState
+from ..iter_state import IterationState
 
 
 class GreedySampler(nn.Module):
@@ -19,7 +19,7 @@ class GreedySampler(nn.Module):
         for n in iteration_state.fill_tokens_num:
             idx += n
             indicies.append(idx - 1)
-        for _ in range(iteration_state.num_generation_jobs):
+        for _ in range(iteration_state.num_generation_primitives):
             idx += 1
             indicies.append(idx - 1)
 

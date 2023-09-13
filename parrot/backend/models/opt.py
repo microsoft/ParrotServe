@@ -29,7 +29,7 @@ from xformers import ops as xops
 
 from .weight_utils import hf_model_weights_iterator
 from ..mem import KVCacheStorage
-from ..entity import IterationState
+from ..iter_state import IterationState
 from .sampler import GreedySampler
 from ..config import AttentionConfig
 

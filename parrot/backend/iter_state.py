@@ -1,32 +1,14 @@
 from typing import List, Dict
-from dataclasses import dataclass
 import torch
 from transformers import OPTConfig
 from xformers import ops as xops
 
 from .mem import KVContext
 from .config import AttentionConfig
+from .backend_jobs import BackendPrimitives, Fill, Generation
 from ..protocol.sampling_params import SamplingParams
 
 
-@dataclass
-class BackendJob:
-    session_id: int
-    context_id: int
-
-
-@dataclass
-class FillJob(BackendJob):
-    parent_context_id: int
-    tokens_id: List[int]
-
-
-@dataclass
-class GenerationJob(BackendJob):
-    sampling_params: SamplingParams
-
-
-@dataclass
 class IterationState:
     """Structure of an iteration:
 
@@ -43,7 +25,7 @@ class IterationState:
 
     def __init__(
         self,
-        jobs: List[BackendJob],
+        jobs: List[BackendPrimitives],
         context_manager: Dict[int, KVContext],
         model_config: OPTConfig,
         attn_config: AttentionConfig,
@@ -66,10 +48,10 @@ class IterationState:
             # Context
             context = context_manager[job.context_id]
 
-            if isinstance(job, FillJob):
+            if isinstance(job, Fill):
                 tokens_num = len(job.tokens_id)
                 self.fill_tokens_num.append(tokens_num)
-            elif isinstance(job, GenerationJob):
+            elif isinstance(job, Generation):
                 tokens_num = 1
                 self.generation_sampling_params.append(job.sampling_params)
 
@@ -105,9 +87,9 @@ class IterationState:
             )
 
     @property
-    def num_fill_jobs(self) -> int:
+    def num_fill_primitives(self) -> int:
         return len(self.fill_tokens_num)
 
     @property
-    def num_generation_jobs(self) -> int:
+    def num_generation_primitives(self) -> int:
         return len(self.generation_sampling_params)

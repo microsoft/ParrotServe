@@ -10,13 +10,13 @@ class JobStatus(Enum):
     RUNNING = 2
 
 
-class Job:
+class PrimitiveJob:
     def __init__(self):
         self.status: JobStatus = JobStatus.WAITING
 
 
-class FillJob(Job):
-    """Fill job is corresponding to the `prefill` stage in LLM.
+class Fill(PrimitiveJob):
+    """Fill primitive is corresponding to the `prefill` stage in LLM.
 
     Its mission is to fill the KV cache in the execution engine, extending the context
     using the input tokens.
@@ -32,8 +32,8 @@ class FillJob(Job):
         return f"FillJob: input={self.input_holder}"
 
 
-class GenerationJob(Job):
-    """Generation job is corresponding to the `decode` stage in LLM.
+class Generation(PrimitiveJob):
+    """Generation primitive is corresponding to the `decode` stage in LLM.
 
     Its mission is to generate the output tokens based on certain context.
     """

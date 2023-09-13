@@ -4,7 +4,7 @@ from ..program.function import Promise, Constant, ParameterLoc
 from ..program.placeholder import Placeholder
 from .dispatcher import Dispatcher
 from .session import Session
-from .job import FillJob, GenerationJob
+from .primitives import Fill, Generation
 from .tokens_holder import TokensHolder
 from ..orchestration.context import Context
 from ..orchestration.controller import Controller
@@ -41,15 +41,15 @@ class TokenizerGroupExecutor:
                     tokenized_storage=self.tokenized_storage,
                 )
                 holder.assign(tokenized[i])
-                job = FillJob(input_holder=holder)
+                job = Fill(input_holder=holder)
             elif isinstance(piece, ParameterLoc):
                 assert piece.param.name in session.promise.bindings
                 placeholder = session.promise.bindings[piece.param.name]
                 holder = self._get_data_holder(placeholder)
                 if piece.param.is_output:
-                    job = GenerationJob(output_holder=holder)
+                    job = Generation(output_holder=holder)
                 else:
-                    job = FillJob(input_holder=holder)
+                    job = Fill(input_holder=holder)
             session.job_queue.put_nowait(job)
 
         run_new_coro_in_current_loop(session.execute_coroutine())

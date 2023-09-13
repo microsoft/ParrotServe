@@ -2,7 +2,7 @@ from typing import Optional
 from queue import Queue
 import time
 
-from .job import Job, FillJob, GenerationJob, JobStatus
+from .primitives import PrimitiveJob, Fill, Generation, JobStatus
 from .tokens_holder import TokensHolder
 from ..orchestration.context import Context
 from ..orchestration.engine import ExecutionEngine
@@ -39,7 +39,7 @@ class Session:
         self.engine: Optional[ExecutionEngine] = None
 
         # ---------- Job queue ----------
-        self.job_queue: Queue[Job] = Queue()
+        self.job_queue: Queue[PrimitiveJob] = Queue()
 
         # NOTE(chaofan): now we use a fixed sampling_params for all sessions
         self.sampling_params = SamplingParams(
@@ -74,7 +74,7 @@ class Session:
 
             st = time.perf_counter_ns()
 
-            if isinstance(job, GenerationJob):
+            if isinstance(job, Generation):
                 try:
                     generator = generate(
                         self.engine.http_address,
@@ -103,7 +103,7 @@ class Session:
                     # block other sessions.
                     logger.error(f"Execute generation job error: {e}")
                     break
-            elif isinstance(job, FillJob):
+            elif isinstance(job, Fill):
                 try:
                     await job.input_holder.streaming_event.wait()
 

@@ -4,7 +4,7 @@ import torch
 
 from .models.opt import OPTForCausalLM
 from .mem import KVContext
-from .entity import BackendJob, FillJob, GenerationJob, IterationState
+from .iter_state import BackendPrimitives, Fill, Generation, IterationState
 from ..utils import RecyclePool
 from .config import AttentionConfig
 
@@ -32,12 +32,12 @@ class Runner:
         self.model.load_weights(model_name)
         self.model = self.model.cuda()
 
-    def run(self, jobs: List[BackendJob]):
+    def run_iter(self, jobs: List[BackendPrimitives]):
         # Allocate new context blocks
         for job in jobs:
             # Context
             if job.context_id not in self.context_manager:
-                assert isinstance(job, FillJob)
+                assert isinstance(job, Fill)
                 if job.parent_context_id not in self.context_manager:
                     assert job.parent_context_id == -1
                     parent_context = None
@@ -52,10 +52,11 @@ class Runner:
             # Allocate blocks
             allocated_blocks_id: List[int] = []
 
-            if isinstance(job, FillJob):
+            if isinstance(job, Fill):
+                context.tokens_id.extend(job.tokens_id)
                 for _ in range(len(job.tokens_id)):
                     allocated_blocks_id.append(self.kv_cache_manager.allocate())
-            elif isinstance(job, GenerationJob):
+            elif isinstance(job, Generation):
                 allocated_blocks_id.append(self.kv_cache_manager.allocate())
 
             context.tokens_kv_block_id.extend(allocated_blocks_id)
@@ -77,12 +78,12 @@ class Runner:
         for job in jobs:
             context = self.context_manager[job.context_id]
             context_len = context.get_context_len()
-            if isinstance(job, FillJob):
+            if isinstance(job, Fill):
                 input_ids.extend(job.tokens_id)
                 input_positions.extend(
                     range(context_len - len(job.tokens_id), context_len)
                 )
-            elif isinstance(job, GenerationJob):
+            elif isinstance(job, Generation):
                 input_ids.append(context.tokens_id[-1])
                 input_positions.append(context_len - 1)
 
