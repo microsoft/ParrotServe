@@ -70,11 +70,11 @@ def test_fill_then_gen():
     )
 
 
-def test_generate_text():
+def test_generate_single_text():
     runner = Runner("facebook/opt-125m")
     prompt_text = "Hello, my name is"
     tokenizer = AutoTokenizer.from_pretrained("facebook/opt-125m")
-    prompt_tokens = tokenizer.encode(prompt_text, return_tensors="pt")[0].tolist()
+    prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
     runner.run_iter(
         [
@@ -100,8 +100,46 @@ def test_generate_text():
     print(tokenizer.decode(runner.context_manager[0].tokens_id))
 
 
+def test_generate_batch_text():
+    runner = Runner("facebook/opt-125m")
+    prompt_text = [
+        "Hello, my name is",
+        "Hello, my name is",
+        "Hello, my name is",
+    ]
+    tokenizer = AutoTokenizer.from_pretrained("facebook/opt-125m")
+    prompt_tokens = tokenizer(prompt_text)["input_ids"]
+
+    # Prefill
+    fills = [
+        Fill(
+            session_id=i,
+            context_id=i,
+            parent_context_id=-1,
+            tokens_id=prompt_tokens[i],
+        )
+        for i in range(len(prompt_tokens))
+    ]
+    runner.run_iter(fills)
+
+    for _ in range(40):
+        gens = [
+            Generation(
+                session_id=i,
+                context_id=i,
+                sampling_params=SamplingParams(),
+            )
+            for i in range(len(prompt_tokens))
+        ]
+        runner.run_iter(gens)
+
+    for i in range(len(prompt_tokens)):
+        print(tokenizer.decode(runner.context_manager[i].tokens_id))
+
+
 if __name__ == "__main__":
     # test_single_fill()
     # test_batch_fills()
     # test_fill_then_gen()
-    test_generate_text()
+    # test_generate_single_text()
+    test_generate_batch_text()

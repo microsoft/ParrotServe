@@ -19,7 +19,7 @@ class Sampler(nn.Module):
         for n in iteration_state.fill_tokens_num:
             idx += n
             indicies.append(idx - 1)
-        for _ in range(iteration_state.num_generation_primitives):
+        for _ in range(iteration_state.num_generation_jobs):
             idx += 1
             indicies.append(idx - 1)
 
@@ -27,7 +27,7 @@ class Sampler(nn.Module):
 
         logits = torch.matmul(hidden_states, self.embd_weight.t())
         probs = torch.softmax(logits, dim=-1, dtype=torch.float)
-        ids = torch.multinomial(probs, num_samples=1, replacement=True)[0]
+        ids = torch.multinomial(probs, num_samples=1, replacement=True).squeeze(-1)
 
         # TODO(chaofan): Apply top-k sampling, temperature, etc.
 

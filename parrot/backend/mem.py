@@ -1,6 +1,9 @@
 from typing import List, Optional
 
 import torch
+from ..utils import get_logger
+
+logger = get_logger("Mem")
 
 
 class KVContext:
@@ -36,6 +39,10 @@ class KVCacheStorage:
         dtype: torch.dtype,
         device: torch.device,
     ) -> None:
+        # logger.info(
+        #     f"Allocated {blocks_num} blocks. Total size: {blocks_num * num_heads * head_size / 1024 / 1024 / 1024 :.2f} GiB"
+        # )
+
         self.storage = torch.empty(
             [blocks_num, num_heads, head_size],
             dtype=dtype,

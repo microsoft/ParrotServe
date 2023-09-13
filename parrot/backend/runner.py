@@ -16,7 +16,7 @@ class Runner:
     def __init__(self, model_name: str):
         # Mgr.
         self.backend_config = BackendConfig(
-            cache_blocks_num=131072 * 10,  # TODO(chaofan): config this
+            cache_blocks_num=500,  # TODO(chaofan): config this
             attn_func="xformers_with_buffer",
             seed=0,
         )

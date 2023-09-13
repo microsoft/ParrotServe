@@ -89,9 +89,9 @@ class IterationState:
             )
 
     @property
-    def num_fill_primitives(self) -> int:
+    def num_fill_jobs(self) -> int:
         return len(self.fill_tokens_num)
 
     @property
-    def num_generation_primitives(self) -> int:
+    def num_generation_jobs(self) -> int:
         return len(self.generation_sampling_params)
