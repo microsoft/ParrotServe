@@ -1,27 +1,28 @@
-from typing import List
-from dataclasses import dataclass
+from typing import List, Optional
 
 import torch
 
 
-@dataclass
 class KVContext:
     """Low-level implementation of Context."""
 
-    context_id: int
-    tokens_block_id: List[int]
-    last_token_id: int
-    parent_context: "KVContext"
+    def __init__(self, context_id: int, parent_context: Optional["KVContext"]):
+        self.context_id = context_id
+        self.parent_context = parent_context
+        self.tokens_kv_block_id: List[int] = []
+        self.tokens_id: List[int] = []
 
     def get_context_len(self) -> int:
         """Return the length of the context."""
-
-        return self.parent_context.context_len + len(self.tokens_block_id)
+        parent_len = self.parent_context.context_len if self.parent_context else 0
+        return parent_len + len(self.tokens_kv_block_id)
 
     def get_context_blocks(self) -> List[int]:
         """Return the context blocks."""
-
-        return self.parent_context.get_context_blocks() + self.tokens_block_id
+        parent_blocks = (
+            self.parent_context.get_context_blocks() if self.parent_context else []
+        )
+        return parent_blocks + self.tokens_kv_block_id
 
 
 class KVCacheStorage:

@@ -31,6 +31,7 @@ from .weight_utils import hf_model_weights_iterator
 from ..mem import KVCacheStorage
 from ..entity import IterationState
 from .sampler import GreedySampler
+from ..config import AttentionConfig
 
 from ..kernels.discontinuous_move_tokens import discontinuous_move_tokens
 
@@ -61,7 +62,7 @@ class OPTAttention(nn.Module):
         self,
         embed_dim: int,
         num_heads: int,
-        cache_blocks_num: int,
+        attn_config: AttentionConfig,
         bias: bool = True,
     ):
         super().__init__()
@@ -80,10 +81,18 @@ class OPTAttention(nn.Module):
         self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
 
         self.k_cache = KVCacheStorage(
-            cache_blocks_num, num_heads, self.head_dim, self.dtype, self.device
+            attn_config.cache_blocks_num,
+            num_heads,
+            self.head_dim,
+            self.qkv_proj.weight.data.dtype,
+            "cuda",
         )
         self.v_cache = KVCacheStorage(
-            cache_blocks_num, num_heads, self.head_dim, self.dtype, self.device
+            attn_config.cache_blocks_num,
+            num_heads,
+            self.head_dim,
+            self.qkv_proj.weight.data.dtype,
+            "cuda",
         )
 
     def forward(
@@ -94,13 +103,16 @@ class OPTAttention(nn.Module):
         # Shape of hidden_states: [num_tokens, hidden_dims]
 
         # get query, key, value
-        qkv_states = self.q_proj(hidden_states)
+        qkv_states = self.qkv_proj(hidden_states)
         query_states, key_states, value_states = torch.chunk(qkv_states, 3, dim=-1)
+        query_states = query_states.view(-1, self.num_heads, self.head_dim)
+        key_states = key_states.view(-1, self.num_heads, self.head_dim)
+        value_states = value_states.view(-1, self.num_heads, self.head_dim)
 
         # cache new k/v
         assert key_states.shape[0] == value_states.shape[0]
         src_indices = torch.arange(
-            key_states.shape[0], dtype=torch.int64, device=self.device
+            key_states.shape[0], dtype=torch.int64, device=key_states.device
         )
         discontinuous_move_tokens(
             key_states,
@@ -117,7 +129,9 @@ class OPTAttention(nn.Module):
 
         # fetch cached k/v into buffer
         dest_indices = torch.arange(
-            iteration_state.k_buffer.shape[0], dtype=torch.int64, device=self.device
+            iteration_state.k_buffer.shape[0],
+            dtype=torch.int64,
+            device=key_states.device,
         )
         discontinuous_move_tokens(
             self.k_cache.storage,
@@ -132,14 +146,15 @@ class OPTAttention(nn.Module):
             dest_indices=dest_indices,
         )
 
+        # NOTE(chaofan): Unsqueeze to make it compatible with xformers
         attn_output = xops.memory_efficient_attention_forward(
-            query_states,
-            iteration_state.k_buffer,
-            iteration_state.v_buffer,
-            attn_bias=iteration_state.attn_bias,
+            query_states.unsqueeze(0),
+            iteration_state.k_buffer.unsqueeze(0),
+            iteration_state.v_buffer.unsqueeze(0),
+            attn_bias=iteration_state.x_attn_bias,
             p=0.0,
             scale=self.scaling,
-            op=xops.fmha.triton.FwOp(),
+            op=xops.fmha.cutlass.FwOp(),
         )
 
         attn_output = attn_output.view(-1, self.num_heads * self.head_dim)
@@ -149,25 +164,29 @@ class OPTAttention(nn.Module):
 
 
 class OPTDecoderLayer(nn.Module):
-    def __init__(self, config: OPTConfig):
+    def __init__(self, opt_config: OPTConfig, attn_config: AttentionConfig):
         super().__init__()
-        self.config = config
-        self.embed_dim = config.hidden_size
+        self.embed_dim = opt_config.hidden_size
         self.self_attn = OPTAttention(
             embed_dim=self.embed_dim,
-            num_heads=config.num_attention_heads,
-            bias=config.enable_bias,
+            num_heads=opt_config.num_attention_heads,
+            attn_config=attn_config,
+            bias=opt_config.enable_bias,
         )
-        self.do_layer_norm_before = config.do_layer_norm_before
-        self.activation_fn = ACT_FUNC[config.activation_function]
+        self.do_layer_norm_before = opt_config.do_layer_norm_before
+        self.activation_fn = ACT_FUNC[opt_config.activation_function]
 
         self.self_attn_layer_norm = nn.LayerNorm(
-            self.embed_dim, elementwise_affine=config.layer_norm_elementwise_affine
+            self.embed_dim, elementwise_affine=opt_config.layer_norm_elementwise_affine
         )
-        self.fc1 = nn.Linear(self.embed_dim, config.ffn_dim, bias=config.enable_bias)
-        self.fc2 = nn.Linear(config.ffn_dim, self.embed_dim, bias=config.enable_bias)
+        self.fc1 = nn.Linear(
+            self.embed_dim, opt_config.ffn_dim, bias=opt_config.enable_bias
+        )
+        self.fc2 = nn.Linear(
+            opt_config.ffn_dim, self.embed_dim, bias=opt_config.enable_bias
+        )
         self.final_layer_norm = nn.LayerNorm(
-            self.embed_dim, elementwise_affine=config.layer_norm_elementwise_affine
+            self.embed_dim, elementwise_affine=opt_config.layer_norm_elementwise_affine
         )
 
     def forward(
@@ -183,7 +202,7 @@ class OPTDecoderLayer(nn.Module):
 
         hidden_states = self.self_attn(
             hidden_states=hidden_states,
-            metadata=iteration_state,
+            iteration_state=iteration_state,
         )
 
         hidden_states = residual + hidden_states
@@ -207,32 +226,31 @@ class OPTDecoderLayer(nn.Module):
 
 
 class OPTDecoder(nn.Module):
-    def __init__(self, config: OPTConfig):
+    def __init__(self, opt_config: OPTConfig, attn_config: AttentionConfig):
         super().__init__()
-        self.config = config
-        self.padding_idx = config.pad_token_id
-        self.max_target_positions = config.max_position_embeddings
-        self.vocab_size = config.vocab_size
+        self.padding_idx = opt_config.pad_token_id
+        self.max_target_positions = opt_config.max_position_embeddings
+        self.vocab_size = opt_config.vocab_size
 
         self.embed_tokens = nn.Embedding(
-            config.vocab_size, config.word_embed_proj_dim, self.padding_idx
+            opt_config.vocab_size, opt_config.word_embed_proj_dim, self.padding_idx
         )
         # Positional embeddings are replicated (not sharded).
         self.embed_positions = OPTLearnedPositionalEmbedding(
-            config.max_position_embeddings, config.hidden_size
+            opt_config.max_position_embeddings, opt_config.hidden_size
         )
 
         # Project out & in will be replicated if they exist.
-        if config.word_embed_proj_dim != config.hidden_size:
+        if opt_config.word_embed_proj_dim != opt_config.hidden_size:
             self.project_out = nn.Linear(
-                config.hidden_size, config.word_embed_proj_dim, bias=False
+                opt_config.hidden_size, opt_config.word_embed_proj_dim, bias=False
             )
         else:
             self.project_out = None
 
-        if config.word_embed_proj_dim != config.hidden_size:
+        if opt_config.word_embed_proj_dim != opt_config.hidden_size:
             self.project_in = nn.Linear(
-                config.word_embed_proj_dim, config.hidden_size, bias=False
+                opt_config.word_embed_proj_dim, opt_config.hidden_size, bias=False
             )
         else:
             self.project_in = None
@@ -241,16 +259,19 @@ class OPTDecoder(nn.Module):
         # keep backward compatibility with checkpoints that have been fine-tuned
         # before transformers v4.20.1
         # see https://github.com/facebookresearch/metaseq/pull/164
-        if config.do_layer_norm_before and not config._remove_final_layer_norm:
+        if opt_config.do_layer_norm_before and not opt_config._remove_final_layer_norm:
             self.final_layer_norm = nn.LayerNorm(
-                config.hidden_size,
-                elementwise_affine=config.layer_norm_elementwise_affine,
+                opt_config.hidden_size,
+                elementwise_affine=opt_config.layer_norm_elementwise_affine,
             )
         else:
             self.final_layer_norm = None
 
         self.layers = nn.ModuleList(
-            [OPTDecoderLayer(config) for _ in range(config.num_hidden_layers)]
+            [
+                OPTDecoderLayer(opt_config, attn_config)
+                for _ in range(opt_config.num_hidden_layers)
+            ]
         )
 
     def forward(
@@ -276,9 +297,9 @@ class OPTDecoder(nn.Module):
 
 
 class OPTModel(nn.Module):
-    def __init__(self, config: OPTConfig):
+    def __init__(self, opt_config: OPTConfig, attn_config: AttentionConfig):
         super().__init__()
-        self.decoder = OPTDecoder(config)
+        self.decoder = OPTDecoder(opt_config, attn_config)
 
     def forward(
         self,
@@ -290,12 +311,11 @@ class OPTModel(nn.Module):
 
 
 class OPTForCausalLM(nn.Module):
-    def __init__(self, config):
+    def __init__(self, opt_config: OPTConfig, attn_config: AttentionConfig):
         super().__init__()
-        self.config = config
-        self.model = OPTModel(config)
+        self.model = OPTModel(opt_config, attn_config)
         # Tie lm_head's weight
-        self.sampler = GreedySampler(config, self.model.decoder.embed_tokens.weight)
+        self.sampler = GreedySampler(opt_config, self.model.decoder.embed_tokens.weight)
 
     def forward(
         self,
@@ -323,9 +343,8 @@ class OPTForCausalLM(nn.Module):
             if name.startswith("decoder."):
                 name = "model." + name
 
-            param = state_dict[name]
+            # Handle qkv_proj
             is_qkv_weight = False
-
             for stride_id, att_weight_name in enumerate(["q_proj", "k_proj", "v_proj"]):
                 if att_weight_name not in name:
                     continue
@@ -341,5 +360,6 @@ class OPTForCausalLM(nn.Module):
                 break
 
             if not is_qkv_weight:
+                param = state_dict[name]
                 param.copy_(loaded_weight)
             # print(f"{name} loaded.")

@@ -5,8 +5,8 @@ from transformers import OPTConfig
 from xformers import ops as xops
 
 from .mem import KVContext
+from .config import AttentionConfig
 from ..protocol.sampling_params import SamplingParams
-from ..utils import RecyclePool
 
 
 @dataclass
@@ -45,8 +45,8 @@ class IterationState:
         self,
         jobs: List[BackendJob],
         context_manager: Dict[int, KVContext],
-        kv_cache_manager: RecyclePool,
-        config: OPTConfig,
+        model_config: OPTConfig,
+        attn_config: AttentionConfig,
         dtype: torch.dtype,
         device: torch.device,
     ):
@@ -66,24 +66,17 @@ class IterationState:
             # Context
             context = context_manager[job.context_id]
 
-            # Allocate blocks
-            allocated_blocks_id: List[int] = []
-
             if isinstance(job, FillJob):
                 tokens_num = len(job.tokens_id)
                 self.fill_tokens_num.append(tokens_num)
-                for _ in range(tokens_num):
-                    allocated_blocks_id.append(kv_cache_manager.allocate())
             elif isinstance(job, GenerationJob):
                 tokens_num = 1
                 self.generation_sampling_params.append(job.sampling_params)
-                allocated_blocks_id.append(kv_cache_manager.allocate())
 
-            # Update
-            context.tokens_block_id.extend(allocated_blocks_id)
-            self.allocated_index_tensor.extend(allocated_blocks_id)
+            context_blocks = context.get_context_blocks()
+            self.context_index_tensor.extend(context_blocks)
+            self.allocated_index_tensor.extend(context_blocks[-tokens_num:])
 
-            self.context_index_tensor.extend(context.get_context_blocks())
             q_lens.append(tokens_num)
             kv_lens.append(context.get_context_len())
 
@@ -96,19 +89,20 @@ class IterationState:
             self.context_index_tensor, dtype=torch.int64, device=device
         )
 
-        num_heads = config.num_attention_heads
-        head_size = config.hidden_size // num_heads
+        num_heads = model_config.num_attention_heads
+        head_size = model_config.hidden_size // num_heads
 
-        # KV Buffer
-        buffer_shape = [sum(self.kv_lens), num_heads, head_size]
-        self.k_buffer = torch.empty(buffer_shape, dtype=dtype, device=device)
-        self.v_buffer = torch.empty(buffer_shape, dtype=dtype, device=device)
+        if attn_config.attn_func == "xformers_with_buffer":
+            # KV Buffer
+            buffer_shape = [sum(kv_lens), num_heads, head_size]
+            self.k_buffer = torch.empty(buffer_shape, dtype=dtype, device=device)
+            self.v_buffer = torch.empty(buffer_shape, dtype=dtype, device=device)
 
-        # Attn Mask
-        self.attn_bias = xops.fmha.attn_bias.BlockDiagonalMask.from_seqlens(
-            q_seqlen=q_lens,
-            kv_seqlen=kv_lens,
-        )
+            # Attn Mask
+            self.x_attn_bias = xops.fmha.attn_bias.BlockDiagonalMask.from_seqlens(
+                q_seqlen=q_lens,
+                kv_seqlen=kv_lens,
+            )
 
     @property
     def num_fill_jobs(self) -> int:
