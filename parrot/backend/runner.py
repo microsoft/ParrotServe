@@ -1,12 +1,13 @@
 from typing import List, Dict
 from transformers import AutoConfig
 import torch
+import numpy as np
 
 from .models.opt import OPTForCausalLM
 from .mem import KVContext
 from .iter_state import BackendPrimitives, Fill, Generation, IterationState
-from ..utils import RecyclePool
-from .config import AttentionConfig
+from ..utils import RecyclePool, set_random_seed
+from .config import BackendConfig
 
 
 class Runner:
@@ -14,24 +15,28 @@ class Runner:
 
     def __init__(self, model_name: str):
         # Mgr.
-        self.attn_config = AttentionConfig(
+        self.backend_config = BackendConfig(
             cache_blocks_num=131072 * 10,  # TODO(chaofan): config this
             attn_func="xformers_with_buffer",
+            seed=0,
         )
         self.context_manager: Dict[int, KVContext] = {}
-        self.kv_cache_manager = RecyclePool(self.attn_config.cache_blocks_num)
+        self.kv_cache_manager = RecyclePool(self.backend_config.cache_blocks_num)
 
         # Load Model
         self.device = torch.device("cuda")
         self.dtype = torch.float16
         self.model_config = AutoConfig.from_pretrained(model_name)
         torch.set_default_dtype(self.dtype)
+        set_random_seed(self.backend_config.seed)
+
         self.model = OPTForCausalLM(
-            self.model_config, self.attn_config
+            self.model_config, self.backend_config
         )  # Currently only support OPT
         self.model.load_weights(model_name)
         self.model = self.model.cuda()
 
+    @torch.inference_mode()
     def run_iter(self, jobs: List[BackendPrimitives]):
         # Allocate new context blocks
         for job in jobs:
@@ -66,7 +71,7 @@ class Runner:
             jobs,
             self.context_manager,
             self.model_config,
-            self.attn_config,
+            self.backend_config,
             self.dtype,
             self.device,
         )

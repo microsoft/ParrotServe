@@ -4,7 +4,7 @@ from transformers import OPTConfig
 from xformers import ops as xops
 
 from .mem import KVContext
-from .config import AttentionConfig
+from .config import BackendConfig
 from .backend_jobs import BackendPrimitives, Fill, Generation
 from ..protocol.sampling_params import SamplingParams
 
@@ -28,7 +28,7 @@ class IterationState:
         jobs: List[BackendPrimitives],
         context_manager: Dict[int, KVContext],
         model_config: OPTConfig,
-        attn_config: AttentionConfig,
+        attn_config: BackendConfig,
         dtype: torch.dtype,
         device: torch.device,
     ):
@@ -81,7 +81,7 @@ class IterationState:
             self.v_buffer = torch.empty(buffer_shape, dtype=dtype, device=device)
 
             # Attn Mask
-            self.x_attn_bias = xops.fmha.attn_bias.BlockDiagonalMask.from_seqlens(
+            self.x_attn_bias = xops.fmha.attn_bias.BlockDiagonalCausalMask.from_seqlens(
                 q_seqlen=q_lens,
                 kv_seqlen=kv_lens,
             )

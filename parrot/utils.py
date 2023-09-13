@@ -53,3 +53,15 @@ class RecyclePool:
 def run_new_coro_in_current_loop(coro):
     loop = asyncio.get_running_loop()
     asyncio.run_coroutine_threadsafe(coro, loop)
+
+
+def set_random_seed(seed: int):
+    import random
+    import numpy as np
+    import torch
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)

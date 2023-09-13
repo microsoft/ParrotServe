@@ -1,4 +1,5 @@
 # coding=utf-8
+#
 # Adapted from
 # https://github.com/vllm-project/vllm/blob/main/vllm/model_executor/models/opt.py
 # Copyright 2023 The vLLM team.
@@ -30,8 +31,8 @@ from xformers import ops as xops
 from .weight_utils import hf_model_weights_iterator
 from ..mem import KVCacheStorage
 from ..iter_state import IterationState
-from .sampler import GreedySampler
-from ..config import AttentionConfig
+from .sampler import Sampler
+from ..config import BackendConfig
 
 from ..kernels.discontinuous_move_tokens import discontinuous_move_tokens
 
@@ -62,7 +63,7 @@ class OPTAttention(nn.Module):
         self,
         embed_dim: int,
         num_heads: int,
-        attn_config: AttentionConfig,
+        backend_config: BackendConfig,
         bias: bool = True,
     ):
         super().__init__()
@@ -81,14 +82,14 @@ class OPTAttention(nn.Module):
         self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
 
         self.k_cache = KVCacheStorage(
-            attn_config.cache_blocks_num,
+            backend_config.cache_blocks_num,
             num_heads,
             self.head_dim,
             self.qkv_proj.weight.data.dtype,
             "cuda",
         )
         self.v_cache = KVCacheStorage(
-            attn_config.cache_blocks_num,
+            backend_config.cache_blocks_num,
             num_heads,
             self.head_dim,
             self.qkv_proj.weight.data.dtype,
@@ -164,13 +165,13 @@ class OPTAttention(nn.Module):
 
 
 class OPTDecoderLayer(nn.Module):
-    def __init__(self, opt_config: OPTConfig, attn_config: AttentionConfig):
+    def __init__(self, opt_config: OPTConfig, backend_config: BackendConfig):
         super().__init__()
         self.embed_dim = opt_config.hidden_size
         self.self_attn = OPTAttention(
             embed_dim=self.embed_dim,
             num_heads=opt_config.num_attention_heads,
-            attn_config=attn_config,
+            backend_config=backend_config,
             bias=opt_config.enable_bias,
         )
         self.do_layer_norm_before = opt_config.do_layer_norm_before
@@ -226,7 +227,7 @@ class OPTDecoderLayer(nn.Module):
 
 
 class OPTDecoder(nn.Module):
-    def __init__(self, opt_config: OPTConfig, attn_config: AttentionConfig):
+    def __init__(self, opt_config: OPTConfig, backend_config: BackendConfig):
         super().__init__()
         self.padding_idx = opt_config.pad_token_id
         self.max_target_positions = opt_config.max_position_embeddings
@@ -269,7 +270,7 @@ class OPTDecoder(nn.Module):
 
         self.layers = nn.ModuleList(
             [
-                OPTDecoderLayer(opt_config, attn_config)
+                OPTDecoderLayer(opt_config, backend_config)
                 for _ in range(opt_config.num_hidden_layers)
             ]
         )
@@ -297,9 +298,9 @@ class OPTDecoder(nn.Module):
 
 
 class OPTModel(nn.Module):
-    def __init__(self, opt_config: OPTConfig, attn_config: AttentionConfig):
+    def __init__(self, opt_config: OPTConfig, backend_config: BackendConfig):
         super().__init__()
-        self.decoder = OPTDecoder(opt_config, attn_config)
+        self.decoder = OPTDecoder(opt_config, backend_config)
 
     def forward(
         self,
@@ -311,11 +312,11 @@ class OPTModel(nn.Module):
 
 
 class OPTForCausalLM(nn.Module):
-    def __init__(self, opt_config: OPTConfig, attn_config: AttentionConfig):
+    def __init__(self, opt_config: OPTConfig, backend_config: BackendConfig):
         super().__init__()
-        self.model = OPTModel(opt_config, attn_config)
+        self.model = OPTModel(opt_config, backend_config)
         # Tie lm_head's weight
-        self.sampler = GreedySampler(opt_config, self.model.decoder.embed_tokens.weight)
+        self.sampler = Sampler(opt_config, self.model.decoder.embed_tokens.weight)
 
     def forward(
         self,

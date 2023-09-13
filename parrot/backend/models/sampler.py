@@ -6,7 +6,7 @@ from transformers import OPTConfig
 from ..iter_state import IterationState
 
 
-class GreedySampler(nn.Module):
+class Sampler(nn.Module):
     def __init__(self, config: OPTConfig, embd_weight: torch.Tensor):
         super().__init__()
         self.embd_weight = embd_weight
@@ -27,8 +27,7 @@ class GreedySampler(nn.Module):
 
         logits = torch.matmul(hidden_states, self.embd_weight.t())
         probs = torch.softmax(logits, dim=-1, dtype=torch.float)
-        logprobs = torch.log(probs)
-        ids = torch.argmax(logprobs, dim=-1)
+        ids = torch.multinomial(probs, num_samples=1, replacement=True)[0]
 
         # TODO(chaofan): Apply top-k sampling, temperature, etc.
 

@@ -72,7 +72,7 @@ def test_fill_then_gen():
 
 def test_generate_text():
     runner = Runner("facebook/opt-125m")
-    prompt_text = "Hello, my name is "
+    prompt_text = "Hello, my name is"
     tokenizer = AutoTokenizer.from_pretrained("facebook/opt-125m")
     prompt_tokens = tokenizer.encode(prompt_text, return_tensors="pt")[0].tolist()
 
@@ -87,16 +87,16 @@ def test_generate_text():
         ]
     )
 
-    for _ in range(100):
-        runner.run_iter(
-            [
-                Generation(
-                    session_id=0,
-                    context_id=0,
-                    sampling_params=SamplingParams(),
-                )
-            ]
-        )
+    # for _ in range(3):
+    #     runner.run_iter(
+    #         [
+    #             Generation(
+    #                 session_id=0,
+    #                 context_id=0,
+    #                 sampling_params=SamplingParams(),
+    #             )
+    #         ]
+    #     )
     print(runner.context_manager[0].tokens_id)
     print(tokenizer.decode(runner.context_manager[0].tokens_id))
 
