@@ -81,9 +81,11 @@ class IterationState:
             self.v_buffer = torch.empty(buffer_shape, dtype=dtype, device=device)
 
             # Attn Mask
-            self.x_attn_bias = xops.fmha.attn_bias.BlockDiagonalCausalMask.from_seqlens(
-                q_seqlen=q_lens,
-                kv_seqlen=kv_lens,
+            self.x_attn_bias = (
+                xops.fmha.attn_bias.BlockDiagonalCausalFromBottomRightMask.from_seqlens(
+                    q_seqlen=q_lens,
+                    kv_seqlen=kv_lens,
+                )
             )
 
     @property

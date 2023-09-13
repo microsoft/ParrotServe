@@ -147,6 +147,7 @@ class OPTAttention(nn.Module):
             dest_indices=dest_indices,
         )
 
+        # torch.testing.assert_close(iteration_state.k_buffer[-1], key_states[-1])
         # NOTE(chaofan): Unsqueeze to make it compatible with xformers
         attn_output = xops.memory_efficient_attention_forward(
             query_states.unsqueeze(0),
@@ -287,7 +288,7 @@ class OPTDecoder(nn.Module):
             inputs_embeds = self.project_in(inputs_embeds)
         hidden_states = inputs_embeds + pos_embeds
 
-        for layer in self.layers:
+        for i, layer in enumerate(self.layers):
             hidden_states = layer(hidden_states, iteration_state)
 
         if self.final_layer_norm is not None:

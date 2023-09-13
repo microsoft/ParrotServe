@@ -87,17 +87,16 @@ def test_generate_text():
         ]
     )
 
-    # for _ in range(3):
-    #     runner.run_iter(
-    #         [
-    #             Generation(
-    #                 session_id=0,
-    #                 context_id=0,
-    #                 sampling_params=SamplingParams(),
-    #             )
-    #         ]
-    #     )
-    print(runner.context_manager[0].tokens_id)
+    for _ in range(40):
+        runner.run_iter(
+            [
+                Generation(
+                    session_id=0,
+                    context_id=0,
+                    sampling_params=SamplingParams(),
+                )
+            ]
+        )
     print(tokenizer.decode(runner.context_manager[0].tokens_id))
 
 
