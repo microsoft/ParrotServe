@@ -1,13 +1,13 @@
 from typing import List, Dict
 from transformers import AutoConfig
 import torch
-import numpy as np
 
 from .models.opt import OPTForCausalLM
 from .mem import KVContext
-from .iter_state import BackendPrimitives, Fill, Generation, IterationState
+from .iter_state import BackendPrimitiveJob, Fill, Generation, IterationState
 from ..utils import RecyclePool, set_random_seed
 from .config import BackendConfig
+from ..constants import PIPE_END_TOKEN_ID
 
 
 class Runner:
@@ -36,40 +36,41 @@ class Runner:
         self.model.load_weights(model_name)
         self.model = self.model.cuda()
 
+    def bind_job_context(self, job: BackendPrimitiveJob):
+        if job.context_id not in self.context_manager:
+            assert isinstance(job, Fill)
+            if job.parent_context_id not in self.context_manager:
+                assert job.parent_context_id == -1
+                parent_context = None
+            else:
+                parent_context = self.context_manager[job.parent_context_id]
+            self.context_manager[job.context_id] = KVContext(
+                job.context_id, parent_context, self.kv_cache_manager
+            )
+        job.context = self.context_manager[job.context_id]
+
     @torch.inference_mode()
-    def run_iter(self, jobs: List[BackendPrimitives]):
+    def run_iter(self, jobs: List[BackendPrimitiveJob]):
         # Allocate new context blocks
         for job in jobs:
-            # Context
-            if job.context_id not in self.context_manager:
-                assert isinstance(job, Fill)
-                if job.parent_context_id not in self.context_manager:
-                    assert job.parent_context_id == -1
-                    parent_context = None
-                else:
-                    parent_context = self.context_manager[job.parent_context_id]
-                self.context_manager[job.context_id] = KVContext(
-                    job.context_id, parent_context
-                )
-
-            context = self.context_manager[job.context_id]
+            if job.context is None:
+                self.bind_job_context(job)
 
             # Allocate blocks
             allocated_blocks_id: List[int] = []
 
             if isinstance(job, Fill):
-                context.tokens_id.extend(job.tokens_id)
-                for _ in range(len(job.tokens_id)):
-                    allocated_blocks_id.append(self.kv_cache_manager.allocate())
+                job.context.token_ids.extend(job.token_ids)
+                job.context.allocate(len(job.token_ids))
             elif isinstance(job, Generation):
-                allocated_blocks_id.append(self.kv_cache_manager.allocate())
+                job.context.allocate(1)
+                job.output_queue.put_nowait(job.context.token_ids[-1])
 
-            context.tokens_kv_block_id.extend(allocated_blocks_id)
+            job.context.tokens_kv_block_id.extend(allocated_blocks_id)
 
         # Prepare iteration state
         iteration_state = IterationState(
             jobs,
-            self.context_manager,
             self.model_config,
             self.backend_config,
             self.dtype,
@@ -84,12 +85,12 @@ class Runner:
             context = self.context_manager[job.context_id]
             context_len = context.get_context_len()
             if isinstance(job, Fill):
-                input_ids.extend(job.tokens_id)
+                input_ids.extend(job.token_ids)
                 input_positions.extend(
-                    range(context_len - len(job.tokens_id), context_len)
+                    range(context_len - len(job.token_ids), context_len)
                 )
             elif isinstance(job, Generation):
-                input_ids.append(context.tokens_id[-1])
+                input_ids.append(context.token_ids[-1])
                 input_positions.append(context_len - 1)
 
         input_ids = torch.tensor(
@@ -112,5 +113,17 @@ class Runner:
         # Update context
         for i, token_id in enumerate(next_tokens):
             job = jobs[i]
-            context = self.context_manager[job.context_id]
-            context.tokens_id.append(token_id)
+            assert job.context is not None, "Context should be assigned."
+            job.context.token_ids.append(token_id)
+
+            # Mark finish flag
+            if isinstance(job, Fill):
+                job.finished.set()
+            elif isinstance(job, Generation):
+                job.output_queue.put_nowait(token_id)
+                if (
+                    job.context.get_context_len() >= job.sampling_params.max_length
+                    or token_id in job.sampling_params.stop_token_ids
+                ):
+                    job.output_queue.put_nowait(PIPE_END_TOKEN_ID)
+                    job.finished.set()

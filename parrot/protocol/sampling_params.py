@@ -1,6 +1,7 @@
 # Adapted from https://github.com/vllm-project/vllm/blob/main/vllm/sampling_params.py
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 
 
 @dataclass
@@ -13,3 +14,4 @@ class SamplingParams:
     repetition_penalty: float = 0.0
     length_penalty: float = 0.0
     num_beams: int = 0
+    stop_token_ids: List[int] = field(default_factory=list)

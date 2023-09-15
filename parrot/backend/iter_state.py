@@ -5,7 +5,7 @@ from xformers import ops as xops
 
 from .mem import KVContext
 from .config import BackendConfig
-from .backend_jobs import BackendPrimitives, Fill, Generation
+from .backend_jobs import BackendPrimitiveJob, Fill, Generation
 from ..protocol.sampling_params import SamplingParams
 
 
@@ -25,8 +25,7 @@ class IterationState:
 
     def __init__(
         self,
-        jobs: List[BackendPrimitives],
-        context_manager: Dict[int, KVContext],
+        jobs: List[BackendPrimitiveJob],
         model_config: OPTConfig,
         attn_config: BackendConfig,
         dtype: torch.dtype,
@@ -45,22 +44,19 @@ class IterationState:
         kv_lens: List[int] = []
 
         for job in jobs:
-            # Context
-            context = context_manager[job.context_id]
-
             if isinstance(job, Fill):
-                tokens_num = len(job.tokens_id)
+                tokens_num = len(job.token_ids)
                 self.fill_tokens_num.append(tokens_num)
             elif isinstance(job, Generation):
                 tokens_num = 1
                 self.generation_sampling_params.append(job.sampling_params)
 
-            context_blocks = context.get_context_blocks()
+            context_blocks = job.context.get_context_blocks()
             self.context_index_tensor.extend(context_blocks)
             self.allocated_index_tensor.extend(context_blocks[-tokens_num:])
 
             q_lens.append(tokens_num)
-            kv_lens.append(context.get_context_len())
+            kv_lens.append(job.context.get_context_len())
 
         self.device = device
 

@@ -12,7 +12,7 @@ def test_single_fill():
         session_id=0,
         context_id=0,
         parent_context_id=-1,
-        tokens_id=np.random.randint(50, 50000, size=10).tolist(),
+        token_ids=np.random.randint(50, 50000, size=10).tolist(),
     )
 
     runner.run_iter([job])
@@ -26,19 +26,19 @@ def test_batch_fills():
             session_id=0,
             context_id=0,
             parent_context_id=-1,
-            tokens_id=np.random.randint(50, 50000, size=10).tolist(),
+            token_ids=np.random.randint(50, 50000, size=10).tolist(),
         ),
         Fill(
             session_id=1,
             context_id=1,
             parent_context_id=-1,
-            tokens_id=np.random.randint(50, 50000, size=15).tolist(),
+            token_ids=np.random.randint(50, 50000, size=15).tolist(),
         ),
         Fill(
             session_id=2,
             context_id=2,
             parent_context_id=-1,
-            tokens_id=np.random.randint(50, 50000, size=20).tolist(),
+            token_ids=np.random.randint(50, 50000, size=20).tolist(),
         ),
     ]
 
@@ -54,7 +54,7 @@ def test_fill_then_gen():
                 session_id=0,
                 context_id=0,
                 parent_context_id=-1,
-                tokens_id=np.random.randint(50, 50000, size=10).tolist(),
+                token_ids=np.random.randint(50, 50000, size=10).tolist(),
             )
         ]
     )
@@ -82,7 +82,7 @@ def test_generate_single_text():
                 session_id=0,
                 context_id=0,
                 parent_context_id=-1,
-                tokens_id=prompt_tokens,
+                token_ids=prompt_tokens,
             )
         ]
     )
@@ -97,7 +97,7 @@ def test_generate_single_text():
                 )
             ]
         )
-    print(tokenizer.decode(runner.context_manager[0].tokens_id))
+    print(tokenizer.decode(runner.context_manager[0].token_ids))
 
 
 def test_generate_batch_text():
@@ -116,7 +116,7 @@ def test_generate_batch_text():
             session_id=i,
             context_id=i,
             parent_context_id=-1,
-            tokens_id=prompt_tokens[i],
+            token_ids=prompt_tokens[i],
         )
         for i in range(len(prompt_tokens))
     ]
@@ -134,7 +134,7 @@ def test_generate_batch_text():
         runner.run_iter(gens)
 
     for i in range(len(prompt_tokens)):
-        print(tokenizer.decode(runner.context_manager[i].tokens_id))
+        print(tokenizer.decode(runner.context_manager[i].token_ids))
 
 
 if __name__ == "__main__":
