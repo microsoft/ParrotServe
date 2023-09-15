@@ -1,1 +1,1 @@
-# Parrot: An End-to-End Optimization Compiler for Semantic Programing​
+# Parrot: High Performance Runtime System for Semantic Programming​
