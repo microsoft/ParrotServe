@@ -75,14 +75,14 @@ async def free_context(request: Request):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parrot backend HTTP server.")
 
-    parser.add_argument("--engine_name", type=str, default="local_engine_0")
+    parser.add_argument("--config_path", type=str)
     parser.add_argument("--host", type=str, default="localhost")
     parser.add_argument("--port", type=int, default=8888)
 
     args = parser.parse_args()
 
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")
-    execution_engine = ExecutionEngine(engine_name=args.engine_name)
+    execution_engine = ExecutionEngine(args.config_path)
 
     loop = asyncio.new_event_loop()
     config = Config(

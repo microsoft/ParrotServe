@@ -1,13 +1,14 @@
 from typing import List
 from .backend_jobs import BackendPrimitiveJob
+from .config import SchedulerConfig
 
 
 class Scheduler:
     """Scheduler for the backend."""
 
-    def __init__(self, max_batch_size: int, max_tokens_sum: int):
-        self.max_batch_size = max_batch_size
-        self.max_tokens_sum = max_tokens_sum
+    def __init__(self, config: SchedulerConfig):
+        self.max_batch_size = config.max_batch_size
+        self.max_tokens_sum = config.max_tokens_sum
 
         self.waiting_jobs: List[BackendPrimitiveJob] = []
         self.running_jobs: List[BackendPrimitiveJob] = []

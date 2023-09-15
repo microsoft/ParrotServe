@@ -1,6 +1,6 @@
 """This test requires a running Parrot HTTP server.
 
-Use `python3 -m parrot.backend.http_server` to start a server.
+Use `python3 -m parrot.backend.http_server --config_path [engine_config_path]` to start a server.
 Please use host `localhost` and port `8888` for the server.
 """
 

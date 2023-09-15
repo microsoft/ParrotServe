@@ -6,34 +6,33 @@ from .models.opt import OPTForCausalLM
 from .mem import KVContext
 from .iter_state import BackendPrimitiveJob, Fill, Generation, IterationState
 from ..utils import RecyclePool, set_random_seed
-from .config import BackendConfig
-from ..constants import STREAMING_END_TOKEN_ID
+from .config import RunnerConfig
 
 
 class Runner:
     """Minimal LLM Runner with adaption to Parrot."""
 
-    def __init__(self, model_name: str):
-        # Mgr.
-        self.backend_config = BackendConfig(
-            cache_blocks_num=500,  # TODO(chaofan): config this
-            attn_func="xformers_with_buffer",
-            seed=0,
-        )
+    def __init__(self, config: RunnerConfig):
+        # self.config = RunnerConfig(
+        #     num_kv_cache_blocks=500,  # TODO(chaofan): config this
+        #     attn_func="xformers_with_buffer",
+        #     random_seed=0,
+        # )
+        self.config = config
         self.context_manager: Dict[int, KVContext] = {}
-        self.kv_cache_manager = RecyclePool(self.backend_config.cache_blocks_num)
+        self.kv_cache_manager = RecyclePool(self.config.num_kv_cache_blocks)
 
         # Load Model
         self.device = torch.device("cuda")
         self.dtype = torch.float16
-        self.model_config = AutoConfig.from_pretrained(model_name)
+        self.hf_model_config = AutoConfig.from_pretrained(self.config.model_name)
         torch.set_default_dtype(self.dtype)
-        set_random_seed(self.backend_config.seed)
+        set_random_seed(self.config.random_seed)
 
         self.model = OPTForCausalLM(
-            self.model_config, self.backend_config
+            self.hf_model_config, self.config
         )  # Currently only support OPT
-        self.model.load_weights(model_name)
+        self.model.load_weights(self.config.model_name)
         self.model = self.model.cuda()
 
     def bind_job_context(self, job: BackendPrimitiveJob):
@@ -76,8 +75,8 @@ class Runner:
         # Prepare iteration state
         iteration_state = IterationState(
             jobs,
-            self.model_config,
-            self.backend_config,
+            self.hf_model_config,
+            self.config,
             self.dtype,
             self.device,
         )

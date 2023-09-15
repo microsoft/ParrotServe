@@ -1,5 +1,6 @@
 import asyncio
 from typing import Dict
+import json
 
 from .runner import Runner
 from .scheduler import Scheduler
@@ -7,6 +8,7 @@ from .backend_jobs import BackendPrimitiveJob
 
 from ..constants import ENGINE_LOOP_INTERVAL
 from ..utils import get_logger
+from .config import RunnerConfig, SchedulerConfig
 
 
 logger = get_logger("ExecutionEngine")
@@ -15,12 +17,15 @@ logger = get_logger("ExecutionEngine")
 class ExecutionEngine:
     """Backend Execution Engine for Parrot."""
 
-    def __init__(self, engine_name: str):
-        self.engine_name = engine_name
+    def __init__(self, engine_config_path: str):
+        with open(engine_config_path) as f:
+            engine_config = json.load(f)
 
-        # TODO(chaofan): config these
-        self.runner = Runner("facebook/opt-125m")
-        self.scheduler = Scheduler(max_batch_size=256, max_tokens_sum=8192)
+        self.engine_name = engine_config["engine_name"]
+        runner_config = RunnerConfig(**engine_config["runner"])
+        scheduler_config = SchedulerConfig(**engine_config["scheduler"])
+        self.runner = Runner(runner_config)
+        self.scheduler = Scheduler(scheduler_config)
 
     def add_job(self, job: BackendPrimitiveJob):
         logger.info(f"Adding job: {job}")
@@ -50,8 +55,8 @@ class ExecutionEngine:
         cached_tokens_size = (
             num_cached_tokens
             # TODO(chaofan): Currently this config must be OPTConfig.
-            * self.runner.model_config.hidden_size
-            * self.runner.model_config.num_hidden_layers
+            * self.runner.hf_model_config.hidden_size
+            * self.runner.hf_model_config.num_hidden_layers
             * 2
             / 1024
             / 1024  # MiB

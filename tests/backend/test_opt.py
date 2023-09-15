@@ -1,12 +1,23 @@
 from parrot.backend.runner import Runner
+from parrot.backend.config import RunnerConfig
 from parrot.backend.iter_state import Fill, Generation
 from parrot.protocol.sampling_params import SamplingParams
 import numpy as np
 from transformers import AutoTokenizer
 
 
+def _get_runner():
+    runner_config = RunnerConfig(
+        model_name="facebook/opt-125m",
+        num_kv_cache_blocks=1024,
+        attn_func="xformers_with_buffer",
+        random_seed=0,
+    )
+    return Runner(runner_config)
+
+
 def test_single_fill():
-    runner = Runner("facebook/opt-125m")
+    runner = _get_runner()
 
     job = Fill(
         session_id=0,
@@ -19,7 +30,7 @@ def test_single_fill():
 
 
 def test_batch_fills():
-    runner = Runner("facebook/opt-125m")
+    runner = _get_runner()
 
     jobs = [
         Fill(
@@ -46,7 +57,7 @@ def test_batch_fills():
 
 
 def test_fill_then_gen():
-    runner = Runner("facebook/opt-125m")
+    runner = _get_runner()
 
     runner.run_iter(
         [
@@ -71,7 +82,7 @@ def test_fill_then_gen():
 
 
 def test_generate_single_text():
-    runner = Runner("facebook/opt-125m")
+    runner = _get_runner()
     prompt_text = "Hello, my name is"
     tokenizer = AutoTokenizer.from_pretrained("facebook/opt-125m")
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
@@ -97,11 +108,11 @@ def test_generate_single_text():
                 )
             ]
         )
-    print(tokenizer.decode(runner.context_manager[0].token_ids))
+    print("Generated: ", tokenizer.decode(runner.context_manager[0].token_ids))
 
 
 def test_generate_batch_text():
-    runner = Runner("facebook/opt-125m")
+    runner = _get_runner()
     prompt_text = [
         "Hello, my name is",
         "Hello, my name is",
@@ -134,12 +145,15 @@ def test_generate_batch_text():
         runner.run_iter(gens)
 
     for i in range(len(prompt_tokens)):
-        print(tokenizer.decode(runner.context_manager[i].token_ids))
+        print(
+            f"Prompt {i} Generated: ",
+            tokenizer.decode(runner.context_manager[i].token_ids),
+        )
 
 
 if __name__ == "__main__":
-    # test_single_fill()
-    # test_batch_fills()
-    # test_fill_then_gen()
-    # test_generate_single_text()
+    test_single_fill()
+    test_batch_fills()
+    test_fill_then_gen()
+    test_generate_single_text()
     test_generate_batch_text()

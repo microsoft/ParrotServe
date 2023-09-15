@@ -3,7 +3,14 @@ from dataclasses import dataclass
 
 
 @dataclass
-class BackendConfig:
-    cache_blocks_num: int
+class RunnerConfig:
+    model_name: str
+    num_kv_cache_blocks: int
     attn_func: Literal["xformers_with_buffer", "flash_attention"]
-    seed: int
+    random_seed: int
+
+
+@dataclass
+class SchedulerConfig:
+    max_batch_size: int
+    max_tokens_sum: int

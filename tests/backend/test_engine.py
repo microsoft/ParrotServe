@@ -1,4 +1,5 @@
 import asyncio
+import parrot
 from parrot.backend.engine import ExecutionEngine
 from parrot.backend.backend_jobs import BackendPrimitiveJob, Fill, Generation
 from parrot.utils import run_coroutine_in_loop
@@ -7,7 +8,10 @@ from transformers import AutoTokenizer
 
 
 def test_engine_simple_serving():
-    engine = ExecutionEngine(engine_name="test")
+    # The config path is relative to the package path.
+    # We temporarily use this way to load the config.
+    package_path = parrot.__path__[0]
+    engine = ExecutionEngine(package_path + "/../configs/backend_server/opt_125m.json")
 
     async def execute_job(job: BackendPrimitiveJob):
         engine.add_job(job)
@@ -32,16 +36,16 @@ def test_engine_simple_serving():
             )
         )
 
-        for _ in range(40):
-            await execute_job(
-                Generation(
-                    session_id=0,
-                    context_id=0,
-                    sampling_params=SamplingParams(
-                        stop_token_ids=[tokenizer.eos_token_id]
-                    ),
-                )
+        await execute_job(
+            Generation(
+                session_id=0,
+                context_id=0,
+                sampling_params=SamplingParams(
+                    max_gen_length=40,
+                    stop_token_ids=[tokenizer.eos_token_id],
+                ),
             )
+        )
         print(tokenizer.decode(engine.runner.context_manager[0].token_ids))
 
     try:

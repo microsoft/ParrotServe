@@ -32,7 +32,7 @@ from .weight_utils import hf_model_weights_iterator
 from ..mem import KVCacheStorage
 from ..iter_state import IterationState
 from .sampler import Sampler
-from ..config import BackendConfig
+from ..config import RunnerConfig
 
 from ..kernels.discontinuous_move_tokens import discontinuous_move_tokens
 
@@ -63,7 +63,7 @@ class OPTAttention(nn.Module):
         self,
         embed_dim: int,
         num_heads: int,
-        backend_config: BackendConfig,
+        backend_config: RunnerConfig,
         bias: bool = True,
     ):
         super().__init__()
@@ -82,14 +82,14 @@ class OPTAttention(nn.Module):
         self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
 
         self.k_cache = KVCacheStorage(
-            backend_config.cache_blocks_num,
+            backend_config.num_kv_cache_blocks,
             num_heads,
             self.head_dim,
             self.qkv_proj.weight.data.dtype,
             "cuda",
         )
         self.v_cache = KVCacheStorage(
-            backend_config.cache_blocks_num,
+            backend_config.num_kv_cache_blocks,
             num_heads,
             self.head_dim,
             self.qkv_proj.weight.data.dtype,
@@ -166,7 +166,7 @@ class OPTAttention(nn.Module):
 
 
 class OPTDecoderLayer(nn.Module):
-    def __init__(self, opt_config: OPTConfig, backend_config: BackendConfig):
+    def __init__(self, opt_config: OPTConfig, backend_config: RunnerConfig):
         super().__init__()
         self.embed_dim = opt_config.hidden_size
         self.self_attn = OPTAttention(
@@ -228,7 +228,7 @@ class OPTDecoderLayer(nn.Module):
 
 
 class OPTDecoder(nn.Module):
-    def __init__(self, opt_config: OPTConfig, backend_config: BackendConfig):
+    def __init__(self, opt_config: OPTConfig, backend_config: RunnerConfig):
         super().__init__()
         self.padding_idx = opt_config.pad_token_id
         self.max_target_positions = opt_config.max_position_embeddings
@@ -299,7 +299,7 @@ class OPTDecoder(nn.Module):
 
 
 class OPTModel(nn.Module):
-    def __init__(self, opt_config: OPTConfig, backend_config: BackendConfig):
+    def __init__(self, opt_config: OPTConfig, backend_config: RunnerConfig):
         super().__init__()
         self.decoder = OPTDecoder(opt_config, backend_config)
 
@@ -313,7 +313,7 @@ class OPTModel(nn.Module):
 
 
 class OPTForCausalLM(nn.Module):
-    def __init__(self, opt_config: OPTConfig, backend_config: BackendConfig):
+    def __init__(self, opt_config: OPTConfig, backend_config: RunnerConfig):
         super().__init__()
         self.model = OPTModel(opt_config, backend_config)
         # Tie lm_head's weight

@@ -4,7 +4,7 @@ from transformers import OPTConfig
 from xformers import ops as xops
 
 from .mem import KVContext
-from .config import BackendConfig
+from .config import RunnerConfig
 from .backend_jobs import BackendPrimitiveJob, Fill, Generation
 from ..protocol.sampling_params import SamplingParams
 
@@ -27,7 +27,7 @@ class IterationState:
         self,
         jobs: List[BackendPrimitiveJob],
         model_config: OPTConfig,
-        attn_config: BackendConfig,
+        attn_config: RunnerConfig,
         dtype: torch.dtype,
         device: torch.device,
     ):
