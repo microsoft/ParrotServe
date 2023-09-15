@@ -43,7 +43,7 @@ def test_engine_simple_serving():
             )
         print(tokenizer.decode(engine.runner.context_manager[0].token_ids))
 
-    asyncio.run(main())
+    asyncio.run(main(), debug=True)
 
 
 if __name__ == "__main__":

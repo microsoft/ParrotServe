@@ -23,6 +23,7 @@ class ExecutionEngine:
     def add_job(self, job: BackendPrimitiveJob):
         logger.info(f"Adding job: {job}")
         self.scheduler.add_job(job)
+        self.runner.bind_job_context(job)
 
     def free_context(self, context_id: int) -> int:
         for job in self.scheduler.running_jobs:
@@ -66,11 +67,7 @@ class ExecutionEngine:
             if self.scheduler.empty:
                 continue
 
-            print("1")
-
             jobs = self.scheduler.schedule()
-
-            print("2")
 
             logger.info(f"Running {len(jobs)} jobs: {jobs}")
 

@@ -53,6 +53,7 @@ class Runner:
     def run_iter(self, jobs: List[BackendPrimitiveJob]):
         # Allocate new context blocks
         for job in jobs:
+            # NOTE(chaofan): if we use engine, this is not necessary.
             if job.context is None:
                 self.bind_job_context(job)
 

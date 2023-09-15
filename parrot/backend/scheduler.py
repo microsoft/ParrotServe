@@ -38,7 +38,6 @@ class Scheduler:
 
         while self.waiting_jobs:
             job = self.waiting_jobs[0]
-            print(job.context)
             job_tokens_num = job.context.get_context_len()
 
             if cur_tokens_sum + job_tokens_num > self.max_tokens_sum:
@@ -59,7 +58,7 @@ class Scheduler:
         """Finish jobs."""
 
         new_running: List[BackendPrimitiveJob] = []
-        for job in self.running:
+        for job in self.running_jobs:
             if not job.finished.is_set():
                 new_running.append(job)
         self.running_jobs = new_running
