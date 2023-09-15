@@ -16,7 +16,7 @@ class Sampler(nn.Module):
         # Get last tokens
         idx = 0
         indicies: List[int] = []
-        for n in iteration_state.fill_tokens_num:
+        for n in iteration_state.num_fill_tokens:
             idx += n
             indicies.append(idx - 1)
         for _ in range(iteration_state.num_generation_jobs):

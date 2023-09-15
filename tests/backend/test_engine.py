@@ -1,25 +1,24 @@
-from typing import List
 import asyncio
 from parrot.backend.engine import ExecutionEngine
 from parrot.backend.backend_jobs import BackendPrimitiveJob, Fill, Generation
-from parrot.utils import run_new_coro_in_current_loop
+from parrot.utils import run_coroutine_in_loop
 from parrot.protocol.sampling_params import SamplingParams
 from transformers import AutoTokenizer
 
 
 def test_engine_simple_serving():
-    engine = ExecutionEngine()
+    engine = ExecutionEngine(engine_name="test")
 
     async def execute_job(job: BackendPrimitiveJob):
         engine.add_job(job)
-        await job.finished.wait()
+        await job.finish_event.wait()
 
     prompt_text = "Hello, my name is"
     tokenizer = AutoTokenizer.from_pretrained("facebook/opt-125m")
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
     async def main():
-        run_new_coro_in_current_loop(engine.execute_loop())
+        run_coroutine_in_loop(engine.execute_loop())
 
         print("Start")
 
@@ -38,12 +37,17 @@ def test_engine_simple_serving():
                 Generation(
                     session_id=0,
                     context_id=0,
-                    sampling_params=SamplingParams(),
+                    sampling_params=SamplingParams(
+                        stop_token_ids=[tokenizer.eos_token_id]
+                    ),
                 )
             )
         print(tokenizer.decode(engine.runner.context_manager[0].token_ids))
 
-    asyncio.run(main(), debug=True)
+    try:
+        asyncio.run(main(), debug=True)
+    except BaseException as e:
+        print("Internal error happends:", e)
 
 
 if __name__ == "__main__":

@@ -28,7 +28,7 @@ def test_sampling_one_token():
     iter_state = IterationState(
         [], {}, model_config, attn_config, torch.float16, "cuda"
     )
-    iter_state.fill_tokens_num = [8]
+    iter_state.num_fill_tokens = [8]
     ids = sampler(hidden_states, iter_state)
 
     assert ids[0] == 14836

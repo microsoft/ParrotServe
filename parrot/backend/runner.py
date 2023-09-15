@@ -7,7 +7,7 @@ from .mem import KVContext
 from .iter_state import BackendPrimitiveJob, Fill, Generation, IterationState
 from ..utils import RecyclePool, set_random_seed
 from .config import BackendConfig
-from ..constants import PIPE_END_TOKEN_ID
+from ..constants import STREAMING_END_TOKEN_ID
 
 
 class Runner:
@@ -63,9 +63,13 @@ class Runner:
             if isinstance(job, Fill):
                 job.context.token_ids.extend(job.token_ids)
                 job.context.allocate(len(job.token_ids))
+                job.context.last_extended_by_fill = True
             elif isinstance(job, Generation):
                 job.context.allocate(1)
-                job.output_queue.put_nowait(job.context.token_ids[-1])
+                if job.context.last_extended_by_fill:
+                    # NOTE: See parrot/backend/mem.py: L31.
+                    job.put_token(job.context.get_last_token_id())
+                job.context.last_extended_by_fill = False
 
             job.context.tokens_kv_block_id.extend(allocated_blocks_id)
 
@@ -91,7 +95,7 @@ class Runner:
                     range(context_len - len(job.token_ids), context_len)
                 )
             elif isinstance(job, Generation):
-                input_ids.append(context.token_ids[-1])
+                input_ids.append(context.get_last_token_id())
                 input_positions.append(context_len - 1)
 
         input_ids = torch.tensor(
@@ -119,12 +123,8 @@ class Runner:
 
             # Mark finish flag
             if isinstance(job, Fill):
-                job.finished.set()
+                job.finish_event.set()
             elif isinstance(job, Generation):
-                job.output_queue.put_nowait(token_id)
-                if (
-                    job.context.get_context_len() >= job.sampling_params.max_length
-                    or token_id in job.sampling_params.stop_token_ids
-                ):
-                    job.output_queue.put_nowait(PIPE_END_TOKEN_ID)
-                    job.finished.set()
+                job.put_token(token_id)
+                if job.check_stop():
+                    job.finish_event.set()

@@ -1,7 +1,7 @@
 from typing import List
 from asyncio import Queue as AsyncQueue
 
-from ..constants import PIPE_END_TOKEN_ID
+from ..constants import STREAMING_END_TOKEN_ID
 
 
 class TokenPipe:
@@ -16,7 +16,7 @@ class TokenPipe:
 
         while True:
             token_id = await self.queue.get()
-            if token_id == PIPE_END_TOKEN_ID:
+            if token_id == STREAMING_END_TOKEN_ID:
                 break
 
             chunk.append(token_id)

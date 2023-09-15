@@ -11,7 +11,6 @@ from parrot.protocol import (
     free_context,
     SamplingParams,
 )
-from aiohttp import ClientSession
 import time
 import asyncio
 
@@ -28,9 +27,9 @@ def test_check_heartbeat():
     ed = time.perf_counter_ns()
     print("Heartbeat Time Used: ", (ed - st) / 1e9)
 
-    assert resp.model_ready == True
-    assert resp.cached_tokens == 0
-    assert resp.running_jobs == 0
+    assert resp.num_cached_tokens == 0
+    assert resp.cached_tokens_size == 0
+    assert resp.num_running_jobs == 0
 
 
 def test_prefix_init():
@@ -40,7 +39,7 @@ def test_prefix_init():
         token_ids=[1, 2, 3],
     )
 
-    assert resp.filled_tokens_num == 3
+    assert resp.num_filled_tokens == 3
 
 
 def test_fill():
@@ -56,7 +55,7 @@ def test_fill():
         ed = time.perf_counter_ns()
         print("Fill Time Used: ", (ed - st) / 1e9)
 
-        assert resp.filled_tokens_num == 3
+        assert resp.num_filled_tokens == 3
 
     asyncio.run(main())
 
@@ -87,10 +86,10 @@ def test_generate():
 def test_free_context():
     resp = free_context(
         http_addr=addr,
-        context_id=0,
+        context_id=233,
     )
 
-    assert resp.free_tokens_num == 0
+    assert resp.num_freed_tokens == 0
 
 
 if __name__ == "__main__":

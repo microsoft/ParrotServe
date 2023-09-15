@@ -9,8 +9,8 @@ from ..orchestration.engine import ExecutionEngine
 from ..program.function import Promise
 from ..protocol import fill, generate, SamplingParams
 from ..protocol import free_context
-from ..utils import RecyclePool, get_logger, run_new_coro_in_current_loop
-from ..constants import RECYCLE_POOL_SIZE, PIPE_END_TOKEN_ID
+from ..utils import RecyclePool, get_logger, run_coroutine_in_loop
+from ..constants import RECYCLE_POOL_SIZE, STREAMING_END_TOKEN_ID
 
 
 logger = get_logger("Session")
@@ -62,7 +62,7 @@ class Session:
             )
         else:
             logger.info(
-                f"Context: {self.context.context_id} freed. Freed tokens: {resp.free_tokens_num}"
+                f"Context: {self.context.context_id} freed. Freed tokens: {resp.num_freed_tokens}"
             )
 
     async def execute_coroutine(self):
@@ -87,15 +87,13 @@ class Session:
                     assert not job.output_holder.ready, "Output holder should be empty."
                     job.output_holder.token_ids = []
 
-                    run_new_coro_in_current_loop(
-                        detokenize_coroutine(job.output_holder)
-                    )
+                    run_coroutine_in_loop(detokenize_coroutine(job.output_holder))
 
                     # Start streaming
                     job.output_holder.streaming_event.set()
                     async for token_id in generator:
                         job.output_holder.send_token(token_id)
-                    job.output_holder.send_token(PIPE_END_TOKEN_ID)
+                    job.output_holder.send_token(STREAMING_END_TOKEN_ID)
 
                     job.output_holder.ready_event.set()
                 except BaseException as e:
@@ -118,8 +116,10 @@ class Session:
                             context_id=self.context.context_id,
                             # We don't fork new context. Hence parent_context_id=-1
                         )
+                        assert resp.num_filled_tokens == len(job.input_holder.token_ids)
                     else:
                         # Streaming input. Pipeling filling.
+                        num_filled_tokens = 0
                         async for chunk in job.input_pipe.generator():
                             resp = await fill(
                                 self.engine.http_address,
@@ -128,6 +128,8 @@ class Session:
                                 context_id=self.context.context_id,
                                 # We don't fork new context. Hence parent_context_id=-1
                             )
+                            num_filled_tokens += resp.num_filled_tokens
+                        assert num_filled_tokens == len(job.input_holder.token_ids)
                 except BaseException as e:
                     # TODO(chaofan): Better error handling. Current solution (abort session) will
                     # block other sessions.

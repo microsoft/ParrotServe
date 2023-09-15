@@ -1,5 +1,6 @@
 import logging
 import asyncio
+from typing import Optional
 
 
 def get_logger(log_name: str, log_level: int = logging.DEBUG):
@@ -50,9 +51,12 @@ class RecyclePool:
         self.recent_free = index
 
 
-def run_new_coro_in_current_loop(coro):
-    loop = asyncio.get_running_loop()
+def run_coroutine_in_loop(coro, loop: Optional[asyncio.AbstractEventLoop] = None):
+    # Do we need use run_coroutine_threadsafe?
+    if loop is None:
+        loop = asyncio.get_running_loop()
     asyncio.run_coroutine_threadsafe(coro, loop)
+    # asyncio.create_task(coro)
 
 
 def set_random_seed(seed: int):

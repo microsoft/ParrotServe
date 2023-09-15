@@ -63,7 +63,7 @@ class Controller:
                     prefix_context.context_id,
                     prefix_tokens,
                 )
-                assert resp.filled_tokens_num == len(
+                assert resp.num_filled_tokens == len(
                     prefix_tokens
                 ), "Prefix init failed: not all tokens are filled."
 
@@ -92,7 +92,7 @@ class Controller:
             return
         assert resp.model_ready, "Engine is not ready."
 
-        engine.cached_tokens = resp.cached_tokens
+        engine.cached_tokens = resp.num_cached_tokens
         engine.running_jobs = resp.running_jobs
         self.engines_table[name] = engine
 
@@ -146,7 +146,7 @@ class Controller:
                     disconnect_engines.append(engine.name)
                 else:
                     # Update engine data
-                    engine.cached_tokens = resp.cached_tokens
+                    engine.cached_tokens = resp.num_cached_tokens
                     engine.running_jobs = resp.running_jobs
 
             for engine_name in disconnect_engines:

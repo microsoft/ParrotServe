@@ -23,28 +23,28 @@ app = FastAPI()
 # Status Data
 
 context = {}  # Context_id -> context_length
-cached_tokens = 0
-running_jobs = 0
+num_cached_tokens = 0
+num_running_jobs = 0
 
 
 @app.post("/heartbeat")
 async def heartbeat(request: Request):
     return {
-        "model_ready": True,
-        "cached_tokens": cached_tokens,
-        "running_jobs": running_jobs,
+        "num_cached_tokens": num_cached_tokens,
+        "cached_tokens_size": num_cached_tokens * 4,
+        "num_running_jobs": num_running_jobs,
     }
 
 
 @app.post("/fill")
 async def fill(request: Request):
-    global running_jobs
-    global cached_tokens
+    global num_running_jobs
+    global num_cached_tokens
 
-    running_jobs += 1
+    num_running_jobs += 1
     payload = await request.json()
     tokens_num = len(payload["token_ids"])
-    cached_tokens += tokens_num
+    num_cached_tokens += tokens_num
 
     if payload["context_id"] not in context:
         context[payload["context_id"]] = 0
@@ -54,26 +54,26 @@ async def fill(request: Request):
     # Simulate the time of filling tokens
     time.sleep(TESTING_FILL_PERTOKEN_TIME * tokens_num)
 
-    running_jobs -= 1
+    num_running_jobs -= 1
 
     return {
-        "filled_tokens_num": tokens_num,
+        "num_filled_tokens": tokens_num,
     }
 
 
 @app.post("/generate")
 async def generate(request: Request):
-    global running_jobs
-    global cached_tokens
+    global num_running_jobs
+    global num_cached_tokens
 
-    running_jobs += 1
+    num_running_jobs += 1
     payload = await request.json()
 
     gen_len = int(np.random.exponential(32) + 3)
     # gen_len = 512
     gen_data = np.random.randint(10, 10000, size=(gen_len,)).tolist()
 
-    cached_tokens += gen_len
+    num_cached_tokens += gen_len
     assert payload["context_id"] in context
     context[payload["context_id"]] += gen_len
 
@@ -83,21 +83,26 @@ async def generate(request: Request):
             time.sleep(TESTING_DECODE_PERTOKEN_TIME)
             yield data.to_bytes(4, "big")
 
-    running_jobs -= 1
+    num_running_jobs -= 1
 
     return StreamingResponse(generator())
 
 
 @app.post("/free_context")
 async def free_context(request: Request):
-    global cached_tokens
+    global num_cached_tokens
 
     payload = await request.json()
-    assert payload["context_id"] in context
-    cached_tokens -= context[payload["context_id"]]
+    # assert payload["context_id"] in context
+
+    num_freed_tokens = 0
+
+    if payload["context_id"] in context:
+        num_cached_tokens -= context[payload["context_id"]]
+        num_freed_tokens = context[payload["context_id"]]
 
     return {
-        "free_tokens_num": context[payload["context_id"]],
+        "num_freed_tokens": num_freed_tokens,
     }
 
 

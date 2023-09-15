@@ -15,7 +15,9 @@ logger = get_logger("ExecutionEngine")
 class ExecutionEngine:
     """Backend Execution Engine for Parrot."""
 
-    def __init__(self):
+    def __init__(self, engine_name: str):
+        self.engine_name = engine_name
+
         # TODO(chaofan): config these
         self.runner = Runner("facebook/opt-125m")
         self.scheduler = Scheduler(max_batch_size=256, max_tokens_sum=8192)
@@ -32,35 +34,38 @@ class ExecutionEngine:
                 raise RuntimeError("Context is still running.")
 
         context = self.runner.context_manager.pop(context_id)
-        free_tokens_num = len(context.token_ids)
+        num_freed_tokens = len(context.token_ids)
         del context
-        return free_tokens_num
+        return num_freed_tokens
 
     def stats(self) -> Dict[str, int]:
-        """Return: cached_tokens_num, cached_tokens_size. num_running_jobs."""
+        """Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
 
-        cached_tokens_num = 0
+        num_cached_tokens = 0
         for context in self.runner.context_manager.values():
-            cached_tokens_num += len(
+            num_cached_tokens += len(
                 len(context.tokens_kv_block_id)
             )  # We don't need to count the parent context.
 
         cached_tokens_size = (
-            cached_tokens_num
+            num_cached_tokens
+            # TODO(chaofan): Currently this config must be OPTConfig.
             * self.runner.model_config.hidden_size
-            * self.runner.num_layers
+            * self.runner.model_config.num_hidden_layers
             * 2
             / 1024
             / 1024  # MiB
         )
         num_running_jobs = len(self.scheduler.running_jobs)
         return {
-            "cached_tokens_num": cached_tokens_num,
+            "num_cached_tokens": num_cached_tokens,
             "cached_tokens_size": cached_tokens_size,
             "num_running_jobs": num_running_jobs,
         }
 
     async def execute_loop(self):
+        logger.info(f"Execution loop of engine: {self.engine_name} started.")
+
         while True:
             await asyncio.sleep(ENGINE_LOOP_INTERVAL)
 
@@ -69,7 +74,7 @@ class ExecutionEngine:
 
             jobs = self.scheduler.schedule()
 
-            logger.info(f"Running {len(jobs)} jobs: {jobs}")
-
+            logger.debug(f"Running {len(jobs)} jobs: {jobs}")
             self.runner.run_iter(jobs)
+            logger.debug(f"Finished running {len(jobs)} jobs: {jobs}")
             self.scheduler.finish()

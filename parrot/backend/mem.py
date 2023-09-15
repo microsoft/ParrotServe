@@ -17,11 +17,20 @@ class KVContext:
     ):
         self.context_id = context_id
         self.sub_contexts: List["KVContext"] = []
+
+        # Link with parent context
         self.parent_context = parent_context
         parent_context.sub_contexts.append(self) if parent_context else None
         self.tokens_kv_block_id: List[int] = []
         self.token_ids: List[int] = []
+
+        # KV cache manager i.e. a pool allocator.
         self.kv_cache_manager = kv_cache_manager
+
+        # Flag to indicate whether the context is extended by a Fill primitive.
+        # If the context is extended by a Fill primitive recently, the last token
+        # will be added the next Generation primitive.
+        self.last_extended_by_fill = False
 
     def __del__(self):
         self.parent_context.sub_contexts.remove(self) if self.parent_context else None
@@ -41,10 +50,16 @@ class KVContext:
 
     def get_context_blocks(self) -> List[int]:
         """Return the context blocks."""
+
         parent_blocks = (
             self.parent_context.get_context_blocks() if self.parent_context else []
         )
         return parent_blocks + self.tokens_kv_block_id
+
+    def get_last_token_id(self) -> int:
+        """Return the last token id."""
+
+        return self.token_ids[-1]
 
 
 class KVCacheStorage:

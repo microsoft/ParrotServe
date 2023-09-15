@@ -9,17 +9,17 @@ class BaseResponse(BaseModel):
 
 
 class HeartbeatResponse(BaseResponse):
-    model_ready: bool
-    cached_tokens: int
-    running_jobs: int
+    num_running_jobs: int
+    num_cached_tokens: int
+    cached_tokens_size: int
 
 
 class FillResponse(BaseResponse):
-    filled_tokens_num: int
+    num_filled_tokens: int
 
 
 class FreeContextResponse(BaseResponse):
-    free_tokens_num: int
+    num_freed_tokens: int
 
 
 def make_response(resp_cls: Type[BaseResponse], resp: Response):

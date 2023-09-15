@@ -9,7 +9,7 @@ class SamplingParams:
     temperature: float = 1.0
     top_p: float = 1.0
     top_k: int = -1
-    max_length: int = 128
+    max_gen_length: int = 128
     # No support for now
     repetition_penalty: float = 0.0
     length_penalty: float = 0.0

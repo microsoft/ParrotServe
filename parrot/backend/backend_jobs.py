@@ -3,6 +3,7 @@ from asyncio import Event, Queue as AsyncQueue
 
 from .mem import KVContext
 from ..protocol.sampling_params import SamplingParams
+from ..constants import STREAMING_END_TOKEN_ID
 
 
 class BackendPrimitiveJob:
@@ -12,7 +13,7 @@ class BackendPrimitiveJob:
         self.session_id = session_id
         self.context_id = context_id
         self.context: Optional[KVContext] = None
-        self.finished = Event()
+        self.finish_event = Event()
 
 
 class Fill(BackendPrimitiveJob):
@@ -41,10 +42,28 @@ class Generation(BackendPrimitiveJob):
         super().__init__(session_id, context_id)
         self.sampling_params = sampling_params
         self.output_queue: AsyncQueue[int] = AsyncQueue()
+        self.gen_length = 0
 
     def __repr__(self) -> str:
         return f"Generation(session_id={self.session_id}, context_id={self.context_id})"
 
+    def put_token(self, token_id: int) -> None:
+        self.output_queue.put_nowait(token_id)
+        self.gen_length += 1
+
+    def check_stop(self) -> bool:
+        token_id = self.context.get_last_token_id()
+        return (
+            token_id in self.sampling_params.stop_token_ids
+            or self.gen_length >= self.sampling_params.max_gen_length
+            # Or other stop conditions
+        )
+
     async def generator(self):
+        """Async generator for streaming."""
+
         while True:
-            yield await self.output_queue.get()
+            token_id = await self.output_queue.get()
+            if self.check_stop():
+                break
+            yield token_id.to_bytes(4, "big")  # streaming

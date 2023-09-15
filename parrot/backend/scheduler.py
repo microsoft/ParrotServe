@@ -59,6 +59,6 @@ class Scheduler:
 
         new_running: List[BackendPrimitiveJob] = []
         for job in self.running_jobs:
-            if not job.finished.is_set():
+            if not job.finish_event.is_set():
                 new_running.append(job)
         self.running_jobs = new_running

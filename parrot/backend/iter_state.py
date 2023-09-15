@@ -32,7 +32,7 @@ class IterationState:
         device: torch.device,
     ):
         # Metadata
-        self.fill_tokens_num: List[int] = []
+        self.num_fill_tokens: List[int] = []
         self.generation_sampling_params: List[SamplingParams] = []
 
         # Tensors
@@ -46,7 +46,7 @@ class IterationState:
         for job in jobs:
             if isinstance(job, Fill):
                 tokens_num = len(job.token_ids)
-                self.fill_tokens_num.append(tokens_num)
+                self.num_fill_tokens.append(tokens_num)
             elif isinstance(job, Generation):
                 tokens_num = 1
                 self.generation_sampling_params.append(job.sampling_params)
@@ -86,7 +86,7 @@ class IterationState:
 
     @property
     def num_fill_jobs(self) -> int:
-        return len(self.fill_tokens_num)
+        return len(self.num_fill_tokens)
 
     @property
     def num_generation_jobs(self) -> int:
