@@ -44,3 +44,7 @@ class Generation(BackendPrimitiveJob):
 
     def __repr__(self) -> str:
         return f"Generation(session_id={self.session_id}, context_id={self.context_id})"
+
+    async def generator(self):
+        while True:
+            yield await self.output_queue.get()

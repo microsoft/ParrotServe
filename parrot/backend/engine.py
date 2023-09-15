@@ -32,9 +32,9 @@ class ExecutionEngine:
                 raise RuntimeError("Context is still running.")
 
         context = self.runner.context_manager.pop(context_id)
-        free_token_nums = len(context.token_ids)
+        free_tokens_num = len(context.token_ids)
         del context
-        return free_token_nums
+        return free_tokens_num
 
     def stats(self) -> Dict[str, int]:
         """Return: cached_tokens_num, cached_tokens_size. num_running_jobs."""
