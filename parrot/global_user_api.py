@@ -31,4 +31,7 @@ def register_engine(*args, **kwargs):
 
 def parrot_run_aysnc(coroutine):
     start_controller()
-    asyncio.run(coroutine)
+    # asyncio.run(coroutine)
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(coroutine)
+    loop.close()

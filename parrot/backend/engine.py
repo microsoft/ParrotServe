@@ -49,12 +49,13 @@ class ExecutionEngine:
         num_cached_tokens = 0
         for context in self.runner.context_manager.values():
             num_cached_tokens += len(
-                len(context.tokens_kv_block_id)
+                context.tokens_kv_block_id
             )  # We don't need to count the parent context.
 
         cached_tokens_size = (
             num_cached_tokens
             # TODO(chaofan): Currently this config must be OPTConfig.
+            # Support other configs in the future.
             * self.runner.hf_model_config.hidden_size
             * self.runner.hf_model_config.num_hidden_layers
             * 2

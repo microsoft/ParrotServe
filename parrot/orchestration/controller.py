@@ -90,10 +90,9 @@ class Controller:
         except:
             logger.error(f"Register engine {engine.name} failed.")
             return
-        assert resp.model_ready, "Engine is not ready."
 
-        engine.cached_tokens = resp.num_cached_tokens
-        engine.running_jobs = resp.running_jobs
+        engine.num_cached_tokens = resp.num_cached_tokens
+        engine.num_running_jobs = resp.num_running_jobs
         self.engines_table[name] = engine
 
         logger.info(
@@ -146,8 +145,13 @@ class Controller:
                     disconnect_engines.append(engine.name)
                 else:
                     # Update engine data
-                    engine.cached_tokens = resp.num_cached_tokens
-                    engine.running_jobs = resp.running_jobs
+                    engine.num_cached_tokens = resp.num_cached_tokens
+                    engine.num_running_jobs = resp.num_running_jobs
+                    logger.info(
+                        f"Engine {engine.name} is alive. "
+                        "{resp.num_cached_tokens} Tokens ({resp.cached_tokens_size} MiB), "
+                        "running {resp.num_running_jobs} jobs."
+                    )
 
             for engine_name in disconnect_engines:
                 self.engines_table.pop(engine_name)

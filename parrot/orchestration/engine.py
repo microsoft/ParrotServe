@@ -9,8 +9,9 @@ class ExecutionEngine:
         self.tokenizer = tokenizer
 
         # ---------- Monitor Data ----------
-        self.cached_tokens = 0
-        self.running_jobs = 0
+        self.num_cached_tokens = 0
+        self.cached_tokens_size = 0
+        self.num_running_jobs = 0
 
     @property
     def http_address(self) -> str:

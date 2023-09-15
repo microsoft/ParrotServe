@@ -11,7 +11,7 @@ from parrot import env, P
 env.register_tokenizer("facebook/opt-13b")
 # Then, we need to register the engine we want to use.
 env.register_engine(
-    "local_engine_0",
+    "opt_13b_local",
     host="localhost",
     port=8888,
     tokenizer="facebook/opt-13b",
@@ -42,4 +42,23 @@ def tell_me_a_joke(
 async def main():
     # First we need some placeholders.
     topic = P.placeholder()
-    keyword = P.placeholder()
+    joke = P.placeholder()
+    explanation = P.placeholder()
+
+    topic.assign("parrots")
+
+    # Then we can call the function.
+    tell_me_a_joke(
+        topic=topic,
+        joke=joke,
+        explanation=explanation,
+    )
+
+    print(f"Request: Tell me a joke about {await topic.get()}.")
+    joke_text = await joke.get()
+    print(f"The joke: {joke_text}")
+    explanation_text = await explanation.get()
+    print(f"The explanation: {explanation_text}")
+
+
+env.parrot_run_aysnc(main())
