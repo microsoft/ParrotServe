@@ -4,7 +4,8 @@ query: (token_nums, head_num, head_dim)
 key: (token_nums, head_num, head_dim)
 value: (token_nums, head_num, head_dim)
 
-Reference: https://github.com/ModelTC/lightllm/blob/main/lightllm/common/basemodel/triton_kernel/destindex_copy_kv.py
+References: 
+https://github.com/ModelTC/lightllm/blob/main/lightllm/common/basemodel/triton_kernel/destindex_copy_kv.py
 """
 
 import torch
@@ -28,14 +29,14 @@ def discontinuous_move_tokens_kernel(
     stride_o_h,  # Stride of dest_storage along the num_heads dimension
     stride_o_d,  # Stride of dest_storage along the d_model dimension
     num_heads,  # Number of attention heads
-    BLOCK_HEAD: tl.constexpr,
-    BLOCK_DMODEL: tl.constexpr,
+    BLOCK_H: tl.constexpr,
+    BLOCK_D: tl.constexpr,
 ):
     """Move tokens discontinuously from the input storage to the output storage."""
 
     token_index = tl.program_id(0)
-    offs_h = tl.arange(0, BLOCK_HEAD)
-    offs_d = tl.arange(0, BLOCK_DMODEL)
+    offs_h = tl.arange(0, BLOCK_H)
+    offs_d = tl.arange(0, BLOCK_D)
 
     src_indices = tl.load(src_indices + token_index)  # Load src index
     dest_indices = tl.load(dest_indices + token_index)  # Load dest index
@@ -69,7 +70,7 @@ def discontinuous_move_tokens(src_storage, dest_storage, src_indices, dest_indic
     num_tokens = src_indices.shape[0]
     num_heads, d_model = src_storage.shape[1:]
 
-    BLOCK_HEAD = triton.next_power_of_2(num_heads)
+    BLOCK_H = triton.next_power_of_2(num_heads)
     grid = (num_tokens,)
     num_warps = 1
 
@@ -85,8 +86,8 @@ def discontinuous_move_tokens(src_storage, dest_storage, src_indices, dest_indic
         dest_storage.stride(1),
         dest_storage.stride(2),
         num_heads,
-        BLOCK_HEAD=BLOCK_HEAD,
-        BLOCK_DMODEL=d_model,
+        BLOCK_H=BLOCK_H,
+        BLOCK_D=d_model,
         num_warps=num_warps,
         num_stages=1,
     )
@@ -98,9 +99,9 @@ def test_discontinuous_move_tokens():
     num_heads = 96
     d_model = 128
 
-    kv_cache_tokens_num = 131072 * 10  # 30 GB
+    kv_cache_num_tokens = 131072 * 10  # 30 GB
     src_storage = torch.ones(
-        [kv_cache_tokens_num, num_heads, d_model], dtype=torch.float16, device="cuda"
+        [kv_cache_num_tokens, num_heads, d_model], dtype=torch.float16, device="cuda"
     )
     batch_tokens = 131072  # tokens in one iteration
     dest_storage = torch.zeros(
@@ -109,7 +110,7 @@ def test_discontinuous_move_tokens():
 
     src_indices = torch.randint(
         0,
-        kv_cache_tokens_num - 1,
+        kv_cache_num_tokens - 1,
         [batch_tokens],
         dtype=torch.int64,
         device="cuda",
