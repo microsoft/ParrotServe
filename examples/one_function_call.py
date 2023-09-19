@@ -25,15 +25,23 @@ env.register_engine(
 
 
 @P.function()
-def tell_me_a_joke(
-    topic: P.Input,
-    keyword: P.Input,
-    joke: P.Output,
-    explanation: P.Output,
+def write_recommendation_latter(
+    name: P.Input,
+    major: P.Input,
+    grades: P.Input,
+    specialty: P.Input,
+    letter: P.Output,
 ):
-    """Tell me a joke about {{topic}}. The following is the joke: {{joke}}. And giving a
-    short explanation to show that why it is funny. The following is the explanation
-    for the joke above: {{explanation}}."""
+    """You are a professor in the university. Given the basic information about a student including his name, major, grades and specialty, please write a recommendation for his PhD application.
+
+    Here are the information of the student:
+    Name: {{name}}
+    Major: {{major}}
+    Grades: {{grades}}/4.0
+    Specialty: {{specialty}}
+
+    The following is the letter you should write: {{letter}}
+    """
 
 
 # Now we can call the function we just defined.
@@ -41,24 +49,32 @@ def tell_me_a_joke(
 
 async def main():
     # First we need some placeholders.
-    topic = P.placeholder()
-    joke = P.placeholder()
-    explanation = P.placeholder()
-
-    topic.assign("parrots")
+    name = P.placeholder()
+    major = P.placeholder()
+    grades = P.placeholder()
+    specialty = P.placeholder()
+    letter = P.placeholder()
 
     # Then we can call the function.
-    tell_me_a_joke(
-        topic=topic,
-        joke=joke,
-        explanation=explanation,
+    write_recommendation_latter(
+        name=name,
+        major=major,
+        grades=grades,
+        specialty=specialty,
+        letter=letter,
     )
 
-    print(f"Request: Tell me a joke about {await topic.get()}.")
-    joke_text = await joke.get()
-    print(f"The joke: {joke_text}")
-    explanation_text = await explanation.get()
-    print(f"The explanation: {explanation_text}")
+    # Now we can fill in the placeholders.
+    name.assign("John")
+    major.assign("Computer Science")
+    grades.assign("3.8")
+    specialty.assign(
+        "Basketball. Good at playing basketball. Used to be team leader of the school basketball team."
+    )
+
+    letter_str = await letter.get()
+    print("\n\n ---------- RECOMMEND LETTER ---------- ")
+    print(letter_str)
 
 
 env.parrot_run_aysnc(main())

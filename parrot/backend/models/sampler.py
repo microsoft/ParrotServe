@@ -9,7 +9,7 @@ from ..iter_state import IterationState
 class Sampler(nn.Module):
     def __init__(self, config: OPTConfig, embd_weight: torch.Tensor):
         super().__init__()
-        self.embd_weight = embd_weight
+        self.embd_weight = embd_weight  # It's a reference
         self.vocab_size = config.vocab_size
 
     def forward(self, hidden_states: torch.Tensor, iteration_state: IterationState):

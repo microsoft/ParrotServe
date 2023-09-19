@@ -39,9 +39,9 @@ class Scheduler:
 
         while self.waiting_jobs:
             job = self.waiting_jobs[0]
-            job_tokens_num = job.context.get_context_len()
+            job_num_tokens = job.context.get_context_len()
 
-            if cur_tokens_sum + job_tokens_num > self.max_tokens_sum:
+            if cur_tokens_sum + job_num_tokens > self.max_tokens_sum:
                 break
 
             if cur_num_jobs + 1 > self.max_batch_size:
@@ -49,7 +49,7 @@ class Scheduler:
 
             self.running_jobs.append(job)
             self.waiting_jobs.pop(0)
-            cur_tokens_sum += job_tokens_num
+            cur_tokens_sum += job_num_tokens
             cur_num_jobs += 1
 
         # NOTE(chaofan): Use copy() to avoid list modification.

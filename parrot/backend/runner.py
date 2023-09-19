@@ -2,8 +2,8 @@ from typing import List, Dict
 from transformers import AutoConfig
 import torch
 
-from .models.opt import OPTForCausalLM
-from .mem import KVContext
+from .model_loader import load_model
+from .mem import KVContext, init_model_cache_storage
 from .iter_state import BackendPrimitiveJob, Fill, Generation, IterationState
 from ..utils import RecyclePool, set_random_seed
 from .config import RunnerConfig
@@ -18,22 +18,21 @@ class Runner:
         #     attn_func="xformers_with_buffer",
         #     random_seed=0,
         # )
-        self.config = config
+
+        self.runner_config = config
         self.context_manager: Dict[int, KVContext] = {}
-        self.kv_cache_manager = RecyclePool(self.config.num_kv_cache_blocks)
+        self.kv_cache_manager = RecyclePool(self.runner_config.num_kv_cache_blocks)
 
         # Load Model
-        self.device = torch.device("cuda")
-        self.dtype = torch.float16
-        self.hf_model_config = AutoConfig.from_pretrained(self.config.model_name)
-        torch.set_default_dtype(self.dtype)
-        set_random_seed(self.config.random_seed)
+        self.device = torch.device("cuda")  # Should this be configurable?
+        self.hf_model_config = AutoConfig.from_pretrained(self.runner_config.model_name)
+        self.model = load_model(self.hf_model_config, self.runner_config)
 
-        self.model = OPTForCausalLM(
-            self.hf_model_config, self.config
-        )  # Currently only support OPT
-        self.model.load_weights(self.config.model_name)
-        self.model = self.model.cuda()
+        # Init model cache storage
+        init_model_cache_storage(self.hf_model_config, self.runner_config)
+
+        # Set random seed
+        set_random_seed(self.runner_config.random_seed)
 
     def bind_job_context(self, job: BackendPrimitiveJob):
         if job.context_id not in self.context_manager:
@@ -76,9 +75,7 @@ class Runner:
         iteration_state = IterationState(
             jobs,
             self.hf_model_config,
-            self.config,
-            self.dtype,
-            self.device,
+            self.runner_config,
         )
 
         # Convert inputs

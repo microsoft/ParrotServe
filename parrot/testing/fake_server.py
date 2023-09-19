@@ -43,21 +43,21 @@ async def fill(request: Request):
 
     num_running_jobs += 1
     payload = await request.json()
-    tokens_num = len(payload["token_ids"])
-    num_cached_tokens += tokens_num
+    num_tokens = len(payload["token_ids"])
+    num_cached_tokens += num_tokens
 
     if payload["context_id"] not in context:
         context[payload["context_id"]] = 0
-    context[payload["context_id"]] += tokens_num
+    context[payload["context_id"]] += num_tokens
 
     # Suppose the server will always fill all tokens
     # Simulate the time of filling tokens
-    time.sleep(TESTING_FILL_PERTOKEN_TIME * tokens_num)
+    time.sleep(TESTING_FILL_PERTOKEN_TIME * num_tokens)
 
     num_running_jobs -= 1
 
     return {
-        "num_filled_tokens": tokens_num,
+        "num_filled_tokens": num_tokens,
     }
 
 

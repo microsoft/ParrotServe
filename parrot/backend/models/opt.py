@@ -1,8 +1,10 @@
 # coding=utf-8
 #
-# Adapted from
+# Adapted from Huggingface transformers library:
+# https://github.com/huggingface/transformers/blob/v4.33-release/src/transformers/models/opt/modeling_opt.py
+# Other References:
 # https://github.com/vllm-project/vllm/blob/main/vllm/model_executor/models/opt.py
-# Copyright 2023 The vLLM team.
+#
 # Copyright 2022 The Fairseq Authors and The HuggingFace Inc. team. All rights
 # reserved.
 #
@@ -18,7 +20,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" PyTorch inference-only OPT model. Input is flattened."""
+"""PyTorch inference-only OPT model. Input is flattened."""
 
 from typing import Optional
 
@@ -26,15 +28,11 @@ import torch
 from torch import nn
 from transformers import OPTConfig
 
-from xformers import ops as xops
-
 from .weight_utils import hf_model_weights_iterator
-from ..mem import KVCacheStorage
 from ..iter_state import IterationState
 from .sampler import Sampler
+from .attn_func import xFormersWithBuffer
 from ..config import RunnerConfig
-
-from ..kernels.discontinuous_move_tokens import discontinuous_move_tokens
 
 
 ACT_FUNC = {
@@ -63,13 +61,15 @@ class OPTAttention(nn.Module):
         self,
         embed_dim: int,
         num_heads: int,
-        backend_config: RunnerConfig,
+        layer_idx: int,
+        attn_func_name: str,
         bias: bool = True,
     ):
         super().__init__()
         self.embed_dim = embed_dim
         self.num_heads = num_heads
         self.head_dim = embed_dim // num_heads
+        self.layer_idx = layer_idx
 
         if (self.head_dim * num_heads) != self.embed_dim:
             raise ValueError(
@@ -80,20 +80,11 @@ class OPTAttention(nn.Module):
 
         self.qkv_proj = nn.Linear(embed_dim, 3 * embed_dim, bias=bias)
         self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
-
-        self.k_cache = KVCacheStorage(
-            backend_config.num_kv_cache_blocks,
-            num_heads,
-            self.head_dim,
-            self.qkv_proj.weight.data.dtype,
-            "cuda",
-        )
-        self.v_cache = KVCacheStorage(
-            backend_config.num_kv_cache_blocks,
-            num_heads,
-            self.head_dim,
-            self.qkv_proj.weight.data.dtype,
-            "cuda",
+        self.attn_func = xFormersWithBuffer(
+            layer_idx=layer_idx,
+            scaling=self.scaling,
+            head_dim=self.head_dim,
+            num_heads=num_heads,
         )
 
     def forward(
@@ -103,76 +94,30 @@ class OPTAttention(nn.Module):
     ) -> torch.Tensor:
         # Shape of hidden_states: [num_tokens, hidden_dims]
 
-        # get query, key, value
         qkv_states = self.qkv_proj(hidden_states)
         query_states, key_states, value_states = torch.chunk(qkv_states, 3, dim=-1)
         query_states = query_states.view(-1, self.num_heads, self.head_dim)
         key_states = key_states.view(-1, self.num_heads, self.head_dim)
         value_states = value_states.view(-1, self.num_heads, self.head_dim)
-
-        # cache new k/v
-        assert key_states.shape[0] == value_states.shape[0]
-        src_indices = torch.arange(
-            key_states.shape[0], dtype=torch.int64, device=key_states.device
+        attn_output = self.attn_func(
+            query_states, key_states, value_states, iteration_state
         )
-        discontinuous_move_tokens(
-            key_states,
-            self.k_cache.storage,
-            src_indices=src_indices,
-            dest_indices=iteration_state.allocated_index_tensor,
-        )
-        discontinuous_move_tokens(
-            value_states,
-            self.v_cache.storage,
-            src_indices=src_indices,
-            dest_indices=iteration_state.allocated_index_tensor,
-        )
-
-        # fetch cached k/v into buffer
-        dest_indices = torch.arange(
-            iteration_state.k_buffer.shape[0],
-            dtype=torch.int64,
-            device=key_states.device,
-        )
-        discontinuous_move_tokens(
-            self.k_cache.storage,
-            iteration_state.k_buffer,
-            src_indices=iteration_state.context_index_tensor,
-            dest_indices=dest_indices,
-        )
-        discontinuous_move_tokens(
-            self.v_cache.storage,
-            iteration_state.v_buffer,
-            src_indices=iteration_state.context_index_tensor,
-            dest_indices=dest_indices,
-        )
-
-        # torch.testing.assert_close(iteration_state.k_buffer[-1], key_states[-1])
-        # NOTE(chaofan): Unsqueeze to make it compatible with xformers
-        attn_output = xops.memory_efficient_attention_forward(
-            query_states.unsqueeze(0),
-            iteration_state.k_buffer.unsqueeze(0),
-            iteration_state.v_buffer.unsqueeze(0),
-            attn_bias=iteration_state.x_attn_bias,
-            p=0.0,
-            scale=self.scaling,
-            op=xops.fmha.cutlass.FwOp(),
-        )
-
-        attn_output = attn_output.view(-1, self.num_heads * self.head_dim)
         attn_output = self.out_proj(attn_output)
 
         return attn_output
 
 
 class OPTDecoderLayer(nn.Module):
-    def __init__(self, opt_config: OPTConfig, backend_config: RunnerConfig):
+    def __init__(
+        self, opt_config: OPTConfig, runner_config: RunnerConfig, layer_idx: int
+    ):
         super().__init__()
         self.embed_dim = opt_config.hidden_size
         self.self_attn = OPTAttention(
             embed_dim=self.embed_dim,
             num_heads=opt_config.num_attention_heads,
-            backend_config=backend_config,
+            layer_idx=layer_idx,
+            attn_func_name=runner_config.attn_func,
             bias=opt_config.enable_bias,
         )
         self.do_layer_norm_before = opt_config.do_layer_norm_before
@@ -228,7 +173,7 @@ class OPTDecoderLayer(nn.Module):
 
 
 class OPTDecoder(nn.Module):
-    def __init__(self, opt_config: OPTConfig, backend_config: RunnerConfig):
+    def __init__(self, opt_config: OPTConfig, runner_config: RunnerConfig):
         super().__init__()
         self.padding_idx = opt_config.pad_token_id
         self.max_target_positions = opt_config.max_position_embeddings
@@ -271,8 +216,8 @@ class OPTDecoder(nn.Module):
 
         self.layers = nn.ModuleList(
             [
-                OPTDecoderLayer(opt_config, backend_config)
-                for _ in range(opt_config.num_hidden_layers)
+                OPTDecoderLayer(opt_config, runner_config, i)
+                for i in range(opt_config.num_hidden_layers)
             ]
         )
 
@@ -288,7 +233,7 @@ class OPTDecoder(nn.Module):
             inputs_embeds = self.project_in(inputs_embeds)
         hidden_states = inputs_embeds + pos_embeds
 
-        for i, layer in enumerate(self.layers):
+        for _, layer in enumerate(self.layers):
             hidden_states = layer(hidden_states, iteration_state)
 
         if self.final_layer_norm is not None:
@@ -299,9 +244,9 @@ class OPTDecoder(nn.Module):
 
 
 class OPTModel(nn.Module):
-    def __init__(self, opt_config: OPTConfig, backend_config: RunnerConfig):
+    def __init__(self, opt_config: OPTConfig, runner_config: RunnerConfig):
         super().__init__()
-        self.decoder = OPTDecoder(opt_config, backend_config)
+        self.decoder = OPTDecoder(opt_config, runner_config)
 
     def forward(
         self,
@@ -313,9 +258,9 @@ class OPTModel(nn.Module):
 
 
 class OPTForCausalLM(nn.Module):
-    def __init__(self, opt_config: OPTConfig, backend_config: RunnerConfig):
+    def __init__(self, opt_config: OPTConfig, runner_config: RunnerConfig):
         super().__init__()
-        self.model = OPTModel(opt_config, backend_config)
+        self.model = OPTModel(opt_config, runner_config)
         # Tie lm_head's weight
         self.sampler = Sampler(opt_config, self.model.decoder.embed_tokens.weight)
 

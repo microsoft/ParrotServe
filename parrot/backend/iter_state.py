@@ -1,9 +1,8 @@
-from typing import List, Dict
+from typing import List
 import torch
-from transformers import OPTConfig
+from transformers import PretrainedConfig
 from xformers import ops as xops
 
-from .mem import KVContext
 from .config import RunnerConfig
 from .backend_jobs import BackendPrimitiveJob, Fill, Generation
 from ..protocol.sampling_params import SamplingParams
@@ -26,10 +25,8 @@ class IterationState:
     def __init__(
         self,
         jobs: List[BackendPrimitiveJob],
-        model_config: OPTConfig,
-        attn_config: RunnerConfig,
-        dtype: torch.dtype,
-        device: torch.device,
+        model_config: PretrainedConfig,
+        runner_config: RunnerConfig,
     ):
         # Metadata
         self.num_fill_tokens: List[int] = []
@@ -45,36 +42,46 @@ class IterationState:
 
         for job in jobs:
             if isinstance(job, Fill):
-                tokens_num = len(job.token_ids)
-                self.num_fill_tokens.append(tokens_num)
+                num_tokens = len(job.token_ids)
+                self.num_fill_tokens.append(num_tokens)
             elif isinstance(job, Generation):
-                tokens_num = 1
+                num_tokens = 1
                 self.generation_sampling_params.append(job.sampling_params)
 
             context_blocks = job.context.get_context_blocks()
             self.context_index_tensor.extend(context_blocks)
-            self.allocated_index_tensor.extend(context_blocks[-tokens_num:])
+            self.allocated_index_tensor.extend(context_blocks[-num_tokens:])
 
-            q_lens.append(tokens_num)
+            q_lens.append(num_tokens)
             kv_lens.append(job.context.get_context_len())
 
-        self.device = device
-
         self.allocated_index_tensor = torch.tensor(
-            self.allocated_index_tensor, dtype=torch.int64, device=device
+            self.allocated_index_tensor,
+            dtype=torch.int64,
+            device=runner_config.device,
         )
         self.context_index_tensor = torch.tensor(
-            self.context_index_tensor, dtype=torch.int64, device=device
+            self.context_index_tensor,
+            dtype=torch.int64,
+            device=runner_config.device,
         )
 
         num_heads = model_config.num_attention_heads
         head_size = model_config.hidden_size // num_heads
 
-        if attn_config.attn_func == "xformers_with_buffer":
+        if runner_config.attn_func == "xformers_with_buffer":
             # KV Buffer
             buffer_shape = [sum(kv_lens), num_heads, head_size]
-            self.k_buffer = torch.empty(buffer_shape, dtype=dtype, device=device)
-            self.v_buffer = torch.empty(buffer_shape, dtype=dtype, device=device)
+            self.k_buffer = torch.empty(
+                buffer_shape,
+                dtype=runner_config.dtype,
+                device=runner_config.device,
+            )
+            self.v_buffer = torch.empty(
+                buffer_shape,
+                dtype=runner_config.dtype,
+                device=runner_config.device,
+            )
 
             # Attn Mask
             self.x_attn_bias = (
@@ -83,6 +90,14 @@ class IterationState:
                     kv_seqlen=kv_lens,
                 )
             )
+        else:
+            raise ValueError(
+                f"Unsupported attention function {runner_config.attn_func}"
+            )
+
+        # Lazy load in RoPE arch
+        self.cos_buffer = None
+        self.sin_buffer = None
 
     @property
     def num_fill_jobs(self) -> int:
