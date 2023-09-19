@@ -15,6 +15,7 @@ _MODEL_ARCH_MAP = {
 }
 
 
+@torch.no_grad()
 def load_model(hf_config: PretrainedConfig, runner_config: RunnerConfig):
     model_arch_cls = None
     for arch_name in hf_config.architectures:
@@ -36,7 +37,9 @@ def load_model(hf_config: PretrainedConfig, runner_config: RunnerConfig):
     original_dtype = torch.get_default_dtype()
     torch.set_default_dtype(runner_config.dtype)
     model = model_arch_cls(hf_config, runner_config)
-    model.load_weights(runner_config.model_name)
+    model.load_weights(
+        runner_config.model_name, use_np_cache=False
+    )  # For faster loading
 
     # Move model to device
     model = model.to(runner_config.device)

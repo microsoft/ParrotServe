@@ -80,6 +80,7 @@ class OPTAttention(nn.Module):
 
         self.qkv_proj = nn.Linear(embed_dim, 3 * embed_dim, bias=bias)
         self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
+        # TODO(chaofan): add support for other attention functions
         self.attn_func = xFormersWithBuffer(
             layer_idx=layer_idx,
             scaling=self.scaling,
@@ -292,10 +293,10 @@ class OPTForCausalLM(nn.Module):
 
             # Handle qkv_proj
             is_qkv_weight = False
-            for stride_id, att_weight_name in enumerate(["q_proj", "k_proj", "v_proj"]):
-                if att_weight_name not in name:
+            for stride_id, weight_name in enumerate(["q_proj", "k_proj", "v_proj"]):
+                if weight_name not in name:
                     continue
-                param = state_dict[name.replace(att_weight_name, "qkv_proj")]
+                param = state_dict[name.replace(weight_name, "qkv_proj")]
                 shard_size = param.shape[0] // 3
 
                 param_slice = param.data[

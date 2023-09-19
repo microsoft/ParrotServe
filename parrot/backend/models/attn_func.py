@@ -98,5 +98,7 @@ class xFormersWithBufferRoPE(xFormersWithBuffer):
     ):
         assert iteration_state.cos_buffer is not None
         assert iteration_state.sin_buffer is not None
+        # Should we fuse them?
         rotary_embedding(q, iteration_state.cos_buffer, iteration_state.sin_buffer)
-        super().forward(q, k, v, iteration_state)
+        rotary_embedding(k, iteration_state.cos_buffer, iteration_state.sin_buffer)
+        return super().forward(q, k, v, iteration_state)

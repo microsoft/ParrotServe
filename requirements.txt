@@ -8,7 +8,7 @@ tokenizers==0.13.3
 torch==2.0.1
 tqdm==4.66.1
 transformers==4.32.0
-triton==2.0.0
+triton==2.1.0
 urllib3==2.0.4
 uvicorn==0.23.2
 xformers==0.0.21

@@ -15,11 +15,6 @@ import torch
 from tqdm.auto import tqdm
 
 
-class Disabledtqdm(tqdm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, disable=True)
-
-
 def hf_model_weights_iterator(
     model_name_or_path: str,
     cache_dir: Optional[str] = None,
@@ -39,7 +34,6 @@ def hf_model_weights_iterator(
                 model_name_or_path,
                 allow_patterns="*.bin",
                 cache_dir=cache_dir,
-                tqdm_class=Disabledtqdm,
             )
     else:
         hf_folder = model_name_or_path

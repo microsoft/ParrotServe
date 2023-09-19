@@ -24,7 +24,6 @@ class Runner:
         self.kv_cache_manager = RecyclePool(self.runner_config.num_kv_cache_blocks)
 
         # Load Model
-        self.device = torch.device("cuda")  # Should this be configurable?
         self.hf_model_config = AutoConfig.from_pretrained(self.runner_config.model_name)
         self.model = load_model(self.hf_model_config, self.runner_config)
 
@@ -97,12 +96,12 @@ class Runner:
         input_ids = torch.tensor(
             input_ids,
             dtype=torch.int64,
-            device=self.device,
+            device=self.runner_config.device,
         )
         input_positions = torch.tensor(
             input_positions,
             dtype=torch.int64,
-            device=self.device,
+            device=self.runner_config.device,
         )
 
         # Execute model

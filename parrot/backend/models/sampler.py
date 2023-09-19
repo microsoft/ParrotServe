@@ -1,13 +1,13 @@
 from typing import List
 import torch
 from torch import nn
-from transformers import OPTConfig
+from transformers import PretrainedConfig
 
 from ..iter_state import IterationState
 
 
 class Sampler(nn.Module):
-    def __init__(self, config: OPTConfig, embd_weight: torch.Tensor):
+    def __init__(self, config: PretrainedConfig, embd_weight: torch.Tensor):
         super().__init__()
         self.embd_weight = embd_weight  # It's a reference
         self.vocab_size = config.vocab_size

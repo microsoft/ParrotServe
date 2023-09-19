@@ -25,7 +25,7 @@
 # limitations under the License.
 
 """PyTorch inference-only LLaMA model. Input is flattened."""
-from typing import List, Optional
+from typing import Optional
 
 import torch
 from torch import nn
@@ -37,7 +37,8 @@ from transformers.models.llama.modeling_llama import (
 )
 
 from ..iter_state import IterationState
-from ..mem import Model_Cache
+from ..mem import get_cos_cache, get_sin_cache
+from ..config import RunnerConfig
 from .sampler import Sampler
 from .attn_func import xFormersWithBufferRoPE
 from .weight_utils import hf_model_weights_iterator
@@ -46,7 +47,12 @@ from .weight_utils import hf_model_weights_iterator
 class LlamaAttention(nn.Module):
     """Multi-headed attention from 'Attention Is All You Need' paper"""
 
-    def __init__(self, config: LlamaConfig, layer_idx: int):
+    def __init__(
+        self,
+        config: LlamaConfig,
+        layer_idx: int,
+        attn_func_name: str,
+    ):
         super().__init__()
         self.config = config
         self.hidden_size = config.hidden_size
@@ -65,6 +71,7 @@ class LlamaAttention(nn.Module):
         self.scaling = self.head_dim**-0.5
         self.qkv_proj = nn.Linear(self.hidden_size, 3 * self.hidden_size, bias=False)
         self.o_proj = nn.Linear(self.hidden_size, self.hidden_size, bias=False)
+        # TODO(chaofan): add support for other attention functions
         self.attn_func = xFormersWithBufferRoPE(
             layer_idx=layer_idx,
             scaling=self.scaling,
@@ -88,17 +95,23 @@ class LlamaAttention(nn.Module):
         attn_output = self.attn_func(
             query_states, key_states, value_states, iteration_state
         )
-        attn_output = self.out_proj(attn_output)
+        attn_output = self.o_proj(attn_output)
 
         return attn_output
 
 
 class LlamaDecoderLayer(nn.Module):
-    def __init__(self, config: LlamaConfig, layer_idx: int):
+    def __init__(
+        self, config: LlamaConfig, runner_config: RunnerConfig, layer_idx: int
+    ):
         super().__init__()
         self.hidden_size = config.hidden_size
 
-        self.self_attn = LlamaAttention(config=config, layer_idx=layer_idx)
+        self.self_attn = LlamaAttention(
+            config=config,
+            layer_idx=layer_idx,
+            attn_func_name=runner_config.attn_func,
+        )
         self.mlp = LlamaMLP(config)
         self.input_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
         self.post_attention_layernorm = LlamaRMSNorm(
@@ -125,7 +138,7 @@ class LlamaDecoderLayer(nn.Module):
 
 
 class LlamaModel(nn.Module):
-    def __init__(self, config: LlamaConfig):
+    def __init__(self, config: LlamaConfig, runner_config: RunnerConfig):
         super().__init__()
         self.padding_idx = config.pad_token_id
         self.vocab_size = config.vocab_size
@@ -133,11 +146,12 @@ class LlamaModel(nn.Module):
             config.vocab_size, config.hidden_size, self.padding_idx
         )
         self.layers = nn.ModuleList(
-            [LlamaDecoderLayer(config, i) for i in range(config.num_hidden_layers)]
+            [
+                LlamaDecoderLayer(config, runner_config, i)
+                for i in range(config.num_hidden_layers)
+            ]
         )
         self.norm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
-        # Initialize weights and apply final processing
-        self.post_init()
 
     def forward(
         self,
@@ -146,19 +160,19 @@ class LlamaModel(nn.Module):
     ) -> torch.Tensor:
         hidden_states = self.embed_tokens(input_ids)
         for _, layer in enumerate(self.layers):
+            print(f"Layer: {_}. Start forward.", flush=True)
             hidden_states = layer(hidden_states, iteration_state)
         hidden_states = self.norm(hidden_states)
         return hidden_states
 
 
 class LlamaForCausalLM(nn.Module):
-    def __init__(self, config: LlamaConfig):
+    def __init__(self, config: LlamaConfig, runner_config: RunnerConfig):
         super().__init__()
         self.config = config
-        self.model = LlamaModel(config)
+        self.model = LlamaModel(config, runner_config)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-        self.sampler = Sampler(config.vocab_size, self.lm_head.weight)
-        self.post_init()
+        self.sampler = Sampler(config, self.lm_head.weight)
 
     def forward(
         self,
@@ -167,12 +181,12 @@ class LlamaForCausalLM(nn.Module):
         iteration_state: IterationState,
     ):
         iteration_state.cos_buffer = torch.index_select(
-            Model_Cache.cos_cache, 0, positions
+            get_cos_cache(), dim=0, index=positions
         )
         iteration_state.sin_buffer = torch.index_select(
-            Model_Cache.sin_cache, 0, positions
+            get_sin_cache(), dim=0, index=positions
         )
-        hidden_states = self.model(input_ids, positions, iteration_state)
+        hidden_states = self.model(input_ids, iteration_state)
         next_tokens = self.sampler(hidden_states, iteration_state)
         return next_tokens
 
@@ -180,25 +194,23 @@ class LlamaForCausalLM(nn.Module):
         self,
         model_name_or_path: str,
         cache_dir: Optional[str] = None,
-        load_format: str = "auto",
-        revision: Optional[str] = None,
+        use_np_cache: bool = False,
     ):
         state_dict = self.state_dict()
+        # print(state_dict.keys())
 
         for name, loaded_weight in hf_model_weights_iterator(
             model_name_or_path, cache_dir, use_np_cache
         ):
-            if "lm_head.weight" in name:
+            if "rotary_emb.inv_freq" in name:
                 continue
-            if name.startswith("decoder."):
-                name = "model." + name
 
             # Handle qkv_proj
             is_qkv_weight = False
-            for stride_id, att_weight_name in enumerate(["q_proj", "k_proj", "v_proj"]):
-                if att_weight_name not in name:
+            for stride_id, weight_name in enumerate(["q_proj", "k_proj", "v_proj"]):
+                if weight_name not in name:
                     continue
-                param = state_dict[name.replace(att_weight_name, "qkv_proj")]
+                param = state_dict[name.replace(weight_name, "qkv_proj")]
                 shard_size = param.shape[0] // 3
 
                 param_slice = param.data[

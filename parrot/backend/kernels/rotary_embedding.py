@@ -15,12 +15,12 @@ import triton.language as tl
 
 @triton.jit
 def rotary_embedding_kernel(
-    query,  # [num_tokens, head_num, head_dim]
+    state,  # [num_tokens, head_num, head_dim]
     cos,  # [num_tokens, 1, head_dim // 2]
     sin,  # [num_tokens, 1, head_dim // 2]
-    stride_q_n,
-    stride_q_h,
-    stride_q_d,
+    stride_state_n,
+    stride_state_h,
+    stride_state_d,
     stride_cos_n,
     stride_cos_d,
     # stride_sin_n,
@@ -39,15 +39,15 @@ def rotary_embedding_kernel(
     dim_range_x = tl.arange(0, BLOCK_D // 2)
     dim_range_y = tl.arange(BLOCK_D // 2, BLOCK_D)
 
-    q_x_offset = (
-        token_range[:, None, None] * stride_q_n
-        + head_range[None, :, None] * stride_q_h
-        + dim_range_x[None, None, :] * stride_q_d
+    state_x_offset = (
+        token_range[:, None, None] * stride_state_n
+        + head_range[None, :, None] * stride_state_h
+        + dim_range_x[None, None, :] * stride_state_d
     )
-    q_y_offset = (
-        token_range[:, None, None] * stride_q_n
-        + head_range[None, :, None] * stride_q_h
-        + dim_range_y[None, None, :] * stride_q_d
+    state_y_offset = (
+        token_range[:, None, None] * stride_state_n
+        + head_range[None, :, None] * stride_state_h
+        + dim_range_y[None, None, :] * stride_state_d
     )
 
     cos_sim_offset = (
@@ -55,14 +55,14 @@ def rotary_embedding_kernel(
         + dim_range_x[None, None, :] * stride_cos_d
     )
 
-    q_x = tl.load(
-        query + q_x_offset,
+    state_x = tl.load(
+        state + state_x_offset,
         mask=(token_range[:, None, None] < num_tokens)
         & (head_range[None, :, None] < num_heads),
         other=0.0,
     )
-    q_y = tl.load(
-        query + q_y_offset,
+    state_y = tl.load(
+        state + state_y_offset,
         mask=(token_range[:, None, None] < num_tokens)
         & (head_range[None, :, None] < num_heads),
         other=0.0,
@@ -79,17 +79,17 @@ def rotary_embedding_kernel(
         other=0.0,
     )
 
-    out_x = q_x * cos_loaded - q_y * sin_loaded
-    out_y = q_x * sin_loaded + q_y * cos_loaded
+    out_x = state_x * cos_loaded - state_y * sin_loaded
+    out_y = state_x * sin_loaded + state_y * cos_loaded
 
     tl.store(
-        query + q_x_offset,
+        state + state_x_offset,
         out_x,
         mask=(token_range[:, None, None] < num_tokens)
         & (head_range[None, :, None] < num_heads),
     )
     tl.store(
-        query + q_y_offset,
+        state + state_y_offset,
         out_y,
         mask=(token_range[:, None, None] < num_tokens)
         & (head_range[None, :, None] < num_heads),
@@ -97,10 +97,10 @@ def rotary_embedding_kernel(
 
 
 @torch.no_grad()
-def rotary_embedding(query, cos, sin):
-    num_tokens = query.shape[0]
-    num_heads = query.shape[1]
-    head_dim = query.shape[2]
+def rotary_embedding(state, cos, sin):
+    num_tokens = state.shape[0]
+    num_heads = state.shape[1]
+    head_dim = state.shape[2]
 
     BLOCK_N = 32
     BLOCK_H = 4
@@ -114,12 +114,12 @@ def rotary_embedding(query, cos, sin):
         num_warps = 4
 
     rotary_embedding_kernel[grid](
-        query,
+        state,
         cos,
         sin,
-        query.stride(0),
-        query.stride(1),
-        query.stride(2),
+        state.stride(0),
+        state.stride(1),
+        state.stride(2),
         cos.stride(0),
         cos.stride(2),
         # sin.stride(0),
@@ -135,12 +135,12 @@ def rotary_embedding(query, cos, sin):
     return
 
 
-def torch_rotary_embedding(query, cos, sin):
-    _, _, dim = query.shape
-    q_x = query[:, :, 0 : dim // 2]
-    q_y = query[:, :, dim // 2 : dim]
-    out_x = q_x * cos - q_y * sin
-    out_y = q_x * sin + q_y * cos
+def torch_rotary_embedding(state, cos, sin):
+    _, _, dim = state.shape
+    state_x = state[:, :, 0 : dim // 2]
+    state_y = state[:, :, dim // 2 : dim]
+    out_x = state_x * cos - state_y * sin
+    out_y = state_x * sin + state_y * cos
     return torch.cat((out_x, out_y), dim=-1)
 
 
@@ -150,15 +150,17 @@ if __name__ == "__main__":
     head_dim = 128
     max_positions = 1024
 
-    dtype = torch.float32
-    query = torch.randn((tokens_num, num_heads, head_dim), dtype=dtype, device="cuda")
+    # torch.float16 has floating point problem in Triton 2.0.0
+    # But it works fine in Triton 2.1.0
+    dtype = torch.float16
+    state = torch.randn((tokens_num, num_heads, head_dim), dtype=dtype, device="cuda")
     cos_shape = (tokens_num, 1, head_dim // 2)
     cos = -1.2 + 0.5 * torch.randn(cos_shape, dtype=dtype, device="cuda")
     sin = -2.0 + 0.5 * torch.randn(cos_shape, dtype=dtype, device="cuda")
     # forward pass
-    torch_result = torch_rotary_embedding(query, cos, sin)
-    rotary_embedding(query, cos, sin)
-    triton_result = query  # query is modified in-place
+    torch_result = torch_rotary_embedding(state, cos, sin)
+    rotary_embedding(state, cos, sin)
+    triton_result = state  # state is modified in-place
     # print(torch_result)
     # print(triton_result)
     assert torch.allclose(torch_result, triton_result, atol=1e-2, rtol=0)

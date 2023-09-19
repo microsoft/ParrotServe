@@ -9,7 +9,7 @@ logger = get_logger("Mem")
 
 
 _ARCH_WITH_ROPE = [
-    "LlamaForCasualLM",
+    "LlamaForCausalLM",
 ]
 
 
@@ -118,6 +118,11 @@ class ModelCacheStorage:
 
         # cos / sin cache for rotary embedding models.
         if runner_config.model_arch in _ARCH_WITH_ROPE:
+            logger.info(
+                f"Model arch {runner_config.model_arch} needs rotary embedding models. "
+                f"Allcoating cos/sin cache ..."
+            )
+
             max_seq_len = hf_config.max_position_embeddings
             # self.cos_cache = torch.empty(
             #     [max_seq_len, 1, head_size // 2],
@@ -137,14 +142,17 @@ class ModelCacheStorage:
             inv_freq = 1.0 / (
                 rope_theta
                 ** (
-                    torch.arange(0, rotary_size, 2, dtype=dtype, device=device)
-                    / rotary_size
+                    torch.arange(0, rotary_size, 2, device=device).float() / rotary_size
                 )
             )
-            t = torch.arange(max_seq_len, dtype=dtype, device=device)
+            t = torch.arange(max_seq_len, dtype=inv_freq.dtype, device=device)
             freqs = torch.einsum("i,j -> ij", t, inv_freq)
-            self.cos_cache = freqs.cos()
-            self.sin_cache = freqs.sin()
+            self.cos_cache = (
+                freqs.cos().view(max_seq_len, 1, rotary_size // 2).to(dtype)
+            )
+            self.sin_cache = (
+                freqs.sin().view(max_seq_len, 1, rotary_size // 2).to(dtype)
+            )
 
             cos_sin_total_size = (
                 max_seq_len
@@ -153,11 +161,18 @@ class ModelCacheStorage:
                 * self.cos_cache.element_size()
                 / 1024
                 / 1024
-                / 1024
             )
             logger.info(
-                f"Allocated cos/sin cache. Total size: {cos_sin_total_size :.2f} GiB"
+                f"Allocated cos/sin cache. Total size: {cos_sin_total_size :.2f} MiB"
             )
+        else:
+            logger.info(
+                f"Model arch {runner_config.model_arch} doesn't needs rotary embedding models. "
+                f"Skip allocating cos/sin cache."
+            )
+
+            self.cos_cache = None
+            self.sin_cache = None
 
 
 # Initialize it when the model is loaded.
