@@ -2,7 +2,7 @@ from typing import List, Dict
 from transformers import AutoConfig
 import torch
 
-from .model_loader import load_model
+from .model_instantiation import instantiate_model
 from .mem import KVContext, init_model_cache_storage
 from .iter_state import BackendPrimitiveJob, Fill, Generation, IterationState
 from ..utils import RecyclePool, set_random_seed
@@ -25,7 +25,7 @@ class Runner:
 
         # Load Model
         self.hf_model_config = AutoConfig.from_pretrained(self.runner_config.model_name)
-        self.model = load_model(self.hf_model_config, self.runner_config)
+        self.model = instantiate_model(self.hf_model_config, self.runner_config)
 
         # Init model cache storage
         init_model_cache_storage(self.hf_model_config, self.runner_config)

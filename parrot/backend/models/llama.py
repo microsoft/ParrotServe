@@ -41,7 +41,7 @@ from ..mem import get_cos_cache, get_sin_cache
 from ..config import RunnerConfig
 from .sampler import Sampler
 from .attn_func import xFormersWithBufferRoPE
-from .weight_utils import hf_model_weights_iterator
+from .weight_utils import hf_weights_loader
 
 
 class LlamaAttention(nn.Module):
@@ -160,7 +160,7 @@ class LlamaModel(nn.Module):
     ) -> torch.Tensor:
         hidden_states = self.embed_tokens(input_ids)
         for _, layer in enumerate(self.layers):
-            print(f"Layer: {_}. Start forward.", flush=True)
+            # print(f"Layer: {_}. Start forward.", flush=True)
             hidden_states = layer(hidden_states, iteration_state)
         hidden_states = self.norm(hidden_states)
         return hidden_states
@@ -190,38 +190,31 @@ class LlamaForCausalLM(nn.Module):
         next_tokens = self.sampler(hidden_states, iteration_state)
         return next_tokens
 
-    def load_weights(
-        self,
-        model_name_or_path: str,
-        cache_dir: Optional[str] = None,
-        use_np_cache: bool = False,
-    ):
+    def load_weights(self, model_name_or_path: str):
         state_dict = self.state_dict()
         # print(state_dict.keys())
 
-        for name, loaded_weight in hf_model_weights_iterator(
-            model_name_or_path, cache_dir, use_np_cache
-        ):
-            if "rotary_emb.inv_freq" in name:
+        for weight_name, weight_value in hf_weights_loader(model_name_or_path):
+            if "rotary_emb.inv_freq" in weight_name:
                 continue
 
             # Handle qkv_proj
             is_qkv_weight = False
-            for stride_id, weight_name in enumerate(["q_proj", "k_proj", "v_proj"]):
-                if weight_name not in name:
+            for stride_id, qkv_proj_name in enumerate(["q_proj", "k_proj", "v_proj"]):
+                if qkv_proj_name not in weight_name:
                     continue
-                param = state_dict[name.replace(weight_name, "qkv_proj")]
+                param = state_dict[weight_name.replace(qkv_proj_name, "qkv_proj")]
                 shard_size = param.shape[0] // 3
 
                 param_slice = param.data[
                     shard_size * stride_id : shard_size * (stride_id + 1)
                 ]
-                assert param_slice.shape == loaded_weight.shape
-                param_slice.copy_(loaded_weight)
+                assert param_slice.shape == weight_value.shape
+                param_slice.copy_(weight_value)
                 is_qkv_weight = True
                 break
 
             if not is_qkv_weight:
-                param = state_dict[name]
-                param.copy_(loaded_weight)
+                param = state_dict[weight_name]
+                param.copy_(weight_value)
             # print(f"{name} loaded.")
