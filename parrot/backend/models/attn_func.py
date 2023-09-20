@@ -84,21 +84,3 @@ class xFormersWithBuffer(nn.Module):
         )
 
         return attn_output.view(-1, self.num_heads * self.head_dim)
-
-
-class xFormersWithBufferRoPE(xFormersWithBuffer):
-    """Operators with rotary position embedding."""
-
-    def forward(
-        self,
-        q: torch.Tensor,
-        k: torch.Tensor,
-        v: torch.Tensor,
-        iteration_state: IterationState,
-    ):
-        assert iteration_state.cos_buffer is not None
-        assert iteration_state.sin_buffer is not None
-        # Should we fuse them?
-        rotary_embedding(q, iteration_state.cos_buffer, iteration_state.sin_buffer)
-        rotary_embedding(k, iteration_state.cos_buffer, iteration_state.sin_buffer)
-        return super().forward(q, k, v, iteration_state)

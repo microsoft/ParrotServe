@@ -40,8 +40,9 @@ from ..iter_state import IterationState
 from ..mem import get_cos_cache, get_sin_cache
 from ..config import RunnerConfig
 from .sampler import Sampler
-from .attn_func import xFormersWithBufferRoPE
+from .attn_func import xFormersWithBuffer
 from .weight_utils import hf_weights_loader
+from ..kernels import rotary_embedding
 
 
 class LlamaAttention(nn.Module):
@@ -72,7 +73,7 @@ class LlamaAttention(nn.Module):
         self.qkv_proj = nn.Linear(self.hidden_size, 3 * self.hidden_size, bias=False)
         self.o_proj = nn.Linear(self.hidden_size, self.hidden_size, bias=False)
         # TODO(chaofan): add support for other attention functions
-        self.attn_func = xFormersWithBufferRoPE(
+        self.attn_func = xFormersWithBuffer(
             layer_idx=layer_idx,
             scaling=self.scaling,
             num_heads=self.num_heads,
@@ -92,6 +93,15 @@ class LlamaAttention(nn.Module):
         query_states = query_states.view(-1, self.num_heads, self.head_dim)
         key_states = key_states.view(-1, self.num_heads, self.head_dim)
         value_states = value_states.view(-1, self.num_heads, self.head_dim)
+
+        # Should we fuse them?
+        rotary_embedding(
+            query_states, iteration_state.cos_buffer, iteration_state.sin_buffer
+        )
+        rotary_embedding(
+            key_states, iteration_state.cos_buffer, iteration_state.sin_buffer
+        )
+
         attn_output = self.attn_func(
             query_states, key_states, value_states, iteration_state
         )

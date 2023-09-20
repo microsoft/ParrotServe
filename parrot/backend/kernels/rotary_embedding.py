@@ -2,6 +2,10 @@
 
 Currently only support GPT-NeoX style rotary embedding.
 
+Why re-implement rotary embedding instead of using HF implementation?
+- HF implementation is not optimized
+- We want to manage cos/sin buffer
+
 References: 
 https://github.com/vllm-project/vllm/blob/main/csrc/pos_encoding_kernels.cu
 https://github.com/ModelTC/lightllm/blob/main/lightllm/models/llama/triton_kernel/rotary_emb.py

@@ -31,22 +31,34 @@ def tell_me_a_joke(
 
 
 async def main():
-    topic = P.placeholder()
-    keyword = P.placeholder()
-    joke = P.placeholder()
-    explanation = P.placeholder()
+    topics = [
+        "a programmer",
+        "a mathematician",
+        "a physicist",
+    ]
+    keywords = [
+        "bug",
+        "iPhone",
+        "cat",
+    ]
 
-    tell_me_a_joke(topic, keyword, joke, explanation)
+    for i in range(3):
+        topic = P.placeholder()
+        keyword = P.placeholder()
+        joke = P.placeholder()
+        explanation = P.placeholder()
 
-    topic.assign("a programmer")
-    keyword.assign("bug")
-    joke_str = await joke.get()
-    print("\n\n ---------- The following is the joke ---------- ")
-    print(joke_str)
-    print(
-        "\n\n ---------- If you don't get it, the following is the explanation ---------- "
-    )
-    print(await explanation.get())
+        tell_me_a_joke(topic, keyword, joke, explanation)
+
+        topic.assign(topics[i])
+        keyword.assign(keywords[i])
+        joke_str = await joke.get()
+        print(f"---------- Round {i}: The following is the joke ---------- ")
+        print(joke_str)
+        print(
+            f"---------- If you don't get it, the following is the explanation ---------- "
+        )
+        print(await explanation.get())
 
 
 env.parrot_run_aysnc(main())
