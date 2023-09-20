@@ -28,19 +28,19 @@ def test_batch_fills(runner_config: RunnerConfig):
             session_id=0,
             context_id=0,
             parent_context_id=-1,
-            token_ids=np.random.randint(50, 50000, size=10).tolist(),
+            token_ids=np.random.randint(50, 10000, size=10).tolist(),
         ),
         Fill(
             session_id=1,
             context_id=1,
             parent_context_id=-1,
-            token_ids=np.random.randint(50, 50000, size=15).tolist(),
+            token_ids=np.random.randint(50, 10000, size=15).tolist(),
         ),
         Fill(
             session_id=2,
             context_id=2,
             parent_context_id=-1,
-            token_ids=np.random.randint(50, 50000, size=20).tolist(),
+            token_ids=np.random.randint(50, 10000, size=20).tolist(),
         ),
     ]
 
@@ -55,7 +55,7 @@ def test_fill_then_gen(runner_config: RunnerConfig):
                 session_id=0,
                 context_id=0,
                 parent_context_id=-1,
-                token_ids=np.random.randint(50, 50000, size=10).tolist(),
+                token_ids=np.random.randint(50, 10000, size=10).tolist(),
             )
         ]
     )
