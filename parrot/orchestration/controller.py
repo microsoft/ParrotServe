@@ -8,7 +8,7 @@ from .engine import ExecutionEngine
 from .context import Context
 from ..utils import get_logger
 from ..program.function import ParrotFunction
-from ..protocol import check_heartbeat, prefix_init
+from ..protocol import check_heartbeat, prefix_init, free_context
 
 
 logger = get_logger("Controller", logging.INFO)
@@ -54,6 +54,7 @@ class Controller:
     def caching_function_prefix(self, tokenized_storage: "TokenizedStorage"):
         for func_name, prefix_context in self.function_prefix.items():
             func = self.functions_table[func_name]
+            # NOTE(chaofan): Now we cache the prefix on all engines
             for engine in self.engines_table.values():
                 prefix_tokens = tokenized_storage.tokenize_func_body(
                     func, engine.tokenizer
@@ -67,16 +68,26 @@ class Controller:
                     prefix_tokens
                 ), "Prefix init failed: not all tokens are filled."
 
+    def free_function_prefix(self):
+        for func_name, prefix_context in self.function_prefix.items():
+            for engine in self.engines_table.values():
+                try:
+                    free_context(
+                        engine.http_address,
+                        prefix_context.context_id,
+                    )
+                except:
+                    logger.error(
+                        f"Free the prefix context {prefix_context.context_id} of the function {func_name} failed."
+                    )
+
     def register_engine(self, name: str, host: str, port: int, tokenizer: str):
         self._check_is_run()
 
-        if name in self.engines_table:
-            logger.error(f"Engine name {name} has been used.")
-            return
-
-        if tokenizer not in self.tokenizers_table:
-            logger.error(f"Tokenizer {tokenizer} has not been registered.")
-            return
+        assert name not in self.engines_table, f"Engine name {name} has been used."
+        assert (
+            tokenizer in self.tokenizers_table
+        ), f"Tokenizer {tokenizer} has not been registered."
 
         engine = ExecutionEngine(
             name=name,
@@ -87,9 +98,10 @@ class Controller:
 
         try:
             resp = check_heartbeat(engine.name, engine.http_address)
-        except:
-            logger.error(f"Register engine {engine.name} failed.")
-            return
+        except Exception:
+            raise RuntimeError(
+                f"Register engine {engine.name} failed. Can't check heartbeat."
+            )
 
         engine.num_cached_tokens = resp.num_cached_tokens
         engine.num_running_jobs = resp.num_running_jobs
@@ -102,9 +114,9 @@ class Controller:
     def register_function(self, function: ParrotFunction, caching_prefix: bool):
         self._check_is_run()
 
-        if function.name in self.functions_table:
-            logger.error(f"Function name {function.name} has been used.")
-            return
+        assert (
+            function.name not in self.functions_table
+        ), f"Function name {function.name} has been used."
 
         if caching_prefix:
             prefix_context = Context()
@@ -116,9 +128,9 @@ class Controller:
     def register_tokenizer(self, tokenizer_name: str):
         self._check_is_run()
 
-        if tokenizer_name in self.tokenizers_table:
-            logger.error(f"Tokenizer name {tokenizer_name} has been used.")
-            return
+        assert (
+            tokenizer_name not in self.tokenizers_table
+        ), f"Tokenizer name {tokenizer_name} has been used."
 
         tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
         self.tokenizers_table[tokenizer_name] = tokenizer
@@ -128,7 +140,7 @@ class Controller:
             self.executor.register_group_executor(tokenizer_name)
         else:
             logger.warning(
-                "Executor is not initialized. Not register the group executor."
+                "Executor is not initialized. Will not register the group executor."
             )
 
         logger.info(f"Register tokenizer: {tokenizer_name}")
@@ -155,6 +167,6 @@ class Controller:
 
             for engine_name in disconnect_engines:
                 self.engines_table.pop(engine_name)
-                logger.info(f"Engine {engine_name} disconnected.")
+                logger.warning(f"Engine {engine_name} disconnected.")
 
             time.sleep(heartbeat_interval)

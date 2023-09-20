@@ -130,16 +130,20 @@ async def generate(
     context_id: int,
     sampling_params: SamplingParams,
 ):
-    async with aiohttp.ClientSession() as client_session:
-        async for resp in async_send_http_request_streaming(
-            client_session,
-            http_addr,
-            "/generate",
-            session_id=session_id,
-            context_id=context_id,
-            **dataclasses.asdict(sampling_params),
-        ):
-            yield resp
+    try:
+        async with aiohttp.ClientSession() as client_session:
+            async for resp in async_send_http_request_streaming(
+                client_session,
+                http_addr,
+                "/generate",
+                session_id=session_id,
+                context_id=context_id,
+                **dataclasses.asdict(sampling_params),
+            ):
+                yield resp
+    except BaseException as e:
+        logger.error(f"Generate error in {http_addr} error: {e}")
+        raise e
 
 
 def free_context(http_addr: str, context_id: int) -> FreeContextResponse:

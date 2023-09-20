@@ -9,7 +9,7 @@ from .tokens_holder import TokensHolder
 from ..orchestration.context import Context
 from ..orchestration.controller import Controller
 from ..orchestration.tokenize import TokenizedStorage
-from ..utils import get_logger, run_coroutine_in_loop
+from ..utils import get_logger, create_task_in_loop
 
 
 logger = get_logger("Executor")
@@ -59,7 +59,7 @@ class TokenizerGroupExecutor:
                     job = Fill(input_holder=holder)
             session.job_queue.put_nowait(job)
 
-        run_coroutine_in_loop(session.execute_coroutine())
+        create_task_in_loop(session.execute_coroutine())
 
     def _get_data_holder(self, placeholder: Placeholder) -> TokensHolder:
         if placeholder.name not in self.data_map:

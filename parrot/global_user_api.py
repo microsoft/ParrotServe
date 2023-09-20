@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 
 from .orchestration.controller import Controller
 from .executor.executor import Executor
@@ -16,9 +17,24 @@ ParrotFunction._controller = global_controller
 ParrotFunction._executor = global_executor
 
 
-def start_controller():
+@contextlib.contextmanager
+def controller_running_context():
+    """Under this context, the global controller is running."""
+
     global_controller.run()
     global_controller.caching_function_prefix(global_tokenized_storage)
+
+    try:
+        yield
+    except BaseException as e:
+        # This is mainly used to catch the error in the `main`
+        #
+        # For errors in coroutines, we use the fail fast mode and quit the whole system
+        # In this case, we can only see a SystemExit error
+        print("Error happens when executing Parrot program: ", type(e), repr(e))
+        # print("Traceback: ", traceback.format_exc())
+
+    global_controller.free_function_prefix()
 
 
 def register_tokenizer(*args, **kwargs):
@@ -30,8 +46,8 @@ def register_engine(*args, **kwargs):
 
 
 def parrot_run_aysnc(coroutine):
-    start_controller()
-    # asyncio.run(coroutine)
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(coroutine)
-    loop.close()
+    with controller_running_context():
+        # asyncio.run(coroutine)
+        loop = asyncio.new_event_loop()
+        loop.run_until_complete(coroutine)
+        loop.close()

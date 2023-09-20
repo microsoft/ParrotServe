@@ -1,8 +1,8 @@
 # Copyright (c) 2023 by Microsoft Corporation.
-
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
 from parrot import env, P
+import time
 
 # We need to configure the environment before we can use it.
 # Here we use the Vicuna model from LMSYS as an example.
@@ -11,7 +11,7 @@ from parrot import env, P
 env.register_tokenizer("hf-internal-testing/llama-tokenizer")
 # Then, we need to register the engine we want to use.
 env.register_engine(
-    "vicuna_7b_v1.3_local",
+    "vicuna_13b_v1.3_local",
     host="localhost",
     port=8888,
     tokenizer="hf-internal-testing/llama-tokenizer",
@@ -25,17 +25,20 @@ env.register_engine(
 
 
 @P.function()
-def write_recommendation_latter(
-    name: P.Input,
+def write_recommendation_letter(
+    stu_name: P.Input,
+    prof_name: P.Input,
     major: P.Input,
     grades: P.Input,
     specialty: P.Input,
     letter: P.Output,
 ):
-    """You are a professor in the university. Given the basic information about a student including his name, major, grades and specialty, please write a recommendation for his PhD application.
+    r"""You are a professor in the university. Please write a recommendation for a student's PhD application.
+
+    Note that the letter should not be too long. You can write at most 300 words. The letter should be written in English, end with "Sincerely, Prof. {{prof_name}}".
 
     Here are some information of the student:
-    Student name: {{name}}
+    Name: {{stu_name}}
     Major: {{major}}
     Grades: {{grades}}/4.0
     Specialty: {{specialty}}
@@ -49,15 +52,20 @@ def write_recommendation_latter(
 
 async def main():
     # First we need some placeholders.
-    name = P.placeholder()
+    stu_name = P.placeholder()
+    prof_name = P.placeholder()
     major = P.placeholder()
     grades = P.placeholder()
     specialty = P.placeholder()
     letter = P.placeholder()
 
+    # To monitor the caching tokens statistics
+    time.sleep(20)
+
     # Then we can call the function.
-    write_recommendation_latter(
-        name=name,
+    write_recommendation_letter(
+        stu_name=stu_name,
+        prof_name=prof_name,
         major=major,
         grades=grades,
         specialty=specialty,
@@ -65,7 +73,8 @@ async def main():
     )
 
     # Now we can fill in the placeholders.
-    name.assign("John")
+    stu_name.assign("John")
+    prof_name.assign("Prof. Smith")
     major.assign("Computer Science")
     grades.assign("3.8")
     specialty.assign(

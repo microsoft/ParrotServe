@@ -1,10 +1,10 @@
 # Copyright (c) 2023 by Microsoft Corporation.
-
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
 from parrot import env, P
 import logging
 
+# Disable the logging
 logging.disable(logging.DEBUG)
 logging.disable(logging.INFO)
 

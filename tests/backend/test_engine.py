@@ -2,7 +2,7 @@ import asyncio
 import parrot
 from parrot.backend.engine import ExecutionEngine
 from parrot.backend.backend_jobs import BackendPrimitiveJob, Fill, Generation
-from parrot.utils import run_coroutine_in_loop
+from parrot.utils import create_task_in_loop
 from parrot.protocol.sampling_params import SamplingParams
 from transformers import AutoTokenizer
 
@@ -22,7 +22,7 @@ def test_engine_simple_serving():
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
     async def main():
-        run_coroutine_in_loop(engine.execute_loop())
+        create_task_in_loop(engine.execute_loop())
 
         print("Start")
 

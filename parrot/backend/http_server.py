@@ -9,7 +9,7 @@ from uvicorn import Config, Server
 
 from .engine import ExecutionEngine
 from .backend_jobs import Fill, Generation
-from ..utils import get_logger, run_coroutine_in_loop
+from ..utils import get_logger, create_task_in_loop
 from ..protocol.sampling_params import SamplingParams
 
 
@@ -93,5 +93,7 @@ if __name__ == "__main__":
         log_level="info",
     )
     uvicorn_server = Server(config)
-    run_coroutine_in_loop(execution_engine.execute_loop(), loop=loop)
+    # NOTE(chaofan): We use `fail_fast` because this project is still in development
+    # For real deployment, maybe we don't need to quit the backend when there is an error
+    create_task_in_loop(execution_engine.execute_loop(), loop=loop, fail_fast=True)
     loop.run_until_complete(uvicorn_server.serve())
