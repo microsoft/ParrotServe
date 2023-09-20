@@ -1,6 +1,7 @@
 import asyncio
 from typing import Dict
 import json
+import time
 
 from .runner import Runner
 from .scheduler import Scheduler
@@ -81,6 +82,10 @@ class ExecutionEngine:
             jobs = self.scheduler.schedule()
 
             logger.debug(f"Running {len(jobs)} jobs: {jobs}")
+            st = time.perf_counter_ns()
             self.runner.run_iter(jobs)
-            logger.debug(f"Finished running {len(jobs)} jobs: {jobs}")
+            ed = time.perf_counter_ns()
+            logger.debug(
+                f"Finished running {len(jobs)} jobs: {jobs}. Time used: {(ed-st) / 1e9} (s)."
+            )
             self.scheduler.finish()

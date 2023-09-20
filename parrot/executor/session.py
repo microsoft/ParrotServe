@@ -18,8 +18,10 @@ logger = get_logger("Session")
 
 async def detokenize_coroutine(holder: TokensHolder):
     assert holder.producer is not None, "Producer should be set."
+    prev_last_token = None
     async for chunk in holder.producer.detokenize_pipe.generator():
-        holder.sync_to_placeholder_partial(chunk)
+        holder.sync_to_placeholder_partial(chunk, prev_last_token)
+        prev_last_token = chunk[-1]
     holder.placeholder.ready_event.set()
 
 
@@ -45,6 +47,7 @@ class Session:
         self.sampling_params = SamplingParams(
             temperature=0.8,
             top_p=0.95,
+            max_gen_length=1024,
         )
 
     def __del__(self):

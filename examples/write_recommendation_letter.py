@@ -5,16 +5,16 @@
 from parrot import env, P
 
 # We need to configure the environment before we can use it.
-# Here we use the OPT model from facebook as an example.
+# Here we use the Vicuna model from LMSYS as an example.
 
 # First, we need to register the tokenizer we want to use.
-env.register_tokenizer("facebook/opt-13b")
+env.register_tokenizer("hf-internal-testing/llama-tokenizer")
 # Then, we need to register the engine we want to use.
 env.register_engine(
-    "opt_13b_local",
+    "vicuna_7b_v1.3_local",
     host="localhost",
     port=8888,
-    tokenizer="facebook/opt-13b",
+    tokenizer="hf-internal-testing/llama-tokenizer",
 )
 
 
@@ -34,8 +34,8 @@ def write_recommendation_latter(
 ):
     """You are a professor in the university. Given the basic information about a student including his name, major, grades and specialty, please write a recommendation for his PhD application.
 
-    Here are the information of the student:
-    Name: {{name}}
+    Here are some information of the student:
+    Student name: {{name}}
     Major: {{major}}
     Grades: {{grades}}/4.0
     Specialty: {{specialty}}

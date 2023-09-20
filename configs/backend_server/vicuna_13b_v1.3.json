@@ -1,0 +1,13 @@
+{
+    "engine_name": "vicuna_13b_v1.3_local",
+    "runner": {
+        "model_name": "lmsys/vicuna-13b-v1.3",
+        "num_kv_cache_blocks": 2000,
+        "attn_func": "xformers_with_buffer",
+        "random_seed": 0
+    },
+    "scheduler": {
+        "max_batch_size": 256,
+        "max_tokens_sum": 8192
+    }
+}

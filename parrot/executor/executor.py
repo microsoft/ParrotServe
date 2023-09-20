@@ -34,6 +34,13 @@ class TokenizerGroupExecutor:
             self.tokenizer_name,
         )
 
+        # Hack: we append eos_token_id in the sampling params
+        # It should be iterated in the future because the sampling params should be unique for every generation.
+        eos_token_id = self.tokenized_storage.get_tokenizer(
+            self.tokenizer_name
+        ).eos_token_id
+        session.sampling_params.stop_token_ids.append(eos_token_id)
+
         for i, piece in enumerate(session.promise.func.body):
             if isinstance(piece, Constant):
                 holder = TokensHolder(

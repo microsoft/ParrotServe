@@ -149,8 +149,8 @@ class Controller:
                     engine.num_running_jobs = resp.num_running_jobs
                     logger.info(
                         f"Engine {engine.name} is alive. "
-                        "{resp.num_cached_tokens} Tokens ({resp.cached_tokens_size} MiB), "
-                        "running {resp.num_running_jobs} jobs."
+                        f"{resp.num_cached_tokens} Tokens ({resp.cached_tokens_size} MiB), "
+                        f"running {resp.num_running_jobs} jobs."
                     )
 
             for engine_name in disconnect_engines:

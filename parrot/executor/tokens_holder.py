@@ -68,17 +68,31 @@ class TokensHolder:
             )
         )
 
-    def sync_to_placeholder_partial(self, token_ids: List[int]):
+    def sync_to_placeholder_partial(
+        self, token_ids: List[int], prev_last_token: Optional[int]
+    ):
         assert self.placeholder is not None, "No placeholder"
         assert self.tokenized_storage is not None, "No tokenized storage"
 
         if self.placeholder.content is None:
             self.placeholder.content = ""
 
-        self.placeholder.content += self.tokenized_storage.detokenize(
+        if prev_last_token:
+            token_ids = [prev_last_token] + token_ids
+            prev_last_text = self.tokenized_storage.detokenize(
+                [prev_last_token],
+                self.tokenizer,
+            )
+
+        partial_text = self.tokenized_storage.detokenize(
             token_ids,
             self.tokenizer,
         )
+
+        if prev_last_token:
+            partial_text = partial_text[len(prev_last_text) :]
+
+        self.placeholder.content += partial_text
 
     def __str__(self) -> str:
         if self.is_constant:
