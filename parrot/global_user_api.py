@@ -1,5 +1,6 @@
 import asyncio
 import contextlib
+import time
 
 from .orchestration.controller import Controller
 from .executor.executor import Executor
@@ -18,11 +19,14 @@ ParrotFunction._executor = global_executor
 
 
 @contextlib.contextmanager
-def controller_running_context():
+def controller_running_context(timeit: bool):
     """Under this context, the global controller is running."""
 
     global_controller.run()
     global_controller.caching_function_prefix(global_tokenized_storage)
+
+    if timeit:
+        st = time.perf_counter_ns()
 
     try:
         yield
@@ -33,6 +37,10 @@ def controller_running_context():
         # In this case, we can only see a SystemExit error
         print("Error happens when executing Parrot program: ", type(e), repr(e))
         # print("Traceback: ", traceback.format_exc())
+
+    if timeit:
+        ed = time.perf_counter_ns()
+        print(f"[Timeit] E2E Program Execution Time: {(ed - st) / 1e9} (s).")
 
     global_controller.free_function_prefix()
 
@@ -45,8 +53,8 @@ def register_engine(*args, **kwargs):
     global_controller.register_engine(*args, **kwargs)
 
 
-def parrot_run_aysnc(coroutine):
-    with controller_running_context():
+def parrot_run_aysnc(coroutine, timeit: bool = False):
+    with controller_running_context(timeit):
         # asyncio.run(coroutine)
         loop = asyncio.new_event_loop()
         loop.run_until_complete(coroutine)

@@ -94,8 +94,8 @@ class Session:
                 # Start streaming
                 job.output_holder.streaming_event.set()
                 async for token_id in generator:
-                    job.output_holder.send_token(token_id)
-                job.output_holder.send_token(STREAMING_END_TOKEN_ID)
+                    job.output_holder.send_token(token_id, put_into_holder=True)
+                job.output_holder.send_token(STREAMING_END_TOKEN_ID, put_into_holder=False)
 
                 job.output_holder.ready_event.set()
             elif isinstance(job, Fill):

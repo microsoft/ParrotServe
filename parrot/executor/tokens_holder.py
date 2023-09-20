@@ -99,12 +99,13 @@ class TokensHolder:
             return f"[TokensHolder(Constant): {self.token_ids}]"
         return f"[TokensHolder(Placeholder): {self.placeholder.name}]"
 
-    def send_token(self, token_id: int):
+    def send_token(self, token_id: int, put_into_holder: bool = True):
         assert self.streaming_event.is_set(), "This tokenholder is not streaming."
         assert not self.ready, "This tokenholder is filled. Can't send token."
 
         # Pushing to output holder
-        self.token_ids.append(token_id)
+        if put_into_holder:
+            self.token_ids.append(token_id)
 
         # Routing to pipes
         for consumer in self.consumers:

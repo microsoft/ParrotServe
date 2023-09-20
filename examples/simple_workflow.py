@@ -99,4 +99,4 @@ async def main():
     print(await post.get())
 
 
-env.parrot_run_aysnc(main())
+env.parrot_run_aysnc(main(), timeit=True)

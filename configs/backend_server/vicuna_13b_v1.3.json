@@ -4,7 +4,7 @@
         "model_name": "lmsys/vicuna-13b-v1.3",
         "num_kv_cache_blocks": 4000,
         "attn_func": "xformers_with_buffer",
-        "random_seed": 0
+        "random_seed": 2333
     },
     "scheduler": {
         "max_batch_size": 256,
