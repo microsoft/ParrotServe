@@ -23,25 +23,15 @@ def test_single_fill(runner_config: RunnerConfig):
 
 def test_batch_fills(runner_config: RunnerConfig):
     runner = Runner(runner_config)
+    batch_size = 16
     jobs = [
         Fill(
-            session_id=0,
-            context_id=0,
+            session_id=i,
+            context_id=i,
             parent_context_id=-1,
-            token_ids=np.random.randint(50, 10000, size=10).tolist(),
-        ),
-        Fill(
-            session_id=1,
-            context_id=1,
-            parent_context_id=-1,
-            token_ids=np.random.randint(50, 10000, size=15).tolist(),
-        ),
-        Fill(
-            session_id=2,
-            context_id=2,
-            parent_context_id=-1,
-            token_ids=np.random.randint(50, 10000, size=20).tolist(),
-        ),
+            token_ids=np.random.randint(50, 10000, size=1000).tolist(),
+        )
+        for i in range(batch_size)
     ]
 
     runner.run_iter(jobs)

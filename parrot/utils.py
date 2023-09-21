@@ -2,7 +2,7 @@ import logging
 import asyncio
 import traceback
 import sys
-from typing import Optional
+from typing import Optional, List
 
 
 def get_logger(log_name: str, log_level: int = logging.DEBUG):
@@ -21,36 +21,24 @@ def get_logger(log_name: str, log_level: int = logging.DEBUG):
 
 class RecyclePool:
     def __init__(self, pool_size: int):
-        self.flags = [False] * pool_size
-        self.recent_free = -1
         self.pool_size = pool_size
+        self.free_ids: List[int] = list(range(pool_size))
 
     def allocate(self) -> int:
         """Fetch an id."""
 
-        allocated_id = -1
-
-        if self.recent_free >= 0:
-            allocated_id = self.recent_free
-            self.recent_free = -1
-        else:
-            for i in range(self.pool_size):
-                if not self.flags[i]:
-                    allocated_id = i
-                    break
-        if allocated_id == -1:
+        if len(self.free_ids) == 0:
             raise ValueError("No free id in the pool.")
-        self.flags[allocated_id] = True
+        allocated_id = self.free_ids.pop()
         return allocated_id
 
-    def free(self, index: int) -> int:
+    def free(self, id: int) -> int:
         """Free an id."""
 
-        if not self.flags[index]:
+        if id in self.free_ids:
             raise ValueError("The id is already free.")
 
-        self.flags[index] = False
-        self.recent_free = index
+        self.free_ids.append(id)
 
 
 def _task_error_callback_fail_fast(task):
