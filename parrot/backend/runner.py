@@ -48,6 +48,9 @@ class Runner:
 
     @torch.inference_mode()
     def run_iter(self, jobs: List[BackendPrimitiveJob]):
+        # We should sort jobs such that Fill jobs are before Generation jobs.
+        jobs.sort(key=lambda job: isinstance(job, Generation))
+
         # Allocate new context blocks
         for job in jobs:
             # NOTE(chaofan): if we use engine, this is not necessary.

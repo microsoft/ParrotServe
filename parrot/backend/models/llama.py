@@ -190,6 +190,7 @@ class LlamaForCausalLM(nn.Module):
         positions: torch.Tensor,
         iteration_state: IterationState,
     ):
+        # print(positions)
         iteration_state.cos_buffer = torch.index_select(
             get_cos_cache(), dim=0, index=positions
         )

@@ -10,11 +10,12 @@ def test_llama():
         random_seed=0,
     )
 
-    test_single_fill(runner_config)
-    test_batch_fills(runner_config)
-    test_fill_then_gen(runner_config)
-    test_generate_single_text(runner_config)
-    test_generate_batch_text(runner_config)
+    # test_single_fill(runner_config)
+    # test_batch_fills(runner_config)
+    # test_fill_then_gen(runner_config)
+    # test_generate_single_text(runner_config)
+    # test_generate_batch_text(runner_config)
+    test_fill_generate_mixed(runner_config)
 
 
 if __name__ == "__main__":

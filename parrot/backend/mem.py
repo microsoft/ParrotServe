@@ -146,7 +146,7 @@ class ModelCacheStorage:
                 )
             )
             t = torch.arange(max_seq_len, dtype=inv_freq.dtype, device=device)
-            freqs = torch.einsum("i,j -> ij", t, inv_freq)
+            freqs = torch.outer(t, inv_freq)
             self.cos_cache = (
                 freqs.cos().view(max_seq_len, 1, rotary_size // 2).to(dtype)
             )

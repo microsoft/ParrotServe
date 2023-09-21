@@ -47,7 +47,7 @@ class Session:
         self.sampling_params = SamplingParams(
             temperature=0.8,
             top_p=0.95,
-            max_gen_length=1024,
+            max_gen_length=512,
         )
 
     def __del__(self):
@@ -95,7 +95,9 @@ class Session:
                 job.output_holder.streaming_event.set()
                 async for token_id in generator:
                     job.output_holder.send_token(token_id, put_into_holder=True)
-                job.output_holder.send_token(STREAMING_END_TOKEN_ID, put_into_holder=False)
+                job.output_holder.send_token(
+                    STREAMING_END_TOKEN_ID, put_into_holder=False
+                )
 
                 job.output_holder.ready_event.set()
             elif isinstance(job, Fill):
@@ -104,6 +106,7 @@ class Session:
                 # 1. The input holder is ready. We can fill the whole data.
                 # 2. The input holder is not ready. We can fill the data chunk by chunk.
                 await job.input_holder.streaming_event.wait()
+                # await job.input_holder.ready_event.wait()
                 num_filled_tokens = 0
 
                 if job.input_holder.ready:

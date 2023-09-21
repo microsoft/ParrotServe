@@ -139,3 +139,48 @@ def test_generate_batch_text(runner_config: RunnerConfig):
             f"Prompt {i} Generated: ",
             tokenizer.decode(runner.context_manager[i].token_ids),
         )
+
+
+def test_fill_generate_mixed(runner_config: RunnerConfig):
+    runner = Runner(runner_config)
+    prompt_text = [
+        "Hello, my name is",
+        "Hello, my name is",
+        "Hello, my name is",
+    ]
+    tokenizer = AutoTokenizer.from_pretrained(runner_config.model_name)
+    prompt_tokens = tokenizer(prompt_text)["input_ids"]
+
+    # Prefill
+    fills = [
+        Fill(
+            session_id=i,
+            context_id=i,
+            parent_context_id=-1,
+            token_ids=prompt_tokens[i],
+        )
+        for i in range(len(prompt_tokens))
+    ]
+
+    # Generations
+    gens = [
+        Generation(
+            session_id=i,
+            context_id=i,
+            sampling_params=SamplingParams(),
+        )
+        for i in range(len(prompt_tokens))
+    ]
+
+    runner.run_iter([fills[0]])  # Run the first fill
+    runner.run_iter([gens[0], fills[1]])  # Run the first gen and second fill
+    runner.run_iter([gens[0], gens[1], fills[2]])  # Run the second gen and third fill
+    # Run the gens
+    for i in range(30):
+        runner.run_iter([gens[0], gens[1], gens[2]])
+
+    for i in range(len(prompt_tokens)):
+        print(
+            f"Prompt {i} Generated: ",
+            tokenizer.decode(runner.context_manager[i].token_ids),
+        )
