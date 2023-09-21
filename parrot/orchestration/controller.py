@@ -7,7 +7,7 @@ from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizer
 from .engine import ExecutionEngine
 from .context import Context
 from ..utils import get_logger
-from ..program.function import ParrotFunction
+from ..program.function import SemanticFunction
 from ..protocol import check_heartbeat, prefix_init, free_context
 
 
@@ -20,7 +20,7 @@ class Controller:
     def __init__(self):
         # ---------- Registry ----------
         self.engines_table: Dict[str, ExecutionEngine] = {}
-        self.functions_table: Dict[str, ParrotFunction] = {}
+        self.functions_table: Dict[str, SemanticFunction] = {}
         self.tokenizers_table: Dict[
             str, Union[PreTrainedTokenizer, PreTrainedTokenizerFast]
         ] = {}
@@ -111,7 +111,7 @@ class Controller:
             f"Register execution engine: {engine.name} in {engine.http_address}"
         )
 
-    def register_function(self, function: ParrotFunction, caching_prefix: bool):
+    def register_function(self, function: SemanticFunction, caching_prefix: bool):
         self._check_is_run()
 
         assert (

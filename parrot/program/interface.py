@@ -1,7 +1,7 @@
 import inspect
 from typing import Optional
 
-from .function import ParrotFunction, logger
+from .function import SemanticFunction, logger
 from .placeholder import Placeholder
 
 
@@ -39,7 +39,7 @@ def function(
                 Output,
             ), "The arguments must be annotated by Input/Output"
             func_args.append((param.name, param.annotation == Output))
-        parrot_func = ParrotFunction(
+        parrot_func = SemanticFunction(
             name=func_name,
             func_body_str=doc_str,
             func_args=func_args,
@@ -47,8 +47,8 @@ def function(
 
         # controller=None: testing mode
         if register_to_global:
-            if ParrotFunction._controller is not None:
-                ParrotFunction._controller.register_function(
+            if SemanticFunction._controller is not None:
+                SemanticFunction._controller.register_function(
                     parrot_func, caching_prefix
                 )
             else:

@@ -4,7 +4,7 @@ import time
 
 from .orchestration.controller import Controller
 from .executor.executor import Executor
-from .program.function import ParrotFunction
+from .program.function import SemanticFunction
 from .orchestration.tokenize import TokenizedStorage
 
 # Initialize the global components
@@ -14,8 +14,8 @@ global_tokenized_storage = TokenizedStorage(global_controller)
 global_executor = Executor(global_controller, global_tokenized_storage)
 
 # Set the executor
-ParrotFunction._controller = global_controller
-ParrotFunction._executor = global_executor
+SemanticFunction._controller = global_controller
+SemanticFunction._executor = global_executor
 
 
 @contextlib.contextmanager

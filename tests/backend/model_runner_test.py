@@ -14,7 +14,7 @@ def test_single_fill(runner_config: RunnerConfig):
         context_id=0,
         parent_context_id=-1,
         token_ids=np.random.randint(
-            50, 10000, size=10
+            50, 10000, size=1000
         ).tolist(),  # Using too-large upper bound may cause index error in Embedding
     )
 

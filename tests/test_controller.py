@@ -6,7 +6,7 @@ import time
 from parrot.orchestration.controller import Controller
 from parrot.orchestration.tokenize import TokenizedStorage
 from parrot import P
-from parrot.program.function import ParrotFunction
+from parrot.program.function import SemanticFunction
 
 
 def test_controller_register_tokenizer():
@@ -42,7 +42,7 @@ def test_controller_register_function():
         "test", host="localhost", port=8888, tokenizer="facebook/opt-13b"
     )
 
-    ParrotFunction._controller = ctrl
+    SemanticFunction._controller = ctrl
 
     @P.function()
     def test(a: P.Input, b: P.Input, c: P.Output):

@@ -5,7 +5,8 @@ from asyncio import Event
 class Placeholder:
     """Placeholder for context variables.
 
-    It's like "Future" in the Python asynchronous programming.
+    It's like "Future" in the Python asynchronous programming, or Tensorflow's "placeholder".
+    As its name suggests, it's a placeholder for the content to be filled in the future.
     """
 
     _counter = 0

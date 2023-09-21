@@ -1,12 +1,16 @@
 from typing import List, Dict
 from transformers import AutoConfig
 import torch
+import time
 
 from .model_instantiation import instantiate_model
 from .mem import KVContext, init_model_cache_storage
 from .iter_state import BackendPrimitiveJob, Fill, Generation, IterationState
-from ..utils import RecyclePool, set_random_seed
+from ..utils import RecyclePool, set_random_seed, get_logger
 from .config import RunnerConfig
+
+
+logger = get_logger("Runner")
 
 
 class Runner:
@@ -48,6 +52,10 @@ class Runner:
 
     @torch.inference_mode()
     def run_iter(self, jobs: List[BackendPrimitiveJob]):
+        logger.debug(f"Running {len(jobs)} jobs: {jobs}")
+
+        st = time.perf_counter_ns()
+
         # We should sort jobs such that Fill jobs are before Generation jobs.
         jobs.sort(key=lambda job: isinstance(job, Generation))
 
@@ -107,10 +115,12 @@ class Runner:
             device=self.runner_config.device,
         )
 
+        st_model = time.perf_counter_ns()
         # Execute model
         next_tokens = (
             self.model(input_ids, input_positions, iteration_state).cpu().tolist()
         )
+        ed_model = time.perf_counter_ns()
         assert len(next_tokens) == len(jobs)
 
         # Update context
@@ -126,3 +136,9 @@ class Runner:
                 job.put_token(token_id)
                 if job.check_stop():
                     job.finish_event.set()
+        ed = time.perf_counter_ns()
+        logger.debug(
+            f"Finished running {len(jobs)} jobs: {jobs}. "
+            f"Total Time used: {(ed-st) / 1e9} (s); "
+            f"Model Time used: {(ed_model-st_model) / 1e9} (s)."
+        )

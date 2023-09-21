@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from .controller import Controller
-from ..program.function import ParrotFunction, Constant, Prefix
+from ..program.function import SemanticFunction, Constant, Prefix
 
 
 class TokenizedStorage:
@@ -17,7 +17,7 @@ class TokenizedStorage:
 
     def tokenize_func_body(
         self,
-        function: ParrotFunction,
+        function: SemanticFunction,
         tokenizer_name: str,
     ) -> List[int]:
         key = (function.name, tokenizer_name)

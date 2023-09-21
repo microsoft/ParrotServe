@@ -6,7 +6,7 @@ from .placeholder import Placeholder
 from ..utils import get_logger
 
 
-logger = get_logger("Parrot Function")
+logger = get_logger("Function")
 
 
 @dataclass
@@ -89,8 +89,8 @@ def parse_func_body(
     return ret
 
 
-class ParrotFunction:
-    """Parrot function is a simplified abstraction of the "general" semantic function,
+class SemanticFunction:
+    """Parrot's semantic function is a simplified abstraction of the "general" semantic function,
     which is used as examples when we play in the Parrot project.
 
     An example:
@@ -131,8 +131,8 @@ class ParrotFunction:
             ), f"Function {self.name} got multiple values for argument {name}"
             bindings[name] = placeholder
 
-        if ParrotFunction._executor is not None:
-            ParrotFunction._executor.submit(Promise(self, bindings))
+        if SemanticFunction._executor is not None:
+            SemanticFunction._executor.submit(Promise(self, bindings))
         else:
             logger.warning("Executor is not set. Not submitting the promise.")
 
@@ -141,6 +141,6 @@ class Promise:
     """Promise is a function call including the functions and bindings (param name ->
     placeholder)."""
 
-    def __init__(self, func: ParrotFunction, bindings: Dict[str, Placeholder]):
+    def __init__(self, func: SemanticFunction, bindings: Dict[str, Placeholder]):
         self.func = func
         self.bindings = bindings

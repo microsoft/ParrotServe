@@ -47,7 +47,7 @@ class Session:
         self.sampling_params = SamplingParams(
             temperature=0.8,
             top_p=0.95,
-            max_gen_length=512,
+            max_gen_length=128,
         )
 
     def __del__(self):
