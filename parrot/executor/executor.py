@@ -1,10 +1,10 @@
 from typing import Dict
 
-from ..program.function import Prefix, Promise, Constant, ParameterLoc
+from ..program.function import Prefix, Promise, Constant, ParameterLoc, ParamType
 from ..program.placeholder import Placeholder
 from .dispatcher import Dispatcher
 from .session import Session
-from .primitives import Fill, Generation
+from .instructions import ConstantFill, PlaceholderFill, Generation
 from .tokens_holder import TokensHolder
 from ..orchestration.context import Context
 from ..orchestration.controller import Controller
@@ -26,7 +26,7 @@ class TokenizerGroupExecutor:
         # ---------- Resources ----------
         self.tokenizer_name = tokenizer_name
         self.tokenized_storage = tokenized_storage
-        self.data_map: Dict[str, TokensHolder] = {}
+        self.tokensholder_map: Dict[str, TokensHolder] = {}
 
     def add_session(self, session: Session):
         tokenized = self.tokenized_storage.tokenize_func_body(
@@ -41,39 +41,47 @@ class TokenizerGroupExecutor:
         ).eos_token_id
         session.sampling_params.stop_token_ids.append(eos_token_id)
 
+        # Translate function body to instructions
         for i, piece in enumerate(session.promise.func.body):
             if isinstance(piece, Prefix):
-                continue  # Suppose prefix has already been cached.
+                if session.promise.func.cached_prefix:
+                    continue  # If the prefix is cached, we do not need to fill it.
+                inst = ConstantFill(tokenized[i])
             elif isinstance(piece, Constant):
-                holder = TokensHolder(
-                    tokenizer=self.tokenizer_name,
-                    tokenized_storage=self.tokenized_storage,
-                )
-                holder.assign(tokenized[i])
-                job = Fill(input_holder=holder)
+                inst = ConstantFill(tokenized[i])
             elif isinstance(piece, ParameterLoc):
                 assert piece.param.name in session.promise.bindings
-                placeholder = session.promise.bindings[piece.param.name]
-                holder = self._get_data_holder(placeholder)
-                if piece.param.is_output:
-                    job = Generation(output_holder=holder)
+                param_value = session.promise.bindings[piece.param.name]
+                if piece.param.typ == ParamType.PYOBJ:
+                    # We use __str__ instead of __repr__
+                    value_str = str(param_value)
+                    inst = ConstantFill(
+                        self.tokenized_storage.tokenize(
+                            value_str,
+                            self.tokenizer_name,
+                        )
+                    )
                 else:
-                    job = Fill(input_holder=holder)
-            session.job_queue.put_nowait(job)
+                    assert isinstance(param_value, Placeholder)
+                    holder = self._get_data_holder(param_value)
+                    if piece.param.is_output:
+                        inst = Generation(output_holder=holder)
+                    else:
+                        inst = PlaceholderFill(input_holder=holder)
+            session.instructions.put_nowait(inst)
 
         create_task_in_loop(session.execute_coroutine())
 
     def _get_data_holder(self, placeholder: Placeholder) -> TokensHolder:
-        if placeholder.name not in self.data_map:
-            self.data_map[placeholder.name] = TokensHolder(
+        # Create a new data holder if not exists
+        # Hence, the name of the placeholder must be unique.
+        if placeholder.name not in self.tokensholder_map:
+            self.tokensholder_map[placeholder.name] = TokensHolder(
                 tokenizer=self.tokenizer_name,
                 tokenized_storage=self.tokenized_storage,
                 placeholder=placeholder,
             )
-        return self.data_map[placeholder.name]
-
-    def _execute_daemon(self):
-        self._execute_loop.run_forever()
+        return self.tokensholder_map[placeholder.name]
 
 
 class Executor:
@@ -100,8 +108,11 @@ class Executor:
 
     def submit(self, promise: Promise):
         # Get/fork context
-        if promise.func.name in self.controller.function_prefix:
-            context = Context(self.controller.function_prefix[promise.func.name])
+        if promise.func.cached_prefix:
+            assert promise.func.name in self.controller.function_prefix
+            context = Context(
+                parent_context=self.controller.function_prefix[promise.func.name]
+            )
         else:
             context = Context()
 

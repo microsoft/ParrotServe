@@ -4,7 +4,7 @@ from transformers import PretrainedConfig
 from xformers import ops as xops
 
 from .config import RunnerConfig
-from .backend_jobs import BackendPrimitiveJob, Fill, Generation
+from .primitives import PrimitiveJob, Fill, Generation
 from ..protocol.sampling_params import SamplingParams
 
 
@@ -24,7 +24,7 @@ class IterationState:
 
     def __init__(
         self,
-        jobs: List[BackendPrimitiveJob],
+        jobs: List[PrimitiveJob],
         model_config: PretrainedConfig,
         runner_config: RunnerConfig,
     ):

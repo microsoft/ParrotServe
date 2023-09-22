@@ -11,7 +11,7 @@ import time
 env.register_tokenizer("hf-internal-testing/llama-tokenizer")
 # Then, we need to register the engine we want to use.
 env.register_engine(
-    "vicuna_7b_v1.3_local",
+    "vicuna_13b_v1.3_local",
     host="localhost",
     port=8888,
     tokenizer="hf-internal-testing/llama-tokenizer",

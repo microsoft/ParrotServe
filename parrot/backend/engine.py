@@ -4,7 +4,7 @@ import json
 
 from .runner import Runner
 from .scheduler import Scheduler
-from .backend_jobs import BackendPrimitiveJob
+from .primitives import PrimitiveJob
 
 from ..constants import ENGINE_LOOP_INTERVAL
 from ..utils import get_logger
@@ -27,7 +27,7 @@ class ExecutionEngine:
         self.runner = Runner(runner_config)
         self.scheduler = Scheduler(scheduler_config)
 
-    def add_job(self, job: BackendPrimitiveJob):
+    def add_job(self, job: PrimitiveJob):
         logger.info(f"Adding job: {job}")
         self.scheduler.add_job(job)
         self.runner.bind_job_context(job)

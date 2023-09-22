@@ -5,9 +5,11 @@ import time
 
 from .model_instantiation import instantiate_model
 from .mem import KVContext, init_model_cache_storage
-from .iter_state import BackendPrimitiveJob, Fill, Generation, IterationState
+from .iter_state import IterationState
+from .primitives import PrimitiveJob, Fill, Generation
 from ..utils import RecyclePool, set_random_seed, get_logger
 from .config import RunnerConfig
+from ..constants import NONE_CONTEXT_ID
 
 
 logger = get_logger("Runner")
@@ -45,11 +47,11 @@ class Runner:
         del context
         return num_freed_tokens
 
-    def bind_job_context(self, job: BackendPrimitiveJob):
+    def bind_job_context(self, job: PrimitiveJob):
         if job.context_id not in self.context_manager:
-            assert isinstance(job, Fill)
+            # assert isinstance(job, Fill)
             if job.parent_context_id not in self.context_manager:
-                assert job.parent_context_id == -1
+                assert job.parent_context_id == NONE_CONTEXT_ID
                 parent_context = None
             else:
                 parent_context = self.context_manager[job.parent_context_id]
@@ -59,7 +61,7 @@ class Runner:
         job.context = self.context_manager[job.context_id]
 
     @torch.inference_mode()
-    def run_iter(self, jobs: List[BackendPrimitiveJob]) -> (int, int):
+    def run_iter(self, jobs: List[PrimitiveJob]) -> (int, int):
         logger.debug(f"Running {len(jobs)} jobs. ")
 
         st = time.perf_counter_ns()

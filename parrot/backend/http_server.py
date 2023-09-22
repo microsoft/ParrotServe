@@ -8,7 +8,7 @@ from fastapi.responses import StreamingResponse
 from uvicorn import Config, Server
 
 from .engine import ExecutionEngine
-from .backend_jobs import Fill, Generation
+from .primitives import Fill, Generation
 from ..utils import get_logger, create_task_in_loop
 from ..protocol.sampling_params import SamplingParams
 
@@ -49,12 +49,15 @@ async def generate(request: Request):
     payload = await request.json()
     session_id = payload["session_id"]
     context_id = payload["context_id"]
+    parent_context_id = payload["parent_context_id"]
     payload.pop("session_id")
     payload.pop("context_id")
+    payload.pop("parent_context_id")
 
     generation_job = Generation(
         session_id=session_id,
         context_id=context_id,
+        parent_context_id=parent_context_id,
         sampling_params=SamplingParams(**payload),
     )
     execution_engine.add_job(generation_job)

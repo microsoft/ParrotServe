@@ -13,14 +13,16 @@ global_controller = Controller()
 global_tokenized_storage = TokenizedStorage(global_controller)
 global_executor = Executor(global_controller, global_tokenized_storage)
 
-# Set the executor
+# Set the controller because we need to register
 SemanticFunction._controller = global_controller
-SemanticFunction._executor = global_executor
 
 
 @contextlib.contextmanager
 def controller_running_context(timeit: bool):
     """Under this context, the global controller is running."""
+
+    # Set the executor
+    SemanticFunction._executor = global_executor
 
     global_controller.run()
     global_controller.caching_function_prefix(global_tokenized_storage)

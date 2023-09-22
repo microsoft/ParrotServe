@@ -27,6 +27,7 @@ def test_simple_serving():
             "http://localhost:8888",
             0,
             0,
+            -1,
             SamplingParams(max_gen_length=10),
         )
 

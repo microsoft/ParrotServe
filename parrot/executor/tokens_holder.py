@@ -15,7 +15,7 @@ class TokensHolder:
         self,
         tokenizer: str,
         tokenized_storage: TokenizedStorage,
-        placeholder: Optional[Placeholder] = None,
+        placeholder: Placeholder,
     ):
         # ---------- Basic info ----------
         self.token_ids: Optional[List[int]] = None
@@ -31,12 +31,11 @@ class TokensHolder:
         self.streaming_event: Event = Event()
         self.ready_event: Event = Event()
 
-        if placeholder is not None:
-            self.placeholder.assign_callbacks.append(
-                self.sync_from_placeholder
-            )  # Add callback
-            if placeholder.ready:
-                self.sync_from_placeholder()
+        self.placeholder.assign_callbacks.append(
+            self.sync_from_placeholder
+        )  # Add callback
+        if placeholder.ready:
+            self.sync_from_placeholder()
 
     @property
     def ready(self) -> bool:
@@ -58,7 +57,7 @@ class TokensHolder:
         self.streaming_event.set()
 
     def sync_from_placeholder(self):
-        assert self.placeholder is not None, "No placeholder"
+        # assert self.placeholder is not None, "No placeholder"
         assert self.placeholder.ready, "Placeholder not ready"
         assert self.tokenized_storage is not None, "No tokenized storage"
         self.assign(
@@ -71,8 +70,8 @@ class TokensHolder:
     def sync_to_placeholder_partial(
         self, token_ids: List[int], prev_last_token: Optional[int]
     ):
-        assert self.placeholder is not None, "No placeholder"
-        assert self.tokenized_storage is not None, "No tokenized storage"
+        # assert self.placeholder is not None, "No placeholder"
+        # assert self.tokenized_storage is not None, "No tokenized storage"
 
         if self.placeholder.content is None:
             self.placeholder.content = ""

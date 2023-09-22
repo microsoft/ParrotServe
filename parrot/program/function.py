@@ -1,4 +1,5 @@
-from typing import List, Dict, Type, Optional
+from enum import Enum
+from typing import List, Dict, Type, Optional, Any
 import regex as re
 from dataclasses import dataclass
 
@@ -28,10 +29,22 @@ class Prefix(Constant):
     """Prefix in a function."""
 
 
+class ParamType(Enum):
+    """Type of a parameter."""
+
+    INPUT = 0
+    OUTPUT = 1
+    PYOBJ = 2
+
+
 @dataclass
 class Parameter:
     name: str
-    is_output: bool
+    typ: ParamType
+
+    @property
+    def is_output(self) -> bool:
+        return self.typ == ParamType.OUTPUT
 
 
 @dataclass
@@ -105,42 +118,63 @@ class SemanticFunction:
     _controller: Optional["Controller"] = None
     _executor: Optional["Executor"] = None
 
-    def __init__(self, name: str, func_body_str: str, func_args: list):
+    def __init__(
+        self,
+        name: str,
+        func_body_str: str,
+        params: List[Parameter],
+        cached_prefix: bool,
+    ):
         """For semantic function, function body is just a prompt template.
         After parsed, it turns to be a list of function pieces.
         """
 
         self.name = name
-        self.params: List[Parameter] = [
-            Parameter(name=arg[0], is_output=arg[1]) for arg in func_args
-        ]
+        self.params = params
+        self.cached_prefix = cached_prefix
         self.params_map = dict([(param.name, param) for param in self.params])
         self.body: List[FunctionPiece] = parse_func_body(func_body_str, self.params_map)
 
-    def __call__(self, *args: List[Placeholder], **kwargs: Dict[str, Placeholder]):
+    @staticmethod
+    def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
+        if param.typ != ParamType.PYOBJ:
+            assert isinstance(value, Placeholder), (
+                f"Argument {param.name} should be a placeholder, "
+                f"but got {type(value)}: {value}"
+            )
+        bindings[param.name] = value
+
+    def __call__(self, *args: List[Any], **kwargs: Dict[str, Any]):
         """Calling a parrot function will not execute it immediately.
         Instead, this will submit the call to the executor."""
 
-        bindings: Dict[str, Placeholder] = {}
-        for i, placeholder in enumerate(args):
-            bindings[self.params[i].name] = placeholder
+        bindings: Dict[str, Any] = {}
 
-        for name, placeholder in kwargs.items():
+        for i, arg_value in enumerate(args):
+            self._set_value(self.params[i], arg_value, bindings)
+
+        for name, arg_value in kwargs.items():
             assert (
                 name not in bindings
             ), f"Function {self.name} got multiple values for argument {name}"
-            bindings[name] = placeholder
+            assert (
+                name in self.params_map
+            ), f"Function {self.name} got an unexpected keyword argument {name}"
+            self._set_value(self.params_map[name], arg_value, bindings)
 
         if SemanticFunction._executor is not None:
             SemanticFunction._executor.submit(Promise(self, bindings))
         else:
-            logger.warning("Executor is not set. Not submitting the promise.")
+            logger.warning(
+                "Executor is not set, will not submit the promise. "
+                "(Please ensure run a Parrot function in a running context, e.g. using env.parrot_run_aysnc)"
+            )
 
 
 class Promise:
     """Promise is a function call including the functions and bindings (param name ->
     placeholder)."""
 
-    def __init__(self, func: SemanticFunction, bindings: Dict[str, Placeholder]):
+    def __init__(self, func: SemanticFunction, bindings: Dict[str, Any]):
         self.func = func
         self.bindings = bindings

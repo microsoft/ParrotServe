@@ -1,7 +1,7 @@
 import asyncio
 import parrot
 from parrot.backend.engine import ExecutionEngine
-from parrot.backend.backend_jobs import BackendPrimitiveJob, Fill, Generation
+from parrot.backend.primitives import PrimitiveJob, Fill, Generation
 from parrot.utils import create_task_in_loop
 from parrot.protocol.sampling_params import SamplingParams
 from transformers import AutoTokenizer
@@ -13,7 +13,7 @@ def test_engine_simple_serving():
     package_path = parrot.__path__[0]
     engine = ExecutionEngine(package_path + "/../configs/backend_server/opt_125m.json")
 
-    async def execute_job(job: BackendPrimitiveJob):
+    async def execute_job(job: PrimitiveJob):
         engine.add_job(job)
         await job.finish_event.wait()
 

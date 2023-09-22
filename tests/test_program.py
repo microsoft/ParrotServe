@@ -74,8 +74,21 @@ def test_call_parrot_function():
     test(a, b, c=c)
 
 
+def test_function_with_pyobjects():
+    @P.function()
+    def test(a: float, b: int, c: list, d: P.Output):
+        """This {{b}} is a test {{a}} function {{c}} and {{d}}"""
+
+    d = P.placeholder("d")
+
+    print(test.body)
+
+    test(23.3, 400, [1, 2, 3, 4], d=d)
+
+
 if __name__ == "__main__":
     test_parse_parrot_function()
     test_placeholder()
     test_placeholder_async()
     test_call_parrot_function()
+    test_function_with_pyobjects()

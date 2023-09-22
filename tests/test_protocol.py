@@ -70,6 +70,7 @@ def test_generate():
             http_addr=addr,
             session_id=0,
             context_id=0,
+            parent_context_id=-1,
             sampling_params=SamplingParams(),
         ):
             counter += 1

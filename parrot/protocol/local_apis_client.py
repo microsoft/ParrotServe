@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from ..utils import get_logger
 from .local_apis_response import *
 from .sampling_params import SamplingParams
+from ..constants import NONE_CONTEXT_ID, NONE_SESSION_ID
 
 
 logger = get_logger("API")
@@ -82,9 +83,9 @@ def prefix_init(http_addr: str, context_id: int, token_ids: List[int]) -> FillRe
             http_addr,
             "/fill",
             retry_times=1,
-            session_id=-1,  # No session id for prefix init
+            session_id=NONE_SESSION_ID,  # No session id for prefix init
             context_id=context_id,
-            parent_context_id=-1,  # Since we are init a new prefix context
+            parent_context_id=NONE_CONTEXT_ID,  # Since we are init a new prefix context
             token_ids=token_ids,
         )
     except BaseException as e:
@@ -97,7 +98,7 @@ async def fill(
     session_id: int,
     token_ids: List[int],
     context_id: int,
-    parent_context_id: int = -1,
+    parent_context_id: int,
 ) -> FillResponse:
     try:
         logger.debug(
@@ -128,6 +129,7 @@ async def generate(
     http_addr: str,
     session_id: int,
     context_id: int,
+    parent_context_id: int,
     sampling_params: SamplingParams,
 ):
     try:
@@ -138,6 +140,7 @@ async def generate(
                 "/generate",
                 session_id=session_id,
                 context_id=context_id,
+                parent_context_id=parent_context_id,
                 **dataclasses.asdict(sampling_params),
             ):
                 yield resp

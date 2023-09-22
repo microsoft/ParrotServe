@@ -1,7 +1,7 @@
 from typing import Optional
 
 from ..utils import RecyclePool
-from ..constants import RECYCLE_POOL_SIZE
+from ..constants import RECYCLE_POOL_SIZE, NONE_CONTEXT_ID
 
 
 class Context:
@@ -23,3 +23,11 @@ class Context:
     def __del__(self):
         # print("Context deleted.")
         Context.context_id_manager.free(self.context_id)
+
+    @property
+    def parent_context_id(self) -> int:
+        return (
+            self.parent_context.context_id
+            if self.parent_context is not None
+            else NONE_CONTEXT_ID
+        )

@@ -1,5 +1,5 @@
 from typing import List
-from .backend_jobs import BackendPrimitiveJob
+from .primitives import PrimitiveJob
 from .config import SchedulerConfig
 
 
@@ -10,10 +10,10 @@ class Scheduler:
         self.max_batch_size = config.max_batch_size
         self.max_tokens_sum = config.max_tokens_sum
 
-        self.waiting_jobs: List[BackendPrimitiveJob] = []
-        self.running_jobs: List[BackendPrimitiveJob] = []
+        self.waiting_jobs: List[PrimitiveJob] = []
+        self.running_jobs: List[PrimitiveJob] = []
 
-    def add_job(self, job: BackendPrimitiveJob):
+    def add_job(self, job: PrimitiveJob):
         """Add a job to the scheduler."""
 
         self.waiting_jobs.append(job)
@@ -24,7 +24,7 @@ class Scheduler:
 
         return len(self.waiting_jobs) == 0 and len(self.running_jobs) == 0
 
-    def schedule(self) -> List[BackendPrimitiveJob]:
+    def schedule(self) -> List[PrimitiveJob]:
         """Schedule jobs."""
 
         cur_num_jobs = len(self.running_jobs)
@@ -58,7 +58,7 @@ class Scheduler:
     def finish(self):
         """Finish jobs."""
 
-        new_running: List[BackendPrimitiveJob] = []
+        new_running: List[PrimitiveJob] = []
         for job in self.running_jobs:
             if not job.finish_event.is_set():
                 new_running.append(job)
