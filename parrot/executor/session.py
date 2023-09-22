@@ -47,7 +47,7 @@ class Session:
         self.sampling_params = SamplingParams(
             temperature=0.8,
             top_p=0.95,
-            max_gen_length=128,
+            max_gen_length=512,  # 128,
         )
 
     def __del__(self):
@@ -105,8 +105,8 @@ class Session:
                 # Then there are two cases:
                 # 1. The input holder is ready. We can fill the whole data.
                 # 2. The input holder is not ready. We can fill the data chunk by chunk.
-                await job.input_holder.streaming_event.wait()
-                # await job.input_holder.ready_event.wait()
+                # await job.input_holder.streaming_event.wait()
+                await job.input_holder.ready_event.wait()
                 num_filled_tokens = 0
 
                 if job.input_holder.ready:

@@ -37,6 +37,14 @@ class Runner:
         # Set random seed
         set_random_seed(self.runner_config.random_seed)
 
+    def free_context(self, context_id: int) -> int:
+        if context_id not in self.context_manager:
+            raise RuntimeError(f"Context id {context_id} not found.")
+        context = self.context_manager.pop(context_id)
+        num_freed_tokens = len(context.token_ids)
+        del context
+        return num_freed_tokens
+
     def bind_job_context(self, job: BackendPrimitiveJob):
         if job.context_id not in self.context_manager:
             assert isinstance(job, Fill)
@@ -51,8 +59,8 @@ class Runner:
         job.context = self.context_manager[job.context_id]
 
     @torch.inference_mode()
-    def run_iter(self, jobs: List[BackendPrimitiveJob]):
-        logger.debug(f"Running {len(jobs)} jobs: {jobs}")
+    def run_iter(self, jobs: List[BackendPrimitiveJob]) -> (int, int):
+        logger.debug(f"Running {len(jobs)} jobs. ")
 
         st = time.perf_counter_ns()
 
@@ -137,8 +145,14 @@ class Runner:
                 if job.check_stop():
                     job.finish_event.set()
         ed = time.perf_counter_ns()
+
+        e2e_time = (ed - st) / 1e9
+        model_time = (ed_model - st_model) / 1e9
         logger.debug(
-            f"Finished running {len(jobs)} jobs: {jobs}. "
-            f"Total Time used: {(ed-st) / 1e9} (s); "
-            f"Model Time used: {(ed_model-st_model) / 1e9} (s)."
+            f"Finished running {len(jobs)} jobs. "
+            f"({iteration_state.num_fill_jobs} Fills, {iteration_state.num_generation_jobs} Generations). "
+            f"Total Time used: {e2e_time} (s); "
+            f"Model Time used: {model_time} (s)."
         )
+
+        return e2e_time, model_time

@@ -38,10 +38,7 @@ class ExecutionEngine:
                 # NOTE(chaofan): We cannot free the context when it is still running.
                 raise RuntimeError("Context is still running.")
 
-        context = self.runner.context_manager.pop(context_id)
-        num_freed_tokens = len(context.token_ids)
-        del context
-        return num_freed_tokens
+        return self.runner.free_context(context_id)
 
     def stats(self) -> Dict[str, int]:
         """Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""

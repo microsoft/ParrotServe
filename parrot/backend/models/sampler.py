@@ -28,6 +28,7 @@ class Sampler(nn.Module):
         logits = torch.matmul(hidden_states, self.embd_weight.t())
         probs = torch.softmax(logits, dim=-1, dtype=torch.float)
         ids = torch.multinomial(probs, num_samples=1, replacement=True).squeeze(-1)
+        # ids = torch.ones(probs.shape[0], dtype=torch.int64, device=probs.device)
 
         # TODO(chaofan): Apply top-k sampling, temperature, etc.
 
