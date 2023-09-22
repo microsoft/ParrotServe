@@ -1,6 +1,6 @@
 from typing import Dict
 
-from ..program.function import Promise, Constant, ParameterLoc
+from ..program.function import Prefix, Promise, Constant, ParameterLoc
 from ..program.placeholder import Placeholder
 from .dispatcher import Dispatcher
 from .session import Session
@@ -42,7 +42,9 @@ class TokenizerGroupExecutor:
         session.sampling_params.stop_token_ids.append(eos_token_id)
 
         for i, piece in enumerate(session.promise.func.body):
-            if isinstance(piece, Constant):
+            if isinstance(piece, Prefix):
+                continue  # Suppose prefix has already been cached.
+            elif isinstance(piece, Constant):
                 holder = TokensHolder(
                     tokenizer=self.tokenizer_name,
                     tokenized_storage=self.tokenized_storage,
