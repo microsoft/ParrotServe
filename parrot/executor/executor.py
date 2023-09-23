@@ -107,7 +107,7 @@ class Executor:
         )
 
     def submit(self, promise: Promise):
-        # Get/fork context
+        # Get/fork temporary context for a promise
         if promise.func.cached_prefix:
             assert promise.func.name in self.controller.function_prefix
             context = Context(
@@ -118,6 +118,8 @@ class Executor:
 
         session = Session(promise, context)
         self.dispatcher.dispatch(session)
+        assert session.engine is not None
+        context.cached_engines.append(session.engine)
         self.group_executors[session.engine.tokenizer].add_session(session)
 
         logger.info(

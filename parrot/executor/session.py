@@ -36,6 +36,7 @@ class Session:
         self.context = context
 
         # ---------- Attached engine ----------
+        # Set by dispatcher
         self.engine_name: Optional[str] = None
         self.engine: Optional[ExecutionEngine] = None
 
@@ -56,20 +57,7 @@ class Session:
     def __del__(self):
         # print("Session deleted.")
         Session.session_id_manager.free(self.session_id)
-
-        try:
-            resp = free_context(
-                self.engine.http_address,
-                self.context.context_id,
-            )
-        except BaseException as e:
-            logger.error(
-                f"Context: {self.context.context_id} did not free correctly: {type(e)}, {e}."
-            )
-        else:
-            logger.info(
-                f"Context: {self.context.context_id} freed. Freed tokens: {resp.num_freed_tokens}"
-            )
+        self.context.destruction()
 
     async def _flush_fill_tokens_buffer(self):
         buffer_len = len(self._fill_tokens_buffer)

@@ -1,7 +1,7 @@
 from typing import List, Optional
 from asyncio import Event, Queue as AsyncQueue
 
-from .mem import KVContext
+from .mem import LowLevelContext
 from ..protocol.sampling_params import SamplingParams
 from ..constants import STREAMING_END_TOKEN_ID
 
@@ -18,7 +18,7 @@ class PrimitiveJob:
         self.session_id = session_id
         self.context_id = context_id
         self.parent_context_id = parent_context_id
-        self.context: Optional[KVContext] = None
+        self.context: Optional[LowLevelContext] = None
         self.finish_event = Event()
 
 

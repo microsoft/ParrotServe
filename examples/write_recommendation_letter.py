@@ -59,9 +59,6 @@ async def main():
     specialty = P.placeholder()
     letter = P.placeholder()
 
-    # To monitor the caching tokens statistics
-    time.sleep(20)
-
     # Then we can call the function.
     write_recommendation_letter(
         stu_name=stu_name,
@@ -71,6 +68,9 @@ async def main():
         specialty=specialty,
         letter=letter,
     )
+
+    # To monitor the caching tokens statistics
+    time.sleep(20)
 
     # Now we can fill in the placeholders.
     stu_name.assign("John")

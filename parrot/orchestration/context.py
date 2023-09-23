@@ -1,7 +1,12 @@
-from typing import Optional
+from typing import Optional, List
 
-from ..utils import RecyclePool
+from .engine import ExecutionEngine
+from ..utils import RecyclePool, get_logger
 from ..constants import RECYCLE_POOL_SIZE, NONE_CONTEXT_ID
+from ..protocol import free_context
+
+
+logger = get_logger("Context")
 
 
 class Context:
@@ -20,8 +25,28 @@ class Context:
         self.context_id = Context.context_id_manager.allocate()
         self.parent_context = parent_context
 
-    def __del__(self):
-        # print("Context deleted.")
+        # Record engines that have cached this context.
+        self.cached_engines: List[ExecutionEngine] = []
+
+    def destruction(self):
+        """Destruct the context. If we call this function, the context obj should not be used
+        anymore."""
+
+        for engine in self.cached_engines:
+            try:
+                resp = free_context(
+                    engine.http_address,
+                    self.context_id,
+                )
+            except BaseException as e:
+                logger.error(
+                    f"Context: {self.context_id} did not free correctly: {type(e)}, {e}."
+                )
+            else:
+                logger.info(
+                    f"Context: {self.context_id} freed. Freed tokens: {resp.num_freed_tokens}"
+                )
+
         Context.context_id_manager.free(self.context_id)
 
     @property

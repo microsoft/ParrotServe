@@ -8,7 +8,7 @@ from .engine import ExecutionEngine
 from .context import Context
 from ..utils import get_logger
 from ..program.function import SemanticFunction
-from ..protocol import check_heartbeat, prefix_init, free_context
+from ..protocol import check_heartbeat, prefix_init
 
 
 logger = get_logger("Controller", logging.INFO)
@@ -56,6 +56,7 @@ class Controller:
             func = self.functions_table[func_name]
             # NOTE(chaofan): Now we cache the prefix on all engines
             for engine in self.engines_table.values():
+                prefix_context.cached_engines.append(engine)
                 prefix_tokens = tokenized_storage.tokenize_func_body(
                     func, engine.tokenizer
                 )[0]
@@ -69,17 +70,8 @@ class Controller:
                 ), "Prefix init failed: not all tokens are filled."
 
     def free_function_prefix(self):
-        for func_name, prefix_context in self.function_prefix.items():
-            for engine in self.engines_table.values():
-                try:
-                    free_context(
-                        engine.http_address,
-                        prefix_context.context_id,
-                    )
-                except:
-                    logger.error(
-                        f"Free the prefix context {prefix_context.context_id} of the function {func_name} failed."
-                    )
+        for prefix_context in self.function_prefix.values():
+            prefix_context.destruction()
 
     def register_engine(self, name: str, host: str, port: int, tokenizer: str):
         self._check_is_run()

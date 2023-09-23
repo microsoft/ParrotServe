@@ -18,7 +18,7 @@ SemanticFunction._controller = global_controller
 
 
 @contextlib.contextmanager
-def controller_running_context(timeit: bool):
+def parrot_running_environment(timeit: bool):
     """Under this context, the global controller is running."""
 
     # Set the executor
@@ -56,7 +56,7 @@ def register_engine(*args, **kwargs):
 
 
 def parrot_run_aysnc(coroutine, timeit: bool = False):
-    with controller_running_context(timeit):
+    with parrot_running_environment(timeit):
         # asyncio.run(coroutine)
         loop = asyncio.new_event_loop()
         loop.run_until_complete(coroutine)

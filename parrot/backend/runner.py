@@ -4,7 +4,7 @@ import torch
 import time
 
 from .model_instantiation import instantiate_model
-from .mem import KVContext, init_model_cache_storage
+from .mem import LowLevelContext, init_model_cache_storage
 from .iter_state import IterationState
 from .primitives import PrimitiveJob, Fill, Generation
 from ..utils import RecyclePool, set_random_seed, get_logger
@@ -27,7 +27,7 @@ class Runner:
         # )
 
         self.runner_config = config
-        self.context_manager: Dict[int, KVContext] = {}
+        self.context_manager: Dict[int, LowLevelContext] = {}
         self.kv_cache_manager = RecyclePool(self.runner_config.num_kv_cache_blocks)
 
         # Load Model
@@ -45,7 +45,7 @@ class Runner:
             raise RuntimeError(f"Context id {context_id} not found.")
         context = self.context_manager.pop(context_id)
         num_freed_tokens = len(context.token_ids)
-        del context
+        context.destruction()
         return num_freed_tokens
 
     def bind_job_context(self, job: PrimitiveJob):
@@ -56,8 +56,10 @@ class Runner:
                 parent_context = None
             else:
                 parent_context = self.context_manager[job.parent_context_id]
-            self.context_manager[job.context_id] = KVContext(
-                job.context_id, parent_context, self.kv_cache_manager
+            self.context_manager[job.context_id] = LowLevelContext(
+                job.context_id,
+                parent_context,
+                self.kv_cache_manager,
             )
         job.context = self.context_manager[job.context_id]
 

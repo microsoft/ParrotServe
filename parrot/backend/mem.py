@@ -13,21 +13,22 @@ _ARCH_WITH_ROPE = [
 ]
 
 
-class KVContext:
+class LowLevelContext:
     """Low-level implementation of Context."""
 
     def __init__(
         self,
         context_id: int,
-        parent_context: Optional["KVContext"],
+        parent_context: Optional["LowLevelContext"],
         kv_cache_manager: RecyclePool,
     ):
         self.context_id = context_id
-        self.sub_contexts: List["KVContext"] = []
+        self.sub_context_ids: List[int] = []
 
         # Link with parent context
         self.parent_context = parent_context
-        parent_context.sub_contexts.append(self) if parent_context else None
+        if self.parent_context is not None:
+            parent_context.sub_context_ids.append(self.context_id)
 
         # KV blocks address
         self.token_kv_block_ids: List[int] = []
@@ -40,9 +41,15 @@ class KVContext:
         # `last_hidden_state` for the `generation` primitive.
         self.last_hidden_state: Optional[torch.Tensor] = None
 
-    def __del__(self):
-        self.parent_context.sub_contexts.remove(self) if self.parent_context else None
-        assert len(self.sub_contexts) == 0, "Sub-contexts should be deleted first."
+    def destruction(self):
+        """Destruct the context. If we call this function, the context obj should not be used
+        anymore."""
+
+        if self.parent_context is not None:
+            self.parent_context.sub_context_ids.remove(self.context_id)
+        assert (
+            len(self.sub_context_ids) == 0
+        ), f"Sub-contexts {self.sub_context_ids[0]} should be deleted first."
         for block_id in self.token_kv_block_ids:
             self.kv_cache_manager.free(block_id)
 
