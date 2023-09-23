@@ -55,6 +55,7 @@ def test_fill_then_gen(runner_config: RunnerConfig):
             Generation(
                 session_id=0,
                 context_id=0,
+                parent_context_id=-1,
                 sampling_params=SamplingParams(),
             )
         ]
@@ -84,6 +85,7 @@ def test_generate_single_text(runner_config: RunnerConfig):
                 Generation(
                     session_id=0,
                     context_id=0,
+                    parent_context_id=-1,
                     sampling_params=SamplingParams(),
                 )
             ]
@@ -118,6 +120,7 @@ def test_generate_batch_text(runner_config: RunnerConfig):
             Generation(
                 session_id=i,
                 context_id=i,
+                parent_context_id=-1,
                 sampling_params=SamplingParams(),
             )
             for i in range(len(prompt_tokens))
@@ -157,6 +160,7 @@ def test_fill_generate_mixed(runner_config: RunnerConfig):
         Generation(
             session_id=i,
             context_id=i,
+            parent_context_id=-1,
             sampling_params=SamplingParams(),
         )
         for i in range(len(prompt_tokens))

@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from transformers import PretrainedConfig
 
-from ..iter_state import IterationState
+from ...protocol.sampling_params import SamplingParams
 
 
 class Sampler(nn.Module):
@@ -12,18 +12,13 @@ class Sampler(nn.Module):
         self.embd_weight = embd_weight  # It's a reference
         self.vocab_size = config.vocab_size
 
-    def forward(self, hidden_states: torch.Tensor, iteration_state: IterationState):
-        # Get last tokens
-        idx = 0
-        indicies: List[int] = []
-        for n in iteration_state.num_fill_tokens:
-            idx += n
-            indicies.append(idx - 1)
-        for _ in range(iteration_state.num_generation_jobs):
-            idx += 1
-            indicies.append(idx - 1)
+    def forward(
+        self, hidden_states: torch.Tensor, sampling_params: List[SamplingParams]
+    ):
+        if hidden_states.shape[0] == 0:
+            return torch.zeros(0, dtype=torch.int64, device=hidden_states.device)
 
-        hidden_states = hidden_states[indicies]
+        assert hidden_states.shape[0] == len(sampling_params)
 
         logits = torch.matmul(hidden_states, self.embd_weight.t())
         probs = torch.softmax(logits, dim=-1, dtype=torch.float)

@@ -10,6 +10,7 @@ from .primitives import PrimitiveJob, Fill, Generation
 from ..utils import RecyclePool, set_random_seed, get_logger
 from .config import RunnerConfig
 from ..constants import NONE_CONTEXT_ID
+from ..protocol.sampling_params import SamplingParams
 
 
 logger = get_logger("Runner")
@@ -69,6 +70,11 @@ class Runner:
         # We should sort jobs such that Fill jobs are before Generation jobs.
         jobs.sort(key=lambda job: isinstance(job, Generation))
 
+        # Some generation jobs should do "first sampling"
+        first_sampling_states: List[torch.Tensor] = []
+        first_sampling_params: List[SamplingParams] = []
+        first_sampling_jobs: List[Generation] = []
+
         # Allocate new context blocks
         for job in jobs:
             # NOTE(chaofan): if we use engine, this is not necessary.
@@ -81,15 +87,26 @@ class Runner:
             if isinstance(job, Fill):
                 job.context.token_ids.extend(job.token_ids)
                 job.context.allocate(len(job.token_ids))
-                job.context.last_extended_by_fill = True
             elif isinstance(job, Generation):
                 job.context.allocate(1)
-                if job.context.last_extended_by_fill:
-                    # NOTE: See parrot/backend/mem.py: L31.
-                    job.put_token(job.context.get_last_token_id())
-                job.context.last_extended_by_fill = False
+                if job.context.last_hidden_state is not None:
+                    first_sampling_states.append(job.context.last_hidden_state)
+                    first_sampling_params.append(job.sampling_params)
+                    first_sampling_jobs.append(job)
+                    job.context.last_hidden_state = None
 
-            job.context.tokens_kv_block_id.extend(allocated_blocks_id)
+            job.context.token_kv_block_ids.extend(allocated_blocks_id)
+
+        # First sampling
+        if len(first_sampling_states) > 0:
+            first_sampling_states = torch.stack(first_sampling_states)
+            first_sampling_tokens = (
+                self.model.sampler(first_sampling_states, first_sampling_params)
+                .cpu()
+                .tolist()
+            )
+            for i, job in enumerate(first_sampling_jobs):
+                job.put_token(first_sampling_tokens[i])
 
         # Prepare iteration state
         iteration_state = IterationState(
@@ -127,25 +144,25 @@ class Runner:
 
         st_model = time.perf_counter_ns()
         # Execute model
-        next_tokens = (
-            self.model(input_ids, input_positions, iteration_state).cpu().tolist()
+        fill_hidden_states, next_tokens = self.model(
+            input_ids, input_positions, iteration_state
         )
+        next_tokens = next_tokens.cpu().tolist()
         ed_model = time.perf_counter_ns()
-        assert len(next_tokens) == len(jobs)
+        assert fill_hidden_states.shape[0] + len(next_tokens) == len(jobs)
 
         # Update context
-        for i, token_id in enumerate(next_tokens):
-            job = jobs[i]
+        for i, job in enumerate(jobs):
             assert job.context is not None, "Context should be assigned."
-            job.context.token_ids.append(token_id)
-
-            # Mark finish flag
             if isinstance(job, Fill):
+                job.context.last_hidden_state = fill_hidden_states[i]
                 job.finish_event.set()
             elif isinstance(job, Generation):
+                token_id = next_tokens[i - iteration_state.num_fill_jobs]
                 job.put_token(token_id)
                 if job.check_stop():
                     job.finish_event.set()
+
         ed = time.perf_counter_ns()
 
         e2e_time = (ed - st) / 1e9

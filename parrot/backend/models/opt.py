@@ -22,12 +22,11 @@
 
 """PyTorch inference-only OPT model. Input is flattened."""
 
-from typing import Optional
-
 import torch
 from torch import nn
 from transformers import OPTConfig
 
+from .model_utils import hidden_states_postprocess
 from .weight_utils import hf_weights_loader
 from ..iter_state import IterationState
 from .sampler import Sampler
@@ -272,8 +271,13 @@ class OPTForCausalLM(nn.Module):
         iteration_state: IterationState,
     ):
         hidden_states = self.model(input_ids, positions, iteration_state)
-        next_tokens = self.sampler(hidden_states, iteration_state)
-        return next_tokens
+        fill_hidden_states, gen_hidden_states = hidden_states_postprocess(
+            hidden_states, iteration_state
+        )
+        next_tokens = self.sampler(
+            gen_hidden_states, iteration_state.generation_sampling_params
+        )
+        return fill_hidden_states, next_tokens
 
     def load_weights(self, model_name_or_path: str):
         state_dict = self.state_dict()

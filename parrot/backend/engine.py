@@ -46,7 +46,7 @@ class ExecutionEngine:
         num_cached_tokens = 0
         for context in self.runner.context_manager.values():
             num_cached_tokens += len(
-                context.tokens_kv_block_id
+                context.token_kv_block_ids
             )  # We don't need to count the parent context.
 
         cached_tokens_size = (

@@ -1,6 +1,6 @@
 from parrot.backend.models.opt import OPTForCausalLM
 from parrot.backend.config import RunnerConfig
-from parrot.backend.iter_state import IterationState
+from parrot.protocol import SamplingParams
 from parrot.utils import set_random_seed
 from transformers import AutoConfig
 import torch
@@ -26,9 +26,7 @@ def test_sampling_one_token():
     hidden_states = torch.randn(
         (8, model_config.hidden_size), dtype=torch.float16, device="cuda"
     )
-    iter_state = IterationState([], model_config, runner_config, torch.float16, "cuda")
-    iter_state.num_fill_tokens = [8]
-    ids = sampler(hidden_states, iter_state)
+    ids = sampler(hidden_states[-1:], [SamplingParams()])
 
     assert ids[0] == 14836
 

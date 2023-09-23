@@ -40,6 +40,7 @@ def test_engine_simple_serving():
             Generation(
                 session_id=0,
                 context_id=0,
+                parent_context_id=-1,
                 sampling_params=SamplingParams(
                     max_gen_length=40,
                     stop_token_ids=[tokenizer.eos_token_id],

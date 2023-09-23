@@ -72,6 +72,7 @@ class Generation(PrimitiveJob):
 
     def put_token(self, token_id: int) -> None:
         self.output_queue.put_nowait(token_id)
+        self.context.token_ids.append(token_id)
         self.gen_length += 1
 
     def check_stop(self) -> bool:

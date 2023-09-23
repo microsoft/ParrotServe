@@ -28,32 +28,33 @@ class KVContext:
         # Link with parent context
         self.parent_context = parent_context
         parent_context.sub_contexts.append(self) if parent_context else None
-        self.tokens_kv_block_id: List[int] = []
+
+        # KV blocks address
+        self.token_kv_block_ids: List[int] = []
         self.token_ids: List[int] = []
 
         # KV cache manager i.e. a pool allocator.
         self.kv_cache_manager = kv_cache_manager
 
-        # Flag to indicate whether the context is extended by a Fill primitive.
-        # If the context is extended by a Fill primitive recently, the last token
-        # will be added the next Generation primitive.
-        self.last_extended_by_fill = False
+        # If the context is extended by the `fill` primitive, it should has a
+        # `last_hidden_state` for the `generation` primitive.
+        self.last_hidden_state: Optional[torch.Tensor] = None
 
     def __del__(self):
         self.parent_context.sub_contexts.remove(self) if self.parent_context else None
         assert len(self.sub_contexts) == 0, "Sub-contexts should be deleted first."
-        for block_id in self.tokens_kv_block_id:
+        for block_id in self.token_kv_block_ids:
             self.kv_cache_manager.free(block_id)
 
     def allocate(self, length: int):
         for _ in range(length):
-            self.tokens_kv_block_id.append(self.kv_cache_manager.allocate())
+            self.token_kv_block_ids.append(self.kv_cache_manager.allocate())
 
     def get_context_len(self) -> int:
         """Return the length of the context."""
 
         parent_len = self.parent_context.get_context_len() if self.parent_context else 0
-        return parent_len + len(self.tokens_kv_block_id)
+        return parent_len + len(self.token_kv_block_ids)
 
     def get_context_blocks(self) -> List[int]:
         """Return the context blocks."""
@@ -61,7 +62,7 @@ class KVContext:
         parent_blocks = (
             self.parent_context.get_context_blocks() if self.parent_context else []
         )
-        return parent_blocks + self.tokens_kv_block_id
+        return parent_blocks + self.token_kv_block_ids
 
     def get_last_token_id(self) -> int:
         """Return the last token id."""

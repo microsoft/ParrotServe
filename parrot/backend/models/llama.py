@@ -25,7 +25,6 @@
 # limitations under the License.
 
 """PyTorch inference-only LLaMA model. Input is flattened."""
-from typing import Optional
 
 import torch
 from torch import nn
@@ -36,12 +35,13 @@ from transformers.models.llama.modeling_llama import (
     LlamaRMSNorm,
 )
 
+from .model_utils import hidden_states_postprocess
+from .weight_utils import hf_weights_loader
 from ..iter_state import IterationState
 from ..mem import get_cos_cache, get_sin_cache
 from ..config import RunnerConfig
 from .sampler import Sampler
 from .attn_func import xFormersWithBuffer
-from .weight_utils import hf_weights_loader
 from ..kernels import rotary_embedding
 
 
@@ -198,8 +198,13 @@ class LlamaForCausalLM(nn.Module):
             get_sin_cache(), dim=0, index=positions
         )
         hidden_states = self.model(input_ids, iteration_state)
-        next_tokens = self.sampler(hidden_states, iteration_state)
-        return next_tokens
+        fill_hidden_states, gen_hidden_states = hidden_states_postprocess(
+            hidden_states, iteration_state
+        )
+        next_tokens = self.sampler(
+            gen_hidden_states, iteration_state.generation_sampling_params
+        )
+        return fill_hidden_states, next_tokens
 
     def load_weights(self, model_name_or_path: str):
         state_dict = self.state_dict()

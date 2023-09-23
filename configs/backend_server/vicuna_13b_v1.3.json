@@ -2,7 +2,7 @@
     "engine_name": "vicuna_13b_v1.3_local",
     "runner": {
         "model_name": "lmsys/vicuna-13b-v1.3",
-        "num_kv_cache_blocks": 4000,
+        "num_kv_cache_blocks": 8000,
         "attn_func": "xformers_with_buffer",
         "random_seed": 2333
     },
