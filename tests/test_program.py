@@ -1,6 +1,6 @@
 import asyncio
 
-from parrot import P
+import parrot as P
 from parrot.program.function import Prefix, Constant, ParameterLoc
 
 

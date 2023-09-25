@@ -47,7 +47,7 @@ class SharedContext:
         if not self._controller.is_running:
             raise RuntimeError(
                 "Controller is not running. "
-                "(Please ensure run a Parrot function in a running context, e.g. using env.parrot_run_aysnc)."
+                "(Please ensure call `vm.init` before running a Parrot function."
             )
 
         if self._tokenized_storage is None:

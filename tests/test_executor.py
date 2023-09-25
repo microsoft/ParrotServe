@@ -2,23 +2,24 @@
 Use `python3 -m parrot.testing.fake_server` to start a fake server.
 """
 
-import time
-from parrot import P, env
+import parrot as P
 
 
 def init():
-    env.register_tokenizer("facebook/opt-13b")
-    env.register_engine(
+    vm = P.VirtualMachine()
+    vm.init()
+    vm.register_tokenizer("facebook/opt-13b")
+    vm.register_engine(
         "test",
         host="localhost",
         port=8888,
         tokenizer="facebook/opt-13b",
     )
+    return vm
 
 
 def test_execute_single_function_call():
-    # Initialize
-    init()
+    vm = init()
 
     @P.function()
     def test(a: P.Input, b: P.Input, c: P.Output):
@@ -38,15 +39,11 @@ def test_execute_single_function_call():
 
         print(await c.get())
 
-    st = time.perf_counter_ns()
-    env.parrot_run_aysnc(main())
-    ed = time.perf_counter_ns()
-    print("Time Used: ", (ed - st) / 1e9)
+    vm.run(main(), timeit=True)
 
 
 def test_pipeline_call():
-    # Initialize
-    init()
+    vm = init()
 
     @P.function()
     def test(a: P.Input, b: P.Input, c: P.Output):
@@ -71,15 +68,11 @@ def test_pipeline_call():
 
         print(await d.get())
 
-    st = time.perf_counter_ns()
-    env.parrot_run_aysnc(main())
-    ed = time.perf_counter_ns()
-    print("Time Used: ", (ed - st) / 1e9)
+    vm.run(main(), timeit=True)
 
 
 def test_dag():
-    # Initialize
-    init()
+    vm = init()
 
     @P.function()
     def test(a: P.Input, b: P.Input, c: P.Output):
@@ -109,15 +102,11 @@ def test_dag():
 
         print(await g.get())
 
-    st = time.perf_counter_ns()
-    env.parrot_run_aysnc(main())
-    ed = time.perf_counter_ns()
-    print("Time Used: ", (ed - st) / 1e9)
+    vm.run(main(), timeit=True)
 
 
 def test_shared_context():
-    # Initialize
-    init()
+    vm = init()
 
     @P.function(caching_prefix=False)
     def test(a: P.Input, b: P.Input, c: P.Output):
@@ -151,11 +140,11 @@ def test_shared_context():
 
         print(await e.get())
 
-    env.parrot_run_aysnc(main())
+    vm.run(main(), timeit=False)
 
 
 if __name__ == "__main__":
-    # test_execute_single_function_call()
-    # test_pipeline_call()
-    # test_dag()
+    test_execute_single_function_call()
+    test_pipeline_call()
+    test_dag()
     test_shared_context()

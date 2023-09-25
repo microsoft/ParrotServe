@@ -1,21 +1,12 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
-from parrot import env, P
+import parrot as P
 import aioconsole  # We use aioconsole to read input asynchronously
 import logging
 
-# Disable the logging
-logging.disable(logging.DEBUG)
-logging.disable(logging.INFO)
-
-env.register_tokenizer("hf-internal-testing/llama-tokenizer")
-env.register_engine(
-    "vicuna_13b_v1.3_local",
-    host="localhost",
-    port=8888,
-    tokenizer="hf-internal-testing/llama-tokenizer",
-)
+vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
+vm.init()
 
 
 @P.function()
@@ -44,4 +35,4 @@ async def main():
         print("Answer: ", answer_str)
 
 
-env.parrot_run_aysnc(main())
+vm.run(main())

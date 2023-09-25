@@ -6,20 +6,10 @@
 # the help of a "playwriter" and a "critic".
 
 
-from parrot import env, P
-import logging
+import parrot as P
 
-# Disable the logging
-logging.disable(logging.DEBUG)
-logging.disable(logging.INFO)
-
-env.register_tokenizer("hf-internal-testing/llama-tokenizer")
-env.register_engine(
-    "vicuna_13b_v1.3_local",
-    host="localhost",
-    port=8888,
-    tokenizer="hf-internal-testing/llama-tokenizer",
-)
+vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
+vm.init()
 
 
 @P.function()
@@ -99,4 +89,4 @@ async def main():
     print(await post.get())
 
 
-env.parrot_run_aysnc(main(), timeit=True)
+vm.run(main(), timeit=True)

@@ -3,9 +3,9 @@ Use `python3 -m parrot.testing.fake_server` to start a fake server.
 """
 
 import time
+import parrot as P
 from parrot.orchestration.controller import Controller
 from parrot.orchestration.tokenize import TokenizedStorage
-from parrot import P
 from parrot.program.function import SemanticFunction
 
 

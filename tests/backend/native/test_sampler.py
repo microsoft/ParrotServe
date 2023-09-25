@@ -1,4 +1,4 @@
-from parrot.backend.models.opt import OPTForCausalLM
+from parrot.backend.native.models.opt import OPTForCausalLM
 from parrot.backend.config import NativeConfig
 from parrot.protocol import SamplingParams
 from parrot.utils import set_random_seed

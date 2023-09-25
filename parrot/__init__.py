@@ -1,5 +1,5 @@
-# Global API
-from . import global_user_api as env
+# Virtual Machine
+from .vm import VirtualMachine
 
 # Program Interface
-from . import program as P
+from .program import *

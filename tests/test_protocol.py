@@ -36,6 +36,7 @@ def test_prefix_init():
     resp = fill(
         http_addr=addr,
         context_id=0,
+        parent_context_id=-1,
         token_ids=[1, 2, 3],
     )
 

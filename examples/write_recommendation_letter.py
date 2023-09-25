@@ -1,21 +1,11 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
-from parrot import env, P
-import time
+import parrot as P
 
-# We need to configure the environment before we can use it.
-# Here we use the Vicuna model from LMSYS as an example.
-
-# First, we need to register the tokenizer we want to use.
-env.register_tokenizer("hf-internal-testing/llama-tokenizer")
-# Then, we need to register the engine we want to use.
-env.register_engine(
-    "vicuna_13b_v1.3_local",
-    host="localhost",
-    port=8888,
-    tokenizer="hf-internal-testing/llama-tokenizer",
-)
+# We need to start a definition scope before defining any functions.
+vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
+vm.init()
 
 
 # Now we can start to define a "Parrot function".
@@ -47,9 +37,7 @@ def write_recommendation_letter(
     """
 
 
-# Now we can call the function we just defined.
-
-
+# Then we can start to define the main function.
 async def main():
     # First we need some placeholders.
     stu_name = P.placeholder()
@@ -69,9 +57,6 @@ async def main():
         letter=letter,
     )
 
-    # To monitor the caching tokens statistics
-    time.sleep(20)
-
     # Now we can fill in the placeholders.
     stu_name.assign("John")
     prof_name.assign("Prof. Smith")
@@ -86,4 +71,5 @@ async def main():
     print(letter_str)
 
 
-env.parrot_run_aysnc(main())
+# Just run it.
+vm.run(main())
