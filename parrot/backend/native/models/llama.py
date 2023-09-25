@@ -39,7 +39,7 @@ from .model_utils import hidden_states_postprocess
 from .weight_utils import hf_weights_loader
 from ..iter_state import IterationState
 from ..mem import get_cos_cache, get_sin_cache
-from ..config import RunnerConfig
+from ...config import NativeConfig
 from .sampler import Sampler
 from .attn_func import xFormersWithBuffer
 from ..kernels import rotary_embedding
@@ -112,7 +112,7 @@ class LlamaAttention(nn.Module):
 
 class LlamaDecoderLayer(nn.Module):
     def __init__(
-        self, config: LlamaConfig, runner_config: RunnerConfig, layer_idx: int
+        self, config: LlamaConfig, native_config: NativeConfig, layer_idx: int
     ):
         super().__init__()
         self.hidden_size = config.hidden_size
@@ -120,7 +120,7 @@ class LlamaDecoderLayer(nn.Module):
         self.self_attn = LlamaAttention(
             config=config,
             layer_idx=layer_idx,
-            attn_func_name=runner_config.attn_func,
+            attn_func_name=native_config.attn_func,
         )
         self.mlp = LlamaMLP(config)
         self.input_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
@@ -148,7 +148,7 @@ class LlamaDecoderLayer(nn.Module):
 
 
 class LlamaModel(nn.Module):
-    def __init__(self, config: LlamaConfig, runner_config: RunnerConfig):
+    def __init__(self, config: LlamaConfig, native_config: NativeConfig):
         super().__init__()
         self.padding_idx = config.pad_token_id
         self.vocab_size = config.vocab_size
@@ -157,7 +157,7 @@ class LlamaModel(nn.Module):
         )
         self.layers = nn.ModuleList(
             [
-                LlamaDecoderLayer(config, runner_config, i)
+                LlamaDecoderLayer(config, native_config, i)
                 for i in range(config.num_hidden_layers)
             ]
         )
@@ -177,10 +177,10 @@ class LlamaModel(nn.Module):
 
 
 class LlamaForCausalLM(nn.Module):
-    def __init__(self, config: LlamaConfig, runner_config: RunnerConfig):
+    def __init__(self, config: LlamaConfig, native_config: NativeConfig):
         super().__init__()
         self.config = config
-        self.model = LlamaModel(config, runner_config)
+        self.model = LlamaModel(config, native_config)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
         self.sampler = Sampler(config, self.lm_head.weight)
 

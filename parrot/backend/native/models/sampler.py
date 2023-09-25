@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from transformers import PretrainedConfig
 
-from ...protocol.sampling_params import SamplingParams
+from parrot.protocol.sampling_params import SamplingParams
 
 
 class Sampler(nn.Module):

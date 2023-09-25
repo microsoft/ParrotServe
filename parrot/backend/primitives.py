@@ -1,9 +1,9 @@
 from typing import List, Optional
 from asyncio import Event, Queue as AsyncQueue
 
-from .mem import LowLevelContext
-from ..protocol.sampling_params import SamplingParams
-from ..constants import STREAMING_END_TOKEN_ID
+from parrot.protocol.sampling_params import SamplingParams
+
+from .low_level_context import LowLevelContext
 
 
 class PrimitiveJob:

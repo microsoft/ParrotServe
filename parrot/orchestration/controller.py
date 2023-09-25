@@ -4,12 +4,13 @@ import time
 import threading
 from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 
+from parrot.utils import get_logger
+from parrot.program.function import SemanticFunction
+from parrot.protocol import check_heartbeat, fill
+from parrot.constants import NONE_CONTEXT_ID
+
 from .engine import ExecutionEngine
 from .context import Context
-from ..utils import get_logger
-from ..program.function import SemanticFunction
-from ..protocol import check_heartbeat, fill
-from ..constants import NONE_CONTEXT_ID
 
 
 logger = get_logger("Controller", logging.INFO)

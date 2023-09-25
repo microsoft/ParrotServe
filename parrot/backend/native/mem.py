@@ -1,9 +1,10 @@
-from typing import List, Optional
+from typing import Optional
 from transformers import PretrainedConfig
 import torch
 
-from .config import RunnerConfig
-from ..utils import get_logger, RecyclePool
+from parrot.utils import get_logger
+
+from ..config import NativeConfig
 
 logger = get_logger("Mem")
 
@@ -11,70 +12,6 @@ logger = get_logger("Mem")
 _ARCH_WITH_ROPE = [
     "LlamaForCausalLM",
 ]
-
-
-class LowLevelContext:
-    """Low-level implementation of Context."""
-
-    def __init__(
-        self,
-        context_id: int,
-        parent_context: Optional["LowLevelContext"],
-        kv_cache_manager: RecyclePool,
-    ):
-        self.context_id = context_id
-        self.sub_context_ids: List[int] = []
-
-        # Link with parent context
-        self.parent_context = parent_context
-        if self.parent_context is not None:
-            parent_context.sub_context_ids.append(self.context_id)
-
-        # KV blocks address
-        self.token_kv_block_ids: List[int] = []
-        self.token_ids: List[int] = []
-
-        # KV cache manager i.e. a pool allocator.
-        self.kv_cache_manager = kv_cache_manager
-
-        # If the context is extended by the `fill` primitive, it should has a
-        # `last_hidden_state` for the `generation` primitive.
-        self.last_hidden_state: Optional[torch.Tensor] = None
-
-    def destruction(self):
-        """Destruct the context. If we call this function, the context obj should not be used
-        anymore."""
-
-        if self.parent_context is not None:
-            self.parent_context.sub_context_ids.remove(self.context_id)
-        assert (
-            len(self.sub_context_ids) == 0
-        ), f"Sub-contexts {self.sub_context_ids[0]} should be deleted first."
-        for block_id in self.token_kv_block_ids:
-            self.kv_cache_manager.free(block_id)
-
-    def allocate(self, length: int):
-        for _ in range(length):
-            self.token_kv_block_ids.append(self.kv_cache_manager.allocate())
-
-    def get_context_len(self) -> int:
-        """Return the length of the context."""
-
-        parent_len = self.parent_context.get_context_len() if self.parent_context else 0
-        return parent_len + len(self.token_kv_block_ids)
-
-    def get_context_blocks(self) -> List[int]:
-        """Return the context blocks."""
-
-        parent_blocks = (
-            self.parent_context.get_context_blocks() if self.parent_context else []
-        )
-        return parent_blocks + self.token_kv_block_ids
-
-    def get_last_token_id(self) -> int:
-        """Return the last token id."""
-
-        return self.token_ids[-1]
 
 
 class ModelCacheStorage:
@@ -88,14 +25,14 @@ class ModelCacheStorage:
     def __init__(
         self,
         hf_config: PretrainedConfig,
-        runner_config: RunnerConfig,
+        native_config: NativeConfig,
     ) -> None:
         num_layers = hf_config.num_hidden_layers
-        num_blocks = runner_config.num_kv_cache_blocks
+        num_blocks = native_config.num_kv_cache_blocks
         num_heads = hf_config.num_attention_heads
         head_size = hf_config.hidden_size // num_heads
-        dtype = runner_config.dtype
-        device = runner_config.device
+        dtype = native_config.dtype
+        device = native_config.device
 
         self.k_cache = torch.empty(
             [num_layers, num_blocks, num_heads, head_size],
@@ -125,9 +62,9 @@ class ModelCacheStorage:
         )
 
         # cos / sin cache for rotary embedding models.
-        if runner_config.model_arch in _ARCH_WITH_ROPE:
+        if native_config.model_arch in _ARCH_WITH_ROPE:
             logger.info(
-                f"Model arch {runner_config.model_arch} needs rotary embedding models. "
+                f"Model arch {native_config.model_arch} needs rotary embedding models. "
                 f"Allcoating cos/sin cache ..."
             )
 
@@ -175,7 +112,7 @@ class ModelCacheStorage:
             )
         else:
             logger.info(
-                f"Model arch {runner_config.model_arch} doesn't needs rotary embedding models. "
+                f"Model arch {native_config.model_arch} doesn't needs rotary embedding models. "
                 f"Skip allocating cos/sin cache."
             )
 
@@ -189,10 +126,10 @@ Model_Cache: Optional[ModelCacheStorage] = None
 
 def init_model_cache_storage(
     hf_config: PretrainedConfig,
-    runner_config: RunnerConfig,
+    native_config: NativeConfig,
 ) -> None:
     global Model_Cache
-    Model_Cache = ModelCacheStorage(hf_config, runner_config)
+    Model_Cache = ModelCacheStorage(hf_config, native_config)
 
 
 def get_k_cache(layer_idx: int) -> torch.Tensor:

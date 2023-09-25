@@ -3,14 +3,16 @@ from transformers import AutoConfig
 import torch
 import time
 
+from parrot.utils import RecyclePool, set_random_seed, get_logger
+from parrot.constants import NONE_CONTEXT_ID
+from parrot.protocol.sampling_params import SamplingParams
+
 from .model_instantiation import instantiate_model
-from .mem import LowLevelContext, init_model_cache_storage
+from .mem import init_model_cache_storage
+from .block_context import BlockContext
 from .iter_state import IterationState
-from .primitives import PrimitiveJob, Fill, Generation
-from ..utils import RecyclePool, set_random_seed, get_logger
-from .config import RunnerConfig
-from ..constants import NONE_CONTEXT_ID
-from ..protocol.sampling_params import SamplingParams
+from ..primitives import PrimitiveJob, Fill, Generation
+from ..config import NativeConfig
 
 
 logger = get_logger("Runner")
@@ -19,26 +21,20 @@ logger = get_logger("Runner")
 class Runner:
     """Minimal LLM Runner with adaption to Parrot."""
 
-    def __init__(self, config: RunnerConfig):
-        # self.config = RunnerConfig(
-        #     num_kv_cache_blocks=500,  # TODO(chaofan): config this
-        #     attn_func="xformers_with_buffer",
-        #     random_seed=0,
-        # )
-
-        self.runner_config = config
-        self.context_manager: Dict[int, LowLevelContext] = {}
-        self.kv_cache_manager = RecyclePool(self.runner_config.num_kv_cache_blocks)
+    def __init__(self, config: NativeConfig):
+        self.native_config = config
+        self.context_manager: Dict[int, BlockContext] = {}
+        self.kv_cache_manager = RecyclePool(self.native_config.num_kv_cache_blocks)
 
         # Load Model
-        self.hf_model_config = AutoConfig.from_pretrained(self.runner_config.model_name)
-        self.model = instantiate_model(self.hf_model_config, self.runner_config)
+        self.hf_model_config = AutoConfig.from_pretrained(self.native_config.model_name)
+        self.model = instantiate_model(self.hf_model_config, self.native_config)
 
         # Init model cache storage
-        init_model_cache_storage(self.hf_model_config, self.runner_config)
+        init_model_cache_storage(self.hf_model_config, self.native_config)
 
         # Set random seed
-        set_random_seed(self.runner_config.random_seed)
+        set_random_seed(self.native_config.random_seed)
 
     def free_context(self, context_id: int) -> int:
         if context_id not in self.context_manager:
@@ -56,7 +52,7 @@ class Runner:
                 parent_context = None
             else:
                 parent_context = self.context_manager[job.parent_context_id]
-            self.context_manager[job.context_id] = LowLevelContext(
+            self.context_manager[job.context_id] = BlockContext(
                 job.context_id,
                 parent_context,
                 self.kv_cache_manager,
@@ -114,7 +110,7 @@ class Runner:
         iteration_state = IterationState(
             jobs,
             self.hf_model_config,
-            self.runner_config,
+            self.native_config,
         )
 
         # Convert inputs
@@ -136,12 +132,12 @@ class Runner:
         input_ids = torch.tensor(
             input_ids,
             dtype=torch.int64,
-            device=self.runner_config.device,
+            device=self.native_config.device,
         )
         input_positions = torch.tensor(
             input_positions,
             dtype=torch.int64,
-            device=self.runner_config.device,
+            device=self.native_config.device,
         )
 
         st_model = time.perf_counter_ns()

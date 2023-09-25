@@ -1,7 +1,8 @@
 from typing import Dict, List
 
+from parrot.program.function import SemanticFunction, Constant, Prefix
+
 from .controller import Controller
-from ..program.function import SemanticFunction, Constant, Prefix
 
 
 class TokenizedStorage:

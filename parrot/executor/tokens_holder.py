@@ -1,8 +1,8 @@
 from typing import List, Optional
 from asyncio import Event
 
-from ..program.placeholder import Placeholder
-from ..orchestration.tokenize import TokenizedStorage
+from parrot.program.placeholder import Placeholder
+from parrot.orchestration.tokenize import TokenizedStorage
 
 
 class TokensHolder:

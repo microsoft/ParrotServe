@@ -1,5 +1,6 @@
+from parrot.orchestration.controller import Controller
+
 from .session import Session
-from ..orchestration.controller import Controller
 
 
 class Dispatcher:

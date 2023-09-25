@@ -1,4 +1,4 @@
-from ..constants import FILL_NO_CHUNK
+from parrot.constants import FILL_NO_CHUNK
 
 
 class ExecutionEngine:

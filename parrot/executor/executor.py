@@ -1,15 +1,16 @@
 from typing import Dict, Optional
 
-from ..program.function import Prefix, Promise, Constant, ParameterLoc, ParamType
-from ..program.placeholder import Placeholder
+from parrot.program.function import Prefix, Promise, Constant, ParameterLoc, ParamType
+from parrot.program.placeholder import Placeholder
+from parrot.orchestration.context import Context
+from parrot.orchestration.controller import Controller
+from parrot.orchestration.tokenize import TokenizedStorage
+from parrot.utils import get_logger, create_task_in_loop
+
 from .dispatcher import Dispatcher
 from .session import Session
 from .instructions import ConstantFill, PlaceholderFill, Generation
 from .tokens_holder import TokensHolder
-from ..orchestration.context import Context
-from ..orchestration.controller import Controller
-from ..orchestration.tokenize import TokenizedStorage
-from ..utils import get_logger, create_task_in_loop
 
 
 logger = get_logger("Executor")

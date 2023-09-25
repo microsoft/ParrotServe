@@ -1,10 +1,11 @@
 import inspect
 from typing import Optional
 
+from parrot.orchestration.context import Context
+
 from .function import SemanticFunction, logger, ParamType, Parameter
 from .placeholder import Placeholder
 from .shared_context import SharedContext
-from ..orchestration.context import Context
 
 
 # Annotations of arguments when defining a parrot function.

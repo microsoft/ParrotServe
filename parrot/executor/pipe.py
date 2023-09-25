@@ -1,7 +1,7 @@
 from typing import List
 from asyncio import Queue as AsyncQueue
 
-from ..constants import STREAMING_END_TOKEN_ID
+from parrot.constants import STREAMING_END_TOKEN_ID
 
 
 class TokenPipe:

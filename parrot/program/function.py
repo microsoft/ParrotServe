@@ -3,8 +3,9 @@ from typing import List, Dict, Type, Optional, Any
 import regex as re
 from dataclasses import dataclass
 
+from parrot.utils import get_logger
+
 from .placeholder import Placeholder
-from ..utils import get_logger
 
 
 logger = get_logger("Function")

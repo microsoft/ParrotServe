@@ -7,10 +7,11 @@ from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from uvicorn import Config, Server
 
-from .engine import ExecutionEngine
-from .primitives import Fill, Generation
-from ..utils import get_logger, create_task_in_loop
-from ..protocol.sampling_params import SamplingParams
+from parrot.utils import get_logger, create_task_in_loop
+from parrot.protocol.sampling_params import SamplingParams
+
+from .engine import NativeExecutionEngine
+from ..primitives import Fill, Generation
 
 
 logger = get_logger("Backend Server")
@@ -19,7 +20,7 @@ logger = get_logger("Backend Server")
 app = FastAPI()
 
 # Engine
-execution_engine: Optional[ExecutionEngine] = None
+execution_engine: Optional[NativeExecutionEngine] = None
 
 
 @app.post("/heartbeat")
@@ -85,7 +86,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")
-    execution_engine = ExecutionEngine(args.config_path)
+    execution_engine = NativeExecutionEngine(args.config_path)
 
     loop = asyncio.new_event_loop()
     config = Config(

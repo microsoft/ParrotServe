@@ -1,8 +1,9 @@
 from typing import Optional, Literal
 
-from ..orchestration.engine import ExecutionEngine
-from ..orchestration.context import Context
-from ..protocol import fill
+from parrot.orchestration.engine import ExecutionEngine
+from parrot.orchestration.context import Context
+from parrot.protocol import fill
+
 from .function import SemanticFunction, Promise, logger
 
 

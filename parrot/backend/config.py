@@ -9,7 +9,7 @@ _DTYPE_MAP = {
 
 
 @dataclass
-class RunnerConfig:
+class NativeConfig:
     model_name: str
     num_kv_cache_blocks: int
     attn_func: Literal["xformers_with_buffer", "flash_attention"]

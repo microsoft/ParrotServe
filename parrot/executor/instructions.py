@@ -1,8 +1,9 @@
 from typing import List
 
+from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
+
 from .tokens_holder import TokensHolder
 from .pipe import TokenPipe
-from ..constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
 
 
 class Instruction:

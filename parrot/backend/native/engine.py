@@ -2,19 +2,20 @@ import asyncio
 from typing import Dict
 import json
 
+from parrot.constants import ENGINE_LOOP_INTERVAL
+from parrot.utils import get_logger
+
 from .runner import Runner
-from .scheduler import Scheduler
-from .primitives import PrimitiveJob
+from ..scheduler import Scheduler
+from ..primitives import PrimitiveJob
 
-from ..constants import ENGINE_LOOP_INTERVAL
-from ..utils import get_logger
-from .config import RunnerConfig, SchedulerConfig
+from ..config import NativeConfig, SchedulerConfig
 
 
-logger = get_logger("ExecutionEngine")
+logger = get_logger("NativeExecutionEngine")
 
 
-class ExecutionEngine:
+class NativeExecutionEngine:
     """Backend Execution Engine for Parrot."""
 
     def __init__(self, engine_config_path: str):
@@ -22,9 +23,9 @@ class ExecutionEngine:
             engine_config = json.load(f)
 
         self.engine_name = engine_config["engine_name"]
-        runner_config = RunnerConfig(**engine_config["runner"])
+        native_config = NativeConfig(**engine_config["runner"])
         scheduler_config = SchedulerConfig(**engine_config["scheduler"])
-        self.runner = Runner(runner_config)
+        self.runner = Runner(native_config)
         self.scheduler = Scheduler(scheduler_config)
 
     def add_job(self, job: PrimitiveJob):

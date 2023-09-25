@@ -3,10 +3,11 @@ import requests
 import aiohttp
 import dataclasses
 
-from ..utils import get_logger
+from parrot.utils import get_logger
+from parrot.constants import NONE_SESSION_ID
+
 from .local_apis_response import *
 from .sampling_params import SamplingParams
-from ..constants import NONE_SESSION_ID
 
 
 logger = get_logger("API")

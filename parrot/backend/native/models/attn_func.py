@@ -4,7 +4,7 @@ from xformers import ops as xops
 
 from ..mem import get_k_cache, get_v_cache
 from ..iter_state import IterationState
-from ..kernels import discontinuous_move_tokens, rotary_embedding
+from ..kernels import discontinuous_move_tokens
 
 
 class xFormersWithBuffer(nn.Module):

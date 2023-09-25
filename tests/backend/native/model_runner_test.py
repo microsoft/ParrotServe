@@ -1,13 +1,14 @@
-from parrot.backend.runner import Runner
-from parrot.backend.config import RunnerConfig
-from parrot.backend.iter_state import Fill, Generation
+from parrot.backend.native.runner import Runner
+from parrot.backend.config import NativeConfig
+from parrot.backend.native.iter_state import Fill, Generation
 from parrot.protocol.sampling_params import SamplingParams
+
 import numpy as np
 from transformers import AutoTokenizer
 
 
-def test_single_fill(runner_config: RunnerConfig):
-    runner = Runner(runner_config)
+def test_single_fill(native_config: NativeConfig):
+    runner = Runner(native_config)
 
     job = Fill(
         session_id=0,
@@ -21,8 +22,8 @@ def test_single_fill(runner_config: RunnerConfig):
     runner.run_iter([job])
 
 
-def test_batch_fills(runner_config: RunnerConfig):
-    runner = Runner(runner_config)
+def test_batch_fills(native_config: NativeConfig):
+    runner = Runner(native_config)
     batch_size = 16
     jobs = [
         Fill(
@@ -37,8 +38,8 @@ def test_batch_fills(runner_config: RunnerConfig):
     runner.run_iter(jobs)
 
 
-def test_fill_then_gen(runner_config: RunnerConfig):
-    runner = Runner(runner_config)
+def test_fill_then_gen(native_config: NativeConfig):
+    runner = Runner(native_config)
     runner.run_iter(
         [
             Fill(
@@ -62,10 +63,10 @@ def test_fill_then_gen(runner_config: RunnerConfig):
     )
 
 
-def test_generate_single_text(runner_config: RunnerConfig):
-    runner = Runner(runner_config)
+def test_generate_single_text(native_config: NativeConfig):
+    runner = Runner(native_config)
     prompt_text = "Hello, my name is"
-    tokenizer = AutoTokenizer.from_pretrained(runner_config.model_name)
+    tokenizer = AutoTokenizer.from_pretrained(native_config.model_name)
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
     runner.run_iter(
@@ -93,14 +94,14 @@ def test_generate_single_text(runner_config: RunnerConfig):
     print("Generated: ", tokenizer.decode(runner.context_manager[0].token_ids))
 
 
-def test_generate_batch_text(runner_config: RunnerConfig):
-    runner = Runner(runner_config)
+def test_generate_batch_text(native_config: NativeConfig):
+    runner = Runner(native_config)
     prompt_text = [
         "Hello, my name is",
         "Hello, my name is",
         "Hello, my name is",
     ]
-    tokenizer = AutoTokenizer.from_pretrained(runner_config.model_name)
+    tokenizer = AutoTokenizer.from_pretrained(native_config.model_name)
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
     # Prefill
@@ -134,14 +135,14 @@ def test_generate_batch_text(runner_config: RunnerConfig):
         )
 
 
-def test_fill_generate_mixed(runner_config: RunnerConfig):
-    runner = Runner(runner_config)
+def test_fill_generate_mixed(native_config: NativeConfig):
+    runner = Runner(native_config)
     prompt_text = [
         "Hello, my name is",
         "Hello, my name is",
         "Hello, my name is",
     ]
-    tokenizer = AutoTokenizer.from_pretrained(runner_config.model_name)
+    tokenizer = AutoTokenizer.from_pretrained(native_config.model_name)
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
     # Prefill

@@ -1,6 +1,6 @@
 import asyncio
 import parrot
-from parrot.backend.engine import ExecutionEngine
+from Parrot.parrot.backend.native.engine import NativeExecutionEngine
 from parrot.backend.primitives import PrimitiveJob, Fill, Generation
 from parrot.utils import create_task_in_loop
 from parrot.protocol.sampling_params import SamplingParams
@@ -11,7 +11,9 @@ def test_engine_simple_serving():
     # The config path is relative to the package path.
     # We temporarily use this way to load the config.
     package_path = parrot.__path__[0]
-    engine = ExecutionEngine(package_path + "/../configs/backend_server/opt_125m.json")
+    engine = NativeExecutionEngine(
+        package_path + "/../configs/backend_server/opt_125m.json"
+    )
 
     async def execute_job(job: PrimitiveJob):
         engine.add_job(job)

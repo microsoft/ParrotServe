@@ -3,9 +3,10 @@ import torch
 from transformers import PretrainedConfig
 from xformers import ops as xops
 
-from .config import RunnerConfig
-from .primitives import PrimitiveJob, Fill, Generation
-from ..protocol.sampling_params import SamplingParams
+from parrot.protocol.sampling_params import SamplingParams
+
+from ..config import NativeConfig
+from ..primitives import PrimitiveJob, Fill, Generation
 
 
 class IterationState:
@@ -26,7 +27,7 @@ class IterationState:
         self,
         jobs: List[PrimitiveJob],
         model_config: PretrainedConfig,
-        runner_config: RunnerConfig,
+        native_config: NativeConfig,
     ):
         # Metadata
         self.num_fill_tokens: List[int] = []
@@ -58,29 +59,29 @@ class IterationState:
         self.allocated_index_tensor = torch.tensor(
             self.allocated_index_tensor,
             dtype=torch.int64,
-            device=runner_config.device,
+            device=native_config.device,
         )
         self.context_index_tensor = torch.tensor(
             self.context_index_tensor,
             dtype=torch.int64,
-            device=runner_config.device,
+            device=native_config.device,
         )
 
         num_heads = model_config.num_attention_heads
         head_size = model_config.hidden_size // num_heads
 
-        if runner_config.attn_func == "xformers_with_buffer":
+        if native_config.attn_func == "xformers_with_buffer":
             # KV Buffer
             buffer_shape = [sum(kv_lens), num_heads, head_size]
             self.k_buffer = torch.empty(
                 buffer_shape,
-                dtype=runner_config.dtype,
-                device=runner_config.device,
+                dtype=native_config.dtype,
+                device=native_config.device,
             )
             self.v_buffer = torch.empty(
                 buffer_shape,
-                dtype=runner_config.dtype,
-                device=runner_config.device,
+                dtype=native_config.dtype,
+                device=native_config.device,
             )
 
             # Attn Mask
@@ -92,7 +93,7 @@ class IterationState:
             )
         else:
             raise ValueError(
-                f"Unsupported attention function {runner_config.attn_func}"
+                f"Unsupported attention function {native_config.attn_func}"
             )
 
         # Lazy load in RoPE arch
