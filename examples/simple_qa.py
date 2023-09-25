@@ -2,6 +2,7 @@
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
 from parrot import env, P
+import aioconsole  # We use aioconsole to read input asynchronously
 import logging
 
 # Disable the logging
@@ -34,14 +35,13 @@ def qa(
 
 async def main():
     while True:
-        question_str = input("Please input your question: ")
+        question_str = await aioconsole.ainput("Your question: ")
         question = P.placeholder()
         answer = P.placeholder()
         qa(question, answer)
         question.assign(question_str)
         answer_str = await answer.get()
-        print(f"---------- The following is the answer ---------- ")
-        print(answer_str)
+        print("Answer: ", answer_str)
 
 
 env.parrot_run_aysnc(main())
