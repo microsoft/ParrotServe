@@ -4,17 +4,15 @@ from .session import Session
 
 
 class Dispatcher:
-    """Dispatcher will dispatch promises to different engines."""
+    """Dispatcher will dispatch LLMCalls to different engines."""
 
     def __init__(self, controller: Controller):
         self.controller = controller
 
     def dispatch(self, session: Session):
         # Must be dispatched to the same engine with the shared context.
-        if session.promise.shared_context_handler is not None:
-            session.engine = (
-                session.promise.shared_context_handler.shared_context.engine
-            )
+        if session.call.shared_context_handler is not None:
+            session.engine = session.call.shared_context_handler.shared_context.engine
             session.engine_name = session.engine.name
             return
 

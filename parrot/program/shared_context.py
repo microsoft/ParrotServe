@@ -4,13 +4,13 @@ from parrot.orchestration.engine import ExecutionEngine
 from parrot.orchestration.context import Context
 from parrot.protocol import fill
 
-from .function import SemanticFunction, Promise, logger
+from .function import SemanticFunction, LLMCall, logger
 
 
 class SharedContext:
     """Shared context for different functions.
 
-    A function call (promise) can specify a shared context to read-only/read-write.
+    A function call (LLMCall) can specify a shared context to read-only/read-write.
     Usage:
     - ctx = P.shared_context(engine, init_text)
     - ctx.fill(text)
@@ -88,7 +88,7 @@ class SharedContextHandler:
         self.shared_context = shared_context
         self.mode = mode
 
-        self._writer: Optional[Promise] = None  # Record current writer
+        self._writer: Optional[LLMCall] = None  # Record current writer
 
     def __enter__(self):
         return self
@@ -100,7 +100,7 @@ class SharedContextHandler:
         self._writer = None
 
     def call(self, func: SemanticFunction, *args, **kwargs):
-        promise = Promise(func, self, *args, **kwargs)
+        call = LLMCall(func, self, *args, **kwargs)
 
         if self._writer is not None:
             raise RuntimeError(
@@ -108,12 +108,17 @@ class SharedContextHandler:
             )
 
         if self.mode == "w":
-            self._writer = promise
+            self._writer = call
 
         if SemanticFunction._executor is not None:
-            SemanticFunction._executor.submit(promise)
+            SemanticFunction._executor.submit(call)
         else:
             logger.warning(
-                "Executor is not set, will not submit the promise. "
+                "Executor is not set, will not submit the call. "
                 "(Please ensure run a Parrot function in a running context, e.g. using env.parrot_run_aysnc)"
             )
+
+        # Unpack the output futures
+        if len(call.output_futures) == 1:
+            return call.output_futures[0]
+        return tuple(call.output_futures)

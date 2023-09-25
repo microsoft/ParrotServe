@@ -132,7 +132,7 @@ class Controller:
 
         # executor=None: testing mode
         if self.executor is not None:
-            self.executor.register_group_executor(tokenizer_name)
+            self.executor.register_native_executor(tokenizer_name)
         else:
             logger.warning(
                 "Executor is not initialized. Will not register the group executor."

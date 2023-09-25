@@ -61,23 +61,16 @@ def write_post(
 
 
 async def main():
-    title = P.placeholder()
-    era = P.placeholder()
-    synopsis = P.placeholder()
-    write_synopsis(title, era, synopsis)
-
-    review = P.placeholder()
-    write_review(synopsis, review)
-
-    time = P.placeholder()
-    location = P.placeholder()
-    post = P.placeholder()
-    write_post(time, location, synopsis, review, post)
-
-    title.assign("Tragedy at sunset on the beach")
-    era.assign("Victorian England")
-    time.assign("December 25th, 8pm PST")
-    location.assign("Theater in the Park")
+    synopsis = write_synopsis(
+        title="Tragedy at sunset on the beach", era="Victorian England"
+    )
+    review = write_review(synopsis)
+    post = write_post(
+        time="December 25th, 8pm PST",
+        location="Theater in the Park",
+        synopsis=synopsis,
+        review=review,
+    )
 
     print("---------- Play Synopsis ----------")
     print(await synopsis.get())

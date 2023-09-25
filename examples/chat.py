@@ -3,11 +3,12 @@
 # The Vicuna chat template is from:
 #   https://github.com/lm-sys/FastChat/blob/main/fastchat/conversation.py
 
+# FIXME(chaofan): Vicuna-13b-v1.3 has strange behavior (Why speaking Chinese?)
+
 import parrot as P
-import aioconsole  # We use aioconsole to read input asynchronously
 
 
-vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
+vm = P.VirtualMachine("configs/vm/single_vicuna_7b_v1.3.json")
 vm.init()
 
 
@@ -35,23 +36,14 @@ async def main():
     chatbot_init()
     print("---------- Chatbot v0.1 ----------\n")
 
-    print(chat_per_round.body)
-
     while True:
-        human_input = P.placeholder()
-        ai_output = P.placeholder()
-
-        with chat_ctx.open("w") as handler:
-            handler.call(chat_per_round, human_input, ai_output)
-
-        human_input_str = await aioconsole.ainput("[HUMAN]: ")
+        human_input_str = input("[HUMAN]: ")
         if human_input_str == "exit":
             break
 
-        human_input.assign(human_input_str)
-
-        ai_output_str = await ai_output.get()
-        print(f"[AI]: {ai_output_str}")
+        with chat_ctx.open("w") as handler:
+            ai_output = handler.call(chat_per_round, human_input_str)
+        print(f"[AI]: {await ai_output.get()}")
 
     print("Bye.")
     chat_ctx.free()

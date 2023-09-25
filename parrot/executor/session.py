@@ -1,43 +1,43 @@
-from typing import Optional, List
+from typing import Optional, List, Callable
 from queue import Queue
 
 from parrot.orchestration.context import Context
 from parrot.orchestration.engine import ExecutionEngine
-from parrot.program.function import Promise
+from parrot.program.function import LLMCall
 from parrot.protocol import afill, agenerate, SamplingParams
 from parrot.utils import RecyclePool, get_logger, create_task_in_loop
 from parrot.constants import RECYCLE_POOL_SIZE, STREAMING_END_TOKEN_ID, FILL_NO_CHUNK
 
 from .instructions import Instruction, ConstantFill, PlaceholderFill, Generation
-from .tokens_holder import TokensHolder
+from .dataholder import DataHolder
 
 
 logger = get_logger("Session")
 
 
-async def detokenize_coroutine(holder: TokensHolder):
+async def detokenizing(holder: DataHolder):
     assert holder.producer is not None, "Producer should be set."
     prev_last_token = None
     async for chunk in holder.producer.detokenize_pipe.generator():
-        holder.sync_to_placeholder_partial(chunk, prev_last_token)
+        holder.sync_to_future_partial(chunk, prev_last_token)
         prev_last_token = chunk[-1]
-    holder.placeholder.ready_event.set()
+    holder.future.ready_event.set()
 
 
 class Session:
-    """A session represents a running promise in the executor."""
+    """A session represents a running LLMCall in the executor."""
 
     session_id_manager = RecyclePool(RECYCLE_POOL_SIZE)
 
     def __init__(
         self,
-        promise: Promise,
+        call: LLMCall,
         context: Context,
-        finish_callback: callable,
+        finish_callback: Callable,
     ):
         # ---------- Basic info ----------
         self.session_id = Session.session_id_manager.allocate()
-        self.promise = promise
+        self.call = call
         self.context = context
 
         # ---------- Attached engine ----------
@@ -98,7 +98,7 @@ class Session:
         ), f"Not all tokens are filled. Filled: {num_filled_tokens}, total: {buffer_len}"
         self._fill_tokens_buffer = []
 
-    async def execute_coroutine(self):
+    async def executing(self):
         while not self.instructions.empty():
             inst = self.instructions.get()
 
@@ -122,7 +122,7 @@ class Session:
                 assert not inst.output_holder.ready, "Output holder should be empty."
                 inst.output_holder.token_ids = []
 
-                create_task_in_loop(detokenize_coroutine(inst.output_holder))
+                create_task_in_loop(detokenizing(inst.output_holder))
 
                 # Start streaming
                 inst.output_holder.streaming_event.set()
@@ -138,6 +138,9 @@ class Session:
                 if not inst.input_holder.ready:
                     # Not ready. Flush the buffer first.
                     await self._flush_fill_tokens_buffer()
+
+                if inst.input_holder.future.coroutine is not None:
+                    await inst.input_holder.future._wait_content()
 
                 # Lock unitl the input holder is streaming.
                 # Then there are two cases:

@@ -26,13 +26,8 @@ def qa(
 
 async def main():
     while True:
-        question_str = await aioconsole.ainput("Your question: ")
-        question = P.placeholder()
-        answer = P.placeholder()
-        qa(question, answer)
-        question.assign(question_str)
-        answer_str = await answer.get()
-        print("Answer: ", answer_str)
+        answer = qa(aioconsole.ainput("Your question: "))
+        print("Answer: ", await answer.get())
 
 
 vm.run(main())

@@ -1,7 +1,10 @@
-from typing import Dict, Optional
+"""Executor is responsible for managing calls and scheduling to execute them."""
 
-from parrot.program.function import Prefix, Promise, Constant, ParameterLoc, ParamType
-from parrot.program.placeholder import Placeholder
+from typing import Dict, Optional
+from abc import ABC, abstractmethod
+
+from parrot.program.function import Prefix, LLMCall, Constant, ParameterLoc, ParamType
+from parrot.program.future import Future
 from parrot.orchestration.context import Context
 from parrot.orchestration.controller import Controller
 from parrot.orchestration.tokenize import TokenizedStorage
@@ -10,14 +13,24 @@ from parrot.utils import get_logger, create_task_in_loop
 from .dispatcher import Dispatcher
 from .session import Session
 from .instructions import ConstantFill, PlaceholderFill, Generation
-from .tokens_holder import TokensHolder
+from .dataholder import DataHolder
 
 
 logger = get_logger("Executor")
 
 
-class TokenizerGroupExecutor:
-    """Sessions under the same tokenizer are managed as a group."""
+class BaseExecutor(ABC):
+    """Base class for executors."""
+
+    @abstractmethod
+    def add_session(self, session: Session):
+        pass
+
+
+class NativeExecutor(BaseExecutor):
+    """NativeExecutor for NativeBackends.
+
+    NOTE(chaofan): Sessions under the same tokenizer are managed as a group."""
 
     def __init__(
         self,
@@ -27,11 +40,11 @@ class TokenizerGroupExecutor:
         # ---------- Resources ----------
         self.tokenizer_name = tokenizer_name
         self.tokenized_storage = tokenized_storage
-        self.tokensholder_map: Dict[str, TokensHolder] = {}
+        self.dataholder_map: Dict[int, DataHolder] = {}
 
     def add_session(self, session: Session):
         tokenized = self.tokenized_storage.tokenize_func_body(
-            session.promise.func,
+            session.call.func,
             self.tokenizer_name,
         )
 
@@ -43,20 +56,22 @@ class TokenizerGroupExecutor:
         session.sampling_params.stop_token_ids.append(eos_token_id)
 
         # Translate function body to instructions
-        for i, piece in enumerate(session.promise.func.body):
+        for i, piece in enumerate(session.call.func.body):
             if isinstance(piece, Prefix):
                 if (
-                    session.promise.func.cached_prefix
-                    and session.promise.shared_context_handler is None
+                    session.call.func.cached_prefix
+                    and session.call.shared_context_handler is None
                 ):
                     continue  # If the prefix is cached, we do not need to fill it.
                 inst = ConstantFill(tokenized[i])
             elif isinstance(piece, Constant):
                 inst = ConstantFill(tokenized[i])
             elif isinstance(piece, ParameterLoc):
-                assert piece.param.name in session.promise.bindings
-                param_value = session.promise.bindings[piece.param.name]
+                assert piece.param.name in session.call.bindings
+                param_value = session.call.bindings[piece.param.name]
+
                 if piece.param.typ == ParamType.PYOBJ:
+                    # For Python object, we directly fill the value.
                     # We use __str__ instead of __repr__
                     value_str = str(param_value)
                     inst = ConstantFill(
@@ -66,31 +81,31 @@ class TokenizerGroupExecutor:
                         )
                     )
                 else:
-                    assert isinstance(param_value, Placeholder)
-                    holder = self._get_data_holder(param_value)
+                    assert isinstance(param_value, Future)
+                    holder = self._get_dataholder(param_value)
                     if piece.param.is_output:
+                        assert param_value.is_middle_node
                         inst = Generation(output_holder=holder)
                     else:
                         inst = PlaceholderFill(input_holder=holder)
             session.instructions.put_nowait(inst)
 
-        create_task_in_loop(session.execute_coroutine())
+        create_task_in_loop(session.executing())
 
-    def _get_data_holder(self, placeholder: Placeholder) -> TokensHolder:
-        # Create a new data holder if not exists
-        # Hence, the name of the placeholder must be unique.
-        if placeholder.name not in self.tokensholder_map:
-            self.tokensholder_map[placeholder.name] = TokensHolder(
+    def _get_dataholder(self, future: Future) -> DataHolder:
+        # Create a new data future if not exists
+        # Hence, the name of the future must be unique.
+        if future.id not in self.dataholder_map:
+            self.dataholder_map[future.id] = DataHolder(
                 tokenizer=self.tokenizer_name,
                 tokenized_storage=self.tokenized_storage,
-                placeholder=placeholder,
+                future=future,
             )
-        return self.tokensholder_map[placeholder.name]
+        return self.dataholder_map[future.id]
 
 
-class Executor:
-    """Executor is responsible for managing promises and scheduling to
-    execute them."""
+class MainExecutor:
+    """Main executor is responsible for managing all the executors."""
 
     def __init__(self, controller: Controller, tokenized_storage: TokenizedStorage):
         # ---------- Global components ----------
@@ -101,34 +116,35 @@ class Executor:
         # ---------- Dispatcher ----------
         self.dispatcher = Dispatcher(controller)
 
-        # ---------- Group executors ----------
-        self.group_executors: Dict[str, TokenizerGroupExecutor] = {}
+        # ---------- Sub-executors ----------
+        # For NativeExectutor, it is: Tokenizer name -> NativeExecutor
+        self.sub_executors: Dict[str, BaseExecutor] = {}
 
-    def register_group_executor(self, tokenizer_name: str):
-        self.group_executors[tokenizer_name] = TokenizerGroupExecutor(
+    def register_native_executor(self, tokenizer_name: str):
+        self.sub_executors[tokenizer_name] = NativeExecutor(
             tokenizer_name,
             self.tokenized_storage,
         )
 
-    def submit(self, promise: Promise):
+    def submit(self, call: LLMCall):
         new_created_context = True
 
-        # Get/fork temporary context for a promise
-        if promise.shared_context_handler is not None:
-            if promise.shared_context_handler.mode == "r":
+        # Get/fork temporary context for a call
+        if call.shared_context_handler is not None:
+            if call.shared_context_handler.mode == "r":
                 # Read mode: fork a new context
                 context = Context(
-                    parent_context=promise.shared_context_handler.shared_context.context
+                    parent_context=call.shared_context_handler.shared_context.context
                 )
             else:
                 # Write mode: directly use the context
-                context = promise.shared_context_handler.shared_context.context
-                finish_callback = promise.shared_context_handler.unlock_writer
+                context = call.shared_context_handler.shared_context.context
+                finish_callback = call.shared_context_handler.unlock_writer
                 new_created_context = False
-        elif promise.func.cached_prefix:
-            assert promise.func.name in self.controller.function_prefix
+        elif call.func.cached_prefix:
+            assert call.func.name in self.controller.function_prefix
             context = Context(
-                parent_context=self.controller.function_prefix[promise.func.name]
+                parent_context=self.controller.function_prefix[call.func.name]
             )
         else:
             context = Context()
@@ -138,7 +154,7 @@ class Executor:
             # Otherwise, we only unlock the writer of the context.
             finish_callback = context.destruction
 
-        session = Session(promise, context, finish_callback)
+        session = Session(call, context, finish_callback)
         self.dispatcher.dispatch(session)
         assert session.engine is not None
 
@@ -147,8 +163,6 @@ class Executor:
             # Hence we should set its cached_engines.
             context.cached_engines.append(session.engine)
 
-        self.group_executors[session.engine.tokenizer].add_session(session)
+        self.sub_executors[session.engine.tokenizer].add_session(session)
 
-        logger.info(
-            f"Promise {promise.func.name} created a session {session.session_id}."
-        )
+        logger.info(f"LLMCall {call.func.name} created a session {session.session_id}.")

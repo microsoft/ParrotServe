@@ -39,31 +39,12 @@ def write_recommendation_letter(
 
 # Then we can start to define the main function.
 async def main():
-    # First we need some placeholders.
-    stu_name = P.placeholder()
-    prof_name = P.placeholder()
-    major = P.placeholder()
-    grades = P.placeholder()
-    specialty = P.placeholder()
-    letter = P.placeholder()
-
-    # Then we can call the function.
-    write_recommendation_letter(
-        stu_name=stu_name,
-        prof_name=prof_name,
-        major=major,
-        grades=grades,
-        specialty=specialty,
-        letter=letter,
-    )
-
-    # Now we can fill in the placeholders.
-    stu_name.assign("John")
-    prof_name.assign("Prof. Smith")
-    major.assign("Computer Science")
-    grades.assign("3.8")
-    specialty.assign(
-        "Basketball. Good at playing basketball. Used to be team leader of the school basketball team."
+    letter = write_recommendation_letter(
+        stu_name="John",
+        prof_name="Prof. Smith",
+        major="Computer Science",
+        grades="3.8",
+        specialty="Basketball. Good at playing basketball. Used to be team leader of the school basketball team.",
     )
 
     letter_str = await letter.get()

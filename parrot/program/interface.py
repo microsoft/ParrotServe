@@ -4,7 +4,6 @@ from typing import Optional
 from parrot.orchestration.context import Context
 
 from .function import SemanticFunction, logger, ParamType, Parameter
-from .placeholder import Placeholder
 from .shared_context import SharedContext
 
 
@@ -71,15 +70,6 @@ def function(
         return semantic_func
 
     return create_func
-
-
-def placeholder(
-    name: Optional[str] = None,
-    content: Optional[str] = None,
-) -> Placeholder:
-    """Interface to create placeholder."""
-
-    return Placeholder(name, content)
 
 
 def shared_context(

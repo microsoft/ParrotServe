@@ -1,5 +1,4 @@
-import asyncio
-
+import pytest
 import parrot as P
 from parrot.program.function import Prefix, Constant, ParameterLoc
 
@@ -42,53 +41,47 @@ def test_parse_parrot_function():
             j += 1
 
 
-def test_placeholder():
-    a = P.placeholder("a", "a_content")
-    b = P.placeholder("b")
-    b.assign("b_content")
-
-    assert a.content == "a_content"
-    assert b.content == "b_content"
-
-
-def test_placeholder_async():
-    a = P.placeholder("a")
-
-    async def main():
-        a_content = a.get()
-        a.assign("a_content")
-        assert await a_content == "a_content"
-
-    asyncio.run(main())
-
-
-def test_call_parrot_function():
+def test_call_function():
     @P.function()
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
 
-    a = P.placeholder("a")
-    b = P.placeholder("b")
-    c = P.placeholder("c")
-
-    test(a, b, c=c)
+    print("Bindings:", test("a", b="b"))
 
 
-def test_function_with_pyobjects():
+def test_call_function_with_pyobjects():
     @P.function()
     def test(a: float, b: int, c: list, d: P.Output):
         """This {{b}} is a test {{a}} function {{c}} and {{d}}"""
 
-    d = P.placeholder("d")
-
     print(test.body)
 
-    test(23.3, 400, [1, 2, 3, 4], d=d)
+    print("Bindings:", test(23.3, 400, [1, 2, 3, 4]))
+
+
+def test_call_function_with_coroutine():
+    async def get_a():
+        return "a"
+
+    @P.function()
+    def test(a: P.Input, b: P.Input, c: P.Output):
+        """This {{b}} is a test {{a}} function {{c}}"""
+
+    print("Bindings:", test(get_a(), b="b"))
+
+
+def test_wrongly_pass_output_argument():
+    @P.function()
+    def test(a: P.Input, b: P.Input, c: P.Output):
+        """This {{b}} is a test {{a}} function {{c}}"""
+
+    with pytest.raises(ValueError):
+        test("a", b="b", c="c")
 
 
 if __name__ == "__main__":
     test_parse_parrot_function()
-    test_placeholder()
-    test_placeholder_async()
-    test_call_parrot_function()
-    test_function_with_pyobjects()
+    test_call_function()
+    test_call_function_with_pyobjects()
+    test_call_function_with_coroutine()
+    test_wrongly_pass_output_argument()

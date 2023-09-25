@@ -18,7 +18,7 @@ def init():
     return vm
 
 
-def test_execute_single_function_call():
+def test_single_function_call():
     vm = init()
 
     @P.function()
@@ -27,13 +27,7 @@ def test_execute_single_function_call():
 
     # Execute
     async def main():
-        a = P.placeholder("a")
-        b = P.placeholder("b")
-        c = P.placeholder("c")
-
-        a.assign("Apple")
-        b.assign("Banana")
-        test(a, b, c)
+        c = test("Apple", "Banana")
 
         # await asyncio.sleep(1)  # Simulate a long running task
 
@@ -51,16 +45,8 @@ def test_pipeline_call():
 
     # Execute
     async def main():
-        a = P.placeholder("a")
-        b = P.placeholder("b")
-        c = P.placeholder("c")
-        d = P.placeholder("d")
-        # e = P.placeholder("e")
-
-        a.assign("Apple")
-        b.assign("Banana")
-        test(a, b, c)
-        test(b, c, d)
+        c = test("Apple", "Banana")
+        d = test("Banana", c)
 
         # e.assign(await c.get())
 
@@ -80,21 +66,13 @@ def test_dag():
 
     # Execute
     async def main():
-        a = P.placeholder("a")
-        b = P.placeholder("b")
-        c = P.placeholder("c")
-        d = P.placeholder("d")
-        e = P.placeholder("e")
-        f = P.placeholder("f")
-        g = P.placeholder("g")
-
-        a.assign("Apple")
-        b.assign("Banana")
-        test(a, b, c)
-        test(b, c, d)
-        test(a, c, e)
-        test(c, d, f)
-        test(e, f, g)
+        a = "Apple"
+        b = "Banana"
+        c = test(a, b)
+        d = test(b, c)
+        e = test(a, c)
+        f = test(c, d)
+        g = test(e, f)
 
         # e.assign(await c.get())
 
@@ -115,28 +93,23 @@ def test_shared_context():
     ctx = P.shared_context(engine_name="test")
 
     async def main():
-        a = P.placeholder("a")
-        b = P.placeholder("b")
-        c = P.placeholder("c")
-        d = P.placeholder("d")
-        e = P.placeholder("e")
-
         ctx.fill("This is a test context.")
 
-        with ctx.open("r") as handler:
-            handler.call(test, a, b, c)
+        a = "Apple"
+        b = "Banana"
 
-        a.assign("Apple")
-        b.assign("Banana")
+        with ctx.open("r") as handler:
+            c = handler.call(test, a, b)
+
         print(await c.get())
 
         with ctx.open("w") as handler:
-            handler.call(test, b, c, d)
+            d = handler.call(test, b, c)
 
         print(await d.get())
 
         with ctx.open("r") as handler:
-            handler.call(test, a, c, e)
+            e = handler.call(test, a, c)
 
         print(await e.get())
 
@@ -144,7 +117,7 @@ def test_shared_context():
 
 
 if __name__ == "__main__":
-    test_execute_single_function_call()
+    test_single_function_call()
     test_pipeline_call()
     test_dag()
     test_shared_context()

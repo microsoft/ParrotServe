@@ -2,10 +2,10 @@ import asyncio
 import contextlib
 import time
 import json
-from typing import Optional
+from typing import Optional, Coroutine
 
 from .orchestration.controller import Controller
-from .executor.executor import Executor
+from .executor.executor import MainExecutor
 from .program.function import SemanticFunction
 from .program.shared_context import SharedContext
 from .orchestration.tokenize import TokenizedStorage
@@ -29,7 +29,7 @@ class VirtualMachine:
 
         self.controller = Controller()
         self.tokenized_storage = TokenizedStorage(self.controller)
-        self.executor = Executor(self.controller, self.tokenized_storage)
+        self.executor = MainExecutor(self.controller, self.tokenized_storage)
 
         SemanticFunction._controller = self.controller
         SharedContext._controller = self.controller
@@ -96,7 +96,7 @@ class VirtualMachine:
 
         self.controller.register_engine(engine_name, host, port, tokenizer)
 
-    def run(self, coroutine, timeit: bool = False):
+    def run(self, coroutine: Coroutine, timeit: bool = False):
         """vm.run method will create a new event loop and run the coroutine."""
 
         with self.running_scope(timeit):

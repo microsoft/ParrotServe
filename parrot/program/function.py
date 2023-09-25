@@ -1,11 +1,11 @@
 from enum import Enum
-from typing import List, Dict, Type, Optional, Any
+from typing import List, Dict, Type, Optional, Any, Coroutine
 import regex as re
 from dataclasses import dataclass
 
 from parrot.utils import get_logger
 
-from .placeholder import Placeholder
+from .future import Future
 
 
 logger = get_logger("Function")
@@ -131,28 +131,35 @@ class SemanticFunction:
         """
 
         self.name = name
-        self.params = params
         self.cached_prefix = cached_prefix
+        self.params = params
         self.params_map = dict([(param.name, param) for param in self.params])
+        self.inputs = [param for param in self.params if param.typ != ParamType.OUTPUT]
+        self.outputs = [param for param in self.params if param.typ == ParamType.OUTPUT]
         self.body: List[FunctionPiece] = parse_func_body(func_body_str, self.params_map)
 
     def __call__(self, *args: List[Any], **kwargs: Dict[str, Any]):
         """Calling a parrot function will not execute it immediately.
         Instead, this will submit the call to the executor."""
 
-        promise = Promise(self, None, *args, **kwargs)
+        call = LLMCall(self, None, *args, **kwargs)
         if SemanticFunction._executor is not None:
-            SemanticFunction._executor.submit(promise)
+            SemanticFunction._executor.submit(call)
         else:
             logger.warning(
-                "Executor is not set, will not submit the promise. "
+                "Executor is not set, will not submit the LLMCall and return bindings instead. "
                 "(Please ensure call `vm.init` before running a Parrot function."
             )
+            return call.bindings
+
+        # Unpack the output futures
+        if len(call.output_futures) == 1:
+            return call.output_futures[0]
+        return tuple(call.output_futures)
 
 
-class Promise:
-    """Promise is a function call including the functions and bindings (param name ->
-    placeholder)."""
+class LLMCall:
+    """A call to a semantic function."""
 
     def __init__(
         self,
@@ -164,10 +171,17 @@ class Promise:
         self.func = func
         self.bindings: Dict[str, Any] = {}
         self.shared_context_handler = shared_context_handler
+        self.output_futures: List[Future] = []
 
+        # Set positional arguments
         for i, arg_value in enumerate(args):
-            self._set_value(self.func.params[i], arg_value, self.bindings)
+            if i >= len(self.func.inputs):
+                raise ValueError(
+                    f"Function {self.func.name} got too many positional arguments."
+                )
+            self._set_value(self.func.inputs[i], arg_value, self.bindings)
 
+        # Set keyword arguments
         for name, arg_value in kwargs.items():
             assert (
                 name not in self.bindings
@@ -175,13 +189,29 @@ class Promise:
             assert (
                 name in self.func.params_map
             ), f"Function {self.func.name} got an unexpected keyword argument {name}"
-            self._set_value(self.func.params_map[name], arg_value, self.bindings)
+            param = self.func.params_map[name]
+            if param in self.func.outputs:
+                raise ValueError(
+                    f"Argument {name} is an output parameter hence cannot be set."
+                )
+            self._set_value(param, arg_value, self.bindings)
+
+        # Create output futures
+        for param in self.func.outputs:
+            future = Future()
+            self.output_futures.append(future)
+            self._set_value(param, future, self.bindings)
 
     @staticmethod
     def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
         if param.typ != ParamType.PYOBJ:
-            assert isinstance(value, Placeholder), (
-                f"Argument {param.name} should be a placeholder, "
-                f"but got {type(value)}: {value}"
-            )
+            if isinstance(value, str):
+                value = Future(content=value)
+            elif isinstance(value, Coroutine):
+                value = Future(coroutine=value)
+            elif not isinstance(value, Future):
+                raise TypeError(
+                    f"Argument {param.name} should be a str or a Coroutine, "
+                    f"but got {type(value)}: {value}"
+                )
         bindings[param.name] = value

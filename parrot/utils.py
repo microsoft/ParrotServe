@@ -1,8 +1,9 @@
 import logging
 import asyncio
+from asyncio import Task
 import traceback
 import sys
-from typing import Optional, List
+from typing import Optional, List, Coroutine
 
 
 def get_logger(log_name: str, log_level: int = logging.DEBUG):
@@ -50,7 +51,7 @@ def _task_error_callback_fail_fast(task):
 
 
 def create_task_in_loop(
-    coro,
+    coro: Coroutine,
     loop: Optional[asyncio.AbstractEventLoop] = None,
     fail_fast: bool = True,
 ):
@@ -61,6 +62,7 @@ def create_task_in_loop(
     task = loop.create_task(coro)
     if fail_fast:
         task.add_done_callback(_task_error_callback_fail_fast)
+    return task
 
 
 def set_random_seed(seed: int):

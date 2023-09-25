@@ -2,7 +2,7 @@ from typing import List
 
 from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
 
-from .tokens_holder import TokensHolder
+from .dataholder import DataHolder
 from .pipe import TokenPipe
 
 
@@ -28,9 +28,9 @@ class ConstantFill(Instruction):
 class PlaceholderFill(Instruction):
     """PlaceholderFill instruction takes a placeholder as input."""
 
-    def __init__(self, input_holder: TokensHolder):
+    def __init__(self, input_holder: DataHolder):
         super().__init__()
-        self.input_holder: TokensHolder = input_holder
+        self.input_holder: DataHolder = input_holder
         self.input_holder.consumers.append(self)
         self.input_pipe = TokenPipe(PIPELINE_SEND_CHUNK_NUM)
 
@@ -41,9 +41,9 @@ class PlaceholderFill(Instruction):
 class Generation(Instruction):
     """Generation instruction, corresponding to Generation primitive in backend."""
 
-    def __init__(self, output_holder: TokensHolder):
+    def __init__(self, output_holder: DataHolder):
         super().__init__()
-        self.output_holder: TokensHolder = output_holder
+        self.output_holder: DataHolder = output_holder
         assert self.output_holder.producer is None, "Concurrent writing to a holder"
         self.output_holder.producer = self
         self.detokenize_pipe = TokenPipe(DETOKENIZE_CHUNK_NUM)

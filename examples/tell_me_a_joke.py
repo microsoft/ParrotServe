@@ -33,15 +33,7 @@ async def main():
     ]
 
     for i in range(3):
-        topic = P.placeholder()
-        keyword = P.placeholder()
-        joke = P.placeholder()
-        explanation = P.placeholder()
-
-        tell_me_a_joke(topic, keyword, joke, explanation)
-
-        topic.assign(topics[i])
-        keyword.assign(keywords[i])
+        joke, explanation = tell_me_a_joke(topics[i], keywords[i])
         joke_str = await joke.get()
         print(f"---------- Round {i}: The following is the joke ---------- ")
         print(joke_str)
