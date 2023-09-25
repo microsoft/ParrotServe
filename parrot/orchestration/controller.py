@@ -8,7 +8,8 @@ from .engine import ExecutionEngine
 from .context import Context
 from ..utils import get_logger
 from ..program.function import SemanticFunction
-from ..protocol import check_heartbeat, prefix_init
+from ..protocol import check_heartbeat, fill
+from ..constants import NONE_CONTEXT_ID
 
 
 logger = get_logger("Controller", logging.INFO)
@@ -38,7 +39,7 @@ class Controller:
         )
 
     def _check_is_run(self):
-        if self._run_flag:
+        if self.is_running:
             raise RuntimeError("Controller is running now, can't register/rerun.")
 
     @property
@@ -60,9 +61,10 @@ class Controller:
                 prefix_tokens = tokenized_storage.tokenize_func_body(
                     func, engine.tokenizer
                 )[0]
-                resp = prefix_init(
+                resp = fill(
                     engine.http_address,
                     prefix_context.context_id,
+                    NONE_CONTEXT_ID,  # Since we are fill a prefix
                     prefix_tokens,
                 )
                 assert resp.num_filled_tokens == len(

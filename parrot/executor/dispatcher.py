@@ -9,6 +9,14 @@ class Dispatcher:
         self.controller = controller
 
     def dispatch(self, session: Session):
+        # Must be dispatched to the same engine with the shared context.
+        if session.promise.shared_context_handler is not None:
+            session.engine = (
+                session.promise.shared_context_handler.shared_context.engine
+            )
+            session.engine_name = session.engine.name
+            return
+
         # TODO(chaofan): Model selection, speculative dispatching.
         for engine_name, engine in self.controller.engines_table.items():
             session.engine_name = engine_name

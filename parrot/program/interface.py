@@ -3,6 +3,8 @@ from typing import Optional
 
 from .function import SemanticFunction, logger, ParamType, Parameter
 from .placeholder import Placeholder
+from .shared_context import SharedContext
+from ..orchestration.context import Context
 
 
 # Annotations of arguments when defining a parrot function.
@@ -31,7 +33,6 @@ def function(
         if emit_py_indent:
             possible_indents = ["\t", "    "]
             for indent in possible_indents:
-                doc_str = doc_str.replace("\n" + indent, " ")
                 doc_str = doc_str.replace(indent, "")
 
         # Parse the function signature (parameters)
@@ -71,7 +72,19 @@ def function(
     return create_func
 
 
-def placeholder(name: Optional[str] = None, content: Optional[str] = None):
+def placeholder(
+    name: Optional[str] = None,
+    content: Optional[str] = None,
+) -> Placeholder:
     """Interface to create placeholder."""
 
     return Placeholder(name, content)
+
+
+def shared_context(
+    engine_name: str,
+    parent_context: Optional[Context] = None,
+) -> SharedContext:
+    """Interface to create a shared context."""
+
+    return SharedContext(engine_name, parent_context)

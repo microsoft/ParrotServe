@@ -1,5 +1,6 @@
 # Parrot: High Performance Runtime System for Semantic Programming​
 
+This project is a research prototype for now. Being eargerly iterated.
 
 ### Start a Vicuna-13b Backend Server
 

@@ -28,6 +28,8 @@ class Context:
         # Record engines that have cached this context.
         self.cached_engines: List[ExecutionEngine] = []
 
+        logger.debug(f"Context created: {self.context_id}")
+
     def destruction(self):
         """Destruct the context. If we call this function, the context obj should not be used
         anymore."""

@@ -5,6 +5,7 @@ import time
 from .orchestration.controller import Controller
 from .executor.executor import Executor
 from .program.function import SemanticFunction
+from .program.shared_context import SharedContext
 from .orchestration.tokenize import TokenizedStorage
 
 # Initialize the global components
@@ -15,6 +16,8 @@ global_executor = Executor(global_controller, global_tokenized_storage)
 
 # Set the controller because we need to register
 SemanticFunction._controller = global_controller
+SharedContext._controller = global_controller
+SharedContext._tokenized_storage = global_tokenized_storage
 
 
 @contextlib.contextmanager
@@ -39,12 +42,12 @@ def parrot_running_environment(timeit: bool):
         # In this case, we can only see a SystemExit error
         print("Error happens when executing Parrot program: ", type(e), repr(e))
         # print("Traceback: ", traceback.format_exc())
+    else:
+        if timeit:
+            ed = time.perf_counter_ns()
+            print(f"[Timeit] E2E Program Execution Time: {(ed - st) / 1e9} (s).")
 
-    if timeit:
-        ed = time.perf_counter_ns()
-        print(f"[Timeit] E2E Program Execution Time: {(ed - st) / 1e9} (s).")
-
-    global_controller.free_function_prefix()
+        global_controller.free_function_prefix()
 
 
 def register_tokenizer(*args, **kwargs):

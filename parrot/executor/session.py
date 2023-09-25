@@ -6,8 +6,7 @@ from .tokens_holder import TokensHolder
 from ..orchestration.context import Context
 from ..orchestration.engine import ExecutionEngine
 from ..program.function import Promise
-from ..protocol import fill, generate, SamplingParams
-from ..protocol import free_context
+from ..protocol import afill, agenerate, SamplingParams
 from ..utils import RecyclePool, get_logger, create_task_in_loop
 from ..constants import RECYCLE_POOL_SIZE, STREAMING_END_TOKEN_ID, FILL_NO_CHUNK
 
@@ -29,7 +28,12 @@ class Session:
 
     session_id_manager = RecyclePool(RECYCLE_POOL_SIZE)
 
-    def __init__(self, promise: Promise, context: Context):
+    def __init__(
+        self,
+        promise: Promise,
+        context: Context,
+        finish_callback: callable,
+    ):
         # ---------- Basic info ----------
         self.session_id = Session.session_id_manager.allocate()
         self.promise = promise
@@ -47,6 +51,8 @@ class Session:
         # This buffer is used to merge multiple Fill instructions into one Fill primitive.
         self._fill_tokens_buffer: List[int] = []
 
+        self.finish_callback = finish_callback
+
         # NOTE(chaofan): now we use a fixed sampling_params for all sessions
         self.sampling_params = SamplingParams(
             temperature=0.8,
@@ -56,8 +62,8 @@ class Session:
 
     def __del__(self):
         # print("Session deleted.")
+        self.finish_callback()
         Session.session_id_manager.free(self.session_id)
-        self.context.destruction()
 
     async def _flush_fill_tokens_buffer(self):
         buffer_len = len(self._fill_tokens_buffer)
@@ -78,7 +84,7 @@ class Session:
                 f"Session {self.session_id} submit Fill primitive (size: {len(chunked_tokens)})"
             )
 
-            resp = await fill(
+            resp = await afill(
                 self.engine.http_address,
                 session_id=self.session_id,
                 token_ids=chunked_tokens,
@@ -103,7 +109,7 @@ class Session:
                     f"Session {self.session_id} submit Generation primitive (instruction: {inst})"
                 )
 
-                generator = generate(
+                generator = agenerate(
                     self.engine.http_address,
                     session_id=self.session_id,
                     context_id=self.context.context_id,
@@ -128,6 +134,10 @@ class Session:
             elif isinstance(inst, ConstantFill):
                 self._fill_tokens_buffer.extend(inst.token_ids)
             elif isinstance(inst, PlaceholderFill):
+                if not inst.input_holder.ready:
+                    # Not ready. Flush the buffer first.
+                    await self._flush_fill_tokens_buffer()
+
                 # Lock unitl the input holder is streaming.
                 # Then there are two cases:
                 # 1. The input holder is ready. We can fill the whole data.
@@ -139,12 +149,10 @@ class Session:
                     # In this case, the placeholder must be synced.
                     self._fill_tokens_buffer.extend(inst.input_holder.token_ids)
                 else:
-                    # Not ready. Flush the buffer first.
-                    await self._flush_fill_tokens_buffer()
                     # Streaming input. Pipeling filling.
                     num_filled_tokens = 0
                     async for chunk in inst.input_pipe.generator():
-                        resp = await fill(
+                        resp = await afill(
                             self.engine.http_address,
                             session_id=self.session_id,
                             token_ids=chunk,

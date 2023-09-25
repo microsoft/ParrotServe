@@ -115,7 +115,47 @@ def test_dag():
     print("Time Used: ", (ed - st) / 1e9)
 
 
+def test_shared_context():
+    # Initialize
+    init()
+
+    @P.function(caching_prefix=False)
+    def test(a: P.Input, b: P.Input, c: P.Output):
+        """This {{b}} is a test {{a}} function {{c}}"""
+
+    ctx = P.shared_context(engine_name="test")
+
+    async def main():
+        a = P.placeholder("a")
+        b = P.placeholder("b")
+        c = P.placeholder("c")
+        d = P.placeholder("d")
+        e = P.placeholder("e")
+
+        ctx.fill("This is a test context.")
+
+        with ctx.open("r") as handler:
+            handler.call(test, a, b, c)
+
+        a.assign("Apple")
+        b.assign("Banana")
+        print(await c.get())
+
+        with ctx.open("w") as handler:
+            handler.call(test, b, c, d)
+
+        print(await d.get())
+
+        with ctx.open("r") as handler:
+            handler.call(test, a, c, e)
+
+        print(await e.get())
+
+    env.parrot_run_aysnc(main())
+
+
 if __name__ == "__main__":
-    test_execute_single_function_call()
+    # test_execute_single_function_call()
     # test_pipeline_call()
     # test_dag()
+    test_shared_context()

@@ -5,9 +5,9 @@ Use `python3 -m parrot.testing.fake_server` to start a fake server.
 
 from parrot.protocol import (
     check_heartbeat,
-    prefix_init,
     fill,
-    generate,
+    afill,
+    agenerate,
     free_context,
     SamplingParams,
 )
@@ -33,7 +33,7 @@ def test_check_heartbeat():
 
 
 def test_prefix_init():
-    resp = prefix_init(
+    resp = fill(
         http_addr=addr,
         context_id=0,
         token_ids=[1, 2, 3],
@@ -45,7 +45,7 @@ def test_prefix_init():
 def test_fill():
     async def main():
         st = time.perf_counter_ns()
-        resp = await fill(
+        resp = await afill(
             http_addr=addr,
             session_id=0,
             context_id=0,
@@ -66,7 +66,7 @@ def test_generate():
     async def main():
         counter = 0
         st = time.perf_counter_ns()
-        async for token_id in generate(
+        async for token_id in agenerate(
             http_addr=addr,
             session_id=0,
             context_id=0,

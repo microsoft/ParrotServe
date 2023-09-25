@@ -1,1 +1,1 @@
-from .interface import Input, Output, function, placeholder
+from .interface import Input, Output, function, placeholder, shared_context

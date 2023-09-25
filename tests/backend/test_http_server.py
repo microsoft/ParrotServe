@@ -20,10 +20,10 @@ def test_simple_serving():
         assert resp.cached_tokens_size == 0
         assert resp.num_running_jobs == 0
 
-        resp = prefix_init("http://localhost:8888", 0, prompt_tokens)
+        resp = fill("http://localhost:8888", 0, prompt_tokens)
         assert resp.num_filled_tokens == len(prompt_tokens)
 
-        generator = generate(
+        generator = agenerate(
             "http://localhost:8888",
             0,
             0,

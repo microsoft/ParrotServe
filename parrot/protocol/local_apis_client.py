@@ -1,15 +1,12 @@
 from typing import Type, List
 import requests
 import aiohttp
-import asyncio
 import dataclasses
-from requests.exceptions import RequestException
-from pydantic import ValidationError
 
 from ..utils import get_logger
 from .local_apis_response import *
 from .sampling_params import SamplingParams
-from ..constants import NONE_CONTEXT_ID, NONE_SESSION_ID
+from ..constants import NONE_SESSION_ID
 
 
 logger = get_logger("API")
@@ -76,16 +73,18 @@ def check_heartbeat(engine_name: str, http_addr: str) -> HeartbeatResponse:
         raise e
 
 
-def prefix_init(http_addr: str, context_id: int, token_ids: List[int]) -> FillResponse:
+def fill(
+    http_addr: str, context_id: int, parent_context_id: int, token_ids: List[int]
+) -> FillResponse:
     try:
         return send_http_request(
             FillResponse,
             http_addr,
             "/fill",
             retry_times=1,
-            session_id=NONE_SESSION_ID,  # No session id for prefix init
+            session_id=NONE_SESSION_ID,  # No session id for simple fill
             context_id=context_id,
-            parent_context_id=NONE_CONTEXT_ID,  # Since we are init a new prefix context
+            parent_context_id=parent_context_id,
             token_ids=token_ids,
         )
     except BaseException as e:
@@ -93,7 +92,7 @@ def prefix_init(http_addr: str, context_id: int, token_ids: List[int]) -> FillRe
         raise e
 
 
-async def fill(
+async def afill(
     http_addr: str,
     session_id: int,
     token_ids: List[int],
@@ -125,7 +124,7 @@ async def fill(
         raise e
 
 
-async def generate(
+async def agenerate(
     http_addr: str,
     session_id: int,
     context_id: int,

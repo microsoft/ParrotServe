@@ -135,35 +135,13 @@ class SemanticFunction:
         self.params_map = dict([(param.name, param) for param in self.params])
         self.body: List[FunctionPiece] = parse_func_body(func_body_str, self.params_map)
 
-    @staticmethod
-    def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
-        if param.typ != ParamType.PYOBJ:
-            assert isinstance(value, Placeholder), (
-                f"Argument {param.name} should be a placeholder, "
-                f"but got {type(value)}: {value}"
-            )
-        bindings[param.name] = value
-
     def __call__(self, *args: List[Any], **kwargs: Dict[str, Any]):
         """Calling a parrot function will not execute it immediately.
         Instead, this will submit the call to the executor."""
 
-        bindings: Dict[str, Any] = {}
-
-        for i, arg_value in enumerate(args):
-            self._set_value(self.params[i], arg_value, bindings)
-
-        for name, arg_value in kwargs.items():
-            assert (
-                name not in bindings
-            ), f"Function {self.name} got multiple values for argument {name}"
-            assert (
-                name in self.params_map
-            ), f"Function {self.name} got an unexpected keyword argument {name}"
-            self._set_value(self.params_map[name], arg_value, bindings)
-
+        promise = Promise(self, None, *args, **kwargs)
         if SemanticFunction._executor is not None:
-            SemanticFunction._executor.submit(Promise(self, bindings))
+            SemanticFunction._executor.submit(promise)
         else:
             logger.warning(
                 "Executor is not set, will not submit the promise. "
@@ -175,6 +153,34 @@ class Promise:
     """Promise is a function call including the functions and bindings (param name ->
     placeholder)."""
 
-    def __init__(self, func: SemanticFunction, bindings: Dict[str, Any]):
+    def __init__(
+        self,
+        func: SemanticFunction,
+        shared_context_handler: Optional["SharedContextHandler"] = None,
+        *args,
+        **kwargs,
+    ):
         self.func = func
-        self.bindings = bindings
+        self.bindings: Dict[str, Any] = {}
+        self.shared_context_handler = shared_context_handler
+
+        for i, arg_value in enumerate(args):
+            self._set_value(self.func.params[i], arg_value, self.bindings)
+
+        for name, arg_value in kwargs.items():
+            assert (
+                name not in self.bindings
+            ), f"Function {self.func.name} got multiple values for argument {name}"
+            assert (
+                name in self.func.params_map
+            ), f"Function {self.func.name} got an unexpected keyword argument {name}"
+            self._set_value(self.func.params_map[name], arg_value, self.bindings)
+
+    @staticmethod
+    def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
+        if param.typ != ParamType.PYOBJ:
+            assert isinstance(value, Placeholder), (
+                f"Argument {param.name} should be a placeholder, "
+                f"but got {type(value)}: {value}"
+            )
+        bindings[param.name] = value

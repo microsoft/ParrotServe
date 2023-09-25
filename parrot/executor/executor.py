@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 from ..program.function import Prefix, Promise, Constant, ParameterLoc, ParamType
 from ..program.placeholder import Placeholder
@@ -44,7 +44,10 @@ class TokenizerGroupExecutor:
         # Translate function body to instructions
         for i, piece in enumerate(session.promise.func.body):
             if isinstance(piece, Prefix):
-                if session.promise.func.cached_prefix:
+                if (
+                    session.promise.func.cached_prefix
+                    and session.promise.shared_context_handler is None
+                ):
                     continue  # If the prefix is cached, we do not need to fill it.
                 inst = ConstantFill(tokenized[i])
             elif isinstance(piece, Constant):
@@ -107,8 +110,21 @@ class Executor:
         )
 
     def submit(self, promise: Promise):
+        new_created_context = True
+
         # Get/fork temporary context for a promise
-        if promise.func.cached_prefix:
+        if promise.shared_context_handler is not None:
+            if promise.shared_context_handler.mode == "r":
+                # Read mode: fork a new context
+                context = Context(
+                    parent_context=promise.shared_context_handler.shared_context.context
+                )
+            else:
+                # Write mode: directly use the context
+                context = promise.shared_context_handler.shared_context.context
+                finish_callback = promise.shared_context_handler.unlock_writer
+                new_created_context = False
+        elif promise.func.cached_prefix:
             assert promise.func.name in self.controller.function_prefix
             context = Context(
                 parent_context=self.controller.function_prefix[promise.func.name]
@@ -116,10 +132,20 @@ class Executor:
         else:
             context = Context()
 
-        session = Session(promise, context)
+        if new_created_context:
+            # If the context is a temporary one, we need to free it after execution;
+            # Otherwise, we only unlock the writer of the context.
+            finish_callback = context.destruction
+
+        session = Session(promise, context, finish_callback)
         self.dispatcher.dispatch(session)
         assert session.engine is not None
-        context.cached_engines.append(session.engine)
+
+        if new_created_context:
+            # And in this case, it must be a newly created context.
+            # Hence we should set its cached_engines.
+            context.cached_engines.append(session.engine)
+
         self.group_executors[session.engine.tokenizer].add_session(session)
 
         logger.info(
