@@ -3,7 +3,7 @@ import parrot
 from parrot.backend.native.engine import NativeExecutionEngine
 from parrot.backend.primitives import PrimitiveJob, Fill, Generation
 from parrot.utils import create_task_in_loop
-from parrot.protocol.sampling_params import SamplingParams
+from parrot.protocol.sampling_config import SamplingConfig
 from transformers import AutoTokenizer
 
 
@@ -44,7 +44,7 @@ def test_engine_simple_serving():
             session_id=0,
             context_id=0,
             parent_context_id=-1,
-            sampling_params=SamplingParams(
+            sampling_config=SamplingConfig(
                 max_gen_length=40,
                 stop_token_ids=[tokenizer.eos_token_id],
             ),

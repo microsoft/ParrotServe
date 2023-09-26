@@ -3,7 +3,7 @@ import torch
 from transformers import PretrainedConfig
 from xformers import ops as xops
 
-from parrot.protocol.sampling_params import SamplingParams
+from parrot.protocol.sampling_config import SamplingConfig
 
 from ..config import NativeConfig
 from ..primitives import PrimitiveJob, Fill, Generation
@@ -31,7 +31,7 @@ class IterationState:
     ):
         # Metadata
         self.num_fill_tokens: List[int] = []
-        self.generation_sampling_params: List[SamplingParams] = []
+        self.generation_sampling_config: List[SamplingConfig] = []
 
         # Tensors
         self.allocated_index_tensor: List[int] = []
@@ -47,7 +47,7 @@ class IterationState:
                 self.num_fill_tokens.append(num_tokens)
             elif isinstance(job, Generation):
                 num_tokens = 1
-                self.generation_sampling_params.append(job.sampling_params)
+                self.generation_sampling_config.append(job.sampling_config)
 
             context_blocks = job.context.get_context_blocks()
             self.context_index_tensor.extend(context_blocks)
@@ -106,4 +106,4 @@ class IterationState:
 
     @property
     def num_generation_jobs(self) -> int:
-        return len(self.generation_sampling_params)
+        return len(self.generation_sampling_config)

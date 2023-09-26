@@ -122,7 +122,12 @@ class ContextManager:
             if context.check_expired():
                 expired_context.append(context)
 
-        for context in expired_context:
+        while len(expired_context) > 0:
+            context = expired_context.pop(0)
+            if len(context.sub_context_ids) > 0:
+                # We cannot delete a context with sub-contexts.
+                expired_context.append(context)
+                continue
             freed_tokens = self.free_context(context.client_id, context.context_id)
             logger.info(
                 f"Garbage collect context {context.unique_id} with {freed_tokens} tokens freed."

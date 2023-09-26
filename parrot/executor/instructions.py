@@ -1,6 +1,7 @@
 from typing import List
 
 from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
+from parrot.protocol.sampling_config import SamplingConfig
 
 from .dataholder import DataHolder
 from .pipe import TokenPipe
@@ -41,9 +42,10 @@ class PlaceholderFill(Instruction):
 class Generation(Instruction):
     """Generation instruction, corresponding to Generation primitive in backend."""
 
-    def __init__(self, output_holder: DataHolder):
+    def __init__(self, output_holder: DataHolder, sampling_config: SamplingConfig):
         super().__init__()
         self.output_holder: DataHolder = output_holder
+        self.sampling_config = sampling_config
         assert self.output_holder.producer is None, "Concurrent writing to a holder"
         self.output_holder.producer = self
         self.detokenize_pipe = TokenPipe(DETOKENIZE_CHUNK_NUM)

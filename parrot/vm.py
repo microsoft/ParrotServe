@@ -2,6 +2,7 @@ import asyncio
 import contextlib
 import time
 import json
+import traceback
 from typing import Optional, Coroutine
 
 from .orchestration.controller import Controller
@@ -72,7 +73,7 @@ class VirtualMachine:
             # For errors in coroutines, we use the fail fast mode and quit the whole system
             # In this case, we can only see a SystemExit error
             print("Error happens when executing Parrot program: ", type(e), repr(e))
-            # print("Traceback: ", traceback.format_exc())
+            print("Traceback: ", traceback.format_exc())
         else:
             if timeit:
                 ed = time.perf_counter_ns()

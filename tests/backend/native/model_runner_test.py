@@ -1,7 +1,7 @@
 from parrot.backend.native.runner import Runner
 from parrot.backend.config import NativeConfig
 from parrot.backend.native.iter_state import Fill, Generation
-from parrot.protocol.sampling_params import SamplingParams
+from parrot.protocol.sampling_config import SamplingConfig
 
 import numpy as np
 from transformers import AutoTokenizer
@@ -61,7 +61,7 @@ def test_fill_then_gen(native_config: NativeConfig):
                 session_id=0,
                 context_id=0,
                 parent_context_id=-1,
-                sampling_params=SamplingParams(),
+                sampling_config=SamplingConfig(),
             )
         ]
     )
@@ -91,7 +91,7 @@ def test_generate_single_text(native_config: NativeConfig):
                     session_id=0,
                     context_id=0,
                     parent_context_id=-1,
-                    sampling_params=SamplingParams(),
+                    sampling_config=SamplingConfig(),
                 )
             ]
         )
@@ -128,7 +128,7 @@ def test_generate_batch_text(native_config: NativeConfig):
                 session_id=i,
                 context_id=i,
                 parent_context_id=-1,
-                sampling_params=SamplingParams(),
+                sampling_config=SamplingConfig(),
             )
             for i in range(len(prompt_tokens))
         ]
@@ -170,7 +170,7 @@ def test_fill_generate_mixed(native_config: NativeConfig):
             session_id=i,
             context_id=i,
             parent_context_id=-1,
-            sampling_params=SamplingParams(),
+            sampling_config=SamplingConfig(),
         )
         for i in range(len(prompt_tokens))
     ]

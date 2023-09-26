@@ -5,7 +5,7 @@ import time
 
 from parrot.utils import RecyclePool, set_random_seed, get_logger
 from parrot.constants import NONE_CONTEXT_ID
-from parrot.protocol.sampling_params import SamplingParams
+from parrot.protocol.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
 from .mem import init_model_cache_storage
@@ -48,7 +48,7 @@ class Runner:
 
         # Some generation jobs should do "first sampling"
         first_sampling_states: List[torch.Tensor] = []
-        first_sampling_params: List[SamplingParams] = []
+        first_sampling_config: List[SamplingConfig] = []
         first_sampling_jobs: List[Generation] = []
 
         # Allocate new context blocks
@@ -69,7 +69,7 @@ class Runner:
                 job.context.allocate(1)
                 if job.context.last_hidden_state is not None:
                     first_sampling_states.append(job.context.last_hidden_state)
-                    first_sampling_params.append(job.sampling_params)
+                    first_sampling_config.append(job.sampling_config)
                     first_sampling_jobs.append(job)
                     job.context.last_hidden_state = None
 
@@ -79,7 +79,7 @@ class Runner:
         if len(first_sampling_states) > 0:
             first_sampling_states = torch.stack(first_sampling_states)
             first_sampling_tokens = (
-                self.model.sampler(first_sampling_states, first_sampling_params)
+                self.model.sampler(first_sampling_states, first_sampling_config)
                 .cpu()
                 .tolist()
             )

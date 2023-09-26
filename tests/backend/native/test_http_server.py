@@ -29,7 +29,7 @@ def test_simple_serving():
             0,
             0,
             -1,
-            SamplingParams(max_gen_length=10),
+            SamplingConfig(max_gen_length=10),
         )
 
         text = prompt_text

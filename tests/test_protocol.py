@@ -9,7 +9,7 @@ from parrot.protocol import (
     afill,
     agenerate,
     free_context,
-    SamplingParams,
+    SamplingConfig,
 )
 import time
 import asyncio
@@ -76,7 +76,7 @@ def test_generate():
             session_id=0,
             context_id=0,
             parent_context_id=-1,
-            sampling_params=SamplingParams(),
+            sampling_config=SamplingConfig(),
         ):
             counter += 1
             # assert counter == token_id

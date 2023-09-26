@@ -1,9 +1,10 @@
 from enum import Enum
-from typing import List, Dict, Type, Optional, Any, Coroutine
+from typing import List, Dict, Type, Optional, Any, Coroutine, Set
 import regex as re
 from dataclasses import dataclass
 
 from parrot.utils import get_logger
+from parrot.protocol.sampling_config import SamplingConfig
 
 from .future import Future
 
@@ -42,6 +43,7 @@ class ParamType(Enum):
 class Parameter:
     name: str
     typ: ParamType
+    sampling_config: Optional[SamplingConfig] = None
 
     @property
     def is_output(self) -> bool:
@@ -70,6 +72,7 @@ def parse_func_body(
         ret.append(piece_cls(idx=idx, **kwargs))
 
     last_output_loc_idx = -1
+    outputs: Set[str] = set()
 
     for match in iterator:
         # Constant
@@ -83,9 +86,12 @@ def parse_func_body(
         param_name = body_str[match.start() + 2 : match.end() - 2]
         assert param_name in params_map, f"Parse failed: {param_name} is not defined."
         param = params_map[param_name]
-        assert not (
-            param.is_output and isinstance(ret[-1], ParameterLoc)
-        ), "Output loc can't be adjacent to another loc."
+        if param.is_output:
+            assert not (
+                isinstance(ret[-1], ParameterLoc)
+            ), "Output loc can't be adjacent to another loc."
+            assert not param.name in outputs, "Output param can't be used twice."
+            outputs.add(param.name)
         push_to_body(ParameterLoc, param=param)
 
         if param.is_output:

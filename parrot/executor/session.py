@@ -4,7 +4,7 @@ from queue import Queue
 from parrot.orchestration.context import Context
 from parrot.orchestration.engine import ExecutionEngine
 from parrot.program.function import LLMCall
-from parrot.protocol import afill, agenerate, SamplingParams
+from parrot.protocol import afill, agenerate, SamplingConfig
 from parrot.utils import RecyclePool, get_logger, create_task_in_loop
 from parrot.constants import RECYCLE_POOL_SIZE, STREAMING_END_TOKEN_ID, FILL_NO_CHUNK
 
@@ -53,13 +53,6 @@ class Session:
         self._fill_tokens_buffer: List[int] = []
 
         self.finish_callback = finish_callback
-
-        # NOTE(chaofan): now we use a fixed sampling_params for all sessions
-        self.sampling_params = SamplingParams(
-            temperature=0.8,
-            top_p=0.95,
-            max_gen_length=1024,  # 128,
-        )
 
     def __del__(self):
         # print("Session deleted.")
@@ -117,7 +110,7 @@ class Session:
                     session_id=self.session_id,
                     context_id=self.context.context_id,
                     parent_context_id=self.context.parent_context_id,
-                    sampling_params=self.sampling_params,
+                    sampling_config=inst.sampling_config,
                     # We don't fork new context. Hence parent_context_id=-1
                 )
 

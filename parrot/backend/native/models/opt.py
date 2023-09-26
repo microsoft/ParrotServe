@@ -275,7 +275,7 @@ class OPTForCausalLM(nn.Module):
             hidden_states, iteration_state
         )
         next_tokens = self.sampler(
-            gen_hidden_states, iteration_state.generation_sampling_params
+            gen_hidden_states, iteration_state.generation_sampling_config
         )
         return fill_hidden_states, next_tokens
 

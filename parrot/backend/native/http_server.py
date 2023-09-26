@@ -8,7 +8,7 @@ from fastapi.responses import StreamingResponse
 from uvicorn import Config, Server
 
 from parrot.utils import get_logger, create_task_in_loop
-from parrot.protocol.sampling_params import SamplingParams
+from parrot.protocol.sampling_config import SamplingConfig
 
 from .engine import NativeExecutionEngine
 from ..primitives import Fill, Generation
@@ -65,7 +65,7 @@ async def generate(request: Request):
         session_id=session_id,
         context_id=context_id,
         parent_context_id=parent_context_id,
-        sampling_params=SamplingParams(**payload),
+        sampling_config=SamplingConfig(**payload),
     )
     execution_engine.add_job(generation_job)
 

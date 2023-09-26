@@ -48,12 +48,9 @@ class NativeExecutor(BaseExecutor):
             self.tokenizer_name,
         )
 
-        # Hack: we append eos_token_id in the sampling params
-        # It should be iterated in the future because the sampling params should be unique for every generation.
         eos_token_id = self.tokenized_storage.get_tokenizer(
             self.tokenizer_name
         ).eos_token_id
-        session.sampling_params.stop_token_ids.append(eos_token_id)
 
         # Translate function body to instructions
         for i, piece in enumerate(session.call.func.body):
@@ -85,7 +82,14 @@ class NativeExecutor(BaseExecutor):
                     holder = self._get_dataholder(param_value)
                     if piece.param.is_output:
                         assert param_value.is_middle_node
-                        inst = Generation(output_holder=holder)
+                        sampling_config = piece.param.sampling_config
+                        # If not ignore_tokenizer_eos, we should add eos_token_id to stop_token_ids
+                        if not sampling_config.ignore_tokenizer_eos:
+                            sampling_config.stop_token_ids.append(eos_token_id)
+                        inst = Generation(
+                            output_holder=holder,
+                            sampling_config=sampling_config,
+                        )
                     else:
                         inst = PlaceholderFill(input_holder=holder)
             session.instructions.put_nowait(inst)

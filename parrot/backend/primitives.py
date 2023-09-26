@@ -1,7 +1,7 @@
 from typing import List, Optional
 from asyncio import Event, Queue as AsyncQueue
 
-from parrot.protocol.sampling_params import SamplingParams
+from parrot.protocol.sampling_config import SamplingConfig
 
 from .low_level_context import LowLevelContext
 
@@ -63,10 +63,10 @@ class Generation(PrimitiveJob):
         session_id: int,
         context_id: int,
         parent_context_id: int,
-        sampling_params: SamplingParams,
+        sampling_config: SamplingConfig,
     ) -> None:
         super().__init__(client_id, session_id, context_id, parent_context_id)
-        self.sampling_params = sampling_params
+        self.sampling_config = sampling_config
         self.output_queue: AsyncQueue[int] = AsyncQueue()
         self.gen_length = 0
 
@@ -86,8 +86,8 @@ class Generation(PrimitiveJob):
     def check_stop(self) -> bool:
         token_id = self.context.get_last_token_id()
         return (
-            token_id in self.sampling_params.stop_token_ids
-            or self.gen_length >= self.sampling_params.max_gen_length
+            token_id in self.sampling_config.stop_token_ids
+            or self.gen_length >= self.sampling_config.max_gen_length
             # Or other stop conditions
         )
 

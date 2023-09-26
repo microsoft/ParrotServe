@@ -7,7 +7,7 @@ from parrot.utils import get_logger
 from parrot.constants import NONE_SESSION_ID
 
 from .local_apis_response import *
-from .sampling_params import SamplingParams
+from .sampling_config import SamplingConfig
 
 
 logger = get_logger("API")
@@ -145,7 +145,7 @@ async def agenerate(
     session_id: int,
     context_id: int,
     parent_context_id: int,
-    sampling_params: SamplingParams,
+    sampling_config: SamplingConfig,
 ):
     try:
         async with aiohttp.ClientSession() as client_session:
@@ -157,7 +157,7 @@ async def agenerate(
                 session_id=session_id,
                 context_id=context_id,
                 parent_context_id=parent_context_id,
-                **dataclasses.asdict(sampling_params),
+                **dataclasses.asdict(sampling_config),
             ):
                 yield resp
     except BaseException as e:

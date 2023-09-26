@@ -5,5 +5,5 @@ from .local_apis_client import (
     agenerate,
     free_context,
 )
-from .sampling_params import SamplingParams
+from .sampling_config import SamplingConfig
 from .local_apis_response import *

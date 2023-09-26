@@ -2,6 +2,7 @@ import inspect
 from typing import Optional
 
 from parrot.orchestration.context import Context
+from parrot.protocol.sampling_config import SamplingConfig
 
 from .function import SemanticFunction, logger, ParamType, Parameter
 from .shared_context import SharedContext
@@ -17,6 +18,9 @@ class Input:
 
 class Output:
     """Annotate the output."""
+
+    def __init__(self, *args, **kwargs):
+        self.sampling_config = SamplingConfig(*args, **kwargs)
 
 
 def function(
@@ -37,13 +41,24 @@ def function(
             #     Input,
             #     Output,
             # ), "The arguments must be annotated by Input/Output"
+            sampling_config: Optional[SamplingConfig] = None
             if param.annotation == Input:
                 param_typ = ParamType.INPUT
             elif param.annotation == Output:
+                # Default output loc
                 param_typ = ParamType.OUTPUT
+                sampling_config = SamplingConfig()
+            elif param.annotation.__class__ == Output:
+                # Output loc with sampling config
+                param_typ = ParamType.OUTPUT
+                sampling_config = param.annotation.sampling_config
             else:
                 param_typ = ParamType.PYOBJ
-            func_params.append(Parameter(name=param.name, typ=param_typ))
+            func_params.append(
+                Parameter(
+                    name=param.name, typ=param_typ, sampling_config=sampling_config
+                )
+            )
 
         semantic_func = SemanticFunction(
             name=func_name,

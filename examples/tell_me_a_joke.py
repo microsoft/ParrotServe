@@ -10,14 +10,19 @@ vm.init()
 @P.function()
 def tell_me_a_joke(
     topic: P.Input,
-    keyword: P.Input,
+    topic2: P.Input,
     joke: P.Output,
     explanation: P.Output,
+    word_limit: int,
 ):
-    """Tell me a short joke about {{topic}}. The joke must contains the following
-    keywords: {{keyword}}. The following is the joke: {{joke}}. And giving a
-    short explanation to show that why it is funny. The following is the explanation
-    for the joke above: {{explanation}}."""
+    """Tell the me a joke about {{topic}} and {{topic2}}.
+    The joke is limited to {{word_limit}} characters.
+    Don't generate a joke that is too long.
+    Only generate a single joke.
+    Sure, here's a joke for you: {{joke}}. Good, and giving a
+    short explanation to show that why it is funny.
+    The explanation should be short, concise and clear.
+    Sure, here's a short explanation for the joke above: {{explanation}}."""
 
 
 async def main():
@@ -26,21 +31,27 @@ async def main():
         "a mathematician",
         "a physicist",
     ]
-    keywords = [
+    topic2s = [
         "bug",
         "iPhone",
         "cat",
     ]
+    jokes = []
+    explanations = []
 
     for i in range(3):
-        joke, explanation = tell_me_a_joke(topics[i], keywords[i])
-        joke_str = await joke.get()
+        joke, explanation = tell_me_a_joke(topics[i], topic2s[i], 100)
+        jokes.append(joke)
+        explanations.append(explanation)
+
+    for i in range(3):
+        joke_str = await jokes[i].get()
         print(f"---------- Round {i}: The following is the joke ---------- ")
         print(joke_str)
         print(
             f"---------- If you don't get it, the following is the explanation ---------- "
         )
-        print(await explanation.get())
+        print(await explanations[i].get())
 
 
 vm.run(main())
