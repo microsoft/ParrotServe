@@ -6,7 +6,6 @@ from typing import List
 class SamplingConfig:
     temperature: float = 0.8
     top_p: float = 0.95
-    top_k: int = -1
     max_gen_length: int = 1024
     ignore_tokenizer_eos: bool = False
     stop_token_ids: List[int] = field(default_factory=list)

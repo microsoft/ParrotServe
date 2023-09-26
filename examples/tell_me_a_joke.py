@@ -7,7 +7,7 @@ vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
 vm.init()
 
 
-@P.function()
+@P.function(formatter=P.AllowingNewlineFormatter)
 def tell_me_a_joke(
     topic: P.Input,
     topic2: P.Input,
@@ -15,14 +15,15 @@ def tell_me_a_joke(
     explanation: P.Output,
     word_limit: int,
 ):
-    """Tell the me a joke about {{topic}} and {{topic2}}.
-    The joke is limited to {{word_limit}} characters.
+    """Tell the me a joke about {{topic}} and {{topic2}}. The joke is limited to {{word_limit}} characters.
     Don't generate a joke that is too long.
     Only generate a single joke.
-    Sure, here's a joke for you: {{joke}}. Good, and giving a
-    short explanation to show that why it is funny.
+    Sure, here's a joke for you: {{joke}}.
+    Good, then giving a short explanation to show that why it is funny.
     The explanation should be short, concise and clear.
-    Sure, here's a short explanation for the joke above: {{explanation}}."""
+    Please just say the explanation. Don't generate other content.
+    Sure, here's a short explanation for the joke above: {{explanation}}.
+    """
 
 
 async def main():

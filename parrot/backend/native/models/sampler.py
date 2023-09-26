@@ -24,11 +24,27 @@ class Sampler(nn.Module):
         # ids = torch.ones(probs.shape[0], dtype=torch.int64, device=probs.device)
 
         # Applying temperature scaling
-        temperature = [sp.temperature for sp in sampling_config]
+        temperature = [sf.temperature for sf in sampling_config]
         temperature = torch.tensor(
             temperature, dtype=torch.float, device=logits.device
         ).unsqueeze(-1)
         logits.div_(temperature)
+
+        sorted_logits, logits_idx = logits.sort(dim=-1, descending=True)
+
+        # Applying top_p
+        top_ps = [sf.top_p for sf in sampling_config]
+        top_ps = torch.tensor(
+            top_ps, dtype=torch.float, device=logits.device
+        ).unsqueeze(-1)
+        sorted_probs = sorted_logits.softmax(dim=-1)
+        sum_probs = sorted_probs.cumsum(dim=-1)
+        mask = (sum_probs - sorted_probs) > top_ps
+        sorted_logits[mask] = -float("inf")
+
+        logits = torch.gather(
+            sorted_logits, dim=-1, index=torch.argsort(logits_idx, dim=-1)
+        )
 
         probs = torch.softmax(logits, dim=-1, dtype=torch.float)
         ids = torch.multinomial(probs, num_samples=1, replacement=True).squeeze(-1)
