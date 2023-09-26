@@ -1,6 +1,6 @@
 """This test requires a running Parrot HTTP server.
 
-Use `python3 -m parrot.backend.http_server --config_path [engine_config_path]` to start a server.
+Use `python3 -m parrot.backend.native.http_server --config_path [engine_config_path]` to start a server.
 Please use host `localhost` and port `8888` for the server.
 """
 
@@ -15,16 +15,17 @@ def test_simple_serving():
         tokenizer = AutoTokenizer.from_pretrained("facebook/opt-125m")
         prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
-        resp = check_heartbeat("test", "http://localhost:8888")
+        resp = check_heartbeat("http://localhost:8888", "test", "0")
         assert resp.num_cached_tokens == 0
         assert resp.cached_tokens_size == 0
         assert resp.num_running_jobs == 0
 
-        resp = fill("http://localhost:8888", 0, prompt_tokens)
+        resp = fill("http://localhost:8888", "0", 0, -1, prompt_tokens)
         assert resp.num_filled_tokens == len(prompt_tokens)
 
         generator = agenerate(
             "http://localhost:8888",
+            "0",
             0,
             0,
             -1,
@@ -37,7 +38,7 @@ def test_simple_serving():
             # print(token_id)
             text += tokenizer.decode([token_id])
 
-        resp = free_context("http://localhost:8888", 0)
+        resp = free_context("http://localhost:8888", "0", 0)
         assert resp.num_freed_tokens > len(prompt_tokens)
 
         print("Generated: ", text)

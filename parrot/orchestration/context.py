@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, Set
 
 from parrot.utils import RecyclePool, get_logger
 from parrot.constants import RECYCLE_POOL_SIZE, NONE_CONTEXT_ID
@@ -27,7 +27,7 @@ class Context:
         self.parent_context = parent_context
 
         # Record engines that have cached this context.
-        self.cached_engines: List[ExecutionEngine] = []
+        self.cached_engines: Set[ExecutionEngine] = set()
 
         logger.debug(f"Context created: {self.context_id}")
 
@@ -38,8 +38,9 @@ class Context:
         for engine in self.cached_engines:
             try:
                 resp = free_context(
-                    engine.http_address,
-                    self.context_id,
+                    http_addr=engine.http_address,
+                    client_id=engine.client_id,
+                    context_id=self.context_id,
                 )
             except BaseException as e:
                 logger.error(

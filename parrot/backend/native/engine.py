@@ -1,14 +1,16 @@
 import asyncio
-from typing import Dict
+from typing import Dict, List
 import json
+import time
 
-from parrot.constants import ENGINE_LOOP_INTERVAL
+from parrot.constants import ENGINE_LOOP_INTERVAL, GC_INTERVAL
 from parrot.utils import get_logger
 
 from .runner import Runner
+from .block_context import BlockContext
 from ..scheduler import Scheduler
 from ..primitives import PrimitiveJob
-
+from ..low_level_context import get_unique_context_id
 from ..config import NativeConfig, SchedulerConfig
 
 
@@ -31,24 +33,38 @@ class NativeExecutionEngine:
     def add_job(self, job: PrimitiveJob):
         logger.info(f"Adding job: {job}")
         self.scheduler.add_job(job)
-        self.runner.bind_job_context(job)
+        self.runner.context_manager.bind_job_context(
+            job,
+            BlockContext,
+            kv_cache_manager=self.runner.kv_cache_manager,
+        )
 
-    def free_context(self, context_id: int) -> int:
+    def free_context(self, client_id: str, context_id: int) -> int:
         for job in self.scheduler.running_jobs:
-            if job.context_id == context_id:
+            if job.client_id == client_id and job.context_id == context_id:
                 # NOTE(chaofan): We cannot free the context when it is still running.
-                raise RuntimeError("Context is still running.")
+                raise RuntimeError(
+                    f"Context {get_unique_context_id(client_id, context_id)} is still running."
+                )
 
-        return self.runner.free_context(context_id)
+        return self.runner.context_manager.free_context(client_id, context_id)
 
-    def stats(self) -> Dict[str, int]:
+    def heartbeat(self, engine_name: str, client_id: str) -> Dict[str, int]:
         """Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
 
-        num_cached_tokens = 0
-        for context in self.runner.context_manager.values():
-            num_cached_tokens += len(
-                context.token_kv_block_ids
-            )  # We don't need to count the parent context.
+        logger.info(f"Heartbeat from client {client_id}.")
+
+        if engine_name != self.engine_name:
+            logger.warning(
+                f"Name mismatch! Heart with engine name {engine_name}, "
+                f"but this engine is {self.engine_name}."
+            )
+
+        self.runner.context_manager.flush_context_heartbeat(client_id)
+
+        # NOTE(chaofan): This info is for all tokens in this engine,
+        # not only for this client.
+        num_cached_tokens = self.runner.context_manager.get_num_cached_tokens()
 
         cached_tokens_size = (
             num_cached_tokens
@@ -70,12 +86,21 @@ class NativeExecutionEngine:
     async def execute_loop(self):
         logger.info(f"Execution loop of engine: {self.engine_name} started.")
 
+        last_gc_time = 0
+
         while True:
             await asyncio.sleep(ENGINE_LOOP_INTERVAL)
+
+            # Do GC
+            cur_time = time.perf_counter_ns()
+            if cur_time - last_gc_time > GC_INTERVAL * 1e9:
+                self.runner.context_manager.garbage_collect()
+                last_gc_time = cur_time
 
             if self.scheduler.empty:
                 continue
 
+            # Run jobs
             jobs = self.scheduler.schedule()
             self.runner.run_iter(jobs)
             self.scheduler.finish()

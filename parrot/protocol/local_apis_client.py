@@ -64,10 +64,17 @@ async def async_send_http_request_streaming(
             yield int().from_bytes(chunk, "big")
 
 
-def check_heartbeat(engine_name: str, http_addr: str) -> HeartbeatResponse:
+def check_heartbeat(
+    http_addr: str, engine_name: str, client_id: str
+) -> HeartbeatResponse:
     try:
         return send_http_request(
-            HeartbeatResponse, http_addr, "/heartbeat", retry_times=3
+            HeartbeatResponse,
+            http_addr,
+            "/heartbeat",
+            retry_times=3,
+            engine_name=engine_name,
+            client_id=client_id,
         )
     except BaseException as e:
         logger.error(f"Check heartbeat error in {engine_name} error: {e}")
@@ -75,7 +82,11 @@ def check_heartbeat(engine_name: str, http_addr: str) -> HeartbeatResponse:
 
 
 def fill(
-    http_addr: str, context_id: int, parent_context_id: int, token_ids: List[int]
+    http_addr: str,
+    client_id: str,
+    context_id: int,
+    parent_context_id: int,
+    token_ids: List[int],
 ) -> FillResponse:
     try:
         return send_http_request(
@@ -83,6 +94,7 @@ def fill(
             http_addr,
             "/fill",
             retry_times=1,
+            client_id=client_id,
             session_id=NONE_SESSION_ID,  # No session id for simple fill
             context_id=context_id,
             parent_context_id=parent_context_id,
@@ -95,6 +107,7 @@ def fill(
 
 async def afill(
     http_addr: str,
+    client_id: str,
     session_id: int,
     token_ids: List[int],
     context_id: int,
@@ -115,6 +128,7 @@ async def afill(
                 FillResponse,
                 http_addr,
                 "/fill",
+                client_id=client_id,
                 session_id=session_id,
                 context_id=context_id,
                 parent_context_id=parent_context_id,
@@ -127,6 +141,7 @@ async def afill(
 
 async def agenerate(
     http_addr: str,
+    client_id: str,
     session_id: int,
     context_id: int,
     parent_context_id: int,
@@ -138,6 +153,7 @@ async def agenerate(
                 client_session,
                 http_addr,
                 "/generate",
+                client_id=client_id,
                 session_id=session_id,
                 context_id=context_id,
                 parent_context_id=parent_context_id,
@@ -149,13 +165,16 @@ async def agenerate(
         raise e
 
 
-def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
+def free_context(
+    http_addr: str, client_id: str, context_id: int
+) -> FreeContextResponse:
     try:
         return send_http_request(
             FreeContextResponse,
             http_addr,
             "/free_context",
             retry_times=1,
+            client_id=client_id,
             context_id=context_id,
         )
     except BaseException as e:

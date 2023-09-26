@@ -25,13 +25,15 @@ execution_engine: Optional[NativeExecutionEngine] = None
 
 @app.post("/heartbeat")
 async def heartbeat(request: Request):
-    return execution_engine.stats()
+    payload = await request.json()
+    return execution_engine.heartbeat(payload["engine_name"], payload["client_id"])
 
 
 @app.post("/fill")
 async def fill(request: Request):
     payload = await request.json()
     fill_job = Fill(
+        client_id=payload["client_id"],
         session_id=payload["session_id"],
         context_id=payload["context_id"],
         parent_context_id=payload["parent_context_id"],
@@ -48,14 +50,18 @@ async def fill(request: Request):
 @app.post("/generate")
 async def generate(request: Request):
     payload = await request.json()
+    client_id = payload["client_id"]
     session_id = payload["session_id"]
     context_id = payload["context_id"]
     parent_context_id = payload["parent_context_id"]
+
+    payload.pop("client_id")
     payload.pop("session_id")
     payload.pop("context_id")
     payload.pop("parent_context_id")
 
     generation_job = Generation(
+        client_id=client_id,
         session_id=session_id,
         context_id=context_id,
         parent_context_id=parent_context_id,
@@ -69,7 +75,9 @@ async def generate(request: Request):
 @app.post("/free_context")
 async def free_context(request: Request):
     payload = await request.json()
-    num_freed_tokens = execution_engine.free_context(payload["context_id"])
+    num_freed_tokens = execution_engine.free_context(
+        payload["client_id"], payload["context_id"]
+    )
 
     return {
         "num_freed_tokens": num_freed_tokens,

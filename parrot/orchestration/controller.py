@@ -2,12 +2,13 @@ from typing import Dict, List, Union, Optional
 import logging
 import time
 import threading
+import uuid
 from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 
 from parrot.utils import get_logger
 from parrot.program.function import SemanticFunction
 from parrot.protocol import check_heartbeat, fill
-from parrot.constants import NONE_CONTEXT_ID
+from parrot.constants import NONE_CONTEXT_ID, HEARTBEAT_INTERVAL
 
 from .engine import ExecutionEngine
 from .context import Context
@@ -35,6 +36,7 @@ class Controller:
         self._run_flag = False
 
         # ---------- Heart Beat ----------
+        self.client_id = str(uuid.uuid1())
         self._heartbeat_thread = threading.Thread(
             target=self._heartbeat_daemon, daemon=True
         )
@@ -51,19 +53,20 @@ class Controller:
         self._check_is_run()
         self._run_flag = True
         self._heartbeat_thread.start()
-        logger.info("Global controller started.")
+        logger.info(f"Global controller started. Client UUID: {self.client_id}")
 
     def caching_function_prefix(self, tokenized_storage: "TokenizedStorage"):
         for func_name, prefix_context in self.function_prefix.items():
             func = self.functions_table[func_name]
             # NOTE(chaofan): Now we cache the prefix on all engines
             for engine in self.engines_table.values():
-                prefix_context.cached_engines.append(engine)
+                prefix_context.cached_engines.add(engine)
                 prefix_tokens = tokenized_storage.tokenize_func_body(
                     func, engine.tokenizer
                 )[0]
                 resp = fill(
                     engine.http_address,
+                    self.client_id,
                     prefix_context.context_id,
                     NONE_CONTEXT_ID,  # Since we are fill a prefix
                     prefix_tokens,
@@ -89,10 +92,15 @@ class Controller:
             host=host,
             port=port,
             tokenizer=tokenizer,
+            client_id=self.client_id,
         )
 
         try:
-            resp = check_heartbeat(engine.name, engine.http_address)
+            resp = check_heartbeat(
+                http_addr=engine.http_address,
+                engine_name=engine.name,
+                client_id=self.client_id,
+            )
         except Exception:
             raise RuntimeError(
                 f"Register engine {engine.name} failed. Can't check heartbeat."
@@ -141,13 +149,15 @@ class Controller:
         logger.info(f"Register tokenizer: {tokenizer_name}")
 
     def _heartbeat_daemon(self):
-        heartbeat_interval = 5  # (Unit: second)
-
         while True:
             disconnect_engines: List[str] = []
             for engine in self.engines_table.values():
                 try:
-                    resp = check_heartbeat(engine.name, engine.http_address)
+                    resp = check_heartbeat(
+                        http_addr=engine.http_address,
+                        engine_name=engine.name,
+                        client_id=self.client_id,
+                    )
                 except:
                     disconnect_engines.append(engine.name)
                 else:
@@ -164,4 +174,4 @@ class Controller:
                 self.engines_table.pop(engine_name)
                 logger.warning(f"Engine {engine_name} disconnected.")
 
-            time.sleep(heartbeat_interval)
+            time.sleep(HEARTBEAT_INTERVAL)

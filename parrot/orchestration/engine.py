@@ -4,12 +4,20 @@ from parrot.constants import FILL_NO_CHUNK
 class ExecutionEngine:
     """Represent execution engines in high-level management."""
 
-    def __init__(self, name: str, host: str, port: int, tokenizer: str):
+    def __init__(
+        self,
+        name: str,
+        host: str,
+        port: int,
+        tokenizer: str,
+        client_id: str,
+    ):
         # ---------- Basic Config ----------
         self.name = name
         self.host = host
         self.port = port
         self.tokenizer = tokenizer
+        self.client_id = client_id
 
         # ---------- Monitor Data ----------
         self.num_cached_tokens = 0

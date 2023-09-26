@@ -11,6 +11,7 @@ from .model_instantiation import instantiate_model
 from .mem import init_model_cache_storage
 from .block_context import BlockContext
 from .iter_state import IterationState
+from ..low_level_context import ContextManager
 from ..primitives import PrimitiveJob, Fill, Generation
 from ..config import NativeConfig
 
@@ -23,7 +24,7 @@ class Runner:
 
     def __init__(self, config: NativeConfig):
         self.native_config = config
-        self.context_manager: Dict[int, BlockContext] = {}
+        self.context_manager = ContextManager()
         self.kv_cache_manager = RecyclePool(self.native_config.num_kv_cache_blocks)
 
         # Load Model
@@ -35,29 +36,6 @@ class Runner:
 
         # Set random seed
         set_random_seed(self.native_config.random_seed)
-
-    def free_context(self, context_id: int) -> int:
-        if context_id not in self.context_manager:
-            raise RuntimeError(f"Context id {context_id} not found.")
-        context = self.context_manager.pop(context_id)
-        num_freed_tokens = len(context.token_ids)
-        context.destruction()
-        return num_freed_tokens
-
-    def bind_job_context(self, job: PrimitiveJob):
-        if job.context_id not in self.context_manager:
-            # assert isinstance(job, Fill)
-            if job.parent_context_id not in self.context_manager:
-                assert job.parent_context_id == NONE_CONTEXT_ID
-                parent_context = None
-            else:
-                parent_context = self.context_manager[job.parent_context_id]
-            self.context_manager[job.context_id] = BlockContext(
-                job.context_id,
-                parent_context,
-                self.kv_cache_manager,
-            )
-        job.context = self.context_manager[job.context_id]
 
     @torch.inference_mode()
     def run_iter(self, jobs: List[PrimitiveJob]) -> (int, int):
@@ -77,7 +55,9 @@ class Runner:
         for job in jobs:
             # NOTE(chaofan): if we use engine, this is not necessary.
             if job.context is None:
-                self.bind_job_context(job)
+                self.context_manager.bind_job_context(
+                    job, BlockContext, kv_cache_manager=self.kv_cache_manager
+                )
 
             # Allocate blocks
             allocated_blocks_id: List[int] = []
@@ -118,15 +98,14 @@ class Runner:
         input_positions = []
 
         for job in jobs:
-            context = self.context_manager[job.context_id]
-            context_len = context.get_context_len()
+            context_len = job.context.get_context_len()
             if isinstance(job, Fill):
                 input_ids.extend(job.token_ids)
                 input_positions.extend(
                     range(context_len - len(job.token_ids), context_len)
                 )
             elif isinstance(job, Generation):
-                input_ids.append(context.get_last_token_id())
+                input_ids.append(job.context.get_last_token_id())
                 input_positions.append(context_len - 1)
 
         input_ids = torch.tensor(

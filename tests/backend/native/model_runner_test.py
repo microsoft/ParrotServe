@@ -11,6 +11,7 @@ def test_single_fill(native_config: NativeConfig):
     runner = Runner(native_config)
 
     job = Fill(
+        client_id="test",
         session_id=0,
         context_id=0,
         parent_context_id=-1,
@@ -27,6 +28,7 @@ def test_batch_fills(native_config: NativeConfig):
     batch_size = 16
     jobs = [
         Fill(
+            client_id="test",
             session_id=i,
             context_id=i,
             parent_context_id=-1,
@@ -43,6 +45,7 @@ def test_fill_then_gen(native_config: NativeConfig):
     runner.run_iter(
         [
             Fill(
+                client_id="test",
                 session_id=0,
                 context_id=0,
                 parent_context_id=-1,
@@ -54,6 +57,7 @@ def test_fill_then_gen(native_config: NativeConfig):
     runner.run_iter(
         [
             Generation(
+                client_id="test",
                 session_id=0,
                 context_id=0,
                 parent_context_id=-1,
@@ -69,21 +73,21 @@ def test_generate_single_text(native_config: NativeConfig):
     tokenizer = AutoTokenizer.from_pretrained(native_config.model_name)
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
-    runner.run_iter(
-        [
-            Fill(
-                session_id=0,
-                context_id=0,
-                parent_context_id=-1,
-                token_ids=prompt_tokens,
-            )
-        ]
+    fill_job = Fill(
+        client_id="test",
+        session_id=0,
+        context_id=0,
+        parent_context_id=-1,
+        token_ids=prompt_tokens,
     )
+
+    runner.run_iter([fill_job])
 
     for _ in range(40):
         runner.run_iter(
             [
                 Generation(
+                    client_id="test",
                     session_id=0,
                     context_id=0,
                     parent_context_id=-1,
@@ -91,7 +95,7 @@ def test_generate_single_text(native_config: NativeConfig):
                 )
             ]
         )
-    print("Generated: ", tokenizer.decode(runner.context_manager[0].token_ids))
+    print("Generated: ", tokenizer.decode(fill_job.context.token_ids))
 
 
 def test_generate_batch_text(native_config: NativeConfig):
@@ -107,6 +111,7 @@ def test_generate_batch_text(native_config: NativeConfig):
     # Prefill
     fills = [
         Fill(
+            client_id="test",
             session_id=i,
             context_id=i,
             parent_context_id=-1,
@@ -119,6 +124,7 @@ def test_generate_batch_text(native_config: NativeConfig):
     for _ in range(40):
         gens = [
             Generation(
+                client_id="test",
                 session_id=i,
                 context_id=i,
                 parent_context_id=-1,
@@ -131,7 +137,7 @@ def test_generate_batch_text(native_config: NativeConfig):
     for i in range(len(prompt_tokens)):
         print(
             f"Prompt {i} Generated: ",
-            tokenizer.decode(runner.context_manager[i].token_ids),
+            tokenizer.decode(gens[i].context.token_ids),
         )
 
 
@@ -148,6 +154,7 @@ def test_fill_generate_mixed(native_config: NativeConfig):
     # Prefill
     fills = [
         Fill(
+            client_id="test",
             session_id=i,
             context_id=i,
             parent_context_id=-1,
@@ -159,6 +166,7 @@ def test_fill_generate_mixed(native_config: NativeConfig):
     # Generations
     gens = [
         Generation(
+            client_id="test",
             session_id=i,
             context_id=i,
             parent_context_id=-1,
@@ -177,5 +185,5 @@ def test_fill_generate_mixed(native_config: NativeConfig):
     for i in range(len(prompt_tokens)):
         print(
             f"Prompt {i} Generated: ",
-            tokenizer.decode(runner.context_manager[i].token_ids),
+            tokenizer.decode(gens[i].context.token_ids),
         )

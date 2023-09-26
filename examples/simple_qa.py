@@ -5,7 +5,7 @@ import parrot as P
 import aioconsole  # We use aioconsole to read input asynchronously
 import logging
 
-vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
+vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3_debug.json")
 vm.init()
 
 

@@ -11,10 +11,12 @@ class PrimitiveJob:
 
     def __init__(
         self,
+        client_id: str,
         session_id: int,
         context_id: int,
         parent_context_id: int,
     ) -> None:
+        self.client_id = client_id
         self.session_id = session_id
         self.context_id = context_id
         self.parent_context_id = parent_context_id
@@ -31,17 +33,20 @@ class Fill(PrimitiveJob):
 
     def __init__(
         self,
+        client_id: str,
         session_id: int,
         context_id: int,
         parent_context_id: int,
         token_ids: List[int],
     ) -> None:
-        super().__init__(session_id, context_id, parent_context_id)
+        super().__init__(client_id, session_id, context_id, parent_context_id)
         self.token_ids = token_ids
 
     def __repr__(self) -> str:
         return (
-            f"Fill(session_id={self.session_id}, context_id={self.context_id}, "
+            f"Fill(session_id={self.session_id}, "
+            f"client_id={self.client_id}, "
+            f"context_id={self.context_id}, "
             f"parent_context_id={self.parent_context_id})"
         )
 
@@ -54,19 +59,22 @@ class Generation(PrimitiveJob):
 
     def __init__(
         self,
+        client_id: str,
         session_id: int,
         context_id: int,
         parent_context_id: int,
         sampling_params: SamplingParams,
     ) -> None:
-        super().__init__(session_id, context_id, parent_context_id)
+        super().__init__(client_id, session_id, context_id, parent_context_id)
         self.sampling_params = sampling_params
         self.output_queue: AsyncQueue[int] = AsyncQueue()
         self.gen_length = 0
 
     def __repr__(self) -> str:
         return (
-            f"Generation(session_id={self.session_id}, context_id={self.context_id}, "
+            f"Generation(session_id={self.session_id}, "
+            f"client_id={self.client_id}, "
+            f"context_id={self.context_id}, "
             f"parent_context_id={self.parent_context_id})"
         )
 

@@ -22,6 +22,7 @@ def test_check_heartbeat():
     st = time.perf_counter_ns()
     resp = check_heartbeat(
         engine_name="test",
+        client_id="0",
         http_addr=addr,
     )
     ed = time.perf_counter_ns()
@@ -35,6 +36,7 @@ def test_check_heartbeat():
 def test_prefix_init():
     resp = fill(
         http_addr=addr,
+        client_id="0",
         context_id=0,
         parent_context_id=-1,
         token_ids=[1, 2, 3],
@@ -48,6 +50,7 @@ def test_fill():
         st = time.perf_counter_ns()
         resp = await afill(
             http_addr=addr,
+            client_id="0",
             session_id=0,
             context_id=0,
             parent_context_id=-1,
@@ -69,6 +72,7 @@ def test_generate():
         st = time.perf_counter_ns()
         async for token_id in agenerate(
             http_addr=addr,
+            client_id="0",
             session_id=0,
             context_id=0,
             parent_context_id=-1,
@@ -88,6 +92,7 @@ def test_generate():
 def test_free_context():
     resp = free_context(
         http_addr=addr,
+        client_id="0",
         context_id=233,
     )
 

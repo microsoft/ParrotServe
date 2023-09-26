@@ -86,7 +86,8 @@ class Session:
             )
 
             resp = await afill(
-                self.engine.http_address,
+                http_addr=self.engine.http_address,
+                client_id=self.engine.client_id,
                 session_id=self.session_id,
                 token_ids=chunked_tokens,
                 context_id=self.context.context_id,
@@ -111,7 +112,8 @@ class Session:
                 )
 
                 generator = agenerate(
-                    self.engine.http_address,
+                    http_addr=self.engine.http_address,
+                    client_id=self.engine.client_id,
                     session_id=self.session_id,
                     context_id=self.context.context_id,
                     parent_context_id=self.context.parent_context_id,
@@ -157,7 +159,8 @@ class Session:
                     num_filled_tokens = 0
                     async for chunk in inst.input_pipe.generator():
                         resp = await afill(
-                            self.engine.http_address,
+                            http_addr=self.engine.http_address,
+                            client_id=self.engine.client_id,
                             session_id=self.session_id,
                             token_ids=chunk,
                             context_id=self.context.context_id,

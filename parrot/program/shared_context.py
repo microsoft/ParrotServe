@@ -34,7 +34,6 @@ class SharedContext:
 
         self.engine: ExecutionEngine = self._controller.engines_table[engine_name]
         self.context = Context(parent_context=parent_context)
-        self.context.cached_engines.append(self.engine)
 
         self._free_flag = False
 
@@ -57,11 +56,13 @@ class SharedContext:
 
         encoded = self._tokenized_storage.tokenize(text, self.engine.tokenizer)
 
+        self.context.cached_engines.add(self.engine)
         resp = fill(
-            self.engine.http_address,
-            self.context.context_id,
-            self.context.parent_context_id,
-            encoded,
+            http_addr=self.engine.http_address,
+            client_id=self.engine.client_id,
+            context_id=self.context.context_id,
+            parent_context_id=self.context.parent_context_id,
+            token_ids=encoded,
         )
         assert resp.num_filled_tokens == len(
             encoded

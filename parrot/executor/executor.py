@@ -161,7 +161,7 @@ class MainExecutor:
         if new_created_context:
             # And in this case, it must be a newly created context.
             # Hence we should set its cached_engines.
-            context.cached_engines.append(session.engine)
+            context.cached_engines.add(session.engine)
 
         self.sub_executors[session.engine.tokenizer].add_session(session)
 

@@ -1,6 +1,6 @@
 import asyncio
 import parrot
-from Parrot.parrot.backend.native.engine import NativeExecutionEngine
+from parrot.backend.native.engine import NativeExecutionEngine
 from parrot.backend.primitives import PrimitiveJob, Fill, Generation
 from parrot.utils import create_task_in_loop
 from parrot.protocol.sampling_params import SamplingParams
@@ -12,7 +12,7 @@ def test_engine_simple_serving():
     # We temporarily use this way to load the config.
     package_path = parrot.__path__[0]
     engine = NativeExecutionEngine(
-        package_path + "/../configs/backend_server/opt_125m.json"
+        package_path + "/../configs/backend/native/opt_125m.json"
     )
 
     async def execute_job(job: PrimitiveJob):
@@ -31,6 +31,7 @@ def test_engine_simple_serving():
         # Prefill
         await execute_job(
             Fill(
+                client_id="test",
                 session_id=0,
                 context_id=0,
                 parent_context_id=-1,
@@ -38,18 +39,18 @@ def test_engine_simple_serving():
             )
         )
 
-        await execute_job(
-            Generation(
-                session_id=0,
-                context_id=0,
-                parent_context_id=-1,
-                sampling_params=SamplingParams(
-                    max_gen_length=40,
-                    stop_token_ids=[tokenizer.eos_token_id],
-                ),
-            )
+        gen_job = Generation(
+            client_id="test",
+            session_id=0,
+            context_id=0,
+            parent_context_id=-1,
+            sampling_params=SamplingParams(
+                max_gen_length=40,
+                stop_token_ids=[tokenizer.eos_token_id],
+            ),
         )
-        print(tokenizer.decode(engine.runner.context_manager[0].token_ids))
+        await execute_job(gen_job)
+        print(tokenizer.decode(gen_job.context.token_ids))
 
     try:
         asyncio.run(main(), debug=True)
