@@ -4,11 +4,12 @@
 #   https://github.com/lm-sys/FastChat/blob/main/fastchat/conversation.py
 
 # FIXME(chaofan): Vicuna-13b-v1.3 has strange behavior (Why speaking Chinese?)
+# 2023.9.26: Fixed
 
 import parrot as P
 
 
-vm = P.VirtualMachine("configs/vm/single_vicuna_7b_v1.3.json")
+vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
 vm.init()
 
 
@@ -17,12 +18,13 @@ def chat_per_round(
     human_input: P.Input,
     ai_output: P.Output,
 ):
-    # fmt: off
-    """ USER: {{human_input}} ASSISTANT: {{ai_output}}"""
-    # fmt: on
+    """
+    USER: {{human_input}}
+    ASSISTANT: {{ai_output}}
+    """
 
 
-chat_ctx = P.shared_context("vicuna_7b_v1.3_local")
+chat_ctx = P.shared_context("vicuna_13b_v1.3_local")
 
 
 def chatbot_init():

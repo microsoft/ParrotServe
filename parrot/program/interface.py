@@ -5,6 +5,7 @@ from parrot.orchestration.context import Context
 
 from .function import SemanticFunction, logger, ParamType, Parameter
 from .shared_context import SharedContext
+from .transforms.prompt_formatter import StandardFormatter, Sequential
 
 
 # Annotations of arguments when defining a parrot function.
@@ -19,21 +20,14 @@ class Output:
 
 
 def function(
-    register_to_global: bool = True,
     caching_prefix: bool = True,
-    emit_py_indent: bool = True,
+    formatter: Sequential = StandardFormatter,
 ):
     """A decorator for users to define parrot functions."""
 
     def create_func(f):
         func_name = f.__name__
         doc_str = f.__doc__
-
-        # Remove the indent of the doc string
-        if emit_py_indent:
-            possible_indents = ["\t", "    "]
-            for indent in possible_indents:
-                doc_str = doc_str.replace(indent, "")
 
         # Parse the function signature (parameters)
         func_sig = inspect.signature(f)
@@ -58,14 +52,15 @@ def function(
             func_body_str=doc_str,
         )
 
+        semantic_func = formatter.transform(semantic_func)
+
         # controller=None: testing mode
-        if register_to_global:
-            if SemanticFunction._controller is not None:
-                SemanticFunction._controller.register_function(
-                    semantic_func, caching_prefix
-                )
-            else:
-                logger.warning("Controller is not set. Not register the function.")
+        if SemanticFunction._controller is not None:
+            SemanticFunction._controller.register_function(
+                semantic_func, caching_prefix
+            )
+        else:
+            logger.warning("Controller is not set. Not register the function.")
 
         return semantic_func
 

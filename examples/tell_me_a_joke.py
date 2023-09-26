@@ -14,7 +14,7 @@ def tell_me_a_joke(
     joke: P.Output,
     explanation: P.Output,
 ):
-    """Tell me a joke about {{topic}}. The joke must contains the following
+    """Tell me a short joke about {{topic}}. The joke must contains the following
     keywords: {{keyword}}. The following is the joke: {{joke}}. And giving a
     short explanation to show that why it is funny. The following is the explanation
     for the joke above: {{explanation}}."""
