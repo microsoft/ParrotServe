@@ -96,6 +96,7 @@ class Generation(PrimitiveJob):
 
         while True:
             token_id = await self.output_queue.get()
-            yield token_id.to_bytes(4, "big")  # streaming
+            # NOTE(chaofan): We don't put the stop token into the output queue.
             if self.check_stop():
                 break
+            yield token_id.to_bytes(4, "big")  # streaming

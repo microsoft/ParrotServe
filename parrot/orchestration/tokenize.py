@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from parrot.program.function import SemanticFunction, Constant, Prefix
+from parrot.program.function import SemanticFunction, Constant
 
 from .controller import Controller
 
@@ -31,7 +31,7 @@ class TokenizedStorage:
                     tokenized.append(
                         tokenizer.encode(
                             piece.text,
-                            add_special_tokens=isinstance(piece, Prefix),
+                            add_special_tokens=False,
                         )
                     )
                 else:

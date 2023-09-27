@@ -43,22 +43,7 @@ def test_decode():
     #     770,
     # ]
 
-    token_ids = [
-        1,
-        29871,
-        3148,
-        1001,
-        29901,
-        29871,
-        6324,
-        29871,
-        319,
-        1799,
-        9047,
-        13566,
-        29901,
-        29871,
-    ]
+    # token_ids = [29871]
 
     print(tokenized_storage.detokenize([310, 278], tokenizer))
 
@@ -69,5 +54,5 @@ def test_decode():
 
 
 if __name__ == "__main__":
-    test_encode()
-    # test_decode()
+    # test_encode()
+    test_decode()

@@ -46,7 +46,7 @@ def test_engine_simple_serving():
             parent_context_id=-1,
             sampling_config=SamplingConfig(
                 max_gen_length=40,
-                stop_token_ids=[tokenizer.eos_token_id],
+                ignore_tokenizer_eos=True,
             ),
         )
         await execute_job(gen_job)

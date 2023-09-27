@@ -26,11 +26,6 @@ class Constant(FunctionPiece):
     text: str
 
 
-@dataclass
-class Prefix(Constant):
-    """Prefix in a function."""
-
-
 class ParamType(Enum):
     """Type of a parameter."""
 
@@ -78,10 +73,7 @@ def parse_func_body(
         # Constant
         chunk = body_str[last_pos : match.start()]
         if chunk != "":
-            if last_pos == 0:
-                push_to_body(Prefix, text=chunk)
-            else:
-                push_to_body(Constant, text=chunk)
+            push_to_body(Constant, text=chunk)
 
         param_name = body_str[match.start() + 2 : match.end() - 2]
         assert param_name in params_map, f"Parse failed: {param_name} is not defined."

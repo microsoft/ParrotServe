@@ -4,7 +4,6 @@ from .func_mutator import (
     FuncMutator,
     SemanticFunction,
     Constant,
-    Prefix,
     Parameter,
 )
 
@@ -19,9 +18,6 @@ class PromptFormatter(FuncMutator):
 
     def _visit_func(self, func: SemanticFunction) -> SemanticFunction:
         return func
-
-    def _visit_prefix(self, prefix: Prefix) -> Prefix:
-        return self._visit_constant(prefix)
 
     def _visit_constant(self, constant: Constant) -> Constant:
         constant_str = constant.text

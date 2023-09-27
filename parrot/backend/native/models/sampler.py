@@ -21,7 +21,6 @@ class Sampler(nn.Module):
         assert hidden_states.shape[0] == len(sampling_config)
 
         logits = torch.matmul(hidden_states, self.embd_weight.t())
-        # ids = torch.ones(probs.shape[0], dtype=torch.int64, device=probs.device)
 
         # Applying temperature scaling
         temperature = [sf.temperature for sf in sampling_config]
@@ -45,6 +44,9 @@ class Sampler(nn.Module):
         logits = torch.gather(
             sorted_logits, dim=-1, index=torch.argsort(logits_idx, dim=-1)
         )
+
+        # ids = torch.ones(logits.shape[0], dtype=torch.int64, device=logits.device)
+        # return ids
 
         probs = torch.softmax(logits, dim=-1, dtype=torch.float)
         ids = torch.multinomial(probs, num_samples=1, replacement=True).squeeze(-1)

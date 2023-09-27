@@ -3,7 +3,7 @@
 from typing import Dict, Optional
 from abc import ABC, abstractmethod
 
-from parrot.program.function import Prefix, LLMCall, Constant, ParameterLoc, ParamType
+from parrot.program.function import LLMCall, Constant, ParameterLoc, ParamType
 from parrot.program.future import Future
 from parrot.orchestration.context import Context
 from parrot.orchestration.controller import Controller
@@ -54,14 +54,15 @@ class NativeExecutor(BaseExecutor):
 
         # Translate function body to instructions
         for i, piece in enumerate(session.call.func.body):
-            if isinstance(piece, Prefix):
+            if isinstance(piece, Constant):
                 if (
-                    session.call.func.cached_prefix
-                    and session.call.shared_context_handler is None
+                    i == 0  # is the first piece
+                    and session.call.func.cached_prefix  # cached
+                    and session.call.shared_context_handler
+                    is None  # not in shared context
                 ):
-                    continue  # If the prefix is cached, we do not need to fill it.
-                inst = ConstantFill(tokenized[i])
-            elif isinstance(piece, Constant):
+                    # If the prefix is cached, we do not need to fill it.
+                    continue
                 inst = ConstantFill(tokenized[i])
             elif isinstance(piece, ParameterLoc):
                 assert piece.param.name in session.call.bindings

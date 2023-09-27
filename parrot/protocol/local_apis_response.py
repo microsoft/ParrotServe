@@ -11,7 +11,7 @@ class BaseResponse(BaseModel):
 class HeartbeatResponse(BaseResponse):
     num_running_jobs: int
     num_cached_tokens: int
-    cached_tokens_size: int
+    cached_tokens_size: float
 
 
 class FillResponse(BaseResponse):

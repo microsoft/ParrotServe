@@ -12,7 +12,7 @@ def tell_me_a_joke(
     topic: P.Input,
     topic2: P.Input,
     joke: P.Output,
-    explanation: P.Output,
+    explanation: P.Output(stop_token_ids=[29871]),
     word_limit: int,
 ):
     """Tell the me a joke about {{topic}} and {{topic2}}. The joke is limited to {{word_limit}} characters.
@@ -21,7 +21,7 @@ def tell_me_a_joke(
     Sure, here's a joke for you: {{joke}}.
     Good, then giving a short explanation to show that why it is funny.
     The explanation should be short, concise and clear.
-    Please just say the explanation. Don't generate other content.
+    Please generate the explanation in a single paragraph.
     Sure, here's a short explanation for the joke above: {{explanation}}.
     """
 
@@ -41,7 +41,7 @@ async def main():
     explanations = []
 
     for i in range(3):
-        joke, explanation = tell_me_a_joke(topics[i], topic2s[i], 100)
+        joke, explanation = tell_me_a_joke(topics[i], topic2s[i], 150)
         jokes.append(joke)
         explanations.append(explanation)
 

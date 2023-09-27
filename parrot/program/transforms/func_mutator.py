@@ -5,7 +5,6 @@ from ..function import (
     FunctionPiece,
     ParameterLoc,
     Constant,
-    Prefix,
     Parameter,
 )
 
@@ -54,18 +53,12 @@ class FuncMutator(ABC):
         the pieces themselves.
         """
 
-        if isinstance(func_piece, Prefix):
-            return self._visit_prefix(func_piece)
-        elif isinstance(func_piece, Constant):
+        if isinstance(func_piece, Constant):
             return self._visit_constant(func_piece)
         elif isinstance(func_piece, ParameterLoc):
             return self._visit_param_loc(func_piece)
         else:
             raise NotImplementedError
-
-    @abstractmethod
-    def _visit_prefix(self, prefix: Prefix) -> Prefix:
-        raise NotImplementedError
 
     @abstractmethod
     def _visit_constant(self, constant: Constant) -> Constant:

@@ -1,6 +1,6 @@
 import pytest
 import parrot as P
-from parrot.program.function import Prefix, Constant, ParameterLoc
+from parrot.program.function import Constant, ParameterLoc
 
 
 def test_parse_parrot_function():
@@ -17,7 +17,7 @@ def test_parse_parrot_function():
         for the joke above: {{explanation}}."""
 
     expected_body = [
-        Prefix,
+        Constant,
         ParameterLoc,
         Constant,
         ParameterLoc,
