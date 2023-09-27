@@ -25,7 +25,7 @@ class Output:
 
 def function(
     caching_prefix: bool = True,
-    formatter: Sequential = standard_formatter,
+    formatter: Optional[Sequential] = standard_formatter,
     conversation_template: Optional[FuncMutator] = None,
 ):
     """A decorator for users to define parrot functions."""
@@ -68,7 +68,8 @@ def function(
             func_body_str=doc_str,
         )
 
-        semantic_func = formatter.transform(semantic_func)
+        if formatter is not None:
+            semantic_func = formatter.transform(semantic_func)
         if conversation_template is not None:
             semantic_func = conversation_template.transform(semantic_func)
 

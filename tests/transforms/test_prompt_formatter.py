@@ -7,22 +7,22 @@ from parrot.program.transforms.prompt_formatter import (
 
 
 def test_py_indent_remover():
-    @P.function()
+    @P.function(formatter=None)
     def foo(a: P.Output):
         """This is a function.
         It has multiple lines.
         And it has indents. {{a}}
         """
 
-    print("Before:", foo.body)
+    print("Before:", foo.display())
 
     foo = PyIndentRemover().transform(foo)
 
-    print("After:", foo.body)
+    print("After:", foo.display())
 
 
-def test_squash_into_one_line():
-    @P.function()
+def test_squash_into_one_line(formatter=None):
+    @P.function(formatter=None)
     def foo(a: P.Output):
         """This
         is
@@ -33,23 +33,23 @@ def test_squash_into_one_line():
         lines. {{a}}
         """
 
-    print("Before:", foo.body)
+    print("Before:", foo.display())
 
     foo = SquashIntoOneLine().transform(foo)
 
-    print("After:", foo.body)
+    print("After:", foo.display())
 
 
 def test_always_one_space():
-    @P.function()
+    @P.function(formatter=None)
     def foo(a: P.Output):
         """This is  a   function.    It     has multiple      spaces.   {{a}}"""
 
-    print("Before:", foo.body)
+    print("Before:", foo.display())
 
     foo = AlwaysOneSpace().transform(foo)
 
-    print("After:", foo.body)
+    print("After:", foo.display())
 
 
 if __name__ == "__main__":
