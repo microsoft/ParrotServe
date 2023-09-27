@@ -14,7 +14,7 @@ vm.init()
 # The function will be automatically be registered to the environment
 
 
-@P.function(formatter=P.AllowingNewlineFormatter)
+@P.function(formatter=P.allowing_newline)
 def write_recommendation_letter(
     stu_name: P.Input,
     prof_name: P.Input,

@@ -7,32 +7,32 @@ vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
 vm.init()
 
 
-@P.function(formatter=P.AllowingNewlineFormatter)
+@P.function(conversation_template=P.vicuna_template)
 def tell_me_a_joke(
     topic: P.Input,
     topic2: P.Input,
     joke: P.Output,
-    explanation: P.Output(stop_token_ids=[29871]),
-    word_limit: int,
+    explanation: P.Output,
 ):
-    """Tell the me a joke about {{topic}} and {{topic2}}. The joke is limited to {{word_limit}} characters.
-    Don't generate a joke that is too long.
-    Only generate a single joke.
-    Sure, here's a joke for you: {{joke}}.
+    """Tell the me a joke about {{topic}} and {{topic2}}. {{joke}}.
     Good, then giving a short explanation to show that why it is funny.
-    The explanation should be short, concise and clear.
-    Please generate the explanation in a single paragraph.
-    Sure, here's a short explanation for the joke above: {{explanation}}.
+    The explanation should be short, concise and clear. {{explanation}}.
     """
 
 
 async def main():
     topics = [
+        "student",
+        "machine learning",
+        "human being",
         "a programmer",
         "a mathematician",
         "a physicist",
     ]
     topic2s = [
+        "homework",
+        "monkey",
+        "robot",
         "bug",
         "iPhone",
         "cat",
@@ -40,12 +40,12 @@ async def main():
     jokes = []
     explanations = []
 
-    for i in range(3):
-        joke, explanation = tell_me_a_joke(topics[i], topic2s[i], 150)
+    for i in range(len(topics)):
+        joke, explanation = tell_me_a_joke(topics[i], topic2s[i])
         jokes.append(joke)
         explanations.append(explanation)
 
-    for i in range(3):
+    for i in range(len(topics)):
         joke_str = await jokes[i].get()
         print(f"---------- Round {i}: The following is the joke ---------- ")
         print(joke_str)

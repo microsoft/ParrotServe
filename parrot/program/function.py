@@ -52,6 +52,11 @@ class ParameterLoc(FunctionPiece):
     param: Parameter
 
 
+def push_to_body(piece_cls: Type[FunctionPiece], body: List[FunctionPiece], **kwargs):
+    idx = len(body)
+    body.append(piece_cls(idx=idx, **kwargs))
+
+
 def parse_func_body(
     body_str: str, params_map: Dict[str, Parameter]
 ) -> List[FunctionPiece]:
@@ -62,10 +67,6 @@ def parse_func_body(
 
     ret: List[FunctionPiece] = []
 
-    def push_to_body(piece_cls: Type[FunctionPiece], **kwargs):
-        idx = len(ret)
-        ret.append(piece_cls(idx=idx, **kwargs))
-
     last_output_loc_idx = -1
     outputs: Set[str] = set()
 
@@ -73,7 +74,7 @@ def parse_func_body(
         # Constant
         chunk = body_str[last_pos : match.start()]
         if chunk != "":
-            push_to_body(Constant, text=chunk)
+            push_to_body(Constant, ret, text=chunk)
 
         param_name = body_str[match.start() + 2 : match.end() - 2]
         assert param_name in params_map, f"Parse failed: {param_name} is not defined."
@@ -84,7 +85,7 @@ def parse_func_body(
             ), "Output loc can't be adjacent to another loc."
             assert not param.name in outputs, "Output param can't be used twice."
             outputs.add(param.name)
-        push_to_body(ParameterLoc, param=param)
+        push_to_body(ParameterLoc, ret, param=param)
 
         if param.is_output:
             last_output_loc_idx = len(ret) - 1
@@ -92,7 +93,7 @@ def parse_func_body(
         last_pos = match.end()
 
     # if last_pos < len(body_str):
-    #     push_to_body(Constant, body_str[last_pos:])
+    #     push_to_body(Constant, ret, body_str[last_pos:])
 
     # NOTE(chaofan): we prune all pieces after the last output loc.
     # The following code is also correct for last_output_loc_idx == -1.
@@ -162,6 +163,17 @@ class SemanticFunction:
         if len(call.output_futures) == 1:
             return call.output_futures[0]
         return tuple(call.output_futures)
+
+    def display(self) -> str:
+        """Display the function body."""
+        return "".join(
+            [
+                piece.text
+                if isinstance(piece, Constant)
+                else "{{" + piece.param.name + "}}"
+                for piece in self.body
+            ]
+        )
 
 
 class LLMCall:

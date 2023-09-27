@@ -6,7 +6,7 @@ from parrot.protocol.sampling_config import SamplingConfig
 
 from .function import SemanticFunction, logger, ParamType, Parameter
 from .shared_context import SharedContext
-from .transforms.prompt_formatter import StandardFormatter, Sequential
+from .transforms.prompt_formatter import standard_formatter, Sequential, FuncMutator
 
 
 # Annotations of arguments when defining a parrot function.
@@ -25,7 +25,8 @@ class Output:
 
 def function(
     caching_prefix: bool = True,
-    formatter: Sequential = StandardFormatter,
+    formatter: Sequential = standard_formatter,
+    conversation_template: Optional[FuncMutator] = None,
 ):
     """A decorator for users to define parrot functions."""
 
@@ -68,6 +69,8 @@ def function(
         )
 
         semantic_func = formatter.transform(semantic_func)
+        if conversation_template is not None:
+            semantic_func = conversation_template.transform(semantic_func)
 
         # controller=None: testing mode
         if SemanticFunction._controller is not None:

@@ -9,7 +9,7 @@ vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
 vm.init()
 
 
-@P.function(formatter=P.AllowingNewlineFormatter)
+@P.function(formatter=P.allowing_newline)
 def qa(
     question: P.Input,
     answer: P.Output,

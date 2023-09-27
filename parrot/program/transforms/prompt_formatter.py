@@ -52,7 +52,7 @@ class AlwaysOneSpace(PromptFormatter):
         super().__init__([[" " * i, " "] for i in range(16, 1, -1)])
 
 
-StandardFormatter = Sequential(
+standard_formatter = Sequential(
     [
         PyIndentRemover(),
         SquashIntoOneLine(),
@@ -60,7 +60,7 @@ StandardFormatter = Sequential(
     ]
 )
 
-AllowingNewlineFormatter = Sequential(
+allowing_newline = Sequential(
     [
         PyIndentRemover(),
         AlwaysOneSpace(),

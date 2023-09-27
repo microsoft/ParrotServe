@@ -9,10 +9,7 @@ def test_encode():
     ctrl.register_tokenizer(tokenizer)
 
     # prompt_text = "He is widely acknowledged as one of the top achievers in his class"
-    prompt_text = """
-USER: Hi
-ASSISTANT: 
-"""
+    prompt_text = "</s>"
     encoded = tokenized_storage.tokenize(prompt_text, tokenizer)
 
     print(encoded)
@@ -54,5 +51,5 @@ def test_decode():
 
 
 if __name__ == "__main__":
-    # test_encode()
-    test_decode()
+    test_encode()
+    # test_decode()

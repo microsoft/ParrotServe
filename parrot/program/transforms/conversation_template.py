@@ -3,13 +3,17 @@
 
 from typing import List
 from enum import auto, IntEnum
+from dataclasses import asdict
 
 from .func_mutator import (
     FuncMutator,
     SemanticFunction,
     Constant,
+    FunctionPiece,
+    ParameterLoc,
     Parameter,
 )
+from ..function import push_to_body
 
 
 class SeparatorStyle(IntEnum):
@@ -49,3 +53,82 @@ class ConversationTemplate(FuncMutator):
         self.seperator_style = seperator_style
         self.sep = sep
         self.sep2 = sep2
+
+    def _visit_constant(self, constant: Constant) -> Constant:
+        return constant
+
+    def _visit_parameter(self, param: Parameter) -> Parameter:
+        return param
+
+    def _visit_func(self, func: SemanticFunction) -> SemanticFunction:
+        new_body: List[FunctionPiece] = []
+
+        # Add system message
+        push_to_body(
+            Constant,
+            new_body,
+            text=self.system_template.format(system_message=self.system_message)
+            + self.sep,
+        )
+
+        conversation_round_start_flag = True
+        for piece in func.body:
+            if conversation_round_start_flag:
+                # Add user message
+                push_to_body(
+                    Constant,
+                    new_body,
+                    text=f"{self.roles[0]}: ",
+                )
+                conversation_round_start_flag = False
+
+            is_output_loc = isinstance(piece, ParameterLoc) and piece.param.is_output
+            if is_output_loc:
+                # Add assistant message
+                push_to_body(
+                    Constant,
+                    new_body,
+                    text=f"{self.sep}{self.roles[1]}: ",
+                )
+                conversation_round_start_flag = True
+
+            keys = list(piece.__dataclass_fields__.keys())
+            keys.remove("idx")  # It will be set automatically
+            data_dict = {k: getattr(piece, k) for k in keys}
+            push_to_body(
+                piece.__class__,
+                new_body,
+                **data_dict,
+            )
+
+            if is_output_loc:
+                # Add assistant sep
+                if self.seperator_style == SeparatorStyle.ADD_COLON_SINGLE:
+                    sep = self.sep
+                elif self.seperator_style == SeparatorStyle.ADD_COLON_TWO:
+                    sep = self.sep2
+                else:
+                    raise ValueError(f"Unknown seperator style: {self.seperator_style}")
+
+                push_to_body(
+                    Constant,
+                    new_body,
+                    text=f"{sep}",
+                )
+
+        return SemanticFunction(
+            name=func.name,
+            params=func.params,
+            cached_prefix=func.cached_prefix,
+            func_body=new_body,
+        )
+
+
+vicuna_template = ConversationTemplate(
+    system_message="A chat between a curious user and an artificial intelligence assistant. "
+    "The assistant gives helpful, detailed, and polite answers to the user's questions.",
+    roles=["USER", "ASSISTANT"],
+    seperator_style=SeparatorStyle.ADD_COLON_TWO,
+    sep=" ",
+    sep2="</s>",
+)

@@ -12,7 +12,7 @@ vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
 vm.init()
 
 
-@P.function(formatter=P.AllowingNewlineFormatter)
+@P.function(formatter=P.allowing_newline)
 def write_synopsis(
     title: P.Input,
     era: P.Input,
@@ -25,7 +25,7 @@ def write_synopsis(
     Playwright: This is a synopsis for the above play: {{synopsis}}"""
 
 
-@P.function(formatter=P.AllowingNewlineFormatter)
+@P.function(formatter=P.allowing_newline)
 def write_review(
     synopsis: P.Input,
     review: P.Output,
@@ -37,7 +37,7 @@ def write_review(
     Review from a New York Times play critic of the above play: {{review}}"""
 
 
-@P.function(formatter=P.AllowingNewlineFormatter)
+@P.function(formatter=P.allowing_newline)
 def write_post(
     time: P.Input,
     location: P.Input,
