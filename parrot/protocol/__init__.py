@@ -1,4 +1,4 @@
-from .local_apis_client import (
+from .backend_apis import (
     check_heartbeat,
     fill,
     afill,
@@ -6,4 +6,8 @@ from .local_apis_client import (
     free_context,
 )
 from .sampling_config import SamplingConfig
-from .local_apis_response import *
+from .backend_responses import (
+    FillResponse,
+    HeartbeatResponse,
+    FreeContextResponse,
+)

@@ -12,7 +12,7 @@ def tell_me_a_joke(
     topic: P.Input,
     topic2: P.Input,
     joke: P.Output,
-    explanation: P.Output,
+    explanation: P.Output(temperature=0.5),
 ):
     """Tell the me a joke about {{topic}} and {{topic2}}. {{joke}}.
     Good, then giving a short explanation to show that why it is funny.

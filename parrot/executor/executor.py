@@ -12,7 +12,7 @@ from parrot.utils import get_logger, create_task_in_loop
 
 from .dispatcher import Dispatcher
 from .session import Session
-from .instructions import ConstantFill, PlaceholderFill, Generation
+from .instructions import ConstantFill, PlaceholderFill, PlaceholderGeneration
 from .dataholder import DataHolder
 
 
@@ -30,7 +30,8 @@ class BaseExecutor(ABC):
 class NativeExecutor(BaseExecutor):
     """NativeExecutor for NativeBackends.
 
-    NOTE(chaofan): Sessions under the same tokenizer are managed as a group."""
+    NOTE(chaofan): Sessions under the same tokenizer are managed as a group.
+    """
 
     def __init__(
         self,
@@ -87,7 +88,7 @@ class NativeExecutor(BaseExecutor):
                         # If not ignore_tokenizer_eos, we should add eos_token_id to stop_token_ids
                         if not sampling_config.ignore_tokenizer_eos:
                             sampling_config.stop_token_ids.append(eos_token_id)
-                        inst = Generation(
+                        inst = PlaceholderGeneration(
                             output_holder=holder,
                             sampling_config=sampling_config,
                         )
@@ -107,6 +108,18 @@ class NativeExecutor(BaseExecutor):
                 future=future,
             )
         return self.dataholder_map[future.id]
+
+
+class HuggingfaceExecutor(BaseExecutor):
+    """Executor for Huggingface backend."""
+
+
+class OpenAIExecutor(BaseExecutor):
+    """Executor for OpenAI APIs backend."""
+
+
+class MLCExecutor(BaseExecutor):
+    """Executor for MLC-chat backend."""
 
 
 class MainExecutor:

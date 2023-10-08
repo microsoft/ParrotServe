@@ -8,7 +8,12 @@ from parrot.protocol import afill, agenerate, SamplingConfig
 from parrot.utils import RecyclePool, get_logger, create_task_in_loop
 from parrot.constants import RECYCLE_POOL_SIZE, STREAMING_END_TOKEN_ID, FILL_NO_CHUNK
 
-from .instructions import Instruction, ConstantFill, PlaceholderFill, Generation
+from .instructions import (
+    Instruction,
+    ConstantFill,
+    PlaceholderFill,
+    PlaceholderGeneration,
+)
 from .dataholder import DataHolder
 
 
@@ -96,7 +101,7 @@ class Session:
         while not self.instructions.empty():
             inst = self.instructions.get()
 
-            if isinstance(inst, Generation):
+            if isinstance(inst, PlaceholderGeneration):
                 # Flush the buffer first.
                 await self._flush_fill_tokens_buffer()
 

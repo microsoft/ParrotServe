@@ -6,7 +6,7 @@ import dataclasses
 from parrot.utils import get_logger
 from parrot.constants import NONE_SESSION_ID
 
-from .local_apis_response import *
+from .backend_responses import *
 from .sampling_config import SamplingConfig
 
 
@@ -163,6 +163,24 @@ async def agenerate(
     except BaseException as e:
         logger.error(f"Generate error in {http_addr} error: {e}")
         raise e
+
+
+async def atext_fill(
+    http_addr: str,
+    client_id: str,
+    session_id: int,
+    text: str,
+):
+    pass
+
+
+async def atext_generate(
+    http_addr: str,
+    client_id: str,
+    session_id: int,
+    sampling_config: SamplingConfig,
+):
+    pass
 
 
 def free_context(

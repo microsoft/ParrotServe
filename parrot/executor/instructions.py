@@ -27,7 +27,7 @@ class ConstantFill(Instruction):
 
 
 class PlaceholderFill(Instruction):
-    """PlaceholderFill instruction takes a placeholder as input."""
+    """PlaceholderFill instruction takes an dataholder as input."""
 
     def __init__(self, input_holder: DataHolder):
         super().__init__()
@@ -39,8 +39,12 @@ class PlaceholderFill(Instruction):
         return f"PlaceholderFill: input={self.input_holder}"
 
 
-class Generation(Instruction):
-    """Generation instruction, corresponding to Generation primitive in backend."""
+class PlaceholderGeneration(Instruction):
+    """PlaceholderGeneration instruction, corresponding to Generation primitive in backend.
+
+    It takes a dataholder as an output. And the decoded result will be passed back from the backend
+    token by token (streaming).
+    """
 
     def __init__(self, output_holder: DataHolder, sampling_config: SamplingConfig):
         super().__init__()
@@ -51,4 +55,26 @@ class Generation(Instruction):
         self.detokenize_pipe = TokenPipe(DETOKENIZE_CHUNK_NUM)
 
     def __str__(self) -> str:
-        return f"Generation: output={self.output_holder}"
+        return f"PlaceholderGeneration: output={self.output_holder}"
+
+
+class TextFill(Instruction):
+    """TextFill instruction."""
+
+    def __init__(self, text: str):
+        super().__init__()
+        self.text = text
+
+    def __str__(self) -> str:
+        return f"TextFill"
+
+
+class TextGeneration(Instruction):
+    """TextGeneration instruction."""
+
+    def __init__(self, sampling_config: SamplingConfig):
+        super().__init__()
+        self.sampling_config = sampling_config
+
+    def __str__(self) -> str:
+        return f"TextGeneration"
