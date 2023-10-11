@@ -13,7 +13,7 @@ DETOKENIZE_CHUNK_NUM = 8
 STREAMING_END_TOKEN_ID = -1
 
 # ---------- Protocol ----------
-NONE_SESSION_ID = -1
+NONE_THREAD_ID = -1
 NONE_CONTEXT_ID = -1
 
 # ---------- Backend ----------

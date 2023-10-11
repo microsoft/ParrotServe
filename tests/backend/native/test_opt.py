@@ -1,4 +1,4 @@
-from parrot.engine.config import NativeConfig
+from parrot.backend.config import NativeConfig
 from model_runner_test import *
 
 

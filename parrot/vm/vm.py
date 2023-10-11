@@ -5,11 +5,11 @@ import json
 import traceback
 from typing import Optional, Coroutine
 
-from ..orchestration.controller import Controller
-from ..executor.executor import MainExecutor
+from .controller import Controller
+from .executor import MainExecutor
 from ..program.function import SemanticFunction
 from ..program.shared_context import SharedContext
-from ..orchestration.tokenize import TokenizedStorage
+from .tokenizer import Tokenizer
 
 
 class VirtualMachine:
@@ -29,7 +29,7 @@ class VirtualMachine:
         you should init the VirtualMachine first."""
 
         self.controller = Controller()
-        self.tokenized_storage = TokenizedStorage(self.controller)
+        self.tokenized_storage = Tokenizer(self.controller)
         self.executor = MainExecutor(self.controller, self.tokenized_storage)
 
         SemanticFunction._controller = self.controller

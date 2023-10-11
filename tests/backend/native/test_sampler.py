@@ -1,5 +1,5 @@
-from parrot.engine.native.models.opt import OPTForCausalLM
-from parrot.engine.config import NativeConfig
+from parrot.backend.native.models.opt import OPTForCausalLM
+from parrot.backend.config import NativeConfig
 from parrot.protocol import SamplingConfig
 from parrot.utils import set_random_seed
 from transformers import AutoConfig

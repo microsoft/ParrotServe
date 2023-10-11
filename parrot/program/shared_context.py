@@ -1,7 +1,7 @@
 from typing import Optional, Literal
 
-from parrot.orchestration.engine import ExecutionEngine
-from parrot.orchestration.context import Context
+from Parrot.parrot.os.engine import ExecutionEngine
+from Parrot.parrot.os.context import Context
 from parrot.protocol import fill
 
 from .function import SemanticFunction, SemanticCall, logger

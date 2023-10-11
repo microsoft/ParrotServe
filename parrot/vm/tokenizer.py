@@ -1,20 +1,27 @@
-from typing import Dict, List
+from typing import Dict, List, Union
+from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 
 from parrot.program.function import SemanticFunction, Constant
 
-from .controller import Controller
+
+HFTokenizer = Union[PreTrainedTokenizer, PreTrainedTokenizerFast]
 
 
-class TokenizedStorage:
+class Tokenizer:
     """Store the tokenized part of some parts of functions."""
 
-    def __init__(self, controller: Controller):
-        self.controller = controller
+    def __init__(self):
+        self.tokenizers: Dict[str, HFTokenizer] = {}
+
         # (Function Name, tokenizer) -> Function Body -> Token ids
-        self.storage: Dict[(str, str), List[List[int]]] = {}
+        self.tokenized_cache: Dict[(str, str), List[List[int]]] = {}
 
     def get_tokenizer(self, tokenizer_name: str):
-        return self.controller.tokenizers_table[tokenizer_name]
+        if tokenizer_name not in self.tokenizers:
+            self.tokenizers[tokenizer_name] = AutoTokenizer.from_pretrained(
+                tokenizer_name
+            )
+        return self.tokenizers[tokenizer_name]
 
     def tokenize_func_body(
         self,
@@ -22,7 +29,7 @@ class TokenizedStorage:
         tokenizer_name: str,
     ) -> List[int]:
         key = (function.name, tokenizer_name)
-        if key not in self.storage:
+        if key not in self.tokenized_cache:
             tokenizer = self.get_tokenizer(tokenizer_name)
 
             tokenized: List[List[int]] = []
@@ -36,9 +43,9 @@ class TokenizedStorage:
                     )
                 else:
                     tokenized.append([])  # Empty for var loc
-            self.storage[key] = tokenized
+            self.tokenized_cache[key] = tokenized
 
-        return self.storage[key].copy()  # Avoid modification
+        return self.tokenized_cache[key].copy()  # Avoid modification
 
     # NOTE(chaofan): Ignore special tokens because we chunk the inputs.
 

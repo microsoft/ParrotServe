@@ -12,7 +12,7 @@ from .mem import init_model_cache_storage
 from .block_context import BlockContext
 from .iter_state import IterationState
 from ..low_level_context import ContextManager
-from ..primitives import PrimitiveJob, Fill, Generation
+from ..backend_jobs import PrimitiveJob, Fill, Generation
 from ..config import NativeConfig
 
 

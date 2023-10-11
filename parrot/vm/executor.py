@@ -5,14 +5,14 @@ from abc import ABC, abstractmethod
 
 from parrot.program.function import SemanticCall, Constant, ParameterLoc, ParamType
 from parrot.program.future import Future
-from parrot.orchestration.context import Context
-from parrot.orchestration.controller import Controller
-from parrot.orchestration.tokenize import TokenizedStorage
+from Parrot.parrot.os.context import Context
+from Parrot.parrot.vm.controller import Controller
+from Parrot.parrot.vm.tokenizer import Tokenizer
 from parrot.utils import get_logger, create_task_in_loop
 
-from .dispatcher import Dispatcher
-from .session import Session
-from .instructions import ConstantFill, PlaceholderFill, PlaceholderGeneration
+from ..executor.dispatcher import Dispatcher
+from .thread import Session
+from ..executor.instructions import ConstantFill, PlaceholderFill, PlaceholderGeneration
 from .dataholder import DataHolder
 
 
@@ -36,7 +36,7 @@ class NativeExecutor(BaseExecutor):
     def __init__(
         self,
         tokenizer_name: str,
-        tokenized_storage: TokenizedStorage,
+        tokenized_storage: Tokenizer,
     ):
         # ---------- Resources ----------
         self.tokenizer_name = tokenizer_name
@@ -125,7 +125,7 @@ class MLCExecutor(BaseExecutor):
 class MainExecutor:
     """Main executor is responsible for managing all the executors."""
 
-    def __init__(self, controller: Controller, tokenized_storage: TokenizedStorage):
+    def __init__(self, controller: Controller, tokenized_storage: Tokenizer):
         # ---------- Global components ----------
         self.controller = controller
         self.controller.executor = self

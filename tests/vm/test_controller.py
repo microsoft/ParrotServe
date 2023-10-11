@@ -4,8 +4,8 @@ Use `python3 -m parrot.testing.fake_server` to start a fake server.
 
 import time
 import parrot as P
-from parrot.orchestration.controller import Controller
-from parrot.orchestration.tokenize import TokenizedStorage
+from Parrot.parrot.vm.controller import Controller
+from Parrot.parrot.vm.tokenizer import Tokenizer
 from parrot.program.function import SemanticFunction
 
 
@@ -35,7 +35,7 @@ def test_controller_register_engine():
 
 def test_controller_register_function():
     ctrl = Controller()
-    tokenized_storage = TokenizedStorage(ctrl)
+    tokenized_storage = Tokenizer(ctrl)
 
     ctrl.register_tokenizer("facebook/opt-13b")
     ctrl.register_engine(

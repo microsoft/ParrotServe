@@ -8,14 +8,33 @@ class BaseResponse(BaseModel):
     pass
 
 
-class HeartbeatResponse(BaseResponse):
-    num_running_jobs: int
-    num_cached_tokens: int
-    cached_tokens_size: float
-
-
 class FillResponse(BaseResponse):
     num_filled_tokens: int
+
+
+class VMHeartbeatResponse(BaseResponse):
+    live: bool
+
+
+class RegisterVMResponse(BaseResponse):
+    pid: int
+
+
+class ThreadStartResponse(BaseResponse):
+    tokenizer: str
+    interpret_type: str
+
+
+class ThreadEndResponse(BaseResponse):
+    num_freed_tokens: int
+
+
+class EngineHeartbeatResponse(BaseResponse):
+    pass
+
+
+class RegisterEngineResponse(BaseResponse):
+    engine_id: int
 
 
 class FreeContextResponse(BaseResponse):

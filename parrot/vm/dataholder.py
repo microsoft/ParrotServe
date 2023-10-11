@@ -2,7 +2,7 @@ from typing import List, Optional
 from asyncio import Event
 
 from parrot.program.future import Future
-from parrot.orchestration.tokenize import TokenizedStorage
+from Parrot.parrot.vm.tokenizer import Tokenizer
 
 
 class DataHolder:
@@ -15,7 +15,7 @@ class DataHolder:
     def __init__(
         self,
         tokenizer: str,
-        tokenized_storage: TokenizedStorage,
+        tokenized_storage: Tokenizer,
         future: Future,
     ):
         # ---------- Basic info ----------

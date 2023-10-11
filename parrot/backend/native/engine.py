@@ -9,7 +9,7 @@ from parrot.utils import get_logger
 from .runner import Runner
 from .block_context import BlockContext
 from ..scheduler import Scheduler
-from ..primitives import PrimitiveJob
+from ..backend_jobs import PrimitiveJob
 from ..low_level_context import get_unique_context_id
 from ..config import NativeConfig, SchedulerConfig
 

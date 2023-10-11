@@ -28,3 +28,9 @@ class NativeConfig:
 class SchedulerConfig:
     max_batch_size: int
     max_tokens_sum: int
+
+
+@dataclass
+class EngineConfig:
+    model_name: str
+    engine_type: Literal["native", "hf", "openai", "mlcllm"]

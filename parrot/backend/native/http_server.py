@@ -11,7 +11,7 @@ from parrot.utils import get_logger, create_task_in_loop
 from parrot.protocol.sampling_config import SamplingConfig
 
 from .engine import NativeExecutionEngine
-from ..primitives import Fill, Generation
+from ..backend_jobs import Fill, Generation
 
 
 logger = get_logger("Backend Server")

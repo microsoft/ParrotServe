@@ -1,10 +1,10 @@
-from parrot.orchestration.controller import Controller
-from parrot.orchestration.tokenize import TokenizedStorage
+from Parrot.parrot.vm.controller import Controller
+from Parrot.parrot.vm.tokenizer import Tokenizer
 
 
 def test_encode():
     ctrl = Controller()
-    tokenized_storage = TokenizedStorage(ctrl)
+    tokenized_storage = Tokenizer(ctrl)
     tokenizer = "hf-internal-testing/llama-tokenizer"
     ctrl.register_tokenizer(tokenizer)
 
@@ -17,7 +17,7 @@ def test_encode():
 
 def test_decode():
     ctrl = Controller()
-    tokenized_storage = TokenizedStorage(ctrl)
+    tokenized_storage = Tokenizer(ctrl)
     tokenizer = "hf-internal-testing/llama-tokenizer"
     ctrl.register_tokenizer(tokenizer)
 

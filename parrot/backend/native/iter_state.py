@@ -6,7 +6,7 @@ from xformers import ops as xops
 from parrot.protocol.sampling_config import SamplingConfig
 
 from ..config import NativeConfig
-from ..primitives import PrimitiveJob, Fill, Generation
+from ..backend_jobs import PrimitiveJob, Fill, Generation
 
 
 class IterationState:

@@ -2,16 +2,10 @@ from typing import Dict, List, Union, Optional
 import logging
 import time
 import threading
-import uuid
-from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 
 from parrot.utils import get_logger
 from parrot.program.function import SemanticFunction
-from parrot.protocol import check_heartbeat, fill
 from parrot.constants import NONE_CONTEXT_ID, HEARTBEAT_INTERVAL
-
-from .engine import ExecutionEngine
-from .context import Context
 
 
 logger = get_logger("Controller", logging.INFO)
