@@ -10,7 +10,7 @@ from .function import SemanticFunction, SemanticCall, logger
 class SharedContext:
     """Shared context for different functions.
 
-    A function call (LLMCall) can specify a shared context to read-only/read-write.
+    A function call (SemanticCall) can specify a shared context to read-only/read-write.
     Usage:
     - ctx = P.shared_context(engine, init_text)
     - ctx.fill(text)

@@ -2,6 +2,8 @@ from typing import Literal, Optional
 from dataclasses import dataclass
 import torch
 
+from .engine_type import EngineType
+
 _DTYPE_MAP = {
     "float16": torch.float16,
     "float32": torch.float32,
@@ -33,4 +35,4 @@ class SchedulerConfig:
 @dataclass
 class EngineConfig:
     model_name: str
-    engine_type: Literal["native", "hf", "openai", "mlcllm"]
+    engine_type: EngineType

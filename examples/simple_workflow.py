@@ -9,7 +9,7 @@
 import parrot as P
 
 vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
-vm.init()
+vm.launch()
 
 
 @P.function(formatter=P.allowing_newline)

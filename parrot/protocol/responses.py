@@ -12,8 +12,13 @@ class FillResponse(BaseResponse):
     num_filled_tokens: int
 
 
+class GenerateResponse(BaseResponse):
+    generated_text: str
+    generated_ids: List[int]
+
+
 class VMHeartbeatResponse(BaseResponse):
-    live: bool
+    available_models: List[str]
 
 
 class RegisterVMResponse(BaseResponse):
@@ -22,7 +27,7 @@ class RegisterVMResponse(BaseResponse):
 
 class ThreadStartResponse(BaseResponse):
     tokenizer: str
-    interpret_type: str
+    interpret_type: int
 
 
 class ThreadEndResponse(BaseResponse):

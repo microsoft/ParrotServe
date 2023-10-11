@@ -123,6 +123,7 @@ class SemanticFunction:
         name: str,
         params: List[Parameter],
         cached_prefix: bool,
+        models: List[str],
         func_body_str: Optional[str] = None,
         func_body: Optional[List[FunctionPiece]] = None,
     ):
@@ -130,8 +131,8 @@ class SemanticFunction:
         After parsed, it turns to be a list of function pieces.
         """
 
+        # ---------- Basic Info ----------
         self.name = name
-        self.cached_prefix = cached_prefix
         self.params = params
         self.params_map = dict([(param.name, param) for param in self.params])
         self.inputs = [param for param in self.params if param.typ != ParamType.OUTPUT]
@@ -144,6 +145,10 @@ class SemanticFunction:
             self.body = func_body
         else:
             raise ValueError("Either func_body_str or func_body should be provided.")
+
+        # ---------- Additional Annotations ----------
+        self.cached_prefix = cached_prefix
+        self.models = models
 
     def __call__(self, *args: List[Any], **kwargs: Dict[str, Any]):
         """Calling a parrot function will not execute it immediately.

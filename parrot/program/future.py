@@ -79,12 +79,12 @@ class Future:
         return self.ready_event.is_set()
 
     def set(self, content: str):
-        """Set the content of the future. We don't use it usually."""
+        """Public API: Set the content of the future. We don't use it usually."""
 
         self._set(content)
 
     async def get(self) -> str:
-        """(Asynchronous) Get the content of the future."""
+        """Public API: (Asynchronous) Get the content of the future."""
 
         if self.coroutine is not None:
             await self._wait_content()

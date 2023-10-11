@@ -1,5 +1,5 @@
 import inspect
-from typing import Optional
+from typing import Optional, List
 
 from Parrot.parrot.os.context import Context
 from parrot.protocol.sampling_config import SamplingConfig
@@ -24,6 +24,7 @@ class Output:
 
 
 def function(
+    models: List[str] = [],
     caching_prefix: bool = True,
     formatter: Optional[Sequential] = standard_formatter,
     conversation_template: Optional[FuncMutator] = None,
@@ -64,6 +65,7 @@ def function(
         semantic_func = SemanticFunction(
             name=func_name,
             params=func_params,
+            models=models,
             cached_prefix=caching_prefix,
             func_body_str=doc_str,
         )
@@ -75,9 +77,7 @@ def function(
 
         # controller=None: testing mode
         if SemanticFunction._controller is not None:
-            SemanticFunction._controller.register_function(
-                semantic_func, caching_prefix
-            )
+            SemanticFunction._controller.register_function(semantic_func)
         else:
             logger.warning("Controller is not set. Not register the function.")
 

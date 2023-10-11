@@ -1,67 +1,64 @@
 import asyncio
 import contextlib
 import time
-import json
 import traceback
-from typing import Optional, Coroutine
+from typing import Coroutine, Literal
+
+from parrot.protocol.layer_apis import register_vm
+from parrot.program.function import SemanticFunction
+from parrot.program.shared_context import SharedContext
+from parrot.utils import get_logger
 
 from .controller import Controller
-from .executor import MainExecutor
-from ..program.function import SemanticFunction
-from ..program.shared_context import SharedContext
+from .executor import Executor
 from .tokenizer import Tokenizer
+
+
+logger = get_logger("VM")
 
 
 class VirtualMachine:
     """The virtual machine for Parrot."""
 
-    def __init__(self, config_path: Optional[str] = None):
-        """The config file contains pre-registered tokenizers and engines."""
+    def __init__(self, os_http_addr):
+        self.os_http_addr = os_http_addr
 
-        if config_path is None:
-            self.config = None
-        else:
-            with open(config_path) as f:
-                self.config = json.load(f)
+        # Call OS to register VM, and allocate a pid
+        resp = register_vm(self.os_http_addr)
+        self.pid = resp.pid
 
-    def init(self):
-        """When you start definiing a Parrot function/shared_context,
-        you should init the VirtualMachine first."""
+        logger.info(f"VM created with PID: {self.pid}")
 
-        self.controller = Controller()
-        self.tokenized_storage = Tokenizer(self.controller)
-        self.executor = MainExecutor(self.controller, self.tokenized_storage)
+    def launch(self, mode: Literal["release", "debug"] = "release"):
+        """Run the global controller and take over the control of the whole system (Change some class members.).
+
+        When you start definiing a Parrot function/shared_context, you should init the VirtualMachine
+        first."""
+
+        self.controller = Controller(self)
+        self.tokenizer = Tokenizer()
+        self.executor = Executor(self, self.tokenizer)
 
         SemanticFunction._controller = self.controller
         SharedContext._controller = self.controller
-        SharedContext._tokenized_storage = self.tokenized_storage
+        SharedContext._tokenized_storage = self.tokenizer
 
-        if self.config is not None:
-            if "mode" in self.config and self.config["mode"] == "release":
-                import logging
+        if mode == "release":
+            import logging
 
-                # We don't disable the error log
-                logging.disable(logging.DEBUG)
-                logging.disable(logging.INFO)
-            if "tokenizers" in self.config:
-                for tokenizer_name in self.config["tokenizers"]:
-                    self.register_tokenizer(tokenizer_name)
-            if "engines" in self.config:
-                for engine_info in self.config["engines"]:
-                    self.register_engine(
-                        **engine_info,
-                    )
-
-    @contextlib.contextmanager
-    def running_scope(self, timeit: bool = False):
-        """Under this context, the global controller is running."""
+            # We don't disable the error log
+            logging.disable(logging.DEBUG)
+            logging.disable(logging.INFO)
 
         # Set the executor
         SemanticFunction._executor = self.executor
 
         self.controller.run()
-        self.controller.caching_function_prefix(self.tokenized_storage)
 
+        logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
+
+    @contextlib.contextmanager
+    def running_scope(self, timeit: bool = False):
         if timeit:
             st = time.perf_counter_ns()
 
@@ -79,26 +76,10 @@ class VirtualMachine:
                 ed = time.perf_counter_ns()
                 print(f"[Timeit] E2E Program Execution Time: {(ed - st) / 1e9} (s).")
 
-            self.controller.free_function_prefix()
-
-    def register_tokenizer(self, tokenizer_name: str):
-        """Register a tokenizer to the global controller."""
-
-        self.controller.register_tokenizer(tokenizer_name)
-
-    def register_engine(
-        self,
-        engine_name: str,
-        host: str,
-        port: int,
-        tokenizer: str,
-    ):
-        """Register an engine to the global controller."""
-
-        self.controller.register_engine(engine_name, host, port, tokenizer)
-
     def run(self, coroutine: Coroutine, timeit: bool = False):
         """vm.run method will create a new event loop and run the coroutine."""
+
+        logger.info(f"VM (pid: {self.pid}) runs program: {coroutine.__name__}")
 
         with self.running_scope(timeit):
             # asyncio.run(coroutine)

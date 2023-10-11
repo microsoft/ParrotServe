@@ -7,7 +7,7 @@ import parrot as P
 
 def init():
     vm = P.VirtualMachine()
-    vm.init()
+    vm.launch()
     vm.register_tokenizer("facebook/opt-13b")
     vm.register_engine(
         "test",

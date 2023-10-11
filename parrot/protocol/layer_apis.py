@@ -25,7 +25,7 @@ from .common import (
 def vm_heartbeat(
     http_addr: str,
     pid: int,
-):
+) -> VMHeartbeatResponse:
     try:
         return send_http_request(
             VMHeartbeatResponse,
@@ -41,7 +41,7 @@ def vm_heartbeat(
         raise e
 
 
-def register_vm(http_addr: str):
+def register_vm(http_addr: str) -> RegisterVMResponse:
     try:
         return send_http_request(
             RegisterVMResponse,
@@ -54,7 +54,9 @@ def register_vm(http_addr: str):
         raise e
 
 
-def thread_start(http_addr: str, pid: int, tid: int, metadata: ThreadMetadata):
+def thread_start(
+    http_addr: str, pid: int, tid: int, metadata: ThreadMetadata
+) -> ThreadStartResponse:
     try:
         return send_http_request(
             ThreadStartResponse,
@@ -70,7 +72,7 @@ def thread_start(http_addr: str, pid: int, tid: int, metadata: ThreadMetadata):
         raise e
 
 
-def thread_end(http_addr: str, pid: int, tid: int):
+def thread_end(http_addr: str, pid: int, tid: int) -> ThreadEndResponse:
     try:
         return send_http_request(
             ThreadEndResponse,
@@ -109,7 +111,7 @@ def register_engine(
     http_addr: str,
     engine_name: str,
     engine_config: EngineConfig,
-):
+) -> RegisterEngineResponse:
     try:
         return send_http_request(
             RegisterEngineResponse,

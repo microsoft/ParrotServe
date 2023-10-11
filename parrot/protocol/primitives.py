@@ -11,7 +11,7 @@ from .common import (
     logger,
 )
 from .sampling_config import SamplingConfig
-from .responses import FillResponse
+from .responses import FillResponse, GenerateResponse
 
 
 @dataclass
@@ -79,21 +79,39 @@ class Fill(Primitive):
 
 
 @dataclass
-class Generation(Primitive):
-    """Generation primitive is corresponding to the `decode` stage in LLM.
+class Generate(Primitive):
+    """Generate primitive is corresponding to the `decode` stage in LLM.
 
     Its mission is to generate the output tokens based on certain context.
     """
 
     sampling_config: SamplingConfig
 
-    async def agenerate(self, http_addr: str):
+    async def apost(self, http_addr: str) -> GenerateResponse:
+        try:
+            async with aiohttp.ClientSession() as client_session:
+                return await async_send_http_request(
+                    client_session,
+                    FillResponse,
+                    http_addr,
+                    "/generate",
+                    pid=self.pid,
+                    tid=self.tid,
+                    context_id=self.context_id,
+                    parent_context_id=self.parent_context_id,
+                    sampling_config=asdict(self.sampling_config),
+                )
+        except BaseException as e:
+            logger.error(f"Generate error in {http_addr} error: {e}")
+            raise e
+
+    async def astream(self, http_addr: str):
         try:
             async with aiohttp.ClientSession() as client_session:
                 async for resp in async_send_http_request_streaming(
                     client_session,
                     http_addr,
-                    "/generate",
+                    "/generate_steam",
                     pid=self.pid,
                     tid=self.tid,
                     context_id=self.context_id,

@@ -5,7 +5,7 @@ import parrot as P
 
 # We need to start a definition scope before defining any functions.
 vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
-vm.init()
+vm.launch()
 
 
 # Now we can start to define a "Parrot function".
