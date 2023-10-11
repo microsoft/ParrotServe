@@ -58,3 +58,14 @@ class BlockContext(LowLevelContext):
         """Return the last token id."""
 
         return self.token_ids[-1]
+
+    def get_last_hidden_state(self) -> torch.Tensor:
+        """Return the last hidden state."""
+
+        if len(self.token_ids) == 0:
+            assert (
+                self.parent_context is not None
+            ), "The parent context should not be None if this is an empty context."
+            return self.parent_context.get_last_hidden_state()
+
+        return self.last_hidden_state

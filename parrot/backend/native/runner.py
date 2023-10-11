@@ -67,8 +67,9 @@ class Runner:
                 job.context.allocate(len(job.token_ids))
             elif isinstance(job, Generation):
                 job.context.allocate(1)
-                if job.context.last_hidden_state is not None:
-                    first_sampling_states.append(job.context.last_hidden_state)
+                last_hidden_state = job.context.get_last_hidden_state()
+                if last_hidden_state is not None:
+                    first_sampling_states.append(last_hidden_state)
                     first_sampling_config.append(job.sampling_config)
                     first_sampling_jobs.append(job)
                     job.context.last_hidden_state = None
