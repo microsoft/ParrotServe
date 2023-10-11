@@ -1,5 +1,6 @@
 aiohttp==3.8.5
 fastapi==0.103.0
+huggingface-hub==0.16.4
 regex==2023.8.8
 requests==2.31.0
 sentencepiece==0.1.99
@@ -8,7 +9,7 @@ tokenizers==0.13.3
 torch==2.0.1
 tqdm==4.66.1
 transformers==4.32.0
-triton==2.1.0
+triton==2.0.0
 urllib3==2.0.4
 uvicorn==0.23.2
 xformers==0.0.21

@@ -2,6 +2,21 @@
 
 This project is a research prototype for now. Being eargerly iterated.
 
+### Install
+
+**Install dependencies:**
+
+```bash
+pip install -r requirements.txt
+pip install triton==2.1.0
+```
+
+**Install Parrot:**
+
+```bash
+python3 setup.py develop
+```
+
 ### Start a Vicuna-13b Backend Server
 
 ```bash
