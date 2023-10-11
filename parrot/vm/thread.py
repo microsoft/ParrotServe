@@ -3,7 +3,7 @@ from queue import Queue
 
 from parrot.orchestration.context import Context
 from parrot.orchestration.engine import ExecutionEngine
-from parrot.program.function import LLMCall
+from parrot.program.function import SemanticCall
 from parrot.protocol import afill, agenerate, SamplingConfig
 from parrot.utils import RecyclePool, get_logger, create_task_in_loop
 from parrot.constants import RECYCLE_POOL_SIZE, STREAMING_END_TOKEN_ID, FILL_NO_CHUNK
@@ -36,7 +36,7 @@ class Session:
 
     def __init__(
         self,
-        call: LLMCall,
+        call: SemanticCall,
         context: Context,
         finish_callback: Callable,
     ):

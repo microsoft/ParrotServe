@@ -5,11 +5,11 @@ import json
 import traceback
 from typing import Optional, Coroutine
 
-from .orchestration.controller import Controller
-from .executor.executor import MainExecutor
-from .program.function import SemanticFunction
-from .program.shared_context import SharedContext
-from .orchestration.tokenize import TokenizedStorage
+from ..orchestration.controller import Controller
+from ..executor.executor import MainExecutor
+from ..program.function import SemanticFunction
+from ..program.shared_context import SharedContext
+from ..orchestration.tokenize import TokenizedStorage
 
 
 class VirtualMachine:

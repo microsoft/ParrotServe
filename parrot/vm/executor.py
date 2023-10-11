@@ -3,7 +3,7 @@
 from typing import Dict, Optional
 from abc import ABC, abstractmethod
 
-from parrot.program.function import LLMCall, Constant, ParameterLoc, ParamType
+from parrot.program.function import SemanticCall, Constant, ParameterLoc, ParamType
 from parrot.program.future import Future
 from parrot.orchestration.context import Context
 from parrot.orchestration.controller import Controller
@@ -144,7 +144,7 @@ class MainExecutor:
             self.tokenized_storage,
         )
 
-    def submit(self, call: LLMCall):
+    def submit(self, call: SemanticCall):
         new_created_context = True
 
         # Get/fork temporary context for a call

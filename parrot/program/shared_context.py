@@ -4,7 +4,7 @@ from parrot.orchestration.engine import ExecutionEngine
 from parrot.orchestration.context import Context
 from parrot.protocol import fill
 
-from .function import SemanticFunction, LLMCall, logger
+from .function import SemanticFunction, SemanticCall, logger
 
 
 class SharedContext:
@@ -89,7 +89,7 @@ class SharedContextHandler:
         self.shared_context = shared_context
         self.mode = mode
 
-        self._writer: Optional[LLMCall] = None  # Record current writer
+        self._writer: Optional[SemanticCall] = None  # Record current writer
 
     def __enter__(self):
         return self
@@ -101,7 +101,7 @@ class SharedContextHandler:
         self._writer = None
 
     def call(self, func: SemanticFunction, *args, **kwargs):
-        call = LLMCall(func, self, *args, **kwargs)
+        call = SemanticCall(func, self, *args, **kwargs)
 
         if self._writer is not None:
             raise RuntimeError(

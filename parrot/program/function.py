@@ -149,7 +149,7 @@ class SemanticFunction:
         """Calling a parrot function will not execute it immediately.
         Instead, this will submit the call to the executor."""
 
-        call = LLMCall(self, None, *args, **kwargs)
+        call = SemanticCall(self, None, *args, **kwargs)
         if SemanticFunction._executor is not None:
             SemanticFunction._executor.submit(call)
         else:
@@ -176,7 +176,7 @@ class SemanticFunction:
         )
 
 
-class LLMCall:
+class SemanticCall:
     """A call to a semantic function."""
 
     def __init__(
