@@ -2,7 +2,7 @@ from typing import List, Optional
 from asyncio import Event
 
 from parrot.program.future import Future
-from Parrot.parrot.vm.tokenizer import Tokenizer
+from Parrot.parrot.os.process.tokenizer import Tokenizer
 
 
 class DataHolder:

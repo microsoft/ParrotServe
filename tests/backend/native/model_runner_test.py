@@ -1,6 +1,6 @@
-from parrot.backend.native.runner import Runner
-from parrot.backend.config import NativeConfig
-from parrot.backend.native.iter_state import Fill, Generation
+from parrot.engine.native.runner import Runner
+from parrot.engine.config import NativeConfig
+from parrot.engine.native.iter_state import Fill, Generation
 from parrot.protocol.sampling_config import SamplingConfig
 
 import numpy as np

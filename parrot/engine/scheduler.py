@@ -1,5 +1,5 @@
 from typing import List
-from .backend_jobs import PrimitiveJob
+from ..protocol.primitives.job import PrimitiveJob
 from .config import SchedulerConfig
 
 

@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import asdict
 
-from parrot.backend.config import EngineConfig
+from parrot.engine.config import EngineConfig
 
 from .responses import (
     VMHeartbeatResponse,

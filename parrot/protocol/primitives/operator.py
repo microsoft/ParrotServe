@@ -5,8 +5,8 @@ from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.program.future import Future
 
-from .dataholder import DataHolder
-from .pipe import TokenPipe
+from ...os.process.placeholder import DataHolder
+from ...os.process.pipe import TokenPipe
 
 
 class InterpretType(Enum):

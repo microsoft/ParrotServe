@@ -2,7 +2,7 @@ from typing import Optional, List, Callable
 from queue import Queue
 
 from parrot.program.function import SemanticCall
-from parrot.protocol.primitives import Fill, Generate
+from Parrot.parrot.protocol.primitives.request import Fill, Generate
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.utils import RecyclePool, get_logger, create_task_in_loop
 from parrot.constants import (
@@ -12,8 +12,8 @@ from parrot.constants import (
     NONE_CONTEXT_ID,
 )
 
-from .instructions import *
-from .dataholder import DataHolder
+from ...protocol.primitives.operator import *
+from .placeholder import DataHolder
 
 
 logger = get_logger("Thread")

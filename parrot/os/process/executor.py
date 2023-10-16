@@ -1,7 +1,7 @@
 from typing import Dict
 
 from parrot.program.function import SemanticCall
-from parrot.vm.tokenizer import Tokenizer
+from Parrot.parrot.os.process.tokenizer import Tokenizer
 from parrot.protocol.thread_metadata import ThreadMetadata
 from parrot.protocol.layer_apis import thread_start
 from parrot.utils import get_logger

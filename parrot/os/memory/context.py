@@ -4,7 +4,7 @@ from parrot.utils import RecyclePool, get_logger
 from parrot.constants import RECYCLE_POOL_SIZE, NONE_CONTEXT_ID
 from parrot.protocol import free_context
 
-from .engine import ExecutionEngine
+from ..engine import ExecutionEngine
 
 
 logger = get_logger("Context")

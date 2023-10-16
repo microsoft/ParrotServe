@@ -8,8 +8,8 @@ from parrot.program.future import Future
 from parrot.utils import create_task_in_loop
 
 from .tokenizer import Tokenizer
-from .dataholder import DataHolder
-from .instructions import *
+from .placeholder import DataHolder
+from ...protocol.primitives.operator import *
 
 
 class BaseInterpreter(ABC):

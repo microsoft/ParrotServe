@@ -15,49 +15,36 @@ TESTING_SERVER_PORT = 8888
 TESTING_FILL_PERTOKEN_TIME = 0.1
 TESTING_DECODE_PERTOKEN_TIME = 0.1
 
-logger = get_logger("Backend Server")
 
 app = FastAPI()
 
 
-# Status Data
-
-context = {}  # Context_id -> context_length
-num_cached_tokens = 0
-num_running_jobs = 0
-
-
-@app.post("/heartbeat")
+@app.post("/vm_heartbeat")
 async def heartbeat(request: Request):
     return {
-        "num_cached_tokens": num_cached_tokens,
-        "cached_tokens_size": num_cached_tokens * 4,
-        "num_running_jobs": num_running_jobs,
+        "available_models": ["llama", "gpt2"],
     }
 
 
 @app.post("/fill")
 async def fill(request: Request):
-    global num_running_jobs
-    global num_cached_tokens
-
-    num_running_jobs += 1
     payload = await request.json()
-    num_tokens = len(payload["token_ids"])
-    num_cached_tokens += num_tokens
 
-    if payload["context_id"] not in context:
-        context[payload["context_id"]] = 0
-    context[payload["context_id"]] += num_tokens
+    token_ids = payload["token_ids"]
+    text = payload["text"]
 
     # Suppose the server will always fill all tokens
     # Simulate the time of filling tokens
-    time.sleep(TESTING_FILL_PERTOKEN_TIME * num_tokens)
+    if token_ids is not None:
+        length = len(token_ids)
+    else:
+        assert text is not None
+        length = len(text.split())
 
-    num_running_jobs -= 1
+    time.sleep(TESTING_FILL_PERTOKEN_TIME * length)
 
     return {
-        "num_filled_tokens": num_tokens,
+        "num_filled_tokens": length,
     }
 
 

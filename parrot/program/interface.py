@@ -1,7 +1,7 @@
 import inspect
 from typing import Optional, List
 
-from Parrot.parrot.os.context import Context
+from Parrot.parrot.os.memory.context import Context
 from parrot.protocol.sampling_config import SamplingConfig
 
 from .function import SemanticFunction, logger, ParamType, Parameter
