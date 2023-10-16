@@ -1,6 +1,9 @@
 import pytest
 import parrot as P
-from parrot.program.function import Constant, ParameterLoc
+
+from parrot.program.function import Constant, ParameterLoc, SemanticFunction
+from parrot.program.future import Future
+from parrot.constants import FUTURE_MAGIC_HEADER
 
 
 def test_parse_parrot_function():
@@ -46,7 +49,7 @@ def test_call_function():
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
 
-    print("Bindings:", test("a", b="b"))
+    print(test("a", b="b"))
 
 
 def test_call_function_with_pyobjects():
@@ -56,18 +59,7 @@ def test_call_function_with_pyobjects():
 
     print(test.body)
 
-    print("Bindings:", test(23.3, 400, [1, 2, 3, 4]))
-
-
-def test_call_function_with_coroutine():
-    async def get_a():
-        return "a"
-
-    @P.function()
-    def test(a: P.Input, b: P.Input, c: P.Output):
-        """This {{b}} is a test {{a}} function {{c}}"""
-
-    print("Bindings:", test(get_a(), b="b"))
+    print(test(23.3, 400, [1, 2, 3, 4]))
 
 
 def test_wrongly_pass_output_argument():
@@ -79,9 +71,43 @@ def test_wrongly_pass_output_argument():
         test("a", b="b", c="c")
 
 
+def test_serialize_future():
+    f = Future("content")
+    print(f)
+    d = f.to_dict()
+    print(d)
+
+    assert FUTURE_MAGIC_HEADER in d
+
+
+def test_serialize_function():
+    @P.function()
+    def test(a: P.Input, b: P.Input, c: P.Output):
+        """This {{b}} is a test {{a}} function {{c}}"""
+
+    print(test.display())
+    d = test.to_dict()
+    print(d)
+    f = SemanticFunction.from_dict(d)
+    print(f.display())
+
+
+def test_serialize_call():
+    @P.function()
+    def test(a: P.Input, b: P.Input, c: P.Output):
+        """This {{b}} is a test {{a}} function {{c}}"""
+
+    call = test("a", b="b")
+    print(call)
+    print(call.to_dict())
+
+
+
 if __name__ == "__main__":
     test_parse_parrot_function()
     test_call_function()
     test_call_function_with_pyobjects()
-    test_call_function_with_coroutine()
     test_wrongly_pass_output_argument()
+    test_serialize_future()
+    test_serialize_function()
+    test_serialize_call()

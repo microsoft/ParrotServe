@@ -60,7 +60,7 @@ class TokenIdInterpreter(BaseInterpreter):
                 assert piece.param.name in thread.call.bindings
                 param_value = thread.call.bindings[piece.param.name]
 
-                if piece.param.typ == ParamType.PYOBJ:
+                if piece.param.typ == ParamType.INPUT_PYOBJ:
                     # For Python object, we directly fill the value.
                     # We use __str__ instead of __repr__
                     value_str = str(param_value)
@@ -114,7 +114,7 @@ class TextInterpreter(BaseInterpreter):
                 assert piece.param.name in thread.call.bindings
                 param_value = thread.call.bindings[piece.param.name]
 
-                if piece.param.typ == ParamType.PYOBJ:
+                if piece.param.typ == ParamType.INPUT_PYOBJ:
                     # For Python object, we directly fill the value.
                     # We use __str__ instead of __repr__
                     value_str = str(param_value)

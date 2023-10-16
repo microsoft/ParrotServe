@@ -1,4 +1,4 @@
-from typing import List
+import aiohttp
 from dataclasses import asdict
 
 from parrot.engine.config import EngineConfig
@@ -6,20 +6,20 @@ from parrot.engine.config import EngineConfig
 from .responses import (
     VMHeartbeatResponse,
     RegisterVMResponse,
-    ThreadStartResponse,
-    ThreadEndResponse,
+    SubmitCallResponse,
+    PlaceholderFetchResponse,
     EngineHeartbeatResponse,
     FreeContextResponse,
     RegisterEngineResponse,
 )
-from .thread_metadata import ThreadMetadata
 from .common import (
     send_http_request,
+    async_send_http_request,
     logger,
 )
 
 
-# ---------- VM Layer to OS Layer APIs ----------
+# ---------- Program Layer to OS Layer APIs ----------
 
 
 def vm_heartbeat(
@@ -54,36 +54,56 @@ def register_vm(http_addr: str) -> RegisterVMResponse:
         raise e
 
 
-def thread_start(
-    http_addr: str, pid: int, tid: int, metadata: ThreadMetadata
-) -> ThreadStartResponse:
+def submit_call(
+    http_addr: str, pid: int, func: "SemanticFunction"
+) -> SubmitCallResponse:
     try:
         return send_http_request(
-            ThreadStartResponse,
+            SubmitCallResponse,
             http_addr,
-            "/thread_start",
+            "/execute_func",
             retry_times=3,
             pid=pid,
-            tid=tid,
-            metadata=metadata,
+            func=func,
         )
     except BaseException as e:
-        logger.error(f"Start thread (pid: {pid}) error in {http_addr}. Error: {e}")
+        logger.error(f"Execute func (pid: {pid}) error in {http_addr}. Error: {e}")
         raise e
 
 
-def thread_end(http_addr: str, pid: int, tid: int) -> ThreadEndResponse:
+def placeholder_fetch(
+    http_addr: str, pid: int, placeholder_id: int
+) -> PlaceholderFetchResponse:
     try:
         return send_http_request(
-            ThreadEndResponse,
+            PlaceholderFetchResponse,
             http_addr,
-            "/thread_end",
+            "/placeholder_fetch",
             retry_times=3,
             pid=pid,
-            tid=tid,
+            placeholder_id=placeholder_id,
         )
     except BaseException as e:
-        logger.error(f"End thread (pid: {pid}) error in {http_addr}. Error: {e}")
+        logger.error(f"Placeholder fetch (pid: {pid}) error in {http_addr}. Error: {e}")
+        raise e
+
+
+async def aplaceholder_fetch(
+    http_addr: str, pid: int, placeholder_id: int
+) -> PlaceholderFetchResponse:
+    try:
+        async with aiohttp.ClientSession() as client_session:
+            return await async_send_http_request(
+                client_session,
+                PlaceholderFetchResponse,
+                http_addr,
+                "/placeholder_fetch",
+                retry_times=3,
+                pid=pid,
+                placeholder_id=placeholder_id,
+            )
+    except BaseException as e:
+        logger.error(f"Placeholder fetch (pid: {pid}) error in {http_addr}. Error: {e}")
         raise e
 
 
@@ -131,7 +151,8 @@ def engine_heartbeat(
     engine_name: str,
     num_running_jobs: int,
     num_cached_tokens: int,
-    cached_tokens_size: float,
+    cache_mem: float,
+    model_mem: float,
 ) -> EngineHeartbeatResponse:
     try:
         return send_http_request(
@@ -142,7 +163,8 @@ def engine_heartbeat(
             engine_name=engine_name,
             num_running_jobs=num_running_jobs,
             num_cached_tokens=num_cached_tokens,
-            cached_tokens_size=cached_tokens_size,
+            cache_mem=cache_mem,
+            model_mem=model_mem,
         )
     except BaseException as e:
         logger.error(f"Check engine heartbeat error. Engine: {engine_name}, Error: {e}")

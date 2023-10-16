@@ -18,20 +18,20 @@ class GenerateResponse(BaseResponse):
 
 
 class VMHeartbeatResponse(BaseResponse):
-    available_models: List[str]
+    mem_used: float
+    mem_threads: int
 
 
 class RegisterVMResponse(BaseResponse):
     pid: int
 
 
-class ThreadStartResponse(BaseResponse):
-    tokenizer: str
-    interpret_type: int
+class SubmitCallResponse(BaseResponse):
+    pass
 
 
-class ThreadEndResponse(BaseResponse):
-    num_freed_tokens: int
+class PlaceholderFetchResponse(BaseResponse):
+    content: str
 
 
 class EngineHeartbeatResponse(BaseResponse):

@@ -1,5 +1,4 @@
-# Virtual Machine
-from .vm.vm import VirtualMachine
+"""Parrot: Scalable and Efficient Runtime System for Semantic Programming."""
 
 # Program Interface and Transforms
 from .program import *
