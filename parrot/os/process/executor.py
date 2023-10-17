@@ -1,10 +1,7 @@
 from typing import Dict
 
-from parrot.program.function import SemanticCall
-from Parrot.parrot.os.process.tokenizer import Tokenizer
-from parrot.protocol.thread_metadata import ThreadMetadata
-from parrot.protocol.layer_apis import thread_start
-from parrot.utils import get_logger
+from parrot.os.process.tokenizer import Tokenizer
+from parrot.utils import get_logger, create_task_in_loop
 
 from .thread import Thread
 from .interpreter import TokenIdInterpreter, TextInterpreter, InterpretType
@@ -14,11 +11,14 @@ logger = get_logger("Executor")
 
 
 class Executor:
-    """Executor is responsible for managing calls and scheduling to execute them."""
+    """Executor is responsible for managing threads and scheduling to execute them.
 
-    def __init__(self, vm: "VirtualMachine", tokenizer: Tokenizer):
+    A thread submitted to the executor must be dispatched to an engine.
+    It will be interpreted and executed by the executor.
+    """
+
+    def __init__(self, tokenizer: Tokenizer):
         # ---------- Global components ----------
-        self.vm = vm
         self.tokenizer = tokenizer
 
         # ---------- Sub-executors ----------
@@ -32,26 +32,23 @@ class Executor:
             self.tokenizer,
         )
 
-    def submit(self, call: SemanticCall):
-        thread = Thread(vm=self.vm, call=call)
+    def submit(self, thread: Thread):
+        assert thread.dispatched, "Thread must be dispatched before submitting."
 
-        metadata = ThreadMetadata(is_latency_critical=True)
+        interpret_type = thread.engine.interpreter_type
 
-        # Call thread dispatcher
-        resp = thread_start(
-            http_addr=self.vm.os_http_addr,
-            pid=self.vm.pid,
-            tid=thread.tid,
-            metadata=metadata,
-        )
-
-        if resp.interpret_type == InterpretType.TOKEN_ID:
-            interpreter = self.get_token_id_interpreter(resp.tokenizer)
-        elif resp.interpret_type == InterpretType.TEXT:
+        if interpret_type == InterpretType.TOKEN_ID:
+            interpreter = self.get_token_id_interpreter(
+                thread.engine.config.tokenizer_name
+            )
+        elif interpret_type == InterpretType.TEXT:
             interpreter = self.text_interpreter
         else:
-            raise ValueError(f"Unknown interpret type {resp.interpret_type}.")
+            raise ValueError(f"Unknown interpret type {interpret_type}.")
 
         interpreter.interpret(thread)
 
-        logger.info(f"SemanticCall {call.func.name} created a thread {thread.tid}.")
+        # Start the thread
+        create_task_in_loop(thread.executing())
+
+        logger.info(f"Thread {thread.tid} started.")

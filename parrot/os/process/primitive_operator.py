@@ -5,8 +5,8 @@ from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.program.future import Future
 
-from ...os.process.placeholder import DataHolder
-from ...os.process.pipe import TokenPipe
+from parrot.os.process.placeholder import Placeholder
+from parrot.os.process.pipe import TokenPipe
 
 
 class InterpretType(Enum):
@@ -14,19 +14,19 @@ class InterpretType(Enum):
     TEXT = auto()
 
 
-class Instruction:
-    """Instructions are the first stage of a semantic call in the executor.
+class PrimitiveOperator:
+    """Primitive operators are the first stage of a semantic call in the executor.
 
-    When a semantic function is executed, its body will be transformed into a sequence of instructions
-    by the interpreter. And these instructions are then transformed/merged into primitives.
+    When a semantic function is executed, its body will be transformed into a sequence of operators
+    by the interpreter. And these operators are then transformed/merged into primitives.
 
-    The different between instructions and primitives is that instructions are presented as a DAG with
+    The different between operators and primitives is that operators are presented as a DAG with
     input holder and output holder, while primitives are pure requests.
     """
 
 
-class TokenIdConstantFill(Instruction):
-    """ConstantFill instruction takes a constant as input."""
+class TokenIdConstantFill(PrimitiveOperator):
+    """ConstantFill operator takes a constant as input."""
 
     def __init__(self, token_ids: List[int]):
         super().__init__()
@@ -36,12 +36,12 @@ class TokenIdConstantFill(Instruction):
         return f"ConstantFill"
 
 
-class TokenIdPlaceholderFill(Instruction):
-    """TokenIdPlaceholderFill instruction takes an Dataholder as input."""
+class TokenIdPlaceholderFill(PrimitiveOperator):
+    """TokenIdPlaceholderFill operator takes an Dataholder as input."""
 
-    def __init__(self, input_holder: DataHolder):
+    def __init__(self, input_holder: Placeholder):
         super().__init__()
-        self.input_holder: DataHolder = input_holder
+        self.input_holder: Placeholder = input_holder
         self.input_holder.consumers.append(self)
         self.input_pipe = TokenPipe(PIPELINE_SEND_CHUNK_NUM)
 
@@ -49,14 +49,14 @@ class TokenIdPlaceholderFill(Instruction):
         return f"TokenIdPlaceholderFill: input={self.input_holder}"
 
 
-class TokenIdPlaceholderGenerate(Instruction):
-    """TokenIdPlaceholderGenerate instruction takes a Dataholder as an output.
+class TokenIdPlaceholderGenerate(PrimitiveOperator):
+    """TokenIdPlaceholderGenerate operator takes a Dataholder as an output.
     And the decoded result will be passed back from the backend token by token (streaming).
     """
 
-    def __init__(self, output_holder: DataHolder, sampling_config: SamplingConfig):
+    def __init__(self, output_holder: Placeholder, sampling_config: SamplingConfig):
         super().__init__()
-        self.output_holder: DataHolder = output_holder
+        self.output_holder: Placeholder = output_holder
         self.sampling_config = sampling_config
         assert self.output_holder.producer is None, "Concurrent writing to a holder"
         self.output_holder.producer = self
@@ -66,8 +66,8 @@ class TokenIdPlaceholderGenerate(Instruction):
         return f"TokenIdPlaceholderGenerate: output={self.output_holder}"
 
 
-class TextConstantFill(Instruction):
-    """TextConstantFill instruction takes a constant as input.."""
+class TextConstantFill(PrimitiveOperator):
+    """TextConstantFill operator takes a constant as input.."""
 
     def __init__(self, text: str):
         super().__init__()
@@ -77,8 +77,8 @@ class TextConstantFill(Instruction):
         return f"TextConstantFill"
 
 
-class TextPlaceholderFill(Instruction):
-    """TextPlaceholderFill instruction takes a Future as input.."""
+class TextPlaceholderFill(PrimitiveOperator):
+    """TextPlaceholderFill operator takes a Future as input.."""
 
     def __init__(self, input_holder: Future):
         super().__init__()
@@ -88,8 +88,8 @@ class TextPlaceholderFill(Instruction):
         return f"TextPlaceholderFill"
 
 
-class TextPlaceholderGenerate(Instruction):
-    """TextPlaceholderGenerate instruction takes a Future as output."""
+class TextPlaceholderGenerate(PrimitiveOperator):
+    """TextPlaceholderGenerate operator takes a Future as output."""
 
     def __init__(self, output_holder: Future, sampling_config: SamplingConfig):
         super().__init__()

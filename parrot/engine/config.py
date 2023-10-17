@@ -36,3 +36,4 @@ class SchedulerConfig:
 class EngineConfig:
     model_name: str
     engine_type: EngineType
+    tokenizer_name: str

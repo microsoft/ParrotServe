@@ -1,7 +1,7 @@
 import asyncio
 import parrot
 from parrot.engine.native.engine import NativeExecutionEngine
-from Parrot.parrot.protocol.primitives.job import PrimitiveJob, Fill, Generation
+from Parrot.parrot.engine.primitive_job import PrimitiveJob, Fill, Generation
 from parrot.utils import create_task_in_loop
 from parrot.protocol.sampling_config import SamplingConfig
 from transformers import AutoTokenizer

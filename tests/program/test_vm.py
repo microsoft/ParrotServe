@@ -29,5 +29,5 @@ def test_e2e():
 
 
 if __name__ == "__main__":
-    # test_heartbeat()
+    test_heartbeat()
     test_e2e()

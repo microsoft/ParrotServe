@@ -5,11 +5,10 @@ from .thread import Thread
 
 from parrot.program.function import Constant, ParameterLoc, ParamType
 from parrot.program.future import Future
-from parrot.utils import create_task_in_loop
 
 from .tokenizer import Tokenizer
-from .placeholder import DataHolder
-from ...protocol.primitives.operator import *
+from .placeholder import Placeholder
+from .primitive_operator import *
 
 
 class BaseInterpreter(ABC):
@@ -42,7 +41,7 @@ class TokenIdInterpreter(BaseInterpreter):
     ):
         self.tokenizer_name = tokenizer_name
         self.tokenizer = tokenizer
-        self.dataholder_map: Dict[int, DataHolder] = {}
+        self.dataholder_map: Dict[int, Placeholder] = {}
 
     def interpret(self, thread: Thread):
         tokenized = self.tokenizer.tokenize_func_body(
@@ -85,15 +84,13 @@ class TokenIdInterpreter(BaseInterpreter):
                         )
                     else:
                         inst = TokenIdPlaceholderFill(input_holder=holder)
-            thread.instructions.put_nowait(inst)
+            thread.operators.put_nowait(inst)
 
-        create_task_in_loop(thread.executing())
-
-    def _get_dataholder(self, future: Future) -> DataHolder:
+    def _get_dataholder(self, future: Future) -> Placeholder:
         # Create a new data future if not exists
         # Hence, the name of the future must be unique.
         if future.id not in self.dataholder_map:
-            self.dataholder_map[future.id] = DataHolder(
+            self.dataholder_map[future.id] = Placeholder(
                 tokenizer=self.tokenizer_name,
                 tokenizer=self.tokenizer,
                 future=future,
@@ -130,6 +127,4 @@ class TextInterpreter(BaseInterpreter):
                         )
                     else:
                         inst = TextPlaceholderFill(input_holder=param_value)
-            thread.instructions.put_nowait(inst)
-
-        create_task_in_loop(thread.executing())
+            thread.operators.put_nowait(inst)

@@ -191,6 +191,11 @@ class SemanticFunction:
             return call.output_futures[0]
         return tuple(call.output_futures)
 
+    @property
+    def prefix(self) -> Constant:
+        """Get the prefix of the function body."""
+        return self.body[0]
+
     def display(self) -> str:
         """Display the function body."""
         return "".join(

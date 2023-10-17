@@ -2,10 +2,11 @@ from typing import List, Optional
 from asyncio import Event
 
 from parrot.program.future import Future
-from Parrot.parrot.os.process.tokenizer import Tokenizer
+
+from .tokenizer import Tokenizer
 
 
-class DataHolder:
+class Placeholder:
     """DataHolder stores the tokens of a Future.
 
     In the data-dependency graph, it serves a middle node which holds the data (token_ids) and
@@ -24,7 +25,7 @@ class DataHolder:
         self.tokenizer: str = tokenizer
         self.future = future
 
-        # ---------- Jobs ----------
+        # ---------- Operators ----------
         self.consumers: List["FillJob"] = []
         self.producer: Optional["GenerationJob"] = None
 

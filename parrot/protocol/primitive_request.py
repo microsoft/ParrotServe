@@ -4,14 +4,14 @@ import aiohttp
 
 from parrot.constants import NONE_THREAD_ID
 
-from ..common import (
+from .common import (
     send_http_request,
     async_send_http_request,
     async_send_http_request_streaming,
     logger,
 )
-from ..sampling_config import SamplingConfig
-from ..responses import FillResponse, GenerateResponse
+from .sampling_config import SamplingConfig
+from .responses import FillResponse, GenerateResponse
 
 
 @dataclass
