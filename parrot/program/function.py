@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import List, Dict, Type, Optional, Any, Set
+import pickle
 import regex as re
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 from parrot.utils import get_logger
 from parrot.protocol.sampling_config import SamplingConfig
@@ -142,8 +143,12 @@ class SemanticFunction:
         self.name = name
         self.params = params
         self.params_map = dict([(param.name, param) for param in self.params])
-        self.inputs = [param for param in self.params if param.typ != ParamType.OUTPUT_LOC]
-        self.outputs = [param for param in self.params if param.typ == ParamType.OUTPUT_LOC]
+        self.inputs = [
+            param for param in self.params if param.typ != ParamType.OUTPUT_LOC
+        ]
+        self.outputs = [
+            param for param in self.params if param.typ == ParamType.OUTPUT_LOC
+        ]
         if func_body_str is not None:
             self.body: List[FunctionPiece] = parse_func_body(
                 func_body_str, self.params_map
@@ -161,10 +166,10 @@ class SemanticFunction:
         Some notes:
         - Calling a parrot function will not execute it immediately.
           Instead, this will submit the call to OS.
-        
+
         - The return value is a list of Future objects, which can be used to get the
           output contents or passed to other functions.
-        
+
         - Caller should provide all the input arguments, including INPUT_LOC and INPUT_PYOBJ.
 
         - The INPUT_PYOBJ arguments should be Python objects, which will be turns to a string
@@ -195,23 +200,6 @@ class SemanticFunction:
                 else "{{" + piece.param.name + "}}"
                 for piece in self.body
             ]
-        )
-
-    def to_dict(self) -> Dict:
-        return {
-            "name": self.name,
-            "params": self.params,
-            "func_body": self.body,
-            "metadata": self.metadata,
-        }
-
-    @classmethod
-    def from_dict(cls, d: Dict) -> "SemanticFunction":
-        return cls(
-            name=d["name"],
-            params=d["params"],
-            func_body=d["func_body"],
-            **asdict(d["metadata"]),
         )
 
 
@@ -269,20 +257,14 @@ class SemanticCall:
             # For Python object, we use __str__ instead of __repr__ to serialize it.
             value = str(value)
         bindings[param.name] = value
-    
-    def to_dict(self) -> Dict:
-        serialized_bindings = {}
-        serialized_output_futures = []
 
-        for k, v in self.bindings.items():
-            if isinstance(v, Future):
-                serialized_bindings[k] = v.to_dict()
-        
-        for f in self.output_futures:
-            serialized_output_futures.append(f.to_dict())
+    # NOTE(chaofan): We use pickle to serialize the call.
+    # We use protocol=0 to make the result can be passed by http.
+    # There maybe some better ways to do this, but this is not important for this project.
 
-        return {
-            "func": self.func.to_dict(),
-            "bindings": serialized_bindings,
-            "output_futures": serialized_output_futures
-        }
+    def pickle(self) -> bytes:
+        return str(pickle.dumps(self, protocol=0), encoding="ascii")
+
+    @classmethod
+    def unpickle(cls, pickled: bytes) -> "SemanticCall":
+        return pickle.loads(bytes(pickled, encoding="ascii"))

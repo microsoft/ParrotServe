@@ -1,6 +1,5 @@
-from typing import Optional, Dict
+from typing import Optional
 
-from parrot.constants import FUTURE_MAGIC_HEADER
 
 class Future:
     """Represents a string which will be filled in the Future.
@@ -31,18 +30,11 @@ class Future:
 
     # ---------- Public Methods ----------
 
-    def to_dict(self) -> Dict:
-        return {
-            FUTURE_MAGIC_HEADER: "",
-            "id": self.id,
-            "content": self.content,
-        }
-
     @property
     def ready(self) -> bool:
         return self.content is not None
 
-    async def get(self) -> str:
+    def get(self) -> str:
         """Public API: (Blocking) Get the content of the future."""
 
         if self.ready:

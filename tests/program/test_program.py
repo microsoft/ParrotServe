@@ -1,9 +1,7 @@
 import pytest
 import parrot as P
 
-from parrot.program.function import Constant, ParameterLoc, SemanticFunction
-from parrot.program.future import Future
-from parrot.constants import FUTURE_MAGIC_HEADER
+from parrot.program.function import Constant, ParameterLoc, SemanticCall
 
 
 def test_parse_parrot_function():
@@ -71,27 +69,6 @@ def test_wrongly_pass_output_argument():
         test("a", b="b", c="c")
 
 
-def test_serialize_future():
-    f = Future("content")
-    print(f)
-    d = f.to_dict()
-    print(d)
-
-    assert FUTURE_MAGIC_HEADER in d
-
-
-def test_serialize_function():
-    @P.function()
-    def test(a: P.Input, b: P.Input, c: P.Output):
-        """This {{b}} is a test {{a}} function {{c}}"""
-
-    print(test.display())
-    d = test.to_dict()
-    print(d)
-    f = SemanticFunction.from_dict(d)
-    print(f.display())
-
-
 def test_serialize_call():
     @P.function()
     def test(a: P.Input, b: P.Input, c: P.Output):
@@ -99,8 +76,10 @@ def test_serialize_call():
 
     call = test("a", b="b")
     print(call)
-    print(call.to_dict())
-
+    call_pickled = call.pickle()
+    print(call_pickled)
+    call_unpickled = SemanticCall.unpickle(call_pickled)
+    print(call_unpickled)
 
 
 if __name__ == "__main__":
@@ -108,6 +87,4 @@ if __name__ == "__main__":
     test_call_function()
     test_call_function_with_pyobjects()
     test_wrongly_pass_output_argument()
-    test_serialize_future()
-    test_serialize_function()
     test_serialize_call()

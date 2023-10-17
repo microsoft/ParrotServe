@@ -5,7 +5,6 @@ RECYCLE_POOL_SIZE = 4096
 
 # ---------- Program ----------
 HEARTBEAT_INTERVAL = 5  # seconds
-FUTURE_MAGIC_HEADER = "__future_magic_header__"
 
 # ---------- OS ----------
 FILL_NO_CHUNK = -1

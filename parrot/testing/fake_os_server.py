@@ -4,6 +4,7 @@ from fastapi import FastAPI, Request
 import uvicorn
 import numpy as np
 
+from parrot.program.function import SemanticCall
 from parrot.utils import get_logger
 
 # ---------- Constants ----------
@@ -20,7 +21,7 @@ app = FastAPI()
 
 @app.post("/vm_heartbeat")
 async def heartbeat(request: Request):
-    pid = await request.json()["pid"]
+    pid = (await request.json())["pid"]
     logger.info(f"Received heartbeat from VM (pid: {pid}).")
     return {
         "mem_used": 0.0,
@@ -39,8 +40,8 @@ async def register_vm(request: Request):
 async def submit_call(request: Request):
     payload = await request.json()
     pid = payload["pid"]
-    func = payload["func"]
-    logger.info(f"Execute function {func["name"]} in VM (pid: {pid}).")
+    call = SemanticCall.unpickle(payload["call"])
+    logger.info(f"Execute function {call.func.name} in VM (pid: {pid}).")
     return {}
 
 
@@ -51,7 +52,6 @@ async def placeholder_fetch(request: Request):
     placeholder_id = payload["placeholder_id"]
     logger.info(f"Fetch placeholder {placeholder_id} in VM (pid: {pid}).")
     return {"content": "placeholder_xxx"}
-
 
 
 if __name__ == "__main__":
