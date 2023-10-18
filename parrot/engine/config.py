@@ -1,8 +1,9 @@
 from typing import Literal, Optional
 from dataclasses import dataclass
 import torch
+from enum import Enum, auto
 
-from .engine_type import EngineType
+from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_ENGINE_SERVER_PORT
 
 _DTYPE_MAP = {
     "float16": torch.float16,
@@ -32,8 +33,17 @@ class SchedulerConfig:
     max_tokens_sum: int
 
 
+class EngineType(Enum):
+    NATIVE = auto()
+    HUGGINGFACE = auto()
+    OPENAI = auto()
+    MLCLLM = auto()
+
+
 @dataclass
 class EngineConfig:
-    model_name: str
-    engine_type: EngineType
-    tokenizer_name: str
+    host: str = DEFAULT_SERVER_HOST
+    port: int = DEFAULT_ENGINE_SERVER_PORT
+    model_name: str = "unknown"
+    engine_type: EngineType = EngineType.NATIVE
+    tokenizer_name: str = "unknown"

@@ -72,18 +72,22 @@ async def register_engine(request: Request):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parrot OS server.")
 
-    parser.add_argument("--host", type=str, default="localhost")
-    parser.add_argument("--port", type=int, default=9999)
+    parser.add_argument(
+        "--config_path",
+        type=str,
+        help="Path to the config file of PCore.",
+        required=True,
+    )
 
     args = parser.parse_args()
-    pcore = PCore()
+    pcore = PCore(args.config_path)
 
     loop = asyncio.new_event_loop()
     config = Config(
         app=app,
         loop=loop,
-        host="localhost",
-        port=args.port,
+        host=pcore.os_config.host,
+        port=pcore.os_config.port,
         log_level="info",
     )
     uvicorn_server = Server(config)

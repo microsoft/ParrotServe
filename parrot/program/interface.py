@@ -23,7 +23,7 @@ class Output:
 
 def function(
     models: List[str] = [],
-    caching_prefix: bool = True,
+    cache_prefix: bool = True,
     formatter: Optional[Sequential] = standard_formatter,
     conversation_template: Optional[FuncMutator] = None,
 ):
@@ -64,7 +64,7 @@ def function(
             name=func_name,
             params=func_params,
             models=models,
-            cached_prefix=caching_prefix,
+            cache_prefix=cache_prefix,
             func_body_str=doc_str,
         )
 

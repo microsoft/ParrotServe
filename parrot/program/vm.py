@@ -70,7 +70,7 @@ class VirtualMachine:
                 pid=self.pid,
             )
 
-            self.runtime_info = VMRuntimeInfo(**asdict(resp))
+            self.runtime_info = VMRuntimeInfo(**resp.dict())
 
             time.sleep(VM_HEARTBEAT_INTERVAL)
 

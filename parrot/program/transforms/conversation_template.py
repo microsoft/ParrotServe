@@ -119,8 +119,8 @@ class ConversationTemplate(FuncMutator):
         return SemanticFunction(
             name=func.name,
             params=func.params,
-            cached_prefix=func.cached_prefix,
             func_body=new_body,
+            **asdict(func.metadata),
         )
 
 

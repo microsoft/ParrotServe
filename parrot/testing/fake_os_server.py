@@ -26,7 +26,7 @@ async def vm_heartbeat(request: Request):
     logger.info(f"Received heartbeat from VM (pid: {pid}).")
     return {
         "mem_used": 0.0,
-        "mem_threads": 0,
+        "num_threads": 0,
     }
 
 

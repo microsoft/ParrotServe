@@ -5,8 +5,10 @@ Use `python3 -m parrot.testing.fake_os_server` to start a fake server.
 import parrot as P
 import time
 
+from parrot.testing.fake_os_server import TESTING_SERVER_HOST, TESTING_SERVER_PORT
 
-SERVER_URL = "http://localhost:8888"
+
+SERVER_URL = f"http://{TESTING_SERVER_HOST}:{TESTING_SERVER_PORT}"
 
 
 def test_heartbeat():

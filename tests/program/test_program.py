@@ -77,9 +77,18 @@ def test_serialize_call():
     call = test("a", b="b")
     print(call)
     call_pickled = call.pickle()
-    print(call_pickled)
+    # print(call_pickled)
     call_unpickled = SemanticCall.unpickle(call_pickled)
     print(call_unpickled)
+
+    assert call.func.name == call_unpickled.func.name
+    assert len(call.func.body) == len(call_unpickled.func.body)
+    for i, piece in enumerate(call.func.body):
+        assert type(piece) == type(call_unpickled.func.body[i])
+
+    assert len(call.bindings) == len(call_unpickled.bindings)
+    for k, v in call.bindings.items():
+        assert type(call_unpickled.bindings[k]) == type(v)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+import json
 from typing import Dict
 import time
 
@@ -13,6 +14,7 @@ from parrot.constants import (
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger
 
+from .config import OSConfig
 from .process.process import Process
 from .memory.mem_space import MemorySpace
 from .engine import ExecutionEngine, EngineRuntimeInfo
@@ -34,7 +36,22 @@ class PCore:
     - Tokenizer.
     """
 
-    def __init__(self):
+    def __init__(self, os_config_path: str):
+        # ---------- Config ----------
+        with open(os_config_path, "r") as f:
+            self.os_config: OSConfig = json.load(f)
+
+        if self.os_config.max_proc_num > PROCESS_POOL_SIZE:
+            logger.warning(
+                f"Config max_proc_num: {self.os_config.max_proc_num} larger than "
+                "proc_pool_size: {PROCESS_POOL_SIZE}"
+            )
+        if self.os_config.max_engines_num > ENGINE_POOL_SIZE:
+            logger.warning(
+                f"Config max_engines_num: {self.os_config.max_engines_num} larger than "
+                "engine_pool_size: {ENGINE_POOL_SIZE}"
+            )
+
         # ---------- Components ----------
         self.processes: Dict[int, Process] = {}  # pid -> process
         self.engines: Dict[int, ExecutionEngine] = {}  # engine_id -> engine
@@ -47,18 +64,18 @@ class PCore:
         self.engine_pool = RecyclePool(ENGINE_POOL_SIZE)
 
         # ---------- Last Seen Time ----------
-        self.process_last_seen_time: Dict[int, float] = {}  # pid -> last_seen_time
+        self.proc_last_seen_time: Dict[int, float] = {}  # pid -> last_seen_time
         self.engine_last_seen_time: Dict[int, float] = {}  # engine_id -> last_seen_time
 
     def check_expired(self):
         cur_time = time.perf_counter_ns()
 
         # VMs
-        for pid, last_seen_time in self.process_last_seen_time.items():
+        for pid, last_seen_time in self.proc_last_seen_time.items():
             if cur_time - last_seen_time > VM_EXPIRE_TIME:
                 process = self.processes.pop(pid)
                 process.free_process()
-                self.process_last_seen_time.pop(pid)
+                self.proc_last_seen_time.pop(pid)
                 self.pid_pool.free(pid)
                 logger.info(f"VM (pid={pid}) disconnected.")
 
@@ -93,7 +110,7 @@ class PCore:
             tokenizer=self.tokenizer,
         )
         self.processes[pid] = process
-        self.process_last_seen_time[pid] = time.perf_counter_ns()
+        self.proc_last_seen_time[pid] = time.perf_counter_ns()
         logger.info(f"VM (pid={pid}) registered.")
         return pid
 
@@ -122,7 +139,7 @@ class PCore:
         """Update the last seen time of a VM, and return required data."""
 
         assert pid in self.processes, f"Unknown pid: {pid}"
-        self.process_last_seen_time[pid] = time.perf_counter_ns()
+        self.proc_last_seen_time[pid] = time.perf_counter_ns()
         logger.info(f"VM (pid={pid}) heartbeat received.")
 
         mem_used = self.mem_space.profile_process_memory(pid)

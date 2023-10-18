@@ -22,11 +22,11 @@ class NativeExecutionEngine:
 
     def __init__(self, engine_config_path: str):
         with open(engine_config_path) as f:
-            engine_config = json.load(f)
+            self.engine_config = json.load(f)
 
-        self.engine_name = engine_config["engine_name"]
-        native_config = NativeConfig(**engine_config["runner"])
-        scheduler_config = SchedulerConfig(**engine_config["scheduler"])
+        self.engine_name = self.engine_config["engine_name"]
+        native_config = NativeConfig(**self.engine_config["runner"])
+        scheduler_config = SchedulerConfig(**self.engine_config["scheduler"])
         self.runner = Runner(native_config)
         self.scheduler = Scheduler(scheduler_config)
 

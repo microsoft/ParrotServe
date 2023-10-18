@@ -6,6 +6,7 @@ import uvicorn
 import time
 import numpy as np
 
+from parrot.engine.config import EngineConfig
 from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_ENGINE_SERVER_PORT
 from parrot.utils import get_logger
 
@@ -22,8 +23,20 @@ app = FastAPI()
 logger = get_logger("Fake Engine Server")
 
 
+# Status Data
+
+context = {}  # Context_id -> context_length
+num_cached_tokens = 0
+num_running_jobs = 0
+
+
 @app.post("/fill")
 async def fill(request: Request):
+    global num_running_jobs
+    global num_cached_tokens
+
+    num_running_jobs += 1
+
     payload = await request.json()
 
     token_ids = payload["token_ids"]
@@ -39,13 +52,26 @@ async def fill(request: Request):
 
     time.sleep(TESTING_FILL_PERTOKEN_TIME * length)
 
+    num_cached_tokens += length
+    if payload["context_id"] not in context:
+        context[payload["context_id"]] = 0
+    context[payload["context_id"]] += length
+
+    num_running_jobs -= 1
+
     return {
         "num_filled_tokens": length,
     }
 
 
-@app.post("/generate_stream")
+@app.post("/generate")
 async def generate(request: Request):
+    global num_running_jobs
+    global num_cached_tokens
+
+
+@app.post("/generate_stream")
+async def generate_stream(request: Request):
     global num_running_jobs
     global num_cached_tokens
 

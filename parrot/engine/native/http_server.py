@@ -85,11 +85,14 @@ async def free_context(request: Request):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parrot backend HTTP server.")
+    parser = argparse.ArgumentParser(description="Parrot native engine HTTP server.")
 
-    parser.add_argument("--config_path", type=str)
-    parser.add_argument("--host", type=str, default="localhost")
-    parser.add_argument("--port", type=int, default=8888)
+    parser.add_argument(
+        "--config_path",
+        type=str,
+        help="Path to the config file of the native engine.",
+        required=True,
+    )
 
     args = parser.parse_args()
 
@@ -100,8 +103,8 @@ if __name__ == "__main__":
     config = Config(
         app=app,
         loop=loop,
-        host="localhost",
-        port=args.port,
+        host=execution_engine.engine_config.host,
+        port=execution_engine.engine_config.port,
         log_level="info",
     )
     uvicorn_server = Server(config)
