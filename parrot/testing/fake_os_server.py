@@ -5,12 +5,13 @@ import uvicorn
 import numpy as np
 
 from parrot.program.function import SemanticCall
+from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_OS_SERVER_PORT
 from parrot.utils import get_logger
 
 # ---------- Constants ----------
 TESTING_RANDOM_SEED = 2333
-TESTING_SERVER_HOST = "localhost"
-TESTING_SERVER_PORT = 8888
+TESTING_SERVER_HOST = DEFAULT_SERVER_HOST
+TESTING_SERVER_PORT = DEFAULT_OS_SERVER_PORT
 
 
 logger = get_logger("Fake OS Server")
@@ -20,7 +21,7 @@ app = FastAPI()
 
 
 @app.post("/vm_heartbeat")
-async def heartbeat(request: Request):
+async def vm_heartbeat(request: Request):
     pid = (await request.json())["pid"]
     logger.info(f"Received heartbeat from VM (pid: {pid}).")
     return {

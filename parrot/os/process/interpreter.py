@@ -4,10 +4,9 @@ from typing import Dict
 from .thread import Thread
 
 from parrot.program.function import Constant, ParameterLoc, ParamType
-from parrot.program.future import Future
 
-from .tokenizer import Tokenizer
-from .placeholder import Placeholder
+from ..tokenizer import Tokenizer
+from .placeholder import Placeholder, TokensHolder
 from .primitive_operator import *
 
 
@@ -41,7 +40,7 @@ class TokenIdInterpreter(BaseInterpreter):
     ):
         self.tokenizer_name = tokenizer_name
         self.tokenizer = tokenizer
-        self.dataholder_map: Dict[int, Placeholder] = {}
+        self.tokensholder_map: Dict[int, TokensHolder] = {}
 
     def interpret(self, thread: Thread):
         tokenized = self.tokenizer.tokenize_func_body(
@@ -59,21 +58,20 @@ class TokenIdInterpreter(BaseInterpreter):
                 assert piece.param.name in thread.call.bindings
                 param_value = thread.call.bindings[piece.param.name]
 
-                if piece.param.typ == ParamType.INPUT_PYOBJ:
-                    # For Python object, we directly fill the value.
-                    # We use __str__ instead of __repr__
-                    value_str = str(param_value)
+                if isinstance(param_value, str):
+                    # Str input or Pyobj input
                     inst = TokenIdConstantFill(
                         self.tokenizer.tokenize(
-                            value_str,
+                            param_value,
                             self.tokenizer_name,
                         )
                     )
                 else:
-                    assert isinstance(param_value, Future)
+                    assert isinstance(
+                        param_value, Placeholder
+                    ), "If not str, must be a placeholder"
                     holder = self._get_dataholder(param_value)
                     if piece.param.is_output:
-                        assert param_value.is_middle_node
                         sampling_config = piece.param.sampling_config
                         # If not ignore_tokenizer_eos, we should add eos_token_id to stop_token_ids
                         if not sampling_config.ignore_tokenizer_eos:
@@ -86,16 +84,16 @@ class TokenIdInterpreter(BaseInterpreter):
                         inst = TokenIdPlaceholderFill(input_holder=holder)
             thread.operators.put_nowait(inst)
 
-    def _get_dataholder(self, future: Future) -> Placeholder:
-        # Create a new data future if not exists
-        # Hence, the name of the future must be unique.
-        if future.id not in self.dataholder_map:
-            self.dataholder_map[future.id] = Placeholder(
-                tokenizer=self.tokenizer_name,
-                tokenizer=self.tokenizer,
-                future=future,
+    def _get_dataholder(self, placeholder: Placeholder) -> TokensHolder:
+        # Create a new data placeholder if not exists
+        # Hence, the name of the placeholder must be unique.
+        if placeholder.id not in self.tokensholder_map:
+            self.tokensholder_map[placeholder.id] = TokensHolder(
+                tokenizer_name=self.tokenizer_name,
+                tokenizer_name=self.tokenizer,
+                placeholder=placeholder,
             )
-        return self.dataholder_map[future.id]
+        return self.tokensholder_map[placeholder.id]
 
 
 class TextInterpreter(BaseInterpreter):
@@ -111,15 +109,11 @@ class TextInterpreter(BaseInterpreter):
                 assert piece.param.name in thread.call.bindings
                 param_value = thread.call.bindings[piece.param.name]
 
-                if piece.param.typ == ParamType.INPUT_PYOBJ:
-                    # For Python object, we directly fill the value.
-                    # We use __str__ instead of __repr__
-                    value_str = str(param_value)
-                    inst = TextConstantFill(value_str)
+                if isinstance(param_value, str):
+                    inst = TextConstantFill(param_value)
                 else:
-                    assert isinstance(param_value, Future)
+                    assert isinstance(param_value, Placeholder)
                     if piece.param.is_output:
-                        assert param_value.is_middle_node
                         sampling_config = piece.param.sampling_config
                         inst = TextPlaceholderGenerate(
                             output_holder=param_value,

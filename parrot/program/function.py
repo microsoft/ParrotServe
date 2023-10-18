@@ -50,7 +50,7 @@ class Parameter:
 class FunctionMetadata:
     """Metadata of a function."""
 
-    cached_prefix: bool
+    cache_prefix: bool
     models: List[str]
 
 

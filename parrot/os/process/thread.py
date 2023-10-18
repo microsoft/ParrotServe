@@ -10,7 +10,7 @@ from parrot.constants import (
 )
 
 from .primitive_operator import *
-from .placeholder import Placeholder
+from .placeholder import TokensHolder
 from ..engine import ExecutionEngine
 from ..memory.context import Context
 
@@ -18,13 +18,13 @@ from ..memory.context import Context
 logger = get_logger("Thread")
 
 
-async def detokenizing(holder: Placeholder):
+async def detokenizing(holder: TokensHolder):
     assert holder.producer is not None, "Producer should be set."
     prev_last_token = None
     async for chunk in holder.producer.detokenize_pipe.generator():
-        holder.sync_to_future_partial(chunk, prev_last_token)
+        holder.sync_to_placeholder_partial(chunk, prev_last_token)
         prev_last_token = chunk[-1]
-    holder.future.ready_event.set()
+    holder.placeholder.ready_event.set()
 
 
 class Thread:
@@ -41,11 +41,11 @@ class Thread:
         self.tid = tid
         self.call = call
         self.finished_flag = False
+        self.has_prefix = False
 
         # The following resources will be set later
         self.engine: Optional[ExecutionEngine] = None
         self.ctx: Optional[Context] = None
-
         # ---------- Operators queue ----------
         self.operators: Queue[PrimitiveOperator] = Queue()
 
@@ -91,8 +91,7 @@ class Thread:
             primitive = Fill(
                 pid=self.process.pid,
                 tid=self.tid,
-                context_id=self.ctx.context_id,
-                parent_context_id=self.ctx.parent_context_id,
+                context=self.ctx,
                 token_ids=chunked_tokens,
             )
             resp = await primitive.apost(self.engine.http_address)
@@ -109,9 +108,6 @@ class Thread:
         if not op.input_holder.ready:
             # Not ready. Flush the buffer first.
             await self._flush_fill_tokens_buffer()
-
-        if op.input_holder.future.coroutine is not None:
-            await op.input_holder.future._wait_content()
 
         # Lock unitl the input holder is streaming.
         # Then there are two cases:
@@ -130,8 +126,7 @@ class Thread:
                 primitive = Fill(
                     pid=self.process.pid,
                     tid=self.tid,
-                    context_id=self.ctx.context_id,
-                    parent_context_id=self.ctx.parent_context_id,
+                    context=self.ctx,
                     token_ids=chunk,
                 )
                 resp = await primitive.apost(self.engine.http_address)
@@ -152,8 +147,7 @@ class Thread:
         primitive = Generate(
             pid=self.process.pid,
             tid=self.tid,
-            context_id=self.ctx.context_id,
-            parent_context_id=self.ctx.parent_context_id,
+            context=self.ctx,
             sampling_config=op.sampling_config,
         )
 
@@ -175,8 +169,7 @@ class Thread:
         primitive = Fill(
             pid=self.process.pid,
             tid=self.tid,
-            context_id=self.ctx.context_id,
-            parent_context_id=self.ctx.parent_context_id,
+            context=self.ctx,
             text=op.text,
         )
         resp = await primitive.apost(self.engine.http_address)
@@ -186,8 +179,7 @@ class Thread:
         primitive = Fill(
             pid=self.process.pid,
             tid=self.tid,
-            context_id=self.ctx.context_id,
-            parent_context_id=self.ctx.parent_context_id,
+            context=self.ctx,
             text=text,
         )
         resp = await primitive.apost(self.engine.http_address)
@@ -196,12 +188,11 @@ class Thread:
         primitive = Generate(
             pid=self.process.pid,
             tid=self.tid,
-            context_id=self.ctx.context_id,
-            parent_context_id=self.ctx.parent_context_id,
+            context=self.ctx,
             sampling_config=op.sampling_config,
         )
         resp = await primitive.apost(self.engine.http_address)
-        op.output_holder._set(resp.generated_text)
+        op.output_holder.set(resp.generated_text)
 
     async def executing(self):
         while not self.operators.empty():

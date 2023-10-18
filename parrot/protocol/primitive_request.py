@@ -20,8 +20,7 @@ class Primitive:
 
     pid: int
     tid: int
-    context_id: int
-    parent_context_id: int
+    context: "Context"
 
 
 @dataclass
@@ -40,18 +39,20 @@ class Fill(Primitive):
         assert self.tid == NONE_THREAD_ID
 
         try:
-            return send_http_request(
+            resp: FillResponse = send_http_request(
                 FillResponse,
                 http_addr,
                 "/fill",
                 retry_times=1,
                 pid=self.pid,
                 tid=self.tid,
-                context_id=self.context_id,
-                parent_context_id=self.parent_context_id,
+                context_id=self.context.context_id,
+                parent_context_id=self.context.parent_context_id,
                 token_ids=self.token_ids,
                 text=self.text,
             )
+            self.context.token_nums += len(resp.num_filled_tokens)
+            return resp
         except BaseException as e:
             logger.error(f"Fill error in {http_addr} error: {e}")
             raise e
@@ -61,18 +62,20 @@ class Fill(Primitive):
 
         try:
             async with aiohttp.ClientSession() as client_session:
-                return await async_send_http_request(
+                resp: FillResponse = await async_send_http_request(
                     client_session,
                     FillResponse,
                     http_addr,
                     "/fill",
                     pid=self.pid,
                     tid=self.tid,
-                    context_id=self.context_id,
-                    parent_context_id=self.parent_context_id,
+                    context_id=self.context.context_id,
+                    parent_context_id=self.context.parent_context_id,
                     token_ids=self.token_ids,
                     text=self.text,
                 )
+            self.context.token_nums += len(resp.num_filled_tokens)
+            return resp
         except BaseException as e:
             logger.error(f"Fill error in {http_addr} error: {e}")
             raise e
@@ -90,17 +93,19 @@ class Generate(Primitive):
     async def apost(self, http_addr: str) -> GenerateResponse:
         try:
             async with aiohttp.ClientSession() as client_session:
-                return await async_send_http_request(
+                resp: GenerateResponse = await async_send_http_request(
                     client_session,
-                    FillResponse,
+                    GenerateResponse,
                     http_addr,
                     "/generate",
                     pid=self.pid,
                     tid=self.tid,
-                    context_id=self.context_id,
-                    parent_context_id=self.parent_context_id,
+                    context_id=self.context.context_id,
+                    parent_context_id=self.context.parent_context_id,
                     sampling_config=asdict(self.sampling_config),
                 )
+                self.context.token_nums += len(resp.generated_ids)
+                return resp
         except BaseException as e:
             logger.error(f"Generate error in {http_addr} error: {e}")
             raise e
@@ -114,10 +119,11 @@ class Generate(Primitive):
                     "/generate_steam",
                     pid=self.pid,
                     tid=self.tid,
-                    context_id=self.context_id,
-                    parent_context_id=self.parent_context_id,
+                    context_id=self.context.context_id,
+                    parent_context_id=self.context.parent_context_id,
                     sampling_config=asdict(self.sampling_config),
                 ):
+                    self.context.token_nums += 1
                     yield resp
         except BaseException as e:
             logger.error(f"Generate error in {http_addr} error: {e}")

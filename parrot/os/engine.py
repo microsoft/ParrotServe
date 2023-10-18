@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from parrot.engine.config import EngineConfig, EngineType
 from parrot.constants import FILL_NO_CHUNK
 
@@ -12,26 +14,34 @@ INTERPRET_TYPE_MAP = {
 }
 
 
+@dataclass
+class EngineRuntimeInfo:
+    num_cached_tokens: int = 0
+    num_running_jobs: int = 0
+    cache_mem: int = 0
+    model_mem: int = 0
+
+
 class ExecutionEngine:
     """Represent execution engines in os-level management."""
 
     def __init__(
         self,
+        engine_id: int,
         name: str,
         host: str,
         port: int,
         config: EngineConfig,
     ):
         # ---------- Basic Config ----------
+        self.engine_id = engine_id
         self.name = name
         self.host = host
         self.port = port
         self.config = config
 
-        # ---------- Monitor Data ----------
-        self.num_cached_tokens = 0
-        self.cached_tokens_size = 0
-        self.num_running_jobs = 0
+        # ---------- Runtime Info ----------
+        self.runtime_info = EngineRuntimeInfo()
 
         # ---------- Controlled Args ----------
         self.fill_chunk_size = FILL_NO_CHUNK

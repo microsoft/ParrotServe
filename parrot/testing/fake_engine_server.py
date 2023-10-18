@@ -6,24 +6,20 @@ import uvicorn
 import time
 import numpy as np
 
-from ..utils import get_logger
+from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_ENGINE_SERVER_PORT
+from parrot.utils import get_logger
 
 # ---------- Constants ----------
 TESTING_RANDOM_SEED = 2333
-TESTING_SERVER_HOST = "localhost"
-TESTING_SERVER_PORT = 8888
+TESTING_SERVER_HOST = DEFAULT_SERVER_HOST
+TESTING_SERVER_PORT = DEFAULT_ENGINE_SERVER_PORT
 TESTING_FILL_PERTOKEN_TIME = 0.1
 TESTING_DECODE_PERTOKEN_TIME = 0.1
 
 
 app = FastAPI()
 
-
-@app.post("/vm_heartbeat")
-async def heartbeat(request: Request):
-    return {
-        "available_models": ["llama", "gpt2"],
-    }
+logger = get_logger("Fake Engine Server")
 
 
 @app.post("/fill")
@@ -48,7 +44,7 @@ async def fill(request: Request):
     }
 
 
-@app.post("/generate")
+@app.post("/generate_stream")
 async def generate(request: Request):
     global num_running_jobs
     global num_cached_tokens

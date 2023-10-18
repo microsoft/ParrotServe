@@ -1,13 +1,12 @@
-from typing import Optional, Set
+from typing import Optional
 
 from parrot.constants import NONE_CONTEXT_ID
-from parrot.protocol import free_context
 
 from ..engine import ExecutionEngine
 
 
 class Context:
-    """Context represents a part of sequences cached in engines.
+    """Context represents a part of sequences cached in one single engine.
 
     If B wants to continue generating based on A's context, the lifecycle is:
     - B forks a context based on A's context.
@@ -17,14 +16,15 @@ class Context:
     """
 
     def __init__(
-        self, context_id: int, pid: int, parent_context: Optional["Context"] = None
+        self,
+        context_id: int,
+        engine: ExecutionEngine,
+        parent_context: Optional["Context"] = None,
     ):
         self.context_id = context_id
-        self.pid = pid
+        self.engine = engine
         self.parent_context = parent_context
-
-        # Record engines that have cached this context.
-        self.cached_engines: Set[ExecutionEngine] = set()
+        self.token_nums = 0
 
     @property
     def parent_context_id(self) -> int:
@@ -33,3 +33,13 @@ class Context:
             if self.parent_context is not None
             else NONE_CONTEXT_ID
         )
+
+    @property
+    def memory_usage(self) -> float:
+        memory_per_token = (
+            self.engine.cache_mem / self.engine.num_cached_tokens
+            if self.engine.num_cached_tokens > 0
+            else 0
+        )
+
+        return memory_per_token * self.token_nums

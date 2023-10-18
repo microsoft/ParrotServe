@@ -3,27 +3,57 @@ from asyncio import Event
 
 from parrot.program.future import Future
 
-from .tokenizer import Tokenizer
+from ..tokenizer import Tokenizer
 
 
 class Placeholder:
-    """DataHolder stores the tokens of a Future.
+    """Placeholder corresponds to a Future in the program.
 
-    In the data-dependency graph, it serves a middle node which holds the data (token_ids) and
+    In the data-dependency graph, it serves a middle node which holds the data and
     connects the producer and consumers.
     """
 
+    def __init__(self, id: int):
+        self.id = id
+        self.content = None
+        self.ready_event: Event = Event()
+        self.assign_callbacks = []
+
+    def __repr__(self) -> str:
+        if self.ready:
+            return f"Placeholder(id={self.id}, content={self.content})"
+        return f"Placeholder(id={self.id})"
+
+    def set(self, content: str):
+        """Set the content of the placeholder."""
+        assert self.content is None, "This placeholder is filled"
+        self.content = content
+        self.ready_event.set()
+
+    @property
+    def ready(self) -> bool:
+        return self.ready_event.is_set()
+
+    async def get(self) -> str:
+        """Get the content of the placeholder."""
+        await self.ready_event.wait()
+        return self.content
+
+
+class TokensHolder:
+    """TokensHolder stores the tokens of a Placeholder."""
+
     def __init__(
         self,
-        tokenizer: str,
-        tokenized_storage: Tokenizer,
-        future: Future,
+        tokenizer_name: str,
+        tokenizer: Tokenizer,
+        placeholder: Placeholder,
     ):
         # ---------- Basic info ----------
         self.token_ids: Optional[List[int]] = None
-        self.tokenized_storage = tokenized_storage
-        self.tokenizer: str = tokenizer
-        self.future = future
+        self.tokenizer = tokenizer
+        self.tokenizer_name: str = tokenizer_name
+        self.placeholder = placeholder
 
         # ---------- Operators ----------
         self.consumers: List["FillJob"] = []
@@ -33,9 +63,8 @@ class Placeholder:
         self.streaming_event: Event = Event()
         self.ready_event: Event = Event()
 
-        self.future.assign_callbacks.append(self.sync_from_future)  # Add callback
-        if future.ready:
-            self.sync_from_future()
+        if placeholder.ready:
+            self.sync_from_placeholder()
 
     @property
     def ready(self) -> bool:
@@ -52,45 +81,41 @@ class Placeholder:
         # NOTE(chaofan): When it has data, also set the streaming event.
         self.streaming_event.set()
 
-    def sync_from_future(self):
-        # assert self.future is not None, "No future"
-        assert self.future.ready, "Future not ready"
-        assert self.tokenized_storage is not None, "No tokenized storage"
+    def sync_from_placeholder(self):
+        assert self.placeholder.ready, "Future not ready"
+        assert self.tokenizer is not None, "No tokenizer"
         self.assign(
-            self.tokenized_storage.tokenize(
-                self.future.content,
-                self.tokenizer,
+            self.tokenizer.tokenize(
+                self.placeholder.content,
+                self.tokenizer_name,
             )
         )
 
-    def sync_to_future_partial(
+    def sync_to_placeholder_partial(
         self, token_ids: List[int], prev_last_token: Optional[int]
     ):
-        # assert self.future is not None, "No future"
-        # assert self.tokenized_storage is not None, "No tokenized storage"
-
-        if self.future.content is None:
-            self.future.content = ""
+        if self.placeholder.content is None:
+            self.placeholder.content = ""
 
         if prev_last_token:
             token_ids = [prev_last_token] + token_ids
-            prev_last_text = self.tokenized_storage.detokenize(
+            prev_last_text = self.tokenizer.detokenize(
                 [prev_last_token],
-                self.tokenizer,
+                self.tokenizer_name,
             )
 
-        partial_text = self.tokenized_storage.detokenize(
+        partial_text = self.tokenizer.detokenize(
             token_ids,
-            self.tokenizer,
+            self.tokenizer_name,
         )
 
         if prev_last_token:
             partial_text = partial_text[len(prev_last_text) :]
 
-        self.future.content += partial_text
+        self.placeholder.content += partial_text
 
     def __str__(self) -> str:
-        return f"[DataHolder: future_id={self.future.id}]"
+        return f"[DataHolder: future_id={self.placeholder.id}]"
 
     def send_token(self, token_id: int, put_into_holder: bool = True):
         assert self.streaming_event.is_set(), "This DataHolder is not streaming."

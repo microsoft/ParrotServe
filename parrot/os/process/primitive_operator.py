@@ -3,10 +3,9 @@ from enum import Enum, auto
 
 from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.program.future import Future
 
-from parrot.os.process.placeholder import Placeholder
-from parrot.os.process.pipe import TokenPipe
+from .placeholder import Placeholder, TokensHolder
+from .pipe import TokenPipe
 
 
 class InterpretType(Enum):
@@ -39,9 +38,9 @@ class TokenIdConstantFill(PrimitiveOperator):
 class TokenIdPlaceholderFill(PrimitiveOperator):
     """TokenIdPlaceholderFill operator takes an Dataholder as input."""
 
-    def __init__(self, input_holder: Placeholder):
+    def __init__(self, input_holder: TokensHolder):
         super().__init__()
-        self.input_holder: Placeholder = input_holder
+        self.input_holder: TokensHolder = input_holder
         self.input_holder.consumers.append(self)
         self.input_pipe = TokenPipe(PIPELINE_SEND_CHUNK_NUM)
 
@@ -54,9 +53,9 @@ class TokenIdPlaceholderGenerate(PrimitiveOperator):
     And the decoded result will be passed back from the backend token by token (streaming).
     """
 
-    def __init__(self, output_holder: Placeholder, sampling_config: SamplingConfig):
+    def __init__(self, output_holder: TokensHolder, sampling_config: SamplingConfig):
         super().__init__()
-        self.output_holder: Placeholder = output_holder
+        self.output_holder: TokensHolder = output_holder
         self.sampling_config = sampling_config
         assert self.output_holder.producer is None, "Concurrent writing to a holder"
         self.output_holder.producer = self
@@ -78,9 +77,9 @@ class TextConstantFill(PrimitiveOperator):
 
 
 class TextPlaceholderFill(PrimitiveOperator):
-    """TextPlaceholderFill operator takes a Future as input.."""
+    """TextPlaceholderFill operator takes a Placeholder as input.."""
 
-    def __init__(self, input_holder: Future):
+    def __init__(self, input_holder: Placeholder):
         super().__init__()
         self.input_holder = input_holder
 
@@ -89,9 +88,9 @@ class TextPlaceholderFill(PrimitiveOperator):
 
 
 class TextPlaceholderGenerate(PrimitiveOperator):
-    """TextPlaceholderGenerate operator takes a Future as output."""
+    """TextPlaceholderGenerate operator takes a Placeholder as output."""
 
-    def __init__(self, output_holder: Future, sampling_config: SamplingConfig):
+    def __init__(self, output_holder: Placeholder, sampling_config: SamplingConfig):
         super().__init__()
         self.output_holder = output_holder
         self.sampling_config = sampling_config

@@ -1,5 +1,5 @@
 from Parrot.parrot.vm.controller import Controller
-from Parrot.parrot.os.process.tokenizer import Tokenizer
+from Parrot.parrot.os.tokenizer import Tokenizer
 
 
 def test_encode():

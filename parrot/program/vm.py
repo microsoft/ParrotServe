@@ -3,6 +3,7 @@ import contextlib
 import time
 import traceback
 import threading
+from dataclasses import dataclass, asdict
 from typing import Callable, Coroutine, Literal
 
 from parrot.protocol.layer_apis import (
@@ -14,10 +15,16 @@ from parrot.protocol.layer_apis import (
 )
 from parrot.program.function import SemanticFunction, Future, SemanticCall
 from parrot.utils import get_logger
-from parrot.constants import HEARTBEAT_INTERVAL
+from parrot.constants import VM_HEARTBEAT_INTERVAL
 
 
 logger = get_logger("VM")
+
+
+@dataclass
+class VMRuntimeInfo:
+    mem_used: float = 0
+    num_threads: int = 0
 
 
 class VirtualMachine:
@@ -50,6 +57,8 @@ class VirtualMachine:
 
         self._heartbeat_thread.start()
 
+        self.runtime_info = VMRuntimeInfo()
+
         logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
 
     # ---------- Private Methods ----------
@@ -61,7 +70,9 @@ class VirtualMachine:
                 pid=self.pid,
             )
 
-            time.sleep(HEARTBEAT_INTERVAL)
+            self.runtime_info = VMRuntimeInfo(**asdict(resp))
+
+            time.sleep(VM_HEARTBEAT_INTERVAL)
 
     def _submit_call(self, call: SemanticCall):
         resp = submit_call(http_addr=self.os_http_addr, pid=self.pid, call=call)

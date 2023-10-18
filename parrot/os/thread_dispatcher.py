@@ -1,4 +1,8 @@
-from .thread import Thread
+from parrot.utils import get_logger
+from .process.thread import Thread
+
+
+logger = get_logger("ThreadDispatcher")
 
 
 class ThreadDispatcher:
@@ -14,4 +18,9 @@ class ThreadDispatcher:
         self.os = os
 
     def dispatch(self, thread: Thread):
-        pass
+        """Dispatch a thread to some backend engine."""
+
+        # TODO: Implement the dispatching strategy.
+        thread.engine = self.os.engines.values()[0]
+
+        logger.info(f"Thread {thread.tid} dispatched to engine {thread.engine.name}.")

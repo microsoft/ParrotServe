@@ -1,6 +1,6 @@
 from typing import Dict
 
-from parrot.os.process.tokenizer import Tokenizer
+from Parrot.parrot.os.tokenizer import Tokenizer
 from parrot.utils import get_logger, create_task_in_loop
 
 from .thread import Thread

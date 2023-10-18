@@ -19,7 +19,7 @@ class GenerateResponse(BaseResponse):
 
 class VMHeartbeatResponse(BaseResponse):
     mem_used: float
-    mem_threads: int
+    num_threads: int
 
 
 class RegisterVMResponse(BaseResponse):
