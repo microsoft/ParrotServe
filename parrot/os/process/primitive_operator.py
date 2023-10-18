@@ -1,16 +1,10 @@
 from typing import List
-from enum import Enum, auto
 
 from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
 from parrot.protocol.sampling_config import SamplingConfig
 
 from .placeholder import Placeholder, TokensHolder
 from .pipe import TokenPipe
-
-
-class InterpretType(Enum):
-    TOKEN_ID = auto()
-    TEXT = auto()
 
 
 class PrimitiveOperator:

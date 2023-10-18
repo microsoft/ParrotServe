@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from typing import List, Optional
 from queue import Queue
 
@@ -27,6 +28,24 @@ async def detokenizing(holder: TokensHolder):
     holder.placeholder.ready_event.set()
 
 
+class PrefixMode(Enum):
+    """There are three cases:
+    1. (NOCACHE) The function is marked as not caching the prefix.
+       In this case, we should directly create a new context.
+    2. (FORK) The function is marked as caching the prefix, but the prefix is not cached.
+       In this case, we should create a new context for the prefix, and then create
+       another new context for the call. The Fill operator of the prefix should be
+       executed on the parent context.
+    3. (SKIP) The function is marked as caching the prefix, and the prefix is cached.
+       In this case, we can directly fork a new context from the cached prefix context,
+       and skip the first Fill operator.
+    """
+
+    NOCACHE = auto()
+    FORK = auto()
+    SKIP = auto()
+
+
 class Thread:
     """A Thread represents a running SemanticCall in the executor."""
 
@@ -40,12 +59,16 @@ class Thread:
         self.process = process
         self.tid = tid
         self.call = call
-        self.finished_flag = False
-        self.has_prefix = False
+        self.prefix_mode = PrefixMode.NOCACHE
 
         # The following resources will be set later
         self.engine: Optional[ExecutionEngine] = None
         self.ctx: Optional[Context] = None
+
+        # ---------- Flags ----------
+        self.finished_flag = False
+        self.prefix_flag = False
+
         # ---------- Operators queue ----------
         self.operators: Queue[PrimitiveOperator] = Queue()
 
@@ -75,8 +98,10 @@ class Thread:
             return
 
         num_filled_tokens = 0
-        chunk_size = self.engine.fill_chunk_size
-        if chunk_size == FILL_NO_CHUNK:
+        chunk_size = self.engine.config.fill_chunk_size
+
+        # NOTE(chaofan): We don't chunk the tokens if it is prefix.
+        if chunk_size == FILL_NO_CHUNK or not self.prefix_flag:
             chunk_size = buffer_len
 
         for i in range(buffer_len // chunk_size):
@@ -88,14 +113,40 @@ class Thread:
                 f"Thread {self.tid} submit Fill primitive (size: {len(chunked_tokens)})"
             )
 
-            primitive = Fill(
-                pid=self.process.pid,
-                tid=self.tid,
-                context=self.ctx,
-                token_ids=chunked_tokens,
-            )
-            resp = await primitive.apost(self.engine.http_address)
-            num_filled_tokens += resp.num_filled_tokens
+            if not self.prefix_flag:
+                if self.prefix_mode == PrefixMode.SKIP:
+                    # Skip the first Fill operator
+                    primitive = None
+                elif self.prefix_mode == PrefixMode.FORK:
+                    assert self.ctx.parent_context is not None
+                    primitive = Fill(
+                        pid=self.process.pid,
+                        tid=self.tid,
+                        context=self.ctx.parent_context,
+                        token_ids=chunked_tokens,
+                    )
+                else:
+                    assert self.prefix_mode == PrefixMode.NOCACHE
+                    primitive = Fill(
+                        pid=self.process.pid,
+                        tid=self.tid,
+                        context=self.ctx,
+                        token_ids=chunked_tokens,
+                    )
+                self.prefix_flag = True
+            else:
+                primitive = Fill(
+                    pid=self.process.pid,
+                    tid=self.tid,
+                    context=self.ctx,
+                    token_ids=chunked_tokens,
+                )
+            if primitive is not None:
+                resp = await primitive.apost(self.engine.http_address)
+                num_filled_tokens += resp.num_filled_tokens
+            else:
+                # Skip
+                num_filled_tokens += len(chunked_tokens)
         assert (
             num_filled_tokens == buffer_len
         ), f"Not all tokens are filled. Filled: {num_filled_tokens}, total: {buffer_len}"
@@ -103,6 +154,9 @@ class Thread:
 
     async def _visit_token_id_constant_fill(self, op: TokenIdConstantFill):
         self._fill_tokens_buffer.extend(op.token_ids)
+        if not self.prefix_flag:
+            # Prefix, should send a Fill primitive.
+            await self._flush_fill_tokens_buffer()
 
     async def _visit_token_id_placeholder_fill(self, op: TokenIdPlaceholderFill):
         if not op.input_holder.ready:
@@ -199,16 +253,16 @@ class Thread:
             op = self.operators.get()
 
             if isinstance(op, TokenIdPlaceholderGenerate):
-                self._visit_token_id_placeholder_generate(op)
+                await self._visit_token_id_placeholder_generate(op)
             elif isinstance(op, TokenIdConstantFill):
-                self._visit_token_id_constant_fill(op)
+                await self._visit_token_id_constant_fill(op)
             elif isinstance(op, TokenIdPlaceholderFill):
-                self._visit_token_id_placeholder_fill(op)
+                await self._visit_token_id_placeholder_fill(op)
             elif isinstance(op, TextConstantFill):
-                self._visit_text_constant_fill(op)
+                await self._visit_text_constant_fill(op)
             elif isinstance(op, TextPlaceholderFill):
-                self._visit_text_placeholder_fill(op)
+                await self._visit_text_placeholder_fill(op)
             elif isinstance(op, TextPlaceholderGenerate):
-                self._visit_text_placeholder_generate(op)
+                await self._visit_text_placeholder_generate(op)
 
         self.finished_flag = True

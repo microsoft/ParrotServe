@@ -51,14 +51,15 @@ class Fill(Primitive):
                 token_ids=self.token_ids,
                 text=self.text,
             )
-            self.context.token_nums += len(resp.num_filled_tokens)
+            self.context.token_nums += resp.num_filled_tokens
             return resp
         except BaseException as e:
             logger.error(f"Fill error in {http_addr} error: {e}")
             raise e
 
     async def apost(self, http_addr: str) -> FillResponse:
-        assert self.tid == NONE_THREAD_ID
+        # NOTE: For thread fill, there is a thread id.
+        assert self.tid != NONE_THREAD_ID
 
         try:
             async with aiohttp.ClientSession() as client_session:
@@ -74,7 +75,7 @@ class Fill(Primitive):
                     token_ids=self.token_ids,
                     text=self.text,
                 )
-            self.context.token_nums += len(resp.num_filled_tokens)
+            self.context.token_nums += resp.num_filled_tokens
             return resp
         except BaseException as e:
             logger.error(f"Fill error in {http_addr} error: {e}")
@@ -116,7 +117,7 @@ class Generate(Primitive):
                 async for resp in async_send_http_request_streaming(
                     client_session,
                     http_addr,
-                    "/generate_steam",
+                    "/generate_stream",
                     pid=self.pid,
                     tid=self.tid,
                     context_id=self.context.context_id,

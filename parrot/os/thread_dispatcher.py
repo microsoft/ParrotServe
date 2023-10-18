@@ -1,6 +1,9 @@
-from parrot.utils import get_logger
-from .process.thread import Thread
+from typing import Dict
 
+from parrot.utils import get_logger
+
+from .process.thread import Thread
+from .engine import ExecutionEngine
 
 logger = get_logger("ThreadDispatcher")
 
@@ -14,13 +17,15 @@ class ThreadDispatcher:
     can be scheduled to the same engine.
     """
 
-    def __init__(self, os: "PCore"):
-        self.os = os
+    def __init__(self, engines: Dict[int, ExecutionEngine]):
+        self.engines = engines
 
     def dispatch(self, thread: Thread):
         """Dispatch a thread to some backend engine."""
 
+        engines_list = list(self.engines.values())
+
         # TODO: Implement the dispatching strategy.
-        thread.engine = self.os.engines.values()[0]
+        thread.engine = engines_list[0]
 
         logger.info(f"Thread {thread.tid} dispatched to engine {thread.engine.name}.")

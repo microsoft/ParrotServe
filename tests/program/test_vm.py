@@ -1,5 +1,5 @@
-"""This test requires a running backend fake OS server in host=localhost, port=8888.
-Use `python3 -m parrot.testing.fake_os_server` to start a fake server.
+"""This test requires a running fake OS server in host=localhost, port=8888.
+Use `python3 -m parrot.testing.fake_os_server` to start a fake os server.
 """
 
 import parrot as P

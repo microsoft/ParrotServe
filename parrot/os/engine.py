@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
 from parrot.engine.config import EngineConfig, EngineType
-from parrot.constants import FILL_NO_CHUNK
 
-from .process.interpreter import InterpretType
+from .process.interpret_type import InterpretType
 
 
 INTERPRET_TYPE_MAP = {
@@ -29,26 +28,19 @@ class ExecutionEngine:
         self,
         engine_id: int,
         name: str,
-        host: str,
-        port: int,
         config: EngineConfig,
     ):
         # ---------- Basic Config ----------
         self.engine_id = engine_id
         self.name = name
-        self.host = host
-        self.port = port
         self.config = config
 
         # ---------- Runtime Info ----------
         self.runtime_info = EngineRuntimeInfo()
 
-        # ---------- Controlled Args ----------
-        self.fill_chunk_size = FILL_NO_CHUNK
-
     @property
     def http_address(self) -> str:
-        return f"http://{self.host}:{self.port}"
+        return f"http://{self.config.host}:{self.config.port}"
 
     @property
     def interpreter_type(self) -> InterpretType:

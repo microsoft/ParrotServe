@@ -36,7 +36,7 @@ class Process:
         self.pid = pid
         self.dispatcher = dispatcher
         self.memory_space = memory_space
-        self.memory_space.new_memory_space(self)
+        self.memory_space.new_memory_space(self.pid)
         self.executor = Executor(tokenizer)
         self.placeholders_map: Dict[int, Placeholder] = {}  # id -> placeholder
 
@@ -46,14 +46,14 @@ class Process:
 
     def _new_thread(self, call: SemanticCall) -> Thread:
         tid = self.threads_pool.allocate()
-        thread = Thread(tid, self, call, self._free_thread)
+        thread = Thread(tid=tid, process=self, call=call)
         self.threads.append(thread)
         return thread
 
     def _free_thread(self, thread: Thread):
         self.threads_pool.free(thread.tid)
         self.threads.remove(thread)
-        self.memory_space._free_context(thread.ctx)
+        self.memory_space.free_thread_memory(thread)
 
     def _rewrite_call(self, call: SemanticCall):
         """Rewrite the futures to placeholders."""

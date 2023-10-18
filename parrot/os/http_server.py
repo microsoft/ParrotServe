@@ -9,6 +9,7 @@ from uvicorn import Config, Server
 from parrot.program.function import SemanticCall
 from parrot.os.pcore import PCore
 from parrot.os.engine import EngineRuntimeInfo
+from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger, create_task_in_loop
 
 
@@ -62,15 +63,14 @@ async def engine_heartbeat(request: Request):
 @app.post("/register_engine")
 async def register_engine(request: Request):
     payload = await request.json()
-    name = payload["name"]
-    host = payload["host"]
-    port = payload["port"]
-    engine_id = pcore.register_engine(name, host, port)
+    engine_name = payload["engine_name"]
+    engine_config = EngineConfig(**payload["engine_config"])
+    engine_id = pcore.register_engine(engine_name, engine_config)
     return {"engine_id": engine_id}
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parrot OS server.")
+    parser = argparse.ArgumentParser(description="Parrot OS server")
 
     parser.add_argument(
         "--config_path",

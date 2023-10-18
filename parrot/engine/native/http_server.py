@@ -85,7 +85,7 @@ async def free_context(request: Request):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parrot native engine HTTP server.")
+    parser = argparse.ArgumentParser(description="Parrot native engine HTTP server")
 
     parser.add_argument(
         "--config_path",

@@ -1,8 +1,6 @@
 import aiohttp
 from dataclasses import asdict
 
-from parrot.engine.config import EngineConfig
-
 from .responses import (
     VMHeartbeatResponse,
     RegisterVMResponse,
@@ -128,7 +126,7 @@ def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
 def register_engine(
     http_addr: str,
     engine_name: str,
-    engine_config: EngineConfig,
+    engine_config: "EngineConfig",
 ) -> RegisterEngineResponse:
     try:
         return send_http_request(
@@ -146,11 +144,9 @@ def register_engine(
 
 def engine_heartbeat(
     http_addr: str,
+    engine_id: int,
     engine_name: str,
-    num_running_jobs: int,
-    num_cached_tokens: int,
-    cache_mem: float,
-    model_mem: float,
+    runtime_info: "EngineRuntimeInfo",
 ) -> EngineHeartbeatResponse:
     try:
         return send_http_request(
@@ -158,12 +154,11 @@ def engine_heartbeat(
             http_addr,
             "/engine_heartbeat",
             retry_times=3,
-            engine_name=engine_name,
-            num_running_jobs=num_running_jobs,
-            num_cached_tokens=num_cached_tokens,
-            cache_mem=cache_mem,
-            model_mem=model_mem,
+            engine_id=engine_id,
+            runtime_info=asdict(runtime_info),
         )
     except BaseException as e:
-        logger.error(f"Check engine heartbeat error. Engine: {engine_name}, Error: {e}")
+        logger.error(
+            f"Check engine heartbeat error. Engine: {engine_name} (id={engine_id}), Error: {e}"
+        )
         raise e

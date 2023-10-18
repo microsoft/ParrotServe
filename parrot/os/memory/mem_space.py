@@ -2,11 +2,11 @@ from typing import Dict, List
 
 from parrot.protocol.layer_apis import free_context
 from parrot.utils import get_logger, RecyclePool
-from parrot.constants import CONTEXT_POOL_SIZE, NONE_PROCESS_ID
+from parrot.constants import CONTEXT_POOL_SIZE
 
 from ..engine import ExecutionEngine
 from .context import Context
-from ..process.thread import Thread
+from ..process.thread import Thread, PrefixMode
 
 logger = get_logger("Memory")
 
@@ -78,6 +78,11 @@ class MemorySpace:
         self.contexts.pop(context.context_id)
         self.pool.free(context.context_id)
 
+    def _add_ref_counter(self, context_id: int):
+        if context_id not in self.ref_counter:
+            self.ref_counter[context_id] = 0
+        self.ref_counter[context_id] += 1
+
     # ---------- Memory Management ----------
 
     def new_memory_space(self, pid: int):
@@ -86,14 +91,24 @@ class MemorySpace:
 
     def free_memory_space(self, pid: int):
         """Free the memory space for a process."""
-        assert pid in self.process_memory
+        assert pid in self.process_memory, "Process should have memory space."
         for context in self.process_memory[pid]:
             self._free_context(context)
         self.process_memory.pop(pid)
 
+    def free_thread_memory(self, thread: Thread):
+        """Free the memory space for a thread."""
+        pid = thread.process.pid
+        assert pid in self.process_memory, "Process should have memory space."
+        assert (
+            self.ref_counter[thread.ctx.context_id] == 1
+        ), "Context should be monopolized by this thread."
+        self.process_memory[pid].remove(thread.ctx)
+        self._free_context(thread.ctx)
+
     def profile_process_memory(self, pid: int) -> float:
         """Profile the memory usage of a process."""
-        assert pid in self.process_memory
+        assert pid in self.process_memory, "Process should have memory space."
 
         mem_used: float = 0
         for context in self.process_memory[pid]:
@@ -114,25 +129,26 @@ class MemorySpace:
         if thread.call.func.metadata.cache_prefix:
             # Try to find a cached prefix
             prefix_key = (thread.call.func.prefix.text, thread.engine.engine_id)
+
             if prefix_key not in self.prefix_cache:
                 # No cached prefix found, create a new context
                 prefix_context = self._new_context(thread.engine)
+                self.prefix_cache[prefix_key] = prefix_context
+                thread.prefix_mode = PrefixMode.FORK
             else:
                 prefix_context = self.prefix_cache[prefix_key]
-                logger.debug(f"Prefix cache hit: {prefix_key}")
+                logger.debug(f"Prefix cache hit! Context: {prefix_context.context_id}")
+                thread.prefix_mode = PrefixMode.SKIP
 
-            thread.has_prefix = True
-
-            # Prefix ctx: Ref counter += 1
-            self.ref_counter[prefix_context.context_id] += 1
+            self._add_ref_counter(prefix_context.context_id)
             self.process_memory[pid].append(prefix_context)
 
             new_context = self._fork_context(self.prefix_cache[prefix_key])
         else:
             new_context = self._new_context(thread.engine)
+            thread.prefix_mode = PrefixMode.NOCACHE
 
-        # New ctx: Ref counter += 1
-        self.ref_counter[new_context.context_id] += 1
+        self._add_ref_counter(new_context.context_id)
         self.process_memory[pid].append(new_context)
 
         thread.ctx = new_context

@@ -1,8 +1,6 @@
 from typing import List, Optional
 from asyncio import Event
 
-from parrot.program.future import Future
-
 from ..tokenizer import Tokenizer
 
 

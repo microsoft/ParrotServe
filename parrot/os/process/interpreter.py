@@ -3,7 +3,7 @@ from typing import Dict
 
 from .thread import Thread
 
-from parrot.program.function import Constant, ParameterLoc, ParamType
+from parrot.program.function import Constant, ParameterLoc
 
 from ..tokenizer import Tokenizer
 from .placeholder import Placeholder, TokensHolder
@@ -90,7 +90,7 @@ class TokenIdInterpreter(BaseInterpreter):
         if placeholder.id not in self.tokensholder_map:
             self.tokensholder_map[placeholder.id] = TokensHolder(
                 tokenizer_name=self.tokenizer_name,
-                tokenizer_name=self.tokenizer,
+                tokenizer=self.tokenizer,
                 placeholder=placeholder,
             )
         return self.tokensholder_map[placeholder.id]

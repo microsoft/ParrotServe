@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Dict, Type, Optional, Any, Set
+from typing import List, Dict, Type, Optional, Any, Set, Union, Tuple
 import pickle
 import regex as re
 from dataclasses import dataclass
@@ -160,7 +160,9 @@ class SemanticFunction:
 
         self.metadata = FunctionMetadata(**kwargs)
 
-    def __call__(self, *args: List[Any], **kwargs: Dict[str, Any]):
+    def __call__(
+        self, *args: List[Any], **kwargs: Dict[str, Any]
+    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
         """Call to a semantic function.
 
         Some notes:

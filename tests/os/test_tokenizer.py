@@ -1,55 +1,48 @@
-from Parrot.parrot.vm.controller import Controller
-from Parrot.parrot.os.tokenizer import Tokenizer
+from parrot.os.tokenizer import Tokenizer
+
+
+TESTING_PROMPT_TEXT = (
+    "He is widely acknowledged as one of the top achievers in his class"
+)
+TESTING_TOKEN_IDS = [
+    940,
+    338,
+    17644,
+    24084,
+    3192,
+    408,
+    697,
+    310,
+    278,
+    2246,
+    3657,
+    347,
+    874,
+    297,
+    670,
+    770,
+]
 
 
 def test_encode():
-    ctrl = Controller()
-    tokenized_storage = Tokenizer(ctrl)
-    tokenizer = "hf-internal-testing/llama-tokenizer"
-    ctrl.register_tokenizer(tokenizer)
+    tokenizer = Tokenizer()
+    tokenizer_name = "hf-internal-testing/llama-tokenizer"
 
-    # prompt_text = "He is widely acknowledged as one of the top achievers in his class"
-    prompt_text = "</s>"
-    encoded = tokenized_storage.tokenize(prompt_text, tokenizer)
+    encoded = tokenizer.tokenize(TESTING_PROMPT_TEXT, tokenizer_name)
 
-    print(encoded)
+    # print(encoded)
+    assert encoded == TESTING_TOKEN_IDS
 
 
 def test_decode():
-    ctrl = Controller()
-    tokenized_storage = Tokenizer(ctrl)
-    tokenizer = "hf-internal-testing/llama-tokenizer"
-    ctrl.register_tokenizer(tokenizer)
+    tokenizer = Tokenizer()
+    tokenizer_name = "hf-internal-testing/llama-tokenizer"
 
-    # token_ids = [
-    #     940,
-    #     338,
-    #     17644,
-    #     24084,
-    #     3192,
-    #     408,
-    #     697,
-    #     310,
-    #     278,
-    #     2246,
-    #     3657,
-    #     347,
-    #     874,
-    #     297,
-    #     670,
-    #     770,
-    # ]
+    decoded = tokenizer.detokenize(TESTING_TOKEN_IDS, tokenizer_name)
 
-    # token_ids = [29871]
-
-    print(tokenized_storage.detokenize([310, 278], tokenizer))
-
-    decoded = tokenized_storage.detokenize(token_ids[:9], tokenizer)
-    decoded += tokenized_storage.detokenize(token_ids[8:], tokenizer)
-
-    print(decoded)
+    assert TESTING_PROMPT_TEXT == decoded
 
 
 if __name__ == "__main__":
     test_encode()
-    # test_decode()
+    test_decode()

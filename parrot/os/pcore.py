@@ -56,7 +56,7 @@ class PCore:
         self.processes: Dict[int, Process] = {}  # pid -> process
         self.engines: Dict[int, ExecutionEngine] = {}  # engine_id -> engine
         self.mem_space = MemorySpace()
-        self.dispatcher = ThreadDispatcher()
+        self.dispatcher = ThreadDispatcher(self.engines)
         self.tokenizer = Tokenizer()
 
         # ---------- Id Allocator ----------
@@ -114,20 +114,12 @@ class PCore:
         logger.info(f"VM (pid={pid}) registered.")
         return pid
 
-    def register_engine(
-        self,
-        name: str,
-        host: str,
-        port: int,
-        config: EngineConfig,
-    ) -> int:
+    def register_engine(self, name: str, config: EngineConfig) -> int:
         """Register a new engine in the OS."""
         engine_id = self.engine_pool.allocate()
         engine = ExecutionEngine(
             engine_id=engine_id,
             name=name,
-            host=host,
-            port=port,
             config=config,
         )
         self.engines[engine_id] = engine
