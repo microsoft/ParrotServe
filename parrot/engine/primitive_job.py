@@ -11,13 +11,13 @@ class PrimitiveJob:
 
     def __init__(
         self,
-        client_id: str,
-        session_id: int,
+        pid: int,
+        tid: int,
         context_id: int,
         parent_context_id: int,
     ) -> None:
-        self.client_id = client_id
-        self.session_id = session_id
+        self.pid = pid
+        self.tid = tid
         self.context_id = context_id
         self.parent_context_id = parent_context_id
         self.context: Optional[LowLevelContext] = None
@@ -33,19 +33,19 @@ class Fill(PrimitiveJob):
 
     def __init__(
         self,
-        client_id: str,
-        session_id: int,
+        pid: int,
+        tid: int,
         context_id: int,
         parent_context_id: int,
         token_ids: List[int],
     ) -> None:
-        super().__init__(client_id, session_id, context_id, parent_context_id)
+        super().__init__(pid, tid, context_id, parent_context_id)
         self.token_ids = token_ids
 
     def __repr__(self) -> str:
         return (
-            f"Fill(session_id={self.session_id}, "
-            f"client_id={self.client_id}, "
+            f"Fill(pid={self.pid}, "
+            f"tid={self.tid}, "
             f"context_id={self.context_id}, "
             f"parent_context_id={self.parent_context_id})"
         )
@@ -59,21 +59,21 @@ class Generation(PrimitiveJob):
 
     def __init__(
         self,
-        client_id: str,
-        session_id: int,
+        pid: int,
+        tid: int,
         context_id: int,
         parent_context_id: int,
         sampling_config: SamplingConfig,
     ) -> None:
-        super().__init__(client_id, session_id, context_id, parent_context_id)
+        super().__init__(pid, tid, context_id, parent_context_id)
         self.sampling_config = sampling_config
         self.output_queue: AsyncQueue[int] = AsyncQueue()
         self.gen_length = 0
 
     def __repr__(self) -> str:
         return (
-            f"Generation(session_id={self.session_id}, "
-            f"client_id={self.client_id}, "
+            f"Generation(pid={self.pid}, "
+            f"tid={self.tid}, "
             f"context_id={self.context_id}, "
             f"parent_context_id={self.parent_context_id})"
         )

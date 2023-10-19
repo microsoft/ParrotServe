@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal, Optional, Dict
 from dataclasses import dataclass
 import torch
 from enum import Enum, auto
@@ -19,7 +19,7 @@ class NativeConfig:
     attn_func: Literal["xformers_with_buffer", "flash_attention"]
     random_seed: int
     dtype: Literal["float16", "float32"] = "float16"
-    device: Literal["cuda", "cpu"] = "cuda"
+    device: str = "cuda"  # cpu, cuda, cuda:x
 
     model_arch: Optional[str] = None  # Lazy load
 
@@ -45,7 +45,21 @@ class EngineType(Enum):
 class EngineConfig:
     host: str = DEFAULT_SERVER_HOST
     port: int = DEFAULT_ENGINE_SERVER_PORT
+    engine_name: str = "unknown"
     model_name: str = "unknown"
     engine_type: EngineType = EngineType.NATIVE
     tokenizer_name: str = "unknown"
     fill_chunk_size: int = FILL_NO_CHUNK
+
+    @classmethod
+    def verify_config(cls, config: Dict) -> bool:
+        """Verify the engine config."""
+
+        if "runner" not in config or "scheduler" not in config:
+            return False
+
+        for field in cls.__fields__:
+            if field not in config:
+                return False
+
+        return True

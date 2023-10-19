@@ -1,17 +1,17 @@
 import asyncio
-from typing import Dict, List
 import json
 import time
 
-from parrot.constants import ENGINE_LOOP_INTERVAL, GC_INTERVAL
+from parrot.constants import ENGINE_LOOP_INTERVAL, ENGINE_HEARTBEAT_INTERVAL
 from parrot.utils import get_logger
+from parrot.protocol.layer_apis import register_engine, engine_heartbeat
 
+from ..runtime_info import EngineRuntimeInfo
 from .runner import Runner
 from .block_context import BlockContext
 from ..scheduler import Scheduler
 from ..primitive_job import PrimitiveJob
-from ..low_level_context import get_unique_context_id
-from ..config import NativeConfig, SchedulerConfig
+from ..config import NativeConfig, SchedulerConfig, EngineConfig
 
 
 logger = get_logger("NativeExecutionEngine")
@@ -20,17 +20,28 @@ logger = get_logger("NativeExecutionEngine")
 class NativeExecutionEngine:
     """Backend Execution Engine for Parrot."""
 
-    def __init__(self, engine_config_path: str):
+    def __init__(self, engine_config_path: str, os_http_address: str):
         with open(engine_config_path) as f:
-            self.engine_config = json.load(f)
+            self.engine_config = dict(json.load(f))
 
-        self.engine_name = self.engine_config["engine_name"]
-        native_config = NativeConfig(**self.engine_config["runner"])
-        scheduler_config = SchedulerConfig(**self.engine_config["scheduler"])
+        if not EngineConfig.verify_config(self.engine_config):
+            raise ValueError(f"Invalid engine config: {self.engine_config}")
+
+        # self.engine_name = self.engine_config["engine_name"]
+        native_config = NativeConfig(**self.engine_config.pop("runner"))
+        scheduler_config = SchedulerConfig(**self.engine_config.pop("scheduler"))
+        self.engine_config = EngineConfig(**self.engine_config)
         self.runner = Runner(native_config)
         self.scheduler = Scheduler(scheduler_config)
+        self.os_http_address = os_http_address
 
-    def add_job(self, job: PrimitiveJob):
+        resp = register_engine(
+            http_addr=self.os_http_address,
+            engine_config=self.engine_config,
+        )
+        self.engine_id = resp.engine_id
+
+    def _add_job(self, job: PrimitiveJob):
         logger.info(f"Adding job: {job}")
         self.scheduler.add_job(job)
         self.runner.context_manager.bind_job_context(
@@ -39,34 +50,22 @@ class NativeExecutionEngine:
             kv_cache_manager=self.runner.kv_cache_manager,
         )
 
-    def free_context(self, client_id: str, context_id: int) -> int:
+    def free_context(self, context_id: int) -> int:
         for job in self.scheduler.running_jobs:
-            if job.client_id == client_id and job.context_id == context_id:
+            if job.context_id == context_id:
                 # NOTE(chaofan): We cannot free the context when it is still running.
-                raise RuntimeError(
-                    f"Context {get_unique_context_id(client_id, context_id)} is still running."
-                )
+                raise RuntimeError(f"Context {context_id} is still running.")
 
-        return self.runner.context_manager.free_context(client_id, context_id)
+        return self.runner.context_manager.free_context(context_id)
 
-    def heartbeat(self, engine_name: str, client_id: str) -> Dict[str, int]:
+    def heartbeat(self):
         """Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
 
-        logger.info(f"Heartbeat from client {client_id}.")
+        logger.info(f"Heartbeat sent to OS.")
 
-        if engine_name != self.engine_name:
-            logger.warning(
-                f"Name mismatch! Heart with engine name {engine_name}, "
-                f"but this engine is {self.engine_name}."
-            )
-
-        self.runner.context_manager.flush_context_heartbeat(client_id)
-
-        # NOTE(chaofan): This info is for all tokens in this engine,
-        # not only for this client.
         num_cached_tokens = self.runner.context_manager.get_num_cached_tokens()
 
-        cached_tokens_size = (
+        cache_mem = (
             num_cached_tokens
             # TODO(chaofan): Currently this config must be OPTConfig.
             # Support other configs in the future.
@@ -74,33 +73,40 @@ class NativeExecutionEngine:
             * self.runner.hf_model_config.num_hidden_layers
             * 2
             / 1024
-            / 1024  # MiB
-        )
+            / 1024
+        )  # MiB
         num_running_jobs = len(self.scheduler.running_jobs)
-        return {
-            "num_cached_tokens": num_cached_tokens,
-            "cached_tokens_size": cached_tokens_size,
-            "num_running_jobs": num_running_jobs,
-        }
 
-    async def execute_loop(self):
-        logger.info(f"Execution loop of engine: {self.engine_name} started.")
+        resp = engine_heartbeat(
+            http_addr=self.os_http_address,
+            engine_id=self.engine_id,
+            engine_name=self.engine_config.engine_name,
+            runtime_info=EngineRuntimeInfo(
+                num_cached_tokens=num_cached_tokens,
+                num_running_jobs=num_running_jobs,
+                cache_mem=cache_mem,
+                model_mem=self.runner.model_mem / 1024 / 1024,  # MiB
+            ),
+        )
 
-        last_gc_time = 0
+    async def engine_loop(self):
+        logger.info(f"Engine loop of engine: {self.engine_config.engine_name} started.")
+
+        last_heartbeat_time = time.perf_counter_ns()
 
         while True:
+            # Send heartbeat to OS
+            cur_time = time.perf_counter_ns()
+            if (cur_time - last_heartbeat_time) / 1e9 > ENGINE_HEARTBEAT_INTERVAL:
+                self.heartbeat()
+                last_heartbeat_time = cur_time
+
             await asyncio.sleep(ENGINE_LOOP_INTERVAL)
 
-            # Do GC
-            cur_time = time.perf_counter_ns()
-            if cur_time - last_gc_time > GC_INTERVAL * 1e9:
-                self.runner.context_manager.garbage_collect()
-                last_gc_time = cur_time
-
+            # Run jobs
             if self.scheduler.empty:
                 continue
 
-            # Run jobs
             jobs = self.scheduler.schedule()
             self.runner.run_iter(jobs)
             self.scheduler.finish()

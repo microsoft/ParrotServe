@@ -1,5 +1,4 @@
-from dataclasses import dataclass
-
+from parrot.engine.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig, EngineType
 
 from .process.interpret_type import InterpretType
@@ -11,14 +10,6 @@ INTERPRET_TYPE_MAP = {
     EngineType.OPENAI: InterpretType.TEXT,
     EngineType.MLCLLM: InterpretType.TEXT,
 }
-
-
-@dataclass
-class EngineRuntimeInfo:
-    num_cached_tokens: int = 0
-    num_running_jobs: int = 0
-    cache_mem: int = 0
-    model_mem: int = 0
 
 
 class ExecutionEngine:

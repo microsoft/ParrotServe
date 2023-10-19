@@ -1,22 +1,33 @@
-from typing import List, Dict
+from typing import List
 from transformers import AutoConfig
 import torch
 import time
+import psutil
 
 from parrot.utils import RecyclePool, set_random_seed, get_logger
-from parrot.constants import NONE_CONTEXT_ID
 from parrot.protocol.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
 from .mem import init_model_cache_storage
 from .block_context import BlockContext
 from .iter_state import IterationState
-from ..low_level_context import ContextManager
+from ..context_manager import ContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generation
 from ..config import NativeConfig
 
 
 logger = get_logger("Runner")
+
+
+def get_memory(device: str) -> int:
+    if "cuda" in device:
+        if device == "cuda":
+            gpu = 0
+        else:
+            gpu = int(device.split(":")[-1])
+        return torch.cuda.get_device_properties(gpu).total_memory
+    elif "cpu" in device:
+        return psutil.virtual_memory().total
 
 
 class Runner:
@@ -29,7 +40,11 @@ class Runner:
 
         # Load Model
         self.hf_model_config = AutoConfig.from_pretrained(self.native_config.model_name)
+
+        before_memory = get_memory(self.native_config.device)
         self.model = instantiate_model(self.hf_model_config, self.native_config)
+        after_memory = get_memory(self.native_config.device)
+        self.model_mem = after_memory - before_memory
 
         # Init model cache storage
         init_model_cache_storage(self.hf_model_config, self.native_config)

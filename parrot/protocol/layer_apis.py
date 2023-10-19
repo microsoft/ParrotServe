@@ -125,7 +125,6 @@ def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
 
 def register_engine(
     http_addr: str,
-    engine_name: str,
     engine_config: "EngineConfig",
 ) -> RegisterEngineResponse:
     try:
@@ -134,11 +133,12 @@ def register_engine(
             http_addr,
             "/register_engine",
             retry_times=3,
-            engine_name=engine_name,
             engine_config=asdict(engine_config),
         )
     except BaseException as e:
-        logger.error(f"Register engine {engine_name} error in {http_addr}. Error: {e}")
+        logger.error(
+            f"Register engine {engine_config.engine_name} error in {http_addr}. Error: {e}"
+        )
         raise e
 
 

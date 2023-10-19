@@ -1,19 +1,21 @@
 # Constants for Parrot
 
+# NOTE(chaofan): All time constansts (with the name of *_TIME, *_INTERVAL) are in seconds.
+
 # ---------- HTTP Server ----------
 DEFAULT_SERVER_HOST = "localhost"
 DEFAULT_OS_SERVER_PORT = 9000
 DEFAULT_ENGINE_SERVER_PORT = 9001
 
 # ---------- Interval ----------
-VM_HEARTBEAT_INTERVAL = 5  # seconds
-ENGINE_HEARTBEAT_INTERVAL = 5  # seconds
+VM_HEARTBEAT_INTERVAL = 5
+ENGINE_HEARTBEAT_INTERVAL = 5
 OS_LOOP_INTERVAL = 0.1
 ENGINE_LOOP_INTERVAL = 0.01
 
 # NOTE(chaofan): HEARTBEAT_INTERVAL + LOOP_INTERVAL < EXPIRE_TIME
-VM_EXPIRE_TIME = 25  # seconds
-ENGINE_EXPIRE_TIME = 25  # seconds
+VM_EXPIRE_TIME = 25
+ENGINE_EXPIRE_TIME = 25
 
 # ---------- Chunk Related ----------
 FILL_NO_CHUNK = -1

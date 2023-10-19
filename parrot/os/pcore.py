@@ -39,7 +39,12 @@ class PCore:
     def __init__(self, os_config_path: str):
         # ---------- Config ----------
         with open(os_config_path, "r") as f:
-            self.os_config: OSConfig = json.load(f)
+            self.os_config = dict(json.load(f))
+
+        if not OSConfig.verify_config(self.os_config):
+            raise ValueError(f"Invalid OS config: {self.os_config}")
+
+        self.os_config = OSConfig(**self.os_config)
 
         if self.os_config.max_proc_num > PROCESS_POOL_SIZE:
             logger.warning(
@@ -72,7 +77,8 @@ class PCore:
 
         # VMs
         for pid, last_seen_time in self.proc_last_seen_time.items():
-            if cur_time - last_seen_time > VM_EXPIRE_TIME:
+            if (cur_time - last_seen_time) / 1e9 > VM_EXPIRE_TIME:
+                # If a VM is expired, we need to free all its resources (garbage collection).
                 process = self.processes.pop(pid)
                 process.free_process()
                 self.proc_last_seen_time.pop(pid)
@@ -81,7 +87,7 @@ class PCore:
 
         # Engines
         for engine_id, last_seen_time in self.engine_last_seen_time.items():
-            if cur_time - last_seen_time > ENGINE_EXPIRE_TIME:
+            if (cur_time - last_seen_time) / 1e9 > ENGINE_EXPIRE_TIME:
                 engine = self.engines.pop(engine_id)
                 self.engine_last_seen_time.pop(engine_id)
                 self.engine_pool.free(engine_id)

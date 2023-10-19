@@ -16,7 +16,7 @@ def test_engine_simple_serving():
     )
 
     async def execute_job(job: PrimitiveJob):
-        engine.add_job(job)
+        engine._add_job(job)
         await job.finish_event.wait()
 
     prompt_text = "Hello, my name is"
@@ -24,7 +24,7 @@ def test_engine_simple_serving():
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
 
     async def main():
-        create_task_in_loop(engine.execute_loop())
+        create_task_in_loop(engine.engine_loop())
 
         print("Start")
 
