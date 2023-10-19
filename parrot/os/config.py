@@ -15,7 +15,7 @@ class OSConfig:
     def verify_config(cls, config: Dict) -> bool:
         """Verify the OS config."""
 
-        for field in cls.__fields__:
+        for field in cls.__dataclass_fields__:
             if field not in config:
                 return False
 

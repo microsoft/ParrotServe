@@ -1,4 +1,6 @@
 {
+    "host": "localhost",
+    "port": 9001,
     "engine_name": "vicuna_7b_v1.3_local",
     "runner": {
         "model_name": "lmsys/vicuna-7b-v1.3",

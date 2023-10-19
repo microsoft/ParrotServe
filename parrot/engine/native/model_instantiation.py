@@ -12,7 +12,9 @@ logger = get_logger("Model Instantiation")
 
 
 @contextlib.contextmanager
-def model_instantiation_context(native_config: NativeConfig, dummy_weight_init: bool):
+def model_instantiation_context(
+    model_name: str, native_config: NativeConfig, dummy_weight_init: bool
+):
     """Provide a context for instantiating models.
 
     Including:
@@ -21,7 +23,7 @@ def model_instantiation_context(native_config: NativeConfig, dummy_weight_init: 
     """
 
     logger.info(
-        f"Start instantiating model {native_config.model_name} ... (dtype: {native_config.dtype})"
+        f"Start instantiating model {model_name} ... (dtype: {native_config.dtype})"
     )
 
     original_dtype = torch.get_default_dtype()
@@ -38,11 +40,13 @@ def model_instantiation_context(native_config: NativeConfig, dummy_weight_init: 
     if not dummy_weight_init:
         torch.nn.Linear.reset_parameters = original_reset_parameters
 
-    logger.info(f"Model {native_config.model_name} instantiated. Weights loaded.")
+    logger.info(f"Model {model_name} instantiated. Weights loaded.")
 
 
 @torch.no_grad()
-def instantiate_model(hf_config: PretrainedConfig, native_config: NativeConfig):
+def instantiate_model(
+    model_name: str, hf_config: PretrainedConfig, native_config: NativeConfig
+):
     # Get the model architecture
     model_arch_cls = None
     for arch_name in hf_config.architectures:
@@ -57,9 +61,9 @@ def instantiate_model(hf_config: PretrainedConfig, native_config: NativeConfig):
             f"Supported models: {MODEL_ARCH_MAP.keys()}"
         )
 
-    with model_instantiation_context(native_config, False):
+    with model_instantiation_context(model_name, native_config, False):
         model = model_arch_cls(hf_config, native_config)
-        model.load_weights(native_config.model_name)
+        model.load_weights(model_name)
 
         # Move model to device
         model = model.to(native_config.device)

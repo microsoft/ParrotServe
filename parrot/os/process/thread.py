@@ -142,7 +142,7 @@ class Thread:
                     token_ids=chunked_tokens,
                 )
             if primitive is not None:
-                resp = await primitive.apost(self.engine.http_address)
+                resp = await primitive.apost()
                 num_filled_tokens += resp.num_filled_tokens
             else:
                 # Skip
@@ -177,13 +177,12 @@ class Thread:
             # Streaming input. Pipeling filling.
             num_filled_tokens = 0
             async for chunk in op.input_pipe.generator():
-                primitive = Fill(
+                resp = await Fill(
                     pid=self.process.pid,
                     tid=self.tid,
                     context=self.ctx,
                     token_ids=chunk,
-                )
-                resp = await primitive.apost(self.engine.http_address)
+                ).apost()
                 num_filled_tokens += resp.num_filled_tokens
             should_filled = len(op.input_holder.token_ids)
             assert (
@@ -198,14 +197,12 @@ class Thread:
 
         logger.debug(f"Thread {self.tid} submit Generation primitive (operator: {op})")
 
-        primitive = Generate(
+        generator = Generate(
             pid=self.process.pid,
             tid=self.tid,
             context=self.ctx,
             sampling_config=op.sampling_config,
-        )
-
-        generator = primitive.astream(self.engine.http_address)
+        ).astream()
 
         assert not op.output_holder.ready, "Output holder should be empty."
         op.output_holder.token_ids = []
@@ -220,32 +217,29 @@ class Thread:
         op.output_holder.ready_event.set()
 
     async def _visit_text_constant_fill(self, op: TextConstantFill):
-        primitive = Fill(
+        resp = await Fill(
             pid=self.process.pid,
             tid=self.tid,
             context=self.ctx,
             text=op.text,
-        )
-        resp = await primitive.apost(self.engine.http_address)
+        ).apost()
 
     async def _visit_text_placeholder_fill(self, op: TextPlaceholderFill):
         text = await op.input_holder.get()
-        primitive = Fill(
+        resp = await Fill(
             pid=self.process.pid,
             tid=self.tid,
             context=self.ctx,
             text=text,
-        )
-        resp = await primitive.apost(self.engine.http_address)
+        ).apost()
 
     async def _visit_text_placeholder_generate(self, op: TextPlaceholderGenerate):
-        primitive = Generate(
+        resp = await Generate(
             pid=self.process.pid,
             tid=self.tid,
             context=self.ctx,
             sampling_config=op.sampling_config,
-        )
-        resp = await primitive.apost(self.engine.http_address)
+        ).apost()
         op.output_holder.set(resp.generated_text)
 
     async def executing(self):

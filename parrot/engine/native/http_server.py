@@ -96,10 +96,7 @@ async def generate_stream(request: Request):
 @app.post("/free_context")
 async def free_context(request: Request):
     payload = await request.json()
-    num_freed_tokens = execution_engine.free_context(
-        payload["client_id"], payload["context_id"]
-    )
-
+    num_freed_tokens = execution_engine.free_context(payload["context_id"])
     return {
         "num_freed_tokens": num_freed_tokens,
     }
@@ -116,16 +113,26 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--connect-os",
+        action="store_true",
+        help="Whether to connect to the OS.",
+    )
+
+    parser.add_argument(
         "--os-address",
         type=str,
         help="HTTP address of the OS.",
         default=f"http://{DEFAULT_SERVER_HOST}:{DEFAULT_OS_SERVER_PORT}",
-        required=True,
     )
 
     args = parser.parse_args()
 
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+    if args.connect_os:
+        assert args.os_address is not None, "OS address must be specified."
+    else:
+        args.os_address = None
+
     execution_engine = NativeExecutionEngine(args.config_path, args.os_address)
 
     loop = asyncio.new_event_loop()

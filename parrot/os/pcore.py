@@ -120,17 +120,16 @@ class PCore:
         logger.info(f"VM (pid={pid}) registered.")
         return pid
 
-    def register_engine(self, name: str, config: EngineConfig) -> int:
+    def register_engine(self, config: EngineConfig) -> int:
         """Register a new engine in the OS."""
         engine_id = self.engine_pool.allocate()
         engine = ExecutionEngine(
             engine_id=engine_id,
-            name=name,
             config=config,
         )
         self.engines[engine_id] = engine
         self.engine_last_seen_time[engine_id] = time.perf_counter_ns()
-        logger.info(f"Engine {name} (id={engine_id}) registered.")
+        logger.info(f"Engine {engine.name} (id={engine_id}) registered.")
         return engine_id
 
     def vm_heartbeat(self, pid: int) -> Dict:

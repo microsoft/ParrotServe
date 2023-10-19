@@ -45,11 +45,10 @@ context = {}  # Context_id -> context_length
 num_cached_tokens = 0
 num_running_jobs = 0
 
-engine_name = "Fake Engine"
-
 engine_config = EngineConfig(
     host=TESTING_SERVER_HOST,
     port=TESTING_SERVER_PORT,
+    engine_name="Fake Engine",
     tokenizer_name="facebook/opt-13b",
 )
 

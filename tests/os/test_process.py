@@ -7,7 +7,7 @@ server (without connect with OS!).
 import asyncio
 import parrot as P
 
-from parrot.testing.fake_engine_server import engine_name, engine_config
+from parrot.testing.fake_engine_server import engine_config
 
 from parrot.os.process.process import Process
 from parrot.os.memory.mem_space import MemorySpace
@@ -20,7 +20,7 @@ def init():
     mem_space = MemorySpace()
     tokenizer = Tokenizer()
     engine_id = 0
-    engine = ExecutionEngine(engine_id, engine_name, engine_config)
+    engine = ExecutionEngine(engine_id, engine_config)
     dispatcher = ThreadDispatcher({engine_id: engine})
 
     pid = 0

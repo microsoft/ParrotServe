@@ -19,32 +19,31 @@ from ..config import NativeConfig
 logger = get_logger("Runner")
 
 
-def get_memory(device: str) -> int:
-    if "cuda" in device:
-        if device == "cuda":
-            gpu = 0
-        else:
-            gpu = int(device.split(":")[-1])
-        return torch.cuda.get_device_properties(gpu).total_memory
-    elif "cpu" in device:
-        return psutil.virtual_memory().total
+def get_model_memory(model) -> float:
+    model_mem = 0
+    for param in model.parameters():
+        model_mem += param.nelement() * param.element_size()
+    for buffer in model.buffers():
+        model_mem += buffer.nelement() * buffer.element_size()
+    return model_mem / 1024 / 1024
 
 
 class Runner:
-    """Minimal LLM Runner with adaption to Parrot."""
+    """Minimal Native LLM Runner with adaption to Parrot."""
 
-    def __init__(self, config: NativeConfig):
+    def __init__(self, model_name: str, config: NativeConfig):
         self.native_config = config
         self.context_manager = ContextManager()
         self.kv_cache_manager = RecyclePool(self.native_config.num_kv_cache_blocks)
 
         # Load Model
-        self.hf_model_config = AutoConfig.from_pretrained(self.native_config.model_name)
+        self.hf_model_config = AutoConfig.from_pretrained(model_name)
 
-        before_memory = get_memory(self.native_config.device)
-        self.model = instantiate_model(self.hf_model_config, self.native_config)
-        after_memory = get_memory(self.native_config.device)
-        self.model_mem = after_memory - before_memory
+        self.model = instantiate_model(
+            model_name, self.hf_model_config, self.native_config
+        )
+        self.model_mem = get_model_memory(self.model)
+        logger.info(f"Model memory usage: {self.model_mem:.2f} MiB.")
 
         # Init model cache storage
         init_model_cache_storage(self.hf_model_config, self.native_config)
@@ -93,6 +92,9 @@ class Runner:
 
         # First sampling
         if len(first_sampling_states) > 0:
+            logger.debug(
+                f"Running first sampling for {len(first_sampling_states)} jobs."
+            )
             first_sampling_states = torch.stack(first_sampling_states)
             first_sampling_tokens = (
                 self.model.sampler(first_sampling_states, first_sampling_config)

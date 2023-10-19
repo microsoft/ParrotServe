@@ -63,9 +63,8 @@ async def engine_heartbeat(request: Request):
 @app.post("/register_engine")
 async def register_engine(request: Request):
     payload = await request.json()
-    engine_name = payload["engine_name"]
     engine_config = EngineConfig(**payload["engine_config"])
-    engine_id = pcore.register_engine(engine_name, engine_config)
+    engine_id = pcore.register_engine(engine_config)
     return {"engine_id": engine_id}
 
 

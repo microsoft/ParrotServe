@@ -37,6 +37,26 @@ async def register_vm(request: Request):
     return {"pid": allocated_pid}
 
 
+@app.post("/engine_heartbeat")
+async def engine_heartbeat(request: Request):
+    payload = await request.json()
+    engine_id = payload["engine_id"]
+    engine_name = payload["engine_name"]
+    logger.info(f"Received heartbeat from Engine {engine_name} (id={engine_id}).")
+    return {}
+
+
+@app.post("/register_engine")
+async def register_engine(request: Request):
+    payload = await request.json()
+    engine_name = payload["engine_config"]["engine_name"]
+    allocated_engine_id = 0
+    logger.info(
+        f"Register Engine {engine_name}. Allocated engine_id: {allocated_engine_id}."
+    )
+    return {"engine_id": allocated_engine_id}
+
+
 @app.post("/submit_call")
 async def submit_call(request: Request):
     payload = await request.json()

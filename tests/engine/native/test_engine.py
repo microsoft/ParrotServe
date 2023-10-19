@@ -1,7 +1,7 @@
 import asyncio
 import parrot
 from parrot.engine.native.engine import NativeExecutionEngine
-from Parrot.parrot.engine.primitive_job import PrimitiveJob, Fill, Generation
+from parrot.engine.primitive_job import PrimitiveJob, Fill, Generation
 from parrot.utils import create_task_in_loop
 from parrot.protocol.sampling_config import SamplingConfig
 from transformers import AutoTokenizer
@@ -12,7 +12,8 @@ def test_engine_simple_serving():
     # We temporarily use this way to load the config.
     package_path = parrot.__path__[0]
     engine = NativeExecutionEngine(
-        package_path + "/../configs/backend/native/opt_125m.json"
+        engine_config_path=package_path + "/../configs/engine/native/opt_125m.json",
+        os_http_address=None,
     )
 
     async def execute_job(job: PrimitiveJob):
@@ -31,8 +32,8 @@ def test_engine_simple_serving():
         # Prefill
         await execute_job(
             Fill(
-                client_id="test",
-                session_id=0,
+                pid=0,
+                tid=0,
                 context_id=0,
                 parent_context_id=-1,
                 token_ids=prompt_tokens,
@@ -40,8 +41,8 @@ def test_engine_simple_serving():
         )
 
         gen_job = Generation(
-            client_id="test",
-            session_id=0,
+            pid=0,
+            tid=0,
             context_id=0,
             parent_context_id=-1,
             sampling_config=SamplingConfig(

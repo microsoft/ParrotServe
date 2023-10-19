@@ -43,3 +43,7 @@ class Context:
         )
 
         return memory_per_token * self.token_nums
+
+    @property
+    def engine_url(self) -> str:
+        return self.engine.http_address

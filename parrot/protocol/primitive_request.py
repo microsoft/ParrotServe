@@ -34,15 +34,15 @@ class Fill(Primitive):
     token_ids: Optional[List[int]] = None
     text: Optional[str] = None
 
-    def post(self, http_addr: str) -> FillResponse:
+    def post(self) -> FillResponse:
         # NOTE(chaofan): For simple fill, there is no thread id.
         assert self.tid == NONE_THREAD_ID
 
         try:
             resp: FillResponse = send_http_request(
-                FillResponse,
-                http_addr,
-                "/fill",
+                response_cls=FillResponse,
+                http_addr=self.context.engine_url,
+                api_url="/fill",
                 retry_times=1,
                 pid=self.pid,
                 tid=self.tid,
@@ -54,20 +54,20 @@ class Fill(Primitive):
             self.context.token_nums += resp.num_filled_tokens
             return resp
         except BaseException as e:
-            logger.error(f"Fill error in {http_addr} error: {e}")
+            logger.error(f"Fill error in {self.context.engine_url} error: {e}")
             raise e
 
-    async def apost(self, http_addr: str) -> FillResponse:
+    async def apost(self) -> FillResponse:
         # NOTE: For thread fill, there is a thread id.
         assert self.tid != NONE_THREAD_ID
 
         try:
             async with aiohttp.ClientSession() as client_session:
                 resp: FillResponse = await async_send_http_request(
-                    client_session,
-                    FillResponse,
-                    http_addr,
-                    "/fill",
+                    client_session=client_session,
+                    response_cls=FillResponse,
+                    http_addr=self.context.engine_url,
+                    api_url="/fill",
                     pid=self.pid,
                     tid=self.tid,
                     context_id=self.context.context_id,
@@ -78,7 +78,7 @@ class Fill(Primitive):
             self.context.token_nums += resp.num_filled_tokens
             return resp
         except BaseException as e:
-            logger.error(f"Fill error in {http_addr} error: {e}")
+            logger.error(f"Fill error in {self.context.engine_url} error: {e}")
             raise e
 
 
@@ -91,14 +91,14 @@ class Generate(Primitive):
 
     sampling_config: SamplingConfig
 
-    async def apost(self, http_addr: str) -> GenerateResponse:
+    async def apost(self) -> GenerateResponse:
         try:
             async with aiohttp.ClientSession() as client_session:
                 resp: GenerateResponse = await async_send_http_request(
-                    client_session,
-                    GenerateResponse,
-                    http_addr,
-                    "/generate",
+                    client_session=client_session,
+                    response_cls=GenerateResponse,
+                    http_addr=self.context.engine_url,
+                    api_url="/generate",
                     pid=self.pid,
                     tid=self.tid,
                     context_id=self.context.context_id,
@@ -108,16 +108,16 @@ class Generate(Primitive):
                 self.context.token_nums += len(resp.generated_ids)
                 return resp
         except BaseException as e:
-            logger.error(f"Generate error in {http_addr} error: {e}")
+            logger.error(f"Generate error in {self.context.engine_url} error: {e}")
             raise e
 
-    async def astream(self, http_addr: str):
+    async def astream(self):
         try:
             async with aiohttp.ClientSession() as client_session:
                 async for resp in async_send_http_request_streaming(
-                    client_session,
-                    http_addr,
-                    "/generate_stream",
+                    client_session=client_session,
+                    http_addr=self.context.engine_url,
+                    api_url="/generate_stream",
                     pid=self.pid,
                     tid=self.tid,
                     context_id=self.context.context_id,
@@ -127,5 +127,5 @@ class Generate(Primitive):
                     self.context.token_nums += 1
                     yield resp
         except BaseException as e:
-            logger.error(f"Generate error in {http_addr} error: {e}")
+            logger.error(f"Generate error in {self.context.engine_url} error: {e}")
             raise e

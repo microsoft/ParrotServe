@@ -1,7 +1,7 @@
 from typing import Literal, Optional, Dict
 from dataclasses import dataclass
 import torch
-from enum import Enum, auto
+from enum import Enum
 from parrot.constants import FILL_NO_CHUNK
 
 from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_ENGINE_SERVER_PORT
@@ -14,16 +14,16 @@ _DTYPE_MAP = {
 
 @dataclass
 class NativeConfig:
-    model_name: str
     num_kv_cache_blocks: int
     attn_func: Literal["xformers_with_buffer", "flash_attention"]
     random_seed: int
     dtype: Literal["float16", "float32"] = "float16"
     device: str = "cuda"  # cpu, cuda, cuda:x
-
     model_arch: Optional[str] = None  # Lazy load
 
     def __post_init__(self):
+        self.dtype_str = self.dtype
+        self.device_str = self.device
         self.dtype = _DTYPE_MAP[self.dtype]
         self.device = torch.device(self.device)
 
@@ -35,30 +35,39 @@ class SchedulerConfig:
 
 
 class EngineType(Enum):
-    NATIVE = auto()
-    HUGGINGFACE = auto()
-    OPENAI = auto()
-    MLCLLM = auto()
+    NATIVE = 0
+    HUGGINGFACE = 1
+    OPENAI = 2
+    MLCLLM = 3
 
 
 @dataclass
 class EngineConfig:
+    model_name: str = "unknown"
     host: str = DEFAULT_SERVER_HOST
     port: int = DEFAULT_ENGINE_SERVER_PORT
     engine_name: str = "unknown"
-    model_name: str = "unknown"
     engine_type: EngineType = EngineType.NATIVE
     tokenizer_name: str = "unknown"
     fill_chunk_size: int = FILL_NO_CHUNK
+
+    # Forward from runner config
+    dtype: Literal["float16", "float32"] = "float16"
+    device: str = "cuda"  # cpu, cuda, cuda:x
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:
         """Verify the engine config."""
 
+        runner_keys = ["dtype", "device"]
+
         if "runner" not in config or "scheduler" not in config:
             return False
 
-        for field in cls.__fields__:
+        for field in cls.__dataclass_fields__:
+            if field in runner_keys:
+                continue
+
             if field not in config:
                 return False
 

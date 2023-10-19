@@ -18,16 +18,18 @@ class ExecutionEngine:
     def __init__(
         self,
         engine_id: int,
-        name: str,
         config: EngineConfig,
     ):
         # ---------- Basic Config ----------
         self.engine_id = engine_id
-        self.name = name
         self.config = config
 
         # ---------- Runtime Info ----------
         self.runtime_info = EngineRuntimeInfo()
+
+    @property
+    def name(self) -> str:
+        return self.config.engine_name
 
     @property
     def http_address(self) -> str:

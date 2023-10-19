@@ -11,12 +11,11 @@ class BlockContext(LowLevelContext):
 
     def __init__(
         self,
-        client_id: str,
         context_id: int,
         parent_context: Optional["BlockContext"],
         kv_cache_manager: RecyclePool,
     ):
-        super().__init__(client_id, context_id, parent_context)
+        super().__init__(context_id, parent_context)
 
         # KV blocks address
         self.token_kv_block_ids: List[int] = []
