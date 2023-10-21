@@ -1,9 +1,12 @@
 {
+    "engine_name": "opt_13b_local",
+    "model_name": "facebook/opt-13b",
     "host": "localhost",
     "port": 9001,
-    "engine_name": "opt_13b_local",
+    "engine_type": "native",
+    "tokenizer_name": "facebook/opt-13b",
+    "fill_chunk_size": -1,
     "runner": {
-        "model_name": "facebook/opt-13b",
         "num_kv_cache_blocks": 2000,
         "attn_func": "xformers_with_buffer",
         "random_seed": 0

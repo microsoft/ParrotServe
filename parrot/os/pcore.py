@@ -1,7 +1,10 @@
 import json
-from typing import Dict
+from typing import Dict, List
+import asyncio
 import time
+from dataclasses import asdict
 
+from parrot.program.vm import VMRuntimeInfo
 from parrot.program.function import SemanticCall
 from parrot.utils import RecyclePool
 from parrot.constants import (
@@ -11,6 +14,7 @@ from parrot.constants import (
     VM_EXPIRE_TIME,
     ENGINE_EXPIRE_TIME,
 )
+from parrot.protocol.layer_apis import ping_engine
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger
 
@@ -61,7 +65,13 @@ class PCore:
         self.processes: Dict[int, Process] = {}  # pid -> process
         self.engines: Dict[int, ExecutionEngine] = {}  # engine_id -> engine
         self.mem_space = MemorySpace()
-        self.dispatcher = ThreadDispatcher(self.engines)
+
+        def flush_engine_callback():
+            self.ping_engines()
+
+        self.dispatcher = ThreadDispatcher(
+            engines=self.engines, flush_engine_callback=flush_engine_callback
+        )
         self.tokenizer = Tokenizer()
 
         # ---------- Id Allocator ----------
@@ -72,28 +82,60 @@ class PCore:
         self.proc_last_seen_time: Dict[int, float] = {}  # pid -> last_seen_time
         self.engine_last_seen_time: Dict[int, float] = {}  # engine_id -> last_seen_time
 
+        logger.info(
+            f"PCore started with config: \n"
+            + "\n".join(
+                [f"  {key}={value}, " for key, value in self.os_config.__dict__.items()]
+            )
+        )
+
     def check_expired(self):
         cur_time = time.perf_counter_ns()
 
         # VMs
         for pid, last_seen_time in self.proc_last_seen_time.items():
             if (cur_time - last_seen_time) / 1e9 > VM_EXPIRE_TIME:
-                # If a VM is expired, we need to free all its resources (garbage collection).
-                process = self.processes.pop(pid)
-                process.free_process()
-                self.proc_last_seen_time.pop(pid)
-                self.pid_pool.free(pid)
-                logger.info(f"VM (pid={pid}) disconnected.")
+                self.processes[pid].dead = True
 
         # Engines
         for engine_id, last_seen_time in self.engine_last_seen_time.items():
             if (cur_time - last_seen_time) / 1e9 > ENGINE_EXPIRE_TIME:
-                engine = self.engines.pop(engine_id)
-                self.engine_last_seen_time.pop(engine_id)
-                self.engine_pool.free(engine_id)
-                logger.info(f"Engine {engine.name} (id={engine_id}) disconnected.")
+                self.engines[engine_id].dead = True
 
-    def os_loop(self):
+    def ping_engines(self):
+        for engine in self.engines.values():
+            if not engine.dead:
+                pong = ping_engine(engine.http_address)
+                if not pong:
+                    engine.dead = True
+
+    def sweep_dead_clients(self):
+        dead_procs: List[Process] = [
+            proc for proc in self.processes.values() if proc.dead
+        ]
+        dead_engines: List[ExecutionEngine] = [
+            engine for engine in self.engines.values() if engine.dead
+        ]
+
+        # VMs
+        for process in dead_procs:
+            pid = process.pid
+            self.processes.pop(pid)
+            # If a VM is dead, we need to free all its resources (garbage collection).
+            process.free_process()
+            self.proc_last_seen_time.pop(pid)
+            self.pid_pool.free(pid)
+            logger.info(f"VM (pid={pid}) disconnected.")
+
+        # Engines
+        for engine in dead_engines:
+            engine_id = engine.engine_id
+            self.engines.pop(engine_id)
+            self.engine_last_seen_time.pop(engine_id)
+            self.engine_pool.free(engine_id)
+            logger.info(f"Engine {engine.name} (id={engine_id}) disconnected.")
+
+    async def os_loop(self):
         """Start the OS loop."""
 
         while True:
@@ -101,8 +143,9 @@ class PCore:
                 process.monitor_threads()
 
             self.check_expired()
+            self.sweep_dead_clients()
 
-            time.sleep(OS_LOOP_INTERVAL)
+            await asyncio.sleep(OS_LOOP_INTERVAL)
 
     # ---------- Public APIs ----------
 
@@ -112,7 +155,7 @@ class PCore:
         process = Process(
             pid=pid,
             dispatcher=self.dispatcher,
-            mem_space=self.mem_space,
+            memory_space=self.mem_space,
             tokenizer=self.tokenizer,
         )
         self.processes[pid] = process
@@ -142,10 +185,12 @@ class PCore:
         mem_used = self.mem_space.profile_process_memory(pid)
         num_threads = len(self.processes[pid].threads)
 
-        return {
-            "mem_used": mem_used,
-            "num_threads": num_threads,
-        }
+        return asdict(
+            VMRuntimeInfo(
+                mem_used=mem_used,
+                num_threads=num_threads,
+            )
+        )
 
     def engine_heartbeat(
         self,

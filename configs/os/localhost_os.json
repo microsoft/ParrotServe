@@ -1,0 +1,6 @@
+{
+    "host": "localhost",
+    "port": 9000,
+    "max_proc_num": 2048,
+    "max_engines_num": 2048
+}

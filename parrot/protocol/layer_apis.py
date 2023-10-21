@@ -9,6 +9,7 @@ from .responses import (
     EngineHeartbeatResponse,
     FreeContextResponse,
     RegisterEngineResponse,
+    PingResponse,
 )
 from .common import (
     send_http_request,
@@ -118,6 +119,19 @@ def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
     except BaseException as e:
         logger.error(f"Free context error in {http_addr}. Error: {e}")
         raise e
+
+
+def ping_engine(http_addr: str) -> bool:
+    try:
+        resp = send_http_request(
+            PingResponse,
+            http_addr,
+            "/ping",
+            retry_times=5,
+        )
+        return True
+    except BaseException as e:
+        return False
 
 
 # ---------- Engine Layer to OS Layer APIs ----------

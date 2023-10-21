@@ -34,11 +34,17 @@ class SchedulerConfig:
     max_tokens_sum: int
 
 
-class EngineType(Enum):
-    NATIVE = 0
-    HUGGINGFACE = 1
-    OPENAI = 2
-    MLCLLM = 3
+# EngineType(Enum)
+ENGINE_TYPE_NATIVE = "native"
+ENGINE_TYPE_HUGGINGFACE = "huggingface"
+ENGINE_TYPE_OPENAI = "openai"
+ENGINE_TYPE_MLCLLM = "mlcllm"
+ENGINE_TYPES = [
+    ENGINE_TYPE_NATIVE,
+    ENGINE_TYPE_HUGGINGFACE,
+    ENGINE_TYPE_OPENAI,
+    ENGINE_TYPE_MLCLLM,
+]
 
 
 @dataclass
@@ -47,7 +53,7 @@ class EngineConfig:
     host: str = DEFAULT_SERVER_HOST
     port: int = DEFAULT_ENGINE_SERVER_PORT
     engine_name: str = "unknown"
-    engine_type: EngineType = EngineType.NATIVE
+    engine_type: str = ENGINE_TYPE_NATIVE
     tokenizer_name: str = "unknown"
     fill_chunk_size: int = FILL_NO_CHUNK
 
@@ -70,5 +76,9 @@ class EngineConfig:
 
             if field not in config:
                 return False
+
+        # Check Literal
+        if config["engine_type"] not in ENGINE_TYPES:
+            return False
 
         return True

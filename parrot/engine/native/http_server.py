@@ -102,6 +102,11 @@ async def free_context(request: Request):
     }
 
 
+@app.post("/ping")
+async def ping(request: Request):
+    return {}
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parrot native engine HTTP server")
 

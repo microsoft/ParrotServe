@@ -17,15 +17,23 @@ class ThreadDispatcher:
     can be scheduled to the same engine.
     """
 
-    def __init__(self, engines: Dict[int, ExecutionEngine]):
+    def __init__(self, engines: Dict[int, ExecutionEngine], flush_engine_callback=None):
         self.engines = engines
+        self.flush_engine_callback = flush_engine_callback
 
     def dispatch(self, thread: Thread):
         """Dispatch a thread to some backend engine."""
 
         engines_list = list(self.engines.values())
+        if self.flush_engine_callback is not None:
+            self.flush_engine_callback()
+        live_engines_list = [engine for engine in engines_list if not engine.dead]
 
         # TODO: Implement the dispatching strategy.
-        thread.engine = engines_list[0]
+        if len(live_engines_list) == 0:
+            logger.warning("No live engine available. Thread dispatch failed.")
+            return
+
+        thread.engine = live_engines_list[0]
 
         logger.info(f"Thread {thread.tid} dispatched to engine {thread.engine.name}.")

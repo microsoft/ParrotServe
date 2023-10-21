@@ -46,6 +46,10 @@ class FreeContextResponse(BaseResponse):
     num_freed_tokens: int
 
 
+class PingResponse(BaseResponse):
+    pass
+
+
 def make_response(resp_cls: Type[BaseResponse], resp: Response):
     resp_data = resp.json()
     init_data = [(field, resp_data[field]) for field in resp_cls.__fields__]

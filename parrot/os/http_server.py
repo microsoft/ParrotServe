@@ -25,7 +25,7 @@ pcore: Optional[PCore] = None
 @app.post("/vm_heartbeat")
 async def vm_heartbeat(request: Request):
     pid = (await request.json())["pid"]
-    pcore.vm_heartbeat(pid)
+    return pcore.vm_heartbeat(pid)
 
 
 @app.post("/register_vm")
@@ -55,7 +55,7 @@ async def placeholder_fetch(request: Request):
 async def engine_heartbeat(request: Request):
     payload = await request.json()
     engine_id = payload["engine_id"]
-    engine_info = EngineRuntimeInfo(**payload["engine_info"])
+    engine_info = EngineRuntimeInfo(**payload["runtime_info"])
     pcore.engine_heartbeat(engine_id, engine_info)
     return {}
 

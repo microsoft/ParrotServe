@@ -17,8 +17,14 @@ pip install triton==2.1.0
 python3 setup.py develop
 ```
 
-### Start a Vicuna-13b Backend Server
+### Start a PCore Server
 
 ```bash
-python3 -m parrot.backend.native.http_server --config_path configs/backend/native/vicuna_13b_v1.3.json
+python3 -m parrot.os.http_server --config_path configs/os/localhost_os.json
+```
+
+### Start a Vicuna-13b Engine Server
+
+```bash
+python3 -m parrot.engine.native.http_server --config_path configs/engine/native/vicuna_13b_v1.3.json
 ```

@@ -51,6 +51,16 @@ class NativeExecutionEngine:
         else:
             self.engine_id = 0
 
+        logger.info(
+            f"Engine {self.engine_config.engine_name} (id={self.engine_id}) started with config: \n"
+            + "\n".join(
+                [
+                    f"  {key}={value}, "
+                    for key, value in self.engine_config.__dict__.items()
+                ]
+            )
+        )
+
     @property
     def connect_to_os(self):
         return self.os_http_address is not None
@@ -109,7 +119,7 @@ class NativeExecutionEngine:
     async def engine_loop(self):
         logger.info(f"Engine loop of engine: {self.engine_config.engine_name} started.")
 
-        last_heartbeat_time = time.perf_counter_ns()
+        last_heartbeat_time = 0  # So that we can send heartbeat at the beginning
 
         while True:
             # Send heartbeat to OS

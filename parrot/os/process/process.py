@@ -39,6 +39,7 @@ class Process:
         self.memory_space.new_memory_space(self.pid)
         self.executor = Executor(tokenizer)
         self.placeholders_map: Dict[int, Placeholder] = {}  # id -> placeholder
+        self.dead = False  # Mark if the process is dead
 
         # ---------- Threads ----------
         self.threads: List[Thread] = []

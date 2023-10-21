@@ -1,14 +1,20 @@
 from parrot.engine.runtime_info import EngineRuntimeInfo
-from parrot.engine.config import EngineConfig, EngineType
+from parrot.engine.config import (
+    EngineConfig,
+    ENGINE_TYPE_NATIVE,
+    ENGINE_TYPE_HUGGINGFACE,
+    ENGINE_TYPE_OPENAI,
+    ENGINE_TYPE_MLCLLM,
+)
 
 from .process.interpret_type import InterpretType
 
 
 INTERPRET_TYPE_MAP = {
-    EngineType.NATIVE: InterpretType.TOKEN_ID,
-    EngineType.HUGGINGFACE: InterpretType.TOKEN_ID,
-    EngineType.OPENAI: InterpretType.TEXT,
-    EngineType.MLCLLM: InterpretType.TEXT,
+    ENGINE_TYPE_NATIVE: InterpretType.TOKEN_ID,
+    ENGINE_TYPE_HUGGINGFACE: InterpretType.TOKEN_ID,
+    ENGINE_TYPE_OPENAI: InterpretType.TEXT,
+    ENGINE_TYPE_MLCLLM: InterpretType.TEXT,
 }
 
 
@@ -23,6 +29,7 @@ class ExecutionEngine:
         # ---------- Basic Config ----------
         self.engine_id = engine_id
         self.config = config
+        self.dead = False  # Mark if the engine is dead
 
         # ---------- Runtime Info ----------
         self.runtime_info = EngineRuntimeInfo()

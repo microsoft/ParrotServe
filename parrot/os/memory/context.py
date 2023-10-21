@@ -37,8 +37,9 @@ class Context:
     @property
     def memory_usage(self) -> float:
         memory_per_token = (
-            self.engine.cache_mem / self.engine.num_cached_tokens
-            if self.engine.num_cached_tokens > 0
+            self.engine.runtime_info.cache_mem
+            / self.engine.runtime_info.num_cached_tokens
+            if self.engine.runtime_info.num_cached_tokens > 0
             else 0
         )
 
