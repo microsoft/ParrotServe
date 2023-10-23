@@ -2,11 +2,11 @@
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
 import parrot as P
-import aioconsole  # We use aioconsole to read input asynchronously
-import logging
 
-vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
-vm.launch()
+vm = P.VirtualMachine(
+    os_http_addr="http://localhost:9000",
+    mode="release",
+)
 
 
 @P.function(formatter=P.allowing_newline)
@@ -24,11 +24,11 @@ def qa(
     """
 
 
-async def main():
+def main():
     while True:
-        question = aioconsole.ainput("Your question: ")
+        question = input("Your question: ")
         answer = qa(question)
-        print("Answer: ", await answer.get())
+        print("Answer: ", answer.get())
 
 
-vm.run(main())
+vm.run(main)

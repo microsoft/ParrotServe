@@ -211,7 +211,7 @@ class PCore:
         assert pid in self.processes, f"Unknown pid: {pid}"
         process = self.processes[pid]
         process.execute_call(call)
-        logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid}"')
+        logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid})')
 
     async def placeholder_fetch(self, pid: int, placeholder_id: int):
         """Fetch a placeholder content from OS to VM."""

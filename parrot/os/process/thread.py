@@ -30,9 +30,9 @@ async def detokenizing(holder: TokensHolder):
 
 class PrefixMode(Enum):
     """There are three cases:
-    1. (NOCACHE) The function is marked as not caching the prefix.
+    1. (SAME_CTX) The function is marked as not caching the prefix.
        In this case, we should directly create a new context.
-    2. (FORK) The function is marked as caching the prefix, but the prefix is not cached.
+    2. (DIFF_CTX) The function is marked as caching the prefix, but the prefix is not cached.
        In this case, we should create a new context for the prefix, and then create
        another new context for the call. The Fill operator of the prefix should be
        executed on the parent context.
@@ -41,8 +41,8 @@ class PrefixMode(Enum):
        and skip the first Fill operator.
     """
 
-    NOCACHE = auto()
-    FORK = auto()
+    SAME_CTX = auto()
+    DIFF_CTX = auto()
     SKIP = auto()
 
 
@@ -59,7 +59,7 @@ class Thread:
         self.process = process
         self.tid = tid
         self.call = call
-        self.prefix_mode = PrefixMode.NOCACHE
+        self.prefix_mode = PrefixMode.SAME_CTX
 
         # The following resources will be set later
         self.engine: Optional[ExecutionEngine] = None
@@ -117,7 +117,7 @@ class Thread:
                 if self.prefix_mode == PrefixMode.SKIP:
                     # Skip the first Fill operator
                     primitive = None
-                elif self.prefix_mode == PrefixMode.FORK:
+                elif self.prefix_mode == PrefixMode.DIFF_CTX:
                     assert self.ctx.parent_context is not None
                     primitive = Fill(
                         pid=self.process.pid,
@@ -126,7 +126,7 @@ class Thread:
                         token_ids=chunked_tokens,
                     )
                 else:
-                    assert self.prefix_mode == PrefixMode.NOCACHE
+                    assert self.prefix_mode == PrefixMode.SAME_CTX
                     primitive = Fill(
                         pid=self.process.pid,
                         tid=self.tid,

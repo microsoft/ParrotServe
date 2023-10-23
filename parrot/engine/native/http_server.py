@@ -118,27 +118,19 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--connect-os",
+        "--without-os",
         action="store_true",
-        help="Whether to connect to the OS.",
-    )
-
-    parser.add_argument(
-        "--os-address",
-        type=str,
-        help="HTTP address of the OS.",
-        default=f"http://{DEFAULT_SERVER_HOST}:{DEFAULT_OS_SERVER_PORT}",
+        help="Whether to start the engine without connecting to OS.",
     )
 
     args = parser.parse_args()
 
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")
-    if args.connect_os:
-        assert args.os_address is not None, "OS address must be specified."
-    else:
-        args.os_address = None
 
-    execution_engine = NativeExecutionEngine(args.config_path, args.os_address)
+    execution_engine = NativeExecutionEngine(
+        engine_config_path=args.config_path,
+        connect_to_os=not args.without_os,
+    )
 
     loop = asyncio.new_event_loop()
     config = Config(

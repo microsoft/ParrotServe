@@ -20,6 +20,7 @@ class MemorySpace:
 
         # (prefix_text, engine_id) -> prefix_context
         self.prefix_cache: Dict[List, Context] = {}
+        self._prefix_cache_reversed: Dict[int, List] = {}  # for free context
 
         # context_id -> List of contexts
         self.process_memory: Dict[int, List[Context]] = {}
@@ -46,7 +47,7 @@ class MemorySpace:
         )
         self.contexts[context_id] = context
         logger.debug(
-            f"Context created: {context_id} (Fork from {parent_context.context_id}))"
+            f"Context created: {context_id} (Fork from {parent_context.context_id})"
         )
         return context
 
@@ -54,29 +55,33 @@ class MemorySpace:
         """Destruct the context. If we call this function, the context obj should not be used
         anymore."""
 
-        assert context.context_id in self.ref_counter
-        self.ref_counter[context.context_id] -= 1
+        context_id = context.context_id
+        assert context_id in self.ref_counter
+        self.ref_counter[context_id] -= 1
 
-        if self.ref_counter[context.context_id] > 0:
+        if self.ref_counter[context_id] > 0:
             return
 
         try:
             engine = context.engine
             resp = free_context(
                 http_addr=engine.http_address,
-                context_id=context.context_id,
+                context_id=context_id,
             )
         except BaseException as e:
             logger.error(
-                f"Context: {context.context_id} did not free correctly: {type(e)}, {e}."
+                f"Context: {context_id} did not free correctly: {type(e)}, {e}."
             )
         else:
             logger.info(
-                f"Context: {context.context_id} freed. Freed tokens: {resp.num_freed_tokens}"
+                f"Context: {context_id} freed. Freed tokens: {resp.num_freed_tokens}"
             )
 
-        self.contexts.pop(context.context_id)
-        self.pool.free(context.context_id)
+        self.contexts.pop(context_id)
+        self.pool.free(context_id)
+        if context_id in self._prefix_cache_reversed:
+            prefix_key = self._prefix_cache_reversed.pop(context_id)
+            self.prefix_cache.pop(prefix_key)
 
     def _add_ref_counter(self, context_id: int):
         if context_id not in self.ref_counter:
@@ -134,19 +139,19 @@ class MemorySpace:
                 # No cached prefix found, create a new context
                 prefix_context = self._new_context(thread.engine)
                 self.prefix_cache[prefix_key] = prefix_context
-                thread.prefix_mode = PrefixMode.FORK
+                self._prefix_cache_reversed[prefix_context.context_id] = prefix_key
+                thread.prefix_mode = PrefixMode.DIFF_CTX  # Fill in different context
+                self._add_ref_counter(prefix_context.context_id)
+                self.process_memory[pid].append(prefix_context)
             else:
                 prefix_context = self.prefix_cache[prefix_key]
                 logger.debug(f"Prefix cache hit! Context: {prefix_context.context_id}")
-                thread.prefix_mode = PrefixMode.SKIP
-
-            self._add_ref_counter(prefix_context.context_id)
-            self.process_memory[pid].append(prefix_context)
+                thread.prefix_mode = PrefixMode.SKIP  # Skip the prefix fill
 
             new_context = self._fork_context(self.prefix_cache[prefix_key])
         else:
             new_context = self._new_context(thread.engine)
-            thread.prefix_mode = PrefixMode.NOCACHE
+            thread.prefix_mode = PrefixMode.SAME_CTX  # Fill in the same context
 
         self._add_ref_counter(new_context.context_id)
         self.process_memory[pid].append(new_context)

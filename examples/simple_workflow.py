@@ -8,8 +8,10 @@
 
 import parrot as P
 
-vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
-vm.launch()
+vm = P.VirtualMachine(
+    os_http_addr="http://localhost:9000",
+    mode="debug",
+)
 
 
 @P.function(formatter=P.allowing_newline)
@@ -73,13 +75,13 @@ async def main():
     )
 
     print("---------- Play Synopsis ----------")
-    print(await synopsis.get())
+    print(await synopsis.aget())
 
     print("---------- Review ----------")
-    print(await review.get())
+    print(await review.aget())
 
     print("---------- Social Media Post ----------")
-    print(await post.get())
+    print(await post.aget())
 
 
 vm.run(main(), timeit=True)

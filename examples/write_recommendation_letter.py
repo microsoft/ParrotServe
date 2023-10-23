@@ -4,8 +4,10 @@
 import parrot as P
 
 # We need to start a definition scope before defining any functions.
-vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
-vm.launch()
+vm = P.VirtualMachine(
+    os_http_addr="http://localhost:9000",
+    mode="debug",
+)
 
 
 # Now we can start to define a "Parrot function".
@@ -38,7 +40,7 @@ def write_recommendation_letter(
 
 
 # Then we can start to define the main function.
-async def main():
+def main():
     letter = write_recommendation_letter(
         stu_name="John",
         prof_name="Prof. Smith",
@@ -47,10 +49,10 @@ async def main():
         specialty="Basketball. Good at playing basketball. Used to be team leader of the school basketball team.",
     )
 
-    letter_str = await letter.get()
+    letter_str = letter.get()
     print("\n\n ---------- RECOMMEND LETTER ---------- ")
     print(letter_str)
 
 
 # Just run it.
-vm.run(main())
+vm.run(main)

@@ -3,8 +3,10 @@
 
 import parrot as P
 
-vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
-vm.launch()
+vm = P.VirtualMachine(
+    os_http_addr="http://localhost:9000",
+    mode="debug",
+)
 
 
 @P.function(conversation_template=P.vicuna_template)
@@ -20,7 +22,7 @@ def tell_me_a_joke(
     """
 
 
-async def main():
+def main():
     topics = [
         "student",
         "machine learning",
@@ -46,13 +48,13 @@ async def main():
         explanations.append(explanation)
 
     for i in range(len(topics)):
-        joke_str = await jokes[i].get()
+        joke_str = jokes[i].get()
         print(f"---------- Round {i}: The following is the joke ---------- ")
         print(joke_str)
         print(
             f"---------- If you don't get it, the following is the explanation ---------- "
         )
-        print(await explanations[i].get())
+        print(explanations[i].get())
 
 
-vm.run(main())
+vm.run(main)

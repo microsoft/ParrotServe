@@ -14,5 +14,9 @@
     "scheduler": {
         "max_batch_size": 256,
         "max_tokens_sum": 8192
+    },
+    "os": {
+        "host": "localhost",
+        "port": 9000
     }
 }

@@ -21,7 +21,7 @@ logger = get_logger("NativeExecutionEngine")
 class NativeExecutionEngine:
     """Backend Execution Engine for Parrot."""
 
-    def __init__(self, engine_config_path: str, os_http_address: Optional[str]):
+    def __init__(self, engine_config_path: str, connect_to_os: bool = True):
         with open(engine_config_path) as f:
             self.engine_config = dict(json.load(f))
 
@@ -29,6 +29,13 @@ class NativeExecutionEngine:
             raise ValueError(f"Invalid engine config: {self.engine_config}")
 
         # self.engine_name = self.engine_config["engine_name"]=
+        self.connect_to_os = connect_to_os
+        if self.connect_to_os:
+            assert (
+                "os" in self.engine_config
+            ), "If connect_to_os is True, os config must be provided."
+            os_config = self.engine_config.pop("os")
+
         native_config = NativeConfig(**self.engine_config.pop("runner"))
         scheduler_config = SchedulerConfig(**self.engine_config.pop("scheduler"))
         self.engine_config = EngineConfig(
@@ -40,9 +47,10 @@ class NativeExecutionEngine:
             model_name=self.engine_config.model_name, config=native_config
         )
         self.scheduler = Scheduler(scheduler_config)
-        self.os_http_address = os_http_address
 
         if self.connect_to_os:
+            self.os_http_address = f"http://{os_config['host']}:{os_config['port']}"
+
             resp = register_engine(
                 http_addr=self.os_http_address,
                 engine_config=self.engine_config,
@@ -60,10 +68,6 @@ class NativeExecutionEngine:
                 ]
             )
         )
-
-    @property
-    def connect_to_os(self):
-        return self.os_http_address is not None
 
     def _add_job(self, job: PrimitiveJob):
         logger.info(f"Adding job: {job}")

@@ -38,7 +38,7 @@ def hf_weights_loader(model_name: str) -> Iterator[Tuple[str, torch.Tensor]]:
     ]
 
     for bin_file in hf_bin_files:
-        state = torch.load(bin_file, map_location="cpu")
+        state = torch.load(bin_file, map_location="cpu", weights_only=True)
         for name, param in state.items():
             yield name, param
         del state

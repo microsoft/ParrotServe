@@ -52,6 +52,7 @@ class Process:
         return thread
 
     def _free_thread(self, thread: Thread):
+        logger.info(f"Free thread {thread.tid}")
         self.threads_pool.free(thread.tid)
         self.threads.remove(thread)
         self.memory_space.free_thread_memory(thread)
@@ -89,6 +90,8 @@ class Process:
         self.executor.submit(thread)
 
     def free_process(self):
+        logger.info(f"Free process {self.pid}")
+        self.monitor_threads()
         assert len(self.threads) == 0, "Cannot free a process with running threads."
         self.memory_space.free_memory_space(self.pid)
 

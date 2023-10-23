@@ -1,6 +1,7 @@
 """This test requires a running OPT-125M Parrot backend HTTP server.
 
-Use `python3 -m parrot.engine.native.http_server --config_path configs/engine/native/opt_125m.json` to start a server.
+Use `python3 -m parrot.engine.native.http_server --config_path configs/engine/native/opt_125m.json --without-os` 
+to start a server.
 Please use host `localhost` and port `9001` for the server.
 Please don't connect to the OS.
 """
