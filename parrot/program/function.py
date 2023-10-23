@@ -1,5 +1,6 @@
 from enum import Enum
-from typing import List, Dict, Type, Optional, Any, Coroutine, Set
+from typing import List, Dict, Type, Optional, Any, Set, Union, Tuple
+import pickle
 import regex as re
 from dataclasses import dataclass
 
@@ -29,9 +30,9 @@ class Constant(FunctionPiece):
 class ParamType(Enum):
     """Type of a parameter."""
 
-    INPUT = 0
-    OUTPUT = 1
-    PYOBJ = 2
+    INPUT_LOC = 0
+    OUTPUT_LOC = 1
+    INPUT_PYOBJ = 2
 
 
 @dataclass
@@ -42,7 +43,15 @@ class Parameter:
 
     @property
     def is_output(self) -> bool:
-        return self.typ == ParamType.OUTPUT
+        return self.typ == ParamType.OUTPUT_LOC
+
+
+@dataclass
+class FunctionMetadata:
+    """Metadata of a function."""
+
+    cache_prefix: bool
+    models: List[str]
 
 
 @dataclass
@@ -102,6 +111,7 @@ def parse_func_body(
     return ret
 
 
+@dataclass
 class SemanticFunction:
     """Parrot's semantic function is a simplified abstraction of the "general" semantic function,
     which is used as examples when we play in the Parrot project.
@@ -115,27 +125,30 @@ class SemanticFunction:
         ```
     """
 
-    _controller: Optional["Controller"] = None
-    _executor: Optional["Executor"] = None
+    _virtual_machine_env: Optional["VirtualMachine"] = None
 
     def __init__(
         self,
         name: str,
         params: List[Parameter],
-        cached_prefix: bool,
         func_body_str: Optional[str] = None,
         func_body: Optional[List[FunctionPiece]] = None,
+        **kwargs,
     ):
         """For semantic function, function body is just a prompt template.
         After parsed, it turns to be a list of function pieces.
         """
 
+        # ---------- Basic Info ----------
         self.name = name
-        self.cached_prefix = cached_prefix
         self.params = params
         self.params_map = dict([(param.name, param) for param in self.params])
-        self.inputs = [param for param in self.params if param.typ != ParamType.OUTPUT]
-        self.outputs = [param for param in self.params if param.typ == ParamType.OUTPUT]
+        self.inputs = [
+            param for param in self.params if param.typ != ParamType.OUTPUT_LOC
+        ]
+        self.outputs = [
+            param for param in self.params if param.typ == ParamType.OUTPUT_LOC
+        ]
         if func_body_str is not None:
             self.body: List[FunctionPiece] = parse_func_body(
                 func_body_str, self.params_map
@@ -145,24 +158,45 @@ class SemanticFunction:
         else:
             raise ValueError("Either func_body_str or func_body should be provided.")
 
-    def __call__(self, *args: List[Any], **kwargs: Dict[str, Any]):
-        """Calling a parrot function will not execute it immediately.
-        Instead, this will submit the call to the executor."""
+        self.metadata = FunctionMetadata(**kwargs)
 
-        call = LLMCall(self, None, *args, **kwargs)
-        if SemanticFunction._executor is not None:
-            SemanticFunction._executor.submit(call)
+    def __call__(
+        self, *args: List[Any], **kwargs: Dict[str, Any]
+    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+        """Call to a semantic function.
+
+        Some notes:
+        - Calling a parrot function will not execute it immediately.
+          Instead, this will submit the call to OS.
+
+        - The return value is a list of Future objects, which can be used to get the
+          output contents or passed to other functions.
+
+        - Caller should provide all the input arguments, including INPUT_LOC and INPUT_PYOBJ.
+
+        - The INPUT_PYOBJ arguments should be Python objects, which will be turns to a string
+          using __str__ method.
+        """
+
+        call = SemanticCall(self, *args, **kwargs)
+        if SemanticFunction._virtual_machine_env is not None:
+            SemanticFunction._virtual_machine_env._submit_call(call)
         else:
             logger.warning(
-                "Executor is not set, will not submit the LLMCall and return bindings instead. "
-                "(Please ensure call `vm.init` before running a Parrot function."
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
             )
-            return call.bindings
+            return call
 
         # Unpack the output futures
         if len(call.output_futures) == 1:
             return call.output_futures[0]
         return tuple(call.output_futures)
+
+    @property
+    def prefix(self) -> Constant:
+        """Get the prefix of the function body."""
+        return self.body[0]
 
     def display(self) -> str:
         """Display the function body."""
@@ -176,19 +210,17 @@ class SemanticFunction:
         )
 
 
-class LLMCall:
+class SemanticCall:
     """A call to a semantic function."""
 
     def __init__(
         self,
         func: SemanticFunction,
-        shared_context_handler: Optional["SharedContextHandler"] = None,
         *args,
         **kwargs,
     ):
         self.func = func
         self.bindings: Dict[str, Any] = {}
-        self.shared_context_handler = shared_context_handler
         self.output_futures: List[Future] = []
 
         # Set positional arguments
@@ -222,14 +254,24 @@ class LLMCall:
 
     @staticmethod
     def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
-        if param.typ != ParamType.PYOBJ:
-            if isinstance(value, str):
-                value = Future(content=value)
-            elif isinstance(value, Coroutine):
-                value = Future(coroutine=value)
-            elif not isinstance(value, Future):
+        if param.typ != ParamType.INPUT_PYOBJ:
+            if not isinstance(value, str) and not isinstance(value, Future):
                 raise TypeError(
-                    f"Argument {param.name} should be a str or a Coroutine, "
+                    f"Argument {param.name} in an input loc should be a str or a Future, "
                     f"but got {type(value)}: {value}"
                 )
+        else:
+            # For Python object, we use __str__ instead of __repr__ to serialize it.
+            value = str(value)
         bindings[param.name] = value
+
+    # NOTE(chaofan): We use pickle to serialize the call.
+    # We use protocol=0 to make the result can be passed by http.
+    # There maybe some better ways to do this, but this is not important for this project.
+
+    def pickle(self) -> bytes:
+        return str(pickle.dumps(self, protocol=0), encoding="ascii")
+
+    @classmethod
+    def unpickle(cls, pickled: bytes) -> "SemanticCall":
+        return pickle.loads(bytes(pickled, encoding="ascii"))

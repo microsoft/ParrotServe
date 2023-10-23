@@ -1,0 +1,42 @@
+from parrot.engine.native.models.opt import OPTForCausalLM
+from parrot.engine.config import NativeConfig
+from parrot.protocol.sampling_config import SamplingConfig
+from parrot.utils import set_random_seed
+from transformers import AutoConfig
+import torch
+
+
+def test_sampling_one_token():
+    model_config = AutoConfig.from_pretrained("facebook/opt-125m")
+    native_config = NativeConfig(
+        num_kv_cache_blocks=1024,
+        attn_func="xformers_with_buffer",
+        random_seed=2333,
+    )
+
+    # Just to get the sampler
+    torch.set_default_dtype(torch.float16)
+    model = OPTForCausalLM(model_config, native_config)
+    model.load_weights("facebook/opt-125m")
+    model = model.cuda()
+
+    sampler = model.sampler
+    set_random_seed(2333)
+    hidden_states = torch.randn(
+        (8, model_config.hidden_size), dtype=torch.float16, device="cuda"
+    )
+    ids = sampler(
+        hidden_states[-1:],
+        [
+            SamplingConfig(
+                temperature=1.0,
+                top_p=1.0,
+            )
+        ],
+    )
+
+    assert ids[0] == 14836
+
+
+if __name__ == "__main__":
+    test_sampling_one_token()

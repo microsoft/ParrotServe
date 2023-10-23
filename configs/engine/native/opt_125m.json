@@ -1,0 +1,22 @@
+{
+    "engine_name": "opt_125m_local",
+    "model_name": "facebook/opt-125m",
+    "host": "localhost",
+    "port": 9001,
+    "engine_type": "native",
+    "tokenizer_name": "facebook/opt-125m",
+    "fill_chunk_size": -1,
+    "runner": {
+        "num_kv_cache_blocks": 2000,
+        "attn_func": "xformers_with_buffer",
+        "random_seed": 0
+    },
+    "scheduler": {
+        "max_batch_size": 256,
+        "max_tokens_sum": 8192
+    },
+    "os": {
+        "host": "localhost",
+        "port": 9000
+    }
+}

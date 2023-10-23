@@ -5,12 +5,15 @@
 
 # FIXME(chaofan): Vicuna-13b-v1.3 has strange behavior (Why speaking Chinese?)
 # 2023.9.26: Fixed
+# 2023.10.23: TODO: Support SharedContext in new Arch
 
 import parrot as P
 
 
-vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
-vm.init()
+vm = P.VirtualMachine(
+    os_http_addr="http://localhost:9000",
+    mode="release",
+)
 
 
 @P.function(caching_prefix=False)

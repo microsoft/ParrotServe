@@ -1,5 +1,6 @@
 from typing import Dict, List
 from abc import ABC, abstractmethod
+from dataclasses import asdict
 from ..function import (
     SemanticFunction,
     FunctionPiece,
@@ -30,8 +31,8 @@ class FuncMutator(ABC):
         new_func = SemanticFunction(
             name=func.name,
             params=new_params,
-            cached_prefix=func.cached_prefix,
             func_body=new_body,
+            **asdict(func.metadata),
         )
 
         return self._visit_func(new_func)
