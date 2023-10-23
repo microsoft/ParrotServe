@@ -39,11 +39,16 @@ class Process:
         self.memory_space.new_memory_space(self.pid)
         self.executor = Executor(tokenizer)
         self.placeholders_map: Dict[int, Placeholder] = {}  # id -> placeholder
+        self.bad = False
         self.dead = False  # Mark if the process is dead
 
         # ---------- Threads ----------
         self.threads: List[Thread] = []
         self.threads_pool = RecyclePool(THREAD_POOL_SIZE)
+
+    @property
+    def live(self):
+        return not self.dead and not self.bad
 
     def _new_thread(self, call: SemanticCall) -> Thread:
         tid = self.threads_pool.allocate()
@@ -90,9 +95,10 @@ class Process:
         self.executor.submit(thread)
 
     def free_process(self):
-        logger.info(f"Free process {self.pid}")
         self.monitor_threads()
-        assert len(self.threads) == 0, "Cannot free a process with running threads."
+        logger.info(
+            f"Free process {self.pid} with running threads num: {len(self.threads)}"
+        )
         self.memory_space.free_memory_space(self.pid)
 
     def monitor_threads(self):

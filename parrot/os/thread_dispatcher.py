@@ -1,6 +1,7 @@
 from typing import Dict
 
 from parrot.utils import get_logger
+from parrot.exceptions import ParrotOSUserError
 
 from .process.thread import Thread
 from .engine import ExecutionEngine
@@ -31,8 +32,9 @@ class ThreadDispatcher:
 
         # TODO: Implement the dispatching strategy.
         if len(live_engines_list) == 0:
-            logger.warning("No live engine available. Thread dispatch failed.")
-            return
+            raise ParrotOSUserError(
+                RuntimeError("No live engine available. Thread dispatch failed.")
+            )
 
         thread.engine = live_engines_list[0]
 

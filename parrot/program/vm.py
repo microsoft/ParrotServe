@@ -75,7 +75,11 @@ class VirtualMachine:
             time.sleep(VM_HEARTBEAT_INTERVAL)
 
     def _submit_call(self, call: SemanticCall):
-        resp = submit_call(http_addr=self.os_http_addr, pid=self.pid, call=call)
+        resp = submit_call(
+            http_addr=self.os_http_addr,
+            pid=self.pid,
+            call=call,
+        )
 
     def _placeholder_fetch(self, placeholder_id: int) -> str:
         resp = placeholder_fetch(

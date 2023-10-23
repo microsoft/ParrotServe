@@ -17,6 +17,7 @@ from parrot.constants import (
 from parrot.protocol.layer_apis import ping_engine
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger
+from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
 
 from .config import OSConfig
 from .process.process import Process
@@ -46,7 +47,9 @@ class PCore:
             self.os_config = dict(json.load(f))
 
         if not OSConfig.verify_config(self.os_config):
-            raise ValueError(f"Invalid OS config: {self.os_config}")
+            raise ParrotOSInteralError(
+                ValueError(f"Invalid OS config: {self.os_config}")
+            )
 
         self.os_config = OSConfig(**self.os_config)
 
@@ -67,7 +70,7 @@ class PCore:
         self.mem_space = MemorySpace()
 
         def flush_engine_callback():
-            self.ping_engines()
+            self._ping_engines()
 
         self.dispatcher = ThreadDispatcher(
             engines=self.engines, flush_engine_callback=flush_engine_callback
@@ -89,7 +92,7 @@ class PCore:
             )
         )
 
-    def check_expired(self):
+    def _check_expired(self):
         cur_time = time.perf_counter_ns()
 
         # VMs
@@ -102,14 +105,14 @@ class PCore:
             if (cur_time - last_seen_time) / 1e9 > ENGINE_EXPIRE_TIME:
                 self.engines[engine_id].dead = True
 
-    def ping_engines(self):
+    def _ping_engines(self):
         for engine in self.engines.values():
             if not engine.dead:
                 pong = ping_engine(engine.http_address)
                 if not pong:
                     engine.dead = True
 
-    def sweep_dead_clients(self):
+    def _sweep_dead_clients(self):
         dead_procs: List[Process] = [
             proc for proc in self.processes.values() if proc.dead
         ]
@@ -135,19 +138,37 @@ class PCore:
             self.engine_pool.free(engine_id)
             logger.info(f"Engine {engine.name} (id={engine_id}) disconnected.")
 
+    def _check_process(self, pid: int):
+        if pid not in self.processes:
+            raise ParrotOSUserError(ValueError(f"Unknown pid: {pid}"))
+
+        process = self.processes[pid]
+        if process.dead:
+            raise ParrotOSUserError(RuntimeError(f"Process (pid={pid}) is dead."))
+
+        if process.bad:
+            process.dead = True
+            raise ParrotOSUserError(
+                RuntimeError(
+                    f"Process (pid={pid}) is bad because exceptions happen "
+                    "during the execution of threads."
+                )
+            )
+
+    # ---------- Public APIs ----------
+
     async def os_loop(self):
         """Start the OS loop."""
 
         while True:
             for process in self.processes.values():
-                process.monitor_threads()
+                if process.live:
+                    process.monitor_threads()
 
-            self.check_expired()
-            self.sweep_dead_clients()
+            self._check_expired()
+            self._sweep_dead_clients()
 
             await asyncio.sleep(OS_LOOP_INTERVAL)
-
-    # ---------- Public APIs ----------
 
     def register_vm(self) -> int:
         """Register a new VM as a process in the OS."""
@@ -178,7 +199,8 @@ class PCore:
     def vm_heartbeat(self, pid: int) -> Dict:
         """Update the last seen time of a VM, and return required data."""
 
-        assert pid in self.processes, f"Unknown pid: {pid}"
+        self._check_process(pid)
+
         self.proc_last_seen_time[pid] = time.perf_counter_ns()
         logger.info(f"VM (pid={pid}) heartbeat received.")
 
@@ -199,7 +221,8 @@ class PCore:
     ):
         """Update the last seen time of an engine and other engine info."""
 
-        assert engine_id in self.engines, f"Unknown engine_id: {engine_id}"
+        if engine_id not in self.engines:
+            raise ParrotOSUserError(ValueError(f"Unknown engine_id: {engine_id}"))
         engine = self.engines[engine_id]
         self.engine_last_seen_time[engine_id] = time.perf_counter_ns()
         engine.runtime_info = engine_info
@@ -208,7 +231,8 @@ class PCore:
     def submit_call(self, pid: int, call: SemanticCall):
         """Submit a call from a VM to the OS."""
 
-        assert pid in self.processes, f"Unknown pid: {pid}"
+        self._check_process(pid)
+
         process = self.processes[pid]
         process.execute_call(call)
         logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid})')
@@ -216,11 +240,13 @@ class PCore:
     async def placeholder_fetch(self, pid: int, placeholder_id: int):
         """Fetch a placeholder content from OS to VM."""
 
-        assert pid in self.processes, f"Unknown pid: {pid}"
+        self._check_process(pid)
+
         process = self.processes[pid]
-        assert (
-            placeholder_id in process.placeholders_map
-        ), f"Unknown placeholder_id: {placeholder_id}"
+        if placeholder_id not in process.placeholders_map:
+            raise ParrotOSUserError(
+                ValueError(f"Unknown placeholder_id: {placeholder_id}")
+            )
         placeholder = process.placeholders_map[placeholder_id]
         logger.info(f'Placeholder (id={placeholder_id}) fetched from VM (pid={pid}"')
         return await placeholder.get()

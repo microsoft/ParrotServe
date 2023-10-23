@@ -1,7 +1,9 @@
 import parrot as P
 
-vm = P.VirtualMachine("configs/vm/single_vicuna_13b_v1.3.json")
-vm.init()
+vm = P.VirtualMachine(
+    os_http_addr="http://localhost:9000",
+    mode="release",
+)
 
 
 @P.function(formatter=P.allowing_newline)
@@ -19,9 +21,9 @@ def dev(response: P.Output):
     """
 
 
-async def main():
+def main():
     code = dev()
-    print(await code.get())
+    print(code.get())
 
 
-vm.run(main(), timeit=True)
+vm.run(main, timeit=True)

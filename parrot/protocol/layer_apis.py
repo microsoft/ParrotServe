@@ -59,7 +59,7 @@ def submit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallRes
             SubmitCallResponse,
             http_addr,
             "/submit_call",
-            retry_times=3,
+            retry_times=1,
             pid=pid,
             call=call.pickle(),
         )

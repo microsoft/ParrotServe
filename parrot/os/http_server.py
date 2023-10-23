@@ -2,8 +2,10 @@
 
 import argparse
 import asyncio
+import traceback
 from typing import Optional
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from uvicorn import Config, Server
 
 from parrot.program.function import SemanticCall
@@ -11,6 +13,7 @@ from parrot.os.pcore import PCore
 from parrot.os.engine import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger, create_task_in_loop
+from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
 
 
 logger = get_logger("OS Server")
@@ -20,6 +23,26 @@ app = FastAPI()
 
 # Engine
 pcore: Optional[PCore] = None
+
+# Mode
+release_mode = False
+
+
+@app.exception_handler(ParrotOSUserError)
+async def parrot_os_internal_error_handler(request: Request, exc: ParrotOSUserError):
+    traceback_info = "" if release_mode else traceback.format_exc()
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": repr(exc),
+            "traceback": traceback_info,
+        },
+    )
+
+
+@app.exception_handler(ParrotOSInteralError)
+async def parrot_os_internal_error_handler(request: Request, exc: ParrotOSInteralError):
+    raise exc
 
 
 @app.post("/vm_heartbeat")
@@ -78,7 +101,15 @@ if __name__ == "__main__":
         required=True,
     )
 
+    parser.add_argument(
+        "--release-mode",
+        action="store_true",
+        help="Run in release mode. In debug mode, "
+        "OS will print more logs and expose extra information to clients.",
+    )
+
     args = parser.parse_args()
+    release_mode = args.release_mode
     pcore = PCore(args.config_path)
 
     loop = asyncio.new_event_loop()

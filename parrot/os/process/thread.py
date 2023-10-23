@@ -9,6 +9,7 @@ from parrot.constants import (
     STREAMING_END_TOKEN_ID,
     FILL_NO_CHUNK,
 )
+from parrot.exceptions import ParrotOSUserError
 
 from .primitive_operator import *
 from .placeholder import TokensHolder
@@ -246,17 +247,24 @@ class Thread:
         while not self.operators.empty():
             op = self.operators.get()
 
-            if isinstance(op, TokenIdPlaceholderGenerate):
-                await self._visit_token_id_placeholder_generate(op)
-            elif isinstance(op, TokenIdConstantFill):
-                await self._visit_token_id_constant_fill(op)
-            elif isinstance(op, TokenIdPlaceholderFill):
-                await self._visit_token_id_placeholder_fill(op)
-            elif isinstance(op, TextConstantFill):
-                await self._visit_text_constant_fill(op)
-            elif isinstance(op, TextPlaceholderFill):
-                await self._visit_text_placeholder_fill(op)
-            elif isinstance(op, TextPlaceholderGenerate):
-                await self._visit_text_placeholder_generate(op)
+            try:
+                if isinstance(op, TokenIdPlaceholderGenerate):
+                    await self._visit_token_id_placeholder_generate(op)
+                elif isinstance(op, TokenIdConstantFill):
+                    await self._visit_token_id_constant_fill(op)
+                elif isinstance(op, TokenIdPlaceholderFill):
+                    await self._visit_token_id_placeholder_fill(op)
+                elif isinstance(op, TextConstantFill):
+                    await self._visit_text_constant_fill(op)
+                elif isinstance(op, TextPlaceholderFill):
+                    await self._visit_text_placeholder_fill(op)
+                elif isinstance(op, TextPlaceholderGenerate):
+                    await self._visit_text_placeholder_generate(op)
+            except Exception as e:
+                # If exception happens, we should terminate the thread and the related process.
+                # But other processes should not be affected.
+                logger.error(f"Error when executing operator {op}: {e}")
+                self.process.bad = True
+                raise ParrotOSUserError(e)
 
         self.finished_flag = True

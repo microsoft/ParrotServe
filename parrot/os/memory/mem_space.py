@@ -3,6 +3,7 @@ from typing import Dict, List
 from parrot.protocol.layer_apis import free_context
 from parrot.utils import get_logger, RecyclePool
 from parrot.constants import CONTEXT_POOL_SIZE
+from parrot.exceptions import parrot_assert, ParrotOSInteralError
 
 from ..engine import ExecutionEngine
 from .context import Context
@@ -56,7 +57,9 @@ class MemorySpace:
         anymore."""
 
         context_id = context.context_id
-        assert context_id in self.ref_counter
+        parrot_assert(
+            context_id in self.ref_counter, "Context should have ref_counter."
+        )
         self.ref_counter[context_id] -= 1
 
         if self.ref_counter[context_id] > 0:
@@ -72,6 +75,7 @@ class MemorySpace:
             logger.error(
                 f"Context: {context_id} did not free correctly: {type(e)}, {e}."
             )
+            raise ParrotOSInteralError(e)
         else:
             logger.info(
                 f"Context: {context_id} freed. Freed tokens: {resp.num_freed_tokens}"
@@ -96,7 +100,7 @@ class MemorySpace:
 
     def free_memory_space(self, pid: int):
         """Free the memory space for a process."""
-        assert pid in self.process_memory, "Process should have memory space."
+        parrot_assert(pid in self.process_memory, "Process should have memory space.")
         for context in self.process_memory[pid]:
             self._free_context(context)
         self.process_memory.pop(pid)
@@ -104,18 +108,19 @@ class MemorySpace:
     def free_thread_memory(self, thread: Thread):
         """Free the memory space for a thread."""
         pid = thread.process.pid
-        assert pid in self.process_memory, "Process should have memory space."
-        assert (
-            self.ref_counter[thread.ctx.context_id] == 1
-        ), "Context should be monopolized by this thread."
+        parrot_assert(pid in self.process_memory, "Process should have memory space.")
+        parrot_assert(
+            self.ref_counter[thread.ctx.context_id] == 1,
+            "Context should be monopolized by this thread.",
+        )
         self.process_memory[pid].remove(thread.ctx)
         self._free_context(thread.ctx)
 
     def profile_process_memory(self, pid: int) -> float:
         """Profile the memory usage of a process."""
-        assert pid in self.process_memory, "Process should have memory space."
+        parrot_assert(pid in self.process_memory, "Process should have memory space.")
 
-        mem_used: float = 0
+        mem_used: float = 0.0
         for context in self.process_memory[pid]:
             mem_used += context.memory_usage
         return mem_used
@@ -127,9 +132,11 @@ class MemorySpace:
         - If the function is marked as "cache_prefix", it will create a new context for prefix;
         - Otherwise, the whole function will be executed in the same new context.
         """
-        assert thread.dispatched, "Thread should be dispatched before getting context."
+        parrot_assert(
+            thread.dispatched, "Thread should be dispatched before getting context."
+        )
         pid = thread.process.pid
-        assert pid in self.process_memory, "Process should have memory space."
+        parrot_assert(pid in self.process_memory, "Process should have memory space.")
 
         if thread.call.func.metadata.cache_prefix:
             # Try to find a cached prefix

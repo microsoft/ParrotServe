@@ -2,6 +2,7 @@ from typing import Dict
 
 from parrot.os.tokenizer import Tokenizer
 from parrot.utils import get_logger, create_task_in_loop
+from parrot.exceptions import ParrotOSInteralError
 
 from .thread import Thread
 from .interpreter import TokenIdInterpreter, TextInterpreter
@@ -36,7 +37,10 @@ class Executor:
         return self.token_id_interpreters[tokenizer_name]
 
     def submit(self, thread: Thread):
-        assert thread.dispatched, "Thread must be dispatched before submitting."
+        if not thread.dispatched:
+            raise ParrotOSInteralError(
+                RuntimeError("Thread must be dispatched before submitting.")
+            )
 
         interpret_type = thread.engine.interpreter_type
 
@@ -47,7 +51,9 @@ class Executor:
         elif interpret_type == InterpretType.TEXT:
             interpreter = self.text_interpreter
         else:
-            raise ValueError(f"Unknown interpret type {interpret_type}.")
+            raise ParrotOSInteralError(
+                ValueError(f"Unknown interpret type {interpret_type}.")
+            )
 
         interpreter.interpret(thread)
 

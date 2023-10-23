@@ -4,6 +4,7 @@ from typing import Dict
 from .thread import Thread
 
 from parrot.program.function import Constant, ParameterLoc
+from parrot.exceptions import parrot_assert
 
 from ..tokenizer import Tokenizer
 from .placeholder import Placeholder, TokensHolder
@@ -55,7 +56,10 @@ class TokenIdInterpreter(BaseInterpreter):
             if isinstance(piece, Constant):
                 inst = TokenIdConstantFill(tokenized[i])
             elif isinstance(piece, ParameterLoc):
-                assert piece.param.name in thread.call.bindings
+                parrot_assert(
+                    piece.param.name in thread.call.bindings,
+                    "Param should be assigned.",
+                )
                 param_value = thread.call.bindings[piece.param.name]
 
                 if isinstance(param_value, str):
@@ -67,9 +71,10 @@ class TokenIdInterpreter(BaseInterpreter):
                         )
                     )
                 else:
-                    assert isinstance(
-                        param_value, Placeholder
-                    ), "If not str, must be a placeholder"
+                    parrot_assert(
+                        isinstance(param_value, Placeholder),
+                        "If not str, must be a placeholder",
+                    )
                     holder = self._get_dataholder(param_value)
                     if piece.param.is_output:
                         sampling_config = piece.param.sampling_config
@@ -106,13 +111,18 @@ class TextInterpreter(BaseInterpreter):
             if isinstance(piece, Constant):
                 inst = TextConstantFill(piece.text)
             elif isinstance(piece, ParameterLoc):
-                assert piece.param.name in thread.call.bindings
+                parrot_assert(
+                    piece.param.name in thread.call.bindings,
+                    "Param should be assigned.",
+                )
                 param_value = thread.call.bindings[piece.param.name]
 
                 if isinstance(param_value, str):
                     inst = TextConstantFill(param_value)
                 else:
-                    assert isinstance(param_value, Placeholder)
+                    parrot_assert(
+                        isinstance(param_value, Placeholder), "Must be a placeholder"
+                    )
                     if piece.param.is_output:
                         sampling_config = piece.param.sampling_config
                         inst = TextPlaceholderGenerate(

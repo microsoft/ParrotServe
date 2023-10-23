@@ -19,16 +19,22 @@ def send_http_request(
 ) -> BaseResponse:
     url = http_addr + api_url
     error = None
+    error_resp = None
     for _ in range(retry_times):
         try:
-            try:
-                resp = requests.post(url, json=kwargs)
-                assert resp.status_code == 200
-                return make_response(response_cls, resp)
-            except BaseException as e:
-                raise e
+            resp = requests.post(url, json=kwargs)
+            if resp.status_code != 200:
+                error_resp = resp
+                continue
+            return make_response(response_cls, resp)
         except BaseException as e:
             error = e
+
+    if error_resp is not None and error_resp.status_code == 500:
+        resp_data = error_resp.json()
+        assert "error" in resp_data
+        assert "traceback" in resp_data
+        raise RuntimeError(f"{resp_data['error']}\n{resp_data['traceback']}")
 
     assert error is not None
     # forward to caller side
