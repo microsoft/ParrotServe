@@ -6,14 +6,14 @@ from parrot.protocol.layer_apis import engine_heartbeat
 
 from ..llm_engine import LLMEngine
 from ..runtime_info import EngineRuntimeInfo
-from .runner import Runner
+from .native_runner import NativeRunner
 from .block_context import BlockContext
 from ..scheduler import Scheduler
 from ..primitive_job import PrimitiveJob, Fill, Generation
 from ..config import NativeConfig, SchedulerConfig, EngineConfig
 
 
-logger = get_logger("NativeExecutionEngine")
+logger = get_logger("NativeEngine")
 
 
 class NativeEngine(LLMEngine):
@@ -29,7 +29,7 @@ class NativeEngine(LLMEngine):
             device=native_config.device_str,
             **engine_config,
         )
-        self.runner = Runner(
+        self.runner = NativeRunner(
             model_name=self.engine_config.model_name, config=native_config
         )
         self.scheduler = Scheduler(scheduler_config)
@@ -57,16 +57,8 @@ class NativeEngine(LLMEngine):
 
     # ---------- Public APIs ----------
 
+    # override
     async def fill(self, payload: Dict) -> Dict:
-        """Fill API.
-
-        Args:
-            payload: Dict[str, Any]. The payload of the fill API.
-
-        Returns:
-            Dict. The response of the fill API.
-        """
-
         fill_job = Fill(
             pid=payload["pid"],
             tid=payload["tid"],
@@ -81,28 +73,14 @@ class NativeEngine(LLMEngine):
             "num_filled_tokens": len(fill_job.token_ids),
         }
 
+    # override
     async def generate(self, payload: Dict) -> Dict:
-        """Generate API.
-
-        Args:
-            payload: Dict[str, Any]. The payload of the generate API.
-
-        Returns:
-            Dict. The response of the generate API.
-        """
-
-        pid = payload["pid"]
-        tid = payload["tid"]
-        context_id = payload["context_id"]
-        parent_context_id = payload["parent_context_id"]
-        sampling_config = SamplingConfig(**payload["sampling_config"])
-
         generation_job = Generation(
-            pid=pid,
-            tid=tid,
-            context_id=context_id,
-            parent_context_id=parent_context_id,
-            sampling_config=sampling_config,
+            pid=payload["pid"],
+            tid=payload["tid"],
+            context_id=payload["context_id"],
+            parent_context_id=payload["parent_context_id"],
+            sampling_config=SamplingConfig(**payload["sampling_config"]),
         )
         self._add_job(generation_job)
 
@@ -117,16 +95,8 @@ class NativeEngine(LLMEngine):
             "generated_ids": generated_token_ids,
         }
 
+    # override
     def generate_stream(self, payload: Dict) -> AsyncGenerator:
-        """Generate stream API.
-
-        Args:
-            payload: Dict[str, Any]. The payload of the generate stream API.
-
-        Returns:
-            The generator of the generate stream API.
-        """
-
         pid = payload["pid"]
         tid = payload["tid"]
         context_id = payload["context_id"]
@@ -144,15 +114,8 @@ class NativeEngine(LLMEngine):
 
         return generation_job.generator()
 
+    # override
     def free_context(self, payload: Dict) -> Dict:
-        """Free context API.
-
-        Args:
-            payload: Dict[str, Any]. The payload of the free context API.
-
-        Returns:
-            Dict. The response of the free context API.
-        """
         context_id = payload["context_id"]
         for job in self.scheduler.running_jobs:
             if job.context_id == context_id:
@@ -164,9 +127,8 @@ class NativeEngine(LLMEngine):
             "num_freed_tokens": num_freed_tokens,
         }
 
+    # override
     def heartbeat(self):
-        """Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
-
         if not self.connect_to_os:
             return
 
@@ -198,6 +160,7 @@ class NativeEngine(LLMEngine):
             ),
         )
 
+    # override
     def engine_iter(self):
         # If there is no job, we don't need to run.
         if self.scheduler.empty:

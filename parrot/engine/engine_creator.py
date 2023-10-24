@@ -11,7 +11,7 @@ from .config import (
     EngineConfig,
 )
 from .native.native_engine import NativeEngine
-
+from .mlc_llm.mlc_engine import MLCEngine
 
 logger = get_logger("Engine Creator")
 
@@ -37,5 +37,7 @@ def create_engine(engine_config_path: str, connect_to_os: bool = True) -> LLMEng
 
     if engine_type == ENGINE_TYPE_NATIVE:
         return NativeEngine(engine_config, connect_to_os)
+    elif engine_type == ENGINE_TYPE_MLCLLM:
+        return MLCEngine(engine_config, connect_to_os)
     else:
         raise NotImplementedError(f"Unsupported engine type: {engine_type}")

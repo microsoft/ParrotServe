@@ -19,6 +19,7 @@ class BlockContext(LowLevelContext):
 
         # KV blocks address
         self.token_kv_block_ids: List[int] = []
+        # Token ids
         self.token_ids: List[int] = []
 
         # KV cache manager i.e. a pool allocator.
@@ -28,6 +29,7 @@ class BlockContext(LowLevelContext):
         # `last_hidden_state` for the `generation` primitive.
         self.last_hidden_state: Optional[torch.Tensor] = None
 
+    # override
     def destruction(self):
         super().destruction()
 
@@ -38,12 +40,17 @@ class BlockContext(LowLevelContext):
         for _ in range(length):
             self.token_kv_block_ids.append(self.kv_cache_manager.allocate())
 
-    def get_context_len(self) -> int:
-        parent_len = self.parent_context.get_context_len() if self.parent_context else 0
-        return parent_len + self.get_this_context_len()
-
+    # override
     def get_this_context_len(self) -> int:
         return len(self.token_kv_block_ids)
+
+    # override
+    def get_last_token_id(self) -> int:
+        return self.token_ids[-1]
+
+    # override
+    def push_token_id(self, token_id: int):
+        self.token_ids.append(token_id)
 
     def get_context_blocks(self) -> List[int]:
         """Return the context blocks."""
@@ -52,11 +59,6 @@ class BlockContext(LowLevelContext):
             self.parent_context.get_context_blocks() if self.parent_context else []
         )
         return parent_blocks + self.token_kv_block_ids
-
-    def get_last_token_id(self) -> int:
-        """Return the last token id."""
-
-        return self.token_ids[-1]
 
     def get_last_hidden_state(self) -> torch.Tensor:
         """Return the last hidden state."""

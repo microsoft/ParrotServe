@@ -1,7 +1,8 @@
 """This test requires a running OPT-125M Parrot backend HTTP server.
 
-Use `python3 -m parrot.engine.http_server --config_path configs/engine/native/opt_125m.json --without-os` 
+Use `python3 -m parrot.engine.http_server --config_path configs/engine/native/opt-125m.json --without-os` 
 to start a server.
+
 Please use host `localhost` and port `9001` for the server.
 Please don't connect to the OS.
 """
@@ -23,11 +24,12 @@ def test_simple_serving():
         url = "http://localhost:9001"
 
         package_path = parrot.__path__[0]
-        engine_config_path = package_path + "/../configs/engine/native/opt_125m.json"
+        engine_config_path = package_path + "/../configs/engine/native/opt-125m.json"
         with open(engine_config_path) as f:
             engine_config = dict(json.load(f))
         engine_config.pop("runner")
         engine_config.pop("scheduler")
+        engine_config.pop("os")
         engine_config = EngineConfig(**engine_config)
 
         os_engine = ExecutionEngine(

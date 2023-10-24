@@ -33,10 +33,22 @@ class LowLevelContext(ABC):
             len(self.sub_context_ids) == 0
         ), f"Sub-contexts {self.sub_context_ids[0]} should be deleted first."
 
-    @abstractmethod
     def get_context_len(self) -> int:
         """Return the length of the context."""
+
+        parent_len = self.parent_context.get_context_len() if self.parent_context else 0
+        return parent_len + self.get_this_context_len()
 
     @abstractmethod
     def get_this_context_len(self) -> int:
         """Return the length of the context, without recursing into parent contexts."""
+
+    # The following methods are used in the token-level context.
+
+    @abstractmethod
+    def push_token_id(self, token_id: int):
+        """Push a token id to the context."""
+
+    @abstractmethod
+    def get_last_token_id(self) -> int:
+        """Return the last token id."""

@@ -10,13 +10,3 @@ class OSConfig:
     port: int = DEFAULT_OS_SERVER_PORT
     max_proc_num: int = 2048
     max_engines_num: int = 2048
-
-    @classmethod
-    def verify_config(cls, config: Dict) -> bool:
-        """Verify the OS config."""
-
-        for field in cls.__dataclass_fields__:
-            if field not in config:
-                return False
-
-        return True

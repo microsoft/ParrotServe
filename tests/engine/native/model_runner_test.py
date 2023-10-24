@@ -1,4 +1,4 @@
-from parrot.engine.native.runner import Runner
+from Parrot.parrot.engine.native.native_runner import NativeRunner
 from parrot.engine.config import NativeConfig
 from parrot.engine.primitive_job import Fill, Generation
 from parrot.protocol.sampling_config import SamplingConfig
@@ -8,7 +8,7 @@ from transformers import AutoTokenizer
 
 
 def test_single_fill(model_name, native_config: NativeConfig):
-    runner = Runner(model_name, native_config)
+    runner = NativeRunner(model_name, native_config)
 
     job = Fill(
         pid=0,
@@ -24,7 +24,7 @@ def test_single_fill(model_name, native_config: NativeConfig):
 
 
 def test_batch_fills(model_name, native_config: NativeConfig):
-    runner = Runner(model_name, native_config)
+    runner = NativeRunner(model_name, native_config)
     batch_size = 16
     jobs = [
         Fill(
@@ -41,7 +41,7 @@ def test_batch_fills(model_name, native_config: NativeConfig):
 
 
 def test_fill_then_gen(model_name, native_config: NativeConfig):
-    runner = Runner(model_name, native_config)
+    runner = NativeRunner(model_name, native_config)
     runner.run_iter(
         [
             Fill(
@@ -68,7 +68,7 @@ def test_fill_then_gen(model_name, native_config: NativeConfig):
 
 
 def test_generate_single_text(model_name, native_config: NativeConfig):
-    runner = Runner(model_name, native_config)
+    runner = NativeRunner(model_name, native_config)
     prompt_text = "Hello, my name is"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
@@ -99,7 +99,7 @@ def test_generate_single_text(model_name, native_config: NativeConfig):
 
 
 def test_generate_batch_text(model_name, native_config: NativeConfig):
-    runner = Runner(model_name, native_config)
+    runner = NativeRunner(model_name, native_config)
     prompt_text = [
         "Hello, my name is",
         "Hello, my name is",
@@ -142,7 +142,7 @@ def test_generate_batch_text(model_name, native_config: NativeConfig):
 
 
 def test_fill_generate_mixed(model_name, native_config: NativeConfig):
-    runner = Runner(model_name, native_config)
+    runner = NativeRunner(model_name, native_config)
     prompt_text = [
         "Hello, my name is",
         "Hello, my name is",

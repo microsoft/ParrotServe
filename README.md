@@ -45,5 +45,5 @@ python3 -m parrot.os.http_server --config_path configs/os/localhost_os.json
 You can separately start an engine server. If you choice to connect to the OS server, you need to start the OS server first and specify the OS server address in the config file.
 
 ```bash
-python3 -m parrot.engine.http_server --config_path configs/engine/native/vicuna_13b_v1.3.json
+python3 -m parrot.engine.http_server --config_path configs/engine/native/vicuna-13b-v1.3.json
 ```

@@ -29,6 +29,13 @@ class NativeConfig:
 
 
 @dataclass
+class MLCConfig:
+    model_path: str
+    lib_path: str
+    device: str = "cuda"  # 'cuda', 'metal', 'vulkan', 'rocm', 'opencl', 'auto'
+
+
+@dataclass
 class SchedulerConfig:
     max_batch_size: int
     max_tokens_sum: int
@@ -65,17 +72,15 @@ class EngineConfig:
     def verify_config(cls, config: Dict) -> bool:
         """Verify the engine config."""
 
-        runner_keys = ["dtype", "device"]
-
         if "runner" not in config or "scheduler" not in config:
             return False
 
-        for field in cls.__dataclass_fields__:
-            if field in runner_keys:
-                continue
+        # for field in cls.__dataclass_fields__:
+        #     if field in runner_keys:
+        #         continue
 
-            if field not in config:
-                return False
+        #     if field not in config:
+        #         return False
 
         # Check Literal
         if config["engine_type"] not in ENGINE_TYPES:

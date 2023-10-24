@@ -16,7 +16,7 @@ from ..primitive_job import PrimitiveJob, Fill, Generation
 from ..config import NativeConfig
 
 
-logger = get_logger("Runner")
+logger = get_logger("NativeRunner")
 
 
 def get_model_memory(model) -> float:
@@ -28,7 +28,7 @@ def get_model_memory(model) -> float:
     return model_mem / 1024 / 1024
 
 
-class Runner:
+class NativeRunner:
     """Minimal Native LLM Runner with adaption to Parrot."""
 
     def __init__(self, model_name: str, config: NativeConfig):

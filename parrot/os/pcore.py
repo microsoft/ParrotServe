@@ -46,10 +46,10 @@ class PCore:
         with open(os_config_path, "r") as f:
             self.os_config = dict(json.load(f))
 
-        if not OSConfig.verify_config(self.os_config):
-            raise ParrotOSInteralError(
-                ValueError(f"Invalid OS config: {self.os_config}")
-            )
+        # if not OSConfig.verify_config(self.os_config):
+        #     raise ParrotOSInteralError(
+        #         ValueError(f"Invalid OS config: {self.os_config}")
+        #     )
 
         self.os_config = OSConfig(**self.os_config)
 
