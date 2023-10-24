@@ -92,7 +92,7 @@ class IterationState:
                 )
             )
         else:
-            raise ValueError(
+            raise NotImplementedError(
                 f"Unsupported attention function {native_config.attn_func}"
             )
 

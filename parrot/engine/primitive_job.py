@@ -37,10 +37,12 @@ class Fill(PrimitiveJob):
         tid: int,
         context_id: int,
         parent_context_id: int,
-        token_ids: List[int],
+        token_ids: Optional[List[int]] = None,
+        text: Optional[str] = None,
     ) -> None:
         super().__init__(pid, tid, context_id, parent_context_id)
         self.token_ids = token_ids
+        self.text = text
 
     def __repr__(self) -> str:
         return (
