@@ -8,6 +8,7 @@ dist
 # Log
 *.log
 *.log.*
+log
 # *.json
 # *.txt
 
