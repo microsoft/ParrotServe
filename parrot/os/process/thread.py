@@ -217,7 +217,7 @@ class Thread:
         op.output_holder.streaming_event.set()
         async for token_id in generator:
             op.output_holder.send_token(token_id, put_into_holder=True)
-            asyncio.sleep(0.0001)
+            # asyncio.sleep(0.0001)
         op.output_holder.send_token(STREAMING_END_TOKEN_ID, put_into_holder=False)
         op.output_holder.ready_event.set()
 

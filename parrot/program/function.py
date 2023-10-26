@@ -269,9 +269,9 @@ class SemanticCall:
     # We use protocol=0 to make the result can be passed by http.
     # There maybe some better ways to do this, but this is not important for this project.
 
-    def pickle(self) -> bytes:
+    def pickle(self) -> str:
         return str(pickle.dumps(self, protocol=0), encoding="ascii")
 
     @classmethod
-    def unpickle(cls, pickled: bytes) -> "SemanticCall":
+    def unpickle(cls, pickled: str) -> "SemanticCall":
         return pickle.loads(bytes(pickled, encoding="ascii"))
