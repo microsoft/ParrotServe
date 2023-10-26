@@ -48,11 +48,13 @@ async def parrot_os_internal_error_handler(request: Request, exc: ParrotOSIntera
 @app.post("/vm_heartbeat")
 async def vm_heartbeat(request: Request):
     pid = (await request.json())["pid"]
+    logger.debug(f"VM heartbeat received: pid={pid}")
     return pcore.vm_heartbeat(pid)
 
 
 @app.post("/register_vm")
 async def register_vm(request: Request):
+    logger.debug(f"Register VM received.")
     allocated_pid = pcore.register_vm()
     return {"pid": allocated_pid}
 
@@ -61,6 +63,7 @@ async def register_vm(request: Request):
 async def submit_call(request: Request):
     payload = await request.json()
     pid = payload["pid"]
+    logger.debug(f"Submit call received: pid={pid}")
     call = SemanticCall.unpickle(payload["call"])
     pcore.submit_call(pid, call)
     return {}
@@ -71,6 +74,9 @@ async def placeholder_fetch(request: Request):
     payload = await request.json()
     pid = payload["pid"]
     placeholder_id = payload["placeholder_id"]
+    logger.debug(
+        f"Placeholder fetch received: pid={pid}, placeholder_id={placeholder_id}"
+    )
     return {"content": await pcore.placeholder_fetch(pid, placeholder_id)}
 
 
@@ -78,6 +84,7 @@ async def placeholder_fetch(request: Request):
 async def engine_heartbeat(request: Request):
     payload = await request.json()
     engine_id = payload["engine_id"]
+    logger.debug(f"Engine heartbeat received: id={engine_id}.")
     engine_info = EngineRuntimeInfo(**payload["runtime_info"])
     pcore.engine_heartbeat(engine_id, engine_info)
     return {}
@@ -86,6 +93,7 @@ async def engine_heartbeat(request: Request):
 @app.post("/register_engine")
 async def register_engine(request: Request):
     payload = await request.json()
+    logger.debug(f"Register engine received.")
     engine_config = EngineConfig(**payload["engine_config"])
     engine_id = pcore.register_engine(engine_config)
     return {"engine_id": engine_id}

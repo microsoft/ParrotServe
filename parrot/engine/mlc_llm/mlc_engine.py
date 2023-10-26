@@ -54,14 +54,14 @@ class MLCEngine(LLMEngine):
         is_gpu = False
         gpu_no = 0
 
-        start_memory = get_memory(is_gpu, gpu_no)
+        # start_memory = get_memory(is_gpu, gpu_no)
         self.chat_module = ChatModule(
             model=mlc_config.model_path,
             model_lib_path=mlc_config.lib_path,
             device=mlc_config.device,
         )
-        end_memory = get_memory(is_gpu, gpu_no)
-        self.model_mem = (end_memory - start_memory) / 1024 / 1024  # MiB
+        # end_memory = get_memory(is_gpu, gpu_no)
+        self.model_mem = 0  # MiB
 
         # logger.info(
         #     f"Model {self.engine_config.model_name} loaded. Total size: {self.model_mem} MiB"

@@ -234,8 +234,14 @@ class PCore:
         self._check_process(pid)
 
         process = self.processes[pid]
-        process.execute_call(call)
-        logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid})')
+        st = time.perf_counter_ns()
+        process._execute_call(call)
+        ed = time.perf_counter_ns()
+
+        logger.info(
+            f'Function call "{call.func.name}" submitted from VM (pid={pid}). '
+            f"Time used: {(ed - st) / 1e9} s."
+        )
 
     async def placeholder_fetch(self, pid: int, placeholder_id: int):
         """Fetch a placeholder content from OS to VM."""
@@ -248,5 +254,5 @@ class PCore:
                 ValueError(f"Unknown placeholder_id: {placeholder_id}")
             )
         placeholder = process.placeholders_map[placeholder_id]
-        logger.info(f'Placeholder (id={placeholder_id}) fetched from VM (pid={pid}"')
+        logger.info(f"Placeholder (id={placeholder_id}) fetched from VM (pid={pid})")
         return await placeholder.get()

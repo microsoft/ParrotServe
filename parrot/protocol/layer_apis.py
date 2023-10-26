@@ -27,10 +27,11 @@ def vm_heartbeat(
 ) -> VMHeartbeatResponse:
     try:
         return send_http_request(
-            VMHeartbeatResponse,
-            http_addr,
-            "/vm_heartbeat",
+            response_cls=VMHeartbeatResponse,
+            http_addr=http_addr,
+            api_url="/vm_heartbeat",
             retry_times=3,
+            timeout=1,
             pid=pid,
         )
     except BaseException as e:
@@ -156,21 +157,23 @@ def register_engine(
         raise e
 
 
-def engine_heartbeat(
+async def engine_heartbeat(
     http_addr: str,
     engine_id: int,
     engine_name: str,
     runtime_info: "EngineRuntimeInfo",
 ) -> EngineHeartbeatResponse:
     try:
-        return send_http_request(
-            EngineHeartbeatResponse,
-            http_addr,
-            "/engine_heartbeat",
-            retry_times=3,
-            engine_id=engine_id,
-            runtime_info=asdict(runtime_info),
-        )
+        async with aiohttp.ClientSession() as client_session:
+            return await async_send_http_request(
+                client_session=client_session,
+                response_cls=EngineHeartbeatResponse,
+                http_addr=http_addr,
+                api_url="/engine_heartbeat",
+                timeout=1,
+                engine_id=engine_id,
+                runtime_info=asdict(runtime_info),
+            )
     except BaseException as e:
         logger.error(
             f"Check engine heartbeat error. Engine: {engine_name} (id={engine_id}), Error: {e}"

@@ -15,6 +15,7 @@ def send_http_request(
     http_addr: str,
     api_url: str,
     retry_times: int,
+    timeout=None,
     **kwargs,
 ) -> BaseResponse:
     url = http_addr + api_url
@@ -22,7 +23,7 @@ def send_http_request(
     error_resp = None
     for _ in range(retry_times):
         try:
-            resp = requests.post(url, json=kwargs)
+            resp = requests.post(url, json=kwargs, timeout=timeout)
             if resp.status_code != 200:
                 error_resp = resp
                 continue
@@ -46,10 +47,11 @@ async def async_send_http_request(
     response_cls: Type[BaseResponse],
     http_addr: str,
     api_url: str,
+    timeout=None,
     **kwargs,
 ) -> BaseResponse:
     url = http_addr + api_url
-    async with client_session.post(url, json=kwargs) as resp:
+    async with client_session.post(url, json=kwargs, timeout=timeout) as resp:
         assert resp.ok, "Send http request error."
         return await async_make_response(response_cls, resp)
 

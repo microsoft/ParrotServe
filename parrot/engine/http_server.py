@@ -24,24 +24,28 @@ llm_engine: Optional[LLMEngine] = None
 @app.post("/fill")
 async def fill(request: Request):
     payload = await request.json()
+    logger.debug(f"Received fill request from pid={payload['pid']}")
     return await llm_engine.fill(payload)
 
 
 @app.post("/generate")
 async def generate(request: Request):
     payload = await request.json()
+    logger.debug(f"Received generate request from pid={payload['pid']}")
     return await llm_engine.generate(payload)
 
 
 @app.post("/generate_stream")
 async def generate_stream(request: Request):
     payload = await request.json()
+    logger.debug(f"Received generate_stream request from pid={payload['pid']}")
     return StreamingResponse(llm_engine.generate_stream(payload))
 
 
 @app.post("/free_context")
 async def free_context(request: Request):
     payload = await request.json()
+    logger.debug(f"Received free_context request")
     return llm_engine.free_context(payload)
 
 

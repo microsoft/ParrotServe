@@ -4,8 +4,12 @@ import time
 
 from parrot.constants import ENGINE_LOOP_INTERVAL, ENGINE_HEARTBEAT_INTERVAL
 from parrot.protocol.layer_apis import register_engine
+from parrot.utils import get_logger
 
 from .config import EngineConfig
+
+
+logger = get_logger("LLMEngine")
 
 
 class LLMEngine:
@@ -75,7 +79,7 @@ class LLMEngine:
             Dict. The response of the free context API.
         """
 
-    def heartbeat(self):
+    async def heartbeat(self):
         """Heartbeat sent to OS.
 
         Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
@@ -84,13 +88,13 @@ class LLMEngine:
         """The function executed in the every iteration of the engine loop."""
 
     async def engine_loop(self):
-        last_heartbeat_time = 0  # So that we can send heartbeat at the beginning
+        last_heartbeat_time = -1e14  # So that we can send heartbeat at the beginning
 
         while True:
             # Send heartbeat to OS
             cur_time = time.perf_counter_ns()
             if (cur_time - last_heartbeat_time) / 1e9 > ENGINE_HEARTBEAT_INTERVAL:
-                self.heartbeat()
+                await self.heartbeat()
                 last_heartbeat_time = cur_time
 
             await asyncio.sleep(ENGINE_LOOP_INTERVAL)

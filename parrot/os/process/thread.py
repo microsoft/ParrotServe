@@ -1,6 +1,7 @@
 from enum import Enum, auto
 from typing import List, Optional
 from queue import Queue
+import asyncio
 
 from parrot.program.function import SemanticCall
 from parrot.protocol.primitive_request import Fill, Generate
@@ -168,7 +169,9 @@ class Thread:
         # Then there are two cases:
         # 1. The input holder is ready. We can fill the whole data.
         # 2. The input holder is not ready. We can fill the data chunk by chunk.
+
         await op.input_holder.streaming_event.wait()
+        # await op.input_holder.ready_event.wait()
 
         if op.input_holder.ready:
             # Has the whole data
@@ -214,6 +217,7 @@ class Thread:
         op.output_holder.streaming_event.set()
         async for token_id in generator:
             op.output_holder.send_token(token_id, put_into_holder=True)
+            asyncio.sleep(0.0001)
         op.output_holder.send_token(STREAMING_END_TOKEN_ID, put_into_holder=False)
         op.output_holder.ready_event.set()
 
@@ -245,7 +249,7 @@ class Thread:
 
     async def executing(self):
         while not self.operators.empty():
-            op = self.operators.get()
+            op = self.operators.get(timeout=0.5)
 
             try:
                 if isinstance(op, TokenIdPlaceholderGenerate):

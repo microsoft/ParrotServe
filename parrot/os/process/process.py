@@ -78,7 +78,7 @@ class Process:
                 self.placeholders_map[future.id] = Placeholder(value.id)
             call.output_futures[i] = self.placeholders_map[future.id]
 
-    def execute_call(self, call: SemanticCall):
+    def _execute_call(self, call: SemanticCall):
         # Rewrite the call using namespace
         self._rewrite_call(call)
 

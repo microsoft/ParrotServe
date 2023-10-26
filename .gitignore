@@ -36,3 +36,4 @@ raw_data
 log
 *.pt
 *.pth
+data

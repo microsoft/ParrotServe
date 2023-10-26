@@ -128,11 +128,11 @@ class NativeEngine(LLMEngine):
         }
 
     # override
-    def heartbeat(self):
+    async def heartbeat(self):
         if not self.connect_to_os:
             return
 
-        logger.info(f"Heartbeat sent to OS.")
+        logger.info(f"Heartbeat sent to OS (address={self.os_http_address}).")
 
         num_cached_tokens = self.runner.context_manager.get_num_cached_tokens()
 
@@ -148,7 +148,7 @@ class NativeEngine(LLMEngine):
         )  # MiB
         num_running_jobs = len(self.scheduler.running_jobs)
 
-        resp = engine_heartbeat(
+        resp = await engine_heartbeat(
             http_addr=self.os_http_address,
             engine_id=self.engine_id,
             engine_name=self.engine_config.engine_name,
