@@ -51,6 +51,7 @@ class FunctionMetadata:
     """Metadata of a function."""
 
     cache_prefix: bool
+    remove_pure_fill: bool
     models: List[str]
 
 
@@ -67,8 +68,12 @@ def push_to_body(piece_cls: Type[FunctionPiece], body: List[FunctionPiece], **kw
 
 
 def parse_func_body(
-    body_str: str, params_map: Dict[str, Parameter]
+    body_str: str,
+    params_map: Dict[str, Parameter],
+    metadata: FunctionMetadata,
 ) -> List[FunctionPiece]:
+    """Parse the function body string to a list of function pieces."""
+
     PLACEHOLDER_REGEX = "{{[a-zA-Z_][a-zA-Z0-9_]*}}"
     pattern = re.compile(PLACEHOLDER_REGEX)
     iterator = pattern.finditer(body_str)
@@ -101,12 +106,12 @@ def parse_func_body(
 
         last_pos = match.end()
 
-    # if last_pos < len(body_str):
-    #     push_to_body(Constant, ret, body_str[last_pos:])
-
-    # NOTE(chaofan): we prune all pieces after the last output loc.
-    # The following code is also correct for last_output_loc_idx == -1.
-    ret = ret[: last_output_loc_idx + 1]
+    if metadata.remove_pure_fill:
+        # NOTE(chaofan): we prune all pieces after the last output loc.
+        # The following code is also correct for last_output_loc_idx == -1.
+        ret = ret[: last_output_loc_idx + 1]
+    elif last_pos < len(body_str):
+        push_to_body(Constant, ret, text=body_str[last_pos:])
 
     return ret
 
@@ -149,24 +154,28 @@ class SemanticFunction:
         self.outputs = [
             param for param in self.params if param.typ == ParamType.OUTPUT_LOC
         ]
+        self.metadata = FunctionMetadata(**kwargs)
         if func_body_str is not None:
             self.body: List[FunctionPiece] = parse_func_body(
-                func_body_str, self.params_map
+                func_body_str, self.params_map, self.metadata
             )
         elif func_body is not None:
             self.body = func_body
         else:
             raise ValueError("Either func_body_str or func_body should be provided.")
 
-        self.metadata = FunctionMetadata(**kwargs)
+        if SemanticFunction._virtual_machine_env is not None:
+            SemanticFunction._virtual_machine_env.register_function(self)
 
     def __call__(
-        self, *args: List[Any], **kwargs: Dict[str, Any]
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
     ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
         """Call to a semantic function.
 
         Some notes:
-        - Calling a parrot function will not execute it immediately.
+        - Calling a parrot semantic function will not execute it immediately.
           Instead, this will submit the call to OS.
 
         - The return value is a list of Future objects, which can be used to get the
@@ -178,9 +187,43 @@ class SemanticFunction:
           using __str__ method.
         """
 
-        call = SemanticCall(self, *args, **kwargs)
+        return self._call_func(context_successor=None, *args, **kwargs)
+
+    def invoke(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+        """Same as __call__."""
+
+        return self._call_func(context_successor=None, *args, **kwargs)
+
+    def invoke_statefully(
+        self,
+        context_successor: "SemanticFunction",
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+        """Call a semantic function statefully.
+
+        This means the context of the function will not be freed immediately. Instead, it will
+        be passed to the successor function.
+
+        For example, if we execute `f1.invoke_statefully(f2, ...)`, then the next call to `f2`
+        will use the context of `f1` this round.
+        """
+
+        return self._call_func(context_successor=context_successor, *args, **kwargs)
+
+    def _call_func(
+        self,
+        context_successor: Optional["SemanticFunction"] = None,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+        call = SemanticCall(self, context_successor, *args, **kwargs)
         if SemanticFunction._virtual_machine_env is not None:
-            SemanticFunction._virtual_machine_env._submit_call(call)
+            SemanticFunction._virtual_machine_env.submit_call(call)
         else:
             logger.warning(
                 "VM environment is not set. Not submit the Call. Return Call instead. "
@@ -216,10 +259,14 @@ class SemanticCall:
     def __init__(
         self,
         func: SemanticFunction,
-        *args,
-        **kwargs,
+        context_successor: Optional[SemanticFunction],
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
     ):
         self.func = func
+        self.context_successor: Optional[str] = (
+            context_successor.name if context_successor else None
+        )
         self.bindings: Dict[str, Any] = {}
         self.output_futures: List[Future] = []
 

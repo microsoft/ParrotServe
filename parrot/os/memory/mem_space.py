@@ -2,7 +2,7 @@ from typing import Dict, List
 
 from parrot.protocol.layer_apis import free_context
 from parrot.utils import get_logger, RecyclePool
-from parrot.constants import CONTEXT_POOL_SIZE
+from parrot.constants import CONTEXT_POOL_SIZE, NONE_CONTEXT_ID
 from parrot.exceptions import parrot_assert, ParrotOSInteralError
 
 from ..engine import ExecutionEngine
@@ -101,8 +101,18 @@ class MemorySpace:
     def free_memory_space(self, pid: int):
         """Free the memory space for a process."""
         parrot_assert(pid in self.process_memory, "Process should have memory space.")
-        for context in self.process_memory[pid]:
-            self._free_context(context)
+
+        # Free context in topo logical order
+        while len(self.process_memory[pid]) > 0:
+            to_remove = set(self.process_memory[pid])
+            for context in self.process_memory[pid]:
+                if context.parent_context in to_remove:
+                    to_remove.remove(context.parent_context)
+
+            for context in to_remove:
+                self._free_context(context)
+                self.process_memory[pid].remove(context)
+
         self.process_memory.pop(pid)
 
     def free_thread_memory(self, thread: Thread):
@@ -138,6 +148,13 @@ class MemorySpace:
         pid = thread.process.pid
         parrot_assert(pid in self.process_memory, "Process should have memory space.")
 
+        # Stateful call:
+        if thread.context_id_exists:
+            thread.prefix_mode = PrefixMode.SAME_CTX  # Fill in the same context
+            thread.ctx = self.contexts[thread.context_id]
+            return
+
+        # Not stateful call: handling prefix
         if thread.call.func.metadata.cache_prefix:
             # Try to find a cached prefix
             prefix_key = (thread.call.func.prefix.text, thread.engine.engine_id)

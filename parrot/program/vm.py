@@ -3,8 +3,8 @@ import contextlib
 import time
 import traceback
 import threading
-from dataclasses import dataclass, asdict
-from typing import Callable, Coroutine, Literal
+from dataclasses import dataclass
+from typing import Callable, Coroutine, Literal, Dict
 
 from parrot.protocol.layer_apis import (
     register_vm,
@@ -15,7 +15,7 @@ from parrot.protocol.layer_apis import (
 )
 from parrot.program.function import SemanticFunction, Future, SemanticCall
 from parrot.utils import get_logger
-from parrot.constants import VM_HEARTBEAT_INTERVAL
+from parrot.constants import VM_HEARTBEAT_INTERVAL, NONE_CONTEXT_ID
 
 
 logger = get_logger("VM")
@@ -38,15 +38,15 @@ class VirtualMachine:
     def __init__(
         self, os_http_addr: str, mode: Literal["release", "debug"] = "release"
     ):
+        # Public info (User can directly access): os_http_addr, pid, runtime_info
+
         self.os_http_addr = os_http_addr
 
         # Call OS to register VM, and allocate a pid
         resp = register_vm(self.os_http_addr)
-        self.pid = resp.pid
 
-        self._heartbeat_thread = threading.Thread(
-            target=self._heartbeat_daemon, daemon=True
-        )
+        self.pid = resp.pid
+        self.runtime_info = VMRuntimeInfo()
 
         if mode == "release":
             import logging
@@ -55,9 +55,17 @@ class VirtualMachine:
             logging.disable(logging.DEBUG)
             logging.disable(logging.INFO)
 
+        # The following attributes are internal.
+
+        # ---------- Heartbeat ----------
+        self._heartbeat_thread = threading.Thread(
+            target=self._heartbeat_daemon, daemon=True
+        )
         self._heartbeat_thread.start()
 
-        self.runtime_info = VMRuntimeInfo()
+        # ---------- Function registry ----------
+        self._function_registry: Dict[str, SemanticFunction] = {}
+        self._context_table: Dict[str, int] = {}  # func name -> context id
 
         logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
 
@@ -73,13 +81,6 @@ class VirtualMachine:
             self.runtime_info = VMRuntimeInfo(**resp.dict())
 
             time.sleep(VM_HEARTBEAT_INTERVAL)
-
-    def _submit_call(self, call: SemanticCall):
-        resp = submit_call(
-            http_addr=self.os_http_addr,
-            pid=self.pid,
-            call=call,
-        )
 
     def _placeholder_fetch(self, placeholder_id: int) -> str:
         resp = placeholder_fetch(
@@ -97,15 +98,49 @@ class VirtualMachine:
         )
         return resp.content
 
+    # ----------Methods for Program Interface ----------
+
+    def register_function(self, func: SemanticFunction):
+        """Register a semantic function to the VM."""
+
+        if func.name in self._function_registry:
+            raise ValueError(f"Function {func.name} already registered.")
+
+        self._function_registry[func.name] = func
+        logger.info(f"VM (pid: {self.pid}) registers function: {func.name}")
+
+    def submit_call(self, call: SemanticCall):
+        """Submit a call to the OS."""
+
+        logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
+
+        # Check if there is a context
+        context_id = self._context_table.pop(call.func.name, NONE_CONTEXT_ID)
+
+        resp = submit_call(
+            http_addr=self.os_http_addr,
+            pid=self.pid,
+            call=call,
+            context_id=context_id,
+        )
+
+        # Update the context table
+        if call.context_successor:
+            self._context_table[call.context_successor] = resp.context_id
+
     # ---------- Public Methods ----------
 
     def set_global_env(self):
+        """Set the global environment for current Python process."""
+
         SemanticFunction._virtual_machine_env = self
         Future._virtual_machine_env = self
         # SharedContext._controller = self.controller
         # SharedContext._tokenized_storage = self.tokenizer
 
     def unset_global_env(self):
+        """Unset the global environment for current Python process."""
+
         SemanticFunction._virtual_machine_env = None
         Future._virtual_machine_env = None
         # SharedContext._controller = None
@@ -113,6 +148,13 @@ class VirtualMachine:
 
     @contextlib.contextmanager
     def running_scope(self, timeit: bool = False):
+        """Any code that runs under this scope will be executed under the VM context.
+
+        - For native code, it will be executed by the system Python interpreter.
+        - For semantic code, it will be submitted to the OS and executed finally
+          by Parrot backend engines.
+        """
+
         self.set_global_env()
 
         if timeit:

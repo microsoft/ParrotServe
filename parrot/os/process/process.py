@@ -50,9 +50,9 @@ class Process:
     def live(self):
         return not self.dead and not self.bad
 
-    def _new_thread(self, call: SemanticCall) -> Thread:
+    def _new_thread(self, call: SemanticCall, context_id: int) -> Thread:
         tid = self.threads_pool.allocate()
-        thread = Thread(tid=tid, process=self, call=call)
+        thread = Thread(tid=tid, process=self, call=call, context_id=context_id)
         self.threads.append(thread)
         return thread
 
@@ -60,7 +60,8 @@ class Process:
         logger.info(f"Free thread {thread.tid}")
         self.threads_pool.free(thread.tid)
         self.threads.remove(thread)
-        self.memory_space.free_thread_memory(thread)
+        if not thread.is_stateful:
+            self.memory_space.free_thread_memory(thread)
 
     def _rewrite_call(self, call: SemanticCall):
         """Rewrite the futures to placeholders."""
@@ -78,12 +79,12 @@ class Process:
                 self.placeholders_map[future.id] = Placeholder(value.id)
             call.output_futures[i] = self.placeholders_map[future.id]
 
-    def _execute_call(self, call: SemanticCall):
+    def execute_call(self, call: SemanticCall, context_id: int) -> Thread:
         # Rewrite the call using namespace
         self._rewrite_call(call)
 
         # Create a new thread
-        thread = self._new_thread(call)
+        thread = self._new_thread(call, context_id)
 
         # Dispatch the thread to some engine
         self.dispatcher.dispatch(thread)
@@ -93,6 +94,8 @@ class Process:
 
         # Execute the thread
         self.executor.submit(thread)
+
+        return thread
 
     def free_process(self):
         self.monitor_threads()

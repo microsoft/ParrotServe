@@ -228,20 +228,22 @@ class PCore:
         engine.runtime_info = engine_info
         logger.info(f"Engine {engine.name} (id={engine_id}) heartbeat received.")
 
-    def submit_call(self, pid: int, call: SemanticCall):
+    def submit_call(self, pid: int, call: SemanticCall, context_id: int) -> int:
         """Submit a call from a VM to the OS."""
 
         self._check_process(pid)
 
         process = self.processes[pid]
         st = time.perf_counter_ns()
-        process._execute_call(call)
+        thread = process.execute_call(call, context_id)
         ed = time.perf_counter_ns()
 
         logger.info(
             f'Function call "{call.func.name}" submitted from VM (pid={pid}). '
             f"Time used: {(ed - st) / 1e9} s."
         )
+
+        return thread.ctx.context_id
 
     async def placeholder_fetch(self, pid: int, placeholder_id: int):
         """Fetch a placeholder content from OS to VM."""

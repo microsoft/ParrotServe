@@ -40,7 +40,7 @@ def test_single_call():
         call = test("Apple", "Banana")
         future_id = call.output_futures[0].id
 
-        proc._execute_call(call)
+        proc.execute_call(call)
 
         content = await proc.placeholders_map[future_id].get()
 

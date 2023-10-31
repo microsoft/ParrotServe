@@ -54,7 +54,9 @@ def register_vm(http_addr: str) -> RegisterVMResponse:
         raise e
 
 
-def submit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallResponse:
+def submit_call(
+    http_addr: str, pid: int, call: "SemanticCall", context_id: int
+) -> SubmitCallResponse:
     try:
         return send_http_request(
             SubmitCallResponse,
@@ -63,6 +65,7 @@ def submit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallRes
             retry_times=1,
             pid=pid,
             call=call.pickle(),
+            context_id=context_id,
         )
     except BaseException as e:
         logger.error(f"Execute func (pid: {pid}) error in {http_addr}. Error: {e}")

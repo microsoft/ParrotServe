@@ -24,6 +24,7 @@ class Output:
 def function(
     models: List[str] = [],
     cache_prefix: bool = True,
+    remove_pure_fill: bool = True,
     formatter: Optional[Sequential] = standard_formatter,
     conversation_template: Optional[FuncMutator] = None,
 ):
@@ -64,8 +65,10 @@ def function(
             name=func_name,
             params=func_params,
             models=models,
-            cache_prefix=cache_prefix,
             func_body_str=doc_str,
+            # Func Metadata
+            cache_prefix=cache_prefix,
+            remove_pure_fill=remove_pure_fill,
         )
 
         if formatter is not None:

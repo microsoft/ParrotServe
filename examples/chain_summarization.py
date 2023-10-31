@@ -55,7 +55,7 @@ def main():
     docs = open(docs_path, "r").read().split("\n\n")
 
     # Split into chunks and map
-    chunk_size = 4000
+    chunk_size = 2000
     word_limit = 10
 
     cur_chunk = ""

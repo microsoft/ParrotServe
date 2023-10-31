@@ -1,7 +1,6 @@
 from enum import Enum, auto
 from typing import List, Optional
 from queue import Queue
-import asyncio
 
 from parrot.program.function import SemanticCall
 from parrot.protocol.primitive_request import Fill, Generate
@@ -9,6 +8,7 @@ from parrot.utils import get_logger, create_task_in_loop
 from parrot.constants import (
     STREAMING_END_TOKEN_ID,
     FILL_NO_CHUNK,
+    NONE_CONTEXT_ID,
 )
 from parrot.exceptions import ParrotOSUserError
 
@@ -56,11 +56,13 @@ class Thread:
         tid: int,
         process: "Process",
         call: SemanticCall,
+        context_id: int,
     ):
         # ---------- Basic info ----------
         self.process = process
         self.tid = tid
         self.call = call
+        self.context_id = context_id
         self.prefix_mode = PrefixMode.SAME_CTX
 
         # The following resources will be set later
@@ -93,6 +95,14 @@ class Thread:
     @property
     def finished(self) -> bool:
         return self.finished_flag
+
+    @property
+    def context_id_exists(self) -> bool:
+        return self.context_id != NONE_CONTEXT_ID
+
+    @property
+    def is_stateful(self) -> bool:
+        return self.call.context_successor is not None
 
     async def _flush_fill_tokens_buffer(self):
         buffer_len = len(self._fill_tokens_buffer)
