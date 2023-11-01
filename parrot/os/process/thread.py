@@ -104,6 +104,15 @@ class Thread:
     def is_stateful(self) -> bool:
         return self.call.context_successor is not None
 
+    @property
+    def prefix_context(self) -> Context:
+        assert self.ctx is not None
+        return (
+            self.ctx
+            if self.prefix_mode == PrefixMode.SAME_CTX
+            else self.ctx.parent_context
+        )
+
     async def _flush_fill_tokens_buffer(self):
         buffer_len = len(self._fill_tokens_buffer)
         if buffer_len == 0:
@@ -116,32 +125,20 @@ class Thread:
         if chunk_size == FILL_NO_CHUNK or not self.prefix_flag:
             chunk_size = buffer_len
 
+        prefix_context = self.prefix_context
+
         for i in range(buffer_len // chunk_size):
             chunked_tokens = self._fill_tokens_buffer[
                 i * chunk_size : (i + 1) * chunk_size
             ]
 
             if not self.prefix_flag:
-                if self.prefix_mode == PrefixMode.SKIP:
-                    # Skip the first Fill operator
-                    primitive = None
-                elif self.prefix_mode == PrefixMode.DIFF_CTX:
-                    assert self.ctx.parent_context is not None
-                    primitive = Fill(
-                        pid=self.process.pid,
-                        tid=self.tid,
-                        context=self.ctx.parent_context,
-                        token_ids=chunked_tokens,
-                    )
-                else:
-                    assert self.prefix_mode == PrefixMode.SAME_CTX
-                    primitive = Fill(
-                        pid=self.process.pid,
-                        tid=self.tid,
-                        context=self.ctx,
-                        token_ids=chunked_tokens,
-                    )
-                self.prefix_flag = True
+                primitive = Fill(
+                    pid=self.process.pid,
+                    tid=self.tid,
+                    context=prefix_context,
+                    token_ids=chunked_tokens,
+                )
             else:
                 primitive = Fill(
                     pid=self.process.pid,
@@ -149,15 +146,22 @@ class Thread:
                     context=self.ctx,
                     token_ids=chunked_tokens,
                 )
-            if primitive is not None:
+
+            if not self.prefix_flag and self.prefix_mode == PrefixMode.SKIP:
+                await prefix_context.prefix_ready_event.wait()
+                # Skip
+                num_filled_tokens += len(chunked_tokens)
+            else:
                 logger.debug(
                     f"Thread {self.tid} submit Fill primitive (size: {len(primitive.token_ids)})"
                 )
                 resp = await primitive.apost()
                 num_filled_tokens += resp.num_filled_tokens
-            else:
-                # Skip
-                num_filled_tokens += len(chunked_tokens)
+
+            if not self.prefix_flag:
+                self.prefix_flag = True
+                prefix_context.prefix_ready_event.set()
+
         assert (
             num_filled_tokens == buffer_len
         ), f"Not all tokens are filled. Filled: {num_filled_tokens}, total: {buffer_len}"

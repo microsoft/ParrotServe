@@ -1,4 +1,5 @@
 from typing import Optional
+from asyncio import Event
 
 from parrot.constants import NONE_CONTEXT_ID
 
@@ -25,6 +26,7 @@ class Context:
         self.engine = engine
         self.parent_context = parent_context
         self.token_nums = 0
+        self.prefix_ready_event = Event()
 
     @property
     def parent_context_id(self) -> int:

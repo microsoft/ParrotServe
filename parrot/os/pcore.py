@@ -161,12 +161,13 @@ class PCore:
         """Start the OS loop."""
 
         while True:
-            for process in self.processes.values():
-                if process.live:
-                    process.monitor_threads()
-
             self._check_expired()
             self._sweep_dead_clients()
+
+            for process in self.processes.values():
+                if process.live:
+                    process.execute_calls()
+                    process.monitor_threads()
 
             await asyncio.sleep(OS_LOOP_INTERVAL)
 
@@ -234,11 +235,9 @@ class PCore:
         self._check_process(pid)
 
         process = self.processes[pid]
-        thread = process.execute_call(call)
+        process.submit_call(call)
 
         logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid}). ')
-
-        return thread.ctx.context_id
 
     async def placeholder_fetch(self, pid: int, placeholder_id: int):
         """Fetch a placeholder content from OS to VM."""

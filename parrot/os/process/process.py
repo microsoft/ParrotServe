@@ -1,4 +1,5 @@
 from typing import List, Dict
+from queue import Queue
 
 from parrot.program.future import Future
 from parrot.program.function import SemanticCall
@@ -39,16 +40,21 @@ class Process:
         self.memory_space.new_memory_space(self.pid)
         self.executor = Executor(tokenizer)
         self.placeholders_map: Dict[int, Placeholder] = {}  # id -> placeholder
-        self.bad = False
-        self.dead = False  # Mark if the process is dead
 
         # ---------- Threads ----------
         self.threads: List[Thread] = []
         self.threads_pool = RecyclePool(THREAD_POOL_SIZE)
 
+        # ---------- Runtime ----------
+        self.bad = False
+        self.dead = False  # Mark if the process is dead
+        self._calls: Queue[SemanticCall] = Queue()
+
     @property
     def live(self):
         return not self.dead and not self.bad
+
+    # ---------- Internal ----------
 
     def _new_thread(self, call: SemanticCall, context_id: int) -> Thread:
         tid = self.threads_pool.allocate()
@@ -88,10 +94,7 @@ class Process:
                 self.placeholders_map[future.id] = Placeholder(value.id)
             call.output_futures[i] = self.placeholders_map[future.id]
 
-    def execute_call(self, call: SemanticCall) -> Thread:
-        # Rewrite the call using namespace
-        self._rewrite_call(call)
-
+    def _execute_call(self, call: SemanticCall):
         # Get state context (if any)
         context_id = self.memory_space.get_state_context_id(
             pid=self.pid,
@@ -110,7 +113,23 @@ class Process:
         # Execute the thread
         self.executor.submit(thread)
 
-        return thread
+    # ---------- Interfaces to PCore ----------
+
+    def submit_call(self, call: SemanticCall):
+        # Rewrite the call using namespace
+        # Submit call will only put the call into a Queue, and the call will be executed later.
+        # This is for get the partial DAG and do optimized scheduling.
+
+        # NOTE(chaofan): For stateful call, since the queue is FIFO, the state contexts are
+        # correctly maintained.
+        self._rewrite_call(call)
+
+        self._calls.put_nowait(call)
+
+    def execute_calls(self):
+        while not self._calls.empty():
+            call = self._calls.get()
+            self._execute_call(call)
 
     def free_process(self):
         self.monitor_threads()
