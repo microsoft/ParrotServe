@@ -63,7 +63,9 @@ async def submit_call(request: Request):
     pid = payload["pid"]
     call = SemanticCall.unpickle(payload["call"])
     logger.info(f"Execute function {call.func.name} in VM (pid: {pid}).")
-    return {}
+    return {
+        "context_id": 0,
+    }
 
 
 @app.post("/placeholder_fetch")

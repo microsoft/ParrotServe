@@ -187,7 +187,7 @@ class SemanticFunction:
           using __str__ method.
         """
 
-        return self._call_func(context_successor=None, *args, **kwargs)
+        return self._call_func(None, *args, **kwargs)
 
     def invoke(
         self,
@@ -196,7 +196,7 @@ class SemanticFunction:
     ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
         """Same as __call__."""
 
-        return self._call_func(context_successor=None, *args, **kwargs)
+        return self._call_func(None, *args, **kwargs)
 
     def invoke_statefully(
         self,
@@ -213,11 +213,11 @@ class SemanticFunction:
         will use the context of `f1` this round.
         """
 
-        return self._call_func(context_successor=context_successor, *args, **kwargs)
+        return self._call_func(context_successor, *args, **kwargs)
 
     def _call_func(
         self,
-        context_successor: Optional["SemanticFunction"] = None,
+        context_successor: Optional["SemanticFunction"],
         *args: List[Any],
         **kwargs: Dict[str, Any],
     ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
