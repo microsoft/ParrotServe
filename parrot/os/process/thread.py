@@ -121,10 +121,6 @@ class Thread:
                 i * chunk_size : (i + 1) * chunk_size
             ]
 
-            logger.debug(
-                f"Thread {self.tid} submit Fill primitive (size: {len(chunked_tokens)})"
-            )
-
             if not self.prefix_flag:
                 if self.prefix_mode == PrefixMode.SKIP:
                     # Skip the first Fill operator
@@ -154,6 +150,9 @@ class Thread:
                     token_ids=chunked_tokens,
                 )
             if primitive is not None:
+                logger.debug(
+                    f"Thread {self.tid} submit Fill primitive (size: {len(primitive.token_ids)})"
+                )
                 resp = await primitive.apost()
                 num_filled_tokens += resp.num_filled_tokens
             else:

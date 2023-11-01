@@ -17,7 +17,7 @@ from parrot.constants import (
 from parrot.protocol.layer_apis import ping_engine
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger
-from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
+from parrot.exceptions import ParrotOSUserError
 
 from .config import OSConfig
 from .process.process import Process
@@ -69,8 +69,8 @@ class PCore:
         self.engines: Dict[int, ExecutionEngine] = {}  # engine_id -> engine
         self.mem_space = MemorySpace()
 
-        def flush_engine_callback():
-            self._ping_engines()
+        def flush_engine_callback(engines: List[ExecutionEngine]):
+            self._ping_engines(engines)
 
         self.dispatcher = ThreadDispatcher(
             engines=self.engines, flush_engine_callback=flush_engine_callback
@@ -105,8 +105,8 @@ class PCore:
             if (cur_time - last_seen_time) / 1e9 > ENGINE_EXPIRE_TIME:
                 self.engines[engine_id].dead = True
 
-    def _ping_engines(self):
-        for engine in self.engines.values():
+    def _ping_engines(self, engines: List[ExecutionEngine]):
+        for engine in engines:
             if not engine.dead:
                 pong = ping_engine(engine.http_address)
                 if not pong:
@@ -193,7 +193,7 @@ class PCore:
         )
         self.engines[engine_id] = engine
         self.engine_last_seen_time[engine_id] = time.perf_counter_ns()
-        logger.info(f"Engine {engine.name} (id={engine_id}) registered.")
+        logger.debug(f"Engine {engine.name} (id={engine_id}) registered.")
         return engine_id
 
     def vm_heartbeat(self, pid: int) -> Dict:
@@ -202,7 +202,7 @@ class PCore:
         self._check_process(pid)
 
         self.proc_last_seen_time[pid] = time.perf_counter_ns()
-        logger.info(f"VM (pid={pid}) heartbeat received.")
+        logger.debug(f"VM (pid={pid}) heartbeat received.")
 
         mem_used = self.mem_space.profile_process_memory(pid)
         num_threads = len(self.processes[pid].threads)
@@ -226,22 +226,17 @@ class PCore:
         engine = self.engines[engine_id]
         self.engine_last_seen_time[engine_id] = time.perf_counter_ns()
         engine.runtime_info = engine_info
-        logger.info(f"Engine {engine.name} (id={engine_id}) heartbeat received.")
+        logger.debug(f"Engine {engine.name} (id={engine_id}) heartbeat received.")
 
-    def submit_call(self, pid: int, call: SemanticCall, context_id: int) -> int:
+    def submit_call(self, pid: int, call: SemanticCall) -> int:
         """Submit a call from a VM to the OS."""
 
         self._check_process(pid)
 
         process = self.processes[pid]
-        st = time.perf_counter_ns()
-        thread = process.execute_call(call, context_id)
-        ed = time.perf_counter_ns()
+        thread = process.execute_call(call)
 
-        logger.info(
-            f'Function call "{call.func.name}" submitted from VM (pid={pid}). '
-            f"Time used: {(ed - st) / 1e9} s."
-        )
+        logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid}). ')
 
         return thread.ctx.context_id
 
@@ -256,5 +251,5 @@ class PCore:
                 ValueError(f"Unknown placeholder_id: {placeholder_id}")
             )
         placeholder = process.placeholders_map[placeholder_id]
-        logger.info(f"Placeholder (id={placeholder_id}) fetched from VM (pid={pid})")
+        logger.debug(f"Placeholder (id={placeholder_id}) fetched from VM (pid={pid})")
         return await placeholder.get()

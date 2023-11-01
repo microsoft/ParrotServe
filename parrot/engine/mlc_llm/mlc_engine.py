@@ -148,7 +148,7 @@ class MLCEngine(LLMEngine):
         if not self.connect_to_os:
             return
 
-        logger.info(f"Heartbeat sent to OS.")
+        logger.debug(f"Heartbeat sent to OS.")
 
         # TODO(chaofan): Profile real data
         num_cached_tokens = 0

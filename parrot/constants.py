@@ -23,6 +23,8 @@ PIPELINE_SEND_CHUNK_NUM = 128
 DETOKENIZE_CHUNK_NUM = 8
 STREAMING_END_TOKEN_ID = -1
 
+# ---------- OS ----------
+LATENCY_AWARE_BS_THRESHOLD = 16
 
 # ---------- Recycle Pool ----------
 PROCESS_POOL_SIZE = 4096

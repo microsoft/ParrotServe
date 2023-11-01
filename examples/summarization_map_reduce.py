@@ -24,12 +24,42 @@ def map(
 
 @P.function(formatter=P.allowing_newline)
 def reduce(
-    doc_summaries: P.Input,
+    chunk1: P.Input,
+    chunk2: P.Input,
+    chunk3: P.Input,
+    chunk4: P.Input,
+    chunk5: P.Input,
+    chunk6: P.Input,
+    chunk7: P.Input,
+    chunk8: P.Input,
+    chunk9: P.Input,
+    chunk10: P.Input,
+    chunk11: P.Input,
+    chunk12: P.Input,
+    chunk13: P.Input,
+    chunk14: P.Input,
+    chunk15: P.Input,
+    chunk16: P.Input,
     final_summary: P.Output(temperature=0.7, max_gen_length=200),
 ):
     """The following is set of summaries:
 
-    {{doc_summaries}}
+    {{chunk1}}
+    {{chunk2}}
+    {{chunk3}}
+    {{chunk4}}
+    {{chunk5}}
+    {{chunk6}}
+    {{chunk7}}
+    {{chunk8}}
+    {{chunk9}}
+    {{chunk10}}
+    {{chunk11}}
+    {{chunk12}}
+    {{chunk13}}
+    {{chunk14}}
+    {{chunk15}}
+    {{chunk16}}
 
     Take these and distill it into a final, consolidated summary of the main themes as short as possible..
     Helpful Answer:
@@ -54,14 +84,11 @@ def main():
             cur_chunk = ""
     print("Total number of chunks:", len(summaries_list))
 
-    # Reduce
-    summaries = ""
-    for i, summary in enumerate(summaries_list):
-        summaries += summary.get()
-        if i != len(summaries_list) - 1:
-            summaries += "\n\n"
+    if len(summaries_list) > 16:
+        raise RuntimeError("Too many chunks")
 
-    final_summary = reduce(summaries)
+    # Reduce
+    final_summary = reduce(*summaries_list)
     print("The following is the final summary of the document:\n", final_summary.get())
 
 

@@ -68,6 +68,9 @@ class EngineConfig:
     dtype: Literal["float16", "float32"] = "float16"
     device: str = "cuda"  # cpu, cuda, cuda:x
 
+    # Forward from scheduler config
+    max_batch_size: int = 1
+
     @classmethod
     def verify_config(cls, config: Dict) -> bool:
         """Verify the engine config."""

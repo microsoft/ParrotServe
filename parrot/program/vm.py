@@ -57,15 +57,11 @@ class VirtualMachine:
 
         # The following attributes are internal.
 
-        # ---------- Heartbeat ----------
         self._heartbeat_thread = threading.Thread(
             target=self._heartbeat_daemon, daemon=True
         )
-        self._heartbeat_thread.start()
-
-        # ---------- Function registry ----------
         self._function_registry: Dict[str, SemanticFunction] = {}
-        self._context_table: Dict[str, int] = {}  # func name -> context id
+        self._heartbeat_thread.start()
 
         logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
 
@@ -114,19 +110,11 @@ class VirtualMachine:
 
         logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
 
-        # Check if there is a context
-        context_id = self._context_table.pop(call.func.name, NONE_CONTEXT_ID)
-
         resp = submit_call(
             http_addr=self.os_http_addr,
             pid=self.pid,
             call=call,
-            context_id=context_id,
         )
-
-        # Update the context table
-        if call.context_successor:
-            self._context_table[call.context_successor] = resp.context_id
 
     # ---------- Public Methods ----------
 

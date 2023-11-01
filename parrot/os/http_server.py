@@ -65,8 +65,8 @@ async def submit_call(request: Request):
     pid = payload["pid"]
     logger.debug(f"Submit call received: pid={pid}")
     call = SemanticCall.unpickle(payload["call"])
-    context_id = payload["context_id"]
-    return {"context_id": pcore.submit_call(pid, call, context_id)}
+    pcore.submit_call(pid, call)
+    return {}
 
 
 @app.post("/placeholder_fetch")

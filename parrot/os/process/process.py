@@ -3,7 +3,7 @@ from typing import List, Dict
 from parrot.program.future import Future
 from parrot.program.function import SemanticCall
 from parrot.utils import get_logger, RecyclePool
-from parrot.constants import THREAD_POOL_SIZE
+from parrot.constants import THREAD_POOL_SIZE, NONE_CONTEXT_ID
 
 from .placeholder import Placeholder
 from .thread import Thread
@@ -60,8 +60,17 @@ class Process:
         logger.info(f"Free thread {thread.tid}")
         self.threads_pool.free(thread.tid)
         self.threads.remove(thread)
+
+        # For stateful call
         if not thread.is_stateful:
             self.memory_space.free_thread_memory(thread)
+        else:
+            # Maintain the stateful context
+            self.memory_space.set_state_context_id(
+                pid=self.pid,
+                func_name=thread.call.func.name,
+                context_id=thread.context_id,
+            )
 
     def _rewrite_call(self, call: SemanticCall):
         """Rewrite the futures to placeholders."""
@@ -79,9 +88,15 @@ class Process:
                 self.placeholders_map[future.id] = Placeholder(value.id)
             call.output_futures[i] = self.placeholders_map[future.id]
 
-    def execute_call(self, call: SemanticCall, context_id: int) -> Thread:
+    def execute_call(self, call: SemanticCall) -> Thread:
         # Rewrite the call using namespace
         self._rewrite_call(call)
+
+        # Get state context (if any)
+        context_id = self.memory_space.get_state_context_id(
+            pid=self.pid,
+            func_name=call.func.name,
+        )
 
         # Create a new thread
         thread = self._new_thread(call, context_id)

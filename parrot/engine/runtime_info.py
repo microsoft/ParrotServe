@@ -9,3 +9,5 @@ class EngineRuntimeInfo:
     # NOTE(chaofan): All memory fields are in MiB.
     cache_mem: float = 0
     model_mem: float = 0
+
+    recent_latency: float = 0  # in nanoseconds

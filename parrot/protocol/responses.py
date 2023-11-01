@@ -27,7 +27,7 @@ class RegisterVMResponse(BaseResponse):
 
 
 class SubmitCallResponse(BaseResponse):
-    context_id: int
+    pass
 
 
 class PlaceholderFetchResponse(BaseResponse):

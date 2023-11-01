@@ -27,6 +27,7 @@ class NativeEngine(LLMEngine):
         self.engine_config = EngineConfig(
             dtype=native_config.dtype_str,
             device=native_config.device_str,
+            max_batch_size=scheduler_config.max_batch_size,
             **engine_config,
         )
         self.runner = NativeRunner(
@@ -47,7 +48,7 @@ class NativeEngine(LLMEngine):
         )
 
     def _add_job(self, job: PrimitiveJob):
-        logger.info(f"Adding job: {job}")
+        logger.debug(f"Adding job: {job}")
         self.scheduler.add_job(job)
         self.runner.context_manager.bind_job_context(
             job,
@@ -132,7 +133,7 @@ class NativeEngine(LLMEngine):
         if not self.connect_to_os:
             return
 
-        logger.info(f"Heartbeat sent to OS (address={self.os_http_address}).")
+        logger.debug(f"Heartbeat sent to OS (address={self.os_http_address}).")
 
         num_cached_tokens = self.runner.context_manager.get_num_cached_tokens()
 
