@@ -1,6 +1,7 @@
 from typing import List, Optional
 from asyncio import Event
 
+from .dag_node import DAGNode
 from ..tokenizer import Tokenizer
 
 
@@ -14,7 +15,9 @@ class Placeholder:
     def __init__(self, id: int):
         self.id = id
         self.content = None
+        self.start_event: Event = Event()
         self.ready_event: Event = Event()
+        self.out_nodes: List[DAGNode] = []
         self.assign_callbacks = []
 
     def __repr__(self) -> str:

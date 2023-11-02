@@ -42,6 +42,10 @@ class Parameter:
     sampling_config: Optional[SamplingConfig] = None
 
     @property
+    def is_input_loc(self) -> bool:
+        return self.typ == ParamType.INPUT_LOC
+
+    @property
     def is_output(self) -> bool:
         return self.typ == ParamType.OUTPUT_LOC
 

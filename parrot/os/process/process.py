@@ -1,13 +1,15 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 from queue import Queue
 
 from parrot.program.future import Future
 from parrot.program.function import SemanticCall
 from parrot.utils import get_logger, RecyclePool
-from parrot.constants import THREAD_POOL_SIZE, NONE_CONTEXT_ID
+from parrot.constants import THREAD_POOL_SIZE
+from parrot.exceptions import ParrotOSUserError
 
 from .placeholder import Placeholder
 from .thread import Thread
+from .dag_node import DAGNode
 from ..thread_dispatcher import ThreadDispatcher
 from ..memory.mem_space import MemorySpace
 from ..tokenizer import Tokenizer
@@ -41,13 +43,17 @@ class Process:
         self.executor = Executor(tokenizer)
         self.placeholders_map: Dict[int, Placeholder] = {}  # id -> placeholder
 
+        # ---------- DAG ----------
+        self.native_code_node = DAGNode()
+
         # ---------- Threads ----------
         self.threads: List[Thread] = []
         self.threads_pool = RecyclePool(THREAD_POOL_SIZE)
 
         # ---------- Runtime ----------
-        self.bad = False
         self.dead = False  # Mark if the process is dead
+        self.bad = False
+        self.bad_exception: Optional[BaseException] = None
         self._calls: Queue[SemanticCall] = Queue()
 
     @property
@@ -66,6 +72,7 @@ class Process:
         logger.info(f"Free thread {thread.tid}")
         self.threads_pool.free(thread.tid)
         self.threads.remove(thread)
+        thread.engine.num_threads -= 1
 
         # For stateful call
         if not thread.is_stateful:
@@ -80,6 +87,11 @@ class Process:
 
     def _rewrite_call(self, call: SemanticCall):
         """Rewrite the futures to placeholders."""
+        node = DAGNode(call)
+        call.node = node
+
+        meet_first_output = False
+
         for name, value in call.bindings.items():
             if not isinstance(value, Future):
                 continue
@@ -89,31 +101,52 @@ class Process:
 
             call.bindings[name] = self.placeholders_map[value.id]
 
+            # NOTE(chaofan): For simplicity, we only consider the edges before the first output.
+
+            if call.func.params_map[name].is_input_loc and not meet_first_output:
+                self.placeholders_map[value.id].out_nodes.append(node)
+                node.add_in_edge()
+
+            if call.func.params_map[name].is_output:
+                meet_first_output = True
+
         for i, future in enumerate(call.output_futures):
             if future.id not in self.placeholders_map:
                 self.placeholders_map[future.id] = Placeholder(value.id)
             call.output_futures[i] = self.placeholders_map[future.id]
 
     def _execute_call(self, call: SemanticCall):
-        # Get state context (if any)
-        context_id = self.memory_space.get_state_context_id(
-            pid=self.pid,
-            func_name=call.func.name,
-        )
+        try:
+            # Mark all placeholders as start
+            for _, value in call.bindings.items():
+                if isinstance(value, Placeholder):
+                    value.start_event.set()
 
-        # Create a new thread
-        thread = self._new_thread(call, context_id)
+            # Get state context (if any)
+            context_id = self.memory_space.get_state_context_id(
+                pid=self.pid,
+                func_name=call.func.name,
+            )
 
-        # Dispatch the thread to some engine
-        self.dispatcher.dispatch(thread)
+            # Create a new thread
+            thread = self._new_thread(call, context_id)
 
-        # Allocate memory
-        self.memory_space.set_thread_ctx(thread)
+            # Dispatch the thread to some engine
+            self.dispatcher.dispatch(thread)
 
-        # Execute the thread
-        self.executor.submit(thread)
+            # Allocate memory
+            self.memory_space.set_thread_ctx(thread)
+
+            # Execute the thread
+            self.executor.submit(thread)
+        except ParrotOSUserError as e:
+            self.exception_interrupt(e)
 
     # ---------- Interfaces to PCore ----------
+
+    def exception_interrupt(self, exception: BaseException):
+        self.bad = True
+        self.bad_exception = exception
 
     def submit_call(self, call: SemanticCall):
         # Rewrite the call using namespace

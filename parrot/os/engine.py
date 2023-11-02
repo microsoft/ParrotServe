@@ -34,6 +34,7 @@ class ExecutionEngine:
 
         # ---------- Runtime Info ----------
         self.runtime_info = EngineRuntimeInfo()
+        self.num_threads = 0
 
     @property
     def name(self) -> str:
@@ -50,3 +51,7 @@ class ExecutionEngine:
     @property
     def is_latency_aware(self) -> bool:
         return self.config.max_batch_size >= LATENCY_AWARE_BS_THRESHOLD
+
+    @property
+    def remain_batch_size(self) -> int:
+        return self.config.max_batch_size - self.runtime_info.num_running_jobs

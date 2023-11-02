@@ -2,13 +2,19 @@ from typing import Dict
 
 from parrot.utils import get_logger
 from parrot.exceptions import ParrotOSUserError
+from parrot.constants import LATENCY_AWARE_BS_THRESHOLD
 
+from .process.placeholder import Placeholder
 from .process.thread import Thread
-from .process.interpret_type import InterpretType
-from .process.executor import Executor
 from .engine import ExecutionEngine
 
 logger = get_logger("ThreadDispatcher")
+
+
+class Candidate:
+    def __init__(self, engine: ExecutionEngine):
+        self.engine = engine
+        self.score = 0
 
 
 class ThreadDispatcher:
@@ -54,6 +60,35 @@ class ThreadDispatcher:
                 f"Start dispatching. Total available engines ({len(available_engines)}): {names}."
             )
 
-        thread.engine = available_engines[0]  # dispatched_engine
+        # Then we start dispatching it to the most suitable engine.
+        candidates = [Candidate(engine) for engine in available_engines]
+
+        # If expect_batch_size is large, we should schedule it to a non-latency-aware engine.
+        expect_batch_size = 0
+        for name, value in thread.call.bindings.items():
+            if thread.call.func.params_map[name].is_output:
+                assert isinstance(value, Placeholder)
+                cur_batch_size = sum([node.in_degree for node in value.out_nodes])
+                expect_batch_size = max(expect_batch_size, cur_batch_size)
+        logger.debug(
+            f"Call {thread.call.func.name} expect batch size: {expect_batch_size}."
+        )
+
+        if expect_batch_size >= LATENCY_AWARE_BS_THRESHOLD:
+            for candidate in candidates:
+                candidate.score -= 999
+
+        # According to the remain batch size, assign a score to each engine.
+        for candidate in candidates:
+            candidate.score += candidate.engine.remain_batch_size
+
+        # Schedule to the engine with the highest score.
+        best_candidate = candidates[0]
+        for candidate in candidates[1:]:
+            if candidate.score > best_candidate.score:
+                best_candidate = candidate
+
+        thread.engine = best_candidate.engine
+        thread.engine.num_threads += 1
 
         logger.info(f"Thread {thread.tid} dispatched to engine {thread.engine.name}.")

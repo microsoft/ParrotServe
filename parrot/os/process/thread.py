@@ -281,7 +281,6 @@ class Thread:
                 # If exception happens, we should terminate the thread and the related process.
                 # But other processes should not be affected.
                 logger.error(f"Error when executing operator {op}: {e}")
-                self.process.bad = True
-                raise ParrotOSUserError(e)
+                self.process.exception_interrupt(ParrotOSUserError(e))
 
         self.finished_flag = True

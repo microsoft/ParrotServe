@@ -148,12 +148,8 @@ class PCore:
 
         if process.bad:
             process.dead = True
-            raise ParrotOSUserError(
-                RuntimeError(
-                    f"Process (pid={pid}) is bad because exceptions happen "
-                    "during the execution of threads."
-                )
-            )
+            logger.error(f"Process (pid={pid}) is bad. Raise exception.")
+            raise process.bad_exception
 
     # ---------- Public APIs ----------
 
@@ -250,5 +246,18 @@ class PCore:
                 ValueError(f"Unknown placeholder_id: {placeholder_id}")
             )
         placeholder = process.placeholders_map[placeholder_id]
+
+        placeholder.out_nodes.append(process.native_code_node)
+        process.native_code_node.add_in_edge()
+
+        await placeholder.start_event.wait()
+
+        # NOTE(chaofan): Recheck the process since it may become bad after starting.
+        self._check_process(pid)
+
         logger.debug(f"Placeholder (id={placeholder_id}) fetched from VM (pid={pid})")
-        return await placeholder.get()
+        content = await placeholder.get()
+
+        process.native_code_node.remove_in_edge()
+
+        return content

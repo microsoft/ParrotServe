@@ -47,7 +47,7 @@ def register_vm(http_addr: str) -> RegisterVMResponse:
             RegisterVMResponse,
             http_addr,
             "/register_vm",
-            retry_times=3,
+            retry_times=1,
         )
     except BaseException as e:
         logger.error(f"Register VM error in {http_addr}. Error: {e}")
@@ -77,7 +77,7 @@ def placeholder_fetch(
             PlaceholderFetchResponse,
             http_addr,
             "/placeholder_fetch",
-            retry_times=3,
+            retry_times=1,
             pid=pid,
             placeholder_id=placeholder_id,
         )
@@ -96,7 +96,7 @@ async def aplaceholder_fetch(
                 PlaceholderFetchResponse,
                 http_addr,
                 "/placeholder_fetch",
-                retry_times=3,
+                retry_times=1,
                 pid=pid,
                 placeholder_id=placeholder_id,
             )
@@ -147,7 +147,7 @@ def register_engine(
             RegisterEngineResponse,
             http_addr,
             "/register_engine",
-            retry_times=3,
+            retry_times=1,
             engine_config=asdict(engine_config),
         )
     except BaseException as e:
@@ -170,7 +170,7 @@ async def engine_heartbeat(
                 response_cls=EngineHeartbeatResponse,
                 http_addr=http_addr,
                 api_url="/engine_heartbeat",
-                timeout=1,
+                timeout=3,
                 engine_id=engine_id,
                 runtime_info=asdict(runtime_info),
             )
