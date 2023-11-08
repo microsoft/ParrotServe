@@ -1,3 +1,4 @@
+import time
 from typing import Dict, AsyncGenerator
 from mlc_chat import ChatModule, GenerationConfig
 from mlc_chat.chat_module import logging
@@ -12,6 +13,7 @@ import psutil
 from parrot.utils import get_logger
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.layer_apis import engine_heartbeat
+from parrot.constants import NONE_CONTEXT_ID
 
 from ..llm_engine import LLMEngine
 from ..runtime_info import EngineRuntimeInfo
@@ -79,9 +81,16 @@ class MLCEngine(LLMEngine):
             )
         )
 
+        self._current_context_id = NONE_CONTEXT_ID
+
     def _execute_job(self, job: PrimitiveJob):
         if isinstance(job, Fill):
+            st = time.perf_counter_ns()
             self.chat_module._prefill(job.text)
+            ed = time.perf_counter_ns()
+            logger.debug(
+                f"Prefill time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
+            )
         elif isinstance(job, Generation):
             generation_config = GenerationConfig(
                 temperature=job.sampling_config.temperature,
@@ -89,17 +98,31 @@ class MLCEngine(LLMEngine):
                 max_gen_len=job.sampling_config.max_gen_length,
             )
             while not self.chat_module._stopped():
+                st = time.perf_counter_ns()
                 self.chat_module._decode(generation_config=generation_config)
+                ed = time.perf_counter_ns()
+                logger.debug(
+                    f"Decode time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
+                )
         else:
             raise NotImplementedError
 
     # ---------- Public APIs ----------
 
     async def fill(self, payload: Dict) -> Dict:
+        context_id = payload["context_id"]
+
+        if self._current_context_id == NONE_CONTEXT_ID:
+            self._current_context_id = context_id
+        else:
+            assert (
+                self._current_context_id == context_id
+            ), "MLCEngine only supports one active context."
+
         fill_job = Fill(
             pid=payload["pid"],
             tid=payload["tid"],
-            context_id=payload["context_id"],
+            context_id=context_id,
             parent_context_id=payload["parent_context_id"],
             text=payload["text"],
         )
@@ -112,10 +135,17 @@ class MLCEngine(LLMEngine):
 
     # override
     async def generate(self, payload: Dict) -> Dict:
+        context_id = payload["context_id"]
+
+        assert self._current_context_id != NONE_CONTEXT_ID, "No active context."
+        assert (
+            self._current_context_id == context_id
+        ), "MLCEngine only supports one active context."
+
         generation_job = Generation(
             pid=payload["pid"],
             tid=payload["tid"],
-            context_id=payload["context_id"],
+            context_id=context_id,
             parent_context_id=payload["parent_context_id"],
             sampling_config=SamplingConfig(**payload["sampling_config"]),
         )
@@ -137,12 +167,20 @@ class MLCEngine(LLMEngine):
     # override
     def free_context(self, payload: Dict) -> Dict:
         context_id = payload["context_id"]
+
+        assert self._current_context_id != NONE_CONTEXT_ID, "No active context."
+        assert (
+            self._current_context_id == context_id
+        ), "MLCEngine only supports one active context."
+
+        self._current_context_id = NONE_CONTEXT_ID
+
         self.chat_module.reset_chat()
         return {
             "num_freed_tokens": 0,
         }
 
-    def heartbeat(self):
+    async def heartbeat(self):
         """Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
 
         if not self.connect_to_os:
@@ -155,7 +193,7 @@ class MLCEngine(LLMEngine):
         cache_mem = 0.0
         num_running_jobs = 0
 
-        resp = engine_heartbeat(
+        resp = await engine_heartbeat(
             http_addr=self.os_http_address,
             engine_id=self.engine_id,
             engine_name=self.engine_config.engine_name,

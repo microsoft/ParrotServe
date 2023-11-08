@@ -10,6 +10,6 @@ echo "Start OS server ..."
 python3 -m parrot.os.http_server --config_path configs/os/localhost_os.json > log/os.log 2>&1 &
 
 echo "Start one single Vicuna 13B server ..."
-python3 -m parrot.engine.http_server --config_path configs/engine/native/vicuna-13b-v1.3.json > log/engine_vicuna_13b.log 2>&1 &
+python3 -m parrot.engine.http_server --config_path configs/engine/mlcllm/Llama-2-13b-chat-hf-q4f16_1-vulkan.json > log/engine_mlc_llm.log 2>&1 &
 
 echo "Successfully launched Parrot runtime system."
