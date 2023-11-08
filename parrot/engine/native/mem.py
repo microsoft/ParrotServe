@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from typing import Optional
 from transformers import PretrainedConfig
 import torch
@@ -12,6 +13,22 @@ logger = get_logger("Mem")
 _ARCH_WITH_ROPE = [
     "LlamaForCausalLM",
 ]
+
+
+class MemLayout(Enum):
+    """Memory layout for KV cache."""
+
+    NORMAL: int = auto()  # [head_num, head_size,]
+    BLOCK: int = auto()  # [head_num, head_size, block_size]
+    VLLM: int = (
+        auto()
+    )  # k: [head_num, head_size // x, block_size, x], v: [head_num, head_size, block_size]
+
+
+ATTN_FUNC_LAYOUT_MAP = {
+    "xformers_with_buffer": MemLayout.NORMAL,
+    "xformers_fill_vllm_paged_attention_generate": MemLayout.VLLM,
+}
 
 
 class ModelCacheStorage:
@@ -29,26 +46,57 @@ class ModelCacheStorage:
     ) -> None:
         num_layers = hf_config.num_hidden_layers
         num_blocks = native_config.num_kv_cache_blocks
+        block_size = native_config.block_size
         num_heads = hf_config.num_attention_heads
         head_size = hf_config.hidden_size // num_heads
         dtype = native_config.dtype
         device = native_config.device
 
-        self.k_cache = torch.empty(
-            [num_layers, num_blocks, num_heads, head_size],
-            dtype=dtype,
-            device=device,
-        )
+        if native_config.mem_layout == MemLayout.NORMAL:
+            assert block_size == 1, "Block size must be 1 for normal layout."
 
-        self.v_cache = torch.empty(
-            [num_layers, num_blocks, num_heads, head_size],
-            dtype=dtype,
-            device=device,
-        )
+            self.k_cache = torch.empty(
+                [num_layers, num_blocks, num_heads, head_size],
+                dtype=dtype,
+                device=device,
+            )
+
+            self.v_cache = torch.empty(
+                [num_layers, num_blocks, num_heads, head_size],
+                dtype=dtype,
+                device=device,
+            )
+        elif native_config.mem_layout == MemLayout.BLOCK:
+            self.k_cache = torch.empty(
+                [num_layers, num_blocks, num_heads, head_size, block_size],
+                dtype=dtype,
+                device=device,
+            )
+
+            self.v_cache = torch.empty(
+                [num_layers, num_blocks, num_heads, head_size, block_size],
+                dtype=dtype,
+                device=device,
+            )
+        elif native_config.mem_layout == MemLayout.VLLM:
+            self.v_cache = torch.empty(
+                [num_layers, num_blocks, num_heads, head_size, block_size],
+                dtype=dtype,
+                device=device,
+            )
+
+            x = 16 // self.v_cache.element_size()
+
+            self.k_cache = torch.empty(
+                [num_layers, num_blocks, num_heads, head_size // x, block_size, x],
+                dtype=dtype,
+                device=device,
+            )
 
         kv_total_size = (
             num_layers
             * num_blocks
+            * block_size
             * num_heads
             * head_size
             * self.k_cache.element_size()
@@ -57,8 +105,12 @@ class ModelCacheStorage:
             / 1024
             / 1024
         )
+
         logger.info(
-            f"Allocated {num_blocks} KV blocks. Total size: {kv_total_size :.2f} GiB"
+            f"Allocated {num_blocks} KV blocks. "
+            f"Mem Layout: {native_config.mem_layout.name}. "
+            f"Per block size: {block_size}. "
+            f"Total size: {kv_total_size :.2f} GiB."
         )
 
         # cos / sin cache for rotary embedding models.

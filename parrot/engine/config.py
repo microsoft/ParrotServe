@@ -1,31 +1,29 @@
-from typing import Literal, Optional, Dict
+from typing import Literal, Optional, Dict, Union
 from dataclasses import dataclass
 import torch
-from enum import Enum
-from parrot.constants import FILL_NO_CHUNK
 
-from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_ENGINE_SERVER_PORT
-
-_DTYPE_MAP = {
-    "float16": torch.float16,
-    "float32": torch.float32,
-}
+from parrot.constants import (
+    FILL_NO_CHUNK,
+    DEFAULT_SERVER_HOST,
+    DEFAULT_ENGINE_SERVER_PORT,
+)
 
 
 @dataclass
 class NativeConfig:
     num_kv_cache_blocks: int
-    attn_func: Literal["xformers_with_buffer", "flash_attention"]
     random_seed: int
-    dtype: Literal["float16", "float32"] = "float16"
-    device: str = "cuda"  # cpu, cuda, cuda:x
-    model_arch: Optional[str] = None  # Lazy load
+    attn_func: Union[str, "AttnFunc"]
+    dtype: Union[Literal["float16", "float32"], torch.dtype] = "float16"
+    device: Union[str, torch.device] = "cuda"  # cpu, cuda, cuda:x
+    block_size: int = 1
+    attn_func_name: Optional[str] = None
+    mem_layout: Optional["MemLayout"] = None
+    model_arch: Optional[str] = None
 
     def __post_init__(self):
-        self.dtype_str = self.dtype
-        self.device_str = self.device
-        self.dtype = _DTYPE_MAP[self.dtype]
-        self.device = torch.device(self.device)
+        # Will be overwritten by native_config_post_init.py
+        pass
 
 
 @dataclass

@@ -26,6 +26,7 @@
 
 """PyTorch inference-only LLaMA model. Input is flattened."""
 
+from typing import Type
 import torch
 from torch import nn
 from transformers import LlamaConfig
@@ -41,7 +42,7 @@ from ..iter_state import IterationState
 from ..mem import get_cos_cache, get_sin_cache
 from ...config import NativeConfig
 from .sampler import Sampler
-from .attn_func import xFormersWithBuffer
+from ..attn_func import AttnFunc
 from ..kernels import rotary_embedding
 
 
@@ -52,7 +53,7 @@ class LlamaAttention(nn.Module):
         self,
         config: LlamaConfig,
         layer_idx: int,
-        attn_func_name: str,
+        attn_func_cls: Type[AttnFunc],
     ):
         super().__init__()
         self.config = config
@@ -73,7 +74,7 @@ class LlamaAttention(nn.Module):
         self.qkv_proj = nn.Linear(self.hidden_size, 3 * self.hidden_size, bias=False)
         self.o_proj = nn.Linear(self.hidden_size, self.hidden_size, bias=False)
         # TODO(chaofan): add support for other attention functions
-        self.attn_func = xFormersWithBuffer(
+        self.attn_func = attn_func_cls(
             layer_idx=layer_idx,
             scaling=self.scaling,
             num_heads=self.num_heads,
@@ -120,7 +121,7 @@ class LlamaDecoderLayer(nn.Module):
         self.self_attn = LlamaAttention(
             config=config,
             layer_idx=layer_idx,
-            attn_func_name=native_config.attn_func,
+            attn_func_cls=native_config.attn_func,
         )
         self.mlp = LlamaMLP(config)
         self.input_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)

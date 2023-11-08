@@ -1,4 +1,4 @@
-from Parrot.parrot.engine.native.native_runner import NativeRunner
+from parrot.engine.native.native_runner import NativeRunner
 from parrot.engine.config import NativeConfig
 from parrot.engine.primitive_job import Fill, Generation
 from parrot.protocol.sampling_config import SamplingConfig

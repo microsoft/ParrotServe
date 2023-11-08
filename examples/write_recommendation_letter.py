@@ -16,7 +16,7 @@ vm = P.VirtualMachine(
 # The function will be automatically be registered to the environment
 
 
-@P.function(formatter=P.allowing_newline)
+@P.function(formatter=P.allowing_newline, cache_prefix=False)
 def write_recommendation_letter(
     stu_name: P.Input,
     prof_name: P.Input,

@@ -26,6 +26,7 @@
 
 """PyTorch inference-only OPT model. Input is flattened."""
 
+from typing import Type
 import torch
 from torch import nn
 from transformers import OPTConfig
@@ -34,7 +35,7 @@ from .model_utils import hidden_states_postprocess
 from .weight_utils import hf_weights_loader
 from ..iter_state import IterationState
 from .sampler import Sampler
-from .attn_func import xFormersWithBuffer
+from ..attn_func import AttnFunc
 from ...config import NativeConfig
 
 
@@ -65,7 +66,7 @@ class OPTAttention(nn.Module):
         embed_dim: int,
         num_heads: int,
         layer_idx: int,
-        attn_func_name: str,
+        attn_func_cls: Type[AttnFunc],
         bias: bool = True,
     ):
         super().__init__()
@@ -84,7 +85,7 @@ class OPTAttention(nn.Module):
         self.qkv_proj = nn.Linear(embed_dim, 3 * embed_dim, bias=bias)
         self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
         # TODO(chaofan): add support for other attention functions
-        self.attn_func = xFormersWithBuffer(
+        self.attn_func = attn_func_cls(
             layer_idx=layer_idx,
             scaling=self.scaling,
             head_dim=self.head_dim,
@@ -121,7 +122,7 @@ class OPTDecoderLayer(nn.Module):
             embed_dim=self.embed_dim,
             num_heads=opt_config.num_attention_heads,
             layer_idx=layer_idx,
-            attn_func_name=native_config.attn_func,
+            attn_func_cls=native_config.attn_func,
             bias=opt_config.enable_bias,
         )
         self.do_layer_norm_before = opt_config.do_layer_norm_before

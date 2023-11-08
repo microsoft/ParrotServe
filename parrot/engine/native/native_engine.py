@@ -35,6 +35,8 @@ class NativeEngine(LLMEngine):
         )
         self.scheduler = Scheduler(scheduler_config)
 
+        self.native_config = native_config
+
         self._register_engine(self.engine_config)
 
         logger.info(
@@ -54,6 +56,7 @@ class NativeEngine(LLMEngine):
             job,
             BlockContext,
             kv_cache_manager=self.runner.kv_cache_manager,
+            block_size=self.native_config.block_size,
         )
 
     # ---------- Public APIs ----------

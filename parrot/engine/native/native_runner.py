@@ -70,7 +70,10 @@ class NativeRunner:
             # NOTE(chaofan): if we use engine, this is not necessary.
             if job.context is None:
                 self.context_manager.bind_job_context(
-                    job, BlockContext, kv_cache_manager=self.kv_cache_manager
+                    job,
+                    BlockContext,
+                    block_size=self.native_config.block_size,
+                    kv_cache_manager=self.kv_cache_manager,
                 )
 
             # Allocate blocks
