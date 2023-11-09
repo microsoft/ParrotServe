@@ -42,7 +42,7 @@ def test_prefix_init():
         token_ids=[1, 2, 3],
     )
 
-    assert resp.num_filled_tokens == 3
+    assert resp.num_filled_len == 3
 
 
 def test_fill():
@@ -59,7 +59,7 @@ def test_fill():
         ed = time.perf_counter_ns()
         print("Fill Time Used: ", (ed - st) / 1e9)
 
-        assert resp.num_filled_tokens == 3
+        assert resp.num_filled_len == 3
 
     asyncio.run(main())
 
@@ -96,7 +96,7 @@ def test_free_context():
         context_id=233,
     )
 
-    assert resp.num_freed_tokens == 0
+    assert resp.context_len == 0
 
 
 if __name__ == "__main__":

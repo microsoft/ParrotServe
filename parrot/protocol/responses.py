@@ -9,7 +9,7 @@ class BaseResponse(BaseModel):
 
 
 class FillResponse(BaseResponse):
-    num_filled_tokens: int
+    num_filled_len: int
 
 
 class GenerateResponse(BaseResponse):
@@ -43,7 +43,7 @@ class RegisterEngineResponse(BaseResponse):
 
 
 class FreeContextResponse(BaseResponse):
-    num_freed_tokens: int
+    context_len: int
 
 
 class PingResponse(BaseResponse):

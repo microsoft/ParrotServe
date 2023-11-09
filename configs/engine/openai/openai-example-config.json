@@ -1,0 +1,23 @@
+{
+    "model": "gpt35turobo4k",
+    "engine_name": "Azure-OpenAI-GPT-3.5-Turbo-4K",
+    "host": "localhost",
+    "port": 9001,
+    "engine_type": "openai",
+    "random_seed": 0,
+    "instance": {
+        "api_key": "xxx",
+        "api_endpoint": "completion",
+        "is_azure": true,
+        "azure_api_version": "2023-07-01-preview",
+        "azure_endpoint": "xxx"
+    },
+    "scheduler": {
+        "max_batch_size": 64,
+        "max_tokens_sum": 1
+    },
+    "os": {
+        "host": "localhost",
+        "port": 9000
+    }
+}

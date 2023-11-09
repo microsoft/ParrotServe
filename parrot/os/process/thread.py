@@ -118,7 +118,7 @@ class Thread:
         if buffer_len == 0:
             return
 
-        num_filled_tokens = 0
+        num_filled_len = 0
         chunk_size = self.engine.config.fill_chunk_size
 
         # NOTE(chaofan): We don't chunk the tokens if it is prefix.
@@ -150,21 +150,21 @@ class Thread:
             if not self.prefix_flag and self.prefix_mode == PrefixMode.SKIP:
                 await prefix_context.prefix_ready_event.wait()
                 # Skip
-                num_filled_tokens += len(chunked_tokens)
+                num_filled_len += len(chunked_tokens)
             else:
                 logger.debug(
                     f"Thread {self.tid} submit Fill primitive (size: {len(primitive.token_ids)})"
                 )
                 resp = await primitive.apost()
-                num_filled_tokens += resp.num_filled_tokens
+                num_filled_len += resp.num_filled_len
 
             if not self.prefix_flag:
                 self.prefix_flag = True
                 prefix_context.prefix_ready_event.set()
 
         assert (
-            num_filled_tokens == buffer_len
-        ), f"Not all tokens are filled. Filled: {num_filled_tokens}, total: {buffer_len}"
+            num_filled_len == buffer_len
+        ), f"Not all tokens are filled. Filled: {num_filled_len}, total: {buffer_len}"
         self._fill_tokens_buffer = []
 
     async def _visit_token_id_constant_fill(self, op: TokenIdConstantFill):
@@ -192,7 +192,7 @@ class Thread:
             self._fill_tokens_buffer.extend(op.input_holder.token_ids)
         else:
             # Streaming input. Pipeling filling.
-            num_filled_tokens = 0
+            num_filled_len = 0
             async for chunk in op.input_pipe.generator():
                 resp = await Fill(
                     pid=self.process.pid,
@@ -200,11 +200,11 @@ class Thread:
                     context=self.ctx,
                     token_ids=chunk,
                 ).apost()
-                num_filled_tokens += resp.num_filled_tokens
+                num_filled_len += resp.num_filled_len
             should_filled = len(op.input_holder.token_ids)
             assert (
-                num_filled_tokens == should_filled
-            ), f"Not all tokens are filled. Filled: {num_filled_tokens}, total: {should_filled}"
+                num_filled_len == should_filled
+            ), f"Not all tokens are filled. Filled: {num_filled_len}, total: {should_filled}"
 
     async def _visit_token_id_placeholder_generate(
         self, op: TokenIdPlaceholderGenerate
@@ -234,22 +234,43 @@ class Thread:
         op.output_holder.send_token(STREAMING_END_TOKEN_ID, put_into_holder=False)
         op.output_holder.ready_event.set()
 
+    async def _fill_text(self, text: str):
+        prefix_context = self.prefix_context
+
+        if not self.prefix_flag:
+            primitive = Fill(
+                pid=self.process.pid,
+                tid=self.tid,
+                context=prefix_context,
+                text=text,
+            )
+        else:
+            primitive = Fill(
+                pid=self.process.pid,
+                tid=self.tid,
+                context=self.ctx,
+                text=text,
+            )
+
+        if not self.prefix_flag and self.prefix_mode == PrefixMode.SKIP:
+            await prefix_context.prefix_ready_event.wait()
+            # Skip
+        else:
+            logger.debug(
+                f"Thread {self.tid} submit Fill primitive (text len: {len(text)})"
+            )
+            resp = await primitive.apost()
+
+        if not self.prefix_flag:
+            self.prefix_flag = True
+            prefix_context.prefix_ready_event.set()
+
     async def _visit_text_constant_fill(self, op: TextConstantFill):
-        resp = await Fill(
-            pid=self.process.pid,
-            tid=self.tid,
-            context=self.ctx,
-            text=op.text,
-        ).apost()
+        await self._fill_text(op.text)
 
     async def _visit_text_placeholder_fill(self, op: TextPlaceholderFill):
         text = await op.input_holder.get()
-        resp = await Fill(
-            pid=self.process.pid,
-            tid=self.tid,
-            context=self.ctx,
-            text=text,
-        ).apost()
+        await self._fill_text(text)
 
     async def _visit_text_placeholder_generate(self, op: TextPlaceholderGenerate):
         resp = await Generate(

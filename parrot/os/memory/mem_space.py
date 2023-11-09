@@ -141,7 +141,7 @@ class MemorySpace:
             raise ParrotOSInteralError(e)
         else:
             logger.debug(
-                f"Context: {context_id} freed. Freed tokens: {resp.num_freed_tokens}"
+                f"Context: {context_id} freed. Freed tokens: {resp.context_len}"
             )
 
         self.contexts.pop(context_id)

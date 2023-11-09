@@ -69,7 +69,8 @@ class Generation(PrimitiveJob):
     ) -> None:
         super().__init__(pid, tid, context_id, parent_context_id)
         self.sampling_config = sampling_config
-        self.output_queue: AsyncQueue[int] = AsyncQueue()
+        self.output_queue: AsyncQueue[int] = AsyncQueue()  # For token streaming
+        self.gen_text = ""  # For text generation
         self.gen_length = 0
 
     def __repr__(self) -> str:

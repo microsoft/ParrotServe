@@ -18,7 +18,7 @@ from parrot.constants import NONE_CONTEXT_ID
 from ..llm_engine import LLMEngine
 from ..runtime_info import EngineRuntimeInfo
 from ..primitive_job import PrimitiveJob, Fill, Generation
-from ..config import MLCConfig, EngineConfig
+from ..config import MLCConfig, EngineConfig, SchedulerConfig
 
 
 logger = get_logger("MLCEngine")
@@ -33,14 +33,18 @@ def get_memory(is_gpu: bool = True, gpu_no: int = 0) -> int:
 
 
 class MLCEngine(LLMEngine):
-    """MLC LLM Engine for Parrot."""
+    """MLC LLM Engine for Parrot powered by MLC-LLM.
+
+    Reference (MLC-LLM): https://llm.mlc.ai
+    """
 
     def __init__(self, engine_config: Dict, connect_to_os: bool = True):
         super().__init__(engine_config, connect_to_os)
 
         scheduler_config = engine_config.pop("scheduler")
+        scheduler_config = SchedulerConfig(**scheduler_config)
 
-        mlc_config = MLCConfig(**engine_config.pop("runner"))
+        mlc_config = MLCConfig(**engine_config.pop("instance"))
         self.engine_config = EngineConfig(
             dtype="float16",  # A fake dtype for now
             device=mlc_config.device,
@@ -49,7 +53,7 @@ class MLCEngine(LLMEngine):
 
         # Create a ChatModule instance
         logger.info(
-            f"Creating a ChatModule instance of the model: {self.engine_config.model_name} ..."
+            f"Creating a ChatModule instance of the model: {self.engine_config.model} ..."
         )
 
         # TODO: Using config info
@@ -69,6 +73,7 @@ class MLCEngine(LLMEngine):
         #     f"Model {self.engine_config.model_name} loaded. Total size: {self.model_mem} MiB"
         # )
 
+        self._current_context_id = NONE_CONTEXT_ID
         self._register_engine(self.engine_config)
 
         logger.info(
@@ -81,15 +86,13 @@ class MLCEngine(LLMEngine):
             )
         )
 
-        self._current_context_id = NONE_CONTEXT_ID
-
     def _execute_job(self, job: PrimitiveJob):
         if isinstance(job, Fill):
             st = time.perf_counter_ns()
             self.chat_module._prefill(job.text)
             ed = time.perf_counter_ns()
             logger.debug(
-                f"Prefill time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
+                f"Fill time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
             )
         elif isinstance(job, Generation):
             generation_config = GenerationConfig(
@@ -102,7 +105,7 @@ class MLCEngine(LLMEngine):
                 self.chat_module._decode(generation_config=generation_config)
                 ed = time.perf_counter_ns()
                 logger.debug(
-                    f"Decode time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
+                    f"Generate time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
                 )
         else:
             raise NotImplementedError
@@ -130,7 +133,7 @@ class MLCEngine(LLMEngine):
         self._execute_job(fill_job)
 
         return {
-            "num_filled_tokens": len(fill_job.text),
+            "num_filled_len": len(fill_job.text),
         }
 
     # override
@@ -177,7 +180,7 @@ class MLCEngine(LLMEngine):
 
         self.chat_module.reset_chat()
         return {
-            "num_freed_tokens": 0,
+            "context_len": 0,
         }
 
     async def heartbeat(self):

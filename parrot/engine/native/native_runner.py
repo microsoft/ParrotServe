@@ -4,7 +4,7 @@ import torch
 import time
 import psutil
 
-from parrot.utils import RecyclePool, set_random_seed, get_logger
+from parrot.utils import RecyclePool, get_logger
 from parrot.protocol.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
@@ -47,9 +47,6 @@ class NativeRunner:
 
         # Init model cache storage
         init_model_cache_storage(self.hf_model_config, self.native_config)
-
-        # Set random seed
-        set_random_seed(self.native_config.random_seed)
 
     @torch.inference_mode()
     def run_iter(self, jobs: List[PrimitiveJob]) -> (int, int):

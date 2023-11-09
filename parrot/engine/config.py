@@ -8,11 +8,20 @@ from parrot.constants import (
     DEFAULT_ENGINE_SERVER_PORT,
 )
 
+from .native.mem_layout import MemLayout, ATTN_FUNC_LAYOUT_MAP
+
+from .openai.api_endpoint import Endpoint, ENDPOINT_MAP
+
+
+_DTYPE_MAP = {
+    "float16": torch.float16,
+    "float32": torch.float32,
+}
+
 
 @dataclass
 class NativeConfig:
     num_kv_cache_blocks: int
-    random_seed: int
     attn_func: Union[str, "AttnFunc"]
     dtype: Union[Literal["float16", "float32"], torch.dtype] = "float16"
     device: Union[str, torch.device] = "cuda"  # cpu, cuda, cuda:x
@@ -22,8 +31,25 @@ class NativeConfig:
     model_arch: Optional[str] = None
 
     def __post_init__(self):
-        # Will be overwritten by native_config_post_init.py
-        pass
+        assert self._attn_func_map is not None
+        ATTN_FUNC_MAP = self._attn_func_map
+
+        # Replace dtype and device
+        self.dtype_str = self.dtype
+        self.device_str = self.device
+        self.dtype = _DTYPE_MAP[self.dtype]
+        self.device = torch.device(self.device)
+
+        # Replace attn func
+        if self.attn_func not in ATTN_FUNC_MAP:
+            raise ValueError(
+                f"Unknown attention function name: {self.attn_func}. "
+                f"Supported attetion functions: {list(ATTN_FUNC_MAP.keys())}"
+            )
+
+        self.mem_layout = ATTN_FUNC_LAYOUT_MAP[self.attn_func]  # Set mem layout
+        self.attn_func_name = self.attn_func
+        self.attn_func = ATTN_FUNC_MAP[self.attn_func]
 
 
 @dataclass
@@ -31,6 +57,31 @@ class MLCConfig:
     model_path: str
     lib_path: str
     device: str = "cuda"  # 'cuda', 'metal', 'vulkan', 'rocm', 'opencl', 'auto'
+
+
+@dataclass
+class OpenAIConfig:
+    api_key: str
+    api_endpoint: Union[str, Endpoint]
+
+    # Azure OpenAI related
+    is_azure: bool = False
+    azure_api_version: str = "2023-07-01-preview"
+    azure_endpoint: str = "https://example-endpoint.openai.azure.com"
+
+    def __post_init__(self):
+        if self.api_endpoint not in ENDPOINT_MAP:
+            raise ValueError(
+                f"Unknown endpoint name: {self.api_endpoint}. "
+                f"Supported endpoints: {list(ENDPOINT_MAP.keys())}"
+            )
+        self.api_endpoint = ENDPOINT_MAP[self.api_endpoint]
+
+
+@dataclass
+class HuggingFaceConfig:
+    dtype: Literal["float16", "float32"] = "float16"
+    device: str = "cuda"
 
 
 @dataclass
@@ -54,13 +105,34 @@ ENGINE_TYPES = [
 
 @dataclass
 class EngineConfig:
-    model_name: str = "unknown"
+    # The model used in this engine.
+    # - For open source LLMs, the model name must follow the format in HuggingFace,
+    #   e.g. facebook/opt-13b;
+    # - For OpenAI API, the model name is the one used in OpenAI API,
+    #   i.e. deployment name.
+    model: str = "unknown"
+
+    # Host and port in engine server.
     host: str = DEFAULT_SERVER_HOST
     port: int = DEFAULT_ENGINE_SERVER_PORT
+
+    # The name of engine.
     engine_name: str = "unknown"
+
+    # The type of engine.
     engine_type: str = ENGINE_TYPE_NATIVE
-    tokenizer_name: str = "unknown"
+
+    # Random seed for reproduction.
+    random_seed: int = 0
+
+    # The tokenizer. Some engines (e.g. OpenAI) do not need tokenizer.
+    # For local LLMs, the tokenizer name must follow the format of
+    # HugoingFace tokenizer name, e.g. facebook/opt-13b.
+    tokenizer: str = "unknown"
     fill_chunk_size: int = FILL_NO_CHUNK
+
+    # The folowing configs are forwarded from sub configs, and is not
+    # required to be set in the engine config.
 
     # Forward from runner config
     dtype: Literal["float16", "float32"] = "float16"
@@ -73,7 +145,7 @@ class EngineConfig:
     def verify_config(cls, config: Dict) -> bool:
         """Verify the engine config."""
 
-        if "runner" not in config or "scheduler" not in config:
+        if "instance" not in config or "scheduler" not in config:
             return False
 
         # for field in cls.__dataclass_fields__:

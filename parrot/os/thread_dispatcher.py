@@ -40,7 +40,7 @@ class ThreadDispatcher:
             # If models is empty, it means the function can be executed on any model.
             if models == []:
                 return True
-            return engine.config.model_name in models
+            return engine.config.model in models
 
         # Get the available engines.
         # To make sure the engine is alive, we need to ping it first and sweep the dead engines.

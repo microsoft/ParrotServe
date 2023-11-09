@@ -1,10 +1,11 @@
 {
+    "model": "meta-llama/Llama-2-13b",
     "engine_name": "Llama-2-13b-chat-hf-q4f16_1-vulkan_local",
-    "model_name": "meta-llama/Llama-2-13b",
     "host": "localhost",
     "port": 9001,
     "engine_type": "mlcllm",
-    "runner": {
+    "random_seed": 0,
+    "instance": {
         "model_path": "../mlc/dist/prebuilt/mlc-chat-Llama-2-13b-chat-hf-q4f16_1",
         "lib_path": "../mlc/dist/prebuilt/lib/Llama-2-13b-chat-hf-q4f16_1-vulkan.so",
         "device": "vulkan"

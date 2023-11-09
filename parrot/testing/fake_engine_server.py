@@ -49,7 +49,7 @@ engine_config = EngineConfig(
     host=TESTING_SERVER_HOST,
     port=TESTING_SERVER_PORT,
     engine_name="Fake Engine",
-    tokenizer_name="facebook/opt-13b",
+    tokenizer="facebook/opt-13b",
 )
 
 
@@ -111,7 +111,7 @@ async def fill(request: Request):
     num_running_jobs -= 1
 
     return {
-        "num_filled_tokens": length,
+        "num_filled_len": length,
     }
 
 
@@ -157,14 +157,14 @@ async def free_context(request: Request):
     payload = await request.json()
     # assert payload["context_id"] in context
 
-    num_freed_tokens = 0
+    context_len = 0
 
     if payload["context_id"] in context:
         num_cached_tokens -= context[payload["context_id"]]
-        num_freed_tokens = context[payload["context_id"]]
+        context_len = context[payload["context_id"]]
 
     return {
-        "num_freed_tokens": num_freed_tokens,
+        "context_len": context_len,
     }
 
 

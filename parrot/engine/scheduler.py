@@ -18,10 +18,16 @@ class Scheduler:
 
         self.waiting_jobs.append(job)
 
+    def remove_job(self, job: PrimitiveJob):
+        """Remove a job from the scheduler."""
+
+        self.running_jobs.remove(job)
+
     @property
     def empty(self) -> bool:
         """Check if the scheduler is empty."""
 
+        # print(f"Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}")
         return len(self.waiting_jobs) == 0 and len(self.running_jobs) == 0
 
     def schedule(self) -> List[PrimitiveJob]:

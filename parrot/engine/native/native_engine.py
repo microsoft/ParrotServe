@@ -22,7 +22,7 @@ class NativeEngine(LLMEngine):
     def __init__(self, engine_config: Dict, connect_to_os: bool = True):
         super().__init__(engine_config, connect_to_os)
 
-        native_config = NativeConfig(**engine_config.pop("runner"))
+        native_config = NativeConfig(**engine_config.pop("instance"))
         scheduler_config = SchedulerConfig(**engine_config.pop("scheduler"))
         self.engine_config = EngineConfig(
             dtype=native_config.dtype_str,
@@ -31,7 +31,7 @@ class NativeEngine(LLMEngine):
             **engine_config,
         )
         self.runner = NativeRunner(
-            model_name=self.engine_config.model_name, config=native_config
+            model_name=self.engine_config.model, config=native_config
         )
         self.scheduler = Scheduler(scheduler_config)
 
@@ -74,7 +74,7 @@ class NativeEngine(LLMEngine):
         self._add_job(fill_job)
         await fill_job.finish_event.wait()
         return {
-            "num_filled_tokens": len(fill_job.token_ids),
+            "num_filled_len": len(fill_job.token_ids),
         }
 
     # override
@@ -126,9 +126,9 @@ class NativeEngine(LLMEngine):
                 # NOTE(chaofan): We cannot free the context when it is still running.
                 raise RuntimeError(f"Context {context_id} is still running.")
 
-        num_freed_tokens = self.runner.context_manager.free_context(context_id)
+        context_len = self.runner.context_manager.free_context(context_id)
         return {
-            "num_freed_tokens": num_freed_tokens,
+            "context_len": context_len,
         }
 
     # override
@@ -165,7 +165,7 @@ class NativeEngine(LLMEngine):
         )
 
     # override
-    def engine_iter(self):
+    async def engine_iter(self):
         # If there is no job, we don't need to run.
         if self.scheduler.empty:
             return

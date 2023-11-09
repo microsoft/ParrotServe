@@ -1,10 +1,9 @@
 from typing import Dict, AsyncGenerator
 import asyncio
-import time
 
 from parrot.constants import ENGINE_LOOP_INTERVAL, ENGINE_HEARTBEAT_INTERVAL
 from parrot.protocol.layer_apis import register_engine
-from parrot.utils import get_logger
+from parrot.utils import get_logger, set_random_seed, create_task_in_loop
 
 from .config import EngineConfig
 
@@ -17,6 +16,9 @@ class LLMEngine:
     LLM engines."""
 
     def __init__(self, engine_config: Dict, connect_to_os: bool = True):
+        # Set global random seed
+        set_random_seed(engine_config["random_seed"])
+
         self.connect_to_os = connect_to_os
         if self.connect_to_os:
             assert (
@@ -48,6 +50,7 @@ class LLMEngine:
         Returns:
             Dict. The response of the fill API.
         """
+        raise NotImplementedError
 
     async def generate(self, payload: Dict) -> Dict:
         """Generate API.
@@ -58,6 +61,7 @@ class LLMEngine:
         Returns:
             Dict. The response of the generate API.
         """
+        raise NotImplementedError
 
     def generate_stream(self, payload: Dict) -> AsyncGenerator:
         """Generate stream API.
@@ -68,6 +72,7 @@ class LLMEngine:
         Returns:
             The generator of the generate stream API.
         """
+        raise NotImplementedError
 
     def free_context(self, payload: Dict) -> Dict:
         """Free context API.
@@ -78,25 +83,33 @@ class LLMEngine:
         Returns:
             Dict. The response of the free context API.
         """
+        raise NotImplementedError
 
     async def heartbeat(self):
         """Heartbeat sent to OS.
 
         Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
+        raise NotImplementedError
 
-    def engine_iter(self):
+    async def engine_iter(self):
         """The function executed in the every iteration of the engine loop."""
+        raise NotImplementedError
+
+    async def _heartbeat_loop(self):
+        """Loop for heartbeat. It is registered in the same event loop with engine loop."""
+        while True:
+            await self.heartbeat()  # Send heartbeat to OS
+            await asyncio.sleep(ENGINE_HEARTBEAT_INTERVAL)
 
     async def engine_loop(self):
-        last_heartbeat_time = -1e14  # So that we can send heartbeat at the beginning
+        """Engine loop, execute jobs token by token.
+
+        For some types of engines, e.g. OpenAI engine, the engine loop is empty loop.
+        """
+
+        # Create a task for heartbeat.
+        create_task_in_loop(self._heartbeat_loop())
 
         while True:
-            # Send heartbeat to OS
-            cur_time = time.perf_counter_ns()
-            if (cur_time - last_heartbeat_time) / 1e9 > ENGINE_HEARTBEAT_INTERVAL:
-                await self.heartbeat()
-                last_heartbeat_time = cur_time
-
             await asyncio.sleep(ENGINE_LOOP_INTERVAL)
-
-            self.engine_iter()
+            await self.engine_iter()

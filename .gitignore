@@ -37,3 +37,8 @@ log
 *.pt
 *.pth
 data
+
+# We do not public our OpenAI API-Key
+configs/engine/openai/*.json
+# But we provide an example config
+!configs/engine/openai/openai-example-config.json

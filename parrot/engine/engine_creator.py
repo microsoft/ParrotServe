@@ -12,6 +12,7 @@ from .config import (
 )
 from .native.native_engine import NativeEngine
 from .mlc_llm.mlc_engine import MLCEngine
+from .openai.openai_engine import OpenAIEngine
 
 logger = get_logger("Engine Creator")
 
@@ -39,5 +40,7 @@ def create_engine(engine_config_path: str, connect_to_os: bool = True) -> LLMEng
         return NativeEngine(engine_config, connect_to_os)
     elif engine_type == ENGINE_TYPE_MLCLLM:
         return MLCEngine(engine_config, connect_to_os)
+    elif engine_type == ENGINE_TYPE_OPENAI:
+        return OpenAIEngine(engine_config, connect_to_os)
     else:
         raise NotImplementedError(f"Unsupported engine type: {engine_type}")

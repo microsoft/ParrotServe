@@ -13,7 +13,10 @@ class ContextManager:
         self._map: Dict[str, LowLevelContext] = {}
 
     def free_context(self, context_id: int) -> int:
-        """Free the context and return the number of freed tokens."""
+        """Free the context and return the number of freed tokens.
+
+        Return the length of the context.
+        """
 
         if context_id not in self._map:
             # raise RuntimeError(f"Context id {context_id} not found.")
@@ -22,9 +25,9 @@ class ContextManager:
             # In this case, we should just return 0.
             return 0
         context = self._map.pop(context_id)
-        num_freed_tokens = len(context.token_ids)
+        context_len = context.get_this_context_len()
         context.destruction()
-        return num_freed_tokens
+        return context_len
 
     def bind_job_context(self, job: PrimitiveJob, ctx_cls, **ctx_kwargs):
         """Set the `context` attribute of the job."""

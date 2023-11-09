@@ -27,7 +27,7 @@ def test_simple_serving():
         engine_config_path = package_path + "/../configs/engine/native/opt-125m.json"
         with open(engine_config_path) as f:
             engine_config = dict(json.load(f))
-        engine_config.pop("runner")
+        engine_config.pop("instance")
         engine_config.pop("scheduler")
         engine_config.pop("os")
         engine_config = EngineConfig(**engine_config)
@@ -53,7 +53,7 @@ def test_simple_serving():
             token_ids=prompt_tokens,
         )
         resp = await primitive.apost()
-        assert resp.num_filled_tokens == len(prompt_tokens)
+        assert resp.num_filled_len == len(prompt_tokens)
 
         primitive = Generate(
             pid=0,
@@ -70,7 +70,7 @@ def test_simple_serving():
             text += tokenizer.decode([token_id])
 
         resp = free_context(url, 0)
-        assert resp.num_freed_tokens > len(prompt_tokens)
+        assert resp.context_len > len(prompt_tokens)
 
         print("Generated: ", text)
 

@@ -45,9 +45,7 @@ class Executor:
         interpret_type = thread.engine.interpreter_type
 
         if interpret_type == InterpretType.TOKEN_ID:
-            interpreter = self.get_token_id_interpreter(
-                thread.engine.config.tokenizer_name
-            )
+            interpreter = self.get_token_id_interpreter(thread.engine.config.tokenizer)
         elif interpret_type == InterpretType.TEXT:
             interpreter = self.text_interpreter
         else:

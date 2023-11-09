@@ -51,7 +51,7 @@ class Fill(Primitive):
                 token_ids=self.token_ids,
                 text=self.text,
             )
-            self.context.token_nums += resp.num_filled_tokens
+            self.context.token_nums += resp.num_filled_len
             return resp
         except BaseException as e:
             logger.error(f"Fill error in {self.context.engine_url} error: {e}")
@@ -75,7 +75,7 @@ class Fill(Primitive):
                     token_ids=self.token_ids,
                     text=self.text,
                 )
-            self.context.token_nums += resp.num_filled_tokens
+            self.context.token_nums += resp.num_filled_len
             return resp
         except BaseException as e:
             logger.error(f"Fill error in {self.context.engine_url} error: {e}")

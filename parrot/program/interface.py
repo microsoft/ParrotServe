@@ -2,9 +2,13 @@ import inspect
 from typing import Optional, List
 
 from parrot.protocol.sampling_config import SamplingConfig
+from parrot.utils import get_logger
 
 from .function import SemanticFunction, ParamType, Parameter
 from .transforms.prompt_formatter import standard_formatter, Sequential, FuncMutator
+
+
+logger = get_logger("Interface")
 
 
 # Annotations of arguments when defining a parrot function.
@@ -74,6 +78,11 @@ def function(
         if formatter is not None:
             semantic_func = formatter.transform(semantic_func)
         if conversation_template is not None:
+            logger.warning(
+                f"Use a conversation template {conversation_template.__class__.__name__} to "
+                "transform the function. This only works well for requests which are dispatched "
+                "to engines with the corresponding models."
+            )
             semantic_func = conversation_template.transform(semantic_func)
 
         return semantic_func

@@ -334,3 +334,7 @@ ATTN_FUNC_MAP = {
     "xformers_with_buffer": xFormersWithBuffer,
     "xformers_fill_vllm_paged_attention_generate": xFormersFill_vLLMPagedAttentionGenerate,
 }
+
+# NOTE(chaofan): This is a hack to make the ATTN_FUNC_MAP visible to the config.
+# To avoid circular import, we cannot import ATTN_FUNC_MAP in config.py.
+NativeConfig._attn_func_map = ATTN_FUNC_MAP
