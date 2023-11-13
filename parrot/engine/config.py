@@ -92,12 +92,10 @@ class SchedulerConfig:
 
 # EngineType(Enum)
 ENGINE_TYPE_NATIVE = "native"
-ENGINE_TYPE_HUGGINGFACE = "huggingface"
 ENGINE_TYPE_OPENAI = "openai"
 ENGINE_TYPE_MLCLLM = "mlcllm"
 ENGINE_TYPES = [
     ENGINE_TYPE_NATIVE,
-    ENGINE_TYPE_HUGGINGFACE,
     ENGINE_TYPE_OPENAI,
     ENGINE_TYPE_MLCLLM,
 ]

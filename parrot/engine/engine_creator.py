@@ -5,7 +5,6 @@ from parrot.utils import get_logger
 from .llm_engine import LLMEngine
 from .config import (
     ENGINE_TYPE_NATIVE,
-    ENGINE_TYPE_HUGGINGFACE,
     ENGINE_TYPE_OPENAI,
     ENGINE_TYPE_MLCLLM,
     EngineConfig,
