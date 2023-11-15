@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 # NOTE(chaofan): The OPT model is not fine-tuned in chat scenarios, so the
 # generated result is not good.
 # We recommend use a chat model in real semantic program running scenarios.

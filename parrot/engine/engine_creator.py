@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 import json
 
 from parrot.utils import get_logger

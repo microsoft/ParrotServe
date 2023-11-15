@@ -1,5 +1,6 @@
-# Reference:
-#     https://github.com/lm-sys/FastChat/blob/main/fastchat/conversation.py
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
 
 from typing import List
 from enum import auto, IntEnum

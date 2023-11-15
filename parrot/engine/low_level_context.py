@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from typing import List, Optional
 from abc import ABC, abstractmethod
 

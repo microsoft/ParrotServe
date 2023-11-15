@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from typing import List
 
 from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM

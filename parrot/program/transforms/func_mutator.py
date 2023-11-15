@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from typing import Dict, List
 from abc import ABC, abstractmethod
 from dataclasses import asdict

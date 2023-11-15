@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 # Adapted from
 # https://github.com/vllm-project/vllm/blob/main/vllm/model_executor/weight_utils.py
 # Copyright 2023 The vLLM team.

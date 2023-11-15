@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from parrot.engine.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import (
     EngineConfig,

@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 """A fake server for testing.
 
 You can choose whether to connect with OS by the argument: --connect_os.

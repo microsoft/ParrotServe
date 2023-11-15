@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional
 

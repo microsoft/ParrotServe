@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 import time
 from typing import Dict, AsyncGenerator
 from mlc_chat import ChatModule, GenerationConfig

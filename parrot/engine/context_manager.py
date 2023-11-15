@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from typing import Dict
 
 from parrot.constants import NONE_CONTEXT_ID

@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 """A fake server for testing."""
 
 from fastapi import FastAPI, Request

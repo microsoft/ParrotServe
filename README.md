@@ -1,4 +1,4 @@
-# Parrot: High Performance Runtime System for Semantic Programming​
+# Parrot: Efficient Serving LLM-based Agents with Dependent Semantic Variables
 
 This project is a research prototype for now. Being eargerly iterated.
 

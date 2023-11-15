@@ -1,4 +1,6 @@
-"""A fake server for testing."""
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
 
 import argparse
 import asyncio

@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from typing import Dict, List, Union
 from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 

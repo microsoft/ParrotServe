@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 # Constants for Parrot
 
 # NOTE(chaofan): All time constansts (with the name of *_TIME, *_INTERVAL) are in seconds.

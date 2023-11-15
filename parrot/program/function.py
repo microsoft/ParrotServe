@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from enum import Enum
 from typing import List, Dict, Type, Optional, Any, Set, Union, Tuple
 import pickle

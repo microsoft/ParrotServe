@@ -1,3 +1,6 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
 # coding=utf-8
 #
 # Adapted from Huggingface transformers library:

@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 """Rotary embedding kernel implemented by Triton.
 
 Currently only support GPT-NeoX style rotary embedding.

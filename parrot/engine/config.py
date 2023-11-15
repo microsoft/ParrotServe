@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from typing import Literal, Optional, Dict, Union
 from dataclasses import dataclass
 import torch

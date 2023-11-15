@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from dataclasses import dataclass, asdict
 from typing import List, Optional
 import aiohttp

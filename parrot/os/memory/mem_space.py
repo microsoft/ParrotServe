@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from typing import Dict, List, Callable
 
 from parrot.protocol.layer_apis import free_context

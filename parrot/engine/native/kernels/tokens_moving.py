@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 """KV Buffer: (token_nums, head_num, head_dim).
 
 query: (token_nums, head_num, head_dim)

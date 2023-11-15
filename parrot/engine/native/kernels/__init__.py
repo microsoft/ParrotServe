@@ -1,4 +1,8 @@
-"""Triton kernels."""
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
+"""Kernels for Parrot native engines."""
 
 from .tokens_moving import (
     discontinuous_move_tokens,

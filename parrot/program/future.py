@@ -1,3 +1,7 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
 from typing import Optional
 
 
@@ -6,6 +10,8 @@ class Future:
 
     It's like "Future" in the Python asynchronous programming, or "Promise" in JavaScript.
     As its name suggests, it's a placeholder for the content to be filled in the future.
+
+    It also corresponds to a Input/Output semantic variable in Parrot System.
     """
 
     _counter = 0
