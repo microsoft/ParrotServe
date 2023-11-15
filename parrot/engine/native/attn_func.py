@@ -3,15 +3,22 @@ import torch
 from torch import nn
 from xformers import ops as xops
 
+from parrot.utils import get_logger
+
 from ..primitive_job import PrimitiveJob, Fill, Generation
 from .mem import get_k_cache, get_v_cache
 from .iter_state import IterationState
 from .kernels import (
     discontinuous_move_tokens,
+    move_tokens_from_blocked_k_cache,
+    move_tokens_from_blocked_v_cache,
     vllm_paged_attention,
     vllm_reshape_and_cache,
 )
 from ..config import NativeConfig
+
+
+logger = get_logger("AttnFunc")
 
 
 class AttnFunc(nn.Module):
@@ -202,11 +209,14 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
         slot_mapping = []  # [num_tokens]
         context_lens = []  # [num_generation_seqs]
 
-        # Mask
-        q_lens: List[int] = []
+        # Fill part
+        fill_q_lens: List[int] = []
+        fill_kv_lens: List[int] = []
+        fill_slots: List[int] = []
 
         # Maxium
         max_num_blocks_per_seq = -1
+        max_num_slots_per_seq = -1
 
         for job in jobs:
             if isinstance(job, Fill):
@@ -217,13 +227,12 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
                 iteration_state.generation_sampling_config.append(job.sampling_config)
 
             context_block_ids = job.context.get_context_block_ids()
-            newly_block_ids = context_block_ids[-num_tokens:]
+            context_slot_ids = job.context.get_context_slot_ids()
             context_len = job.context.get_context_len()
 
-            # Update slot mapping for query tokens
-            for i, block_id in enumerate(newly_block_ids):
-                offset = i + len(context_block_ids) - num_tokens
-                slot_mapping.append(block_id * block_size + offset % block_size)
+            # Maintain slot mapping for query tokens
+            slot_mapping.append(context_slot_ids[-num_tokens:])
+            max_num_slots_per_seq = max(max_num_slots_per_seq, len(slot_mapping[-1]))
 
             if isinstance(job, Generation):
                 # Update block tables for generation tokens
@@ -235,22 +244,39 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
                     max_num_blocks_per_seq, len(block_tables[-1])
                 )
             else:
-                # In this case, q_lens are only for Fill
-                q_lens.append(num_tokens)
-
-                assert (
-                    context_len == num_tokens
-                ), f"In vLLM, context-aware Fill is not allowed: context_len={context_len}."
+                fill_q_lens.append(num_tokens)
+                fill_kv_lens.append(context_len)
+                fill_slots.extend(context_slot_ids)
+                # assert (
+                #     context_len == num_tokens
+                # ), f"In vLLM, context-aware Fill is not allowed: context_len={context_len}."
 
         # Attn Mask
-        iteration_state.q_attn_bias = (
-            xops.fmha.attn_bias.BlockDiagonalCausalMask.from_seqlens(q_lens)
+        iteration_state.q_kv_attn_bias = (
+            xops.fmha.attn_bias.BlockDiagonalCausalFromBottomRightMask.from_seqlens(
+                q_seqlen=fill_q_lens,
+                kv_seqlen=fill_kv_lens,
+            )
+        )
+
+        # KV Buffer
+        buffer_shape = [sum(fill_kv_lens), num_heads, head_size]
+        iteration_state.k_buffer = torch.empty(
+            buffer_shape,
+            dtype=native_config.dtype,
+            device=native_config.device,
+        )
+        iteration_state.v_buffer = torch.empty(
+            buffer_shape,
+            dtype=native_config.dtype,
+            device=native_config.device,
         )
 
         # Tensors for vLLM
 
         # NOTE: We must pad block tables to the same length.
         block_tables = [_pad_to_max(x, max_num_blocks_per_seq, 0) for x in block_tables]
+        slot_mapping = [_pad_to_max(x, max_num_slots_per_seq, 0) for x in slot_mapping]
 
         # print(block_tables)
         # print(slot_mapping)
@@ -265,6 +291,12 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
         iteration_state.slot_mapping = torch.tensor(
             slot_mapping,
             dtype=torch.int32,
+            device=native_config.device,
+        )
+
+        iteration_state.fill_slots = torch.tensor(
+            fill_slots,
+            dtype=torch.int64,
             device=native_config.device,
         )
 
@@ -298,13 +330,36 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
 
         # Calculate attn for Fill
         num_total_fill_tokens = iteration_state.num_total_fill_tokens
+
+        # print(iteration_state.fill_slots) / 0
+
         if num_total_fill_tokens > 0:
             q_fill = q[:num_total_fill_tokens]
+            dest_indices = torch.arange(
+                iteration_state.k_buffer.shape[0],
+                dtype=torch.int64,
+                device=k.device,
+            )
+
+            move_tokens_from_blocked_k_cache(
+                k_cache,
+                iteration_state.k_buffer,
+                iteration_state.fill_slots,
+                dest_indices,
+            )
+
+            move_tokens_from_blocked_v_cache(
+                v_cache,
+                iteration_state.v_buffer,
+                iteration_state.fill_slots,
+                dest_indices,
+            )
+
             fill_output = xops.memory_efficient_attention_forward(
                 q_fill.unsqueeze(0),
-                k.unsqueeze(0),
-                v.unsqueeze(0),
-                attn_bias=iteration_state.q_attn_bias,
+                iteration_state.k_buffer.unsqueeze(0),
+                iteration_state.v_buffer.unsqueeze(0),
+                attn_bias=iteration_state.q_kv_attn_bias,
                 p=0.0,
                 scale=self.scaling,
                 op=xops.fmha.cutlass.FwOp(),
@@ -330,11 +385,31 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
         return output.view(-1, self.num_heads * self.head_dim)
 
 
-ATTN_FUNC_MAP = {
-    "xformers_with_buffer": xFormersWithBuffer,
-    "xformers_fill_vllm_paged_attention_generate": xFormersFill_vLLMPagedAttentionGenerate,
-}
+# ATTN_FUNC_MAP = {
+#     "xformers_with_buffer": xFormersWithBuffer,
+#     "xformers_fill_vllm_paged_attention_generate": xFormersFill_vLLMPagedAttentionGenerate,
+# }
+
+ATTN_FUNCS = ["xformers_with_buffer", "xformers_fill_vllm_paged_attention_generate"]
+
+
+def _get_attn_func(self, attn_func_name: str):
+    if attn_func_name == "xformers_with_buffer":
+        logger.warning("Use slow attn func: xformers_with_buffer")
+        return xFormersWithBuffer
+    elif attn_func_name == "xformers_fill_vllm_paged_attention_generate":
+        logger.warning(
+            "Use attn func without Fill/Generate fusion, which means these "
+            "two stages are executed serially."
+        )
+        return xFormersFill_vLLMPagedAttentionGenerate
+    else:
+        raise ValueError(
+            f"Unknown attention function name: {attn_func_name}. "
+            f"Supported attetion functions: {ATTN_FUNCS}"
+        )
+
 
 # NOTE(chaofan): This is a hack to make the ATTN_FUNC_MAP visible to the config.
 # To avoid circular import, we cannot import ATTN_FUNC_MAP in config.py.
-NativeConfig._attn_func_map = ATTN_FUNC_MAP
+NativeConfig._get_attn_func = _get_attn_func

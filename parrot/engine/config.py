@@ -31,9 +31,6 @@ class NativeConfig:
     model_arch: Optional[str] = None
 
     def __post_init__(self):
-        assert self._attn_func_map is not None
-        ATTN_FUNC_MAP = self._attn_func_map
-
         # Replace dtype and device
         self.dtype_str = self.dtype
         self.device_str = self.device
@@ -41,15 +38,9 @@ class NativeConfig:
         self.device = torch.device(self.device)
 
         # Replace attn func
-        if self.attn_func not in ATTN_FUNC_MAP:
-            raise ValueError(
-                f"Unknown attention function name: {self.attn_func}. "
-                f"Supported attetion functions: {list(ATTN_FUNC_MAP.keys())}"
-            )
-
         self.mem_layout = ATTN_FUNC_LAYOUT_MAP[self.attn_func]  # Set mem layout
         self.attn_func_name = self.attn_func
-        self.attn_func = ATTN_FUNC_MAP[self.attn_func]
+        self.attn_func = self._get_attn_func(self.attn_func)
 
 
 @dataclass
