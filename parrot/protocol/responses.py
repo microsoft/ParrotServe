@@ -13,7 +13,7 @@ class BaseResponse(BaseModel):
 
 
 class FillResponse(BaseResponse):
-    num_filled_len: int
+    filled_len: int
 
 
 class GenerateResponse(BaseResponse):

@@ -1,13 +1,13 @@
+import numpy as np
+from transformers import AutoTokenizer
+
 from parrot.engine.native.native_runner import NativeRunner
 from parrot.engine.config import NativeConfig
 from parrot.engine.primitive_job import Fill, Generation
 from parrot.protocol.sampling_config import SamplingConfig
 
-import numpy as np
-from transformers import AutoTokenizer
 
-
-def test_single_fill(model_name, native_config: NativeConfig):
+def template_test_single_fill(model_name: str, native_config: NativeConfig):
     runner = NativeRunner(model_name, native_config)
 
     job = Fill(
@@ -23,7 +23,7 @@ def test_single_fill(model_name, native_config: NativeConfig):
     runner.run_iter([job])
 
 
-def test_batch_fills(model_name, native_config: NativeConfig):
+def template_test_batch_fills(model_name: str, native_config: NativeConfig):
     runner = NativeRunner(model_name, native_config)
     batch_size = 16
     jobs = [
@@ -40,7 +40,7 @@ def test_batch_fills(model_name, native_config: NativeConfig):
     runner.run_iter(jobs)
 
 
-def test_fill_then_gen(model_name, native_config: NativeConfig):
+def template_test_fill_then_gen(model_name: str, native_config: NativeConfig):
     runner = NativeRunner(model_name, native_config)
     runner.run_iter(
         [
@@ -67,7 +67,7 @@ def test_fill_then_gen(model_name, native_config: NativeConfig):
     )
 
 
-def test_generate_single_text(model_name, native_config: NativeConfig):
+def template_test_generate_single_text(model_name: str, native_config: NativeConfig):
     runner = NativeRunner(model_name, native_config)
     prompt_text = "Hello, my name is"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -98,7 +98,7 @@ def test_generate_single_text(model_name, native_config: NativeConfig):
     print("Generated: ", tokenizer.decode(fill_job.context.token_ids))
 
 
-def test_generate_batch_text(model_name, native_config: NativeConfig):
+def template_test_generate_batch_text(model_name: str, native_config: NativeConfig):
     runner = NativeRunner(model_name, native_config)
     prompt_text = [
         "Hello, my name is",
@@ -141,7 +141,7 @@ def test_generate_batch_text(model_name, native_config: NativeConfig):
         )
 
 
-def test_fill_generate_mixed(model_name, native_config: NativeConfig):
+def template_test_fill_generate_mixed(model_name: str, native_config: NativeConfig):
     runner = NativeRunner(model_name, native_config)
     prompt_text = [
         "Hello, my name is",

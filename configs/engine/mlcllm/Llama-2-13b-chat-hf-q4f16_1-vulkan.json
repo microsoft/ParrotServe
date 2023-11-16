@@ -6,8 +6,8 @@
     "engine_type": "mlcllm",
     "random_seed": 0,
     "instance": {
-        "model_path": "../mlc/dist/prebuilt/mlc-chat-Llama-2-13b-chat-hf-q4f16_1",
-        "lib_path": "../mlc/dist/prebuilt/lib/Llama-2-13b-chat-hf-q4f16_1-vulkan.so",
+        "model_path": "/home/v-chaofanlin/llm-playground/mlc/dist/prebuilt/mlc-chat-Llama-2-13b-chat-hf-q4f16_1",
+        "lib_path": "/home/v-chaofanlin/llm-playground/mlc/dist/prebuilt/lib/Llama-2-13b-chat-hf-q4f16_1-vulkan.so",
         "device": "vulkan"
     },
     "scheduler": {

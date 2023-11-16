@@ -40,7 +40,7 @@ class Fill(Primitive):
 
     def post(self) -> FillResponse:
         # NOTE(chaofan): For simple fill, there is no thread id.
-        assert self.tid == NONE_THREAD_ID
+        # assert self.tid == NONE_THREAD_ID
 
         try:
             resp: FillResponse = send_http_request(
@@ -55,7 +55,7 @@ class Fill(Primitive):
                 token_ids=self.token_ids,
                 text=self.text,
             )
-            self.context.token_nums += resp.num_filled_len
+            self.context.token_nums += resp.filled_len
             return resp
         except BaseException as e:
             logger.error(f"Fill error in {self.context.engine_url} error: {e}")
@@ -79,7 +79,7 @@ class Fill(Primitive):
                     token_ids=self.token_ids,
                     text=self.text,
                 )
-            self.context.token_nums += resp.num_filled_len
+            self.context.token_nums += resp.filled_len
             return resp
         except BaseException as e:
             logger.error(f"Fill error in {self.context.engine_url} error: {e}")

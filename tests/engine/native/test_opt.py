@@ -1,6 +1,6 @@
 from parrot.engine.config import NativeConfig
 from parrot.utils import set_random_seed
-from model_runner_test import *
+from parrot.testing.model_runner_test_template import *
 
 
 def test_opt():
@@ -12,12 +12,12 @@ def test_opt():
         attn_func="xformers_with_buffer",
     )
 
-    test_single_fill(model_name, native_config)
-    test_batch_fills(model_name, native_config)
-    test_fill_then_gen(model_name, native_config)
-    test_generate_single_text(model_name, native_config)
-    test_generate_batch_text(model_name, native_config)
-    test_fill_generate_mixed(model_name, native_config)
+    template_test_single_fill(model_name, native_config)
+    template_test_batch_fills(model_name, native_config)
+    template_test_fill_then_gen(model_name, native_config)
+    template_test_generate_single_text(model_name, native_config)
+    template_test_generate_batch_text(model_name, native_config)
+    template_test_fill_generate_mixed(model_name, native_config)
 
 
 if __name__ == "__main__":

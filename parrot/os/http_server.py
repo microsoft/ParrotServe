@@ -86,7 +86,8 @@ async def placeholder_fetch(request: Request):
 async def engine_heartbeat(request: Request):
     payload = await request.json()
     engine_id = payload["engine_id"]
-    logger.debug(f"Engine heartbeat received: id={engine_id}.")
+    engine_name = payload["engine_name"]
+    logger.debug(f"Engine {engine_name} (id={engine_id}) heartbeat received.")
     engine_info = EngineRuntimeInfo(**payload["runtime_info"])
     pcore.engine_heartbeat(engine_id, engine_info)
     return {}
@@ -99,6 +100,28 @@ async def register_engine(request: Request):
     engine_config = EngineConfig(**payload["engine_config"])
     engine_id = pcore.register_engine(engine_config)
     return {"engine_id": engine_id}
+
+
+def start_server(os_config_path: str, release_mode: bool = False):
+    global pcore
+    global app
+
+    # The Operating System Core
+    pcore = PCore(os_config_path)
+
+    loop = asyncio.new_event_loop()
+    config = Config(
+        app=app,
+        loop=loop,
+        host=pcore.os_config.host,
+        port=pcore.os_config.port,
+        log_level="info",
+    )
+    uvicorn_server = Server(config)
+    # NOTE(chaofan): We use `fail_fast` because this project is still in development
+    # For real deployment, maybe we don't need to quit the backend when there is an error
+    create_task_in_loop(pcore.os_loop(), loop=loop, fail_fast=True)
+    loop.run_until_complete(uvicorn_server.serve())
 
 
 if __name__ == "__main__":
@@ -120,18 +143,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     release_mode = args.release_mode
-    pcore = PCore(args.config_path)
 
-    loop = asyncio.new_event_loop()
-    config = Config(
-        app=app,
-        loop=loop,
-        host=pcore.os_config.host,
-        port=pcore.os_config.port,
-        log_level="info",
+    start_server(
+        os_config_path=args.config_path,
+        release_mode=release_mode,
     )
-    uvicorn_server = Server(config)
-    # NOTE(chaofan): We use `fail_fast` because this project is still in development
-    # For real deployment, maybe we don't need to quit the backend when there is an error
-    create_task_in_loop(pcore.os_loop(), loop=loop, fail_fast=True)
-    loop.run_until_complete(uvicorn_server.serve())

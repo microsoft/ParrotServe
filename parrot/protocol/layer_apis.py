@@ -176,6 +176,7 @@ async def engine_heartbeat(
                 api_url="/engine_heartbeat",
                 timeout=3,
                 engine_id=engine_id,
+                engine_name=engine_name,
                 runtime_info=asdict(runtime_info),
             )
     except BaseException as e:

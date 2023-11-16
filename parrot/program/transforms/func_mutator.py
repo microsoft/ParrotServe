@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from dataclasses import asdict
 from ..function import (
     SemanticFunction,
-    FunctionPiece,
+    SemanticVariable,
     ParameterLoc,
     Constant,
     Parameter,
@@ -21,7 +21,7 @@ class FuncMutator(ABC):
         """Transform a function and return a new function."""
 
         new_params: List[Parameter] = []
-        new_body: List[FunctionPiece] = []
+        new_body: List[SemanticVariable] = []
 
         self._param_remap: Dict[str, Parameter] = {}
         for param in func.params:
@@ -30,7 +30,7 @@ class FuncMutator(ABC):
             new_params.append(new_param)
 
         for piece in func.body:
-            new_body.append(self._visit_func_piece(piece))
+            new_body.append(self._visit_sv(piece))
 
         new_func = SemanticFunction(
             name=func.name,
@@ -51,17 +51,17 @@ class FuncMutator(ABC):
 
         raise NotImplementedError
 
-    def _visit_func_piece(self, func_piece: FunctionPiece) -> FunctionPiece:
-        """Visit a function piece and return a new function piece.
+    def _visit_sv(self, sv: SemanticVariable) -> SemanticVariable:
+        """Visit a semantic variable and return a new semantic variable.
 
         NOTE(chaofan): We don't change to idx of the pieces here. We only focus on mutating
         the pieces themselves.
         """
 
-        if isinstance(func_piece, Constant):
-            return self._visit_constant(func_piece)
-        elif isinstance(func_piece, ParameterLoc):
-            return self._visit_param_loc(func_piece)
+        if isinstance(sv, Constant):
+            return self._visit_constant(sv)
+        elif isinstance(sv, ParameterLoc):
+            return self._visit_param_loc(sv)
         else:
             raise NotImplementedError
 

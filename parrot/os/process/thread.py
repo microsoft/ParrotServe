@@ -122,7 +122,7 @@ class Thread:
         if buffer_len == 0:
             return
 
-        num_filled_len = 0
+        filled_len = 0
         chunk_size = self.engine.config.fill_chunk_size
 
         # NOTE(chaofan): We don't chunk the tokens if it is prefix.
@@ -154,21 +154,21 @@ class Thread:
             if not self.prefix_flag and self.prefix_mode == PrefixMode.SKIP:
                 await prefix_context.prefix_ready_event.wait()
                 # Skip
-                num_filled_len += len(chunked_tokens)
+                filled_len += len(chunked_tokens)
             else:
                 logger.debug(
                     f"Thread {self.tid} submit Fill primitive (size: {len(primitive.token_ids)})"
                 )
                 resp = await primitive.apost()
-                num_filled_len += resp.num_filled_len
+                filled_len += resp.filled_len
 
             if not self.prefix_flag:
                 self.prefix_flag = True
                 prefix_context.prefix_ready_event.set()
 
         assert (
-            num_filled_len == buffer_len
-        ), f"Not all tokens are filled. Filled: {num_filled_len}, total: {buffer_len}"
+            filled_len == buffer_len
+        ), f"Not all tokens are filled. Filled: {filled_len}, total: {buffer_len}"
         self._fill_tokens_buffer = []
 
     async def _visit_token_id_constant_fill(self, op: TokenIdConstantFill):
@@ -196,7 +196,7 @@ class Thread:
             self._fill_tokens_buffer.extend(op.input_holder.token_ids)
         else:
             # Streaming input. Pipeling filling.
-            num_filled_len = 0
+            filled_len = 0
             async for chunk in op.input_pipe.generator():
                 resp = await Fill(
                     pid=self.process.pid,
@@ -204,11 +204,11 @@ class Thread:
                     context=self.ctx,
                     token_ids=chunk,
                 ).apost()
-                num_filled_len += resp.num_filled_len
+                filled_len += resp.filled_len
             should_filled = len(op.input_holder.token_ids)
             assert (
-                num_filled_len == should_filled
-            ), f"Not all tokens are filled. Filled: {num_filled_len}, total: {should_filled}"
+                filled_len == should_filled
+            ), f"Not all tokens are filled. Filled: {filled_len}, total: {should_filled}"
 
     async def _visit_token_id_placeholder_generate(
         self, op: TokenIdPlaceholderGenerate

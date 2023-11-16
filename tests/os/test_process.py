@@ -1,13 +1,8 @@
-"""This test requires a running fake backend server.
-
-Use `python3 -m parrot.testing.fake_engine_server` to start a fake backend 
-server (without connect with OS!).
-"""
-
 import asyncio
 import parrot as P
 
 from parrot.testing.fake_engine_server import engine_config
+from parrot.testing.localhost_server_daemon import fake_engine_server
 
 from parrot.os.process.process import Process
 from parrot.os.memory.mem_space import MemorySpace
@@ -40,13 +35,15 @@ def test_single_call():
         call = test("Apple", "Banana")
         future_id = call.output_futures[0].id
 
-        proc.execute_call(call)
+        proc._rewrite_call(call)
+        proc._execute_call(call)
 
         content = await proc.placeholders_map[future_id].get()
 
         print(content)
 
-    asyncio.run(main())
+    with fake_engine_server():
+        asyncio.run(main())
 
 
 if __name__ == "__main__":

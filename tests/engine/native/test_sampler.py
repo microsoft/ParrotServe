@@ -1,17 +1,19 @@
-from parrot.engine.native.models.opt import OPTForCausalLM
-from parrot.engine.config import NativeConfig
-from parrot.protocol.sampling_config import SamplingConfig
-from parrot.utils import set_random_seed
 from transformers import AutoConfig
 import torch
 
 
+from parrot.engine.native.models.opt import OPTForCausalLM
+from parrot.engine.config import NativeConfig
+from parrot.protocol.sampling_config import SamplingConfig
+from parrot.utils import set_random_seed
+
+
 def test_sampling_one_token():
+    set_random_seed(2333)
+
     model_config = AutoConfig.from_pretrained("facebook/opt-125m")
     native_config = NativeConfig(
-        num_kv_cache_blocks=1024,
-        attn_func="xformers_with_buffer",
-        random_seed=2333,
+        num_kv_cache_blocks=1024, attn_func="xformers_with_buffer"
     )
 
     # Just to get the sampler

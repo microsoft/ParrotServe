@@ -33,6 +33,7 @@ from parrot.utils import get_logger, create_task_in_loop
 TESTING_RANDOM_SEED = 2333
 TESTING_SERVER_HOST = DEFAULT_SERVER_HOST
 TESTING_SERVER_PORT = DEFAULT_ENGINE_SERVER_PORT
+TESTING_SERVER_URL = f"http://{TESTING_SERVER_HOST}:{TESTING_SERVER_PORT}"
 TESTING_FILL_PERTOKEN_TIME = 0.1
 TESTING_DECODE_PERTOKEN_TIME = 0.1
 
@@ -115,7 +116,7 @@ async def fill(request: Request):
     num_running_jobs -= 1
 
     return {
-        "num_filled_len": length,
+        "filled_len": length,
     }
 
 
@@ -123,6 +124,18 @@ async def fill(request: Request):
 async def generate(request: Request):
     global num_running_jobs
     global num_cached_tokens
+
+    num_running_jobs += 1
+    payload = await request.json()
+
+    gen_len = int(np.random.exponential(32) + 3)
+
+    time.sleep(TESTING_DECODE_PERTOKEN_TIME * gen_len)
+
+    return {
+        "generated_text": "xxx",
+        "generated_ids": [],
+    }
 
 
 @app.post("/generate_stream")

@@ -137,7 +137,7 @@ class MLCEngine(LLMEngine):
         self._execute_job(fill_job)
 
         return {
-            "num_filled_len": len(fill_job.text),
+            "filled_len": len(fill_job.text),
         }
 
     # override
@@ -212,6 +212,6 @@ class MLCEngine(LLMEngine):
             ),
         )
 
-    def engine_iter(self):
+    async def engine_iter(self):
         # Do nothing
         pass

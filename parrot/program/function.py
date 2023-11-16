@@ -2,56 +2,24 @@
 # Licensed under the MIT license.
 
 
-from enum import Enum
 from typing import List, Dict, Type, Optional, Any, Set, Union, Tuple
 import pickle
 import regex as re
 from dataclasses import dataclass
 
 from parrot.utils import get_logger
-from parrot.protocol.sampling_config import SamplingConfig
 
 from .future import Future
+from .semantic_variable import (
+    SemanticVariable,
+    Constant,
+    Parameter,
+    ParamType,
+    ParameterLoc,
+)
 
 
 logger = get_logger("Function")
-
-
-@dataclass
-class FunctionPiece:
-    """A piece in the function body."""
-
-    idx: int
-
-
-@dataclass
-class Constant(FunctionPiece):
-    """Constant text."""
-
-    text: str
-
-
-class ParamType(Enum):
-    """Type of a parameter."""
-
-    INPUT_LOC = 0
-    OUTPUT_LOC = 1
-    INPUT_PYOBJ = 2
-
-
-@dataclass
-class Parameter:
-    name: str
-    typ: ParamType
-    sampling_config: Optional[SamplingConfig] = None
-
-    @property
-    def is_input_loc(self) -> bool:
-        return self.typ == ParamType.INPUT_LOC
-
-    @property
-    def is_output(self) -> bool:
-        return self.typ == ParamType.OUTPUT_LOC
 
 
 @dataclass
@@ -63,14 +31,9 @@ class FunctionMetadata:
     models: List[str]
 
 
-@dataclass
-class ParameterLoc(FunctionPiece):
-    """An input/output location in the function."""
-
-    param: Parameter
-
-
-def push_to_body(piece_cls: Type[FunctionPiece], body: List[FunctionPiece], **kwargs):
+def push_to_body(
+    piece_cls: Type[SemanticVariable], body: List[SemanticVariable], **kwargs
+):
     idx = len(body)
     body.append(piece_cls(idx=idx, **kwargs))
 
@@ -79,15 +42,15 @@ def parse_func_body(
     body_str: str,
     params_map: Dict[str, Parameter],
     metadata: FunctionMetadata,
-) -> List[FunctionPiece]:
-    """Parse the function body string to a list of function pieces."""
+) -> List[SemanticVariable]:
+    """Parse the function body string to a list of semantic variables."""
 
     PLACEHOLDER_REGEX = "{{[a-zA-Z_][a-zA-Z0-9_]*}}"
     pattern = re.compile(PLACEHOLDER_REGEX)
     iterator = pattern.finditer(body_str)
     last_pos = 0
 
-    ret: List[FunctionPiece] = []
+    ret: List[SemanticVariable] = []
 
     last_output_loc_idx = -1
     outputs: Set[str] = set()
@@ -145,11 +108,11 @@ class SemanticFunction:
         name: str,
         params: List[Parameter],
         func_body_str: Optional[str] = None,
-        func_body: Optional[List[FunctionPiece]] = None,
+        func_body: Optional[List[SemanticVariable]] = None,
         **kwargs,
     ):
         """For semantic function, function body is just a prompt template.
-        After parsed, it turns to be a list of function pieces.
+        After parsed, it turns to be a list of semantic variables.
         """
 
         # ---------- Basic Info ----------
@@ -164,7 +127,7 @@ class SemanticFunction:
         ]
         self.metadata = FunctionMetadata(**kwargs)
         if func_body_str is not None:
-            self.body: List[FunctionPiece] = parse_func_body(
+            self.body: List[SemanticVariable] = parse_func_body(
                 func_body_str, self.params_map, self.metadata
             )
         elif func_body is not None:

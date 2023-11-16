@@ -10,7 +10,7 @@ from .func_mutator import (
     FuncMutator,
     SemanticFunction,
     Constant,
-    FunctionPiece,
+    SemanticVariable,
     ParameterLoc,
     Parameter,
 )
@@ -62,7 +62,7 @@ class ConversationTemplate(FuncMutator):
         return param
 
     def _visit_func(self, func: SemanticFunction) -> SemanticFunction:
-        new_body: List[FunctionPiece] = []
+        new_body: List[SemanticVariable] = []
 
         # Add system message
         push_to_body(

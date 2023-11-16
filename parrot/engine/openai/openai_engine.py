@@ -133,7 +133,7 @@ class OpenAIEngine(LLMEngine):
         self._add_job(fill_job)
         await fill_job.finish_event.wait()
         return {
-            "num_filled_len": len(fill_job.text),
+            "filled_len": len(fill_job.text),
         }
 
     # override

@@ -1,33 +1,28 @@
-"""This test requires a running fake OS server in host=localhost, port=9000.
-Use `python3 -m parrot.testing.fake_os_server` to start a fake os server.
-"""
-
 import parrot as P
 import time
 
-from parrot.testing.fake_os_server import TESTING_SERVER_HOST, TESTING_SERVER_PORT
-
-
-SERVER_URL = f"http://{TESTING_SERVER_HOST}:{TESTING_SERVER_PORT}"
+from parrot.testing.fake_os_server import TESTING_SERVER_URL
+from parrot.testing.localhost_server_daemon import fake_os_server
 
 
 def test_heartbeat():
-    vm = P.VirtualMachine(SERVER_URL)
-    time.sleep(10)  # Wait for 10 sec to see the heartbeat logs
+    with fake_os_server():
+        vm = P.VirtualMachine(os_http_addr=TESTING_SERVER_URL)
+        time.sleep(10)  # Wait for 10 sec to see the heartbeat logs
 
 
 def test_e2e():
-    @P.function()
-    def test(a: P.Input, b: P.Input, c: P.Output):
-        """This {{b}} is a test {{a}} function {{c}}"""
+    with fake_os_server():
+        @P.function()
+        def test(a: P.Input, b: P.Input, c: P.Output):
+            """This {{b}} is a test {{a}} function {{c}}"""
 
-    def main():
-        c = test("a", b="b")
-        print(c.get())
+        def main():
+            c = test("a", b="b")
+            print(c.get())
 
-    vm = P.VirtualMachine(SERVER_URL)
-
-    vm.run(main)
+        vm = P.VirtualMachine(os_http_addr=TESTING_SERVER_URL)
+        vm.run(main)
 
 
 if __name__ == "__main__":

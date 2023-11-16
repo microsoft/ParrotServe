@@ -56,6 +56,30 @@ async def ping(request: Request):
     return {}
 
 
+def start_server(engine_config_path: str, connect_to_os: bool = True):
+    global llm_engine
+    global app
+
+    llm_engine = create_engine(
+        engine_config_path=engine_config_path,
+        connect_to_os=connect_to_os,
+    )
+
+    loop = asyncio.new_event_loop()
+    config = Config(
+        app=app,
+        loop=loop,
+        host=llm_engine.engine_config.host,
+        port=llm_engine.engine_config.port,
+        log_level="info",
+    )
+    uvicorn_server = Server(config)
+    # NOTE(chaofan): We use `fail_fast` because this project is still in development
+    # For real deployment, maybe we don't need to quit the backend when there is an error
+    create_task_in_loop(llm_engine.engine_loop(), loop=loop, fail_fast=True)
+    loop.run_until_complete(uvicorn_server.serve())
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parrot native engine HTTP server")
 
@@ -76,21 +100,4 @@ if __name__ == "__main__":
 
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")
 
-    llm_engine = create_engine(
-        engine_config_path=args.config_path,
-        connect_to_os=not args.without_os,
-    )
-
-    loop = asyncio.new_event_loop()
-    config = Config(
-        app=app,
-        loop=loop,
-        host=llm_engine.engine_config.host,
-        port=llm_engine.engine_config.port,
-        log_level="info",
-    )
-    uvicorn_server = Server(config)
-    # NOTE(chaofan): We use `fail_fast` because this project is still in development
-    # For real deployment, maybe we don't need to quit the backend when there is an error
-    create_task_in_loop(llm_engine.engine_loop(), loop=loop, fail_fast=True)
-    loop.run_until_complete(uvicorn_server.serve())
+    start_server(args.config_path, connect_to_os=not args.without_os)
