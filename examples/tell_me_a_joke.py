@@ -1,6 +1,10 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
+# This application is a generator of jokes and their explanations.
+# It can generate a batch of jokes at a time!
+
+
 import parrot as P
 
 vm = P.VirtualMachine(
@@ -9,17 +13,7 @@ vm = P.VirtualMachine(
 )
 
 
-@P.function(conversation_template=P.vicuna_template)
-def tell_me_a_joke(
-    topic: P.Input,
-    topic2: P.Input,
-    joke: P.Output,
-    explanation: P.Output(temperature=0.5),
-):
-    """Tell the me a joke about {{topic}} and {{topic2}}. {{joke}}.
-    Good, then giving a short explanation to show that why it is funny.
-    The explanation should be short, concise and clear. {{explanation}}.
-    """
+joke_generator = vm.import_function("tell_me_a_joke", "app.common")
 
 
 def main():
@@ -43,7 +37,7 @@ def main():
     explanations = []
 
     for i in range(len(topics)):
-        joke, explanation = tell_me_a_joke(topics[i], topic2s[i])
+        joke, explanation = joke_generator(topics[i], topic2s[i])
         jokes.append(joke)
         explanations.append(explanation)
 

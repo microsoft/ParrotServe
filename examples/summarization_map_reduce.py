@@ -1,6 +1,9 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
+# This application is a text summarization agent, which uses Map-Reduce strategy
+# to handle long documents.
+
 import asyncio
 import parrot as P
 
@@ -10,32 +13,8 @@ vm = P.VirtualMachine(
 )
 
 
-@P.function(formatter=P.allowing_newline)
-def map(
-    doc_pieces: P.Input,
-    summary: P.Output(temperature=0.5, max_gen_length=50),
-):
-    """The following is a piece of a document:
-    {{doc_pieces}}
-    Based on this piece of docs, please summarize the main content of this piece of docs as short as possible.
-    Helpful Answer:
-    {{summary}}
-    """
-
-
-@P.function(formatter=P.allowing_newline)
-def reduce(
-    doc_summaries: P.Input,
-    final_summary: P.Output(temperature=0.7, max_gen_length=200),
-):
-    """The following is set of summaries:
-
-    {{doc_summaries}}
-
-    Take these and distill it into a final, consolidated summary of the main themes as short as possible..
-    Helpful Answer:
-    {{final_summary}}
-    """
+map = vm.import_function("summarize_map", "app.summarization")
+reduce = vm.import_function("summarize_reduce", "app.summarization")
 
 
 async def main():

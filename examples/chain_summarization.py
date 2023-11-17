@@ -9,44 +9,8 @@ vm = P.VirtualMachine(
 )
 
 
-@P.function(formatter=P.allowing_newline)
-def first_sum(
-    doc: P.Input,
-    summary: P.Output(temperature=0.5, max_gen_length=10, ignore_tokenizer_eos=True),
-    word_limit: int,
-):
-    """The following is a piece of a document:
-    {{doc}}
-    Based on this piece of docs, please summarize the main content of this piece of docs as short as possible.
-    The number of words should not exceed {{word_limit}}.
-    Helpful Answer:
-    {{summary}}
-    """
-
-
-@P.function(formatter=P.allowing_newline)
-def refine(
-    new_text: P.Input,
-    previous_sum: P.Input,
-    next_sum: P.Output(temperature=0.7, max_gen_length=10, ignore_tokenizer_eos=True),
-    word_limit: int,
-):
-    """Your job is to produce a final summary
-
-    We have the opportunity to refine the existing summary (only if needed) with some more context below.
-    ------------
-    {{new_text}}
-    ------------
-    Given the new context, refine the original summary in English.
-
-    We have provided an existing summary up to a certain point: {{previous_sum}}
-
-    If the context isn't useful, return the original summary.
-    The number of words should not exceed {{word_limit}}.
-
-    Helpful Answer:
-    {{next_sum}}
-    """
+first_sum = vm.import_function("chain_summarize_first", "app.summarization")
+refine = vm.import_function("chain_summarize_refine", "app.summarization")
 
 
 def main():
@@ -56,7 +20,7 @@ def main():
 
     # Split into chunks and map
     chunk_size = 2000
-    word_limit = 10
+    word_limit = 100
 
     cur_chunk = ""
     i = 0

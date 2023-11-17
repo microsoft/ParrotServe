@@ -7,9 +7,11 @@ import contextlib
 import time
 import traceback
 import threading
+import importlib
 from dataclasses import dataclass
 from typing import Callable, Coroutine, Literal, Dict
 
+import parrot
 from parrot.protocol.layer_apis import (
     register_vm,
     vm_heartbeat,
@@ -121,6 +123,35 @@ class VirtualMachine:
         )
 
     # ---------- Public Methods ----------
+
+    def import_function(
+        self,
+        function_name: str,
+        module_path: str,
+        lib_path: str = "semantic_code_lib",
+    ):
+        """Import a semantic function from a Python module.
+
+        - The function name is the name of the semantic function in the module file;
+        - The module path is in the format of `xx.yy.zz`, with the root directory
+          being the lib path;
+        - The lib path is the directory of the lib, with the root directory being the
+          Parrot root directory.
+        """
+
+        try:
+            module = importlib.import_module(f"{lib_path}.{module_path}")
+            semantic_function = getattr(module, function_name)
+        except:
+            raise ImportError(
+                f"Cannot import function {function_name} from module: {module_path}."
+            )
+
+        if not isinstance(semantic_function, SemanticFunction):
+            raise ValueError(f"Function {function_name} is not a semantic function.")
+
+        self.register_function(semantic_function)
+        return semantic_function
 
     def set_global_env(self):
         """Set the global environment for current Python process."""

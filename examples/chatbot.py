@@ -17,23 +17,8 @@ vm = P.VirtualMachine(
     mode="release",
 )
 
-
-@P.function(remove_pure_fill=False)
-def chat_start():
-    """A chat between a curious user and an artificial intelligence assistant.
-    The assistant gives helpful, detailed, and polite answers to the user's questions.
-    """
-
-
-@P.function()
-def chat_per_round(
-    human_input: P.Input,
-    ai_output: P.Output(temperature=0.5, max_gen_length=50),
-):
-    """
-     USER: {{human_input}}
-    ASSISTANT: {{ai_output}}
-    """
+chat_start = vm.import_function("vicuna_chat_start", "app.chat")
+chat_per_round = vm.import_function("vicuna_chat_per_round", "app.chat")
 
 
 async def main():
