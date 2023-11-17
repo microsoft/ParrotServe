@@ -6,6 +6,6 @@ The functions are imported from `semantic_code_lib/app/`.
 
 We don't bench these applications.
 
-## List of Applications
+<!-- ## List of Applications
 
-TODO
+TODO -->
