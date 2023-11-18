@@ -14,7 +14,7 @@ from parrot.program.function import SemanticCall
 from parrot.os.pcore import PCore
 from parrot.os.engine import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
-from parrot.utils import get_logger, create_task_in_loop
+from parrot.utils import get_logger, create_task_in_loop, set_log_output_file
 from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
 
 
@@ -135,7 +135,21 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--release-mode",
+        "--log_dir",
+        type=str,
+        default=None,
+        help="Path to the log directory. If not set, logs will be printed to stdout.",
+    )
+
+    parser.add_argument(
+        "--log_filename",
+        type=str,
+        default="os.log",
+        help="Filename of the OS server.",
+    )
+
+    parser.add_argument(
+        "--release_mode",
         action="store_true",
         help="Run in release mode. In debug mode, "
         "OS will print more logs and expose extra information to clients.",
@@ -143,6 +157,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     release_mode = args.release_mode
+
+    if args.log_dir is not None:
+        set_log_output_file(
+            log_file_dir_path=args.log_dir,
+            log_file_name=args.log_filename,
+        )
 
     start_server(
         os_config_path=args.config_path,

@@ -11,7 +11,7 @@ import importlib
 from dataclasses import dataclass
 from typing import Callable, Coroutine, Literal, Dict
 
-import parrot
+
 from parrot.protocol.layer_apis import (
     register_vm,
     vm_heartbeat,
@@ -53,6 +53,8 @@ class VirtualMachine:
 
         self.pid = resp.pid
         self.runtime_info = VMRuntimeInfo()
+
+        self.stat_run_time = 0.0
 
         if mode == "release":
             import logging
@@ -196,7 +198,8 @@ class VirtualMachine:
             self.unset_global_env()
             if timeit:
                 ed = time.perf_counter_ns()
-                print(f"[Timeit] E2E Program Execution Time: {(ed - st) / 1e9} (s).")
+                self.stat_run_time = (ed - st) / 1e9
+                print(f"[Timeit] E2E Program Execution Time: {self.stat_run_time} (s).")
 
     def run(self, program: Callable, timeit: bool = False):
         """vm.run method wraps a E2E running process of a semantic program.
@@ -214,3 +217,21 @@ class VirtualMachine:
                 loop.close()
             else:
                 program()
+
+    def profile(self, program: Callable, warmups: int = 3, trials: int = 20) -> float:
+        """Profile the E2E lantecy of certain semantic program."""
+
+        sleep_interval = 2.5
+
+        for _ in range(warmups):
+            self.run(program)
+            time.sleep(sleep_interval)
+
+        e2e_lantecy = 0.0
+
+        for _ in range(trials):
+            self.run(program, timeit=True)
+            e2e_lantecy += self.stat_run_time
+            time.sleep(sleep_interval)
+
+        return e2e_lantecy / trials

@@ -7,5 +7,8 @@
 (Scalable and Efficient Runtime System for Semantic Programming.)
 """
 
+
+import mlc_chat  # Avoid MLC error because "torch" is imported before "mlc_chat"
+
 # Program Interface and Transforms
 from .program import *

@@ -56,6 +56,7 @@ class NativeRunner:
     def run_iter(self, jobs: List[PrimitiveJob]) -> (int, int):
         logger.debug(f"Running {len(jobs)} jobs. ")
 
+        torch.cuda.synchronize()
         st = time.perf_counter_ns()
 
         # We should sort jobs such that Fill jobs are before Generation jobs.
@@ -141,7 +142,9 @@ class NativeRunner:
             device=self.native_config.device,
         )
 
+        torch.cuda.synchronize()
         st_model = time.perf_counter_ns()
+
         # Execute model
         fill_hidden_states, next_tokens = self.model(
             input_ids, input_positions, iteration_state
@@ -162,6 +165,7 @@ class NativeRunner:
                 if job.check_stop():
                     job.finish_event.set()
 
+        torch.cuda.synchronize()
         ed = time.perf_counter_ns()
 
         e2e_time = (ed - st) / 1e9

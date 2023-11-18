@@ -9,7 +9,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from uvicorn import Config, Server
 
-from parrot.utils import get_logger, create_task_in_loop
+from parrot.utils import get_logger, create_task_in_loop, set_log_output_file
 
 from .engine_creator import create_engine
 from .llm_engine import LLMEngine
@@ -91,12 +91,32 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--without-os",
+        "--without_os",
         action="store_true",
         help="Whether to start the engine without connecting to OS.",
     )
 
+    parser.add_argument(
+        "--log_dir",
+        type=str,
+        default=None,
+        help="Path to the log directory. If not set, logs will be printed to stdout.",
+    )
+
+    parser.add_argument(
+        "--log_filename",
+        type=str,
+        default="engine.log",
+        help="Filename of the Engine server.",
+    )
+
     args = parser.parse_args()
+
+    if args.log_dir is not None:
+        set_log_output_file(
+            log_file_dir_path=args.log_dir,
+            log_file_name=args.log_filename,
+        )
 
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")
 

@@ -42,6 +42,8 @@ def function(
         func_name = f.__name__
         doc_str = f.__doc__
 
+        # print(doc_str)
+
         # Parse the function signature (parameters)
         func_sig = inspect.signature(f)
         func_params = []

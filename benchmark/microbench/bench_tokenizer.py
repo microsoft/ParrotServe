@@ -13,7 +13,7 @@ def bench_tokenize_time(tokenizer_name: str):
         return tokenizer.encode(workload, add_special_tokens=False)
 
     workload_tokens = encode()
-    print("Workload token tokens num: ", len(workload_tokens))
+    print("Workload tokens num: ", len(workload_tokens))
 
     warmups = 10
     trials = 100
@@ -32,8 +32,9 @@ def bench_detokenize_time(tokenizer_name: str):
     print("Bench detokenize. Tokenizer: ", tokenizer_name)
 
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
-    workload = [1] * 1000
-    print("Workload string length: ", len(workload))
+    workload = "This is a test sentence. " * 200
+    workload = tokenizer.encode(workload, add_special_tokens=False)
+    print("Workload token num: ", len(workload))
 
     def decode():
         return tokenizer.decode(

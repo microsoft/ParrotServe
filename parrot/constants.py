@@ -26,7 +26,7 @@ ENGINE_EXPIRE_TIME = 7
 # ---------- Chunk Related ----------
 FILL_NO_CHUNK = -1
 PIPELINE_SEND_CHUNK_NUM = 128
-DETOKENIZE_CHUNK_NUM = 8
+DETOKENIZE_CHUNK_NUM = 256
 STREAMING_END_TOKEN_ID = -1
 
 # ---------- OS ----------

@@ -4,9 +4,11 @@
 
 from dataclasses import dataclass, asdict
 from typing import List, Optional
+import time
 import aiohttp
 
 from parrot.constants import NONE_THREAD_ID
+from parrot.utils import get_logger
 
 from .common import (
     send_http_request,
@@ -16,6 +18,9 @@ from .common import (
 )
 from .sampling_config import SamplingConfig
 from .responses import FillResponse, GenerateResponse
+
+
+logger = get_logger("Primitive")
 
 
 @dataclass
@@ -43,6 +48,7 @@ class Fill(Primitive):
         # assert self.tid == NONE_THREAD_ID
 
         try:
+            st = time.perf_counter_ns()
             resp: FillResponse = send_http_request(
                 response_cls=FillResponse,
                 http_addr=self.context.engine_url,
@@ -55,6 +61,8 @@ class Fill(Primitive):
                 token_ids=self.token_ids,
                 text=self.text,
             )
+            ed = time.perf_counter_ns()
+            logger.debug(f"Fill request latency: {(ed - st) / 1e6} ms")
             self.context.token_nums += resp.filled_len
             return resp
         except BaseException as e:
@@ -67,6 +75,7 @@ class Fill(Primitive):
 
         try:
             async with aiohttp.ClientSession() as client_session:
+                st = time.perf_counter_ns()
                 resp: FillResponse = await async_send_http_request(
                     client_session=client_session,
                     response_cls=FillResponse,
@@ -79,6 +88,8 @@ class Fill(Primitive):
                     token_ids=self.token_ids,
                     text=self.text,
                 )
+                ed = time.perf_counter_ns()
+                logger.debug(f"Fill request latency: {(ed - st) / 1e6} ms")
             self.context.token_nums += resp.filled_len
             return resp
         except BaseException as e:
@@ -98,6 +109,7 @@ class Generate(Primitive):
     async def apost(self) -> GenerateResponse:
         try:
             async with aiohttp.ClientSession() as client_session:
+                st = time.perf_counter_ns()
                 resp: GenerateResponse = await async_send_http_request(
                     client_session=client_session,
                     response_cls=GenerateResponse,
@@ -109,6 +121,8 @@ class Generate(Primitive):
                     parent_context_id=self.context.parent_context_id,
                     sampling_config=asdict(self.sampling_config),
                 )
+                ed = time.perf_counter_ns()
+                logger.debug(f"Generate request latency: {(ed - st) / 1e6} ms")
                 self.context.token_nums += len(resp.generated_ids)
                 return resp
         except BaseException as e:
@@ -118,6 +132,7 @@ class Generate(Primitive):
     async def astream(self):
         try:
             async with aiohttp.ClientSession() as client_session:
+                st = time.perf_counter_ns()
                 async for resp in async_send_http_request_streaming(
                     client_session=client_session,
                     http_addr=self.context.engine_url,
@@ -130,6 +145,8 @@ class Generate(Primitive):
                 ):
                     self.context.token_nums += 1
                     yield resp
+                ed = time.perf_counter_ns()
+                logger.debug(f"Generate stream latency: {(ed - st) / 1e6} ms")
         except BaseException as e:
             logger.error(f"Generate error in {self.context.engine_url} error: {e}")
             raise e

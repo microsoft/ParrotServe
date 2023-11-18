@@ -61,8 +61,8 @@ class TokensHolder:
         self.placeholder = placeholder
 
         # ---------- Operators ----------
-        self.consumers: List["FillJob"] = []
-        self.producer: Optional["GenerationJob"] = None
+        self.consumers: List["TokenIdPlaceholderFill"] = []
+        self.producer: Optional["TokenIdPlaceholderGenerate"] = None
 
         # ---------- Events ----------
         self.streaming_event: Event = Event()

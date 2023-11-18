@@ -5,6 +5,7 @@
 from enum import Enum, auto
 from typing import List, Optional
 from queue import Queue
+import time
 
 from parrot.program.function import SemanticCall
 from parrot.protocol.primitive_request import Fill, Generate
@@ -13,6 +14,7 @@ from parrot.constants import (
     STREAMING_END_TOKEN_ID,
     FILL_NO_CHUNK,
     NONE_CONTEXT_ID,
+    DETOKENIZE_CHUNK_NUM,
 )
 from parrot.exceptions import ParrotOSUserError
 
@@ -28,9 +30,17 @@ logger = get_logger("Thread")
 async def detokenizing(holder: TokensHolder):
     assert holder.producer is not None, "Producer should be set."
     prev_last_token = None
+    # st = time.perf_counter_ns()
+    # chunk_counter = 0
     async for chunk in holder.producer.detokenize_pipe.generator():
+        # chunk_counter += 1
         holder.sync_to_placeholder_partial(chunk, prev_last_token)
         prev_last_token = chunk[-1]
+    # ed = time.perf_counter_ns()
+    # logger.debug(
+    #     f"Detokenizing time: {(ed - st) / 1e6} ms. "
+    #     f"Chunk num: {chunk_counter}, Chunk size: {DETOKENIZE_CHUNK_NUM}"
+    # )
     holder.placeholder.ready_event.set()
 
 
