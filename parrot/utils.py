@@ -4,11 +4,12 @@
 
 import logging
 import asyncio
-from asyncio import Task
 import traceback
 import sys
 import os
 from typing import Optional, List, Coroutine
+import cProfile, pstats, io
+import contextlib
 
 
 ### Logging ###
@@ -55,11 +56,6 @@ def set_log_output_file(log_file_dir_path: str, log_file_name: str):
 
     log_file_path = os.path.join(log_file_dir_path, log_file_name)
 
-    # Redirect stdout and stderr to the log file
-    fp = open(log_file_path, "w")
-    sys.stdout = fp
-    sys.stderr = fp
-
     if makedir_flag:
         print(
             "The log directory does not exist. Create log file directory: ",
@@ -73,7 +69,6 @@ def get_logger(log_name: str, log_level: int = logging.DEBUG):
     """Get a logger with the given name and the level."""
 
     global log_formatter
-    global log_handler
 
     logger = logging.getLogger(log_name)
     if logger not in loggers:
@@ -86,6 +81,15 @@ def get_logger(log_name: str, log_level: int = logging.DEBUG):
 
 
 ###
+
+
+def redirect_stdout_stderr_to_file(log_file_dir_path: str, file_name: str):
+    """Redirect stdout and stderr to a file."""
+
+    path = os.path.join(log_file_dir_path, file_name)
+    fp = open(path, "w+")
+    sys.stdout = fp
+    sys.stderr = fp
 
 
 class RecyclePool:
@@ -143,3 +147,23 @@ def set_random_seed(seed: int):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
+
+
+@contextlib.contextmanager
+def cprofile(profile_title: str):
+    global cprofile_stream
+
+    pr = cProfile.Profile()
+    pr.enable()
+
+    yield
+
+    pr.disable()
+    s = io.StringIO()
+    ps = pstats.Stats(pr, stream=s).sort_stats(2)
+    ps.print_stats()
+
+    print(
+        "\n\n\n" + f"*** {profile_title} ***" + "\n" + s.getvalue() + "\n\n\n",
+        flush=True,
+    )

@@ -23,7 +23,7 @@ def test_latency():
             print(f"Sent ping request: {i}")
         ed = time.perf_counter_ns()
 
-        print(f"Average latency: {(ed - st) / test_iters / 1e6} ms")
+        print(f"Average latency: {(ed - st) / test_iters / 1e6: .3f} ms")
 
 
 if __name__ == "__main__":

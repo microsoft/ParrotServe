@@ -20,7 +20,7 @@ from parrot.constants import (
 )
 from parrot.protocol.layer_apis import ping_engine
 from parrot.engine.config import EngineConfig
-from parrot.utils import get_logger
+from parrot.utils import get_logger, cprofile
 from parrot.exceptions import ParrotOSUserError
 
 from .config import OSConfig
@@ -254,13 +254,19 @@ class PCore:
         placeholder.out_nodes.append(process.native_code_node)
         process.native_code_node.add_in_edge()
 
+        # NOTE(chaofan): The "start event" of the placeholder is set when the related process is executed.
+        # It is to ensure the "check_process" is called after the process is executed.
         await placeholder.start_event.wait()
 
         # NOTE(chaofan): Recheck the process since it may become bad after starting.
         self._check_process(pid)
 
-        logger.debug(f"Placeholder (id={placeholder_id}) fetched from VM (pid={pid})")
+        logger.debug(f"Placeholder (id={placeholder_id}) fetching from VM (pid={pid})")
+
+        # with cprofile("wait_placeholder_get"):
         content = await placeholder.get()
+
+        logger.debug(f"Placeholder (id={placeholder_id}) fetched.")
 
         process.native_code_node.remove_in_edge()
 

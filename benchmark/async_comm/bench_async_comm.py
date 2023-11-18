@@ -3,8 +3,7 @@
 
 import time
 import parrot as P
-
-import cProfile, pstats, io
+from parrot.utils import cprofile
 
 vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
@@ -13,6 +12,12 @@ test_func = vm.import_function("chain_sum_test", "bench.chain_summarization")
 input_workload = "Test " * 100
 
 chunk_num = 20
+
+
+def single_call():
+    holder = test_func(input_workload)
+    with cprofile("get"):
+        holder.get()
 
 
 def main():
@@ -30,26 +35,28 @@ def baseline():
     next_input = input_workload
     for _ in range(chunk_num):
         next_input = test_func(next_input)
+        # with cprofile("get"):
         next_input.get()
 
 
 def test_baseline():
     print("baseline:")
+    # with cprofile("baseline"):
     vm.run(baseline, timeit=True)
     time.sleep(3)
 
 
 def test_main():
     print("main:")
+    # with cprofile("main"):
     vm.run(main, timeit=True)
     time.sleep(3)
 
 
 if __name__ == "__main__":
-    pr = cProfile.Profile()
-    pr.enable()
-
     # print(test_func.body)
+
+    # vm.run(single_call, timeit=True)
 
     test_baseline()
     # test_main()
@@ -60,9 +67,3 @@ if __name__ == "__main__":
 
     # latency = vm.profile(main)
     # print(latency)
-
-    pr.disable()
-    s = io.StringIO()
-    ps = pstats.Stats(pr, stream=s).sort_stats(2)
-    ps.print_stats()
-    print(s.getvalue())

@@ -9,7 +9,12 @@ from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from uvicorn import Config, Server
 
-from parrot.utils import get_logger, create_task_in_loop, set_log_output_file
+from parrot.utils import (
+    get_logger,
+    create_task_in_loop,
+    set_log_output_file,
+    redirect_stdout_stderr_to_file,
+)
 
 from .engine_creator import create_engine
 from .llm_engine import LLMEngine
@@ -116,6 +121,11 @@ if __name__ == "__main__":
         set_log_output_file(
             log_file_dir_path=args.log_dir,
             log_file_name=args.log_filename,
+        )
+
+        redirect_stdout_stderr_to_file(
+            log_file_dir_path=args.log_dir,
+            file_name="engine_stdout.out",
         )
 
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")

@@ -14,7 +14,12 @@ from parrot.program.function import SemanticCall
 from parrot.os.pcore import PCore
 from parrot.os.engine import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
-from parrot.utils import get_logger, create_task_in_loop, set_log_output_file
+from parrot.utils import (
+    get_logger,
+    create_task_in_loop,
+    set_log_output_file,
+    redirect_stdout_stderr_to_file,
+)
 from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
 
 
@@ -67,6 +72,7 @@ async def submit_call(request: Request):
     pid = payload["pid"]
     logger.debug(f"Submit call received: pid={pid}")
     call = SemanticCall.unpickle(payload["call"])
+    await asyncio.sleep(0.25)  # Sleep for 250ms to simulate network latency
     pcore.submit_call(pid, call)
     return {}
 
@@ -162,6 +168,11 @@ if __name__ == "__main__":
         set_log_output_file(
             log_file_dir_path=args.log_dir,
             log_file_name=args.log_filename,
+        )
+
+        redirect_stdout_stderr_to_file(
+            log_file_dir_path=args.log_dir,
+            file_name="os_stdout.out",
         )
 
     start_server(
