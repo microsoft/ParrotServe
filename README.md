@@ -11,6 +11,10 @@ pip install -r requirements.txt
 pip install triton==2.1.0
 ```
 
+(Note: Triton 2.0.0 has some bugs in Kernel memory issues. The similar error also happens in [LightLLM](https://github.com/ModelTC/lightllm) kernels.)
+
+Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it.
+
 **Install Parrot:**
 
 ```bash
@@ -28,9 +32,9 @@ We provide some one-click scripts to run Parrot in a single machine. You can fin
 sh scripts/launch_single_vicuna_13b.sh
 ```
 
-**Run Docker Compose in a Cluster**
+<!-- **Run Docker Compose in a Cluster**
 
-TODO
+TODO -->
 
 **Start an OS Server**
 
