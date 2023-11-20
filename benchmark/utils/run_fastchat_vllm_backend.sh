@@ -14,7 +14,3 @@ export OPENAI_API_BASE=http://localhost:8000/v1
 export OPENAI_API_KEY=EMPTY
 
 sleep 1
-
-python3 chain_summarization_langchain_baseline.py
-
-ps -ef | grep fastchat | grep -v grep | awk '{print $2}' | xargs kill -9

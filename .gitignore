@@ -39,6 +39,6 @@ log
 data
 
 # We do not public our OpenAI API-Key
-configs/engine/openai/*.json
+sample_configs/engine/azure-openai*
 # But we provide an example config
-!configs/engine/openai/openai-example-config.json
+!sample_configs/engine/openai-example-config.json

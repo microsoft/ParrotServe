@@ -15,7 +15,7 @@ from parrot.testing.localhost_server_daemon import engine_server
 
 def _test_single_server_simple_serving(config):
     engine_type, config_fn = config
-    engine_config_path = get_engine_config_path(engine_type, config_fn)
+    engine_config_path = get_engine_config_path(config_fn)
 
     async def main():
         with open(engine_config_path) as f:
@@ -81,7 +81,6 @@ def _test_single_server_simple_serving(config):
     wait_ready_time = 20 if "vicuna" in config_fn else 5  # seconds
 
     with engine_server(
-        engine_type,
         config_fn,
         wait_ready_time=wait_ready_time,
         connect_to_os=False,

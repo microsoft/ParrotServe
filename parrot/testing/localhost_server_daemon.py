@@ -87,13 +87,12 @@ def os_server():
 
 @contextlib.contextmanager
 def engine_server(
-    engine_type: str,
     engine_config_name: str,
     wait_ready_time: float = 0.1,
     connect_to_os: bool = False,
 ):
     def _launch_engine():
-        engine_config_path = get_engine_config_path(engine_type, engine_config_name)
+        engine_config_path = get_engine_config_path(engine_config_name)
         start_engine_server(
             engine_config_path=engine_config_path, connect_to_os=connect_to_os
         )
@@ -112,7 +111,6 @@ def engine_server(
 def system_opt():
     with os_server():
         with engine_server(
-            engine_type="native",
             engine_config_name="opt-125m.json",
             wait_ready_time=3.0,
             connect_to_os=True,
@@ -124,7 +122,6 @@ def system_opt():
 def system_vicuna():
     with os_server():
         with engine_server(
-            engine_type="native",
             engine_config_name="vicuna-7b-v1.3.json",
             wait_ready_time=5.0,
             connect_to_os=True,
@@ -136,7 +133,6 @@ def system_vicuna():
 def system_vicuna_vllm():
     with os_server():
         with engine_server(
-            engine_type="native",
             engine_config_name="vicuna-7b-v1.3-vllm.json",
             wait_ready_time=5.0,
             connect_to_os=True,
@@ -148,7 +144,6 @@ def system_vicuna_vllm():
 def system_mlcllm():
     with os_server():
         with engine_server(
-            engine_type="mlcllm",
             engine_config_name="Llama-2-13b-chat-hf-q4f16_1-vulkan.json",
             wait_ready_time=3.0,
             connect_to_os=True,
@@ -160,7 +155,6 @@ def system_mlcllm():
 def system_openai():
     with os_server():
         with engine_server(
-            engine_type="openai",
             engine_config_name="azure-openai-gpt-3.5-turbo.json",
             wait_ready_time=3.0,
             connect_to_os=True,

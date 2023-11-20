@@ -104,7 +104,7 @@ def test_engine_heartbeat():
 
 
 def _get_opt_125m_engine_config():
-    engine_config_path = get_engine_config_path("native", "opt-125m.json")
+    engine_config_path = get_engine_config_path("opt-125m.json")
     with open(engine_config_path, "r") as f:
         engine_config = json.load(f)
 

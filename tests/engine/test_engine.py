@@ -15,7 +15,7 @@ def _test_single_engine_simple_serving(config):
     engine_type, config_fn = config
 
     engine = create_engine(
-        engine_config_path=get_engine_config_path(engine_type, config_fn),
+        engine_config_path=get_engine_config_path(config_fn),
         connect_to_os=False,
     )
 

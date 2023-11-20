@@ -33,7 +33,7 @@ recommended commit refers to `3rdparty` folder.
 
 Install other dependencies listed in `3rdparty` folder.
 
-- Step 4 (Rechecking).
+- Important Notes:
 
 Triton 2.0.0 has some bugs in Kernel memory issues. So we enforce the version to be 2.1.0 here. You will see some dependencies warnings, but it will not affect the common usages. (The similar error also happens in [LightLLM](https://github.com/ModelTC/lightllm) kernels.)
 

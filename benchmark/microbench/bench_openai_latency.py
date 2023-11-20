@@ -8,9 +8,7 @@ from parrot.constants import DEFAULT_ENGINE_URL
 
 
 def test_azure_openai_url_latency():
-    openai_config_path = get_engine_config_path(
-        "openai", "azure-openai-gpt-3.5-turbo.json"
-    )
+    openai_config_path = get_engine_config_path("azure-openai-gpt-3.5-turbo.json")
 
     with open(openai_config_path, "r") as f:
         openai_engine_config_dict = json.load(f)

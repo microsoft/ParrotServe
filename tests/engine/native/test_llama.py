@@ -39,5 +39,5 @@ def test_llama_vllm():
 
 
 if __name__ == "__main__":
-    test_llama_xformers_with_buffer()
+    # test_llama_xformers_with_buffer()
     test_llama_vllm()
