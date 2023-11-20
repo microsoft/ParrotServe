@@ -765,7 +765,7 @@ async def count_tokens(request: APITokenCheckRequest):
 @app.post("/api/v1/chat/completions")
 async def create_chat_completion(request: APIChatCompletionRequest):
     """Creates a completion for the chat message"""
-    await asyncio.sleep(0.25)  # Simulate client-server network latency
+    await asyncio.sleep(0.25)  # Simulate 250ms client-server network latency
 
     error_check_ret = await check_model(request)
     if error_check_ret is not None:
