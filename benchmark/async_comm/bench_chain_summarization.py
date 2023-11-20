@@ -43,23 +43,24 @@ def test_baseline():
     print("baseline:")
     # with cprofile("baseline"):
     vm.run(baseline, timeit=True)
-    time.sleep(3)
+    time.sleep(5)
 
 
 def test_main():
     print("main:")
     # with cprofile("main"):
     vm.run(main, timeit=True)
-    time.sleep(3)
+    time.sleep(5)
 
 
 if __name__ == "__main__":
     # print(test_func.body)
 
     # vm.run(single_call, timeit=True)
+    # vm.run(single_call, timeit=True)
 
     test_baseline()
-    # test_main()
+    test_main()
 
     # for _ in range(5):
     #     test_baseline()

@@ -8,6 +8,7 @@ from typing import Optional, List
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.utils import get_logger
 
+from .future import Future
 from .function import SemanticFunction, ParamType, Parameter
 from .transforms.prompt_formatter import standard_formatter, Sequential, FuncMutator
 
@@ -94,6 +95,12 @@ def function(
         return semantic_func
 
     return create_func
+
+
+def future(content: Optional[str] = None):
+    """Let user construct Future explicitly."""
+
+    return Future(content)
 
 
 # def shared_context(

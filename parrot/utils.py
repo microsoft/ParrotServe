@@ -23,9 +23,10 @@ loggers: List[logging.Logger] = []
 
 def _set_log_handler(logger: logging.Logger, log_level: int):
     global log_file_path
+
     logger.setLevel(log_level)
     if log_file_path is not None:
-        handler = logging.FileHandler(log_file_path)
+        handler = logging.FileHandler(log_file_path, mode="a+", delay=False)
     else:
         handler = logging.StreamHandler()
     handler.setLevel(log_level)

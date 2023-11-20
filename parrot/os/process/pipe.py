@@ -20,7 +20,7 @@ class TokenPipe:
 
         while True:
             token_id = await self.queue.get()
-            if token_id == STREAMING_END_TOKEN_ID:
+            if token_id == STREAMING_END_TOKEN_ID:  # We don't include the last token
                 break
 
             chunk.append(token_id)

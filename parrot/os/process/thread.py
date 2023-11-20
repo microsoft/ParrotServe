@@ -206,19 +206,9 @@ class Thread:
             self._fill_tokens_buffer.extend(op.input_holder.token_ids)
         else:
             # Streaming input. Pipeling filling.
-            filled_len = 0
             async for chunk in op.input_pipe.generator():
-                resp = await Fill(
-                    pid=self.process.pid,
-                    tid=self.tid,
-                    context=self.ctx,
-                    token_ids=chunk,
-                ).apost()
-                filled_len += resp.filled_len
-            should_filled = len(op.input_holder.token_ids)
-            assert (
-                filled_len == should_filled
-            ), f"Not all tokens are filled. Filled: {filled_len}, total: {should_filled}"
+                self._fill_tokens_buffer.extend(chunk)
+                await self._flush_fill_tokens_buffer()  # Flush every time
 
     async def _visit_token_id_placeholder_generate(
         self, op: TokenIdPlaceholderGenerate

@@ -145,14 +145,21 @@ class SemanticFunction:
     ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
         """Call to a semantic function.
 
-        Some notes:
+        Some NOTES:
+
         - Calling a parrot semantic function will not execute it immediately.
           Instead, this will submit the call to OS.
 
         - The return value is a list of Future objects, which can be used to get the
           output contents or passed to other functions.
 
-        - Caller should provide all the input arguments, including INPUT_LOC and INPUT_PYOBJ.
+        - When passing arguments, the caller needs to pass all the input arguments, including
+          INPUT_LOC and INPUT_PYOBJ.
+
+        - In some cases, the caller may preallocate the output Futures. In this case, the caller
+          can also pass them as arguments to the function, to make the outputs be written to
+          the preallocated Futures. But in order to make the call convention clear, we only
+          allow these arguments to be passed as keyword arguments.
 
         - The INPUT_PYOBJ arguments should be Python objects, which will be turns to a string
           using __str__ method.
@@ -258,10 +265,10 @@ class SemanticCall:
                 name in self.func.params_map
             ), f"Function {self.func.name} got an unexpected keyword argument {name}"
             param = self.func.params_map[name]
-            if param in self.func.outputs:
-                raise ValueError(
-                    f"Argument {name} is an output parameter hence cannot be set."
-                )
+            # if param in self.func.outputs:
+            #     raise ValueError(
+            #         f"Argument {name} is an output parameter hence cannot be set."
+            #     )
             self._set_value(param, arg_value, self.bindings)
 
         # Create output futures
