@@ -6,6 +6,8 @@ This project is a research prototype for now. Being eargerly iterated.
 
 **Install dependencies:**
 
+- Step 1.
+
 ```bash
 pip install -r requirements.txt
 pip install triton==2.1.0
@@ -13,7 +15,14 @@ pip install triton==2.1.0
 
 (Note: Triton 2.0.0 has some bugs in Kernel memory issues. The similar error also happens in [LightLLM](https://github.com/ModelTC/lightllm) kernels.)
 
-Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it.
+- Step 2.
+
+Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it. The 
+recommended commit refers to `3rdparty` folder.
+
+- Step 3.
+
+Install other dependencies listed in `3rdparty` folder.
 
 **Install Parrot:**
 
