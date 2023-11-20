@@ -43,14 +43,14 @@ def test_baseline():
     print("baseline:")
     # with cprofile("baseline"):
     vm.run(baseline, timeit=True)
-    time.sleep(5)
+    time.sleep(3)
 
 
 def test_main():
     print("main:")
     # with cprofile("main"):
     vm.run(main, timeit=True)
-    time.sleep(5)
+    time.sleep(3)
 
 
 if __name__ == "__main__":

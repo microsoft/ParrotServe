@@ -10,10 +10,7 @@ This project is a research prototype for now. Being eargerly iterated.
 
 ```bash
 pip install -r requirements.txt
-pip install triton==2.1.0
 ```
-
-(Note: Triton 2.0.0 has some bugs in Kernel memory issues. The similar error also happens in [LightLLM](https://github.com/ModelTC/lightllm) kernels.)
 
 - Step 2.
 
@@ -28,6 +25,14 @@ Install other dependencies listed in `3rdparty` folder.
 
 ```bash
 python3 setup.py develop
+```
+
+- Step 4.
+
+Triton 2.0.0 has some bugs in Kernel memory issues. So we enforce the version to be 2.1.0 here. You will see some dependencies warnings, but it will not affect the common usages. (The similar error also happens in [LightLLM](https://github.com/ModelTC/lightllm) kernels.)
+
+```bash
+pip install triton==2.1.0
 ```
 
 
