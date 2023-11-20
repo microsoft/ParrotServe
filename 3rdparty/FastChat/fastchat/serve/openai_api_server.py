@@ -378,6 +378,9 @@ async def show_available_models():
 @app.post("/v1/chat/completions", dependencies=[Depends(check_api_key)])
 async def create_chat_completion(request: ChatCompletionRequest):
     """Creates a completion for the chat message"""
+
+    # await asyncio.sleep(1.25)  # Simulate 250ms client-server network latency
+
     error_check_ret = await check_model(request)
     if error_check_ret is not None:
         return error_check_ret
@@ -411,7 +414,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
     if error_check_ret is not None:
         return error_check_ret
 
-    gen_params["max_new_tokens"] = max_new_tokens
+    gen_params["max_new_tokens"] = 20  # max_new_tokens
 
     if request.stream:
         generator = chat_completion_stream_generator(
@@ -765,7 +768,6 @@ async def count_tokens(request: APITokenCheckRequest):
 @app.post("/api/v1/chat/completions")
 async def create_chat_completion(request: APIChatCompletionRequest):
     """Creates a completion for the chat message"""
-    await asyncio.sleep(0.25)  # Simulate 250ms client-server network latency
 
     error_check_ret = await check_model(request)
     if error_check_ret is not None:

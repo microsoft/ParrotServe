@@ -10,7 +10,3 @@ sleep 10
 
 python3 -m fastchat.serve.openai_api_server --host localhost --port 8000 &
 
-export OPENAI_API_BASE=http://localhost:8000/v1
-export OPENAI_API_KEY=EMPTY
-
-sleep 1

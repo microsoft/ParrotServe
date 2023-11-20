@@ -168,3 +168,25 @@ def cprofile(profile_title: str):
         "\n\n\n" + f"*** {profile_title} ***" + "\n" + s.getvalue() + "\n\n\n",
         flush=True,
     )
+
+
+@contextlib.contextmanager
+def torch_profile(profile_title: str):
+    import torch.profiler as profiler
+
+    with profiler.profile(
+        activities=[
+            profiler.ProfilerActivity.CPU,
+            profiler.ProfilerActivity.CUDA,
+        ]
+    ) as prof:
+        yield
+
+    print(
+        "\n\n\n"
+        + f"*** {profile_title} ***"
+        + "\n"
+        + prof.key_averages().table(sort_by="cuda_time_total")
+        + "\n\n\n",
+        flush=True,
+    )

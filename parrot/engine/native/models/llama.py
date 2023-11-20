@@ -36,7 +36,6 @@ from transformers import LlamaConfig
 from transformers.models.llama.modeling_llama import (
     LlamaConfig,
     LlamaMLP,
-    LlamaRMSNorm,
 )
 
 from .model_utils import hidden_states_postprocess
@@ -46,7 +45,19 @@ from ..mem import get_cos_cache, get_sin_cache
 from ...config import NativeConfig
 from .sampler import Sampler
 from ..attn_func import AttnFunc
-from ..kernels import rotary_embedding
+from ..kernels import rotary_embedding, rmsnorm_forward
+
+
+class LlamaRMSNorm(nn.Module):
+    """Wrapper for RMSNorm."""
+
+    def __init__(self, dim, eps=1e-5):
+        super().__init__()
+        self.eps = eps
+        self.weight = nn.Parameter(torch.ones(dim))
+
+    def forward(self, x):
+        return rmsnorm_forward(x, self.weight, self.eps)
 
 
 class LlamaAttention(nn.Module):

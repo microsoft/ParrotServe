@@ -8,7 +8,7 @@ import torch
 import time
 import psutil
 
-from parrot.utils import RecyclePool, get_logger
+from parrot.utils import RecyclePool, get_logger, torch_profile
 from parrot.protocol.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
@@ -146,11 +146,16 @@ class NativeRunner:
         st_model = time.perf_counter_ns()
 
         # Execute model
+        # with torch_profile("model_iter"):
         fill_hidden_states, next_tokens = self.model(
             input_ids, input_positions, iteration_state
         )
+
         next_tokens = next_tokens.cpu().tolist()
+
+        torch.cuda.synchronize()
         ed_model = time.perf_counter_ns()
+
         assert fill_hidden_states.shape[0] + len(next_tokens) == len(jobs)
 
         # Update context
@@ -165,7 +170,6 @@ class NativeRunner:
                 if job.check_stop():
                     job.finish_event.set()
 
-        torch.cuda.synchronize()
         ed = time.perf_counter_ns()
 
         e2e_time = (ed - st) / 1e9
