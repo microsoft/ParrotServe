@@ -6,7 +6,7 @@ from parrot.engine.engine_creator import create_engine
 from parrot.engine.primitive_job import Fill, Generation
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.utils import create_task_in_loop
-from parrot.testing.get_configs import get_engine_config_path
+from parrot.testing.get_configs import get_sample_engine_config_path
 
 import torch
 
@@ -15,7 +15,7 @@ def _test_single_engine_simple_serving(config):
     engine_type, config_fn = config
 
     engine = create_engine(
-        engine_config_path=get_engine_config_path(config_fn),
+        engine_config_path=get_sample_engine_config_path(config_fn),
         connect_to_os=False,
     )
 

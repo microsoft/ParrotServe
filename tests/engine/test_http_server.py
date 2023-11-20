@@ -9,13 +9,13 @@ from parrot.protocol.primitive_request import Fill, Generate
 from parrot.os.memory.context import Context
 from parrot.os.engine import ExecutionEngine
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.testing.get_configs import get_engine_config_path
+from parrot.testing.get_configs import get_sample_engine_config_path
 from parrot.testing.localhost_server_daemon import engine_server
 
 
 def _test_single_server_simple_serving(config):
     engine_type, config_fn = config
-    engine_config_path = get_engine_config_path(config_fn)
+    engine_config_path = get_sample_engine_config_path(config_fn)
 
     async def main():
         with open(engine_config_path) as f:

@@ -22,7 +22,7 @@ from parrot.constants import (
 from parrot.os.http_server import start_server as start_os_server
 from parrot.engine.http_server import start_server as start_engine_server
 
-from .get_configs import get_engine_config_path, get_os_config_path
+from .get_configs import get_sample_engine_config_path, get_sample_os_config_path
 from .fake_engine_server import app as FakeEngineApp
 from .fake_os_server import app as FakeOSApp
 
@@ -70,7 +70,7 @@ def fake_engine_server():
 @contextlib.contextmanager
 def os_server():
     def _launch_os():
-        os_config_path = get_os_config_path("localhost_os.json")
+        os_config_path = get_sample_os_config_path("localhost_os.json")
         release_mode = False
 
         start_os_server(os_config_path=os_config_path, release_mode=release_mode)
@@ -92,7 +92,7 @@ def engine_server(
     connect_to_os: bool = False,
 ):
     def _launch_engine():
-        engine_config_path = get_engine_config_path(engine_config_name)
+        engine_config_path = get_sample_engine_config_path(engine_config_name)
         start_engine_server(
             engine_config_path=engine_config_path, connect_to_os=connect_to_os
         )

@@ -55,7 +55,7 @@ python3 setup.py develop
 We provide some one-click scripts to run Parrot in a single machine. You can find them in the `scripts` folder.
 
 ```bash
-sh scripts/launch_single_vicuna_13b.sh
+bash sample_configs/scripts/launch_single_vicuna_13b.sh
 ```
 
 <!-- **Run Docker Compose in a Cluster**
@@ -67,13 +67,13 @@ TODO -->
 You can separately start an OS server.
 
 ```bash
-python3 -m parrot.os.http_server --config_path configs/os/localhost_os.json
+python3 -m parrot.os.http_server --config_path <config_path>
 ```
 
-**Start a Vicuna-13b Engine Server**
+**Start an Engine Server**
 
 You can separately start an engine server. If you choose to connect to the OS server, you need to start the OS server first and specify the OS server address in the config file.
 
 ```bash
-python3 -m parrot.engine.http_server --config_path configs/engine/native/vicuna-13b-v1.3.json
+python3 -m parrot.engine.http_server --config_path <config_path>
 ```

@@ -2,18 +2,23 @@
 # Licensed under the MIT license.
 
 
-"""Get config files by relative path to the package root path."""
+"""Get config files by relative path to the package root path.
+
+NOTE(chaofan): This part of functionality requires the original repo structure to be kept.
+
+In particular, it will automatically search in the `sample_configs` folder for the config file.
+"""
 
 import parrot
 
 
-def get_engine_config_path(config_file_name: str) -> str:
+def get_sample_engine_config_path(config_file_name: str) -> str:
     # The config path is relative to the package path.
     # We temporarily use this way to load the config.
     package_path = parrot.__path__[0]
     return f"{package_path}/../configs/engine/{config_file_name}"
 
 
-def get_os_config_path(config_file_name: str) -> str:
+def get_sample_os_config_path(config_file_name: str) -> str:
     package_path = parrot.__path__[0]
     return package_path + "/../configs/os/" + config_file_name

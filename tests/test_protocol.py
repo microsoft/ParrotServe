@@ -27,7 +27,7 @@ from parrot.testing.fake_os_server import TESTING_SERVER_URL as OS_URL
 from parrot.testing.fake_engine_server import TESTING_SERVER_URL as ENGINE_URL
 from parrot.testing.fake_engine_server import TESTING_SERVER_HOST, TESTING_SERVER_PORT
 from parrot.testing.localhost_server_daemon import fake_os_server, fake_engine_server
-from parrot.testing.get_configs import get_engine_config_path
+from parrot.testing.get_configs import get_sample_engine_config_path
 
 
 def test_vm_heartbeat():
@@ -104,7 +104,7 @@ def test_engine_heartbeat():
 
 
 def _get_opt_125m_engine_config():
-    engine_config_path = get_engine_config_path("opt-125m.json")
+    engine_config_path = get_sample_engine_config_path("opt-125m.json")
     with open(engine_config_path, "r") as f:
         engine_config = json.load(f)
 
