@@ -10,7 +10,7 @@ dist
 *.log.*
 log
 # *.json
-# *.txt
+*.txt
 
 # Editor
 *.swp

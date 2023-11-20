@@ -1,0 +1,6 @@
+[submodule "3rdparty/mlc-llm"]
+	path = 3rdparty/mlc-llm
+	url = git@github.com:mlc-ai/mlc-llm.git
+[submodule "3rdparty/langchain"]
+	path = 3rdparty/langchain
+	url = git@github.com:langchain-ai/langchain.git
