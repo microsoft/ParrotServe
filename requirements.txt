@@ -1,15 +1,22 @@
-aiohttp==3.8.5
-fastapi==0.103.0
-huggingface-hub==0.16.4
-regex==2023.8.8
-requests==2.31.0
-sentencepiece==0.1.99
-starlette==0.27.0
-tokenizers==0.13.3
-torch==2.0.1
-tqdm==4.66.1
-transformers==4.32.0
-triton==2.0.0
-urllib3==2.0.4
-uvicorn==0.23.2
-xformers==0.0.21
+# Related to HTTP server
+aiohttp
+requests
+fastapi
+uvicorn
+starlette
+
+# Huggingface & LLM related
+huggingface-hub
+sentencepiece
+tokenizers
+transformers
+
+# Machine Learning packages
+torch >= 2.1.1
+triton >= 2.1.0
+xformers >= 0.0.22.post7
+
+# Misc
+regex
+tqdm
+urllib3

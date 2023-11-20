@@ -4,6 +4,18 @@ This project is a research prototype for now. Being eargerly iterated.
 
 ## Install
 
+**Environment Settings:**
+
+- OS: Linux
+- GPU: cc >= 7.0
+- CUDA version: >= 12.1
+- DL Framework: PyTorch >= 2.1.1 with CUDA 12.1.
+
+```bash
+pip install torch --upgrade --index-url https://download.pytorch.org/whl/cu121
+```
+
+
 **Install dependencies:**
 
 - Step 1.
@@ -21,18 +33,18 @@ recommended commit refers to `3rdparty` folder.
 
 Install other dependencies listed in `3rdparty` folder.
 
-**Install Parrot:**
-
-```bash
-python3 setup.py develop
-```
-
-- Step 4.
+- Step 4 (Rechecking).
 
 Triton 2.0.0 has some bugs in Kernel memory issues. So we enforce the version to be 2.1.0 here. You will see some dependencies warnings, but it will not affect the common usages. (The similar error also happens in [LightLLM](https://github.com/ModelTC/lightllm) kernels.)
 
 ```bash
 pip install triton==2.1.0
+```
+
+**Install Parrot:**
+
+```bash
+python3 setup.py develop
 ```
 
 
