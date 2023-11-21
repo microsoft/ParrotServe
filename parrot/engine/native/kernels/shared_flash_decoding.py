@@ -120,7 +120,7 @@ def _fwd_kernel(
     tl.store(Out + offs_q, acc.to(tl.float16))
 
 
-# FIxME: Wrong in the unshared case
+# FIXME: Wrong in the unshared case
 
 
 def paged_flash_attention(

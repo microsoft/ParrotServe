@@ -21,7 +21,7 @@ from parrot.constants import NONE_CONTEXT_ID
 
 from ..llm_engine import LLMEngine
 from ..runtime_info import EngineRuntimeInfo
-from ..primitive_job import PrimitiveJob, Fill, Generation
+from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import MLCConfig, EngineConfig, SchedulerConfig
 
 
@@ -98,7 +98,7 @@ class MLCEngine(LLMEngine):
             logger.debug(
                 f"Fill time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
             )
-        elif isinstance(job, Generation):
+        elif isinstance(job, Generate):
             generation_config = GenerationConfig(
                 temperature=job.sampling_config.temperature,
                 top_p=job.sampling_config.top_p,
@@ -149,7 +149,7 @@ class MLCEngine(LLMEngine):
             self._current_context_id == context_id
         ), "MLCEngine only supports one active context."
 
-        generation_job = Generation(
+        generation_job = Generate(
             pid=payload["pid"],
             tid=payload["tid"],
             context_id=context_id,

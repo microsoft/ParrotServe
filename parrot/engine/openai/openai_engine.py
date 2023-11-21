@@ -15,7 +15,7 @@ from .api_endpoint import Endpoint
 from .text_context import TextContext
 from ..runtime_info import EngineRuntimeInfo
 from ..context_manager import ContextManager
-from ..primitive_job import PrimitiveJob, Fill, Generation
+from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..scheduler import Scheduler
 from ..llm_engine import LLMEngine
 from ..config import OpenAIConfig, EngineConfig, SchedulerConfig
@@ -82,7 +82,7 @@ class OpenAIEngine(LLMEngine):
             # Just fill the text context.
             job.context.append_text(job.text, role_is_user=True)
             logger.debug(f"Fill job done. Fill length: {len(job.text)}")
-        elif isinstance(job, Generation):
+        elif isinstance(job, Generate):
             # Generate text and append it to the text context.
 
             logger.debug("Generate job started. Submit request to OpenAI API...")
@@ -138,7 +138,7 @@ class OpenAIEngine(LLMEngine):
 
     # override
     async def generate(self, payload: Dict) -> Dict:
-        generation_job = Generation(
+        generation_job = Generate(
             pid=payload["pid"],
             tid=payload["tid"],
             context_id=payload["context_id"],

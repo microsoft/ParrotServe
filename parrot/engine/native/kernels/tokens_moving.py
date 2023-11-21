@@ -62,7 +62,7 @@ def discontinuous_move_tokens_kernel(
     tl.store(out_ptrs, token, mask=offs_h[:, None] < num_heads)
 
 
-@torch.no_grad()
+@torch.inference_mode()
 def discontinuous_move_tokens(src_storage, dest_storage, src_indices, dest_indices):
     assert (
         src_indices.shape == dest_indices.shape

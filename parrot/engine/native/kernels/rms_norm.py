@@ -46,6 +46,7 @@ def _rms_norm_fwd_fused(
         tl.store(Y + cols, y.to(tl.float16), mask=mask)
 
 
+@torch.inference_mode()
 def rmsnorm_forward(x, weight, eps):
     # allocate output
     y = torch.empty_like(x)

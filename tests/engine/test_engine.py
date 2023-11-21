@@ -3,7 +3,7 @@ import time
 from transformers import AutoTokenizer
 
 from parrot.engine.engine_creator import create_engine
-from parrot.engine.primitive_job import Fill, Generation
+from parrot.engine.primitive_job import Fill, Generate
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.utils import create_task_in_loop
 from parrot.testing.get_configs import get_sample_engine_config_path
@@ -40,7 +40,7 @@ def _test_single_engine_simple_serving(config):
             token_ids=prompt_tokens,
         )
 
-    gen_job = Generation(
+    gen_job = Generate(
         pid=0,
         tid=0,
         context_id=0,

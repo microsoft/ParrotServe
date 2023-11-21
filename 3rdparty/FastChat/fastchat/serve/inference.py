@@ -156,6 +156,9 @@ def generate_stream(
 
                 logits = model.lm_head(out[0])
             else:
+                # torch.cuda.synchronize()
+                # st = time.perf_counter_ns()
+
                 out = model(
                     input_ids=torch.as_tensor(
                         [[token] if not sent_interrupt else output_ids],
@@ -164,6 +167,14 @@ def generate_stream(
                     use_cache=True,
                     past_key_values=past_key_values if not sent_interrupt else None,
                 )
+
+                # torch.cuda.synchronize()
+                # ed = time.perf_counter_ns()
+
+                # print(
+                #     f"One token decode time: {(ed - st) / 1e6} ms, {past_key_values[0][0].shape}"
+                # )
+
                 sent_interrupt = False
                 logits = out.logits
             past_key_values = out.past_key_values

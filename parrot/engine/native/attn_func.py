@@ -9,7 +9,7 @@ from xformers import ops as xops
 
 from parrot.utils import get_logger
 
-from ..primitive_job import PrimitiveJob, Fill, Generation
+from ..primitive_job import PrimitiveJob, Fill, Generate
 from .mem import get_k_cache, get_v_cache
 from .iter_state import IterationState
 from .kernels import (
@@ -81,7 +81,7 @@ class xFormersWithBuffer(AttnFunc):
             if isinstance(job, Fill):
                 num_tokens = len(job.token_ids)
                 iteration_state.num_fill_tokens.append(num_tokens)
-            elif isinstance(job, Generation):
+            elif isinstance(job, Generate):
                 num_tokens = 1
                 iteration_state.generation_sampling_config.append(job.sampling_config)
 
@@ -226,7 +226,7 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
             if isinstance(job, Fill):
                 num_tokens = len(job.token_ids)
                 iteration_state.num_fill_tokens.append(num_tokens)
-            elif isinstance(job, Generation):
+            elif isinstance(job, Generate):
                 num_tokens = 1
                 iteration_state.generation_sampling_config.append(job.sampling_config)
 
@@ -238,7 +238,7 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
             slot_mapping.append(context_slot_ids[-num_tokens:])
             max_num_slots_per_seq = max(max_num_slots_per_seq, len(slot_mapping[-1]))
 
-            if isinstance(job, Generation):
+            if isinstance(job, Generate):
                 # Update block tables for generation tokens
                 # This tables is logicial block id -> physical block id, so we need to
                 # squeeze the tokens to blocks

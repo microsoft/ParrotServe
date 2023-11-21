@@ -104,7 +104,7 @@ def rotary_embedding_kernel(
     )
 
 
-@torch.no_grad()
+@torch.inference_mode()
 def rotary_embedding(state, cos, sin):
     num_tokens = state.shape[0]
     num_heads = state.shape[1]

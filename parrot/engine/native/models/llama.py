@@ -41,11 +41,14 @@ from transformers.models.llama.modeling_llama import (
 from .model_utils import hidden_states_postprocess
 from .weight_utils import hf_weights_loader
 from ..iter_state import IterationState
-from ..mem import get_cos_cache, get_sin_cache
+from ..mem import get_cos_sin_cache
 from ...config import NativeConfig
 from .sampler import Sampler
 from ..attn_func import AttnFunc
-from ..kernels import rotary_embedding, rmsnorm_forward
+
+# from ..kernels import rotary_embedding, rmsnorm_forward
+
+from ..kernels import vllm_rms_norm, vllm_rotary_emb
 
 
 class LlamaRMSNorm(nn.Module):
@@ -57,7 +60,7 @@ class LlamaRMSNorm(nn.Module):
         self.weight = nn.Parameter(torch.ones(dim))
 
     def forward(self, x):
-        return rmsnorm_forward(x, self.weight, self.eps)
+        return vllm_rms_norm(x, self.weight, self.eps)
 
 
 class LlamaAttention(nn.Module):
@@ -98,6 +101,7 @@ class LlamaAttention(nn.Module):
     def forward(
         self,
         hidden_states: torch.Tensor,
+        positions: torch.Tensor,
         iteration_state: IterationState,
     ) -> torch.Tensor:
         # Shape of hidden_states: [num_tokens, hidden_dims]
@@ -105,17 +109,27 @@ class LlamaAttention(nn.Module):
         # get query, key, value
         qkv_states = self.qkv_proj(hidden_states)
         query_states, key_states, value_states = torch.chunk(qkv_states, 3, dim=-1)
+
+        # Should we fuse?
+        # rotary_embedding(
+        #     query_states, iteration_state.cos_buffer, iteration_state.sin_buffer
+        # )
+        # rotary_embedding(
+        #     key_states, iteration_state.cos_buffer, iteration_state.sin_buffer
+        # )
+
+        cos_sin_cache = get_cos_sin_cache()
+        vllm_rotary_emb(
+            positions,
+            query_states,
+            key_states,
+            cos_sin_cache,
+            head_size=self.head_dim,
+        )
+        
         query_states = query_states.view(-1, self.num_heads, self.head_dim)
         key_states = key_states.view(-1, self.num_heads, self.head_dim)
         value_states = value_states.view(-1, self.num_heads, self.head_dim)
-
-        # Should we fuse them?
-        rotary_embedding(
-            query_states, iteration_state.cos_buffer, iteration_state.sin_buffer
-        )
-        rotary_embedding(
-            key_states, iteration_state.cos_buffer, iteration_state.sin_buffer
-        )
 
         attn_output = self.attn_func(
             query_states, key_states, value_states, iteration_state
@@ -146,12 +160,13 @@ class LlamaDecoderLayer(nn.Module):
     def forward(
         self,
         hidden_states: torch.Tensor,
+        positions: torch.Tensor,
         iteration_state: IterationState,
     ) -> torch.Tensor:
         # Self Attention
         residual = hidden_states
         hidden_states = self.input_layernorm(hidden_states)
-        hidden_states = self.self_attn(hidden_states, iteration_state)
+        hidden_states = self.self_attn(hidden_states, positions, iteration_state)
         hidden_states = residual + hidden_states
 
         # Fully Connected
@@ -181,12 +196,13 @@ class LlamaModel(nn.Module):
     def forward(
         self,
         input_ids: torch.Tensor,
+        positions: torch.Tensor,
         iteration_state: IterationState,
     ) -> torch.Tensor:
         hidden_states = self.embed_tokens(input_ids)
         for _, layer in enumerate(self.layers):
             # print(f"Layer: {_}. Start forward.", flush=True)
-            hidden_states = layer(hidden_states, iteration_state)
+            hidden_states = layer(hidden_states, positions, iteration_state)
         hidden_states = self.norm(hidden_states)
         return hidden_states
 
@@ -206,13 +222,8 @@ class LlamaForCausalLM(nn.Module):
         iteration_state: IterationState,
     ):
         # print(positions)
-        iteration_state.cos_buffer = torch.index_select(
-            get_cos_cache(), dim=0, index=positions
-        )
-        iteration_state.sin_buffer = torch.index_select(
-            get_sin_cache(), dim=0, index=positions
-        )
-        hidden_states = self.model(input_ids, iteration_state)
+        hidden_states = self.model(input_ids, positions, iteration_state)
+
         fill_hidden_states, gen_hidden_states = hidden_states_postprocess(
             hidden_states, iteration_state
         )

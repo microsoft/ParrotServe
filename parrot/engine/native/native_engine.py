@@ -13,7 +13,7 @@ from ..runtime_info import EngineRuntimeInfo
 from .native_runner import NativeRunner
 from .block_context import BlockContext
 from ..scheduler import Scheduler
-from ..primitive_job import PrimitiveJob, Fill, Generation
+from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import NativeConfig, SchedulerConfig, EngineConfig
 
 
@@ -83,7 +83,7 @@ class NativeEngine(LLMEngine):
 
     # override
     async def generate(self, payload: Dict) -> Dict:
-        generation_job = Generation(
+        generation_job = Generate(
             pid=payload["pid"],
             tid=payload["tid"],
             context_id=payload["context_id"],
@@ -111,7 +111,7 @@ class NativeEngine(LLMEngine):
         parent_context_id = payload["parent_context_id"]
         sampling_config = SamplingConfig(**payload["sampling_config"])
 
-        generation_job = Generation(
+        generation_job = Generate(
             pid=pid,
             tid=tid,
             context_id=context_id,

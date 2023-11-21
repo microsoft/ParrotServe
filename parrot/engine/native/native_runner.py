@@ -8,7 +8,7 @@ import torch
 import time
 import psutil
 
-from parrot.utils import RecyclePool, get_logger, torch_profile
+from parrot.utils import RecyclePool, get_logger
 from parrot.protocol.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
@@ -16,7 +16,7 @@ from .mem import init_model_cache_storage
 from .block_context import BlockContext
 from .iter_state import IterationState
 from ..context_manager import ContextManager
-from ..primitive_job import PrimitiveJob, Fill, Generation
+from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import NativeConfig
 
 
@@ -60,12 +60,12 @@ class NativeRunner:
         st = time.perf_counter_ns()
 
         # We should sort jobs such that Fill jobs are before Generation jobs.
-        jobs.sort(key=lambda job: isinstance(job, Generation))
+        jobs.sort(key=lambda job: isinstance(job, Generate))
 
         # Some generation jobs should do "first sampling"
         first_sampling_states: List[torch.Tensor] = []
         first_sampling_config: List[SamplingConfig] = []
-        first_sampling_jobs: List[Generation] = []
+        first_sampling_jobs: List[Generate] = []
 
         # Allocate new context blocks
         for job in jobs:
@@ -84,7 +84,7 @@ class NativeRunner:
             if isinstance(job, Fill):
                 job.context.token_ids.extend(job.token_ids)
                 job.context.allocate(len(job.token_ids))
-            elif isinstance(job, Generation):
+            elif isinstance(job, Generate):
                 job.context.allocate(1)
                 last_hidden_state = job.context.get_last_hidden_state()
                 if last_hidden_state is not None:
@@ -127,7 +127,7 @@ class NativeRunner:
                 input_positions.extend(
                     range(context_len - len(job.token_ids), context_len)
                 )
-            elif isinstance(job, Generation):
+            elif isinstance(job, Generate):
                 input_ids.append(job.context.get_last_token_id())
                 input_positions.append(context_len - 1)
 
@@ -146,7 +146,6 @@ class NativeRunner:
         st_model = time.perf_counter_ns()
 
         # Execute model
-        # with torch_profile("model_iter"):
         fill_hidden_states, next_tokens = self.model(
             input_ids, input_positions, iteration_state
         )
@@ -164,7 +163,7 @@ class NativeRunner:
             if isinstance(job, Fill):
                 job.context.last_hidden_state = fill_hidden_states[i]
                 job.finish_event.set()
-            elif isinstance(job, Generation):
+            elif isinstance(job, Generate):
                 token_id = next_tokens[i - iteration_state.num_fill_jobs]
                 job.put_token(token_id)
                 if job.check_stop():

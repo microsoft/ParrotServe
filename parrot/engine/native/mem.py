@@ -132,23 +132,27 @@ class ModelCacheStorage:
             )
             t = torch.arange(max_seq_len, dtype=inv_freq.dtype, device=device)
             freqs = torch.outer(t, inv_freq)
-            self.cos_cache = (
-                freqs.cos().view(max_seq_len, 1, rotary_size // 2).to(dtype)
-            )
-            self.sin_cache = (
-                freqs.sin().view(max_seq_len, 1, rotary_size // 2).to(dtype)
-            )
+            # self.cos_cache = (
+            #     freqs.cos().view(max_seq_len, 1, rotary_size // 2).to(dtype)
+            # )
+            # self.sin_cache = (
+            #     freqs.sin().view(max_seq_len, 1, rotary_size // 2).to(dtype)
+            # )
+
+            self.cos_sin_cache = torch.cat((freqs.cos(), freqs.sin()), dim=-1)
+            self.cos_sin_cache = self.cos_sin_cache.to(dtype)
 
             cos_sin_total_size = (
                 max_seq_len
                 * rotary_size
                 * 2
-                * self.cos_cache.element_size()
+                * self.cos_sin_cache.element_size()
                 / 1024
                 / 1024
             )
             logger.info(
-                f"Allocated cos/sin cache. Total size: {cos_sin_total_size :.2f} MiB"
+                f"Allocated cos/sin cache for max_seq_len {max_seq_len}. "
+                f"Total size: {cos_sin_total_size :.2f} MiB"
             )
         else:
             logger.info(
@@ -156,8 +160,9 @@ class ModelCacheStorage:
                 f"Skip allocating cos/sin cache."
             )
 
-            self.cos_cache = None
-            self.sin_cache = None
+            # self.cos_cache = None
+            # self.sin_cache = None
+            self.cos_sin_cache
 
 
 # Initialize it when the model is loaded.
@@ -184,13 +189,19 @@ def get_v_cache(layer_idx: int) -> torch.Tensor:
     return Model_Cache.v_cache[layer_idx]
 
 
-def get_cos_cache() -> torch.Tensor:
-    global Model_Cache
-    assert Model_Cache is not None
-    return Model_Cache.cos_cache
+# def get_cos_cache() -> torch.Tensor:
+#     global Model_Cache
+#     assert Model_Cache is not None
+#     return Model_Cache.cos_cache
 
 
-def get_sin_cache() -> torch.Tensor:
+# def get_sin_cache() -> torch.Tensor:
+#     global Model_Cache
+#     assert Model_Cache is not None
+#     return Model_Cache.sin_cache
+
+
+def get_cos_sin_cache() -> torch.Tensor:
     global Model_Cache
     assert Model_Cache is not None
-    return Model_Cache.sin_cache
+    return Model_Cache.cos_sin_cache

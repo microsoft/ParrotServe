@@ -57,8 +57,8 @@ class Fill(PrimitiveJob):
         )
 
 
-class Generation(PrimitiveJob):
-    """Generation primitive is corresponding to the `decode` stage in LLM.
+class Generate(PrimitiveJob):
+    """Generate primitive is corresponding to the `decode` stage in LLM.
 
     Its mission is to generate the output tokens based on certain context.
     """

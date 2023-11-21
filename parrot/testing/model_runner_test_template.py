@@ -7,7 +7,7 @@ from transformers import AutoTokenizer
 
 from parrot.engine.native.native_runner import NativeRunner
 from parrot.engine.config import NativeConfig
-from parrot.engine.primitive_job import Fill, Generation
+from parrot.engine.primitive_job import Fill, Generate
 from parrot.protocol.sampling_config import SamplingConfig
 
 
@@ -60,7 +60,7 @@ def template_test_fill_then_gen(model_name: str, native_config: NativeConfig):
 
     runner.run_iter(
         [
-            Generation(
+            Generate(
                 pid=0,
                 tid=0,
                 context_id=0,
@@ -90,7 +90,7 @@ def template_test_generate_single_text(model_name: str, native_config: NativeCon
     for _ in range(40):
         runner.run_iter(
             [
-                Generation(
+                Generate(
                     pid=0,
                     tid=0,
                     context_id=0,
@@ -127,7 +127,7 @@ def template_test_generate_batch_text(model_name: str, native_config: NativeConf
 
     for _ in range(40):
         gens = [
-            Generation(
+            Generate(
                 pid=0,
                 tid=i,
                 context_id=i,
@@ -169,7 +169,7 @@ def template_test_fill_generate_mixed(model_name: str, native_config: NativeConf
 
     # Generations
     gens = [
-        Generation(
+        Generate(
             pid=0,
             tid=i,
             context_id=i,

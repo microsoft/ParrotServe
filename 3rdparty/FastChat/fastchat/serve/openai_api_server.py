@@ -379,7 +379,7 @@ async def show_available_models():
 async def create_chat_completion(request: ChatCompletionRequest):
     """Creates a completion for the chat message"""
 
-    # await asyncio.sleep(1.25)  # Simulate 250ms client-server network latency
+    await asyncio.sleep(0.25)  # Simulate 250ms client-server network latency
 
     error_check_ret = await check_model(request)
     if error_check_ret is not None:

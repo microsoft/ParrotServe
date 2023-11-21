@@ -9,7 +9,7 @@ from transformers import PretrainedConfig
 from parrot.protocol.sampling_config import SamplingConfig
 
 from ..config import NativeConfig
-from ..primitive_job import PrimitiveJob, Fill, Generation
+from ..primitive_job import PrimitiveJob, Fill, Generate
 
 
 class IterationState:
@@ -46,10 +46,6 @@ class IterationState:
             num_heads,
             head_size,
         )
-
-        # Lazy load in RoPE arch
-        self.cos_buffer = None
-        self.sin_buffer = None
 
     @property
     def num_fill_jobs(self) -> int:

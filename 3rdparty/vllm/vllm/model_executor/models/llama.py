@@ -33,7 +33,10 @@ from transformers import LlamaConfig
 
 from vllm.model_executor.input_metadata import InputMetadata
 from vllm.model_executor.layers.activation import SiluAndMul
+
 from vllm.model_executor.layers.layernorm import RMSNorm
+
+# from transformers.models.llama.modeling_llama import LlamaRMSNorm as RMSNorm
 from vllm.model_executor.layers.attention import PagedAttentionWithRoPE
 from vllm.model_executor.layers.sampler import Sampler
 from vllm.model_executor.weight_utils import (
@@ -186,7 +189,7 @@ class LlamaDecoderLayer(nn.Module):
     ) -> torch.Tensor:
         # Self Attention
         residual = hidden_states
-        # hidden_states = self.input_layernorm(hidden_states)
+        hidden_states = self.input_layernorm(hidden_states)
         hidden_states = self.self_attn(
             positions=positions,
             hidden_states=hidden_states,
@@ -197,10 +200,10 @@ class LlamaDecoderLayer(nn.Module):
         hidden_states = residual + hidden_states
 
         # Fully Connected
-        # residual = hidden_states
-        # hidden_states = self.post_attention_layernorm(hidden_states)
-        # hidden_states = self.mlp(hidden_states)
-        # hidden_states = residual + hidden_states
+        residual = hidden_states
+        hidden_states = self.post_attention_layernorm(hidden_states)
+        hidden_states = self.mlp(hidden_states)
+        hidden_states = residual + hidden_states
         return hidden_states
 
 
@@ -272,6 +275,7 @@ class LlamaForCausalLM(nn.Module):
         hidden_states = self.model(
             input_ids, positions, kv_caches, input_metadata, cache_events
         )
+        next_tokens = torch.tensor([1], device=hidden_states.device)
         next_tokens = self.sampler(self.lm_head.weight, hidden_states, input_metadata)
         return next_tokens
 

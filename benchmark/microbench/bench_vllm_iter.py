@@ -7,7 +7,7 @@ import torch
 def bench_7b_model():
     runner = vLLMRunner(model="lmsys/vicuna-7b-v1.3", max_tokens_sum=81000)
 
-    runner.prefill_random_data(1, 670, 200)
+    runner.prefill_random_data(1, 1024, 200)
 
     warmups = 10
     trials = 100
@@ -30,12 +30,17 @@ def bench_7b_model():
 def profile_7b_model():
     runner = vLLMRunner(model="lmsys/vicuna-7b-v1.3", max_tokens_sum=81000)
 
-    runner.prefill_random_data(1, 670, 200)
+    runner.prefill_random_data(1, 1024, 200)
+
+    warmups = 10
+
+    for _ in range(warmups):
+        runner.step()
 
     with torch_profile("7b_model"):
         runner.step()
 
 
 if __name__ == "__main__":
-    # bench_7b_model()
-    profile_7b_model()
+    bench_7b_model()
+    # profile_7b_model()
