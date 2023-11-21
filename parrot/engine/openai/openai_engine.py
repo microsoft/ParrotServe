@@ -8,18 +8,19 @@ import time
 import asyncio
 
 from parrot.utils import get_logger
-from parrot.protocol.layer_apis import engine_heartbeat
 from parrot.protocol.sampling_config import SamplingConfig
+from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
+from parrot.constants import UNKNOWN_DATA_FIELD
 
 from .api_endpoint import Endpoint
-from .text_context import TextContext
-from ..runtime_info import EngineRuntimeInfo
-from ..context_manager import ContextManager
+from ..context.text_context import TextContext
+from ...protocol.engine_runtime_info import EngineRuntimeInfo
+from ..context.context_manager import ContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..scheduler import Scheduler
 from ..llm_engine import LLMEngine
 from ..config import OpenAIConfig, EngineConfig, SchedulerConfig
-
+from ..latency_analyzer import LatencyAnalyzer
 
 logger = get_logger("OpenAIEngine")
 
@@ -34,14 +35,18 @@ class OpenAIEngine(LLMEngine):
         scheduler_config["max_tokens_sum"] = 9999999999999  # Unlimited
         scheduler_config = SchedulerConfig(**scheduler_config)
 
+        # ---------- Configs ----------
         self.openai_config = OpenAIConfig(**engine_config.pop("instance"))
         self.engine_config = EngineConfig(
             dtype="unknown",
             device="unknown",
             **engine_config,
         )
+
+        # ---------- Components ----------
         self.scheduler = Scheduler(scheduler_config)
         self.context_manager = ContextManager()
+        self.latency_analyzer = LatencyAnalyzer()
 
         # Create a OpenAI client
         logger.info(
@@ -167,28 +172,24 @@ class OpenAIEngine(LLMEngine):
         }
 
     # override
-    async def heartbeat(self):
-        if not self.connect_to_os:
-            return
+    def get_runtime_info(self) -> EngineRuntimeInfo:
+        # NOTE(chaofan): For OpenAI Engine, mem-related fields are unknown.
+        num_cached_tokens = UNKNOWN_DATA_FIELD
+        cache_mem = UNKNOWN_DATA_FIELD
+        model_mem = UNKNOWN_DATA_FIELD
 
-        logger.debug(f"Heartbeat sent to OS (address={self.os_http_address}).")
+        num_running_jobs = self.scheduler.num_running_jobs
+        num_total_jobs = self.scheduler.num_total_jobs
 
-        # NOTE(chaofan): For OpenAI Engine, mem-related fields are all fake.
-        num_cached_tokens = 0
-        cache_mem = 0  # MiB
+        recent_avarage_latency = self.latency_analyzer.get_average_latency()
 
-        num_running_jobs = len(self.scheduler.running_jobs)
-
-        resp = await engine_heartbeat(
-            http_addr=self.os_http_address,
-            engine_id=self.engine_id,
-            engine_name=self.engine_config.engine_name,
-            runtime_info=EngineRuntimeInfo(
-                num_cached_tokens=num_cached_tokens,
-                num_running_jobs=num_running_jobs,
-                cache_mem=cache_mem,
-                model_mem=0,  # MiB
-            ),
+        return EngineRuntimeInfo(
+            num_cached_tokens=num_cached_tokens,
+            num_running_jobs=num_running_jobs,
+            num_total_jobs=num_total_jobs,
+            cache_mem=cache_mem,
+            model_mem=model_mem,
+            recent_average_latency=recent_avarage_latency,
         )
 
     # override
@@ -204,6 +205,10 @@ class OpenAIEngine(LLMEngine):
 
         coroutines = [self._execute_job(job) for job in jobs]
         if len(coroutines) > 0:
+            st = time.perf_counter_ns()
             await asyncio.gather(*coroutines)
+            ed = time.perf_counter_ns()
+            iter_latency = ed - st
+            self.latency_analyzer.add_latency(iter_latency)
 
         self.scheduler.finish()

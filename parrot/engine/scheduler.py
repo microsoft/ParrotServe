@@ -28,11 +28,24 @@ class Scheduler:
         self.running_jobs.remove(job)
 
     @property
+    def num_running_jobs(self) -> int:
+        """Get the number of running jobs."""
+
+        return len(self.running_jobs)
+
+    @property
+    def num_total_jobs(self) -> int:
+        """Get the number of total jobs."""
+
+        return len(self.waiting_jobs) + len(self.running_jobs)
+
+    @property
     def empty(self) -> bool:
         """Check if the scheduler is empty."""
 
         # print(f"Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}")
-        return len(self.waiting_jobs) == 0 and len(self.running_jobs) == 0
+        # return len(self.waiting_jobs) == 0 and len(self.running_jobs) == 0
+        return self.num_total_jobs == 0
 
     def schedule(self) -> List[PrimitiveJob]:
         """Schedule jobs."""

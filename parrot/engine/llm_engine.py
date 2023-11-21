@@ -2,11 +2,13 @@
 # Licensed under the MIT license.
 
 
+from abc import ABC, abstractmethod
 from typing import Dict, AsyncGenerator
 import asyncio
 
 from parrot.constants import ENGINE_LOOP_INTERVAL, ENGINE_HEARTBEAT_INTERVAL
-from parrot.protocol.layer_apis import register_engine
+from parrot.protocol.layer_apis import register_engine, engine_heartbeat
+from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 from parrot.utils import get_logger, set_random_seed, create_task_in_loop
 
 from .config import EngineConfig
@@ -15,7 +17,7 @@ from .config import EngineConfig
 logger = get_logger("LLMEngine")
 
 
-class LLMEngine:
+class LLMEngine(ABC):
     """Base class for all LLM engines. It provides a minimal interface for
     LLM engines."""
 
@@ -45,6 +47,7 @@ class LLMEngine:
         else:
             self.engine_id = 0
 
+    @abstractmethod
     async def fill(self, payload: Dict) -> Dict:
         """Fill API.
 
@@ -54,8 +57,9 @@ class LLMEngine:
         Returns:
             Dict. The response of the fill API.
         """
-        raise NotImplementedError
+        ...
 
+    @abstractmethod
     async def generate(self, payload: Dict) -> Dict:
         """Generate API.
 
@@ -65,8 +69,9 @@ class LLMEngine:
         Returns:
             Dict. The response of the generate API.
         """
-        raise NotImplementedError
+        ...
 
+    @abstractmethod
     def generate_stream(self, payload: Dict) -> AsyncGenerator:
         """Generate stream API.
 
@@ -78,6 +83,7 @@ class LLMEngine:
         """
         raise NotImplementedError
 
+    @abstractmethod
     def free_context(self, payload: Dict) -> Dict:
         """Free context API.
 
@@ -87,17 +93,38 @@ class LLMEngine:
         Returns:
             Dict. The response of the free context API.
         """
-        raise NotImplementedError
+        ...
+
+    @abstractmethod
+    def get_runtime_info(self) -> EngineRuntimeInfo:
+        """Get runtime info of this engine.
+
+        Return: EngineRuntimeInfo."""
+        ...
+
+    @abstractmethod
+    async def engine_iter(self):
+        """The function executed in the every iteration of the engine loop."""
+        ...
+
+    # Implemented methods
 
     async def heartbeat(self):
         """Heartbeat sent to OS.
 
         Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
-        raise NotImplementedError
 
-    async def engine_iter(self):
-        """The function executed in the every iteration of the engine loop."""
-        raise NotImplementedError
+        if not self.connect_to_os:
+            return
+
+        logger.debug(f"Heartbeat sent to OS (address={self.os_http_address}).")
+
+        resp = await engine_heartbeat(
+            http_addr=self.os_http_address,
+            engine_id=self.engine_id,
+            engine_name=self.engine_config.engine_name,
+            runtime_info=self.get_runtime_info(),
+        )
 
     async def _heartbeat_loop(self):
         """Loop for heartbeat. It is registered in the same event loop with engine loop."""

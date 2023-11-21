@@ -58,7 +58,9 @@ async def free_context(request: Request):
 
 @app.post("/ping")
 async def ping(request: Request):
-    return {}
+    return {
+        "runtime_info": llm_engine.get_runtime_info(),
+    }
 
 
 def start_server(engine_config_path: str, connect_to_os: bool = True):

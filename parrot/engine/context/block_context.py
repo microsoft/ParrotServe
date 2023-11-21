@@ -7,7 +7,7 @@ import torch
 
 from parrot.utils import RecyclePool
 
-from ..low_level_context import LowLevelContext
+from .low_level_context import LowLevelContext
 
 
 class BlockContext(LowLevelContext):

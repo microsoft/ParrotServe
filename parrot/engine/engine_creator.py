@@ -17,6 +17,8 @@ from .native.native_engine import NativeEngine
 from .mlc_llm.mlc_engine import MLCEngine
 from .openai.openai_engine import OpenAIEngine
 
+from parrot.exceptions import ParrotEngineInteralError
+
 logger = get_logger("Engine Creator")
 
 
@@ -35,7 +37,7 @@ def create_engine(engine_config_path: str, connect_to_os: bool = True) -> LLMEng
         engine_config = dict(json.load(f))
 
     if not EngineConfig.verify_config(engine_config):
-        raise ValueError(f"Invalid engine config: {engine_config}")
+        raise ParrotEngineInteralError(f"Invalid engine config: {engine_config}")
 
     engine_type = engine_config["engine_type"]
 
@@ -46,4 +48,4 @@ def create_engine(engine_config_path: str, connect_to_os: bool = True) -> LLMEng
     elif engine_type == ENGINE_TYPE_OPENAI:
         return OpenAIEngine(engine_config, connect_to_os)
     else:
-        raise NotImplementedError(f"Unsupported engine type: {engine_type}")
+        raise ParrotEngineInteralError(f"Unsupported engine type: {engine_type}")

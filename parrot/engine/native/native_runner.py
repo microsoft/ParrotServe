@@ -13,9 +13,9 @@ from parrot.protocol.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
 from .mem import init_model_cache_storage
-from .block_context import BlockContext
+from ..context.block_context import BlockContext
 from .iter_state import IterationState
-from ..context_manager import ContextManager
+from ..context.context_manager import ContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import NativeConfig
 
@@ -171,13 +171,13 @@ class NativeRunner:
 
         ed = time.perf_counter_ns()
 
-        e2e_time = (ed - st) / 1e9
-        model_time = (ed_model - st_model) / 1e9
+        e2e_time = ed - st
+        model_time = ed_model - st_model
         logger.debug(
             f"Finished running {len(jobs)} jobs. "
             f"({iteration_state.num_fill_jobs} Fills, {iteration_state.num_generation_jobs} Generations). "
-            f"Total Time used: {e2e_time} (s); "
-            f"Model Time used: {model_time} (s)."
+            f"Total Time used: {e2e_time / 1e6} (ms); "
+            f"Model Time used: {model_time / 1e6} (ms)."
         )
 
         return e2e_time, model_time

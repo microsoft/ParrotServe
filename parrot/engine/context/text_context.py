@@ -5,7 +5,7 @@
 from typing import Optional, List, Literal
 from dataclasses import dataclass
 
-from ..low_level_context import LowLevelContext
+from .low_level_context import LowLevelContext
 
 
 @dataclass

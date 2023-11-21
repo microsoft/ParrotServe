@@ -1,4 +1,5 @@
 #!/bin/sh
+
 echo "Start OS server ..."
 python3 -m parrot.os.http_server --config_path sample_configs/os/localhost_os.json --log_dir log/ --log_filename os_single_vicuna_13b.log &
 

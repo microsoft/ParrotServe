@@ -7,7 +7,7 @@ from asyncio import Event, Queue as AsyncQueue
 
 from parrot.protocol.sampling_config import SamplingConfig
 
-from .low_level_context import LowLevelContext
+from .context.low_level_context import LowLevelContext
 
 
 class PrimitiveJob:
@@ -89,10 +89,14 @@ class Generate(PrimitiveJob):
 
     def put_token(self, token_id: int) -> None:
         self.output_queue.put_nowait(token_id)
+
+        # This requires the context to be token-level.
         self.context.push_token_id(token_id)
+
         self.gen_length += 1
 
     def check_stop(self) -> bool:
+        # This requires the context to be token-level.
         token_id = self.context.get_last_token_id()
         return (
             token_id in self.sampling_config.stop_token_ids

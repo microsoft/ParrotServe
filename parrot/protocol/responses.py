@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 
-from typing import List, Type
+from typing import List, Dict, Type
 from pydantic import BaseModel
 from requests import Response
 from aiohttp import ClientResponse
@@ -51,7 +51,8 @@ class FreeContextResponse(BaseResponse):
 
 
 class PingResponse(BaseResponse):
-    pass
+    pong: bool = True
+    runtime_info: Dict = {}
 
 
 def make_response(resp_cls: Type[BaseResponse], resp: Response):

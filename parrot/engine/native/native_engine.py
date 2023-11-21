@@ -6,12 +6,12 @@ from typing import Dict, AsyncGenerator
 
 from parrot.utils import get_logger
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.protocol.layer_apis import engine_heartbeat
+from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 
 from ..llm_engine import LLMEngine
-from ..runtime_info import EngineRuntimeInfo
 from .native_runner import NativeRunner
-from .block_context import BlockContext
+from ..latency_analyzer import LatencyAnalyzer
+from ..context.block_context import BlockContext
 from ..scheduler import Scheduler
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import NativeConfig, SchedulerConfig, EngineConfig
@@ -26,6 +26,7 @@ class NativeEngine(LLMEngine):
     def __init__(self, engine_config: Dict, connect_to_os: bool = True):
         super().__init__(engine_config, connect_to_os)
 
+        # ---------- Configs ----------
         native_config = NativeConfig(**engine_config.pop("instance"))
         scheduler_config = SchedulerConfig(**engine_config.pop("scheduler"))
         self.engine_config = EngineConfig(
@@ -34,12 +35,14 @@ class NativeEngine(LLMEngine):
             max_batch_size=scheduler_config.max_batch_size,
             **engine_config,
         )
+        self.native_config = native_config
+
+        # ---------- Components ----------
         self.runner = NativeRunner(
             model_name=self.engine_config.model, config=native_config
         )
         self.scheduler = Scheduler(scheduler_config)
-
-        self.native_config = native_config
+        self.latency_analyzer = LatencyAnalyzer()
 
         self._register_engine(self.engine_config)
 
@@ -136,14 +139,13 @@ class NativeEngine(LLMEngine):
         }
 
     # override
-    async def heartbeat(self):
-        if not self.connect_to_os:
-            return
+    def get_runtime_info(self) -> EngineRuntimeInfo:
+        # Scheduler
+        num_running_jobs = self.scheduler.num_running_jobs
+        num_total_jobs = self.scheduler.num_total_jobs
 
-        logger.debug(f"Heartbeat sent to OS (address={self.os_http_address}).")
-
+        # Memory
         num_cached_tokens = self.runner.context_manager.get_num_cached_tokens()
-
         cache_mem = (
             num_cached_tokens
             # TODO(chaofan): Currently this config must be OPTConfig.
@@ -154,18 +156,17 @@ class NativeEngine(LLMEngine):
             / 1024
             / 1024
         )  # MiB
-        num_running_jobs = len(self.scheduler.running_jobs)
+        model_mem = self.runner.model_mem
 
-        resp = await engine_heartbeat(
-            http_addr=self.os_http_address,
-            engine_id=self.engine_id,
-            engine_name=self.engine_config.engine_name,
-            runtime_info=EngineRuntimeInfo(
-                num_cached_tokens=num_cached_tokens,
-                num_running_jobs=num_running_jobs,
-                cache_mem=cache_mem,
-                model_mem=self.runner.model_mem,  # MiB
-            ),
+        recent_average_latency = self.latency_analyzer.get_average_latency()
+
+        return EngineRuntimeInfo(
+            num_cached_tokens=num_cached_tokens,
+            num_running_jobs=num_running_jobs,
+            num_total_jobs=num_total_jobs,
+            cache_mem=cache_mem,
+            model_mem=model_mem,
+            recent_average_latency=recent_average_latency,
         )
 
     # override
@@ -175,5 +176,6 @@ class NativeEngine(LLMEngine):
             return
 
         jobs = self.scheduler.schedule()
-        self.runner.run_iter(jobs)
+        e2e_time, model_time = self.runner.run_iter(jobs)
+        self.latency_analyzer.add_latency(e2e_time)
         self.scheduler.finish()

@@ -2,14 +2,13 @@
 # Licensed under the MIT license.
 
 
-from parrot.engine.runtime_info import EngineRuntimeInfo
+from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 from parrot.engine.config import (
     EngineConfig,
     ENGINE_TYPE_NATIVE,
     ENGINE_TYPE_OPENAI,
     ENGINE_TYPE_MLCLLM,
 )
-from parrot.constants import LATENCY_AWARE_BS_THRESHOLD
 
 from .process.interpret_type import InterpretType
 
@@ -49,10 +48,6 @@ class ExecutionEngine:
     @property
     def interpreter_type(self) -> InterpretType:
         return INTERPRET_TYPE_MAP[self.config.engine_type]
-
-    @property
-    def is_latency_aware(self) -> bool:
-        return self.config.max_batch_size >= LATENCY_AWARE_BS_THRESHOLD
 
     @property
     def remain_batch_size(self) -> int:

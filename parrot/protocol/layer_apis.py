@@ -20,6 +20,7 @@ from .common import (
     async_send_http_request,
     logger,
 )
+from .engine_runtime_info import EngineRuntimeInfo
 
 
 # ---------- Program Layer to OS Layer APIs ----------
@@ -126,17 +127,16 @@ def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
         raise e
 
 
-def ping_engine(http_addr: str) -> bool:
+def ping_engine(http_addr: str) -> PingResponse:
     try:
-        resp = send_http_request(
+        return send_http_request(
             PingResponse,
             http_addr,
             "/ping",
             retry_times=5,
         )
-        return True
     except BaseException as e:
-        return False
+        return PingResponse(pong=False)
 
 
 # ---------- Engine Layer to OS Layer APIs ----------
@@ -165,7 +165,7 @@ async def engine_heartbeat(
     http_addr: str,
     engine_id: int,
     engine_name: str,
-    runtime_info: "EngineRuntimeInfo",
+    runtime_info: EngineRuntimeInfo,
 ) -> EngineHeartbeatResponse:
     try:
         async with aiohttp.ClientSession() as client_session:

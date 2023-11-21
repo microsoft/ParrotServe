@@ -61,9 +61,9 @@ engine_config = EngineConfig(
 def fake_engine_daemon():
     global num_running_jobs
     global num_cached_tokens
+
     resp = register_engine(
         http_addr=OS_URL,
-        engine_name=engine_name,
         engine_config=engine_config,
     )
 
@@ -73,7 +73,7 @@ def fake_engine_daemon():
         resp = engine_heartbeat(
             http_addr=OS_URL,
             engine_id=engine_id,
-            engine_name=engine_name,
+            engine_name=engine_config.engine_name,
             runtime_info=EngineRuntimeInfo(
                 num_cached_tokens=num_cached_tokens,
                 num_running_jobs=num_running_jobs,
@@ -187,7 +187,17 @@ async def free_context(request: Request):
 
 @app.post("/ping")
 async def ping(request: Request):
-    return {}
+    global num_running_jobs
+    global num_cached_tokens
+
+    return {
+        "runtime_info": EngineRuntimeInfo(
+            num_cached_tokens=num_cached_tokens,
+            num_running_jobs=num_running_jobs,
+            cache_mem=num_cached_tokens * 4,  # Simple assumption: 4 bytes per token
+            model_mem=0,
+        ),
+    }
 
 
 if __name__ == "__main__":

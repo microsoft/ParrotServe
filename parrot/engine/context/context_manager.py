@@ -7,7 +7,7 @@ from typing import Dict
 from parrot.constants import NONE_CONTEXT_ID
 
 from .low_level_context import LowLevelContext
-from .primitive_job import PrimitiveJob
+from ..primitive_job import PrimitiveJob
 
 
 class ContextManager:

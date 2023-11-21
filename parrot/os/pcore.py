@@ -21,13 +21,13 @@ from parrot.constants import (
 from parrot.protocol.layer_apis import ping_engine
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger, cprofile
-from parrot.exceptions import ParrotOSUserError
+from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
 
 from .config import OSConfig
 from .process.process import Process
 from .memory.mem_space import MemorySpace
 from .engine import ExecutionEngine, EngineRuntimeInfo
-from .thread_dispatcher import ThreadDispatcher
+from .thread_dispatcher import DispatcherConfig, ThreadDispatcher
 from .tokenizer import Tokenizer
 
 
@@ -48,14 +48,14 @@ class PCore:
     def __init__(self, os_config_path: str):
         # ---------- Config ----------
         with open(os_config_path, "r") as f:
-            self.os_config = dict(json.load(f))
+            os_config = dict(json.load(f))
 
-        # if not OSConfig.verify_config(self.os_config):
-        #     raise ParrotOSInteralError(
-        #         ValueError(f"Invalid OS config: {self.os_config}")
-        #     )
+        if not OSConfig.verify_config(os_config):
+            raise ParrotOSInteralError(f"Invalid OS config: {os_config}")
 
-        self.os_config = OSConfig(**self.os_config)
+        dispatcher_config = os_config.pop("dispatcher")
+        dispatcher_config = DispatcherConfig(**dispatcher_config)
+        self.os_config = OSConfig(**os_config)
 
         if self.os_config.max_proc_num > PROCESS_POOL_SIZE:
             logger.warning(
@@ -77,7 +77,9 @@ class PCore:
             self._ping_engines(engines)
 
         self.dispatcher = ThreadDispatcher(
-            engines=self.engines, flush_engine_callback=flush_engine_callback
+            config=dispatcher_config,
+            engines=self.engines,
+            flush_engine_callback=flush_engine_callback,
         )
         self.tokenizer = Tokenizer()
 
@@ -218,16 +220,20 @@ class PCore:
     def engine_heartbeat(
         self,
         engine_id: int,
-        engine_info: EngineRuntimeInfo,
+        engine_runtime_info: EngineRuntimeInfo,
     ):
         """Update the last seen time of an engine and other engine info."""
 
         if engine_id not in self.engines:
             raise ParrotOSUserError(ValueError(f"Unknown engine_id: {engine_id}"))
+
         engine = self.engines[engine_id]
         self.engine_last_seen_time[engine_id] = time.perf_counter_ns()
-        engine.runtime_info = engine_info
-        logger.debug(f"Engine {engine.name} (id={engine_id}) heartbeat received.")
+        engine.runtime_info = engine_runtime_info
+        logger.debug(
+            f"Engine {engine.name} (id={engine_id}) heartbeat received. "
+            "Runtime info: \n" + engine_runtime_info.display()
+        )
 
     def submit_call(self, pid: int, call: SemanticCall) -> int:
         """Submit a call from a VM to the OS."""

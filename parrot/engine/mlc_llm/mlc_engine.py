@@ -16,11 +16,14 @@ import psutil
 
 from parrot.utils import get_logger
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.protocol.layer_apis import engine_heartbeat
-from parrot.constants import NONE_CONTEXT_ID
+from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
+from parrot.constants import NONE_CONTEXT_ID, UNKNOWN_DATA_FIELD
 
+from ..context.text_context import TextContext
+from ..context.context_manager import ContextManager
+from ..latency_analyzer import LatencyAnalyzer
+from ..scheduler import Scheduler
 from ..llm_engine import LLMEngine
-from ..runtime_info import EngineRuntimeInfo
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import MLCConfig, EngineConfig, SchedulerConfig
 
@@ -47,7 +50,10 @@ class MLCEngine(LLMEngine):
 
         scheduler_config = engine_config.pop("scheduler")
         scheduler_config = SchedulerConfig(**scheduler_config)
+        scheduler_config.max_batch_size = 999999  # Batching for MLC-LLM is meaningless
+        scheduler_config.max_tokens_sum = 9999999999999  # Unlimited
 
+        # ---------- Configs ----------
         mlc_config = MLCConfig(**engine_config.pop("instance"))
         self.engine_config = EngineConfig(
             dtype="float16",  # A fake dtype for now
@@ -71,13 +77,19 @@ class MLCEngine(LLMEngine):
             device=mlc_config.device,
         )
         # end_memory = get_memory(is_gpu, gpu_no)
-        self.model_mem = 0  # MiB
+        self.model_mem = UNKNOWN_DATA_FIELD
 
         # logger.info(
         #     f"Model {self.engine_config.model_name} loaded. Total size: {self.model_mem} MiB"
         # )
 
         self._current_context_id = NONE_CONTEXT_ID
+
+        # ---------- Components ----------
+        self.scheduler = Scheduler(scheduler_config)
+        self.latency_analyzer = LatencyAnalyzer()
+        self.context_manager = ContextManager()
+
         self._register_engine(self.engine_config)
 
         logger.info(
@@ -90,10 +102,21 @@ class MLCEngine(LLMEngine):
             )
         )
 
+    def _add_job(self, job: PrimitiveJob):
+        logger.debug(f"Adding job: {job}")
+        self.scheduler.add_job(job)
+        self.context_manager.bind_job_context(
+            job,
+            TextContext,
+        )
+
     def _execute_job(self, job: PrimitiveJob):
         if isinstance(job, Fill):
             st = time.perf_counter_ns()
+
             self.chat_module._prefill(job.text)
+            job.context.append_text(job.text, role_is_user=True)
+
             ed = time.perf_counter_ns()
             logger.debug(
                 f"Fill time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
@@ -111,8 +134,12 @@ class MLCEngine(LLMEngine):
                 logger.debug(
                     f"Generate time: {(ed - st) / 1e9:.3f} (s). Stats: {self.chat_module.stats()}"
                 )
+            generated_text = self.chat_module._get_message()
+            job.context.append_text(generated_text, role_is_user=False)
         else:
             raise NotImplementedError
+
+        job.finish_event.set()
 
     # ---------- Public APIs ----------
 
@@ -134,7 +161,10 @@ class MLCEngine(LLMEngine):
             text=payload["text"],
         )
 
-        self._execute_job(fill_job)
+        # self._execute_job(fill_job)
+        self._add_job(fill_job)
+
+        await fill_job.finish_event.wait()
 
         return {
             "filled_len": len(fill_job.text),
@@ -157,9 +187,12 @@ class MLCEngine(LLMEngine):
             sampling_config=SamplingConfig(**payload["sampling_config"]),
         )
 
-        self._execute_job(generation_job)
+        # self._execute_job(generation_job)
+        self._add_job(generation_job)
 
-        generated_text = self.chat_module._get_message()
+        await generation_job.finish_event.wait()
+
+        generated_text = generation_job.context.get_latest_context_text()
 
         return {
             "generated_text": generated_text,
@@ -181,37 +214,49 @@ class MLCEngine(LLMEngine):
         ), "MLCEngine only supports one active context."
 
         self._current_context_id = NONE_CONTEXT_ID
+        self.context_manager.free_context(context_id)
 
         self.chat_module.reset_chat()
         return {
             "context_len": 0,
         }
 
-    async def heartbeat(self):
-        """Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
+    def get_runtime_info(self) -> EngineRuntimeInfo:
+        num_cached_tokens = UNKNOWN_DATA_FIELD
+        num_running_jobs = self.scheduler.num_running_jobs
+        num_total_jobs = self.scheduler.num_total_jobs
+        cache_mem = UNKNOWN_DATA_FIELD
+        recent_average_latency = self.latency_analyzer.get_average_latency()
 
-        if not self.connect_to_os:
-            return
-
-        logger.debug(f"Heartbeat sent to OS.")
-
-        # TODO(chaofan): Profile real data
-        num_cached_tokens = 0
-        cache_mem = 0.0
-        num_running_jobs = 0
-
-        resp = await engine_heartbeat(
-            http_addr=self.os_http_address,
-            engine_id=self.engine_id,
-            engine_name=self.engine_config.engine_name,
-            runtime_info=EngineRuntimeInfo(
-                num_cached_tokens=num_cached_tokens,
-                num_running_jobs=num_running_jobs,
-                cache_mem=cache_mem,
-                model_mem=self.model_mem,  # MiB
-            ),
+        return EngineRuntimeInfo(
+            num_cached_tokens=num_cached_tokens,
+            num_running_jobs=num_running_jobs,
+            num_total_jobs=num_total_jobs,
+            cache_mem=cache_mem,
+            model_mem=self.model_mem,
+            recent_average_latency=recent_average_latency,
         )
 
     async def engine_iter(self):
-        # Do nothing
-        pass
+        # If there is no job, we don't need to run.
+        if self.scheduler.empty:
+            return
+
+        jobs = self.scheduler.schedule()
+        selected_job = None
+
+        for job in jobs:
+            if (
+                job.context_id == self._current_context_id
+                or self._current_context_id == NONE_CONTEXT_ID
+            ):
+                selected_job = job
+                break
+
+        st = time.perf_counter_ns()
+        self._execute_job(selected_job)
+        ed = time.perf_counter_ns()
+        e2e_time = ed - st
+
+        self.latency_analyzer.add_latency(e2e_time)
+        self.scheduler.finish()

@@ -4,7 +4,7 @@ import asyncio
 
 import parrot as P
 
-from parrot.engine.runtime_info import EngineRuntimeInfo
+from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.os.engine import ExecutionEngine
 from parrot.os.memory.context import Context
@@ -90,7 +90,8 @@ def test_free_context():
 
 def test_ping_engine():
     with fake_engine_server():
-        assert ping_engine(http_addr=ENGINE_URL)
+        resp = ping_engine(http_addr=ENGINE_URL)
+        assert resp.pong
 
 
 def test_engine_heartbeat():

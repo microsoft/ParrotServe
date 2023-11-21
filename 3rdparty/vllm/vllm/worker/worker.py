@@ -306,7 +306,7 @@ class Worker:
         torch.cuda.synchronize()
         ed = time.perf_counter_ns()
 
-        print(f"Model execution time: {(ed - st) / 1e6:.2f} ms")
+        # print(f"Model execution time: {(ed - st) / 1e6:.2f} ms")
 
         return output
 
