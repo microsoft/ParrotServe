@@ -136,6 +136,7 @@ def ping_engine(http_addr: str) -> PingResponse:
             retry_times=5,
         )
     except BaseException as e:
+        print(e.args)
         return PingResponse(pong=False)
 
 

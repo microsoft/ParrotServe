@@ -85,6 +85,7 @@ def _test_single_server_simple_serving(config):
         wait_ready_time=wait_ready_time,
         connect_to_os=False,
     ):
+        time.sleep(5)
         asyncio.run(main())
 
 

@@ -51,11 +51,11 @@ def _test_single_engine_simple_serving(config):
         ),
     )
 
-    if engine_type == "native":
+    async def execute_job(job):
+        engine._add_job(job)
+        await job.finish_event.wait()
 
-        async def execute_job(job):
-            engine._add_job(job)
-            await job.finish_event.wait()
+    if engine_type == "native":
 
         async def main():
             create_task_in_loop(engine.engine_loop())
@@ -63,20 +63,15 @@ def _test_single_engine_simple_serving(config):
             await execute_job(gen_job)
             print(tokenizer.decode(gen_job.context.token_ids))
 
-        try:
-            asyncio.run(main(), debug=True)
-        except BaseException as e:
-            print("Internal error happends:", e)
-
     elif engine_type == "mlcllm":
-        engine._execute_job(fill_job)
-        engine._execute_job(gen_job)
-        print(engine.chat_module._get_message())
-    elif engine_type == "openai":
 
-        async def execute_job(job):
-            engine._add_job(job)
-            await job.finish_event.wait()
+        async def main():
+            create_task_in_loop(engine.engine_loop())
+            await execute_job(fill_job)
+            await execute_job(gen_job)
+            print(engine.chat_module._get_message())
+
+    elif engine_type == "openai":
 
         async def main():
             create_task_in_loop(engine.engine_loop())
@@ -84,10 +79,10 @@ def _test_single_engine_simple_serving(config):
             await execute_job(gen_job)
             print(gen_job.context.get_latest_context_text())
 
-        try:
-            asyncio.run(main(), debug=True)
-        except BaseException as e:
-            print("Internal error happends:", e)
+    try:
+        asyncio.run(main(), debug=True)
+    except BaseException as e:
+        print("Internal error happends:", e)
 
     # if engine_type != "mlcllm":
     #     engine.free_context({"context_id": 0})

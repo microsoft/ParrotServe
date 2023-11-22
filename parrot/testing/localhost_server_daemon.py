@@ -9,7 +9,13 @@ The server daemon will run in a separate process created by the lib Python multi
 
 
 import contextlib
-from multiprocessing import Process
+
+import torch
+
+from torch import multiprocessing
+
+# from multiprocessing import Process
+
 import uvicorn
 import time
 
@@ -26,17 +32,28 @@ from .get_configs import get_sample_engine_config_path, get_sample_os_config_pat
 from .fake_engine_server import app as FakeEngineApp
 from .fake_os_server import app as FakeOSApp
 
+# RuntimeError: Cannot re-initialize CUDA in forked subprocess.
+# To use CUDA with multiprocessing, you must use the 'spawn' start method
+# torch.multiprocessing.set_start_method("spawn")
+
+# Issue: https://github.com/pytorch/pytorch/issues/3492
+ctx = multiprocessing.get_context("spawn")
+Process = ctx.Process
+
+
+# NOTE(chaofan): Do not use closure here, since the torch "spawn" method
+# need to pickle the function.
+def _launch_fake_os():
+    uvicorn.run(
+        FakeOSApp,
+        host=DEFAULT_SERVER_HOST,
+        port=DEFAULT_OS_SERVER_PORT,
+        log_level="info",
+    )
+
 
 @contextlib.contextmanager
 def fake_os_server():
-    def _launch_fake_os():
-        uvicorn.run(
-            FakeOSApp,
-            host=DEFAULT_SERVER_HOST,
-            port=DEFAULT_OS_SERVER_PORT,
-            log_level="info",
-        )
-
     p = Process(target=_launch_fake_os, daemon=True)
     p.start()
     time.sleep(0.1)
@@ -47,16 +64,17 @@ def fake_os_server():
     time.sleep(0.1)
 
 
+def _launch_fake_engine():
+    uvicorn.run(
+        FakeEngineApp,
+        host=DEFAULT_SERVER_HOST,
+        port=DEFAULT_ENGINE_SERVER_PORT,
+        log_level="info",
+    )
+
+
 @contextlib.contextmanager
 def fake_engine_server():
-    def _launch_fake_engine():
-        uvicorn.run(
-            FakeEngineApp,
-            host=DEFAULT_SERVER_HOST,
-            port=DEFAULT_ENGINE_SERVER_PORT,
-            log_level="info",
-        )
-
     p = Process(target=_launch_fake_engine, daemon=True)
     p.start()
     time.sleep(0.1)
@@ -67,14 +85,15 @@ def fake_engine_server():
     time.sleep(0.1)
 
 
+def _launch_os():
+    os_config_path = get_sample_os_config_path("localhost_os.json")
+    release_mode = False
+
+    start_os_server(os_config_path=os_config_path, release_mode=release_mode)
+
+
 @contextlib.contextmanager
 def os_server():
-    def _launch_os():
-        os_config_path = get_sample_os_config_path("localhost_os.json")
-        release_mode = False
-
-        start_os_server(os_config_path=os_config_path, release_mode=release_mode)
-
     p = Process(target=_launch_os, daemon=True)
     p.start()
     time.sleep(0.1)
@@ -85,19 +104,27 @@ def os_server():
     time.sleep(0.1)
 
 
+def _launch_engine(engine_config_name: str, connect_to_os: bool):
+    engine_config_path = get_sample_engine_config_path(engine_config_name)
+    start_engine_server(
+        engine_config_path=engine_config_path, connect_to_os=connect_to_os
+    )
+
+
 @contextlib.contextmanager
 def engine_server(
     engine_config_name: str,
     wait_ready_time: float = 0.1,
     connect_to_os: bool = False,
 ):
-    def _launch_engine():
-        engine_config_path = get_sample_engine_config_path(engine_config_name)
-        start_engine_server(
-            engine_config_path=engine_config_path, connect_to_os=connect_to_os
-        )
-
-    p = Process(target=_launch_engine, daemon=True)
+    p = Process(
+        target=_launch_engine,
+        args=(
+            engine_config_name,
+            connect_to_os,
+        ),
+        daemon=True,
+    )
     p.start()
     time.sleep(wait_ready_time)
 

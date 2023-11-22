@@ -61,12 +61,14 @@ def test_call_function_with_pyobjects():
 
 
 def test_wrongly_pass_output_argument():
+    # NOTE: output argument can only be passed by name
+
     @P.function()
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
 
     with pytest.raises(ValueError):
-        test("a", b="b", c="c")
+        test("a", "b", "c")
 
 
 def test_serialize_call():

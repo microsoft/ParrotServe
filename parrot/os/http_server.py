@@ -12,6 +12,7 @@ from uvicorn import Config, Server
 
 from parrot.program.function import SemanticCall
 from parrot.os.pcore import PCore
+from parrot.os.os_creator import create_os
 from parrot.os.engine import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.utils import (
@@ -108,12 +109,20 @@ async def register_engine(request: Request):
     return {"engine_id": engine_id}
 
 
-def start_server(os_config_path: str, release_mode: bool = False):
+def start_server(
+    os_config_path: str,
+    release_mode: bool = False,
+    override_args: dict = {},
+):
     global pcore
     global app
 
     # The Operating System Core
-    pcore = PCore(os_config_path)
+    pcore = create_os(
+        os_config_path=os_config_path,
+        release_mode=release_mode,
+        override_args=override_args,
+    )
 
     loop = asyncio.new_event_loop()
     config = Config(
@@ -132,6 +141,18 @@ def start_server(os_config_path: str, release_mode: bool = False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parrot OS server")
+
+    parser.add_argument(
+        "--host",
+        type=str,
+        help="Host of OS server",
+    )
+
+    parser.add_argument(
+        "--port",
+        type=int,
+        help="Port of OS server",
+    )
 
     parser.add_argument(
         "--config_path",
@@ -164,6 +185,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     release_mode = args.release_mode
 
+    # Set log output file
     if args.log_dir is not None:
         set_log_output_file(
             log_file_dir_path=args.log_dir,
@@ -175,7 +197,14 @@ if __name__ == "__main__":
             file_name="os_stdout.out",
         )
 
+    override_args = {}
+    if args.host is not None:
+        override_args["host"] = args.host
+    if args.port is not None:
+        override_args["port"] = args.port
+
     start_server(
         os_config_path=args.config_path,
         release_mode=release_mode,
+        override_args=override_args,
     )

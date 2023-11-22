@@ -12,6 +12,7 @@ start the OS server at: http://localhost:9000
 
 import asyncio
 import argparse
+from dataclasses import asdict
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 import uvicorn
@@ -190,13 +191,15 @@ async def ping(request: Request):
     global num_running_jobs
     global num_cached_tokens
 
+    rt_info = EngineRuntimeInfo(
+        num_cached_tokens=num_cached_tokens,
+        num_running_jobs=num_running_jobs,
+        cache_mem=num_cached_tokens * 4,  # Simple assumption: 4 bytes per token
+        model_mem=0,
+    )
+
     return {
-        "runtime_info": EngineRuntimeInfo(
-            num_cached_tokens=num_cached_tokens,
-            num_running_jobs=num_running_jobs,
-            cache_mem=num_cached_tokens * 4,  # Simple assumption: 4 bytes per token
-            model_mem=0,
-        ),
+        "runtime_info": asdict(rt_info),
     }
 
 

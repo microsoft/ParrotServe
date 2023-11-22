@@ -10,6 +10,8 @@ from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_OS_SERVER_PORT
 
 @dataclass
 class OSConfig:
+    """Config for OS."""
+
     host: str = DEFAULT_SERVER_HOST
     port: int = DEFAULT_OS_SERVER_PORT
     max_proc_num: int = 2048

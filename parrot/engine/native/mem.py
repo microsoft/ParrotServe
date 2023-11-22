@@ -162,7 +162,6 @@ class ModelCacheStorage:
 
             # self.cos_cache = None
             # self.sin_cache = None
-            self.cos_sin_cache
 
 
 # Initialize it when the model is loaded.

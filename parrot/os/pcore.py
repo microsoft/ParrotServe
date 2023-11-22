@@ -2,7 +2,6 @@
 # Licensed under the MIT license.
 
 
-import json
 from typing import Dict, List
 import asyncio
 import time
@@ -45,14 +44,8 @@ class PCore:
     - Tokenizer.
     """
 
-    def __init__(self, os_config_path: str):
+    def __init__(self, os_config: Dict):
         # ---------- Config ----------
-        with open(os_config_path, "r") as f:
-            os_config = dict(json.load(f))
-
-        if not OSConfig.verify_config(os_config):
-            raise ParrotOSInteralError(f"Invalid OS config: {os_config}")
-
         dispatcher_config = os_config.pop("dispatcher")
         dispatcher_config = DispatcherConfig(**dispatcher_config)
         self.os_config = OSConfig(**os_config)

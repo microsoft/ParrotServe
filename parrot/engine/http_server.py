@@ -4,7 +4,8 @@
 
 import argparse
 import asyncio
-from typing import Optional
+from dataclasses import asdict
+from typing import Optional, Dict
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from uvicorn import Config, Server
@@ -58,18 +59,24 @@ async def free_context(request: Request):
 
 @app.post("/ping")
 async def ping(request: Request):
+    rt_info = llm_engine.get_runtime_info()
     return {
-        "runtime_info": llm_engine.get_runtime_info(),
+        "runtime_info": asdict(rt_info),
     }
 
 
-def start_server(engine_config_path: str, connect_to_os: bool = True):
+def start_server(
+    engine_config_path: str,
+    connect_to_os: bool = True,
+    override_args: Dict = {},
+):
     global llm_engine
     global app
 
     llm_engine = create_engine(
         engine_config_path=engine_config_path,
         connect_to_os=connect_to_os,
+        override_args=override_args,
     )
 
     loop = asyncio.new_event_loop()
@@ -89,6 +96,24 @@ def start_server(engine_config_path: str, connect_to_os: bool = True):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parrot native engine HTTP server")
+
+    parser.add_argument(
+        "--host",
+        type=str,
+        help="Host of engine server to override the config file.",
+    )
+
+    parser.add_argument(
+        "--port",
+        type=int,
+        help="Port of engine server to override the config file.",
+    )
+
+    parser.add_argument(
+        "--engine_name",
+        type=str,
+        help="Port of engine server to override the config file.",
+    )
 
     parser.add_argument(
         "--config_path",
@@ -119,6 +144,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # Set the log file
     if args.log_dir is not None:
         set_log_output_file(
             log_file_dir_path=args.log_dir,
@@ -130,6 +156,18 @@ if __name__ == "__main__":
             file_name="engine_stdout.out",
         )
 
+    override_args = {}
+    if args.host is not None:
+        override_args["host"] = args.host
+    if args.port is not None:
+        override_args["port"] = args.port
+    if args.engine_name is not None:
+        override_args["engine_name"] = args.engine_name
+
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")
 
-    start_server(args.config_path, connect_to_os=not args.without_os)
+    start_server(
+        engine_config_path=args.config_path,
+        connect_to_os=not args.without_os,
+        override_args=override_args,
+    )

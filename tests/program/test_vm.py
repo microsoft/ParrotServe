@@ -31,7 +31,7 @@ def test_vm_import():
         vm = P.VirtualMachine(os_http_addr=TESTING_SERVER_URL, mode="debug")
         vm.import_function(
             function_name="tell_me_a_joke",
-            module_path="app.daily_agents",
+            module_path="app.common",
         )
 
 

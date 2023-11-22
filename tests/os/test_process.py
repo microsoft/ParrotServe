@@ -7,19 +7,23 @@ from parrot.testing.localhost_server_daemon import fake_engine_server
 from parrot.os.process.process import Process
 from parrot.os.memory.mem_space import MemorySpace
 from parrot.os.engine import ExecutionEngine
+from parrot.os.thread_dispatcher import DispatcherConfig
 from parrot.os.thread_dispatcher import ThreadDispatcher
 from parrot.os.tokenizer import Tokenizer
 
 
 def init():
+    dispatcher_config = DispatcherConfig()
+
     mem_space = MemorySpace()
     tokenizer = Tokenizer()
     engine_id = 0
     engine = ExecutionEngine(engine_id, engine_config)
-    dispatcher = ThreadDispatcher({engine_id: engine})
+    dispatcher = ThreadDispatcher(config=dispatcher_config, engines={engine_id: engine})
 
     pid = 0
     process = Process(pid, dispatcher, mem_space, tokenizer)
+
     return process
 
 

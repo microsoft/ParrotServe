@@ -8,7 +8,9 @@ from parrot.testing.localhost_server_daemon import os_server, engine_server
 def test_engine_register():
     with os_server():
         with engine_server(
-            "native", "opt-125m.json", wait_ready_time=2.0, connect_to_os=True
+            engine_config_name="opt-125m.json",
+            wait_ready_time=2.0,
+            connect_to_os=True,
         ):
             time.sleep(5)  # test heartbeat
 

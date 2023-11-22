@@ -3,6 +3,7 @@
 
 
 import json
+from typing import Dict
 
 from parrot.utils import get_logger
 
@@ -22,12 +23,17 @@ from parrot.exceptions import ParrotEngineInteralError
 logger = get_logger("Engine Creator")
 
 
-def create_engine(engine_config_path: str, connect_to_os: bool = True) -> LLMEngine:
+def create_engine(
+    engine_config_path: str,
+    connect_to_os: bool = True,
+    override_args: Dict = {},
+) -> LLMEngine:
     """Create an execution engine.
 
     Args:
         engine_config_path: str. The path to the engine config file.
         connect_to_os: bool. Whether to connect to the OS.
+        override_args: Dict. The override arguments.
 
     Returns:
         LLMEngine. The created execution engine.
@@ -35,6 +41,8 @@ def create_engine(engine_config_path: str, connect_to_os: bool = True) -> LLMEng
 
     with open(engine_config_path) as f:
         engine_config = dict(json.load(f))
+
+    engine_config.update(override_args)
 
     if not EngineConfig.verify_config(engine_config):
         raise ParrotEngineInteralError(f"Invalid engine config: {engine_config}")
