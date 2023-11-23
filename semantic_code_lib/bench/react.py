@@ -9,25 +9,45 @@ import parrot as P
 
 def normal_multi_stage_react_agent(
     stage0_input: P.Input,
-    stage0_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage0_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage1_input: P.Input,
-    stage1_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage1_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage2_input: P.Input,
-    stage2_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage2_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage3_input: P.Input,
-    stage3_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage3_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage4_input: P.Input,
-    stage4_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage4_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage5_input: P.Input,
-    stage5_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage5_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage6_input: P.Input,
-    stage6_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage6_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage7_input: P.Input,
-    stage7_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage7_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage8_input: P.Input,
-    stage8_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage8_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
     stage9_input: P.Input,
-    stage9_output: P.Output(ignore_tokenizer_eos=True, max_gen_length=40),
+    stage9_output: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=40)
+    ),
 ):
     """Long system prompt:
 

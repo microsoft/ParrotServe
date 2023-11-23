@@ -5,6 +5,7 @@
     "port": 9001,
     "engine_type": "mlcllm",
     "random_seed": 0,
+    "max_jobs_num": 4,
     "instance": {
         "model_path": "/home/v-chaofanlin/llm-playground/mlc/dist/prebuilt/mlc-chat-Llama-2-13b-chat-hf-q4f16_1",
         "lib_path": "/home/v-chaofanlin/llm-playground/mlc/dist/prebuilt/lib/Llama-2-13b-chat-hf-q4f16_1-vulkan.so",

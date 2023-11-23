@@ -11,7 +11,9 @@ refine_instruction = "Test " * 10
 
 def chain_sum_test(
     previous_document: P.Input,
-    refined_document: P.Output(ignore_tokenizer_eos=True, max_gen_length=20),  # 20 Gen
+    refined_document: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=20)
+    ),  # 20 Gen
 ):
     """"""
 

@@ -47,9 +47,6 @@ class Process:
         self.executor = Executor(tokenizer)
         self.placeholders_map: Dict[int, Placeholder] = {}  # id -> placeholder
 
-        # ---------- DAG ----------
-        self.native_code_node = DAGNode()
-
         # ---------- Threads ----------
         self.threads: List[Thread] = []
         self.threads_pool = RecyclePool(THREAD_POOL_SIZE)
@@ -58,7 +55,6 @@ class Process:
         self.dead = False  # Mark if the process is dead
         self.bad = False
         self.bad_exception: Optional[BaseException] = None
-        self._calls: Queue[SemanticCall] = Queue()
 
     @property
     def live(self):
@@ -76,7 +72,8 @@ class Process:
         logger.info(f"Free thread {thread.tid}")
         self.threads_pool.free(thread.tid)
         self.threads.remove(thread)
-        thread.engine.num_threads -= 1
+
+        thread.engine.remove_thread(thread)
 
         # For stateful call
         if not thread.is_stateful:
@@ -89,8 +86,13 @@ class Process:
                 context_id=thread.context_id,
             )
 
-    def _rewrite_call(self, call: SemanticCall):
-        """Rewrite the futures to placeholders."""
+    # ---------- Interfaces to PCore ----------
+
+    def rewrite_call(self, call: SemanticCall):
+        r"""Rewrite the "Futures (Program-level)" to "Placeholders (OS-level)",
+        using the namespace of the process.
+        """
+
         node = DAGNode(call)
         call.node = node
 
@@ -119,25 +121,22 @@ class Process:
                 self.placeholders_map[future.id] = Placeholder(value.id)
             call.output_futures[i] = self.placeholders_map[future.id]
 
-    def _execute_call(self, call: SemanticCall):
+    def make_thread(self, call: SemanticCall) -> Thread:
+        # Mark all placeholders as start
+        for _, value in call.bindings.items():
+            if isinstance(value, Placeholder):
+                value.start_event.set()
+
+        # Get state context (if any)
+        context_id = self.memory_space.get_state_context_id(
+            pid=self.pid,
+            func_name=call.func.name,
+        )
+
+        return self._new_thread(call, context_id)
+
+    def execute_thread(self, thread: Thread):
         try:
-            # Mark all placeholders as start
-            for _, value in call.bindings.items():
-                if isinstance(value, Placeholder):
-                    value.start_event.set()
-
-            # Get state context (if any)
-            context_id = self.memory_space.get_state_context_id(
-                pid=self.pid,
-                func_name=call.func.name,
-            )
-
-            # Create a new thread
-            thread = self._new_thread(call, context_id)
-
-            # Dispatch the thread to some engine
-            self.dispatcher.dispatch(thread)
-
             # Allocate memory
             self.memory_space.set_thread_ctx(thread)
 
@@ -146,27 +145,9 @@ class Process:
         except ParrotOSUserError as e:
             self.exception_interrupt(e)
 
-    # ---------- Interfaces to PCore ----------
-
     def exception_interrupt(self, exception: BaseException):
         self.bad = True
         self.bad_exception = exception
-
-    def submit_call(self, call: SemanticCall):
-        # Rewrite the call using namespace
-        # Submit call will only put the call into a Queue, and the call will be executed later.
-        # This is for get the partial DAG and do optimized scheduling.
-
-        # NOTE(chaofan): For stateful call, since the queue is FIFO, the state contexts are
-        # correctly maintained.
-        self._rewrite_call(call)
-
-        self._calls.put_nowait(call)
-
-    def execute_calls(self):
-        while not self._calls.empty():
-            call = self._calls.get()
-            self._execute_call(call)
 
     def free_process(self):
         self.monitor_threads()

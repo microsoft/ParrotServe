@@ -107,8 +107,10 @@ class PCore:
     def _ping_engines(self, engines: List[ExecutionEngine]):
         for engine in engines:
             if not engine.dead:
-                pong = ping_engine(engine.http_address)
-                if not pong:
+                resp = ping_engine(engine.http_address)
+                if resp.pong:
+                    engine.runtime_info = resp.runtime_info
+                else:
                     engine.dead = True
 
     def _sweep_dead_clients(self):
@@ -151,20 +153,6 @@ class PCore:
             raise process.bad_exception
 
     # ---------- Public APIs ----------
-
-    async def os_loop(self):
-        """Start the OS loop."""
-
-        while True:
-            self._check_expired()
-            self._sweep_dead_clients()
-
-            for process in self.processes.values():
-                if process.live:
-                    process.execute_calls()
-                    process.monitor_threads()
-
-            await asyncio.sleep(OS_LOOP_INTERVAL)
 
     def register_vm(self) -> int:
         """Register a new VM as a process in the OS."""
@@ -231,10 +219,23 @@ class PCore:
     def submit_call(self, pid: int, call: SemanticCall) -> int:
         """Submit a call from a VM to the OS."""
 
-        self._check_process(pid)
+        # Submit call will only put the call into a Queue, and the call will be executed later.
+        # This is for get the partial DAG and do optimized scheduling.
 
+        # NOTE(chaofan): For stateful call, since the queue is FIFO, the state contexts are
+        # correctly maintained.
+
+        self._check_process(pid)
         process = self.processes[pid]
-        process.submit_call(call)
+
+        # Rewrite the call using namespace
+        process.rewrite_call(call)
+
+        # Convert it to a "Thread"
+        thread = process.make_thread(call)
+
+        # Push it to the dispatcher
+        self.dispatcher.push_thread(thread)
 
         logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid}). ')
 
@@ -250,9 +251,6 @@ class PCore:
             )
         placeholder = process.placeholders_map[placeholder_id]
 
-        placeholder.out_nodes.append(process.native_code_node)
-        process.native_code_node.add_in_edge()
-
         # NOTE(chaofan): The "start event" of the placeholder is set when the related process is executed.
         # It is to ensure the "check_process" is called after the process is executed.
         await placeholder.start_event.wait()
@@ -267,6 +265,21 @@ class PCore:
 
         logger.debug(f"Placeholder (id={placeholder_id}) fetched.")
 
-        process.native_code_node.remove_in_edge()
-
         return content
+
+    async def os_loop(self):
+        """Start the OS loop."""
+
+        while True:
+            self._check_expired()
+            self._sweep_dead_clients()
+
+            threads = self.dispatcher.dispatch()
+            for thread in threads:
+                thread.process.execute_thread(thread)
+
+            for process in self.processes.values():
+                if process.live:
+                    process.monitor_threads()
+
+            await asyncio.sleep(OS_LOOP_INTERVAL)

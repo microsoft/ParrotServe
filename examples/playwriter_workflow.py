@@ -18,7 +18,7 @@ vm = P.VirtualMachine(
 def write_synopsis(
     title: P.Input,
     era: P.Input,
-    synopsis: P.Output(max_gen_length=200, ignore_tokenizer_eos=True),
+    synopsis: P.Output(P.SamplingConfig(max_gen_length=200, ignore_tokenizer_eos=True)),
 ):
     """You are a playwright. Given the title of play and the era it is set in, it is your job to write a synopsis for that title.
 
@@ -30,7 +30,7 @@ def write_synopsis(
 @P.function(formatter=P.allowing_newline)
 def write_review(
     synopsis: P.Input,
-    review: P.Output(max_gen_length=200, ignore_tokenizer_eos=True),
+    review: P.Output(P.SamplingConfig(max_gen_length=200, ignore_tokenizer_eos=True)),
 ):
     """You are a play critic from the New York Times. Given the synopsis of play, it is your job to write a review for that play.
 
@@ -45,7 +45,7 @@ def write_post(
     location: P.Input,
     synopsis: P.Input,
     review: P.Input,
-    post: P.Output(max_gen_length=200, ignore_tokenizer_eos=True),
+    post: P.Output(P.SamplingConfig(max_gen_length=200, ignore_tokenizer_eos=True)),
 ):
     """You are a social media manager for a theater company. Given the title of play, the era it is set in, the date, time and location, the synopsis of the play, and the review of the play, it is your job to write a social media post for that play.
 

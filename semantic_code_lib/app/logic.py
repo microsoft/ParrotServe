@@ -14,7 +14,7 @@ import parrot as P
 @P.function(formatter=P.allowing_newline)
 def summarize_map(
     doc_pieces: P.Input,
-    summary: P.Output(temperature=0.5, max_gen_length=50),
+    summary: P.Output(P.SamplingConfig(temperature=0.5, max_gen_length=50)),
 ):
     """The following is a piece of a document:
     {{doc_pieces}}
@@ -27,7 +27,7 @@ def summarize_map(
 @P.function(formatter=P.allowing_newline)
 def summarize_reduce(
     doc_summaries: P.Input,
-    final_summary: P.Output(temperature=0.7, max_gen_length=200),
+    final_summary: P.Output(P.SamplingConfig(temperature=0.7, max_gen_length=200)),
 ):
     """The following is set of summaries:
 

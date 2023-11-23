@@ -12,10 +12,6 @@ import contextlib
 
 import torch
 
-from torch import multiprocessing
-
-# from multiprocessing import Process
-
 import uvicorn
 import time
 
@@ -37,8 +33,14 @@ from .fake_os_server import app as FakeOSApp
 # torch.multiprocessing.set_start_method("spawn")
 
 # Issue: https://github.com/pytorch/pytorch/issues/3492
+
+from torch import multiprocessing
+
 ctx = multiprocessing.get_context("spawn")
-Process = ctx.Process
+TorchProcess = ctx.Process
+
+
+from multiprocessing import Process as StdProcess
 
 
 # NOTE(chaofan): Do not use closure here, since the torch "spawn" method
@@ -54,7 +56,7 @@ def _launch_fake_os():
 
 @contextlib.contextmanager
 def fake_os_server():
-    p = Process(target=_launch_fake_os, daemon=True)
+    p = StdProcess(target=_launch_fake_os, daemon=True)
     p.start()
     time.sleep(0.1)
 
@@ -75,7 +77,7 @@ def _launch_fake_engine():
 
 @contextlib.contextmanager
 def fake_engine_server():
-    p = Process(target=_launch_fake_engine, daemon=True)
+    p = StdProcess(target=_launch_fake_engine, daemon=True)
     p.start()
     time.sleep(0.1)
 
@@ -94,7 +96,7 @@ def _launch_os():
 
 @contextlib.contextmanager
 def os_server():
-    p = Process(target=_launch_os, daemon=True)
+    p = StdProcess(target=_launch_os, daemon=True)
     p.start()
     time.sleep(0.1)
 
@@ -117,7 +119,7 @@ def engine_server(
     wait_ready_time: float = 0.1,
     connect_to_os: bool = False,
 ):
-    p = Process(
+    p = TorchProcess(
         target=_launch_engine,
         args=(
             engine_config_name,

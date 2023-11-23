@@ -24,11 +24,11 @@ def init():
     pid = 0
     process = Process(pid, dispatcher, mem_space, tokenizer)
 
-    return process
+    return dispatcher, process
 
 
 def test_single_call():
-    proc = init()
+    dispatcher, proc = init()
 
     async def main():
         @P.function()
@@ -39,8 +39,14 @@ def test_single_call():
         call = test("Apple", "Banana")
         future_id = call.output_futures[0].id
 
-        proc._rewrite_call(call)
-        proc._execute_call(call)
+        proc.rewrite_call(call)
+        thread = proc.make_thread(call)
+        dispatcher.push_thread(thread)
+
+        dispatched_threads = dispatcher.dispatch()
+
+        assert len(dispatched_threads) == 1
+        proc.execute_thread(dispatched_threads[0])
 
         content = await proc.placeholders_map[future_id].get()
 

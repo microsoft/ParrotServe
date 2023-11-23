@@ -14,7 +14,7 @@ import parrot as P
 @P.function()
 def linux_terminal(
     command: P.Input,
-    output: P.Output(temperature=0.5),
+    output: P.Output(P.SamplingConfig(temperature=0.5)),
 ):
     """I want you to act as a linux terminal.
     I will type commands and you will reply with what the terminal should show.

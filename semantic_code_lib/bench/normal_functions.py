@@ -8,7 +8,7 @@ import parrot as P
 @P.function()
 def func_1i_1o_genlen_100(
     input1: P.Input,
-    output1: P.Output(ignore_tokenizer_eos=True, max_gen_length=100),
+    output1: P.Output(P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=100)),
 ):
     """
     AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -29,8 +29,8 @@ def func_3i_2o_genlen_100(
     input1: P.Input,
     input2: P.Input,
     input3: P.Input,
-    output1: P.Output(ignore_tokenizer_eos=True, max_gen_length=100),
-    output2: P.Output(ignore_tokenizer_eos=True, max_gen_length=100),
+    output1: P.Output(P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=100)),
+    output2: P.Output(P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=100)),
 ):
     """
     AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

@@ -28,7 +28,7 @@ vm = P.VirtualMachine(
 
 
 @P.function()
-def llm_print(string: P.Input, output: P.Output()):
+def llm_print(string: P.Input, output: P.Output):
     """You are a repeater. Given a string, it is your job to print it out.
     User input: {{string}}
     Your output: {{output}}"""

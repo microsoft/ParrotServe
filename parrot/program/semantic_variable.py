@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Optional
 
 from parrot.protocol.sampling_config import SamplingConfig
+from parrot.protocol.annotation import DispatchAnnotation
 
 
 @dataclass
@@ -54,6 +55,7 @@ class Parameter:
     name: str
     typ: ParamType
     sampling_config: Optional[SamplingConfig] = None
+    dispatch_annotation: Optional[DispatchAnnotation] = None
 
     @property
     def is_input_loc(self) -> bool:

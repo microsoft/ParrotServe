@@ -32,7 +32,6 @@ class NativeEngine(LLMEngine):
         self.engine_config = EngineConfig(
             dtype=native_config.dtype_str,
             device=native_config.device_str,
-            max_batch_size=scheduler_config.max_batch_size,
             **engine_config,
         )
         self.native_config = native_config

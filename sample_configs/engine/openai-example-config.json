@@ -5,6 +5,7 @@
     "port": 9001,
     "engine_type": "openai",
     "random_seed": 0,
+    "max_jobs_num": 64,
     "instance": {
         "api_key": "xxx",
         "api_endpoint": "completion",

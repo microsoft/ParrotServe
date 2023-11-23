@@ -32,8 +32,8 @@ class OpenAIEngine(LLMEngine):
         super().__init__(engine_config, connect_to_os)
 
         scheduler_config = engine_config.pop("scheduler")
-        scheduler_config["max_tokens_sum"] = 9999999999999  # Unlimited
         scheduler_config = SchedulerConfig(**scheduler_config)
+        scheduler_config.max_tokens_sum = 9999999999999  # Unlimited
 
         # ---------- Configs ----------
         self.openai_config = OpenAIConfig(**engine_config.pop("instance"))

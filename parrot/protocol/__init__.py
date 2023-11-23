@@ -2,4 +2,4 @@
 # Licensed under the MIT license.
 
 
-"""Protocols between layers."""
+"""Protocols and common components between layers."""

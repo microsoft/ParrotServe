@@ -1,5 +1,6 @@
 import parrot as P
 import time
+import pytest
 
 from parrot.testing.fake_os_server import TESTING_SERVER_URL
 from parrot.testing.localhost_server_daemon import fake_os_server
@@ -26,6 +27,7 @@ def test_e2e():
         vm.run(main)
 
 
+# @pytest.mark.skip(reason="Not implemented yet")
 def test_vm_import():
     with fake_os_server():
         vm = P.VirtualMachine(os_http_addr=TESTING_SERVER_URL, mode="debug")

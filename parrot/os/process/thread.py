@@ -7,7 +7,7 @@ from typing import List, Optional
 from queue import Queue
 import time
 
-from parrot.program.function import SemanticCall
+from parrot.program.function import Parameter, SemanticCall
 from parrot.protocol.primitive_request import Fill, Generate
 from parrot.utils import get_logger, create_task_in_loop
 from parrot.constants import (
@@ -126,6 +126,16 @@ class Thread:
             if self.prefix_mode == PrefixMode.SAME_CTX
             else self.ctx.parent_context
         )
+
+    @property
+    def max_jobs_num(self) -> int:
+        call_max_jobs_num = 999999
+        for param in self.call.func.body:
+            if isinstance(param, Parameter) and param.dispatch_annotation is not None:
+                call_max_jobs_num = min(
+                    call_max_jobs_num, param.dispatch_annotation.max_jobs_num
+                )
+        return call_max_jobs_num
 
     async def _flush_fill_tokens_buffer(self):
         buffer_len = len(self._fill_tokens_buffer)

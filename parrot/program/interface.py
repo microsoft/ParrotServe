@@ -6,6 +6,7 @@ import inspect
 from typing import Optional, List
 
 from parrot.protocol.sampling_config import SamplingConfig
+from parrot.protocol.annotation import DispatchAnnotation
 from parrot.utils import get_logger
 
 from .future import Future
@@ -20,14 +21,19 @@ logger = get_logger("Interface")
 
 
 class Input:
-    """Annotate the input."""
+    """Annotate the Input semantic variable in the Parrot function signature."""
 
 
 class Output:
-    """Annotate the output."""
+    """Annotate the Output semantic varialbe in the Parrot function signature."""
 
-    def __init__(self, *args, **kwargs):
-        self.sampling_config = SamplingConfig(*args, **kwargs)
+    def __init__(
+        self,
+        sampling_config: SamplingConfig = SamplingConfig(),
+        dispatch_annotation: DispatchAnnotation = DispatchAnnotation(),
+    ):
+        self.sampling_config = sampling_config
+        self.dispatch_annotation = dispatch_annotation
 
 
 def function(
@@ -53,24 +59,28 @@ def function(
             #     Input,
             #     Output,
             # ), "The arguments must be annotated by Input/Output"
-            sampling_config: Optional[SamplingConfig] = None
+
+            kwargs = {}
+
             if param.annotation == Input:
                 param_typ = ParamType.INPUT_LOC
             elif param.annotation == Output:
                 # Default output loc
                 param_typ = ParamType.OUTPUT_LOC
-                sampling_config = SamplingConfig()
+                kwargs = {
+                    "sampling_config": SamplingConfig(),
+                    "dispatch_annotation": DispatchAnnotation(),
+                }
             elif param.annotation.__class__ == Output:
                 # Output loc with sampling config
                 param_typ = ParamType.OUTPUT_LOC
-                sampling_config = param.annotation.sampling_config
+                kwargs = {
+                    "sampling_config": param.annotation.sampling_config,
+                    "dispatch_annotation": param.annotation.dispatch_annotation,
+                }
             else:
                 param_typ = ParamType.INPUT_PYOBJ
-            func_params.append(
-                Parameter(
-                    name=param.name, typ=param_typ, sampling_config=sampling_config
-                )
-            )
+            func_params.append(Parameter(name=param.name, typ=param_typ, **kwargs))
 
         semantic_func = SemanticFunction(
             name=func_name,

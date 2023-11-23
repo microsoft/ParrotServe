@@ -4,7 +4,8 @@
     "max_proc_num": 2048,
     "max_engines_num": 2048,
     "dispatcher": {
-        "policy": "round_robin",
-        "bs_aware": false
+        "dag_aware": false,
+        "app_fifo": false,
+        "max_queue_size": 2048
     }
 }
