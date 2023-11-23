@@ -11,7 +11,7 @@ from parrot.program.function import Constant, ParameterLoc
 from parrot.exceptions import parrot_assert
 
 from ..tokenizer import Tokenizer
-from .placeholder import Placeholder, TokensHolder
+from .placeholder import SVPlaceholder, TokensHolder
 from .primitive_operator import *
 
 
@@ -76,7 +76,7 @@ class TokenIdInterpreter(BaseInterpreter):
                     )
                 else:
                     parrot_assert(
-                        isinstance(param_value, Placeholder),
+                        isinstance(param_value, SVPlaceholder),
                         "If not str, must be a placeholder",
                     )
                     holder = self._get_dataholder(param_value)
@@ -93,7 +93,7 @@ class TokenIdInterpreter(BaseInterpreter):
                         inst = TokenIdPlaceholderFill(input_holder=holder)
             thread.operators.put_nowait(inst)
 
-    def _get_dataholder(self, placeholder: Placeholder) -> TokensHolder:
+    def _get_dataholder(self, placeholder: SVPlaceholder) -> TokensHolder:
         # Create a new data placeholder if not exists
         # Hence, the name of the placeholder must be unique.
         if placeholder.id not in self.tokensholder_map:
@@ -125,7 +125,7 @@ class TextInterpreter(BaseInterpreter):
                     inst = TextConstantFill(param_value)
                 else:
                     parrot_assert(
-                        isinstance(param_value, Placeholder), "Must be a placeholder"
+                        isinstance(param_value, SVPlaceholder), "Must be a placeholder"
                     )
                     if piece.param.is_output:
                         sampling_config = piece.param.sampling_config

@@ -66,13 +66,13 @@ class PCore:
         self.engines: Dict[int, ExecutionEngine] = {}  # engine_id -> engine
         self.mem_space = MemorySpace()
 
-        def flush_engine_callback(engines: List[ExecutionEngine]):
-            self._ping_engines(engines)
+        def _ping_engine_method(engine: ExecutionEngine):
+            self._ping_engine(engine)
 
         self.dispatcher = ThreadDispatcher(
             config=dispatcher_config,
             engines=self.engines,
-            flush_engine_callback=flush_engine_callback,
+            ping_engine_method=_ping_engine_method,
         )
         self.tokenizer = Tokenizer()
 
@@ -104,14 +104,17 @@ class PCore:
             if (cur_time - last_seen_time) / 1e9 > ENGINE_EXPIRE_TIME:
                 self.engines[engine_id].dead = True
 
-    def _ping_engines(self, engines: List[ExecutionEngine]):
-        for engine in engines:
-            if not engine.dead:
-                resp = ping_engine(engine.http_address)
-                if resp.pong:
-                    engine.runtime_info = resp.runtime_info
-                else:
-                    engine.dead = True
+    def _ping_engine(self, engine: ExecutionEngine):
+        if not engine.dead:
+            resp = ping_engine(engine.http_address)
+            if resp.pong:
+                engine.runtime_info = EngineRuntimeInfo(**resp.runtime_info)
+                # logger.debug(
+                #     "Ping engine success. Runtime info: \n"
+                #     + engine.runtime_info.display()
+                # )
+            else:
+                engine.dead = True
 
     def _sweep_dead_clients(self):
         dead_procs: List[Process] = [

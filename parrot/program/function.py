@@ -241,12 +241,17 @@ class SemanticCall:
         *args: List[Any],
         **kwargs: Dict[str, Any],
     ):
+        # ---------- Basic Info ----------
         self.func = func
         self.context_successor: Optional[str] = (
             context_successor.name if context_successor else None
         )
         self.bindings: Dict[str, Any] = {}
         self.output_futures: List[Future] = []
+
+        # ---------- Runtime ----------
+        self.edges: List["DAGEdge"] = []
+        self.edges_map: Dict[int, "DAGEdge"] = {}  # SemanticVariable idx -> DAGEdge
 
         # Set positional arguments
         for i, arg_value in enumerate(args):
@@ -273,7 +278,7 @@ class SemanticCall:
 
         # Create output futures
         for param in self.func.outputs:
-            future = Future()
+            future = Future(name=param.name)
             self.output_futures.append(future)
             self._set_value(param, future, self.bindings)
 

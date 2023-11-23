@@ -5,29 +5,38 @@
 from typing import List, Optional
 from asyncio import Event
 
-from .dag_node import DAGNode
+from .dag_edge import DAGEdge
 from ..tokenizer import Tokenizer
 
 
-class Placeholder:
-    """Placeholder corresponds to a Future in the program.
+class SVPlaceholder:
+    """Placeholder corresponds to a Future (Input/Output semantic variable) in the program.
 
     In the data-dependency graph, it serves a middle node which holds the data and
     connects the producer and consumers.
     """
 
-    def __init__(self, id: int):
+    def __init__(self, id: int, name: str):
         self.id = id
+        self.name = name
         self.content = None
+
+        # Events
         self.start_event: Event = Event()
         self.ready_event: Event = Event()
-        self.out_nodes: List[DAGNode] = []
-        self.assign_callbacks = []
+
+        # DAG
+        # An edge is an in-edge if this SV is the out-node of the edge.
+        # An edge is an out-edge if this SV is the in-node of the edge.
+        self.in_edges: List[DAGEdge] = []
+        self.out_edges: List[DAGEdge] = []
 
     def __repr__(self) -> str:
         if self.ready:
-            return f"Placeholder(id={self.id}, content={self.content})"
-        return f"Placeholder(id={self.id})"
+            return (
+                f"Placeholder(name={self.name}, id={self.id}, content={self.content})"
+            )
+        return f"Placeholder(name={self.name}, id={self.id})"
 
     def set(self, content: str):
         """Set the content of the placeholder."""
@@ -52,7 +61,7 @@ class TokensHolder:
         self,
         tokenizer_name: str,
         tokenizer: Tokenizer,
-        placeholder: Placeholder,
+        placeholder: SVPlaceholder,
     ):
         # ---------- Basic info ----------
         self.token_ids: Optional[List[int]] = None

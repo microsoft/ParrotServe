@@ -2,6 +2,8 @@
 # Licensed under the MIT license.
 
 
+from typing import List
+
 from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 from parrot.engine.config import (
     EngineConfig,
@@ -35,10 +37,7 @@ class ExecutionEngine:
 
         # ---------- Runtime Info ----------
         self.runtime_info = EngineRuntimeInfo()
-        self.num_threads = 0
-        self.expect_max_jobs_num = (
-            99999  # = min{thread.max_jobs_num for each thread in this engine}
-        )
+        self.threads: List["Thread"] = []
 
     @property
     def name(self) -> str:
@@ -53,21 +52,29 @@ class ExecutionEngine:
         return INTERPRET_TYPE_MAP[self.config.engine_type]
 
     @property
-    def jobs_num(self) -> int:
-        return self.runtime_info.num_total_jobs
+    def remain_thread_locs(self) -> int:
+        return self.config.max_threads_num - self.num_threads
 
     @property
-    def remain_job_locs(self) -> int:
-        return self.config.max_jobs_num - self.jobs_num
+    def num_threads(self) -> int:
+        return len(self.threads)
+
+    @property
+    def requests_num_upperbound(self) -> int:
+        """Return the upperbound of the number of jobs that can be dispatched to this engine."""
+        return min(
+            [self.config.max_threads_num]
+            + [thread.requests_num_upperbound for thread in self.threads]
+        )
 
     def accept_thread(self, thread: "Thread"):
         """Accept a thread to this engine."""
 
         thread.engine = self
-        self.num_threads += 1
+        self.threads.append(thread)
 
     def remove_thread(self, thread: "Thread"):
         """Remove a thread from this engine."""
 
         thread.engine = None
-        self.num_threads -= 1
+        self.threads.remove(thread)

@@ -7,7 +7,7 @@
     "tokenizer": "facebook/opt-13b",
     "random_seed": 0,
     "fill_chunk_size": -1,
-    "max_jobs_num": 256,
+    "max_threads_num": 256,
     "instance": {
         "num_kv_cache_blocks": 2000,
         "attn_func": "xformers_with_buffer"

@@ -56,5 +56,33 @@ def test_single_call():
         asyncio.run(main())
 
 
+def test_make_dag():
+    dispatcher, proc = init()
+
+    @P.function()
+    def test1(a: P.Input, b: P.Output):
+        """This is a test {{a}} function {{b}}"""
+
+    @P.function()
+    def test2(c: P.Input, d: P.Output):
+        """This is a test {{c}} function {{d}}"""
+
+    @P.function()
+    def test3(e: P.Input, f: P.Output):
+        """This is a test {{e}} function {{f}}"""
+
+    # Without VM, it will return the call
+    call1 = test1("Apple")
+    b1 = call1.output_futures[0]
+    call2 = test2(b1)
+    b2 = call2.output_futures[0]
+    call3 = test3(b2)
+
+    proc.rewrite_call(call1)
+    proc.rewrite_call(call2)
+    proc.rewrite_call(call3)
+
+
 if __name__ == "__main__":
-    test_single_call()
+    # test_single_call()
+    test_make_dag()

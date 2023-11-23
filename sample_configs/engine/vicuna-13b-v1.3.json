@@ -7,7 +7,7 @@
     "random_seed": 0,
     "tokenizer": "hf-internal-testing/llama-tokenizer",
     "fill_chunk_size": -1,
-    "max_jobs_num": 256,
+    "max_threads_num": 1,
     "instance": {
         "num_kv_cache_blocks": 16000,
         "attn_func": "xformers_with_buffer"

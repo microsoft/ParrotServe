@@ -19,9 +19,11 @@ class Future:
 
     def __init__(
         self,
+        name: Optional[str] = None,
         content: Optional[str] = None,
     ):
         self.id = self._increment()
+        self.name = name if name is not None else f"v{self.id}"
         self.content = content
 
     @classmethod
@@ -31,8 +33,8 @@ class Future:
 
     def __repr__(self) -> str:
         if self.ready:
-            return f"Future(id={self.id}, content={self.content})"
-        return f"Future(id={self.id})"
+            return f"Future(name={self.name}, id={self.id}, content={self.content})"
+        return f"Future(name={self.name}, id={self.id})"
 
     # ---------- Public Methods ----------
 

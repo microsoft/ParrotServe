@@ -131,8 +131,8 @@ class EngineConfig:
     dtype: Literal["float16", "float32"] = "float16"
     device: str = "cuda"  # cpu, cuda, cuda:x
 
-    # Max jobs the engine can handle.
-    max_jobs_num: int = 256
+    # Max threads the engine can handle.
+    max_threads_num: int = 256
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:

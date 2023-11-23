@@ -16,7 +16,7 @@ DEFAULT_ENGINE_URL = f"http://{DEFAULT_SERVER_HOST}:{DEFAULT_ENGINE_SERVER_PORT}
 # ---------- Poll Interval ----------
 VM_HEARTBEAT_INTERVAL = 5
 ENGINE_HEARTBEAT_INTERVAL = 3
-OS_LOOP_INTERVAL = 0.0001
+OS_LOOP_INTERVAL = 0.001
 # The engine need a very short interval, prevent it from affecting the performance of LLM
 ENGINE_LOOP_INTERVAL = 0.00001
 

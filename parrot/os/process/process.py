@@ -5,15 +5,16 @@
 from typing import List, Dict, Optional
 from queue import Queue
 
+from parrot.program.semantic_variable import ParameterLoc
 from parrot.program.future import Future
 from parrot.program.function import SemanticCall
 from parrot.utils import get_logger, RecyclePool
 from parrot.constants import THREAD_POOL_SIZE
 from parrot.exceptions import ParrotOSUserError
 
-from .placeholder import Placeholder
+from .placeholder import SVPlaceholder
 from .thread import Thread
-from .dag_node import DAGNode
+from .dag_edge import DAGEdge
 from ..thread_dispatcher import ThreadDispatcher
 from ..memory.mem_space import MemorySpace
 from ..tokenizer import Tokenizer
@@ -45,7 +46,7 @@ class Process:
         self.memory_space = memory_space
         self.memory_space.new_memory_space(self.pid)
         self.executor = Executor(tokenizer)
-        self.placeholders_map: Dict[int, Placeholder] = {}  # id -> placeholder
+        self.placeholders_map: Dict[int, SVPlaceholder] = {}  # id -> placeholder
 
         # ---------- Threads ----------
         self.threads: List[Thread] = []
@@ -89,44 +90,52 @@ class Process:
     # ---------- Interfaces to PCore ----------
 
     def rewrite_call(self, call: SemanticCall):
-        r"""Rewrite the "Futures (Program-level)" to "Placeholders (OS-level)",
-        using the namespace of the process.
+        r"""This function does two things:
+
+        1. Rewrite the "Futures (Program-level)" to "Placeholders (OS-level)", using the namespace of the process.
+        2. Make the DAG according to the dependencies between the placeholders.
         """
 
-        node = DAGNode(call)
-        call.node = node
-
-        meet_first_output = False
-
+        # Rewrite future to Placeholder
         for name, value in call.bindings.items():
             if not isinstance(value, Future):
                 continue
 
             if value.id not in self.placeholders_map:
-                self.placeholders_map[value.id] = Placeholder(value.id)
+                self.placeholders_map[value.id] = SVPlaceholder(
+                    id=value.id, name=value.name
+                )
 
             call.bindings[name] = self.placeholders_map[value.id]
 
-            # NOTE(chaofan): For simplicity, we only consider the edges before the first output.
-
-            if call.func.params_map[name].is_input_loc and not meet_first_output:
-                self.placeholders_map[value.id].out_nodes.append(node)
-                node.add_in_edge()
-
-            if call.func.params_map[name].is_output:
-                meet_first_output = True
-
         for i, future in enumerate(call.output_futures):
             if future.id not in self.placeholders_map:
-                self.placeholders_map[future.id] = Placeholder(value.id)
+                self.placeholders_map[future.id] = SVPlaceholder(
+                    id=value.id, name=value.name
+                )
             call.output_futures[i] = self.placeholders_map[future.id]
 
-    def make_thread(self, call: SemanticCall) -> Thread:
-        # Mark all placeholders as start
-        for _, value in call.bindings.items():
-            if isinstance(value, Placeholder):
-                value.start_event.set()
+        # Make DAG
+        cur_edge = DAGEdge(call)
+        call.edges.append(cur_edge)
 
+        for sv in call.func.body:
+            call.edges_map[sv.idx] = cur_edge
+
+            if isinstance(sv, ParameterLoc):
+                sv_placeholder = call.bindings[sv.param.name]
+                if isinstance(sv_placeholder, SVPlaceholder):
+                    if sv.param.is_input_loc:
+                        cur_edge.link_with_in_node(sv_placeholder)
+                    elif sv.param.is_output:
+                        cur_edge.link_with_out_node(sv_placeholder)
+
+                if sv.param.is_output:
+                    # make a new node for the next segment
+                    cur_edge = DAGEdge(call)
+                    call.edges.append(cur_edge)
+
+    def make_thread(self, call: SemanticCall) -> Thread:
         # Get state context (if any)
         context_id = self.memory_space.get_state_context_id(
             pid=self.pid,
@@ -137,6 +146,11 @@ class Process:
 
     def execute_thread(self, thread: Thread):
         try:
+            # Mark all placeholders as start
+            for _, value in thread.call.bindings.items():
+                if isinstance(value, SVPlaceholder):
+                    value.start_event.set()
+
             # Allocate memory
             self.memory_space.set_thread_ctx(thread)
 

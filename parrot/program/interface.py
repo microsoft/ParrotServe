@@ -107,10 +107,10 @@ def function(
     return create_func
 
 
-def future(content: Optional[str] = None):
+def future(name: Optional[str] = None, content: Optional[str] = None):
     """Let user construct Future explicitly."""
 
-    return Future(content)
+    return Future(name, content)
 
 
 # def shared_context(

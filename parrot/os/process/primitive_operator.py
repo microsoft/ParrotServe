@@ -7,7 +7,7 @@ from typing import List
 from parrot.constants import PIPELINE_SEND_CHUNK_NUM, DETOKENIZE_CHUNK_NUM
 from parrot.protocol.sampling_config import SamplingConfig
 
-from .placeholder import Placeholder, TokensHolder
+from .placeholder import SVPlaceholder, TokensHolder
 from .pipe import TokenPipe
 
 
@@ -77,7 +77,7 @@ class TextConstantFill(PrimitiveOperator):
 class TextPlaceholderFill(PrimitiveOperator):
     """TextPlaceholderFill operator takes a Placeholder as input.."""
 
-    def __init__(self, input_holder: Placeholder):
+    def __init__(self, input_holder: SVPlaceholder):
         super().__init__()
         self.input_holder = input_holder
 
@@ -88,7 +88,7 @@ class TextPlaceholderFill(PrimitiveOperator):
 class TextPlaceholderGenerate(PrimitiveOperator):
     """TextPlaceholderGenerate operator takes a Placeholder as output."""
 
-    def __init__(self, output_holder: Placeholder, sampling_config: SamplingConfig):
+    def __init__(self, output_holder: SVPlaceholder, sampling_config: SamplingConfig):
         super().__init__()
         self.output_holder = output_holder
         self.sampling_config = sampling_config

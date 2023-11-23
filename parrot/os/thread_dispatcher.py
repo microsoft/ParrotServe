@@ -35,33 +35,39 @@ class ThreadDispatcher:
         self,
         config: DispatcherConfig,
         engines: Dict[int, ExecutionEngine],
-        flush_engine_callback=None,
+        ping_engine_method=None,
     ):
         self.config = config
         self.engines = engines
-        self.flush_engine_callback = flush_engine_callback
+        self.ping_engine_method = ping_engine_method
         self.thread_queue = Queue(self.config.max_queue_size)
-
-        # Private states used in dispatching.
-        self._engines_remain_locs: Dict[int, int] = {}
 
     def _get_engine_list(self, thread: Thread) -> List[ExecutionEngine]:
         engines_list = list(self.engines.values())
         models = thread.call.func.metadata.models
-        max_jobs_num = thread.max_jobs_num
+        request_upperbound = thread.requests_num_upperbound
 
         def check_engine_available(engine: ExecutionEngine):
-            # If models is empty, it means the function can be executed on any model.
-            if models == [] or engine.config.model in models:
-                return True
+            # Check whether the model is supported by the engine.
+            # If "models" field is empty, it means the function can be executed on any model.
+            if len(models) > 0 and not engine.config.model in models:
+                return False
 
-            # Check whether the engine fulfills the thread's max_jobs_num requirement.
+            # Check whether the engine exceeds the uppderbound itself.
             # This condition is only used in DAG-aware policy.
-            if self.config.dag_aware and max_jobs_num < engine.jobs_num:
-                return True
+            if (
+                self.config.dag_aware
+                and engine.requests_num_upperbound <= engine.num_threads
+            ):
+                return False
+
+            # Check whether the engine fulfills the thread's num_threads requirement.
+            # This condition is only used in DAG-aware policy.
+            if self.config.dag_aware and request_upperbound <= engine.num_threads:
+                return False
 
             # Check whether the engine has enough remain locs.
-            return engine.remain_job_locs > 0
+            return engine.remain_thread_locs > 0
 
         # Get the available engines.
         return [engine for engine in engines_list if check_engine_available(engine)]
@@ -78,31 +84,31 @@ class ThreadDispatcher:
 
         # Get the best candidate engine.
         if self.config.dag_aware:
-            # DAG Aware policy: select the engine with the most remain locs first,
-            # preventing threads with a relaxed max_jobs_num requirement from
+            # DAG Aware policy: select the engine with the least remain locs first,
+            # preventing threads with a relaxed max_threads_num requirement from
             # occupying the engine with a smaller remain locs.
-            best_candidate_id = -1
-            for engine_id, remain_locs in self._engines_remain_locs.items():
+            best_candidate = None
+            for engine in engines_list:
                 if (
-                    best_candidate_id == -1
-                    or remain_locs < self._engines_remain_locs[best_candidate_id]
+                    best_candidate == None
+                    or engine.remain_thread_locs < best_candidate.remain_thread_locs
                 ):
-                    best_candidate_id = engine_id
+                    best_candidate = engine
         else:
             # Default policy: dispatch to the engine with the most remain locs.
-            best_candidate_id = -1
-            for engine_id, remain_locs in self._engines_remain_locs.items():
+            best_candidate = None
+            for engine in engines_list:
                 if (
-                    best_candidate_id == -1
-                    or remain_locs > self._engines_remain_locs[best_candidate_id]
+                    best_candidate == None
+                    or engine.remain_thread_locs > best_candidate.remain_thread_locs
                 ):
-                    best_candidate_id = engine_id
-            best_candidate = self.engines[best_candidate_id]
+                    best_candidate = engine
 
-        self._engines_remain_locs[best_candidate.engine_id] -= 1
         best_candidate.accept_thread(thread)
 
-        logger.info(f"Thread {thread.tid} dispatched to engine {best_candidate.name}.")
+        logger.info(
+            f"Thread {thread.tid} dispatched to engine {best_candidate.name} (id={best_candidate.engine_id})."
+        )
 
         return True
 
@@ -133,17 +139,13 @@ class ThreadDispatcher:
         # Flush engines.
         # To make sure the engine is alive, we need to ping it first and sweep the dead engines.
         # And ping the engines can also update the engine status.
-        if self.flush_engine_callback is not None:
-            self.flush_engine_callback(list(self.engines.values()))
+        if self.ping_engine_method is not None:
+            for _, engine in self.engines.items():
+                self.ping_engine_method(engine)
+
         dead_keys = [key for key, engine in self.engines.items() if engine.dead]
         for key in dead_keys:
             self.engines.pop(key)
-
-        # Maintain the remain locs
-        self._engines_remain_locs = {
-            engine_id: engine.remain_job_locs
-            for engine_id, engine in self.engines.items()
-        }
 
         # Dispatch all possible threads.
         new_thread_queue = Queue(self.config.max_queue_size)
@@ -159,14 +161,16 @@ class ThreadDispatcher:
         self.thread_queue = new_thread_queue
 
         # Display the dispatch results.
-        logger.debug(
-            f"Dispatched {len(dispatched_threads)} threads. Results: \n"
-            + "\n".join(
-                [
-                    f"  {thread.tid} -> engine: id={thread.engine.engine_id}, name={thread.engine.name}, "
-                    for thread in dispatched_threads
-                ]
+        # NOTE(chaofan): Only display >0 case to reduce the log size.
+        if len(dispatched_threads) > 0:
+            logger.debug(
+                f"Dispatched {len(dispatched_threads)} threads. Results: \n"
+                + "\n".join(
+                    [
+                        f"  tid={thread.tid} -> engine: id={thread.engine.engine_id}, name={thread.engine.name}, "
+                        for thread in dispatched_threads
+                    ]
+                )
             )
-        )
 
         return dispatched_threads
