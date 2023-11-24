@@ -1,10 +1,10 @@
-# Parrot: Efficient Serving LLM-based Agents with Dependent Semantic Variables
+# Parrot: Serving LLM-based Agents with Dependent Semantic Variables
 
 This project is a research prototype for now. Being eargerly iterated.
 
 ## Install
 
-**Environment Settings:**
+**0. Environment Settings:**
 
 - OS: Linux
 - GPU: cc >= 7.0
@@ -16,28 +16,30 @@ pip install torch==2.1.0 --upgrade --index-url https://download.pytorch.org/whl/
 ```
 
 
-**Clone the Project:**
+**1. Clone the Project:**
 
 ```bash
 git clone --recursive https://github.com/SiriusNEO/LLMOS-Parrot.git
 ```
 
-**Install dependencies:**
+**2. Install dependencies:**
 
-- Step 1.
+- Step 1: Install basic requirements.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-- Step 2.
-
-Install dependencies listed in `3rdparty` folder.
+- Step 2: Install necessary dependencies listed in `3rdparty` folder.
 
 ```bash
 cd 3rdparty/vllm
 pip install -e .
 ```
+
+- Step 3 (Optional): Install Optional dependencies.
+
+(Optional) FastChat and Langchain are used only in our benchmark.
 
 ```bash
 cd 3rdparty/FastChat
@@ -45,12 +47,11 @@ pip install -e ".[model_worker,webui]"
 ```
 
 ```bash
-cd 3rdparty/langchain
+cd 3rdparty/langchain/libs/langchain
 pip install -e .
 ```
 
-
-- Step 3 (Optional).
+(Optional) MLC-LLM and OpenAI are a special type of engines.
 
 If you used MLC-LLM engines, Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it, including the pre-compiled library and weights. The recommended commit refers to `3rdparty` folder.
 
@@ -62,7 +63,7 @@ Triton 2.0.0 has some bugs in Kernel memory issues. So we enforce the version to
 pip install triton==2.1.0
 ```
 
-**Install Parrot:**
+**3. Install Parrot:**
 
 ```bash
 python3 setup.py develop
@@ -73,7 +74,7 @@ python3 setup.py develop
 
 **Run the Compose Script in a Single Machine**
 
-We provide some one-click scripts to run Parrot in a single machine. You can find them in the `scripts` folder.
+We provide some one-click scripts to run Parrot in a single machine. You can check them in the `sample_configs/scripts` folder.
 
 ```bash
 bash sample_configs/scripts/launch_single_vicuna_13b.sh

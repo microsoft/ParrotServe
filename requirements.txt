@@ -10,6 +10,7 @@ huggingface-hub
 sentencepiece
 tokenizers
 transformers
+openai
 
 # Machine Learning packages
 torch >= 2.1.0
