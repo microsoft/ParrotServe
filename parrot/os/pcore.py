@@ -261,6 +261,9 @@ class PCore:
 
         placeholder.set(content)
 
+        logger.debug(f"Placeholder set (id={placeholder_id}) from VM (pid={pid}). "
+                     f"Set content length: {len(content)} ")
+
     async def placeholder_fetch(self, pid: int, placeholder_id: int):
         """Fetch a placeholder content from OS to VM."""
 

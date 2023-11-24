@@ -136,7 +136,7 @@ class SemanticFunction:
             raise ValueError("Either func_body_str or func_body should be provided.")
 
         if SemanticFunction._virtual_machine_env is not None:
-            SemanticFunction._virtual_machine_env.register_function(self)
+            SemanticFunction._virtual_machine_env.register_function_handler(self)
 
     def __call__(
         self,
@@ -201,7 +201,7 @@ class SemanticFunction:
     ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
         call = SemanticCall(self, context_successor, *args, **kwargs)
         if SemanticFunction._virtual_machine_env is not None:
-            SemanticFunction._virtual_machine_env.submit_call(call)
+            SemanticFunction._virtual_machine_env.submit_call_handler(call)
         else:
             logger.warning(
                 "VM environment is not set. Not submit the Call. Return Call instead. "

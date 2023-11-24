@@ -37,7 +37,7 @@ def baseline():
     map_input = P.future()
     for _ in range(chunk_num):
         chunk_sums.append(map_func_test(map_input))
-    time.sleep(1) # take 1 second to load the docs from web, suppose
+    time.sleep(3) # take 3 second to load the docs from web, suppose
     map_input.set(map_document_chunk)
 
     final_output = reduce_func_test(*chunk_sums)
@@ -59,5 +59,5 @@ def test_main():
 
 
 if __name__ == "__main__":
-    # test_baseline()
+    test_baseline()
     test_main()

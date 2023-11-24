@@ -25,6 +25,9 @@ class SVPlaceholder:
         self.start_event: Event = Event()
         self.ready_event: Event = Event()
 
+        # TokenHolders
+        self.token_holders: List[TokensHolder] = []
+
         # DAG
         # An edge is an in-edge if this SV is the out-node of the edge.
         # An edge is an out-edge if this SV is the in-node of the edge.
@@ -40,9 +43,14 @@ class SVPlaceholder:
 
     def set(self, content: str):
         """Set the content of the placeholder."""
+
         assert self.content is None, "This placeholder is filled"
         self.content = content
         self.ready_event.set()
+
+        # Sync results to token holders
+        for token_holder in self.token_holders:
+            token_holder.sync_from_placeholder()
 
     @property
     def ready(self) -> bool:
@@ -68,6 +76,7 @@ class TokensHolder:
         self.tokenizer = tokenizer
         self.tokenizer_name: str = tokenizer_name
         self.placeholder = placeholder
+        placeholder.token_holders.append(self)
 
         # ---------- Operators ----------
         self.consumers: List["TokenIdPlaceholderFill"] = []

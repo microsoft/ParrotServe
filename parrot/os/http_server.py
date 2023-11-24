@@ -80,12 +80,12 @@ async def submit_call(request: Request):
 
 @app.post("/placeholder_set")
 async def placeholder_set(request: Request):
-    payload = request.json()
+    payload = await request.json()
     pid = payload["pid"]
     placeholder_id = payload["placeholder_id"]
     content = payload["content"]
     logger.debug(
-        f"Placeholder set received: pid={pid}, placeholder_id={placeholder_id}, content={content}"
+        f"Placeholder set received: pid={pid}, placeholder_id={placeholder_id}"
     )
     await pcore.placeholder_set(pid, placeholder_id, content)
     return {}
