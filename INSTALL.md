@@ -59,7 +59,7 @@ Triton 2.0.0 has some bugs in Kernel memory issues. So we enforce the version to
 pip install triton==2.1.0
 ```
 
-### Install Parrot:**
+### Install Parrot
 
 ```bash
 python3 setup.py develop
