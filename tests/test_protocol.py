@@ -14,6 +14,7 @@ from parrot.protocol.layer_apis import (
     vm_heartbeat,
     register_vm,
     submit_call,
+    placeholder_set,
     placeholder_fetch,
     free_context,
     ping_engine,
@@ -64,6 +65,16 @@ def test_submit_call():
             http_addr=OS_URL,
             pid=0,
             call=call,
+        )
+
+
+def test_placeholder_set():
+    with fake_os_server():
+        resp = placeholder_set(
+            http_addr=OS_URL,
+            pid=0,
+            placeholder_id=0,
+            content="placeholder_xxx",
         )
 
 
@@ -198,13 +209,14 @@ def test_generate():
 
 
 if __name__ == "__main__":
-    test_vm_heartbeat()
-    test_register_vm()
-    test_submit_call()
-    test_placeholder_fetch()
-    test_free_context()
-    test_ping_engine()
-    test_engine_heartbeat()
-    test_register_engine()
-    test_fill()
-    test_generate()
+    # test_vm_heartbeat()
+    # test_register_vm()
+    # test_submit_call()
+    test_placeholder_set()
+    # test_placeholder_fetch()
+    # test_free_context()
+    # test_ping_engine()
+    # test_engine_heartbeat()
+    # test_register_engine()
+    # test_fill()
+    # test_generate()

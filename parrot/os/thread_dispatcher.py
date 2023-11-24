@@ -168,6 +168,7 @@ class ThreadDispatcher:
                 + "\n".join(
                     [
                         f"  tid={thread.tid} -> engine: id={thread.engine.engine_id}, name={thread.engine.name}, "
+                        f"num_threads={thread.engine.num_threads}"
                         for thread in dispatched_threads
                     ]
                 )

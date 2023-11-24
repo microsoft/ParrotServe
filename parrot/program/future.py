@@ -42,12 +42,19 @@ class Future:
     def ready(self) -> bool:
         return self.content is not None
 
+    def set(self, content):
+        """Public API: Set the content of the future."""
+
+        self.content = content
+        self._virtual_machine_env.placeholder_set(self.id, content)
+        return
+
     def get(self) -> str:
         """Public API: (Blocking) Get the content of the future."""
 
         if self.ready:
             return self.content
-        content = self._virtual_machine_env._placeholder_fetch(self.id)
+        content = self._virtual_machine_env.placeholder_fetch(self.id)
         return content
 
     async def aget(self) -> str:
@@ -55,5 +62,5 @@ class Future:
 
         if self.ready:
             return self.content
-        content = await self._virtual_machine_env._aplaceholder_fetch(self.id)
+        content = await self._virtual_machine_env.aplaceholder_fetch(self.id)
         return content

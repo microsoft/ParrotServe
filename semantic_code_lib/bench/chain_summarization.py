@@ -3,6 +3,8 @@
 
 # Functions in this file are used for immitating the workload of chain summarization.
 
+# Reference of prompt length: https://python.langchain.com/docs/use_cases/summarization
+
 import parrot as P
 
 fake_long_document_chunk = "Test " * 670  # len=670 for each chunk
@@ -15,7 +17,7 @@ def chain_sum_test(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=20)
     ),  # 20 Gen
 ):
-    """"""
+    pass
 
 
 chain_sum_test_body = (

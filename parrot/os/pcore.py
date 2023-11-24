@@ -227,7 +227,7 @@ class PCore:
 
         # NOTE(chaofan): For stateful call, since the queue is FIFO, the state contexts are
         # correctly maintained.
-
+        
         self._check_process(pid)
         process = self.processes[pid]
 
@@ -241,6 +241,25 @@ class PCore:
         self.dispatcher.push_thread(thread)
 
         logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid}). ')
+    
+    async def placeholder_set(self, pid: int, placeholder_id: int, content: str):
+        """Set a placeholder content from VM."""
+
+        self._check_process(pid)
+
+        process = self.processes[pid]
+        if placeholder_id not in process.placeholders_map:
+            raise ParrotOSUserError(
+                ValueError(f"Unknown placeholder_id: {placeholder_id}")
+            )
+
+        placeholder = process.placeholders_map[placeholder_id]
+
+        # NOTE(chaofan): The "start event" of the placeholder is set when the related process is executed.
+        # It is to ensure the "check_process" is called after the process is executed.
+        await placeholder.start_event.wait()
+
+        placeholder.set(content)
 
     async def placeholder_fetch(self, pid: int, placeholder_id: int):
         """Fetch a placeholder content from OS to VM."""

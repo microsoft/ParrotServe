@@ -6,7 +6,7 @@
 from .vm import VirtualMachine
 
 # Interface
-from .interface import Input, Output, function
+from .interface import Input, Output, function, future
 
 # Useful transforms and sequential transforms
 from .transforms.prompt_formatter import standard_formatter, allowing_newline

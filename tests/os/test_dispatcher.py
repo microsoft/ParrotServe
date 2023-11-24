@@ -143,5 +143,5 @@ def test_request_wait():
 
 if __name__ == "__main__":
     # test_default_policy()
-    # test_dag_aware_policy()
-    test_request_wait()
+    test_dag_aware_policy()
+    # test_request_wait()

@@ -71,6 +71,16 @@ async def submit_call(request: Request):
     return {}
 
 
+@app.post("/placeholder_set")
+async def placeholder_set(request: Request):
+    payload = await request.json()
+    pid = payload["pid"]
+    placeholder_id = payload["placeholder_id"]
+    content = payload["content"]
+    logger.debug(f"Set placeholder {placeholder_id} in VM (pid: {pid}). Set content: {content}.")
+    return {}
+
+
 @app.post("/placeholder_fetch")
 async def placeholder_fetch(request: Request):
     payload = await request.json()

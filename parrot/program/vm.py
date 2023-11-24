@@ -16,6 +16,7 @@ from parrot.protocol.layer_apis import (
     register_vm,
     vm_heartbeat,
     submit_call,
+    placeholder_set,
     placeholder_fetch,
     aplaceholder_fetch,
 )
@@ -86,7 +87,17 @@ class VirtualMachine:
 
             time.sleep(VM_HEARTBEAT_INTERVAL)
 
-    def _placeholder_fetch(self, placeholder_id: int) -> str:
+    # ----------Methods for Program Interface ----------
+
+    def placeholder_set_handler(self, placeholder_id: int, content: str):
+        resp = placeholder_set(
+            http_addr=self.os_http_addr,
+            pid=self.pid,
+            placeholder_id=placeholder_id,
+            content=content,
+        )
+
+    def placeholder_fetch_handler(self, placeholder_id: int) -> str:
         resp = placeholder_fetch(
             http_addr=self.os_http_addr,
             pid=self.pid,
@@ -94,7 +105,7 @@ class VirtualMachine:
         )
         return resp.content
 
-    async def _aplaceholder_fetch(self, placeholder_id: int) -> str:
+    async def aplaceholder_fetch_handler(self, placeholder_id: int) -> str:
         resp = await aplaceholder_fetch(
             http_addr=self.os_http_addr,
             pid=self.pid,
@@ -102,9 +113,7 @@ class VirtualMachine:
         )
         return resp.content
 
-    # ----------Methods for Program Interface ----------
-
-    def register_function(self, func: SemanticFunction):
+    def register_function_handler(self, func: SemanticFunction):
         """Register a semantic function to the VM."""
 
         if func.name in self._function_registry:
@@ -113,7 +122,7 @@ class VirtualMachine:
         self._function_registry[func.name] = func
         logger.info(f"VM (pid: {self.pid}) registers function: {func.name}")
 
-    def submit_call(self, call: SemanticCall):
+    def submit_call_handler(self, call: SemanticCall):
         """Submit a call to the OS."""
 
         logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
@@ -152,7 +161,7 @@ class VirtualMachine:
         if not isinstance(semantic_function, SemanticFunction):
             raise ValueError(f"Function {function_name} is not a semantic function.")
 
-        self.register_function(semantic_function)
+        self.register_function_handler(semantic_function)
         return semantic_function
 
     def set_global_env(self):

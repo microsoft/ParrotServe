@@ -9,6 +9,7 @@ from .responses import (
     VMHeartbeatResponse,
     RegisterVMResponse,
     SubmitCallResponse,
+    PlaceholderSetResponse,
     PlaceholderFetchResponse,
     EngineHeartbeatResponse,
     FreeContextResponse,
@@ -71,6 +72,24 @@ def submit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallRes
         )
     except BaseException as e:
         logger.error(f"Execute func (pid: {pid}) error in {http_addr}. Error: {e}")
+        raise e
+
+
+def placeholder_set(
+    http_addr: str, pid: int, placeholder_id: int, content: str
+):
+    try:
+        send_http_request(
+            PlaceholderSetResponse,
+            http_addr,
+            "/placeholder_set",
+            retry_times=1,
+            pid=pid,
+            placeholder_id=placeholder_id,
+            content=content,
+        )
+    except BaseException as e:
+        logger.error(f"Placeholder set (pid: {pid}) error in {http_addr}. Error: {e}")
         raise e
 
 

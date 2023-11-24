@@ -78,6 +78,19 @@ async def submit_call(request: Request):
     return {}
 
 
+@app.post("/placeholder_set")
+async def placeholder_set(request: Request):
+    payload = request.json()
+    pid = payload["pid"]
+    placeholder_id = payload["placeholder_id"]
+    content = payload["content"]
+    logger.debug(
+        f"Placeholder set received: pid={pid}, placeholder_id={placeholder_id}, content={content}"
+    )
+    await pcore.placeholder_set(pid, placeholder_id, content)
+    return {}
+
+
 @app.post("/placeholder_fetch")
 async def placeholder_fetch(request: Request):
     payload = await request.json()
