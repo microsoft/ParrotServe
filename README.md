@@ -9,12 +9,18 @@ This project is a research prototype for now. Being eargerly iterated.
 - OS: Linux
 - GPU: cc >= 7.0
 - CUDA version: >= 12.1
-- DL Framework: PyTorch >= 2.1.1 with CUDA 12.1.
+- DL Framework: PyTorch >= 2.1.0 with CUDA 12.1.
 
 ```bash
-pip install torch --upgrade --index-url https://download.pytorch.org/whl/cu121
+pip install torch==2.1.0 --upgrade --index-url https://download.pytorch.org/whl/cu121
 ```
 
+
+**Clone the Project:**
+
+```bash
+git clone --recursive https://github.com/SiriusNEO/LLMOS-Parrot.git
+```
 
 **Install dependencies:**
 
@@ -26,12 +32,27 @@ pip install -r requirements.txt
 
 - Step 2.
 
-Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it. The 
-recommended commit refers to `3rdparty` folder.
+Install dependencies listed in `3rdparty` folder.
 
-- Step 3.
+```bash
+cd 3rdparty/vllm
+pip install -e .
+```
 
-Install other dependencies listed in `3rdparty` folder.
+```bash
+cd 3rdparty/FastChat
+pip install -e ".[model_worker,webui]"
+```
+
+```bash
+cd 3rdparty/langchain
+pip install -e .
+```
+
+
+- Step 3 (Optional).
+
+If you used MLC-LLM engines, Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it, including the pre-compiled library and weights. The recommended commit refers to `3rdparty` folder.
 
 - Important Notes:
 

@@ -5,12 +5,15 @@ __pycache__
 dist
 .venv
 
+# Test
+test.txt
+
 # Log
 *.log
 *.log.*
 log
 # *.json
-*.txt
+# *.txt
 
 # Editor
 *.swp
