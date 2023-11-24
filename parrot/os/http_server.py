@@ -73,7 +73,7 @@ async def submit_call(request: Request):
     pid = payload["pid"]
     logger.debug(f"Submit call received: pid={pid}")
     call = SemanticCall.unpickle(payload["call"])
-    # await asyncio.sleep(0.25)  # Sleep for 250ms to simulate network latency
+    await asyncio.sleep(0.25)  # Sleep for 250ms to simulate network latency
     pcore.submit_call(pid, call)
     return {}
 
