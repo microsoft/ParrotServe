@@ -2,7 +2,7 @@
 
 This project is a research prototype for now. Being eargerly iterated.
 
-![](assets/arch.png)
+![](assets/layers_arch.png)
 
 
 ## Install
