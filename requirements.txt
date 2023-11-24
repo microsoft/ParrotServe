@@ -21,3 +21,4 @@ xformers >= 0.0.22.post7
 regex
 tqdm
 urllib3
+pytest

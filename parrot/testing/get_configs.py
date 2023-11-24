@@ -6,7 +6,7 @@
 
 NOTE(chaofan): This part of functionality requires the original repo structure to be kept.
 
-In particular, it will automatically search in the `sample_configs` folder for the config file.
+In particular, it will automatically search in the `configs` folder for the config file.
 """
 
 import parrot

@@ -13,10 +13,24 @@ reduce_instruction_1 = "Test " * 10
 reduce_instruction_2 = "Test " * 10
 
 
-def map_sum_test(
+# NOTE(chaofan): For baseline, we use the same upperbound as the main.
+def map_sum_test_baseline(
     doc_chunk: P.Input,
     doc_sum: P.Output(
-        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50)
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
+        P.DispatchAnnotation(requests_num_upperbound=2),
+    ),  # 20 Gen
+):
+    pass
+
+
+# NOTE(chaofan): We annotate map stage a large job upperbound, 
+# and reduce stage a small job upperbound.
+def map_sum_test_main(
+    doc_chunk: P.Input,
+    doc_sum: P.Output(
+        P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
+        P.DispatchAnnotation(requests_num_upperbound=64),
     ),  # 20 Gen
 ):
     pass
@@ -29,8 +43,10 @@ map_sum_test_body = (
     + "{{doc_sum}}"
 )
 
-map_sum_test.__doc__ = map_sum_test_body
-map_sum_test = P.function(cache_prefix=False)(map_sum_test)
+map_sum_test_baseline.__doc__ = map_sum_test_body
+map_sum_test_baseline = P.function(cache_prefix=False)(map_sum_test_baseline)
+map_sum_test_main.__doc__ = map_sum_test_body
+map_sum_test_main = P.function(cache_prefix=False)(map_sum_test_main)
 
 
 # We unrolling the function for now.

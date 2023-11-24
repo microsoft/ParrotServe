@@ -13,8 +13,8 @@ vm = P.VirtualMachine(
 )
 
 
-map = vm.import_function("summarize_map", "app.summarization")
-reduce = vm.import_function("summarize_reduce", "app.summarization")
+map = vm.import_function("summarize_map", "codelib.app.summarization")
+reduce = vm.import_function("summarize_reduce", "codelib.app.summarization")
 
 
 async def main():

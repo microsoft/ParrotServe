@@ -43,5 +43,6 @@ data
 
 # We do not public our OpenAI API-Key
 sample_configs/engine/azure-openai*
+sample_configs/engine/openai*
 # But we provide an example config
 !sample_configs/engine/openai-example-config.json

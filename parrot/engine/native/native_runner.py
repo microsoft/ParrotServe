@@ -41,7 +41,7 @@ class NativeRunner:
         self.kv_cache_manager = RecyclePool(self.native_config.num_kv_cache_blocks)
 
         # Init CUDA env
-        if self.native_config.device_str.startswith("cuda"):
+        if self.native_config.device_str.startswith("cuda:"):
             local_rank = int(self.native_config.device_str.split(":")[1])
             torch.cuda.set_device(local_rank)
 

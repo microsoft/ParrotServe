@@ -12,7 +12,7 @@ vm = P.VirtualMachine(
     mode="debug",
 )
 
-letter_generator = vm.import_function("write_recommendation_letter", "app.common")
+letter_generator = vm.import_function("write_recommendation_letter", "codelib.app.common")
 
 
 def main():
