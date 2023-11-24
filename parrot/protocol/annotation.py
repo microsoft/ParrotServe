@@ -12,3 +12,5 @@ class DispatchAnnotation:
 
     # This field means this request should not be dispatched to a engine with more than this number of jobs.
     requests_num_upperbound: int = 256
+    tokens_num_upperbound: int = 2048
+    ddl_requirement: float = 0.0

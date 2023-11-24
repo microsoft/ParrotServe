@@ -100,19 +100,25 @@ if __name__ == "__main__":
     parser.add_argument(
         "--host",
         type=str,
-        help="Host of engine server to override the config file.",
+        help="Host of engine server.",
     )
 
     parser.add_argument(
         "--port",
         type=int,
-        help="Port of engine server to override the config file.",
+        help="Port of engine server.",
     )
 
     parser.add_argument(
         "--engine_name",
         type=str,
-        help="Port of engine server to override the config file.",
+        help="Name of engine server.",
+    )
+
+    parser.add_argument(
+        "--device",
+        type=str,
+        help="Device of engine server.",
     )
 
     parser.add_argument(
@@ -163,6 +169,8 @@ if __name__ == "__main__":
         override_args["port"] = args.port
     if args.engine_name is not None:
         override_args["engine_name"] = args.engine_name
+    if args.device is not None:
+        override_args["device"] = args.device
 
     # uvicorn.run(app, host=args.host, port=args.port, log_level="info")
 

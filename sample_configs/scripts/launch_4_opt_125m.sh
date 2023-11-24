@@ -13,7 +13,7 @@ do
         --log_filename engine_opt_server_$i.log \
         --port 900$i \
         --engine_name opt_125m_server_$i \
-        &
+        --device cuda:$[$i-1] &
     sleep 1
 done
 
