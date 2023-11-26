@@ -7,7 +7,7 @@ from parrot.utils import cprofile
 
 vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
-test_func = vm.import_function("chain_sum_test", "bench.chain_summarization")
+test_func = vm.import_function("chain_sum_test", "benchmark.bench_codelib.chain_summarization")
 
 input_workload = "Test " * 100
 

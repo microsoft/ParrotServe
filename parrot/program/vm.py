@@ -16,6 +16,7 @@ from parrot.protocol.layer_apis import (
     register_vm,
     vm_heartbeat,
     submit_call,
+    asubmit_call,
     placeholder_set,
     placeholder_fetch,
     aplaceholder_fetch,
@@ -90,6 +91,8 @@ class VirtualMachine:
     # ----------Methods for Program Interface ----------
 
     def placeholder_set_handler(self, placeholder_id: int, content: str):
+        """Set the content of a placeholder to OS."""
+
         resp = placeholder_set(
             http_addr=self.os_http_addr,
             pid=self.pid,
@@ -98,6 +101,8 @@ class VirtualMachine:
         )
 
     def placeholder_fetch_handler(self, placeholder_id: int) -> str:
+        """Fetch a placeholder from OS."""
+
         resp = placeholder_fetch(
             http_addr=self.os_http_addr,
             pid=self.pid,
@@ -106,6 +111,8 @@ class VirtualMachine:
         return resp.content
 
     async def aplaceholder_fetch_handler(self, placeholder_id: int) -> str:
+        """(Async) fetch a placeholder from OS."""
+
         resp = await aplaceholder_fetch(
             http_addr=self.os_http_addr,
             pid=self.pid,
@@ -128,6 +135,17 @@ class VirtualMachine:
         logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
 
         resp = submit_call(
+            http_addr=self.os_http_addr,
+            pid=self.pid,
+            call=call,
+        )
+    
+    async def asubmit_call_handler(self, call: SemanticCall):
+        """Submit a call to the OS."""
+
+        logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
+
+        resp = await asubmit_call(
             http_addr=self.os_http_addr,
             pid=self.pid,
             call=call,

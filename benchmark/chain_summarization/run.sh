@@ -16,4 +16,4 @@ python3 bench_chain_summarization.py # > log/program.log
 sleep 1
 
 # Kill cluster
-bash ../../util_scripts/kill_all_servers.sh
+bash ../../scripts/kill_all_servers.sh

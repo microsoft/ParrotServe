@@ -4,10 +4,7 @@
 import importlib
 import time
 
-lib_path: str = "semantic_code_lib"
-module_path: str = "bench.map_reduce_summarization"
-
-module = importlib.import_module(f"{lib_path}.{module_path}")
+module = importlib.import_module(f"benchmark.bench_codelib.map_reduce_summarization")
 chunk_num = getattr(module, "chunk_num")
 map_document_chunk = "Test " * 1000  # len=1000 for each chunk
 
@@ -28,7 +25,6 @@ llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 chain = load_summarize_chain(llm, chain_type="map_reduce")
 
 loader = TextLoader("test.txt")
-time.sleep(3) # take 3 second to load the docs from web, suppose
 
 docs = loader.load()
 text_splitter = CharacterTextSplitter.from_tiktoken_encoder(

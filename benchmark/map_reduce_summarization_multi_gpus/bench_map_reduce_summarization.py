@@ -1,7 +1,10 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
+
 import time
+import asyncio
+
 import parrot as P
 from parrot.utils import cprofile
 from parrot.testing.localhost_server_daemon import fake_os_server
@@ -18,24 +21,22 @@ map_document_chunk = "Test " * 1000  # len=1000 for each chunk
 
 
 
-def _preprocess(map_func):
-    chunk_sums = []
-    map_input = P.future()
+async def _preprocess(map_func):
+    coroutines = []
     for _ in range(chunk_num):
-        chunk_sums.append(map_func(map_input))
-    time.sleep(3) # take 3 second to load the docs from web, suppose
-    map_input.set(map_document_chunk)
+        coroutines.append(map_func.ainvoke(map_document_chunk))
+    chunk_sums = await asyncio.gather(*coroutines)
     return chunk_sums
 
 
-def main():
-    chunk_sums = _preprocess(map_highupperbound)
+async def main():
+    chunk_sums = await _preprocess(map_highupperbound)
     final_output = reduce_func_test(*chunk_sums)
     final_output.get()
 
 
-def baseline():
-    chunk_sums = _preprocess(map_lowupperbound)
+async def baseline():
+    chunk_sums = await _preprocess(map_lowupperbound)
     final_output = reduce_func_test(*chunk_sums)
     final_output.get()
 
@@ -43,14 +44,14 @@ def baseline():
 def test_baseline():
     print("baseline:")
     # with cprofile("baseline"):
-    vm.run(baseline, timeit=True)
+    vm.run(baseline(), timeit=True)
     time.sleep(3)
 
 
 def test_main():
     print("main:")
     # with cprofile("main"):
-    vm.run(main, timeit=True)
+    vm.run(main(), timeit=True)
     time.sleep(3)
 
 

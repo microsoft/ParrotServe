@@ -75,6 +75,23 @@ def submit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallRes
         raise e
 
 
+async def asubmit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallResponse:
+    try:
+        async with aiohttp.ClientSession() as client_session:
+            return await async_send_http_request(
+                client_session,
+                SubmitCallResponse,
+                http_addr,
+                "/submit_call",
+                retry_times=1,
+                pid=pid,
+                call=call.pickle(),
+            )
+    except BaseException as e:
+        logger.error(f"Execute func (pid: {pid}) error in {http_addr}. Error: {e}")
+        raise e
+
+
 def placeholder_set(
     http_addr: str, pid: int, placeholder_id: int, content: str
 ):

@@ -176,6 +176,16 @@ class SemanticFunction:
 
         return self._call_func(None, *args, **kwargs)
 
+    async def ainvoke(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+        """Async call."""
+
+        return await self._acall_func(None, *args, **kwargs)
+
+
     def invoke_statefully(
         self,
         context_successor: "SemanticFunction",
@@ -202,6 +212,28 @@ class SemanticFunction:
         call = SemanticCall(self, context_successor, *args, **kwargs)
         if SemanticFunction._virtual_machine_env is not None:
             SemanticFunction._virtual_machine_env.submit_call_handler(call)
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+            return call
+
+        # Unpack the output futures
+        if len(call.output_futures) == 1:
+            return call.output_futures[0]
+        return tuple(call.output_futures)
+
+    async def _acall_func(
+        self,
+        context_successor: Optional["SemanticFunction"],
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+        call = SemanticCall(self, context_successor, *args, **kwargs)
+        if SemanticFunction._virtual_machine_env is not None:
+            # Different from _call_func, we use asubmit_call_handler here.
+            await SemanticFunction._virtual_machine_env.asubmit_call_handler(call)
         else:
             logger.warning(
                 "VM environment is not set. Not submit the Call. Return Call instead. "

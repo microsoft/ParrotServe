@@ -30,7 +30,7 @@ def map_sum_test_main(
     doc_chunk: P.Input,
     doc_sum: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
-        P.DispatchAnnotation(requests_num_upperbound=64),
+        P.DispatchAnnotation(requests_num_upperbound=8),
     ),  # 20 Gen
 ):
     pass
@@ -49,8 +49,10 @@ map_sum_test_main.__doc__ = map_sum_test_body
 map_sum_test_main = P.function(cache_prefix=False)(map_sum_test_main)
 
 
+chunk_num = 30
+
+
 # We unrolling the function for now.
-chunk_num = 15
 def reduce_sum_test(
     chunk_sum_1: P.Input,
     chunk_sum_2: P.Input,
@@ -67,6 +69,21 @@ def reduce_sum_test(
     chunk_sum_13: P.Input,
     chunk_sum_14: P.Input,
     chunk_sum_15: P.Input,
+    chunk_sum_16: P.Input,
+    chunk_sum_17: P.Input,
+    chunk_sum_18: P.Input,
+    chunk_sum_19: P.Input,
+    chunk_sum_20: P.Input,
+    chunk_sum_21: P.Input,
+    chunk_sum_22: P.Input,
+    chunk_sum_23: P.Input,
+    chunk_sum_24: P.Input,
+    chunk_sum_25: P.Input,
+    chunk_sum_26: P.Input,
+    chunk_sum_27: P.Input,
+    chunk_sum_28: P.Input,
+    chunk_sum_29: P.Input,
+    chunk_sum_30: P.Input,
     output: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50)
     ),  # 50 Gen

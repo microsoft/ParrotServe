@@ -4,10 +4,7 @@
 import importlib
 import time
 
-lib_path: str = "semantic_code_lib"
-module_path: str = "bench.chain_summarization"
-
-module = importlib.import_module(f"{lib_path}.{module_path}")
+module = importlib.import_module(f"benchmark.bench_codelib.chain_summarization")
 fake_long_document_chunk = getattr(module, "fake_long_document_chunk")
 
 chunk_num = 20
