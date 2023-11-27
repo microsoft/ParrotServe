@@ -185,7 +185,6 @@ class SemanticFunction:
 
         return await self._acall_func(None, *args, **kwargs)
 
-
     def invoke_statefully(
         self,
         context_successor: "SemanticFunction",
@@ -284,6 +283,7 @@ class SemanticCall:
         # ---------- Runtime ----------
         self.edges: List["DAGEdge"] = []
         self.edges_map: Dict[int, "DAGEdge"] = {}  # SemanticVariable idx -> DAGEdge
+        self.thread: Optional["Thread"] = None
 
         # Set positional arguments
         for i, arg_value in enumerate(args):

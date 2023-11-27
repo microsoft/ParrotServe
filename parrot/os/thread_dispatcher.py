@@ -6,6 +6,7 @@ from typing import Dict, Union, List
 from enum import Enum
 from queue import Queue
 from dataclasses import dataclass
+from collections import deque
 
 from parrot.utils import get_logger
 from parrot.exceptions import ParrotOSUserError
@@ -148,17 +149,20 @@ class ThreadDispatcher:
             self.engines.pop(key)
 
         # Dispatch all possible threads.
-        new_thread_queue = Queue(self.config.max_queue_size)
+        new_thread_queue = deque(self.config.max_queue_size)
+
         while not self.thread_queue.empty():
             thread: Thread = self.thread_queue.get()
-            if not self._dispatch_one(thread):
+            if not thread.ready_to_dispatch() or not self._dispatch_one(thread):
                 # If the process is not alive, discard the thread directly.
                 if thread.process.live:
                     new_thread_queue.put_nowait(thread)
             else:
-                # TODO(chaofan): App FIFO
                 dispatched_threads.append(thread)
-                
+
+                # App FIFO: the thread will "pull" its successors to the top of the queue.
+                pass
+
         self.thread_queue = new_thread_queue
 
         # Display the dispatch results.

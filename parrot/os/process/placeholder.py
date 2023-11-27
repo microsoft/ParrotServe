@@ -5,6 +5,8 @@
 from typing import List, Optional
 from asyncio import Event
 
+from parrot.program.function import SemanticCall
+
 from .dag_edge import DAGEdge
 from ..tokenizer import Tokenizer
 
@@ -16,7 +18,7 @@ class SVPlaceholder:
     connects the producer and consumers.
     """
 
-    def __init__(self, id: int, name: str):
+    def __init__(self, id: int, name: str, producer: Optional[SemanticCall] = None):
         self.id = id
         self.name = name
         self.content = None
@@ -33,6 +35,7 @@ class SVPlaceholder:
         # An edge is an out-edge if this SV is the in-node of the edge.
         self.in_edges: List[DAGEdge] = []
         self.out_edges: List[DAGEdge] = []
+        self.producer = producer
 
     def __repr__(self) -> str:
         if self.ready:

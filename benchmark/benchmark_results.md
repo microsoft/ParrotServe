@@ -4,6 +4,7 @@ Network latency=250ms (If not specified)
 
 Baseline: No pipeline, submitting requests sequentiallyS
 Settings: Chunks num=20, per_chunk_size=670
+Batch size is not important, because it's sequential.
 
 - FastChat (w/o vLLM): 17.32, 17.23, 17.28, 17.50, 17.44, 17.61, 17.51, 17.25, 17.16
 - FastChat (w/ vLLM): 11.26, 11.27, 11.28, 11.27, 11.29, 11.33, 11.27, 11.27, 11.26
