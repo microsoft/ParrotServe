@@ -47,7 +47,7 @@ cd 3rdparty/langchain/libs/langchain
 pip install -e .
 ```
 
-(Optional) MLC-LLM and OpenAI are a special type of engines.
+(Optional) MLC-LLM is a special type of engine.
 
 If you used MLC-LLM engines, Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it, including the pre-compiled library and weights. The recommended commit refers to `3rdparty` folder.
 
@@ -64,5 +64,5 @@ pip install triton==2.1.0
 (In the root folder of Parrot)
 
 ```bash
-python3 install -e .
+pip install -e .
 ```
