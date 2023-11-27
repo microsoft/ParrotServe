@@ -40,6 +40,7 @@ log
 *.pt
 *.pth
 data
+*.so
 
 # We do not public our OpenAI API-Key
 sample_configs/engine/azure-openai*
