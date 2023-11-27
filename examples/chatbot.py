@@ -17,8 +17,8 @@ vm = P.VirtualMachine(
     mode="release",
 )
 
-chat_start = vm.import_function("vicuna_chat_start", "app.chat")
-chat_per_round = vm.import_function("vicuna_chat_per_round", "app.chat")
+chat_start = vm.import_function("vicuna_chat_start", "codelib.app.chat")
+chat_per_round = vm.import_function("vicuna_chat_per_round", "codelib.app.chat")
 
 
 async def main():

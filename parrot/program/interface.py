@@ -107,7 +107,7 @@ def function(
     return create_func
 
 
-def future(name: Optional[str] = None, content: Optional[str] = None):
+def future(name: Optional[str] = None, content: Optional[str] = None) -> Future:
     """Let user construct Future explicitly."""
 
     return Future(name, content)

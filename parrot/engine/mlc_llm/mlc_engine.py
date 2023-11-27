@@ -4,12 +4,17 @@
 
 import time
 from typing import Dict, AsyncGenerator
-from mlc_chat import ChatModule, GenerationConfig
-from mlc_chat.chat_module import logging
 
-logging.info = (
-    lambda x: x
-)  # This is a dirty way to disable logging in MLC-LLM, avoiding repeative logging.
+
+MLC_INSTALLED = True
+try:
+    from mlc_chat import ChatModule, GenerationConfig
+    from mlc_chat.chat_module import logging
+    logging.info = (
+        lambda x: x
+    )  # This is a dirty way to disable logging in MLC-LLM, avoiding repeative logging.
+except ImportError:
+    MLC_INSTALLED = False
 
 import torch
 import psutil
@@ -18,6 +23,7 @@ from parrot.utils import get_logger
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 from parrot.constants import NONE_CONTEXT_ID, UNKNOWN_DATA_FIELD
+from parrot.exceptions import ParrotEngineInteralError
 
 from ..context.text_context import TextContext
 from ..context.context_manager import ContextManager
@@ -46,6 +52,11 @@ class MLCEngine(LLMEngine):
     """
 
     def __init__(self, engine_config: Dict, connect_to_os: bool = True):
+        if not MLC_INSTALLED:
+            raise ParrotEngineInteralError(
+                "MLC is not installed hence can not start a MLC-LLM engine."
+            )
+
         super().__init__(engine_config, connect_to_os)
 
         scheduler_config = engine_config.pop("scheduler")

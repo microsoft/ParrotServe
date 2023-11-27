@@ -88,6 +88,14 @@ def redirect_stdout_stderr_to_file(log_file_dir_path: str, file_name: str):
     """Redirect stdout and stderr to a file."""
 
     path = os.path.join(log_file_dir_path, file_name)
+
+    counter = 1
+    orig_filename = file_name
+    while os.path.exists(path):
+        file_name = orig_filename + str(counter)
+        path = os.path.join(log_file_dir_path, file_name)
+        counter += 1
+
     fp = open(path, "w+")
     sys.stdout = fp
     sys.stderr = fp

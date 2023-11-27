@@ -9,7 +9,7 @@
     "fill_chunk_size": -1,
     "max_threads_num": 256,
     "instance": {
-        "num_kv_cache_blocks": 80000,
+        "num_kv_cache_blocks": 8000,
         "attn_func": "xformers_with_buffer"
     },
     "scheduler": {

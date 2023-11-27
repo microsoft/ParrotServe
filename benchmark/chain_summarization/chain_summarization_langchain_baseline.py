@@ -4,10 +4,7 @@
 import importlib
 import time
 
-lib_path: str = "semantic_code_lib"
-module_path: str = "bench.chain_summarization"
-
-module = importlib.import_module(f"{lib_path}.{module_path}")
+module = importlib.import_module(f"benchmark.bench_codelib.chain_summarization")
 fake_long_document_chunk = getattr(module, "fake_long_document_chunk")
 
 chunk_num = 20
@@ -39,7 +36,10 @@ split_docs = text_splitter.split_documents(docs)
 for i, doc in enumerate(split_docs):
     print(i, len(doc.page_content.split(" ")))
 
-st = time.perf_counter_ns()
-chain.run(split_docs)
-ed = time.perf_counter_ns()
-print(f"Time: {(ed - st) / 1e9} s")
+for _ in range(10):
+    st = time.perf_counter_ns()
+    chain.run(split_docs)
+    ed = time.perf_counter_ns()
+    with open("langchain_stdout.log", "a+") as f:
+        print(f"Time: {(ed - st) / 1e9} s", file=f, flush=True)
+    time.sleep(3)

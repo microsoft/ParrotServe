@@ -13,4 +13,4 @@ python3 chain_summarization_langchain_baseline.py
 
 sleep 1
 
-bash ../experiment_configs/fastchat_vllm/kill.sh
+bash ../../scripts/kill_all_fastchat_servers.sh

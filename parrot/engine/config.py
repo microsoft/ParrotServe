@@ -58,6 +58,7 @@ class MLCConfig:
 class OpenAIConfig:
     api_key: str
     api_endpoint: Union[str, Endpoint]
+    base_url: Optional[str] = None
 
     # Azure OpenAI related
     is_azure: bool = False

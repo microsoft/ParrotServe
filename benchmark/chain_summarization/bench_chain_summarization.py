@@ -7,7 +7,9 @@ from parrot.utils import cprofile
 
 vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
-test_func = vm.import_function("chain_sum_test", "bench.chain_summarization")
+test_func = vm.import_function(
+    "chain_sum_test_order1", "benchmark.bench_codelib.chain_summarization"
+)
 
 input_workload = "Test " * 100
 
@@ -59,12 +61,12 @@ if __name__ == "__main__":
     # vm.run(single_call, timeit=True)
     # vm.run(single_call, timeit=True)
 
-    test_baseline()
-    test_main()
+    # test_baseline()
+    # test_main()
 
-    # for _ in range(5):
-    #     test_baseline()
-    #     test_main()
+    for _ in range(10):
+        # test_baseline()
+        test_main()
 
     # latency = vm.profile(main)
     # print(latency)

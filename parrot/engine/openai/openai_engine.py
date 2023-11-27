@@ -57,10 +57,14 @@ class OpenAIEngine(LLMEngine):
             self.client = openai.AsyncAzureOpenAI(
                 api_key=self.openai_config.api_key,
                 api_version=self.openai_config.azure_api_version,
+                base_url=self.openai_config.base_url,
                 azure_endpoint=self.openai_config.azure_endpoint,
             )
         else:
-            self.client = openai.AsyncOpenAI(api_key=self.openai_config.api_key)
+            self.client = openai.AsyncOpenAI(
+                api_key=self.openai_config.api_key, 
+                base_url=self.openai_config.base_url,
+            )
 
         self._register_engine(self.engine_config)
 

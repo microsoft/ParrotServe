@@ -13,7 +13,7 @@ vm = P.VirtualMachine(
 )
 
 
-joke_generator = vm.import_function("tell_me_a_joke", "app.common")
+joke_generator = vm.import_function("tell_me_a_joke", "codelib.app.common")
 
 
 def main():

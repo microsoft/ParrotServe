@@ -17,7 +17,7 @@ from parrot.constants import (
     NONE_CONTEXT_ID,
     DETOKENIZE_CHUNK_NUM,
 )
-from parrot.exceptions import ParrotOSUserError
+from parrot.exceptions import ParrotOSUserError, parrot_assert
 
 from .primitive_operator import *
 from .placeholder import TokensHolder
@@ -130,7 +130,7 @@ class Thread:
 
     @property
     def requests_num_upperbound(self) -> int:
-        ret = 999999
+        ret = 999999  # +inf
         for sv in self.call.func.body:
             if (
                 isinstance(sv, ParameterLoc)
@@ -138,6 +138,40 @@ class Thread:
             ):
                 ret = min(ret, sv.param.dispatch_annotation.requests_num_upperbound)
         return ret
+
+    def get_next_threads(self) -> List["Thread"]:
+        """Get threads which take the output of this thread as input."""
+
+        ret = []
+        for sv in self.call.func.body:
+            if isinstance(sv, ParameterLoc) and sv.is_output:
+                sv_placeholder: SVPlaceholder = self.call.bindings[sv.param.name]
+                parrot_assert(
+                    isinstance(sv_placeholder, SVPlaceholder),
+                    "Output loc must be a placeholder",
+                )
+
+                for edge in sv_placeholder.out_edges:
+                    ret.append(edge.call.thread)
+        return ret
+
+    def ready_to_dispatch(self) -> bool:
+        """Check whether the thread is ready to be dispatched.
+
+        A thread is ready to be dispatched if and only if all its input placeholders are dispatched.
+        """
+
+        for sv in self.call.func.body:
+            if isinstance(sv, ParameterLoc) and sv.param.is_input_loc:
+                sv_placeholder = self.call.bindings[sv.param.name]
+                if isinstance(sv_placeholder, SVPlaceholder) and sv_placeholder.producer is not None:
+                    # parrot_assert(sv_placeholder.producer is not None, "Producer is None")
+                    thread = sv_placeholder.producer.thread
+
+                    if not thread.dispatched:
+                        return False
+
+        return True
 
     async def _flush_fill_tokens_buffer(self):
         buffer_len = len(self._fill_tokens_buffer)

@@ -16,6 +16,8 @@ from parrot.protocol.layer_apis import (
     register_vm,
     vm_heartbeat,
     submit_call,
+    asubmit_call,
+    placeholder_set,
     placeholder_fetch,
     aplaceholder_fetch,
 )
@@ -86,7 +88,21 @@ class VirtualMachine:
 
             time.sleep(VM_HEARTBEAT_INTERVAL)
 
-    def _placeholder_fetch(self, placeholder_id: int) -> str:
+    # ----------Methods for Program Interface ----------
+
+    def placeholder_set_handler(self, placeholder_id: int, content: str):
+        """Set the content of a placeholder to OS."""
+
+        resp = placeholder_set(
+            http_addr=self.os_http_addr,
+            pid=self.pid,
+            placeholder_id=placeholder_id,
+            content=content,
+        )
+
+    def placeholder_fetch_handler(self, placeholder_id: int) -> str:
+        """Fetch a placeholder from OS."""
+
         resp = placeholder_fetch(
             http_addr=self.os_http_addr,
             pid=self.pid,
@@ -94,7 +110,9 @@ class VirtualMachine:
         )
         return resp.content
 
-    async def _aplaceholder_fetch(self, placeholder_id: int) -> str:
+    async def aplaceholder_fetch_handler(self, placeholder_id: int) -> str:
+        """(Async) fetch a placeholder from OS."""
+
         resp = await aplaceholder_fetch(
             http_addr=self.os_http_addr,
             pid=self.pid,
@@ -102,9 +120,7 @@ class VirtualMachine:
         )
         return resp.content
 
-    # ----------Methods for Program Interface ----------
-
-    def register_function(self, func: SemanticFunction):
+    def register_function_handler(self, func: SemanticFunction):
         """Register a semantic function to the VM."""
 
         if func.name in self._function_registry:
@@ -113,12 +129,23 @@ class VirtualMachine:
         self._function_registry[func.name] = func
         logger.info(f"VM (pid: {self.pid}) registers function: {func.name}")
 
-    def submit_call(self, call: SemanticCall):
+    def submit_call_handler(self, call: SemanticCall):
         """Submit a call to the OS."""
 
         logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
 
         resp = submit_call(
+            http_addr=self.os_http_addr,
+            pid=self.pid,
+            call=call,
+        )
+    
+    async def asubmit_call_handler(self, call: SemanticCall):
+        """Submit a call to the OS."""
+
+        logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
+
+        resp = await asubmit_call(
             http_addr=self.os_http_addr,
             pid=self.pid,
             call=call,
@@ -130,19 +157,16 @@ class VirtualMachine:
         self,
         function_name: str,
         module_path: str,
-        lib_path: str = "semantic_code_lib",
     ):
         """Import a semantic function from a Python module.
 
         - The function name is the name of the semantic function in the module file;
         - The module path is in the format of `xx.yy.zz`, with the root directory
-          being the lib path;
-        - The lib path is the directory of the lib, with the root directory being the
-          Parrot root directory.
+          being the Parrot root directory.
         """
 
         try:
-            module = importlib.import_module(f"{lib_path}.{module_path}")
+            module = importlib.import_module(f"{module_path}")
             semantic_function = getattr(module, function_name)
         except:
             raise ImportError(
@@ -152,7 +176,7 @@ class VirtualMachine:
         if not isinstance(semantic_function, SemanticFunction):
             raise ValueError(f"Function {function_name} is not a semantic function.")
 
-        self.register_function(semantic_function)
+        self.register_function_handler(semantic_function)
         return semantic_function
 
     def set_global_env(self):

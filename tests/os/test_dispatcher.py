@@ -141,7 +141,11 @@ def test_request_wait():
     assert len(dispatched_threads) == 1
 
 
+def test_app_fifo():
+    pass
+
+
 if __name__ == "__main__":
     # test_default_policy()
-    # test_dag_aware_policy()
-    test_request_wait()
+    test_dag_aware_policy()
+    # test_request_wait()

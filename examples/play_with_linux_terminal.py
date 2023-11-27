@@ -10,7 +10,7 @@ vm = P.VirtualMachine(
     mode="debug",
 )
 
-bash = vm.import_function("linux_terminal", "app.simulation")
+bash = vm.import_function("linux_terminal", "codelib.app.simulation")
 
 
 def main():

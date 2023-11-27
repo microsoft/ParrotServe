@@ -111,7 +111,7 @@ class Process:
         for i, future in enumerate(call.output_futures):
             if future.id not in self.placeholders_map:
                 self.placeholders_map[future.id] = SVPlaceholder(
-                    id=value.id, name=value.name
+                    id=value.id, name=value.name, producer=call
                 )
             call.output_futures[i] = self.placeholders_map[future.id]
 
@@ -142,7 +142,8 @@ class Process:
             func_name=call.func.name,
         )
 
-        return self._new_thread(call, context_id)
+        call.thread = self._new_thread(call, context_id)
+        return call.thread
 
     def execute_thread(self, thread: Thread):
         try:

@@ -4,8 +4,8 @@
 
 from typing import Dict, Union, List
 from enum import Enum
-from queue import Queue
 from dataclasses import dataclass
+from collections import deque as Deque
 
 from parrot.utils import get_logger
 from parrot.exceptions import ParrotOSUserError
@@ -40,7 +40,7 @@ class ThreadDispatcher:
         self.config = config
         self.engines = engines
         self.ping_engine_method = ping_engine_method
-        self.thread_queue = Queue(self.config.max_queue_size)
+        self.thread_queue = Deque(maxlen=self.config.max_queue_size)
 
     def _get_engine_list(self, thread: Thread) -> List[ExecutionEngine]:
         engines_list = list(self.engines.values())
@@ -117,7 +117,7 @@ class ThreadDispatcher:
     def push_thread(self, thread: Thread):
         """Push a thread to the thread queue."""
 
-        if self.thread_queue.qsize() >= self.config.max_queue_size:
+        if len(self.thread_queue) >= self.config.max_queue_size:
             raise ParrotOSUserError(
                 RuntimeError(
                     f"Thread queue is full. Current size: {len(self.thread_queue)}. "
@@ -125,13 +125,13 @@ class ThreadDispatcher:
                 )
             )
 
-        self.thread_queue.put_nowait(thread)  # Append from right
+        self.thread_queue.append(thread)  # Append from right
 
     def dispatch(self) -> List[Thread]:
         """Dispatch all the (available) threads in the order of the queue."""
 
         # No thread to dispatch.
-        if self.thread_queue.empty():
+        if len(self.thread_queue) == 0:
             return []
 
         dispatched_threads: List[Thread] = []
@@ -148,16 +148,20 @@ class ThreadDispatcher:
             self.engines.pop(key)
 
         # Dispatch all possible threads.
-        new_thread_queue = Queue(self.config.max_queue_size)
-        while not self.thread_queue.empty():
-            thread: Thread = self.thread_queue.get()
-            if not self._dispatch_one(thread):
+        new_thread_queue = Deque(maxlen=self.config.max_queue_size)
+
+        while len(self.thread_queue) > 0:
+            thread: Thread = self.thread_queue.popleft()  # Pop from left
+            if not thread.ready_to_dispatch() or not self._dispatch_one(thread):
                 # If the process is not alive, discard the thread directly.
                 if thread.process.live:
-                    new_thread_queue.put_nowait(thread)
+                    new_thread_queue.append(thread) # Append from right
             else:
-                # TODO(chaofan): App FIFO
                 dispatched_threads.append(thread)
+
+                # App FIFO: the thread will "pull" its successors to the top of the queue.
+                pass
+
         self.thread_queue = new_thread_queue
 
         # Display the dispatch results.
@@ -168,6 +172,7 @@ class ThreadDispatcher:
                 + "\n".join(
                     [
                         f"  tid={thread.tid} -> engine: id={thread.engine.engine_id}, name={thread.engine.name}, "
+                        f"num_threads={thread.engine.num_threads}, num_threads_upperbound={thread.engine.requests_num_upperbound}, "
                         for thread in dispatched_threads
                     ]
                 )

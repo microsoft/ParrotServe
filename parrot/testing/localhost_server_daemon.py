@@ -8,6 +8,7 @@ The server daemon will run in a separate process created by the lib Python multi
 """
 
 
+from typing import Dict
 import contextlib
 
 import torch
@@ -106,10 +107,12 @@ def os_server():
     time.sleep(0.1)
 
 
-def _launch_engine(engine_config_name: str, connect_to_os: bool):
+def _launch_engine(engine_config_name: str, connect_to_os: bool, override_args: Dict):
     engine_config_path = get_sample_engine_config_path(engine_config_name)
     start_engine_server(
-        engine_config_path=engine_config_path, connect_to_os=connect_to_os
+        engine_config_path=engine_config_path, 
+        connect_to_os=connect_to_os, 
+        override_args=override_args,
     )
 
 
@@ -118,12 +121,15 @@ def engine_server(
     engine_config_name: str,
     wait_ready_time: float = 0.1,
     connect_to_os: bool = False,
+    **args,
 ):
+    override_args = args
     p = TorchProcess(
         target=_launch_engine,
         args=(
             engine_config_name,
             connect_to_os,
+            override_args,
         ),
         daemon=True,
     )

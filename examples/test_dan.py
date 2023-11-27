@@ -9,7 +9,7 @@ vm = P.VirtualMachine(
 )
 
 
-dan_request = vm.import_function("dan", "app.chat")
+dan_request = vm.import_function("dan", "codelib.app.chat")
 
 
 def main():

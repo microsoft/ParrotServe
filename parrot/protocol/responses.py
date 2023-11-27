@@ -34,6 +34,9 @@ class SubmitCallResponse(BaseResponse):
     pass
 
 
+class PlaceholderSetResponse(BaseResponse):
+    pass
+
 class PlaceholderFetchResponse(BaseResponse):
     content: str
 

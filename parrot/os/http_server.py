@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 
+import os
 import argparse
 import asyncio
 import traceback
@@ -69,12 +70,31 @@ async def register_vm(request: Request):
 
 @app.post("/submit_call")
 async def submit_call(request: Request):
+    # Sleep simulate network latency
+    latency = os.environ.get("SIMULATE_NETWORK_LATENCY", None)
+    assert (
+        latency is None or not latency.isdigit()
+    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
+    await asyncio.sleep(float(latency))
+
     payload = await request.json()
     pid = payload["pid"]
     logger.debug(f"Submit call received: pid={pid}")
     call = SemanticCall.unpickle(payload["call"])
-    await asyncio.sleep(0.25)  # Sleep for 250ms to simulate network latency
     pcore.submit_call(pid, call)
+    return {}
+
+
+@app.post("/placeholder_set")
+async def placeholder_set(request: Request):
+    payload = await request.json()
+    pid = payload["pid"]
+    placeholder_id = payload["placeholder_id"]
+    content = payload["content"]
+    logger.debug(
+        f"Placeholder set received: pid={pid}, placeholder_id={placeholder_id}"
+    )
+    await pcore.placeholder_set(pid, placeholder_id, content)
     return {}
 
 

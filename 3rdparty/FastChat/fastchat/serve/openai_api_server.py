@@ -379,9 +379,13 @@ async def show_available_models():
 async def create_chat_completion(request: ChatCompletionRequest):
     """Creates a completion for the chat message"""
 
+    latency = os.environ.get("SIMULATE_NETWORK_LATENCY", None)
+    assert (
+        latency is None or not latency.isdigit()
+    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
     await asyncio.sleep(
-        0.25
-    )  # HACK(chaofan): Simulate 250ms client-server network latency
+        float(latency)
+    )  # HACK(chaofan): Simulate client-server network latency
 
     error_check_ret = await check_model(request)
     if error_check_ret is not None:
@@ -416,7 +420,12 @@ async def create_chat_completion(request: ChatCompletionRequest):
     if error_check_ret is not None:
         return error_check_ret
 
-    gen_params["max_new_tokens"] = 20  # max_new_tokens
+    # HACK(chaofan): Override max_new_tokens
+    max_gen_len = os.environ.get("FS_MAX_GEN_LENGTH", None)
+    assert (
+        latency is None or not latency.isdecimal()
+    ), "Please specify the environment variable FS_MAX_GEN_LENGTH"
+    gen_params["max_new_tokens"] = int(max_gen_len)
 
     if request.stream:
         generator = chat_completion_stream_generator(

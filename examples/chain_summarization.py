@@ -9,8 +9,8 @@ vm = P.VirtualMachine(
 )
 
 
-first_sum = vm.import_function("chain_summarize_first", "app.summarization")
-refine = vm.import_function("chain_summarize_refine", "app.summarization")
+first_sum = vm.import_function("chain_summarize_first", "codelib.app.summarization")
+refine = vm.import_function("chain_summarize_refine", "codelib.app.summarization")
 
 
 def main():
