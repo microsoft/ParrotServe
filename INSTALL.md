@@ -61,6 +61,8 @@ pip install triton==2.1.0
 
 ### Install Parrot
 
+(In the root folder of Parrot)
+
 ```bash
-python3 setup.py develop
+python3 install -e .
 ```

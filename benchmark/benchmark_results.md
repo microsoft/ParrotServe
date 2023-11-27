@@ -1,9 +1,20 @@
+Network latency=250ms (If not specified)
+
 ### Chain 1 GPU, 1 VM
 
-Baseline: No pipeline, submitting requests sequentially
+Baseline: No pipeline, submitting requests sequentiallyS
+Settings: Chunks num=20, per_chunk_size=670
+
+- FastChat (w/o vLLM): 17.32, 17.23, 17.28, 17.50, 17.44, 17.61, 17.51, 17.25, 17.16
+- FastChat (w/ vLLM): 11.26, 11.27, 11.28, 11.27, 11.29, 11.33, 11.27, 11.27, 11.26
+- Parrot baseline: 11.24, 11.32, 11.25, 11.29, 11.26, 11.26, 11.26, 11.26, 11.25, 11.29
+- Parrot main: 6.81, 6.83, 6.83, 6.81, 6.81, 6.81, 6.82, 6.84, 6.82, 6.87
 
 ### Chain 1 GPU, multi VMs
 
+Baseline: No pipeline, submitting requests sequentially.
+Settings: Chunks num=20, per_chunk_size=670, 16 VMs send requests concurrently.
+And the backend engine's max_num_batched_tokens is 2048, max_batch_size=2.
 
 ### Chain 1 GPU, with long Constant Prefix
 

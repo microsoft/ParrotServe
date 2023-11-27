@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 
+import os
 import argparse
 import asyncio
 import traceback
@@ -69,7 +70,12 @@ async def register_vm(request: Request):
 
 @app.post("/submit_call")
 async def submit_call(request: Request):
-    await asyncio.sleep(0.25)  # Sleep for 250ms to simulate network latency
+    # Sleep simulate network latency
+    latency = os.environ.get("SIMULATE_NETWORK_LATENCY", None)
+    assert (
+        latency is None or not latency.isdigit()
+    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
+    await asyncio.sleep(float(latency))
 
     payload = await request.json()
     pid = payload["pid"]

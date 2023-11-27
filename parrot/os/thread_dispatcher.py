@@ -158,6 +158,7 @@ class ThreadDispatcher:
             else:
                 # TODO(chaofan): App FIFO
                 dispatched_threads.append(thread)
+                
         self.thread_queue = new_thread_queue
 
         # Display the dispatch results.

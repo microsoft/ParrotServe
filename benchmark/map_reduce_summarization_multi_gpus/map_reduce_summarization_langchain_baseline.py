@@ -5,7 +5,7 @@ import importlib
 import time
 
 module = importlib.import_module(f"benchmark.bench_codelib.map_reduce_summarization")
-chunk_num = getattr(module, "chunk_num")
+chunk_num = getattr(module, "chunk_num_30")
 map_document_chunk = "Test " * 1000  # len=1000 for each chunk
 
 full_document = (map_document_chunk + "\n\n") * chunk_num

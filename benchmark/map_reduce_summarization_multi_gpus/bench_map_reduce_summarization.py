@@ -11,14 +11,20 @@ from parrot.testing.localhost_server_daemon import fake_os_server
 
 vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
-map_lowupperbound = vm.import_function("map_sum_test_baseline", module_path="benchmark.bench_codelib.map_reduce_summarization")
-map_highupperbound = vm.import_function("map_sum_test_main", module_path="benchmark.bench_codelib.map_reduce_summarization")
-reduce_func_test = vm.import_function("reduce_sum_test", module_path="benchmark.bench_codelib.map_reduce_summarization")
+map_lowupperbound = vm.import_function(
+    "map_sum_test_baseline",
+    module_path="benchmark.bench_codelib.map_reduce_summarization",
+)
+map_highupperbound = vm.import_function(
+    "map_sum_test_main", module_path="benchmark.bench_codelib.map_reduce_summarization"
+)
+reduce_func_test = vm.import_function(
+    "reduce_sum_test_30", module_path="benchmark.bench_codelib.map_reduce_summarization"
+)
 
 chunk_num = len(reduce_func_test.inputs)
 
 map_document_chunk = "Test " * 1000  # len=1000 for each chunk
-
 
 
 async def _preprocess(map_func):
