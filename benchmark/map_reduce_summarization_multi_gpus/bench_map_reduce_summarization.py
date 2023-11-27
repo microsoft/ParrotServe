@@ -63,6 +63,8 @@ def test_main():
 
 
 if __name__ == "__main__":
-    for _ in range(10):
+    test_baseline()
+    
+    # for _ in range(10):
         # test_baseline()
-        test_main()
+        # test_main()

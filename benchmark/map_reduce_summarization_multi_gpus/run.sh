@@ -1,4 +1,5 @@
 #!/bin/sh
+
 rm -rf log
 
 pwd=$PWD

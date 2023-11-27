@@ -1,12 +1,16 @@
 #!/bin/sh
 
+rm -rf log
 rm *.log -rf
 
 bash fastchat/launch_fs.sh
 
+pwd=$PWD
+log_path=$pwd/log/
+
 # Launch cluster
 cd openai
-bash launch.sh log os.log engine1.log engine2.log engine3.log engine4.log
+bash launch.sh $log_path os.log engine1.log engine2.log engine3.log engine4.log
 sleep 2
 
 # Run benchmark

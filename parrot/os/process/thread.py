@@ -162,18 +162,14 @@ class Thread:
         """
 
         for sv in self.call.func.body:
-            if isinstance(sv, ParameterLoc) and sv.is_input_loc:
-                sv_placeholder: SVPlaceholder = self.call.bindings[sv.param.name]
-                parrot_assert(
-                    isinstance(sv_placeholder, SVPlaceholder),
-                    "Input loc must be a placeholder",
-                )
+            if isinstance(sv, ParameterLoc) and sv.param.is_input_loc:
+                sv_placeholder = self.call.bindings[sv.param.name]
+                if isinstance(sv_placeholder, SVPlaceholder) and sv_placeholder.producer is not None:
+                    # parrot_assert(sv_placeholder.producer is not None, "Producer is None")
+                    thread = sv_placeholder.producer.thread
 
-                parrot_assert(sv_placeholder.producer is not None, "Producer is None")
-                thread = sv_placeholder.producer.call.thread
-
-                if not thread.dispatched:
-                    return False
+                    if not thread.dispatched:
+                        return False
 
         return True
 
