@@ -126,9 +126,9 @@ class Process:
                 sv_placeholder = call.bindings[sv.param.name]
                 if isinstance(sv_placeholder, SVPlaceholder):
                     if sv.param.is_input_loc:
-                        cur_edge.link_with_in_node(sv_placeholder)
+                        cur_edge.link_with_from_node(sv_placeholder)
                     elif sv.param.is_output:
-                        cur_edge.link_with_out_node(sv_placeholder)
+                        cur_edge.link_with_to_node(sv_placeholder)
 
                 if sv.param.is_output:
                     # make a new node for the next segment
@@ -137,6 +137,7 @@ class Process:
 
     def make_thread(self, call: SemanticCall) -> Thread:
         # Get state context (if any)
+        # -1 indicates no state context
         context_id = self.memory_space.get_state_context_id(
             pid=self.pid,
             func_name=call.func.name,

@@ -10,8 +10,8 @@ from parrot.os.thread_dispatcher import DispatcherConfig, ThreadDispatcher
 
 
 @P.function()
-def test(a: P.Input, b: P.Input, c: P.Output):
-    """This {{b}} is a test {{a}} function {{c}}"""
+def test(a: P.Input, b: P.Output):
+    """This is a test {{a}} function {{b}}"""
 
 
 def test_default_policy():
@@ -37,7 +37,7 @@ def test_default_policy():
     )
 
     # 8 threads
-    call = test("a", "b")
+    call = test("a")
     for i in range(8):
         thread = Thread(tid=i, process=process, call=call, context_id=0)
         dispatcher.push_thread(thread)
@@ -132,7 +132,7 @@ def test_request_wait():
     )
 
     # 4 threads
-    call = test("a", "b")
+    call = test("a")
     for i in range(4):
         thread = Thread(tid=i, process=process, call=call, context_id=0)
         dispatcher.push_thread(thread)
@@ -142,10 +142,62 @@ def test_request_wait():
 
 
 def test_app_fifo():
-    pass
+    dispatcher_config = DispatcherConfig(
+        dag_aware=False,
+        app_fifo=True,
+        max_queue_size=1024,
+    )
+
+    # 1 engine with max_threads_num=1
+    engine_config = EngineConfig(max_threads_num=1)
+    engines = {0: ExecutionEngine(engine_id=0, config=engine_config)}
+
+    # init dispatcher
+    dispatcher = ThreadDispatcher(config=dispatcher_config, engines=engines)
+    mem_space = MemorySpace()
+    tokenizer = Tokenizer()
+    process = Process(
+        pid=0,
+        dispatcher=dispatcher,
+        tokenizer=tokenizer,
+        memory_space=mem_space,
+    )
+
+    # 8 calls, each group of 2 calls with A->B dependency.
+    threads = []
+    for i in range(4):
+        tid1 = i
+        tid2 = i + 4
+        middle_node = P.future(name=f"middle_{i}")
+        call1 = test("a", b=middle_node)
+        call2 = test(middle_node)
+
+        # Necessary to make DAG
+        process.rewrite_call(call1)
+        process.rewrite_call(call2)
+
+        thread1 = Thread(tid=tid1, process=process, call=call1, context_id=0)
+        call1.thread = thread1
+        thread2 = Thread(tid=tid2, process=process, call=call2, context_id=0)
+        call2.thread = thread2
+
+        threads.append(thread1)
+        threads.append(thread2)
+
+    threads.sort(key=lambda x: x.tid)  # sort as A, A, A, A, B, B, B, B order
+
+    for thread in threads:
+        dispatcher.push_thread(thread)
+
+    for _ in range(8):
+        dispatched_threads = dispatcher.dispatch()
+        assert len(dispatched_threads) == 1
+        thread = dispatched_threads[0]
+        thread.engine.remove_thread(thread)  # Free loc
 
 
 if __name__ == "__main__":
     # test_default_policy()
-    test_dag_aware_policy()
+    # test_dag_aware_policy()
     # test_request_wait()
+    test_app_fifo()

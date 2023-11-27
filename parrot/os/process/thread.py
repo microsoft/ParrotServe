@@ -144,12 +144,14 @@ class Thread:
 
         ret = []
         for sv in self.call.func.body:
-            if isinstance(sv, ParameterLoc) and sv.is_output:
+            if isinstance(sv, ParameterLoc) and sv.param.is_output:
                 sv_placeholder: SVPlaceholder = self.call.bindings[sv.param.name]
                 parrot_assert(
                     isinstance(sv_placeholder, SVPlaceholder),
-                    "Output loc must be a placeholder",
+                    f"Output loc must be a placeholder, but get {type(sv_placeholder)}",
                 )
+
+                # print(sv_placeholder, sv_placeholder.out_edges, sv_placeholder.in_edges)
 
                 for edge in sv_placeholder.out_edges:
                     ret.append(edge.call.thread)
@@ -164,7 +166,10 @@ class Thread:
         for sv in self.call.func.body:
             if isinstance(sv, ParameterLoc) and sv.param.is_input_loc:
                 sv_placeholder = self.call.bindings[sv.param.name]
-                if isinstance(sv_placeholder, SVPlaceholder) and sv_placeholder.producer is not None:
+                if (
+                    isinstance(sv_placeholder, SVPlaceholder)
+                    and sv_placeholder.producer is not None
+                ):
                     # parrot_assert(sv_placeholder.producer is not None, "Producer is None")
                     thread = sv_placeholder.producer.thread
 

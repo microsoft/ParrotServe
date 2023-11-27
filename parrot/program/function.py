@@ -310,9 +310,11 @@ class SemanticCall:
 
         # Create output futures
         for param in self.func.outputs:
-            future = Future(name=param.name)
-            self.output_futures.append(future)
-            self._set_value(param, future, self.bindings)
+            # Skip the output locs that are already set.
+            if param.name not in self.bindings:
+                future = Future(name=param.name)
+                self.output_futures.append(future)
+                self._set_value(param, future, self.bindings)
 
     @staticmethod
     def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
