@@ -25,6 +25,7 @@ async def _preprocess(map_func):
     coroutines = []
     for _ in range(chunk_num):
         coroutines.append(map_func.ainvoke(map_document_chunk))
+    # time.sleep(0.1)
     chunk_sums = await asyncio.gather(*coroutines)
     return chunk_sums
 
@@ -56,5 +57,6 @@ def test_main():
 
 
 if __name__ == "__main__":
-    test_baseline()
-    # test_main()
+    for _ in range(10):
+        # test_baseline()
+        test_main()

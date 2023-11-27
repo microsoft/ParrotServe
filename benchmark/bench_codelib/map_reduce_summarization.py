@@ -19,7 +19,7 @@ def map_sum_test_baseline(
     doc_sum: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
         P.DispatchAnnotation(requests_num_upperbound=2),
-    ),  # 20 Gen
+    ),
 ):
     pass
 
@@ -31,7 +31,7 @@ def map_sum_test_main(
     doc_sum: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
         P.DispatchAnnotation(requests_num_upperbound=8),
-    ),  # 20 Gen
+    ),
 ):
     pass
 
@@ -86,7 +86,7 @@ def reduce_sum_test(
     chunk_sum_30: P.Input,
     output: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50)
-    ),  # 50 Gen
+    ),
 ):
     pass
 

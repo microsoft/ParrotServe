@@ -2,7 +2,7 @@
 
 rm *.log -rf
 
-bash fastchat/launch_fs.sh
+bash fastchat/launch_vllm.sh
 
 # Launch cluster
 cd openai

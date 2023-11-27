@@ -106,7 +106,7 @@ class VLLMWorker(BaseModelWorker):
             presence_penalty=presence_penalty,
             frequency_penalty=frequency_penalty,
             best_of=best_of,
-            ignore_eos=True,  # Hack to avoid the model from early stopping
+            ignore_eos=True,  # HACK(chaofan): to avoid the model from early stopping
         )
         results_generator = engine.generate(context, sampling_params, request_id)
 

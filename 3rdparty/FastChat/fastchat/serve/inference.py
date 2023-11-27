@@ -81,10 +81,13 @@ def generate_stream(
     max_new_tokens = int(params.get("max_new_tokens", 256))
     logprobs = params.get("logprobs", None)  # FIXME: Support logprobs>1.
     echo = bool(params.get("echo", True))
+    
     stop_str = params.get("stop", None)
     stop_token_ids = params.get("stop_token_ids", None) or []
-    if tokenizer.eos_token_id not in stop_token_ids:
-        stop_token_ids.append(tokenizer.eos_token_id)
+    
+    # HACK(chaofan): Don't stop in EOS for testing stability.
+    # if tokenizer.eos_token_id not in stop_token_ids:
+    #     stop_token_ids.append(tokenizer.eos_token_id)
 
     logits_processor = prepare_logits_processor(
         temperature, repetition_penalty, top_p, top_k

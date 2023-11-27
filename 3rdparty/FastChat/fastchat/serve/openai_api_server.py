@@ -416,7 +416,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
     if error_check_ret is not None:
         return error_check_ret
 
-    gen_params["max_new_tokens"] = 20  # max_new_tokens
+    gen_params["max_new_tokens"] = 50  # HACK(chaofan): Set max_new_tokens
 
     if request.stream:
         generator = chat_completion_stream_generator(

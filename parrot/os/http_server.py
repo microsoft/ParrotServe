@@ -69,11 +69,12 @@ async def register_vm(request: Request):
 
 @app.post("/submit_call")
 async def submit_call(request: Request):
+    await asyncio.sleep(0.25)  # Sleep for 250ms to simulate network latency
+
     payload = await request.json()
     pid = payload["pid"]
     logger.debug(f"Submit call received: pid={pid}")
     call = SemanticCall.unpickle(payload["call"])
-    await asyncio.sleep(0.25)  # Sleep for 250ms to simulate network latency
     pcore.submit_call(pid, call)
     return {}
 
