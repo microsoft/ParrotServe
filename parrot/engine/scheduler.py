@@ -47,7 +47,7 @@ class Scheduler:
         # return len(self.waiting_jobs) == 0 and len(self.running_jobs) == 0
         return self.num_total_jobs == 0
 
-    def schedule(self) -> List[PrimitiveJob]:
+    def schedule(self, remove_scheduled_jobs: bool = False) -> List[PrimitiveJob]:
         """Schedule jobs."""
 
         cur_num_jobs = len(self.running_jobs)
@@ -76,7 +76,10 @@ class Scheduler:
             cur_num_jobs += 1
 
         # NOTE(chaofan): Use copy() to avoid list modification.
-        return self.running_jobs.copy()
+        ret = self.running_jobs.copy()
+        if remove_scheduled_jobs:
+            self.running_jobs = []
+        return ret
 
     def finish(self):
         """Finish jobs."""

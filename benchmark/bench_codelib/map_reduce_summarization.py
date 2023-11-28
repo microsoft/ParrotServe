@@ -30,7 +30,7 @@ def map_sum_test_main(
     doc_chunk: P.Input,
     doc_sum: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
-        P.DispatchAnnotation(requests_num_upperbound=8),
+        P.DispatchAnnotation(requests_num_upperbound=32),
     ),
 ):
     pass

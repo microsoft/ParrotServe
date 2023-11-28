@@ -383,9 +383,9 @@ async def create_chat_completion(request: ChatCompletionRequest):
     assert (
         latency is None or not latency.isdigit()
     ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
-    await asyncio.sleep(
-        float(latency)
-    )  # HACK(chaofan): Simulate client-server network latency
+    # await asyncio.sleep(
+    #     float(latency)
+    # )  # HACK(chaofan): Simulate client-server network latency
 
     error_check_ret = await check_model(request)
     if error_check_ret is not None:

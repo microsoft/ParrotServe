@@ -9,8 +9,8 @@ export OPENAI_API_KEY=EMPTY
 
 sleep 1
 
-python3 chain_summarization_langchain_baseline.py
+python3 map_reduce_summarization_langchain_baseline.py
 
 sleep 1
 
-bash ../experiment_configs/fastchat_vllm/kill.sh
+bash ../../scripts/kill_all_fastchat_servers.sh

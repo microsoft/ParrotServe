@@ -2,6 +2,7 @@ Network latency=250ms (If not specified)
 
 ### Chain 1 GPU, 1 VM
 
+Model: Llama-13B
 Baseline: No pipeline, submitting requests sequentiallyS
 Settings: Chunks num=20, per_chunk_size=670
 Batch size is not important, because it's sequential.
@@ -22,12 +23,22 @@ And the backend engine's max_num_batched_tokens is 2048, max_batch_size=2.
 
 ### Map-Reduce 1 GPU
 
+GPU: A100*1
+Model: Llama-13B
 Baseline: Engine with 2048 max_num_batched_tokens (or 2 max_num_jobs)
 Settings: Chunks num=15, per_chunk_size=1000
 Ours: (Upperbound) map stage marked as 8, reduce stage marked as 2 (as baselines)
 
 Then for baselines, it takes 15/2=8 iters to finish map stage.
+Approximately, each iter's running time is 50*20ms = 1s. And there is addtional 1s for reduce.
 
+Results (s):
+- Langchain + FastChat (w/o vLLM): 31.67, 31.59, 31.66, 31.83, 31.70, 31.85, 31.78, 31.79, 32.54
+- Langchain + FastChat (w/ vLLM): 15.27, 15.28, 15.31, 15.30, 15.28, 15.29, 15.28, 15.28, 15.29
+- Parrot + FastChat (w/o vLLM): 33.42, 33.10, 33.70, 32.64, 3298, 31.47, 32.12, 32.64, 31.89
+- Parrot + FastChat (w/ vLLM): 13.60, 13.42, 13.54, 13.55, 13.58, 13.60, 13.58, 13.59, 13.58
+- Parrot baseline: 14.14, 14.12, 14.00, 13.95, 14.15, 14.12, 14.11, 14.17, 14.04
+- Parrot main: 5.30, 5.45, 5.30,,5.38, 5.35, 5.32, 5.32, 5.37, 5.37
 
 ### Map-Reduce 4 GPUs
 
@@ -66,11 +77,11 @@ Results (s):
 - Parrot + FastChat (w/ vLLM): 21.13, 22.91, 22.97, 20.91, 22.68
 - Parrot + FastChat (w/o vLLM, TP): 
 - Parrot + FastChat (w/ vLLM, TP): 
-- Parrot baseline: 14.05, 12.66, 13.92, 13.53, 12.76, 13.07, 12.58, 12.82, 13.26, 12.80
-- Parrot main: 6.72, 5.35, 5.27, 5.41, 5.23, 5.38, 5.18, 5.19, 5.27, 5.43
+- Parrot baseline: (14.05,) 12.66, 13.92, 13.53, 12.76, 13.07, 12.58, 12.82, 13.26, 12.80
+- Parrot main: (6.72,) 5.35, 5.27, 5.41, 5.23, 5.38, 5.18, 5.19, 5.27, 5.43
 
 
 ### Chatbots
 
 
-### Multi-agents ReAct applications (MetaGPT, Autogen)
+### Multi-agents ReAct applications (MetaGPT,)

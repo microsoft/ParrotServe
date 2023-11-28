@@ -11,7 +11,7 @@ fake_long_document_chunk = "Test " * 670  # len=670 for each chunk
 refine_instruction = "Test " * 10
 
 
-def chain_sum_test_order1(
+def chain_sum_test(
     previous_document: P.Input,
     refined_document: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=20)
@@ -20,14 +20,18 @@ def chain_sum_test_order1(
     pass
 
 
-chain_sum_test_body_order1 = (
-    "{{previous_document}}"
-    + f"{fake_long_document_chunk}"
+"""
+A long chunked doc, a previous (refined) doc, and some instructions.
+"""
+
+chain_sum_test_body = (
+    f"{fake_long_document_chunk}"
+    + "{{previous_document}}"
     + f"{refine_instruction}"
     + "{{refined_document}}"
 )
 
-chain_sum_test_order1.__doc__ = chain_sum_test_body_order1
-chain_sum_test_order1 = P.function(cache_prefix=False)(chain_sum_test_order1)
+chain_sum_test.__doc__ = chain_sum_test_body
+chain_sum_test = P.function(cache_prefix=False)(chain_sum_test)
 
 # print(chain_sum_test_body)

@@ -7,7 +7,7 @@ import openai
 import time
 import asyncio
 
-from parrot.utils import get_logger
+from parrot.utils import get_logger, create_task_in_loop
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 from parrot.constants import UNKNOWN_DATA_FIELD
@@ -62,7 +62,7 @@ class OpenAIEngine(LLMEngine):
             )
         else:
             self.client = openai.AsyncOpenAI(
-                api_key=self.openai_config.api_key, 
+                api_key=self.openai_config.api_key,
                 base_url=self.openai_config.base_url,
             )
 
@@ -164,7 +164,7 @@ class OpenAIEngine(LLMEngine):
         }
 
     # override
-    def generate_stream(self, payload: Dict) -> AsyncGenerator:
+    async def generate_stream(self, payload: Dict) -> AsyncGenerator:
         raise NotImplementedError
 
     # override
@@ -196,18 +196,13 @@ class OpenAIEngine(LLMEngine):
             recent_average_latency=recent_avarage_latency,
         )
 
-    # override
-    async def engine_iter(self):
-        """Get the jobs and execute them asynchronously."""
-        # If there is no job, we don't need to run.
-        if self.scheduler.empty:
-            return
-
-        jobs = self.scheduler.schedule()
+    async def _execute_iter(self):
+        jobs = self.scheduler.schedule(remove_scheduled_jobs=True)
 
         logger.debug(f"Running {len(jobs)} jobs. ")
 
         coroutines = [self._execute_job(job) for job in jobs]
+
         if len(coroutines) > 0:
             st = time.perf_counter_ns()
             await asyncio.gather(*coroutines)
@@ -215,4 +210,11 @@ class OpenAIEngine(LLMEngine):
             iter_latency = ed - st
             self.latency_analyzer.add_latency(iter_latency)
 
-        self.scheduler.finish()
+    # override
+    async def engine_iter(self):
+        """Get the jobs and execute them asynchronously."""
+        # If there is no job, we don't need to run.
+        if self.scheduler.empty:
+            return
+
+        create_task_in_loop(self._execute_iter())

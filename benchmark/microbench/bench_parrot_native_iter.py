@@ -19,7 +19,9 @@ def _init():
 
     prompt_len = 1024
 
-    fill = Fill(
+    fill1 = Fill(pid=0, tid=0, context_id=0, parent_context_id=-1, token_ids=[100])
+
+    fill2 = Fill(
         pid=0,
         tid=0,
         context_id=0,
@@ -40,17 +42,18 @@ def _init():
         sampling_config=sampling_config,
     )
 
-    return runner, fill, gen
+    return runner, fill1, fill2, gen
 
 
 @torch.inference_mode()
 def bench_7b_model():
-    runner, fill, gen = _init()
+    runner, fill1, fill2, gen = _init()
 
     warmups = 10
     trials = 100
 
-    runner.run_iter([fill])
+    runner.run_iter([fill1])
+    runner.run_iter([fill2])
 
     for _ in range(warmups):
         runner.run_iter([gen])
