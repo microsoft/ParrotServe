@@ -7,10 +7,13 @@ Baseline: No pipeline, submitting requests sequentiallyS
 Settings: Chunks num=20, per_chunk_size=670
 Batch size is not important, because it's sequential.
 
-- FastChat (w/o vLLM): 17.32, 17.23, 17.28, 17.50, 17.44, 17.61, 17.51, 17.25, 17.16
-- FastChat (w/ vLLM): 11.26, 11.27, 11.28, 11.27, 11.29, 11.33, 11.27, 11.27, 11.26
-- Parrot baseline: 11.24, 11.32, 11.25, 11.29, 11.26, 11.26, 11.26, 11.26, 11.25, 11.29
-- Parrot main: 6.81, 6.83, 6.83, 6.81, 6.81, 6.81, 6.82, 6.84, 6.82, 6.87
+Results (s):
+- Langchain + FastChat (w/o vLLM): 21.41, 21.63, 21.34, 21.28, 21.22, 21.22, 21.20, 21.20, 21.35
+- Langchain + FastChat (w/ vLLM): 15.62, 15.62, 15.69, 15.65, 15.64, 15.64, 15.65, 15.68, 15.69
+- Parrot + FastChat (w/o vLLM): 21.53, 21.52, 21.23, 21.36, 21.43, 21.39, 21.43, 21.38, 21.38
+- Parrot + FastChat (w/ vLLM): 16.00, 15.98, 15.98, 16.16, 16.01, 16.01, 16.00, 16.00, 16.01
+- Parrot baseline: 16.04, 16.02, 16.09, 16.06, 16.03, 16.05, 16.04, 16.05, 16.05
+- Parrot main: 11.43, 11.42, 11.53, 11.47, 11.49, 11.49, 11.66, 11.46, 11.47
 
 ### Chain 1 GPU, multi VMs
 
@@ -33,8 +36,8 @@ Then for baselines, it takes 15/2=8 iters to finish map stage.
 Approximately, each iter's running time is 50*20ms = 1s. And there is addtional 1s for reduce.
 
 Results (s):
-- Langchain + FastChat (w/o vLLM): 31.67, 31.59, 31.66, 31.83, 31.70, 31.85, 31.78, 31.79, 32.54
-- Langchain + FastChat (w/ vLLM): 15.27, 15.28, 15.31, 15.30, 15.28, 15.29, 15.28, 15.28, 15.29
+- Langchain + FastChat (w/o vLLM): 31.95, 31.67, 31.76, 32.07, 32.44, 32.41, 32.20, 31.94, 32.43
+- Langchain + FastChat (w/ vLLM): 23.54, 23.60, 23.54, 23.56, 23.57, 23.59, 23.59, 23.57, 23.57
 - Parrot + FastChat (w/o vLLM): 33.42, 33.10, 33.70, 32.64, 3298, 31.47, 32.12, 32.64, 31.89
 - Parrot + FastChat (w/ vLLM): 13.60, 13.42, 13.54, 13.55, 13.58, 13.60, 13.58, 13.59, 13.58
 - Parrot baseline: 14.14, 14.12, 14.00, 13.95, 14.15, 14.12, 14.11, 14.17, 14.04

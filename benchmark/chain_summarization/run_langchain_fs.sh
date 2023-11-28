@@ -2,7 +2,7 @@
 
 rm *.log -rf
 
-bash ../experiment_configs/fastchat_vllm/launch_fs.sh
+bash fastchat/launch_fs.sh
 
 export OPENAI_API_BASE=http://localhost:8000/v1
 export OPENAI_API_KEY=EMPTY

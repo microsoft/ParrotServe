@@ -1,19 +1,24 @@
 #!/bin/sh
+
 rm -rf log
+rm *.log -rf
+
+bash fastchat/launch_fs.sh
 
 pwd=$PWD
 log_path=$pwd/log/
 
-echo $log_path
-
 # Launch cluster
-cd cluster_1_vicuna_13b/
+cd cluster_1_openai
 bash launch.sh $log_path os.log engine.log
+sleep 2
 
 # Run benchmark
 cd ..
-python3 bench_chain_summarization.py # > log/program.log
+
+python3 bench_chain_summarization.py > 1.log
+
 sleep 1
 
-# Kill cluster
+bash ../../scripts/kill_all_fastchat_servers.sh
 bash ../../scripts/kill_all_servers.sh
