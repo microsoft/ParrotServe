@@ -8,6 +8,7 @@ import time
 import traceback
 import threading
 import importlib
+import inspect
 from dataclasses import dataclass
 from typing import Callable, Coroutine, Literal, Dict, List, Any
 
@@ -234,21 +235,28 @@ class VirtualMachine:
     ) -> float:
         """vm.run method wraps a E2E running process of a semantic program.
 
-        It accepts both normal functions and coroutines. When the program is a coroutine,
-        VM will create a new event loop and run the coroutine.
+        It accepts both normal functions and async functions. When the program is async,
+        VM will create a new event loop and run the coroutine it created.
 
-        Args are the arguments passed to the program. This case is only used for normal functions.
+        For simplicity, we only support positional arguments for now.
 
         Return the E2E running time of the program.
         """
 
         logger.info(f"VM (pid: {self.pid}) runs program: {program.__name__}")
 
+        if inspect.iscoroutinefunction(program):
+            coroutine = program(*args)
+        else:
+            coroutine = None
+
         with self.running_scope(timeit):
             # asyncio.run(program)
-            if isinstance(program, Coroutine):
+            # if isinstance(program, Coroutine):
+
+            if coroutine:
                 loop = asyncio.new_event_loop()
-                loop.run_until_complete(program)
+                loop.run_until_complete(coroutine)
                 loop.close()
             else:
                 program(*args)

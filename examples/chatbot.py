@@ -43,4 +43,4 @@ async def main():
     print("Bye.")
 
 
-vm.run(main())
+vm.run(main)

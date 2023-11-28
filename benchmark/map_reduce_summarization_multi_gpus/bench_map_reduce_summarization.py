@@ -51,20 +51,20 @@ async def baseline():
 def test_baseline():
     print("baseline:")
     # with cprofile("baseline"):
-    vm.run(baseline(), timeit=True)
+    vm.run(baseline, timeit=True)
     time.sleep(3)
 
 
 def test_main():
     print("main:")
     # with cprofile("main"):
-    vm.run(main(), timeit=True)
+    vm.run(main, timeit=True)
     time.sleep(3)
 
 
 if __name__ == "__main__":
     test_baseline()
-    
+
     # for _ in range(10):
-        # test_baseline()
-        # test_main()
+    # test_baseline()
+    # test_main()

@@ -87,4 +87,4 @@ async def main():
     print(await post.aget())
 
 
-vm.run(main(), timeit=True)
+vm.run(main, timeit=True)

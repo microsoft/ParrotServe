@@ -46,7 +46,7 @@ def bench_4_7b_models():
 
         print(f"Total time: {(et - st) / 1e6} ms")
 
-    vm.run(main())
+    vm.run(main)
 
 
 if __name__ == "__main__":

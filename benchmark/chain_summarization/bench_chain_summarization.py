@@ -76,7 +76,7 @@ def test_main():
 def test_main_async():
     print("main_async:")
     # with cprofile("main_async"):
-    vm.run(main_async(), timeit=True)
+    vm.run(main_async, timeit=True)
     time.sleep(3)
 
 

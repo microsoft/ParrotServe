@@ -45,4 +45,4 @@ async def main():
 
 # main()
 
-vm.run(main())
+vm.run(main)
