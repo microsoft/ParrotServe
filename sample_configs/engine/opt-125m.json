@@ -3,7 +3,7 @@
     "model": "facebook/opt-125m",
     "host": "localhost",
     "port": 9001,
-    "engine_type": "native",
+    "engine_type": "builtin",
     "random_seed": 0,
     "tokenizer": "facebook/opt-125m",
     "fill_chunk_size": -1,

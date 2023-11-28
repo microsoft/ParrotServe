@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 
-"""Kernels for Parrot native engines."""
+"""Kernels for Parrot built-in engines."""
 
 from .tokens_moving import (
     discontinuous_move_tokens,

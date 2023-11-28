@@ -9,36 +9,36 @@ from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 
 from ..llm_engine import LLMEngine
-from .native_runner import NativeRunner
+from .builtin_runner import BuiltinRunner
 from ..latency_analyzer import LatencyAnalyzer
 from ..context.block_context import BlockContext
 from ..scheduler import Scheduler
 from ..primitive_job import PrimitiveJob, Fill, Generate
-from ..config import NativeConfig, SchedulerConfig, EngineConfig
+from ..config import BuiltinConfig, SchedulerConfig, EngineConfig
 
 
-logger = get_logger("NativeEngine")
+logger = get_logger("BuiltinEngine")
 
 
-class NativeEngine(LLMEngine):
-    """Native LLM Engine for Parrot."""
+class BuiltinEngine(LLMEngine):
+    """Parrot built-in LLM Engine, supporting the most fine-grained level optimization."""
 
     def __init__(self, engine_config: Dict, connect_to_os: bool = True):
         super().__init__(engine_config, connect_to_os)
 
         # ---------- Configs ----------
-        native_config = NativeConfig(**engine_config.pop("instance"))
+        builtin_config = BuiltinConfig(**engine_config.pop("instance"))
         scheduler_config = SchedulerConfig(**engine_config.pop("scheduler"))
         self.engine_config = EngineConfig(
-            dtype=native_config.dtype_str,
-            device=native_config.device_str,
+            dtype=builtin_config.dtype_str,
+            device=builtin_config.device_str,
             **engine_config,
         )
-        self.native_config = native_config
+        self.builtin_config = builtin_config
 
         # ---------- Components ----------
-        self.runner = NativeRunner(
-            model_name=self.engine_config.model, config=native_config
+        self.runner = BuiltinRunner(
+            model_name=self.engine_config.model, config=builtin_config
         )
         self.scheduler = Scheduler(scheduler_config)
         self.latency_analyzer = LatencyAnalyzer()
@@ -46,7 +46,7 @@ class NativeEngine(LLMEngine):
         self._register_engine(self.engine_config)
 
         logger.info(
-            f"NativeEngine {self.engine_config.engine_name} (id={self.engine_id}) started with config: \n"
+            f"BuiltinEngine {self.engine_config.engine_name} (id={self.engine_id}) started with config: \n"
             + "\n".join(
                 [
                     f"  {key}={value}, "
@@ -62,7 +62,7 @@ class NativeEngine(LLMEngine):
             job,
             BlockContext,
             kv_cache_manager=self.runner.kv_cache_manager,
-            block_size=self.native_config.block_size,
+            block_size=self.builtin_config.block_size,
         )
 
     # ---------- Public APIs ----------

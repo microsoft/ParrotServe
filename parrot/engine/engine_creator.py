@@ -9,12 +9,12 @@ from parrot.utils import get_logger
 
 from .llm_engine import LLMEngine
 from .config import (
-    ENGINE_TYPE_NATIVE,
+    ENGINE_TYPE_BUILTIN,
     ENGINE_TYPE_OPENAI,
     ENGINE_TYPE_MLCLLM,
     EngineConfig,
 )
-from .native.native_engine import NativeEngine
+from .builtin.builtin_engine import BuiltinEngine
 from .mlc_llm.mlc_engine import MLCEngine
 from .openai.openai_engine import OpenAIEngine
 
@@ -52,8 +52,8 @@ def create_engine(
 
     engine_type = engine_config["engine_type"]
 
-    if engine_type == ENGINE_TYPE_NATIVE:
-        return NativeEngine(engine_config, connect_to_os)
+    if engine_type == ENGINE_TYPE_BUILTIN:
+        return BuiltinEngine(engine_config, connect_to_os)
     elif engine_type == ENGINE_TYPE_MLCLLM:
         return MLCEngine(engine_config, connect_to_os)
     elif engine_type == ENGINE_TYPE_OPENAI:

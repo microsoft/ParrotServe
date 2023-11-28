@@ -28,7 +28,7 @@ class Executor:
         self.tokenizer = tokenizer
 
         # ---------- Sub-executors ----------
-        # For TokenIdInterpreter, it is: Tokenizer name -> NativeExecutor
+        # For TokenIdInterpreter, it is: Tokenizer name -> TokenIdInterpreter
         self.token_id_interpreters: Dict[str, TokenIdInterpreter] = {}
         self.text_interpreter = TextInterpreter()
 

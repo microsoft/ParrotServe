@@ -7,7 +7,7 @@ The key/value cache shape is [num_blocks, num_kv_heads, head_size // block_size,
 """
 
 
-from parrot.engine.native.kernels import discontinuous_move_tokens
+from parrot.engine.builtin.kernels import discontinuous_move_tokens
 import time
 import torch
 from vllm import attention_ops

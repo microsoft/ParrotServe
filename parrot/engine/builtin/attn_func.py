@@ -19,7 +19,7 @@ from .kernels import (
     vllm_paged_attention,
     vllm_reshape_and_cache,
 )
-from ..config import NativeConfig
+from ..config import BuiltinConfig
 
 
 logger = get_logger("AttnFunc")
@@ -44,7 +44,7 @@ class AttnFunc(nn.Module):
     @staticmethod
     def init_iteration_state(
         iteration_state: IterationState,
-        native_config: NativeConfig,
+        builtin_config: BuiltinConfig,
         jobs: List[PrimitiveJob],
         num_heads: int,
         head_size: int,
@@ -64,7 +64,7 @@ class xFormersWithBuffer(AttnFunc):
     @staticmethod
     def init_iteration_state(
         iteration_state: IterationState,
-        native_config: NativeConfig,
+        builtin_config: BuiltinConfig,
         jobs: List[PrimitiveJob],
         num_heads: int,
         head_size: int,
@@ -96,13 +96,13 @@ class xFormersWithBuffer(AttnFunc):
         buffer_shape = [sum(kv_lens), num_heads, head_size]
         iteration_state.k_buffer = torch.empty(
             buffer_shape,
-            dtype=native_config.dtype,
-            device=native_config.device,
+            dtype=builtin_config.dtype,
+            device=builtin_config.device,
         )
         iteration_state.v_buffer = torch.empty(
             buffer_shape,
-            dtype=native_config.dtype,
-            device=native_config.device,
+            dtype=builtin_config.dtype,
+            device=builtin_config.device,
         )
 
         # Attn Mask
@@ -117,12 +117,12 @@ class xFormersWithBuffer(AttnFunc):
         iteration_state.allocated_index_tensor = torch.tensor(
             newly_part_block_ids,
             dtype=torch.int64,
-            device=native_config.device,
+            device=builtin_config.device,
         )
         iteration_state.context_index_tensor = torch.tensor(
             whole_ctx_block_ids,
             dtype=torch.int64,
-            device=native_config.device,
+            device=builtin_config.device,
         )
 
     def forward(
@@ -201,12 +201,12 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
     @staticmethod
     def init_iteration_state(
         iteration_state: IterationState,
-        native_config: NativeConfig,
+        builtin_config: BuiltinConfig,
         jobs: List[PrimitiveJob],
         num_heads: int,
         head_size: int,
     ):
-        block_size = native_config.block_size
+        block_size = builtin_config.block_size
 
         # Address Tables
         block_tables = []  # [num_generation_seqs, max_num_blocks_per_seq]
@@ -267,13 +267,13 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
         buffer_shape = [sum(fill_kv_lens), num_heads, head_size]
         iteration_state.k_buffer = torch.empty(
             buffer_shape,
-            dtype=native_config.dtype,
-            device=native_config.device,
+            dtype=builtin_config.dtype,
+            device=builtin_config.device,
         )
         iteration_state.v_buffer = torch.empty(
             buffer_shape,
-            dtype=native_config.dtype,
-            device=native_config.device,
+            dtype=builtin_config.dtype,
+            device=builtin_config.device,
         )
 
         # Tensors for vLLM
@@ -289,25 +289,25 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
         iteration_state.block_tables = torch.tensor(
             block_tables,
             dtype=torch.int32,
-            device=native_config.device,
+            device=builtin_config.device,
         )
 
         iteration_state.slot_mapping = torch.tensor(
             slot_mapping,
             dtype=torch.int32,
-            device=native_config.device,
+            device=builtin_config.device,
         )
 
         iteration_state.fill_slots = torch.tensor(
             fill_slots,
             dtype=torch.int64,
-            device=native_config.device,
+            device=builtin_config.device,
         )
 
         iteration_state.context_lens = torch.tensor(
             context_lens,
             dtype=torch.int32,
-            device=native_config.device,
+            device=builtin_config.device,
         )
 
     def forward(
@@ -416,4 +416,4 @@ def _get_attn_func(self, attn_func_name: str):
 
 # NOTE(chaofan): This is a hack to make the ATTN_FUNC_MAP visible to the config.
 # To avoid circular import, we cannot import ATTN_FUNC_MAP in config.py.
-NativeConfig._get_attn_func = _get_attn_func
+BuiltinConfig._get_attn_func = _get_attn_func

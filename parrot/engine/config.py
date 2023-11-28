@@ -12,7 +12,7 @@ from parrot.constants import (
     DEFAULT_ENGINE_SERVER_PORT,
 )
 
-from .native.mem_layout import MemLayout, ATTN_FUNC_LAYOUT_MAP
+from .builtin.mem_layout import MemLayout, ATTN_FUNC_LAYOUT_MAP
 
 from .openai.api_endpoint import Endpoint, ENDPOINT_MAP
 
@@ -24,7 +24,7 @@ _DTYPE_MAP = {
 
 
 @dataclass
-class NativeConfig:
+class BuiltinConfig:
     num_kv_cache_blocks: int
     attn_func: Union[str, "AttnFunc"]
     dtype: Union[Literal["float16", "float32"], torch.dtype] = "float16"
@@ -87,11 +87,11 @@ class SchedulerConfig:
 
 
 # EngineType(Enum)
-ENGINE_TYPE_NATIVE = "native"
+ENGINE_TYPE_BUILTIN = "builtin"
 ENGINE_TYPE_OPENAI = "openai"
 ENGINE_TYPE_MLCLLM = "mlcllm"
 ENGINE_TYPES = [
-    ENGINE_TYPE_NATIVE,
+    ENGINE_TYPE_BUILTIN,
     ENGINE_TYPE_OPENAI,
     ENGINE_TYPE_MLCLLM,
 ]
@@ -114,7 +114,7 @@ class EngineConfig:
     engine_name: str = "unknown"
 
     # The type of engine.
-    engine_type: str = ENGINE_TYPE_NATIVE
+    engine_type: str = ENGINE_TYPE_BUILTIN
 
     # Random seed for reproduction.
     random_seed: int = 0

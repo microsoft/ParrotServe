@@ -1,5 +1,5 @@
-from parrot.engine.native.native_runner import NativeRunner
-from parrot.engine.config import NativeConfig
+from parrot.engine.builtin.native_runner import NativeRunner
+from parrot.engine.config import BuiltinConfig
 from parrot.engine.primitive_job import Fill, Generate
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.utils import torch_profile
@@ -14,7 +14,7 @@ base = 0
 def _init():
     global base
 
-    config = NativeConfig(
+    config = BuiltinConfig(
         num_kv_cache_blocks=1000,
         attn_func="xformers_fill_vllm_paged_attention_generate",
         block_size=16,

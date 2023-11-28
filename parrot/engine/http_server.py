@@ -95,7 +95,7 @@ def start_server(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parrot native engine HTTP server")
+    parser = argparse.ArgumentParser(description="Parrot engine HTTP server")
 
     parser.add_argument(
         "--host",
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--config_path",
         type=str,
-        help="Path to the config file of the native engine.",
+        help="Path to the config file of the engine.",
         required=True,
     )
 

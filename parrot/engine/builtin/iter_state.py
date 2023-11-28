@@ -8,7 +8,7 @@ from transformers import PretrainedConfig
 
 from parrot.protocol.sampling_config import SamplingConfig
 
-from ..config import NativeConfig
+from ..config import BuiltinConfig
 from ..primitive_job import PrimitiveJob, Fill, Generate
 
 
@@ -30,7 +30,7 @@ class IterationState:
         self,
         jobs: List[PrimitiveJob],
         model_config: PretrainedConfig,
-        native_config: NativeConfig,
+        builtin_config: BuiltinConfig,
     ):
         # Metadata
         self.num_fill_tokens: List[int] = []
@@ -39,9 +39,9 @@ class IterationState:
         num_heads = model_config.num_attention_heads
         head_size = model_config.hidden_size // num_heads
 
-        native_config.attn_func.init_iteration_state(
+        builtin_config.attn_func.init_iteration_state(
             self,
-            native_config,
+            builtin_config,
             jobs,
             num_heads,
             head_size,

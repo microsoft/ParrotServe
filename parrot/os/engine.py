@@ -7,7 +7,7 @@ from typing import List
 from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 from parrot.engine.config import (
     EngineConfig,
-    ENGINE_TYPE_NATIVE,
+    ENGINE_TYPE_BUILTIN,
     ENGINE_TYPE_OPENAI,
     ENGINE_TYPE_MLCLLM,
 )
@@ -16,7 +16,7 @@ from .process.interpret_type import InterpretType
 
 
 INTERPRET_TYPE_MAP = {
-    ENGINE_TYPE_NATIVE: InterpretType.TOKEN_ID,
+    ENGINE_TYPE_BUILTIN: InterpretType.TOKEN_ID,
     ENGINE_TYPE_OPENAI: InterpretType.TEXT,
     ENGINE_TYPE_MLCLLM: InterpretType.TEXT,
 }

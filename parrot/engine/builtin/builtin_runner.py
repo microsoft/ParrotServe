@@ -17,10 +17,10 @@ from ..context.block_context import BlockContext
 from .iter_state import IterationState
 from ..context.context_manager import ContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
-from ..config import NativeConfig
+from ..config import BuiltinConfig
 
 
-logger = get_logger("NativeRunner")
+logger = get_logger("BuiltinRunner")
 
 
 def get_model_memory(model) -> float:
@@ -32,30 +32,30 @@ def get_model_memory(model) -> float:
     return model_mem / 1024 / 1024
 
 
-class NativeRunner:
-    """Minimal Native LLM Runner with adaption to Parrot."""
+class BuiltinRunner:
+    """Minimal Builtin LLM Runner with adaption to Parrot."""
 
-    def __init__(self, model_name: str, config: NativeConfig):
-        self.native_config = config
+    def __init__(self, model_name: str, config: BuiltinConfig):
+        self.builtin_config = config
         self.context_manager = ContextManager()
-        self.kv_cache_manager = RecyclePool(self.native_config.num_kv_cache_blocks)
+        self.kv_cache_manager = RecyclePool(self.builtin_config.num_kv_cache_blocks)
 
         # Init CUDA env
-        if self.native_config.device_str.startswith("cuda:"):
-            local_rank = int(self.native_config.device_str.split(":")[1])
+        if self.builtin_config.device_str.startswith("cuda:"):
+            local_rank = int(self.builtin_config.device_str.split(":")[1])
             torch.cuda.set_device(local_rank)
 
         # Load Model
         self.hf_model_config = AutoConfig.from_pretrained(model_name)
 
         self.model = instantiate_model(
-            model_name, self.hf_model_config, self.native_config
+            model_name, self.hf_model_config, self.builtin_config
         )
         self.model_mem = get_model_memory(self.model)
         logger.info(f"Model memory usage: {self.model_mem:.2f} MiB.")
 
         # Init model cache storage
-        init_model_cache_storage(self.hf_model_config, self.native_config)
+        init_model_cache_storage(self.hf_model_config, self.builtin_config)
 
     @torch.inference_mode()
     def run_iter(self, jobs: List[PrimitiveJob]) -> (int, int):
@@ -79,7 +79,7 @@ class NativeRunner:
                 self.context_manager.bind_job_context(
                     job,
                     BlockContext,
-                    block_size=self.native_config.block_size,
+                    block_size=self.builtin_config.block_size,
                     kv_cache_manager=self.kv_cache_manager,
                 )
 
@@ -118,7 +118,7 @@ class NativeRunner:
         iteration_state = IterationState(
             jobs,
             self.hf_model_config,
-            self.native_config,
+            self.builtin_config,
         )
 
         # Convert inputs
@@ -139,12 +139,12 @@ class NativeRunner:
         input_ids = torch.tensor(
             input_ids,
             dtype=torch.int64,
-            device=self.native_config.device,
+            device=self.builtin_config.device,
         )
         input_positions = torch.tensor(
             input_positions,
             dtype=torch.int64,
-            device=self.native_config.device,
+            device=self.builtin_config.device,
         )
 
         torch.cuda.synchronize()

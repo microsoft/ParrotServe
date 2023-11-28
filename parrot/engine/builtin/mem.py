@@ -8,7 +8,7 @@ import torch
 
 from parrot.utils import get_logger
 
-from ..config import NativeConfig
+from ..config import BuiltinConfig
 from .mem_layout import MemLayout
 
 logger = get_logger("Mem")
@@ -30,17 +30,17 @@ class ModelCacheStorage:
     def __init__(
         self,
         hf_config: PretrainedConfig,
-        native_config: NativeConfig,
+        builtin_config: BuiltinConfig,
     ) -> None:
         num_layers = hf_config.num_hidden_layers
-        num_blocks = native_config.num_kv_cache_blocks
-        block_size = native_config.block_size
+        num_blocks = builtin_config.num_kv_cache_blocks
+        block_size = builtin_config.block_size
         num_heads = hf_config.num_attention_heads
         head_size = hf_config.hidden_size // num_heads
-        dtype = native_config.dtype
-        device = native_config.device
+        dtype = builtin_config.dtype
+        device = builtin_config.device
 
-        if native_config.mem_layout == MemLayout.NORMAL:
+        if builtin_config.mem_layout == MemLayout.NORMAL:
             assert block_size == 1, "Block size must be 1 for normal layout."
 
             self.k_cache = torch.empty(
@@ -54,7 +54,7 @@ class ModelCacheStorage:
                 dtype=dtype,
                 device=device,
             )
-        elif native_config.mem_layout == MemLayout.BLOCK:
+        elif builtin_config.mem_layout == MemLayout.BLOCK:
             self.k_cache = torch.empty(
                 [num_layers, num_blocks, num_heads, head_size, block_size],
                 dtype=dtype,
@@ -66,7 +66,7 @@ class ModelCacheStorage:
                 dtype=dtype,
                 device=device,
             )
-        elif native_config.mem_layout == MemLayout.VLLM:
+        elif builtin_config.mem_layout == MemLayout.VLLM:
             self.v_cache = torch.empty(
                 [num_layers, num_blocks, num_heads, head_size, block_size],
                 dtype=dtype,
@@ -96,15 +96,15 @@ class ModelCacheStorage:
 
         logger.info(
             f"Allocated {num_blocks} KV blocks. "
-            f"Mem Layout: {native_config.mem_layout.name}. "
+            f"Mem Layout: {builtin_config.mem_layout.name}. "
             f"Per block size: {block_size}. "
             f"Total size: {kv_total_size :.2f} GiB."
         )
 
         # cos / sin cache for rotary embedding models.
-        if native_config.model_arch in _ARCH_WITH_ROPE:
+        if builtin_config.model_arch in _ARCH_WITH_ROPE:
             logger.info(
-                f"Model arch {native_config.model_arch} needs rotary embedding models. "
+                f"Model arch {builtin_config.model_arch} needs rotary embedding models. "
                 f"Allcoating cos/sin cache ..."
             )
 
@@ -156,7 +156,7 @@ class ModelCacheStorage:
             )
         else:
             logger.info(
-                f"Model arch {native_config.model_arch} doesn't needs rotary embedding models. "
+                f"Model arch {builtin_config.model_arch} doesn't needs rotary embedding models. "
                 f"Skip allocating cos/sin cache."
             )
 
@@ -170,10 +170,10 @@ Model_Cache: Optional[ModelCacheStorage] = None
 
 def init_model_cache_storage(
     hf_config: PretrainedConfig,
-    native_config: NativeConfig,
+    builtin_config: BuiltinConfig,
 ) -> None:
     global Model_Cache
-    Model_Cache = ModelCacheStorage(hf_config, native_config)
+    Model_Cache = ModelCacheStorage(hf_config, builtin_config)
 
 
 def get_k_cache(layer_idx: int) -> torch.Tensor:

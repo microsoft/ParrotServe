@@ -40,7 +40,7 @@ from .weight_utils import hf_weights_loader
 from ..iter_state import IterationState
 from .sampler import Sampler
 from ..attn_func import AttnFunc
-from ...config import NativeConfig
+from ...config import BuiltinConfig
 
 
 ACT_FUNC = {
@@ -118,7 +118,7 @@ class OPTAttention(nn.Module):
 
 class OPTDecoderLayer(nn.Module):
     def __init__(
-        self, opt_config: OPTConfig, native_config: NativeConfig, layer_idx: int
+        self, opt_config: OPTConfig, builtin_config: BuiltinConfig, layer_idx: int
     ):
         super().__init__()
         self.embed_dim = opt_config.hidden_size
@@ -126,7 +126,7 @@ class OPTDecoderLayer(nn.Module):
             embed_dim=self.embed_dim,
             num_heads=opt_config.num_attention_heads,
             layer_idx=layer_idx,
-            attn_func_cls=native_config.attn_func,
+            attn_func_cls=builtin_config.attn_func,
             bias=opt_config.enable_bias,
         )
         self.do_layer_norm_before = opt_config.do_layer_norm_before
@@ -182,7 +182,7 @@ class OPTDecoderLayer(nn.Module):
 
 
 class OPTDecoder(nn.Module):
-    def __init__(self, opt_config: OPTConfig, native_config: NativeConfig):
+    def __init__(self, opt_config: OPTConfig, builtin_config: BuiltinConfig):
         super().__init__()
         self.padding_idx = opt_config.pad_token_id
         self.max_target_positions = opt_config.max_position_embeddings
@@ -225,7 +225,7 @@ class OPTDecoder(nn.Module):
 
         self.layers = nn.ModuleList(
             [
-                OPTDecoderLayer(opt_config, native_config, i)
+                OPTDecoderLayer(opt_config, builtin_config, i)
                 for i in range(opt_config.num_hidden_layers)
             ]
         )
@@ -253,9 +253,9 @@ class OPTDecoder(nn.Module):
 
 
 class OPTModel(nn.Module):
-    def __init__(self, opt_config: OPTConfig, native_config: NativeConfig):
+    def __init__(self, opt_config: OPTConfig, builtin_config: BuiltinConfig):
         super().__init__()
-        self.decoder = OPTDecoder(opt_config, native_config)
+        self.decoder = OPTDecoder(opt_config, builtin_config)
 
     def forward(
         self,
@@ -267,9 +267,9 @@ class OPTModel(nn.Module):
 
 
 class OPTForCausalLM(nn.Module):
-    def __init__(self, opt_config: OPTConfig, native_config: NativeConfig):
+    def __init__(self, opt_config: OPTConfig, builtin_config: BuiltinConfig):
         super().__init__()
-        self.model = OPTModel(opt_config, native_config)
+        self.model = OPTModel(opt_config, builtin_config)
         # Tie lm_head's weight
         self.sampler = Sampler(opt_config, self.model.decoder.embed_tokens.weight)
 

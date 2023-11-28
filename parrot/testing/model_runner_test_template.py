@@ -5,14 +5,14 @@
 import numpy as np
 from transformers import AutoTokenizer
 
-from parrot.engine.native.native_runner import NativeRunner
-from parrot.engine.config import NativeConfig
+from parrot.engine.builtin.builtin_runner import BuiltinRunner
+from parrot.engine.config import BuiltinConfig
 from parrot.engine.primitive_job import Fill, Generate
 from parrot.protocol.sampling_config import SamplingConfig
 
 
-def template_test_single_fill(model_name: str, native_config: NativeConfig):
-    runner = NativeRunner(model_name, native_config)
+def template_test_single_fill(model_name: str, builtin_config: BuiltinConfig):
+    runner = BuiltinRunner(model_name, builtin_config)
 
     job = Fill(
         pid=0,
@@ -27,8 +27,8 @@ def template_test_single_fill(model_name: str, native_config: NativeConfig):
     runner.run_iter([job])
 
 
-def template_test_batch_fills(model_name: str, native_config: NativeConfig):
-    runner = NativeRunner(model_name, native_config)
+def template_test_batch_fills(model_name: str, builtin_config: BuiltinConfig):
+    runner = BuiltinRunner(model_name, builtin_config)
     batch_size = 16
     jobs = [
         Fill(
@@ -44,8 +44,8 @@ def template_test_batch_fills(model_name: str, native_config: NativeConfig):
     runner.run_iter(jobs)
 
 
-def template_test_fill_then_gen(model_name: str, native_config: NativeConfig):
-    runner = NativeRunner(model_name, native_config)
+def template_test_fill_then_gen(model_name: str, builtin_config: BuiltinConfig):
+    runner = BuiltinRunner(model_name, builtin_config)
     runner.run_iter(
         [
             Fill(
@@ -71,8 +71,8 @@ def template_test_fill_then_gen(model_name: str, native_config: NativeConfig):
     )
 
 
-def template_test_generate_single_text(model_name: str, native_config: NativeConfig):
-    runner = NativeRunner(model_name, native_config)
+def template_test_generate_single_text(model_name: str, builtin_config: BuiltinConfig):
+    runner = BuiltinRunner(model_name, builtin_config)
     prompt_text = "Hello, my name is"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     prompt_tokens = tokenizer(prompt_text)["input_ids"]
@@ -102,8 +102,8 @@ def template_test_generate_single_text(model_name: str, native_config: NativeCon
     print("Generated: ", tokenizer.decode(fill_job.context.token_ids))
 
 
-def template_test_generate_batch_text(model_name: str, native_config: NativeConfig):
-    runner = NativeRunner(model_name, native_config)
+def template_test_generate_batch_text(model_name: str, builtin_config: BuiltinConfig):
+    runner = BuiltinRunner(model_name, builtin_config)
     prompt_text = [
         "Hello, my name is",
         "Hello, my name is",
@@ -145,8 +145,8 @@ def template_test_generate_batch_text(model_name: str, native_config: NativeConf
         )
 
 
-def template_test_fill_generate_mixed(model_name: str, native_config: NativeConfig):
-    runner = NativeRunner(model_name, native_config)
+def template_test_fill_generate_mixed(model_name: str, builtin_config: BuiltinConfig):
+    runner = BuiltinRunner(model_name, builtin_config)
     prompt_text = [
         "Hello, my name is",
         "Hello, my name is",
