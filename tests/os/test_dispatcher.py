@@ -109,7 +109,7 @@ def test_dag_aware_policy():
     # and 8 latency threads are dispatched averagely to the rest 3 engines.
 
 
-def test_request_wait():
+def test_dispatcher_order():
     dispatcher_config = DispatcherConfig(
         dag_aware=False,
         app_fifo=False,
@@ -131,14 +131,48 @@ def test_request_wait():
         memory_space=mem_space,
     )
 
-    # 4 threads
-    call = test("a")
+    # 4 threads with chain dependency
+    outputs = [P.future() for _ in range(8)]
+    threads = [None] * 8
+    next_input = "a"
+
     for i in range(4):
-        thread = Thread(tid=i, process=process, call=call, context_id=0)
+        idx = i * 2
+
+        call = test(a=next_input, b=outputs[idx])
+
+        # Rewrite call to make DAG
+        process.rewrite_call(call)
+
+        next_input = outputs[idx]
+        thread = Thread(tid=idx, process=process, call=call, context_id=0)
+        call.thread = thread
+        threads[idx] = thread
+
+    next_input = "a"
+
+    for i in range(4):
+        idx = i * 2 + 1
+
+        call = test(a=next_input, b=outputs[idx])
+
+        # Rewrite call to make DAG
+        process.rewrite_call(call)
+
+        next_input = outputs[idx]
+        thread = Thread(tid=idx, process=process, call=call, context_id=0)
+        call.thread = thread
+        threads[idx] = thread
+
+    # Push threads in reverse order
+    for thread in threads[::-1]:
         dispatcher.push_thread(thread)
 
-    dispatched_threads = dispatcher.dispatch()
-    assert len(dispatched_threads) == 1
+    for _ in range(8):
+        dispatched_threads = dispatcher.dispatch()
+        assert len(dispatched_threads) == 1, len(dispatched_threads)
+        thread = dispatched_threads[0]
+        thread.engine.remove_thread(thread)  # Free loc
 
 
 def test_app_fifo():
@@ -199,5 +233,5 @@ def test_app_fifo():
 if __name__ == "__main__":
     # test_default_policy()
     # test_dag_aware_policy()
-    # test_request_wait()
-    test_app_fifo()
+    test_dispatcher_order()
+    # test_app_fifo()

@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from queue import Queue
 
 from parrot.utils import get_logger
-from parrot.exceptions import ParrotOSUserError
+from parrot.exceptions import ParrotOSUserError, parrot_assert
 from .process.thread import Thread
 from .engine import ExecutionEngine
 
@@ -40,6 +40,8 @@ class ThreadDispatcher:
         self.config = config
         self.engines = engines
         self.ping_engine_method = ping_engine_method
+
+        self.threads: Dict[str, Thread] = {}  # uid -> thread
         self.thread_queue = Queue(maxsize=self.config.max_queue_size)
 
     def _get_engine_list(self, thread: Thread) -> List[ExecutionEngine]:
@@ -112,24 +114,7 @@ class ThreadDispatcher:
 
         return True
 
-    # ---------- Public Methods ----------
-
-    def push_thread(self, thread: Thread):
-        """Push a thread to the thread queue."""
-
-        if self.thread_queue.qsize() >= self.config.max_queue_size:
-            raise ParrotOSUserError(
-                RuntimeError(
-                    f"Thread queue is full. Current size: {self.thread_queue.qsize()}. "
-                    f"Hence the incoming thread (tid={thread.tid}) is rejected."
-                )
-            )
-
-        self.thread_queue.put_nowait(thread)
-
-    def dispatch(self) -> List[Thread]:
-        """Dispatch all the (available) threads in the order of the queue."""
-
+    def _dispatch(self) -> List[Thread]:
         # No thread to dispatch.
         if self.thread_queue.qsize() == 0:
             return []
@@ -151,31 +136,71 @@ class ThreadDispatcher:
         new_thread_queue = []
 
         # Currently only two levels: 0 for normal, 1 for promoted.
-        priority: Dict[int, int] = {}
+        priority: Dict[str, int] = {}
 
         while self.thread_queue.qsize() > 0:
             thread: Thread = self.thread_queue.get()
+            parrot_assert(
+                thread.unique_id in self.threads,
+                f"Thread not in the thread queue. {self.threads}",
+            )
+
             if not thread.ready_to_dispatch() or not self._dispatch_one(thread):
                 # If the process is not alive, discard the thread directly.
                 if thread.process.live:
                     new_thread_queue.append(thread)
-                    if thread.tid not in priority:
-                        priority[thread.tid] = 0
+                    if thread.unique_id not in priority:
+                        priority[thread.unique_id] = 0
             else:
                 dispatched_threads.append(thread)
+                self.threads.pop(thread.unique_id)
 
                 # App FIFO: the thread will "pull" its successors to the top of the queue.
                 if self.config.app_fifo:
                     next_threads = thread.get_next_threads()
                     for next_thread in next_threads:
-                        if next_thread.ready_to_dispatch():
-                            priority[next_thread.tid] = 1
+                        if (
+                            next_thread.ready_to_dispatch()
+                            and next_thread.unique_id in self.threads
+                        ):
+                            priority[next_thread.unique_id] = 1
 
         # Reorder
-        new_thread_queue.sort(key=lambda thread: priority[thread.tid], reverse=True)
+        new_thread_queue.sort(
+            key=lambda thread: priority[thread.unique_id], reverse=True
+        )
 
         for thread in new_thread_queue:
             self.thread_queue.put_nowait(thread)
+
+        return dispatched_threads
+
+    # ---------- Public Methods ----------
+
+    def push_thread(self, thread: Thread):
+        """Push a thread to the thread queue."""
+
+        if self.thread_queue.qsize() >= self.config.max_queue_size:
+            raise ParrotOSUserError(
+                RuntimeError(
+                    f"Thread queue is full. Current size: {self.thread_queue.qsize()}. "
+                    f"Hence the incoming thread (tid={thread.tid}) is rejected."
+                )
+            )
+
+        self.thread_queue.put_nowait(thread)
+        self.threads[thread.unique_id] = thread
+
+    def dispatch(self) -> List[Thread]:
+        """Dispatch all the threads in the queue."""
+
+        newly_dispatched = self._dispatch()
+        dispatched_threads = []
+        dispatched_threads.extend(newly_dispatched)
+
+        while len(newly_dispatched) > 0:
+            newly_dispatched = self._dispatch()
+            dispatched_threads.extend(newly_dispatched)
 
         # Display the dispatch results.
         # NOTE(chaofan): Only display >0 case to reduce the log size.

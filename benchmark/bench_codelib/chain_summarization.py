@@ -7,7 +7,7 @@
 
 import parrot as P
 
-fake_long_document_chunk = "Test " * 670  # len=670 for each chunk
+fake_long_document_chunk = "Test " * 650  # len=650 for each chunk
 refine_instruction = "Test " * 10
 
 

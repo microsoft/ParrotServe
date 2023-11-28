@@ -18,7 +18,7 @@ class SVPlaceholder:
     connects the producer and consumers.
     """
 
-    def __init__(self, id: int, name: str, producer: Optional[SemanticCall] = None):
+    def __init__(self, id: int, name: str):
         self.id = id
         self.name = name
         self.content = None
@@ -35,7 +35,6 @@ class SVPlaceholder:
         # An edge is an out-edge if this SV is the in-node of the edge.
         self.in_edges: List[DAGEdge] = []
         self.out_edges: List[DAGEdge] = []
-        self.producer = producer
 
     def __repr__(self) -> str:
         if self.ready:

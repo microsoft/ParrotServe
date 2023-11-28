@@ -96,6 +96,10 @@ class Thread:
         self._fill_tokens_buffer: List[int] = []
 
     @property
+    def unique_id(self) -> str:
+        return f"{self.process.pid}_{self.tid}"
+
+    @property
     def dispatched(self) -> bool:
         return self.engine is not None
 
@@ -163,18 +167,22 @@ class Thread:
         A thread is ready to be dispatched if and only if all its input placeholders are dispatched.
         """
 
+        parrot_assert(not self.dispatched, "Thread is already dispatched")
+
         for sv in self.call.func.body:
             if isinstance(sv, ParameterLoc) and sv.param.is_input_loc:
                 sv_placeholder = self.call.bindings[sv.param.name]
-                if (
-                    isinstance(sv_placeholder, SVPlaceholder)
-                    and sv_placeholder.producer is not None
-                ):
-                    # parrot_assert(sv_placeholder.producer is not None, "Producer is None")
-                    thread = sv_placeholder.producer.thread
+                if isinstance(sv_placeholder, SVPlaceholder):
+                    # Find the producer thread
+                    parrot_assert(
+                        len(sv_placeholder.in_edges) <= 1,
+                        f"Number of in edges must <= 1, but get multiple in-edges: {sv_placeholder.in_edges}",
+                    )
+                    if len(sv_placeholder.in_edges) == 1:
+                        thread = sv_placeholder.in_edges[0].call.thread
 
-                    if not thread.dispatched:
-                        return False
+                        if not thread.dispatched:
+                            return False
 
         return True
 

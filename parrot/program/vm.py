@@ -9,7 +9,7 @@ import traceback
 import threading
 import importlib
 from dataclasses import dataclass
-from typing import Callable, Coroutine, Literal, Dict
+from typing import Callable, Coroutine, Literal, Dict, List, Any
 
 
 from parrot.protocol.layer_apis import (
@@ -139,7 +139,7 @@ class VirtualMachine:
             pid=self.pid,
             call=call,
         )
-    
+
     async def asubmit_call_handler(self, call: SemanticCall):
         """Submit a call to the OS."""
 
@@ -225,11 +225,21 @@ class VirtualMachine:
                 self.stat_run_time = (ed - st) / 1e9
                 print(f"[Timeit] E2E Program Execution Time: {self.stat_run_time} (s).")
 
-    def run(self, program: Callable, timeit: bool = False):
+    def run(
+        self,
+        program: Callable,
+        timeit: bool = False,
+        args: List[Any] = [],
+    ) -> float:
         """vm.run method wraps a E2E running process of a semantic program.
 
         It accepts both normal functions and coroutines. When the program is a coroutine,
-        VM will create a new event loop and run the coroutine."""
+        VM will create a new event loop and run the coroutine.
+
+        Args are the arguments passed to the program. This case is only used for normal functions.
+
+        Return the E2E running time of the program.
+        """
 
         logger.info(f"VM (pid: {self.pid}) runs program: {program.__name__}")
 
@@ -240,21 +250,29 @@ class VirtualMachine:
                 loop.run_until_complete(program)
                 loop.close()
             else:
-                program()
+                program(*args)
 
-    def profile(self, program: Callable, warmups: int = 3, trials: int = 20) -> float:
+        return self.stat_run_time
+
+    def profile(
+        self,
+        program: Callable,
+        warmups: int = 3,
+        trials: int = 20,
+        args: List[Any] = [],
+    ) -> float:
         """Profile the E2E lantecy of certain semantic program."""
 
         sleep_interval = 2.5
 
         for _ in range(warmups):
-            self.run(program)
+            self.run(program, args)
             time.sleep(sleep_interval)
 
         e2e_lantecy = 0.0
 
         for _ in range(trials):
-            self.run(program, timeit=True)
+            self.run(program, timeit=True, args=args)
             e2e_lantecy += self.stat_run_time
             time.sleep(sleep_interval)
 

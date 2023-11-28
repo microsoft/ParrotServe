@@ -10,7 +10,7 @@ from parrot.program.future import Future
 from parrot.program.function import SemanticCall
 from parrot.utils import get_logger, RecyclePool
 from parrot.constants import THREAD_POOL_SIZE
-from parrot.exceptions import ParrotOSUserError
+from parrot.exceptions import ParrotOSUserError, parrot_assert
 
 from .placeholder import SVPlaceholder
 from .thread import Thread
@@ -111,7 +111,7 @@ class Process:
         for i, future in enumerate(call.output_futures):
             if future.id not in self.placeholders_map:
                 self.placeholders_map[future.id] = SVPlaceholder(
-                    id=value.id, name=value.name, producer=call
+                    id=value.id, name=value.name
                 )
             call.output_futures[i] = self.placeholders_map[future.id]
 

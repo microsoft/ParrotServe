@@ -227,7 +227,7 @@ class PCore:
 
         # NOTE(chaofan): For stateful call, since the queue is FIFO, the state contexts are
         # correctly maintained.
-        
+
         self._check_process(pid)
         process = self.processes[pid]
 
@@ -240,8 +240,11 @@ class PCore:
         # Push it to the dispatcher
         self.dispatcher.push_thread(thread)
 
-        logger.info(f'Function call "{call.func.name}" submitted from VM (pid={pid}). ')
-    
+        logger.info(
+            f'Function call "{call.func.name}" submitted from VM (pid={pid}). '
+            f"Created thread: tid={thread.tid}"
+        )
+
     async def placeholder_set(self, pid: int, placeholder_id: int, content: str):
         """Set a placeholder content from VM."""
 
@@ -261,8 +264,10 @@ class PCore:
 
         placeholder.set(content)
 
-        logger.debug(f"Placeholder set (id={placeholder_id}) from VM (pid={pid}). "
-                     f"Set content length: {len(content)} ")
+        logger.debug(
+            f"Placeholder set (id={placeholder_id}) from VM (pid={pid}). "
+            f"Set content length: {len(content)} "
+        )
 
     async def placeholder_fetch(self, pid: int, placeholder_id: int):
         """Fetch a placeholder content from OS to VM."""

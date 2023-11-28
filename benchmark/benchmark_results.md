@@ -3,8 +3,8 @@ Network latency=250ms (If not specified)
 ### Chain 1 GPU, 1 VM
 
 Model: Llama-13B
-Baseline: No pipeline, submitting requests sequentiallyS
-Settings: Chunks num=20, per_chunk_size=670
+Baseline: No pipeline, submitting requests sequentially.
+Settings: Chunks num=20, per_chunk_size=650
 Batch size is not important, because it's sequential.
 
 Results (s):
@@ -17,9 +17,9 @@ Results (s):
 
 ### Chain 1 GPU, multi VMs
 
-Baseline: No pipeline, submitting requests sequentially.
-Settings: Chunks num=20, per_chunk_size=670, 16 VMs send requests concurrently.
-And the backend engine's max_num_batched_tokens is 2048, max_batch_size=2.
+Baseline: No pipeline, submitting requests sequentially. No App FIFO.
+Settings: Chunks num=20, per_chunk_size=650, 16 VMs send requests concurrently.
+And the backend engine's max_num_batched_tokens is 2560, max_batch_size=2.
 
 ### Chain 1 GPU, with long Constant Prefix
 
@@ -41,7 +41,7 @@ Results (s):
 - Parrot + FastChat (w/o vLLM): 33.42, 33.10, 33.70, 32.64, 3298, 31.47, 32.12, 32.64, 31.89
 - Parrot + FastChat (w/ vLLM): 13.60, 13.42, 13.54, 13.55, 13.58, 13.60, 13.58, 13.59, 13.58
 - Parrot baseline: 14.14, 14.12, 14.00, 13.95, 14.15, 14.12, 14.11, 14.17, 14.04
-- Parrot main: 5.30, 5.45, 5.30,,5.38, 5.35, 5.32, 5.32, 5.37, 5.37
+- Parrot main: 5.30, 5.45, 5.30, 5.38, 5.35, 5.32, 5.32, 5.37, 5.37
 
 ### Map-Reduce 4 GPUs
 

@@ -76,5 +76,7 @@ class ExecutionEngine:
     def remove_thread(self, thread: "Thread"):
         """Remove a thread from this engine."""
 
-        thread.engine = None
+        # Don't do this! Because hence the thread will be marked as not dispatched.
+        # thread.engine = None
+
         self.threads.remove(thread)

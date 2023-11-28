@@ -1,0 +1,24 @@
+{
+    "engine_name": "vicuna-13b-v1.3_local",
+    "model": "lmsys/vicuna-13b-v1.3",
+    "host": "localhost",
+    "port": 9001,
+    "engine_type": "native",
+    "random_seed": 0,
+    "tokenizer": "hf-internal-testing/llama-tokenizer",
+    "fill_chunk_size": -1,
+    "max_threads_num": 1,
+    "instance": {
+        "block_size": 16,
+        "num_kv_cache_blocks": 4000,
+        "attn_func": "xformers_fill_vllm_paged_attention_generate"
+    },
+    "scheduler": {
+        "max_batch_size": 256,
+        "max_tokens_sum": 999999999
+    },
+    "os": {
+        "host": "localhost",
+        "port": 9000
+    }
+}
