@@ -9,14 +9,14 @@ import parrot as P
 ### Vicuna Chat Functions Start
 
 
-@P.function(remove_pure_fill=False)
+@P.semantic_function(remove_pure_fill=False)
 def vicuna_chat_start():
     """A chat between a curious user and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the user's questions.
     """
 
 
-@P.function()
+@P.semantic_function()
 def vicuna_chat_per_round(
     human_input: P.Input,
     ai_output: P.Output(P.SamplingConfig(temperature=0.5, max_gen_length=50)),
@@ -33,7 +33,7 @@ def vicuna_chat_per_round(
 # DAN (Do Anything Now): https://github.com/0xk1h0/ChatGPT_DAN
 
 
-@P.function(
+@P.semantic_function(
     conversation_template=P.vicuna_template,
     cache_prefix=True,
 )

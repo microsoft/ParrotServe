@@ -33,7 +33,7 @@ def main():
 
 
 async def main_async():
-    outputs = [P.future(name=f"output_{i}") for i in range(chunk_num)]
+    outputs = [P.variable(name=f"output_{i}") for i in range(chunk_num)]
     coroutines = []
     for i in range(chunk_num):
         if i == 0:

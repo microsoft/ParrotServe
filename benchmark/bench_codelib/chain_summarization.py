@@ -32,6 +32,6 @@ chain_sum_test_body = (
 )
 
 chain_sum_test.__doc__ = chain_sum_test_body
-chain_sum_test = P.function(cache_prefix=False)(chain_sum_test)
+chain_sum_test = P.semantic_function(cache_prefix=False)(chain_sum_test)
 
 # print(chain_sum_test_body)

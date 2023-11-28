@@ -6,7 +6,7 @@
 import parrot as P
 
 
-@P.function(conversation_template=P.vicuna_template)
+@P.semantic_function(conversation_template=P.vicuna_template)
 def tell_me_a_joke(
     topic: P.Input,
     topic2: P.Input,
@@ -19,7 +19,7 @@ def tell_me_a_joke(
     """
 
 
-@P.function(formatter=P.allowing_newline, cache_prefix=False)
+@P.semantic_function(formatter=P.allowing_newline, cache_prefix=False)
 def write_recommendation_letter(
     stu_name: P.Input,
     prof_name: P.Input,
@@ -42,7 +42,7 @@ def write_recommendation_letter(
     """
 
 
-@P.function(formatter=P.allowing_newline)
+@P.semantic_function(formatter=P.allowing_newline)
 def qa(
     question: P.Input,
     answer: P.Output,

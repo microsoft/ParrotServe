@@ -10,11 +10,11 @@ from .func_mutator import (
     FuncMutator,
     SemanticFunction,
     Constant,
-    SemanticVariable,
+    SemanticRegion,
     ParameterLoc,
     Parameter,
 )
-from ..function import push_to_body
+from ..semantic_function import push_to_body
 
 
 class SeparatorStyle(IntEnum):
@@ -62,7 +62,7 @@ class ConversationTemplate(FuncMutator):
         return param
 
     def _visit_func(self, func: SemanticFunction) -> SemanticFunction:
-        new_body: List[SemanticVariable] = []
+        new_body: List[SemanticRegion] = []
 
         # Add system message
         push_to_body(

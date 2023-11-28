@@ -8,7 +8,7 @@ import time
 from dataclasses import asdict
 
 from parrot.program.vm import VMRuntimeInfo
-from parrot.program.function import SemanticCall
+from parrot.program.semantic_function import SemanticCall
 from parrot.utils import RecyclePool
 from parrot.constants import (
     PROCESS_POOL_SIZE,

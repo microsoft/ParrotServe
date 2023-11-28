@@ -5,7 +5,7 @@
 from typing import List, Optional
 from asyncio import Event
 
-from parrot.program.function import SemanticCall
+from parrot.program.semantic_function import SemanticCall
 
 from .dag_edge import DAGEdge
 from ..tokenizer import Tokenizer

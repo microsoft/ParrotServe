@@ -3,7 +3,7 @@ from parrot.program.transforms.conversation_template import vicuna_template
 
 
 def test_vicuna_template():
-    @P.function()
+    @P.semantic_function()
     def foo(a: P.Input, b: P.Input, c: P.Output, d: P.Output):
         """This is a test function {{a}}.
         An apple {{b}} a day keeps the doctor away.

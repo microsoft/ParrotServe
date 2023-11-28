@@ -9,8 +9,8 @@ from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.annotation import DispatchAnnotation
 from parrot.utils import get_logger
 
-from .future import Future
-from .function import SemanticFunction, ParamType, Parameter
+from .semantic_variable import SemanticVariable
+from .semantic_function import SemanticFunction, ParamType, Parameter
 from .transforms.prompt_formatter import standard_formatter, Sequential, FuncMutator
 
 
@@ -36,7 +36,7 @@ class Output:
         self.dispatch_annotation = dispatch_annotation
 
 
-def function(
+def semantic_function(
     models: List[str] = [],
     cache_prefix: bool = True,
     remove_pure_fill: bool = True,
@@ -107,10 +107,12 @@ def function(
     return create_func
 
 
-def future(name: Optional[str] = None, content: Optional[str] = None) -> Future:
-    """Let user construct Future explicitly."""
+def variable(
+    name: Optional[str] = None, content: Optional[str] = None
+) -> SemanticVariable:
+    """Let user construct Semantic Variable explicitly."""
 
-    return Future(name, content)
+    return SemanticVariable(name, content)
 
 
 # def shared_context(

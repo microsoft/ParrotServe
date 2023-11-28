@@ -7,7 +7,7 @@ from parrot.program.transforms.prompt_formatter import (
 
 
 def test_py_indent_remover():
-    @P.function(formatter=None)
+    @P.semantic_function(formatter=None)
     def foo(a: P.Output):
         """This is a function.
         It has multiple lines.
@@ -22,7 +22,7 @@ def test_py_indent_remover():
 
 
 def test_squash_into_one_line(formatter=None):
-    @P.function(formatter=None)
+    @P.semantic_function(formatter=None)
     def foo(a: P.Output):
         """This
         is
@@ -41,7 +41,7 @@ def test_squash_into_one_line(formatter=None):
 
 
 def test_always_one_space():
-    @P.function(formatter=None)
+    @P.semantic_function(formatter=None)
     def foo(a: P.Output):
         """This is  a   function.    It     has multiple      spaces.   {{a}}"""
 

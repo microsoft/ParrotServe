@@ -15,7 +15,7 @@ def test_heartbeat():
 def test_e2e():
     with fake_os_server():
 
-        @P.function()
+        @P.semantic_function()
         def test(a: P.Input, b: P.Input, c: P.Output):
             """This {{b}} is a test {{a}} function {{c}}"""
 

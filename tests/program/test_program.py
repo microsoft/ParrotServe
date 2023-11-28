@@ -1,11 +1,11 @@
 import pytest
 import parrot as P
 
-from parrot.program.function import Constant, ParameterLoc, SemanticCall
+from parrot.program.semantic_function import Constant, ParameterLoc, SemanticCall
 
 
 def test_parse_parrot_function():
-    @P.function()
+    @P.semantic_function()
     def tell_me_a_joke(
         topic: P.Input,
         keyword: P.Input,
@@ -43,7 +43,7 @@ def test_parse_parrot_function():
 
 
 def test_call_function():
-    @P.function()
+    @P.semantic_function()
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
 
@@ -51,7 +51,7 @@ def test_call_function():
 
 
 def test_call_function_with_pyobjects():
-    @P.function()
+    @P.semantic_function()
     def test(a: float, b: int, c: list, d: P.Output):
         """This {{b}} is a test {{a}} function {{c}} and {{d}}"""
 
@@ -63,7 +63,7 @@ def test_call_function_with_pyobjects():
 def test_wrongly_pass_output_argument():
     # NOTE: output argument can only be passed by name
 
-    @P.function()
+    @P.semantic_function()
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
 
@@ -72,7 +72,7 @@ def test_wrongly_pass_output_argument():
 
 
 def test_serialize_call():
-    @P.function()
+    @P.semantic_function()
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
 

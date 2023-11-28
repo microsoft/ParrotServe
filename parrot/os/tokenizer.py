@@ -5,7 +5,7 @@
 from typing import Dict, List, Union
 from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 
-from parrot.program.function import SemanticFunction, Constant
+from parrot.program.semantic_function import SemanticFunction, Constant
 
 
 HFTokenizer = Union[PreTrainedTokenizer, PreTrainedTokenizerFast]

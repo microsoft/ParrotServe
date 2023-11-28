@@ -54,7 +54,7 @@ def test_register_vm():
 
 
 def test_submit_call():
-    @P.function()
+    @P.semantic_function()
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
 

@@ -21,7 +21,8 @@ from parrot.protocol.layer_apis import (
     placeholder_fetch,
     aplaceholder_fetch,
 )
-from parrot.program.function import SemanticFunction, Future, SemanticCall
+from parrot.program.semantic_variable import SemanticVariable
+from parrot.program.semantic_function import SemanticFunction, SemanticCall
 from parrot.utils import get_logger
 from parrot.constants import VM_HEARTBEAT_INTERVAL, NONE_CONTEXT_ID
 
@@ -183,7 +184,7 @@ class VirtualMachine:
         """Set the global environment for current Python process."""
 
         SemanticFunction._virtual_machine_env = self
-        Future._virtual_machine_env = self
+        SemanticVariable._virtual_machine_env = self
         # SharedContext._controller = self.controller
         # SharedContext._tokenized_storage = self.tokenizer
 
@@ -191,7 +192,7 @@ class VirtualMachine:
         """Unset the global environment for current Python process."""
 
         SemanticFunction._virtual_machine_env = None
-        Future._virtual_machine_env = None
+        SemanticVariable._virtual_machine_env = None
         # SharedContext._controller = None
         # SharedContext._tokenized_storage = None
 

@@ -11,7 +11,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from uvicorn import Config, Server
 
-from parrot.program.function import SemanticCall
+from parrot.program.semantic_function import SemanticCall
 from parrot.os.pcore import PCore
 from parrot.os.os_creator import create_os
 from parrot.os.engine import EngineRuntimeInfo

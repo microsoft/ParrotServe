@@ -41,9 +41,9 @@ map_sum_test_body = (
 )
 
 map_sum_test_baseline.__doc__ = map_sum_test_body
-map_sum_test_baseline = P.function(cache_prefix=False)(map_sum_test_baseline)
+map_sum_test_baseline = P.semantic_function(cache_prefix=False)(map_sum_test_baseline)
 map_sum_test_main.__doc__ = map_sum_test_body
-map_sum_test_main = P.function(cache_prefix=False)(map_sum_test_main)
+map_sum_test_main = P.semantic_function(cache_prefix=False)(map_sum_test_main)
 
 
 # Setting 1
@@ -81,7 +81,7 @@ reduce_sum_test_body_15 = (
 )
 
 reduce_sum_test_15.__doc__ = reduce_sum_test_body_15
-reduce_sum_test_15 = P.function(cache_prefix=False)(reduce_sum_test_15)
+reduce_sum_test_15 = P.semantic_function(cache_prefix=False)(reduce_sum_test_15)
 
 
 # Setting 2
@@ -134,4 +134,4 @@ reduce_sum_test_body_30 = (
 )
 
 reduce_sum_test_30.__doc__ = reduce_sum_test_body_30
-reduce_sum_test_30 = P.function(cache_prefix=False)(reduce_sum_test_30)
+reduce_sum_test_30 = P.semantic_function(cache_prefix=False)(reduce_sum_test_30)

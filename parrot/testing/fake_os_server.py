@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request
 import uvicorn
 import numpy as np
 
-from parrot.program.function import SemanticCall
+from parrot.program.semantic_function import SemanticCall
 from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_OS_SERVER_PORT
 from parrot.utils import get_logger
 
@@ -77,7 +77,9 @@ async def placeholder_set(request: Request):
     pid = payload["pid"]
     placeholder_id = payload["placeholder_id"]
     content = payload["content"]
-    logger.debug(f"Set placeholder {placeholder_id} in VM (pid: {pid}). Set content: {content}.")
+    logger.debug(
+        f"Set placeholder {placeholder_id} in VM (pid: {pid}). Set content: {content}."
+    )
     return {}
 
 

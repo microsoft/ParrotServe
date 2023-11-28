@@ -5,9 +5,8 @@
 from typing import List, Dict, Optional
 from queue import Queue
 
-from parrot.program.semantic_variable import ParameterLoc
-from parrot.program.future import Future
-from parrot.program.function import SemanticCall
+from parrot.program.semantic_variable import ParameterLoc, SemanticVariable
+from parrot.program.semantic_function import SemanticCall
 from parrot.utils import get_logger, RecyclePool
 from parrot.constants import THREAD_POOL_SIZE
 from parrot.exceptions import ParrotOSUserError, parrot_assert
@@ -92,13 +91,14 @@ class Process:
     def rewrite_call(self, call: SemanticCall):
         r"""This function does two things:
 
-        1. Rewrite the "Futures (Program-level)" to "Placeholders (OS-level)", using the namespace of the process.
+        1. Rewrite the "Semantic Variables (Program-level)" to "Placeholders (OS-level)",
+           using the namespace of the process.
         2. Make the DAG according to the dependencies between the placeholders.
         """
 
-        # Rewrite future to Placeholder
+        # Rewrite SemanticVariable to Placeholder
         for name, value in call.bindings.items():
-            if not isinstance(value, Future):
+            if not isinstance(value, SemanticVariable):
                 continue
 
             if value.id not in self.placeholders_map:
@@ -108,29 +108,29 @@ class Process:
 
             call.bindings[name] = self.placeholders_map[value.id]
 
-        for i, future in enumerate(call.output_futures):
-            if future.id not in self.placeholders_map:
-                self.placeholders_map[future.id] = SVPlaceholder(
+        for i, region in enumerate(call.output_vars):
+            if region.id not in self.placeholders_map:
+                self.placeholders_map[region.id] = SVPlaceholder(
                     id=value.id, name=value.name
                 )
-            call.output_futures[i] = self.placeholders_map[future.id]
+            call.output_vars[i] = self.placeholders_map[region.id]
 
         # Make DAG
         cur_edge = DAGEdge(call)
         call.edges.append(cur_edge)
 
-        for sv in call.func.body:
-            call.edges_map[sv.idx] = cur_edge
+        for region in call.func.body:
+            call.edges_map[region.idx] = cur_edge
 
-            if isinstance(sv, ParameterLoc):
-                sv_placeholder = call.bindings[sv.param.name]
+            if isinstance(region, ParameterLoc):
+                sv_placeholder = call.bindings[region.param.name]
                 if isinstance(sv_placeholder, SVPlaceholder):
-                    if sv.param.is_input_loc:
+                    if region.param.is_input_loc:
                         cur_edge.link_with_from_node(sv_placeholder)
-                    elif sv.param.is_output:
+                    elif region.param.is_output:
                         cur_edge.link_with_to_node(sv_placeholder)
 
-                if sv.param.is_output:
+                if region.param.is_output:
                     # make a new node for the next segment
                     cur_edge = DAGEdge(call)
                     call.edges.append(cur_edge)

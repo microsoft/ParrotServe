@@ -9,9 +9,9 @@ from dataclasses import dataclass
 
 from parrot.utils import get_logger
 
-from .future import Future
 from .semantic_variable import (
     SemanticVariable,
+    SemanticRegion,
     Constant,
     Parameter,
     ParamType,
@@ -31,9 +31,7 @@ class FunctionMetadata:
     models: List[str]
 
 
-def push_to_body(
-    piece_cls: Type[SemanticVariable], body: List[SemanticVariable], **kwargs
-):
+def push_to_body(piece_cls: Type[SemanticRegion], body: List[SemanticRegion], **kwargs):
     idx = len(body)
     body.append(piece_cls(idx=idx, **kwargs))
 
@@ -42,7 +40,7 @@ def parse_func_body(
     body_str: str,
     params_map: Dict[str, Parameter],
     metadata: FunctionMetadata,
-) -> List[SemanticVariable]:
+) -> List[SemanticRegion]:
     """Parse the function body string to a list of semantic variables."""
 
     PLACEHOLDER_REGEX = "{{[a-zA-Z_][a-zA-Z0-9_]*}}"
@@ -50,7 +48,7 @@ def parse_func_body(
     iterator = pattern.finditer(body_str)
     last_pos = 0
 
-    ret: List[SemanticVariable] = []
+    ret: List[SemanticRegion] = []
 
     last_output_loc_idx = -1
     outputs: Set[str] = set()
@@ -108,7 +106,7 @@ class SemanticFunction:
         name: str,
         params: List[Parameter],
         func_body_str: Optional[str] = None,
-        func_body: Optional[List[SemanticVariable]] = None,
+        func_body: Optional[List[SemanticRegion]] = None,
         **kwargs,
     ):
         """For semantic function, function body is just a prompt template.
@@ -127,7 +125,7 @@ class SemanticFunction:
         ]
         self.metadata = FunctionMetadata(**kwargs)
         if func_body_str is not None:
-            self.body: List[SemanticVariable] = parse_func_body(
+            self.body: List[SemanticRegion] = parse_func_body(
                 func_body_str, self.params_map, self.metadata
             )
         elif func_body is not None:
@@ -142,7 +140,7 @@ class SemanticFunction:
         self,
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         """Call to a semantic function.
 
         Some NOTES:
@@ -150,15 +148,15 @@ class SemanticFunction:
         - Calling a parrot semantic function will not execute it immediately.
           Instead, this will submit the call to OS.
 
-        - The return value is a list of Future objects, which can be used to get the
+        - The return value is a list of SemanticVariable objects, which can be used to get the
           output contents or passed to other functions.
 
         - When passing arguments, the caller needs to pass all the input arguments, including
           INPUT_LOC and INPUT_PYOBJ.
 
-        - In some cases, the caller may preallocate the output Futures. In this case, the caller
+        - In some cases, the caller may preallocate the output SemanticVariables. In this case, the caller
           can also pass them as arguments to the function, to make the outputs be written to
-          the preallocated Futures. But in order to make the call convention clear, we only
+          the preallocated SemanticVariables. But in order to make the call convention clear, we only
           allow these arguments to be passed as keyword arguments.
 
         - The INPUT_PYOBJ arguments should be Python objects, which will be turns to a string
@@ -171,7 +169,7 @@ class SemanticFunction:
         self,
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         """Same as __call__."""
 
         return self._call_func(None, *args, **kwargs)
@@ -180,7 +178,7 @@ class SemanticFunction:
         self,
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         """Async call."""
 
         return await self._acall_func(None, *args, **kwargs)
@@ -190,7 +188,7 @@ class SemanticFunction:
         context_successor: "SemanticFunction",
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         """Call a semantic function statefully.
 
         This means the context of the function will not be freed immediately. Instead, it will
@@ -207,7 +205,7 @@ class SemanticFunction:
         context_successor: Optional["SemanticFunction"],
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         call = SemanticCall(self, context_successor, *args, **kwargs)
         if SemanticFunction._virtual_machine_env is not None:
             SemanticFunction._virtual_machine_env.submit_call_handler(call)
@@ -218,17 +216,17 @@ class SemanticFunction:
             )
             return call
 
-        # Unpack the output futures
-        if len(call.output_futures) == 1:
-            return call.output_futures[0]
-        return tuple(call.output_futures)
+        # Unpack the output SemanticVariables
+        if len(call.output_vars) == 1:
+            return call.output_vars[0]
+        return tuple(call.output_vars)
 
     async def _acall_func(
         self,
         context_successor: Optional["SemanticFunction"],
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[Future, Tuple[Future, ...], "SemanticCall"]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         call = SemanticCall(self, context_successor, *args, **kwargs)
         if SemanticFunction._virtual_machine_env is not None:
             # Different from _call_func, we use asubmit_call_handler here.
@@ -240,10 +238,10 @@ class SemanticFunction:
             )
             return call
 
-        # Unpack the output futures
-        if len(call.output_futures) == 1:
-            return call.output_futures[0]
-        return tuple(call.output_futures)
+        # Unpack the output SemanticVariables
+        if len(call.output_vars) == 1:
+            return call.output_vars[0]
+        return tuple(call.output_vars)
 
     @property
     def prefix(self) -> Constant:
@@ -278,7 +276,7 @@ class SemanticCall:
             context_successor.name if context_successor else None
         )
         self.bindings: Dict[str, Any] = {}
-        self.output_futures: List[Future] = []
+        self.output_vars: List[SemanticVariable] = []
 
         # ---------- Runtime ----------
         self.edges: List["DAGEdge"] = []
@@ -308,20 +306,20 @@ class SemanticCall:
             #     )
             self._set_value(param, arg_value, self.bindings)
 
-        # Create output futures
+        # Create output variables.
         for param in self.func.outputs:
             # Skip the output locs that are already set.
             if param.name not in self.bindings:
-                future = Future(name=param.name)
-                self.output_futures.append(future)
-                self._set_value(param, future, self.bindings)
+                out_var = SemanticVariable(name=param.name)
+                self.output_vars.append(out_var)
+                self._set_value(param, out_var, self.bindings)
 
     @staticmethod
     def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
         if param.typ != ParamType.INPUT_PYOBJ:
-            if not isinstance(value, str) and not isinstance(value, Future):
+            if not isinstance(value, str) and not isinstance(value, SemanticVariable):
                 raise TypeError(
-                    f"Argument {param.name} in an input loc should be a str or a Future, "
+                    f"Argument {param.name} in an input loc should be a str or a SemanticVariable, "
                     f"but got {type(value)}: {value}"
                 )
         else:

@@ -14,7 +14,7 @@ vm = P.VirtualMachine(
 )
 
 
-@P.function(formatter=P.allowing_newline)
+@P.semantic_function(formatter=P.allowing_newline)
 def write_synopsis(
     title: P.Input,
     era: P.Input,
@@ -27,7 +27,7 @@ def write_synopsis(
     Playwright: This is a synopsis for the above play: {{synopsis}}"""
 
 
-@P.function(formatter=P.allowing_newline)
+@P.semantic_function(formatter=P.allowing_newline)
 def write_review(
     synopsis: P.Input,
     review: P.Output(P.SamplingConfig(max_gen_length=200, ignore_tokenizer_eos=True)),
@@ -39,7 +39,7 @@ def write_review(
     Review from a New York Times play critic of the above play: {{review}}"""
 
 
-@P.function(formatter=P.allowing_newline)
+@P.semantic_function(formatter=P.allowing_newline)
 def write_post(
     time: P.Input,
     location: P.Input,

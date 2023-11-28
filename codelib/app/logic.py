@@ -11,7 +11,7 @@ import parrot as P
 # Reference: https://python.langchain.com/docs/use_cases/summarization
 
 
-@P.function(formatter=P.allowing_newline)
+@P.semantic_function(formatter=P.allowing_newline)
 def summarize_map(
     doc_pieces: P.Input,
     summary: P.Output(P.SamplingConfig(temperature=0.5, max_gen_length=50)),
@@ -24,7 +24,7 @@ def summarize_map(
     """
 
 
-@P.function(formatter=P.allowing_newline)
+@P.semantic_function(formatter=P.allowing_newline)
 def summarize_reduce(
     doc_summaries: P.Input,
     final_summary: P.Output(P.SamplingConfig(temperature=0.7, max_gen_length=200)),

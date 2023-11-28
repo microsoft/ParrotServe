@@ -7,7 +7,7 @@ from typing import Dict
 
 from .thread import Thread
 
-from parrot.program.function import Constant, ParameterLoc
+from parrot.program.semantic_variable import Constant, ParameterLoc
 from parrot.exceptions import parrot_assert
 
 from ..tokenizer import Tokenizer

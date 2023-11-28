@@ -9,7 +9,7 @@ from parrot.engine.config import EngineConfig
 from parrot.os.thread_dispatcher import DispatcherConfig, ThreadDispatcher
 
 
-@P.function()
+@P.semantic_function()
 def test(a: P.Input, b: P.Output):
     """This is a test {{a}} function {{b}}"""
 
@@ -49,7 +49,7 @@ def test_default_policy():
     # Expect results: dispatch threads averagely to all engines i.e. 2 threads per engine
 
 
-@P.function()
+@P.semantic_function()
 def test_func_throughput(
     a: P.Input,
     b: P.Output(
@@ -59,7 +59,7 @@ def test_func_throughput(
     """This is a test {{a}} function {{b}}"""
 
 
-@P.function()
+@P.semantic_function()
 def test_func_latency(
     a: P.Input,
     b: P.Output(
@@ -132,7 +132,7 @@ def test_dispatcher_order():
     )
 
     # 4 threads with chain dependency
-    outputs = [P.future() for _ in range(8)]
+    outputs = [P.variable() for _ in range(8)]
     threads = [None] * 8
     next_input = "a"
 
@@ -202,7 +202,7 @@ def test_app_fifo():
     for i in range(4):
         tid1 = i
         tid2 = i + 4
-        middle_node = P.future(name=f"middle_{i}")
+        middle_node = P.variable(name=f"middle_{i}")
         call1 = test("a", b=middle_node)
         call2 = test(middle_node)
 

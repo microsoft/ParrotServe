@@ -8,7 +8,7 @@ from queue import Queue
 import time
 
 from parrot.program.semantic_variable import ParameterLoc
-from parrot.program.function import SemanticCall
+from parrot.program.semantic_function import SemanticCall
 from parrot.protocol.primitive_request import Fill, Generate
 from parrot.utils import get_logger, create_task_in_loop
 from parrot.constants import (

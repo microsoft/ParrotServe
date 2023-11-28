@@ -11,7 +11,7 @@ import parrot as P
 # Act as a Linux Terminal
 
 
-@P.function()
+@P.semantic_function()
 def linux_terminal(
     command: P.Input,
     output: P.Output(P.SamplingConfig(temperature=0.5)),

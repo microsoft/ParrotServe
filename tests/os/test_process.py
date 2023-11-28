@@ -31,13 +31,13 @@ def test_single_call():
     dispatcher, proc = init()
 
     async def main():
-        @P.function()
+        @P.semantic_function()
         def test(a: P.Input, b: P.Input, c: P.Output):
             """This {{b}} is a test {{a}} function {{c}}"""
 
         # Without VM, it will return the call
         call = test("Apple", "Banana")
-        future_id = call.output_futures[0].id
+        future_id = call.output_vars[0].id
 
         proc.rewrite_call(call)
         thread = proc.make_thread(call)
@@ -59,23 +59,23 @@ def test_single_call():
 def test_make_dag():
     dispatcher, proc = init()
 
-    @P.function()
+    @P.semantic_function()
     def test1(a: P.Input, b: P.Output):
         """This is a test {{a}} function {{b}}"""
 
-    @P.function()
+    @P.semantic_function()
     def test2(c: P.Input, d: P.Output):
         """This is a test {{c}} function {{d}}"""
 
-    @P.function()
+    @P.semantic_function()
     def test3(e: P.Input, f: P.Output):
         """This is a test {{e}} function {{f}}"""
 
     # Without VM, it will return the call
     call1 = test1("Apple")
-    b1 = call1.output_futures[0]
+    b1 = call1.output_vars[0]
     call2 = test2(b1)
-    b2 = call2.output_futures[0]
+    b2 = call2.output_vars[0]
     call3 = test3(b2)
 
     proc.rewrite_call(call1)

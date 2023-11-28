@@ -5,7 +5,7 @@
 import parrot as P
 
 
-@P.function()
+@P.semantic_function()
 def func_1i_1o_genlen_100(
     input1: P.Input,
     output1: P.Output(P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=100)),
@@ -24,7 +24,7 @@ def func_1i_1o_genlen_100(
     {{output1}}"""
 
 
-@P.function()
+@P.semantic_function()
 def func_3i_2o_genlen_100(
     input1: P.Input,
     input2: P.Input,
