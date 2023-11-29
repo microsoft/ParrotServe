@@ -5,7 +5,7 @@
 from typing import Dict, List
 from abc import ABC, abstractmethod
 from dataclasses import asdict
-from ..semantic_function import (
+from ..function import (
     SemanticFunction,
     SemanticRegion,
     ParameterLoc,

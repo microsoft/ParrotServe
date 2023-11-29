@@ -34,4 +34,4 @@ class ParrotEngineInteralError(ParrotError):
 
 def parrot_assert(cond: bool, msg: str):
     if not cond:
-        raise ParrotOSInteralError(AssertionError(msg))
+        raise ParrotError(AssertionError(msg))

@@ -8,7 +8,7 @@ import time
 from dataclasses import asdict
 
 from parrot.program.vm import VMRuntimeInfo
-from parrot.program.semantic_function import SemanticCall
+from parrot.program.function import SemanticCall, NativeCall
 from parrot.utils import RecyclePool
 from parrot.constants import (
     PROCESS_POOL_SIZE,
@@ -219,8 +219,23 @@ class PCore:
             "Runtime info: \n" + engine_runtime_info.display()
         )
 
-    def submit_call(self, pid: int, call: SemanticCall) -> int:
-        """Submit a call from a VM to the OS."""
+    def submit_native_call(self, pid: int, call: NativeCall) -> int:
+        """Submit a native call from a VM to the OS."""
+
+        # The native call must be a short, executable and stateless call. (FaaS)
+        # The native call will be executed immediately once all its inputs are ready.
+
+        self._check_process(pid)
+        process = self.processes[pid]
+
+        # Rewrite the call using namespace
+        process.rewrite_call(call)
+
+        # Execute it immediately
+        process.execute_native_call(call)
+
+    def submit_semantic_call(self, pid: int, call: SemanticCall) -> int:
+        """Submit a semantic call from a VM to the OS."""
 
         # Submit call will only put the call into a Queue, and the call will be executed later.
         # This is for get the partial DAG and do optimized scheduling.

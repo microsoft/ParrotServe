@@ -23,7 +23,8 @@ from parrot.protocol.layer_apis import (
     aplaceholder_fetch,
 )
 from parrot.program.semantic_variable import SemanticVariable
-from parrot.program.semantic_function import SemanticFunction, SemanticCall
+from parrot.program.function import BasicFunction, NativeFunction
+from parrot.program.function_call import BasicCall
 from parrot.utils import get_logger
 from parrot.constants import VM_HEARTBEAT_INTERVAL, NONE_CONTEXT_ID
 
@@ -72,7 +73,7 @@ class VirtualMachine:
         self._heartbeat_thread = threading.Thread(
             target=self._heartbeat_daemon, daemon=True
         )
-        self._function_registry: Dict[str, SemanticFunction] = {}
+        self._function_registry: Dict[str, BasicFunction] = {}
         self._heartbeat_thread.start()
 
         logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
@@ -122,8 +123,8 @@ class VirtualMachine:
         )
         return resp.content
 
-    def register_function_handler(self, func: SemanticFunction):
-        """Register a semantic function to the VM."""
+    def register_function_handler(self, func: BasicFunction):
+        """Register a function to the VM."""
 
         if func.name in self._function_registry:
             raise ValueError(f"Function {func.name} already registered.")
@@ -131,18 +132,21 @@ class VirtualMachine:
         self._function_registry[func.name] = func
         logger.info(f"VM (pid: {self.pid}) registers function: {func.name}")
 
-    def submit_call_handler(self, call: SemanticCall):
+    def submit_call_handler(self, call: BasicCall):
         """Submit a call to the OS."""
 
         logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
+
+        is_native = isinstance(call.func, NativeFunction)
 
         resp = submit_call(
             http_addr=self.os_http_addr,
             pid=self.pid,
             call=call,
+            is_native=is_native,
         )
 
-    async def asubmit_call_handler(self, call: SemanticCall):
+    async def asubmit_call_handler(self, call: BasicCall):
         """Submit a call to the OS."""
 
         logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
@@ -175,8 +179,10 @@ class VirtualMachine:
                 f"Cannot import function {function_name} from module: {module_path}."
             )
 
-        if not isinstance(semantic_function, SemanticFunction):
-            raise ValueError(f"Function {function_name} is not a semantic function.")
+        if not isinstance(semantic_function, BasicFunction):
+            raise ValueError(
+                f"Function {function_name} is not a semantic function or a native function."
+            )
 
         self.register_function_handler(semantic_function)
         return semantic_function
@@ -184,7 +190,7 @@ class VirtualMachine:
     def set_global_env(self):
         """Set the global environment for current Python process."""
 
-        SemanticFunction._virtual_machine_env = self
+        BasicFunction._virtual_machine_env = self
         SemanticVariable._virtual_machine_env = self
         # SharedContext._controller = self.controller
         # SharedContext._tokenized_storage = self.tokenizer
@@ -192,8 +198,8 @@ class VirtualMachine:
     def unset_global_env(self):
         """Unset the global environment for current Python process."""
 
-        SemanticFunction._virtual_machine_env = None
-        SemanticVariable._virtual_machine_env = None
+        BasicFunction._virtual_machine_env = None
+        SemanticVariable._virtual_machine_env = self
         # SharedContext._controller = None
         # SharedContext._tokenized_storage = None
 

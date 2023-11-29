@@ -14,7 +14,7 @@ from .func_mutator import (
     ParameterLoc,
     Parameter,
 )
-from ..semantic_function import push_to_body
+from ..function import push_to_body
 
 
 class SeparatorStyle(IntEnum):

@@ -3,7 +3,7 @@
 
 from typing import Optional, List
 
-from parrot.program.semantic_function import SemanticCall
+from parrot.program.function import SemanticCall
 from parrot.utils import get_logger
 
 

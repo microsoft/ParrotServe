@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 
+import inspect
 import logging
 import asyncio
 import traceback
@@ -198,3 +199,17 @@ def torch_profile(profile_title: str):
         + "\n\n\n",
         flush=True,
     )
+
+
+def change_signature(func, new_parameters, new_return_annotation):
+    """Change a function's signature.
+
+    Reference: https://deepinout.com/python/python-qa/369_python_set_function_signature_in_python.html
+    """
+
+    signature = inspect.signature(func)
+    new_signature = signature.replace(
+        parameters=new_parameters,
+        return_annotation=new_return_annotation,
+    )
+    func.__signature__ = new_signature

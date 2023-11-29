@@ -60,7 +60,9 @@ def register_vm(http_addr: str) -> RegisterVMResponse:
         raise e
 
 
-def submit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallResponse:
+def submit_call(
+    http_addr: str, pid: int, call: "BasicCall", is_native: bool
+) -> SubmitCallResponse:
     try:
         return send_http_request(
             SubmitCallResponse,
@@ -69,13 +71,16 @@ def submit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallRes
             retry_times=1,
             pid=pid,
             call=call.pickle(),
+            is_native=is_native,
         )
     except BaseException as e:
         logger.error(f"Execute func (pid: {pid}) error in {http_addr}. Error: {e}")
         raise e
 
 
-async def asubmit_call(http_addr: str, pid: int, call: "SemanticCall") -> SubmitCallResponse:
+async def asubmit_call(
+    http_addr: str, pid: int, call: "BasicCall"
+) -> SubmitCallResponse:
     try:
         async with aiohttp.ClientSession() as client_session:
             return await async_send_http_request(
@@ -92,9 +97,7 @@ async def asubmit_call(http_addr: str, pid: int, call: "SemanticCall") -> Submit
         raise e
 
 
-def placeholder_set(
-    http_addr: str, pid: int, placeholder_id: int, content: str
-):
+def placeholder_set(http_addr: str, pid: int, placeholder_id: int, content: str):
     try:
         send_http_request(
             PlaceholderSetResponse,

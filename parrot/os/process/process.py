@@ -2,12 +2,13 @@
 # Licensed under the MIT license.
 
 
+import asyncio
 from typing import List, Dict, Optional
 from queue import Queue
 
 from parrot.program.semantic_variable import ParameterLoc, SemanticVariable
-from parrot.program.semantic_function import SemanticCall
-from parrot.utils import get_logger, RecyclePool
+from parrot.program.function_call import BasicCall, SemanticCall, NativeCall
+from parrot.utils import get_logger, RecyclePool, create_task_in_loop
 from parrot.constants import THREAD_POOL_SIZE
 from parrot.exceptions import ParrotOSUserError, parrot_assert
 
@@ -88,7 +89,7 @@ class Process:
 
     # ---------- Interfaces to PCore ----------
 
-    def rewrite_call(self, call: SemanticCall):
+    def rewrite_call(self, call: BasicCall):
         r"""This function does two things:
 
         1. Rewrite the "Semantic Variables (Program-level)" to "Placeholders (OS-level)",
@@ -107,33 +108,53 @@ class Process:
                 )
 
             call.bindings[name] = self.placeholders_map[value.id]
+            if value.ready:
+                self.placeholders_map[value.id].set(value.get())
 
-        for i, region in enumerate(call.output_vars):
-            if region.id not in self.placeholders_map:
-                self.placeholders_map[region.id] = SVPlaceholder(
+        # Rewrite SemanticVariable to Placeholder
+        for i, var in enumerate(call.output_vars):
+            if var.id not in self.placeholders_map:
+                self.placeholders_map[var.id] = SVPlaceholder(
                     id=value.id, name=value.name
                 )
-            call.output_vars[i] = self.placeholders_map[region.id]
+            call.output_vars[i] = self.placeholders_map[var.id]
 
         # Make DAG
         cur_edge = DAGEdge(call)
         call.edges.append(cur_edge)
 
-        for region in call.func.body:
-            call.edges_map[region.idx] = cur_edge
+        if isinstance(call, SemanticCall):
+            """Semantic Call has multiple regions, hence multiple edges."""
+            for region in call.func.body:
+                call.edges_map[region.idx] = cur_edge
 
-            if isinstance(region, ParameterLoc):
-                sv_placeholder = call.bindings[region.param.name]
-                if isinstance(sv_placeholder, SVPlaceholder):
-                    if region.param.is_input_loc:
-                        cur_edge.link_with_from_node(sv_placeholder)
-                    elif region.param.is_output:
-                        cur_edge.link_with_to_node(sv_placeholder)
+                if isinstance(region, ParameterLoc):
+                    sv_placeholder = call.bindings[region.param.name]
+                    if isinstance(sv_placeholder, SVPlaceholder):
+                        if region.param.is_input_loc:
+                            cur_edge.link_with_from_node(sv_placeholder)
+                        elif region.param.is_output:
+                            cur_edge.link_with_to_node(sv_placeholder)
 
-                if region.param.is_output:
-                    # make a new node for the next segment
-                    cur_edge = DAGEdge(call)
-                    call.edges.append(cur_edge)
+                    if region.param.is_output:
+                        # make a new node for the next segment
+                        cur_edge = DAGEdge(call)
+                        call.edges.append(cur_edge)
+        else:
+            """Native Call has only one edge."""
+            for name, value in call.bindings.items():
+                if (
+                    not isinstance(value, SVPlaceholder)
+                    or call.func.params_map[name].is_output
+                ):
+                    continue
+
+                sv_placeholder = self.placeholders_map[value.id]
+                cur_edge.link_with_from_node(sv_placeholder)
+
+            for var in call.output_vars:
+                sv_placeholder = self.placeholders_map[var.id]
+                cur_edge.link_with_to_node(sv_placeholder)
 
     def make_thread(self, call: SemanticCall) -> Thread:
         # Get state context (if any)
@@ -160,6 +181,42 @@ class Process:
             self.executor.submit(thread)
         except ParrotOSUserError as e:
             self.exception_interrupt(e)
+
+    def execute_native_call(self, call: NativeCall):
+        async def _execute_body(func, *args):
+            return func(*args)
+
+        async def _execute_main():
+            try:
+                # Mark all placeholders as start
+                for _, value in call.bindings.items():
+                    if isinstance(value, SVPlaceholder):
+                        value.start_event.set()
+
+                # Wait all inputs to be ready
+                args = []
+                for name, value in call.bindings.items():
+                    if call.func.params_map[name].is_output:
+                        continue
+                    elif isinstance(value, SVPlaceholder):
+                        args.append(await value.get())  # Maybe block here
+                        continue
+                    else:
+                        args.append(value)
+
+                # Execute the native call
+                native_pyfunc = call.func.get_pyfunc()
+                result = await asyncio.wait_for(
+                    _execute_body(native_pyfunc, *args),
+                    call.func.metadata.timeout,
+                )
+
+                # Set the output
+                call.output_vars[0].set(result)
+            except BaseException as e:
+                self.exception_interrupt(e)
+
+        create_task_in_loop(_execute_main(), fail_fast=False)
 
     def exception_interrupt(self, exception: BaseException):
         self.bad = True

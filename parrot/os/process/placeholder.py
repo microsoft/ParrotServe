@@ -5,7 +5,7 @@
 from typing import List, Optional
 from asyncio import Event
 
-from parrot.program.semantic_function import SemanticCall
+from parrot.program.function import SemanticCall
 
 from .dag_edge import DAGEdge
 from ..tokenizer import Tokenizer
@@ -49,6 +49,7 @@ class SVPlaceholder:
         assert self.content is None, "This placeholder is filled"
         self.content = content
         self.ready_event.set()
+        self.start_event.set()  # Must started
 
         # Sync results to token holders
         for token_holder in self.token_holders:

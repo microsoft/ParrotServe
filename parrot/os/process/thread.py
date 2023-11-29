@@ -8,7 +8,7 @@ from queue import Queue
 import time
 
 from parrot.program.semantic_variable import ParameterLoc
-from parrot.program.semantic_function import SemanticCall
+from parrot.program.function import SemanticCall
 from parrot.protocol.primitive_request import Fill, Generate
 from parrot.utils import get_logger, create_task_in_loop
 from parrot.constants import (
@@ -157,6 +157,8 @@ class Thread:
 
                 # print(sv_placeholder, sv_placeholder.out_edges, sv_placeholder.in_edges)
 
+                # TODO(chaofan): Here we don't consider native function edge.
+                # Related works will be done in the future.
                 for edge in sv_placeholder.out_edges:
                     ret.append(edge.call.thread)
         return ret

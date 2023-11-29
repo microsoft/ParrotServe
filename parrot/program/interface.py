@@ -3,14 +3,15 @@
 
 
 import inspect
+import collections
 from typing import Optional, List
 
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.annotation import DispatchAnnotation
-from parrot.utils import get_logger
+from parrot.utils import get_logger, change_signature
 
 from .semantic_variable import SemanticVariable
-from .semantic_function import SemanticFunction, ParamType, Parameter
+from .function import SemanticFunction, NativeFunction, ParamType, Parameter
 from .transforms.prompt_formatter import standard_formatter, Sequential, FuncMutator
 
 
@@ -85,9 +86,9 @@ def semantic_function(
         semantic_func = SemanticFunction(
             name=func_name,
             params=func_params,
-            models=models,
             func_body_str=doc_str,
             # Func Metadata
+            models=models,
             cache_prefix=cache_prefix,
             remove_pure_fill=remove_pure_fill,
         )
@@ -103,6 +104,93 @@ def semantic_function(
             semantic_func = conversation_template.transform(semantic_func)
 
         return semantic_func
+
+    return create_func
+
+
+def native_function(
+    timeout: float = 0.1,
+):
+    """A decorator for users to define parrot functions."""
+
+    def create_func(f):
+        func_name = f.__name__
+
+        # Parse the function signature (parameters)
+        func_sig = inspect.signature(f)
+        return_annotations = func_sig.return_annotation
+        func_params = []
+
+        # Update annotations for the pyfunc
+        new_params_anotations = []
+        new_return_annotations = []
+
+        for param in func_sig.parameters.values():
+            if param.annotation == Input:
+                param_typ = ParamType.INPUT_LOC
+                new_params_anotations.append(
+                    inspect.Parameter(
+                        param.name,
+                        param.kind,
+                        default=param.default,
+                        annotation=str,
+                    )
+                )
+            elif param.annotation == Output:
+                raise ValueError(
+                    "Please put Output annotation in the return type in native function."
+                )
+            elif param.annotation.__class__ == Output:
+                raise ValueError(
+                    "Please put Output annotation in the return type in native function."
+                )
+            else:
+                param_typ = ParamType.INPUT_PYOBJ
+                new_params_anotations.append(
+                    inspect.Parameter(
+                        param.name,
+                        param.kind,
+                        default=param.default,
+                        annotatioin=param.annotation,
+                    )
+                )
+            func_params.append(Parameter(name=param.name, typ=param_typ))
+
+        if isinstance(return_annotations, collections.abc.Iterable):
+            # return_annotations = [
+            #     return_annotations,
+            # ]
+            raise ValueError("Native function can only return one P.Output.")
+        elif return_annotations == inspect.Signature.empty:
+            raise ValueError("Native function must return one P.Output.")
+
+        ret_counter = 0
+        for annotation in [return_annotations]:
+            if annotation == Output:
+                func_params.append(
+                    Parameter(name=f"ret_{ret_counter}", typ=ParamType.OUTPUT_LOC)
+                )
+                ret_counter += 1
+                new_return_annotations.append(str)
+            elif annotation.__class__ == Output:
+                # Output loc with sampling config
+                raise ValueError(
+                    "Native function does not support annotate Output variables."
+                )
+            else:
+                raise ValueError("Native function can only return P.Output")
+
+        change_signature(f, new_params_anotations, new_return_annotations)
+
+        native_func = NativeFunction(
+            name=func_name,
+            pyfunc=f,
+            params=func_params,
+            # Func Metadata
+            timeout=timeout,
+        )
+
+        return native_func
 
     return create_func
 

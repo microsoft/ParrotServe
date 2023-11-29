@@ -53,7 +53,7 @@ def test_register_vm():
         )  # It's related to the allocating policy of the fake OS server
 
 
-def test_submit_call():
+def test_submit_semantic_call():
     @P.semantic_function()
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
@@ -65,6 +65,23 @@ def test_submit_call():
             http_addr=OS_URL,
             pid=0,
             call=call,
+            is_native=False,
+        )
+
+
+def test_submit_native_call():
+    @P.native_function()
+    def test(a: P.Input) -> P.Output:
+        return a
+
+    call = test("a")
+
+    with fake_os_server():
+        resp = submit_call(
+            http_addr=OS_URL,
+            pid=0,
+            call=call,
+            is_native=True,
         )
 
 
@@ -211,8 +228,9 @@ def test_generate():
 if __name__ == "__main__":
     # test_vm_heartbeat()
     # test_register_vm()
-    # test_submit_call()
-    test_placeholder_set()
+    # test_submit_semantic_call()
+    test_submit_native_call()
+    # test_placeholder_set()
     # test_placeholder_fetch()
     # test_free_context()
     # test_ping_engine()

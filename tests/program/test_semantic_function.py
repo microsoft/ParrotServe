@@ -1,10 +1,10 @@
 import pytest
 import parrot as P
 
-from parrot.program.semantic_function import Constant, ParameterLoc, SemanticCall
+from parrot.program.function import Constant, ParameterLoc, SemanticCall
 
 
-def test_parse_parrot_function():
+def test_parse_semantic_function():
     @P.semantic_function()
     def tell_me_a_joke(
         topic: P.Input,
@@ -94,7 +94,7 @@ def test_serialize_call():
 
 
 if __name__ == "__main__":
-    test_parse_parrot_function()
+    test_parse_semantic_function()
     test_call_function()
     test_call_function_with_pyobjects()
     test_wrongly_pass_output_argument()

@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request
 import uvicorn
 import numpy as np
 
-from parrot.program.semantic_function import SemanticCall
+from parrot.program.function import SemanticCall, NativeCall
 from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_OS_SERVER_PORT
 from parrot.utils import get_logger
 
@@ -66,8 +66,17 @@ async def register_engine(request: Request):
 async def submit_call(request: Request):
     payload = await request.json()
     pid = payload["pid"]
-    call = SemanticCall.unpickle(payload["call"])
-    logger.debug(f"Execute function {call.func.name} in VM (pid: {pid}).")
+    is_native = payload["is_native"]
+    if is_native:
+        call = NativeCall.unpickle(payload["call"])
+        pyfunc = call.func.get_pyfunc()
+        ret = pyfunc(*["1" for _ in range(len(call.func.inputs))])
+        logger.debug(
+            f"Execute native function {call.func.name} in VM (pid: {pid}). Result: {ret}"
+        )
+    else:
+        call = SemanticCall.unpickle(payload["call"])
+        logger.debug(f"Execute function {call.func.name} in VM (pid: {pid}).")
     return {}
 
 

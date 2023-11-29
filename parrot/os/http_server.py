@@ -11,7 +11,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from uvicorn import Config, Server
 
-from parrot.program.semantic_function import SemanticCall
+from parrot.program.function import SemanticCall, NativeCall
 from parrot.os.pcore import PCore
 from parrot.os.os_creator import create_os
 from parrot.os.engine import EngineRuntimeInfo
@@ -79,9 +79,14 @@ async def submit_call(request: Request):
 
     payload = await request.json()
     pid = payload["pid"]
+    is_native = payload["is_native"]
     logger.debug(f"Submit call received: pid={pid}")
-    call = SemanticCall.unpickle(payload["call"])
-    pcore.submit_call(pid, call)
+    if is_native:
+        call = NativeCall.unpickle(payload["call"])
+        pcore.submit_native_call(pid, call)
+    else:
+        call = SemanticCall.unpickle(payload["call"])
+        pcore.submit_semantic_call(pid, call)
     return {}
 
 
