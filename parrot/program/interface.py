@@ -156,16 +156,16 @@ def native_function(
                 )
             func_params.append(Parameter(name=param.name, typ=param_typ))
 
-        if isinstance(return_annotations, collections.abc.Iterable):
-            # return_annotations = [
-            #     return_annotations,
-            # ]
-            raise ValueError("Native function can only return one P.Output.")
-        elif return_annotations == inspect.Signature.empty:
-            raise ValueError("Native function must return one P.Output.")
+        if return_annotations == inspect.Signature.empty:
+            raise ValueError("Native function must return at least one P.Output.")
+        elif not isinstance(return_annotations, collections.abc.Iterable):
+            return_annotations = [
+                return_annotations,
+            ]
+            # raise ValueError("Native function can only return one P.Output.")
 
         ret_counter = 0
-        for annotation in [return_annotations]:
+        for annotation in return_annotations:
             if annotation == Output:
                 func_params.append(
                     Parameter(name=f"ret_{ret_counter}", typ=ParamType.OUTPUT_LOC)

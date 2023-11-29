@@ -146,7 +146,7 @@ class Thread:
     def get_next_threads(self) -> List["Thread"]:
         """Get threads which take the output of this thread as input."""
 
-        ret = []
+        ret = set()
         for sv in self.call.func.body:
             if isinstance(sv, ParameterLoc) and sv.param.is_output:
                 sv_placeholder: SVPlaceholder = self.call.bindings[sv.param.name]
@@ -160,8 +160,8 @@ class Thread:
                 # TODO(chaofan): Here we don't consider native function edge.
                 # Related works will be done in the future.
                 for edge in sv_placeholder.out_edges:
-                    ret.append(edge.call.thread)
-        return ret
+                    ret.add(edge.call.thread)
+        return list(ret)
 
     def ready_to_dispatch(self) -> bool:
         """Check whether the thread is ready to be dispatched.

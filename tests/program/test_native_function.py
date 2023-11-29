@@ -20,20 +20,17 @@ def test_parse_native_function():
 
 
 def test_parse_native_function_two_rets():
-    with pytest.raises(ValueError):
+    @P.native_function()
+    def add(a: P.Input, b: P.Input) -> (P.Output, P.Output):
+        return str(int(a) + int(b)), str(int(a) - int(b))
 
-        @P.native_function()
-        def add(a: P.Input, b: P.Input) -> (P.Output, P.Output):
-            return str(int(a) + int(b)), str(int(a) - int(b))
+    def add_pyfunc(a: str, b: str) -> (str, str):
+        return str(int(a) + int(b)), str(int(a) - int(b))
 
-    # def add_pyfunc(a: str, b: str) -> (str, str):
-    #     return str(int(a) + int(b)), str(int(a) - int(b))
-
-    # print(add.display_signature())
-    # print(add.inputs)
-    # print(add.outputs)
-    # print(inspect.signature(add.pyfunc))
-    # print(inspect.signature(add_pyfunc))
+    print(add.display_signature())
+    print(add.inputs)
+    print(add.outputs)
+    print(inspect.signature(add_pyfunc))
 
 
 def test_call_function():
@@ -81,7 +78,7 @@ def test_serialize_call():
 
 
 if __name__ == "__main__":
-    # test_parse_native_function()
-    # test_parse_native_function_two_rets()
-    # test_call_function()
+    test_parse_native_function()
+    test_parse_native_function_two_rets()
+    test_call_function()
     test_serialize_call()
