@@ -21,7 +21,8 @@ Baseline: No pipeline, submitting requests sequentially. No App FIFO.
 Settings: Chunks num=20, per_chunk_size=650, 16 VMs send requests concurrently.
 And the backend engine's max_num_batched_tokens is 2560, max_batch_size=2.
 
-### Chain 1 GPU, with long Constant Prefix
+### Chat Serving, 1 GPU
+
 
 
 ### Map-Reduce 1 GPU

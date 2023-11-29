@@ -186,8 +186,8 @@ def parse_func_body(
         param = params_map[param_name]
         if param.is_output:
             assert not (
-                isinstance(ret[-1], ParameterLoc)
-            ), "Output loc can't be adjacent to another loc."
+                isinstance(ret[-1], ParameterLoc) and ret[-1].param.is_output
+            ), "Output loc can't be adjacent to another output loc."
             assert not param.name in outputs, "Output param can't be used twice."
             outputs.add(param.name)
         push_to_body(ParameterLoc, ret, param=param)

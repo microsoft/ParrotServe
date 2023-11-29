@@ -42,6 +42,19 @@ def test_parse_semantic_function():
             j += 1
 
 
+def test_parse_semantic_function_corner_cases():
+    @P.semantic_function()
+    def single_output(output: P.Output):
+        """This is a test for single output: {{output}}"""
+
+    @P.semantic_function()
+    def pure_locs(
+        input: P.Input,
+        output: P.Output,
+    ):
+        """This is a test for pure locs: {{input}}{{output}}"""
+
+
 def test_call_function():
     @P.semantic_function()
     def test(a: P.Input, b: P.Input, c: P.Output):
@@ -94,8 +107,9 @@ def test_serialize_call():
 
 
 if __name__ == "__main__":
-    test_parse_semantic_function()
-    test_call_function()
-    test_call_function_with_pyobjects()
-    test_wrongly_pass_output_argument()
-    test_serialize_call()
+    # test_parse_semantic_function()
+    test_parse_semantic_function_corner_cases()
+    # test_call_function()
+    # test_call_function_with_pyobjects()
+    # test_wrongly_pass_output_argument()
+    # test_serialize_call()

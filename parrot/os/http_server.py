@@ -71,11 +71,15 @@ async def register_vm(request: Request):
 @app.post("/submit_call")
 async def submit_call(request: Request):
     # Sleep simulate network latency
-    latency = os.environ.get("SIMULATE_NETWORK_LATENCY", None)
+    latency = os.environ.get("SIMULATE_NETWORK_LATENCY_PRT", None)
     assert (
-        latency is None or not latency.isdigit()
+        latency is not None
     ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
-    await asyncio.sleep(float(latency))
+    try:
+        latency = float(latency)
+    except ValueError:
+        return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
+    await asyncio.sleep(latency)
 
     payload = await request.json()
     pid = payload["pid"]

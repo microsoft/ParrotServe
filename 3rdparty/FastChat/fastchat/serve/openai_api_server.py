@@ -379,13 +379,15 @@ async def show_available_models():
 async def create_chat_completion(request: ChatCompletionRequest):
     """Creates a completion for the chat message"""
 
-    latency = os.environ.get("SIMULATE_NETWORK_LATENCY", None)
+    latency = os.environ.get("SIMULATE_NETWORK_LATENCY_FS", None)
     assert (
-        latency is None or not latency.isdigit()
-    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
-    await asyncio.sleep(
-        float(latency)
-    )  # HACK(chaofan): Simulate client-server network latency
+        latency is not None
+    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY_FS"
+    try:
+        latency = float(latency)
+    except ValueError:
+        return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
+    await asyncio.sleep(latency)
 
     error_check_ret = await check_model(request)
     if error_check_ret is not None:

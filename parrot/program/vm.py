@@ -127,7 +127,9 @@ class VirtualMachine:
         """Register a function to the VM."""
 
         if func.name in self._function_registry:
-            raise ValueError(f"Function {func.name} already registered.")
+            # raise ValueError(f"Function {func.name} already registered.")
+            # Don't raise error here, because we may register the same function
+            return
 
         self._function_registry[func.name] = func
         logger.info(f"VM (pid: {self.pid}) registers function: {func.name}")
