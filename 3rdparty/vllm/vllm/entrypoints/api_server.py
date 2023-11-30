@@ -1,6 +1,8 @@
 import argparse
 import json
 from typing import AsyncGenerator
+import os
+import asyncio
 
 from fastapi import BackgroundTasks, FastAPI, Request
 from fastapi.responses import JSONResponse, Response, StreamingResponse
@@ -25,6 +27,18 @@ async def generate(request: Request) -> Response:
     - stream: whether to stream the results or not.
     - other fields: the sampling parameters (See `SamplingParams` for details).
     """
+
+    # HACK(chaofan): Sleep simulate network latency
+    latency = os.environ.get("SIMULATE_NETWORK_LATENCY_FS", None)
+    assert (
+        latency is not None
+    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
+    try:
+        latency = float(latency)
+    except ValueError:
+        return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
+    await asyncio.sleep(latency)
+
     request_dict = await request.json()
     prompt = request_dict.pop("prompt")
     stream = request_dict.pop("stream", False)
@@ -36,9 +50,7 @@ async def generate(request: Request) -> Response:
     async def stream_results() -> AsyncGenerator[bytes, None]:
         async for request_output in results_generator:
             prompt = request_output.prompt
-            text_outputs = [
-                prompt + output.text for output in request_output.outputs
-            ]
+            text_outputs = [prompt + output.text for output in request_output.outputs]
             ret = {"text": text_outputs}
             yield (json.dumps(ret) + "\0").encode("utf-8")
 
@@ -77,8 +89,10 @@ if __name__ == "__main__":
     engine_args = AsyncEngineArgs.from_cli_args(args)
     engine = AsyncLLMEngine.from_engine_args(engine_args)
 
-    uvicorn.run(app,
-                host=args.host,
-                port=args.port,
-                log_level="debug",
-                timeout_keep_alive=TIMEOUT_KEEP_ALIVE)
+    uvicorn.run(
+        app,
+        host=args.host,
+        port=args.port,
+        log_level="debug",
+        timeout_keep_alive=TIMEOUT_KEEP_ALIVE,
+    )

@@ -8,4 +8,4 @@ python3 -m parrot.engine.http_server \
     --port 9001 \
     --engine_name engine_server1 \
     --device cuda &
-sleep 30
+sleep 35
