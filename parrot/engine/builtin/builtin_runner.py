@@ -42,8 +42,10 @@ class BuiltinRunner:
 
         # Init CUDA env
         if self.builtin_config.device_str.startswith("cuda:"):
-            local_rank = int(self.builtin_config.device_str.split(":")[1])
-            torch.cuda.set_device(local_rank)
+            self.local_rank = int(self.builtin_config.device_str.split(":")[1])
+            torch.cuda.set_device(self.local_rank)
+        else:
+            self.local_rank = 0
 
         # Load Model
         self.hf_model_config = AutoConfig.from_pretrained(model_name)

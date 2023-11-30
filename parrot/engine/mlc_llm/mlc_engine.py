@@ -10,6 +10,7 @@ MLC_INSTALLED = True
 try:
     from mlc_chat import ChatModule, GenerationConfig
     from mlc_chat.chat_module import logging
+
     logging.info = (
         lambda x: x
     )  # This is a dirty way to disable logging in MLC-LLM, avoiding repeative logging.

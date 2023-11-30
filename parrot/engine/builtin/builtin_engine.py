@@ -4,7 +4,7 @@
 
 from typing import Dict, AsyncGenerator
 
-from parrot.utils import get_logger
+from parrot.utils import get_logger, MemTracker, get_cpu_memory_usage
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
 
@@ -42,6 +42,7 @@ class BuiltinEngine(LLMEngine):
         )
         self.scheduler = Scheduler(scheduler_config)
         self.latency_analyzer = LatencyAnalyzer()
+        self.gpu_mem_tracker = MemTracker(device=self.runner.local_rank)
 
         self._register_engine(self.engine_config)
 
@@ -159,12 +160,20 @@ class BuiltinEngine(LLMEngine):
 
         recent_average_latency = self.latency_analyzer.get_average_latency()
 
+        self.gpu_mem_tracker.clear_cache()
+        profiled_cpu_mem = get_cpu_memory_usage()
+        profiled_gpu_allocate_mem = self.gpu_mem_tracker.get_allocate_usage()
+        profiled_gpu_tensor_mem = self.gpu_mem_tracker.get_tensor_usage()
+
         return EngineRuntimeInfo(
             num_cached_tokens=num_cached_tokens,
             num_running_jobs=num_running_jobs,
             num_total_jobs=num_total_jobs,
             cache_mem=cache_mem,
             model_mem=model_mem,
+            profiled_cpu_mem=profiled_cpu_mem,
+            profiled_gpu_allocate_mem=profiled_gpu_allocate_mem,
+            profiled_gpu_tensor_mem=profiled_gpu_tensor_mem,
             recent_average_latency=recent_average_latency,
         )
 

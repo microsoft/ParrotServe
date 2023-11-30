@@ -5,6 +5,7 @@
 import inspect
 import sys
 import os
+import psutil
 
 
 def redirect_stdout_stderr_to_file(log_file_dir_path: str, file_name: str):
@@ -48,3 +49,11 @@ def change_signature(func, new_parameters, new_return_annotation):
         return_annotation=new_return_annotation,
     )
     func.__signature__ = new_signature
+
+
+def get_cpu_memory_usage() -> float:
+    """Get the current process's CPU memory usage in MiB."""
+
+    # process = psutil.Process(os.getpid())
+    # return process.memory_info().rss / 1024 / 1024
+    return psutil.virtual_memory().used / 1024 / 1024
