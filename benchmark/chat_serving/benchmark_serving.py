@@ -37,7 +37,7 @@ REQUEST_LATENCY: List[Tuple[int, int, float]] = []
 # Parrot VM
 import parrot as P
 
-vm = P.VirtualMachine(os_http_addr="http://localhost:9000", mode="release")
+vm = None
 
 
 def sample_requests(
@@ -217,17 +217,20 @@ def main(args: argparse.Namespace):
 
     benchmark_start_time = time.perf_counter()
 
-    with vm.running_scope():
-        asyncio.run(
-            benchmark(
-                args.backend,
-                api_url,
-                input_requests,
-                args.best_of,
-                args.use_beam_search,
-                args.request_rate,
-            )
+    if args.backend == "parrot":
+        vm = P.VirtualMachine(os_http_addr="http://localhost:9000", mode="debug")
+        vm.set_global_env()
+
+    asyncio.run(
+        benchmark(
+            args.backend,
+            api_url,
+            input_requests,
+            args.best_of,
+            args.use_beam_search,
+            args.request_rate,
         )
+    )
     benchmark_end_time = time.perf_counter()
     benchmark_time = benchmark_end_time - benchmark_start_time
     print(f"Total time: {benchmark_time:.2f} s")

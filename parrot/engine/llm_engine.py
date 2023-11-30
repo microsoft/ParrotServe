@@ -119,11 +119,20 @@ class LLMEngine(ABC):
 
         logger.debug(f"Heartbeat sent to OS (address={self.os_http_address}).")
 
+        engine_name = self.engine_config.engine_name
+        engine_id = self.engine_id
+        engine_runtime_info = self.get_runtime_info()
+
+        logger.debug(
+            f"Engine {engine_name} (id={engine_id}) heartbeat sent. "
+            "Runtime info: \n" + engine_runtime_info.display()
+        )
+
         resp = await engine_heartbeat(
             http_addr=self.os_http_address,
-            engine_id=self.engine_id,
-            engine_name=self.engine_config.engine_name,
-            runtime_info=self.get_runtime_info(),
+            engine_id=engine_id,
+            engine_name=engine_name,
+            runtime_info=engine_runtime_info,
         )
 
     async def _heartbeat_loop(self):

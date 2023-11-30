@@ -113,11 +113,16 @@ class SemanticCall(BasicCall):
     # There maybe some better ways to do this, but this is not important for this project.
 
     def pickle(self) -> str:
-        return str(pickle.dumps(self, protocol=0), encoding="ascii")
+        dumped = pickle.dumps(self, protocol=0)  # binary codes
+        b64str = str(base64.b64encode(dumped), encoding="ascii")  # base64 string
+        return b64str
 
     @classmethod
     def unpickle(cls, pickled: str) -> "SemanticCall":
-        return pickle.loads(bytes(pickled, encoding="ascii"))
+        pickled = bytes(pickled, encoding="ascii")
+        b64bytes = base64.b64decode(pickled)
+        call = pickle.loads(b64bytes)
+        return call
 
 
 class NativeCall(BasicCall):

@@ -33,6 +33,8 @@ class EngineRuntimeInfo:
     # All memory fields are in MiB.
     cache_mem: float = 0
     model_mem: float = 0
+    profiled_gpu_mem: float = 0
+    profiled_cpu_mem: float = 0
 
     # All latency fields are in nanoseconds.
     recent_average_latency: float = 0

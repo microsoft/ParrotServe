@@ -54,6 +54,16 @@ def test_parse_semantic_function_corner_cases():
     ):
         """This is a test for pure locs: {{input}}{{output}}"""
 
+    @P.semantic_function()
+    def test_utf8(
+        input: P.Input,
+        output: P.Output,
+    ):
+        """This is a test for utf8: {{input}}中文{{output}}"""
+
+    pickled = test_utf8("a").pickle()
+    # print(pickled)
+
 
 def test_call_function():
     @P.semantic_function()

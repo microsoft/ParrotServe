@@ -148,11 +148,14 @@ class PCore:
 
         process = self.processes[pid]
         if process.dead:
+            logger.error(f"Process (pid={pid}) is dead. Raise exception.")
             raise ParrotOSUserError(RuntimeError(f"Process (pid={pid}) is dead."))
 
         if process.bad:
             process.dead = True
-            logger.error(f"Process (pid={pid}) is bad. Raise exception.")
+            logger.error(
+                f"Process (pid={pid}) is bad. Raise exception: {process.bad_exception.args}."
+            )
             raise process.bad_exception
 
     # ---------- Public APIs ----------

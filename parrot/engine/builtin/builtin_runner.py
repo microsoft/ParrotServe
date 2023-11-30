@@ -160,6 +160,8 @@ class BuiltinRunner:
         torch.cuda.synchronize()
         ed_model = time.perf_counter_ns()
 
+        torch.cuda.empty_cache()  # Release unactivated GPU memory
+
         assert fill_hidden_states.shape[0] + len(next_tokens) == len(jobs)
 
         # Update context
