@@ -277,7 +277,9 @@ class Thread:
         # Flush the buffer first.
         await self._flush_fill_tokens_buffer()
 
-        logger.debug(f"Thread {self.tid} submit Generation primitive (operator: {op})")
+        logger.debug(
+            f"Thread {self.tid} submit Generation primitive (operator: {op}, max_len: {op.sampling_config.max_gen_length})"
+        )
 
         generator = Generate(
             pid=self.process.pid,

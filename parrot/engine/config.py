@@ -85,6 +85,7 @@ class SchedulerConfig:
     max_batch_size: int
     max_num_batched_tokens: int
     max_total_tokens: int
+    policy: Literal["fifo", "tgi"] = "fifo"
 
 
 # EngineType(Enum)

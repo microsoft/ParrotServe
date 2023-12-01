@@ -62,7 +62,9 @@ class Fill(Primitive):
                 text=self.text,
             )
             ed = time.perf_counter_ns()
-            logger.debug(f"Fill request latency: {(ed - st) / 1e6} ms")
+            logger.debug(
+                f"Fill request latency: {(ed - st) / 1e6} ms. pid={self.pid}, tid={self.tid}"
+            )
             self.context.token_nums += resp.filled_len
             return resp
         except BaseException as e:
@@ -89,7 +91,9 @@ class Fill(Primitive):
                     text=self.text,
                 )
                 ed = time.perf_counter_ns()
-                logger.debug(f"Fill request latency: {(ed - st) / 1e6} ms")
+                logger.debug(
+                    f"Fill request latency: {(ed - st) / 1e6} ms. pid={self.pid}, tid={self.tid}"
+                )
             self.context.token_nums += resp.filled_len
             return resp
         except BaseException as e:
@@ -122,7 +126,9 @@ class Generate(Primitive):
                     sampling_config=asdict(self.sampling_config),
                 )
                 ed = time.perf_counter_ns()
-                logger.debug(f"Generate request latency: {(ed - st) / 1e6} ms")
+                logger.debug(
+                    f"Generate request latency: {(ed - st) / 1e6} ms. pid={self.pid}, tid={self.tid}"
+                )
                 self.context.token_nums += len(resp.generated_ids)
                 return resp
         except BaseException as e:
@@ -146,7 +152,9 @@ class Generate(Primitive):
                     self.context.token_nums += 1
                     yield resp
                 ed = time.perf_counter_ns()
-                logger.debug(f"Generate stream latency: {(ed - st) / 1e6} ms")
+                logger.debug(
+                    f"Generate stream latency: {(ed - st) / 1e6} ms. pid={self.pid}, tid={self.tid}"
+                )
         except BaseException as e:
             logger.error(f"Generate error in {self.context.engine_url} error: {e}")
             raise e

@@ -3,11 +3,16 @@
 
 
 from typing import List
+import time
 
 from parrot.exceptions import parrot_assert
+from parrot.utils import get_logger
 
 from .primitive_job import PrimitiveJob, Fill, Generate
 from .config import SchedulerConfig
+
+
+logger = get_logger("Scheduler")
 
 
 class Scheduler:
@@ -20,6 +25,8 @@ class Scheduler:
 
         self.waiting_jobs: List[PrimitiveJob] = []
         self.running_jobs: List[PrimitiveJob] = []
+
+        self.policy = config.policy
 
     def add_job(self, job: PrimitiveJob):
         """Add a job to the scheduler."""
@@ -55,39 +62,36 @@ class Scheduler:
         """Schedule jobs."""
 
         # TGI-style scheduling: Fill and Gen jobs are scheduled separately.
-        # cur_tokens_sum = 0
-        # cur_num_jobs = 0
-        # fill_running_jobs = []
+        if self.policy == "tgi":
+            cur_tokens_sum = 0
+            cur_num_jobs = 0
+            fill_running_jobs = []
 
-        # for job in self.waiting_jobs:
-        #     if not isinstance(job, Fill):
-        #         continue
+            for job in self.waiting_jobs:
+                if not isinstance(job, Fill):
+                    continue
 
-        #     job_num_tokens = len(job.token_ids) if job.token_ids else 0
+                job_num_tokens = len(job.token_ids) if job.token_ids else 0
 
-        #     if cur_tokens_sum + job_num_tokens > self.max_num_batched_tokens:
-        #         break
+                if cur_tokens_sum + job_num_tokens > self.max_num_batched_tokens:
+                    break
 
-        #     fill_running_jobs.append(job)
-        #     cur_tokens_sum += job_num_tokens
-        #     cur_num_jobs += 1
+                fill_running_jobs.append(job)
+                if job.start_time == -1:
+                    job.start_time = time.perf_counter_ns()
+                cur_tokens_sum += job_num_tokens
+                cur_num_jobs += 1
 
-        # if len(fill_running_jobs) > 0:
-        #     # Remove all fill_running_jobs from waiting_jobs.
-        #     self.waiting_jobs = [
-        #         job for job in self.waiting_jobs if job not in fill_running_jobs
-        #     ]
+            if len(fill_running_jobs) > 0:
+                # Remove all fill_running_jobs from waiting_jobs.
+                self.waiting_jobs = [
+                    job for job in self.waiting_jobs if job not in fill_running_jobs
+                ]
 
-        #     # Preempte all running Generation jobs.
-        #     while self.running_jobs:
-        #         job = self.running_jobs.pop(0)
-        #         parrot_assert(
-        #             isinstance(job, Generate), "Running job must be a Generate job."
-        #         )
-        #         self.waiting_jobs.append(job)
-
-        #     self.running_jobs = fill_running_jobs
-        #     return fill_running_jobs.copy()
+                # Preempte all running Generation jobs.
+                self.waiting_jobs = self.running_jobs + self.waiting_jobs  # FIFO
+                self.running_jobs = fill_running_jobs
+                return fill_running_jobs.copy()
 
         cur_num_jobs = len(self.running_jobs)
         cur_num_batched_tokens = len(
@@ -140,6 +144,8 @@ class Scheduler:
                 break
 
             self.running_jobs.append(job)
+            if job.start_time == -1:
+                job.start_time = time.perf_counter_ns()
             self.waiting_jobs.pop(0)
 
             # Update
@@ -158,4 +164,10 @@ class Scheduler:
         for job in self.running_jobs:
             if not job.finish_event.is_set():
                 new_running.append(job)
+            else:
+                job.end_time = time.perf_counter_ns()
+                logger.debug(
+                    f"Job {job} finished. Latency: {(job.end_time - job.start_time) / 1e6} ms"
+                )
+
         self.running_jobs = new_running

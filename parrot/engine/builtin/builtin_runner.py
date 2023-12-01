@@ -166,6 +166,8 @@ class BuiltinRunner:
 
         assert fill_hidden_states.shape[0] + len(next_tokens) == len(jobs)
 
+        model_time = ed_model - st_model
+
         # Update context
         for i, job in enumerate(jobs):
             assert job.context is not None, "Context should be assigned."
@@ -181,7 +183,6 @@ class BuiltinRunner:
         ed = time.perf_counter_ns()
 
         e2e_time = ed - st
-        model_time = ed_model - st_model
         logger.debug(
             f"Finished running {len(jobs)} jobs. "
             f"({iteration_state.num_fill_jobs} Fills, {iteration_state.num_generation_jobs} Generations). "

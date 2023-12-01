@@ -27,6 +27,9 @@ class PrimitiveJob:
         self.context: Optional[LowLevelContext] = None
         self.finish_event = Event()
 
+        self.start_time: float = -1
+        self.end_time: float = -1
+
 
 class Fill(PrimitiveJob):
     """Fill primitive is corresponding to the `prefill` stage in LLM.

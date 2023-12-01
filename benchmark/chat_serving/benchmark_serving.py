@@ -23,7 +23,7 @@ import asyncio
 import json
 import random
 import time
-from typing import AsyncGenerator, List, Tuple
+from typing import AsyncGenerator, List, Tuple, Optional
 
 import aiohttp
 import numpy as np
@@ -37,7 +37,7 @@ REQUEST_LATENCY: List[Tuple[int, int, float]] = []
 # Parrot VM
 import parrot as P
 
-vm = None
+vm: Optional[P.VirtualMachine] = None
 
 
 def sample_requests(
@@ -111,6 +111,8 @@ async def send_request(
     best_of: int,
     use_beam_search: bool,
 ) -> None:
+    global REQUEST_LATENCY
+
     request_start_time = time.perf_counter()
 
     headers = {"User-Agent": "Benchmark Client"}
@@ -216,6 +218,7 @@ def main(args: argparse.Namespace):
     input_requests = sample_requests(args.dataset, args.num_prompts, tokenizer)
 
     if args.backend == "parrot":
+        global vm
         vm = P.VirtualMachine(os_http_addr="http://localhost:9000", mode="debug")
         vm.set_global_env()
 
@@ -231,6 +234,9 @@ def main(args: argparse.Namespace):
             args.request_rate,
         )
     )
+
+    global REQUEST_LATENCY
+
     benchmark_end_time = time.perf_counter()
     benchmark_time = benchmark_end_time - benchmark_start_time
     print(f"Total time: {benchmark_time:.2f} s")
@@ -250,14 +256,6 @@ def main(args: argparse.Namespace):
         [latency / output_len for _, output_len, latency in REQUEST_LATENCY]
     )
     print("Average latency per output token: " f"{avg_per_output_token_latency:.2f} s")
-
-    # Calculate the percentage of requests which meet the latency requirement.
-    latency_requirement_per_output_token = 0.050  # 50ms, from some related posts.
-    num_ok_requests = [
-        int(latency / output_len < latency_requirement_per_output_token)
-        for _, output_len, latency in REQUEST_LATENCY
-    ]
-    print("Percentage of OK requests: " f"{np.mean(num_ok_requests):.4f}")
 
 
 if __name__ == "__main__":

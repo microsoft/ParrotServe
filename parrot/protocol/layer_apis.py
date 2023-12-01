@@ -37,7 +37,7 @@ def vm_heartbeat(
             http_addr=http_addr,
             api_url="/vm_heartbeat",
             retry_times=3,
-            timeout=1,
+            timeout=3,
             pid=pid,
         )
     except BaseException as e:
