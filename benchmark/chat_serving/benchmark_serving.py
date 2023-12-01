@@ -156,7 +156,7 @@ async def send_request(
         raise ValueError(f"Unknown backend: {backend}")
 
     if backend == "parrot":
-        output = test(prompt)
+        output = await test.ainvoke(prompt)
         await output.aget()
     else:
         timeout = aiohttp.ClientTimeout(total=3 * 3600)
@@ -215,11 +215,11 @@ def main(args: argparse.Namespace):
     tokenizer = get_tokenizer(args.tokenizer, trust_remote_code=args.trust_remote_code)
     input_requests = sample_requests(args.dataset, args.num_prompts, tokenizer)
 
-    benchmark_start_time = time.perf_counter()
-
     if args.backend == "parrot":
         vm = P.VirtualMachine(os_http_addr="http://localhost:9000", mode="debug")
         vm.set_global_env()
+
+    benchmark_start_time = time.perf_counter()
 
     asyncio.run(
         benchmark(
@@ -250,6 +250,14 @@ def main(args: argparse.Namespace):
         [latency / output_len for _, output_len, latency in REQUEST_LATENCY]
     )
     print("Average latency per output token: " f"{avg_per_output_token_latency:.2f} s")
+
+    # Calculate the percentage of requests which meet the latency requirement.
+    latency_requirement_per_output_token = 0.050  # 50ms, from some related posts.
+    num_ok_requests = [
+        int(latency / output_len < latency_requirement_per_output_token)
+        for _, output_len, latency in REQUEST_LATENCY
+    ]
+    print("Percentage of OK requests: " f"{np.mean(num_ok_requests):.4f}")
 
 
 if __name__ == "__main__":

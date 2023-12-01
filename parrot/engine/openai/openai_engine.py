@@ -9,12 +9,12 @@ import asyncio
 
 from parrot.utils import get_logger, create_task_in_loop
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
+from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.constants import UNKNOWN_DATA_FIELD
 
 from .api_endpoint import Endpoint
 from ..context.text_context import TextContext
-from ...protocol.engine_runtime_info import EngineRuntimeInfo
+from ...protocol.runtime_info import EngineRuntimeInfo
 from ..context.context_manager import ContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..scheduler import Scheduler
@@ -33,7 +33,9 @@ class OpenAIEngine(LLMEngine):
 
         scheduler_config = engine_config.pop("scheduler")
         scheduler_config = SchedulerConfig(**scheduler_config)
-        scheduler_config.max_tokens_sum = 9999999999999  # Unlimited
+        scheduler_config.max_batch_size = 9999999999999  # Unlimited
+        scheduler_config.max_num_batched_tokens = 9999999999999  # Unlimited
+        scheduler_config.max_total_tokens = 9999999999999  # Unlimited
 
         # ---------- Configs ----------
         self.openai_config = OpenAIConfig(**engine_config.pop("instance"))
@@ -46,7 +48,7 @@ class OpenAIEngine(LLMEngine):
         # ---------- Components ----------
         self.scheduler = Scheduler(scheduler_config)
         self.context_manager = ContextManager()
-        self.latency_analyzer = LatencyAnalyzer()
+        # self.latency_analyzer = LatencyAnalyzer()
 
         # Create a OpenAI client
         logger.info(
@@ -140,7 +142,11 @@ class OpenAIEngine(LLMEngine):
         )
 
         self._add_job(fill_job)
-        await fill_job.finish_event.wait()
+        self.scheduler.schedule()
+        # await fill_job.finish_event.wait()
+        await self._execute_job(fill_job)
+        self.scheduler.finish()
+
         return {
             "filled_len": len(fill_job.text),
         }
@@ -156,7 +162,10 @@ class OpenAIEngine(LLMEngine):
         )
 
         self._add_job(generation_job)
-        await generation_job.finish_event.wait()
+        self.scheduler.schedule()
+        # await generation_job.finish_event.wait()
+        await self._execute_job(generation_job)
+        self.scheduler.finish()
 
         return {
             "generated_text": generation_job.context.get_latest_context_text(),
@@ -185,7 +194,7 @@ class OpenAIEngine(LLMEngine):
         num_running_jobs = self.scheduler.num_running_jobs
         num_total_jobs = self.scheduler.num_total_jobs
 
-        recent_avarage_latency = self.latency_analyzer.get_average_latency()
+        recent_avarage_latency = 0  # self.latency_analyzer.get_average_latency()
 
         return EngineRuntimeInfo(
             num_cached_tokens=num_cached_tokens,
@@ -196,25 +205,23 @@ class OpenAIEngine(LLMEngine):
             recent_average_latency=recent_avarage_latency,
         )
 
-    async def _execute_iter(self):
-        jobs = self.scheduler.schedule(remove_scheduled_jobs=True)
+    # async def _execute_iter(self):
+    #     jobs = self.scheduler.schedule()
 
-        logger.debug(f"Running {len(jobs)} jobs. ")
+    #     logger.debug(f"Running {len(jobs)} jobs. ")
 
-        coroutines = [self._execute_job(job) for job in jobs]
+    #     coroutines = [self._execute_job(job) for job in jobs]
 
-        if len(coroutines) > 0:
-            st = time.perf_counter_ns()
-            await asyncio.gather(*coroutines)
-            ed = time.perf_counter_ns()
-            iter_latency = ed - st
-            self.latency_analyzer.add_latency(iter_latency)
+    #     if len(coroutines) > 0:
+    #         st = time.perf_counter_ns()
+    #         await asyncio.gather(*coroutines)
+    #         ed = time.perf_counter_ns()
+    #         iter_latency = ed - st
+    #         self.latency_analyzer.add_latency(iter_latency)
 
     # override
     async def engine_iter(self):
         """Get the jobs and execute them asynchronously."""
-        # If there is no job, we don't need to run.
-        if self.scheduler.empty:
-            return
 
-        create_task_in_loop(self._execute_iter())
+        # The request will be directly handled by the engine.
+        pass

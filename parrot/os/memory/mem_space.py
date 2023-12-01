@@ -60,6 +60,10 @@ class ProcessMemorySpace:
         """Get the memory usage of the process."""
         return sum([context.memory_usage for context in self._contexts])
 
+    def get_total_tokens(self) -> int:
+        """Get the total number of tokens in the process memory space."""
+        return sum([context.token_nums for context in self._contexts])
+
     def get_state_context_id(self, func_name: str) -> int:
         """Get the context id of a stateful function."""
 
@@ -191,6 +195,11 @@ class MemorySpace:
         """Profile the memory usage of a process."""
         parrot_assert(pid in self.process_memory, "Process should have memory space.")
         return self.process_memory[pid].get_mem_usage()
+
+    def profile_process_tokens(self, pid: int) -> int:
+        """Profile the total number of tokens in a process."""
+        parrot_assert(pid in self.process_memory, "Process should have memory space.")
+        return self.process_memory[pid].get_total_tokens()
 
     def get_state_context_id(self, pid: int, func_name: StopIteration) -> int:
         """Get the context id of a stateful function."""

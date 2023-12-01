@@ -21,7 +21,7 @@ from .common import (
     async_send_http_request,
     logger,
 )
-from .engine_runtime_info import EngineRuntimeInfo
+from .runtime_info import EngineRuntimeInfo
 
 
 # ---------- Program Layer to OS Layer APIs ----------
@@ -79,7 +79,7 @@ def submit_call(
 
 
 async def asubmit_call(
-    http_addr: str, pid: int, call: "BasicCall"
+    http_addr: str, pid: int, call: "BasicCall", is_native: bool
 ) -> SubmitCallResponse:
     try:
         async with aiohttp.ClientSession() as client_session:
@@ -91,6 +91,7 @@ async def asubmit_call(
                 retry_times=1,
                 pid=pid,
                 call=call.pickle(),
+                is_native=is_native,
             )
     except BaseException as e:
         logger.error(f"Execute func (pid: {pid}) error in {http_addr}. Error: {e}")

@@ -4,7 +4,7 @@
 
 from typing import List
 
-from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
+from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import (
     EngineConfig,
     ENGINE_TYPE_BUILTIN,

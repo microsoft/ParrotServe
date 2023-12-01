@@ -84,5 +84,5 @@ def test_make_dag():
 
 
 if __name__ == "__main__":
-    # test_single_call()
+    test_single_call()
     test_make_dag()

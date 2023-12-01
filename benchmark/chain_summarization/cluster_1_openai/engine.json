@@ -14,7 +14,8 @@
     },
     "scheduler": {
         "max_batch_size": 64,
-        "max_tokens_sum": 1
+        "max_num_batched_tokens": 1,
+        "max_total_tokens": 1
     },
     "os": {
         "host": "localhost",

@@ -8,7 +8,7 @@ import asyncio
 
 from parrot.constants import ENGINE_LOOP_INTERVAL, ENGINE_HEARTBEAT_INTERVAL
 from parrot.protocol.layer_apis import register_engine, engine_heartbeat
-from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
+from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.utils import get_logger, set_random_seed, create_task_in_loop
 
 from .config import EngineConfig

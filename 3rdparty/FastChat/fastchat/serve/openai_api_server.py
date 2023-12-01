@@ -379,6 +379,7 @@ async def show_available_models():
 async def create_chat_completion(request: ChatCompletionRequest):
     """Creates a completion for the chat message"""
 
+    # HACK(chaofan): Simulate network latency
     latency = os.environ.get("SIMULATE_NETWORK_LATENCY_FS", None)
     assert (
         latency is not None
@@ -425,7 +426,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
     # HACK(chaofan): Override max_new_tokens
     max_gen_len = os.environ.get("FS_MAX_GEN_LENGTH", None)
     assert (
-        latency is None or not latency.isdecimal()
+        max_gen_len is not None and max_gen_len.isdecimal()
     ), "Please specify the environment variable FS_MAX_GEN_LENGTH"
     gen_params["max_new_tokens"] = int(max_gen_len)
 

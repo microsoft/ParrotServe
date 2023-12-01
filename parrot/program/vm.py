@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from typing import Callable, Coroutine, Literal, Dict, List, Any
 
 
+from parrot.protocol.runtime_info import VMRuntimeInfo
 from parrot.protocol.layer_apis import (
     register_vm,
     vm_heartbeat,
@@ -30,12 +31,6 @@ from parrot.constants import VM_HEARTBEAT_INTERVAL, NONE_CONTEXT_ID
 
 
 logger = get_logger("VM")
-
-
-@dataclass
-class VMRuntimeInfo:
-    mem_used: float = 0
-    num_threads: int = 0
 
 
 class VirtualMachine:
@@ -153,10 +148,13 @@ class VirtualMachine:
 
         logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
 
+        is_native = isinstance(call.func, NativeFunction)
+
         resp = await asubmit_call(
             http_addr=self.os_http_addr,
             pid=self.pid,
             call=call,
+            is_native=is_native,
         )
 
     # ---------- Public Methods ----------

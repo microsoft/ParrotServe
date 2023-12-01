@@ -4,7 +4,7 @@ import asyncio
 
 import parrot as P
 
-from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
+from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.os.engine import ExecutionEngine
 from parrot.os.memory.context import Context
@@ -226,15 +226,15 @@ def test_generate():
 
 
 if __name__ == "__main__":
-    # test_vm_heartbeat()
-    # test_register_vm()
-    # test_submit_semantic_call()
+    test_vm_heartbeat()
+    test_register_vm()
+    test_submit_semantic_call()
     test_submit_native_call()
-    # test_placeholder_set()
-    # test_placeholder_fetch()
-    # test_free_context()
-    # test_ping_engine()
-    # test_engine_heartbeat()
-    # test_register_engine()
-    # test_fill()
-    # test_generate()
+    test_placeholder_set()
+    test_placeholder_fetch()
+    test_free_context()
+    test_ping_engine()
+    test_engine_heartbeat()
+    test_register_engine()
+    test_fill()
+    test_generate()

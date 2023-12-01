@@ -6,9 +6,14 @@ from vllm.config import CacheConfig, SchedulerConfig
 from vllm.core.block_manager import BlockSpaceManager
 from vllm.core.policy import PolicyFactory
 from vllm.logger import init_logger
-from vllm.sequence import (Sequence, SequenceData, SequenceGroup,
-                           SequenceGroupMetadata, SequenceOutputs,
-                           SequenceStatus)
+from vllm.sequence import (
+    Sequence,
+    SequenceData,
+    SequenceGroup,
+    SequenceGroupMetadata,
+    SequenceOutputs,
+    SequenceStatus,
+)
 
 logger = init_logger(__name__)
 
@@ -22,12 +27,12 @@ class PreemptionMode(enum.Enum):
     recompute them when the sequences are resumed, treating the sequences as
     new prompts.
     """
+
     SWAP = enum.auto()
     RECOMPUTE = enum.auto()
 
 
 class SchedulerOutputs:
-
     def __init__(
         self,
         scheduled_seq_groups: List[SequenceGroup],
@@ -50,12 +55,15 @@ class SchedulerOutputs:
 
     def is_empty(self) -> bool:
         # NOTE: We do not consider the ignored sequence groups.
-        return (not self.scheduled_seq_groups and not self.blocks_to_swap_in
-                and not self.blocks_to_swap_out and not self.blocks_to_copy)
+        return (
+            not self.scheduled_seq_groups
+            and not self.blocks_to_swap_in
+            and not self.blocks_to_swap_out
+            and not self.blocks_to_copy
+        )
 
 
 class Scheduler:
-
     def __init__(
         self,
         scheduler_config: SchedulerConfig,
@@ -125,11 +133,13 @@ class Scheduler:
                 num_prompt_tokens = seq_group.get_seqs()[0].get_len()
                 prompt_limit = min(
                     self.scheduler_config.max_model_len,
-                    self.scheduler_config.max_num_batched_tokens)
+                    self.scheduler_config.max_num_batched_tokens,
+                )
                 if num_prompt_tokens > prompt_limit:
                     logger.warning(
                         f"Input prompt ({num_prompt_tokens} tokens) is too long"
-                        f" and exceeds limit of {prompt_limit}")
+                        f" and exceeds limit of {prompt_limit}"
+                    )
                     for seq in seq_group.get_seqs():
                         seq.status = SequenceStatus.FINISHED_IGNORED
                     ignored_seq_groups.append(seq_group)
@@ -141,19 +151,20 @@ class Scheduler:
                     break
 
                 # If the number of batched tokens exceeds the limit, stop.
-                if (num_batched_tokens + num_prompt_tokens >
-                        self.scheduler_config.max_num_batched_tokens):
+                if (
+                    num_batched_tokens + num_prompt_tokens
+                    > self.scheduler_config.max_num_batched_tokens
+                ):
                     break
 
                 # The total number of sequences in the RUNNING state should not
                 # exceed the maximum number of sequences.
-                num_new_seqs = seq_group.num_seqs(
-                    status=SequenceStatus.WAITING)
+                num_new_seqs = seq_group.num_seqs(status=SequenceStatus.WAITING)
                 num_curr_seqs = sum(
                     seq_group.num_seqs(status=SequenceStatus.RUNNING)
-                    for seq_group in self.running)
-                if (num_curr_seqs + num_new_seqs >
-                        self.scheduler_config.max_num_seqs):
+                    for seq_group in self.running
+                )
+                if num_curr_seqs + num_new_seqs > self.scheduler_config.max_num_seqs:
                     break
 
                 seq_group = self.waiting.pop(0)
@@ -219,9 +230,9 @@ class Scheduler:
             num_new_seqs = seq_group.num_seqs(status=SequenceStatus.SWAPPED)
             num_curr_seqs = sum(
                 seq_group.num_seqs(status=SequenceStatus.RUNNING)
-                for seq_group in self.running)
-            if (num_curr_seqs + num_new_seqs >
-                    self.scheduler_config.max_num_seqs):
+                for seq_group in self.running
+            )
+            if num_curr_seqs + num_new_seqs > self.scheduler_config.max_num_seqs:
                 break
 
             seq_group = self.swapped.pop(0)
@@ -231,7 +242,8 @@ class Scheduler:
 
         num_batched_tokens = sum(
             seq_group.num_seqs(status=SequenceStatus.RUNNING)
-            for seq_group in self.running)
+            for seq_group in self.running
+        )
 
         scheduler_outputs = SchedulerOutputs(
             scheduled_seq_groups=self.running,
@@ -308,8 +320,7 @@ class Scheduler:
 
     def free_finished_seq_groups(self) -> None:
         self.running = [
-            seq_group for seq_group in self.running
-            if not seq_group.is_finished()
+            seq_group for seq_group in self.running if not seq_group.is_finished()
         ]
 
     def _allocate(self, seq_group: SequenceGroup) -> None:
@@ -402,7 +413,8 @@ class Scheduler:
             # entire engine.
             raise RuntimeError(
                 "Aborted due to the lack of CPU swap space. Please increase "
-                "the swap space to avoid this error.")
+                "the swap space to avoid this error."
+            )
         mapping = self.block_manager.swap_out(seq_group)
         blocks_to_swap_out.update(mapping)
         for seq in seq_group.get_seqs(status=SequenceStatus.RUNNING):

@@ -22,7 +22,7 @@ import psutil
 
 from parrot.utils import get_logger
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
+from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.constants import NONE_CONTEXT_ID, UNKNOWN_DATA_FIELD
 from parrot.exceptions import ParrotEngineInteralError
 
@@ -63,7 +63,7 @@ class MLCEngine(LLMEngine):
         scheduler_config = engine_config.pop("scheduler")
         scheduler_config = SchedulerConfig(**scheduler_config)
         scheduler_config.max_batch_size = 999999  # Batching for MLC-LLM is meaningless
-        scheduler_config.max_tokens_sum = 9999999999999  # Unlimited
+        scheduler_config.max_num_batched_tokens = 9999999999999  # Unlimited
 
         # ---------- Configs ----------
         mlc_config = MLCConfig(**engine_config.pop("instance"))

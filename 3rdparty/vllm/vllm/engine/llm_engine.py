@@ -3,8 +3,7 @@ import copy
 from functools import partial
 from typing import Any, List, Optional, Tuple, TYPE_CHECKING
 
-from vllm.config import (CacheConfig, ModelConfig, ParallelConfig,
-                         SchedulerConfig)
+from vllm.config import CacheConfig, ModelConfig, ParallelConfig, SchedulerConfig
 from vllm.core.scheduler import Scheduler
 from vllm.engine.arg_utils import EngineArgs
 from vllm.engine.ray_utils import initialize_cluster, ray, RayWorker
@@ -12,8 +11,7 @@ from vllm.logger import init_logger
 from vllm.outputs import RequestOutput
 from vllm.sampling_params import SamplingParams
 from vllm.sequence import Sequence, SequenceGroup, SequenceStatus
-from vllm.transformers_utils.tokenizer import (detokenize_incrementally,
-                                               get_tokenizer)
+from vllm.transformers_utils.tokenizer import detokenize_incrementally, get_tokenizer
 from vllm.utils import Counter
 
 if ray:
@@ -78,7 +76,8 @@ class LLMEngine:
             f"download_dir={model_config.download_dir!r}, "
             f"use_np_weights={model_config.use_np_weights}, "
             f"tensor_parallel_size={parallel_config.tensor_parallel_size}, "
-            f"seed={model_config.seed})")
+            f"seed={model_config.seed})"
+        )
         # TODO(woosuk): Print more configs in debug mode.
 
         self.model_config = model_config
@@ -91,7 +90,8 @@ class LLMEngine:
         self.tokenizer = get_tokenizer(
             model_config.tokenizer,
             tokenizer_mode=model_config.tokenizer_mode,
-            trust_remote_code=model_config.trust_remote_code)
+            trust_remote_code=model_config.trust_remote_code,
+        )
         self.seq_counter = Counter()
 
         # Create the parallel GPU workers.
@@ -118,8 +118,9 @@ class LLMEngine:
         # before CUDA_VISIBLE_DEVICES is set in the Worker
         from vllm.worker.worker import Worker  # pylint: disable=import-outside-toplevel
 
-        assert self.parallel_config.world_size == 1, (
-            "Ray is required if parallel_config.world_size > 1.")
+        assert (
+            self.parallel_config.world_size == 1
+        ), "Ray is required if parallel_config.world_size > 1."
 
         self.workers: List[Worker] = []
         worker = Worker(
@@ -149,7 +150,8 @@ class LLMEngine:
                 num_gpus=1,
                 scheduling_strategy=PlacementGroupSchedulingStrategy(
                     placement_group=placement_group,
-                    placement_group_capture_child_tasks=True),
+                    placement_group_capture_child_tasks=True,
+                ),
             )(RayWorker).remote()
             self.workers.append(worker)
 
@@ -158,15 +160,17 @@ class LLMEngine:
         model_config = copy.deepcopy(self.model_config)
         parallel_config = copy.deepcopy(self.parallel_config)
         scheduler_config = copy.deepcopy(self.scheduler_config)
-        self._run_workers("init_worker",
-                          get_all_outputs=True,
-                          worker_init_fn=lambda: Worker(
-                              model_config,
-                              parallel_config,
-                              scheduler_config,
-                              None,
-                              None,
-                          ))
+        self._run_workers(
+            "init_worker",
+            get_all_outputs=True,
+            worker_init_fn=lambda: Worker(
+                model_config,
+                parallel_config,
+                scheduler_config,
+                None,
+                None,
+            ),
+        )
         self._run_workers(
             "init_model",
             get_all_outputs=True,
@@ -193,13 +197,16 @@ class LLMEngine:
         num_gpu_blocks = min(b[0] for b in num_blocks)
         num_cpu_blocks = min(b[1] for b in num_blocks)
         # FIXME(woosuk): Change to debug log.
-        logger.info(f"# GPU blocks: {num_gpu_blocks}, "
-                    f"# CPU blocks: {num_cpu_blocks}")
+        logger.info(
+            f"# GPU blocks: {num_gpu_blocks}, " f"# CPU blocks: {num_cpu_blocks}"
+        )
 
         if num_gpu_blocks <= 0:
-            raise ValueError("No available memory for the cache blocks. "
-                             "Try increasing `gpu_memory_utilization` when "
-                             "initializing the engine.")
+            raise ValueError(
+                "No available memory for the cache blocks. "
+                "Try increasing `gpu_memory_utilization` when "
+                "initializing the engine."
+            )
 
         self.cache_config.num_gpu_blocks = num_gpu_blocks
         self.cache_config.num_cpu_blocks = num_cpu_blocks
@@ -214,13 +221,14 @@ class LLMEngine:
         engine_configs = engine_args.create_engine_configs()
         parallel_config = engine_configs[2]
         # Initialize the cluster.
-        distributed_init_method, placement_group = initialize_cluster(
-            parallel_config)
+        distributed_init_method, placement_group = initialize_cluster(parallel_config)
         # Create the LLM engine.
-        engine = cls(*engine_configs,
-                     distributed_init_method,
-                     placement_group,
-                     log_stats=not engine_args.disable_log_stats)
+        engine = cls(
+            *engine_configs,
+            distributed_init_method,
+            placement_group,
+            log_stats=not engine_args.disable_log_stats,
+        )
         return engine
 
     def add_request(
@@ -262,8 +270,7 @@ class LLMEngine:
             seqs.append(seq)
 
         # Create the sequence group.
-        seq_group = SequenceGroup(request_id, seqs, sampling_params,
-                                  arrival_time)
+        seq_group = SequenceGroup(request_id, seqs, sampling_params, arrival_time)
 
         # Add the sequence group to the scheduler.
         self.scheduler.add_seq_group(seq_group)
@@ -335,8 +342,9 @@ class LLMEngine:
 
         if self.log_stats:
             # Log the system stats.
-            self._log_system_stats(scheduler_outputs.prompt_run,
-                                   scheduler_outputs.num_batched_tokens)
+            self._log_system_stats(
+                scheduler_outputs.prompt_run, scheduler_outputs.num_batched_tokens
+            )
         return request_outputs
 
     def _log_system_stats(
@@ -356,11 +364,14 @@ class LLMEngine:
             return
 
         # Discard the old stats.
-        self.num_prompt_tokens = [(t, n) for t, n in self.num_prompt_tokens
-                                  if now - t < _LOGGING_INTERVAL_SEC]
-        self.num_generation_tokens = [(t, n)
-                                      for t, n in self.num_generation_tokens
-                                      if now - t < _LOGGING_INTERVAL_SEC]
+        self.num_prompt_tokens = [
+            (t, n) for t, n in self.num_prompt_tokens if now - t < _LOGGING_INTERVAL_SEC
+        ]
+        self.num_generation_tokens = [
+            (t, n)
+            for t, n in self.num_generation_tokens
+            if now - t < _LOGGING_INTERVAL_SEC
+        ]
 
         if len(self.num_prompt_tokens) > 1:
             total_num_tokens = sum(n for _, n in self.num_prompt_tokens[:-1])
@@ -369,37 +380,36 @@ class LLMEngine:
         else:
             avg_prompt_throughput = 0.0
         if len(self.num_generation_tokens) > 1:
-            total_num_tokens = sum(n
-                                   for _, n in self.num_generation_tokens[:-1])
+            total_num_tokens = sum(n for _, n in self.num_generation_tokens[:-1])
             window = now - self.num_generation_tokens[0][0]
             avg_generation_throughput = total_num_tokens / window
         else:
             avg_generation_throughput = 0.0
 
         total_num_gpu_blocks = self.cache_config.num_gpu_blocks
-        num_free_gpu_blocks = (
-            self.scheduler.block_manager.get_num_free_gpu_blocks())
+        num_free_gpu_blocks = self.scheduler.block_manager.get_num_free_gpu_blocks()
         num_used_gpu_blocks = total_num_gpu_blocks - num_free_gpu_blocks
         gpu_cache_usage = num_used_gpu_blocks / total_num_gpu_blocks
 
         total_num_cpu_blocks = self.cache_config.num_cpu_blocks
         if total_num_cpu_blocks > 0:
-            num_free_cpu_blocks = (
-                self.scheduler.block_manager.get_num_free_cpu_blocks())
+            num_free_cpu_blocks = self.scheduler.block_manager.get_num_free_cpu_blocks()
             num_used_cpu_blocks = total_num_cpu_blocks - num_free_cpu_blocks
             cpu_cache_usage = num_used_cpu_blocks / total_num_cpu_blocks
         else:
             cpu_cache_usage = 0.0
 
-        logger.info("Avg prompt throughput: "
-                    f"{avg_prompt_throughput:.1f} tokens/s, "
-                    "Avg generation throughput: "
-                    f"{avg_generation_throughput:.1f} tokens/s, "
-                    f"Running: {len(self.scheduler.running)} reqs, "
-                    f"Swapped: {len(self.scheduler.swapped)} reqs, "
-                    f"Pending: {len(self.scheduler.waiting)} reqs, "
-                    f"GPU KV cache usage: {gpu_cache_usage * 100:.1f}%, "
-                    f"CPU KV cache usage: {cpu_cache_usage * 100:.1f}%")
+        logger.info(
+            "Avg prompt throughput: "
+            f"{avg_prompt_throughput:.1f} tokens/s, "
+            "Avg generation throughput: "
+            f"{avg_generation_throughput:.1f} tokens/s, "
+            f"Running: {len(self.scheduler.running)} reqs, "
+            f"Swapped: {len(self.scheduler.swapped)} reqs, "
+            f"Pending: {len(self.scheduler.waiting)} reqs, "
+            f"GPU KV cache usage: {gpu_cache_usage * 100:.1f}%, "
+            f"CPU KV cache usage: {cpu_cache_usage * 100:.1f}%"
+        )
         self.last_logging_time = now
 
     def _decode_sequences(self, seq_groups: List[SequenceGroup]) -> None:
@@ -427,9 +437,8 @@ class LLMEngine:
                     if seq.output_text.endswith(stop_str):
                         # Truncate the output text so that the stop string is
                         # not included in the output.
-                        seq.output_text = seq.output_text[:-len(stop_str)]
-                        self.scheduler.free_seq(
-                            seq, SequenceStatus.FINISHED_STOPPED)
+                        seq.output_text = seq.output_text[: -len(stop_str)]
+                        self.scheduler.free_seq(seq, SequenceStatus.FINISHED_STOPPED)
                         stopped = True
                         break
                 if stopped:
@@ -437,19 +446,16 @@ class LLMEngine:
 
                 # Check if the sequence has reached max_model_len.
                 if seq.get_len() > self.scheduler_config.max_model_len:
-                    self.scheduler.free_seq(
-                        seq, SequenceStatus.FINISHED_LENGTH_CAPPED)
+                    self.scheduler.free_seq(seq, SequenceStatus.FINISHED_LENGTH_CAPPED)
                     continue
                 # Check if the sequence has reached max_tokens.
                 if seq.get_output_len() == sampling_params.max_tokens:
-                    self.scheduler.free_seq(
-                        seq, SequenceStatus.FINISHED_LENGTH_CAPPED)
+                    self.scheduler.free_seq(seq, SequenceStatus.FINISHED_LENGTH_CAPPED)
                     continue
                 # Check if the sequence has generated the EOS token.
                 if not sampling_params.ignore_eos:
                     if seq.get_last_token_id() == self.tokenizer.eos_token_id:
-                        self.scheduler.free_seq(
-                            seq, SequenceStatus.FINISHED_STOPPED)
+                        self.scheduler.free_seq(seq, SequenceStatus.FINISHED_STOPPED)
                         continue
 
     def _run_workers(

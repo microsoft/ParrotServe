@@ -291,6 +291,7 @@ class Worker:
             seq_group_metadata_list
         )
 
+        # HACK(chaofan): Measure the time for model execution.
         torch.cuda.synchronize()
         st = time.perf_counter_ns()
 
@@ -306,7 +307,11 @@ class Worker:
         torch.cuda.synchronize()
         ed = time.perf_counter_ns()
 
-        # print(f"Model execution time: {(ed - st) / 1e6:.2f} ms")
+        job_type = "Fill" if input_metadata.num_prompt_tokens > 0 else "Generate"
+        job_num_seqs = len(seq_group_metadata_list)
+        print(
+            f"Running {job_num_seqs} {job_type} Model execution time: {(ed - st) / 1e6:.2f} ms"
+        )
 
         return output
 

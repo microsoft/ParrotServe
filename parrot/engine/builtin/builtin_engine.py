@@ -6,7 +6,7 @@ from typing import Dict, AsyncGenerator
 
 from parrot.utils import get_logger, MemTracker, get_cpu_memory_usage
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.protocol.engine_runtime_info import EngineRuntimeInfo
+from parrot.protocol.runtime_info import EngineRuntimeInfo
 
 from ..llm_engine import LLMEngine
 from .builtin_runner import BuiltinRunner

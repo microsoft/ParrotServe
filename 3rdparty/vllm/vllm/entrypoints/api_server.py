@@ -29,15 +29,15 @@ async def generate(request: Request) -> Response:
     """
 
     # HACK(chaofan): Sleep simulate network latency
-    latency = os.environ.get("SIMULATE_NETWORK_LATENCY_FS", None)
-    assert (
-        latency is not None
-    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
-    try:
-        latency = float(latency)
-    except ValueError:
-        return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
-    await asyncio.sleep(latency)
+    # latency = os.environ.get("SIMULATE_NETWORK_LATENCY_FS", None)
+    # assert (
+    #     latency is not None
+    # ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
+    # try:
+    #     latency = float(latency)
+    # except ValueError:
+    #     return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
+    # await asyncio.sleep(latency)
 
     request_dict = await request.json()
     prompt = request_dict.pop("prompt")

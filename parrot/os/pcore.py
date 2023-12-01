@@ -7,7 +7,6 @@ import asyncio
 import time
 from dataclasses import asdict
 
-from parrot.program.vm import VMRuntimeInfo
 from parrot.program.function import SemanticCall, NativeCall
 from parrot.utils import RecyclePool
 from parrot.constants import (
@@ -18,6 +17,7 @@ from parrot.constants import (
     ENGINE_EXPIRE_TIME,
 )
 from parrot.protocol.layer_apis import ping_engine
+from parrot.protocol.runtime_info import VMRuntimeInfo, EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger, cprofile
 from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
@@ -25,7 +25,7 @@ from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
 from .config import OSConfig
 from .process.process import Process
 from .memory.mem_space import MemorySpace
-from .engine import ExecutionEngine, EngineRuntimeInfo
+from .engine import ExecutionEngine
 from .thread_dispatcher import DispatcherConfig, ThreadDispatcher
 from .tokenizer import Tokenizer
 
@@ -192,17 +192,23 @@ class PCore:
         self._check_process(pid)
 
         self.proc_last_seen_time[pid] = time.perf_counter_ns()
-        logger.debug(f"VM (pid={pid}) heartbeat received.")
 
         mem_used = self.mem_space.profile_process_memory(pid)
+        num_total_tokens = self.mem_space.profile_process_tokens(pid)
         num_threads = len(self.processes[pid].threads)
 
-        return asdict(
-            VMRuntimeInfo(
-                mem_used=mem_used,
-                num_threads=num_threads,
-            )
+        vm_runtime_info = VMRuntimeInfo(
+            mem_used=mem_used,
+            num_total_tokens=num_total_tokens,
+            num_threads=num_threads,
         )
+
+        logger.debug(
+            f"VM (pid={pid}) heartbeat received. Profiled status: \n"
+            + vm_runtime_info.display()
+        )
+
+        return asdict(vm_runtime_info)
 
     def engine_heartbeat(
         self,

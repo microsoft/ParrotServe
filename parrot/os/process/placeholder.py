@@ -140,6 +140,23 @@ class TokensHolder:
 
         self.placeholder.content += partial_text
 
+    def decode_one_token(
+        self,
+        prev_output_tokens: List[str],
+        new_token_id: int,
+        skip_special_tokens: bool,
+    ) -> str:
+        """Decodes one token and updates prev_output_tokens."""
+        new_token, output_text = self.tokenizer.detokenize_incrementally(
+            self.tokenizer_name,
+            prev_output_tokens,
+            new_token_id,
+            skip_special_tokens,
+        )
+        if new_token is not None:
+            prev_output_tokens.append(new_token)
+        self.placeholder.content = output_text
+
     def __str__(self) -> str:
         return f"[DataHolder: future_id={self.placeholder.id}]"
 

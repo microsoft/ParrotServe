@@ -23,6 +23,16 @@ And the backend engine's max_num_batched_tokens is 2560, max_batch_size=2.
 
 ### Chat Serving, 1 GPU
 
+This benchmark is to demonstrate that for latency-sensitive applications (chatting), to meet 
+certain latency requirement (e.g. 20ms per generated token), how large should we set the `max_total_tokens`?
+
+Setting: ShareGPT, 100 requests, 4.0 request rate.
+
+Results (max_total_tokens, percentage of OK requests):
+- unlimited: 0
+- 10000: 0.1400
+- 8000: 0.1500
+- 4000: 0
 
 
 ### Map-Reduce 1 GPU
