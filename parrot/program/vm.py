@@ -10,7 +10,7 @@ import threading
 import importlib
 import inspect
 from dataclasses import dataclass
-from typing import Callable, Coroutine, Literal, Dict, List, Any
+from typing import Callable, Optional, Literal, Dict, List, Any
 
 
 from parrot.protocol.runtime_info import VMRuntimeInfo
@@ -24,7 +24,15 @@ from parrot.protocol.layer_apis import (
     aplaceholder_fetch,
 )
 from parrot.program.semantic_variable import SemanticVariable
-from parrot.program.function import BasicFunction, NativeFunction
+from parrot.program.function import (
+    BasicFunction,
+    NativeFunction,
+    SemanticFunction,
+    ParamType,
+    Parameter,
+)
+from parrot.protocol.annotation import DispatchAnnotation
+from parrot.protocol.sampling_config import SamplingConfig
 from parrot.program.function_call import BasicCall
 from parrot.utils import get_logger
 from parrot.constants import VM_HEARTBEAT_INTERVAL, NONE_CONTEXT_ID
@@ -70,6 +78,8 @@ class VirtualMachine:
         )
         self._function_registry: Dict[str, BasicFunction] = {}
         self._heartbeat_thread.start()
+
+        self._anonymous_funcname_counter = 0
 
         logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
 
@@ -158,6 +168,40 @@ class VirtualMachine:
         )
 
     # ---------- Public Methods ----------
+
+    def define_function(
+        self,
+        func_name: Optional[str],
+        func_body: str,
+        params: List[Parameter],
+        models: List[str] = [],
+        cache_prefix: bool = True,
+        remove_pure_fill: bool = True,
+    ) -> SemanticFunction:
+        if func_name is None:
+            func_name = f"anonymous_{self._anonymous_funcname_counter}"
+            self._anonymous_funcname_counter += 1
+
+        for param in params:
+            if param.typ == ParamType.OUTPUT_LOC:
+                if param.dispatch_annotation is None:
+                    param.dispatch_annotation = DispatchAnnotation()
+                if param.sampling_config is None:
+                    param.sampling_config = SamplingConfig()
+
+        func = SemanticFunction(
+            name=func_name,
+            func_body_str=func_body,
+            params=params,
+            # Func Metadata
+            models=models,
+            cache_prefix=cache_prefix,
+            remove_pure_fill=remove_pure_fill,
+        )
+
+        self.register_function_handler(func)
+
+        return func
 
     def import_function(
         self,

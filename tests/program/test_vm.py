@@ -37,7 +37,22 @@ def test_vm_import():
         )
 
 
+def test_define_func():
+    with fake_os_server():
+        vm = P.VirtualMachine(os_http_addr=TESTING_SERVER_URL, mode="debug")
+        func = vm.define_function(
+            func_name="test",
+            func_body="This is a {{input}}. {{output}}",
+            params=[
+                P.Parameter(name="input", typ=P.ParamType.INPUT_LOC),
+                P.Parameter(name="output", typ=P.ParamType.OUTPUT_LOC),
+            ],
+        )
+        print(func.display())
+
+
 if __name__ == "__main__":
-    test_heartbeat()
-    test_e2e()
-    test_vm_import()
+    # test_heartbeat()
+    # test_e2e()
+    # test_vm_import()
+    test_define_func()
