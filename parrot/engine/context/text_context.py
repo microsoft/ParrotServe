@@ -57,14 +57,28 @@ class TextContext(LowLevelContext):
         )
         return parent_text + "".join(texts)
 
-    def get_chat_messages(self) -> str:
-        return [
+    def get_whole_chat_messages(self) -> str:
+        messages = [
             {
                 "role": text.role,
                 "content": text.text,
             }
             for text in self.text_chunks
         ]
+        if self.parent_context is not None:
+            messages = self.parent_context.get_whole_chat_messages() + messages
+
+        # Merge messages with the same role
+        merged_messages = []
+        for message in messages:
+            if (
+                len(merged_messages) > 0
+                and merged_messages[-1]["role"] == message["role"]
+            ):
+                merged_messages[-1]["content"] += message["content"]
+            else:
+                merged_messages.append(message)
+        return merged_messages
 
     # Text Context doesn't implement the following methods.
 

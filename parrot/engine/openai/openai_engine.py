@@ -109,7 +109,8 @@ class OpenAIEngine(LLMEngine):
                 )
                 generated_result = completion.choices[0].message.content
             else:
-                chat_messages = job.context.get_chat_messages()
+                chat_messages = job.context.get_whole_chat_messages()
+                logger.debug(f"Send messages: {chat_messages} to OpenAI API.")
                 chat_completion = await self.client.chat.completions.create(
                     messages=chat_messages,
                     model=self.engine_config.model,
@@ -142,9 +143,8 @@ class OpenAIEngine(LLMEngine):
         )
 
         self._add_job(fill_job)
-        self.scheduler.schedule()
-        # await fill_job.finish_event.wait()
-        await self._execute_job(fill_job)
+        await fill_job.finish_event.wait()
+
         self.scheduler.finish()
 
         return {
@@ -162,10 +162,7 @@ class OpenAIEngine(LLMEngine):
         )
 
         self._add_job(generation_job)
-        self.scheduler.schedule()
-        # await generation_job.finish_event.wait()
-        await self._execute_job(generation_job)
-        self.scheduler.finish()
+        await generation_job.finish_event.wait()
 
         return {
             "generated_text": generation_job.context.get_latest_context_text(),
@@ -205,23 +202,36 @@ class OpenAIEngine(LLMEngine):
             recent_average_latency=recent_avarage_latency,
         )
 
-    # async def _execute_iter(self):
-    #     jobs = self.scheduler.schedule()
+    async def _execute_iter(self):
+        jobs = self.scheduler.schedule()
 
-    #     logger.debug(f"Running {len(jobs)} jobs. ")
+        logger.debug(f"Running {len(jobs)} jobs. ")
 
-    #     coroutines = [self._execute_job(job) for job in jobs]
+        # coroutines = [self._execute_job(job) for job in jobs]
 
-    #     if len(coroutines) > 0:
-    #         st = time.perf_counter_ns()
-    #         await asyncio.gather(*coroutines)
-    #         ed = time.perf_counter_ns()
-    #         iter_latency = ed - st
-    #         self.latency_analyzer.add_latency(iter_latency)
+        for job in jobs:
+            if isinstance(job, Fill):
+                # Execute it immediately.
+                await self._execute_job(job)
+            elif isinstance(job, Generate):
+                # Execute it in background.
+                self.scheduler.running_jobs.remove(job)  # Avoiding repeated execution
+                create_task_in_loop(self._execute_job(job))
+
+        self.scheduler.finish()
+
+        # if len(coroutines) > 0:
+        # st = time.perf_counter_ns()
+        # await asyncio.gather(*coroutines)
+        # ed = time.perf_counter_ns()
+        # iter_latency = ed - st
+        # self.latency_analyzer.add_latency(iter_latency)
 
     # override
     async def engine_iter(self):
         """Get the jobs and execute them asynchronously."""
 
-        # The request will be directly handled by the engine.
-        pass
+        if self.scheduler.empty:
+            return
+
+        await self._execute_iter()
