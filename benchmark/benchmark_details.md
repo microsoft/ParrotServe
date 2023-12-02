@@ -10,22 +10,18 @@ This benchmark contains two different styles of summarization methods:
 
 Datasets:
 - Arxiv-March23
+- BBC News
 - OnlineMeeting
 
 ### Chain 1 GPU, 1 VM
 
 Model: Llama-13B
 Baseline: No pipeline, submitting requests sequentially.
-Settings: Chunks num=20, per_chunk_size=650
-Batch size is not important, because it's sequential.
+Settings: 
+- Test: Chunks num=20, per_chunk_size=650
+- Datasets: Chunk size=650, 1024, 1
 
-Results (s):
-- Langchain + FastChat (w/o vLLM): 21.41, 21.63, 21.34, 21.28, 21.22, 21.22, 21.20, 21.20, 21.35
-- Langchain + FastChat (w/ vLLM): 15.62, 15.62, 15.69, 15.65, 15.64, 15.64, 15.65, 15.68, 15.69
-- Parrot + FastChat (w/o vLLM): 21.53, 21.52, 21.23, 21.36, 21.43, 21.39, 21.43, 21.38, 21.38
-- Parrot + FastChat (w/ vLLM): 16.00, 15.98, 15.98, 16.16, 16.01, 16.01, 16.00, 16.00, 16.01
-- Parrot baseline: 16.04, 16.02, 16.09, 16.06, 16.03, 16.05, 16.04, 16.05, 16.05
-- Parrot main: 11.43, 11.42, 11.53, 11.47, 11.49, 11.49, 11.66, 11.46, 11.47
+Batch size is not important, because it's sequential.
 
 ### Chain 1 GPU, multi VMs
 

@@ -4,7 +4,9 @@
 import importlib
 import time
 
-module = importlib.import_module(f"benchmark.bench_codelib.chain_summarization")
+module = importlib.import_module(
+    f"benchmark.workloads.test_examples.chain_summarization"
+)
 fake_long_document_chunk = getattr(module, "fake_long_document_chunk")
 
 chunk_num = 20

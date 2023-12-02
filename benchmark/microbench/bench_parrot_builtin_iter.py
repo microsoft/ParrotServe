@@ -1,4 +1,4 @@
-from parrot.engine.builtin.native_runner import NativeRunner
+from parrot.engine.builtin.builtin_runner import BuiltinRunner
 from parrot.engine.config import BuiltinConfig
 from parrot.engine.primitive_job import Fill, Generate
 from parrot.protocol.sampling_config import SamplingConfig
@@ -15,7 +15,7 @@ def _init():
         block_size=16,
     )
 
-    runner = NativeRunner(model_name="lmsys/vicuna-7b-v1.3", config=config)
+    runner = BuiltinRunner(model_name="lmsys/vicuna-7b-v1.3", config=config)
 
     prompt_len = 1024
 
