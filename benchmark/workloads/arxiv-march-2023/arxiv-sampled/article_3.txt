@@ -1,0 +1,285 @@
+
+
+
+
+Color Mismatches in Stereoscopic Video: Real-World Dataset and Deep Correction Method
+
+This study was supported by Russian Science Foundation under grant 22-21-00478, <https://rscf.ru/en/project/22-21-00478/>
+
+    
+    
+        Egor Chistov,1
+        Nikita Alutis,1
+        Maxim Velikanov,1
+        and
+        Dmitriy Vatolin12
+    
+    
+        Lomonosov Moscow State University1
+    
+    
+        MSU Institute for Artificial Intelligence2
+    
+    
+        
+    
+
+    
+===================================================================================================================================================================================================================================================================
+
+empty
+empty
+
+
+
+
+Finger-tip tactile sensors are increasingly used for robotic sensing to establish stable grasps and to infer object properties. Promising performance has been shown in a number of works for inferring adjectives that describe the object, but there remains a question about how each taxel contributes to the performance. This paper explores this question with empirical experiments, leading insights for future finger-tip tactile sensor usage and design.
+
+
+
+
+
+§ INTRODUCTION
+
+In recent years, with the developments of tactile sensors and machine learning techniques, finger-tip tactile sensors are increasingly used for robotic tasks such as adjective classification <cit.>. Promising performance has been shown for adjective classification <cit.> or learning adjective distributions <cit.>. However, there are few works exploring: how each taxel in a finger-tip tactile sensor contributes to the inferring of object adjectives, and how taxel spatial density and measurement temporal density influence the performance. This paper seeks answers to these questions via empirical experiments.
+
+The empirical study is conducted using the PHAC-2 dataset <cit.>. 
+The dataset was collected using a Willow Garage PR2 equipped with a pair of SynTouch BioTac sensors to explore a set of objects using a set of finger-tip motions (see Fig. <ref>).
+To focus on the benefit of tactile signals, rather than measuring classification performance, we propose to evaluate the information quality of the tactile signals, i.e., measurements indicating how tactile signals could potentially perform in downstream tasks such as the adjective classification task, but avoiding the influence of classifiers which might introduce differences or biases due to method selection or parameter tuning. 
+Detailed method design is introduced in Section <ref>, followed by experiments (Section <ref>) 
+seeking answers to the aforementioned questions. This paper makes three major contributions:
+
+    
+  * a new method is proposed to re-evaluate finger-tip tactile data for inferring object adjectives from an information quality rather than classification performance perspective,
+    
+  * comprehensive experiments are conducted to study the benefit of finger-tip tactile sensing from the perspectives of taxel distribution, taxel spatial density and measurement temporal density, and
+    
+  * important insights are obtained to guide the usage and design of finger-tip tactile sensors in related tasks.
+
+
+
+
+
+
+
+§ RELATED WORKS
+
+
+There are a number of works exploring tactile sensing for inferring object adjectives <cit.>, many of which use the PHAC-2 dataset <cit.>. Early solutions use hand-crafted features together with an SVM for adjective classification <cit.>, achieving promising performance. Better performance was then achieved by various learning approaches <cit.>. Approaches were also proposed to fuse vision and tactile for adjective classification, showing that the fusion of the two modalities improves the performance <cit.>. The current State-of-The-Art classification performance was achieved by a method using learned features <cit.>. More recently, a learning method was proposed to predict perceptual distributions of haptic adjectives <cit.>, demonstrating the feasibility of modeling both the intensity and the variation of tactile perception. All these methods enabled better adjective classification or perceptual distribution prediction. Some of them also studied how different types of signals and different exploratory procedures contributed to adjective classification. However, no study has been done at the taxel level. It remains unknown how much each taxel contributes to inferring the object adjectives.
+
+
+
+
+§ METHODOLOGY
+
+
+
+The exploration of how the finger-tip tactile information contributes to a robotic task is conducted by ablating the tactile signals and evaluating information quality measures such as distinguishability which is critical for downstream tasks such as the adjective classification <cit.>. 
+Signals with a higher distinguishability have a more distinct distribution in their feature space, and are therefore better for inferring object adjectives (e.g., easier to classify).
+The tactile signals are ablated from the perspectives of taxel distribution, taxel spatial density, and measurement temporal density. 
+
+
+
+
+ §.§ Dataset
+
+
+The study is conducted using the tactile adjective classification dataset Penn Haptic Adjective Corpus (PHAC-2) <cit.>. 
+The dataset contains 600 trials collected using a Willow Garage PR2 equipped with two SynTouch BioTac tactile finger-tip sensors as shown in Fig. <ref>. 
+The trials were recorded by using the robot to perform four exploratory procedures (EPs): “squeeze”, “hold”, “slow slide”, and “fast slide” on 60 different objects, with 10 trials of each. 
+A tactile signal frame 𝐕 contains signals from both left (𝐕_L) and right (𝐕_R) BioTac sensors, each of which comprises 19 spatially distributed electrodes (taxels) 𝐄∈ℝ^19 and four scalars: vibration (P_AC), pressure (P_DC), heat flow (T_AC) and temperature (T_DC), i.e., 𝐕_L, 𝐕_R∈ℝ^23.
+The P_AC is measured at 2.2 kHz, while the other signals are measured at 100 Hz.
+
+The dataset was designed for adjective classification, but in this work it is used for tactile signal ablation and information quality evaluation in this work. 
+The dataset has 19 binary adjective labels 𝐀∈𝔹^19 (the version <cit.> has 24 adjectives, but we follow the setup in <cit.> in this work and exclude those with fewer than three positively labeled objects). We use the same training and test sets as <cit.> and <cit.>.
+
+
+
+
+ §.§ Metrics
+
+
+The information quality (distinguishability) of tactile signals are evaluated using the commonly used mean Average Precision (mAP) <cit.> which directly indicates how signals could potentially perform in downstream tasks such as classification, but with no influence from classifiers which might introduce differences or biases due to method selection or parameter tuning.
+mAP is a good indication of how samples of different classes are distinctly distributed in the feature space. A larger mAP means a more distinct distribution of samples across different classes, and is therefore easier to classify.
+When comparing to existing classification baselines such as <cit.> and <cit.>, 𝐅_1 score <cit.> is used to measure classification performance in Section <ref>. 
+
+
+
+ §.§ Feature generation
+
+
+Different from <cit.> and <cit.> where hand-crafted or learned features were used, dimension-reduced raw tactile signals are directly used as features for information quality evaluation in this work to avoid unnecessary biases. The dimension reduction is performed via Principal Component Analysis (PCA) <cit.>.
+
+A sequence of tactile signals from one sensor from one exploratory procedure 
+are first concatenated into one vector 𝐙_k = [𝐕_k,1, 𝐕_k,2, ⋯, 𝐕_k,N] ∈ℝ^23N, k ∈ [L,R],
+where N is the total number of frames in one sequence.
+Then 𝐙_L and 𝐙_R from the two fingers are concatenated to 𝐙∈ℝ^46I. PCA is then applied to 𝐙∈ℝ^46I. The top 200 components are used as the features representing each sequence for information quality evaluation. Evaluation experiments in Section <ref> show that the top 200 components could maintain >99% of the input's variance. For the convenience of expression, the dimension-reduced features are denoted as 𝐙^200∈ℝ^200. 
+
+Table <ref> shows the N values and feature dimensions for the tactile sequences collected from the four exploratory procedures. The N values we used are the maximum length of the sequences for each EP. The sequences with a shorter length are padded to the maximum length by repeating their first and last elements in a symmetric manner (the non-repeated fractions are in the middle of the padded signals). 
+
+
+
+
+
+
+ §.§ Classification method
+
+
+Although the main focus of this work is to explore the benefit of each tactile signal by ablating raw signals and observing their information quality changes, classification performance is also evaluated on the dimension-reduced features 𝐙^200 to see their feasibility by comparing to the initial method <cit.> (SVM with hand-crafted features, denoted as HF+SVM) and the current State-of-The-Art solution <cit.> (SVM with learned features, denoted as LF+SVM) for adjective classification with PHAC-2. 
+
+Similarly to <cit.>, SVM is adopted to predict binary adjective labels. Nineteen SVMs are trained for each EP (one for each adjective). Cross-validation and grid search are used to select the SVM regularization parameter C with values ranging from 10^-4 to 10^4, tolerance tol for the stopping criterion with values ranging from 10^-6 to 10, and the kernel either linear or RBF <cit.>.
+Similar to the settings in <cit.>, each classifier is trained using the L_2 metric <cit.> with the 𝐅_1 score averaged over 100 cross-validation sets created by randomly selecting 3 objects from each training set.
+
+
+
+§ EXPERIMENTAL RESULTS
+
+
+Experiments are first conducted to see the feasibility of the dimension-reduced features by evaluating their classification performance with an SVM as introduced in Section <ref>.
+This is followed by ablation studies to show the benefits of PCA. Then experiments are conducted to study how the individual tactile signals contribute to or influence the adjective inferring performance.
+
+
+
+ §.§ Classification performance
+
+
+
+
+  
+    
+
+The classification performance of SVM with the dimension-reduced features (denoted as PCA+SVM) was evaluated by comparing to HF+SVM and LF+SVM using 𝐅_1 scores. mAP 
+was not compared as there were no mAP results presented in <cit.> and <cit.>. The setups for the dataset, PCA and SVM were introduced in Section <ref>.
+
+
+
+Fig. <ref> shows the boxplots of the 𝐅_1 scores of the three methods. We can see that PCA+SVM performs better than HF+SVM, but worse than LF+SVM across all EPs. Considering that the three works all use SVM-based classifiers with similar settings, this result indicates that the features produced by the proposed PCA-based dimension reduction method works better than the hand-crafted features, but worse than the learned features.
+
+Detailed 𝐅_1 scores are shown in Fig. <ref>, from which we can see that PCA+SVM has a performance in between in most cases (42/76), 
+with 54 cases better than HF+SVM and 12 cases being the best.
+This is also indicated by the average 𝐅_1 scores listed in Table <ref> where PCA+SVM has an in-between average score across all EPs.
+These results demonstrate the feasibility of the dimension-reduced features generated directly from the raw tactile signals via PCA. 
+
+Similarly to <cit.> and <cit.>, we can also observe from Fig. <ref> that the tactile signals collected by the four EPs are not informative enough for some texture-related adjectives (whose best 𝐅_1 scores are below 0.75) such as: “smooth”, “textured”, “rough”, “fuzzy”, “scratchy”, and “hairy”. As mentioned in <cit.>, this poor performance might be related to the degradation of the ridges on the BioTac sensor skin during data collection. The best scores of “cool” and “springy” are also below 0.75, which might also be related to similar issues (not much useful information was obtained in data collection). From the EP perspective, “squeeze” is the most informative (𝐅_1 scores above 0.75 in 10 adjectives); then “hold” comes second (performs good in 8 adjectives); the two sliding EPs only achieve acceptable performance in 7 adjectives.
+
+
+
+
+ §.§ Effect of PCA
+
+
+To study how the proposed PCA-based dimension reduction method influences information quality, comparisons were conducted on features produced with different PCA component settings.
+All the rest experiments are evaluated from information quality perspective using mAP.
+All dataset and PCA setups were the same as in Section <ref>, except the number of components for PCA. 
+
+
+
+Fig. <ref> shows the results, from which we can see that signals with more components have slightly better mAP performance up to 200 components. 
+PCA with 200 components will be used in the remainder of the experiments due to its lower computational cost (dimensions reduced by more than 99.7% as shown in Table <ref>) and no obvious performance loss.
+
+
+
+ §.§ Benefit from each tactile sensor
+
+
+
+ 
+  
+   
+
+As introduced in Section <ref>, the dataset was collected using a pair of BioTac sensors. This section evaluates how each tactile sensor contributes to the performance in inferring object adjectives. All setups were the same as in Section <ref> except the signals to which PCA was applied. Fig. <ref> shows the mAP results of left finger (𝐙^200_L), right finger (𝐙^200_R) and both fingers (𝐙^200). We can see that the performance of “Both Fingers” is a combination of “Finger L” and “Finger R” across all EPs. All three cases have very similar performance although with some differences, which can also be observed from the average mAP scores in Table <ref>. This indicates that one tactile sensor is sufficient for symmetric use cases (symmetric interaction motions on symmetric objects/surfaces).
+
+
+  
+  
+
+ 
+
+
+
+
+
+
+
+ §.§ Benefits from taxels and other signals
+
+
+
+Similar to <cit.>, comparisons were conducted on different types of signals, but this work focuses more on electrode versus other signals. All setups were the same as in Section <ref> except the signals which the PCA was applied to. Fig. <ref> shows the mAP results of signals with all four scalars and taxels (“All-PCA200”) and pure taxel signals (“Ele-PCA200”). The performance of the raw tactile signals with no PCA dimension reduction was also evaluated as a reference (“Original”).
+
+From Fig. <ref> we can observe that the performance of “All-PCA200” is even slightly better than “Original” although with greatly fewer dimensions. 
+This indicates that the PCA dimension reduction improves the feature quality.
+The overall performance of “Ele-PCA200” is comparable to “All-PCA200” in most EPs except for “slow slide” where it is worse than “All-PCA200”. This can be observed more clearly in Fig. <ref>, from which we can also see that: all texture-related (“smooth”, “textured”, “soft”, “absorbent”, “rough”, `slippery”, “fuzzy”, “porous”, “scratchy”, and “hairy”) or temperature-related (“cool” and “metallic”) adjectives have worse performance across at least 3 EPs; the others have better performance across at least 2 EPs. This is unsurprising as the four scalar signals contain vibration and temperature related information which is particularly helpful for those adjectives, but not that helpful for the rest (sometimes distracting, such as for “solid”, “squishy”, “compressible” and “hard”).
+
+
+
+ §.§ Benefits of different taxels
+
+
+
+To explore how each taxel contributes to inferring object adjectives by providing information with a higher quality, comparisons were made on different taxels by dividing the electrodes into 5 regions shown in Fig. <ref>a. 
+The original electrodes (“All regions”) were also compared as a reference. 
+All setups were the same as in Section <ref> except the signals to which the PCA was applied.
+The mAP results are shown in
+Fig. <ref>, from which we can observe that the original electrodes (“All regions”) only worked the best in four cases (“squishy” with “hold”, “soft” with “squeeze” and “slow slide”, and “rough” with “squeeze”); the best results of the rest were obtained by individual regions. The surprisingly poor performance of “All regions” indicates that not all electrodes contribute to inferring object adjectives. This might be caused by noisy or confusing signals from some regions for some adjectives and EPs.
+
+In particular, “Region 1 to 3” cover most of the best results, indicating that these regions contribute the most to inferring adjectives. “Region 1” tends to contribute more with “squeeze”, “Region 3” contributes more with the rest of three EPs, while “Region 2” contributes across all EPs.
+The contribution from “Region 4” is very limited (the best in only three cases: “bumpy” with “squeeze” and “hold” EPs, and “thick” with “hold”). “Region 5” contributes the most in the cases where contacts on either/both sides of the BioTac sensor are critical for inferring certain adjectives, such as “porous”, “scratchy” and “absorbent”.
+
+  
+  
+    
+
+
+
+ §.§ Influence of taxel spatial density
+
+
+This section evaluates how the taxel spatial density influences the performance in inferring object adjectives. The 19 electrode measurements from each sensor were first arranged into a 7×3 rectangular array using the same method in <cit.> as shown in Fig. <ref>b. The study was conducted by comparing the performance of signals spatially-downsampled from 7×3 (original electrodes) to 4×2 (by 2, denoted as SDS2) and 2×1 (by 4, denoted as SDS4). 
+All setups were the same as in Section <ref> except the signals to which the PCA was applied.
+
+Fig. <ref> and Fig. <ref> show the results. From Fig. <ref> we can see that downsampling generally decreases the performance in most cases across all EPs. 
+From adjective perspective (Fig. <ref>), “solid”, “squishy”, “compressible” and “hard” have obviously better performance with downsampled signals across 3 EPs except “hold”; 
+most of the rest have obvious performance decreases across at least 3 EPs, particularly for those texture-related ones. This indicates that denser taxels are helpful for those texture-related adjectives, but can be distracting to those non-texture-related ones.
+
+
+
+ §.§ Influence of measurement temporal density
+
+
+
+
+
+
+The study of measurement temporal density was conducted by comparing signals temporally downsampled by factors of 20, 50, 100, 200, and 400 (denoted as TDS20 to TDS400).
+The performance of the original electrodes was also compared as a reference (denoted as TDS1).
+All setups were the same as in Section <ref> except the signals to which the PCA was applied. Considering the significantly reduced number of frames in the downsampled sequences, the numbers of PCA components were set to 100 for TDS200 and 50 for TDS400, which maintained >99% of the input's variance.
+
+Table <ref> shows the average mAP results, from which we can observe that signals collected by “squeeze” have obvious performance degradation (⩾0.01) from TDS400, “slow slide” from TDS200, and “fast slide” from TDS100; while “hold” has no obvious performance changes. This trend can also be observed in Fig. <ref>. When paying attention to the numbers of frames in the downsampled sequences of each EP in Table <ref>, we can also observe that the performance starts decreasing at around 10 for “squeeze” (12) and “slow slide” (9), and 18 for “fast slide”. There is no obvious performance difference for the cases with smaller downsampling factors. All these observations indicate that much smaller frame rates can satisfy the demand of inferring object adjectives, although with differences for some adjectives and EPs. For those exploratory procedures with the possibility of obtaining more information, more frames are required to keep the information.
+
+  
+
+From Fig. <ref> we can also see that the performance changes of “solid”, “squishy”, “compressible” and “hard” with “squeeze” are much more significant (⩾0.1) than the others. This indicates that the contributions from the temporal information in these signals are critical for inferring stiffness-related adjectives, and the minimum numbers of frames are around 24 to keep the information.
+   
+
+
+§ CONCLUSIONS AND DISCUSSIONS
+
+
+This paper has presented a comprehensive empirical study on how parallel finger-tip tactile contributes to inferring object adjectives using the PHAC-2 dataset. The study was mainly conducted to explore the influence of taxel spatial density, measurement temporal density, and taxel distribution. Experimental results showed that one tactile sensor is sufficient for symmetric use cases (symmetric interaction motions on symmetric objects/surfaces) such as most of the data collected in the PHAC-2 dataset. The two tactile sensors on the PR2 robot have similar performance individually or combined.
+
+Both spatial and temporal information from taxels contributes to inferring object adjectives. Dense taxels are beneficial for texture-related adjectives, but can be distracting to non-texture-related ones. The contributions from the temporal information are critical for inferring stiffness-related adjectives such as “solid”, “squishy”, “compressible” and “hard”. The frame-rate of the BioTac sensor is more than sufficient for inferring object adjectives. Sensors with much smaller frame rates can satisfy the demand. 
+
+The vibration and temperature related signals from the BioTac sensor have significant contributions to the inferring of textured-related or temperature-related adjectives, but can also be distracting for some adjectives such as stiffness-related features. In terms of taxel distribution, not all taxels benefit the inferring of object adjectives: the electrodes on the belly of the sensor make the largest contribution to inferring the most object adjectives, while the electrodes on both sides of the sensor are critical for inferring the adjectives such as “porous”, “scratchy” and “absorbent”, where deep contact (sensor mostly wrapped by the contact surface) between the sensor and object is needed.
+
+
+
+§ ACKNOWLEDGMENT
+
+The authors acknowledge continued support from the Queensland University of Technology (QUT) through the Centre for Robotics, and thank the support and help from Dr Ben Richardson for the use of the PHAC-2 dataset.
+Support from the GentleMAN (RCN 299757) is also greatly acknowledged.
+Computational resources and services used in this work were provided by the eResearch Office, Queensland University of Technology, Brisbane, Australia.
+
+IEEEtran
+
+

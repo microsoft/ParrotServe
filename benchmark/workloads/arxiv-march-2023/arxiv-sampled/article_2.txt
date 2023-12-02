@@ -1,0 +1,1160 @@
+
+	
+Generation-based Code Review Automation: 
+ How Far Are We?
+    Xin Zhou
+Singapore Management University 
+
+Singapore 
+
+xinzhou.2020@phdcs.smu.edu.sg
+Kisub Kim**Corresponding author. Email: kisubkim@smu.edu.sg
+Singapore Management University 
+
+Singapore 
+
+kisubkim@smu.edu.sg
+Bowen Xu
+Singapore Management University 
+
+Singapore 
+
+bowenxu@smu.edu.sg
+DongGyun Han
+Royal Holloway, University of London 
+
+UK 
+
+donggyun.han@rhul.ac.uk
+Junda He
+Singapore Management University 
+
+Singapore 
+
+jundahe@smu.edu.sg
+David Lo
+Singapore Management University 
+
+Singapore 
+
+davidlo@smu.edu.sg
+
+    March 30, 2023
+======================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+Double heavy quark systems such as the J/ψ, Υ, B_c,  and B_c^* mesons are an ideal probe to study  Quantum Chromodynamics (QCD).
+The non-relativistic Quantum Chromodynamics  (NRQCD) effective theory  is a powerful theoretical framework to deal with
+the production and decay of double heavy quark systems where  quarks move with small relative
+velocity u <cit.>.
+Within the framework of NRQCD factorization, a physical observable can be separated into a perturbatively calculable short-distance coefficient (matching coefficient) multiplied with the nonperturbative  NRQCD long-distance matrix element (wave function at the origin).
+Thus NRQCD   provides the possibility to  systematically  study double heavy quark systems with  higher order calculation  in   powers of  two small parameters  α_s and  u.
+
+
+
+
+
+The     matching coefficients  can be calculated by matching between  perturbative QCD and  perturbative NRQCD.
+In the past three decades, various  matching coefficients of double heavy quark systems have been computed to higher order using NRQCD effective theory.
+For equal heavy quark   masses case, the  two-loop correction to the vector current was first obtained in Refs. <cit.>.
+Then two-loop corrections to  vector, axial-vector, scalar and pseudo-scalar currents were accomplished  in
+in Ref. <cit.>.
+The  three-loop correction to the vector current was investigated in  a variety of  literature  <cit.>.
+And three-loop calculation allowing for all four currents were available  in
+ Refs. <cit.>.
+The phenomenological applications for the leptonic
+decays of  J/ψ, Υ  and the threshold production of top quark-antiquark pairs
+can be found in the  literature <cit.>.
+For two different heavy quark   masses case, the first
+one-loop calculation for  pseudo-scalar current can be found in Ref. <cit.>.
+And  in Refs. <cit.> one can find the  one-loop  QCD corrections to
+ pseudo-scalar and  vector     currents  combined with higher order relativistic corrections.
+Two-loop corrections to  pseudo-scalar and  vector     currents were calculated in the literature  <cit.>.
+At the three-loop level, the  pseudo-scalar,  vector and  scalar     currents have been numerically evaluated in Ref. <cit.>, Ref. <cit.> and Ref. <cit.>, respectively.
+For phenomenological applications of matching coefficients in B_c  and B_c^* mesons,  one can refer to various  literature <cit.>.
+
+
+The   matching coefficients and the wave function at the origin are two  important building blocks of phenomenological predictions for double heavy quark systems. 
+For a complete N^3LO perturbative QCD calculation of physical  quantities such as decay constants, decay widths, cross sections, we need consider  the N^3LO corrections to both the   matching coefficients and the wave functions at the origin <cit.>.
+The higher-order perturbative correction to  the wave function at the origin can be calculated using the potential NRQCD effective theory <cit.>.
+For the  heavy quarkonia with two equal masses such as J/ψ and Υ, the wave functions at the origin up to N^3LO  are  available  in various literature <cit.>.
+For the unequal mass case, the NLO result of the wave function at the
+  origin can be obtained from Ref. <cit.> and various research on the perturbative  corrections to  potentials can be found in Refs. <cit.>. Nevertheless, higher-order corrections to the wave function at the origin for unequal masses are still missing in the literature.
+  
+
+
+In this paper we will complete the computation of three-loop QCD corrections to the     matching coefficients  for    vector, axial-vector, scalar		and pseudo-scalar currents with two different heavy quark masses, where the axial-vector case is achieved for the first time. We will not attempt to calculate the rigorous N^3LO expression of the wave function at origin for the double heavy quark system with different masses based on the pNRQCD effective theory, but employ the scale relation to obtain the   N^3LO correction to the wave functions at the origin for the vector B_c^* meson and the pseudo-scalar B_c meson   from  the known result for the equal-mass  heavy quarkonium. After  the three-loop matching coefficients are combined with the N^3LO corrections to the wave functions at the origin, the resultant decay constants for B_c^* and B_c   will test the perturbative convergence in the NRQCD effective theory.
+  
+  
+
+ 
+
+
+The rest of the paper is organized as follows.
+In Sec. <ref>, we introduce the  matching formula between QCD and NRQCD.
+In Sec. <ref>,  we describe details of our calculation procedure.
+In Sec. <ref>, we  present the three-loop analytical results of  the  renormalization constants and corresponding anomalous dimensions  in NRQCD.
+In Sec. <ref>, we present our numeric results of the  matching coefficients up to N^3LO.
+In Sec. <ref>, the phenomenological applications of three-loop matching coefficients to the cb̅ mesons are presented.
+Sec. <ref> contains a summary.
+
+
+
+
+
+
+
+
+§ MATCHING FORMULA  
+
+The heavy flavor-changing  currents in the full QCD are defined by
+
+    j_v^μ = ψ̅_b γ^μψ_c,
+    
+       
+    j_p     = ψ̅_b  iγ_5 ψ_c,
+    
+       
+    j_a^μ = ψ̅_b γ^μγ_5 ψ_c,
+    
+       
+    j_s     = ψ̅_b ψ_c,
+
+which  can be expanded  in terms of NRQCD currents as follows,
+
+
+    j_v^0 = 0+ 𝒪(u^2),
+    
+       
+    j_v^i = 𝒞_vj̃_v^i + 𝒪(u^2),
+    
+       
+    j_p     = 𝒞_pj̃_p + 𝒪(u^2),
+    
+       
+    j_a^0 = 𝒞_a,0j̃_a^0 + 𝒪(u^2),
+    
+       
+    j_a^i = 𝒞_a,ij̃_a^i + 𝒪(u^3),
+    
+       
+    j_s     = 𝒞_sj̃_s + 𝒪(u^3),
+
+where u  refers   to the small relative velocity   between the bottom and charm,
+ 𝒞_v,𝒞_p,𝒞_a,0,𝒞_a,i, 𝒞_s
+ are the matching coefficients for the   heavy flavor-changing      vector, pseudo-scalar, the zeroth component of axial-vector, the space-like component of axial-vector, and scalar currents, respectively. And the NRQCD currents read
+ 
+    j̃_v^i = φ_b^†σ^i χ_c,
+    
+       j̃_p     = - i φ_b^†χ_c,
+    
+       j̃_a^0 = φ_b^†χ_c,
+    
+       j̃_a^i = 1/4 m_rφ_b^†[σ^i,k⃗·σ⃗] χ_c,
+    
+       j̃_s     = -1/2m_rφ_b^†k⃗·σ⃗χ_c,
+
+where  φ_b^† and χ_c denote 2-component Pauli spinor  fields annihilating the b̅ and c quarks, respectively, and j̃_p=- i j̃_a^0 means 𝒞_p=𝒞_a,0.
+|k⃗|= m_r u  refers   to the small half relative spatial  momentum  between the bottom and charm.   m_r=m_b m_c/(m_b+m_c) is the reduced  mass with bottom mass m_b and charm mass m_c.
+
+
+The heavy flavor-changing  currents in Eq. (<ref>) and Eq. (<ref>) can be related to  the on-shell unrenormalized  vertex functions in QCD and NRQCD
+which we denote by Γ_J and Γ_J with
+J∈{v,p,(a,0),(a,i),s}, respectively.
+Then the matching coefficients can be determined through the conventional perturbative matching procedure. Namely, one  performs renormalization for  the on-shell vertex functions in both perturbative QCD and perturbative
+NRQCD sides, then solves the matching coefficient  order by order in α_s.
+The matching formula with renormalization procedure reads
+
+    √(Z_2,b Z_2,c) Z_J Γ_J =
+    𝒞_J(μ_f,μ,m_b,m_c)  √(Z_2,bZ_2,c) Z_J^-1 Γ_J + 𝒪(u^2),
+
+where  the left part in the equation represents the renormalization of full QCD current while the right part represents the renormalization of NRQCD current.
+𝒪(u^2) denotes higher order relativistic corrections in powers of the  relative velocity u between the bottom quark  b̅ and the charm quark c,
+and in this paper we will calculate 
+higher-order QCD corrections up to 𝒪(α_s^3)   but at the lowest order in u.
+ At the leading-order (LO), we set 𝒞_J=1,
+while in a fixed high order QCD correction calculation,
+  the matching coefficient 𝒞_J(μ_f,μ,m_b,m_c) depends NRQCD factorization scale μ_f and QCD  renormalization scale μ.
+In on-shell (OS) scheme,   NRQCD  quark field renormalization constants Z_2,b=Z_2,c=1.
+ Z_J is NRQCD current renormalization constant in the modified-minimal-subtraction (MS) scheme and Z_p=Z_a,0.
+ Z_J is QCD  current on-shell  renormalization constant, i.e., Z_v=Z_a,0=Z_a,i=1, Z_p=Z_s=(m_b Z_m,b+m_c Z_m,c)/(m_b+m_c). Z_2 and Z_m are QCD  quark field and mass on-shell renormalization constants, respectively.
+ The three-loop analytical results of  the QCD quark field and mass on-shell  renormalization constants  allowing for two different non-zero quark masses  can be found in literature <cit.>, which can be  evaluated to high numerical precision  with the package  <cit.>.
+ The QCD coupling MS renormalization constant can be found in literature <cit.>.
+
+
+
+
+
+
+
+
+
+§ CALCULATION PROCEDURE 
+
+
+Our high-order calculation  consists of the following steps.
+
+	
+  * First, we use  <cit.>  to obtain Feynman diagrams and corresponding Feynman amplitudes. By  <cit.>, we decompose  every Feyman amplitude  into several Feynman integral families.
+	
+  * Second, we use  <cit.>/ <cit.>/ <cit.> based on Integration by Parts (IBP) <cit.> to reduce every Feynman integral family to master integral family.
+	
+  * Third,
+	based on symmetry among different integral families and using   +  + , we can realize  integral reduction among different integral families, and further on, the reduction from all of master integral families to the minimal set <cit.> of master  integral families.
+	
+  * Last, we use  <cit.>, which is a proof-of-concept implementation of the auxiliary mass flow method <cit.>, equipped with  <cit.>/ <cit.> to calculate the minimal set  family by family.
+
+In order to obtain the finite results of  high-order QCD corrections, one has to perform the  conventional renormalization procedure <cit.>. Equivalently, We can also use diagrammatic renormalization method <cit.>  with the aid of the package  <cit.>, which at N^3LO sums contributions from three-loop diagrams and four  kinds of counter-term diagrams, i.e.,  tree diagram   inserted with one α_s^3-order counter-term vertex, one-loop diagram inserted with one α_s^2-order counter-term vertex, one-loop diagram inserted with two α_s-order counter-term vertexes, two-loop diagrams inserted with one α_s-order counter-term vertex. Our final finite results by these two renormalization methods are in agreement with each other.
+
+
+
+
+
+
+
+
+
+
+
+
+We want to mention that all contributions up to NNLO have been evaluated for general gauge parameter ξ and the NNLO results of the  matching coefficients   for the heavy flavor-changing   currents   are all independent of ξ, which constitutes an important check on our calculation.
+At N^3LO, we work in  Feynman gauge. To check  the correctness of
+our results, we also calculated the three-loop matching coefficient  for the  flavor-changing heavy quark pseudo-scalar current with keeping  the linear ξ-dependence terms and we have
+verified these terms vanish  in the final results of the matching coefficient. Therefore, we conjecture the matching coefficients, the NRQCD current renormalization constants and the corresponding anomalous dimensions for flavor-changing heavy quark currents  are gauge invariant up to all order of α_s.
+By FeynCalc, there are 1, 1, 13, 268 bare Feynman diagrams for the QCD vertex function with every heavy flavor-changing   current  at tree, one-loop, two-loop, three-loop orders in α_s, respectively.
+Some representative Feynman diagrams up to  three loops  are displayed in Fig. <ref> and Fig. <ref>.
+In the calculation of multi-loop diagrams, we have allowed for n_b bottom quarks with mass m_b, n_c charm quarks  with mass m_c and n_l massless quarks appearing in the quark loop.
+To facilitate our calculation, we take full advantage of computing numerically. Namely, before generating amplitudes, m_b and m_c are chosen to be particular rational numbers values <cit.>.
+
+Following the literature <cit.>, we employ the projectors constructed for the heavy flavor-changing   currents   to obtain intended QCD vertex functions, which means one need extend    the projectors for   various   currents   with equal heavy quark masses in Eq.(7)  and Eq.(8) of Ref. <cit.> to the different heavy quark masses case. We choose q_1=m_c/m_b+m_cq+k and q_2=m_b/m_b+m_cq-k denoting the on-shell charm and bottom momentum, respectively, and present the projectors for the heavy flavor-changing  currents  as
+
+    P_(v),μ =   1/2(D-1)(m_b+m_c)^2(m_c/m_b+m_cq + m_c
+    ) γ_μ(-m_b/m_b+m_cq + m_b
+    ),
+    
+    
+    P_(p) =   1/2(m_b+m_c)^2(m_c/m_b+m_cq + m_c
+    ) γ_5 (-m_b/m_b+m_cq + m_b
+    ),
+    
+    
+    P_(a,0),μ =    -1/2(m_b+m_c)^2(m_c/m_b+m_cq + m_c
+    ) γ_μγ_5 (-m_b/m_b+m_cq + m_b
+    ),
+    
+    
+    P_(a,i),μ =    -1/2(m_b+m_c)^2{1/D-1m_c/m_b+m_c(m_c/m_b+m_cq + m_c
+    ) γ_μγ_5(m_b/m_b+m_cq + m_b
+    )
+    
+       
+    +1/D-1m_b/m_b+m_c(-m_c/m_b+m_cq + m_c
+    ) γ_μγ_5(-m_b/m_b+m_cq + m_b
+    )
+    
+       
+    - 1/D-22 m_b m_c/m_b+m_c(m_c/m_b+m_cq + m_c
+    ) -k_μ + γ_μk/k^2γ_5 (-m_b/m_b+m_cq + m_b) },
+    
+    P_(s) =    1/2(m_b+m_c)^2{m_c/m_b+m_c(m_c/m_b+m_cq + m_c
+    )  1(m_b/m_b+m_cq + m_b)
+    
+       
+    +m_b/m_b+m_c(-m_c/m_b+m_cq + m_c
+    )  1(-m_b/m_b+m_cq + m_b)
+    
+       
+    +2 m_b m_c/m_b+m_c(m_c/m_b+m_cq + m_c) k/k^2(-m_b/m_b+m_cq + m_b) },
+
+where the small momentum k refers to  relative movement  between the bottom and charm, q represents the total momentum of the bottom and charm, q_1^2=m_c^2, q_2^2=m_b^2, q^2=(m_b+m_c)^2+𝒪(k^2) <cit.>, q· k=0. With the help of projectors, the  on-shell heavy flavor-changing current vertex functions in full QCD can be obtained as
+
+    Γ_v = [ P_(v),μΓ_(v)^μ] ,
+    
+       Γ_p = [ P_(p)Γ_(p)] ,
+    
+       Γ_a,0 = [ P_(a,0),μΓ_(a)^μ] ,
+    
+       Γ_a,i = [ P_(a,i),μΓ_(a)^μ] ,
+    
+       Γ_s = [ P_(s)Γ_(s)] ,
+
+where Γ_(v)^μ, Γ_(p), Γ_(a)^μ, Γ_(s)    denote QCD amplitudes with tensor structures for the vector, pseudo-scalar, axial-vector, scalar currents, respectively.
+
+Since contributions from soft, potential and ultrasoft loop momenta in full QCD and NRQCD are identical,  thus they drop out from both sides of the matching formula in Eq. (<ref>).
+Then we set  Γ_J=1 <cit.> in Eq. (<ref>) and   Γ_J  turns into  the hard  part of the full QCD, which entirely   determines   the matching coefficients  to all orders.
+To match with NRQCD and obtain the matching coefficients, one need extract the contribution from the hard region in full QCD amplitudes for the heavy flavor-changing currents.
+For the vector current, the pseudo-scalar current and the zeroth component of the axial-vector current case, we can simply set  the   small momentum  k=0 in the QCD amplitudes.
+However, for  the space-like component of the axial-vector current and the scalar current  case, since NRQCD currents include contributions at 𝒪(k/m_r) from Eq. (<ref>) and Eq. (<ref>), accordingly,
+one need first introduce the small  momentum k to momenta in the QCD amplitudes  and then series expand propagator denominators with respect to k up to 𝒪(k) in  the hard region of loop momenta <cit.>, which will cancel k^2 in the denominators of the   projectors in Eq. (<ref>) and Eq. (<ref>) so that we can obtain the finite final results   as k^2 → 0.
+
+Due to the expansion in powers of k, the number and powers of propagators in Feynman integrals constituting the amplitudes for the space-like component of the axial-vector current and the scalar current will remarkably increase compared with  the vector current case, the pseudo-scalar current and the zeroth component of the axial-vector current case. In our practice, the total number  of propagators in a three-loop Feynman integral family is 12 for the former two currents and 9 for the latter three currents. In our calculation, the most difficult and   time-consuming is
+the reduction from three-loop Feynman integrals    with rank 5, dot 4, and 12  propagators   to master integrals. By trial and  error, we find it is more  appropriate for  Fire6 <cit.> to deal with this problem than  <cit.> or  <cit.>.
+For  every heavy flavor-changing current, after  using  ++ to achieve the minimal set of master integral families  from  all of master integral families    based on symmetry among different integral families, the number of three-loop master integral families is reduced from 830s  to 26, meanwhile the number of three-loop master integrals is reduced from 13000s  to 300.
+
+
+
+
+
+
+
+
+
+
+§ NRQCD CURRENT RENORMALIZATION CONSTANTS 
+
+
+After implementing the quark field and  mass on-shell renormalization, and  the QCD coupling constant MS renormalization, the QCD vertex function gets rid of ultra-violet (UV) poles, yet still contains  uncancelled infra-red (IR) poles starting from order α_s^2.  The remaining IR poles in QCD should be exactly  cancelled by the UV divergences of Z_J in NRQCD,  rendering the matching coefficient finite.  With the aid of the obtained high-precision numerical results, combined with the structures and features of NRQCD  current renormalization constants investigated in other known literature <cit.>,    we have successfully reconstructed the exact analytical expressions of the NRQCD  renormalization constants for the heavy flavor-changing   currents
+ through the PSLQ algorithm and 
+
+numerical fitting recipes <cit.>. Here we directly present the final results  as following
+
+    Z_J(x, μ^2_f m_b m_c )   =1+(α_s^(n_l)(μ_f)/π)^2Z_J^(2)(x)
+     +(α_s^(n_l)(μ_f)/π)^3Z_J^(3)(x, μ^2_f m_b m_c )+𝒪(α_s^4).
+
+
+    Z_v^(2)(x )   =π^2C_F1/ϵ(3x^2+2x+3/24(1+x)^2C_F+1/8C_A),
+    
+    Z_v^(3)(x, μ^2_f m_b m_c )   =
+    π^2C_F{
+    C_F^2 [3 x^2-x+3/36ϵ ^2 (x+1)^2 
+    +1/ϵ(
+    19 x^2+5 x+19/36 (x+1)^2-2 /3ln 2
+    .
+       .
+    +x^3-4 x^2-2 x-3/12 (x+1)^3ln x
+    +1/6ln (x+1)
+    	+3 x^2-x+3 /12 (x+1)^2lnμ _f^2/m_b
+    		m_c)]
+    
+       
+    +
+    C_F C_A [
+    x/216ϵ ^2 (x+1)^2 
+    +
+    1/ϵ(
+    39 x^2+148	x+39/162 (x+1)^2.
+       .
+    -x+11 /48 (x+1)ln x
+    +1/4ln (x+1)
+    +11 x^2+8 x+11/48 (x+1)^2lnμ _f^2/m_b
+    	m_c)]
+    
+       
+    +C_A^2  [
+    -1/16 ϵ ^2+1/ϵ(
+    2/27+1/6ln2-1/24ln x+1/12ln (x+1) +
+    1/24lnμ _f^2/m_b	m_c)]
+    
+       
+    + C_F T_F n_l[
+    3 x^2+2
+    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+58 x+21/324 ϵ (x+1)^2 ]
+    +C_A  T_F n_l [
+    1/36 ϵ ^2-37/432 ϵ]
+    
+       
+    +C_F  T_F n_b
+     x^2 /15ϵ (x+1)^2  
+    +C_F  T_F n_c
+     1 /15ϵ (x+1)^2  }.
+
+
+    Z_p^(2)(x )   = π^2C_F1/ϵ(x^2+6 x+1/8 (x+1)^2C_F+1/8C_A),
+    
+    Z_p^(3)(x, μ^2_f m_b m_c )   =
+    π^2C_F{
+    C_F^2 [
+    3 x^2-x+3/36ϵ ^2 (x+1)^2 
+    +1/ϵ(19 x^2+29 x+19/36 (x+1)^2-2 /3ln 2
+    .
+       .
+    +x^4-5 x^3-22 x^2-x+3 /12 (x-1) (x+1)^3ln x+1/6ln (x+1)
+    +3	x^2-x+3/12 (x+1)^2lnμ _f^2/m_b	m_c)]
+    
+       
+    +
+    C_F C_A [
+    -5 x/24ϵ ^2 (x+1)^2 
+    +
+    1/ϵ(
+    26 x^2+93	x+26/108 (x+1)^2.
+       .
+    +-x^2+2 x+11 /48 (x-1) (x+1)ln x+1/4ln (x+1)+
+     11 x^2+36 x+11 /48 (x+1)^2lnμ _f^2/m_b	m_c)]
+    
+       
+    +C_A^2  [
+    -1/16 ϵ ^2+1/ϵ(
+    2/27+1/6ln 2-1/24ln x+1/12ln (x+1)+1/24lnμ _f^2/m_b	m_c)]
+    
+       
+    + C_F T_F n_l[
+    x^2+6 x+1/36 ϵ ^2 (x+1)^2-7 x^2+30 x+7/108 ϵ 	(x+1)^2]
+    +C_A  T_F n_l [
+    1/36 ϵ ^2-37/432 ϵ]
+    
+       
+    +C_F  T_F n_b
+     x^2 /15ϵ (x+1)^2  
+    +C_F  T_F n_c
+     1 /15ϵ (x+1)^2  }.
+
+
+    Z_a,i^(2)(x )   = π^2C_F1/ϵ(3x^2+4x+3/24(1+x)^2C_F+1/24C_A),
+    
+    Z_a,i^(3)(x, μ^2_f m_b m_c )   =
+    π^2C_F{C_F^2/ϵ[171 x^2-296 x+171/216
+    	(x+1)^2-ln 2/3
+       
+    +-57 x^4+89 x^3+274 x^2+89 x-57/216 (x-1) (x+1)^3ln x]
+    
+       
+    +
+    C_F C_A [	-22 x^2+31	x+22/432ϵ ^2 (x+1)^2 
+    +
+    1/ϵ(
+    379 x^2+675 x+379/1296 (x+1)^2-ln 2/18.
+       .
+    -5 x+11/144 (x+1)ln x+1/9ln (x+1)
+    +11 x^2+13 x+11/144	(x+1)^2lnμ _f^2/m_b
+    	m_c)]
+    
+       
+    +C_A^2  [-1/48 ϵ ^2+1/648 ϵ(34+72 ln2-9 ln x+18 ln (x+1)+9 lnμ _f^2/m_b m_c)]
+    
+       
+    + C_F T_F n_l[
+    3 x^2+4
+    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+41 x+21/324 ϵ (x+1)^2 ]
+    
+       
+    +C_A  T_F n_l [1/108 ϵ ^2-53/1296 ϵ] }.
+
+
+    Z_s^(2)(x )   = π^2C_F1/ϵ(3x^2+10x+3/24(1+x)^2C_F+1/24C_A),
+    
+    Z_s^(3)(x, μ^2_f m_b m_c )   =
+    π^2C_F{C_F^2/ϵ[57x^2+146x+57/216(x+1)^2-ln2/3]
+    
+       
+    +
+    C_F C_A [-11 x^2+41 x+11/216ϵ ^2	(x+1)^2 
+    +
+    1/1296 ϵ(379 x^2+1086 x+379/(x+1)^2-72 ln2
+    .
+       .
+    -9 (5 x+11) /x+1ln x+144 ln (x+1)+9 (11 x^2+28 x+11) /(x+1)^2lnμ _f^2/m_b
+    	m_c)]
+    
+       
+    +C_A^2  [-1/48 ϵ ^2+1/648 ϵ(34+72 ln2-9 ln x+18 ln (x+1)+9 lnμ _f^2/m_b m_c)]
+    
+       
+    + C_F T_F n_l[3 x^2+10
+    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+74 x+21/324 ϵ (x+1)^2 ]
+    
+       
+    +C_A  T_F n_l [1/108 ϵ ^2-53/1296 ϵ] },
+
+where C_A=3, C_F=4/3 and T_F=1/2 are QCD constants and we have defined a dimensionless parameter x representing the ratio of two heavy quark masses
+
+    x= m_c m_b.
+
+
+Then the corresponding anomalous dimension γ̃_J for the heavy flavor-changing   NRQCD  currents  is related to Z_J by <cit.>
+
+    γ̃_J(x, μ^2_f m_b m_c )    ≡d lnZ_J d lnμ_f 
+    ≡-2 ∂Z_J^[1]/∂lnα_s^(n_l)(μ_f)
+       
+     =(α_s^(n_l)(μ_f)/π)^2 γ̃_J^(2)(x )
+    +(α_s^(n_l)
+    	(μ_f)/π)^3γ̃_J^(3)(x, μ^2_f m_b m_c )+𝒪(α^4_s),
+
+where Z_J^[1] denotes the coefficient of the 1/ϵ pole in Z_J, and within the NRQCD frame we use μ_f to denote the  NRQCD factorization scale, 
+ so that both  Z_J and  γ̃_J explicitly depend on  μ_f but not the QCD renormalization scale μ <cit.>. Explicitly, γ̃_J^(2) and γ̃_J^(3) read
+
+    γ̃_v^(2)(x )   =-π^2C_F [C_F 3 x^2+2	x+3/6(x+1)^2+C_A/2],
+    
+    γ̃_v^(3)(x, μ^2_f m_b m_c )   =
+    π^2C_F{
+    C_F^2 [
+    -19 x^2+5 x+19/6 (x+1)^2+4 ln 2
+    
+       
+    +-x^3+4 x^2+2 x+3/2 (x+1)^3ln x-ln (x+1)
+    +-3 x^2+x-3 /2 (x+1)^2lnμ_f^2/m_b m_c]
+    
+       
+    +C_F C_A [
+    -39 x^2+148 x+39/27	(x+1)^2+x+11 /8( x+1)ln x
+    
+       
+    -3/2ln (x+1)
+    -11 x^2+8 x+11/8 (x+1)^2lnμ_f^2/m_b m_c]
+    
+       	
+    +C_A^2 [
+    -4/9-ln 2+1/4ln x-1/2ln (x+1)
+    -1/4lnμ_f^2/m_b m_c]
+     
+       
+    +C_F T_F n_l 21 x^2+58 x+21/54 (x+1)^2
+    +37/72 C_A T_F n_l
+    
+       	
+    -2 x^2 /5 (x+1)^2 C_F T_F n_b
+    -2/5 (x+1)^2 C_F T_F n_c
+    }.
+
+
+    γ̃_p^(2)(x )   =
+    -π^2C_F [x^2+6 x+1 /2 (x+1)^2C_F+C_A /2],
+    
+    γ̃_p^(3)(x, μ^2_f m_b m_c )   =
+    π^2C_F{
+    C_F^2 [
+    -19 x^2+29 x+19/6 (x+1)^2+4 ln 2
+    
+       
+    +-x^4+5 x^3+22 x^2+x-3 /2 (x-1)	(x+1)^3ln x-ln (x+1)+-3 x^2+x-3/2 (x+1)^2lnμ_f^2/m_b m_c]
+    
+       
+    +C_F C_A [
+    -26 x^2+93 x+26/18	(x+1)^2--x^2+2 x+11 /8(x-1)(x+1)ln x
+    
+       
+    -3/2ln (x+1)
+    -11 x^2+36 x+11/8 (x+1)^2lnμ_f^2/m_b m_c]
+    
+       	
+    +C_A^2 [
+    -4/9-ln 2+1/4ln x-1/2ln (x+1)
+    -1/4lnμ_f^2/m_b m_c]
+    
+       
+    +C_F T_F n_l 7 x^2+30	x+7/18 (x+1)^2
+    +37/72 C_A T_F n_l
+    
+       	
+    -2 x^2 /5 (x+1)^2 C_F T_F n_b
+    -2/5 (x+1)^2 C_F T_F n_c
+    }.
+
+
+    γ̃_a,i^(2)(x )   =
+    -π^2C_F [C_F 3 x^2+4	x+3/6(x+1)^2+C_A/6],
+    
+    γ̃_a,i^(3)(x, μ^2_f m_b m_c )   =
+    π^2C_F{
+    C_F^2 [-171 x^2+296 x-171/36 (x+1)^2+2 ln 2
+    
+       
+    +57 x^4-89 x^3-274 x^2-89 x+57 /36 (x-1) (x+1)^3ln x]
+    
+       
+    +C_F C_A [-379 x^2+675 x+379/216 (x+1)^2+ln 2/3
+       
+    +5 x+11/24( x+1)ln x
+    -2/3ln (x+1)
+    	-11 x^2+13 x+11/24 (x+1)^2lnμ
+    		_f^2/m_b m_c]
+    
+       	
+    +C_A^2 [
+    -17/54-2 /3ln 2+1/12ln x-1/6log (x+1)-1/12lnμ_f^2/m_b m_c]
+    
+       
+    +C_F T_F n_l 21 x^2+41 x+21/54 (x+1)^2
+    +53/216 C_A T_F n_l }.
+
+
+    γ̃_s^(2)(x )   =
+    -π^2C_F [C_F 3 x^2+10	x+3/6(x+1)^2+C_A/6],
+    
+    γ̃_s^(3)(x, μ^2_f m_b m_c )   =
+    π^2C_F{
+    C_F^2 [-57 x^2+146 x+57/36 (x+1)^2+2 ln 2]
+    
+       
+    +C_F C_A [-379 x^2+1086 x+379/216 (x+1)^2
+    +ln 2/3
+       
+    +5 x+11 /24 (x+1)ln x-2/3ln (x+1)-11 x^2+28 x+11/24 (x+1)^2lnμ
+    	_f^2/m_b m_c]
+    
+       	
+    +C_A^2 [-17/54-2 /3ln 2+1/12ln x-1/6ln (x+1)-1/12lnμ_f^2/m_b m_c]
+    
+       
+    +C_F T_F n_l 21 x^2+74 x+21/54 (x+1)^2
+    +53/216 C_A T_F n_l }.
+
+Note that the above analytical expressions of Z_a,i and γ̃_a,i for the space-like  component  of the heavy flavor-changing  axial-vector   current  are new.
+The obtained Z_J and γ̃_J have been checked with several different values of m_b and m_c.
+To verify the correctness of our results, on the one hand, one can check that the above Z_J (also γ̃_J) is  symmetric/invariant under the exchange m_b↔ m_c meanwhile n_b↔ n_c, on the other hand, in the equal quark masses case x=1, our Z_J and γ̃_J are in full agreement with the known results in Refs. <cit.>.
+
+
+
+In our calculation, we include the contributions from the loops of charm quark and bottom quark in full QCD, which however are decoupled in the NRQCD.
+To match QCD with NRQCD, one need twice apply the decoupling relation <cit.> of  α_s :
+
+    α_s^(n_l+1)(μ)/α_s^(n_l)(μ) =    1-α_s^(n_l)(μ)/π
+    	(1-I_0 ϵ )/3  ϵT_F
+    +
+    ( α_s^(n_l)(μ)/π)^2
+     T_F {C_A (I_0^2 ϵ(4 ϵ ^3+4 ϵ ^2-11 ϵ -10)/8
+    		(ϵ -2) (2 ϵ +1) (2 ϵ +3).	
+       .	
+    	-5/24 ϵ)	
+    	+C_F (-I_0^2 ϵ(4 ϵ ^3-7 ϵ -1)/4
+    		(ϵ -2) (2 ϵ -1) (2 ϵ +1)-1/8 ϵ)+T_F (1-I_0 ϵ )^2/9 ϵ ^2}
+    + 𝒪(α_s^3),
+
+where I_0= e^γ_E  ϵ (ϵ -1) Γ (ϵ -1) (μ
+	^2/m_Q^2)^ϵ and m_Q is the on-shell mass of the decoupled heavy
+quark.
+
+
+
+Besides, we  can evolve the strong coupling from the scale μ_f to the scale μ with  renormalization group running equation <cit.> in D=4-2 ϵ dimensions  as following
+
+    α_s^(n_l)(μ_f)=
+    α_s^(n_l)(μ)(μ/μ_f)^2ϵ[1+α_s^(n_l)(μ)/πβ_0^(n_l)/4ϵ((μ/μ_f)^2ϵ-1)+ 𝒪(α_s^2)] .
+
+To calculate the values of the strong coupling  constant  α_s,  we  also use the renormalization group running equation <cit.> in D=4 dimensions as
+
+    α_s^(n_l)(μ)=
+    4π/β_0^(n_l)L_Λ[1-b_1 ln L_Λ/β_0^(n_l)L_Λ+b_1^2(ln^2 L_Λ-ln L_Λ-1)+b_2/(β_0^(n_l)L_Λ)^2+𝒪((1/L_Λ)^3)],
+
+where L_Λ=ln(μ^2/Λ_QCD^(n_l)^2),  b_i=β_i^(n_l)/β_0^(n_l). And β_0, β_1,  β_2 are the one-loop, two-loop and three-loop coefficients of
+the QCD β function <cit.>, respectively, which read
+
+    β_0^(n_l)=11/3C_A-4/3 T_F n_l,
+    
+       β_1^(n_l)=34/3C_A^2-20/3 C_A T_F n_l-4 C_F T_F n_l,
+    
+       β_2^(n_l)=2857/54C_A^3-(1415/27 C_A^2+205/9 C_A C_F-2C_F^2) T_F n_l+(158/27 C_A+44/9  C_F) T_F^2 n_l^2.
+
+In our numerical evaluation,  n_b=n_c=1, n_l=3 are fixed through the decoupling region from μ=0.4 GeV to μ=7 GeV,
+and the typical QCD scale Λ_QCD^(n_l=3)=0.3344GeV  is  determined using three-loop formula with the aid of the package  <cit.>  by inputting the initial value  α_s^(n_f=5)(m_Z=91.1876GeV)=0.1179.
+
+
+
+
+
+
+
+
+
+§ MATCHING COEFFICIENTS 
+
+Following Refs. <cit.>, the dimensionless matching coefficient 𝒞_J for the heavy flavor-changing  currents  can be decomposed as:
+
+    𝒞_J(μ_f,μ,m_b,m_c) =1+α_s^(n_l)(μ)/π𝒞_J^(1)(x)
+    +(α_s^(n_l)(μ)/π)^2
+    (𝒞_J^(1)(x)β_0^(n_l)/4lnμ^2/m_b m_c.
+       .
+    +γ̃_J^(2)(x)/2lnμ_f^2/m_b m_c+𝒞_J^(2)(x))
+     +(α_s^(n_l)(μ)/π)^3{(𝒞_J^(1)(x)/16β_1^(n_l)+𝒞_J^(2)(x)/2β_0^(n_l))lnμ^2/m_b m_c
+       
+    +𝒞_J^(1)(x)/16β_0^(n_l)^2ln^2
+    μ^2/m_b m_c
+    +1/8(dγ̃_J^(3)(x,μ_f^2/m_b m_c)/d lnμ_f-β_0^(n_l)γ̃_J^(2)(x))ln^2μ_f^2/m_b m_c
+       
+    +1/2(𝒞_J^(1)(x) γ̃_J^(2)(x)+γ̃_J^(3)(x,1))lnμ_f^2/m_b m_c
+    +β_0^(n_l)/4γ̃_J^(2)(x)lnμ_f^2/m_b m_c  lnμ^2/m_b m_c
+    + 𝒞_J^(3)(x) }
+       
+    +𝒪(α_s^4),
+
+where n_l=3 denotes the massless flavours. 𝒞_J^(n)(x)(n=1,2,3), as a function of x=m_c/m_b, independent of μ and μ_f, corresponds to the nontrivial part at 𝒪(α_s^n) of 𝒞_J.
+It's well known that 𝒞_J and 𝒞_J^(n)(x) satisfy the following symmetry properties <cit.>:
+
+    𝒞_J(μ_f,μ,m_b,m_c)=𝒞_J(μ_f,μ,m_c,m_b)|_   n_b↔ n_c,
+    
+       𝒞_J^(n)(x)=𝒞_J^(n)(1/x)|_   n_b↔ n_c.
+
+
+
+The nontrivial one-loop piece  𝒞_J^(1)(x) can be analytically achieved as:
+
+    𝒞_v^(1)(x)=3/4C_F(x-1/x+1 ln x-8/3),
+    
+       𝒞_p^(1)(x)=3/4C_F(x-1/x+1 ln x-2),
+    
+       𝒞_a,i^(1)(x)=3/4 C_F (x-1/x+1 ln x-4/3),
+    
+       𝒞_s^(1)(x)=3/4 C_F (x-1/x+1 ln x-2/3).
+
+
+
+
+And the nontrivial two-loop and three-loop pieces in Eq. (<ref>) are  𝒞_J^(2)(x) and 𝒞_J^(3)(x), respectively, which following the convention of Refs. <cit.>, can be further decomposed  in terms of different color/flavor structures:
+
+    𝒞_J^(2)(x) =    C_F   C_F  𝒞_J^FF(x)+C_F   C_A 𝒞_J^FA(x)
+    
+       
+    +C_F   T_F  n_b  𝒞_J^FB(x) +C_F   T_F  n_c 𝒞_J^FC(x) +C_F   T_F  n_l 𝒞_J^FL(x),
+    
+    𝒞_J^(3)(x) =      C^3_F  𝒞_J^FFF(x)+C_F^2  C_A  𝒞_J^FFA(x)
+    +C_F  C_A^2  𝒞_J^FAA(x)
+    
+       
+     +C_F^2  T_F  n_l 𝒞_J^FFL(x) +C_F C_A T_F  n_l 𝒞_J^FAL(x)
+    +C_F T_F^2   n_c   n_l 𝒞_J^FCL(x)   
+     
+       
+    +C_F T_F^2   n_b   n_l 𝒞_J^FBL(x) +C_F T_F^2  n_l^2 𝒞_J^FLL(x)
+        +C_F  T_F^2   n_b   n_c  𝒞_J^FBC(x)
+     
+       
+        +
+    C_F^2 T_F   n_c 𝒞_J^FFC(x)
+        +C_F  C_A T_F   n_c 𝒞_J^FAC(x)+
+     C_F  T_F^2   n_c^2 𝒞_J^FCC(x)
+    
+         + C_F^2   T_F  n_b 𝒞_J^FFB(x)+C_F  C_A T_F  n_b 𝒞_J^FAB(x)+C_F T_F^2  n_b^2 𝒞_J^FBB(x).
+
+
+Due to limited computing resources,
+we choose to calculate the matching coefficient 𝒞_J at three rational numerical points: the physical point  {m_b=475/100 GeV, m_c=150/100 GeV} (i.e.,x=x_0=150/475),   the check  point x=1/x_0 and the equal mass point x=1, respectively.
+The results 𝒞_J obtained at the physical point and the check  point verify the symmetric features of 𝒞_J and 𝒞_J^(n)(x) in Eq. (<ref>). Our results 𝒞_J obtained at the equal mass point x=1 are consistent with the known results 𝒞_J for all four currents in the equal quark masses case in the literature <cit.>. Furthermore, our calculation  have verified   the three-loop matching coefficients  for the  heavy flavor-changing    pseudoscalar current  and   the zeroth component of  the heavy flavor-changing   axial-vector current are identical, i.e., 𝒞_p≡𝒞_a,0.
+To confirm our calculation,  we have also calculated   𝒞_p and  𝒞_v at the reference point {m_b=498/100 GeV, m_c=204/100 GeV},  where  our results   agree with the known results in Refs. <cit.>.
+
+
+
+
+In the following, we will present the highly accurate numerical results of 𝒞_J^(2)(x) and 𝒞_J^(3)(x) at the physical heavy quark mass ratio  x=x_0=150/475  with about 30-digit precision.
+The various color-structure components of C_v^(2)(x_0) and  C_v^(3)(x_0)  read:
+
+	
+    𝒞_v^FF(x_0) = -13.71289080533129643353786882415,
+    	
+       𝒞_v^FA(x_0) = -6.585499135192203408065908804167,
+    	
+       𝒞_v^FB(x_0) = 0.0947676481125652606487968503976,
+    	
+       𝒞_v^FC(x_0) = 0.585796563729044305159251023619,
+    	
+       𝒞_v^FL(x_0) = 0.486237497534452686364818186481.
+    
+       𝒞_v^FFF(x_0) =20.18969417129305999911571842286 ,
+    	
+       𝒞_v^FFA(x_0) = -203.4349264860295194232572876813,
+    	
+       𝒞_v^FAA(x_0) = -102.7968727737777422224763578788,
+    	
+       𝒞_v^FFL(x_0) = 50.93775016890326146248907065956,
+    	
+       𝒞_v^FAL(x_0) = 40.22574662383519955538190917802,
+    	
+       𝒞_v^FCL(x_0) = -0.776339576123527777867508257477,
+    	
+       𝒞_v^FBL(x_0) =-0.0556259617628169261333544284783 ,
+    	
+       𝒞_v^FLL(x_0) = -2.08814878247962216692347776970,
+    	
+       𝒞_v^FBC(x_0) = 0.0903048438843974616499880474411,
+    	
+       𝒞_v^FFC(x_0) = -1.6854789447153670526748653364,
+    	
+       𝒞_v^FAC(x_0) = 0.464663487323886298396191419941,
+    	
+       𝒞_v^FCC(x_0) = 0.166410566769625472334622650374,
+    	
+       𝒞_v^FFB(x_0) = -0.125493504901815435721244899040,
+    	
+       𝒞_v^FAB(x_0) = -0.207735042283005003179604843189,
+    	
+       𝒞_v^FBB(x_0) = 0.0155302263395316874159466507910.
+
+
+The various color-structure components of C_p^(2)(x_0) and  C_p^(3)(x_0)  read:
+
+	
+    𝒞_p^FF(x_0) = -13.2664163032173887184051674623,
+    	
+       𝒞_p^FA(x_0) =-8.01693280168379244869854709253,
+    	
+       𝒞_p^FB(x_0) =0.128918313022470380156209778800 ,
+    	
+       𝒞_p^FC(x_0) = 0.709389226649688045706906749579,
+    	
+       𝒞_p^FL(x_0) =0.0583586106180016483840747484073 .
+    
+       𝒞_p^FFF(x_0) = -19.1073059443195339789160242369,
+    	
+       𝒞_p^FFA(x_0) = -199.368217320524804838849517451,
+    	
+       𝒞_p^FAA(x_0) = -108.136868017309597645533701505,
+    	
+       𝒞_p^FFL(x_0) = 54.7202915496511304152624843564,
+    	
+       𝒞_p^FAL(x_0) = 40.1950559961352476805071968834,
+    	
+       𝒞_p^FCL(x_0) = -0.72340116280534841918416586699,
+    	
+       𝒞_p^FBL(x_0) = -0.019622466229502871214841024261,
+    	
+       𝒞_p^FLL(x_0) = -1.2331473244200630628135034057,
+    	
+       𝒞_p^FBC(x_0) = 0.157356536599972434859830922842,
+    	
+       𝒞_p^FFC(x_0) =4.93713785637736911159215602248 ,
+    	
+       𝒞_p^FAC(x_0) = -0.837019369825724302408030392435,
+    	
+       𝒞_p^FCC(x_0) = 0.256031525456388447241169171007,
+    	
+       𝒞_p^FFB(x_0) = 1.74108819472094062081877632041,
+    	
+       𝒞_p^FAB(x_0) = -0.675630407239784126013977083266,
+    	
+       𝒞_p^FBB(x_0) = 0.030203809353562550021046660214.
+
+
+The various color-structure components of C_a,i^(2)(x_0) and  C_a,i^(3)(x_0)  read:
+
+
+    𝒞_a,i^FF(x_0) = -7.55810100985517328528944527445,
+    
+       𝒞_a,i^FA(x_0) = -4.00029433499832597188660997837,
+    
+       𝒞_a,i^FB(x_0) = 0.01402013116548156662918961686909,
+    
+       𝒞_a,i^FC(x_0) = 0.1451892135460458985527809307761,
+    
+       𝒞_a,i^FL(x_0) = 0.06421749358957698454852728485104.
+    
+       𝒞_a,i^FFF(x_0) = -8.42643917300377651280522219395,
+    	
+       𝒞_a,i^FFA(x_0) = -93.2038302986321307103761492345,
+    	
+       𝒞_a,i^FAA(x_0) = -63.7233070196452524188390331877,
+    	
+       𝒞_a,i^FFL(x_0) = 30.26464969513072132366156126441,
+    	
+       𝒞_a,i^FAL(x_0) = 21.16033670918183535060836071864,
+    	
+       𝒞_a,i^FCL(x_0) = -0.3153222090952701782698048799971,
+    	
+       𝒞_a,i^FBL(x_0) = -0.04600893146925268206019173772344,
+    	
+       𝒞_a,i^FLL(x_0) = -0.5156996834396487701112794535693,
+    	
+       𝒞_a,i^FBC(x_0) = -0.0118687507006037939590736816982,
+    	
+       𝒞_a,i^FFC(x_0) = 1.972145133214113574301216956655,
+    	
+       𝒞_a,i^FAC(x_0) = -0.2648389457862748902646421554436,
+    	
+       𝒞_a,i^FCC(x_0) = 0.005739492344304311786485592038925,
+    	
+       𝒞_a,i^FFB(x_0) = 0.468239957569145876297846606135,
+    	
+       𝒞_a,i^FAB(x_0) = -0.128836049327094055088259653772,
+    	
+       𝒞_a,i^FBB(x_0) = -0.0047313889291568923452785036443.
+
+
+The various color-structure components of C_s^(2)(x_0) and   C_s^(3)(x_0)   read:
+
+
+    𝒞_s^FF(x_0) = -6.96020737354849312657205418357,
+    	
+       𝒞_s^FA(x_0) = -4.12970820397051570036738297443,
+    	
+       𝒞_s^FB(x_0) = 0.048170796075386686136602545271,
+    	
+       𝒞_s^FC(x_0) = 0.268781876466689639100436656736,
+    	
+       𝒞_s^FL(x_0) = -0.363661393326874053432216153222.
+    
+       𝒞_s^FFF(x_0) = -12.6512824902497489841790999287,
+    	
+       𝒞_s^FFA(x_0) = -91.3076763843495687930187876995,
+    	
+       𝒞_s^FAA(x_0) = -67.2034246352357623358462321068,
+    	
+       𝒞_s^FFL(x_0) = 31.12323218543900065296825277243,
+    	
+       𝒞_s^FAL(x_0) = 19.49987491622541782889333507621,
+    	
+       𝒞_s^FCL(x_0) = -0.262383795777090819586462489511,
+    	
+       𝒞_s^FBL(x_0) = -0.0100054359359386271416783335057,
+    	
+       𝒞_s^FLL(x_0) = 0.3393017746199103339986949104357,
+    	
+       𝒞_s^FBC(x_0) = 0.0551829420149711792507691937024,
+    	
+       𝒞_s^FFC(x_0) = 4.4105666464862568415402096694718,
+    	
+       𝒞_s^FAC(x_0) = -0.6861454400278606762848799078670,
+    	
+       𝒞_s^FCC(x_0) = 0.09536045103106728669303211267177,
+    	
+       𝒞_s^FFB(x_0) = 1.1373781611175929139065523549900,
+    	
+       𝒞_s^FAB(x_0) = -0.318775996588438248091557753877,
+    	
+       𝒞_s^FBB(x_0) = 0.00994219408487397025982150577842.
+
+
+From the above numerical values, we find the dominant contributions in 𝒞_J^(2)(x_0) and 𝒞_J^(3)(x_0) come from the components corresponding to the color structures C_F^2, C_FC_A, C_F^2C_A and C_FC_A^2, and the contributions from the bottom and charm quark loops are negligible.
+
+Fixing the renormalization scale μ=μ_0=3GeV, m_b=4.75GeV, m_c=1.5GeV, and setting the factorization scale μ_f=1.2 GeV, Eq. (<ref>) then reduces to
+
+    𝒞_v
+     =1-2.067273 α_s^(3)(μ_0)/π-29.29166(α_s^(3)(μ_0)/π)^2
+     -1689.867(α_s^(3)(μ_0)/π)^3
+     +𝒪(α_s^4),
+    
+       𝒞_p
+     =1-1.400607 α_s^(3)(μ_0)/π-27.80076(α_s^(3)(μ_0)/π)^2
+     -1781.283(α_s^(3)(μ_0)/π)^3
+     +𝒪(α_s^4),
+    
+       𝒞_a,i =1-0.7339400 α_s^(3)(μ_0)/π-18.16765(α_s^(3)(μ_0)/π)^2
+    -922.7452(α_s^(3)(μ_0)/π)^3
+    +𝒪(α_s^4),
+    
+       𝒞_s =1-0.06727332 α_s^(3)(μ_0)/π-15.46391(α_s^(3)(μ_0)/π)^2
+    -935.4686(α_s^(3)(μ_0)/π)^3
+    +𝒪(α_s^4).
+
+
+
+With the values of α_s^(n_l=3)(μ) calculated by the renormalization group running equation Eq. (<ref>),
+we investigate the renormalization scale dependence of the matching coefficients 𝒞_J for the heavy flavor-changing  currents
+at LO,  NLO,  NNLO and N^3LO accuracy in Fig. <ref>.
+The middle lines correspond to the choice of μ_f=1.2 GeV for the NRQCD factorization scale, and the upper and lower  edges   of the error bands
+correspond to μ_f=0.4 GeV and μ_f=2 GeV, respectively.
+
+We also present our precise numerical results of the matching coefficients 𝒞_J  at LO,  NLO ,  NNLO and N^3LO in Table <ref>, where the uncertainties from μ_f and μ are included.
+
+From Eq. (<ref>), Fig. <ref> and Table <ref>, one can find the higher order QCD corrections have larger values, especially, the O(α_s^3) correction looks quite sizable, which confirms the nonconvergence behaviors of the matching coefficients investigated in previous literature <cit.>. From  Fig. <ref> and Table <ref>, it seems that both the NRQCD factorization scale dependence and the QCD renormalization scale dependence become larger at higher order.
+Note, at each truncated perturbative order, the matching coefficient 𝒞_J  is renormalization-group invariant <cit.>, e.g., at N^3LO, 𝒞_J obeys the following renormalization-group running invariance:
+
+    𝒞_J^ N^3LO(μ_f,μ,m_b,m_c) =𝒞_J^ N^3LO(μ_f,μ_0,m_b,m_c) +𝒪(α_s^4),
+
+where 𝒞_J^ N^3LO(μ_f,μ,m_b,m_c) has dropped the 𝒪(α_s^4) terms in Eq. (<ref>). So the  μ-dependence of the  N^3LO results is at the 𝒪(α_s^4) order. Though the  μ-dependence is suppressed by α_s^4, the coefficients of α_s^4  in  above equation  contain μ-independent terms such as 𝒞_J^(3)(x) and lnμ_f, which come from the 𝒪(α_s^3) order in Eq. (<ref>), and have   considerably large values by aforementioned  calculation within the framework of NRQCD factorization. As a result, these terms will lead to a significantly larger renormalization scale dependence at N^3LO. From Fig. <ref>, we also find the NRQCD factorization scale μ_f has a dominant influence on the higher order QCD corrections.
+When μ_f decreases, both the convergence of α_s expansion  and the independence of μ will improve.
+
+Since  the  matching coefficients   on their own  are nonphysical, in order to obtain  a  reliable higher order correction to a physical quantity, the large α_s-expansion nonconvergence  and the strong scale  dependence of the  matching coefficients at higher order  especially  𝒪(α_s^3)     have to be  compensated by other higher order corrections.
+Within the NRQCD effective  theroy,  physical quantities such as    the   beauty-charmed meson B_c and B^*_c decay constants   are factorized to the  matching coefficients   multiplied  with the long-distance nonperturbative NRQCD matrix elements (the Schrödinger  wave functions at the origin), therefore we  not only need to calculate the  higher   order  QCD  corrections to the matching coefficients, but also need to perform the  higher   order corrections to the    wave functions at the origin.
+Besides, it is also  indispensable to take into account  higher order relativistic corrections, resummation techniques and so on ( also see   Refs. <cit.> for more discussions).
+
+
+
+
+
+
+§ PHENOMENOLOGICAL ANALYSIS 
+
+Before starting our discussions about phenomenological applications of the matching coefficients, one can  review related  discussions in Refs. <cit.>. For  an explicit example, one can also see Eq.(4) in Ref. <cit.>, where the leptonic decay width of Υ meson was calculated up to N^3LO within NRQCD and pNRQCD effective theory and 
+a large cancellation between three-loop perturbative QCD corrections to the matching coefficient and N^3LO perturbative corrections to the wave function at the origin was presented.
+As following, we will confirm this phenomenon is also in the cb̅ meson systems and   evaluate three-loop corrections to the decay constants, leptonic decay widths and corresponding branching ratios of the beauty-charmed mesons B_c and B^*_c.
+
+We use the following formulas  <cit.> to compute
+the decay constants  f_B_c^* of the  vector  B_c^* meson and f_B_c of the pseudoscalar  B_c meson:
+
+    f_B_c^*=2 √(N_c/m_B_c^*) [𝒞_v+d_v E_B_c^*/12(8/M-3/m_r)]
+     |Ψ_B_c^*(0)|,
+       
+    f_B_c=2 √(N_c/m_B_c) [𝒞_p-d_p E_B_c/4m_r]
+     |Ψ_B_c(0)|,
+
+where M=m_b+m_c, m_r=m_b m_c/(m_b+m_c) is the reduced mass, m_B_c^* and m_B_c are the masses of the vector and pseudoscalar  cb̅ mesons, respectively.
+Note that,  in our calculation we do not  employ the expansion  m_B_c^*(m_B_c)=m_b+m_c+E_B_c^*(E_B_c) as Refs. <cit.> (in Table <ref> and Table <ref> we will see the influence from the expansion is small), but directly adopt the following physical values <cit.> for the cb̅ mesons masses:
+
+    m_B_c=6.274 GeV,   m_B_c^*=6.331 GeV.
+
+
+
+d_v and d_p are matching coefficients between QCD and NRQCD in sub-leading order of relative velocity for the vector  B_c^* meson and pseudoscalar  B_c meson, respectively.
+One-loop results of d_v and d_p can be found in Refs. <cit.>
+
+    d_v=1-α_s^(n_l)(μ)/πC_F(x+1)^2/3 x^2-2 x+3(4 /3 +(x-1) (7
+    	x^2+6 x+7) /4  (x+1)^3ln x+4 lnμ_f ^2/m_b m_c)+𝒪(α_s^2),
+       
+    d_p=1+α_s^(n_l)(μ)/π C_F (x^2+98 x+1/18 (x+1)^2-(x-1) (7 x^2+46 x+7) /12
+    	(x+1)^3ln x-4/3lnμ_f ^2/m_b m_c)+𝒪(α_s^2).
+
+
+E_B_c^* and   |Ψ_B_c^*(0)| are  the binding energy and the wave function  at the origin for B_c^*, respectively, while E_B_c and |Ψ_B_c(0)| are for B_c.   
+In the previous sections, we have calculated higher-order perturbative corrections to the matching coefficient by extracting the hard contribution using the NRQCD effective theory. Similarly, the  higher-order perturbative corrections to the binding energy and the wave function  at the origin can be calculated allowing for the soft, potential and ultrasoft contributions from the Coulomb potential, non-Coulomb potentials and ultrasoft gluon exchange     using the potential NRQCD effective theory  (pNRQCD) <cit.>.
+Since the pseudoscalar meson B_c(1^1S_0) and vector meson B_c^*(1^3S_1) are respectively  the  lowest-lying  spin-singlet and   spin-triplet S-wave bound state, i.e., B_c and B_c^* have different spin quantum  numbers, E_B_c and     |Ψ_B_c(0)| are slightly different (see Refs. <cit.>) from E_B_c^* and |Ψ_B_c^*(0)|, respectively. 
+However, the binding energies of the double heavy quark systems are spin-independent  up to NLO (see Refs. <cit.>), hence E_B_c^NLO≡ E_B_c^*^NLO, which 
+can be obtained from Refs. <cit.> as
+
+    E_B_c^NLO≡ E_B_c^*^NLO= E^(0){1+α_s^(n_l)(μ_f) /π[β _0^(n_l)(ln( μ _f/2 m_r C_F α_s^(n_l)(μ_f))+11/6)-4/3 C_A ]},
+ 
+where  E^(0)=-m_r/2(α_s^(n_l)(μ_f)C_F)^2,  n_l=3. For simplicity, we have set the pNRQCD factorization scale equal to the NRQCD factorization scale μ_f [ This is not a problem because, in strict fixed order computations it is
+not necessary to distinguish between factorization scales as they all cancel to the required accuracy  once all contributions to an observable are added <cit.>.],  which separates contributions coming from the hard and soft momentum regions.   α_s^(n_l)(μ_f) can be translated into α_s^(n_l)(μ)  by the coupling running equation in Eq.(<ref>).
+Based on Eq. (<ref>) and Eq. (<ref>), the NLO results in Eq. (<ref>), Eq. (<ref>) and Eq. (<ref>) are    sufficient  for the N^3LO calculation of the decay constants.
+
+For phenomenological analysis of the pseudoscalar B_c meson, we will use the approximation  |Ψ_B_c(0)|≈ |Ψ_B_c^*(0)|, so that the only  missing piece  in Eq. (<ref>) and Eq. (<ref>) is |Ψ_B_c^*(0)|. 
+In order to obtain |Ψ_B_c^*(0)|, we  employ the scale relation explored  by Collins et al. <cit.>:
+
+    |Ψ_B_c^*(0)|=|Ψ_J/ψ(0)|^1-y |Ψ_Υ(0)|^y,
+
+where  y∈[0.3,0.4] with the central value y=y_c=ln((1+m_c/m_b)/2)/ln(m_c/m_b) [
+	The central value y=y_c=ln((1+m_c/m_b)/2)/ln(m_c/m_b)  can be exactly derived from the scale law of the wave function at the origin: |ψ_μ^n(0)|^2=f(n,a)(Aμ)^3/(2+a) for any reduced mass μ and any class of power-law potentials V(r)=A r^a+C, where f(n,a) is only a function of the radial quantum number n and the power a. 
+	To cover the uncertainties from various potentials, the maximal (minimal) value of y is simply taken to be 0.4 (0.3) independent of the quark masses. 
+For more details, see Ref. <cit.> (where y=0.35 was chosen as the only optimal solution) .] is the scale power. |Ψ_J/ψ(0)| and |Ψ_Υ(0)| are the wave functions at the origin for the vector heavy quarkonia  J/ψ and   Υ, respectively.
+From literature <cit.>,  the full N^3LO  corrections to the wave function at the origin for the lowest-lying vector heavy quarkonium QQ̅  can be expressed as 
+
+    |Ψ_QQ̅^V(0)|^2/|Ψ_QQ̅^(0)(0)|^2=   1+α_s^(n_f)(μ_f) /π6 β^(n_f)_0 L_s+c_ψ,1^C/4 
+    +(α_s^(n_f)(μ_f) /π)^2 {3/2β _0^(n_f)^2 L_s^2
+    
+       
+    +L_s/24[9 β _1^(n_f)-18 β_0^(n_f)^2+12 β _0^(n_f)
+    c_ψ,1^C+8 π ^2 C_F (3 C_A+2 C_F)]
+    
+       
+    +1/144[2 π ^2 C_F (162 C_A+89 C_F)+9 c_ψ,2^C]
+    }
+       
+    +
+    (α_s^(n_f)(μ_f) /π)^3π ^2 {
+    C_A^3 [-L_s/4+L_m/4-ln(C_F)-π ^2/12+1/2]
+    
+       
+    +C_A^2 C_F [
+    -2/3	L_s^2+L_s (4/3 L_m+4ln 2+17/18)-L_m^2/6
+       
+    + L_m(31/9-ln 2)
+    +2/9ln(C_F) (9 ln(C_F)+12 ln 2-44)]
+    
+       
+    +C_A C_F^2 [-9/4L_s^2 +L_s (9 /2L_m+4ln
+    2-25/54)-3 /8L_m^2
+    
+       
+    + L_m(61/9-ln  2)
+    +4/3ln(C_F) (4 ln(C_F)+ln 2-10)]
+    
+       
+    +
+    C_A C_F [2 β_0^(n_f) L_s^2+ L_s/72(β_0^(n_f)(423-12 π ^2) -218 T_F n_f )]
+    
+       
+    +C_F^3 [-3/2 L_s^2+L_s (3 L_m-8 ln
+    2+47/18)-L_m^2/4
+       
+    +L_m(2ln 2+59/36) 
+    +8/9ln(C_F) (3 log(C_F)-9 ln 2+2)]
+    
+       
+    +C_F^2 T_F [L_s(2/15-59/27 n_f)
+    +L_m/15]
+    +β_0^(n_f) C_F^2 [4 /3L_s^2+L_s(53/16-π
+    	^2/9) ]
+    
+       
+    +1/π ^2[
+    5/4β_0^(n_f)^3 L_s^3
+    +β_0^(n_f)L_s^2/32(27 β_1^(n_f)-54 β_0^(n_f)^2+20 β_0^(n_f) c_ψ,1^C) 
+    
+       
+    + L_s/32(12 β_0^(n_f)^3-12 β_1^(n_f)β_0^(n_f)+3 β_2^(n_f)-8 β_0^(n_f)^2 c_ψ,1^C.
+       .
+    +4 β_1^(n_f) c_ψ,1^C+5 β_0^(n_f)
+    c_ψ,2^C)
+    
+    +c_ψ,3^C+c_ψ,3^nC/64]
+    +δ_1^us}+𝒪(α_s^4),
+
+where |Ψ_QQ̅^(0)(0)|^2=(mα_s^(n_f)(μ_f)C_F)^3/(8π),  L_s=ln[μ_f/(mα_s^(n_f)(μ_f)C_F)], L_m=ln(μ_f/m), m is the mass of Q, n_f is  flavours   lighter than  Q, and the non-logarithmic terms of the Coulomb, non-Coulomb and ultrasoft corrections read
+
+    c_ψ,1^C   = 2.62290 - 1.61351 n_f,
+    
+    
+    c_ψ,2^C   = 1800.745 - 193.4887 n_f + 3.50376 n_f^2,
+    
+    
+    c_ψ,3^C   = -39854.2 + 2005.08 n_f + 19.79845 n_f^2 + 3.61806 n_f^3,
+    
+    
+    c_ψ,3^nC   = -44754.7 - 3126.52 n_f,
+    
+    δ_1^us   = 353.06.
+ 
+Equivalently, Eq. (<ref>) can  be simplified in a numerical form
+
+    |Ψ_QQ̅^V(0)|^2/|Ψ_QQ̅^(0)(0)|^2=   1+
+    α_s^(n_f)(μ_f) [L_s (5.252113122  -0.3183098862 n_f)-0.1283989789 n_f
+    
+       
+    +0.2087238344]
+    +(α_s^(n_f)(μ_f))^2 [L_s^2(0.06754745576 n_f^2-2.229066040 n_f
+    .
+       .
+    +18.38979483)
+    + L_s(0.02072049126 n_f^2-0.3544823646 n_f+1.327477963)
+    
+       
+    +0.02218780425 n_f^2-1.225281344 n_f+22.60088339]
+    
+       
+    +(α_s^(n_f)(μ_f))^3 [L_s^3(-0.01194501275 n_f^3+0.5912781313 n_f^2
+    -9.756089166 n_f
+    .
+       .
+    +53.65849041)
+    +L_s^2(0.001670726641 n_f^3
+    -0.06791901544 n_f^2
+    .
+       .
+    +0.6172398127 n_f-6.696584076)
+    +L_s (14.99593242
+    L_m
+    .
+       .
+    -0.009572483336 n_f^3+0.8198924520 n_f^2
+    -23.92535721 n_f
+    +192.0183234)
+    
+       
+    +0.001823251079 n_f^3+0.009977039176 n_f^2
+    -0.5651253308 n_f
+    
+       
+    +50.45825046
+    -1.461867625 L_m^2+25.28876373 L_m
+    ]+𝒪(α_s^4).
+
+With |Ψ_QQ̅^V(0)| known, we can obtain  |Ψ_J/ψ(0)| and |Ψ_Υ(0)|  as following
+
+    Ψ_J/ψ(0)   =Ψ_QQ̅^V(0)|_m→ m_c,n_f→ n_l,
+    
+    Ψ_Υ(0)   =Ψ_QQ̅^V(0)|_m→ m_b,n_f→ n_l+1,
+
+where n_l=3 denotes the massless flavours. Furthermore, we  use the decoupling relation in Eq. (<ref>) (but up to 𝒪(α_s^3)) to translate α_s^(n_l+1)(μ_f) into α_s^(n_l)(μ_f), which can further be translated into α_s^(n_l)(μ) by the coupling running equation in Eq. (<ref>) (but up to 𝒪(α_s^3)).
+By Eq. (<ref>), we can finally express |Ψ_B_c^*(0)| in power series of α_s^(n_l=3)(μ) and we have checked the obtained series expansion in α_s^(n_l=3)(μ) of |Ψ_B_c^*(0)| obeys the  renormalization-group running invariance as Eq. (<ref>).
+
+As following, we will present the numeric results for the matching coefficients d_v and d_p for sub-leading order relativistic corrections, the binding energies, the wave functions at the origin, the decay constants, leptonic decay widths and corresponding branching ratios for the pseudoscalar and vector cb̅ mesons.
+In spirit of perturbation theory, through all our calculations we expand all of above quantities  in power series of α_s^(n_l=3)(μ) by the decoupling relation with coupling running, and truncate them up to a fixed order. 
+Choosing  the scale power y=y_c and  fixing  the factorization scale μ_f=1.2 GeV, the renormalization scale μ=μ_0=3 GeV, m_b=4.75GeV, m_c=1.5GeV, we present the  α_s-expansion  of   these quantities in Table <ref> and Table <ref>, where the leading-order of the wave functions at the origin and the decay constants are determined by Eq. (<ref>), Eq.(<ref>)  and Eq.(<ref>) as:  
+
+    |Ψ^(0)_B_c(0)|^2=|Ψ^(0)_B_c^*(0)|^2   =(m_rα_s^(n_l=3)(μ)C_F)^3/π,
+    
+    
+    f_B_c^*^(0)   =2√(N_c/m_B_c^*)|Ψ^(0)_B_c^*(0)|,
+    
+    
+    f_B_c^(0)   =2√(N_c/m_B_c)|Ψ^(0)_B_c(0)|.
+ 
+From  Table <ref> and Table <ref>, we find  the influences of d_v, d_p, E_B_c^*  and E_B_c  on the decay constants in Eq. (<ref>) and Eq. (<ref>) are inconsiderable compared  with the matching coefficients  𝒞_v and 𝒞_p. Both 𝒞_v (𝒞_p) and |Ψ_B_c^*(0)| (|Ψ_B_c(0)|) have a large  α_s-expansion nonconvergence at the third order, however, after a large cancellation between the matching coefficient  and the wave function at the origin, the perturbative α_s-expansion of the  decay constant becomes  convergent  up to N^3LO.
+

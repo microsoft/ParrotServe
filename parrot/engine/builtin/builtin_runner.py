@@ -63,7 +63,7 @@ class BuiltinRunner:
     def run_iter(self, jobs: List[PrimitiveJob]) -> (int, int):
         logger.debug(f"Running {len(jobs)} jobs. ")
 
-        torch.cuda.synchronize()
+        # torch.cuda.synchronize()
         st = time.perf_counter_ns()
 
         # We should sort jobs such that Fill jobs are before Generation jobs.

@@ -22,34 +22,42 @@ class Sampler(nn.Module):
         if hidden_states.shape[0] == 0:
             return torch.zeros(0, dtype=torch.int64, device=hidden_states.device)
 
+        # ids = torch.ones(
+        #     hidden_states.shape[0], dtype=torch.int64, device=hidden_states.device
+        # )
+        # return ids
+
         assert hidden_states.shape[0] == len(sampling_config)
 
         logits = torch.matmul(hidden_states, self.embd_weight.t())
 
         # Applying temperature scaling
         temperature = [sf.temperature for sf in sampling_config]
-        temperature = torch.tensor(
-            temperature, dtype=torch.float, device=logits.device
-        ).unsqueeze(-1)
-        logits.div_(temperature)
-
-        sorted_logits, logits_idx = logits.sort(dim=-1, descending=True)
+        if any([t != 1.0 for t in temperature]):
+            temperature = torch.tensor(
+                temperature, dtype=torch.float, device=logits.device
+            ).unsqueeze(-1)
+            logits.div_(temperature)
 
         # Applying top_p
         top_ps = [sf.top_p for sf in sampling_config]
-        top_ps = torch.tensor(
-            top_ps, dtype=torch.float, device=logits.device
-        ).unsqueeze(-1)
-        sorted_probs = sorted_logits.softmax(dim=-1)
-        sum_probs = sorted_probs.cumsum(dim=-1)
-        mask = (sum_probs - sorted_probs) > top_ps
-        sorted_logits[mask] = -float("inf")
+        if any([p < 1.0 for p in top_ps]):
+            sorted_logits, logits_idx = logits.sort(dim=-1, descending=True)
+            top_ps = torch.tensor(
+                top_ps, dtype=torch.float, device=logits.device
+            ).unsqueeze(-1)
+            sorted_probs = sorted_logits.softmax(dim=-1)
+            sum_probs = sorted_probs.cumsum(dim=-1)
+            mask = (sum_probs - sorted_probs) > top_ps
+            sorted_logits[mask] = -float("inf")
 
-        logits = torch.gather(
-            sorted_logits, dim=-1, index=torch.argsort(logits_idx, dim=-1)
-        )
+            logits = torch.gather(
+                sorted_logits, dim=-1, index=torch.argsort(logits_idx, dim=-1)
+            )
 
-        # ids = torch.ones(logits.shape[0], dtype=torch.int64, device=logits.device)
+        # ids = torch.ones(
+        #     hidden_states.shape[0], dtype=torch.int64, device=hidden_states.device
+        # )
         # return ids
 
         probs = torch.softmax(logits, dim=-1, dtype=torch.float)

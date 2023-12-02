@@ -6,7 +6,7 @@
     "engine_type": "builtin",
     "random_seed": 0,
     "tokenizer": "hf-internal-testing/llama-tokenizer",
-    "fill_chunk_size": -1,
+    "fill_chunk_size": 256,
     "max_threads_num": 128,
     "instance": {
         "block_size": 16,
@@ -15,7 +15,7 @@
     },
     "scheduler": {
         "max_batch_size": 256,
-        "max_num_batched_tokens": 99999999,
+        "max_num_batched_tokens": 300,
         "max_total_tokens": 99999999
     },
     "os": {

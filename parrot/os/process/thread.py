@@ -6,6 +6,7 @@ from enum import Enum, auto
 from typing import List, Optional
 from queue import Queue
 import time
+import math
 
 from parrot.program.semantic_variable import ParameterLoc
 from parrot.program.function import SemanticCall
@@ -202,7 +203,7 @@ class Thread:
 
         prefix_context = self.prefix_context
 
-        for i in range(buffer_len // chunk_size):
+        for i in range(math.ceil(buffer_len / chunk_size)):
             chunked_tokens = self._fill_tokens_buffer[
                 i * chunk_size : (i + 1) * chunk_size
             ]

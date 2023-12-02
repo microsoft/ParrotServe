@@ -1,6 +1,11 @@
 #!/bin/sh
-python3 -m parrot.os.http_server --config_path os.json --log_dir $1 --log_filename $2 &
+python3 -m parrot.os.http_server \
+    --config_path os.json \
+    --log_dir $1 \
+    --log_filename $2 &
+
 sleep 1
+
 python3 -m parrot.engine.http_server \
     --config_path engine.json \
     --log_dir $1 \

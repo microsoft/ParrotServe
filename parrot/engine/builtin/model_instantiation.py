@@ -72,4 +72,9 @@ def instantiate_model(
         # Move model to device
         model = model.to(builtin_config.device)
 
+        # Use compiled model if specified
+        # model = torch.compile(
+        #     model, mode="reduce-overhead", dynamic=True, fullgraph=False
+        # )
+
     return model

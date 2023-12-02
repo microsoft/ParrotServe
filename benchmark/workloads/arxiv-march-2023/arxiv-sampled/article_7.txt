@@ -1,0 +1,716 @@
+
+
+APS/123-QED
+
+
+
+
+
+amiteshs@stanford.edu
+ Department of Mechanical Engineering, Stanford University, CA 94305, USA
+
+jikai.ye@nus.edu.sg
+
+Department of Mechanical Engineering, National University of Singapore, 117575, Singapore
+
+
+mpegre@nus.edu.sg
+
+Department of Mechanical Engineering, National University of Singapore, 117575, Singapore
+
+
+
+
+
+
+
+
+
+
+
+This article reports the modeling of inertial rotational Brownian motion as an Ornstein-Uhlenbeck process evolving on the cotangent bundle of the rotation group, SO(3). The benefit of this approach and the use of a different parameterization of rotations allows the handling of particles with arbitrary shapes, without requiring any simplifying assumptions on the shape or the structure of the viscosity tensors. The resultant Fokker-Planck equation for the joint orientation and angular momentum probability distribution can be solved approximately using an `ansatz' Gaussian distribution in exponential coordinates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+On the Inertial Rotational Brownian Motion of Arbitrarily Shaped Particles
+    Gregory S. Chirikjian
+    March 30, 2023
+==========================================================================
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+The study of rotational Brownian motion has more than 100 years of history, commencing with Debye's pioneering work <cit.> in 1913. Rotational Brownian motion, as opposed to translational Brownian motion, is the phenomenon observed when a three-dimensional body is subject to random torques—giving rise to a random trajectory on the group of rigid body rotations, SO(3). Despite the fact that research in this area commenced more than a century ago, rotational Brownian motion continues to be relevant in a variety of fields beyond soft matter and colloidal science, such as attitude estimation <cit.> and even exotic applications in astrophysics <cit.>. Debye had considered non-inertial rotational Brownian motion and Perrin <cit.> furthered this analysis by casting non-inertial rotational Brownian motion as a stochastic process on the rotation group SO(3).
+
+Obtaining the joint orientation and angular velocity/momentum probability density for the inertial theory of rotational Brownian motion is a more challenging problem for arbitrary body geometries due to the presence of the nonlinear cross-product term in Euler's equations for rigid body motions. Many researchers have previously considered various approximations of the problem. Hubbard <cit.> for instance analyzed the rotational Brownian motion of spherical particles as dynamics evolving on the state space, SO(3)× so(3). However, his analysis is approximate as well and he performed an iterative solution of the resulting Fokker-Planck equations rather than a direct exact solution. Fixman <cit.> considered the dynamics over phase space, SO(3) × so^*(3), but his analysis is restricted to symmetric top-shaped particles. Finally, Coffey <cit.> considered Brownian motion in the phase space, i.e., SO(3)× so^*(3) for needle-shaped particles but does not solve the Fokker-Planck equations directly. 
+
+There has also been some research in the context of obtaining marginalized versions of the joint probability densities, i.e., Hubbard <cit.> has also considered the probability distribution over angular velocity alone for arbitrarily shaped particles—but the results are most accurate for small deviations from sphericity. Steele on the other hand <cit.> considers the probability distribution over orientation alone, but focuses primarily on a spherical particle. Ivanov <cit.> considers the probability distribution over orientation for arbitrarily shaped particles, with the Brownian motion process modeled as a random walk. 
+Finally, Ford et. al., <cit.> derive orientational and angular velocity autocorrelation functions for asymmetric tops but assume that the viscous tensor and the inertia tensor are simultaneously diagonalizable; moreover, their expressions are derived by a perturbative expansion and are thus approximate. 
+Moreover, they do not attempt to directly solve for the probability density function.
+
+This paper considers the inertial rotational Brownian motion problem for an arbitrarily shaped three-dimensional rigid body, with no constraints on the structure of the viscosity tensor or moment of inertia. 
+We reformulate the inertial rotational Brownian motion as a stochastic process on the cotangent bundle group of SO(3).
+A small-time closed-form expression is derived for the probability density function (PDF) over orientation and angular momentum for the particle. 
+The parameters of the PDF are determined by an integration, which has an analytic expression in some cases and can be solved numerically in general.
+
+
+
+§  GOVERNING EQUATIONS
+
+
+
+
+ §.§ Equations of Motion
+
+Consider a three-dimensional rigid body with the moment of inertia tensor I (in a body frame of reference). It is suspended in a fluid medium and at any point of time, its orientation is encoded by a three-dimensional rotation matrix, R∈ SO(3). The body frame angular velocity of the body is ω_R∈ℝ^3 and defined such that ω_R = (R^TṘ)^∨ where ∨ is a bijection converting elements from the Lie algebra of SO(3) to ℝ^3 (in other words, vectorizes 3× 3 skew-symmetric matrices). The angular momentum of the body is then ℓ = Iω_R.
+
+This body is subject to both a viscous torque that is proportional to the angular velocity of the body, i.e. of the form Cω_R, as well as a random torque (in the context of Brownian motion, this arises from molecular collisions) η. The equation of motion is then the familiar Euler equation for angular momentum with random torque:
+
+    (ℓ̇ + I^-1ℓ×ℓ) = -CI^-1ℓ + η.
+
+Writing this as a stochastic differential equation by noting that η dt = B dW, where dW is a Wiener process increment with zero mean and variance dt, we have,
+
+    (ℓ̇ + I^-1ℓ×ℓ) dt = -CI^-1ℓ dt + B dW.
+
+Note that B controls the variance and `color' of the noise term. 
+In the non-inertial theory, the cross-product term I^-1ℓ×ℓ is assumed to be much smaller than the viscous torque CI^-1ℓ.
+This is true when the viscosity of the fluid is relatively large and the particles are small.
+We explain in Appendix I that these two terms can be of a comparable magnitude when the fluid is not viscous enough, e.g., in the air, where the inertial theory should apply.
+
+In addition, since we are interested in obtaining the probability distribution over phase space (R,ℓ) we also have the following definition,
+
+    (R^TṘ)^∨ dt = I^-1ℓ dt.
+
+Simultaneously solving (<ref>) and (<ref>) we obtain the joint distribution f(R,ℓ;t) on phase space. In the following section, we describe the geometry of this phase space.
+
+
+
+ §.§ Geometry of Phase Space
+
+From Hamiltonian dynamics, the phase space can be represented by the set of all orientation and angular momentum states that the body can occupy. We imbue an additional semi-direct product structure to this space so that we have a group SO(3)⋉ℝ^3 as the phase space on which the system evolves. From <cit.> we see that this is in fact the cotangent bundle group of SO(3). A group element, h(R,ℓ) ∈ SO(3)⋉ℝ^3 is constructed as,
+
+    h(R,ℓ) = (
+        [ R^T   ℓ; 0^T   1 ]).
+
+Note that we parameterize rotations with R^T instead of R (nevertheless, this group is simply a different parameterization of SE(3)).
+
+The Lie algebra of SO(3)⋉ℝ^3 is six-dimensional, and can be expressed using the same orthonormal basis as se(3):
+
+    Ẽ_1 =
+        [  0  0  0  0;  0  0 -1  0;  0  1  0  0;  0  0  0  0 ],
+          Ẽ_2 =
+        [  0  0  1  0;  0  0  0  0; -1  0  0  0;  0  0  0  0 ],
+
+
+    Ẽ_3 =
+        [  0 -1  0  0;  1  0  0  0;  0  0  0  0;  0  0  0  0 ],
+          Ẽ_4 =
+        [ 0 0 0 1; 0 0 0 0; 0 0 0 0; 0 0 0 0 ],
+
+
+    Ẽ_5 =
+        [ 0 0 0 0; 0 0 0 1; 0 0 0 0; 0 0 0 0 ]  and  Ẽ_6 =
+        [ 0 0 0 0; 0 0 0 0; 0 0 0 1; 0 0 0 0 ].
+
+The adjoint matrix of the group is [Ad(h)] and is given by,
+
+    [Ad(h)] = 
+        [  R^T    𝕆; LR^T  R^T ],
+
+where L^∨ = ℓ. Moreover, the “little ad" operator is given by [ad(X)] where X is in the Lie algebra of SO(3)⋉ℝ^3. If,
+
+    X = 
+        [   Ω   v; 0^T   0 ],
+
+then for V^∨ = v,
+
+    [ad(X)] = 
+        [ Ω 𝕆; V Ω ].
+
+The right and left Jacobians, 𝒥_L and 𝒥_R can be calculated as,
+
+    𝒥_r = 
+        [ J_r(R^T)        𝕆;        𝕆        R ]  and  𝒥_l = 
+        [  J_l(R^T)         𝕆; LJ_l(R^T)         𝕀 ],
+
+where J_r and J_l are the right and left Jacobians for SO(3) given as,
+
+    J_r(R(q)) = [(R^T∂ R/∂ q_1)^∨,⋯,(R^T∂ R/∂ q_3)^∨],
+
+
+    J_l(R(q)) = [(∂ R/∂ q_1 R^T)^∨,⋯,(∂ R/∂ q_3R^T)^∨].
+
+Using the definitions for the left and right Jacobians, we can construct the left and right Lie derivatives for this group (where the summation is implied over repeated indices),
+
+    Ẽ^R_i u(h(q,ℓ))    = 
+    
+    E^L_i u(h(q,ℓ))  (i, j = 1, 2, 3)
+    
+    
+    R_(i-3),j∂ũ/∂ℓ_j   (j = 1, 2, 3; i = 4, 5, 6)
+    Ẽ^L_i u(h(q,ℓ))    = 
+    
+    E^R_i u(h(q,ℓ)) - ε_ijkℓ_j∂ũ/∂ l_k  (i,j,k = 1, 2, 3)
+    
+    
+    -∂ũ/∂ℓ_i-3  (i = 4, 5, 6)
+
+where h is parameterized by q for the rotation and ℓ for angular momentum and u(h(q,ℓ)) = ũ(q,ℓ). Also, ε_ijk is the Levi-Civita symbol. We use the formulae, E^R f = [J_r]^-T∂ u/∂q and E^L f = -[J_l]^-T∂ u/∂q, and, Ẽ^R f = [𝒥_R]^-T∂ u/∂ξ and Ẽ^L f = -[𝒥_L]^-T∂ u/∂ξ where ξ = [q^T,ℓ^T]^T.
+
+
+
+ §.§ Ornstein-Uhlenbeck Process in SO(3)⋉ℝ^3
+
+
+We observe that the left-hand side of the equations of motion (<ref>,<ref>) can be written as a component of (ḣh^-1)^∨ dt where h is given in (<ref>). Since,
+
+    (ḣh^-1)^∨ =
+        [        Ṙ^TR -Ṙ^TRℓ + ℓ̇;         0^T           0 ]^∨.
+
+and (Ṙ^TR)^∨ = -(R^TṘ)^∨ = -ω_R. This also implies that -Ṙ^TRℓ = ω_R×ℓ and we have,
+
+    (ḣh^-1)^∨ = 
+        [       -ω_R; ℓ̇ + ω_R×ℓ ].
+
+Comparing with (<ref>,<ref>) we see that,
+
+    (ḣh^-1)^∨ dt = -
+        [  I^-1ℓ; CI^-1ℓ ]  dt +
+        [ 𝕆 𝕆; 𝕆 B ]Ⓢ dw,
+
+which is a (left) stochastic differential equation evolving on SO(3)⋉ℝ^3; the Ⓢ makes it explicit that this is a Stratonovich equation. Notably, the troublesome cross-product term is absorbed into the definition of h, therefore, avoiding the need to deal with that term explicitly. Setting 
+
+    m = 
+    [  I^-1ℓ; CI^-1ℓ ]  and  B̃ = 
+    [ 𝕆 𝕆; 𝕆 B ],
+
+the Fokker-Planck equation for the probability density function u(h,t) on SO(3)^T⋉ℝ^3 is,
+
+    ∂ u/∂ t =- ∑_i = 1^6 E^L_i(m_i u) + 1/2∑_i,j = 1^6 (B̃B̃^T)_ijE^L_iE^L_j u.
+
+The procedure to go from a stochastic differential equation evolving on a group to a corresponding Fokker-Planck equation is provided in detail in <cit.>. In coordinates ξ = [q^T,ℓ^T]^T, we express the equation in terms of ũ(ξ,t) = u(h(ξ),t) as,
+
+    ∂ũ/∂ t = -∑_i,j = 1^6 Q_ijẼ^L_i(ξ_j ũ) + 1/2∑_i,j = 1^6 (B̃B̃^T)_ijẼ^L_iẼ^L_j ũ,
+
+where Q is,
+
+    Q = 
+        [     𝕆  I^-1;     𝕆 CI^-1 ],
+
+therefore describing a degenerate Ornstein-Uhlenbeck process. The matrix Q has a maximum rank of 3, and therefore only 3 non-zero singular values.
+
+
+
+ §.§ Maxwell-Boltzmann Limit
+
+The limiting distribution at t→∞ is a Maxwell-Boltzmann distribution for angular momentum and a uniform distribution over orientation, i.e.,
+
+    u_∞(R,ℓ) = 1/Zexp(-1/2βℓ^TI^-1ℓ),
+
+which is known from thermodynamics. Here, β = 1/k_BT where k_B is the Boltzmann constant, and Z is the partition function to normalize the distribution over phase space. To ensure that this limiting distribution can be obtained we also need,
+
+    C+C^T = β BB^T,
+
+by the fluctuation-dissipation theorem. 
+A proof using a non-parametric approach is provided in Appendix II.
+For usual physical systems, this reduces to,
+
+    2C = β BB^T,
+
+because C is a symmetric matrix as per Onsager's reciprocity theorem <cit.>. 
+Note that a similar relationship between a diffusion matrix and viscous matrix is derived in <cit.>.
+However, their diffusion matrix D_0 has a different physical meaning from the BB^T we are using here.
+
+
+
+§ SOLUTION METHODOLOGY AND RESULTS
+
+To approximately solve the Fokker-Planck equation in (<ref>) we adapt the solution provided by Riksen in <cit.>. We consider the initial conditions of ũ(h,0) = δ_G(h) where δ_G(h) is the group Dirac delta function concentrated at the identity element (this implies that the particle has zero angular velocity at t = 0 and all orientations are defined with respect to the orientation at t = 0). If the probability distribution is sufficiently concentrated we can make the following approximation,
+
+    Ẽ^L_i ≈ - ∂/∂ξ_i,
+
+so that we have u(h,t) = ũ(ξ,t) for sufficiently small time t,
+
+    ∂ũ/∂ t = ∑_i,j = 1^6 Q_ij∂/∂ξ_i(ξ_j ũ) + 1/2∑_i,j = 1^6 (B̃B̃^T)_ij∂^2ũ/∂ξ_i∂ξ_j,
+
+which solves to yield a Gaussian with mean μ(t) = 0 and covariance Σ(t) that varies as,
+
+    Σ(t) = ∫_0^t [e^-Qτ]B̃B̃^T[e^-Qτ]^T dτ.
+
+Assuming that this is the solution on the Lie algebra we can construct the solution on the group as,
+
+    u(h,t) =1/(2π)^3|det Σ(t)|^1/2exp(-1/2[log^∨ h]^T Σ^-1(t)[log^∨ h]),
+
+where log is the matrix logarithm. Hence, we obtain a closed-form approximate solution for the joint probability distribution evolving in phase space. We also note that the group theoretic mean and covariance are defined as,
+
+    ∫_G log^∨(h ∘μ^-1) u(h,t) dh  ≐ 0,
+
+and,
+
+    Σ(t)  ≐ ∫_G [log^∨(h ∘μ^-1)][log^∨(h ∘μ^-1)]^T u(h,t) dh.
+
+
+
+
+
+
+
+
+ §.§ Example: Diagonal and Isotropic Viscous Tensor
+
+Consider a body fixed frame that is oriented along the eigenvectors of the moment of inertia tensor I so that we have a diagonal moment of inertia tensor, I = diag(I_1,I_2,I_3). Then assume that the viscous tensor is of the form C = c𝕀 (i.e., diagonal and isotropic). The B̃ is also given as,
+
+    B̃ = 
+        [  𝕆  𝕆;  𝕆 b𝕀 ],
+
+where 2c = β b^2 from (<ref>). Then, 
+
+    Q = [                       𝕆 diag(1/I_1,1/I_2,1/I_3);                       𝕆 diag(c/I_1,c/I_2,c/I_3) ],
+
+so that,
+
+    Σ(t) = ∫_0^t [e^-Qτ]B̃B̃^T[e^-Qτ]^T dτ
+    
+        = [ σ_11(t) σ_12(t); σ_21(t) σ_22(t) ],
+
+where,
+
+    σ_11(t)    = b^2diag(σ_11(I_1;t),σ_11(I_2;t),σ_11(I_3;t))
+    σ_12(t)    = b^2diag(σ_12(I_1;t),σ_12(I_2;t),σ_12(I_3;t))
+    σ_21(t)    = b^2diag(σ_21(I_1;t),σ_21(I_2;t),σ_21(I_3;t))
+    σ_22(t)    = b^2diag(σ_22(I_1;t),σ_22(I_2;t),σ_22(I_3;t)),
+
+such that,
+
+    σ_11(I_i;t) = b^2/c^2(t - 3I_i/2c- I_i/2c(e^-2ct/I_i - 4e^-ct/I_i))
+       σ_12(I_i;t) = σ_21(I_i;t) = b^2/c(I_i/ce^-ct/I_i - I_i/2ce^-2ct/I_i - I_i/2c)
+       σ_22(I_i;t) = -I_i b^2/2c(e^-2ct/I_i-1).
+
+We see that when we set I_i = 0 for i = 1, 2, 3, we obtain σ_11(t) = b^2 t/c^2 and σ_12(t) = σ_21(t) = σ_22(t) = 0. In fact, this is the solution obtained from a non-inertial theory as will be explored in the following section.
+
+
+  §.§.§ Comparison against non-inertial theory
+
+In the non-inertial theory of rotational Brownian motion, the governing stochastic differential equation is of the form,
+
+    C (R^TṘ)^∨ dt    = BdW.
+
+This yields the following Fokker-Planck equation for u(R,t),
+
+    ∂ u/∂ t =  1/2∑_i,j=1^3 D_ijE^R_iE^R_j u,
+
+for D = C^-1BB^TC^-T, which is a drift-less diffusion on SO(3). If we consider the solution at small times (which can be approximated via covariance propagation <cit.>) and an initial condition of zero initial angular velocity, we obtain the following approximate solution:
+
+    u(R,t)    = 1/(2π)^3/2|Dt|^1/2exp(-1/2t[log^∨ R]^TD^-1[log^∨ R]).
+
+Noting that the covariance terms corresponding to the three-dimensional vector log^∨ R is σ_11 from (<ref>), we proceed to make a comparison with the results from the theory of inertial rotational Brownian motion. 
+Now, if B = b𝕀 is the identity matrix and C = c𝕀, this gives Σ = Dt = b^2t/c^2𝕀. However, by setting I_1 = I_2 = I_3 = 0 in (<ref>), we obtain the same form for the orientational covariance σ_11(t) from (<ref>).
+
+
+
+  §.§.§ Spherical particles
+
+As a special case, we consider a spherical particle, where I_1 = I_2 = I_3, to demonstrate the underlying ideas.
+
+
+As ground truth, we compare against the covariance (the mean is always identity) obtained from an Itô-Gangolli integration of the governing stochastic differential equation in (<ref>). That is, we evolve an ensemble of i = 1,⋯,N particles on the group with time as follows with the following update over a time step dt:
+
+    h_i(t + dt) = exp(dX)∘ h_i(t),
+
+where dX^∨ is the right-hand side of (<ref>). A probability distribution can be constructed from these sample points as,
+
+    u_s(h,t) = 1/N∑_i=1^Nδ(h∘ h_i^-1(t)),
+
+and the sample covariance is,
+
+    Σ_s(t) = 1/N∑_i=1^N[log^∨ h_i(t)][log^∨ h_i(t)]^T.
+
+The above assumes that the sample mean is identity at all times. This is seen as a reasonable approximation since numerically, the sample mean deviates from the identity with only a 3% error (measured by a relative Frobenius norm) for N = 30,000 particles. 
+
+In what follows, we assume N = 30,000 particles and compare the covariance obtained from the Ornstein-Uhlenbeck solution in (<ref>) with the sampled covariance for t = 3 units (and time step of dt = 1× 10^-3 units). Additionally, I = C = 𝕀 and β = 0.2 (the fluctuation-dissipation theorem sets the value of b = √(2/β)). Furthermore, we decompose the 6×6 covariance matrix into blocks of 3×3 matrices as,
+
+    Σ = 
+        [   Σ_RR   Σ_Rℓ; Σ_Rℓ^T   Σ_ℓℓ ],
+
+where Σ_RR and Σ_ℓℓ are related to the covariance of the distribution once the distribution is marginalised over angular momenta and orientation respectively; Σ_Rℓ is the covariance for the coupling of the two variables. 
+
+The error between the covariance matrix obtained from the Ornstein-Uhlenbeck solution in (<ref>) and the sample covariance matrix is computed as,
+
+    Error(t) = ||Σ(t) - Σ_s(t)||_F/||Σ_s(t)||_F,
+
+where ||⋯||_F is the Frobenius norm. The evolution of this relative error with time is plotted in Figure <ref>. Notably, the error is small (order of 1%) till t≈ 0.6 units after which the error grows monotonically, and the approximation is no longer valid. 
+
+
+Since for a sphere, all three covariance matrices can be expected to be multiples of 𝕀 (from (<ref>)), we now seek to compare the time-evolution for (co)variance Σ_RR, Σ_Rℓ and Σ_ℓℓ; that is, for a covariance Σ = k𝕀, we compare in terms of the scalar k.
+For the sample covariance, we use the average of diagonal elements as k.
+
+
+  
+Covariance for orientations If the probability density for orientation for a non-inertial rotational Brownian motion is solved by covariance propagation, we obtain Σ_RR = tD𝕀 where D = b^2/c^2. 
+We also plot this solution along with that from the Ornstein-Uhlenbeck approximation (for inertial theory). Finally, from Section <ref> we know that the limiting orientational distribution is a uniform distribution in SO(3), i.e., u_∞(R) = 1/(8π^2) so that we have,
+
+    ∫_SO(3)1/8π^2 dg = 1/8π^2∫_0^2π∫_0^π∫_0^2πsinβ dα dβ dγ = 1,
+
+where the integral over SO(3) is decomposed to an integral over the ZYZ Euler angles (α,β,γ). The limiting covariance is then,
+
+    Σ_RR,∞ = 1/8π^2∫_G[log^∨ g][log^∨ g]^T dg.
+
+Now we parameterize g = g(q) in terms of exponential coordinates, i.e., g = exp(q^∧). In this parameterisation, 
+    dg = 2(1 - cos||q||)/||q||^2 dq.
+ Since q∈ℝ^3, we imagine decomposing the integral into an integration over a solid ball of radius r = ||q|| where 0≤ r < π. Then, letting the polar angle be θ, for 0≤θ < π, and the azimuthal angle be ϕ, for 0≤ϕ < 2π, we can write, q = [rcosϕsinθ,rsinϕsinθ,rcosθ]^T. Thus,
+
+    Σ_RR,∞   = 1/8π^2∫_0^π∫_0^2π∫_0^πqq^T 2(1 - cos r)sinθ dθ dϕ dr
+       = π^2 + 6/9𝕀.
+
+Figure <ref> is a plot comparing the (co)variance obtained from the Ornstein-Uhlenbeck solution in (<ref>) along with the corresponding term in the sample covariance. Additionally, the covariance from the non-inertial theory and that for the limiting uniform distribution (<ref>) are plotted. 
+
+
+We note that the covariance from the Ornstein-Uhlenbeck solution (<ref>) begins to deviate from the sample covariance after about t≈ 0.6 units. Numerically, this is when the covariance becomes large enough that a distribution in the ℝ^3 space spanned by the exponential parameterisation of orientation has sufficiently large volume outside the solid ball, ||log^∨ g|| < π for g ∈ SO(3). The curvature of SO(3), therefore, makes the small covariance assumption that motivated the Ornstein-Uhlenbeck solution invalid. This is true even of the non-inertial theory in Figure <ref> and thus, none of the propagation or Ornstein-Uhlenbeck solutions are able to recover the limiting uniform distribution (corresponding to thermal equilibrium).
+
+
+
+  
+Covariance for orientation-angular momentum coupling Figure <ref> depicts the time evolution of the coupling covariance, comparing the Ornstein-Uhlenbeck solution with the corresponding sample covariance.
+
+At large times, the coupling (co)variance goes to zero, suggesting the decoupling between angular momentum and orientation, which is seen from the limiting Maxwell-Boltzmann solution in (<ref>).
+
+
+  
+Covariance for angular momentum In exponential coordinates, 
+    log^∨ h = [          q; J_l^-1(q)ℓ ],
+
+where J_l is the left Jacobian for SO(3) for exponential coordinates <cit.>. Thus Σ_ℓℓ is taken to refer to the (co)variance associated with the vector y = J_l^-1(q)ℓ instead. 
+Using the Maxwell-Boltzmann distribution and the definition (<ref>), we can obtain that the time limit covariance for y is Σ_ℓℓ,∞=π^2+3/9β I.
+Figure <ref> depicts the time evolution for the covariance associated with angular momentum, comparing the Ornstein-Uhlenbeck solution with the corresponding sample covariance and the time limit covariance.
+
+
+
+
+§ CONCLUSIONS
+
+
+We have provided a short-time closed-form expression of the probability density function on the phase space for an arbitrary-shaped particle undergoing an inertial rotational Brownian motion.
+The phase space is described by the cotangent bundle group of SO(3).
+An example, where the parameters of the PDF have an analytic expression, is shown and compared to the ground truth and the approximate solution of the non-inertial theory.
+For more general cases, it is possible to use a numerical method to obtain the parameters and utilize the simple closed-form PDF to perform further calculations.
+
+One possible future work is to fit a spline to connect the small-time solution with the steady-state Boltzmann distribution.
+It requires an additional estimation of the relaxation time.
+Another extension is to calculate the covariance matrix without using the approximation (<ref>).
+A possible approach is to estimate the time derivative of the covariance matrix (<ref>) using the Fokker-Planck equation on phase space (<ref>) and the Lie derivative approximations in Appendix III.
+
+Acknowledgements
+This work was supported by NUS Startup  grants A-0009059-02-00 and A-0009059-03-00, National Research Foundation, Singapore, under its Medium Sized Centre Programme - Centre for Advanced Robotics Technology Innovation (CARTIN),  sub award A-0009428-08-00, and AME Programmatic Fund Project MARIO A-0008449-01-00.
+
+
+
+
+
+
+
+
+
+
+
+
+§ APPENDIX I
+
+
+In this section, we give a real-world example where the viscous torque is comparable to the torque introduced by inertia.
+The modeling details and numerical results are presented.
+
+Assume many Tobacco Mosaic Virus (TMV) particles are floating and rotating in the air subject to viscous torque and a random torque.
+A TMV particle is a long, stick-like particle, whose total length, inner, and outer diameter are 300 nm, 4 nm, and 18 nm respectively.
+It is composed of coat proteins and a single-strand RNA molecule inside, with a total particle weight 3.94× 10^7 Da <cit.>.
+We model a TMV particle as a solid ellipsoid with a major axis a=150 nm, two minor axes b=c=9 nm and mass M=3.94× 10^7   Da.
+The viscous torque for a prolate ellipsoid is known <cit.>,
+
+    T^hyd=16/3πη d^3  ω / [ 1/2lna+d/a-d-ad/b^2],
+
+where η is the shear viscosity of the fluid and d=√(a^2-b^2).
+The inertia tensor of an ellipsoid is (when the frame is aligned with the principle axes):
+
+    I=M/5[ b^2+c^2       0       0;       0 a^2+c^2       0;       0       0 a^2+b^2 ],
+
+where M is the total mass.
+
+The long-term distribution of the angular velocity of these particles should be a Maxwell-Boltzmann distribution,
+
+    ũ_∞(ω) = 1/Zexp(-1/2k_B Tω^TI ω),
+
+following the distribution of the angular momentum (<ref>).
+
+If an angular velocity ω_0 is relatively “usual” for the distribution (<ref>), the value 1/2k_B Tω_0^TI ω_0 should not be too large.
+Assume an angular velocity takes the following form,
+
+    ω_0 = (ω_0,ω_0,ω_0)^T,
+
+which is illustrated in Figure <ref>.
+Assume the temperature T=300K. 
+For a “usual” angular velocity ω_0 that satisfies:
+
+    1/2k_B Tω_0^TI ω_0
+    =2,
+
+we can obtain,
+
+    ω_0=√(2· 2k_B T / tr(I))=5.29× 10^6 rad/s
+
+using (<ref>) and the parameters of a TMV particle.
+At this temperature, the shear viscosity of air is η=1.86× 10^-5  Pa· s. 
+The viscous torque using (<ref>) is,
+
+    Cω_0=  [ -2.02× 10^-20; -2.02× 10^-20; -2.02× 10^-20 ] N· m,
+
+and the torque introduced by inertia is,
+
+    ω_0× (Iω_0)=
+    [ -7.10× 10^-37; -8.19× 10^-21; +8.19× 10^-21 ] N· m.
+
+In this case, we see the viscous and inertial torques are of a comparable magnitude.
+So when the distribution is approaching the limit distribution, a considerable amount of particles are influenced by both torques, where the inertial theory becomes important.
+
+
+
+§ APPENDIX II
+
+
+In this section, we provide a proof for the relationship (<ref>) in a more general setting, where a deterministic force field is also present.
+The proof is written for inertial rotational Brownian motion, while the proof for the non-inertial case follows the same way.
+Below, we use the “∧” and “∨” operators, the basis of Lie algebra, and Lie derivative E^R_k of SO(3) defined in <cit.>.
+The Einstein summation convention is also used to simplify equations.
+
+Assume a particle is rotating in a deterministic field V(R) with linear viscous torque and random torque. 
+The following stochastic differential equations on the direct product group SO(3)×ℝ^3 describes the movement of the particle:
+
+    dℓ=(ℓ̂ I^-1ℓ-E^R V - CI^-1ℓ)dt+Bdw, 
+    
+        (R^T dR)^∨=I^-1ℓ dt,
+
+where ℓ=Iω is the angular momentum. 
+We also rewrite the cross-product term ℓ×(I^-1ℓ) as a matrix multiplication term ℓ̂I^-1ℓ using the property of skew-symmetric matrices. 
+The Lie derivative term stands for a vector E^R V=(E^R_1 V,  E^R_2 V,  E^R_3 V)^T.
+Using the methodology in <cit.>, the corresponding Fokker-Planck equation on SO(3)×ℝ^3 is:
+
+    ∂ f/∂ t=-E^R_k(h_k^Rf)-∂/∂ℓ_k(h^ℓ_k f)+1/2(BB^T)_kl∂ ^2 f/∂ℓ_k ∂ℓ _l,
+
+where
+
+    h^ℓ =ℓ̂I^-1ℓ-E^RV-CI^-1ℓ,
+    h^R =I^-1ℓ.
+
+Here, we use the notation f(R,ℓ,t) to denote the distribution on the direct product group, so as to differentiate from the distribution u(h,t) on the cotangent bundle in the main text.
+We proceed to prove the main theorem.
+
+The solution f(R,ℓ,t) to the Fokker-Planck equation (<ref>) satisfies
+
+    lim_t→∞ f(R,ℓ,t)=1/Zexp(-β( 1/2ℓ^TI^-1ℓ+V(R) ) ),
+
+if and only if,
+
+    C+C^T=β BB^T.
+
+
+
+When the time is very large, the LHS of (<ref>) should approach zero.
+We denote the RHS of (<ref>) as f_∞(R,ℓ) and substitute it into the RHS of (<ref>).
+The first term is,
+
+    -E_k^R(h_k^Rf_∞)=-e_k^TI^-1ℓE^R_k f_∞,
+
+where e_k^TI^-1ℓ is a scalar and the subscript k is summed over.
+For the second term, we first calculate ∂ h_k^ℓ/∂ℓ _k,
+
+    ∂ h^ℓ_k/∂ℓ_k   =∂/∂ℓ_k[ e^T_k(ℓ̂I^-1ℓ-E^RV-CI^-1ℓ) ] 
+       =e^T_k(ê_kI^-1ℓ+ℓ̂ I^-1e_k-CI^-1e_k) 
+       =e_k^T(ℓ̂ -C)I^-1e_k.
+
+Note that the term e^T_k ê_kI^-1ℓ vanishes because e^T_k ê_k=-(e_k ×e_k)^T.
+The derivatives of f_∞ are: 
+
+    E^R_kf_∞=-β (E^R_k V) f_∞
+    ∂ f_∞/∂ℓ_k=-βe_k^T I^-1ℓ f_∞
+    ∂ ^2 f_∞/∂ℓ_k ∂ℓ_l=(-βe_k^TI^-1e_l+β^2 ℓ^T(I^-Te_k e_l^TI^-1)ℓ )f_∞.
+
+The fact that e_k^TI^-1ℓ=ℓ^TI^-Te_k is used above.
+
+Substituting (<ref>), (<ref>), and (<ref>) into (<ref>) and removing f_∞, we have:
+
+    β (E^R_k V)e_k^TI^-1ℓ-e_k^T(ℓ̂ -C)I^-1e_k + β (e_k^T I^-1ℓ) h_k^ℓ
+     +1/2(BB^T)_kl(-βe_k^TI^-1e_l+β^2ℓ^T(I^-Te_k e_l^TI^-1)ℓ)=0  .
+
+The first three terms can be organized as:
+
+    β (E^R_k V)e_k^TI^-1ℓ-e_k^T(ℓ̂ -C)I^-1e_k 
+                + β (e_k^T I^-1ℓ) [e_k^T(ℓ̂ -C)I^-1ℓ-E^R_kV] 
+    
+    =   e_k^TCI^-1e_k-e_k^T ℓ̂  I^-1e_k-βℓ^TI^-Te_ke_k^TCI^-1ℓ
+                 +βℓ^TI^-Te_k e_k^T ℓ̂  I^-1ℓ
+    
+    =   e_k^TCI^-1e_k-tr( ℓ̂  I^-1)-βℓ^TI^-TCI^-1ℓ
+    
+    =   e_k^TCI^-1e_k-βℓ^TI^-TCI^-1ℓ
+
+The equation e_k^TI^-1ℓ=ℓ^TI^-Te_k is used in lines 1-2. 
+In line 2, the term e_k e_k^T equals the identity matrix when summed over.
+So the cubic term is simplified to (I^-1ℓ)^Tℓ̂ I^-1ℓ=ω·(ℓ×ω) and vanishes.
+In lines 3-4, we employ the fact that the trace of a skew-symmetric matrix multiplying a symmetric matrix is 0.
+
+For (<ref>) to hold true, the constant term and the quadratic term should vanish for all ℓ. Substituting (<ref>) into (<ref>), the constant term is,
+
+    e_k^TCI^-1e_k-1/2β·(BB^T)_kle_k^TI^-1e_l 
+    
+    =   tr((C-1/2β· BB^T)I^-1),
+
+and the quadratic term is,
+
+    -βℓ^TI^-TCI^-1ℓ+1/2(BB^T)_klβ^2ℓ^T(I^-Te_k e_l^TI^-1)ℓ
+    
+    =   ℓ^T(-β I^-TCI^-1 +1/2(BB^T)_klβ^2(I^-Te_k e_l^TI^-1))ℓ
+    
+    =   ℓ^T(-β I^-TCI^-1 +1/2β^2(I^-TBB^TI^-1))ℓ
+    
+    =    -β·ℓ^TI^-T(C-1/2β· BB^T)I^-1ℓ
+    
+    =    -β·ω^T(C-1/2β· BB^T)ω.
+
+The only condition for both (<ref>) and (<ref>) to be zero is that C-1/2β· BB^T is a skew-symmetric matrix:
+
+    (C-1/2β· BB^T)=-(C-1/2β· BB^T)^T.
+
+Since BB^T is symmetric, the condition is equivalent to,
+
+    C+C^T=β· BB^T,
+
+which ends the proof.
+
+
+
+
+
+
+§ APPENDIX III
+
+In this section, we provide some useful approximation formulas for the Lie derivative of the logarithm of a group element, i.e., 
+
+    E^L_i x,  E^L_i(xx^T),  E_i^LE_j^L x,  E_i^L E_j^L(xx^T),
+       E^R_i x,  E^R_i(xx^T),  E_i^RE_j^R x,  E_i^R E_j^R(xx^T).
+
+where x(k)=[log^∨ k] is a vector-valued function of k∈G.
+
+The BCH expansion for Z = log(e^Xe^Y) is,
+
+    Z = X + Y + 1/2[X,Y] + 1/12([X,[X,Y]] + [Y,[Y,X]]) +
+    + 1/48([Y,[X,[Y,X]]] + [X,[Y,[Y,X]]]) + ⋯,
+
+where [X,Y] = XY - YX and the subsequent terms involve at least five appearances of X or Y in the recursive Lie brackets (i.e., for instance [Y,[Y,[Y,[Y,X]]]]).
+
+We first see that,
+
+    [log^∨(e^-tE_i∘ k)] - [log^∨ k] = -te_i - t/2ad_ix -
+    - t/12ad_Xad_Xe_i + 𝒪(t,||x||^4),
+
+and,
+
+    [log^∨(k ∘ e^tE_i)] - [log^∨ k] = te_i - t/2ad_ix +
+    + t/12ad_Xad_Xe_i + 𝒪(t,||x||^4).
+
+
+From here, we can see that,
+
+    E^L_ix   = lim_t→ 0([log^∨ (e^-tE_i∘ k)] - [log^∨ k]/t) 
+       ≈ -e_i - 1/2ad_ix - 1/12ad_Xad_Xe_i + 𝒪(||x||^4),
+
+and,
+
+    E^R_ix   = lim_t→ 0([log^∨ (k∘ e^tE_i)] - [log^∨ k]/t) 
+       ≈e_i - 1/2ad_ix + 1/12ad_Xad_Xe_i + 𝒪(||x||^4).
+
+
+Therefore, with an error of order 𝒪(||x||^3) we obtain,
+
+    E^L_i(xx^T)    ≈ -x(e_i + 1/2ad_ix)^T - (e_i + 1/2ad_ix)x^T
+       ≈ -xe^T_i - e_ix^T - 1/2xx^Tad_i^T - 1/2ad_ixx^T.
+
+Similarly we have,
+
+    E^R_i(xx^T) = xe^T_i + e_ix^T - 1/2xx^Tad_i^T - 1/2ad_ixx^T.
+
+
+A term that we will appear is, E^L_iE^L_jx, which we can expand with an error of 𝒪(||x||^3) to obtain,
+
+    E^L_iE^L_jx≈1/2ad_j(e_i + 1/2ad_ix + 1/12ad_Xad_Xe_i) -
+    -  1/12E^L_i(ad_Xad_X)e_j
+
+Since ad_X is linear in x, to ensure that  E^L_iE^L_jx has an error of 𝒪(||x||^3), we can truncate the expansion of E^L_i(ad_X) with an error of 𝒪(||x||^2). Similarly,
+
+    E^R_iE^R_jx≈1/2ad_j(e_i - 1/2ad_ix + 1/12ad_Xad_Xe_i) +
+    + 1/12E^R_i(ad_Xad_X)e_j
+
+
+The following is true by the product rule:
+
+    E^L_iE^L_j(xx^T) = (E^L_iE^L_jx)x^T + E^L_jxE^L_ix^T +
+    + E^L_ixE^L_jx^T + x(E^L_iE^L_jx^T),
+
+where the E^L_ix term has to be expanded with an error of 𝒪(||x||^3) but E^L_iE^L_jx only needs to have an error of 𝒪(||x||^2) in the expressions in the paper (since it is usually multiplied with another quantity of order 𝒪(||x||)). Likewise,
+
+    E^R_iE^R_j(xx^T) = (E^R_iE^R_jx)x^T + E^R_jxE^R_ix^T +
+    + E^R_ixE^R_jx^T + x(E^R_iE^R_jx^T),
+
+
+The previous two expressions rely on knowing E^L_iad_X and E^R_iad_X with an error of at most 𝒪(||x||^2). We first note that,
+
+    ad(c_1X + c_2Y) = c_1ad(X) + c_2ad(Y),
+
+by linearity for two constants c_1 and c_2. This can also be seen by assuming an arbitrary Z such that ad(c_1X + c_2Y)Z = [c_1X+c_2Y,Z] = c_1[X,Z] + c_2[Y,Z] = c_1ad(X)Z + c_2ad(Y)Z = (c_1ad(X) + c_2ad(Y))Z. Since this holds for any Z, the above identity follows. Then,
+
+    E^L_i(ad_X)    = lim_t→ 0([ad(log(e^-tE_i∘ k))] - [ad(log k)]/t) 
+       ≈ 
+        -ad_i - 1/2ad_[E_i,X],
+
+and,
+
+    E^R_i(ad_X)    = lim_t→ 0([ad(log(k∘ e^tE_i))] - [ad(log k)]/t) 
+       ≈ 
+        ad_i - 1/2ad_[E_i,X].
+
+Using these results we have, to an error of 𝒪(||x||^3),
+
+    E^L_iE^L_jx≈1/2ad_je_i + 1/4ad_jad_ix +
+    + 1/24ad_jad_Xad_Xe_i + 1/12(ad_iad_Xe_j + ad_Xad_ie_j)+
+    + 1/24(ad_[E_i,X]ad_Xe_j + ad_Xad_[E_i,X]e_j),
+
+and if we define P and S as the following collection of terms:
+
+    P = 1/2ad_je_ix^T + 1/4ad_jad_ixx^T +
+    +1/12(ad_iad_Xe_jx^T + ad_Xad_ie_jx^T),
+
+
+    S = e_ie_j^T + 1/2(e_ix^Tad_j^T + ad_ixe_j^T) +
+    + 1/4ad_ixx^Tad_j^T + 1/12(e_ie_j^Tad_X^Tad_X^T + ad_Xad_Xe_ie^T_j),
+
+we would have,
+
+    E^L_iE^L_j(xx^T) ≈ P + P^T + S + S^T.
+
+
+
+

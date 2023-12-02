@@ -79,6 +79,8 @@ async def submit_call(request: Request):
         latency = float(latency)
     except ValueError:
         return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
+
+    # RTT
     await asyncio.sleep(latency)
 
     payload = await request.json()
@@ -91,6 +93,7 @@ async def submit_call(request: Request):
     else:
         call = SemanticCall.unpickle(payload["call"])
         pcore.submit_semantic_call(pid, call)
+
     return {}
 
 
@@ -208,11 +211,19 @@ if __name__ == "__main__":
         "--release_mode",
         action="store_true",
         help="Run in release mode. In debug mode, "
-        "OS will print more logs and expose extra information to clients.",
+        "OS will print logs and expose extra information to clients.",
     )
 
     args = parser.parse_args()
     release_mode = args.release_mode
+
+    if release_mode:
+        # Disable logging
+        import logging
+
+        # We don't disable the error log
+        logging.disable(logging.DEBUG)
+        logging.disable(logging.INFO)
 
     # Set log output file
     if args.log_dir is not None:

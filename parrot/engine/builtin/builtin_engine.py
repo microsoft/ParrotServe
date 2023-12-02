@@ -4,7 +4,7 @@
 
 from typing import Dict, AsyncGenerator
 
-from parrot.utils import get_logger, MemTracker, get_cpu_memory_usage
+from parrot.utils import get_logger, MemTracker, get_cpu_memory_usage, cprofile
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.constants import UNKNOWN_DATA_FIELD
@@ -190,6 +190,9 @@ class BuiltinEngine(LLMEngine):
             return
 
         jobs = self.scheduler.schedule()
+
+        # with cprofile("run_iter"):
         e2e_time, model_time = self.runner.run_iter(jobs)
+
         self.latency_analyzer.add_latency(e2e_time)
         self.scheduler.finish()

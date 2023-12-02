@@ -148,7 +148,22 @@ if __name__ == "__main__":
         help="Filename of the Engine server.",
     )
 
+    parser.add_argument(
+        "--release_mode",
+        action="store_true",
+        help="Run in release mode. In debug mode, Engine will print lots of logs.",
+    )
+
     args = parser.parse_args()
+    release_mode = args.release_mode
+
+    if release_mode:
+        # Disable logging
+        import logging
+
+        # We don't disable the error log
+        logging.disable(logging.DEBUG)
+        logging.disable(logging.INFO)
 
     # Set the log file
     if args.log_dir is not None:

@@ -275,7 +275,6 @@ class LlamaForCausalLM(nn.Module):
         hidden_states = self.model(
             input_ids, positions, kv_caches, input_metadata, cache_events
         )
-        next_tokens = torch.tensor([1], device=hidden_states.device)
         next_tokens = self.sampler(self.lm_head.weight, hidden_states, input_metadata)
         return next_tokens
 

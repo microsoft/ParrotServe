@@ -121,7 +121,7 @@ class LLMEngine(ABC):
 
         engine_name = self.engine_config.engine_name
         engine_id = self.engine_id
-        engine_runtime_info = self.get_runtime_info(profile=True)  # Get detailed info
+        engine_runtime_info = self.get_runtime_info(profile=False)  # Performance
 
         logger.debug(
             f"Engine {engine_name} (id={engine_id}) heartbeat sent. "

@@ -83,11 +83,12 @@ def test_main_async():
 if __name__ == "__main__":
     # print(test_func.body)
 
-    # vm.run(single_call, timeit=True)
+    # with cprofile("e2e"):
+    #     vm.run(single_call, timeit=True)
     # vm.run(single_call, timeit=True)
 
-    test_baseline()
-    # test_main()
+    # test_baseline()
+    test_main()
     # test_main_async()
 
     # for _ in range(10):

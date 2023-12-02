@@ -1,0 +1,230 @@
+
+
+
+Probabilistic Uncertainty-Aware Risk Spot 
+ Detector for Naturalistic Driving
+    Tim Puphal, Malte Probst and Julian Eggert
+
+
+ The authors are with the Honda Research Institute (HRI) Europe, Carl-Legien-Str. 30, 63073 Offenbach, Germany 
+	(e-mail: tim.puphal@honda-ri.de; malte.probst@honda-ri.de; julian.eggert@honda-ri.de) 
+
+    March 30, 2023
+=========================================================================================================================================================================================================================================================
+
+
+
+
+As we all know, multi-view data is more expressive than single-view data and multi-label annotation enjoys richer supervision information than single-label, which makes multi-view multi-label learning widely applicable for various pattern recognition tasks. In this complex representation learning problem, three main challenges can be characterized as follows: i) How to learn consistent representations of samples across all views? ii) How to exploit and utilize category correlations of multi-label to guide inference? iii) How to avoid the negative impact resulting from the incompleteness of views or labels? To cope with these problems, we propose a general multi-view multi-label learning framework named label-guided masked view- and category-aware transformers in this paper. First, we design two transformer-style based modules for cross-view features aggregation and multi-label classification, respectively. The former aggregates information from different views in the process of extracting view-specific features, and the latter learns subcategory embedding to improve classification performance. Second, considering the imbalance of expressive power among views, an adaptively weighted view fusion module is proposed to obtain view-consistent embedding features. Third, we impose a label manifold constraint in sample-level representation learning to maximize the utilization of supervised information. Last but not least, all the modules are designed under the premise of incomplete views and labels, which makes our method adaptable to arbitrary multi-view and multi-label data. Extensive experiments on five datasets confirm that our method has clear advantages over other state-of-the-art methods.
+
+
+
+
+§ INTRODUCTION
+
+
+Since the development of representation learning methods, data analysis technology based on simple single-view data has become more and more difficult to meet diverse application requirements. In the past few years, data acquisition technology has flourished, and multi-view data from various media or with different styles are ubiquitous, providing more possibilities for comprehensively and accurately describing observation targets. Simply put, multiple observations,  obtained from different observation angles for the same thing, could be regarded as multi-view data <cit.>. For example, retinal images captured at four different positions constitute a four-view retinal dataset <cit.>; the features extracted from the target image with different feature extraction operators can also form a multi-view dataset <cit.>. More typically, multi-view or multi-modal datasets composed of multimedia data such as text, pictures, and videos have been widely used in many applications such as web page classification <cit.>. As a result, multi-view learning emerges as the times require, and a large number of methods based on subspace learning, matrix factorization, and graph learning have been proposed <cit.>. Most of these methods seek to obtain a consistent representation of multiple views to characterize the essential attributes of objects. On the other hand, since the core of multi-view learning is representation learning, researchers usually combine it with downstream tasks to improve the application value and evaluate the learning effect <cit.>. That is, multi-view learning can be divided into clustering and classification, according to whether supervised information is available. Further, in the single-label classification task, a sample is only labeled with one category, which is obviously against the distribution of information in nature <cit.>. For example, a bird picture is likely to contain the category of `sky' or `tree'. Therefore, although multi-label classification still faces more challenges than single-label classification, its broad application prospects are attracting a lot of research enthusiasm. Based on this, a complex fusion task, i.e., multi-view multi-label classification (MvMlC) is put on the agenda.  proposed a matrix factorization-based MvMlC model, which attempts to enforce alignment of different views in the kernel space to exploit multi-view complementarity and explore more latent information <cit.>. A Bernoulli mixture conditional model is proposed to model label dependencies and employ a variational inference framework for approximate posterior estimation <cit.>. 
+
+Researchers have conducted extensive researches in the field of MvMlC, however these works assume that all views and labels are complete, which is often violated in practice. For example, if a web page contains only text and images, then the video view of the page is not available. To avoid the negative effects of missing views as much as possible, some multi-view learning works try to mask unavailable views or restore missing views <cit.>. Similarly, manual annotation is likely to miss some tags due to mistakes or cost, which inevitably weakens the supervision information of multi-label. To solve the issue, some works focusing on incomplete multi-label classification have been developed in recent years <cit.>. Although these methods designed for incomplete multi-view or incomplete multi-label learning have achieved surprising fruits, most of them are not able to cope with the both incomplete cases simultaneously. 
+
+To this end, we propose a general MvMlC framework, termed Label-guided Masked View- and Category-Aware Transformers (LMVCAT), which can handle the multi-view data with arbitrary missing-view and missing-label. In addition, unlike traditional methods to learn low-level representations of samples, deep neural networks based LMVCAT is capable to extract high-level features of samples, which is of great benefit for learning complex multi-category semantic labels. In recent years, transformer, designed for natural language processing, has shown its dominance in the image and other fields, which clearly demonstrates the effectiveness of the self-attention mechanism <cit.>. Inspired by this, our LMVCAT is also designed based on the transformer with self-attention mechanism which can provide a global receptive field for each view <cit.>. Overall, our model is composed of four parts: a masked view-aware encoder, an adaptively weighted multi-view fusion module, a label-guided sample-level graph constraint, and a subcategory-aware multi-label classification module. Specifically, the four parts of our LMVCAT are motivated by the following points: 1) breaking the inter-view barriers to aggregate multi-view features can fully exploit the complementary information of multiple views, so we design a view-aware module to integrate all views while extracting sample-specific high-level representations; 2) different discrimination ability of views means the different contributions to the final classification, so an adaptively weighted strategy that automatically learns the weight factor of each view is needed <cit.>; 3) compared with single-label data, multi-label data naturally enjoys richer label similarity information, so it is of great significance to utilize label smoothness (manifold) to guide sample encoding; 4) it is well known that multi-label data is with non-negligible inter-class correlations, thus we adopt a category-aware module that learns correlations in the subcategory embedding space to collaboratively predict labels <cit.>. Apart from those, it needs to be emphasized that we consider the possibility of missing labels and missing views in all components of our model. So it is no doubt that our LMVCAT is a general MvMlC framework that is comfortable with all kinds of multi-view multi-label data.
+Our contributions are summarized as follows:
+
+    
+  * To the best of our knowledge, this is the first Transformer-based incomplete multi-view multi-label learning framework capable of handling both incomplete views and labels. The proposed masked view-aware self-attention module could avoid the missing views' negative effects to information interaction across views. Similarly, our category-aware module is designed to mine latent inter-class correlations in the subcategory embedding space to improve the expressiveness.
+    
+  * Label manifold is fully exploited. Although the multi-label information is fragmentary, we still try our best to construct an approximate similarity graph based on incomplete labels to guide the encoding process of samples, which further strengthens the discrimination power of high-level semantic features.
+    
+  * Different views contribute different importance to the prediction, so we introduce an adaptively weighted fusion method to balance this importance instead of simply adding multiple views. Sufficient experimental results confirm the effectiveness of our LMVCAT.
+
+
+
+
+
+§ PRELIMINARIES
+
+
+
+ §.§ Formulation
+
+In this section, we define our main problem as follows: Given input multi-view dataset 𝖣= {𝖷,𝖸}, which contains n samples. For i-th sample, 𝖷_i is composed of m views with dimension d_v, i.e., 𝖷_i={x_i^(v)∈ℝ^d_v}_v=1^m, or for v-th view, 𝖷^(v)={x^(v)_i∈ℝ^d_v}_i=1^n. 𝖸_i∈{0,1}^c is a row vector that denotes the label of i-th sample and c is the number of categories. To describe the missing cases, we let 𝖶∈{0,1}^n× m be the missing-view indicator matrix, where 𝖶_ij=1 represent j-th view of sample i is available, otherwise 𝖶_ij=0. Similarly, we define 𝖦∈{0,1}^n× c as the missing-label indicator matrix, where 𝖦_ij=1 represents j-th category of sample i is known, otherwise 𝖦_ij=0. All missing information of feature 𝖷 and label 𝖸 will be set as `0' in the data-preparation stage. And our goal of multi-view multi-label learning is to train a model which can correctly predict multiple categories for each input sample. 
+
+
+
+
+ §.§ Related Works
+
+
+A matrix completion based MvMlC method, termed as lrMMC, which forces common subspace to be low rank to satisfy the assumption of matrix completion <cit.>. However, lrMMC is incapable of adapting to missing-view or missing-label data. MVL-IV, an incomplete multi-view learning method, attempts to exploit the connections between views <cit.>. As another incomplete multi-view single-label learning model, iMSF cleverly divides the incomplete multi-view classification tasks into multiple complete subtasks <cit.>. There is a limitation to both methods that MVL-IV and iMSF only consider the incompleteness of views. On the contrary, MvEL, a method aiming to capture the semantic context and the neighborhood consistency, could only handle the incomplete multi-label case <cit.>. In recent years, there are few approaches to consider double missing cases except iMvWL<cit.> and NAIML<cit.>. iMvWL simultaneously maps multi-view features and muti-label information to a common subspace. And a correlation matrix is introduced to enhance the projection from label space to embedding subspace. NAIML copes with the double incomplete problem based on the low-rank hypothesis of sub-label matrix, which also implicitly exploits the sub-class correlations. In addition, because the iMvWL and NAIML are well suited to datasets with both view and label incompleteness, we focus on evaluating these two methods in our comparison experiments.
+
+
+
+
+§ METHOD
+
+In this section, we elaborate on each component of our model, including view-aware transformer, label-guided graph constraint, multi-view adaptively weighted fusion, and category-aware transformer.
+
+
+ §.§ VFormer
+
+As we all know, the key to success of multi-view learning is the complementarity among views, which are not available in single-view data. To this end, we design a view-aware transformer encoder (VFormer for short) to aggregate complementary information during the cross-view interaction. Before this, it needs to be considered that different views may have different feature dimensions, so for convenience, we map the original multi-view data to the embedding space with the same dimension by a stack of Multilayer Perceptrons (MLP) {_θ^(v)}_v=1^m, which can also be seen as a preliminary feature extraction operation, i.e., _θ^(v): 𝖷^(v)∈ℝ^n× d_v→𝖷^(v)∈ℝ^n× d_e. These embedding features of multiple views are stacked into a feature sequence 𝖷∈ℝ^n× m × d_e, like a sentence embedding tensor composed of some word embedding vectors, as the input tensor of the VFormer. The structure of our VFormer is similar to that of the encoder in the typical transformer <cit.>, and the main difference is that we introduce a missing view indicator matrix in the calculation of multi-head self-attention scores to prevent missing views from participating in the calculation of attention scores. Our masked multi-head self-attention encoder is characterized as follows: 
+
+
+For each sample embedding 𝖷_i ∈ℝ^m× d_e, we project it linearly to get its queries, keys, and values by h groups projective matrices, i.e., {𝖶^𝗊_t,𝖶^𝗄_t,𝖶^𝗏_t}_t=1^h with head number h. To mask the embedding features according to missing-view distribution, we define a fill function to fill zero value with -1e^9 and construct a mask matrix of sample i: 𝖬_i =w_i^Tw_i ∈ℝ^m× m, where w_i is i-th row vector of 𝖶. Then we calculate view correlations 𝖠_t and output 𝖧_t:
+
+    𝖠_t=softmax(fill((𝖷_i𝖶^𝗊_t)(𝖷_i𝖶^𝗄_t)^T𝖬_i)/√(d_h))
+       𝖧_t = 𝖠_t(𝖷_i𝖶^𝗏_t),
+	
+where d_h=d_e/h, 𝖶^𝗊_t, 𝖶^𝗄_t, 𝖶^𝗏_t ∈ℝ^d_e × d_h, and 𝖧_t∈ℝ^m× d_h. The masked self-attention mechanism is shown in the Fig. <ref>, it is worth noting that we fill the attention values with -1e^9 so that the softmax will ignore the corresponding missing views when calculating the attention scores. And then, we concatenate all outputs to produce a new embedding feature w.r.t sample i:
+𝖧 = Concat(𝖧_1,...,𝖧_t) ∈ℝ^m× d_e. To sum up, all views of the same sample will exchange information during the parallel encoding process in our VFormer. As a result, the private information of each view is shared to some extent by other views. Other operations on VFormer are shown in the Fig. <ref>(a). Finally, our VFormer can be formulated as: :𝖷→𝖹∈ℝ^n× m× d_e.
+
+
+
+ §.§ Label-Guided Graph Constraint
+
+Unlike single-label samples maintaining an invariant label distance (√(2) by Euclidean distance), multi-label samples naturally hold uneven distribution in label space, which offers the possibility to guide the high-level representation learning based on label similarity. Simply put, the label manifold assumption means that if two samples are similar, their labels should also be similar <cit.>. In turn, we utilize label similarity to construct a sample-level graph constraint to guide the representation learning. As shown in Fig. <ref>(b), the similarity vector from sample 1 to other samples is calculated to guide the embedding encoding of sample 1. Before that, we define the label similarity matrix 𝖳:
+
+    𝖳=(𝖸⊙𝖦)(𝖸⊙𝖦)^T./(𝖦𝖦^T),
+
+where ‘⊙’ is Hadamard product and ‘./’ denotes the division of corresponding elements. Notably, 𝖳∈ [0,1]^n× n is normalized by 𝖦𝖦^T, where (𝖦𝖦^T)_ij is referring to the number of known categories in both 𝖸_i and 𝖸_j. In other words, for two samples, the larger the number of common positive tags, the more similar they are. In addition, the similarity of two embedding features is calculated in cosine space, i.e., for sample i and j, their similarity in view v is defined as:
+
+    𝖲_ij^(v)=(⟨ z_i^(v)· z_j^(v)⟩/z_i^(v)z_j^(v)+1)/2,
+
+where ⟨·⟩ denotes the vector dot product operation. z_i^(v) and z_j^(v) are two embedding features from view v that are output by VFormer. In order to learn sample neighbor relationships from labels, we let label similarity be the target and feature similarity be the learning object. The graph constraint loss ℒ_gc is formulated as:
+
+    ℒ_gc   = -1/2mN∑_v=1^m∑_i=1^n∑_j i^n(𝖳_ijlog𝖲^(v)_ij
+       +(1-𝖳_ij)log(1-𝖲^(v)_ij))(𝖶_iv𝖶_jv),
+
+where N=∑_i,j𝖶_iv𝖶_jv denotes the number of available sample pairs in view v. We introduce 𝖶_iv𝖶_jv to mask the calculation of loss w.r.t missing views.
+
+
+
+
+
+ §.§ Adaptively Weighted Fusion
+
+As mentioned above, VFormer encodes an embedding feature for each view of each sample (i.e., 𝖹∈ℝ^n× m× d_e). In order to obtain a consistent common representation to uniquely describe the corresponding sample, we propose an adaptively weighted fusion strategy to fuse multi-view embedding features before final classification. The fusion feature z̅_̅i̅ of sample i is defined as follows:
+
+
+    z̅_̅i̅=∑_v=1^me^a^γ_vz_i^(v)𝖶_iv/∑_ve^a^γ_v𝖶_iv,
+
+where a_v is a learnable scalar weight of v-th view and γ is a adjustment factor. Apparently simple as Eq. (<ref>) seems, it serves two purposes: i) Distinct from other methods to treat all views equally, we flexibly assign each view different weighting coefficients, which help to maintain or highlight the differences of discriminative ability among views.
+ii) Unusable views must be ignored in multi-view fusion to avoid negative effects, so missing-view indicator matrix is introduced in our fusion module. Stack all z̅_̅i̅ and we can get output tensor 𝖹̅∈ℝ^n× d_e for next classification.
+
+
+
+
+ §.§ CFormer and Classifier
+
+In the real world, multiple categories of samples are not independent of each other. How to leverage the multi-label correlations to make our model more discriminative is the main concern in the subsection. Instead of learning a category correlation graph, similar to <cit.>, we directly map each category to the feature space and leverage the self-attention mechanism to capture the category correlations. In more detail, c class tokens {cls^i∈ℝ^d_e}_i=1^c are randomly initialized before training and input to category-aware transformer (CFormer for short) with fusion features of samples (i.e., the input of CFormer is {z̅_̅i̅,cls^1,...,cls^c}_i=1^n). Similar to the structure of VFormer, CFormer allows the fusion features and category tokens to share information, which enjoys two major benefits: On the one hand, the view-fusion features aggregate all subcategory information according to similarities among them, which makes the embedding features encoded by CFormer closer to their relevant class tokens. On the other hand, the information interaction across categories implicitly promotes the learning of category relevance. It should be pointed out that we do not introduce the missing-label mask here because mining the category correlation information requires the participation of all class tokens. And for any sample i, the output tensor of our CFormer is {z_i,cls^1_i,...,cls^c_i}∈ℝ^(c+1)× d_e. We split the output into two parts, i.e., consensus representation {z_i} for the main classification purpose and {cls^1_i,...,cls^c_i} for the representation learning of class tokens. 
+
+As shown in Fig. <ref>, c+1 linear classifiers {_z,{_i}_i=1^c} are connected in parallel to the outputs of CFormer, where the classifier _z predicts the final result 𝖯_z∈ [0,1]^n× c. While each other classifier _i only predicts the value of its own category so we can get another prediction 𝖯_c∈ [0,1]^n× c from all class tokens. Finally, we define a masked binary cross-entropy function as our multi-label classification loss:
+
+    ℒ_mbce   =  -1/C∑_i=1^n∑_j=1^c(𝖸_ijlog(𝖯_ij)
+       +(1-𝖸_ij)log(1-𝖯_ij)
+    )𝖦_ij,
+
+where C = ∑_i,j𝖦_i,j denotes the number of available labels and 𝖯 is the prediction. 𝖦 is introduced to prevent unknown labels from participating in the calculation of loss. As a result, we can obtain a main classification loss ℒ_mc and an ancillary classification loss ℒ_ac according to ℒ_mbce for 𝖯_z and 𝖯_c, respectively. Overall, our total loss function is :
+
+    ℒ = ℒ_mc+ αℒ_gc+ βℒ_ac,
+ 
+where α and β are penalty coefficients.
+
+
+
+§ EXPERIMENTS
+
+
+
+ §.§ Experimental Setting
+
+Datasets. In the experiments, we use five multi-view multi-label datasets as same as <cit.>: (1) corel5k <cit.>: The corel5k dataset contains 5000 image samples with 260 classes and we use 4999 samples in the experiments. (2) Pascal07 <cit.>: The popular Pascal07 dataset has 9963 images covering 20 types of tags. (3) Espgame <cit.>: 20770 samples and 268 categories of Espgame are used in our experiments. It is no doubt that it is a large-scale database. (4) IAPRTC12 <cit.>: As a benchmark database, IAPRTC12 is composed of 20,000 high-quality natural images and we use 19627 images and 291 tags in the experiments. (5) Mirflickr <cit.>: The Mirflickr is collected from the social photography site Flickr, which is made up by 25000 images. 38 types of annotations are selected in the experiments. For the above five multi-view multi-label datasets, each dataset contains six views, i.e., GIST, HSV, HUE, SIFT, RGB, and LAB. 
+
+Data processing. To evaluate the performance of various multi-view multi-label learning methods on incomplete datasets, following <cit.>, we treat the five datasets as follows to simulate the incomplete case: (1) For each view, we randomly remove 50% of samples while guaranteeing that at least one view is available for each sample. (2) For each category, we randomly select 50% of positive tags and negative tags as unknown labels. 
+
+Comparison. We select eight top methods to compare to our LMVCAT. Six methods, i.e., lrMMC, MVL-IV, MvEL, iMSF, iMvWL, and NAIML, are introduced in section <ref>. In addition, we add two advanced methods, named C2AE <cit.> and GLOCAL <cit.>, to expand the evaluation experiments. C2AE is a canonical correlated autoencoder network, which learns a latent embedding space to bridge feature representations and label information. GLOCAL exploits the global and local label correlations on the representation learning, which is also an application of label manifold. However, C2AE and GLOCAL are both single-view multi-label classification methods, and only iMvWL and NAIML are designed for the datasets with both missing views and missing labels. Therefore, we have to do extra alterations to the rest of the methods. Like <cit.> and <cit.>, average values of available views are filled into unusable views for MvEL and lrMMC. And as to MVL-IV and iMSF, we set missing tags to be negative tags. C2AE and GLOCAL are independently conducted on each view and the best results are reported. All parameters of these comparison methods are set as recommended in their papers or codes for a fair comparison.
+
+Evaluation. Different from <cit.> and <cit.>, we only select AP (Average Precision), RL (Ranking Loss), and AUC (adapted Area Under Curve) as our metrics due to the weak discrimination of HL (Hamming Loss). Note that 1-RL is used instead of RL in our results so that the higher the value, the better the performance. 
+
+The implementation of our method is based on MindSpore and Pytorch framework.
+
+
+
+
+
+
+
+
+ §.§ Experimental Results and Analysis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Table <ref> to <ref> show the performance of the nine methods on five incomplete datasets (some of the results are quoted from <cit.> and <cit.>). Table <ref> lists the results on the datasets with complete views and labels. All experiments are repeated 10 times to avoid outlier results as much as possible, and we list the mean and standard deviation of 10 tests in these tables. Values in parentheses represent the standard deviation. Fig. <ref> and Fig. <ref> show more results w.r.t different missing and training sample rates. From Table <ref> to <ref>, we can summarize the following observations:
+
+
+
+  * Our method achieves overwhelming advantages on all three metrics of the five datasets, especially on the most representative AP metric. For example, the AP value of our model exceeds the second-best NAIML by about 7% and 5% on the Corel5k and Espgame datasets respectively, which verifies the superiority of our method. 
+
+  * Both iMvWL and NAIML reach relatively better performance compared to the first four methods, which benefits from good compatibility to double incomplete data. As a deep method with stronger fitting ability, C2AE performs mediocrely due to the lack of multi-view complementary information. Though GLOCAL is a single-view method, the full exploitation of label correlations helps it achieve surprising results on several datasets.
+
+  * From Table <ref>, we can find that, although our LMVCAT is an incomplete method, it still works well with complete datasets. Specifically, on the Corel5k dataset, the AP value of our method is about 14 percentage points ahead of the second-best GLOCAL.
+
+
+
+
+As shown in Fig. <ref>, we respectively plot the histogram of three metrics in different missing-view and missing-label ratios by fixing another ratio on the corel5k dataset. These results verify that both incomplete views and partial labels are harmful for efficient classification. In addition, an interesting phenomenon is that when the incompleteness ratio is relatively small, missing labels have a greater impact on the performance, and conversely, the negative impact of missing views is greater. 
+As shown in Fig. <ref>, we conduct experiments on Corel5k and Mirflickr datasets with 50% available views, 50% known tags and different training sample ratios. It is clear that, as the proportion of training samples in the total increases, the performance of our method gradually goes up. 
+
+
+
+ §.§ Hyperparameters Study
+
+There are three hyperparameters, i.e., α, β, and γ in our LMVCAT. To study the optimal parameters selection, we list the performance of our method on different parameter combinations in Fig. <ref>. All datasets used in parameters study are with 50% missing-view ratio, 50% missing-label ratio, and 70% training samples. As can be seen in Fig. <ref> (a) and (b), for Corel5k dataset, the optimal parameters α and β are located in the range of [5,10] and [0.05,0.5], respectively, and for Pascal07 dataset, the optimal parameters α and β are located in the range of [10,100] and [0.001,0.5], respectively. As to γ, obviously, our method is insensitive to it from Fig. <ref> (c) and (d). In our experiments, γ is uniformly set to 2.
+
+
+
+
+ §.§ Ablation Study
+
+To study the effectiveness of each component of our method, we perform experiments with following altered methods. For the complete LMVCAT, we remove graph constraint, CFormer, and adaptively weighted module sequentially. Besides, we take off the missing-view indicator and missing-label indicator in our model so that the incomplete views and weak labels are completely exposed to the network. As can be seen in Table <ref>, our label-guided graph constraint plays a key role and all experiments confirm that each component of our LMVCAT is beneficial and necessary.
+
+
+
+
+
+§ CONCLUSION
+ In this paper, we propose a general transformer-based framework for MvMlC, which skillfully exploits label manifold to guide the representation learning. And its innovative view- and category-awareness realize multi-view information interaction and multi-category discrimination fusion. An adaptively weighted fusion strategy is also introduced to balance the view-specific contribution. In addition, missing-view and weak label problems are specifically avoided throughout the network. Extensive experiments support the conclusion of the effectiveness of our method. 
+
+
+
+
+§ ACKNOWLEDGMENTS
+
+This work is supported by Shenzhen Science and Technology Program under Grant RCBS20210609103709020, GJHZ20210705141812038, Shenzhen Fundamental Research Fund under Grant GXWD20220811173317002, and CAAI-Huawei MindSpore Open Fund under Grant CAAIXSJLJJ-2022-011C.
+
+
+
+
+
+
+
+
+
+
+

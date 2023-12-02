@@ -90,6 +90,7 @@ class LlamaAttention(nn.Module):
         self.scaling = self.head_dim**-0.5
         self.qkv_proj = nn.Linear(self.hidden_size, 3 * self.hidden_size, bias=False)
         self.o_proj = nn.Linear(self.hidden_size, self.hidden_size, bias=False)
+
         # TODO(chaofan): add support for other attention functions
         self.attn_func = attn_func_cls(
             layer_idx=layer_idx,

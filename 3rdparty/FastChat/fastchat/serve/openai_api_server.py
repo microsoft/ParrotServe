@@ -388,6 +388,8 @@ async def create_chat_completion(request: ChatCompletionRequest):
         latency = float(latency)
     except ValueError:
         return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
+
+    # RTT
     await asyncio.sleep(latency)
 
     error_check_ret = await check_model(request)
@@ -423,17 +425,11 @@ async def create_chat_completion(request: ChatCompletionRequest):
     if error_check_ret is not None:
         return error_check_ret
 
-    # HACK(chaofan): Override max_new_tokens
-    max_gen_len = os.environ.get("FS_MAX_GEN_LENGTH", None)
-    assert (
-        max_gen_len is not None and max_gen_len.isdecimal()
-    ), "Please specify the environment variable FS_MAX_GEN_LENGTH"
-    gen_params["max_new_tokens"] = int(max_gen_len)
-
     if request.stream:
         generator = chat_completion_stream_generator(
             request.model, gen_params, request.n, worker_addr
         )
+
         return StreamingResponse(generator, media_type="text/event-stream")
 
     choices = []

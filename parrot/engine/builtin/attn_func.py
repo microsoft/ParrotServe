@@ -339,35 +339,48 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
 
         if num_total_fill_tokens > 0:
             q_fill = q[:num_total_fill_tokens]
-            dest_indices = torch.arange(
-                iteration_state.k_buffer.shape[0],
-                dtype=torch.int64,
-                device=k.device,
-            )
 
-            move_tokens_from_blocked_k_cache(
-                k_cache,
-                iteration_state.k_buffer,
-                iteration_state.fill_slots,
-                dest_indices,
-            )
+            if iteration_state.k_buffer.shape[0] == num_total_fill_tokens:
+                fill_output = xops.memory_efficient_attention_forward(
+                    q_fill.unsqueeze(0),
+                    k.unsqueeze(0),
+                    v.unsqueeze(0),
+                    attn_bias=iteration_state.q_kv_attn_bias,
+                    p=0.0,
+                    scale=self.scaling,
+                    op=xops.fmha.cutlass.FwOp(),
+                )
 
-            move_tokens_from_blocked_v_cache(
-                v_cache,
-                iteration_state.v_buffer,
-                iteration_state.fill_slots,
-                dest_indices,
-            )
+            else:
+                dest_indices = torch.arange(
+                    iteration_state.k_buffer.shape[0],
+                    dtype=torch.int64,
+                    device=k.device,
+                )
 
-            fill_output = xops.memory_efficient_attention_forward(
-                q_fill.unsqueeze(0),
-                iteration_state.k_buffer.unsqueeze(0),
-                iteration_state.v_buffer.unsqueeze(0),
-                attn_bias=iteration_state.q_kv_attn_bias,
-                p=0.0,
-                scale=self.scaling,
-                op=xops.fmha.cutlass.FwOp(),
-            )
+                move_tokens_from_blocked_k_cache(
+                    k_cache,
+                    iteration_state.k_buffer,
+                    iteration_state.fill_slots,
+                    dest_indices,
+                )
+
+                move_tokens_from_blocked_v_cache(
+                    v_cache,
+                    iteration_state.v_buffer,
+                    iteration_state.fill_slots,
+                    dest_indices,
+                )
+
+                fill_output = xops.memory_efficient_attention_forward(
+                    q_fill.unsqueeze(0),
+                    iteration_state.k_buffer.unsqueeze(0),
+                    iteration_state.v_buffer.unsqueeze(0),
+                    attn_bias=iteration_state.q_kv_attn_bias,
+                    p=0.0,
+                    scale=self.scaling,
+                    op=xops.fmha.cutlass.FwOp(),
+                )
             output[:num_total_fill_tokens] = fill_output
 
         if iteration_state.num_generation_jobs > 0:

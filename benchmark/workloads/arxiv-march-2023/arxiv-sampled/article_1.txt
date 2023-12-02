@@ -1,0 +1,480 @@
+
+
+
+
+
+
+Transformer Encoder with Multiscale Deep Learning for Pain Classification Using Physiological Signals
+    Zhenyuan Lu
+
+lu.zhenyua@northeastern.edu
+
+Northeastern University
+
+Boston, MA
+
+
+
+
+
+
+Burcu Ozek
+
+ozek.b@northeastern.edu
+
+Northeastern University
+
+Boston, MA
+
+Sagar Kamarthi
+
+s.kamarthi@northeastern.edu
+
+Northeastern University
+
+Boston, MA
+
+    Received: date / Accepted: date
+===================================================================================================================================================================================================================================================
+
+
+
+
+
+
+
+  Pain is a serious worldwide health problem that affects a vast proportion of the population. For efficient pain management and treatment, accurate classification and evaluation of pain severity are necessary. However, this can be challenging as pain is a subjective sensation-driven experience. Traditional techniques for measuring pain intensity, self-report scales, are susceptible to bias and unreliable in some instances. Consequently, there is a need for more objective and automatic pain intensity assessment strategies. In this paper, we develop PainAttnNet (PAN), a novel transformer-encoder deep-learning framework for classifying pain intensities with physiological signals as input. The proposed approach is comprised of three feature extraction architectures: multiscale convolutional networks (MSCN), a squeeze-and-excitation residual network (SEResNet), and a transformer encoder block. On the basis of pain stimuli, MSCN extracts short- and long-window information as well as sequential features. SEResNet highlights relevant extracted features by mapping the interdependencies among features. The third module employs a transformer encoder consisting of three temporal convolutional networks (TCN) with three multi-head attention (MHA) layers to extract temporal dependencies from the features. Using the publicly available BioVid pain dataset, we test the proposed PainAttnNet model and demonstrate that our outcomes outperform state-of-the-art models. These results confirm that our approach can be utilized for automated classification of pain intensity using physiological signals to improve pain management and treatment. The source code and other supplemental information are documented: <https://github.com/zhenyuanlu/PainAttnNet>.
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+Pain is a distressing sensation and emotional experience that is associated with potential or actual tissue damage in the body <cit.>. It serves the purpose of alerting the body's defense mechanism to react to a stimulus to prevent further harm. Pain can seriously affect one's physical, mental, and social well-being <cit.>. According to the World Health Organization (WHO), those with chronic pain are more than twice as likely to have problems functioning and four times more probable to suffer from depression or anxiety <cit.>. In addition, the International Association for the Study of Pain (IASP) also estimates that 20% of adults worldwide experience pain daily and that 10% of adults are formally diagnosed with chronic pain each year <cit.>. 
+
+The most prevalent criteria for categorizing pain are based on: (1) the pathophysiological mechanism (nociceptive or neuropathic pain from tissue or nerve injury, respectively), (2) the pattern of duration (, acute, chronic, recurring), (3) the anatomical location involved (, neck, back, knee), or (4) the etiology (, malignant associated with cancer, pinched nerve, dislocated joint) <cit.>. Therefore, pain is an essential indicator, which can range in intensity from mild to severe, that something is wrong with the body and thus can drive a person to seek medical care. Over the past two decades, pain research has been an increasingly popular field of study. The authors of this paper investigated and analyzed 264,560 research articles published since 2002 on the topic of pain using a keyword co-occurrence network (KCN) architecture <cit.>. According to this study <cit.>, there has been a sevenfold increase in the use of “pain” as a keyword and a near doubling in the number of papers discussing pain in the scientific literature.
+
+To enhance one's health and quality of life, it is essential to gain insight into pain and develop effective pain management strategies <cit.>. One of the significant obstacles to effectively manage pain is the lack of appropriate pain assessment <cit.>. Proper pain assessment is also necessary for both tracking the effectiveness of pain management strategies and monitoring changes in pain intensity over time. Pain assessment techniques help clinicians and researchers to identify the causes of pain, develop new treatments, and improve our understanding of how the body processes and responds to pain <cit.>. Therefore, accurate pain assessments are vital for effective pain management, as it enables healthcare providers to determine the most suitable treatments for each individual  <cit.>.
+
+
+The most well-known method to assess pain intensity for individuals is using self-report scales, the verbal rating scales (VR), Visual Analog Scale (VAS), or the Numeric Rating Scale (NRS), which rely on subjective self-assessment <cit.>. Despite these scales can offer valuable information on a person's pain experience, the pain assessment can be challenging in certain populations, neonatal infants <cit.> and individuals with cognitive impairments or communication difficulties <cit.>. As a result, there is a need for more objective and automated methods for assessing pain intensity <cit.>.
+
+One common approach to meeting this need is the use of physiological signals, electrodermal activity (EDA), electrocardiography (ECG), electromyography (EMG), and electroencephalography (EEG), to classify pain intensity <cit.>. EDA (also known as the galvanic skin response (GSR)) detects variations in the skin conductance level (SCL), which closely corresponds with sweat gland activation. In clinical settings, skin conductance has also been employed as a substitute for pain <cit.>. The EDA complex comprises of sympathetic neuronal activity-generated tonic (known as skin conductance level, SCL) and phasic (known as skin conductance response SCR) components <cit.>. ECG captures the electrical activity of the heart in order to assess cardiac health and stress. EMG monitors muscle activity and identifies changes in muscular tension, whereas EEG examines the brain's electrical activity. These signals can be used to investigate the effectiveness of pain management and shed light on how the body reacts to pain. It is possible to use them in combination with other tools to get a broader picture of the level of pain being experienced <cit.>. In recent years, EDA signals for pain intensity classification have gained popularity, as these signals can be easily detected using wearable sensors <cit.>, making them convenient and non-invasive. Recently, there has been increasing interest in applying machine learning algorithms to classify pain intensity based on these signals allowing for a more objective and automated approach to pain assessment <cit.>. They have also shown promising results in previous studies, which we discuss in <ref>. 
+
+
+In this paper, we evaluate a novel transformer-encoder deep learning approach on EDA signals for automated pain intensity classification. The data from publically available BioVid dataset is utilized for the experiments. We aim to provide an objective, automatic, and convenient method of pain assessment that can be used in clinical settings and home settings.
+
+
+
+
+
+
+
+
+
+
+§ RELATED WORK
+
+
+
+There has been growing interest in using conventional machine learning techniques, support vector machine (SVM), k-nearest neighbors (KNN), regression model, bayesian model, and tree-based model, for the classification of pain intensity in order to improve the accuracy and efficiency of pain assessment based on physiological signals. 
+
+Using an SVM and KNN to classify pain levels is a common strategy <cit.>. One study proposed an SVM model and used two separate feature selection strategies (univariate feature selection and sequential forward selection) during the feature extraction phase <cit.>. In a similar fashion, one study identified low back pain based on features extracted from motion sensor data using an SVM model <cit.>.
+
+A Bayesian network was utilized in one research to construct a decision support system to aid in the treatment of low back pain <cit.>. The system was capable of providing tailored therapeutic recommendations based on the unique characteristics of patient and medical history. One more common strategy is the use of random forests, which has been implemented in a variety of research projects. These studies <cit.> applied random forest models to the BioVid Heat Pain Database <cit.>, which included multidimensional datasets consisting of both video and physiological signals (ECG, SCL, EMG, EEG). The other tree-based models, AdaBoost, XGBoost, and TabNet, have also been applied in the classification of pain intensity. For example, in the study of Shi <cit.>, the researchers manually extracted features to categorize pain intensity using AdaBoost, XGBoost, and TabNet models. Similarly, Pouromran <cit.> explored XGBoost for estimating pain intensity using catch22 <cit.> features of signals. Other studies implemented ADABoost and XGBoost <cit.> with filter-based feature selection methods, gini impurity gain. 
+
+Several studies have also integraded tree-based models with other machine learning techniques. For instance, Pouromran <cit.> employed BiLSTM to extract the features which were then output to the XGBoost, resulting in high performance across four categories of pain intensity. The BiLSTM layer, which is an enhanced RNN with gates to govern the information flow, has the ability to tackle the problem of vanishing and exploding gradients in RNN. Wang <cit.> introduced a hybrid deep learning model with a BiLSTM layer to extract temporal features. They fused these with hand-crafted features, mean, maximum, and standard deviation of SCL and fed to a multi-layer perceptron (MLP) block to classify the signals. Lopez-Martinez and Picard <cit.> proposed a multi-task deep MLP to classify pain intensity using physiological signals, heart rate variability, skin conductance to classify pain intensity. Similarly Gouverneur <cit.> applied MLP with unique hand-crafted features to classify heat-induced pain classification.
+
+Thiam <cit.> proposed a deep learning model that utilizes a deep CNN framework followed by a block of fully connected layers (FCL) for the pain recognition. Similarly, Subramaniam and Dass <cit.> built a hybrid deep learning model that combines CNN with LSTM for pain recognition. These authors used such a framework to extract temporal features from hand-picked samples of BioVid, and then used a FCL to classify the signals into pain or no pain categories. 
+
+These models described above have demonstrated potential in pain intensity classifications, but they also have limitations. RNNs, despite their ability to capture temporal dependencies in sequential data, may struggle to maintain long-term dependencies in the input sequences. In addition, RNNs are not amenable for training in parallel due to their recurrent nature. On the other hand, MLPs tend to have a limited capacity to capture temporal dependencies of the input signals. CNNs have shown promising results in pain intensity classification, but may not be effective for modeling temporal dependencies among EDA data. To overcome these limitations, we propose PainAttnNet (PAN), a novel transformer-encoder deep-learning framework for classifying pain intensities using physiological signals as inputs.
+
+In <ref>, we will provide a detailed implementation of our proposed model (See <ref>) to resolve the above issues. In <ref> we will introduce the dataset we used, experimental results, evaluation metrics, baseline models comparison and model analysis. We provide the discussion in <ref>
+
+
+
+
+
+
+
+
+
+
+
+
+§ METHODOLOGY
+
+
+Our implementation section includes five parts: (1) an overview of our framework, (2) Multiscale Convolutional Network for feature extraction, (3) Adaptive Recalibration Block for highlighting relevant features, (4) Temporal Convolutional Network for capturing temporal dependencies, and (5) Multi-head Attention mechanism for further improving performance.
+
+
+
+
+ §.§ Outline of PainAttnNet
+
+
+
+To address the limitations of existing models for classifying pain intensity using physiological signals, we propose a novel framework that combines multiple networks and models (<ref>). Our framework aims to effectively classify pain intensity from physiological signals by utilizing various strategies to extract the features from the signals.
+
+We initially employ a multiscale convolutional network (MSCN) to extract long- and short-window features from signals, Electrodermal Activity (EDA). These extracted features can capture important information about the overall trend and variations in the signal, providing valuable insight into the pain intensity.
+
+Next, we use Squeeze-and-Excitation Residual Network (SEResNet) to learn the interdependencies among the extracted features to enhance the representation capability of the features. SEResNet consist of two main components: a squeeze operation, which reduces the number of channels in the feature maps by taking their spatial average, and an excitation operation, which scales the channel-wise feature maps using a weighted sum of the squeezed features. This allows the network to selectively weight the importance of different channels and adaptively recalibrate the feature maps.
+
+Finally, to capture the temporal representations of the extracted features, we use a multi-head attention mechanism in conjunction with a temporal (causal) convolutional network. The multi-head attention mechanism allows the network to attend to different parts of the input sequence simultaneously, and the temporal convolution network effectively captures the dependencies between the input and output over time. The mechanism behind the multi-head attention rests on the idea of scaling the dot product of the query and key vectors by the square root of their dimensionality, followed by a weighted sum of the values using the scaled dot products as weights. This mechanism allows the network to attend to different parts of the input sequence in a parallel fashion. On the other hand, the temporal convolution network uses an auto-regressive operation to effectively capture the dependencies between the sequence over time, while also allowing the end-to-end network training.
+
+Overall, the proposed model aims to extract and analyze features from physiological signals comprehensively and effectively, improving the accuracy of pain intensity classification. In the next section, we will provide a detailed implementation of the proposed model.
+
+
+
+
+
+ §.§ Multiscale Convolutional Network (MSCN)
+
+
+As EDA signals are inherently non-stationary. In the proposed approach, we employ a MSCN to effectively capture the various kinds of features from EDA signals (<ref>). To accomplish this, the MSCN architecture is intended to sample varied lengths of EDA timestamps by utilizing two branches of convolutional layers, each with a different kernel size at the first layer. The first branch uses a kernel of 400 to cover a window of  0.8 seconds while the second branch uses a kernel of 50 to cover a window of  0.1 seconds, giving us a large segment and a small segment of features, respectively. The deep learning models presented in several studies <cit.> inspired this technique. <ref> depicts the network architecture, which consists of two max-pooling layers and three convolutions per branch, and the output of each convolutional layer is normalized by one batch normalization layer before being activated using Gaussian Error Linear Unit (GELU). Max-pooling, in particular, is a technique for downsampling an input representation, which reduces the dimensionality of the feature maps and controls overfitting. It is used to determine the maximum value of a certain feature map region. Given an input 𝐗={x_1,…, x_N}∈^N× L × C, The operation of max-pooling can be described as:
+
+
+    f_c(𝐱)=max_i,j(x_i, j, c).
+
+where f is the output feature map, 𝐱 is the input feature map per channel, i and j are the spatial dimensions and c is the channel. The max pooling operation is applied to each channel separately, and the function f_c(𝐱) gives the maximum value of the elements in channel c. For example, f_c(𝐱) would be the maximum value of all elements in the c-th channel of the feature map 𝐗.
+
+After each convolutional layer, the batch normalization layer accelerates network convergence by decreasing internal covariate shifts and stabilizes the training process <cit.>. Batch normalization normalizes the activations of the prior layer by using the channel-wise mean mu_c and standard deviation σ_c. The batch normalization formulas are as follows: Let feature map 𝐗∈^N× L × C over a batch, where L is the length of each feature, N is the total number of features, and C is the channel. The formula for batch normalization are as follows:
+
+
+
+    y_γ, β, c = x_i,j,c-μ_c/σ_c·γ + β,
+
+
+here, 
+
+
+    μ_c = 1/NL∑_i,jx_i,j,c,
+
+
+
+    σ_c^2 = 1/NL∑_i,j(x_i,j,c- μ_c)^2.
+
+where i and j d spatial indices and c is the channel index; μ_c and σ_c^2 are the mean of the values and the variance in channel c for the current batch, respectively. In the above euqations, γ and β are learnable parameters introduced to allow the network to learn an appropriate normalization even when the input is not normally distributed.
+
+GELU is a form of activation function that is a smooth approximation of the behavior of the rectified linear unit (ReLU)<cit.> to prevent neurons from vanishing while limiting how deep into the negative regime activations <cit.>. This allows having some negative weights to pass through the network, which is important to send the information to the subsequent task in SEResNet. As GELU follows the Batch Normalization Layer, the feature map inputs 𝐗∼𝒩(0,1). The GELU is defined as: 
+
+
+    g(𝐱) := 𝐱·Φ(𝐱) =𝐱·1/2(1 + 𝐞𝐫𝐟(𝐱/√(2))).
+
+where Φ(𝐱) is the cumulative distribution function of the standard normal distribution P(𝐗≤𝐱). The 𝐞𝐫𝐟(·) is the error function. The ability of GELU is to boost the representation capabilities of the network by introducing a stochastic component that enables more diverse and ; GELU is one of the network's primary strengths. In addition, it has been demonstrated that GELU has a more stable gradient and a more robust optimization landscape than ReLU and leaky ReLU, because of this GELU can promote faster convergence and improved generalization performance.
+
+Additionally, we employ a dropout layer after the first max pooling in both branches, and concatenate the output features from the two branches of the MSCN.  
+
+
+
+ §.§ Squeeze-and-Excitation Residual Network (SEResNet)
+
+
+
+
+
+
+
+
+
+
+Using the SEResNet (<ref>), we can adaptively recalibrate the concatenated features from the MSCN to enhance the most important global spatial information of EDA signals. The mechanism of the SEResNet aims to model the inter-dependencies between the channels to enhance the convolutional features and increase the sensitivity of the network to the most informative features <cit.>, which is useful for our subsequent tasks. The SEResNet operates by compressing the spatial information of the feature maps into a global information embedding, and the excitation operation uses this descriptor to adaptively scale the feature maps (<ref>). Particularly, we initially employ two convolutional layers with a kernel and stride size of 1, and an activation of ReLU. Here we use ReLU, other than GELU, to improve the performance on the convergence. At the squeezing stage in the SEResNet, the global spatial information from the two convolutional layers are then compressed by global average pooling. It reduces the spatial dimension of feature maps while keeping the most informative features. Let the feature map from the MSCN as 𝐗∈^N × L × C, we apply two convolutional layers to 𝐗 and have new feature maps 𝐕∈^N × L × C shrink the 𝐗 to generate the statistics 𝐳∈^C: 
+
+
+    z_c=1/NL∑_i=1^N∑_j=1^Lv_i,j,c ,
+
+where z_c is the global average of L data points per each channel. Next comes the excitation (adaptive recalibration) stage, in which two FCL generate the statistics used to scale the feature maps. As a bottleneck, the first FCL with ReLU is used to reduce the dimensionality of the feature maps. The second with sigmoid recovers the channel dimensions to their original size by performing a dimensionality-increasing operation. Let the 𝐳∈^C. We define adaptive recalibration as follows: 
+
+
+
+    α=σ(𝐖_2δ(𝐖_1𝐳)),
+
+where r is the reduction ratio. δ denotes the ReLU function, and σ refers to the sigmoid function. 𝐖_1∈^C/r× C and 𝐖_2∈^C×C/r is the learnable weights for the first FC layer and the second, respectively. These weights reveal the channel dependencies and provide information about the most informative channel.
+
+Then the original feature map 𝐯 is scaled by the activation α, and this is done by channel-wise multiplication: 
+
+
+    𝐌=α_c⊗𝐯_c,
+
+
+
+    𝐗̃=𝐗⊕𝐌.
+
+where 𝐗̃ is the final output of the SEResNet, which results from the original input 𝐗 and the enhanced features 𝐌.
+
+
+
+ §.§ Transformer Encoder
+
+
+
+  §.§.§ Temporal Convolutional Network (TCN)
+
+
+TCN framework, inspired by the studies of Lea <cit.> and Van den Oord <cit.>, has been used effectively for processing and generating sequential data, audio or images. TCN employs one dimension convolutional layers to capture the temporal dependencies among the input data in a sequence, previous recalibrated SEResNet features. In contrast to a regular convolutional network, the TCN's output at time t depends only on the inputs before t. TCN only permits the convolutional layer to look back in time by masking future inputs. Like the regular convolutional network, each convolutional layer contains a kernel with a specific width to extract certain patterns or dependencies in the input data across time before the present t. To make input and output length the same, additional padding is added to the left side of input to compensate for the input's window shift. 
+
+Let input feature map 𝐗∈^1 × L × C_1, where L is the input length, and C_1 is the dimension of input channels. We have kernel 𝐖∈^K × C_1 × C_2, and the size of padding (K-1)∈, where K is the size of the kernel, and C_2 is the dimension of output channels. Then we have the output from TCN as φ(·) ∈^1 × L × C_2. This approach can assist us in constructing an effective auto-regressive model that only retrieves temporal information with a particular time frame from the past without cheating by utilizing knowledge about the future.
+
+
+
+
+
+
+
+
+  §.§.§ Multi-Head Attention (MHA)
+
+
+
+
+
+
+
+
+
+
+Multi-Head Attention (MHA) is the main part of the Transformer Encoder. It is a popular method for learning long-term relationships in sequences of features (<ref>). We adapt this algorithm from Dosovitskiy <cit.>, Vaswani <cit.>, and Bahdanau <cit.>. It has significant performance in different fields, GPT <cit.> and BERT <cit.> models in natural language process, and physiological signals classification for sleep Eldele <cit.>, Zhu <cit.>. MHA consists of multiple layers of Scaled Dot-Product Attention, where each layer is capable of learning different temporal dependencies from the input feature maps (<ref>). MHA aims to obtain a more comprehensive understanding of how the ith feature is relevant with jth features by processing them through multiple attention mechanisms. In particular, let the output feature maps from SEResNet, 𝐗={x_1, …, x_N }∈^N × L. Then we take three duplicates of 𝐗 such that 𝐗̃=φ(𝐗), where φ(·) is the function of TCN, and 𝐗̃ is the output of TCN. Next we send the three outputs, 𝐗̃^(Q), 𝐗̃^(K), 𝐗̃^(V) to attention layers to calculate the weighted sum of the input, the attention scores 𝐳_i: 
+
+
+    𝐳_i = ∑_j=1^Lα_ijφ(𝐱̃_j^(V)),
+
+the weight α_ij of each φ(x_j) is computed by:
+
+
+
+
+
+
+    α_ij=exp(e_ij)/∑_r=1^Lexp(e_ir),
+
+here, 
+
+    e_ij = 1/√(L)·𝐱̃_i^(Q)·𝐱̃_j^(K)⊤.
+
+then the output of one attention layer is 𝐳 = {z_0, …, z_L  }∈^N × L. 
+
+Next, MHA calculates all the attention scores 𝐙^(H) from multiple attention layers parallelly, and then concatenate them into 𝐙̃_MHA∈^N × HL, where H is the number of attention heads, and HL is the overall length of the concatenated attention scores. 
+
+We apply a linear transformation with learnable weight W ∈^HL × L to make the input and output dimensions the same so that we can easily process the subsequent stages. The overall equation for MHA is as follows:
+
+
+    𝐙̃_MHA= Concat(𝐳^(1), …, 𝐳^(H)) · W ∈^N × L.
+
+
+After concatenating these attention scores, we process them with the original 𝐗̃ using an addition operation and layer normalization adopted from <cit.>, formed as Φ(𝐗̃ + 𝐙̃_MHA), which can be described as a residual layer with layernorm funciton Φ_1(·). The output of Φ_1(·) is then passed through the following two fully connected networks and the second residual layer Φ_2(·). Finally, the pain intensity categorization results are obtained from another two fully connected networks, which are then followed by a Softmax function.
+
+
+
+
+
+
+§ EXPERIMENTAL RESULTS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ BioVid Heat Pain Datase
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+In our experiment, we used the Electrodermal Activity (EDA) signals from BioVid Heat Pain Database (BioVid), generated by Walter <cit.>. As described in <ref>, Electrodermal Activity (EDA) is an useful indicator of pain intensity <cit.>. Walter <cit.> conducted a series of pain stimulus experiments in order to acquire five distinct datasets, including video signals caputuring the subjects' facial expression, SCL (also known as EDA), ECG, and EMG. The experiment featured 90 participants in ages: 18-35, 36-50 and 51-65. Each group has 30 subjects, with an equal number of males and females. At the beginning of the experiment, the authors callibrated each participant's pain threshold by progressively raising the temperature from the baseline T_0= 32^∘  C to determine the temperature stages T_P and T_T; here TP represents the temperature stages at which the individual began to experience the heat pain; TT is the temperature at which the individual experiences intolerable pain.  Then four temperature stages can be determined as follows:
+
+
+    T_i =  {[ T_P + [(i-1) ×γ]   i∈{1, 2, 3, 4};              T_B            i = 0 ].
+
+here, 
+
+    γ = (T_T-T_P)/4
+
+where T_P and T_T are respectively defined as T_1 and T_4. The individual received heat stimuli through a thermode (PATHWAY, Medoc, Israel) connected to the right arm for the duration of the experiment. In each trial, pain stimulation was administered to each participant for a duration of 25 minutes. In each experiment, they determined five temperatures, T_i∈{0, 1, 2, 3, 4}, to induce five pain intensity levels from lowest to highest. Each temperature stimulus was delivered 20 times for 4 seconds, with a random interval of 8 to 12 seconds between each application (<ref>a). During this interval, the temperatures were kept at the pain-free (32^∘ C) level. EDA, ECG, and EMG were collected by the according sensors to a sampling rate of 512 Hz with a segmentation in a length of 5.5 seconds. Due to technical issues in the studies, three subjects were excluded, resulting in a final count of 87. Therefore, the training sample of each signal creates a channel with dimensions of 2816 × 20 × 5 × 87. Informed by the the previous <cit.>, we adopted the data from BioVid and used the EDA signal in a dimension of 2816 × 20 × 5 × 87 with a 5.5 second segmentation as the input in our experiment for pain intensity classification based on five pain labels. We also discovered that Subramaniam and Dass <cit.> removed 20 out of 87 subjects, resulting 2816 × 20 × 5 × 67 training samples. In contrast Thiam <cit.> utilized a 4.5 seconds segmentation as opposed to the original 5.5 seconds (<ref>b). In next sections, we will compare these latest state-of-the-art methods.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Evaluation metrics
+
+
+
+
+We utilized the accuracy (ACC), Cohen Kappa (κ) <cit.>, and macro F1 score (MF_1) to analyze the performance of our PainAttnNet on the classification of pain intensity: 
+
+
+    ACC = 1/Q∑_i=1^KTP_i.
+
+
+
+    MF_1 = 1/K∑_i=1^KF_1 ,
+
+here, 
+
+
+    F_1,i = 2 × Precision_i × Recall_i/Precision_i + Recall_i,
+
+
+
+
+    Precision_i = TP_i/TP_i + FP_i,
+
+
+
+    Recall_i = TP_i/TP_i + FN_i.
+
+
+
+
+
+
+
+
+
+
+
+
+where TP_i ,TN_i, and FN_i are the true positive, true negative, and false negative of each class. Here K is the total number of classes, and Q is the total number of samples in the training set. 
+
+
+
+
+ §.§ Experimental Settings
+
+In our study, we compared PainAttnNet with six baselines, Random Forest <cit.>, MT-NN <cit.>, SVM <cit.>, TabNet <cit.>, MLP <cit.>, and XGBoost <cit.>. In contrast, we also listed other two models, CNN + LSTM <cit.>, CNN <cit.>, with different segmentation and sample selections on the EDA signals as the input. 
+
+We implemented 87-fold cross-validation for the BioVid dataset by splitting the subjects into 87 groups, therefore, each subject is in one group as a leave-one-out cross-validation (LOOCV). We trained on 86 subjects and tested on one subject with 100 epochs for each iteration. Ultimately, the macro performance matrices were computed by combining the projected pain intensity classes from all 87 iterations. We created PainAttnNet using Python 3.10 and PyTorch 1.13 on a GPU powered by an Nvidia Quadro RTX 4000. We configured the optimizer as Adam with the initial learning rate of 1e-03, a weight decay of 1e-03a, and batch size of 128 for the training dataset. PyTorch's default settings for Betas and Epsilon were (0.9, 0.999) and 1e-08. In the transformer encoder, we utilized five heads for multi-head attention structure, with each feature's size being 75.
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+ §.§ Performance of PainAttnNet
+
+
+We conducted six experimental tasks: (1) T_0 vs.  T_1 vs.  T_2 vs.  T_3 vs.  T_4, (2) T_0 vs. (T_1, T_2, T_3, T_4), (3) T_0 vs.  T_1, (4) T_0 vs.  T_2, (5) T_0 vs. T_3, and (6) T_0 vs. T_4, to evaluate PainAttnNet's performance on the BioVid dataset (<ref>). Among these tasks, we are most interested in tasks 2, 5, and 6, as in clinical trials it is essential to distinguish between pain and no pain (Task 2), and it is crucial for us to understand the distinctions between no pain and nearly intolerable pain (Tasks 5 and 6), to improve the quality of patient care.
+
+The six classification tasks listed in the table evaluate the performance of the PainAttnNet on the BioVid dataset (<ref>). The first task, T_0 vs. T_1 vs. T_2 vs. T_3 vs. T_4, involves classifying pain intensity levels into five categories: no pain (T_0), low pain (T_1), medium pain (T_2), high pain (T_3), and nearly intolerable pain (T_4).
+
+Task 2, T_0 vs. (T_1, T_2, T_3, T_4), involves classifying pain intensity levels into two categories: no pain (T0) and any level of pain (T1, T2, T3, T4).
+
+Tasks 3, 4, 5, and 6 classify pain intensity levels into two categories for each specific pain level. For example, in the third task (T_0 vs. T_1), the classifier is trained to distinguish between no pain (T_0) and low pain (T_1). Similarly, in the fourth task (T_0 vs. T_2), the classifier is trained to distinguish between no pain (T_0) and medium pain (T_2), and so on.
+
+Among these, tasks 2, 5, and 6 are particular interesting as they involve classifying instances into two categories: no pain (T_0) and pain. Task 2 is important as it involves distinguishing between no pain and any level of pain, which is essential in clinical trials. Tasks 5 and 6 are important since they distinguish between no pain and nearly intolerable pain (T_3 and T_40), which is crucial for improving the quality of patient care.
+
+The results show that the PainAttnNet model performed best on Task 6, with an of 85.34% accuracy, a macro F1 score of 85.27%, and a Cohen Kappa of 0.70. The model performed weakly on Task 2, with an accuracy of 80.87%, a macro F1 score of 78.32%, and a Cohen Kappa of 0.09. The performance on Tasks 3, 4, and 5 falls in between the performance levels for Task 2 and Task 6 varying levels of accuracy, macro F1 score, and Cohen Kappa. 
+
+
+We also compared PainAttnNet to other SOTA and the latest approaches on the pain intensity classification for the BioVid dataset (<ref>). To be easy to make a comparison we only select four out of the previous six classification tasks: T_0 vs.  T_1, T_0 vs.  T_2, T_0 vs. T_3, and T_0 vs. T_4.
+
+The first two approaches, CNN + LSTM <cit.> and CNN <cit.>, used different sample selections and data segmentation, respectively. Therefore, we just list the results in the table <ref> as references but without comparison to the rest.
+
+The results in the table (<ref>) show that our proposed model outperforms other SOTA approaches. In particular, PainAttnNet achieved the highest accuracy for tasks T_0 vs. T_3, and T_0 vs. T_4, where the distinction between no pain and nearly intolerable pain is crucial. In task T_0 vs.  T_2, our model achieved a slightly higher accuracy compared to the best-performing SOTA approach (68.82 vs 68.39). In task T_0 vs.  T_1, Shi <cit.> have the highest accuracy. 
+
+In conclusion, the results of this comparison demonstrate that our proposed model, PainAttnNet, is a promising approach for classifying pain levels in EDA signals.
+
+
+
+
+
+
+
+§ CONCLUSIONS
+
+
+PainAttnNet is a unique framework we developed to classify the severity of pain based on EDA signals (PAN). A multiscale convolutional network (MSCN) and an Sequeeze-and-Excitation Residual Network (SEResNet) based on the feature extraction from EDA signals performed by PainAttnNet. The multi-head attention architecture consists of a temporal convolutional network (TCN) for catching temporal dependencies and multiple Scaled Dot-Product Attention layers for understanding the relationship among input temporal features. The results of the experiments conducted on the BioVid database indicates that our model achieves better results compared to other state-of-the-art methods.
+
+The results suggest that the PainAttnNet model performs well on tasks distinguishing between no pain from various pain levels, but there is room for improvement in its ability to differentiate different levels of pain intensities. Moving further, we aim to apply masked models and adaptive embedding to enhance the feature information from subspace on the labelled data. To be more realistic for potential future clinical practice, we will utilize contrastive learning with transfer learning on both huge unlabeled data and little chunks of labeled data to determine if it can still provide significant results.
+
+
+
+
+
+
+
+
+
+
+
+
+
+ieee_fullname
+
+
+
