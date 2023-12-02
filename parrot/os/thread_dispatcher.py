@@ -7,7 +7,7 @@ from enum import Enum
 from dataclasses import dataclass
 from queue import Queue
 
-from parrot.utils import get_logger
+from parrot.utils import get_logger, cprofile
 from parrot.exceptions import ParrotOSUserError, parrot_assert
 from .process.thread import Thread
 from .engine import ExecutionEngine
@@ -119,6 +119,7 @@ class ThreadDispatcher:
         if self.thread_queue.qsize() == 0:
             return []
 
+        # with cprofile("dispatch"):
         dispatched_threads: List[Thread] = []
 
         # Flush engines.

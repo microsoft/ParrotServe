@@ -7,6 +7,7 @@ from typing import Dict, AsyncGenerator
 from parrot.utils import get_logger, MemTracker, get_cpu_memory_usage
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.runtime_info import EngineRuntimeInfo
+from parrot.constants import UNKNOWN_DATA_FIELD
 
 from ..llm_engine import LLMEngine
 from .builtin_runner import BuiltinRunner
@@ -139,7 +140,7 @@ class BuiltinEngine(LLMEngine):
         }
 
     # override
-    def get_runtime_info(self) -> EngineRuntimeInfo:
+    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         # Scheduler
         num_running_jobs = self.scheduler.num_running_jobs
         num_total_jobs = self.scheduler.num_total_jobs
@@ -160,10 +161,15 @@ class BuiltinEngine(LLMEngine):
 
         recent_average_latency = self.latency_analyzer.get_average_latency()
 
-        self.gpu_mem_tracker.clear_cache()
-        profiled_cpu_mem = get_cpu_memory_usage()
-        profiled_gpu_allocate_mem = self.gpu_mem_tracker.get_allocate_usage()
-        profiled_gpu_tensor_mem = self.gpu_mem_tracker.get_tensor_usage()
+        if profile:
+            self.gpu_mem_tracker.clear_cache()
+            profiled_cpu_mem = get_cpu_memory_usage()
+            profiled_gpu_allocate_mem = self.gpu_mem_tracker.get_allocate_usage()
+            profiled_gpu_tensor_mem = self.gpu_mem_tracker.get_tensor_usage()
+        else:
+            profiled_cpu_mem = UNKNOWN_DATA_FIELD
+            profiled_gpu_allocate_mem = UNKNOWN_DATA_FIELD
+            profiled_gpu_tensor_mem = UNKNOWN_DATA_FIELD
 
         return EngineRuntimeInfo(
             num_cached_tokens=num_cached_tokens,

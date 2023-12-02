@@ -59,7 +59,7 @@ async def free_context(request: Request):
 
 @app.post("/ping")
 async def ping(request: Request):
-    rt_info = llm_engine.get_runtime_info()
+    rt_info = llm_engine.get_runtime_info(profile=False)  # For speed
     return {
         "runtime_info": asdict(rt_info),
     }

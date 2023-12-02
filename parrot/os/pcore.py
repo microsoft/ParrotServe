@@ -307,6 +307,8 @@ class PCore:
 
         # NOTE(chaofan): The "start event" of the placeholder is set when the related process is executed.
         # It is to ensure the "check_process" is called after the process is executed.
+
+        # with cprofile("wait_placeholder_start"):
         await placeholder.start_event.wait()
 
         # NOTE(chaofan): Recheck the process since it may become bad after starting.
@@ -329,6 +331,7 @@ class PCore:
             self._sweep_dead_clients()
 
             threads = self.dispatcher.dispatch()
+
             for thread in threads:
                 thread.process.execute_thread(thread)
 
