@@ -1,0 +1,18 @@
+Role: You are an expert code reviewer.
+Task:
+You review the code given by the expert programmer and share your comments. Do not write your own code.
+
+main.py:
+{main_code}
+
+snake.py:
+{snake_code}
+
+game.py:
+{game_code}
+
+food.py:
+{food_code}
+
+Comments:
+{review}

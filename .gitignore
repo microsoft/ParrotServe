@@ -47,3 +47,7 @@ sample_configs/engine/azure-openai*
 sample_configs/engine/openai*
 # But we provide an example config
 !sample_configs/engine/openai-example-config.json
+
+# Benchmark workloads
+benchmark/workloads/*/*.json
+*.parquet
