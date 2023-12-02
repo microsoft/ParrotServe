@@ -24,24 +24,37 @@ And the backend engine's max_num_batched_tokens is 2560, max_batch_size=2.
 ### Chat Serving, 1 GPU
 
 This benchmark is to demonstrate that for latency-sensitive applications (chatting), to meet 
-certain latency requirement (e.g. 20ms per generated token), how large should we set the `max_total_tokens`?
+certain latency requirement (e.g. 20ms per generated token), how large should we set `max_batch_size` and `max_total_tokens`?
 
-Setting: ShareGPT, 100 requests, 4.0 request rate. max_num_batched_tokens=8700.
+It's a non-trivial trade-off between latency and throughput. The larger the batch size is, (usually) the higher the throughput is, but the latency will be higher. (Which means QoS of every user will be worse.)
+
+Setting: ShareGPT, 100 requests max_num_batched_tokens=2560.
 
 We only count the model execution time, not including the queueing time, since in real case 
 these requests will be rejected.
 
-latency requirement: 100ms per generated token
+latency requirement: 30ms per generated token
 
-Results (max_total_tokens, percentage of OK requests):
-- unlimited:0.0400, 0.0600, 0.0400
-- 20000: 0.0100
-- 15000: 0.0500
-- 10240: 0.7400
-- 8192: 0.8300 0.8400 0.8000 0.8000
-- 6144: 0.8900 0.8900 0.9000, 0.8700
-- 4096: 0.9300 0.9300 0.9200 0.960
-- 2048: 0.9600
+
+Burst results (max_total_tokens, percentage of OK requests):
+- 12288: 0.06
+- 10240: 0.25
+- 8192: 0.53
+- 6144: 0.85
+- 4096: 0.90
+- 2048: 0.96
+
+Serving results (25 req/s):
+- 12288: 0.06
+- 10240: 0.28
+- 8192: 0.45
+- 6144: 0.51
+- 4096: 0.78
+- 2048: 0.8
+
+Hence, for meeting 30ms latency requirement, a batch of total tokens (including KV cache) should be better <= 4096.
+
+In some of our experiments, we let baseline to use 6000~10000 tokens.
 
 
 ### Map-Reduce 1 GPU

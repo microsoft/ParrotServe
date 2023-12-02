@@ -57,11 +57,3 @@ for i in range(total_requests):
     print(
         f"Request {i}: latency: {latencies[i] / 1e3:.2f} s, output len: {requests_output_len[i]}, lat_per_out: {per_output_latencies[i] / 1e3:.4f} s"
     )
-
-# Calculate the percentage of requests which meet the latency requirement.
-latency_requirement_per_output_token = 30  # 50ms, from some related posts.
-num_ok_requests = [
-    1 if per_output_latencies[i] <= latency_requirement_per_output_token else 0
-    for i in range(total_requests)
-]
-print("Percentage of OK requests: " f"{np.mean(num_ok_requests):.4f}")
