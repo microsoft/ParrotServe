@@ -28,6 +28,9 @@ def cal_percentage(file_name: str, requirement: float):
         1 if per_output_latencies[i] <= latency_requirement_per_output_token else 0
         for i in range(total_requests)
     ]
+    print(f"file name: {file_name}")
+    print(f"Mean latency: {np.mean(list(per_output_latencies.values())):.4f}")
+    print(f"p90 latency: {np.percentile(list(per_output_latencies.values()), 90):.4f}")
     # print("Percentage of OK requests: " f"{np.mean(num_ok_requests):.4f}")
     return np.mean(num_ok_requests)
 
@@ -48,4 +51,6 @@ def plot():
 
 if __name__ == "__main__":
     # plot()
-    print(cal_percentage("25reqs/token_6144.log", 0.03))
+    for rate in range(5, 30, 5):
+        for i in range(2048, 2048 * 2 + 10240, 2048):
+            cal_percentage(f"{rate}reqs/token_{i}.log", 0.035)

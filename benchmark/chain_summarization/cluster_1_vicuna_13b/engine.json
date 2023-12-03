@@ -9,6 +9,7 @@
     "fill_chunk_size": -1,
     "max_threads_num": 128,
     "instance": {
+        "max_seq_len": 1024,
         "block_size": 16,
         "num_kv_cache_blocks": 4000,
         "attn_func": "xformers_fill_vllm_paged_attention_generate"

@@ -51,3 +51,7 @@ sample_configs/engine/openai*
 # Benchmark workloads
 benchmark/workloads/*/*.json
 *.parquet
+
+# Evaluation data
+!benchmark/*/results/*/*.log
+!benchmark/*/results/*.log
