@@ -1,39 +1,81 @@
 
 
+DINO-MC: Self-supervised Contrastive Learning for Remote Sensing Imagery with Multi-sized Local Crops
+    Xinye Wanyan
 
 
-Color Mismatches in Stereoscopic Video: Real-World Dataset and Deep Correction Method
 
-This study was supported by Russian Science Foundation under grant 22-21-00478, <https://rscf.ru/en/project/22-21-00478/>
-
-    
-    
-        Egor Chistov,1
-        Nikita Alutis,1
-        Maxim Velikanov,1
-        and
-        Dmitriy Vatolin12
-    
-    
-        Lomonosov Moscow State University1
-    
-    
-        MSU Institute for Artificial Intelligence2
-    
-    
-        
-    
-
-    
-===================================================================================================================================================================================================================================================================
-
-empty
-empty
+xwanyan@student.unimelb.edu.au
 
 
 
 
-Finger-tip tactile sensors are increasingly used for robotic sensing to establish stable grasps and to infer object properties. Promising performance has been shown in a number of works for inferring adjectives that describe the object, but there remains a question about how each taxel contributes to the performance. This paper explores this question with empirical experiments, leading insights for future finger-tip tactile sensor usage and design.
+
+Sachith Seneviratne
+
+
+sachith.seneviratne@unimelb.edu.au
+Shuchang Shen 
+
+
+chuchangs@student.unimelb.edu.au
+Michael Kirley 
+
+
+
+mkirley@unimelb.edu.au
+
+    March 30, 2023
+=============================================================================================================================================================================================================
+
+
+
+
+  Any system of bisectors (in the sense of abstract Voronoi diagrams)
+  defines an arrangement of simple curves in the plane.  We define
+  Voronoi-like graphs on such an arrangement, which are graphs
+  whose vertices are locally Voronoi.  A vertex v is called
+  locally Voronoi, if v and its incident edges appear in the Voronoi
+  diagram of three sites.
+  
+  In a so-called admissible bisector system, where Voronoi regions are
+  connected and cover the plane, we prove that any Voronoi-like graph
+  is indeed an abstract Voronoi diagram.
+  The result can be seen as an abstract dual version of Delaunay’s
+  theorem on (locally) empty circles.
+
+  Further, we define Voronoi-like cycles in an admissible bisector
+  system, and show that the Voronoi-like graph induced by such a cycle
+  C is a unique tree (or a forest, if C is unbounded). In the
+  special case where C is the boundary of an abstract Voronoi region,
+  the induced Voronoi-like graph can be computed in expected linear time
+  following the technique of [Junginger and Papadopoulou SOCG'18].
+  
+  Otherwise,  within the same time, 
+  the algorithm constructs the Voronoi-like graph of a 
+  cycle C' on the same set (or subset) of sites,
+  which may equal C or be enclosed by C.
+  
+  Overall, the technique  computes abstract 
+  Voronoi (or Voronoi-like) trees and forests
+  in linear expected time, 
+  given the order of their leaves along a Voronoi-like cycle.
+  We show a
+  direct application in updating a constraint Delaunay triangulation in
+  linear expected time, after the insertion of a new segment constraint,
+  simplifying upon the result of [Shewchuk and Brown CGTA 2015].
+
+  
+  
+  
+  
+
+  
+
+
+
+
+
 
 
 
@@ -41,158 +83,508 @@ Finger-tip tactile sensors are increasingly used for robotic sensing to establis
 
 § INTRODUCTION
 
-In recent years, with the developments of tactile sensors and machine learning techniques, finger-tip tactile sensors are increasingly used for robotic tasks such as adjective classification <cit.>. Promising performance has been shown for adjective classification <cit.> or learning adjective distributions <cit.>. However, there are few works exploring: how each taxel in a finger-tip tactile sensor contributes to the inferring of object adjectives, and how taxel spatial density and measurement temporal density influence the performance. This paper seeks answers to these questions via empirical experiments.
 
-The empirical study is conducted using the PHAC-2 dataset <cit.>. 
-The dataset was collected using a Willow Garage PR2 equipped with a pair of SynTouch BioTac sensors to explore a set of objects using a set of finger-tip motions (see Fig. <ref>).
-To focus on the benefit of tactile signals, rather than measuring classification performance, we propose to evaluate the information quality of the tactile signals, i.e., measurements indicating how tactile signals could potentially perform in downstream tasks such as the adjective classification task, but avoiding the influence of classifiers which might introduce differences or biases due to method selection or parameter tuning. 
-Detailed method design is introduced in Section <ref>, followed by experiments (Section <ref>) 
-seeking answers to the aforementioned questions. This paper makes three major contributions:
 
-    
-  * a new method is proposed to re-evaluate finger-tip tactile data for inferring object adjectives from an information quality rather than classification performance perspective,
-    
-  * comprehensive experiments are conducted to study the benefit of finger-tip tactile sensing from the perspectives of taxel distribution, taxel spatial density and measurement temporal density, and
-    
-  * important insights are obtained to guide the usage and design of finger-tip tactile sensors in related tasks.
+Delaunay’s theorem <cit.> is a well-known 
+cornerstone 
+in Computational Geometry:
+given a set of points, a triangulation 
+is globally Delaunay if and only if it is 
+locally Delaunay.
 
+A triangulation edge is called locally Delaunay if it is incident to
+only one triangle, or it is incident to two triangles, and
+appears in the Delaunay triangulation of the four related
+vertices.
+
+The Voronoi diagram  and the Delaunay triangulation of a point set
+are dual to each other.
+These two 
+highly influential and  versatile structures are often 
+used and computed interchangeably; see the book of
+Aurenhammer<cit.> for  
+extensive information. 
+
+
+Let us pose the following question:
+how does Delaunay's
+theorem extend to Voronoi diagrams of generalized (not necessarily
+point) sites?
+We are interested in simple geometric objects such as line
+segments,  polygons, disks, or point clusters, as they often appear
+in application areas, and answering 
+this question is intimately related to
 
+efficient construction algorithms for Voronoi diagrams (or
+their duals) 
+on these objects.
 
+Here we consider this question in the framework of abstract Voronoi
+diagrams <cit.> so that we can simultaneously answer it for various
+concrete and fundamental cases under their umbrella. 
 
 
+Although Voronoi diagrams and Delaunay triangulations of
+point sites have been 
+widely
+used in many fields of science, being available in most
+software libraries of commonly used programming
+languages,  practice has  not been the same for their counterparts
+of simple 
+geometric
+objects. 
+In fact it is surprising that certain related questions may have remained open or
+non-optimally solved. 
 
+Edelsbrunner and Seidel <cit.> defined
+Voronoi diagrams as lower envelopes of distance functions in a space one dimension
+higher, making a powerful link 
+to arrangements, which made their rich combinatorial and algorithmic results
+applicable, e.g.,  <cit.>.
 
-§ RELATED WORKS
 
 
-There are a number of works exploring tactile sensing for inferring object adjectives <cit.>, many of which use the PHAC-2 dataset <cit.>. Early solutions use hand-crafted features together with an SVM for adjective classification <cit.>, achieving promising performance. Better performance was then achieved by various learning approaches <cit.>. Approaches were also proposed to fuse vision and tactile for adjective classification, showing that the fusion of the two modalities improves the performance <cit.>. The current State-of-The-Art classification performance was achieved by a method using learned features <cit.>. More recently, a learning method was proposed to predict perceptual distributions of haptic adjectives <cit.>, demonstrating the feasibility of modeling both the intensity and the variation of tactile perception. All these methods enabled better adjective classification or perceptual distribution prediction. Some of them also studied how different types of signals and different exploratory procedures contributed to adjective classification. However, no study has been done at the taxel level. It remains unknown how much each taxel contributes to inferring the object adjectives.
 
+However, there are different levels of difficulty concerning
+arrangements of planes versus more general surfaces,
+which play a role, especially in practice.
 
 
 
-§ METHODOLOGY
 
+In this paper we define Voronoi-like graphs based on 
+local information, inspired by Delaunay's theorem.
+Following the framework of abstract Voronoi diagrams (AVDs) <cit.>,
+let S be a set of n  abstract sites (a set of indices)
+        and  be their  underlying system of bisectors, which satisfies
+        some simple combinatorial properties (see Sections <ref>, <ref>).
 
+Consider a graph G on the arrangement of the bisector system 
+possibly truncated within a simply connected domain D.
+The vertices of G are vertices of the bisector arrangement,
+its leaves lie on
+the boundary ∂ D,
+and the edges are  maximal bisector arcs 
+connecting pairs of vertices.
 
-The exploration of how the finger-tip tactile information contributes to a robotic task is conducted by ablating the tactile signals and evaluating information quality measures such as distinguishability which is critical for downstream tasks such as the adjective classification <cit.>. 
-Signals with a higher distinguishability have a more distinct distribution in their feature space, and are therefore better for inferring object adjectives (e.g., easier to classify).
-The tactile signals are ablated from the perspectives of taxel distribution, taxel spatial density, and measurement temporal density. 
+A vertex v in G 
+is called locally Voronoi, if v and its incident edges within
+a small neighborhood around v appear in the Voronoi diagram
+of the three sites defining v (Def. <ref>), see Figure <ref>.
 
 
 
+The graph G is called Voronoi-like, if its vertices (other than its leaves on ∂
+D) are locally Voronoi vertices (Def. <ref>), see Figure <ref>.
 
- §.§ Dataset
 
+If the graph G is a simple cycle on the arrangement of bisectors
+related to one site p and its vertices are locally
+Voronoi  of degree 2, then it is 
+called a Voronoi-like cycle, for brevity a site-cycle
+(Def. <ref>). 
 
-The study is conducted using the tactile adjective classification dataset Penn Haptic Adjective Corpus (PHAC-2) <cit.>. 
-The dataset contains 600 trials collected using a Willow Garage PR2 equipped with two SynTouch BioTac tactile finger-tip sensors as shown in Fig. <ref>. 
-The trials were recorded by using the robot to perform four exploratory procedures (EPs): “squeeze”, “hold”, “slow slide”, and “fast slide” on 60 different objects, with 10 trials of each. 
-A tactile signal frame 𝐕 contains signals from both left (𝐕_L) and right (𝐕_R) BioTac sensors, each of which comprises 19 spatially distributed electrodes (taxels) 𝐄∈ℝ^19 and four scalars: vibration (P_AC), pressure (P_DC), heat flow (T_AC) and temperature (T_DC), i.e., 𝐕_L, 𝐕_R∈ℝ^23.
-The P_AC is measured at 2.2 kHz, while the other signals are measured at 100 Hz.
+A major difference between  points in the
+Euclidean plane, versus non-points, such as line segments, disks, or
+AVDs, can be immediately pointed out: 
+in the  former case the bisector system is a line arrangement, while
+in the latter, the bisecting curves are not even pseudolines.
+On a line arrangement, it is not hard to see that a Voronoi-like
+graph coincides with the Voronoi diagram of the involved sites:
+any Voronoi-like cycle is a convex polygon, which is in fact a
+Voronoi region in the Voronoi diagram of a subset of sites.
+But in the arrangement of an abstract bisector system,  many different
+Voronoi-like  cycles can exist for the
+same set of sites (see, e.g., Figure <ref>).
+Whether a Voronoi-like graph  corresponds to a Voronoi
+diagram is not immediately clear.
 
-The dataset was designed for adjective classification, but in this work it is used for tactile signal ablation and information quality evaluation in this work. 
-The dataset has 19 binary adjective labels 𝐀∈𝔹^19 (the version <cit.> has 24 adjectives, but we follow the setup in <cit.> in this work and exclude those with fewer than three positively labeled objects). We use the same training and test sets as <cit.> and <cit.>.
+In this paper we show that a Voronoi-like graph on the arrangement of an abstract
+bisector system is as close as possible to being an abstract Voronoi
+diagram, subject to, perhaps,   
+missing some faces (see Def. <ref>);
+if the graph misses no face, then it is a Voronoi
+diagram. 
 
 
 
 
- §.§ Metrics
 
+ Thus, in the classic AVD model <cit.>, where abstract Voronoi regions are
+ connected and cover the plane, any Voronoi-like graph 
+ 
+ is indeed an abstract Voronoi diagram.
+This result can be seen as an abstract dual version of Delaunay’s
+theorem. 
 
-The information quality (distinguishability) of tactile signals are evaluated using the commonly used mean Average Precision (mAP) <cit.> which directly indicates how signals could potentially perform in downstream tasks such as classification, but with no influence from classifiers which might introduce differences or biases due to method selection or parameter tuning.
-mAP is a good indication of how samples of different classes are distinctly distributed in the feature space. A larger mAP means a more distinct distribution of samples across different classes, and is therefore easier to classify.
-When comparing to existing classification baselines such as <cit.> and <cit.>, 𝐅_1 score <cit.> is used to measure classification performance in Section <ref>. 
+Voronoi-like graphs (and their duals) can be very useful structures to
+hold partial Voronoi information, either when dealing
+with disconnected Voronoi regions, or when considering 
+partial information concerning some region.
 
 
 
- §.§ Feature generation
 
 
-Different from <cit.> and <cit.> where hand-crafted or learned features were used, dimension-reduced raw tactile signals are directly used as features for information quality evaluation in this work to avoid unnecessary biases. The dimension reduction is performed via Principal Component Analysis (PCA) <cit.>.
+Building a Voronoi-like graph of partial information may be
+far easier and faster than constructing the full diagram.
 
-A sequence of tactile signals from one sensor from one exploratory procedure 
-are first concatenated into one vector 𝐙_k = [𝐕_k,1, 𝐕_k,2, ⋯, 𝐕_k,N] ∈ℝ^23N, k ∈ [L,R],
-where N is the total number of frames in one sequence.
-Then 𝐙_L and 𝐙_R from the two fingers are concatenated to 𝐙∈ℝ^46I. PCA is then applied to 𝐙∈ℝ^46I. The top 200 components are used as the features representing each sequence for information quality evaluation. Evaluation experiments in Section <ref> show that the top 200 components could maintain >99% of the input's variance. For the convenience of expression, the dimension-reduced features are denoted as 𝐙^200∈ℝ^200. 
 
-Table <ref> shows the N values and feature dimensions for the tactile sequences collected from the four exploratory procedures. The N values we used are the maximum length of the sequences for each EP. The sequences with a shorter length are padded to the maximum length by repeating their first and last elements in a symmetric manner (the non-repeated fractions are in the middle of the padded signals). 
+In some cases the full diagram may even be undesirable, 
+as in the example of Section <ref>
+in updating a constrained Delaunay triangulation.
 
 
 
+The term Voronoi-like diagram was first used, in a restricted
+sence, by 
+Junginger and Papadopoulou <cit.>, defining it as a tree (occasionally a forest)
+that subdivided a planar region enclosed by a so-called
+boundary curve 
+defined on a subset of Voronoi edges.
+Their Voronoi-like diagram was then used as an intermediate
+structure
+to perform deletion in an abstract Voronoi diagram in linear expected
+time.
+In this paper the formulation of a Voronoi-like graph
+is entirely different;
+we nevertheless prove  that the Voronoi-like diagram
+of <cit.> remains 
 
+a special case of the one 
 
+in this paper.
+We thus use the results of <cit.> 
+when applicable, and extend them to Voronoi-like cycles in an
+admissible bisector system.
 
- §.§ Classification method
+In the remainder of this section we consider an admissible bisector
+system  following the classic AVD model <cit.>, where bisectors
+are unbounded simple curves and Voronoi regions are connected.
+To avoid issues with infinity, we asume a large Jordan curve Γ
+(e.g, a circle)
 
+bounding the computation domain, which is large
+enough to enclose any bisector intersection.
+In the sequel, we list further results, which are obtained 
+in this paper under this model.
 
-Although the main focus of this work is to explore the benefit of each tactile signal by ablating raw signals and observing their information quality changes, classification performance is also evaluated on the dimension-reduced features 𝐙^200 to see their feasibility by comparing to the initial method <cit.> (SVM with hand-crafted features, denoted as HF+SVM) and the current State-of-The-Art solution <cit.> (SVM with learned features, denoted as LF+SVM) for adjective classification with PHAC-2. 
 
-Similarly to <cit.>, SVM is adopted to predict binary adjective labels. Nineteen SVMs are trained for each EP (one for each adjective). Cross-validation and grid search are used to select the SVM regularization parameter C with values ranging from 10^-4 to 10^4, tolerance tol for the stopping criterion with values ranging from 10^-6 to 10, and the kernel either linear or RBF <cit.>.
-Similar to the settings in <cit.>, each classifier is trained using the L_2 metric <cit.> with the 𝐅_1 score averaged over 100 cross-validation sets created by randomly selecting 3 objects from each training set.
 
+We consider a Voronoi-like cycle C on the arrangement of bisectors
+_p⊆∪Γ, which are related to a site p∈ S.
+Let S_C⊆ S∖{p} be the set of sites that
+(together with p) contribute to the bisector arcs in C.
+The cycle C encodes a sequence of site
+  occurrences from  S_C.
+We define the Voronoi-like graph (C), 
+which can be thought as a Voronoi diagram of site
+  occurrences, instead of sites, whose order is represented  by C.
 
+We prove that (C) is a tree, or a forest if C is unbounded,
+and  it 
+exists for any Voronoi-like cycle C.
 
-§ EXPERIMENTAL RESULTS
+The uniqueness of (C) can be inferred from the results in
+<cit.>.
 
+The same properties can be extended
+to Voronoi-like graphs of cycles
+related to a set P of k sites.
 
-Experiments are first conducted to see the feasibility of the dimension-reduced features by evaluating their classification performance with an SVM as introduced in Section <ref>.
-This is followed by ablation studies to show the benefits of PCA. Then experiments are conducted to study how the individual tactile signals contribute to or influence the adjective inferring performance.
 
 
 
- §.§ Classification performance
+We then  consider the randomized incremental construction of
+<cit.>,
+and apply it to a Voronoi-like cycle in linear expected
+time.
+If C is the boundary of a Voronoi region then
+(C), which is
+the part of the abstract Voronoi diagram (S_C), truncated by C,
 
+can be computed in expected linear time (this has been previously shown <cit.>).
 
+Otherwise, within the same time, the Voronoi-like graph of a (possibly
+different) Voronoi-like cycle C’,  enclosed by C, is computed by
+essentially the same algorithm. 
+We give conditions under which we can force the randomized algorithm
+to compute (C), if desirable, without hurting its
+expected-linear time complexity,
+using deletion <cit.> as a subroutine.
+The overall technique follows the randomized linear-time
+paradigm of Chew <cit.>, originally given to compute the Voronoi
+diagram of points in convex position.
 
+The generalization of Chew's technique can potentially be used to convert
+algorithms working on point sites, which use it,  to counterparts
+involving non-point sites that fall under the umbrella
+of abstract Voronoi diagrams.
 
-  
-    
 
-The classification performance of SVM with the dimension-reduced features (denoted as PCA+SVM) was evaluated by comparing to HF+SVM and LF+SVM using 𝐅_1 scores. mAP 
-was not compared as there were no mAP results presented in <cit.> and <cit.>. The setups for the dataset, PCA and SVM were introduced in Section <ref>.
 
 
 
-Fig. <ref> shows the boxplots of the 𝐅_1 scores of the three methods. We can see that PCA+SVM performs better than HF+SVM, but worse than LF+SVM across all EPs. Considering that the three works all use SVM-based classifiers with similar settings, this result indicates that the features produced by the proposed PCA-based dimension reduction method works better than the hand-crafted features, but worse than the learned features.
-
-Detailed 𝐅_1 scores are shown in Fig. <ref>, from which we can see that PCA+SVM has a performance in between in most cases (42/76), 
-with 54 cases better than HF+SVM and 12 cases being the best.
-This is also indicated by the average 𝐅_1 scores listed in Table <ref> where PCA+SVM has an in-between average score across all EPs.
-These results demonstrate the feasibility of the dimension-reduced features generated directly from the raw tactile signals via PCA. 
-
-Similarly to <cit.> and <cit.>, we can also observe from Fig. <ref> that the tactile signals collected by the four EPs are not informative enough for some texture-related adjectives (whose best 𝐅_1 scores are below 0.75) such as: “smooth”, “textured”, “rough”, “fuzzy”, “scratchy”, and “hairy”. As mentioned in <cit.>, this poor performance might be related to the degradation of the ridges on the BioTac sensor skin during data collection. The best scores of “cool” and “springy” are also below 0.75, which might also be related to similar issues (not much useful information was obtained in data collection). From the EP perspective, “squeeze” is the most informative (𝐅_1 scores above 0.75 in 10 adjectives); then “hold” comes second (performs good in 8 adjectives); the two sliding EPs only achieve acceptable performance in 7 adjectives.
-
-
-
-
- §.§ Effect of PCA
-
-
-To study how the proposed PCA-based dimension reduction method influences information quality, comparisons were conducted on features produced with different PCA component settings.
-All the rest experiments are evaluated from information quality perspective using mAP.
-All dataset and PCA setups were the same as in Section <ref>, except the number of components for PCA. 
-
-
-
-Fig. <ref> shows the results, from which we can see that signals with more components have slightly better mAP performance up to 200 components. 
-PCA with 200 components will be used in the remainder of the experiments due to its lower computational cost (dimensions reduced by more than 99.7% as shown in Table <ref>) and no obvious performance loss.
-
-
-
- §.§ Benefit from each tactile sensor
 
 
 
  
+
+
+Finally, we give a direct application
+
+for computing the Voronoi-like
+graph of a site-cycle in linear expected
+time, when updating a constrained Delaunay
+triangulation upon insertion of a new line segment, simplifying upon the corresponding result of Shewchuk and
+Brown<cit.>.
+The resulting algorithm is extremely simple. By modeling the problem
+as computing the dual of a Voronoi-like graph, given a Voronoi-like
+cycle (which is not a Voronoi region's boundary), the algorithmic description becomes almost trivial and explains
+the technicalities, such as self-intersecting subpolygons, that are
+listed by Shewchuk and Brown.
+
+The overall technique computes abstract Voronoi, or 
+Voronoi-like, trees and forests in linear expected time, given the
+order of their leaves along a Voronoi-like cycle. 
+
+In an extended paper, we also give simple conditions under which the
+cycle C
+is an arbitrary Jordan curve of constant complexity, along
+which the ordering of Voronoi regions is known.
+
+
+
+
+
+
+
+
+
+
+§ PRELIMINARIES AND DEFINITIONS
+
+
+We follow the framework of abstract Voronoi diagrams (AVDs), which have been defined by Klein <cit.>.
+Let  S be a set of n  abstract sites (a set of indices)
+        and  be an underlying system of bisectors that satisfy
+        some simple combinatorial properties (some axioms).  
+        The bisector J(p,q)  of two sites p,q ∈ S is a simple curve
+        
+        that
+        subdivides the plane into two open domains:
+        the dominance region of p, D(p,q),
+	having label p,
+	and the dominance region of q, D(q,p),
+	having label q. 
+
+        
+
+
+        The Voronoi region of site p is 
+        
+	
+    (p,S) = ⋂_q ∈ S ∖{p}  D(p,q).
+
+	The Voronoi diagram of S is
+	(S) = ℝ^2∖⋃_p ∈ S(p, S).
+        The vertices and the edges of (S) are called Voronoi vertices
+        and 
+        Voronoi edges, respectively.
+
+        Variants of abstract Voronoi diagrams
+        
+        of different degrees of generalization
+        have been
+        proposed, see e.g., <cit.>. 
+        
+ 
+        Following the original formulation by Klein <cit.>, the bisector system    is called  admissible, if it satisfies the following axioms,
+	for every subset S' ⊆S:
+        
+	
   
-   
+    
+	
+		
+  (A1) Each Voronoi region (p, S') is
+                  non-empty and pathwise connected. 
+		
+  (A2) Each point in the plane belongs to the
+                  closure of a Voronoi region (p, S').
+                  
+  (A3) Each bisector is an unbounded simple
+                    curve homeomorphic to a line.
+		
+		
+		
+  (A4) Any two bisectors intersect
+                  transversally and in a finite number of points.
+                  
 
-As introduced in Section <ref>, the dataset was collected using a pair of BioTac sensors. This section evaluates how each tactile sensor contributes to the performance in inferring object adjectives. All setups were the same as in Section <ref> except the signals to which PCA was applied. Fig. <ref> shows the mAP results of left finger (𝐙^200_L), right finger (𝐙^200_R) and both fingers (𝐙^200). We can see that the performance of “Both Fingers” is a combination of “Finger L” and “Finger R” across all EPs. All three cases have very similar performance although with some differences, which can also be observed from the average mAP scores in Table <ref>. This indicates that one tactile sensor is sufficient for symmetric use cases (symmetric interaction motions on symmetric objects/surfaces).
+                
+
+              
+Under these axioms, the abstract Voronoi diagram (S) is a planar graph
+of complexity O(n), which can be computed in 
+O(nlog n)  time, randomized
+<cit.> or  deterministic <cit.>.
+
+
+       To avoid dealing with infinity,  we
+       assume that (S) is truncated within a domain D_Γ
+       enclosed by a large Jordan curve
+       Γ (e.g., a circle or a rectangle)
+       
+       such that all bisector intersections are contained in D_Γ.
+       
+
+	Each bisector crosses Γ exactly  twice and
+        transversally.
+        All Voronoi regions are assumed 
+        to be  truncated by Γ, and thus, lie  within the domain
+        D_Γ.
+        
+        
+
+        We make a general position assumption that no three 
+        bisectors involving one common site intersect at the same point,
+        that is, all vertices in the arrangement of the 
+        bisector system  have degree 6, and Voronoi vertices
+        have degree 3.
+        
+
+          
+
+        Bisectors that have a site p in common are called
+        related, in particular, p-related.
+        Let _p⊆ denote the set of all p-related
+        bisectors in .
+        Under axiom A2, if related bisectors J(p,q) and J(p,s) intersect 
+        at a vertex v, then J(q,s) must also intersect with them
+        at the same vertex,
+        which is  a Voronoi vertex in V({p,q,s})
+        
+        (otherwise, axiom A2 would be violated in V({p,q,s})). 
+        
+        
+        In an admissible bisector system, related bisectors can
+        intersect at most twice <cit.>;
+        thus, 
+        a Voronoi diagram of three sites may have at most  two Voronoi
+        vertices, see e.g., the bisectors of three line segments in
+        Figure <ref>.
+        
+        The curve Γ can be interpreted as a p-related bisector
+        J(p,s_∞), for a site s_∞ representing
+        infinity, for any p∈ S.
+        
+        
+        
+
+
+
+
+
+
+
+
+
+In an admissible bisector system, related bisectors that do not 
+intersect or intersect twice must follow the patterns illustrated in Figures <ref>
+and <ref> respectively.
+
+
+
+In Figure <ref>(c) the pattern is illegal
+because of axiom A1, and in Figure <ref>(d) because
+
+of combining axioms A2 and A1:
+
+J(s,t) must pass through the intersection
+points of J(p,s) and J(t,p), by A2. 
+Then any possible configuration of J(s,t) 
+
+results in violating either axiom A1 or A2. 
+
+
+
+
+
+
+The pattern in Figure <ref>(b) can
+be shown illegal by combining axioms A1 and A2 in the
+presence of  J(s,t), which does not intersect J(s,p) nor J(t,p). 
+
+
+
+
+
+
+
 
 
   
-  
 
+      
+      
+ [<cit.>]
+
+In an admissible bisector system, no cycle in the arrangment of
+bisectors related to p
+can have the label p on the exterior of the cycle, for all of its
+arcs.
+
+
+
+      
+        
+        Any component α of a bisector curve J(p,q) is called an
+        arc. We use s_α∈ S to denote the site such  that
+         arc α⊆ J(p,s_α).
+        Any component of Γ is called a Γ-arc.
+        
+        
+        The arrangement of a bisector set _x⊆ is denoted by
+        (_x).
+
+
+
+
+
+
+
+§ DEFINING ABSTRACT VORONOI-LIKE GRAPHS AND CYCLES
+
+
+
+In order to define Voronoi-like graphs in a
+broader sense, we can relax  axioms A1-A4 in this section.
+In particular, we  drop axiom A1 to allow disconnected
+Voronoi regions and relax axiom A3 to allow disconnected (or even closed)
+bisecting curves. 
+
+The bisector J(p,q)  of two sites p,q ∈ S
+        
+        
+        still subdivides the plane into two  open domains:
+        the dominance region of p, D(p,q),
+	
+	and the dominance region of q, D(q,p),
+        however, D(p,q) 
+        may be disconnected or  bounded.
+        Axioms A2 and A4 remain.
+        
+        
+        Unless otherwise specified, we use the general term abstract bisector
+          system to denote such a relaxed variant in
+        the subsequent definitions and in
+        Theorem <ref>.
+        
+        
+        The term admissible bisector system always implies
+        
+        axioms  A1-A4.
  
 
 
@@ -200,86 +592,1769 @@ As introduced in Section <ref>, the dataset was collected using a pair of BioTa
 
 
 
-
- §.§ Benefits from taxels and other signals
-
-
-
-Similar to <cit.>, comparisons were conducted on different types of signals, but this work focuses more on electrode versus other signals. All setups were the same as in Section <ref> except the signals which the PCA was applied to. Fig. <ref> shows the mAP results of signals with all four scalars and taxels (“All-PCA200”) and pure taxel signals (“Ele-PCA200”). The performance of the raw tactile signals with no PCA dimension reduction was also evaluated as a reference (“Original”).
-
-From Fig. <ref> we can observe that the performance of “All-PCA200” is even slightly better than “Original” although with greatly fewer dimensions. 
-This indicates that the PCA dimension reduction improves the feature quality.
-The overall performance of “Ele-PCA200” is comparable to “All-PCA200” in most EPs except for “slow slide” where it is worse than “All-PCA200”. This can be observed more clearly in Fig. <ref>, from which we can also see that: all texture-related (“smooth”, “textured”, “soft”, “absorbent”, “rough”, `slippery”, “fuzzy”, “porous”, “scratchy”, and “hairy”) or temperature-related (“cool” and “metallic”) adjectives have worse performance across at least 3 EPs; the others have better performance across at least 2 EPs. This is unsurprising as the four scalar signals contain vibration and temperature related information which is particularly helpful for those adjectives, but not that helpful for the rest (sometimes distracting, such as for “solid”, “squishy”, “compressible” and “hard”).
+	
 
 
 
- §.§ Benefits of different taxels
+ 
 
 
 
-To explore how each taxel contributes to inferring object adjectives by providing information with a higher quality, comparisons were made on different taxels by dividing the electrodes into 5 regions shown in Fig. <ref>a. 
-The original electrodes (“All regions”) were also compared as a reference. 
-All setups were the same as in Section <ref> except the signals to which the PCA was applied.
-The mAP results are shown in
-Fig. <ref>, from which we can observe that the original electrodes (“All regions”) only worked the best in four cases (“squishy” with “hold”, “soft” with “squeeze” and “slow slide”, and “rough” with “squeeze”); the best results of the rest were obtained by individual regions. The surprisingly poor performance of “All regions” indicates that not all electrodes contribute to inferring object adjectives. This might be caused by noisy or confusing signals from some regions for some adjectives and EPs.
 
-In particular, “Region 1 to 3” cover most of the best results, indicating that these regions contribute the most to inferring adjectives. “Region 1” tends to contribute more with “squeeze”, “Region 3” contributes more with the rest of three EPs, while “Region 2” contributes across all EPs.
-The contribution from “Region 4” is very limited (the best in only three cases: “bumpy” with “squeeze” and “hold” EPs, and “thick” with “hold”). “Region 5” contributes the most in the cases where contacts on either/both sides of the BioTac sensor are critical for inferring certain adjectives, such as “porous”, “scratchy” and “absorbent”.
+
+Let G=(V,E) be a graph on the arrangement of an abstract bisector system ,
+truncated within a simply connected domain D⊆ D_Γ (the
+leaves of G are on  ∂ D).
+The vertices of G are  arrangement vertices 
+and the edges are maximal bisector arcs connecting pairs of vertices.
+
+Figure <ref> illustrates examples of such graphs on a
+bisector arrangment (shown in grey).
+Under  the general position assumption, the vertices of G, except
+the leaves on ∂ D,  are of degree 3.
+
+
+
+
+            
+
+A vertex v in graph G 
+is called locally Voronoi, if v and its incident graph edges, within
+a small neighborhood around v, N(v), appear in the Voronoi diagram
+of the set of three sites defining v, denoted S_v, 
+
+
+
+see Figure <ref>(a).
+
+If instead we consider the farthest
+Voronoi diagram of 
+S_v, then v is called locally
+Voronoi of the farthest-type, see Figure <ref>(b).
+An ordinary locally Voronoi vertex  is 
+
+of the nearest-type.
+
+
+
+
+
+ 
+
+        	
+
+
+
+A graph G on the arrangement of an abstract bisector system,
+enclosed within a simply connected domain D, is called Voronoi-like, if its vertices (other than its leaves on ∂
+D) are locally Voronoi vertices.
+If G is disconnected, we further require that consecutive leaves
+on ∂ D have consistent labels, i.e., they are incident 
+to the dominance region of the same site, as implied  by the incident
+bisector edges in G, see Figure <ref>.
+
+
+
+
+
+
+
+The graph  G is actually called an abstract Voronoi-like graph but, 
+
+for brevity, we typically skip the term abstract.
+
+We next consider the relation between a Voronoi-like graph G and the Voronoi diagram
+(S)∩ D, where S is the set of sites involved in the edges of  G. 
+
+
+
+
+Since the vertices of G are locally Voronoi, each face f in G
+must have the label of exactly one site s_f in its interior, which
+is called the site of f.
+
+
+
+
 
   
+Imagine we superimpose G and  (S)∩ D. 
+A face f of (S)∩ D is said to be missing from G, if
+ f is covered by faces of G that belong to sites that
+ are different
+ from the site of f, see Figure <ref>, which
+ is derived from Figure <ref>.
+
+
+
+
   
+
+
+
+  
+Let r be a face
+of an abstract Voronoi-like graph G and let  s_r  denote its site (the bisectors
+bounding r have the label s_r inside r). Then one of the
+following holds:
+
+
+  * there is a Voronoi face r' in (S)∩ D, of the same site
+  s_r, r'⊆(s_r,S), such that r'⊆ r, see
+  Figure <ref>.
+
+  * face r is disjoint from the Voronoi region (s_r,S). 
+Further, it is
+entirely covered by Voronoi faces of (S)∩ D, which are
+missing from G, see
+  Figure <ref>.
+
+
+
+
+Imagine we superimpose G and  (S)∩ D.
+
+
+Face r in G cannot partially overlap any face of the Voronoi
+region (s_r,S)
+because if it did, some s_r-related bisector, 
+which contributes to the boundary of r, would
+intersect the interior of  (s_r,S), which is not possible by the
+definition of a Voronoi region. For the same reason, r cannot be
+contained in (s_r,S). Since Voronoi regions cover the plane, the
+claim, except from the last sentence in item 2, follows.
+
+Consider a Voronoi face c' of (S)∩ D that  overlaps with 
+face r of G in case 2, where the site of c', s_c, is different from s_r.
+
+
+Since c' overlaps with r, it follows that c' cannot be entirely  contained
+in any face of site s_c in G.
+Furthermore,  c' cannot overlap partially  with any face of
+s_c in  G, by the proof in the previous paragraph. 
+Thus, c' is disjoint from any face of  G of site s_c, i.e.,
+it must be missing from G.
+In Figure <ref>, face c' contains r.
+
+
+
+
+ 
+
+
+      
+
+
+If no Voronoi face of  (S) ∩ D is missing from G, then G = (S) ∩ D.
+
+            
+
+Let us now consider an  admissible bisector system, satisfying axioms
+A1-A4. 
+
+
+
+In an admissible bisector system , if D corresponds to the entire plane,
+then any Voronoi-like graph  on  equals the Voronoi
+diagram of the relevant set of sites. 
+
+
+
+
+
+
+
+
+
+In an admissible bisector system, Voronoi regions are connected, thus,
+only faces incident to ∂ D may be missing from  (S) ∩ D.
+
+
+
+In an admissible bisector system, any  
+face f of G that does not touch ∂ D either
+coincides with or contains the
+Voronoi region (s_f,S). 
+
+
+
+
+
+By Corollary <ref>,
+
+in an admissible bisector system, we
+need to characterize 
+the faces of a Voronoi-like graph
+that interact with the boundary of the domain D. 
+That is, we are interested in Voronoi-like
+trees and forests. 
+
+
+Let p be a site in S and let _p  denote the set of p-related
+bisectors in .
+
+
+     
+        
+        Let C be a cycle  in the arrangement of p-related bisectors (_p∪Γ) such that the label p appears in the interior of C. 
+        
+        
+        A vertex v in C is called  degree-2
+          locally Voronoi, if its two incident bisector arcs
+        
+        correspond  to edges
+        
+        
+        in the Voronoi diagram (S_v)
+        of the three sites that define v 
+        (p∈ S_v).
+        In particular, C∩ N(v)⊆(S_v)∩ N(v), where
+        N(v) is a small neighborhood around v.
+        The cycle C is called Voronoi-like, if its vertices
+        are either degree-2 locally Voronoi or points on Γ.
+        
+        
+        
+        For brevity, C is also called  a 
+        p-cycle or site-cycle, if the site p is not specified.
+        If C bounds a Voronoi region, then it is called a Voronoi cycle. 
+
+        
+  
+      C is called  bounded if it contains no Γ-arcs, otherwise, it is called
+      unbounded.
+      
+
+
+
+
+     
+
+      The part of the plane enclosed by C is called the
+        domain of C, denoted as D_C.
+        Any Γ-arc of C indicates an opening of the 
+        domain to infinity.
+        
+
+       Figure <ref> illustrates a Voronoi-like cycle for
+       site p,
+       which is unbounded (see the Γ-arc γ).
+        
+        
+        
+        It is easy to see in this
+        figure that other p-cycles exist, on the same set of sites,
+        which may enclose or 
+        be enclosed by C. The innermost such cycle is the boundary
+        of a Voronoi region, see Figure <ref>. 
+ 
+
+       
+
+ 
+
+             
+        Let S_C⊆ S∖{p} denote the set of sites that
+        (together with p) contribute the bisector arcs of C, 
+        S_C={s_α∈ S∖{p}|α∈
+        C∖Γ}.
+        We refer to S_C as the  set of sites relevant to C.
+        Let Ĉ denote the Voronoi cycle Ĉ=∂((p,S_C∪{p})∩ D_Γ).
+        
+        
+        
+        
+        
+
+     
+     
+
+ 
+
+
+
+
+      
+ 
+        
+          
+          In an admissible bisector system,
+          
+          
+          there can be many
+        different Voronoi-like cycles  involving the
+        same set of sites. Any 
+        such cycle C must enclose  the Voronoi cycle Ĉ.
+        Further, S_Ĉ⊆ S_C.
+       
+       
+       
+       
+       
+       
+        In the special case of a  line
+        arrangement, e.g., bisectors of point-sites in
+        the Euclidean plane,
+        a site-cycle C is unique for S_C; in particular,
+        C=Ĉ. 
+      
+
+
+
+A Voronoi-like cycle C must share several bisector arcs with its
+Voronoi cycle Ĉ, at least one bisector arc
+       
+for each site in S_Ĉ.
+Let C∩Ĉ denote the sequence of common arcs between C and Ĉ.
+        
+       
+       
+       
+       
+ 
+
+       Several other p-cycles C', 
+       where S_Ĉ⊆ S_C'⊆ S_C, 
+      may lie between  C and  Ĉ, all sharing  
+      
+      C∩Ĉ.
+      
+      
+       
+       
+      
+      
+      
+      Other p-cycles 
+      may enclose C.
+      Figure <ref> shows such cycles, where the innermost one is
+      Ĉ; its domain (a Voronoi region) is shown in solid grey.
+      
+            
+
+
+
+
+
+§ THE VORONOI-LIKE GRAPH OF A CYCLE
+
+
+Let  be an admissible bisector system and let C be a
+Voronoi-like cycle 
+for site p, which involves a set of sites S_C (p∉S_C).
+Let _C⊆ be the subset of all bisectors that are related
+to the sites in S_c.
+The cycle
+C corresponds to a sequence of site-occurrences from S_C, which  imply
+a Voronoi-like graph (C) in the domain of C, defined as
+follows:
+
+
+
+The Voronoi-like graph (C), implied by a Voronoi-like cycle C, is a graph on
+the underlying arrangement of bisectors (_C)∩ D_C,  
+whose leaves are the vertices of C, and its remaining (non-leaf) vertices are locally
+Voronoi vertices, see Figure <ref>.
+
+(The existence of such a graph
+on (_C)∩ D_C remains to be established).
+
+
+
+
+
+       
+
+ 
+
+In this section we prove the following theorem for
+any Voronoi-like cycle C on (_p∪Γ).
+
+
+
+
+
+
+
+The Voronoi-like graph (C) of a p-cycle C has the following
+properties:
+
+
+
+
+  * it exists and is unique;
+  
+  * it is a tree if C is bounded, and a forest if C is
+    unbounded;
+  
+  * it can be computed in expected linear time, if it is the
+    boundary of a Voronoi region. 
+    Otherwise, in expected linear time we can compute (C')
+     for some p-cycle C' 
+     that is enclosed by C (possibly, C'=C or C'=Ĉ).
+     
+     
+
+
+
+
+Recall that Ĉ denotes the Voronoi-cycle enclosed by C, where
+Ĉ=∂ [(p,S_C∪{p})∩ D_Γ].
+Then (Ĉ)  is the Voronoi
+diagram (S_C)∩ D_Ĉ.
+
+To derive Theorem <ref> we show each item separately in
+subsequent lemmas.
+
+
+
+
+
+
+
+Assuming that it exists, (C) is a forest, and if C is bounded,
+then (C) is a tree.
+Each face of (C) is incident to exactly one bisector arc
+α of
+C, which is called the face (or region) of α,
+denoted R(α,C).
+
+
+
+
+ 
+
+  
+  We first show that (C) contains no cycles.  
+  
+By Observation <ref>, any
+Voronoi-like cycle for a site s∈ S_C  must entirely enclose 
+(s,S_C), thus, it must also enclose
+(s,S_C∪{p})⊆(s,S_C).
+
+Since  J(p,s) 
+contributes arc(s) to C,
+
+it follows that (s,S_C∪{p}) must extend outside of C,
+hense, (s,S_C) must also extend outside of C. 
+
+
+Since (s,S_C) cannot be enclosed by C, the same must hold for any
+s-cycle on S_C. 
+Thus, (C) may not contain a cycle. 
+
+The same argument  implies that 
+
+  (C) cannot have a face that is incident to Γ without
+also  being  incident to a bisector arc of C. 
+  
+
+       
+
+  Suppose now that (C) has a face f, which 
+  belongs to a site s_f∈ S_c, incident to two bisector arcs 
+  ϕ_1,ϕ_2∈ C such that  ϕ_1,ϕ_2 ⊆ J(p,s_f),
+   see Figure <ref>.
+  Then one brunch of ∂
+          f∖{ϕ_1,ϕ_2} and the component of
+          J(p,s_f) between ϕ_1 and ϕ_2 would form a cycle
+          having  the label s_f 
+          outside, see Figure <ref>.
+          Such
+          a cycle is not possible in an admissible bisector system, 
+          by Observation <ref>, deriving a contradiction.
+ 
+          Thus, each face of (C) must be incident to exactly one
+          bisector arc.
+
+
+
+If C is the boundary of a Voronoi region, the tree property of the
+Voronoi diagram  (S)∩ D_C had been previously shown in <cit.>.
+Lemma <ref> generalizes it to Voronoi-like
+graphs for  any Voronoi-like cycle C. 
+
+In <cit.>, a Voronoi-like diagram was defined 
+as a tree structure subdividing the domain of a so-called
+boundary curve, which was implied by a set of Voronoi edges.  A
+boundary curve is a Voronoi-like cycle but not necessarily vice versa. 
+That is, the tree structure of <cit.> was defined using 
+
+
+some of the properties in Lemma <ref> as definition,
+and the question whether such a tree always existed
+had remained open.
+In this paper a Voronoi-like graph is defined entirely differently, but
+
+
+Lemma <ref> implies that 
+the two structures are equivalent within the domain of a boundary
+curve. As a result,
+
+we can use and extend the results of <cit.>. 
+
+
+
+
+
+Given a p-cycle C,
+and a bisector J(p,s) that  intersects it,
+an arc-insertion operation can be defined <cit.>  as follows.
+Let α⊆ J(p,s) be a maximal
+component of J(p,s) in the domain of C, see Figure <ref>.
+         Let C_α=C⊕α  denote the p-cycle 
+         obtained by substituting with α the superflous portion of C between the
+         endpoints of α. 
+         (Note that only one portion of C
+         forms a p-cycle with α, thus, no ambiguity exists).
+          There are three different main cases possible as a result, see Figure <ref>:
+         1) α may lie between two consecutive
+         arcs of C, in which case  |C_α|=|C|+1; 2) α may cause the deletion of 
+         one or more arcs in C, thus, |C_α|≤ |C|; 3) the endpoints of
+         α may lie on the same arc ω of C, in which
+         case ω splits in two different arcs, thus,
+         |C_α|=|C|+2. 
+         In all cases C_α is enclosed by C (|·|
+         denotes cardinality).
+
+         
+       
+              
+The arc-insertion operation can be naturally extended  to the Voronoi-like
+graph (C) to insert arc α and obtain
+(C_α). We use
+the following lemma, which can be extracted from <cit.>
+(using Theorem 18, Theorem 20, and Lemma 21 of <cit.>). 
+
+
+
+
+
+
+Given (C), arc α∈ J(p,s) ∩ D_C, and the endpoints of α on C, we can
+compute the merge curve 
+J(α)=∂ R(α, C_α), using standard
+techniques 
+as in ordinary Voronoi diagrams.
+If the endpoints of α lie on different arcs of C, or Γ,
+
+the time complexity is  O(|J(α)| +|C∖ C_α|).
+
+Otherwise,  α splits a bisector arc ω, and
+its region  R(ω,C), into
+R(ω_1,C_α) and R(ω_2,C_α);
+the time complexity increases to  O(|J(α)|+
+min{|R(ω_1,C_α)|, |R(ω_2,C_α)|}).
+
+
+
+
+
+
+
+The correctness proofs from <cit.>, which are related
+to Lemma <ref>,  
+remain intact if performed on a Voronoi-like cycle, as long as the arc α is
+contained in the cycle's domain; see also 
+<cit.>.
+
+Thus, Lemma <ref> can be established.
+
+
+
+
+
+
+Next we prove the existence of (C) by construction.
+To this goal we use a split relation between bisectors in
+_p or sites in S_C, which had also been considered in
+<cit.>, see Figure <ref>. 
+
+
+
+For any two sites s,t∈ S_C, 
+we say that J(p,s) splits
+J(p,t)  (we also say that s splits t, with respect
+to p),
+if J(p,t) ∩ D(p,s) 
+contains two connected components.
+
+
+
+
+
+
+ 
+From the fact that related bisectors in an admissible bisector system
+intersect at most twice, as shown in
+Figs. <ref> and <ref>,
+we can infer
+that the split relation  is asymmetric and transitive, 
+
+thus, it is also acyclic.
+
+The split relation  induces a strict partial order on S_C,
+
+where s<_p t, if J(p,s) splits J(p,t), see Figure <ref>.
+Let o_p be a topological order of the resulting directed acyclic 
+graph, which underlies  the split relation on S_c induced by p.
+
+
+
+
+
+
+
+The following lemma shows that (C) exists
+
+by construction. 
+It builds upon a more restricted version regarding a boundary
+curve that had been considered in <cit.>. 
+ 
+
+
+
+Given the topological ordering of the split relation o_p, 
+(C)
+can be constructed in O(|C|^2) time; thus, (C) exists.
+
+Further, at the same time,
+we can construct (C')  for any other
+Voronoi-like cycle C' 
+that is enclosed by C, S_C'⊆ S_C.
+
+
+
+
+
+
+Given the order o_p, we follow the randomized approach of
+Chew <cit.>, and apply the arc-insertion operation of
+Lemma <ref>, which is extracted from <cit.>.
+
+Let the sites in S_C be numbered according to 
+o_p=(s_1,s_2… s_m), m=|S_C|.
+We first show that C can be constructed incrementally, by arc-insertion,
+following o_p.
+
+Let C_i denote the p-cycle constructed by the first
+i sites in o_p. 
+
+C_1 consists of J(s_1,p) and a Γ-arc, 
+
+that is, C_1=∂(D(p,s_i)∩
+D_Γ). Clearly C_1 encloses C.
+
+Suppose  that C_i encloses C.
+
+Then, given C_i, let C_i+1 by the p-cycle obtained
+by inserting to C_i the components of J(s_i+1,p)∩ D_C_i, which
+correspond to arcs in C.
+For each such component α (α∈ J(s_i+1,p)∩
+D_C_i), if some portion of α appears in C, then compute
+C_i⊕α; if α does not appear in C, ignore
+it.
+Let C_i+1 be the resulting
+p-cycle after all such components of J(s_i+1,p) have been inserted to C_i, one by one.
+
+Because  any site whose p-bisector splits 
+J(p,s_i+1) has already been processed, a distinct component
+of J(s_i+1,p)∩ D_C_i must exist for each arc of 
+s_i+1 in C.
+Thus, C_i+1 can be derived from C_i and must enclose C.
+
+
+
+
+
+
+
+We have shown that C can be constructed incrementally, if we follow
+o_p, in time  O(|C|^2).
+
+It remains to construct the Voronoi-like graph
+(C_i) at each step i.
+
+To this end, we use Lemma <ref>, starting at 
+(C_1)=∅.
+Given (C_i) and C_i+1,  we can apply
+Lemma <ref> to each arc α⊆ J(s_i+1,p) in C_i+1∖
+C_i.
+The correctness proof of <cit.> ensures the feasibility and the correctness of each
+arc insertion, thus, it also ensures the existence of (C_i+1).
+
+
+
+
+
+
+The above incremental construction can also
+compute (C') 
+by computing both C_i and C_i'
+at each step i.
+
+
+Suppose C_i=C_i', where C_1'=C_1.
+When considering site s_i+1, we
+insert to  C_i' all components of J(s_i+1,p)∩ D_C_i 
+corresponding to arcs of s_i+1, which appear in either  C or 
+C'. 
+
+Thus,  C_i+1' is derived from  C_i+1 by inserting any additional
+arcs α' of s_i+1, where  α'∈ C'∖ C.
+Note that all arcs of
+s_i+1 that appear in C are inserted to C_i+1', even if they do not
+appear in C'.
+This is possible because of the
+order o_p: any site whose p-bisector splits 
+J(p,s_i+1) has already been processed, thus, a distinct component
+of J(s_i+1,p)∩ D_C_i must exist for each arc of
+s_i+1 in either C or C', which can be identified.
+
+Referring to (C_i+1), the insertion of an additional arc
+α' may only cause an existing region to shrink.
+Therefore, we derive two invariants: 1. R(β,C_i+1')⊆ R(β,C_i+1) for any arc β∈
+C_i+1∩ C_i+1'; and 2.  C_i+1' is enclosed by
+C_i. 
+The invariants are maintained in subsequent steps.
+The fact that step i+1 starts with C_i+1', which is enclosed by
+C_i+1, does not make a difference to the above arguments.
+Thus, the invariants hold for
+C_n and C_n', therefore, C_n'=C'.
+
+
+
+
+
+
+The following lemma can also be extracted from <cit.>. 
+
+
+
+
+It  can be used to
+establish the uniqueness of (C).
+
+Similarly to Lemma <ref>, its original statement 
+does not refer to a p-cycle, 
+
+however, nothing in its proof prevents its adaptation 
+to a p-cycle, 
+see <cit.>.
+
+
+
+ <cit.>
+ 
+Let C be a p-cycle and let α,β be two bisector arcs in
+C, where s_α≠
+s_β.
+Suppose that a component e of J(s_α,s_β) intersects  R(α,C).
+Then J(p,s_β) must intersect D_c with a component
+β'⊆ J(p,s_β)∩ D_c such that e is a portion of
+∂ R(β',C⊕β').
+
+
+
+
+
+
+By Lemma <ref>,  if J(s_α,s_β) intersects
+R(α,C), then a face of s_β must be missing from
+(C) (compared to (Ĉ)) implying that an arc of J(p,s_β) is missing
+from C. Then (C) must be unique.
+
+
+
+
+We now use the randomized incremental construction of <cit.> to
+construct (C), which in turn follows Chew <cit.>,
+to establish the last claim of Theorem <ref>.
+
+Let o=(α_1,…α_n) be a random permutation of the bisector arcs
+of C, where each arc represents a different occurrence of a site in S_C.
+The incremental algorithm works in two phases.
+In phase 1, delete arcs from C
+in the reverse order o^-1, 
+while registering their neighbors at the
+time of deletion.
+In phase 2,  insert the arcs one by one, following
+o, using their neighbors information from phase 1. 
+
+
+Let C_i denote the p-cycle constructed by considering the
+first i arcs in o in this order.
+C_1 is the p-cycle consisting of J(s_α_1,p) and the relevant
+Γ-arc. 
+
+
+Given C_i, let α_i+1' denote the bisector
+component of J(p,s_α_i+1)∩ D_C_i that contains
+α_i+1 (if any), see Figure <ref> where α
+stands for α_i+1'. 
+If α_i+1 lies outside C_i, then
+α_i+1'=∅
+
+
+(this is possible if C_i is not a Voronoi cycle).
+Let cycle
+C_i+1=C_i⊕α_i+1' (if α_i+1'=∅,
+then  C_i+1=C_i).
+Given α_i+1', and  (C_i), the graph 
+(C_i+1) is obtained
+
+by applying Lemma <ref>.
+
+
+
+Let us point out a critical case, which differentiates from <cit.>: both endpoints of
+α_i+1' lie on the same arc ω of C_i, see
+Figure <ref>(c) where α stands for α_i+1'.
+That is, the insertion of α_i+1 splits the arc ω in two arcs, ω_1 and ω_2.
+
+(Note s_α_i+1 <_p s_ω 
+but ω was inserted to C_i before  α_i+1).
+
+Because of this split, C_i, and thus (C_i), is order-dependent: if α_i+1 were
+considered before ω, in some alternative ordering, then ω_1 or ω_2 would not
+exist in the resulting cycle, and similarly for their faces in
+(C_i+1).
+The time to split R(ω,C_i) is proportional to the minimum complexity of
+R(ω_1,C_i+1) and R(ω_2,C_i+1), which is added to the
+time complexity
+of step i.
+
+Another side effect of the split relation is that α_i+1 may fall outside
+C_i, if C is not a Voronoi-cycle,  in which case,  
+C_i+1=C_i.
+Then  C_n≠ C, in particular, C_n
+is enclosed by C. 
+
+
+Because the computed cycles are order-dependent, standard backwards analysis
+cannot be directly applied to 
+step i.
+In <cit.> an alternative technique was proposed, 
+
+which can 
+be applied to the above construction.
+The main difference from
+<cit.> is 
+case  C_i+1=C_i,
+
+
+however, such a case has no effect to  time complexity,
+thus, the analysis of 
+<cit.> can be applied. 
+
+  
+
+By the variant of backwards analysis in <cit.>, the time complexity of step i 
+ is expected O(1).
+
+
+
+
+
+
+ 
+
+
+ §.§ The relation among the Voronoi-like graphs
+  (C), (C'), and (Ĉ)
+
+
+ In the following proposition, the first claim follows from
+ Theorem <ref> and the second follows from the proof of
+ Lemma <ref>.
+ 
+
+
+
+Let C' be a Voronoi-like cycle between C and Ĉ such that S_Ĉ⊆ S_C'⊆ S_C. 
+
+
+  * R(α,C') ⊇ R(α,Ĉ), for any arc α∈ C'∩Ĉ.
+
+  * R(α,C') ⊆ R(α,C), for any arc α∈ C∩
+C'.
+
+
+
+
+Proposition <ref> indicates that the faces  of
+(C') shrink as we move from the outer cycle C to an inner
+one, 
+until we reach the Voronoi faces of (Ĉ), which are
+contained in all others.
+It also indicates that (C), (C') and (Ĉ) 
+share common subgraphs, and that the adjacencies of the Voronoi diagram
+(Ĉ) are  preserved. More formally, 
+
+
+
+Let (C',C∩ C') be
+the following subgraph of (C'): vertex  v∈(C') is included in
+(C',C∩ C'), if all three faces incident to v belong to 
+arcs in  C∩ C';
+edge e ∈(C') is included to (C',C∩ C') if
+both faces incident to e belong to arcs in  C∩ C'.
+
+
+
+
+
+
+For any Voronoi-like cycle C',
+enclosed by C, where 
+S_C'⊆ S_C,
+it holds: 
+(C',C∩ C') ⊆(C). 
+
+
+
+Depending on the problem at hand, computing  (C') (instead of the more expensive task of computing (C))
+may be sufficient. For an example see
+
+Section <ref>.
+
+
+
+Computing (C) in linear expected time, instead of (C'),
+
+is possible if the faces of (C) are Voronoi
+regions.
+This can be achieved by deleting the superflous arcs in C'∖
+C, created during the arc-splits,
+which are called auxiliary arcs. 
+A concrete example is given in Section <ref>.
+During any step of the construction, if R(α',C_i) is
+ a Voronoi region,  but α'∩ C=∅, 
+ we can call
+the site-deletion procedure of <cit.>
+to eliminate α'  and R(α',C_i) 
+from (C_i). In particular,
+
+
+
+Given (C_i), 1≤ i≤ n, we can delete R(α,C_i), if
+R(α,C_i) ⊆(s_α, S_α), where
+
+S_α⊆ S_C is the set of sites that define 
+∂ R(α,C_i),
+in expected time linear on |S_α|.
+
+
+
+There are two ways to use Proposition <ref>, if applicable:
+
+
+  * Use it when necessary to 
+maintain the invariant that C_i encloses C (by deleting <cit.> any
+auxiliary arc in C_i-1 that blocks the insertion of  α_i, thus, eliminating the case C_i =C_i-1).
+
+  * Eliminate any auxiliary arc at the time of its creation. 
+If the insertion of α_i splits an arc ω∈ C_i-1
+into ω_1 and ω_2,  but ω_2∉C, then
+eliminate R(ω_2,C_i) by calling <cit.>.
+
+
+
+The advantage of the latter is that Voronoi-like cycles become
+order-independent, 
+therefore,
+backwards analysis becomes possible to establish the algorithm's time complexity.
+
+We give the backwards analysis argument on the concrete
+case of Section <ref>; the same type of argument, only
+more technical, can be derived for this abstract formulation as well.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ EXTENDING TO VORONOI-LIKE CYCLES OF K SITES
+
+
+
+
+Theorem <ref> can extend to a Voronoi-like k-cycle,
+
+
+
+for brevity, a k-cycle, which involves 
+a set P of k sites whose labels appear
+in the interior of the cycle.
+A k-cycle C_k lies in the arrangement (_P∪Γ)  and its vertices are degree-2 locally Voronoi, where _P
+denotes the set of bisectors related to the sites in P. 
+
+It implies a Voronoi-like graph (C_k), which involves the
+set of sites S_C⊆ S∖ P, which (together
+with the sites in P) define  the bisector arcs of C_k.
+(C_k) is defined  analogously to
+Def. <ref>, given C_k and the set of sites S_C.
+
+
+
+We distinguish two different types of k-cycles on (_P∪Γ):
+1. a k-site Voronoi-like
+  cycle whose vertices are  all 
+of the nearest type, e.g., the boundary  of the union of k
+neighboring Voronoi regions; and
+2. an order-k Voronoi-like
+  cycle whose vertices are both of the nearest and the farthest type,
+e.g.,  the boundary of an order-k Voronoi face.
+
+
+
+
+
+In either case we partition a k-cycle C_k into maximal 
+compound arcs, each induced by one site in S_C.
+
+
+Vertices in the interior of a compound arc are switches between
+sites in P, and the endpoints of compound arcs are switches between
+sites in S_c.
+For an order-k cycle, the former vertices 
+
+
+are of the farthest type, whereas the latter
+(endpoints of compound arcs) are of the nearest type.
+
+
+
+
+
+
+
+
+Given a compound arc α, let J(α) denote the bisector
+curve that consists of the arc α extending the 
+bisector arcs incident to its endpoints to Γ, see Figure <ref>.
+Let P_α⊆ P be the subset of sites 
+that (together with one site in S_C) define α.
+
+
+
+
+
+
+
+
+
+                  
+
+
+
+
+Assuming that it exists, (C_k) is a forest, and if C_k is bounded,
+then (C_k) is a tree.
+Each face of (C_k) is incident to exactly one compound arc 
+α of
+C_k, which is denoted as R(α,C_k).
+
+
+
+
+
+
+
+
+
+  
+  (C_k) may not contain cycles because (s,S_C), s∈ S_C,
+  cannot be enclosed by C_k, as 
+  in the proof of 
+  Lemma <ref>. For the same reason, any face of
+  (C_k) must be incident to a bisector arc.
+  
+ 
+  
+  
+  Thus,  (C_k) is a forest whose leaves are incident to
+  
+  the endpoints of 
+  compound arcs.
+  It remains to show that no face of  (C_k)  can be incident to
+  a pair of compound arcs  of the same site s∈ S_c. 
+
+      
+
+              
+  Suppose, for the sake of contradiction,  that a face f is incident
+  to two compound arcs 
+  α,α'∈ C_k of the same site s∈ S_C (s=s_f).
+  We first consider an order-k cycle, see 
+  Figure <ref>. 
+  Arcs α and α' consist of bisector pieces in
+  J(s,p_i), p_i∈ P.
+  Any two of these s-related bisectors J(s,p_i), J(s,p_j) 
+  
+  must intersect at least once, as otherwise 
+  (s,{s,p_i,p_j}) would be disconnected, violating axiom A1.
+  Furthermore, any two J(s,p_i) and  J(s,p_r) 
+  contributing to the same compound arc must intersect
+  exactly once, because if they intersected twice, they would intersect
+  under an illegal pattern of
+  Figure <ref>(d), see Figure <ref>(c).
+  
+  
+ 
+ 
+              
+  
+  
+  
+  
+  Consider the two branches of  ∂
+          f∖{α,α'}, see
+          Figure <ref>. Choose one such brunch, say
+          B_1, 
+          and let α_i⊂ J(s,p_i) and  α_j⊂
+          J(s,p_j) be the bisector arcs of α and α'
+          respectively incident to the endpoints of B_1.
+          
+          If  J(s,p_i) and  J(s,p_j) intersect at a point I at
+          opposite side of B_1 as α_i and α_j, then we
+          have a cycle formed by B_1 and the pieces of J(s,p_i)
+          and  J(s,p_j) incident to I  that has the label s
+          outside.
+          But such a cycle cannot exist, by Observation <ref>.
+          Thus, I cannot exist  and  J(s,p_i), J(s,p_j) must
+          intersect at a point I' on the other side of B_1.
+          
+          
+
+          
+          Bisector J(s,p_i) (resp. J(s,p_j))  cannot enter face f because
+          otherwise J(s,p_i) (resp. J(s,p_j)) would intersect
+          twice with another s-related bisector contributing to
+          arc α (resp. α'), which is not possible as
+          claimed above. Thus, 
+          I' 
+                                
+          
+          cannot lie within f.
+
+          
+          
+          
+          
+          
+          
+          
+          
+    
+          Consider the other brunch B_2 of  ∂
+          f∖{α,α'} and expand the arcs 
+          incident to its endpoints until one hits  J(s,p_i) and the
+          other hits J(s,p_j), see Figure <ref>(b).  The bisectors constituting
+          B_2 are s-related, thus, they must intersect J(s,p_i)
+          and J(s,p_j), as otherwise the illegal pattern of
+          Figure <ref>(b) would appear.
+          
+          
+          
+          Suppose now that J(s,p_i) and  J(s,p_j) intersect at a point I' at
+          the opposite side of B_2 as f.
+          Then an illegal cycle with the label s outside is
+          constructed by the expanded brunch B_2 and the pieces of J(s,p_i)  
+          and  J(s,p_j) incident to I', concluding that I' is
+          not possible either, by Observation <ref>.
+
+          We derive a contradiction as J(s,p_i)
+          and J(s,p_j) must intersect at least once.
+ 
+          Thus, each face of (C_k) must be incident to exactly one
+          order-k arc of C_k.
+
+          Suppose now that C_k is a k-site Voronoi-like
+          cycle and face f is incident to compound arcs α and
+          α'. Consider the curves J(α)  and
+          J(α'), which  can not 
+          intersect B_1 nor B_2 because
+          otherwise an illegal cycle, having the label
+          s outside, would be created  contradicting
+          Observation <ref>.
+          (In Figure <ref>(a) an illegal cycle would be
+          created if  J(α) turned to intersect B_1).
+          
+          
+          
+          
+          Furthermore, J(α) and J(α')  must intersect otherwise
+          (s,P_α∪ P_α'∪{s}) would be
+          disconnected. 
+          
+          But then an illegal
+          cycle,  with the label
+          s outside, would be created between the intersecting pieces
+          of  J(α) and J(α'), and  B_1 or B_2,
+          contradicting Observation <ref>.
+          
+          
+          
+          
+          
+          
+          
+          
+
+
+
+Given Lemma <ref>, the remaining claims of
+Theorem <ref> can be derived as in  Section <ref>.
+
+
+
+
+
+
+Let J(s_α,P) denote the bisector curve associated with a
+compound arc α, s_α∈ S_C.
+For a k-site cycle,
+J(s_α,P)=∂(s_α,P∪{s_α}).
+
+
+For an order-k cycle,  J(s_α,P)=∂(α,P∪{s_α}), where
+(α,P∪{s_α}) denotes the face of the
+farthest Voronoi region of s_α, which is incident to arc
+α. 
+
+In both cases J(α)=J(s_α,P_α).
+
+The curve  J(s_α,P) is
+expensive to compute, however, we never need to entirely compute it.
+
+
+Instead of J(s_α,P), we use J(s_α,P̃_α), where
+P_α⊆P̃_α⊆ P, and  |P_α| ≤
+|P̃_α| ≤ |P_α|+2.
+J(s_α,P̃_α) is readily available from
+J(α)  and the two neighbors of α at its insertion time in the 
+current Voronoi-like cycle.
+Using J(s_α,P̃_α)  in the place of the p-bisectors
+of Section <ref> the same essentially incremental algorithm
+can be applied  on the compound arcs of c_k.
+Some properties of  J(s_α,P̃_α) in the
+case of an order-k cycle are given in <cit.>.
+
+
+
+
+
+
+
+
+ §.§ Computing a Voronoi-like graph in an order-k Voronoi face
+
+We now review an example by Junginger and Papadopoulou <cit.> when C_k is the boundary
+of  a face f of an order-k Voronoi region.
+It is  known that (C_k)  can be computed in
+linear-expected time <cit.>,
+
+but an even simpler technique can be derived by computing the
+Voronoi-like graph of an appropriately defined Voronoi-like cycle C <cit.>.
+
+
+In fact, 
+the Voronoi-like graph of any Voronoi-like cycle  C', between C and
+Ĉ, turns out fully sufficient. 
+
+
+
+
+Let f be a 
+face of an order-k
+Voronoi region of a set H of k sites.
+Let S_f denote the set of sites that, together with the sites in
+H, define the boundary ∂ f.
+The graph (∂ f) gives  the order-(k+1)
+Voronoi subdivision within f, which is the Voronoi diagram
+(S_f), truncated within f, i.e., (S_f)∩ f.
+
+
+
+
+
+
+
+ 
+
+  * Computing the Voronoi diagram (S_f)∩ f= (∂ f) <cit.>.
+
+
+  * Given ∂ f, and any h∈ H,  compute an h-cycle C as
+implied by the order of sites along the boundary of f. Note that C
+encloses the Voronoi region (h,S_f), which in turn encloses
+f. (h,S_f) is not known, however, C can be derived directly 
+from ∂ f.
+
+
+  * Run the randomized incremental technique of <cit.>
+ on C in linear
+  expected time  (see Section <ref>). It
+will compute (C')
+for some h-cycle between C and Ĉ.
+
+  * Truncate (C')∩ f. No matter which h-cycle is computed, (C')∩ f=
+  (S_f)∩ f.
+
+
+
+
+The  claim follows by  
+the fact that R(α',Ĉ)
+∩ f=∅, for any α'∈Ĉ∖ C', and
+C∖ C'⊆Ĉ∖ C. Thus,
+(Ĉ)∩ f= (Ĉ, Ĉ∩ C')∩ f = (Ĉ, Ĉ∩ C)∩ f.
+
+
+
+
+
+
+
+§ UPDATING A CONSTRAINT DELAUNAY
+       TRIANGULATION
+
+      We give an example of a Voronoi-like cycle C, which does  not
+     correspond to a Voronoi
+     region, but we need to compute the adjacencies of the Voronoi-like
+     graph (C).
+     The problem appears in the incremental construction of a constraint Delaunay
+       triangulation (CDT), a well-known variant of the Delaunay
+     triangulation, in which a given set of segments is constrained
+     to appear in the triangulation of a point set Q, which includes
+     the endpoints of the segments, see <cit.> and references therein.
+     
+     Every edge of the CDT is either an input segment or is
+     locally Delaunay (see Section 1).
+     
+     
+     
+     
+     The incremental construction to compute a CDT,
+     first constructs an ordinary
+       Delaunay triangulation of the points in Q, and then inserts segment
+      constraints, one by one, updating the triangulation after
+      each insertion.
+ 
+      Shewchuk and  Brown <cit.> gave an expected
+      linear-time algorithm to perform each update. 
+      Although the algorithm is summarized in a pseudocode, which could then
+      be directly implemented,
+      
+      
+      the algorithmic description is quite
+      technical having to make sense of self-intersecting polygons,
+      their triangulations, and other exceptions.
+      
+      
+      
+      We show that the problem corresponds exactly to computing (in
+      dual sense) the
+      Voronoi-like graph of a Voronoi-like cycle. 
+      
+      
+      Thus, a very simple randomized incremental construction, with
+      occasional calls to Chew's algorithm <cit.> to delete a
+      Voronoi region of points, can be derived.
+      Quoting from <cit.>: incremental segment insertion is
+      likely to remain the most used CDT construction algorithm, so it
+      is important to provide an understanding of its performance and
+      how to make it run fast.
+      We do exactly the latter in this section.
+      
+      
+      
+
+
+
+
+     
+        
+
+
+      
+       When a new constraint segment s is inserted in a CDT, the
+       triangles, which get 
+       destroyed by that segment, are  identified and
+       deleted <cit.>. This creates two cavities that need to be
+       re-triangulated using constrained Delaunay triangles,
+       see Figure <ref>(a),(b), borrowed from <cit.>,
+       where one cavity is shown shaded (in light blue) and the other unshaded.
+       
+       
+       
+       The boundary of each cavity need not 
+       
+       be  a simple polygon. 
+       However, each cavity implies a Voronoi-like cycle,
+       whose Voronoi-like graph re-triangulates the cavity, see Figure <ref>(c),(d).
+       
+      
+      
+        
+
+      
+      Let  P=(p_1,p_2,…, p_n) denote one of the cavities, where p_1 … p_n
+      
+      is the sequence of cavity vertices in counterclockwise order, and  p_1,p_n are the endpoints of s.
+      Let S denote the corresponding set of points (|S|≤ n) and
+      let _s denote the underlying bisector system
+      involving the segment s and points in S.
+      Let  C be the s-cycle in (_S∪Γ) that has one s-bisector
+      arc for each  vertex in P, in the same order as P, see
+      Figure <ref>.
+      Note that one  point in S may contibute more than one arc in
+      C.
+
+ 
+      
+    
+        
+      The  s-cycle C exists and can be derived from P in linear time.
     
 
+       
+      
+    
+      Let p_i∈ P, 1<i<n. The diagonal of the original CDT, which bounded the triangle  incident to
+       p_ip_i-1 (resp. p_ip_i+1) was a
+       locally Delaunay edge intersected by s.
+      Thus, there is a
+      circle through p_i that is tangent to s that contains 
+      neither p_i-1 nor p_i+1, see Figure <ref>. Hense, an arc of J(p_i,s) must
+      exist, which contains the center of this circle, and extends
+      from an intersection point of J(p_i,s)∩
+      J(p_i-1,s) to an intersection point of J(p_i,s)∩
+      J(p_i+1,s). The portion
+      of J(p_i,s) between these two intersections corresponds to the
+      arc of p_i on C, denoted α_i.
+      Note that the s-bisectors are parabolas that share the same directrix
+      (the line through s), thus, they may intersect twice.
+      It is also possible that  p_i-1=p_i+1. In each case,
+      we can determine which intersection  is relavant to arc
+      α_i, given the counterclockwise order of P.
+      Such questions can be reduced to in-circle tests involving the
+      segment s and three points.
+      
+      
+      
+      
+     
 
 
- §.§ Influence of taxel spatial density
-
-
-This section evaluates how the taxel spatial density influences the performance in inferring object adjectives. The 19 electrode measurements from each sensor were first arranged into a 7×3 rectangular array using the same method in <cit.> as shown in Fig. <ref>b. The study was conducted by comparing the performance of signals spatially-downsampled from 7×3 (original electrodes) to 4×2 (by 2, denoted as SDS2) and 2×1 (by 4, denoted as SDS4). 
-All setups were the same as in Section <ref> except the signals to which the PCA was applied.
-
-Fig. <ref> and Fig. <ref> show the results. From Fig. <ref> we can see that downsampling generally decreases the performance in most cases across all EPs. 
-From adjective perspective (Fig. <ref>), “solid”, “squishy”, “compressible” and “hard” have obviously better performance with downsampled signals across 3 EPs except “hold”; 
-most of the rest have obvious performance decreases across at least 3 EPs, particularly for those texture-related ones. This indicates that denser taxels are helpful for those texture-related adjectives, but can be distracting to those non-texture-related ones.
-
-
-
- §.§ Influence of measurement temporal density
-
-
-
-
-
-
-The study of measurement temporal density was conducted by comparing signals temporally downsampled by factors of 20, 50, 100, 200, and 400 (denoted as TDS20 to TDS400).
-The performance of the original electrodes was also compared as a reference (denoted as TDS1).
-All setups were the same as in Section <ref> except the signals to which the PCA was applied. Considering the significantly reduced number of frames in the downsampled sequences, the numbers of PCA components were set to 100 for TDS200 and 50 for TDS400, which maintained >99% of the input's variance.
-
-Table <ref> shows the average mAP results, from which we can observe that signals collected by “squeeze” have obvious performance degradation (⩾0.01) from TDS400, “slow slide” from TDS200, and “fast slide” from TDS100; while “hold” has no obvious performance changes. This trend can also be observed in Fig. <ref>. When paying attention to the numbers of frames in the downsampled sequences of each EP in Table <ref>, we can also observe that the performance starts decreasing at around 10 for “squeeze” (12) and “slow slide” (9), and 18 for “fast slide”. There is no obvious performance difference for the cases with smaller downsampling factors. All these observations indicate that much smaller frame rates can satisfy the demand of inferring object adjectives, although with differences for some adjectives and EPs. For those exploratory procedures with the possibility of obtaining more information, more frames are required to keep the information.
-
+     Let (P)  denote the  constraint Delaunay triangulation of
+     P. Its edges are either locally Delaunay or they are cavity edges on
+     the boundary of P.
   
+     
+       The (P) is  dual to 
+       (C), where C is the s-cycle derived from P.
+     
 
-From Fig. <ref> we can also see that the performance changes of “solid”, “squishy”, “compressible” and “hard” with “squeeze” are much more significant (⩾0.1) than the others. This indicates that the contributions from the temporal information in these signals are critical for inferring stiffness-related adjectives, and the minimum numbers of frames are around 24 to keep the information.
-   
+      
+     
+      The claim derives from the definitions, Lemma <ref>, which
+      shows the existence of C,
+      and the properties of 
+      Theorem <ref>. 
+      The dual of (C) has one node for each s-bisector arc of C,
+      thus, one node per vertex in P.
+      An edge of (C) incident to two locally Voronoi
+      vertices v,u  involves four different sites in
+      S; thus, its dual edge is locally Delaunay.
+      The dual of an edge incident to a leaf of C, 
+      
+      is an edge of the
+      boundary of P. 
+     
+     
+ 
+        
+Next, we 
+compute (C) in expected linear time.
+Because C is not the complete boundary of a Voronoi-region,
+if we apply the construction of Theorem <ref>,  
+the computed cycle C_n may be 
+
+enclosed by C.
+This is because of occasional split operations, given the random order
+of arc-insertion,
+which may create auxiliary arcs that have no correspondence to vertices of
+P.
+
+However, we can use Proposition <ref> to delete such auxiliary
+arcs and their faces. 
 
 
-§ CONCLUSIONS AND DISCUSSIONS
 
 
-This paper has presented a comprehensive empirical study on how parallel finger-tip tactile contributes to inferring object adjectives using the PHAC-2 dataset. The study was mainly conducted to explore the influence of taxel spatial density, measurement temporal density, and taxel distribution. Experimental results showed that one tactile sensor is sufficient for symmetric use cases (symmetric interaction motions on symmetric objects/surfaces) such as most of the data collected in the PHAC-2 dataset. The two tactile sensors on the PR2 robot have similar performance individually or combined.
-
-Both spatial and temporal information from taxels contributes to inferring object adjectives. Dense taxels are beneficial for texture-related adjectives, but can be distracting to non-texture-related ones. The contributions from the temporal information are critical for inferring stiffness-related adjectives such as “solid”, “squishy”, “compressible” and “hard”. The frame-rate of the BioTac sensor is more than sufficient for inferring object adjectives. Sensors with much smaller frame rates can satisfy the demand. 
-
-The vibration and temperature related signals from the BioTac sensor have significant contributions to the inferring of textured-related or temperature-related adjectives, but can also be distracting for some adjectives such as stiffness-related features. In terms of taxel distribution, not all taxels benefit the inferring of object adjectives: the electrodes on the belly of the sensor make the largest contribution to inferring the most object adjectives, while the electrodes on both sides of the sensor are critical for inferring the adjectives such as “porous”, “scratchy” and “absorbent”, where deep contact (sensor mostly wrapped by the contact surface) between the sensor and object is needed.
-
+The sites in S are points, thus, any Voronoi-like cycle
+in their bisector arrangement coincides with a Voronoi region. 
+By calling Chew's algorithm <cit.> we can delete any face of any auxiliary
+arc in expected time linear in the complexity of the face.
 
 
-§ ACKNOWLEDGMENT
 
-The authors acknowledge continued support from the Queensland University of Technology (QUT) through the Centre for Robotics, and thank the support and help from Dr Ben Richardson for the use of the PHAC-2 dataset.
-Support from the GentleMAN (RCN 299757) is also greatly acknowledged.
-Computational resources and services used in this work were provided by the eResearch Office, Queensland University of Technology, Brisbane, Australia.
 
-IEEEtran
+
+It is easy to dualize the technique to directly compute constraint
+Delaunay triangles.
+
+In fact, the cycle C can remain  conceptual with no need to explicitly compute it. 
+
+
+
+ 
+The dual  nodes  are  graph
+theoretic, each one corresponding to an  s-bisector  arc,
+
+which in turn corresponds to a cavity vertex.
+
+
+
+This explains the
+polygon self-crossings of <cit.> if we 
+draw these graph-theoretic  nodes on the cavity vertices
+
+during the intermediate steps of the construction. 
+
+
+
+
+
+
+The algorithm to compute (C) (or its dual (C)=(P)) is very simple.
+Let  o=(v_1,… v_n) be a random permutation of the vertices in
+P, except the endpoints of s; let v_1=p_1 and
+v_2=p_n.
+Let  P_i denote the sub-sequence of P consisting of the first
+i vertices in o.
+Let  C_i denote the corresponding s-cycle, which has one s-bisector arc for each vertex in P_i in the
+order of P_i (see Lemma <ref>).
+
+
+
+
+
+
+In an initial  phase 1, starting at P_n=P, delete
+vertices in reverse order o^-1, recording the
+neighbors of each vertex v_i in P_i at the time of its deletion.
+
+
+
+In phase 2, 
+consider the vertices in o in increasing order, starting with
+(C_3), and using the arc-insertion operation 
+(Lemma <ref>)
+to build C_i and 
+(C_i)
+
+incrementally, 3≤ i≤ n.
+
+
+Instead of (C_i), we can equivalently be constructing the dual (C_i).
+
+
+
+
+
+In more detail, let C_3 be the s-cycle obtained by the two perpendicular lines
+through the endpoints of s, which are truncated on one side by Γ, and on
+the other by  J(v_3,s).  C_3 consists of four arcs on: J(s,p_1), J(v_3,s),
+J(s,p_n) and Γ, respectively. (C_3) has one Voronoi vertex
+for (p_1,v_3, p_n), see Figure <ref>(a). 
+
+
+
+
+
+
+
+
+Given (C_i-1), we insert v_i  between its two neighboring vertices
+w,u, which have been recorded in phase 1. Suppose w,v_i,u appear
+in counterclockwise order in P, see Figure <ref>(a), where v_i=v. 
+
+Let α_i  denote the arc of v_i  in C_i, in particular, α_i is the component of J(v_i,s)∩ D_C_i-1
+whose endpoints lie between the arcs of u and w in C_i-1,
+call them β and ω respectively, see
+Figure <ref>(a), where α_i=α.
+Among the three cases of the arc
+insertion operation, we only consider  the split case (depicted in
+Figure <ref>(c) and <ref>(a)),
+where
+J(v_i,s) splits (intersects twice) the arc ω⊆
+J(w,s) in C_i-1; the other cases are straightforward.
+
+
+
+
+
+In this case, when inserting α_i to  (C_i-1), the region  R(ω,C_i-1) is split in two faces, where 
+one, say R(ω_2,C_i), does not correspond
+to w (since it is out of order with respect to  w,v_i, u).
+That is,  we compute  (C_i'), where
+C_i'=C_i-1⊕α_i and includes the auxiliary arc  ω_2.
+
+
+To obtain  (C_i) we can call Chew's algorithm to delete R(ω_2,C_i'),
+thus, restore C_i to its original definition.
+
+
+
+
+The increase to the time complexity of step i 
+is expected O(|R(ω_2,C_i)|.
+This is 
+not covered by the argument of <cit.>, which proves
+the expected constant time complexity of step i.
+
+However, 
+by deleting auxiliary arcs,  (C_i) becomes
+order-independent, therefore, we can  prove the
+time complexity of step i in simpler
+terms by invoking backwards analysis.
+
+
+
+
+
+
+The time complexity of step i, which computes (C_i)
+enhanced by calling Chew's
+algorithm to delete any generated auxiliary arc, is expected
+O(1). 
+        
+
+
+
+Since C_i-1 contains no auxiliary arcs, step i can be performed
+in time proportional to |R(α_i,C_i')| +
+|R(ω_2,C_i')|, where C_i'=C_i-1⊕α_i, and
+ω_2 is the auxiliary arc when 
+inserting α_i to  (C_i-1). 
+The first term |R(α_i,C_i')|≤
+|R(α_i,C_i)|.
+The second term can be expressed as 
+|R(ω_2,C_i⊕ω_2|), i.e, the face complexity of ω_2, if we
+insert the arc ω_2 to (C_i). We charge 1 unit, on
+behalf of  v_i, to any vertex of (C_i)
+that would get deleted if we inserted the arc ω_2.
+
+Let V_i={v_3… v_i}. 
+
+Any vertex in V_i is
+equally likely to be the last one considered at step i.
+Thus, we can add up the time complexity of step i when considering  
+each vertex in V_i as last, and take the average.
+The total is  O(|(C_i)|)  for the first term, plus the total
+number of charges for the second.
+By the following lemma the total number of charges is also
+O(|(C_i)|).
+Therefore, the average time complexity is O(1).
+
+
+     
+
+
+
+
+At step i,  any vertex  of  (C_i) can be charged
+at most twice. 
+
+
+
+Consider a vertex t of (C_i) and its Delaunay circle C_t
+passing through three vertices of P_i, indicated by crosses in
+Figure <ref>(b). The three vertices
+partition C_t in three arcs: A_1,A_2, A_3. The segment s must
+cross through (intersect twice) one of these arcs, say A_1, since
+s must be visible to t and the three defining sites of  C_t.
+
+
+Suppose t is charged 
+one unit by  v∈ V_i.
+Suppose w,v,u appear consecutively counterclockwise around P_i. 
+Let ω,β be the arcs corresponding to  w and u,  respectively, in
+C_i-1, see Figure <ref>(a).
+Since t is charged 
+one unit by  v, it follows that ω∈ C_i-1 gets split by the insertion
+of v creating an auxiliary arc ω_2, and  t lies in R(ω_2,C_i⊕ω_2).
+That is, w is enclosed by C_t but  v and u are not.
+Thus, diagonal vu must intersect C_t, and since it cannot obstruct
+the visibility between s and the defining points of C_t, it must
+cross through another arc of C_t, say A_2; diagonal uv leaves
+w and t on opposite sides.
+
+
+But s must be visible to diagonal uv,
+thus,  no other diagonal
+of P_i can also cross through A_2,  obstructing the visibility of
+uv  and s.
+Thus, v can receive at most one charge in relation to arc A_2.
+This implies that v can receive at most one more charge in total, which  corresponds to
+A_3.
+
+
+
+
+Figure <ref> illustrates the incremental construction
+for an indicated order o=(v_1,…, v_6). Vertices  v_4 and v_6 coincide.
+The insertion of v_5 causes the arc of v_4 to
+split, see Fig. <ref>(c). The result of deleting the
+created auxiliary arc is shown in Fig. <ref>(d);
+we insert v_6 
+in Fig. <ref>(e).
+In this example, we could avoid deleting the
+auxiliary arc of v_4, which is created by inserting  v_5 in  Fig. <ref>(c), because it overlaps with an
+arc of C, therefore, it is known that it will later be
+re-inserted and it cannot obstruct the insertion process of other arcs.
+
+
+
+     
+
+      
+
+§ CONCLUDING REMARKS
+
+
+
+We have also considered the variant of computing, in linear
+expected time, a Voronoi-like 
+tree (or forest) within a simply connected domain D, of constant 
+boundary complexity, given the ordering of some Voronoi faces along the 
+boundary of D. In an extended paper, we will provide conditions under which the same
+essentially technique can be applied. 
+
+
+In future research, we are also interested in 
+considering
+deterministic linear-time algorithms to compute
+abstract Voronoi-like trees and forests as inspired by <cit.>.
+
+
+
+       
+
 
 

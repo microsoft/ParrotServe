@@ -6,7 +6,7 @@ import time
 
 
 chunk_size = 1024
-file_name = "article_0"
+file_name = "article_5"
 
 
 ### Langchain part
@@ -36,17 +36,17 @@ split_docs = text_splitter.split_documents(docs)
 for i, doc in enumerate(split_docs):
     print(i, len(tokenizer.encode(doc.page_content)))
 
-prompt_template = """Write a concise summary of the following:
+prompt_template = """Write an one-sentence summary (AS SHORT AS POSSIBLE) of the following:
 {text}
 CONCISE SUMMARY:"""
 prompt = PromptTemplate.from_template(prompt_template)
 
 refine_template = (
-    "Your job is to produce a final summary\n"
+    "Your job is to produce an one-sentence summary (AS SHORT AS POSSIBLE) for a long document.\n"
+    "!!!IMPORTANT!!! The summary should be less than 25 words.\n "
     "We have provided an existing summary up to a certain point: {existing_answer}\n"
     "We have the opportunity to refine the existing summary"
     "(only if needed) with some more context below.\n"
-    "!!!IMPORTANT!!! Never let your summary exceeds 50 words.\n"
     "------------\n"
     "{text}\n"
     "------------\n"
@@ -66,12 +66,17 @@ chain = load_summarize_chain(
 result = chain({"input_documents": split_docs}, return_only_outputs=True)
 steps = result["intermediate_steps"]
 
+output_lens = []
 with open(
     f"arxiv-sampled/{file_name}-chain-outputlen.txt", encoding="utf-8", mode="w"
 ) as f:
     for i, step in enumerate(steps):
+        output_len = len(tokenizer.encode(step, add_special_tokens=False))
+        output_lens.append(output_len)
         print(
-            f"Step {i}: Output Len={str(len(tokenizer.encode(step)))}",
+            f"Step {i}: Output Len={output_len}",
             file=f,
             flush=True,
         )
+
+    print("Average output length:", sum(output_lens) / len(output_lens), file=f)

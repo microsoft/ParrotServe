@@ -56,7 +56,7 @@ if __name__ == "__main__":
     loader = ArxivLoader(tokenizer_name="hf-internal-testing/llama-tokenizer")
     loader.load()
 
-    indices = loader.sample_articles_length_greater_than(2000, 10)
+    indices = loader.sample_articles_length_greater_than(20000, 20)
 
     for i, index in enumerate(indices):
         with open(f"arxiv-sampled/article_{i}.txt", encoding="utf-8", mode="w") as f:

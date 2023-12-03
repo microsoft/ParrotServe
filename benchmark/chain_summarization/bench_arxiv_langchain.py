@@ -19,7 +19,7 @@ from langchain.prompts import PromptTemplate
 
 from transformers import AutoTokenizer
 
-llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=91)
+llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=47)
 loader = TextLoader(f"../workloads/arxiv-march-2023/arxiv-sampled/{file_name}.txt")
 docs = loader.load()
 
@@ -56,33 +56,23 @@ refine_template = (
 
 refine_prompt = PromptTemplate.from_template(refine_template)
 
-chain = load_summarize_chain(
-    llm=llm,
-    chain_type="refine",
-    question_prompt=prompt,
-    refine_prompt=refine_prompt,
-    input_key="input_documents",
-    output_key="output_text",
-)
-
 
 def run_chain():
+    chain = load_summarize_chain(
+        llm=llm,
+        chain_type="refine",
+        question_prompt=prompt,
+        refine_prompt=refine_prompt,
+        input_key="input_documents",
+        output_key="output_text",
+    )
     result = chain({"input_documents": split_docs}, return_only_outputs=True)
     return result
 
 
-from multiprocessing import Process
-
-bs = 8
-procs = [Process(target=run_chain) for _ in range(bs)]
-
 st = time.perf_counter_ns()
 
-for proc in procs:
-    proc.start()
-
-for proc in procs:
-    proc.join()
+result = run_chain()
 
 ed = time.perf_counter_ns()
 print(f"Run chain time: {(ed - st) / 1e9:.2f}s")

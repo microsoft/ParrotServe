@@ -1,51 +1,27 @@
 
-	
-Generation-based Code Review Automation: 
- How Far Are We?
-    Xin Zhou
-Singapore Management University 
 
-Singapore 
-
-xinzhou.2020@phdcs.smu.edu.sg
-Kisub Kim**Corresponding author. Email: kisubkim@smu.edu.sg
-Singapore Management University 
-
-Singapore 
-
-kisubkim@smu.edu.sg
-Bowen Xu
-Singapore Management University 
-
-Singapore 
-
-bowenxu@smu.edu.sg
-DongGyun Han
-Royal Holloway, University of London 
-
-UK 
-
-donggyun.han@rhul.ac.uk
-Junda He
-Singapore Management University 
-
-Singapore 
-
-jundahe@smu.edu.sg
-David Lo
-Singapore Management University 
-
-Singapore 
-
-davidlo@smu.edu.sg
-
+firstpage–lastpage
+Effects of Nb Doping on the Charge-Density Wave and Electronic Correlations in the Kagome Metal Cs(V_1-xNb_x)_3Sb_5
+    Hai-Hu Wen
     March 30, 2023
-======================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+===================================================================================================================
 
 
 
 
 
+GRB 210704A is a burst of intermediate duration (T_90∼ 1-4 s) followed by a fading afterglow and an optical excess that peaked about 7 days after the explosion.  
+Its properties, and in particular those of the excess, do not easily fit into the well established classification scheme of GRBs as being long or short,
+leaving the nature of its progenitor uncertain. 
+We present multi-wavelength observations of the GRB and its counterpart, observed up to 160 days after the burst. 
+In order to decipher the nature of the progenitor system, we present a detailed analysis of the GRB high-energy properties (duration, spectral lag, and Amati correlation), its environment, and late-time optical excess. 
+We discuss three possible scenarios: a neutron star merger, a collapsing massive star, and an atypical explosion possibly hosted in a cluster of galaxies. We find that traditional kilonova and supernova models do not match well the properties of the optical excess, leaving us with the intriguing suggestion that this event was an exotic high-energy merger. 
+
+
+
+
+
+(stars:) gamma-ray burst: individual: GRB 210704A – (transients:) gamma-ray bursts
 
 
 
@@ -53,168 +29,210 @@ davidlo@smu.edu.sg
 § INTRODUCTION
 
 
-Double heavy quark systems such as the J/ψ, Υ, B_c,  and B_c^* mesons are an ideal probe to study  Quantum Chromodynamics (QCD).
-The non-relativistic Quantum Chromodynamics  (NRQCD) effective theory  is a powerful theoretical framework to deal with
-the production and decay of double heavy quark systems where  quarks move with small relative
-velocity u <cit.>.
-Within the framework of NRQCD factorization, a physical observable can be separated into a perturbatively calculable short-distance coefficient (matching coefficient) multiplied with the nonperturbative  NRQCD long-distance matrix element (wave function at the origin).
-Thus NRQCD   provides the possibility to  systematically  study double heavy quark systems with  higher order calculation  in   powers of  two small parameters  α_s and  u.
+
+Gamma-ray bursts (GRBs) are the brightest explosive events in the universe <cit.>. They are classified according to their duration T_90 and spectral hardness <cit.>. The population of short GRBs (SGRBs) typically has T_90≲ 2 s and harder spectra, whereas the population of long GRBs (LGRBs) typically has T_90≳ 2 s and softer spectra <cit.>. However, there is overlap between the two populations, and so in some cases it is not clear whether a burst with intermediate properties belongs to the one population or the other <cit.>.
+
+Nowadays, it is known that at least some SGRBs are the consequence of mergers between compact objects, driven by angular momentum and energy losses to gravitational radiation <cit.> and as such are sources of gravitational wave emission <cit.>. These mergers are followed by a luminous and short-lived kilonova emission, visible at optical and near-infrared wavelengths <cit.>.
+
+In contrast, LGRBs are thought to be the result of the core-collapse of a star <cit.> whose mass exceeds about 10 M_⊙ <cit.>.  
+In this scenario, the optical emission from the SN appears a few days after the GRB, when the afterglow has faded sufficiently and the component powered by radioactive heating can be seen. This leads to two ways to identify the presence of a SN associated with a LGRB. First, through a “rebrightening” or “excess” in the optical /nIR light curve of the LGRB, visible for several days/weeks after the burst as a consequence of the SN emission <cit.>. 
+Second, by the appearance of the broad spectral lines characteristic of rapidly expanding ejecta.
+The identification of a SN associated with GRB 980425  <cit.> and of several more in the following years (see, e.g., ) confirmed that this scenario applies to most LGRBs. 
+
+In this work, we investigate the nature of GRB 210704A, a burst first classified as a SGRB, but later considered to be of intermediate duration. We study the high-energy properties of the GRB prompt phase, and present  X-ray, optical, and infrared observations of its afterglow to 15 days after the burst. These observations show that the afterglow initially fades but then becomes brighter again in the optical and, to a less extent, in the near-infrared.  We also present late HST observations of a possible host galaxy. We derive constraints on the redshift of the bursts and consider three possible host environments: a nearby galaxy, a nearby cluster of galaxies, and a distant galaxy. We explore different scenarios to explain our data, and eliminate all of the those involving standard SGRBs or LGRBs. We are left with the intriguing possibility that GRB 210704A was an exotic transient in a cluster at z≈ 0.2.
+
+Our paper is organised as follows. In section <ref>, we present the observations with Fermi, Swift, Chandra, GTC, LDT, Gemini, Subaru, HST, and other telescopes. In section <ref> we present our analysis. We discuss the nature of the GRB in section <ref>. Finally, in section <ref> we summarise our results. 
+
+
+
+§ OBSERVATIONS
 
 
 
 
 
-The     matching coefficients  can be calculated by matching between  perturbative QCD and  perturbative NRQCD.
-In the past three decades, various  matching coefficients of double heavy quark systems have been computed to higher order using NRQCD effective theory.
-For equal heavy quark   masses case, the  two-loop correction to the vector current was first obtained in Refs. <cit.>.
-Then two-loop corrections to  vector, axial-vector, scalar and pseudo-scalar currents were accomplished  in
-in Ref. <cit.>.
-The  three-loop correction to the vector current was investigated in  a variety of  literature  <cit.>.
-And three-loop calculation allowing for all four currents were available  in
- Refs. <cit.>.
-The phenomenological applications for the leptonic
-decays of  J/ψ, Υ  and the threshold production of top quark-antiquark pairs
-can be found in the  literature <cit.>.
-For two different heavy quark   masses case, the first
-one-loop calculation for  pseudo-scalar current can be found in Ref. <cit.>.
-And  in Refs. <cit.> one can find the  one-loop  QCD corrections to
- pseudo-scalar and  vector     currents  combined with higher order relativistic corrections.
-Two-loop corrections to  pseudo-scalar and  vector     currents were calculated in the literature  <cit.>.
-At the three-loop level, the  pseudo-scalar,  vector and  scalar     currents have been numerically evaluated in Ref. <cit.>, Ref. <cit.> and Ref. <cit.>, respectively.
-For phenomenological applications of matching coefficients in B_c  and B_c^* mesons,  one can refer to various  literature <cit.>.
+ §.§ Gamma-rays
 
 
-The   matching coefficients and the wave function at the origin are two  important building blocks of phenomenological predictions for double heavy quark systems. 
-For a complete N^3LO perturbative QCD calculation of physical  quantities such as decay constants, decay widths, cross sections, we need consider  the N^3LO corrections to both the   matching coefficients and the wave functions at the origin <cit.>.
-The higher-order perturbative correction to  the wave function at the origin can be calculated using the potential NRQCD effective theory <cit.>.
-For the  heavy quarkonia with two equal masses such as J/ψ and Υ, the wave functions at the origin up to N^3LO  are  available  in various literature <cit.>.
-For the unequal mass case, the NLO result of the wave function at the
-  origin can be obtained from Ref. <cit.> and various research on the perturbative  corrections to  potentials can be found in Refs. <cit.>. Nevertheless, higher-order corrections to the wave function at the origin for unequal masses are still missing in the literature.
-  
+The prompt gamma-ray emission of GRB 210704A was detected by six instruments: Fermi/GBM <cit.>, AGILE/MCAL <cit.>, Fermi/LAT <cit.>,  AstroSat/CZTI <cit.>, Konus-Wind <cit.>, INTEGRAL/SPI-ACS, and INTEGRAL/ISGRI <cit.>.
+Hereafter, we use the Fermi/GBM trigger time as reference time  T = 2021 July 4 19:33:24.59 UTC. 
+
+<cit.> estimated a duration of about T_90 = 1.06 s based on the  AGILE/MCAL data (0.4-100 MeV), and classified it as a SGRB. 
+A similar short duration, T_90 = 1.0± 0.4 s (20-200 keV), was derived by the analysis of the AstroSat/CZTI dataset <cit.>. 
 
 
-In this paper we will complete the computation of three-loop QCD corrections to the     matching coefficients  for    vector, axial-vector, scalar		and pseudo-scalar currents with two different heavy quark masses, where the axial-vector case is achieved for the first time. We will not attempt to calculate the rigorous N^3LO expression of the wave function at origin for the double heavy quark system with different masses based on the pNRQCD effective theory, but employ the scale relation to obtain the   N^3LO correction to the wave functions at the origin for the vector B_c^* meson and the pseudo-scalar B_c meson   from  the known result for the equal-mass  heavy quarkonium. After  the three-loop matching coefficients are combined with the N^3LO corrections to the wave functions at the origin, the resultant decay constants for B_c^* and B_c   will test the perturbative convergence in the NRQCD effective theory.
-  
-  
+<cit.> reported instead that the Fermi/GBM light curve consisted of a main bright peak with a duration T_90 of about 4.7 s (50-300 keV), with possible faint emission extending to T+20 s <cit.>. 
+In the time interval between T and T+10 s, high-energy (>100 MeV) emission was detected by the Fermi/LAT <cit.> with a photon flux of (1.6±0.3)×10^-3 ph cm^-2 s^-1 and a photon index of -1.74±0.13. 
+The LAT localization was RA, Dec (J2000) = 159.08, +57.31 with a 90% error radius of 6.7 arcmin, critical to enable follow-up observations with narrow-field instruments.
 
+<cit.> reported Konus-Wind observations of a bright peak
+in the interval from T to T+2 s followed by a weaker pulse peaked at T+4.5 s (20 keV - 4 MeV). Finally, <cit.> estimated a duration of T_90 = 3.5± 0.7 s (>80 keV) based on the INTEGRAL/SPI-ACS data.
+All the durations T_90 cited above are summarised in Table <ref>. 
+
+
+
+
+
+
+The values of T_90 reported in GCNs range from 1.0 to 4.7 seconds (see Table <ref>) and do not unambiguously aid in the classification of GRB 210704A. 
+This discrepancy can largely be understood by considering Figure <ref>, which shows the Fermi/GBM light curves in three energy bands.
+
+
+It shows that the observed emission in the soft energy range (8-50 keV; top panel) consists of a weak precursor, followed by strong initial peak with a duration of less than 2 seconds and then an extended tail out to about 6 seconds with two weaker peaks at about 3.5 and 4.8 seconds. 
+However, the precursor and tail are not seen in the harder 300-1000 keV band. 
+Therefore, we suggest that gamma-ray instruments that are not sensitive to soft (≲50 keV) energies would not detect the extended emission and would measure shorter values of T_90.  
+This sort of instrumental selection effect is well known <cit.> and can explain the short T_90 measured by AGILE/MCAL, but does not completely explain the short value measured by AstroSat/CZTI. 
+
+We conclude that from the prompt gamma-ray light curve alone it is not clear whether the GRB is a LGRB or a SGRB with temporally extended spectrally soft emission.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ X-rays
+
+
+
+Following the localisation by the Fermi/LAT,
+the X-Ray Telescope (XRT) aboard Swift initiated automated Target of Opportunity (ToO) observations of the field <cit.>. 
+A first visit was carried out between T+53.5 ks and  T+61.6 ks for a total exposure of 2.6 ks. This led to the identification of the X-ray afterglow at an enhanced position of RA, Dec (J2000) = 10:36:05.21 +57:12:59.1 with a 90% uncertainty radius of 2.7.
+Monitoring of the source continued until T + 5.3 d, when the X-ray afterglow fell below the XRT detection threshold. 
+
+In our analysis, we use light curves and spectra from the UK Swift Science Data Centre (UKSSDC) on-line repository <cit.>. 
+The XRT light curve displays a simple power-law decline, t^-α with α=1.3±0.2.
+The time-averaged XRT spectrum, from T+53 ks to T+455 ks, is best described by an absorbed power-law with a photon index Γ=1.7±0.2 and hydrogen column density N_ H = 5.6× 10^19 cm^-2 fixed at the Galactic value. 
+Based on this model, the unabsorbed X-ray flux (0.3–10 keV) at 11 hrs is approximately 8×10^-13 erg cm^-2 s^-1, in agreement with the distribution of X-ray fluxes of bright SGRBs <cit.>.
+
+In order to characterise the afterglow temporal evolution at late times, we requested Director's Discretionary Time (DDT) observations with the Chandra X-ray Telescope. The target was observed with the ACIS-S3 camera, starting at 01:32:42 UTC on 2021 July 22 (T+14.25 d) for a total exposure of 19.8 ks (ObsID: 25093; PI: Troja). The Chandra data were processed using  4.12 with  Version 4.9.0. 
+At the afterglow position we detect 12 photons within a 1 extraction radius. 
+After correcting for PSF-losses, we derive a count rate of (6.6^+2.1_-1.7) × 10^-4 cts s^-1 in the 0.5-7.0 keV energy range.
+This translates to an unabsorbed X-ray flux of (1.3^+0.4_-0.3) × 10^-14 erg cm^-2 s^-1 in the 0.3-10 keV energy band using the best fit parameters derived from the Swift/XRT spectrum. 
+The combined Swift/Chandra light curve is best described by a power-law decay with α=1.26±0.04. 
+
+
+
+
+ §.§ Optical and Infrared Photometry
+
+
+
+
+We carried out an extensive campaign of follow-up observations using 
+the Deca-Degree Optical Transient Imager (DDOTI; ),
+the Large Monolithic Imager (LMI) on the 4.3-m Lowell Discovery Telescope (LDT; ), the Near Infra-red Imager (NIRI) and the Gemini Multi-Object Spectrographs (GMOS) instruments on the 8.1-m Gemini-North Telescope  <cit.>,  the Hyper Suprime-Cam (HSC) on the Subaru 8.2 m telescope <cit.>, and the Optical System for Imaging and low-Intermediate-Resolution Integrated Spectroscopy (OSIRIS) instrument on the 10.4-m Gran Telescopio de Canarias (GTC; ). 
+Table <ref> gives a log of the observations. 
+
+This dataset was supplemented by archival observations from the
+Hubble Space Telescope (HST) obtained with the Wide Field Camera 3 (WFC3), and 
+from the Canada-France-Hawaii Telescope (CFHT) obtained with MegaPrime/MegaCam during December 2004 (PI: Tanvir and Cowie) (observationID: G013.158.521+57.697) 
+and retrieved from the MegaPipe image stacking pipeline[https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/megapipe/access/graph.html]. 
+
+
+Data were processed following standard techniques for CCD data reduction (e.g., bias subtraction, flat-fielding, cosmic-ray rejection).  
+The Gemini images were reduced using the Gemini  package v1.14[https://www.gemini.edu/observing/phase-iii/understanding-and-processing-data/data-processing-software/gemini-iraf-general], whereas the GTC, LDT and Subaru images were reduced using custom Python-based software. The HST data were processed using standard procedures within the  package <cit.>. The final pixel scale was 0.09/pix for WFC3/IR (F105W and F160W filters) and 0.03/pix for the WFC3/UVIS data.
+
+
+
+We performed PSF photometry on the optical images using  <cit.>. To minimize systematic errors in the calibration, we calibrated all of the r and z photometry using the same six nearby Sloan Digital Sky Survey (SDSS) Data Release 12 (DR12) stars <cit.>. 
+In the nIR images from Gemini, only a weak signal is visible at the GRB position. We estimated its brightness by performing forced aperture photometry, calibrated against nearby Two Micron All-Sky Survey (2MASS; ) sources. Due to the low number of 
+2MASS sources within the NIRI field of view and their likely extended nature, a systematic error of 0.1 mag was added to the absolute calibration of the nIR photometry.  
+
+We performed photometry of the two galaxies S1 and S2 (see Figure <ref>) in the late-epoch HST images using using  aperture photometry and the photometric zeropoints in the image headers. We will discuss the possibility of these galaxies being the host of the GRB in <ref>, but for the time being we will simply note that S1 is almost coincident with the GRB position and therefore our ground-based observations combine the flux of both the GRB counterpart and S1.
+
+Our photometry is shown in Table <ref> (with upper limits being 3σ) and Table <ref> and is plotted in Figure <ref>. All our magnitudes were converted to an AB scale and not corrected for Milky Way extinction, E(B-V) = 0.007 <cit.>. We also include additional measurements from the literature <cit.>. 
+
+
+
+
+
+
+
+
+
+
+ §.§ Optical Spectroscopy
+
+
+Optical spectroscopy of the afterglow at T + 1.1 d was obtained by <cit.> 
  
+using the OSIRIS instrument on GTC. We downloaded their calibrated spectrum from the GRBSpec database <cit.>, and show it in Figure <ref>. 
 
 
-The rest of the paper is organized as follows.
-In Sec. <ref>, we introduce the  matching formula between QCD and NRQCD.
-In Sec. <ref>,  we describe details of our calculation procedure.
-In Sec. <ref>, we  present the three-loop analytical results of  the  renormalization constants and corresponding anomalous dimensions  in NRQCD.
-In Sec. <ref>, we present our numeric results of the  matching coefficients up to N^3LO.
-In Sec. <ref>, the phenomenological applications of three-loop matching coefficients to the cb̅ mesons are presented.
-Sec. <ref> contains a summary.
 
 
+<cit.> noted the clear presence of a continuum down to at least 4200 Å, which implies z < 3.6. 
+They also noted a tentative detection of a broad absorption dip at about 4050 Å, which they interpreted as Ly-α at z = 2.34. We note that this feature occurs in a part of the spectrum that is quite noisy, which calls its reality into doubt.
+They also commented on possible low-significance detections of absorption from OI (1302/1304 Å), SiII (1260 Å), and CII (1334 Å),
+but the absence of corresponding absorption from CIV and SiIV.
 
 
+Another clue to the GRB redshift comes
+from the lack of MgII absorption features.
+The MgII doublet was observed with a mean rest-frame equivalent width of about 3.8 Å in 27 of the sample of 31 LGRBs observed by <cit.> and <cit.>. 
+The optical spectrum of GRB210704A has a signal-to-noise ratio (SNR) of at least 5 from 5000 to 7200 Å and shows no strong absorption lines. For this reason, we suggest that if the GRB is similar to typical LGRBs, then the absence of MgII disfavours the redshift range 
+0.8<z<1.6. However, if the GRB is similar to typical SGRBs, whose spectra do not show strong host absorption lines, then we have the weaker constraint that the redshift is less than 3.6.
 
 
 
 
-§ MATCHING FORMULA  
 
-The heavy flavor-changing  currents in the full QCD are defined by
+§ ANALYSIS
 
-    j_v^μ = ψ̅_b γ^μψ_c,
-    
-       
-    j_p     = ψ̅_b  iγ_5 ψ_c,
-    
-       
-    j_a^μ = ψ̅_b γ^μγ_5 ψ_c,
-    
-       
-    j_s     = ψ̅_b ψ_c,
 
-which  can be expanded  in terms of NRQCD currents as follows,
 
 
-    j_v^0 = 0+ 𝒪(u^2),
-    
-       
-    j_v^i = 𝒞_vj̃_v^i + 𝒪(u^2),
-    
-       
-    j_p     = 𝒞_pj̃_p + 𝒪(u^2),
-    
-       
-    j_a^0 = 𝒞_a,0j̃_a^0 + 𝒪(u^2),
-    
-       
-    j_a^i = 𝒞_a,ij̃_a^i + 𝒪(u^3),
-    
-       
-    j_s     = 𝒞_sj̃_s + 𝒪(u^3),
 
-where u  refers   to the small relative velocity   between the bottom and charm,
- 𝒞_v,𝒞_p,𝒞_a,0,𝒞_a,i, 𝒞_s
- are the matching coefficients for the   heavy flavor-changing      vector, pseudo-scalar, the zeroth component of axial-vector, the space-like component of axial-vector, and scalar currents, respectively. And the NRQCD currents read
- 
-    j̃_v^i = φ_b^†σ^i χ_c,
-    
-       j̃_p     = - i φ_b^†χ_c,
-    
-       j̃_a^0 = φ_b^†χ_c,
-    
-       j̃_a^i = 1/4 m_rφ_b^†[σ^i,k⃗·σ⃗] χ_c,
-    
-       j̃_s     = -1/2m_rφ_b^†k⃗·σ⃗χ_c,
+ §.§ Amati correlation
 
-where  φ_b^† and χ_c denote 2-component Pauli spinor  fields annihilating the b̅ and c quarks, respectively, and j̃_p=- i j̃_a^0 means 𝒞_p=𝒞_a,0.
-|k⃗|= m_r u  refers   to the small half relative spatial  momentum  between the bottom and charm.   m_r=m_b m_c/(m_b+m_c) is the reduced  mass with bottom mass m_b and charm mass m_c.
 
 
-The heavy flavor-changing  currents in Eq. (<ref>) and Eq. (<ref>) can be related to  the on-shell unrenormalized  vertex functions in QCD and NRQCD
-which we denote by Γ_J and Γ_J with
-J∈{v,p,(a,0),(a,i),s}, respectively.
-Then the matching coefficients can be determined through the conventional perturbative matching procedure. Namely, one  performs renormalization for  the on-shell vertex functions in both perturbative QCD and perturbative
-NRQCD sides, then solves the matching coefficient  order by order in α_s.
-The matching formula with renormalization procedure reads
+Given the ambiguity of the GRB duration, we will consider its properties in the context of the Amati correlation <cit.>. For this, we analysed the Fermi/GBM data from T-0.2 to T+6.1 s and found the best fitting function was a Band function with α=-0.59±0.02, β=-2.95± 0.20, and E_ peak= 283± 8 keV. 
+The fluence in the 10-1000 keV interval (observer's frame) is F=(2.3±0.3)× 10^-5 erg cm^-2.  In the top panel of Figure <ref>, we show the position of the GRB at z = 0.1, 0.4, 0.8, and 2.34. We also show the populations of SGRBs and LGRBs from <cit.>. We see that GRB 210704A is consistent with being a SGRB at low redshift (z<0.4) or with being a LGRB at higher redshift (z ≳ 0.4).
 
-    √(Z_2,b Z_2,c) Z_J Γ_J =
-    𝒞_J(μ_f,μ,m_b,m_c)  √(Z_2,bZ_2,c) Z_J^-1 Γ_J + 𝒪(u^2),
 
-where  the left part in the equation represents the renormalization of full QCD current while the right part represents the renormalization of NRQCD current.
-𝒪(u^2) denotes higher order relativistic corrections in powers of the  relative velocity u between the bottom quark  b̅ and the charm quark c,
-and in this paper we will calculate 
-higher-order QCD corrections up to 𝒪(α_s^3)   but at the lowest order in u.
- At the leading-order (LO), we set 𝒞_J=1,
-while in a fixed high order QCD correction calculation,
-  the matching coefficient 𝒞_J(μ_f,μ,m_b,m_c) depends NRQCD factorization scale μ_f and QCD  renormalization scale μ.
-In on-shell (OS) scheme,   NRQCD  quark field renormalization constants Z_2,b=Z_2,c=1.
- Z_J is NRQCD current renormalization constant in the modified-minimal-subtraction (MS) scheme and Z_p=Z_a,0.
- Z_J is QCD  current on-shell  renormalization constant, i.e., Z_v=Z_a,0=Z_a,i=1, Z_p=Z_s=(m_b Z_m,b+m_c Z_m,c)/(m_b+m_c). Z_2 and Z_m are QCD  quark field and mass on-shell renormalization constants, respectively.
- The three-loop analytical results of  the QCD quark field and mass on-shell  renormalization constants  allowing for two different non-zero quark masses  can be found in literature <cit.>, which can be  evaluated to high numerical precision  with the package  <cit.>.
- The QCD coupling MS renormalization constant can be found in literature <cit.>.
 
 
 
+ §.§ Spectral lag
 
 
 
+We also consider the spectral lag GRB 210704A in the context of other GRBs, following <cit.> and <cit.>. 
 
+We derive the GRB peak flux by fitting the spectrum of the brightest 1.024 s interval <cit.>  with a Band function.
+The best fit model yields α=-0.36± 0.02, β=-2.82± 0.12, E_ peak= 302± 8 keV), and a peak flux of F=(1.53± 0.02)× 10^-5 erg cm^-2 s^-1. 
+From this value, we derive the isotropic-equivalent peak luminosity,
+ L_ peak, by assuming different redshifts.
+ For example, at z=0.5 the measured peak flux corresponds to L_ peak  = (5.46 ± 0.07)× 10^51 erg s^-1 in the comoving 50–300 keV energy range.
 
+We calculated the lag between the energy bands 25–50 keV and 100–300 keV using the 10 ms resolution light curve and the sum of the signals from the three brightest Fermi NaI detectors (1, 3 and 5). 
+The lag was determined by the maximum of the cross-correlation function between the two light curves. We fit a 4th-degree polynomial around the peak in order to accurately determine the lag. We find that the lag is:
+τ = 80± 9  ms,
+in which the uncertainties are 1σ.
+We estimated the uncertainty by adding Poisson noise to the data <cit.> and repeating the cross-correlation analysis. 
 
-§ CALCULATION PROCEDURE 
-
-
-Our high-order calculation  consists of the following steps.
 
-	
-  * First, we use  <cit.>  to obtain Feynman diagrams and corresponding Feynman amplitudes. By  <cit.>, we decompose  every Feyman amplitude  into several Feynman integral families.
-	
-  * Second, we use  <cit.>/ <cit.>/ <cit.> based on Integration by Parts (IBP) <cit.> to reduce every Feynman integral family to master integral family.
-	
-  * Third,
-	based on symmetry among different integral families and using   +  + , we can realize  integral reduction among different integral families, and further on, the reduction from all of master integral families to the minimal set <cit.> of master  integral families.
-	
-  * Last, we use  <cit.>, which is a proof-of-concept implementation of the auxiliary mass flow method <cit.>, equipped with  <cit.>/ <cit.> to calculate the minimal set  family by family.
+In the bottom panel of Figure <ref>, we show the spectral lag (corrected for redshift as (1+z)^0.67, following ) and peak luminosity L_ peak of the GRB at z=0.1, 0.4, 0.8, and 2.34. We also show the populations of LGRBs and SGRBs from <cit.> and <cit.>. 
+We see that, for any redshift, the GRB lag is longer than typical SGRBs.
+Its luminosity fits within the distribution
+of cosmological LGRBs for z ≳ 0.8, whereas for lower redshifts its location in the lag-luminosity diagram would be unusual. 
+Other outliers in a similar position are 
+GRB 031203 and GRB 060729A, peculiar LGRBs associated with bright supernovae. 
 
-In order to obtain the finite results of  high-order QCD corrections, one has to perform the  conventional renormalization procedure <cit.>. Equivalently, We can also use diagrammatic renormalization method <cit.>  with the aid of the package  <cit.>, which at N^3LO sums contributions from three-loop diagrams and four  kinds of counter-term diagrams, i.e.,  tree diagram   inserted with one α_s^3-order counter-term vertex, one-loop diagram inserted with one α_s^2-order counter-term vertex, one-loop diagram inserted with two α_s-order counter-term vertexes, two-loop diagrams inserted with one α_s-order counter-term vertex. Our final finite results by these two renormalization methods are in agreement with each other.
 
 
 
@@ -224,937 +242,705 @@ In order to obtain the finite results of  high-order QCD corrections, one has to
 
 
 
+ §.§ Afterglow
 
 
 
-We want to mention that all contributions up to NNLO have been evaluated for general gauge parameter ξ and the NNLO results of the  matching coefficients   for the heavy flavor-changing   currents   are all independent of ξ, which constitutes an important check on our calculation.
-At N^3LO, we work in  Feynman gauge. To check  the correctness of
-our results, we also calculated the three-loop matching coefficient  for the  flavor-changing heavy quark pseudo-scalar current with keeping  the linear ξ-dependence terms and we have
-verified these terms vanish  in the final results of the matching coefficient. Therefore, we conjecture the matching coefficients, the NRQCD current renormalization constants and the corresponding anomalous dimensions for flavor-changing heavy quark currents  are gauge invariant up to all order of α_s.
-By FeynCalc, there are 1, 1, 13, 268 bare Feynman diagrams for the QCD vertex function with every heavy flavor-changing   current  at tree, one-loop, two-loop, three-loop orders in α_s, respectively.
-Some representative Feynman diagrams up to  three loops  are displayed in Fig. <ref> and Fig. <ref>.
-In the calculation of multi-loop diagrams, we have allowed for n_b bottom quarks with mass m_b, n_c charm quarks  with mass m_c and n_l massless quarks appearing in the quark loop.
-To facilitate our calculation, we take full advantage of computing numerically. Namely, before generating amplitudes, m_b and m_c are chosen to be particular rational numbers values <cit.>.
+In the standard fireball model for GRBs, the afterglow emission is produced by external shocks resulting from the interaction between the relativistic jet and the circumstellar medium <cit.>. 
+Typically, the afterglow phase can be explained as synchrotron radiation from a power-law energy distribution of shocked electrons, N(E)∝ E^-p, which lead to the observed flux density being a series of power-laws segments as a function of time t and frequency ν as F_ν∝ t^-αν^-β <cit.> in which F_ν is the observed flux density and α and β are the temporal and spectral indices, respectively. 
 
-Following the literature <cit.>, we employ the projectors constructed for the heavy flavor-changing   currents   to obtain intended QCD vertex functions, which means one need extend    the projectors for   various   currents   with equal heavy quark masses in Eq.(7)  and Eq.(8) of Ref. <cit.> to the different heavy quark masses case. We choose q_1=m_c/m_b+m_cq+k and q_2=m_b/m_b+m_cq-k denoting the on-shell charm and bottom momentum, respectively, and present the projectors for the heavy flavor-changing  currents  as
+The early optical and X-ray data can be fit with a with a simple absorbed power-law of slope β=0.84±0.02 (see Figure <ref>), indicating that they belong to the same spectral segment and therefore they are expected to display the same temporal decay. 
+We identify this segment as ν_m≲ν_opt≲ν_X≲ν_c (and therefore a slow-cooling regime), where ν_m is the synchrotron characteristic frequency and ν_c is the cooling frequency <cit.>. 
+In this case, F_ν∝ν^(1-p)/2 and the electron index is p=2.68±0.04.
+For a fireball expanding into a uniform density medium, the relation of flux density and time is F_ν∝ t^3(1-p)/4. With the electron index previously estimated, we obtain F_ν∝ t^-1.26±0.03.
 
-    P_(v),μ =   1/2(D-1)(m_b+m_c)^2(m_c/m_b+m_cq + m_c
-    ) γ_μ(-m_b/m_b+m_cq + m_b
-    ),
-    
-    
-    P_(p) =   1/2(m_b+m_c)^2(m_c/m_b+m_cq + m_c
-    ) γ_5 (-m_b/m_b+m_cq + m_b
-    ),
-    
-    
-    P_(a,0),μ =    -1/2(m_b+m_c)^2(m_c/m_b+m_cq + m_c
-    ) γ_μγ_5 (-m_b/m_b+m_cq + m_b
-    ),
-    
-    
-    P_(a,i),μ =    -1/2(m_b+m_c)^2{1/D-1m_c/m_b+m_c(m_c/m_b+m_cq + m_c
-    ) γ_μγ_5(m_b/m_b+m_cq + m_b
-    )
-    
-       
-    +1/D-1m_b/m_b+m_c(-m_c/m_b+m_cq + m_c
-    ) γ_μγ_5(-m_b/m_b+m_cq + m_b
-    )
-    
-       
-    - 1/D-22 m_b m_c/m_b+m_c(m_c/m_b+m_cq + m_c
-    ) -k_μ + γ_μk/k^2γ_5 (-m_b/m_b+m_cq + m_b) },
-    
-    P_(s) =    1/2(m_b+m_c)^2{m_c/m_b+m_c(m_c/m_b+m_cq + m_c
-    )  1(m_b/m_b+m_cq + m_b)
-    
-       
-    +m_b/m_b+m_c(-m_c/m_b+m_cq + m_c
-    )  1(-m_b/m_b+m_cq + m_b)
-    
-       
-    +2 m_b m_c/m_b+m_c(m_c/m_b+m_cq + m_c) k/k^2(-m_b/m_b+m_cq + m_b) },
-
-where the small momentum k refers to  relative movement  between the bottom and charm, q represents the total momentum of the bottom and charm, q_1^2=m_c^2, q_2^2=m_b^2, q^2=(m_b+m_c)^2+𝒪(k^2) <cit.>, q· k=0. With the help of projectors, the  on-shell heavy flavor-changing current vertex functions in full QCD can be obtained as
-
-    Γ_v = [ P_(v),μΓ_(v)^μ] ,
-    
-       Γ_p = [ P_(p)Γ_(p)] ,
-    
-       Γ_a,0 = [ P_(a,0),μΓ_(a)^μ] ,
-    
-       Γ_a,i = [ P_(a,i),μΓ_(a)^μ] ,
-    
-       Γ_s = [ P_(s)Γ_(s)] ,
-
-where Γ_(v)^μ, Γ_(p), Γ_(a)^μ, Γ_(s)    denote QCD amplitudes with tensor structures for the vector, pseudo-scalar, axial-vector, scalar currents, respectively.
-
-Since contributions from soft, potential and ultrasoft loop momenta in full QCD and NRQCD are identical,  thus they drop out from both sides of the matching formula in Eq. (<ref>).
-Then we set  Γ_J=1 <cit.> in Eq. (<ref>) and   Γ_J  turns into  the hard  part of the full QCD, which entirely   determines   the matching coefficients  to all orders.
-To match with NRQCD and obtain the matching coefficients, one need extract the contribution from the hard region in full QCD amplitudes for the heavy flavor-changing currents.
-For the vector current, the pseudo-scalar current and the zeroth component of the axial-vector current case, we can simply set  the   small momentum  k=0 in the QCD amplitudes.
-However, for  the space-like component of the axial-vector current and the scalar current  case, since NRQCD currents include contributions at 𝒪(k/m_r) from Eq. (<ref>) and Eq. (<ref>), accordingly,
-one need first introduce the small  momentum k to momenta in the QCD amplitudes  and then series expand propagator denominators with respect to k up to 𝒪(k) in  the hard region of loop momenta <cit.>, which will cancel k^2 in the denominators of the   projectors in Eq. (<ref>) and Eq. (<ref>) so that we can obtain the finite final results   as k^2 → 0.
-
-Due to the expansion in powers of k, the number and powers of propagators in Feynman integrals constituting the amplitudes for the space-like component of the axial-vector current and the scalar current will remarkably increase compared with  the vector current case, the pseudo-scalar current and the zeroth component of the axial-vector current case. In our practice, the total number  of propagators in a three-loop Feynman integral family is 12 for the former two currents and 9 for the latter three currents. In our calculation, the most difficult and   time-consuming is
-the reduction from three-loop Feynman integrals    with rank 5, dot 4, and 12  propagators   to master integrals. By trial and  error, we find it is more  appropriate for  Fire6 <cit.> to deal with this problem than  <cit.> or  <cit.>.
-For  every heavy flavor-changing current, after  using  ++ to achieve the minimal set of master integral families  from  all of master integral families    based on symmetry among different integral families, the number of three-loop master integral families is reduced from 830s  to 26, meanwhile the number of three-loop master integrals is reduced from 13000s  to 300.
-
-
-
-
-
-
-
-
-
-
-§ NRQCD CURRENT RENORMALIZATION CONSTANTS 
-
-
-After implementing the quark field and  mass on-shell renormalization, and  the QCD coupling constant MS renormalization, the QCD vertex function gets rid of ultra-violet (UV) poles, yet still contains  uncancelled infra-red (IR) poles starting from order α_s^2.  The remaining IR poles in QCD should be exactly  cancelled by the UV divergences of Z_J in NRQCD,  rendering the matching coefficient finite.  With the aid of the obtained high-precision numerical results, combined with the structures and features of NRQCD  current renormalization constants investigated in other known literature <cit.>,    we have successfully reconstructed the exact analytical expressions of the NRQCD  renormalization constants for the heavy flavor-changing   currents
- through the PSLQ algorithm and 
-
-numerical fitting recipes <cit.>. Here we directly present the final results  as following
-
-    Z_J(x, μ^2_f m_b m_c )   =1+(α_s^(n_l)(μ_f)/π)^2Z_J^(2)(x)
-     +(α_s^(n_l)(μ_f)/π)^3Z_J^(3)(x, μ^2_f m_b m_c )+𝒪(α_s^4).
-
-
-    Z_v^(2)(x )   =π^2C_F1/ϵ(3x^2+2x+3/24(1+x)^2C_F+1/8C_A),
-    
-    Z_v^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [3 x^2-x+3/36ϵ ^2 (x+1)^2 
-    +1/ϵ(
-    19 x^2+5 x+19/36 (x+1)^2-2 /3ln 2
-    .
-       .
-    +x^3-4 x^2-2 x-3/12 (x+1)^3ln x
-    +1/6ln (x+1)
-    	+3 x^2-x+3 /12 (x+1)^2lnμ _f^2/m_b
-    		m_c)]
-    
-       
-    +
-    C_F C_A [
-    x/216ϵ ^2 (x+1)^2 
-    +
-    1/ϵ(
-    39 x^2+148	x+39/162 (x+1)^2.
-       .
-    -x+11 /48 (x+1)ln x
-    +1/4ln (x+1)
-    +11 x^2+8 x+11/48 (x+1)^2lnμ _f^2/m_b
-    	m_c)]
-    
-       
-    +C_A^2  [
-    -1/16 ϵ ^2+1/ϵ(
-    2/27+1/6ln2-1/24ln x+1/12ln (x+1) +
-    1/24lnμ _f^2/m_b	m_c)]
-    
-       
-    + C_F T_F n_l[
-    3 x^2+2
-    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+58 x+21/324 ϵ (x+1)^2 ]
-    +C_A  T_F n_l [
-    1/36 ϵ ^2-37/432 ϵ]
-    
-       
-    +C_F  T_F n_b
-     x^2 /15ϵ (x+1)^2  
-    +C_F  T_F n_c
-     1 /15ϵ (x+1)^2  }.
-
-
-    Z_p^(2)(x )   = π^2C_F1/ϵ(x^2+6 x+1/8 (x+1)^2C_F+1/8C_A),
-    
-    Z_p^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [
-    3 x^2-x+3/36ϵ ^2 (x+1)^2 
-    +1/ϵ(19 x^2+29 x+19/36 (x+1)^2-2 /3ln 2
-    .
-       .
-    +x^4-5 x^3-22 x^2-x+3 /12 (x-1) (x+1)^3ln x+1/6ln (x+1)
-    +3	x^2-x+3/12 (x+1)^2lnμ _f^2/m_b	m_c)]
-    
-       
-    +
-    C_F C_A [
-    -5 x/24ϵ ^2 (x+1)^2 
-    +
-    1/ϵ(
-    26 x^2+93	x+26/108 (x+1)^2.
-       .
-    +-x^2+2 x+11 /48 (x-1) (x+1)ln x+1/4ln (x+1)+
-     11 x^2+36 x+11 /48 (x+1)^2lnμ _f^2/m_b	m_c)]
-    
-       
-    +C_A^2  [
-    -1/16 ϵ ^2+1/ϵ(
-    2/27+1/6ln 2-1/24ln x+1/12ln (x+1)+1/24lnμ _f^2/m_b	m_c)]
-    
-       
-    + C_F T_F n_l[
-    x^2+6 x+1/36 ϵ ^2 (x+1)^2-7 x^2+30 x+7/108 ϵ 	(x+1)^2]
-    +C_A  T_F n_l [
-    1/36 ϵ ^2-37/432 ϵ]
-    
-       
-    +C_F  T_F n_b
-     x^2 /15ϵ (x+1)^2  
-    +C_F  T_F n_c
-     1 /15ϵ (x+1)^2  }.
-
-
-    Z_a,i^(2)(x )   = π^2C_F1/ϵ(3x^2+4x+3/24(1+x)^2C_F+1/24C_A),
-    
-    Z_a,i^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{C_F^2/ϵ[171 x^2-296 x+171/216
-    	(x+1)^2-ln 2/3
-       
-    +-57 x^4+89 x^3+274 x^2+89 x-57/216 (x-1) (x+1)^3ln x]
-    
-       
-    +
-    C_F C_A [	-22 x^2+31	x+22/432ϵ ^2 (x+1)^2 
-    +
-    1/ϵ(
-    379 x^2+675 x+379/1296 (x+1)^2-ln 2/18.
-       .
-    -5 x+11/144 (x+1)ln x+1/9ln (x+1)
-    +11 x^2+13 x+11/144	(x+1)^2lnμ _f^2/m_b
-    	m_c)]
-    
-       
-    +C_A^2  [-1/48 ϵ ^2+1/648 ϵ(34+72 ln2-9 ln x+18 ln (x+1)+9 lnμ _f^2/m_b m_c)]
-    
-       
-    + C_F T_F n_l[
-    3 x^2+4
-    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+41 x+21/324 ϵ (x+1)^2 ]
-    
-       
-    +C_A  T_F n_l [1/108 ϵ ^2-53/1296 ϵ] }.
-
-
-    Z_s^(2)(x )   = π^2C_F1/ϵ(3x^2+10x+3/24(1+x)^2C_F+1/24C_A),
-    
-    Z_s^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{C_F^2/ϵ[57x^2+146x+57/216(x+1)^2-ln2/3]
-    
-       
-    +
-    C_F C_A [-11 x^2+41 x+11/216ϵ ^2	(x+1)^2 
-    +
-    1/1296 ϵ(379 x^2+1086 x+379/(x+1)^2-72 ln2
-    .
-       .
-    -9 (5 x+11) /x+1ln x+144 ln (x+1)+9 (11 x^2+28 x+11) /(x+1)^2lnμ _f^2/m_b
-    	m_c)]
-    
-       
-    +C_A^2  [-1/48 ϵ ^2+1/648 ϵ(34+72 ln2-9 ln x+18 ln (x+1)+9 lnμ _f^2/m_b m_c)]
-    
-       
-    + C_F T_F n_l[3 x^2+10
-    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+74 x+21/324 ϵ (x+1)^2 ]
-    
-       
-    +C_A  T_F n_l [1/108 ϵ ^2-53/1296 ϵ] },
-
-where C_A=3, C_F=4/3 and T_F=1/2 are QCD constants and we have defined a dimensionless parameter x representing the ratio of two heavy quark masses
-
-    x= m_c m_b.
-
-
-Then the corresponding anomalous dimension γ̃_J for the heavy flavor-changing   NRQCD  currents  is related to Z_J by <cit.>
-
-    γ̃_J(x, μ^2_f m_b m_c )    ≡d lnZ_J d lnμ_f 
-    ≡-2 ∂Z_J^[1]/∂lnα_s^(n_l)(μ_f)
-       
-     =(α_s^(n_l)(μ_f)/π)^2 γ̃_J^(2)(x )
-    +(α_s^(n_l)
-    	(μ_f)/π)^3γ̃_J^(3)(x, μ^2_f m_b m_c )+𝒪(α^4_s),
-
-where Z_J^[1] denotes the coefficient of the 1/ϵ pole in Z_J, and within the NRQCD frame we use μ_f to denote the  NRQCD factorization scale, 
- so that both  Z_J and  γ̃_J explicitly depend on  μ_f but not the QCD renormalization scale μ <cit.>. Explicitly, γ̃_J^(2) and γ̃_J^(3) read
-
-    γ̃_v^(2)(x )   =-π^2C_F [C_F 3 x^2+2	x+3/6(x+1)^2+C_A/2],
-    
-    γ̃_v^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [
-    -19 x^2+5 x+19/6 (x+1)^2+4 ln 2
-    
-       
-    +-x^3+4 x^2+2 x+3/2 (x+1)^3ln x-ln (x+1)
-    +-3 x^2+x-3 /2 (x+1)^2lnμ_f^2/m_b m_c]
-    
-       
-    +C_F C_A [
-    -39 x^2+148 x+39/27	(x+1)^2+x+11 /8( x+1)ln x
-    
-       
-    -3/2ln (x+1)
-    -11 x^2+8 x+11/8 (x+1)^2lnμ_f^2/m_b m_c]
-    
-       	
-    +C_A^2 [
-    -4/9-ln 2+1/4ln x-1/2ln (x+1)
-    -1/4lnμ_f^2/m_b m_c]
-     
-       
-    +C_F T_F n_l 21 x^2+58 x+21/54 (x+1)^2
-    +37/72 C_A T_F n_l
-    
-       	
-    -2 x^2 /5 (x+1)^2 C_F T_F n_b
-    -2/5 (x+1)^2 C_F T_F n_c
-    }.
-
-
-    γ̃_p^(2)(x )   =
-    -π^2C_F [x^2+6 x+1 /2 (x+1)^2C_F+C_A /2],
-    
-    γ̃_p^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [
-    -19 x^2+29 x+19/6 (x+1)^2+4 ln 2
-    
-       
-    +-x^4+5 x^3+22 x^2+x-3 /2 (x-1)	(x+1)^3ln x-ln (x+1)+-3 x^2+x-3/2 (x+1)^2lnμ_f^2/m_b m_c]
-    
-       
-    +C_F C_A [
-    -26 x^2+93 x+26/18	(x+1)^2--x^2+2 x+11 /8(x-1)(x+1)ln x
-    
-       
-    -3/2ln (x+1)
-    -11 x^2+36 x+11/8 (x+1)^2lnμ_f^2/m_b m_c]
-    
-       	
-    +C_A^2 [
-    -4/9-ln 2+1/4ln x-1/2ln (x+1)
-    -1/4lnμ_f^2/m_b m_c]
-    
-       
-    +C_F T_F n_l 7 x^2+30	x+7/18 (x+1)^2
-    +37/72 C_A T_F n_l
-    
-       	
-    -2 x^2 /5 (x+1)^2 C_F T_F n_b
-    -2/5 (x+1)^2 C_F T_F n_c
-    }.
-
-
-    γ̃_a,i^(2)(x )   =
-    -π^2C_F [C_F 3 x^2+4	x+3/6(x+1)^2+C_A/6],
-    
-    γ̃_a,i^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [-171 x^2+296 x-171/36 (x+1)^2+2 ln 2
-    
-       
-    +57 x^4-89 x^3-274 x^2-89 x+57 /36 (x-1) (x+1)^3ln x]
-    
-       
-    +C_F C_A [-379 x^2+675 x+379/216 (x+1)^2+ln 2/3
-       
-    +5 x+11/24( x+1)ln x
-    -2/3ln (x+1)
-    	-11 x^2+13 x+11/24 (x+1)^2lnμ
-    		_f^2/m_b m_c]
-    
-       	
-    +C_A^2 [
-    -17/54-2 /3ln 2+1/12ln x-1/6log (x+1)-1/12lnμ_f^2/m_b m_c]
-    
-       
-    +C_F T_F n_l 21 x^2+41 x+21/54 (x+1)^2
-    +53/216 C_A T_F n_l }.
-
-
-    γ̃_s^(2)(x )   =
-    -π^2C_F [C_F 3 x^2+10	x+3/6(x+1)^2+C_A/6],
-    
-    γ̃_s^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [-57 x^2+146 x+57/36 (x+1)^2+2 ln 2]
-    
-       
-    +C_F C_A [-379 x^2+1086 x+379/216 (x+1)^2
-    +ln 2/3
-       
-    +5 x+11 /24 (x+1)ln x-2/3ln (x+1)-11 x^2+28 x+11/24 (x+1)^2lnμ
-    	_f^2/m_b m_c]
-    
-       	
-    +C_A^2 [-17/54-2 /3ln 2+1/12ln x-1/6ln (x+1)-1/12lnμ_f^2/m_b m_c]
-    
-       
-    +C_F T_F n_l 21 x^2+74 x+21/54 (x+1)^2
-    +53/216 C_A T_F n_l }.
-
-Note that the above analytical expressions of Z_a,i and γ̃_a,i for the space-like  component  of the heavy flavor-changing  axial-vector   current  are new.
-The obtained Z_J and γ̃_J have been checked with several different values of m_b and m_c.
-To verify the correctness of our results, on the one hand, one can check that the above Z_J (also γ̃_J) is  symmetric/invariant under the exchange m_b↔ m_c meanwhile n_b↔ n_c, on the other hand, in the equal quark masses case x=1, our Z_J and γ̃_J are in full agreement with the known results in Refs. <cit.>.
-
-
-
-In our calculation, we include the contributions from the loops of charm quark and bottom quark in full QCD, which however are decoupled in the NRQCD.
-To match QCD with NRQCD, one need twice apply the decoupling relation <cit.> of  α_s :
-
-    α_s^(n_l+1)(μ)/α_s^(n_l)(μ) =    1-α_s^(n_l)(μ)/π
-    	(1-I_0 ϵ )/3  ϵT_F
-    +
-    ( α_s^(n_l)(μ)/π)^2
-     T_F {C_A (I_0^2 ϵ(4 ϵ ^3+4 ϵ ^2-11 ϵ -10)/8
-    		(ϵ -2) (2 ϵ +1) (2 ϵ +3).	
-       .	
-    	-5/24 ϵ)	
-    	+C_F (-I_0^2 ϵ(4 ϵ ^3-7 ϵ -1)/4
-    		(ϵ -2) (2 ϵ -1) (2 ϵ +1)-1/8 ϵ)+T_F (1-I_0 ϵ )^2/9 ϵ ^2}
-    + 𝒪(α_s^3),
-
-where I_0= e^γ_E  ϵ (ϵ -1) Γ (ϵ -1) (μ
-	^2/m_Q^2)^ϵ and m_Q is the on-shell mass of the decoupled heavy
-quark.
-
-
-
-Besides, we  can evolve the strong coupling from the scale μ_f to the scale μ with  renormalization group running equation <cit.> in D=4-2 ϵ dimensions  as following
-
-    α_s^(n_l)(μ_f)=
-    α_s^(n_l)(μ)(μ/μ_f)^2ϵ[1+α_s^(n_l)(μ)/πβ_0^(n_l)/4ϵ((μ/μ_f)^2ϵ-1)+ 𝒪(α_s^2)] .
-
-To calculate the values of the strong coupling  constant  α_s,  we  also use the renormalization group running equation <cit.> in D=4 dimensions as
-
-    α_s^(n_l)(μ)=
-    4π/β_0^(n_l)L_Λ[1-b_1 ln L_Λ/β_0^(n_l)L_Λ+b_1^2(ln^2 L_Λ-ln L_Λ-1)+b_2/(β_0^(n_l)L_Λ)^2+𝒪((1/L_Λ)^3)],
-
-where L_Λ=ln(μ^2/Λ_QCD^(n_l)^2),  b_i=β_i^(n_l)/β_0^(n_l). And β_0, β_1,  β_2 are the one-loop, two-loop and three-loop coefficients of
-the QCD β function <cit.>, respectively, which read
-
-    β_0^(n_l)=11/3C_A-4/3 T_F n_l,
-    
-       β_1^(n_l)=34/3C_A^2-20/3 C_A T_F n_l-4 C_F T_F n_l,
-    
-       β_2^(n_l)=2857/54C_A^3-(1415/27 C_A^2+205/9 C_A C_F-2C_F^2) T_F n_l+(158/27 C_A+44/9  C_F) T_F^2 n_l^2.
-
-In our numerical evaluation,  n_b=n_c=1, n_l=3 are fixed through the decoupling region from μ=0.4 GeV to μ=7 GeV,
-and the typical QCD scale Λ_QCD^(n_l=3)=0.3344GeV  is  determined using three-loop formula with the aid of the package  <cit.>  by inputting the initial value  α_s^(n_f=5)(m_Z=91.1876GeV)=0.1179.
-
-
-
-
-
-
-
-
-
-§ MATCHING COEFFICIENTS 
-
-Following Refs. <cit.>, the dimensionless matching coefficient 𝒞_J for the heavy flavor-changing  currents  can be decomposed as:
-
-    𝒞_J(μ_f,μ,m_b,m_c) =1+α_s^(n_l)(μ)/π𝒞_J^(1)(x)
-    +(α_s^(n_l)(μ)/π)^2
-    (𝒞_J^(1)(x)β_0^(n_l)/4lnμ^2/m_b m_c.
-       .
-    +γ̃_J^(2)(x)/2lnμ_f^2/m_b m_c+𝒞_J^(2)(x))
-     +(α_s^(n_l)(μ)/π)^3{(𝒞_J^(1)(x)/16β_1^(n_l)+𝒞_J^(2)(x)/2β_0^(n_l))lnμ^2/m_b m_c
-       
-    +𝒞_J^(1)(x)/16β_0^(n_l)^2ln^2
-    μ^2/m_b m_c
-    +1/8(dγ̃_J^(3)(x,μ_f^2/m_b m_c)/d lnμ_f-β_0^(n_l)γ̃_J^(2)(x))ln^2μ_f^2/m_b m_c
-       
-    +1/2(𝒞_J^(1)(x) γ̃_J^(2)(x)+γ̃_J^(3)(x,1))lnμ_f^2/m_b m_c
-    +β_0^(n_l)/4γ̃_J^(2)(x)lnμ_f^2/m_b m_c  lnμ^2/m_b m_c
-    + 𝒞_J^(3)(x) }
-       
-    +𝒪(α_s^4),
-
-where n_l=3 denotes the massless flavours. 𝒞_J^(n)(x)(n=1,2,3), as a function of x=m_c/m_b, independent of μ and μ_f, corresponds to the nontrivial part at 𝒪(α_s^n) of 𝒞_J.
-It's well known that 𝒞_J and 𝒞_J^(n)(x) satisfy the following symmetry properties <cit.>:
-
-    𝒞_J(μ_f,μ,m_b,m_c)=𝒞_J(μ_f,μ,m_c,m_b)|_   n_b↔ n_c,
-    
-       𝒞_J^(n)(x)=𝒞_J^(n)(1/x)|_   n_b↔ n_c.
-
-
-
-The nontrivial one-loop piece  𝒞_J^(1)(x) can be analytically achieved as:
-
-    𝒞_v^(1)(x)=3/4C_F(x-1/x+1 ln x-8/3),
-    
-       𝒞_p^(1)(x)=3/4C_F(x-1/x+1 ln x-2),
-    
-       𝒞_a,i^(1)(x)=3/4 C_F (x-1/x+1 ln x-4/3),
-    
-       𝒞_s^(1)(x)=3/4 C_F (x-1/x+1 ln x-2/3).
-
-
-
-
-And the nontrivial two-loop and three-loop pieces in Eq. (<ref>) are  𝒞_J^(2)(x) and 𝒞_J^(3)(x), respectively, which following the convention of Refs. <cit.>, can be further decomposed  in terms of different color/flavor structures:
-
-    𝒞_J^(2)(x) =    C_F   C_F  𝒞_J^FF(x)+C_F   C_A 𝒞_J^FA(x)
-    
-       
-    +C_F   T_F  n_b  𝒞_J^FB(x) +C_F   T_F  n_c 𝒞_J^FC(x) +C_F   T_F  n_l 𝒞_J^FL(x),
-    
-    𝒞_J^(3)(x) =      C^3_F  𝒞_J^FFF(x)+C_F^2  C_A  𝒞_J^FFA(x)
-    +C_F  C_A^2  𝒞_J^FAA(x)
-    
-       
-     +C_F^2  T_F  n_l 𝒞_J^FFL(x) +C_F C_A T_F  n_l 𝒞_J^FAL(x)
-    +C_F T_F^2   n_c   n_l 𝒞_J^FCL(x)   
-     
-       
-    +C_F T_F^2   n_b   n_l 𝒞_J^FBL(x) +C_F T_F^2  n_l^2 𝒞_J^FLL(x)
-        +C_F  T_F^2   n_b   n_c  𝒞_J^FBC(x)
-     
-       
-        +
-    C_F^2 T_F   n_c 𝒞_J^FFC(x)
-        +C_F  C_A T_F   n_c 𝒞_J^FAC(x)+
-     C_F  T_F^2   n_c^2 𝒞_J^FCC(x)
-    
-         + C_F^2   T_F  n_b 𝒞_J^FFB(x)+C_F  C_A T_F  n_b 𝒞_J^FAB(x)+C_F T_F^2  n_b^2 𝒞_J^FBB(x).
-
-
-Due to limited computing resources,
-we choose to calculate the matching coefficient 𝒞_J at three rational numerical points: the physical point  {m_b=475/100 GeV, m_c=150/100 GeV} (i.e.,x=x_0=150/475),   the check  point x=1/x_0 and the equal mass point x=1, respectively.
-The results 𝒞_J obtained at the physical point and the check  point verify the symmetric features of 𝒞_J and 𝒞_J^(n)(x) in Eq. (<ref>). Our results 𝒞_J obtained at the equal mass point x=1 are consistent with the known results 𝒞_J for all four currents in the equal quark masses case in the literature <cit.>. Furthermore, our calculation  have verified   the three-loop matching coefficients  for the  heavy flavor-changing    pseudoscalar current  and   the zeroth component of  the heavy flavor-changing   axial-vector current are identical, i.e., 𝒞_p≡𝒞_a,0.
-To confirm our calculation,  we have also calculated   𝒞_p and  𝒞_v at the reference point {m_b=498/100 GeV, m_c=204/100 GeV},  where  our results   agree with the known results in Refs. <cit.>.
-
-
-
-
-In the following, we will present the highly accurate numerical results of 𝒞_J^(2)(x) and 𝒞_J^(3)(x) at the physical heavy quark mass ratio  x=x_0=150/475  with about 30-digit precision.
-The various color-structure components of C_v^(2)(x_0) and  C_v^(3)(x_0)  read:
-
-	
-    𝒞_v^FF(x_0) = -13.71289080533129643353786882415,
-    	
-       𝒞_v^FA(x_0) = -6.585499135192203408065908804167,
-    	
-       𝒞_v^FB(x_0) = 0.0947676481125652606487968503976,
-    	
-       𝒞_v^FC(x_0) = 0.585796563729044305159251023619,
-    	
-       𝒞_v^FL(x_0) = 0.486237497534452686364818186481.
-    
-       𝒞_v^FFF(x_0) =20.18969417129305999911571842286 ,
-    	
-       𝒞_v^FFA(x_0) = -203.4349264860295194232572876813,
-    	
-       𝒞_v^FAA(x_0) = -102.7968727737777422224763578788,
-    	
-       𝒞_v^FFL(x_0) = 50.93775016890326146248907065956,
-    	
-       𝒞_v^FAL(x_0) = 40.22574662383519955538190917802,
-    	
-       𝒞_v^FCL(x_0) = -0.776339576123527777867508257477,
-    	
-       𝒞_v^FBL(x_0) =-0.0556259617628169261333544284783 ,
-    	
-       𝒞_v^FLL(x_0) = -2.08814878247962216692347776970,
-    	
-       𝒞_v^FBC(x_0) = 0.0903048438843974616499880474411,
-    	
-       𝒞_v^FFC(x_0) = -1.6854789447153670526748653364,
-    	
-       𝒞_v^FAC(x_0) = 0.464663487323886298396191419941,
-    	
-       𝒞_v^FCC(x_0) = 0.166410566769625472334622650374,
-    	
-       𝒞_v^FFB(x_0) = -0.125493504901815435721244899040,
-    	
-       𝒞_v^FAB(x_0) = -0.207735042283005003179604843189,
-    	
-       𝒞_v^FBB(x_0) = 0.0155302263395316874159466507910.
-
-
-The various color-structure components of C_p^(2)(x_0) and  C_p^(3)(x_0)  read:
-
-	
-    𝒞_p^FF(x_0) = -13.2664163032173887184051674623,
-    	
-       𝒞_p^FA(x_0) =-8.01693280168379244869854709253,
-    	
-       𝒞_p^FB(x_0) =0.128918313022470380156209778800 ,
-    	
-       𝒞_p^FC(x_0) = 0.709389226649688045706906749579,
-    	
-       𝒞_p^FL(x_0) =0.0583586106180016483840747484073 .
-    
-       𝒞_p^FFF(x_0) = -19.1073059443195339789160242369,
-    	
-       𝒞_p^FFA(x_0) = -199.368217320524804838849517451,
-    	
-       𝒞_p^FAA(x_0) = -108.136868017309597645533701505,
-    	
-       𝒞_p^FFL(x_0) = 54.7202915496511304152624843564,
-    	
-       𝒞_p^FAL(x_0) = 40.1950559961352476805071968834,
-    	
-       𝒞_p^FCL(x_0) = -0.72340116280534841918416586699,
-    	
-       𝒞_p^FBL(x_0) = -0.019622466229502871214841024261,
-    	
-       𝒞_p^FLL(x_0) = -1.2331473244200630628135034057,
-    	
-       𝒞_p^FBC(x_0) = 0.157356536599972434859830922842,
-    	
-       𝒞_p^FFC(x_0) =4.93713785637736911159215602248 ,
-    	
-       𝒞_p^FAC(x_0) = -0.837019369825724302408030392435,
-    	
-       𝒞_p^FCC(x_0) = 0.256031525456388447241169171007,
-    	
-       𝒞_p^FFB(x_0) = 1.74108819472094062081877632041,
-    	
-       𝒞_p^FAB(x_0) = -0.675630407239784126013977083266,
-    	
-       𝒞_p^FBB(x_0) = 0.030203809353562550021046660214.
-
-
-The various color-structure components of C_a,i^(2)(x_0) and  C_a,i^(3)(x_0)  read:
-
-
-    𝒞_a,i^FF(x_0) = -7.55810100985517328528944527445,
-    
-       𝒞_a,i^FA(x_0) = -4.00029433499832597188660997837,
-    
-       𝒞_a,i^FB(x_0) = 0.01402013116548156662918961686909,
-    
-       𝒞_a,i^FC(x_0) = 0.1451892135460458985527809307761,
-    
-       𝒞_a,i^FL(x_0) = 0.06421749358957698454852728485104.
-    
-       𝒞_a,i^FFF(x_0) = -8.42643917300377651280522219395,
-    	
-       𝒞_a,i^FFA(x_0) = -93.2038302986321307103761492345,
-    	
-       𝒞_a,i^FAA(x_0) = -63.7233070196452524188390331877,
-    	
-       𝒞_a,i^FFL(x_0) = 30.26464969513072132366156126441,
-    	
-       𝒞_a,i^FAL(x_0) = 21.16033670918183535060836071864,
-    	
-       𝒞_a,i^FCL(x_0) = -0.3153222090952701782698048799971,
-    	
-       𝒞_a,i^FBL(x_0) = -0.04600893146925268206019173772344,
-    	
-       𝒞_a,i^FLL(x_0) = -0.5156996834396487701112794535693,
-    	
-       𝒞_a,i^FBC(x_0) = -0.0118687507006037939590736816982,
-    	
-       𝒞_a,i^FFC(x_0) = 1.972145133214113574301216956655,
-    	
-       𝒞_a,i^FAC(x_0) = -0.2648389457862748902646421554436,
-    	
-       𝒞_a,i^FCC(x_0) = 0.005739492344304311786485592038925,
-    	
-       𝒞_a,i^FFB(x_0) = 0.468239957569145876297846606135,
-    	
-       𝒞_a,i^FAB(x_0) = -0.128836049327094055088259653772,
-    	
-       𝒞_a,i^FBB(x_0) = -0.0047313889291568923452785036443.
-
-
-The various color-structure components of C_s^(2)(x_0) and   C_s^(3)(x_0)   read:
-
-
-    𝒞_s^FF(x_0) = -6.96020737354849312657205418357,
-    	
-       𝒞_s^FA(x_0) = -4.12970820397051570036738297443,
-    	
-       𝒞_s^FB(x_0) = 0.048170796075386686136602545271,
-    	
-       𝒞_s^FC(x_0) = 0.268781876466689639100436656736,
-    	
-       𝒞_s^FL(x_0) = -0.363661393326874053432216153222.
-    
-       𝒞_s^FFF(x_0) = -12.6512824902497489841790999287,
-    	
-       𝒞_s^FFA(x_0) = -91.3076763843495687930187876995,
-    	
-       𝒞_s^FAA(x_0) = -67.2034246352357623358462321068,
-    	
-       𝒞_s^FFL(x_0) = 31.12323218543900065296825277243,
-    	
-       𝒞_s^FAL(x_0) = 19.49987491622541782889333507621,
-    	
-       𝒞_s^FCL(x_0) = -0.262383795777090819586462489511,
-    	
-       𝒞_s^FBL(x_0) = -0.0100054359359386271416783335057,
-    	
-       𝒞_s^FLL(x_0) = 0.3393017746199103339986949104357,
-    	
-       𝒞_s^FBC(x_0) = 0.0551829420149711792507691937024,
-    	
-       𝒞_s^FFC(x_0) = 4.4105666464862568415402096694718,
-    	
-       𝒞_s^FAC(x_0) = -0.6861454400278606762848799078670,
-    	
-       𝒞_s^FCC(x_0) = 0.09536045103106728669303211267177,
-    	
-       𝒞_s^FFB(x_0) = 1.1373781611175929139065523549900,
-    	
-       𝒞_s^FAB(x_0) = -0.318775996588438248091557753877,
-    	
-       𝒞_s^FBB(x_0) = 0.00994219408487397025982150577842.
-
-
-From the above numerical values, we find the dominant contributions in 𝒞_J^(2)(x_0) and 𝒞_J^(3)(x_0) come from the components corresponding to the color structures C_F^2, C_FC_A, C_F^2C_A and C_FC_A^2, and the contributions from the bottom and charm quark loops are negligible.
-
-Fixing the renormalization scale μ=μ_0=3GeV, m_b=4.75GeV, m_c=1.5GeV, and setting the factorization scale μ_f=1.2 GeV, Eq. (<ref>) then reduces to
-
-    𝒞_v
-     =1-2.067273 α_s^(3)(μ_0)/π-29.29166(α_s^(3)(μ_0)/π)^2
-     -1689.867(α_s^(3)(μ_0)/π)^3
-     +𝒪(α_s^4),
-    
-       𝒞_p
-     =1-1.400607 α_s^(3)(μ_0)/π-27.80076(α_s^(3)(μ_0)/π)^2
-     -1781.283(α_s^(3)(μ_0)/π)^3
-     +𝒪(α_s^4),
-    
-       𝒞_a,i =1-0.7339400 α_s^(3)(μ_0)/π-18.16765(α_s^(3)(μ_0)/π)^2
-    -922.7452(α_s^(3)(μ_0)/π)^3
-    +𝒪(α_s^4),
-    
-       𝒞_s =1-0.06727332 α_s^(3)(μ_0)/π-15.46391(α_s^(3)(μ_0)/π)^2
-    -935.4686(α_s^(3)(μ_0)/π)^3
-    +𝒪(α_s^4).
-
-
-
-With the values of α_s^(n_l=3)(μ) calculated by the renormalization group running equation Eq. (<ref>),
-we investigate the renormalization scale dependence of the matching coefficients 𝒞_J for the heavy flavor-changing  currents
-at LO,  NLO,  NNLO and N^3LO accuracy in Fig. <ref>.
-The middle lines correspond to the choice of μ_f=1.2 GeV for the NRQCD factorization scale, and the upper and lower  edges   of the error bands
-correspond to μ_f=0.4 GeV and μ_f=2 GeV, respectively.
-
-We also present our precise numerical results of the matching coefficients 𝒞_J  at LO,  NLO ,  NNLO and N^3LO in Table <ref>, where the uncertainties from μ_f and μ are included.
-
-From Eq. (<ref>), Fig. <ref> and Table <ref>, one can find the higher order QCD corrections have larger values, especially, the O(α_s^3) correction looks quite sizable, which confirms the nonconvergence behaviors of the matching coefficients investigated in previous literature <cit.>. From  Fig. <ref> and Table <ref>, it seems that both the NRQCD factorization scale dependence and the QCD renormalization scale dependence become larger at higher order.
-Note, at each truncated perturbative order, the matching coefficient 𝒞_J  is renormalization-group invariant <cit.>, e.g., at N^3LO, 𝒞_J obeys the following renormalization-group running invariance:
-
-    𝒞_J^ N^3LO(μ_f,μ,m_b,m_c) =𝒞_J^ N^3LO(μ_f,μ_0,m_b,m_c) +𝒪(α_s^4),
-
-where 𝒞_J^ N^3LO(μ_f,μ,m_b,m_c) has dropped the 𝒪(α_s^4) terms in Eq. (<ref>). So the  μ-dependence of the  N^3LO results is at the 𝒪(α_s^4) order. Though the  μ-dependence is suppressed by α_s^4, the coefficients of α_s^4  in  above equation  contain μ-independent terms such as 𝒞_J^(3)(x) and lnμ_f, which come from the 𝒪(α_s^3) order in Eq. (<ref>), and have   considerably large values by aforementioned  calculation within the framework of NRQCD factorization. As a result, these terms will lead to a significantly larger renormalization scale dependence at N^3LO. From Fig. <ref>, we also find the NRQCD factorization scale μ_f has a dominant influence on the higher order QCD corrections.
-When μ_f decreases, both the convergence of α_s expansion  and the independence of μ will improve.
-
-Since  the  matching coefficients   on their own  are nonphysical, in order to obtain  a  reliable higher order correction to a physical quantity, the large α_s-expansion nonconvergence  and the strong scale  dependence of the  matching coefficients at higher order  especially  𝒪(α_s^3)     have to be  compensated by other higher order corrections.
-Within the NRQCD effective  theroy,  physical quantities such as    the   beauty-charmed meson B_c and B^*_c decay constants   are factorized to the  matching coefficients   multiplied  with the long-distance nonperturbative NRQCD matrix elements (the Schrödinger  wave functions at the origin), therefore we  not only need to calculate the  higher   order  QCD  corrections to the matching coefficients, but also need to perform the  higher   order corrections to the    wave functions at the origin.
-Besides, it is also  indispensable to take into account  higher order relativistic corrections, resummation techniques and so on ( also see   Refs. <cit.> for more discussions).
-
-
-
-
-
-
-§ PHENOMENOLOGICAL ANALYSIS 
-
-Before starting our discussions about phenomenological applications of the matching coefficients, one can  review related  discussions in Refs. <cit.>. For  an explicit example, one can also see Eq.(4) in Ref. <cit.>, where the leptonic decay width of Υ meson was calculated up to N^3LO within NRQCD and pNRQCD effective theory and 
-a large cancellation between three-loop perturbative QCD corrections to the matching coefficient and N^3LO perturbative corrections to the wave function at the origin was presented.
-As following, we will confirm this phenomenon is also in the cb̅ meson systems and   evaluate three-loop corrections to the decay constants, leptonic decay widths and corresponding branching ratios of the beauty-charmed mesons B_c and B^*_c.
-
-We use the following formulas  <cit.> to compute
-the decay constants  f_B_c^* of the  vector  B_c^* meson and f_B_c of the pseudoscalar  B_c meson:
-
-    f_B_c^*=2 √(N_c/m_B_c^*) [𝒞_v+d_v E_B_c^*/12(8/M-3/m_r)]
-     |Ψ_B_c^*(0)|,
-       
-    f_B_c=2 √(N_c/m_B_c) [𝒞_p-d_p E_B_c/4m_r]
-     |Ψ_B_c(0)|,
-
-where M=m_b+m_c, m_r=m_b m_c/(m_b+m_c) is the reduced mass, m_B_c^* and m_B_c are the masses of the vector and pseudoscalar  cb̅ mesons, respectively.
-Note that,  in our calculation we do not  employ the expansion  m_B_c^*(m_B_c)=m_b+m_c+E_B_c^*(E_B_c) as Refs. <cit.> (in Table <ref> and Table <ref> we will see the influence from the expansion is small), but directly adopt the following physical values <cit.> for the cb̅ mesons masses:
-
-    m_B_c=6.274 GeV,   m_B_c^*=6.331 GeV.
-
-
-
-d_v and d_p are matching coefficients between QCD and NRQCD in sub-leading order of relative velocity for the vector  B_c^* meson and pseudoscalar  B_c meson, respectively.
-One-loop results of d_v and d_p can be found in Refs. <cit.>
-
-    d_v=1-α_s^(n_l)(μ)/πC_F(x+1)^2/3 x^2-2 x+3(4 /3 +(x-1) (7
-    	x^2+6 x+7) /4  (x+1)^3ln x+4 lnμ_f ^2/m_b m_c)+𝒪(α_s^2),
-       
-    d_p=1+α_s^(n_l)(μ)/π C_F (x^2+98 x+1/18 (x+1)^2-(x-1) (7 x^2+46 x+7) /12
-    	(x+1)^3ln x-4/3lnμ_f ^2/m_b m_c)+𝒪(α_s^2).
-
-
-E_B_c^* and   |Ψ_B_c^*(0)| are  the binding energy and the wave function  at the origin for B_c^*, respectively, while E_B_c and |Ψ_B_c(0)| are for B_c.   
-In the previous sections, we have calculated higher-order perturbative corrections to the matching coefficient by extracting the hard contribution using the NRQCD effective theory. Similarly, the  higher-order perturbative corrections to the binding energy and the wave function  at the origin can be calculated allowing for the soft, potential and ultrasoft contributions from the Coulomb potential, non-Coulomb potentials and ultrasoft gluon exchange     using the potential NRQCD effective theory  (pNRQCD) <cit.>.
-Since the pseudoscalar meson B_c(1^1S_0) and vector meson B_c^*(1^3S_1) are respectively  the  lowest-lying  spin-singlet and   spin-triplet S-wave bound state, i.e., B_c and B_c^* have different spin quantum  numbers, E_B_c and     |Ψ_B_c(0)| are slightly different (see Refs. <cit.>) from E_B_c^* and |Ψ_B_c^*(0)|, respectively. 
-However, the binding energies of the double heavy quark systems are spin-independent  up to NLO (see Refs. <cit.>), hence E_B_c^NLO≡ E_B_c^*^NLO, which 
-can be obtained from Refs. <cit.> as
-
-    E_B_c^NLO≡ E_B_c^*^NLO= E^(0){1+α_s^(n_l)(μ_f) /π[β _0^(n_l)(ln( μ _f/2 m_r C_F α_s^(n_l)(μ_f))+11/6)-4/3 C_A ]},
- 
-where  E^(0)=-m_r/2(α_s^(n_l)(μ_f)C_F)^2,  n_l=3. For simplicity, we have set the pNRQCD factorization scale equal to the NRQCD factorization scale μ_f [ This is not a problem because, in strict fixed order computations it is
-not necessary to distinguish between factorization scales as they all cancel to the required accuracy  once all contributions to an observable are added <cit.>.],  which separates contributions coming from the hard and soft momentum regions.   α_s^(n_l)(μ_f) can be translated into α_s^(n_l)(μ)  by the coupling running equation in Eq.(<ref>).
-Based on Eq. (<ref>) and Eq. (<ref>), the NLO results in Eq. (<ref>), Eq. (<ref>) and Eq. (<ref>) are    sufficient  for the N^3LO calculation of the decay constants.
-
-For phenomenological analysis of the pseudoscalar B_c meson, we will use the approximation  |Ψ_B_c(0)|≈ |Ψ_B_c^*(0)|, so that the only  missing piece  in Eq. (<ref>) and Eq. (<ref>) is |Ψ_B_c^*(0)|. 
-In order to obtain |Ψ_B_c^*(0)|, we  employ the scale relation explored  by Collins et al. <cit.>:
-
-    |Ψ_B_c^*(0)|=|Ψ_J/ψ(0)|^1-y |Ψ_Υ(0)|^y,
-
-where  y∈[0.3,0.4] with the central value y=y_c=ln((1+m_c/m_b)/2)/ln(m_c/m_b) [
-	The central value y=y_c=ln((1+m_c/m_b)/2)/ln(m_c/m_b)  can be exactly derived from the scale law of the wave function at the origin: |ψ_μ^n(0)|^2=f(n,a)(Aμ)^3/(2+a) for any reduced mass μ and any class of power-law potentials V(r)=A r^a+C, where f(n,a) is only a function of the radial quantum number n and the power a. 
-	To cover the uncertainties from various potentials, the maximal (minimal) value of y is simply taken to be 0.4 (0.3) independent of the quark masses. 
-For more details, see Ref. <cit.> (where y=0.35 was chosen as the only optimal solution) .] is the scale power. |Ψ_J/ψ(0)| and |Ψ_Υ(0)| are the wave functions at the origin for the vector heavy quarkonia  J/ψ and   Υ, respectively.
-From literature <cit.>,  the full N^3LO  corrections to the wave function at the origin for the lowest-lying vector heavy quarkonium QQ̅  can be expressed as 
-
-    |Ψ_QQ̅^V(0)|^2/|Ψ_QQ̅^(0)(0)|^2=   1+α_s^(n_f)(μ_f) /π6 β^(n_f)_0 L_s+c_ψ,1^C/4 
-    +(α_s^(n_f)(μ_f) /π)^2 {3/2β _0^(n_f)^2 L_s^2
-    
-       
-    +L_s/24[9 β _1^(n_f)-18 β_0^(n_f)^2+12 β _0^(n_f)
-    c_ψ,1^C+8 π ^2 C_F (3 C_A+2 C_F)]
-    
-       
-    +1/144[2 π ^2 C_F (162 C_A+89 C_F)+9 c_ψ,2^C]
-    }
-       
-    +
-    (α_s^(n_f)(μ_f) /π)^3π ^2 {
-    C_A^3 [-L_s/4+L_m/4-ln(C_F)-π ^2/12+1/2]
-    
-       
-    +C_A^2 C_F [
-    -2/3	L_s^2+L_s (4/3 L_m+4ln 2+17/18)-L_m^2/6
-       
-    + L_m(31/9-ln 2)
-    +2/9ln(C_F) (9 ln(C_F)+12 ln 2-44)]
-    
-       
-    +C_A C_F^2 [-9/4L_s^2 +L_s (9 /2L_m+4ln
-    2-25/54)-3 /8L_m^2
-    
-       
-    + L_m(61/9-ln  2)
-    +4/3ln(C_F) (4 ln(C_F)+ln 2-10)]
-    
-       
-    +
-    C_A C_F [2 β_0^(n_f) L_s^2+ L_s/72(β_0^(n_f)(423-12 π ^2) -218 T_F n_f )]
-    
-       
-    +C_F^3 [-3/2 L_s^2+L_s (3 L_m-8 ln
-    2+47/18)-L_m^2/4
-       
-    +L_m(2ln 2+59/36) 
-    +8/9ln(C_F) (3 log(C_F)-9 ln 2+2)]
-    
-       
-    +C_F^2 T_F [L_s(2/15-59/27 n_f)
-    +L_m/15]
-    +β_0^(n_f) C_F^2 [4 /3L_s^2+L_s(53/16-π
-    	^2/9) ]
-    
-       
-    +1/π ^2[
-    5/4β_0^(n_f)^3 L_s^3
-    +β_0^(n_f)L_s^2/32(27 β_1^(n_f)-54 β_0^(n_f)^2+20 β_0^(n_f) c_ψ,1^C) 
-    
-       
-    + L_s/32(12 β_0^(n_f)^3-12 β_1^(n_f)β_0^(n_f)+3 β_2^(n_f)-8 β_0^(n_f)^2 c_ψ,1^C.
-       .
-    +4 β_1^(n_f) c_ψ,1^C+5 β_0^(n_f)
-    c_ψ,2^C)
-    
-    +c_ψ,3^C+c_ψ,3^nC/64]
-    +δ_1^us}+𝒪(α_s^4),
-
-where |Ψ_QQ̅^(0)(0)|^2=(mα_s^(n_f)(μ_f)C_F)^3/(8π),  L_s=ln[μ_f/(mα_s^(n_f)(μ_f)C_F)], L_m=ln(μ_f/m), m is the mass of Q, n_f is  flavours   lighter than  Q, and the non-logarithmic terms of the Coulomb, non-Coulomb and ultrasoft corrections read
-
-    c_ψ,1^C   = 2.62290 - 1.61351 n_f,
-    
-    
-    c_ψ,2^C   = 1800.745 - 193.4887 n_f + 3.50376 n_f^2,
-    
-    
-    c_ψ,3^C   = -39854.2 + 2005.08 n_f + 19.79845 n_f^2 + 3.61806 n_f^3,
-    
-    
-    c_ψ,3^nC   = -44754.7 - 3126.52 n_f,
-    
-    δ_1^us   = 353.06.
- 
-Equivalently, Eq. (<ref>) can  be simplified in a numerical form
-
-    |Ψ_QQ̅^V(0)|^2/|Ψ_QQ̅^(0)(0)|^2=   1+
-    α_s^(n_f)(μ_f) [L_s (5.252113122  -0.3183098862 n_f)-0.1283989789 n_f
-    
-       
-    +0.2087238344]
-    +(α_s^(n_f)(μ_f))^2 [L_s^2(0.06754745576 n_f^2-2.229066040 n_f
-    .
-       .
-    +18.38979483)
-    + L_s(0.02072049126 n_f^2-0.3544823646 n_f+1.327477963)
-    
-       
-    +0.02218780425 n_f^2-1.225281344 n_f+22.60088339]
-    
-       
-    +(α_s^(n_f)(μ_f))^3 [L_s^3(-0.01194501275 n_f^3+0.5912781313 n_f^2
-    -9.756089166 n_f
-    .
-       .
-    +53.65849041)
-    +L_s^2(0.001670726641 n_f^3
-    -0.06791901544 n_f^2
-    .
-       .
-    +0.6172398127 n_f-6.696584076)
-    +L_s (14.99593242
-    L_m
-    .
-       .
-    -0.009572483336 n_f^3+0.8198924520 n_f^2
-    -23.92535721 n_f
-    +192.0183234)
-    
-       
-    +0.001823251079 n_f^3+0.009977039176 n_f^2
-    -0.5651253308 n_f
-    
-       
-    +50.45825046
-    -1.461867625 L_m^2+25.28876373 L_m
-    ]+𝒪(α_s^4).
-
-With |Ψ_QQ̅^V(0)| known, we can obtain  |Ψ_J/ψ(0)| and |Ψ_Υ(0)|  as following
-
-    Ψ_J/ψ(0)   =Ψ_QQ̅^V(0)|_m→ m_c,n_f→ n_l,
-    
-    Ψ_Υ(0)   =Ψ_QQ̅^V(0)|_m→ m_b,n_f→ n_l+1,
-
-where n_l=3 denotes the massless flavours. Furthermore, we  use the decoupling relation in Eq. (<ref>) (but up to 𝒪(α_s^3)) to translate α_s^(n_l+1)(μ_f) into α_s^(n_l)(μ_f), which can further be translated into α_s^(n_l)(μ) by the coupling running equation in Eq. (<ref>) (but up to 𝒪(α_s^3)).
-By Eq. (<ref>), we can finally express |Ψ_B_c^*(0)| in power series of α_s^(n_l=3)(μ) and we have checked the obtained series expansion in α_s^(n_l=3)(μ) of |Ψ_B_c^*(0)| obeys the  renormalization-group running invariance as Eq. (<ref>).
-
-As following, we will present the numeric results for the matching coefficients d_v and d_p for sub-leading order relativistic corrections, the binding energies, the wave functions at the origin, the decay constants, leptonic decay widths and corresponding branching ratios for the pseudoscalar and vector cb̅ mesons.
-In spirit of perturbation theory, through all our calculations we expand all of above quantities  in power series of α_s^(n_l=3)(μ) by the decoupling relation with coupling running, and truncate them up to a fixed order. 
-Choosing  the scale power y=y_c and  fixing  the factorization scale μ_f=1.2 GeV, the renormalization scale μ=μ_0=3 GeV, m_b=4.75GeV, m_c=1.5GeV, we present the  α_s-expansion  of   these quantities in Table <ref> and Table <ref>, where the leading-order of the wave functions at the origin and the decay constants are determined by Eq. (<ref>), Eq.(<ref>)  and Eq.(<ref>) as:  
-
-    |Ψ^(0)_B_c(0)|^2=|Ψ^(0)_B_c^*(0)|^2   =(m_rα_s^(n_l=3)(μ)C_F)^3/π,
-    
-    
-    f_B_c^*^(0)   =2√(N_c/m_B_c^*)|Ψ^(0)_B_c^*(0)|,
-    
-    
-    f_B_c^(0)   =2√(N_c/m_B_c)|Ψ^(0)_B_c(0)|.
- 
-From  Table <ref> and Table <ref>, we find  the influences of d_v, d_p, E_B_c^*  and E_B_c  on the decay constants in Eq. (<ref>) and Eq. (<ref>) are inconsiderable compared  with the matching coefficients  𝒞_v and 𝒞_p. Both 𝒞_v (𝒞_p) and |Ψ_B_c^*(0)| (|Ψ_B_c(0)|) have a large  α_s-expansion nonconvergence at the third order, however, after a large cancellation between the matching coefficient  and the wave function at the origin, the perturbative α_s-expansion of the  decay constant becomes  convergent  up to N^3LO.
+
+
+
+
+
+
+A simple power-law decay of slope -1.26 is consistent with X-ray observations at all epochs and with the early optical observations (see Figure <ref>). However, beginning at T+5.5 d, it underpredicts the observed optical and near-infrared emission. 
+We interpret this as evidence of an additional component powering the late-time optical/nIR light curve and will return to discuss it in detail in <ref>.
+
+
+
+
+From the condition that the X-ray afterglow is in slow-cooling regime, we derive an upper limit on the circumburst density n following <cit.>: 
+
+    n ≲  0.4    (1+z/ 2)^-6/11(t/ 1 d)^-4/11(E_ K,iso/10^52 erg)^-6/11
+       (ϵ_e/0.1)^-40/33(ϵ_B/10^-5)^-5/9 cm^-3,
+
+which is consistent with densities typical of the interstellar medium, and disfavors the high-density environment where some LGRBs are found.
+
+Finally, by assuming that the GeV flux is also produced by external forward shocks, 
+we can use the flux above 100 MeV <cit.> as proxy for the blastwave kinetic energy <cit.>. For p≈2.6, we obtain: 
+
+    E_ K,iso≈      10^53(1+z/3)^-1(d_L,28/5)^1.74(F_LAT/ 0.2 nJy)^0.87(t/ 5 s)^1.25
+       (ϵ_e/0.1)^-1.38(ϵ_B/10^-3)^0.13 erg,
+
+where d_L,28 is the luminosity distance in units of 10^28 cm.
+For z≳2, this value fits well within the distribution of LGRBs. 
+
+
+
+
+
+ §.§ Late-time Excess
+
+
+
+The light curves in Figure <ref> are compared to the standard power-law afterglow.  A late-time flattening is expected due to the contribution of the source S1, underlying the GRB position. This model (solid lines) underpredicts the optical and, to a less extent, near-infrared photometry from T+5 d to T+15 d. We consider this to be indicative of an excess component in addition to the afterglow. We identify the peak of this excess at around T+6.5 d, when the observed light is 3-5 times brighter than the afterglow+S1 model. 
+
+Figure <ref> shows the spectral energy distribution (SED) of the GRB counterpart at 
+two epochs, T+1.1 d and  T+5.5 d, respectively. 
+The earlier SED is well described by a power-law function, as expected for a non-thermal afterglow spectrum.
+The later SED shows an excess in the optical (grz) and J band. 
+
+
+We consider a simple model for the excess, treating it as black-body emission arising from a spherical fireball in expansion and ignoring relativistic effects. The rest-frame parameters of this model are the temperature T' and radius R' of the photosphere. 
+
+In the observer's frame, the spectrum will have the shape of a black-body with T_ obs = T'/(1+z).
+
+If we fit this simple black-body model to the grzJK data in Figure <ref>, we obtain T_ obs≈ 3800 K (orange thin line) and a reduced χ^2 ≈ 2 as this model severely underpredicts the K-band measurement. 
+This discrepancy could be due the presence of broad line spectral features that either suppress the K-band emission or enhance the zJ-band measurements. 
+In the latter case, if we exclude the zJ-band points from the fit, the continuum is 
+well described by a hotter black-body with T_ obs≈ 9000 K (blue thick line). 
+We examine both these models in more detail when we discuss likely progenitors and redshifts in <ref>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Environment
+
+
+
+
+
+
+
+
+
+
+
+The field of GRB 210704A  is shown in Figure <ref>. 
+The GRB region shows an overdensity of low-redshift galaxies, notably
+the galaxy WISEA J103604.24+571327.7 (labelled G1 in Figure <ref>) at z = 0.0817 and the galaxies' cluster 400d J1036+5713 at z = 0.203 <cit.>. 
+Two faint (r≈25 AB mag) sources (labelled S1 and S2 in Figure <ref>) lie closer to the GRB position and are also plausible candidate host galaxies. 
+
+Unfortunately, optical spectroscopy does not allow us to conclusively determine the redshift of GRB 210704A and use this redshift to determine the host galaxy (see  <ref>). Therefore, we analyse the projected angular offsets between the galaxies and the GRB to quantify the probability of association.
+
+
+We determined the positions, statistical uncertainties, and half-light radii using the pre-explosion r-band image from MegaPrime/MegaCam for S1 and S2, and the Gemini/GMOS-N r-band image obtained at T+10.44 d for the GRB afterglow and the other host candidates. We likewise confirm the offsets with the HST imaging and derive the photometry for these galaxies in the HST filters (see Table <ref>). To determine the offset for each galaxy we followed the methods outlined by <cit.>. 
+We first aligned the afterglow image (Gemini) and pre-explosion image (MegaPrime) using  to identify point sources in each image and then  to determine the astrometric solution. Using 19 common point sources between the two images, we derive a relative astrometric uncertainty of σ_tie ∼ 0.09. This astrometric uncertainty is included in the offset determination. 
+
+
+Using the Equations 1 to 3 from <cit.> and the galaxy number counts from deep optical imaging <cit.>, the probability of finding an unrelated galaxy of magnitude m_r or brighter within the vicinity of a GRB can be approximated as:
+
+    P_ ch =1-exp(-π r^2_ i× 10^a (m_r - m_0) + b  ),
+
+with a=0.36, b = -2.42, and m_0=24 for galaxies fainter than m_r≳19 mag
+and a=0.56, b = -4.80 and m_0=18 for brighter galaxies. 
+The effective radius  r_ i depends on the projected angular separation R_0 between the GRB and the galaxy and on the half-light radius R_half of the galaxy. We take r_ i=2R_ half for S1 since GRB 210704A is localized inside the detectable light, whereas for other candidates we use r_ i=(R^2_ 0+4R^2_ half)^1/2 because the GRB position is well outside the light of these galaxies. In Table <ref>, we summarize the information on the galaxies that have P_ ch<0.15.
+
+
+Often a galaxy is more likely to be the host than all the other ones, however, in the crowded field of GRB 210704A, two galaxies have comparably low probabilities of chance alignment with the GRB. 
+The bright nearby galaxy G1, located  about 29from the afterglow, has a low chance coincidence probability of 0.5%.  However, the faint galaxy S1, detected close to the afterglow position, has 
+a similarly  probability of 2%. 
+
+
+
+
+ §.§ The Properties of the Possible Host Galaxy G1
+
+
+According to the spectrum  from the Sloan Digital Sky Survey Data Release 7, the galaxy G1 shows the signature of Ca H and K (at 3934 Å and 3969 Å respectively), the G-band (4304 Å), Mg (5175 Å) and Na (5894 Å) absorption lines, all of which are consistent with an old population. Moreover, the decomposition of stellar populations and their analysis using pyPipe3D[<http://ifs.astroscu.unam.mx/pyPipe3D/>], suggest of an old dominant population. Nevertheless, the analysis confirms that a young population is also present, with about 15% of the light corresponding to stars of less than 2 Gyr of age. 
+Based on its spectral properties and observed morphology, we classify G1 as a Sa/Sb galaxy. 
+
+
+
+
+ §.§ The Properties of the Possible Host Galaxy S1
+
+
+We do not have a spectroscopic redshift for S1. Therefore, we modelled its SED (Table <ref>) using  <cit.> using the methodology previously described in <cit.>. The model parameters are the redshift z, total mass M, galaxy age t_ age, e-folding timescale τ, extinction A_V, and metallicity Z. We use these parameters to derive the stellar mass M_* and the star formation rate (SFR) as outlined in <cit.>. Following <cit.>, we apply uniform priors in log t_ age, log τ, log Z, and A_V. We leave the redshift as a free parameter with a uniform prior between 0 and 5. We performed a fit to the data using the  package <cit.>. 
+
+
+
+
+We obtain a photometric redshift z_phot=2.15±0.10, driven by the flux increase in the 
+F160W filter interpreted as the 4000 Å break
+(see Figure <ref>). 
+The best fit yields a galaxy's stellar mass M_*=(1-3)× 10^9 M_⊙, a sub-solar metallicity Z/Z_⊙=0.3^+0.4_-0.2, a moderate star formation rate SFR=2.5^+1.7_-0.9 M_⊙ yr^-1, a relatively young stellar population with age t_m=0.8±0.5 Gyr, and an intrinsic extinction of A_V=0.30±0.15 mag. 
+These parameters are typical of GRB host galaxies in this redshift range for both long and short GRBs <cit.>, although the low metallicity tends to favor the former class. 
+Moreover, the galaxy's absolute magnitude of M_ r=-21.0 is similar to other host galaxies associated to LGRBs <cit.>. 
+
+
+
+
+ §.§ A Possible Host Cluster
+
+
+The overdensity of galaxies
+in this vicinity of the burst is related to the X-ray cluster 400d J1036+5713 (see Figure <ref>). 
+The cluster has an estimated mass of approximately 9×10^13  and a virial radius of R_500≈3. As shown in Figure <ref>, the GRB afterglow lies about 1.5 from the peak of the X-ray diffuse emission, within the cluster's angular radius. 
+In this case, the probabilities reported in Table 2 might overestimate the chance of a random alignment between the GRB and the galaxies in the cluster. 
+To better estimate this value we consider the Swift XRT Cluster Survey <cit.> and search for the number of X-ray clusters serendipitously located within 2 arcmin of a GRB position. Among over 300 long GRB fields examined in the survey, only 4 closely intercept an X-ray cluster, from which we derive a chance probability of P_ ch≈0.012, comparable to the probabilities derived for S1 and G1. 
+If we factor in the cluster brightness and consider only sources with f_X ≳2 × 10^-13 erg cm^-2 s^-1, then the probability of a chance alignment drops to 10^-3. A spurious GRB/cluster association is therefore unlikely, although not impossible when considering the large sample of more than 1500 Swift bursts. Notably, the only other known case of an association with an X-ray cluster is the short GRB 050509B <cit.>. 
+
+
+
+
+
+
+
+
+§ DISCUSSION
+
+
+
+
+
+In this section, we interpret and discuss the physical implications of the results obtained in section <ref>. We consider the nature of the burst (SGRB or LGRB), its redshift, and its likely environment (G1, S1 or the galaxy cluster). For distances, we assume a ΛCDM model with a H_0=67.8 km s^-1 Mpc^-1 <cit.>.
+
+
+
+
+ §.§ A nearby short GRB
+
+
+
+We first consider the possibility of a GRB hosted by the bright (M_r≈-21.5) galaxy G1 (WISEA J103604.24+571327.7) at z = 0.08168. This is supported by the low probability of coincidence of only 0.5% (see Table <ref>). 
+
+
+
+
+The relatively large projected offset of about 52 kpc from G1 is an important constraint. 
+The observed distribution for LGRBs does not extend beyond 10 kpc <cit.>, which allows us to disfavour this possibility. Furthermore, the high-energy properties of GRB 210704A do not resemble those of nearby LGRBs <cit.>. 
+
+The case for a SGRB is less clear. Between 5% and 25% of SGRBs are observed to lie beyond 20 kpc from their host galaxies <cit.>. Assuming an age of 1–0.1 Gyr for the GRB progenitor, the inferred offset would require an intrinsic kick velocity of v_ kick≈50–500 km s^-1, in the range observed for Galactic NS binaries.
+A SGRB at z ∼ 0.08 would be consistent with the properties of other cosmological SGRBs (section <ref>), and would not obey the spectral lag-luminosity relation of LGRBs (section <ref>) as observed in the case of other nearby events <cit.>. 
+Therefore, based on the GRB high-energy properties and its location, a nearby SGRB remains a plausible option. 
+
+
+On the other hand, the observed peak luminosity and peak time of the excess emission do not match well the properties of the kilonova AT2017gfo: 
+the peak brightness  would be about two magnitudes fainter (M_r=-14.6) than AT2017gfo (M_r=-16.4), and the peak time would be several days later.  It was no later than T+12 hours for AT2017gfo whereas for GRB 210704A we observe a maximum around T+7 days.
+
+Using the one-zone model of <cit.>, a radioactively powered transient peaks at a time t_peak given by 
+
+
+    t_peak≈ 1.5  d (M_ej/0.01 M_⊙)^0.5(κ/1 cm^2 g^-1)^0.5(v_ej/0.1 c)^-0.5
+
+where M_ ej is the ejecta mass,  
+v_ ej its velocity, and κ its opacity. 
+To explain a peak of about 7 days, one needs to either increase the mass to of order 0.1 and/or increase the opacity. As a result, the spectral peak would shift to redder wavelengths than the ones observed in this case. 
+Alternatively, a delayed peak can be explained by a low expansion velocity, v≈0.01 c. This latter solution
+is consistent with the simple blackbody model for the optical/nIR excess, which, at a redshift of 0.08, implies temperatures of 4000-10000 K and expansion velocities of 20000-2000 km s^-1, slower than typical merger ejecta.
+
+We also compared our case to the library of simulated kilonova light curves  by <cit.>, incorporating a broad range of ejecta compositions, morphologies and viewing angles. 
+We find that, although the luminosities of the kilonova models are in agreement with the observations for z ≲ 0.4,  the optical peak can only range from a few hours up to a couple of days after the explosion, whereas we observe a peak at T+7 d.
+We note that the mismatch between the observed peak and the kilonova timescale applies to any SGRB up to z≈1, and therefore we can rule out any typical kilonova in this range. 
+
+
+
+ §.§ A distant long GRB
+
+
+
+We next consider the possibility that GRB 210704A is associated with the faint source S1. Intuitively, this may appear as the most likely association given the positional coincidence between S1 and the GRB. However,  the probability of chance coincidence is 2% (Table <ref>), the highest among the three possible host candidates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+The high-redshift derived from the photometric fit in  <ref> is consistent with the weak absorption feature in the afterglow optical spectrum (section <ref>). This provides us with tantalizing evidence that GRB 210704A was indeed located at z≈2.3.
+At this distance, its rest-frame duration would be ≲1.5 s.
+However, its other high-energy properties such as spectral lag (section <ref>), peak energy, and energetics (section <ref>), would fit within the distribution of typical LGRBs (see Figure <ref>). 
+
+
+In this high-redshift scenario, the case of GRB 210704A is reminiscent of other bursts, such as GRB 090426A <cit.> and GRB 200826A <cit.>, characterized by a short duration of the gamma-ray emission despite likely having collapsing massive stars as progenitors. 
+Based on the observed BATSE distribution of GRB durations <cit.>, a small fraction of LGRBs (≲1%) is expected to last less than 2 s. It is therefore not surprising to find some of these examples within the sample of over 1,000 bursts discovered by Swift.
+
+However, in the case of GRB 210704A, the observed optical bump would be challenging to explain with standard SN models.
+At a redshift of 2.3, the simple blackbody model adopted for the optical/nIR excess implies a
+temperature of 30000 K and a sub-relativistic velocity of ∼ 0.2 c. The second solution of a colder black body peaking in the observed J-band requires a superluminal speed, and is thus considered unphysical.
+
+The observed magnitude of the excess of r≈23 AB at T+7 d implies an absolute magnitude of M_UV≈-23.2 at T+2.3 d (rest-frame) (after subtracting the afterglow contribution), brighter than most known SNe <cit.> and AT2018cow-like events <cit.> (see Figure <ref>). The only event whose brightness in UV is comparable with the excess of GRB 210704A is the Dougie tidal disruption event (TDE) candidate <cit.>. However, 
+known TDEs evolve on slower timescales than the excess of GRB210704A. 
+
+Mechanisms capable of producing such a high peak brightness and rapid rise time are rare.
+For instance, the interaction between the SN shock wave and a dense environment, or the continued energy injection from a long-lived central engine are also expected to act on longer timescales than the ones observed here <cit.> . 
+<cit.> suggested that, for the most energetic explosions (≳10^52 erg), a shock breakout propagating through a dense stellar wind could produce strong emission in excess of 10^44 erg s^-1, peaking 
+in the UV on timescales of a few days after the burst. This emission becomes dominant when the Ni^56 yield is low
+as expected if the star directly collapses to a black hole. 
+
+
+
+
+
+
+
+
+
+ §.§ A nearby peculiar GRB
+
+
+
+A final possibility is that GRB 210704A is a peculiar GRB associated with a member of the galaxy cluster at z = 0.203. 
+
+
+
+<cit.> showed that progenitor systems formed within a cluster are likely to be retained within the potential well of its halo, regardless of the intrinsic kick velocity of the progenitor system. However, due to the high merger activity in such crowded environment, the GRB may happen far from its true birthplace. As a result, its host galaxy cannot be confidently identified based on its spatial proximity. 
+
+A cluster environment, although rarely associated with a GRB, has been discussed in the case of both SGRBs and LGRBs. 
+The connection with SGRBs naturally arises as NS binaries with long merger timescales are expected to track the stellar mass density and reside in evolved stellar environments. 
+However, as discussed in section <ref>, a SGRB produced by a typical NS merger would not produce a kilonova compatible with the luminosity and late-onset of the optical excess.
+
+In the case of LGRBs, their typical progenitors, young massive stars <cit.>, are not found in clusters, and a merger-driven explosion with unusual progenitors appears to be the most likely explanation. For example, black hole and neutron star systems (BH-NS), black hole and white dwarf (BH-WD), white dwarf and neutron star (WD-NS) or WD-WD  encounters have been considered <cit.>. 
+
+An exotic progenitor system could explain the unusual high-energy properties of this event and why they do not fit within the standard relations of typical LGRBs for z∼0.2. In addition, we note that the only other LGRB possibly associated with a galaxy cluster is GRB 050911 <cit.>, whose prompt emission was a short duration (∼1 s) peak followed by a weak 16 s long tail and as such resembles the light curve of GRB 210704A. A LGRB produced by an exotic merger system could also give rise to a peculiar optical transient, although in this case, predictions are less secure. 
+
+Assuming that the optical excess is radioactively-powered, we consider the case of ejecta with pure nickel abundance. This is justified by the rapid evolution of the optical emission, comparable to the ^56Ni half-life timescale  of about 6 d. 
+At a redshift of z ≈ 0.2, the optical bump would peak at an absolute magnitude of M_r≈-16.5, corresponding to a luminosity of about 10^42 erg s^-1. The peak bolometric luminosity can be related to the ejecta mass M_ej using Arnett's law, L_pk≈ϵ_ Ni(t_pk) M_ej, where ϵ_ Ni(t_pk) ≈ 5×10^43 erg s^-1 is the energy generation rate at 6 d (rest-frame). 
+The derived mass M_ej≈0.1  is much smaller than in a typical SN, and indicative of a weaker explosion. 
+
+Based on the black-body fit of the optical excess, we derived a temperature of 4500–10000  K and ejecta velocity v_ ej≈0.2-0.02 c. 
+Therefore, the basic properties of the  optical excess, such as its luminosity and fast timescales, could be reproduced by an explosion ejecting a low-mass shell of fast-moving material, composed mainly of ^56Ni. 
+At first order, this is consistent with the predictions of an  accretion-induced collapse (AIC) of a WD <cit.>, 
+driven for example from a WD-WD encounter <cit.>.
+
+
+
+
+
+
+
+
+§ SUMMARY
+
+
+
+
+We have presented broadband observations of GRB 210704A, its afterglow, and environment.
+
+
+After its discovery, the burst was initially classified as a SGRB.
+Our analysis of the high-energy prompt emission shows that the GRB duration is affected by instrumental selection effects, and that the GRB lies at the intersection between SGRBs and LGRBs.
+We place the GRB in the context of the Amati and spectral lag correlations, and show that these can provide information on the nature of the GRB at different possible redshifts.
+
+
+An additional peculiar feature of this GRB is an optical/nIR excess, observed to peak at about T+7 days (observer's frame)
+at a magnitude r≈23.2 AB. 
+We identified this excess by comparing our optical and nIR photometry with a simple afterglow model derived from the X-ray data. 
+
+
+
+
+
+We consider three possible host environments and distance scales: the galaxy G1 at z ≈ 0.08, the galaxy S1 at z ≈ 2.3, and a galaxy's cluster at z≈0.2. We also discuss three different progenitors: a standard SGRB with a kilonova, a standard LGRB with a SN, and an exotic LGRB, perhaps an accretion-induced collapse of a WD <cit.>.
+
+None of the standard explanations is entirely satisfactory. A SGRB followed by a kilonova, perhaps associated with G1, explains the short duration of the prompt gamma-ray emission, its other high-energy properties, and the large distance from the host galaxy. However, the color and timescales of the observed optical excess imply an expansion velocity not typical for the ejecta of a compact binary merger. 
+
+On the other hand, a LGRB associated with the galaxy S1 remains consistent with all the high-energy properties of the event but is challenged by the extreme luminosity of the optical excess. No known transient matches the high luminosity, blue color, and rapid timescales implied by the observations.  
+
+Finally, we considered an exotic progenitor, involving the merger of a WD with another compact objects (either a BH, a NS, or another WD), in the cluster at z ≈ 0.2. 
+Such stellar encounters can explain GRB durations longer than the canonical 2 seconds and could be followed by fast-evolving optical transients consistent with the observed excess. This is the only scenario that matches all the observed properties of GRB210704A although, admittedly, is also the least constrained one. 
+
+
+The difficulty we have had in identifying the progenitor of GRB 210704A highlights the limitations of the traditional GRB dichotomy in long/short, collapsars/mergers events. Although valid for the majority of bursts, it is not sufficient to describe the GRB population in its entirety. The large Swift sample of well-localized bursts has been instrumental to identify these oddball GRBs and start exploring their possible origins. In the next few years, the arrival of the Vera C. Rubin Observatory will undoubtedly enlarge the sample of exotic transient events and perhaps help us find analogues to GRB 210704A.
+
+
+
+
+
+
+
+§ RESEARCH DATA POLICY
+
+The data underlying this article will be shared on reasonable request to the corresponding author.
+
+
+
+
+§ ACKNOWLEDGEMENTS
+
+
+
+We thank the staff of GTC and Gemini for scheduling and executing the observations included in this work, especially Antonio Cabrera and  David Garcia.
+
+
+This project has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme, grant  101002761 (BHianca; PI: Troja).
+
+Some of the data used in this paper were acquired with the RATIR instrument, funded by the University of California and NASA Goddard Space Flight Center, and the 1.5-meter Harold L. Johnson telescope at the Observatorio Astronómico Nacional on the Sierra de San Pedro Mártir, operated and maintained by the Observatorio Astronómico Nacional and the Instituto de Astronomía of the Universidad Nacional Autónoma de México. Operations are partially funded by the Universidad Nacional Autónoma de México (DGAPA/PAPIIT IG100414, IT102715, AG100317, IN109418, IG100820, and IN105921). We acknowledge the contribution of Leonid Georgiev and Neil Gehrels to the development of RATIR.
+
+Some of the data used in this paper were acquired with the DDOTI instrument at the Observatorio Astronómico Nacional on the Sierra de San Pedro Mártir. DDOTI is partially funded by CONACyT (LN 232649, LN 260369, LN 271117, and 277901), the Universidad Nacional Autónoma de México (CIC and DGAPA/PAPIIT IG100414, IT102715, AG100317, IN109418, and IN105921), the NASA Goddard Space Flight Center and is partially funded by the University of Maryland (NNX17AK54G). DDOTI is operated and maintained by the Observatorio Astronómico Nacional and the Instituto de Astronomía of the Universidad Nacional Autónoma de México. We acknowledge the contribution of Neil Gehrels to the development of DDOTI.
+
+We thank the staff of the Observatorio Astronómico Nacional.
+
+We thank Ori Fox, Antonio Castellanos-Ramírez, Yuri Cavecchi and Sebastián F. Sánchez for their useful comments. We also thank Rubén Sánchez Ramírez and Aishwarya Thakur for their support in the reduction of GTC data.
+
+We acknowledge support from the DGAPA/UNAM IG100820 and IN105921. RLB acknowledges support from CONACyT and DGAPA postdoctoral fellowships.
+
+M.I. and G.S.H.P. acknowledge the support from the National Research Foundation grants No. 2020R1A2C3011091 and No. 2021M3F7A1084525, and the R&D program (Project No. 2022-1-860-03) of the Korea Astronomy and Space Science Institute.
+
+This research is based in part on data collected at the Subaru Telescope, which is operated by the National Astronomical Observatory of Japan. We are honored and grateful for the opportunity of observing the Universe from Maunakea, which has the cultural, historical, and natural significance in Hawaii. 
+
+This work is partly based on data obtained with the Gran Telescopio Canarias (GTC), installed in the Spanish Observatorio del Roque de los Muchachos of the Instituto de Astrofísica de Canarias, in the island of La Palma, and with the instrument OSIRIS, built by a Consortium led by the Instituto de Astrofísica de Canarias in collaboration with the Instituto de Astronomía of the Universidad Autónoma de México. OSIRIS was funded by GRANTECAN and the National Plan of Astronomy and Astrophysics of the Spanish Government.
+
+The scientific results reported in this article are based in part on observations made by the Chandra X-ray Observatory through Director's Discretionary Time (ObsID: 25093; PI: Troja). 
+
+This work made use of data supplied by the UK Swift Science Data Centre at the University of Leicester. 
+
+RLB dedicates this work to Cicerón. Thanks for sharing your life with me. I will always love you.
+
+
+
+
+
+
+
+
+
+
+
+
+99
+[Abbott et al.2017a]Abbott2017 Abbott B. P., et al., 2017a, PhRvL, 119, 161101
+
+
+
+[Ahumada et al.2020]SDSS16 Ahumada R., Prieto C. A., Almeida A., Anders F., Anderson S. F., Andrews B. H., Anguiano B., et al., 2020, ApJS, 249, 3. doi:10.3847/1538-4365/ab929e
+
+[Ahumada et al.(2021)]Ahumada2021 Ahumada, T., Singer, L. P., Anand, S., et al. 2021, Nature Astronomy, 5, 917. doi:10.1038/s41550-021-01428-7
+
+
+[Alam et al.2015]SDSS12 Alam S., Albareti F. D., Allende Prieto C., Anders F., Anderson S. F., Anderton T., Andrews B. H., et al., 2015, ApJS, 219, 12. doi:10.1088/0067-0049/219/1/12
+
+[Amati et al.2008]Amati2008 Amati L., Guidorzi C., Frontera F., Della Valle M., Finelli F., Landi R., Montanari E., 2008, MNRAS, 391, 577. doi:10.1111/j.1365-2966.2008.13943.x
+
+[Antonelli et al.(2009)]Antonelli09 Antonelli, L. A., D'Avanzo, P., Perna, R., et al. 2009, , 507, L45. doi:10.1051/0004-6361/200913062
+
+[Arnett1982]Arnett1982 Arnett W. D., 1982, ApJ, 253, 785. doi:10.1086/159681
+
+[Barbieri et al.2019]Barbieri2019 Barbieri C., Salafia O. S., Colpi M., Ghirlanda G., Perego A., Colombo A., 2019, ApJL, 887, L35. doi:10.3847/2041-8213/ab5c1e
+
+[Becerra et al.2017]Becerra2017 Becerra R. L., Watson A. M., Lee W. H., Fraija N., Butler N. R., Bloom J. S., Capone J. I., et al., 2017, ApJ, 837, 116. doi:10.3847/1538-4357/aa610f
+
+[Beckwith et al.2006]Beckwith2006 Beckwith S. V. W., Stiavelli M., Koekemoer A. M., Caldwell J. A. R., Ferguson H. C., Hook R., Lucas R. A., et al., 2006, AJ, 132, 1729. doi:10.1086/507302
+
+[Beniamini et al.2015]Beniamini2015 Beniamini P., Nava L., Duran R. B., Piran T., 2015, MNRAS, 454, 1073. doi:10.1093/mnras/stv2033
+
+[Berger2010]Berger2010 Berger E., 2010, ApJ, 722, 1946. doi:10.1088/0004-637X/722/2/1946
+
+[Berger et al.2011]Berger2011 Berger E., Chornock R., Holmes T. R., Foley R. J., Cucchiara A., Wolf C., Podsiadlowski P., et al., 2011, ApJ, 743, 204. doi:10.1088/0004-637X/743/2/204
+
+[Berretta et al.2021]30375 Berretta A., Longo F., Axelsson M., Bissaldi E., Piron F., Arimoto M., Fermi-LAT Collaboration, 2021, GCN, 30375
+
+[Bertin & Arnouts1996]Bertin1996 Bertin E., Arnouts S., 1996, A&AS, 117, 393
+
+[Bloom, Kulkarni, & Djorgovski2002]Bloom2002 Bloom J. S., Kulkarni S. R., Djorgovski S. G., 2002, AJ, 123, 1111. doi:10.1086/338893
+
+[Bloom et al.2006]Bloom2006 Bloom J. S., Prochaska J. X., Pooley D., Blake C. H., Foley R. J., Jha S., Ramirez-Ruiz E., et al., 2006, ApJ, 638, 354. doi:10.1086/498107
+
+
+
+
+[Breeveld, Lien, & Swift/UVOT Team2021]30389 Breeveld A. A., Lien A. Y., Swift/UVOT Team, 2021, GCN, 30389
+
+[Burenin et al.2007]ROSAT Burenin R. A., Vikhlinin A., Hornstrup A., Ebeling H., Quintana H., Mescheryakov A., 2007, ApJS, 172, 561. doi:10.1086/519457
+
+[Campana et al.2006]Campana2006 Campana S., Mangano V., Blustin A. J., Brown P., Burrows D. N., Chincarini G., Cummings J. R., et al., 2006, Natur, 442, 1008. doi:10.1038/nature04892
+
+[Cartier et al.2021]Cartier2021 Cartier R., Hamuy M., Contreras C., Anderson J. P., Phillips M. M., Morrell N., Stritzinger M. D., et al., 2021, arXiv, arXiv:2108.09828
+
+[Cucchiara et al.2013]Cucchiara2013 Cucchiara A., Prochaska J. X., Zhu G., Ménard B., Fynbo J. P. U., Fox D. B., Chen H.-W., et al., 2013, ApJ, 773, 82. doi:10.1088/0004-637X/773/2/82
+
+[Cutri et al.2003]Cutri2003 Cutri R. M., Skrutskie M. F., van Dyk S., Beichman C. A., Carpenter J. M., Chester T., Cambresy L., et al., 2003, tmc..book
+
+[D'Ai et al.2021]30379 D'Ai A., Kennea J. A., Tohuvavohu A., Sbarufatti B., Page K. L., Beardmore A. P., Melandri A., et al., 2021, GCN, 30379
+
+[D'Avanzo et al.2021]30385 D'Avanzo P., D'Elia V., Fiorenzano A., Padilla C., CIBO Collaboration, 2021, GCN, 30385
+
+[D'Avanzo et al.2021]30432 D'Avanzo P., D'Elia V., Campana S., De Pasquale M., Melandri A., Rossi A., Salvaterra R., et al., 2021, GCN, 30432
+
+[de Ugarte Postigo et al.2012]deUgarte2012 de Ugarte Postigo A., Fynbo J. P. U., Thöne C. C., Christensen L., Gorosabel J., Milvang-Jensen B., Schulze S., et al., 2012, A&A, 548, A11. doi:10.1051/0004-6361/201219894
+
+[de Ugarte Postigo et al.2014]deUgarte2014 de Ugarte Postigo A., Blazek M., Janout P., Sprimont P., Thöne C. C., Gorosabel J., Sánchez-Ramírez R., 2014, SPIE, 9152, 91520B. doi:10.1117/12.2055774
+
+[de Ugarte Postigo et al.2021]30392 de Ugarte Postigo A., Kann D. A., Thoene C., Blazek M., Agui Fernandez J. F., Fynbo J. P. U., Izzo L., et al., 2021, GCN, 30392
+
+[Dichiara et al.2021]30383 Dichiara S., Troja E., Butler N., Watson A. M., Becerra R. L., Kutyrev A., Lee W. H., et al., 2021, GCN, 30383
+
+[Dichiara et al.2021]Dichiara2021 Dichiara S., Troja E., Lipunov V., Ricci R., Oates S. R., Butler N. R., Liuzzo E., et al., 2021, arXiv, arXiv:2111.14861
+
+[Dimple et al.2022]Dimple2022 Dimple, Misra K., Ghosh A., Arun K. G., Gupta R., Kumar A., Resmi L., et al., 2022, arXiv, arXiv:2202.01191. doi:10.48550/arXiv.2202.01191
+
+[Drout et al.2017]Drout17 Drout M. R., Piro A. L., Shappee B. J., Kilpatrick C. D., Simon J. D., Contreras C., Coulter D. A., et al., 2017, Sci, 358, 1570. doi:10.1126/science.aaq0049
+
+[Eichler et al.1989]Eichler1989 Eichler D., Livio M., Piran T., Schramm D. N., 1989, Natur, 340, 126. doi:10.1038/340126a0
+
+[Evans et al.2009]Evans2009 Evans P. A., Beardmore A. P., Page K. L., Osborne J. P., O'Brien P. T., Willingale R., Starling R. L. C., et al., 2009, MNRAS, 397, 1177. doi:10.1111/j.1365-2966.2009.14913.x
+
+[Evans et al.2017]Evans17 Evans P. A., Cenko S. B., Kennea J. A., Emery S. W. K., Kuin N. P. M., Korobkin O., Wollaeger R. T., et al., 2017, Sci, 358, 1565. doi:10.1126/science.aap9580
+
+[Evans & Swift Team2021]30374 Evans P. A., Swift Team, 2021, GCN, 30374
+
+[Fong, Berger, & Fox2010]Fong2010 Fong W., Berger E., Fox D. B., 2010, ApJ, 708, 9. doi:10.1088/0004-637X/708/1/9
+
+[Fong & Rastinejad2021]30445 Fong W., Rastinejad J., 2021, GCN, 30445
+
+[Fraija2015]Fraija2015 Fraija N., 2015, ApJ, 804, 105. doi:10.1088/0004-637X/804/2/105
+
+[Fryer, Burrows, & Benz1998]Fryer1998 Fryer C., Burrows A., Benz W., 1998, ApJ, 496, 333. doi:10.1086/305348
+
+[Fryer, Hungerford, & Young2007]Fryer2007 Fryer C. L., Hungerford A. L., Young P. A., 2007, ApJL, 662, L55. doi:10.1086/519523
+
+
+[Fynbo et al.2009]Fynbo2009 Fynbo J. P. U., Jakobsson P., Prochaska J. X., Malesani D., Ledoux C., de Ugarte Postigo A., Nardini M., et al., 2009, ApJS, 185, 526. doi:10.1088/0067-0049/185/2/526
+
+
+[Galama et al.1998]Galama1998 Galama T. J., Vreeswijk P. M., van Paradijs J., Kouveliotou C., Augusteijn T., Böhnhardt H., Brewer J. P., et al., 1998, Nature, 395, 670. doi:10.1038/27150
+
+[Garcia-Cifuentes al.2023]Garcia-Cifuentes2023 Garcia-Cifuentes, K., Becerra R. L., De Colle F., Cabrera J. I., del Burgo, C. 2023, ApJ, submitted
+
+[Gehrels et al.2005]Gehrels2005 Gehrels N., Sarazin C. L., O'Brien P. T., Zhang B., Barbier L., Barthelmy S. D., Blustin A., et al., 2005, Natur, 437, 851. doi:10.1038/nature04142
+
+[Gehrels et al.2006]Gehrels2006 Gehrels N., Norris J. P., Barthelmy S. D., Granot J., Kaneko Y., Kouveliotou C., Markwardt C. B., et al., 2006, Natur, 444, 1044. doi:10.1038/nature05376
+
+[Gehrels & Razzaque2013]Gehrels2013 Gehrels N., Razzaque S., 2013, FrPhy, 8, 661. doi:10.1007/s11467-013-0282-3
+
+[Giacomazzo, Rezzolla, & Stergioulas2011]Giacomazzo2011 Giacomazzo B., Rezzolla L., Stergioulas N., 2011, PhRvD, 84, 024022. doi:10.1103/PhysRevD.84.024022
+
+[Gonzaga et al.2012]Gonzaga2012 Gonzaga S., Hack W., Fruchter A., Mack J., 2012, drzp.book
+
+[Granot & Sari2002]Granot2002 Granot J., Sari R., 2002, ApJ, 568, 820. doi:10.1086/338966
+
+[Grossman et al.2014]Grossman2014 Grossman D., Korobkin O., Rosswog S., Piran T., 2014, MNRAS, 439, 757. doi:10.1093/mnras/stt2503
+
+[Hakkila et al.2018]Hakkila+18smoke Hakkila J., Lesage S., McAfee S., Hofesmann E., Maly Taylor C., Cannon T., 2018, ApJ, 863, 77. doi:10.3847/1538-4357/aad335
+
+[Hjorth & Bloom2012]Hjorth2012 Hjorth J., Bloom J. S., 2012, grb..book, 169
+
+[Ho et al.(2020)]Ho2020 Ho, A. Y. Q., Perley, D. A., Kulkarni, S. R., et al. 2020, , 895, 49. doi:10.3847/1538-4357/ab8bcf
+
+[Hosseinzadeh et al.2017]Hosseinzadeh2017 Hosseinzadeh G., Arcavi I., Valenti S., McCully C., Howell D. A., Johansson J., Sollerman J., et al., 2017, ApJ, 836, 158. doi:10.3847/1538-4357/836/2/158
+
+
+[Johnson et al.2019]Johnson2019 Johnson B. D., Leja J. L., Conroy C., Speagle J. S., 2019, ascl.soft
+
+[Kashikawa et al.2004]Kashikawa2004 Kashikawa N., Shimasaku K., Yasuda N., Ajiki M., Akiyama M., Ando H., Aoki K., et al., 2004, PASJ, 56, 1011. doi:10.1093/pasj/56.6.1011
+
+[Kann et al.2021]30391 Kann D. A., de Ugarte Postigo A., Thoene C., Blazek M., Agui Fernandez J. F., Martin-Fernandez P., 2021, GCN, 30391
+
+[Kann et al.2021]30401 Kann D. A., de Ugarte Postigo A., Thoene C., Blazek M., Agui Fernandez J. F., Maicas N., Lamadrid (COAJ J. L., 2021, GCN, 30401
+
+[Kann et al.2021]30443 Kann D. A., Izzo L., Galindo Guil F. J., Kasikov A., 2021, GCN, 30443
+
+[Kim et al.2021]30384 Kim V., Pozanenko A., Krugov M., Belkin S., Pankov N., IKI FuN G., 2021, GCN, 30384
+
+[King, Olsson, & Davies2007]King2007 King A., Olsson E., Davies M. B., 2007, MNRAS, 374, L34. doi:10.1111/j.1745-3933.2006.00259.x
+
+[Kouveliotou, et al.1993]Kouveliotou93 Kouveliotou C., et al., 1993, ApJL, 413, L101
+
+[Kumar & Piran2000]Kumar2000 Kumar P., Piran T., 2000, ApJ, 532, 286. doi:10.1086/308537
+
+[Kunzweiler et al.2021]30369 Kunzweiler F., Biltzinger B., Berlato F., Burgess J., Greiner J., 2021, GCN, 30369
+
+[Le Fèvre et al.2004]LeFevre2004 Le Fèvre O., Vettolani G., Paltani S., Tresse L., Zamorani G., Le Brun V., Moreau C., et al., 2004, A&A, 428, 1043. doi:10.1051/0004-6361:20048072
+
+
+[Lee & Ramirez-Ruiz2007]Lee2007 Lee W. H., Ramirez-Ruiz E., 2007, NJPh, 9, 17. doi:10.1088/1367-2630/9/1/017
+
+[Levan et al.2006]Levan2006 Levan A. J., Wynn G. A., Chapman R., Davies M. B., King A. R., Priddey R. S., Tanvir N. R., 2006, MNRAS, 368, L1. doi:10.1111/j.1745-3933.2006.00144.x
+
+[Levan et al.2021]30381 Levan A. J., Campana S., Kann D. A., D'Avanzo P., 2021, GCN, 30381
+
+[Levesque2014]Levesque2014 Levesque E. M., 2014, PASP, 126, 1. doi:10.1086/674531
+
+[Lyutikov & Toonen2019]LyutikovToonen2019 Lyutikov M., Toonen S., 2019, MNRAS, 487, 5618. doi:10.1093/mnras/stz1640
+
+[MacFadyen & Woosley1999]MacFadyen1999ApJ MacFadyen A. I., Woosley S. E., 1999, ApJ, 524, 262. doi:10.1086/307790
+
+[Malacaria, Meegan, & Fermi GBM Team2021]30380 Malacaria C., Meegan C., Fermi GBM Team, 2021, GCN, 30380
+
+[Mazzali et al.2006]Mazzali2006 Mazzali P. A., Deng J., Nomoto K., Sauer D. N., Pian E., Tominaga N., Tanaka M., et al., 2006, Natur, 442, 1018. doi:10.1038/nature05081
+
+[McCracken et al.2003]McCracken2003 McCracken H. J., Radovich M., Bertin E., Mellier Y., Dantel-Fort M., Le Fèvre O., Cuillandre J. C., et al., 2003, A&A, 410, 17. doi:10.1051/0004-6361:20031081
+
+[Mendel et al.2014]Mendel2014 Mendel J. T., Simard L., Palmer M., Ellison S. L., Patton D. R., 2014, ApJS, 210, 3
+
+[Metcalfe et al.2001]Metcalfe2001 Metcalfe N., Shanks T., Campos A., McCracken H. J., Fong R., 2001, MNRAS, 323, 795. doi:10.1046/j.1365-8711.2001.04168.x
+
+[Minaev & Pozanenko2020]Minaev2020 Minaev P. Y., Pozanenko A. S., 2020, MNRAS, 492, 1919. doi:10.1093/mnras/stz3611
+
+[Minaev et al.2021a]30444 Minaev, Pozanenko, Chelovekov, Grebenev, GRB IKI FuN, 2021, GCN, 30444
+
+[Minaev et al.2021b]30452 Minaev P., Pozanenko A., Chelovekov I., Grebenev S., GRB IKI FuN, 2021, GCN, 30452
+
+[Mirabal et al.2006]Mirabal2006 Mirabal N., Halpern J. P., An D., Thorstensen J. R., Terndrup D. M., 2006, ApJL, 643, L99. doi:10.1086/505177
+
+[Miyazaki et al.2018]Miyazaki2018 Miyazaki S., Komiyama Y., Kawanomoto S., Doi Y., Furusawa H., Hamana T., Hayashi Y., et al., 2018, PASJ, 70, S1. doi:10.1093/pasj/psx063
+
+[Moss et al.2022]Moss2022 Moss M., Lien A., Guiriec S., Cenko S. B., Sakamoto T., 2022, ApJ, 927, 157. doi:10.3847/1538-4357/ac4d94
+
+[Nakar & Piran(2017)]nakar17 Nakar, E. & Piran, T. 2017, , 834, 28. doi:10.3847/1538-4357/834/1/28
+
+[Narayan, Paczynski, & Piran1992]Narayan1992 Narayan R., Paczynski B., Piran T., 1992, ApJL, 395, L83. doi:10.1086/186493
+
+[Norris, Marani, & Bonnell2000]Norris2000 Norris J. P., Marani G. F., Bonnell J. T., 2000, ApJ, 534, 248. doi:10.1086/308725
+
+[Norris2002]Norris2002 Norris J. P., 2002, ApJ, 579, 386. doi:10.1086/342747
+
+[O'Connor, Beniamini, & Kouveliotou2020]OConnor2020 O'Connor B., Beniamini P., Kouveliotou C., 2020, MNRAS, 495, 4782. doi:10.1093/mnras/staa1433
+
+[O'Connor et al.2021]OConnor2021 O'Connor B., Troja E., Dichiara S., Chase E. A., Ryan G., Cenko S. B., Fryer C. L., et al., 2021, MNRAS, 502, 1279. doi:10.1093/mnras/stab132
+
+[O'Connor et al.2021]30451
+O'Connor, B., Troja, E., Zack, E., Dichiara, S., Gatkine, P., Durbak J. M., Cenko, S. B., Kutyrev, A., & Veilleux, S. 2021, GCN, 30451
+
+[O'Connor et al.2022]OConnor2022 O'Connor B., Troja E., Dichiara S., Beniamini P., Cenko S. B., Kouveliotou C., González J. B., et al., 2022, MNRAS.tmp. doi:10.1093/mnras/stac1982
+
+[O'Connor et al.2023]OConnor2023 O'Connor B., Troja E., Ryan G., Beniamini P., van Eerten H., Granot J., Dichiara S., et al., 2023, arXiv, arXiv:2302.07906. doi:10.48550/arXiv.2302.07906
+
+[Page et al.2006]Page2006 Page K. L., King A. R., Levan A. J., O'Brien P. T., Osborne J. P., Barthelmy S. D., Beardmore A. P., et al., 2006, ApJL, 637, L13. doi:10.1086/500430
+
+[Palmerio, et al.2019]Palmerio2019 Palmerio J. T., et al., 2019, A&A, 623, A26
+
+[Pankov et al.2021]30440 Pankov N., Belkin S., Kim V., Pozanenko A., Krugov M., GRB IKI FuN, 2021, GCN, 30440
+
+[Pastorello et al.2010]Pastorello2010 Pastorello A., Smartt S. J., Botticella M. T., Maguire K., Fraser M., Smith K., Kotak R., et al., 2010, ApJL, 724, L16. doi:10.1088/2041-8205/724/1/L16
+
+
+[Perley et al.2019]Perley2019 Perley D. A., Mazzali P. A., Yan L., Cenko S. B., Gezari S., Taggart K., Blagorodnova N., et al., 2019, MNRAS, 484, 1031. doi:10.1093/mnras/sty3420
+
+[Perley et al.2021]Perley2021 Perley D. A., Ho A. Y. Q., Yao Y., Fremling C., Anderson J. P., Schulze S., Kumar H., et al., 2021, MNRAS, 508, 5138. doi:10.1093/mnras/stab2785
+
+[Planck Collaboration et al.2014]Planck2014 Planck Collaboration, Ade P. A. R., Aghanim N., Alves M. I. R., Armitage-Caplan C., Arnaud M., Ashdown M., et al., 2014, A&A, 571, A1. doi:10.1051/0004-6361/201321529
+
+[Poolakkil et al.2021]Poolakkil2021 Poolakkil S., Preece R., Fletcher C., Goldstein A., Bhat P. N., Bissaldi E., Briggs M. S., et al., 2021, ApJ, 913, 60. doi:10.3847/1538-4357/abf24d
+
+[Prasad et al.2021]30378 Prasad V., Sawant P., Waratkar G., Vibhute A., Bhalerao V., Bhattacharya D., Rao A. R., et al., 2021, GCN, 30378
+
+[Qin et al.2013]Qin2013 Qin Y., Liang E.-W., Liang Y.-F., Yi S.-X., Lin L., Zhang B.-B., Zhang J., et al., 2013, ApJ, 763, 15. doi:10.1088/0004-637X/763/1/15
+
+[Rastinejad et al.2021]Rastinejad2021 Rastinejad J. C., Fong W., Kilpatrick C. D., Paterson K., Tanvir N. R., Levan A. J., Metzger B. D., et al., 2021, ApJ, 916, 89. doi:10.3847/1538-4357/ac04b4
+
+[Rastinejad et al.2021]30433 Rastinejad J., Levan A., Fong W., Tanvir N. R., Rouco Escorial A., 2021, GCN, 30433
+
+[Richardson et al.2014]Richardson2014 Richardson D., Jenkins R. L., Wright J., Maddox L., 2014, AJ, 147, 118. doi:10.1088/0004-6256/147/5/118
+
+[Richmond et al.1996]Richmon1996 Richmond M. W., van Dyk S. D., Ho W., Peng C. Y., Paik Y., Treffers R. R., Filippenko A. V., et al., 1996, AJ, 111, 327. doi:10.1086/117785
+
+[Ridnaia et al.2021]30388 Ridnaia A., Frederiks D., Golenetskii S., Lysenko A., Svinkin D., Tsvetkova A., Ulanov M., et al., 2021, GCN, 30388
+
+[Rosswog & Ramirez-Ruiz2002]Rosswog2002 Rosswog S., Ramirez-Ruiz E., 2002, MNRAS, 336, L7. doi:10.1046/j.1365-8711.2002.05898.x
+
+[Rueda et al.2018]Rueda2018 Rueda J. A., Ruffini R., Wang Y., Aimuratov Y., Barres de Almeida U., Bianco C. L., Chen Y. C., et al., 2018, JCAP, 2018, 006. doi:10.1088/1475-7516/2018/10/006
+
+[Ruffert & Janka1998]Ruffert1998 Ruffert M., Janka H.-T., 1998, A&A, 338, 535
+
+[Salafia et al.2021]Salafia2021 Salafia O. S., Ravasio M. E., Yang J., An T., Orienti M., Ghirlanda G., Nava L., et al., 2021, arXiv, arXiv:2106.07169
+
+[Sari, Piran, & Narayan1998]Sari1998 Sari R., Piran T., Narayan R., 1998, ApJL, 497, L17. doi:10.1086/311269
+
+[Savaglio, Glazebrook, & Le Borgne2009]Savaglio09 Savaglio S., Glazebrook K., Le Borgne D., 2009, ApJ, 691, 182. doi:10.1088/0004-637X/691/1/182
+
+[Schlegel, Finkbeiner, & Davis1998]Schlegel1998 Schlegel D. J., Finkbeiner D. P., Davis M., 1998, ApJ, 500, 525. doi:10.1086/305772
+
+[Sharon & Kushnir2020]SharonKushnir2020 Sharon A., Kushnir D., 2020, ApJ, 894, 146. doi:10.3847/1538-4357/ab8a31
+
+[Speagle2020]dynesty Speagle J. S., 2020, MNRAS, 493, 3132.
+
+[Sun et al.2021]30411 Sun T.-R., Hu Y.-D., Fernandez-Garcia E., Caballero-Garcia A. J. C.-T. M. D., Castro Tirado M. A., Martin-Fernandez P., 2021, GCN, 30411
+
+[Tanvir et al.2013]Tanvir13 Tanvir N. R., Levan A. J., Fruchter A. S., Hjorth J., Hounsell R. A., Wiersema K., Tunnicliffe R. L., 2013, Natur, 500, 547. doi:10.1038/nature12505
+
+[Toba et al.2014]Toba2014 Toba Y., Oyabu S., Matsuhara H., Malkan M. A., Gandhi P., Nakagawa T., Isobe N., et al., 2014, ApJ, 788, 45. doi:10.1088/0004-637X/788/1/45
+
+[Troja et al.2008]Troja2008 Troja E., King A. R., O'Brien P. T., Lyons N., Cusumano G., 2008, MNRAS, 385, L10. doi:10.1111/j.1745-3933.2007.00421.x
+
+[Troja et al.2012]Troja2012 Troja E., Sakamoto T., Guidorzi C., Norris J. P., Panaitescu A., Kobayashi S., Omodei N., et al., 2012, ApJ, 761, 50. doi:10.1088/0004-637X/761/1/50
+
+[Troja et al.2019]Troja2019 Troja E., Castro-Tirado A. J., Becerra González J., Hu Y., Ryan G. S., Cenko S. B., Ricci R., et al., 2019, MNRAS, 489, 2104. doi:10.1093/mnras/stz2255
+
+[Troja et al.2021]30390 Troja E., Butler N., Watson A. M., Kutyrev A., Lee W. H., Richer M. G., Fox O., et al., 2021, GCN, 30390
+
+[Troja et al.2022]Troja2022 Troja E., Fryer C. L., O'Connor B., Ryan G., Dichiara S., Kumar A., Ito N., et al., 2022, Natur, 612, 228. doi:10.1038/s41586-022-05327-3
+
+[Troja, Watson, & O'Connor2021]30442 Troja E., Watson A., O'Connor B., 2021, GCN, 30442
+
+[Tundo et al.2012]Tundo2012 Tundo E., Moretti A., Tozzi P., Teng L., Rosati P., Tagliaferri G., Campana S., 2012, A&A, 547, A57. doi:10.1051/0004-6361/201219038
+
+[Tunnicliffe et al.2014]Tunnicliffe2014 Tunnicliffe R. L., Levan A. J., Tanvir N. R., Rowlinson A., Perley D. A., Bloom J. S., Cenko S. B., et al., 2014, MNRAS, 437, 1495. doi:10.1093/mnras/stt1975
+
+
+[Ukwatta et al.2010]Ukwatta+10lag Ukwatta T. N., Stamatikos M., Dhuga K. S., Sakamoto T., Barthelmy S. D., Eskandarian A., Gehrels N., et al., 2010, ApJ, 711, 1073. doi:10.1088/0004-637X/711/2/1073
+
+
+[Ursi et al.2021]30372 Ursi A., Pittori C., Verrecchia F., Tavani M., Argan A., Cardillo M., Casentini C., et al., 2021, GCN, 30372
+
+[Valenti et al.2008]Valenti2008 Valenti S., Benetti S., Cappellaro E., Patat F., Mazzali P., Turatto M., Hurley K., et al., 2008, MNRAS, 383, 1485. doi:10.1111/j.1365-2966.2007.12647.x
+
+
+[Villar et al.2017]Villar2017 Villar V. A., Guillochon J., Berger E., Metzger B. D., Cowperthwaite P. S., Nicholl M., Alexander K. D., et al., 2017, ApJL, 851, L21. doi:10.3847/2041-8213/aa9c84
+
+[Vinkó et al.2015]Vinko2015 Vinkó J., Yuan F., Quimby R. M., Wheeler J. C., Ramirez-Ruiz E., Guillochon J., Chatzopoulos E., et al., 2015, ApJ, 798, 12. doi:10.1088/0004-637X/798/1/12
+
+[Volnova et al.2021]30465 Volnova A., Moskvitin A., Pozanenko A., Pankov N., Belkin S., IKI FuN G., 2021, GCN, 30465
+
+[Watson et al.2021]30436 Watson A. M., Troja E., Becerra R. L., Sánchez R., Thakur A., Dichiara S., Butler N., et al., 2021, GCN, 30436
+
+[Williams et al.2023]Williams2023 Williams M. A., Kennea J. A., Dichiara S., Kobayashi K., Iwakiri W. B., Beardmore A. P., Evans P. A., et al., 2023, arXiv, arXiv:2302.03642. doi:10.48550/arXiv.2302.03642
+
+[Wollaeger et al.2021]Wollaeger2021 Wollaeger R. T., Fryer C. L., Chase E. A., Fontes C. J., Ristic M., Hungerford A. L., Korobkin O., et al., 2021, ApJ, 918, 10. doi:10.3847/1538-4357/ac0d03
+
+[Woosley1993]Woosley1993 Woosley S. E., 1993, ApJ, 405, 273. doi:10.1086/172359
+
+[Woosley & Bloom2006]Woosley2006 Woosley S. E., Bloom J. S., 2006, ARA&A, 44, 507. doi:10.1146/annurev.astro.43.072103.150558
+
+[Yang et al.2022]Yang2022 Yang J., Ai S., Zhang B.-B., Zhang B., Liu Z.-K., Wang X. I., Yang Y.-H., et al., 2022, Natur, 612, 232. doi:10.1038/s41586-022-05403-8
+
+[Zemp, Ramirez-Ruiz, & Diemand2009]Zemp2009 Zemp M., Ramirez-Ruiz E., Diemand J., 2009, ApJL, 705, L186. doi:10.1088/0004-637X/705/2/L186
+
+[Zhang et al.2021]Zhang2021 Zhang B.-B., Liu Z.-K., Peng Z.-K., Li Y., Lü H.-J., Yang J., Yang Y.-S., et al., 2021, NatAs, 5, 911. doi:10.1038/s41550-021-01395-z
+
+
+
+
+[Greiner et al.2015]Greiner2015 Greiner J., Mazzali P. A., Kann D. A., Krühler T., Pian E., Prentice S., Olivares E. F., et al., 2015, Natur, 523, 189. doi:10.1038/nature14579
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

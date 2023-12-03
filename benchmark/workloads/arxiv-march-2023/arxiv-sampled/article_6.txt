@@ -1,230 +1,3092 @@
 
+	Effective lower bound]Almost sharp lower bound for the nodal volume of harmonic functions.
+	
+	
+	
+	[Andrea Sartori]Departement of Mathematics, Tel Aviv University, Tel Aviv, Israel, IL
+	[Andrea Sartori]sartori.andrea.math@gmail.com
+	[Lakshmi Priya]Departement of Mathematics, Tel Aviv University, Tel Aviv, Israel, IL
+	[Lakshmi Priya]lpriyame@gmail.com
+	[Alexander Logunov]Université de Genève, Section de mathématiques, rue du Conseil-Général 7-9, 1205 Genève, Switzerland and Department of Mathematics, Princeton University, Princeton, NJ, USA
+	[Alexander Logunov]log239@yandex.ru
+
+This paper focuses on a relation between the growth of harmonic functions and the Hausdorff measure of their zero sets.		
+	Let u be a real-valued harmonic function in ℝ^n with u(0)=0 and n≥ 3. We prove
+	
+    ℋ^n-1({u=0}∩ B(0,2)) ≳_ N^1-,
+
+	where the doubling index N is a notion of growth defined by
+	
+    sup_B(0, 1)|u| = 2^N sup_B(0,1/2)|u|.
+
+	This gives an almost sharp lower bound for the Hausdorff measure of the zero set of u, which is conjectured to be linear in N. The new ingredients of the article are the notion
+	of stable growth, and a multi-scale induction technique for a lower bound for
+	the distribution of the doubling index of harmonic functions. It gives a significant improvement over the previous best-known bound
+	ℋ^n-1({u=0}∩ 2B)≥exp (c log N/loglog N ),
+	which implied Nadirashvili's conjecture.
+	
+	
 
 
-Probabilistic Uncertainty-Aware Risk Spot 
- Detector for Naturalistic Driving
-    Tim Puphal, Malte Probst and Julian Eggert
 
-
- The authors are with the Honda Research Institute (HRI) Europe, Carl-Legien-Str. 30, 63073 Offenbach, Germany 
-	(e-mail: tim.puphal@honda-ri.de; malte.probst@honda-ri.de; julian.eggert@honda-ri.de) 
-
+	[
+    Alexander Logunov, Lakshmi Priya M.E., Andrea Sartori 
     March 30, 2023
-=========================================================================================================================================================================================================================================================
-
-
-
-
-As we all know, multi-view data is more expressive than single-view data and multi-label annotation enjoys richer supervision information than single-label, which makes multi-view multi-label learning widely applicable for various pattern recognition tasks. In this complex representation learning problem, three main challenges can be characterized as follows: i) How to learn consistent representations of samples across all views? ii) How to exploit and utilize category correlations of multi-label to guide inference? iii) How to avoid the negative impact resulting from the incompleteness of views or labels? To cope with these problems, we propose a general multi-view multi-label learning framework named label-guided masked view- and category-aware transformers in this paper. First, we design two transformer-style based modules for cross-view features aggregation and multi-label classification, respectively. The former aggregates information from different views in the process of extracting view-specific features, and the latter learns subcategory embedding to improve classification performance. Second, considering the imbalance of expressive power among views, an adaptively weighted view fusion module is proposed to obtain view-consistent embedding features. Third, we impose a label manifold constraint in sample-level representation learning to maximize the utilization of supervised information. Last but not least, all the modules are designed under the premise of incomplete views and labels, which makes our method adaptable to arbitrary multi-view and multi-label data. Extensive experiments on five datasets confirm that our method has clear advantages over other state-of-the-art methods.
-
+==========================================================
 
 
 
 § INTRODUCTION
 
 
-Since the development of representation learning methods, data analysis technology based on simple single-view data has become more and more difficult to meet diverse application requirements. In the past few years, data acquisition technology has flourished, and multi-view data from various media or with different styles are ubiquitous, providing more possibilities for comprehensively and accurately describing observation targets. Simply put, multiple observations,  obtained from different observation angles for the same thing, could be regarded as multi-view data <cit.>. For example, retinal images captured at four different positions constitute a four-view retinal dataset <cit.>; the features extracted from the target image with different feature extraction operators can also form a multi-view dataset <cit.>. More typically, multi-view or multi-modal datasets composed of multimedia data such as text, pictures, and videos have been widely used in many applications such as web page classification <cit.>. As a result, multi-view learning emerges as the times require, and a large number of methods based on subspace learning, matrix factorization, and graph learning have been proposed <cit.>. Most of these methods seek to obtain a consistent representation of multiple views to characterize the essential attributes of objects. On the other hand, since the core of multi-view learning is representation learning, researchers usually combine it with downstream tasks to improve the application value and evaluate the learning effect <cit.>. That is, multi-view learning can be divided into clustering and classification, according to whether supervised information is available. Further, in the single-label classification task, a sample is only labeled with one category, which is obviously against the distribution of information in nature <cit.>. For example, a bird picture is likely to contain the category of `sky' or `tree'. Therefore, although multi-label classification still faces more challenges than single-label classification, its broad application prospects are attracting a lot of research enthusiasm. Based on this, a complex fusion task, i.e., multi-view multi-label classification (MvMlC) is put on the agenda.  proposed a matrix factorization-based MvMlC model, which attempts to enforce alignment of different views in the kernel space to exploit multi-view complementarity and explore more latent information <cit.>. A Bernoulli mixture conditional model is proposed to model label dependencies and employ a variational inference framework for approximate posterior estimation <cit.>. 
 
-Researchers have conducted extensive researches in the field of MvMlC, however these works assume that all views and labels are complete, which is often violated in practice. For example, if a web page contains only text and images, then the video view of the page is not available. To avoid the negative effects of missing views as much as possible, some multi-view learning works try to mask unavailable views or restore missing views <cit.>. Similarly, manual annotation is likely to miss some tags due to mistakes or cost, which inevitably weakens the supervision information of multi-label. To solve the issue, some works focusing on incomplete multi-label classification have been developed in recent years <cit.>. Although these methods designed for incomplete multi-view or incomplete multi-label learning have achieved surprising fruits, most of them are not able to cope with the both incomplete cases simultaneously. 
-
-To this end, we propose a general MvMlC framework, termed Label-guided Masked View- and Category-Aware Transformers (LMVCAT), which can handle the multi-view data with arbitrary missing-view and missing-label. In addition, unlike traditional methods to learn low-level representations of samples, deep neural networks based LMVCAT is capable to extract high-level features of samples, which is of great benefit for learning complex multi-category semantic labels. In recent years, transformer, designed for natural language processing, has shown its dominance in the image and other fields, which clearly demonstrates the effectiveness of the self-attention mechanism <cit.>. Inspired by this, our LMVCAT is also designed based on the transformer with self-attention mechanism which can provide a global receptive field for each view <cit.>. Overall, our model is composed of four parts: a masked view-aware encoder, an adaptively weighted multi-view fusion module, a label-guided sample-level graph constraint, and a subcategory-aware multi-label classification module. Specifically, the four parts of our LMVCAT are motivated by the following points: 1) breaking the inter-view barriers to aggregate multi-view features can fully exploit the complementary information of multiple views, so we design a view-aware module to integrate all views while extracting sample-specific high-level representations; 2) different discrimination ability of views means the different contributions to the final classification, so an adaptively weighted strategy that automatically learns the weight factor of each view is needed <cit.>; 3) compared with single-label data, multi-label data naturally enjoys richer label similarity information, so it is of great significance to utilize label smoothness (manifold) to guide sample encoding; 4) it is well known that multi-label data is with non-negligible inter-class correlations, thus we adopt a category-aware module that learns correlations in the subcategory embedding space to collaboratively predict labels <cit.>. Apart from those, it needs to be emphasized that we consider the possibility of missing labels and missing views in all components of our model. So it is no doubt that our LMVCAT is a general MvMlC framework that is comfortable with all kinds of multi-view multi-label data.
-Our contributions are summarized as follows:
-
-    
-  * To the best of our knowledge, this is the first Transformer-based incomplete multi-view multi-label learning framework capable of handling both incomplete views and labels. The proposed masked view-aware self-attention module could avoid the missing views' negative effects to information interaction across views. Similarly, our category-aware module is designed to mine latent inter-class correlations in the subcategory embedding space to improve the expressiveness.
-    
-  * Label manifold is fully exploited. Although the multi-label information is fragmentary, we still try our best to construct an approximate similarity graph based on incomplete labels to guide the encoding process of samples, which further strengthens the discrimination power of high-level semantic features.
-    
-  * Different views contribute different importance to the prediction, so we introduce an adaptively weighted fusion method to balance this importance instead of simply adding multiple views. Sufficient experimental results confirm the effectiveness of our LMVCAT.
+Given a non-constant harmonic function u in ℝ^n, its zero set {u=0} is non-empty and has Hausdorff dimension (n-1). Locally the geometry and complexity of the zero set of u is controlled in terms of its growth. In particular, one can bound the (n-1) dimensional Hausdorff measure of  the set {u=0}  in every Euclidean ball B in terms of growth of u around B. 
 
 
 
 
+One of the multiple ways to quantify the growth of a function is given by the notion of the doubling index. Given a positive number k and an Euclidean ball B=B(x,r) with center at x and radius r>0, we denote by kB the scaled ball B(x,kr). 
+For any function h in a ball 2B⊂ℝ^n, the doubling index of h in B is defined by
 
-§ PRELIMINARIES
+    𝒩_h(B):= log_2 sup_2B|h|/sup_B|h|.
 
+We often write 𝒩(x,r) instead of 𝒩_h(B(x,r)) and often omit the dependence on h in the notation and simply write 
+𝒩(B).	 
 
-
- §.§ Formulation
-
-In this section, we define our main problem as follows: Given input multi-view dataset 𝖣= {𝖷,𝖸}, which contains n samples. For i-th sample, 𝖷_i is composed of m views with dimension d_v, i.e., 𝖷_i={x_i^(v)∈ℝ^d_v}_v=1^m, or for v-th view, 𝖷^(v)={x^(v)_i∈ℝ^d_v}_i=1^n. 𝖸_i∈{0,1}^c is a row vector that denotes the label of i-th sample and c is the number of categories. To describe the missing cases, we let 𝖶∈{0,1}^n× m be the missing-view indicator matrix, where 𝖶_ij=1 represent j-th view of sample i is available, otherwise 𝖶_ij=0. Similarly, we define 𝖦∈{0,1}^n× c as the missing-label indicator matrix, where 𝖦_ij=1 represents j-th category of sample i is known, otherwise 𝖦_ij=0. All missing information of feature 𝖷 and label 𝖸 will be set as `0' in the data-preparation stage. And our goal of multi-view multi-label learning is to train a model which can correctly predict multiple categories for each input sample. 
-
-
-
-
- §.§ Related Works
-
-
-A matrix completion based MvMlC method, termed as lrMMC, which forces common subspace to be low rank to satisfy the assumption of matrix completion <cit.>. However, lrMMC is incapable of adapting to missing-view or missing-label data. MVL-IV, an incomplete multi-view learning method, attempts to exploit the connections between views <cit.>. As another incomplete multi-view single-label learning model, iMSF cleverly divides the incomplete multi-view classification tasks into multiple complete subtasks <cit.>. There is a limitation to both methods that MVL-IV and iMSF only consider the incompleteness of views. On the contrary, MvEL, a method aiming to capture the semantic context and the neighborhood consistency, could only handle the incomplete multi-label case <cit.>. In recent years, there are few approaches to consider double missing cases except iMvWL<cit.> and NAIML<cit.>. iMvWL simultaneously maps multi-view features and muti-label information to a common subspace. And a correlation matrix is introduced to enhance the projection from label space to embedding subspace. NAIML copes with the double incomplete problem based on the low-rank hypothesis of sub-label matrix, which also implicitly exploits the sub-class correlations. In addition, because the iMvWL and NAIML are well suited to datasets with both view and label incompleteness, we focus on evaluating these two methods in our comparison experiments.
-
-
-
-
-§ METHOD
-
-In this section, we elaborate on each component of our model, including view-aware transformer, label-guided graph constraint, multi-view adaptively weighted fusion, and category-aware transformer.
-
-
- §.§ VFormer
-
-As we all know, the key to success of multi-view learning is the complementarity among views, which are not available in single-view data. To this end, we design a view-aware transformer encoder (VFormer for short) to aggregate complementary information during the cross-view interaction. Before this, it needs to be considered that different views may have different feature dimensions, so for convenience, we map the original multi-view data to the embedding space with the same dimension by a stack of Multilayer Perceptrons (MLP) {_θ^(v)}_v=1^m, which can also be seen as a preliminary feature extraction operation, i.e., _θ^(v): 𝖷^(v)∈ℝ^n× d_v→𝖷^(v)∈ℝ^n× d_e. These embedding features of multiple views are stacked into a feature sequence 𝖷∈ℝ^n× m × d_e, like a sentence embedding tensor composed of some word embedding vectors, as the input tensor of the VFormer. The structure of our VFormer is similar to that of the encoder in the typical transformer <cit.>, and the main difference is that we introduce a missing view indicator matrix in the calculation of multi-head self-attention scores to prevent missing views from participating in the calculation of attention scores. Our masked multi-head self-attention encoder is characterized as follows: 
-
-
-For each sample embedding 𝖷_i ∈ℝ^m× d_e, we project it linearly to get its queries, keys, and values by h groups projective matrices, i.e., {𝖶^𝗊_t,𝖶^𝗄_t,𝖶^𝗏_t}_t=1^h with head number h. To mask the embedding features according to missing-view distribution, we define a fill function to fill zero value with -1e^9 and construct a mask matrix of sample i: 𝖬_i =w_i^Tw_i ∈ℝ^m× m, where w_i is i-th row vector of 𝖶. Then we calculate view correlations 𝖠_t and output 𝖧_t:
-
-    𝖠_t=softmax(fill((𝖷_i𝖶^𝗊_t)(𝖷_i𝖶^𝗄_t)^T𝖬_i)/√(d_h))
-       𝖧_t = 𝖠_t(𝖷_i𝖶^𝗏_t),
+  
+	Let B⊂ℝ^n be a unit ball. There exists a constant C=C(n)>1 such that 
 	
-where d_h=d_e/h, 𝖶^𝗊_t, 𝖶^𝗄_t, 𝖶^𝗏_t ∈ℝ^d_e × d_h, and 𝖧_t∈ℝ^m× d_h. The masked self-attention mechanism is shown in the Fig. <ref>, it is worth noting that we fill the attention values with -1e^9 so that the softmax will ignore the corresponding missing views when calculating the attention scores. And then, we concatenate all outputs to produce a new embedding feature w.r.t sample i:
-𝖧 = Concat(𝖧_1,...,𝖧_t) ∈ℝ^m× d_e. To sum up, all views of the same sample will exchange information during the parallel encoding process in our VFormer. As a result, the private information of each view is shared to some extent by other views. Other operations on VFormer are shown in the Fig. <ref>(a). Finally, our VFormer can be formulated as: :𝖷→𝖹∈ℝ^n× m× d_e.
+    ℋ^n-1({u=0}∩ B)≤ C 𝒩(B),
+
+	for all harmonic functions u: 2B →ℝ.
+
+The main result of this paper states that there is also a lower bound in terms of growth.
+
+	
+	Let B⊂ℝ^n be a unit ball and n≥ 3. For every ε>0, there exists a constant c=c(n,ε)>0 such that for every harmonic function  u: 4B →ℝ with u(0)=0, we have 
+	
+    ℋ^n-1({u=0}∩ 2B)≥ c 𝒩(1/2B)^1-ε.
 
 
 
- §.§ Label-Guided Graph Constraint
+Let us make a few remarks. Given a unit ball B⊂ℝ^n, Harnack's inequality for harmonic functions implies that if 𝒩_u(1/2B) is sufficiently large,  then 2B must contain a zero point of u. If the harmonic function u is zero at the center of the ball B, then 
 
-Unlike single-label samples maintaining an invariant label distance (√(2) by Euclidean distance), multi-label samples naturally hold uneven distribution in label space, which offers the possibility to guide the high-level representation learning based on label similarity. Simply put, the label manifold assumption means that if two samples are similar, their labels should also be similar <cit.>. In turn, we utilize label similarity to construct a sample-level graph constraint to guide the representation learning. As shown in Fig. <ref>(b), the similarity vector from sample 1 to other samples is calculated to guide the embedding encoding of sample 1. Before that, we define the label similarity matrix 𝖳:
+    𝒩(B)≥ c_n
 
-    𝖳=(𝖸⊙𝖦)(𝖸⊙𝖦)^T./(𝖦𝖦^T),
-
-where ‘⊙’ is Hadamard product and ‘./’ denotes the division of corresponding elements. Notably, 𝖳∈ [0,1]^n× n is normalized by 𝖦𝖦^T, where (𝖦𝖦^T)_ij is referring to the number of known categories in both 𝖸_i and 𝖸_j. In other words, for two samples, the larger the number of common positive tags, the more similar they are. In addition, the similarity of two embedding features is calculated in cosine space, i.e., for sample i and j, their similarity in view v is defined as:
-
-    𝖲_ij^(v)=(⟨ z_i^(v)· z_j^(v)⟩/z_i^(v)z_j^(v)+1)/2,
-
-where ⟨·⟩ denotes the vector dot product operation. z_i^(v) and z_j^(v) are two embedding features from view v that are output by VFormer. In order to learn sample neighbor relationships from labels, we let label similarity be the target and feature similarity be the learning object. The graph constraint loss ℒ_gc is formulated as:
-
-    ℒ_gc   = -1/2mN∑_v=1^m∑_i=1^n∑_j i^n(𝖳_ijlog𝖲^(v)_ij
-       +(1-𝖳_ij)log(1-𝖲^(v)_ij))(𝖶_iv𝖶_jv),
-
-where N=∑_i,j𝖶_iv𝖶_jv denotes the number of available sample pairs in view v. We introduce 𝖶_iv𝖶_jv to mask the calculation of loss w.r.t missing views.
+for some numerical constant c_n > 0 (see Claim <ref> in Appendix <ref> for the proof). Hence, in Theorem <ref> there is a uniform lower bound, which was conjectured by Nadirashvili.
 
 
 
 
 
- §.§ Adaptively Weighted Fusion
-
-As mentioned above, VFormer encodes an embedding feature for each view of each sample (i.e., 𝖹∈ℝ^n× m× d_e). In order to obtain a consistent common representation to uniquely describe the corresponding sample, we propose an adaptively weighted fusion strategy to fuse multi-view embedding features before final classification. The fusion feature z̅_̅i̅ of sample i is defined as follows:
-
-
-    z̅_̅i̅=∑_v=1^me^a^γ_vz_i^(v)𝖶_iv/∑_ve^a^γ_v𝖶_iv,
-
-where a_v is a learnable scalar weight of v-th view and γ is a adjustment factor. Apparently simple as Eq. (<ref>) seems, it serves two purposes: i) Distinct from other methods to treat all views equally, we flexibly assign each view different weighting coefficients, which help to maintain or highlight the differences of discriminative ability among views.
-ii) Unusable views must be ignored in multi-view fusion to avoid negative effects, so missing-view indicator matrix is introduced in our fusion module. Stack all z̅_̅i̅ and we can get output tensor 𝖹̅∈ℝ^n× d_e for next classification.
+Nadirashvili's conjecture. If the harmonic function u is zero at the center of the unit ball B⊂ℝ^3, then the area of the zero set of u in B is bounded from below by a positive numerical constant.
 
 
 
 
- §.§ CFormer and Classifier
+Nadirashvili's conjecture was recently proved in <cit.>. The fact sounds elementary, but there is no simple proof known, and there are applications including the lower bound in Yau's conjecture for nodal sets of Laplace eigenfunctions. We refer to <cit.>  for the statement of Yau's conjecture and related results.
 
-In the real world, multiple categories of samples are not independent of each other. How to leverage the multi-label correlations to make our model more discriminative is the main concern in the subsection. Instead of learning a category correlation graph, similar to <cit.>, we directly map each category to the feature space and leverage the self-attention mechanism to capture the category correlations. In more detail, c class tokens {cls^i∈ℝ^d_e}_i=1^c are randomly initialized before training and input to category-aware transformer (CFormer for short) with fusion features of samples (i.e., the input of CFormer is {z̅_̅i̅,cls^1,...,cls^c}_i=1^n). Similar to the structure of VFormer, CFormer allows the fusion features and category tokens to share information, which enjoys two major benefits: On the one hand, the view-fusion features aggregate all subcategory information according to similarities among them, which makes the embedding features encoded by CFormer closer to their relevant class tokens. On the other hand, the information interaction across categories implicitly promotes the learning of category relevance. It should be pointed out that we do not introduce the missing-label mask here because mining the category correlation information requires the participation of all class tokens. And for any sample i, the output tensor of our CFormer is {z_i,cls^1_i,...,cls^c_i}∈ℝ^(c+1)× d_e. We split the output into two parts, i.e., consensus representation {z_i} for the main classification purpose and {cls^1_i,...,cls^c_i} for the representation learning of class tokens. 
 
-As shown in Fig. <ref>, c+1 linear classifiers {_z,{_i}_i=1^c} are connected in parallel to the outputs of CFormer, where the classifier _z predicts the final result 𝖯_z∈ [0,1]^n× c. While each other classifier _i only predicts the value of its own category so we can get another prediction 𝖯_c∈ [0,1]^n× c from all class tokens. Finally, we define a masked binary cross-entropy function as our multi-label classification loss:
 
-    ℒ_mbce   =  -1/C∑_i=1^n∑_j=1^c(𝖸_ijlog(𝖯_ij)
-       +(1-𝖸_ij)log(1-𝖯_ij)
-    )𝖦_ij,
 
-where C = ∑_i,j𝖦_i,j denotes the number of available labels and 𝖯 is the prediction. 𝖦 is introduced to prevent unknown labels from participating in the calculation of loss. As a result, we can obtain a main classification loss ℒ_mc and an ancillary classification loss ℒ_ac according to ℒ_mbce for 𝖯_z and 𝖯_c, respectively. Overall, our total loss function is :
+This article does not pursue the purpose of generality. We restrict our attention only to the Euclidean case.   There isn't a methodological obstacle preventing to extend the main result to the case of smooth Riemannian manifolds, though we don't do this job. We hope that this decision makes the article more accessible for the reader.
 
-    ℒ = ℒ_mc+ αℒ_gc+ βℒ_ac,
+
+
+
+One can compare this paper to the approach for Nadirashvili's conjecture in <cit.>, which gave a slowly growing bound
+
+    ℋ^n-1({u=0}∩ 2B)≥exp (c log N/loglog N ),
+
+where N= 𝒩(1/2B) is assumed to be bigger than 10 just to make the right hand side well-defined and u vanishes at the center of B. Compared to <cit.>, this article introduces the new notion of stable growth and a new multi-scale induction technique, which gives significantly improved lower bounds and allows to come closer to the following folklore conjecture.
+
+	
+	Given a unit ball B⊂ℝ^n, n≥ 3, and a harmonic function u in 4B, which is zero at the center of B, the following lower bound holds:
+	
+    ℋ^n-1({u=0}∩ 2B) ≥ c 𝒩(1/2B),
+
+	for some numerical constant c=c(n)>0. 
+
+Before discussing the conjecture let us mention a few properties of the doubling index.	The doubling index is scale invariant. 
+A non-trival fact states that the doubling index for a harmonic function u is almost monotone function of a set in the sense that 
+    𝒩_u(b) ≤ C 𝒩_u(B)
+
+if a ball B contains the ball 2b. Here C>1 is a dimensional constant, but one can find a sharper statement in <ref> about the doubling index. The monotonicity property is a powerful tool often used in geometrical analysis. However,
+besides almost monotonicity it is unclear how the doubling index behaves as a function of a set. Rescaling Conjecture <ref> and Theorem <ref>, one can
+see that scaled doubling index 
+
+    𝒮𝒩(B):=𝒩(B) (B)^n-1
+ is comparable to the Hausdorff measure of the zero set of u in the following sense.
+
+
+
+
+Rescaled Theorem <ref>.
+
+    ℋ^n-1({u=0}∩ B)≤ C ·𝒮𝒩(B).
+	
+
+Rescaled Conjecture <ref>.
+
+    𝒮𝒩(1/2B)≤ C ·ℋ^n-1({u=0}∩ 2B) + C ·(B)^n-1.
+	
+The extra additive term C ·(B)^n-1 is required (u can be positive and have no zeroes in 4B), but as a rule it plays no role. 
+
+
+
+
+A challenge in nodal geometry is to understand the distribution of the  doubling index as a function of a set. If Conjecture <ref> is true and the scaled doubling index for harmonic functions is comparable to the Hausdorff measure of the zero set, then one can conclude that the scaled doubling index is almost additive as a function of a set. The main Theorem <ref> is likely to have applications in nodal geometry as it gives a weak version of almost additivity for scaled doubling index with subpolynomial error term.
+
+
+
+
+In this paper we introduce a new notion of stable growth. At some moment in this paper we will choose a dimensional constant C=C(n)>1 (its choice will be presented in Remark <ref>).  A harmonic function u:ℝ^n is said to have stable growth  in a ball B⊆^n if 
+
+    C^-1(12B) ≤(2B) ≤   C (12B).
+
+We note that the first inequality holds due to almost monotonicity of the doubling index (see Lemma <ref> below) and can be omitted in the definition of stable growth. The assumption of stable growth is usually earned for free or for a small price of a subpolynomial error term, but it simplifies many of the proofs.  
+
+
+
+
+
+
+Conjecture (<ref>) together with Theorem <ref> imply that if a harmonic function u has stable growth  in a unit ball B and A is a constant such that  𝒩(B) ≫ A>1, then on the scale 1/A the following property of the doubling index holds:
+
+    ∫_B 𝒩(x, A^-1)dx ≍𝒩(B)/A.
+
+In other words, it is anticipated that the average doubling index drops proportionally to the scale factor.
+
+
+
+
+
+
+§ ACKNOWLEDGMENT.
+
+The authors are indebted to Mikhail Sodin for his enormous patience and numerous fruitful discussions that motivated this work. The authors  are grateful to Tel Aviv University, Princeton University and University of Geneva, where this work was conducted. 
+A.L. was supported in part by the Packard Fellowship, Swiss NSF grant 200020-200400 and by NCCR SwissMAP (Swiss NSF grant 205607).  L.P.M.E. was supported by ERC Advanced Grant 692616, ERC consolidator grant 101001124 (UniversalMap) and ISF grant 1294/19.  A.S. was supported by the ISF Grant 1903/18 and the BSF Start up Grant no. 20183.
+
+
+
+
+
+ §.§ Notation
+
+As mentioned above, given a ball B=B(x,r)⊂ℝ^n with center at x∈ℝ^n and radius r>0, we denote by ℓ B the ball ℓ B= B(x,ℓ· r) for a given scaling parameter ℓ>0.  Sometimes we will not need to explicate the center of the ball and we will simply write B(x,r)= B(r). We also write B to denote a closed ball.  Similarly, given a cube Q⊂ℝ^n we write ℓ Q for the cube which is the homothetic copy of Q with same center and with homothety coefficient ℓ>0. We define the maximal doubling index of a cube Q by 
+
+    𝒩^*(Q) := sup_x ∈ Q 
+     0<ρ≤(Q) 𝒩(B(x,ρ)).
+
+We denote by c,c_1,c_2,… (small) positive constants and by C,C_1,C_2,… (large) positive constants,  which may change from line to line. Given two quantities A,B, we write A≲ B and A≳ B to designate the existence of two constants c,C>0 such that A≤ CB and A≥ cB, respectively. Here the constants c, C are allowed to depend on the dimension n. 
+If these constants depend on some auxiliary parameter γ, we write A≲_γ B and A≳_γ B. If A≲ B and B≲ A, we write A≍ B and A≍_γ B if one (or both) constants implied in the notation depend on the auxiliary parameter γ.  Finally, we write A≪ B to mean that, for a sufficiently small constant c>0, we have A≤ cB and A≫ B if, for a sufficiently large constant C≥1, we have   A≥ CB. Again, we write A≪_γ B and A≫_γ B if the constants implied in the notation depend on the parameter γ. Sometimes we will just write ≍, ≲ and ≪ instead of ≍_n, ≲_n and ≪_n. 
+
+
+
+Given some x∈ℝ, we write ⌊ x⌋ for the largest integer smaller than x and ⌈ x ⌉ for the smallest integer larger than x.
+
+Given a finite set F, we denote by # F the number of elements in F. For a set S ⊂^n and ℓ >0, define the ℓ-neighbourhood of S by
+
+    S_+ℓ := {x ∈^n : x= s+b, where s∈ S and b∈ B(0,ℓ) }.
+
+  The zero sets of harmonic functions are often called nodal sets. We will sometimes refer to the Hausdorff measure of the nodal set as nodal volume. When we say that a harmonic function u has bounded doubling index in the ball B, we mean that there exists a numerical constant C>0 such that 
+  
+    𝒩_u(B)≤ C.
+
+
+
+
+§ FIRST THOUGHTS AND OBSERVATIONS
+
+
+This section discusses elementary ideas and some examples for building intuition about the zero sets and the doubling index of harmonic functions. 
+
+
+
+
+
+
+ §.§ Bounded doubling index 
  
-where α and β are penalty coefficients.
+The following simple observation gives a lower bound for the nodal volume of a harmonic function in terms of its doubling index. We note that this bound is useful only when the doubling index is not large. 
 
 
+	 
+	Let B=B(0,1)⊂ℝ^n be the unit ball and let u  be a harmonic function in  2B. Suppose that u(0)=0, then  there exists a constant c=c(n)>0 such that 
+	
+    ℋ^n-1({u=0}∩ 2B )≥ c 𝒩(B)^1-n.
 
-§ EXPERIMENTS
 
+ Before starting the proof, we formulate a consequence of Harnack's inequality. 
+ Let B=B(x,r) ⊂^n be any ball. Then  for any non-constant harmonic function u defined in 2B satisfying u(x) ≥ 0, we have
+	
+    sup_43B u ≳_nsup_B |u|.
 
 
- §.§ Experimental Setting
+ Let M and m denote the supremum and the infimum of u in B. If m≥ 0, then the conclusion (<ref>) holds trivially. Let M' denote the supremum of u in 43B. It suffices to consider the case m <0, and show that -m ≲_n M'. 
+	
+	 Let x_m, x_M ∈∂ B be such that u(x_m) = m and u(x_M) = M. Consider the  positive harmonic function  h := M' -u  in 43B. By Harnack's inequality, there is a constant C=C(n) >1 such that 
+	
+    (M' - m)	= h(x_m) ≤ C h(x_M) = C(M' - M) ≤ CM'.
 
-Datasets. In the experiments, we use five multi-view multi-label datasets as same as <cit.>: (1) corel5k <cit.>: The corel5k dataset contains 5000 image samples with 260 classes and we use 4999 samples in the experiments. (2) Pascal07 <cit.>: The popular Pascal07 dataset has 9963 images covering 20 types of tags. (3) Espgame <cit.>: 20770 samples and 268 categories of Espgame are used in our experiments. It is no doubt that it is a large-scale database. (4) IAPRTC12 <cit.>: As a benchmark database, IAPRTC12 is composed of 20,000 high-quality natural images and we use 19627 images and 291 tags in the experiments. (5) Mirflickr <cit.>: The Mirflickr is collected from the social photography site Flickr, which is made up by 25000 images. 38 types of annotations are selected in the experiments. For the above five multi-view multi-label datasets, each dataset contains six views, i.e., GIST, HSV, HUE, SIFT, RGB, and LAB. 
+	Hence,
+	
+    -m ≲_n M',
+	
+	and the claim follows.
 
-Data processing. To evaluate the performance of various multi-view multi-label learning methods on incomplete datasets, following <cit.>, we treat the five datasets as follows to simulate the incomplete case: (1) For each view, we randomly remove 50% of samples while guaranteeing that at least one view is available for each sample. (2) For each category, we randomly select 50% of positive tags and negative tags as unknown labels. 
 
-Comparison. We select eight top methods to compare to our LMVCAT. Six methods, i.e., lrMMC, MVL-IV, MvEL, iMSF, iMvWL, and NAIML, are introduced in section <ref>. In addition, we add two advanced methods, named C2AE <cit.> and GLOCAL <cit.>, to expand the evaluation experiments. C2AE is a canonical correlated autoencoder network, which learns a latent embedding space to bridge feature representations and label information. GLOCAL exploits the global and local label correlations on the representation learning, which is also an application of label manifold. However, C2AE and GLOCAL are both single-view multi-label classification methods, and only iMvWL and NAIML are designed for the datasets with both missing views and missing labels. Therefore, we have to do extra alterations to the rest of the methods. Like <cit.> and <cit.>, average values of available views are filled into unusable views for MvEL and lrMMC. And as to MVL-IV and iMSF, we set missing tags to be negative tags. C2AE and GLOCAL are independently conducted on each view and the best results are reported. All parameters of these comparison methods are set as recommended in their papers or codes for a fair comparison.
 
-Evaluation. Different from <cit.> and <cit.>, we only select AP (Average Precision), RL (Ranking Loss), and AUC (adapted Area Under Curve) as our metrics due to the weak discrimination of HL (Hamming Loss). Note that 1-RL is used instead of RL in our results so that the higher the value, the better the performance. 
 
-The implementation of our method is based on MindSpore and Pytorch framework.
 
 
 
+	We will estimate the Hausdorff measure of the zero set of u in  the spherical layer {4/3≤ |x|≤5/3}. Let N:= 20⌈𝒩(B)⌉. Consider the behavior of u in the concentric spheres
+	
+    S_i= ∂ ( r_i B )= {x∈ 2B : |x|=r_i}, where  r_i= 4/3 + i/3N
 
+	for i=0,…,N and define
+	
+    m_i^+ := max_S_iu,   and  m_i^- := min_S_iu.
 
+We may assume that u is not identically zero.	Since u(0)=0, the maximum principle  implies 
+	
+    m_i^+>0,   m_i^-<0,  m_i^+ <  m_i+1^+,  and  |m_i^-| < |m_i+1^-|.
 
+	We aim to show that there are two balls of radius c_0 N^-1 in B, for some c_0=c_0(n)>0, such that  u is positive in one ball and negative in the other ball. The following geometrical fact shows that existence of two such balls guarantees a lower bound for the nodal volume. 
+	
+	
+	
+		Let f:D be a continuous function in a convex set D⊂ℝ^n.  Assume that  there are two balls B^+, B^-⊂ D both of radius r>0 such that f>0 in B^+ and f<0 in B^-. Then
+		
+    ℋ^n-1 ({f=0}) ≳_n r^n-1.
 
+	
 
- §.§ Experimental Results and Analysis
+		 Consider line segments starting in B^+ and ending in B^-, which are parallel to the line connecting the centers of the balls B^+ and B^-. Since f is positive at one end and negative at the other end, every such line segment contains a zero of f. Consider the orthogonal projection of the zero set {f=0} onto a hyperplane orthogonal to these line segments. The zeros of f in the line segments project onto a (n-1) dimensional ball of radius r in this hyperplane. Since the orthogonal projection does not increase the distances, the  Hausdorff measure of {f=0} is at least the Hausdorff measure of its projection, which contains a (n-1) dimensional ball of radius r.  This completes the proof of Claim <ref>.
+	
+	
+	
 
+	
+	We are ready to proceed with the proof of Lemma <ref>. 
+	We will show that there are at least N/10 disjoint  spherical layers {x∈ 2B: r_i-1≤ |x|≤ r_i} such that in each of them, we can find two balls of radius c_0 N^-1, for some c_0=c_0(n)>0, so that u is positive in one of the balls and negative in the other.
+	
+	
+	
+	
+	The increment of u from 43B to 53B can be written as a telescopic product
+	
+    m_1^+/m_0^+·m_2^+/m_1^+⋯m_N^+/m_N-1^+ = sup_5/3Bu/sup_4/3 Bu.
 
+	 By Claim <ref> and recalling that N= 20⌈𝒩(B)⌉, we have  
+	
+    sup_5/3Bu/sup_4/3 Bu≲_n sup_2B|u|/sup_B|u| =  2^𝒩(B)≤ e^N.
 
+	 Similarly,
+	
+    m_1^-/m_0^-·m_2^-/m_1^-⋯m_N^-/m_N-1^-≲_n e^ N.
 
+	Hence we conclude that there exists C_1=C_1(n) >0 such that |m_i+1^-|≤ C_1 |m_i^-| holds for at least 3/4N values of i (and similarly for m_i^+). Thus, we have
+	
+    m_i+1^+≤ C_1 m_i^+  and   |m_i+1^-|≤ C_1 |m_i^-|,
 
+for at least N/2  values of i.		From now on, we will consider only i satisfying (<ref>). 	Let x_i^+ and x_i^-∈ S_i be points where u attains its maximum and minimum respectively, i.e., u(x_i^+) = m_i^+ and u(x_i^-) = m_i^-.  Define 
+	
+    B_i^+ := B(x_i^+, 110N) and B_i^- := B(x_i^-, 110N).
 
+	We will now show that there is a small constant c_0>0 such that  u >0 in c_0 B_i^+, and u <0 in c_0 B_i^-, by estimating the gradient of u as follows:
+	
+    sup_B_i^+ |∇ u| ≲_n N sup_2B_i^+ |u| ≲_n Nsup_83B_i^+u ≤Nsup_S_i+1 u = N m_i+1^+≤_(<ref>) C_2 N  m_i^+,
 
+	where the first inequality follows from the standard gradient estimates (Claim <ref>), the second inequality follows from  Claim <ref>, and the third inequality follows from the inclusion 83B_i^+⊂ r_i+1B.
+	All in all, we have  
+	
+    u(x_i^+) = m_i^+ and sup_B_i^+|∇ u| ≲_n Nm_i^+,  where 	B_i^+ := B(x_i^+, 110N).
 
+	We may conclude that there is a small constant c_0 ∈ (0,1) such that u >0 in c_0 B_i^+. A similar argument implies that (for a small c_0∈ (0,1)) we have u <0 in c_0B_i^-. Finally, the Euclidean Claim <ref> implies the lower bound for the nodal volume. 
 
+ One can modify the argument in  Lemma 2.1 to prove a slightly better estimate for the nodal volume:
+	
+    ℋ^n-1({u=0}∩ 2B) ≳(B)^2-n,
 
+	by showing that 
+	
+    ℋ^n-1( {u=0}∩{x∈ 2B: r_i-1≤ |x|≤ r_i+1})≳1/N^n-1
 
+	for at least N/2 indices i. 
 
 
 
 
 
+We recall from <ref>  the known upper bound  and the conjectured lower bound for the nodal volume of a harmonic u vanishing at the center of a ball B ⊂^n
 
+    (12B)r^n-1Conj.<ref>≲_nℋ^n-1({u=0}∩ B) Thm.<ref>≲_n(B) r^n-1.
 
+In the case when u has bounded doubling index in B 
 
-Table <ref> to <ref> show the performance of the nine methods on five incomplete datasets (some of the results are quoted from <cit.> and <cit.>). Table <ref> lists the results on the datasets with complete views and labels. All experiments are repeated 10 times to avoid outlier results as much as possible, and we list the mean and standard deviation of 10 tests in these tables. Values in parentheses represent the standard deviation. Fig. <ref> and Fig. <ref> show more results w.r.t different missing and training sample rates. From Table <ref> to <ref>, we can summarize the following observations:
+    𝒩(1/2B)≍𝒩(B)≍ 1,
 
+Theorem <ref> and Lemma <ref> imply that the nodal volume of u is comparable to the surface area of B. 
 
+ 
+	Let B ⊂^n be a ball and let C>1 be some constant. Then for all harmonic functions u in 2B, vanishing at the center of B, such that _u(B) ≤ C, we have
+	
+    ℋ^n-1({u=0}∩ B) ≍_C,n r^n-1.
 
-  * Our method achieves overwhelming advantages on all three metrics of the five datasets, especially on the most representative AP metric. For example, the AP value of our model exceeds the second-best NAIML by about 7% and 5% on the Corel5k and Espgame datasets respectively, which verifies the superiority of our method. 
+	The nodal volume is also comparable to the scaled doubling index:
+	
+    ℋ^n-1({u=0}∩ B) ≍_C,n𝒮𝒩(B).
 
-  * Both iMvWL and NAIML reach relatively better performance compared to the first four methods, which benefits from good compatibility to double incomplete data. As a deep method with stronger fitting ability, C2AE performs mediocrely due to the lack of multi-view complementary information. Though GLOCAL is a single-view method, the full exploitation of label correlations helps it achieve surprising results on several datasets.
 
-  * From Table <ref>, we can find that, although our LMVCAT is an incomplete method, it still works well with complete datasets. Specifically, on the Corel5k dataset, the AP value of our method is about 14 percentage points ahead of the second-best GLOCAL.
 
 
 
 
-As shown in Fig. <ref>, we respectively plot the histogram of three metrics in different missing-view and missing-label ratios by fixing another ratio on the corel5k dataset. These results verify that both incomplete views and partial labels are harmful for efficient classification. In addition, an interesting phenomenon is that when the incompleteness ratio is relatively small, missing labels have a greater impact on the performance, and conversely, the negative impact of missing views is greater. 
-As shown in Fig. <ref>, we conduct experiments on Corel5k and Mirflickr datasets with 50% available views, 50% known tags and different training sample ratios. It is clear that, as the proportion of training samples in the total increases, the performance of our method gradually goes up. 
 
+ §.§ Chopping
+ 
 
+Given a harmonic function u vanishing at the center of a ball B⊂^n, how can we estimate the volume of the zero set  when the doubling index is large? 
 
- §.§ Hyperparameters Study
 
-There are three hyperparameters, i.e., α, β, and γ in our LMVCAT. To study the optimal parameters selection, we list the performance of our method on different parameter combinations in Fig. <ref>. All datasets used in parameters study are with 50% missing-view ratio, 50% missing-label ratio, and 70% training samples. As can be seen in Fig. <ref> (a) and (b), for Corel5k dataset, the optimal parameters α and β are located in the range of [5,10] and [0.05,0.5], respectively, and for Pascal07 dataset, the optimal parameters α and β are located in the range of [10,100] and [0.001,0.5], respectively. As to γ, obviously, our method is insensitive to it from Fig. <ref> (c) and (d). In our experiments, γ is uniformly set to 2.
 
 
+When we start looking at the zero set at small scales, the doubling index in small balls around the zero drops down asymptotically in the following way:
 
+    lim_ 0(B(x,)) =  order of vanishing of u at x.
 
- §.§ Ablation Study
+The latter limit is 1 for all x in the zero set except the singular set, that is the set where u and |∇ u| vanish simultaneously. The singular set does not contribute to the nodal volume as it has Hausdorff dimension (n-2), see <cit.>, and also <cit.> for a quantitative estimate. The non-singular zero set can be covered by countably many balls  with bounded doubling index. 
 
-To study the effectiveness of each component of our method, we perform experiments with following altered methods. For the complete LMVCAT, we remove graph constraint, CFormer, and adaptively weighted module sequentially. Besides, we take off the missing-view indicator and missing-label indicator in our model so that the incomplete views and weak labels are completely exposed to the network. As can be seen in Table <ref>, our label-guided graph constraint plays a key role and all experiments confirm that each component of our LMVCAT is beneficial and necessary.
 
 
 
+In order to prove a lower bound for the nodal volume, a naive idea is to find small disjoint balls B_k = B(x_k,r_k) in B with doubling index (B_k) ≤ C such that the harmonic function has a zero at the center of each B_k. Then in each of the B_k we have a lower bound for the nodal volume by Claim <ref>, and therefore
 
+    ℋ^n-1({u=0}∩ B) ≥∑_B_kℋ^n-1({u=0}∩ B_k) ≍∑_B_k r_k^n-1.
 
-§ CONCLUSION
- In this paper, we propose a general transformer-based framework for MvMlC, which skillfully exploits label manifold to guide the representation learning. And its innovative view- and category-awareness realize multi-view information interaction and multi-category discrimination fusion. An adaptively weighted fusion strategy is also introduced to balance the view-specific contribution. In addition, missing-view and weak label problems are specifically avoided throughout the network. Extensive experiments support the conclusion of the effectiveness of our method. 
+To find balls with bounded doubling index, one can attempt to use the following idea of chopping. 
+Take a cube Q (which is easier to chop than balls) and repeatedly divide it into smaller subcubes {Q_k}. At any point in this process if we have a subcube with bounded doubling index, we stop chopping, and if a subcube has large doubling index we continue chopping. Finally, in subcubes with small doubling index and a zero of u, one can use a version of Claim <ref> for cubes. 
 
 
 
 
-§ ACKNOWLEDGMENTS
 
-This work is supported by Shenzhen Science and Technology Program under Grant RCBS20210609103709020, GJHZ20210705141812038, Shenzhen Fundamental Research Fund under Grant GXWD20220811173317002, and CAAI-Huawei MindSpore Open Fund under Grant CAAIXSJLJJ-2022-011C.
+There are two problems to implement this idea. The first one is to show that for most of the subcubes the doubling index drops down. The second problem is to get some lower bound for the sum of scaled doubling indices 
 
+    ∑(Q_k) (diam Q_k)^n-1,
 
+where the sum is over subcubes Q_k containing a zero of u. We choose to work with (<ref>) as it imitates the nodal volume.
 
 
 
 
+In order to obtain quantitative bounds for the nodal volume, one has to understand the distribution of the doubling index on many scales. More precisely, given a partition of cube Q ⊂^n into equal subcubes and a harmonic function in 2Q, what can we say about the doubling indices in these subcubes compared to the doubling indices of Q and 1/4Q?  
 
 
 
+
+
+
+
+In the next section we discuss two simple examples of the distribution of doubling index.  Old and new results about the distribution of doubling index of harmonic functions will be presented in <ref>
+
+
+
+
+
+ §.§ Examples
+ 
+
+
+
+
+
+
+	We consider the harmonic function u(x,y)= exp (Nx)sin (Ny), for some large positive integer N.  Partition Q=[0,1]^2 into A^2 many equal subcubes {Q_i}_i of side length A^-1. If 1 ≪ A ≪ N, then 
+	
+    𝒩^*(Q)≍ N  and 𝒩^*(Q_i)≍N/A.
+
+	In this case, the doubling index is a linearly decreasing function of the size of the subcubes. The zero set of u consists of parallel lines, see Figure <ref> below. 
+
+
+
+
+
+	Consider u(x,y)= ((x+iy)^N) for some large integer N>1. 
+	The zero set of the function u is the union of 2N rays emanating from the origin, see Figure <ref> below. We consider Q=[-2,2]^2 and partition it into A^2 equal subcubes {Q_i}_i. 
+	
+	We have 𝒩^*(Q)≍ N. 
+	Unlike the previous example, the doubling index of the subcubes depend on the proximity of the subcube to the origin, which is a singular zero of u. Consider z∈ Q with |z| = r>0, let us now get an estimate for (z,1/A). In polar coordinates, u can be written as u(r,θ) = r^N cos Nθ. Hence, for 1 ≪ A≪ N, we have 
+	
+    logsup_B(z,2/A)|u|/sup_B(z,1/A)|u|≍log(r+2A)^N/(r+1A)^N = log(1+2rA)^N/(1+1rA)^N.
+
+	If (1/rA) ≪ 1, or equivalently r≫ 1/A, then we have
+	
+    (z,1/A) ≍N/rA.
+
+	Thus, for subcubes Q_i close to the origin, we have ^*(Q_i) ≍ N. And for subcubes away from the origin, e.g. the ones in B(0,1)\ B(0,1/2), we have ^*(Q_i) ≍ N/A. 
+	
+	
+
+
+
+
+
+ 
+
+ 
+
+
+
+§ DOUBLING INDEX AND THE FREQUENCY FUNCTION 
+
+
+The frequency of a harmonic function is a well-studied close cousin of the doubling index. Due to its analytic nature, it is sometimes easier to study the frequency than the doubling index. In this section, we first define the frequency of a harmonic function and then present some of its well-known properties. Later, we discuss the relation between the frequency and the doubling index. All the results presented in this section are well-known; for completeness, we give their proofs in Appendix <ref>. 
+
+
+
+
+ §.§ Frequency of a harmonic function
+
+
+
+Given  a harmonic function u in ℝ^n, x∈ℝ^n  and r>0,  we define 
+
+    H(x,r):= ∫_∂ B(x,r) u^2 dS,
+
+where dS is the surface measure on ∂ B(x,r). Moreover, we also let 
+ 
+    G(x,r):= ∫_B(x,r) |∇ u|^2 d.
+
+The frequency function is defined by 
+
+    β(x,r):= r G(x,r)/H(x,r).
+ 
+ Agmon <cit.> and  Almgren <cit.> proved that β(·) is a monotonic function. 
+
+
+	
+	For any harmonic function in ℝ^n, its frequency function β(r):=β(0,r) is a non-decreasing function of r. 
+
+
+Garofalo and Lin  <cit.> generalized it to elliptic operators with variable coefficients, see also the work of Kukavica <cit.> and Mangoubi <cit.>. We would like to mention an elegant work of Colding and Minicozzi <cit.>, which proves monotonicity of the frequency function for parabolic operators in a suprisingly elementary way and in great generality.
+
+
+
+
+
+
+An equivalent way to define the frequency function is 
+
+    β(x,r):= rH'(x,r)/2H(x,r) - n-1/2,
+
+where the derivative is taken with respect to r, see Appendix <ref>. That is the frequency is the logarithmic derivative of H, up to the factor of r and constants. The following is an immediate corollary of this definition and the monotonicity of β.
+ 
+ 
+	For any harmonic function in ℝ^n, let β(r)= β(0,r) be its frequency function. For any 0<r_1<r_2,  we have 
+ 
+    H(r_2)/r_2^n-1= H(r_1)/r_1^n-1exp( 2 ∫_r_1^r_2β(r)/rdr).
+
+ Moreover, we also have 
+ 
+    (r_2/r_1)^2β(r_1) + n-1≤H(r_2)/H(r_1)≤(r_2/r_1)^2β(r_2) + n-1.
+
+ 
+
+
+ 
+	To define the frequency, it is not necessary for the harmonic function to be defined in the whole of ^n. For any R>1 and any harmonic function defined in a neighbourhood of the closed ball B(x,R)⊂^n, the frequency is well defined by (<ref>) for r∈ [0,R]. All the results about the frequency (namely Theorem <ref>, Corollary <ref>, and Lemmas <ref> & <ref>) hold in any ball where the harmonic function is defined. 
+
+
+ 
+
+ §.§ Relation between the frequency and the doubling index
+ Thanks to the standard elliptic estimates (see the proofs in Appendix <ref>), we have the following comparison between the frequency in a ball and the doubling index in a slightly larger ball. 
+ 
+  
+
+	  Let δ>0 be a sufficiently small parameter and let 𝒩(r):= 𝒩(B(0,r)), for r>0. There exists a constant C=C(δ,n)≥ 1 such that 
+	
+    β (r(1+δ))(1-100δ) -C≤𝒩(r) ≤β (2r(1+δ))(1+100δ) +C
+
+uniformly	for all 0<r≤ 4^-1 	and all harmonic functions u defined in B(0,2). 
+
+The above lemma together with the monotonicity of the frequency (Theorem <ref>) immediately imply the following almost monotonicity property of the doubling index.  
+
+
+
+	
+		Let δ>0 be a sufficiently small parameter and let u be a harmonic function in B(0,2). Let 𝒩(r):= 𝒩(B(0,r)), for r>0. There exists a constant C=C(δ,n)>0, independent of u, such that 
+	
+    (r_2/r_1)^𝒩(r_1)(1-δ)-C≤sup_B(0,r_2)|u|/sup_B(0,r_1)|u|≤(r_2/r_1)^𝒩(r_2)(1+δ)+C,
+
+	 for all r_1≤ r_2/2≤ 4^-1. In particular, we have 
+	
+    𝒩(r_1)(1-δ) - C≤𝒩(r_2)(1+δ) + C.
+
+
+
+
+ 
+Let B⊂ℝ^n be any ball and let u be a harmonic function in 2B. There exists some constant C=C(n)>1 such that 
+
+    𝒩_u(b) ≤ C 𝒩_u(B)
+
+for all balls b with  2b⊂ B.  
+
+
+
+
+
+
+§ DISTRIBUTION OF THE DOUBLING INDEX AND HOW TO USE IT
+
+In this section we review the known results from <cit.>, <cit.> about the distribution of the doubling index and formulate a new bound (Proposition <ref>) , which is a crucial ingredient of the paper for proving a lower bound for the nodal volume. 
+
+
+ §.§ Upper bounds for the distribution of doubling index
+
+
+
+The following result is borrowed from <cit.>. A sketch of the proof is provided in Appendix <ref>. The proposition below states that if we chop a big cube into smaller subcubes, then most of the subcubes have smaller doubling index than that of the big cube.
+
+
+	
+	Let a cube Q in ℝ^n be partitioned into A^n equal subcubes Q_i. Let u be a harmonic function in 4√(n)· Q. There exist numerical (depending only on the dimension n) constants A_0,C > 1 and c>0  such that  if A>A_0, then the number of Q_i with 
+	
+    ^*(Q_i)>max(^*(Q)exp(- c log A/ loglog A ), C)
+
+	is smaller than A^n-1-c. 
+
+
+
+
+The work of Donnelly–Fefferman <cit.> gives a different kind of information about the distribution of the doubling index.
+
+
+	 Let Q be a unit cube in ^n and let u be a harmonic function in 4√(n)· Q. Let ε>0 and 	let  Q  be partitioned into  equal subcubes {Q_i}_i of side length  ≍_nc_u^*(Q) for some sufficiently small c=c(n,ε)>0.  There exists a constant C = C(n,ε) > 1 such that 
+	
+    ^*(Q_i)≤ C
+
+	for at least (1-ε) portion of the Q_i. 
+
+Although Proposition <ref> is known to experts and is attributed to Donnelly and Fefferman, we could not find a precise reference. A version of it appeared in the study of the doubling index for Laplace eigenfunctions <cit.>. Roughly speaking, if we consider a Laplace eigenfunction on a compact Riemannian manifold with eigenvalue λ, and cover the manifold with balls of radius ≍λ^-1/2, the doubling index for most of these balls is bounded. 
+
+
+
+
+We will not use Proposition <ref>  by Donnelly and Fefferman in 
+our present work. Nevertheless,  it follows in a straightforward way from their results in <cit.> about holomorphic functions and the method of holomorphic extension. A formal deduction of Proposition <ref> is contained in Appendix <ref>. The result is formulated here for the sake of completeness and in connection to Conjecture <ref> (almost additivity). 
+To explain the connection we have to formulate another conjecture.
+
+
+	
+	Assume that a harmonic function u has stable growth in a unit ball B and 𝒩_u(B)=N ≫ 1.
+	Let us cover 2B by a lattice of cubes Q_i of size 1/N. Then the number of Q_i in 2B, which contain a zero of u, is at least 
+	cN^n for some c>0 depending on the dimension n.
+  
+
+Let us make a few remarks and speculations. 
+
+The constant c in Conjecture <ref> might become worse as we change the constant in the definition of stable growth. 
+
+
+
+
+
+
+Conjecture <ref> about many separated zeroes and Proposition <ref> imply that Conjecture <ref> is true under the assumption of stable growth. 
+Roughly speaking they imply that one can find ≍ N^n cubes Q_i of size 1/N  (N=𝒩_u(B)), which contain zeroes of u and have a bounded doubling index. Claim <ref> implies that 2Q_i must have nodal volume ≳ 1/N^n-1. So 
+
+    ℋ^n-1({u=0}∩ 2B) ≳ N
+
+in the case of stable growth (this additional assumption can be earned for free).
+
+
+
+
+
+
+ §.§  New result on the distribution of doubling index
+ 
+
+Let us remind the definition of scaled doubling index.
+
+  For a harmonic function u in a ball 2B ⊂^n, we define the scaled doubling index (s.d.i.) of B, denoted by 𝒮𝒩(B), to be 
+	
+    𝒮𝒩(B) := (B) r^n-1,
+ 
+	where r is the radius of B.
+
+
+For a harmonic function vanishing at the center of a ball B,  𝒮𝒩( B) is conjectured (Conjecture <ref>) to give a lower bound for its nodal volume in 2B. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Complementary to the known results (<ref>), our main new result also gives a lower bound for the distribution of the doubling index.  Given a ball B and a harmonic function on 4B, we show that there is a  collection of disjoint balls with doubling index smaller than (2B), but whose total s.d.i. is almost as large as ( B).
+
+	
+	Let B⊂ℝ^n be a unit ball, u: 4B a harmonic function, and A>1  a sufficiently large parameter. Let N_1:= (1/2B) and N_2:= 𝒩(2B). Then there 
+	exists a constant C_A>1 such that whenever N_1≥ C_A,  there exists a collection of disjoint balls {B_i = B(x_i,r_i)}_i ∈ℐ such that 
+	
+		
+  * We have an upper bound on the doubling index:
+		
+    max(2B_i) ≲_n N_2/A.
+ 
+		
+  *  We have a lower bound on the sum of the s.d.i.'s:
+		
+    ∑𝒮𝒩(12B_i)=∑(12B_i) r_i^n-1≳_n N_1/(log Aloglog A)^n-1.
+
+		
+		
+  * Vanishing and non-intersection properties:
+		
+    u(x_i) = 0, 4B_i ∩ 4 B_j=∅, and 4B_i⊂ 2B,
+
+		for all i≠ j. 
+	
+
+
+
+
+We now briefly sketch how one can use Proposition <ref> to implement the naive idea discussed in <ref>  in order to prove a lower bound for the zero set. 
+One can recursively apply Proposition <ref> in order to obtain a collection of balls with bounded doubling indices. Roughly speaking, in each step we apply Proposition <ref> to each of the balls with large doubling index and replace it by a collection of sub-balls with smaller doubling index. Conditions (<ref>) and (<ref>) guarantee that in a finite number of steps all balls will have bounded doubling index  and  u must vanish at the center of each ball. The number of steps can be estimated in terms of N_2 and A.
+
+
+
+
+
+Condition (<ref>) should be interpreted as a condition ensuring that after recursive applications of Proposition <ref>, we don't lose too much of the nodal set. Here is an informal explanation. The sum  ∑𝒮𝒩( B_i) imitates the nodal volume. If we believe in Conjecture <ref>, then 
+
+    ∑ℋ^n-1({u=0}∩ 2B_i) ≳∑𝒮𝒩( B_i) ≳N_1/(log Aloglog A)^n-1,
+
+and the loss of the nodal volume in each step is subpolynomial in A. 
+
+In the last step all balls have bounded doubling index. Recall that if u has a bounded doubling index in a ball B and vanishes at its  center, then Claim <ref> gives the following estimate for the nodal volume 
+
+    𝒮𝒩( B) ≍ℋ^n-1({u=0}∩ B) ≍ (radius(B))^n-1.
+
+We can apply Claim <ref> to each of the balls in the last step and the control (<ref>) of the sum of s.d.i. provides a lower bound for the nodal volume. In the next section we formalize the idea and quantify what kind of a lower bound we get for the  nodal volume.
+
+
+
+	
+	
+	
+	
+	
+
+ §.§ How to use Proposition <ref>
+ We will start proving 
+	Proposition <ref> only in <ref>. Now, we show how Proposition <ref> implies the following lower bound for the nodal volume. 
+
+	
+	
+		
+		Let B⊂ℝ^n be a unit ball, and u: 4B a harmonic function. Assume that ε>0,  N_1  := 𝒩(1/2B) ≫_n,ε 1, and N_2 := 𝒩(2B). Then we have  
+		
+    ℋ^n-1( {u=0}∩ 2B)≳_n,ε  N_1^1-ε(N_1/N_2)^ε.
+ 
+	
+	We observe that if u has stable growth in a unit ball B, i.e. the ratio N_2/N_1 is bounded by some numerical constant (possibly depending on the dimension n), then Lemma <ref> immediately implies Theorem <ref> under the assumption of stable growth. Unfortunately, the bound in Lemma <ref> gets worse as the ratio N_2/N_1 gets larger. However, in <ref> we will show that Lemma <ref> implies Theorem <ref> by reducing the general case to the stable growth case.
+	
+	 Given ε>0, we will choose a large constant A=A(ε)≥ 2 later.  Let C_A≥ 1 be given by Proposition <ref>, and assume that C_A≫_n 1. Starting with S_0 := {B}, for every k ∈, we will recursively use Proposition <ref> to construct a collection of balls S_k = {B_α}. This sequence will eventually stabilize, that is, there exists K≥ 0 such that S_k = S_K for every k ≥ K. Moreover, the final collection S_K will be such that  for every ball B_α∈ S_K,  u vanishes at its center and (12B_α) ≤ C_A.
+		
+		
+		
+		
+		Let S_0 := {B}. Given S_k = {B_α}, we will define S_k+1. Suppose B_α∈ S_k is such that (1/2 B_α) ≤ C_A, then we retain B_α in S_k+1. If (1/2 B_α) > C_A, then we apply Proposition <ref> to B_α to obtain a collection of balls {B_α,i}_i satisfying the three conditions of  Proposition <ref>, and this collection will replace B_α in S_k+1, i.e.,
+		
+    S_k+1 := {B_α: B_α∈ S_k and (12 B_α) ≤ C_A}∪{B_α,i: B_α∈ S_k and (12 B_α) > C_A}.
+
+		
+		For B_α∈ S_k, let x_α and r_α be its center and radius respectively.  We claim that the collection S_k satisfies the following properties:
+		
+			
+  *  For some (large) C=C(n)≥ 1, we have for every B_α∈ S_k: 
+			
+    (2B_α) ≤  C^k N_2/A^k  or (12 B_α) ≤ C_A.
+
+			
+  *  For some (small) c=c(n)>0, we have 
+			
+    ∑_B_α∈ S_k(12B_α) r_α^n-1≥ c^k N_1/(log Aloglog A)^k(n-1).
+
+			
+			
+  * Vanishing  and non-intersection properties: 
+			
+    u(x_α) = 0 , 4B_α∩ 4B_γ=∅,  and 4B_α⊂ 2B,
+
+			for all B_α,B_γ∈ S_k with B_α≠ B_γ.
+		
+		We prove by induction that the above properties <ref>-<ref> hold for every S_k. Properties <ref>-<ref> hold for S_1 by the statement of Proposition <ref>. Assuming that all the above properties hold for S_k, let us show that they hold for S_k+1 as well. It is an immediate consequence of Proposition <ref> and the way S_k is constructed that <ref> and <ref> hold. We now show that <ref> also holds. We partition S_k into S_k^(1) and S_k^(2) where
+		
+    S_k^(1) = {B_α∈ S_k: (12 B_α) ≤ C_A} and S_k^(2) = S_k ∖ S_k^(1).
+
+		For B_α∈ S_k^(2), we denote by {B_α,i}_i the collection of balls obtained by applying Proposition <ref> to B_α. Let r_α,i be the radius of B_α,i, then we have
+		
+    ∑_B_j ∈ S_k+1(12 B_j) r_j^n-1 = ∑_B_α∈  S_k^(1)(12 B_α) r_α^n-1 + ∑_B_α∈  S_k^(2)∑_i(12 B_α,i) r_α,i^n-1.
+
+		It follows from the second condition of Proposition <ref> that 
+		
+    ∑_i(12 B_α,i) r_α,i^n-1≥c/(log A loglog A)^n-1·(12 B_α) r_α^n-1.
+
+		We thus have
+		
+    ∑_B_j ∈ S_k+1(12 B_j) r_j^n-1   ≥∑_B_α∈  S_k^(1)(12 B_α) r_α^n-1 + c/(log A loglog A)^n-1∑_B_α∈  S_k^(2)(12 B_α) r_α^n-1,
+       ≥c/(log A loglog A)^n-1∑_B_α∈ S_k(12 B_α) r_α^n-1,
+       ≥c^k+1/(log A loglog A)^(k+1)(n-1)· N_1,
+
+		where the last inequality follows by our induction hypothesis that <ref> holds for S_k.
+		
+		We now show that S_k stabilizes  in ≍log N_2/log A steps. Because of <ref>, at every step and for every ball B_α∈ S_k either (12 B_α) ≤ C_A (and then B_α is frozen forever) or the doubling index of 2B_α drops by a factor of A/C, which can be crudely estimated by √(A) (assuming that A is sufficiently large). The latter scenario can happen only ≍log N_2/log A times as we start with N(2B)=N_2. Indeed, otherwise doing k ≥ 2 log N_2/log A steps, we have a ball B_α∈ S_k with 
+    (2B_α) ≤ N_2/ A^k/2≤ 1
+ 
+		and by almost monotonicity of the doubling index it implies
+		
+    ( B_α) ≤ C (2B_α) ≤ C ≤ C_A.
+
+		So after K := ⌈ 2 log N_2/log A ⌉ steps all balls have bounded doubling index. 
+		
+		
+		
+			
+			
+		
+		
+		By Lemma <ref> we have
+		
+    ℋ^n-1({u=0}∩ 2B)    ≥∑_B_α∈ S_Kℋ^n-1({u=0}∩ B_α)  
+       ≥ c ∑_B_α∈ S_K(12 B_α)^1-n r_α^n-1
+       ≥ c · C_A^1-n∑_B_α∈ S_k  r_α^n-1.
+
+		It is time to use <ref> to get a lower bound (<ref>):
+		
+    C_A ∑_B_α∈ S_k  r_α^n-1≥∑_B_α∈ S_k(12 B_α) r_α^n-1≥c^K/(log A loglog A)^K(n-1) N_1,
+
+		thus,
+		
+    ℋ^n-1({u=0}∩ 2B) ≳ C_A^-nc^K/(log A loglog A)^K(n-1) N_1.
+
+		We may assume that N_2≫ 1 because N_1 ≫ 1.	Since K = ⌈ 2 log N_2/log A ⌉, we can always choose A=A(ε)≥ 2  so that
+		
+    c^K≥  N_2^-ε/2 and  (log Aloglog A)^K(n-1)≤  N_2^ε/2.
+
+		Hence, absorbing the factor C_A^-n, which now depends only on ε, in the ≲_ε notation, we have 
+		
+    C_A^-n·  c^K N_1/(log Aloglog A)^K(n-1)≳_ε  N_1 · N_2^-ε= N_1^1-ε(N_1/N_2)^ε,
+
+		concluding the proof of Lemma <ref>. 
+	
+
+
+
+§ STRUCTURE OF THE PROOFS OF THEOREM <REF> AND PROPOSITION <REF>
+
+
+
+
+block/.style=rectangle split, draw, rectangle split parts=2,
+		text width=14em, text centered, rounded corners, minimum height=4em,
+	grnblock/.style=rectangle, draw, fill=white, text width=14em, text centered, rounded corners, minimum height=4em, 
+	sgrnblock/.style=rectangle, draw, fill=white, text width=7em, text centered, rounded corners, minimum height=2em, 
+newsgrnblock/.style=rectangle, draw, fill=white, text width=9em, text centered, rounded corners, minimum height=2em,
+slgrnblock/.style=rectangle, draw, fill=white, text width=13em, text centered, rounded corners, minimum height=2em, 
+whtblock/.style=rectangle, draw, fill=white!20, text width=14em, text centered, minimum height=4em,    
+line/.style=draw, -Latex[length=2mm,width=1mm],
+cloud/.style=draw, ellipse,fill=white!20, node distance=3cm,    minimum height=4em,  
+container/.style=draw, rectangle,dashed,inner sep=0.28cm, rounded
+	corners,fill=white,minimum height=4cm
+
+
+
+
+
+In Figure <ref>, we present a logical progression of ideas/results leading to our main result Theorem <ref>. We  now indicate where to find these results, and also what we do in the remaining sections. 
+We advise the reader to keep Figure <ref> and the following as a guide while navigating through the rest of the paper. 
+
+
+
+
+
+
+
+
+
+<ref> Distribution of the doubling index and how to use it: In this section, we present old and new results on the distribution of the doubling index of a harmonic function. Given a cube Q ⊂^n which is partitioned into equal subcubes Q_i, Proposition <ref>, which was established in <cit.>, gives an upper bound on the number of cubes with large doubling index.
+
+
+ 
+
+Proposition <ref> is a new result about the distribution of doubling index. For a harmonic function u defined in a ball B, Proposition <ref> gives a collection of disjoint balls in B satisfying the following properties: u vanishes at their centers, their total s.d.i. is large, and their doubling index is much smaller than (B). We explain how to use Proposition <ref> in Lemma <ref>, which gives a lower bound for the nodal volume.
+
+
+
+
+
+
+<ref> Stable growth: 
+In this section, we study the  behaviour of a harmonic function in a ball with stable growth (Definition <ref>). In <ref>, we prove Lemma <ref>,
+which gives estimates for the growth of a harmonic function in a spherical layer where the frequency is almost constant. 
+
+
+
+
+In some instances, we will prove  results about the nodal set of a harmonic function in a ball B, under the simplified assumption of stable growth. Claim <ref>, proved in <ref>, serves as a bridge between the stable growth case and the general case by implying that for any harmonic function defined in ball B, there are several balls B_k ⊂ B of significant size with stable growth.  Lemma <ref> implies Theorem <ref> under the additional assumption of stable growth. We show that this along with Claim <ref> implies the general case of Theorem <ref>.
+
+
+
+
+<ref> Reducing Proposition <ref> to the stable growth case: We state Lemma <ref>, which is a  version of Proposition <ref> with the additional  assumption of stable growth. Using Claim  <ref> again, we reduce Proposition <ref> to Lemma <ref>.
+
+
+
+
+<ref> Zeros of harmonic functions in a tunnel: In this section, we study harmonic functions defined in a tunnel, that is a hyper-rectangle in ^n with all sides but one of equal length, while the length of the remaining side is much larger than the others. In Lemma <ref>, we show that for a harmonic function u defined in a good tunnel (which is a tunnel where u has significant growth along the longer side of the tunnel, and there is some control on the doubling index at all points in the tunnel), there are many disjoint balls where u vanishes and the sum of their s.d.i.'s is large. 
+
+
+
+
+<ref> Connecting the dots: Proof of Lemma <ref>: In this final section, equipped with Proposition <ref>, Lemma <ref> and Lemma <ref>, we finish the proof of Lemma <ref>. 
+Recall that Lemma <ref> is Proposition <ref> with the additional assumption of stable growth. 
+
+
+
+
+We first use Lemma <ref> to get several tunnels where the harmonic function has significant growth along their longer sides. We then use Proposition <ref> to control the doubling index at all points in at least half of these tunnels, thus giving us several good tunnels. 
+Finally in these good tunnels, we apply Lemma <ref> to conclude that there are several disjoint balls satisfying the conclusions of Lemma <ref>.
+
+
+
+§ STABLE GROWTH
+
+The notion of stable growth has already appeared a few times in the earlier sections; we are finally ready to formally introduce it. 
+
+
+
+
+ §.§ Definition of stable growth and some consequences
+
+
+
+	
+	
+	Let C>1 be a  constant depending only on the dimension n (which will be chosen in Remark <ref>).
+
+A harmonic function u:ℝ^n is said to have stable growth  in a ball B⊆^n if 
+		 
+    C^-1(12B) ≤(2B) ≤   C (12B).
+
+
+In (<ref>), the first inequality C^-1( B) ≤(2B) automatically holds as a consequence of the almost monotonicity of the doubling index (Lemma <ref>). The main point of the stable growth condition (<ref>) is the other inequality, namely, (2B) ≤ C( B).
+  Any homogeneous harmonic polynomial p of degree N ≥ 1 has stable growth in every ball B(0,r) ⊆^n. Such p can be written as
+		
+    p(r,θ) = r^N q(θ), for r≥ 0, θ∈𝕊^n-1,
+
+	where q: 𝕊^n-1 is a spherical harmonic of degree N. Then 
+	
+    sup_B(0,r)|p| = r^Nsup_𝕊^n-1|q|,
+
+and the doubling index (0,r) ≡ N, for every r>0. 
+
+
+	Any harmonic polynomial P has the following representation:
+
+    P(x) = ∑_k=m^M p_k(x),
+ 
+where p_k is a homogeneous harmonic polynomial in ^n, of degree k. For 0<r≪ 1 and R ≫ 1, we have 
+
+    P(r,θ)     = p_m(r,θ) + O(r^m +1),
+    
+    P(R,θ)     = p_M(R,θ) + O(R^M-1).
+
+Hence for small r, we have (0,r) ≍ m; for  large  R, we have (0,R) ≍ M. Hence P has stable growth in balls centered at the origin, whose radius is either small or large.   
+	
+In the case M=2m, for the polynomial P(x) = ∑_k=m^2m p_k(x) we have (0,r) ≍ m for small r, and (0,R) ≍ M ≍ m for large R. So by the monotonicity of the doubling index, (0,t) ≍ m for all t>0. Hence P has stable growth in every ball B(0,r). 
+
+
+
+
+	
+We observe that if a harmonic function u has stable growth in a ball B=B(x,r) ⊂^n with 𝒩(1/2B)=: N≥ 1, then because of the close relation between the doubling index and the frequency (Lemma <ref>), the frequency β satisfies 
+
+    β_u(x,t)∈[c_1 N, C_1 N], ∀ t∈ [1.1r,1.9r]
+
+where constants c_1,C_1>0 depend only on n. 
+
+
+
+
+
+ §.§ Choosing the stability constant
+
+  Let B=B(0,1) ⊂^n be the unit ball and let u be a harmonic function in 4B.
+	Consider the spherical layer
+	
+    𝒮_ρ,w:={x∈ℝ^n : ρ-10w≤ |x|≤ρ + 10 w}⊂ B(2)\ B(1),
+ with width 20w ∈ (0,ρ).	 Suppose that the frequency  of u  in this layer satisfies 
+	
+    β_u(0,t) ∈ [N,10N] , for t∈ [ρ- 10w, ρ + 10w].
+
+	Also assume that the layer is not too narrow in terms of N, in the sense that
+	
+    N w(log1w)^-1n≫ 1.
+
+	Then there exists a constant C >0 and a ball D of radius w such that 4D ⊂𝒮_ρ,w satisfying 
+	
+    C^-1( D) ≤(2D) ≤C( D),
+
+	and 
+	
+    (2D) ≍_n wN.
+
+
+
+	
+	From now on, we fix the stability constant in  Definition <ref> to be C, as given in the statement of Lemma <ref>. 
+
+
+
+
+
+
+ The following result captures the growth of a harmonic function with stable growth.
+
+
+
+	Let B=B(0,1) ⊂^n be the unit ball and let u be a harmonic function in 4B.
+ Consider the spherical layer
+	
+    𝒮_ρ,w:={x∈ℝ^n : ρ-10w≤ |x|≤ρ + 10 w}⊂ B(2)\ B(1),
+ with width 20w ∈ (0,ρ).	 Suppose that the frequency  of u is comparable to N>1 in this layer, that is, β_u(0,t) ≍_n N  for t∈ [ρ- 10w, ρ + 10w]. Also assume that the layer is not too narrow in terms of N, in the sense that
+	 
+    N w(log1w)^-1n≫ 1
+  (the larger N, the smaller w can be).   Define the function 
+	
+    M(t):= sup_tB|u|.
+
+ 	Then, for all  t_1<t_2∈ [ρ- 3w,ρ+ 3w] and |t_2-t_1|≥ w/2, we have  
+
+    exp(λ(t_2-t_1)N)<M(t_2)/M(t_1)<exp (Λ (t_2-t_1)N),
+
+ for some constants λ=λ(n)>0 and Λ=Λ(n)>1.
+
+
+
+
+
+
+Lemma <ref> will be used to prove Lemma <ref> and also Lemma <ref>.
+
+	
+
+	
+	
+	Under the assumptions of Lemma <ref> and maintaining the same notation, we have the following. Let x_0 ∈∂(ρ B) be a point where |u| attains its maximum on ρ B, that is, |u(x_0)| = M(ρ). If D is any ball of radius w such that x_0 ∈∂D, then 
+	
+    (D) ≲_n wN.
+
+	
+	
+		
+  * If D ⊂ρ B is a ball of radius w such that x_0∈∂ D, then  4D ⊂𝒮_ρ,w and
+		
+    (12D)≍_n 𝒩(2D)≍_n wN.
+
+	
+		
+  * If D̃ is any ball of radius w such that x_0 ∈∂D̃, then we have the following upper bound for (D̃):
+		
+    (D̃) ≲_n wN.
+
+		
+	
+
+
+
+We are now ready to prove Lemma <ref>.
+
+	To simplify the notation, we write
+		
+    H(r) = ∫_∂(rB)u^2 dS,
+
+	and  β(r) instead of the  frequency β(0,r). 
+	We know that H is a non-decreasing function, and thanks to Corollary <ref>, we also know a great deal about the growth of H in an interval where β is nearly constant. For harmonic functions, we can compare the L^2 norm √(H(·)) with the L^∞ norm M(·). Hence we should also be able to get information about the growth of M(·) in an interval where β is nearly constant. 
+	
+	
+	We now establish the upper bound in (<ref>), the lower bound can be shown using a similar argument. Let x_2 ∈∂ (t_2 B) be such that 
+
+    M(t_2)= |u(x_2)|,
+
+and let us write s= (t_2-t_1). We have 
+
+    u(x_2)^2 ≲ s^-2n(∫_B(x_2,s)|u| )^2 ≲ s^-n∫_B(x_2,s)u^2≤ s^-n∫_B(0,t_2+s)u^2.
+
+
+Since  H(·) is non-decreasing, we have  
+
+    ∫_rB u^2= ∫_0^r∫_∂(tB) u^2(x) dS(x) dt = ∫_0^r H(t)dt≤ r H(r).
+
+Since (t_2 + s)<4, we have the following comparison between H and M:
+
+    M(t_2)^2 ≲_(<ref>) s^-n∫_B(0,t_2 +s)u^2 ≲_(<ref>) s^-n  H(t_2 +s).
+
+Since (t_2+s)  ∈ (ρ-10w, ρ + 10w),  we have by our  assumption on β that  β(t_2+s) ≍ N.   Corollary <ref> implies that for some C=C(n)>0, we have
+
+    H(t_2+s)/H(t_1)≤(t_2+s/t_1)^C N= t_1 +2s/t_1^C N≤ (1+2s)^C N≤exp(2C sN),
+
+since t_1 >1. Hence 
+
+    H(t_1) ≥ H(t_2 +s) exp(-2Cs N) ≳_(<ref>) s^n exp(-2Cs N) M(t_2)^2.
+
+From the trivial comparison H(t_1) ≲ M(t_1)^2 and (<ref>), we have
+
+    M(t_2)^2 ≲ M(t_1)^2 exp(2Cs N + n log1s).
+
+Since s ≍ w, and Nw ≫log1w, we also have Ns ≫log1s. Hence there is a constant Λ = Λ(n) such that 
+
+    2Cs N + n log1s≤ 2Λ s N = 2Λ (t_2 - t_1)N,
+
+and this establishes the upper bound in (<ref>). 
+
+
+We now prove Lemma <ref> and Lemma <ref>.
+
+ Let x_0 be a point where |u| attains its maximum in ρ B. Let D ⊂ρ B be a ball of radius w such that x_0∈∂ D. Then we have 4D ⊂ (ρ+3w)B and by Lemma <ref>
+	
+    sup_4D|u|≤ M(ρ+3w) ≤  M(ρ) exp(3Λ w N).
+
+	Since D ⊂ (ρ- w)B, by Lemma <ref> we have
+	
+    sup_1/2D |u| ≤ M(ρ -  w) ≤ M(ρ) exp(-λ w N/2).
+
+	Using sup_D|u|=M(ρ) and sup_2D|u|≥ M(ρ), we have
+	
+    λ w N/2≤logsup_D |u|/sup_1/2D|u|  = (12D) and (2D) = logsup_4D|u|/sup_2D|u|≤ 3Λ w N,
+
+	which concludes the proof of Lemma <ref>.
+	
+	
+
+
+  The proof is similar to the proof of Lemma <ref> and  follows  by observing that 
+
+    sup_D|u| ≥ M(ρ)   and sup_2D|u| ≤ M(ρ) exp(3Λ wN),
+ 
+where the second inequality holds because  2D⊂ (ρ+3w)B.  This completes the proof of Lemma <ref>. 
+	
+
+
+
+ §.§ Proof of Theorem <ref> assuming Proposition <ref>.
+ 
+
+We now state a useful claim about the frequency. Although we state it specifically for the frequency, 
+an analogous statement is true for more general monotone functions φ:[a,b].
+ It essentially says that for any  monotone function, it is possible to find a subinterval of significant length where the function is almost constant. 
+
+ 
+   
+   Let u be a harmonic function defined in 4B, with B =B(0,1) ⊂ℝ^n. Suppose that 𝒩(1/2B)=N_1≫_n 1 and let 𝒩(2B)=N_2. Then there exists some N satisfying  N_1 ≲_n N ≲_n N_2 such that 
+   
+    β(0,t)∈ [N, eN],  ∀ t ∈ℐ
+
+   where ℐ⊂ [1.1,1.9] is some interval of length |ℐ|≳_n (log N)^-2.
+
+ In this proof, we write β(r) instead of β(0,r). We first observe that as a consequence of Lemma <ref> and assumption N_1 ≫_n 1, we have
+	
+    1 ≪_n N_1 ≲_n β(1.1) ≤β(1.9) ≲_n N_2.
+
+	Depending on the growth of the frequency β, we partition the interval [1.1,1.9] as follows. Let k ∈ be such that 
+	
+    k:=⌊logβ(1.9)β(1.1)⌋.
+
+	For 0 ≤ j ≤ k, let a_j ∈ [1.1,1.9] be defined by 
+	
+    a_j :=  inf{t∈ [1.1,1.9]: β(t)≥ 10^jβ(1.1)}.
+
+	
+	If there is some j such that 0≤ j ≤ k-1 and
+	
+    a_j+1 - a_j≥1/100 (logβ(a_j))^-2,
+
+then we can take ℐ = [a_j,a_j+1]. 
+If (<ref>) does not hold for any j, then we have
+
+    ∑_j=0^k-1 a_j+1 - a_j   ≤1/100∑_j=0^k-1(logβ(a_j))^-2≤1/100·∑_j=0^k-11/(logβ(1.1) + j)^2,
+    
+    a_k - 1.1    ≤1/100·∑_j=0^∞1/j^2≤ 0.02,
+
+	and hence a_k ≤ 1.12. By our definition of k, we also have 1≤β(1.9)/β(a_k) ≤ e. Hence 
+	
+    β(t) ∈ [β(a_k),eβ(a_k)],∀ t∈ [a_k,1.9].
+
+	Also notice that 1.9 - a_k ≥ 0.7 ≫ (logβ(1.1))^-2≥ (logβ(a_k))^-2. This shows that at least one of the  intervals [a_j,a_j+1] or [a_k,1.9] satisfies the required condition, and this completes the proof of Claim <ref>. 
+	
+First let us define the points 
+
+    r_0= 1.1  and  r_k+1=r_k + 1/100 logβ(r_k),
+
+for all k≥ 0 subject to r_k+1< 1.8. Suppose, by contradiction, that 
+
+    β(r_k+1)≥ 10 β(r_k),
+
+for all k. Then, since β(1.1)≥ N_1/2 by Lemma <ref> (with δ=10^-10) and the fact that N_1 is large, we have β(r_k)≥ 10^k and 
+
+    r_k+1- r_k = 1/100 logβ(r_k)≤1/100 k^2.
+
+Since 100^-1∑_k k^-2< 0.5,  the monotonicity of β(·), that is Theorem <ref>, implies 
+
+    β(r_k)≤β(1.6),
+
+a contradiction to β(r_k)≥ 10^k. 
+
+
+
+All in all, we have shown that there exists some r_k_0∈ [1.1,1.8] such that 
+
+    N_1/2≤β(r_k_0)≤ 2N_2  and β(r_k_0+1)≤ 10 β(r_k_0),
+
+where we have used again Lemma <ref> (with δ=10^-10). Hence, we may take β(r_k_0)= N and I_n=[r_k_0+1, r_k_0], as required. 
+
+
+Lemma <ref>  implies Theorem <ref>, under the stable growth assumption. We now show that Theorem <ref> also follows in the general case.
+Let us recall the setting of Theorem <ref>. We have the unit ball B=B(0,1), and a harmonic function u in 4B, which vanishes at the center of B. We wish to get a lower bound for the nodal volume of u in 2B, in terms of ( B).
+
+
+Define N_1:= ( B) and fix ε >0. We may assume that N_1 ≫_ε, n 1, otherwise we may employ the elementary Lemma <ref>.
+
+ 
+ We first use Claim <ref> to conclude that there is N ≳_n N_1, and an interval ℐ of length |ℐ| ≍ (log N)^-2 on which β∈ [N,eN].  Then  we apply Lemma <ref> to ℐ and conclude that there is a ball D of radius ≍ (log N)^-2 with stable growth satisfying: (D) ≍ N(log N)^-2 and 4D ⊂ 2B. Finally, we use Lemma <ref> for this ball to get the following lower bound: 
+
+    ℋ^n-1({u=0}∩ 2D)    ≳_n, (N(log N)^-2)^1-· (log N)^-2(n-1)≥ N^1-(log N)^-2n≥ N^1-2,
+
+where the last inequality follows because N ≫ 1. Now since 4D ⊂ 2B, we can also conculde that 
+
+    ℋ^n-1({u=0}∩ 2B)    ≳_n, N^1-2,
+
+and this completes the reduction of Theorem <ref> to Lemma <ref>. 
+
+Lemma <ref> was already reduced to Proposition <ref>, which is the only thing left to prove. 
+
+
+Let N_1=𝒩(1/2B) and let N_0 be as in Claim <ref>. If N_1≤ N_0, then we may apply Lemma <ref> and Theorem  <ref> follows by taking the constant c sufficiently small. Therefore, we may assume that  t N_1=𝒩(1/2B)≥ N_0. Thanks to Claim <ref>, there exists  some N_1/2≤ N and some interval I=I_N⊂ [1/2,2] of length |I|≍_n (log N)^-2 such that β_u(t)∈ [N, 10N] for all t∈ I. Therefore, by Lemma <ref>, there exists a ball B̃ of radius r≍_n (log N)^-2 such that 4B̃⊂ B and 
+
+    (1/2B̃)≍_n 𝒩(2B̃)≍_nN/(log N)^2.
+
+Finally, applying a rescaled version of Lemma <ref>, we find 
+
+    ℋ^n-1( {u=0}∩ 2B)≥ℋ^n-1( {u=0}∩ 2B̃) ≥ r^n-1(1/2B̃)^1-ε/2≥ N^1-ε,
+
+where we have absorbed the logarithmic factors into the term N^-ε.  This concludes the proof of Theorem <ref>. 
+
+ 
+
+
+
+
+§ REDUCING PROPOSITION <REF> TO THE STABLE GROWTH CASE
+
+
+
+
+The aim of this section is to show that it suffices to prove Proposition <ref> under the additional assumption that u has stable growth in B. The following result is exactly Proposition <ref> with the extra assumption of stable growth. 
+
+
+
+	  Let B be a unit ball, u: 4B⊂ℝ^n be a harmonic function and A>1 be a sufficiently large parameter. There exists a constant C_A>1 such that the following holds. Assume that u has stable growth in B and (1/2B)=N≥ C_A. Then there exists a collection of disjoint balls  B_i = B(x_i,r_i) such that:
+	
+	
+  * We have an upper bound on the doubling index:
+
+    max_i (2B_i) ≲_n N/A.
+ 
+
+  * We have a lower bound on the total s.d.i.'s:
+
+    ∑ (12B_i) r_i^n-1≳_n N_1/(log Aloglog A)^n-1.
+
+
+
+  * Vanishing at the center and non-intersection properties:
+
+    u(x_i) = 0, 4B_i ∩ 4 B_j=∅, and 4B_i⊂ 2B,∀ i≠ j.
+
+
+
+
+ Let x be the center of B; we will write β(·) for β(x,·).
+	Depending on the growth of the frequency β, we divide the interval [1.1,1.9] as follows. Let k ∈ be such that k:=⌊logβ(1.9)β(1.1)⌋. For 0 ≤ j ≤ k, let a_j ∈ [1.1,1.9] be such that β(a_j) = 10^jβ(1.1). Define the interval I_j:= [a_j, a_j+1] of length 20w_j := a_j+1 - a_j. Observe that on each of the intervals I_j, the frequency β does not grow more than by a factor of 10. If w_j satisfies 
+	
+    10^j β(1.1) ≥ C_n ·1w_jlog1w_j,
+
+	for some sufficiently large constant C_n>0, then we can use Lemma <ref> to get a ball B_j of stable growth in B(a_j+1)∖ B(a_j).
+	But some of these intervals I_j can be too short and (<ref>) may not hold for these intervals, and we will discard them. 
+	
+	
+
+
+
+
+
+
+We will show that the sum of the w_j satisfying (<ref>) is at least 1/2 if β(1.1) is large enough (which holds because β(1.1)≳𝒩(1/2B) ≥ C_A ≫ 1).
+
+
+
+
+
+Since w_j ∈ (0,1), and x≥log x for x>1,  we have 
+
+    1/w_j^2≥1/w_jlog1/w_j.
+
+ Hence if w_j^2· 10^j β(1.1) ≥ C_n, then (<ref>) holds. Thus, letting 𝒥 be the collection of indices j for which 
+w_j^2· 10^j β(1.1) ≤ C_n, we have
+
+    ∑_j ∈𝒥 w_j ≤√(C_n/β(1.1)) ∑_j ∈1/10^j/2≤√(C_n/β(1.1)).
+
+Hence the sum ∑_j ∈𝒥 w_j < 1/3 for β(1.1)≫ 1. Define 
+
+    G = {0,1,…,k}∖𝒥.
+
+We have
+
+    ∑_j ∈G w_j ≥ 1/2,
+
+and for each I_j, j ∈ G, we can apply Lemma <ref> to find a ball B_j such that:
+
+	
+  * u has stable growth in B_j, and (B_j) ≍ w_j 10^j β(1.1).
+	
+  * The radius of B_j is w_j, and 4B_j ⊂ B(0,a_j+1)∖ B(0,a_j).
+	
+The latter property implies that 4B_j are disjoint. 
+
+
+
+
+
+In order to simplify the notation, let us write Φ(A)= (log A loglog A)^n-1 until the end of the proof. For each B_j, j ∈G, we use Lemma <ref> to get a collection of disjoint sub-balls {B_i,j}_i, with radii r_i,j and  centers x_i,j, satisfying the following conditions:
+
+	
+  *   Upper bound for the doubling index:
+	
+    max_i (2B_i,j) ≲_n (B_j)/A ≍_n w_j 10^j β(1.1)/A.
+ 
+	
+  *  Lower bound for the total s.d.i.:
+	
+    ∑_i (12B_i,j) r_i,j^n-1≳_n (B_j)/Φ(A)· w_j^n-1≍β(1.1)/Φ(A)· 10^j w_j^n.
+
+	
+  *  Vanishing at the centers and disjointness: 
+    u(x_i,j) = 0,  4B_i,j∩ 4 B_k,j=∅,  and 4B_i,j⊂ 2B_j,∀ i≠ k.
+
+
+Since w_j≤ 1, <ref> and Lemma <ref>  imply that
+
+    max_i (2B_i,j) ≲_n w_j 10^j β(1.1)/A  ≲_n β(1.9)/A≲_n 𝒩(2B)/A.
+
+We observe that <ref> implies (3) in Proposition <ref>. Therefore, we are left to show (2).   It suffices to show that, for j ∈ G, we have 
+
+    ∑_i,j(12B_i,j)  r_i,j^n-1≳_n  ( B)/Φ(A).
+
+Indeed, summing (<ref>) over all j ∈ G and using the bound β(1.1)≳𝒩(1/2B), which follows from Lemma <ref>, we get
+
+    ∑_j ∈ G∑_i(12B_i,j)  r_i,j^n-1≳_n  ( B)/Φ(A)∑_j ∈ G 10^j w_j^n.
+
+We will get a lower bound for ∑_j ∈ G 10^j w_j^n by using  Holder's inequality which says that, for α_m, γ_m >0, and p,q ≥ 1 such that p^-1 + q^-1 = 1, we have
+
+    ∑_mα_m γ_m ≤∑_m α_m^p^1/p∑_m γ_m^q^1/q.
+
+Choosing p=n, q=nn-1, α_j = w_j 10^j/n, γ_j = 10^-j/n in (<ref>), we get
+
+    ∑_j ∈ G w_j ≤(∑_j ∈ G 10^j w_j^n)^1/n·( ∑_j ∈ 10^-j/n-1)^n-1/n.
+
+By  (<ref>),  ∑_j ∈ Gw_j ≥ 1/2. We deduce that there exists constant c_n>0 such that 
+
+    ∑_j ∈ G 10^j w_j^n≥ c_n.
+
+Using this in (<ref>), we have shown that (<ref>) holds. This concludes the proof of Proposition <ref> (assuming Lemma <ref>). 
+	
+
+
+
+§ ZEROS OF A HARMONIC FUNCTION IN A TUNNEL
+
+
+
+
+
+
+
+
+In this section we introduce the notion of a tunnel. A tunnel 𝒯⊂^n is a closed hyper-rectangle with all sides  but one of length h>0, while  the length ℓ of the remaining side is much larger than h. That is, ℓ≫_n h. We call h and ℓ the width and the length of the tunnel respectively. We will always tacitly assume that m := ℓ/ h ∈. A tunnel  has two faces whose sides are all of length h. We designate one of these to be the beginning face and the other one to be the end face, and we  will denote them by  F_beg and F_end respectively. We can find a unit vector v ∈^n (which is parallel to the longer side of ) and a∈ such that 
+
+    F_beg = ∩{x ∈^n: v · x = a} and F_end = ∩{x∈^n: v · x = a+ℓ},
+
+where · denotes the usual inner product in ^n. We partition  into equal hyper-cubes of side length h, and denote this collection by {q_i}_i=1^m. More precisely, for 1≤ k ≤ m: 
+
+    q_k := ∩{x∈^n : a+ (k-1)h ≤ v· x ≤ a + kh}.
+
+Note that F_beg⊂ q_1 and F_end⊂ q_m. We will call subcubes q_1 and q_m the beginning and the end of  respectively. Henceforth, whenever we talk about a tunnel, we implicitly assume that it comes with a choice of the beginning and the end.  
+
+With  as above, a harmonic function u defined in a neighbourhood of  is said to have logarithmic multiplicative increment (l.m.i.) Z>0 in  if 
+
+    logsup_q_m|u|/sup_q_1|u|= Z.
+
+
+
+
+
+
+
+
+
+We now recall the notion of  the doubling index of a cube introduced in 
+(<ref>): given a cube Q with diameter r>0, and a harmonic function on √(n)Q,  we write
+
+    𝒩^*(Q)= sup_x ∈ Q,  .05cm ρ∈ (0,r) (x,ρ).
+
+We recall the notion of ℓ-neighbourhood of a set S ⊂^n:
+
+    S_+ℓ := {x ∈^n : x= s+b, where s∈ S and b∈ B(0,ℓ) }.
+
+
+In the following lemma, we show that if a harmonic function u has  a large enough multiplicative increment Z in a tunnel , and the doubling indicies in all of the subcubes q_k are much smaller than Z, then the zero set of u in a neighbourhood of  is non-empty and is well spread out. That is, there are many disjoint balls (of radius ≍ h) where u vanishes. 
+
+
+	
+	Let B ⊂^n be a unit ball and let  u be a harmonic function in 4B. Let ⊂1.6B be a tunnel of length ℓ and width h.  Suppose that  u has l.m.i. Z>1 in , and that  m= ℓ/ h≪_n Z. Moreover, suppose that
+	
+    max_k 𝒩^*(100√(n)q_k)≤ Z/V,
+
+	for some positive number V ≪_n Z. Then there exist ≳_n V many disjoint balls B_k = B(y_k,r_k) such that B_k⊂_+50√(n)h  and the following holds.
+	
+		
+  *  
+		Vanishing and non-intersection properties:
+		
+    u(y_i) = 0,  4B_i ∩ 4 B_j=∅, and  4B_i⊂ 2B,
+ 
+		for all i ≠ j.
+		
+  *  
+		A lower bound for the sum of the doubling indices: 
+		
+    Z ≲_n ∑_k 𝒩(12B_k).
+
+	
+	
+
+
+
+	Let z_k be the center of q_k. We start with the following claim. 
+	
+	
+	
+	
+	
+		
+		Let S ⊂{1,2,…,m-1} be the collection of of k's such that (2q_k ∪ 2q_k+1) contains a zero of u. Then we have
+		
+    |S| ≳_n V  and ∑_k ∈ S(z_k, 4√(n)h) ≳_n Z.
+
+		
+	
+	
+		We first observe that 
+		
+    Z = logsup_q_m|u|/sup_q_1|u|= ∑_k=1^m-1logsup_q_k+1|u|/sup_q_k|u|.
+
+		
+		If u does not vanish on  (2q_k∪ 2q_k+1), then by Harnack's inequality,  there exists some constant C_0=C_0(n)>0 such that 
+		
+    logsup_q_k+1|u|/sup_q_k|u|≤ C_0.
+
+		Therefore, writing S^c={1,2,…,m-1}\ S, we have
+		
+    Z    = ∑_k ∈ S^clogsup_q_k+1|u|/sup_q_k|u| + ∑_k ∈ Slogsup_q_k+1|u|/sup_q_k|u|,
+       ≤ C_0 m + ∑_k ∈ Slogsup_q_k+1|u|/sup_q_k|u|.
+
+		Since  m≪ Z, we have C_0 m ≤ Z/2 and hence
+		
+    Z/2   ≤∑_k ∈ Slogsup_q_k+1|u|/sup_q_k|u|.
+
+		
+		Since B(z_k, h2) ⊂ q_k, and q_k+1⊂ B(z_k, 2√(n)h), we conclude from Lemma <ref>  that 
+		
+    logsup_q_k+1|u|/sup_q_k|u|   ≤logsup_B(z_k, 2√(n)h)|u|/sup_B(z_k, h2)|u|, 
+       ≤log [(4√(n))^2(z_k, 4√(n)h) + C_1], 
+       ≤ C_2 (z_k, 4√(n)h) +C_2,
+
+		where C_1, C_2>0 are dimensional constants. 
+		 From (<ref>) and  (<ref>), we have
+			
+    Z/2≤∑_k ∈ S[C_2 (z_k, 4√(n)h) + C_2 ] ≤ C_2 ∑_k ∈ S(z_k, 4√(n)h) + C_2 m.
+
+		 Since  m≪ Z, we have
+		
+    Z≲∑_k ∈ S(z_k, 4√(n)h).
+
+		By our assumption, each ^*(4√(n) q_k) ≤ Z/V, and hence (z_k,4 h) ≤ Z/V.  Hence	we have |S| ≳_n V. This completes the proof of Claim <ref>. 
+		
+		
+		
+		
+		
+		
+		
+		
+	 
+	
+	
+	
+	
+		The collection of balls obtained in Claim <ref> satisfy (<ref>), but the balls  might intersect each other and the zeros are not necessarily at their centers. It is easy to modify this collection to also satisfy (<ref>). 
+	
+	For k ∈ S, let y_k ∈ (2q_k ∪ 2q_k+1) be a point where u vanishes.  The distance between y_k and z_k is at most 3√(n)h. So
+	
+    B(z_k, 8√(n)h)  ⊂ B(y_k, 16√(n)h).
+
+	By almost monotonicity of the doubling index for non-concentric balls (Lemma <ref>)
+	
+    (z_k, 4√(n)h) ≲_n (y_k, 16√(n)h).
+
+	Thus by Claim <ref> 
+	
+    ∑_k ∈ S(y_k, 16√(n)h)  ≳_n∑_k ∈ S(z_k, 4√(n)h)  ≳_n Z.
+
+	Define B_k := B(y_k, 32√(n)h).  
+	Then 
+    ∑_k ∈  S(12 B_k) ≳_n Z .
+ 
+	Since each of the balls 4B_k intersects at most C=C(n) of other balls 4B_l,
+	we can split the set { 4B_k}_k ∈ S into at most C collections of balls such the balls in each collection do not intersect.
+	Let  {4B_k}_k  ∈S̃ be the collection of disjoint balls with the maximal sum ∑_k ∈S̃(12 B_k). Then
+	
+    ∑_k ∈S̃(12 B_k) ≥1/C∑_k ∈ S(12 B_k) ≳_n Z.
+ 
+	The collection of balls {B_k}_k ∈S̃ satisfies (<ref>) and (<ref>). This completes the proof of Lemma <ref>. 	
+	
+	
+	
+	
+	
+	
+	The collection of balls obtained in Claim <ref> satisfy (<ref>), but the balls  might intersect and the zeros are not necessarily at their centers. It is easy to modify this collection to also satisfy (<ref>). 
+	
+	For k ∈ S, let y_k ∈ (2q_k ∪ 2q_k+1) be a point where u vanishes.  The following inclusion is easy to see:
+	
+    B(z_k, 8√(n)h)  ⊂ B(y_k, 16√(n)h).
+
+	From this and Lemma <ref>, we can conclude that 
+	
+
+
+
+
+	
+    (z_k, 4√(n)h) ≲_n (y_k, 16√(n)h).
+
+	Thus from Claim <ref>, and the fact that m ≪ Z, we conclude that 
+	
+    ∑_k ∈ S(y_k, 16√(n)h) ≳_n Z.
+
+	For k ∈ S, define B_k := B(y_k, 32√(n)h). Except for the fact that B_k's
+	can have non-trivial intersection, this collection of balls has all the other desired properties, i.e., u vanishes at the center of each B_k and (<ref>) holds. Note that there is a constant K_0 ∈ such that if |k-k'|≥ K_0, then 4B_k∩ 4B_k' = ∅. Hence we can find a subcollection of balls, denoted {B_k}_k ∈ℐ where ℐ⊂ S, such that  |ℐ| ≥ |S|/K_0 ≳_n V, and 
+	
+    ∑_k ∈ℐ(y_k, 22√(n)h) =  ∑_k ∈ℐ(12 B_k) ≥1/K_0∑_k ∈ S(y_k, 22√(n)h) ≳_n Z.
+
+	The collection of balls {B_k}_k ∈ℐ has all the desired properties and this completes the proof of Lemma <ref>. 
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ CONNECTING THE DOTS: PROOF OF LEMMA <REF>
+
+
+
+	
+Throughout this section, we will use the notation for tunnels introduced in <ref>. 
+
+
+
+The proof of Lemma <ref> is split into three parts.
+
+In <ref> we  show how to construct tunnels in 2B= B(0,2), which have l.m.i. at least N=𝒩(1/2B). In <ref> we use information about the distribution of doubling index from Proposition <ref> to prove that many of these  tunnels  are good. Good tunnels are those for which the l.m.i. is at least N, and the doubling index in each of its subcubes is much smaller than N. 
+Finally in <ref> we use Lemma <ref> in good tunnels to conclude the proof of Lemma <ref>. 
+
+
+
+
+
+
+
+
+
+
+ §.§ Step 1: Constructing tunnels with large multiplicative increment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+We first start with a lemma about the growth of harmonic functions. 
+ Let B=B(0,1) ⊂^n and let u be a harmonic function in B. There exists C=C(n)>0 such that the following holds. For every r_1, r_2 satisfying 0< 2r_1 < r_2 < 4^-1, and y ∈∂(r_2B), we have
+	
+    sup_B(0,r_1)|u| ≥ |u(y)|(r_2/r_1)^-2𝒩(0,r_2) - C.
+
+
+
+
+
+
+	We use monotonicity of doubling index (Lemma <ref>) to see that 
+	
+    |u(y)|/sup_B(0,r_1)|u|≤sup_B(0,r_2)|u|/sup_B(0,r_1)|u|≤(r_2/r_1)^2𝒩(0, r_2) +C,
+
+	as required. 
+
+
+Consider a  harmonic function u with stable growth in the unit ball B=B(0,1), with (1/2B) =N. In the following claim, we consider a tunnel  whose end is near a point where |u| attains its maximum on ∂(1.5 B), and whose beginning is contained well within 1.5B (for example in 1.3B). We show that if 𝒯 is not too narrow, then  u has l.m.i. Z ≳ N in . 
+
+
+
+
+
+
+
+ 	 Let B=B(0,1) ⊂^n. Assume that  a harmonic function u in 4B has stable growth in B. Let x_0 ∈∂ (1.5B) be a point where |u| attains its maximum in 1.5B. 	Let 𝒯 be any tunnel of length 1/4 and width h such that the beginning q_1 satisfies
+	
+    q_1 ⊂ 1.3B.
+
+	Denote by z_m the center of the ending q_m of  and put r=|z_m -x_0|. Assume that
+	
+    h ≪_n 1 and h/2≤ r ≪_n (log1h)^-1
+
+	and  
+	
+    ( B) = N ≫_n 1hlog1h.
+ Then u has multiplicative increment Z ≳_n N in 𝒯.
+
+
+
+
+	
+	Let M=|u(x_0)|. We can apply Lemma <ref> to u in the spherical layer {x∈ℝ^n: 1.1≤ |x|≤ 1.9} to conclude that 
+	
+    sup_q_1 |u|≤sup_B(0,1.3) |u| ≤sup_B(0,1.5) |u|exp(-c_1 N) = M exp(-c_1 N)
+
+	for some  constant c_1=c_1(n)>0.  We conclude from Claim <ref>  that
+	
+    sup_q_m |u| ≥sup_B(z_m, h/4) |u| ≥ |u(x_0)| 4r/h^-2(z_m,r)-C,
+
+	for some C=C(n)>0. Since  
+    Nr(log1r)^-1≥ Nh ( log1h)^-1≫_n 1
+ 
+	we can use  Lemma <ref> to get 
+    (z_m, r) ≲_n rN.
+ Let's plug the latter inequality in (<ref>) and use rN ≫ 1 :
+	
+    sup_q_m |u| ≥ M (2r/h)^-C_1rN = Mexp(-C_1rN log(4r/h)) 
+    ≥ Mexp(-C_1rN log (1/h))
+
+	for some  C_1=C_1(n)>1.
+	Hence, we have the following bound for the multiplicative increment of u in :
+	
+    Z = logsup_q_m|u|/sup_q_1|u|≳_(<ref>),(<ref>) N(c_1 - C_1rlog (1/h)) ≳ N.
+
+	In the last inequality we use the assumption r ≪_n (log1h)^-1. The proof of Lemma <ref> is finished.
+
+
+
+
+ §.§ Step 2: Seeking for many good tunnels
+
+A randomly chosen tunnel from Lemma <ref> may have a subcube with doubling index comparable to N. In order to apply Lemma <ref>, we need to ensure that all the subcubes in the tunnel have doubling index ≪_n N. Such a tunnel will be called a good tunnel. The goal of this section is to construct many good tunnels in Lemma <ref>. 
+
+
+
+We are proving Lemma <ref> and we keep the notation introduced in its statement. Namely, u is harmonic on 4B and has stable growth in B=B(0,1), with (12B) =N. 
+
+Let x_0 ∈∂ (1.5B) be such that |u(x_0)| = sup_1.5B|u|.
+Denote by ℛ a tunnel of length 1/4 and width w ≪ 1, whose longer side is parallel to the vector x_0, and x_0 is the center of its end face. We will assume that  (4w)^-1∈ so that we could chop ℛ into equal subcubes. 
+Then ℛ⊂ 1.6B and its beginning is contained in 1.3B. See Figure <ref> 
+
+
+
+
+We will start chopping ℛ into subcubes and we will need an integer (chopping) parameter K ≫ 1. 
+K and w will be chosen later, depending on A in the statement of Lemma <ref>. 
+Partition ℛ into equal subcubes {Q_j: 1≤ j ≤ (4w)^-1} of side length w. Also partition ℛ into equal subtunnels {_i: 1 ≤ i ≤ K^n-1} of length 1/4 and width w/K. 
+
+The tunnels _i are such that all their beginning faces and end faces  are contained in the beginning face and the end face of ℛ respectively. We denote by {q_i,t: 1≤ t ≤ K(4w)^-1} the subcubes of tunnel _i with side length w/K. See Figure <ref> for a pictorial explanation for this partitioning. 
+
+
+
+It is easy to see that Q_j consists of K^n equal subcubes q_i,t:
+
+    Q_j = ∪{q_i,t: 1+ (j-1)K ≤ t ≤ jK and 1 ≤ i ≤ K^n-1}.
+
+
+We will show  that in at least half of the tunnels _i, the doubling index of all the scaled subcubes 100√(n)q_i,t is much smaller than N, by using a modified version of Proposition <ref>, which is proved in Appendix <ref>. 
+ Let a unit cube Q ⊂^n be  partitioned into K^n equal subcubes {q_α: 1≤α≤ K^n}. Let u be a harmonic function in 4√(n) Q.  Let ^*(2Q) = N. If K ≫_n 1, then we have
+	
+    #{α :^*(100√(n)q_α) ≥max(N· 2^-clog K/loglog K,C)}≤ K^n-1-c,
+
+	where c,C >0 are dimensional constants. 
+
+
+
+
+The next claim is a straightforward consequence of the almost monotonicity of doubling index (Lemma <ref>).
+
+	
+	Let B=B(0,1) ⊂^n. Then for every harmonic function u defined in 4B, and every cube Q⊂ B(0, 1.6) of side length at most (10√(n))^-1, we have 
+	
+    𝒩^*(Q)≲_n 𝒩(2B).
+
+
+
+We are now ready to show the existence of many good tunnels in ℛ.
+
+	 With the  notation as above, we define 
+    N^*(𝒯_i) = max_t=1,2,…, K(4w)^-1𝒩^*(100 q_i,t).
+
+	If  K ≫_n 1 and w≍_n (log K)^-1, then 
+	
+    #{i: 	N^*(𝒯_i) ≤  N/ C_K }≥K^n-1/2,
+
+	where C_K = exp(c' log K/loglog K) for some constant c' = c'(n)>0.
+	
+
+
+In total there are K^n-1  tunnels _i. The above lemma implies that  in a neighborhood  of at least  half of these tunnels the doubling index significantly drops down.
+
+
+
+	If w ≪ 1, we can apply Claim <ref> to get
+	
+    ^*(2Q_j) ≤ C N,
+ for some constant C=C(n)>1.	
+	
+	By Corollary <ref> applied to Q_j we have
+	
+    #{q_i,t⊂ Q_j : ^*(100√(n)q_i,t) ≥ NC2^-clog K/loglog K}≤ K^n-1-c,
+ 
+	Put c':=c/2 and C_K := exp(c' log K/loglog K).
+	If K≫ 1,then 	
+    N C 2^-clog K/loglog K≤ N/C_K.
+  
+	There are (4w)^-1 subcubes Q_j. Using the assumptions w^-1≍_n log K  and K ≫ 1 we have
+	
+    #{q_i,t⊂ℛ : ^*(100√(n)q_i,t) ≥ N/C_K}≲ w^-1 K^n-1-c≪K^n-1/2,
+
+	Since the total number of tunnels _i is K^n-1, we conclude that at least half of them satisfy N^*(𝒯_i) ≤ N/C_K.
+	
+
+
+
+
+
+
+
+ §.§ Step 3: Concluding the proof of Lemma <ref>
+
+In order to finish the proof we need to carefully choose the parameters K,w in the construction and chopping of the tunnel ℛ.
+Recall that ℛ has  length 1/4 and width w.  Its subtunnels _i have length 1/4 and width h=w/K. 
+
+
+  We can choose a dimensional constant  c_0=c_0(n)>0 and put  w=c_0/ log K so that the the following holds.   If K≫_n 1 and  N ≫_n K(log K)^2, then every tunnel _i ⊂ℛ has a multiplicative increment Z ≳_n N.  
+
+
+	Formally,  we just need to check that the assumptions of  Lemma <ref> hold to conclude that the multiplicative increment Z ≳_n N.
+	
+	For that we need to consider the end cube q of _i and its center z. 
+	Recall that x_0 is the maximum point of u on ∂(1.5 B) and r:=|z - x_0|.  
+	
+	The assumptions needed for  Lemma <ref> are the following:
+	
+	
+	
+    h/2 ≤ r,     r ≪_n  (log1/h )^-1   and   1/hlog1/h≪_n N .
+
+	
+	The first inequality holds because x_0 is on the end face of ℛ and z is the center of the end cube q, which is of side-length h. 
+Moreover,  the diameter of the end face of ℛ is ≍_n w.   See figure <ref>.
+So r ≲_n w and for the second inequality in (<ref>) it is sufficeint to have 
+
+    w ≪_n ( log1/h )^-1.
+
+In view of  w=c_0 / log  K and h=K/w, it is equivalent to
+
+    c_0/log K·logK log K/c_0≪_n 1.
+
+This is the place where we choose the dimensional constant c_0>0, keeping in mind that K≫_n 1.
+
+The third inequality in (<ref>)  holds because we assume N ≫_n K(log K)^2 and
+
+    1/hlog1/h = K log K/c_0logK log K/c_0≲_n K (log K)^2 ≪_n N.
+  
+
+
+
+
+
+Connecting the dots and choosing the parameters.
+
+We have defined w=c_0 / log K.  The constant K≫_n 1 is not chosen yet and we  assume N ≫_n K(log K)^2 .   By the previous Claim <ref> every tunnel _i ⊂ℛ has a multiplicative increment Z ≳_n N.  
+
+Lemma <ref> ensures that half of {_i}_i  satisfy N^*(_i) ≤ N/ C_K.  
+We can find a  positive portion of the good tunnels {_i}_i,  which are well-separated.  That is, there is S ⊂{1,…, K^n-1} such that |S|≳_n K^n-1,  N^*(_i) ≤ N/ C_K for each i ∈ S, and for distinct  i,j ∈ S:
+
+    (_i)_+50 w/K∩ (_j)_+50 w/K = ∅.
+
+
+
+Finally for every i ∈ S, we can use Lemma <ref> in _i to obtain a collection of disjoint balls {B_i,k}_k with center y_i,k and radius r_i,k≍ w/K satisfying the following properties.
+
+
+  *  The doubling index drops down:
+
+    max_k𝒩 (2B_i,k)≤ N/C_K.
+
+
+  *  From condition (<ref>) of Lemma <ref>, we have the following lower bound on the sum of the doubling indices:
+
+    N ≲_n ∑_k 𝒩( 12B_i,k).
+
+
+  *  From condition (<ref>) of Lemma <ref>,  we have
+
+    u(x_i,j) = 0, 4B_i,j∩ 4 B_i,k=∅,    and  4B_i,k⊂ (_i)_+50 w/K⊂ 2B,
+
+for all i∈ S and all j≠ k.
+
+
+
+
+Finally, we will show that the collection ⋃_i∈ S{B_i,k} satisfies conditions (1), (2) and (3) of Lemma <ref>. 
+
+Condition (3) of Lemma <ref>.  almost follows  from <ref>. We need also to show that for two different tunnels 𝒯_i and 𝒯_j with i,j ∈ S  any balls B_i,k and B_j,l are disjoint.  This is why we constructed the tunnels to be well-separated.  Namely, (_i)_+50 w/K, i 
+∈ S are disjoint while the balls 4B_i,k and 4B_j,l must lie in 50 w/K neighbourhood of the corresponding tunnels. 
+
+To get (1) of Lemma <ref> we will choose K depending on A and n.  Namely,  we choose K so that 
+
+    C_K = e^c'log K/loglog K > A
+
+Then  condition <ref> translates to condition (1) in Lemma <ref>.    We also assumed many times that K≫_n 1 which follows from the assumption A ≫_n 1, in Lemma <ref>. Finally we make our choice of K so that
+
+
+    log A ≍_n log K/loglog K and 	C_K = e^c'log K/loglog K > A .
+
+
+Now the constants w and K are chosen, and we can specify the constant C(A)>1 in Lemma <ref>. The condition 
+    N≫ K (log K)^2
+ translates to 
+
+    N≫ C(A) withlog C(A) ≍log A loglog A.
+
+
+
+
+
+
+We now need to check (2) of Lemma <ref> and we do this below.  Recall that for every i∈ S, each r_i,k≍ w/K with w≍ (log K)^-1. Hence from (<ref>) and the fact that |S| ≳_n K^n-1, we have
+
+    ∑_i∈ S∑_k  ( 12B_i,k )  r_i,k^n-1≳_n |S| w/K^n-1 N ≳_n w^n-1 N ≍_n  N/(log K)^n-1.
+ 
+Since log A ≍_n log K/loglog K, we have log K ≲_n  log A ·loglog A, for all large enough K. Hence we get the following lower bound from (<ref>):
+
+    ∑_i∈ S∑_k  (12B_i,k)  r_i,k^n-1≳_n N/(log A ·loglog A)^n-1.
+
+as required. This completes the proof of Lemma <ref>. 
+
+
+
+
+
+
+
+
+
+
+
+
+§ PROOF OF CLASSICAL RESULTS
+
+
+In this first part of this section, we prove several known results  about the frequency function which was presented in <ref>. 
+Recall that the frequency  of a harmonic function u in ℝ^n is defined by
+
+    β(x,r)= r G(x,r)/H(x,r),
+
+where x∈ℝ^n, r>0 and 
+
+    H(x,r)= ∫_∂ B(x,r) u^2 dS,      G(x,r)= ∫_B(x,r) |∇ u|^2 d.
+ 
+The following well-known identity will be useful in proving that β(r):=β(0,r) is a non-decreasing function of r, see <cit.>.
+
+	
+	With the above notation, we have 
+	
+    ∫_∂ (rB) |∇ u|^2 = n-2/r∫_rB |∇ u|^2d  + 2∫_∂ (rB)(∇ u·n̂)^2 dS.
+
+	where  n̂ is then unit normal vector to the sphere ∂ (rB) and B=B(0,1).
+
+
+	Writing 1= r̂·n̂ / r, where  n̂= r̂r^-1 is the unit normal to the sphere ∂(rB), we have
+	
+    ∫_∂ (rB) |∇ u|^2= r^-1∫_∂ (rB) |∇ u|^2 r̂·n̂ dS= r^-1∫_rB( |∇ u|^2 ·r̂) d,
+
+	where the second equality follows by the divergence theorem. Expanding the divergence operator and using the fact that (r̂)=n, we obtain 
+	
+    ∫_rB( |∇ u|^2 ·r̂) d   = n∫_rB |∇ u|^2 d + 2∫_rB (H (u)  r̂)·∇ u  d
+       = n G(r) +  2∫_rB (H (u)  r̂)·∇ u  d,
+
+	where H(u) is the Hessian of u. Using the identity 
+	
+    ∇(∇ u ·r̂) = H(u) r̂ + ∇ u,
+
+	the second term in (<ref>) can be re-written as 
+	
+    ∫_rB (H (u)  r̂)·∇ u  d   = ∫_rB∇ (∇ u·r̂) ·∇ u  d - ∫_rB |∇ u|^2 d
+       = ∫_∂ (rB) (∇ u ·r̂) (∇ u ·n̂) dS - ∫_rB |∇ u|^2 d.
+
+	Therefore, inserting (<ref>) into (<ref>) and using the fact that n̂= r̂ r^-1, we conclude 
+	
+    ∫_∂ (rB) |∇ u|^2=n-2/r G(r) + 2∫_∂ (rB)(∇ u·n̂)^2 dS,
+
+	as required. 
+
+
+
+thm: monotonicity frequency [Monotonicity of the frequency]
+	For any harmonic function in ℝ^n, its frequency function β(r):=β(0,r) is a non-decreasing function of r. 
+	
+
+
+
+
+
+  
+	Taking the logarithmic derivative in the definition of the frequency function (<ref>) we have 
+	
+    β'(r)= β(r)(1/r + G'(r)/G(r) - H'(r)/H(r)).
+
+	We first  consider the term H'/H on the r.h.s. of (<ref>). Observe that 
+	
+    H(r)= ∫_∂ (rB) |u|^2 dS= r^n-1∫_∂ B |u(r·)|^2 dS.
+
+	Thus, we have
+	
+    H'(r)   = (n-1)r^n-2∫_∂ B |u(r·)|^2 dS + r^n-1∫_∂ B∂_r |u(r·)|^2 dS, 
+       = n-1/rH(r) + 2 ∫_∂ (rB) u (  ∇ u ·n̂ )dS,
+
+	which gives
+	
+    H'(r)/H(r)=  n-1/r + 2 ∫_∂ (rB) u (  ∇ u ·n̂ )dS/∫_∂ (rB) u^2dS.
+
+	
+	
+
+	
+	We now compute the term G'/G on the r.h.s. of (<ref>).  Differentiating G(r), we find 
+	
+    G'(r)=∫_∂ (rB) |∇ u|^2 dS.
+
+	Therefore, Lemma <ref> gives
+	
+    G'(r)= n-2/rG(r) + ∫_∂ (rB)( ∇ u ·n̂ )^2dS.
+ 
+	Since, for a non-constant harmonic function u,
+	
+    G(r)= ∫_B(x,r) |∇ u|^2 d = ∫_∂ (rB) u( ∇ u ·n̂ )dS>0,
+
+	we deduce
+	
+    G'(r)/G(r)= n-2/r + 2 ∫_∂ (rB) ( ∇ u ·n̂ )^2dS/∫_∂ (rB) u( ∇ u ·n̂ )dS.
+ 	
+	Finally,	inserting (<ref>) and (<ref>) into (<ref>), we obtain 
+	
+	
+    β'(r)= 2β(r)(∫_∂ (rB) (  u ·n̂ )^2dS/∫_∂ (rB) u( ∇ u ·n̂ )dS- ∫_∂ (rB) u ( ∇ u ·n̂ )dS/∫_∂ (rB) u^2dS),
+
+	which is non-negative by the Cauchy-Schwartz inequality. 
+
+
+cor: formulas for the growth For any harmonic function in ℝ^n, let β(r)= β(0,r) be its frequency function. For any 0<r_1<r_2,  we have 
+	
+    H(r_2)/r_2^n-1= H(r_1)/r_1^n-1exp( 2 ∫_r_1^r_2β(r)/rdr).
+
+	Moreover, we also have 
+	
+    (r_2/r_1)^2β(r_1) + n-1≤H(r_2)/H(r_1)≤(r_2/r_1)^2β(r_2) + n-1.
+
+	
+
+
+
+
+	Since we may write
+	
+    G(r)= ∫_∂ (rB) u (∇ u·n̂)dS,
+ formula (<ref>) implies the following expression for the frequency function 
+	
+    2β(r)/r = 2G(r)/H(r)= H'(r)/H(r)- n-1/r
+
+	Integrating both sides, we obtain the first claim of Corollary <ref>. Since, by Theorem <ref>, we have β(r_1)≤β(r)≤β(r_2) for all r≤ r_2, the second claim in Theorem <ref> follows from the first. 
+
+
+Thanks to the Poisson formula for harmonic functions in ℝ^n, it is possible to bound the L^∞ norm of a harmonic function in a ball by its L^2 norm on the boundary of a slightly larger ball.
+
+	 Let δ>0 and let B⊂ℝ^n be a unit ball. There exists some constant C=C(n,δ)>1 such that 
+	
+    sup_B|u|^2 ≤ C∫_∂((1+δ)B) |u|^2 dS,
+
+	for any harmonic function u defined in a neighbourhood of (1+δ)B.  
+
+
+lem: comparability di and frequency  Let δ>0 be a sufficiently small parameter and let 𝒩(r):= 𝒩(B(0,r)), for r>0. There exists a constant C=C(δ,n)≥ 1 such that 
+	
+    β (r(1+δ))(1-100δ) -C≤𝒩(r) ≤β (2r(1+δ))(1+100δ) +C
+
+	uniformly	for all 0<r≤ 4^-1 	and all harmonic functions u defined in B(0,2). 
+
+
+
+
+	We first establish the lower bound in Lemma <ref>. Let us write B=B(0,1)⊂ℝ^n and observe that, by  elliptic estimates, we have 
+	
+    sup_rB|u|^2 ≲_δ1/r^n-1∫_∂ (r(1+δ)B) |u|^2 dS ≲_δH((1+δ)r)/r^n-1.
+
+	We also have 
+	
+    sup_2rB|u|^2 ≳1/r^n-1∫_∂ (2rB) |u|^2 dS≳H(2r)/r^n-1.
+
+	Therefore, 
+	
+    2𝒩(rB) = logsup_2rB|u|^2/sup_rB|u|^2≥logH(2r)/H((1+δ)r) + C_0,
+
+	for some C_0=C_0(n,δ)≥ 1. Using the second part of Corollary <ref> and taking δ>0 sufficiently small (so that log_2(2/(1+δ))≥ 1-100δ), we obtain 
+	
+    logH(2r)/H((1+δ)r)≥ 2β (r(1+δ))(1-100δ) + C_1,
+
+	for some C_1=C_1(n,δ)≥ 1, and the lower bound in Lemma <ref> follows. 
+	
+	
+
+	
+	We are now going to establish the upper bound in Lemma <ref>. By elliptic estimates, we have 
+	
+    sup_2rB|u|^2 ≲_δ1/r^n-1∫_∂ (2r(1+δ)B) |u|^2 dS ≲_δH(2(1+δ)r)/r^n-1,
+
+	and we also have
+	
+    sup_rB|u|^2 ≥1/r^n-1∫_∂ (rB) |u|^2 dS= H(r)/r^n-1.
+
+	Therefore, 
+	
+    2𝒩(rB) = logsup_2rB|u|^2/sup_rB|u|^2≤logH(2r(1+δ))/H(r) + C_2,
+
+	for some C_2=C_2(n,δ)>0. By Corollary <ref> and taking δ>0 sufficiently small (so that log_2(2/(1+δ))≤ 1+100δ), we have 
+	
+    logH(2r)/H((1+δ)r)≤ 2β (2r(1+δ))(1+100δ) + C_3,
+
+	for some C_3=C_3(n,δ)>0, and the upper bound in Lemma <ref> follows.
+
+
+lem: monotonicity doubling index[Almost monotonicity of the doubling index]
+	Let δ>0 be a sufficiently small parameter and let u be a harmonic function in B(0,2). Let 𝒩(r):= 𝒩(B(0,r)), for r>0. There exists a constant C=C(δ,n)>0 such that 
+
+    (r_2/r_1)^𝒩(r_1)(1-δ)-C≤sup_B(0,r_2)|u|/sup_B(0,r_1)|u|≤(r_2/r_1)^𝒩(r_2)(1+δ)+C,
+
+for all r_1≤ r_2/2≤ 4^-1. In particular, we have 
+
+    𝒩(r_1)(1-δ) - C≤𝒩(r_2)(1+δ) + C.
+
+
+
+
+	Let B=B(0,1)⊂ℝ^n.	We will first prove the upper bound in Lemma <ref>. Let δ_1>0 be some, sufficiently small, parameter to be chosen in terms of δ>0. By elliptic estimates, we have 
+	
+    sup_r_2B|u|^2≲_δ_1H(r_2(1+δ_1))/r_2^n-1.
+
+	By Corollary <ref>, we have 
+	
+    H(r_2(1+δ_1))/r_2^n-1≲_δ_1H(r_1)/r_1^n-1(r_2(1+δ_1)/r_1)^2β(r_2(1+δ_1)) +n-1.
+
+	By Lemma <ref>, we have 
+	
+    β(r_2(1+δ_1)) ≤𝒩(r_2)/(1+100δ_1) +C_1≤𝒩(r_2)(1+200δ_1) + C_1 ,
+
+	for some C_1=C(δ_1,n)≥ 1. Therefore, have shown that 
+	
+    sup_r_2B|u|^2≲_δ_1H(r_1)/r_1^n-1(r_2(1+δ_1)/r_1)^2𝒩(r_2)(1+200δ_1) + C_1.
+
+	Choosing δ_1=δ/1000 (so that (1+200δ_1)log(1+δ_1)≤δ/10, say), we deduce
+	
+    sup_r_2B|u|^2≤H(r_1)/r_1^n-1(r_2/r_1)^2𝒩(r_2)(1+δ) + C_2,
+
+where we have absorbed the constant in the ≲ notation into C_2. Hence, the upper bound in Lemma <ref> follows upon noticing that 
+	
+    H(r_1)/r_1^n-1≤sup_r_1B|u|^2,
+
+	and taking the square-root. 
+	
+	
+
+	
+	We are now going to prove the lower bound in Lemma <ref>. First, we observe that we may assume r_2≥ 2(1+δ)r_1. Indeed, if 2r_1≤ r_2≤ 2(1+δ)r_1, then 
+	
+    (r_2/r_1)^𝒩(r_1)(1-δ)≤ (2(1+δ))^𝒩(r_1)(1-δ)≤ 2^𝒩(r_1),
+
+	for all δ>0 sufficiently small so that (2(1+δ))^1-δ≤ 2. Therefore, in this case, we have 
+	
+    sup_r_2B|u|≥sup_2r_1B|u|= 2^𝒩(r_1)sup_r_1B|u|≥(r_2/r_1)^𝒩(r_1)(1-δ)sup_r_1B|u|.
+
+	
+	
+	From now we will assume that r_2≥ 2(1+δ)r_1. Let δ_1 ∈ (0,δ/2) be a parameter to be chosen later in terms of δ>0. By Corollary <ref>, we have 
+	
+    sup_r_2B|u|^2≥H(r_2)/r_2^n-1≥H(2r_1(1+δ_1))/(2r_1(1+δ_1))^n-1(r_2/2r_1(1+δ_1))^2β(2r_1(1+δ_1)),
+
+	and, by Lemma  <ref>, we also have 
+	
+    β(2r_1(1+δ_1))≥𝒩(r_1)/1+100δ_1 - C_3,
+
+	for some C_3=C_3(δ_1,n)≥ 1. Moreover, by elliptic estimates, we have 
+	
+    H(2r_1(1+δ_1))/(2r_1(1+δ_1))^n-1≳_δ_1sup_2r_1B|u|^2≳_δ_1 2^2𝒩(r_1)sup_r_1B|u|^2.
+
+	All in all, we have shown that 
+	
+    sup_r_2B|u|^2 ≳_δ_1sup_r_1B |u|^2 (r_2/2r_1(1+δ_1))^2𝒩(r_1)(1+100δ_1)^-1 -C_32^2𝒩(r_1) .
+
+	Taking the square root and choosing δ_1=δ/10000>0 (so that (1+100δ_1)^-1≥ 1-δ/10), we conclude that 
+	
+    sup_r_2B|u| ≥sup_r_1B |u| (r_2/r_1)^𝒩(r_1)(1-δ) -C_4,
+
+	where we have absorbed the constant implied in the ≲ notation into C_4,	as required. 
+
+
+
+
+
+	
+	v
+		First, we observe that, by the monotonicity of the doubling index Lemma <ref> and the definition of 𝒩^*(·), it is enough to prove that 
+		
+    𝒩(x,r)≤ C_1 𝒩(0,2) + C_2,
+
+		for all x∈ B(0,1.6) and r=10^-1 (say).  In order to see (<ref>), we will first show that there exists constants C_3=C_3(n)≥ 1 and C_4=C_4(n)≥ 1 such that 
+		
+    𝒩(x,1)≤ C_3𝒩(0,2) + C_4,
+
+		for all |x|≤ 99/100. Indeed, given the inclusion of balls
+		
+    B(x,2) ⊂ B(0,4) and B(0,10^-4)⊂ B(x,1),
+
+		the definition of 𝒩(·) and Lemma <ref> (with δ=10^-10, say) give 
+		
+    sup_B(x,2)|u|≤sup_B(0,4) |u|= 2^𝒩(0,2)sup_B(0,2)|u| 
+       ≤exp (C_3 𝒩(0,2) + C_4)sup_B(0,10^-4)|u|≤exp (C_3 𝒩(0,2) + C_4) sup_B(x,1)|u|,
+
+		and (<ref>)  follows. Now, given x∈ B with |x|≤ 99/100, we may apply (rescaled) (<ref>) to u(· -x) to see that 
+		
+    𝒩(y,1/2)≤ C_3𝒩(x,1) + C_4,≤  C_5𝒩(0,2) + C_6,
+
+		for some C_5=C_5(n)≥ 1 and C_6=C_6(n)≥ 1, for all |y-x|≤ 2^-1(99/100)^2 and all |x|≤ 99/100. Repeating (<ref>) a third time, we conclude that 
+		
+    𝒩(x,1/4)≤  C_7𝒩(0,2) + C_8,
+
+		for some C_7,C_8=C_7(n),C_8(n)≥ 1, for all x∈ 2B with 
+		
+    |x|≤  99/100+ 1/2(99/100)^2 + 1/4(99/100)^3 =1.7226...,
+ as required. 
+	
+	
+	 
+		Partition Q' into (A')^n many equal subcubes {q'_j: 1≤ j ≤ (A')^n} with side length 100√(n)ℓ A'^-1 each, where A' ≍ A. Define  and ' to be the collections := {100√(n)q_α}_α and ' := {q'_j}_j.
+		Proposition <ref> implies that 
+		
+    ♯{1≤ j ≤ (A')^n-1: ^*(q'_j) ≥max(N· 2^-clog A/loglog A,C)}≤ (A')^n-1-c_0≲ A^n-1-c_0.
+
+		It is easy to see that  every 100√(n)q_α∈ can be covered by cubes from '; and for every q'_j ∈', there are at most L = L(n) many cubes in  which have non-trivial intersection with q'_j. 
+		Also the side length of every cube 100√(n)q_α∈𝒞 is smaller than the side length of every cube q'_j∈𝒞'. Because of this, we can conclude
+		
+    ♯{α    : ^*(100√(n)q_α) ≥max(N· 2^-clog A/loglog A,C)}
+       ≲_L♯{j: ^*(q'_j) ≥max(N·  2^-clog A/loglog A,C)}≲ A^n-1-c_0.
+
+		as claimed, and this finishes the proof of Corollary <ref>. 
+	
+	
+
+
+[Gradient estimates for harmonic functions]  Let B(p,r)⊂^n be any ball, and let u be a harmonic function defined in a neighbourhood of its closure. Then
+	
+    | ∇ u (p)| ≲_n 1/rsup_B(p,r)|u|.
+
+
+
+	Since the partial derivatives of u are also harmonic functions, the mean value theorem and the divergence theorem imply that 
+	
+    ∇ u (p) = 1/ B(p, r)∫_B(p,r)∇ u  d = 1/ B(p, r)∫_∂ B(p,r) u(x)n_x dS(x),
+
+	where n_x is the exterior normal vector to ∂ B(p,r) at x ∈∂ B(p,r); and dS denotes the surface measure on ∂ B(p,r). Hence
+	
+    | ∇ u (p)| ≲_n 1/rsup_B(p,r)|u|,
+
+	as claimed.
+	
+
+
+	
+	Let B⊂ℝ^n be the unit ball, and let u be a non-zero harmonic function on 2B such that u(0)=0. Then, there exists some constant c=c(n)>0, independent of u, such that 
+	
+    𝒩(B)≥ c.
+ 
+
+
+	Let m_1^+:=sup_B u, m_2^+:= sup_2B u and   m_1^-:=-inf_B u, m_2^-:= -inf_2B u and observe that, since u(0)=0, the Mean Value Theorem implies 
+	
+    m_1^+,m_2^+,m_1^-,m_2^->0.
+
+	Now, assume that m_1^+=sup_B|u| and consider the harmonic function h:= m_2^+-u. Then h≥ 0 in 2B and Harnack's inequality implies
+	
+    sup_B  h≤ C inf_B h.
+
+	Let x∈ B be the point such that u(x)= m_1^+=sup_B|u|. We obtain 
+	
+    1/Ch(0)≤ h(x) ≤ C h(0),
+
+	that is 
+	
+    C^-1 m_2^+≤ m_2^+- m_1^+≤ C m_2^+,
+
+	which, upon rearranging, gives 
+	
+    m_1^+≤ m_2^+ (1- 1/C).
+
+	All in all, we have shown that 
+	
+    (1- 1/C)^-1≤m_2^+/m_1^+≤sup_2B|u|/sup_B|u|,
+
+	as required. If  -m_1^-=sup_B|u|, we apply the above argument to the harmonic function -u. This concludes the proof of Claim <ref>. 
+
+
+
+
+
+	
+		
+		Let B=B(0,1) be the unit ball and let u be a non-constant harmonic function in 4B. There exists a numerical constant C=C(n)>1, independent of u, such that 
+		
+    C^-1𝒩(1/2B)≤𝒩(2B).
+
+	
+	
+		By Lemma <ref>, we have 
+		
+    1/2𝒩(1/2B)-C_1 ≤ 2𝒩(2B),
+
+		for some constant C_1= C_1>1. Thus, Claim <ref> is true in the case 𝒩(1/2B)≥ C_2 for some constant C_2=C_2(n)>0. Let us now suppose that 𝒩(1/2B)≤ C_2. By multiplying u by a constant, we may assume that 
+		
+    sup_1/2B|u|=1 sup_B|u|=sup_B u =: M.
+
+		Let us also write p∈∂ B for the point such that u(p)=M and let M'= sup_2B|u|. Finally, let us write D= B(p,1), D_1= D∩1/2B, D_2= D∩ (B\1/2B) and D_3= D∩ (2B\ B). By the mean value theorem for harmonic functions, we have 
+		
+    M=u(p)= 1/(D)∫_D u  d≤1/(D)((D_1) + M (D_2) +  M'(D_3) ).
+ 
+		Since (D) = (D_1)  + (D_2)+ (D_3), we obtain  
+		
+    (M-1) (D_1)≤ (M'-M)(D_3),
+
+		that is 
+		
+    M +(M-1)(D_1)/(D_3)≤ M'.
+
+		Letting c= (D_1)/(D_3), we have 
+		
+    1 + cM-1/M≤M'/M.
+
+		To conclude the proof of Claim <ref>, let us first consider the case, M= 1+ε for some small ε≤ε_0. Then, we have 
+		
+    𝒩(1/2B)=log (1+ε)≍ε,
+
+		and 
+		
+    𝒩(2B)≥log(1+cε/1+ε)≍ cε.
+
+		Thus, Claim <ref> follows. For M≥ 1+ε_0, (<ref>) implies that there exists some constant c_1=c_1(n,ε_0)>0 such that 
+		
+    𝒩(2B)≥ c_1,
+
+		which implies Claim <ref>, in light of the fact that 𝒩(1/2B)≤ C_2, as required. 
+	
+	
+
+
+
+
+
+
+	
+	Let Q⊂ℝ^n be a unit cube. There exists some  Γ=Γ(n)≥ 1 such that for any  harmonic function u in Γ Q, we have 
+	
+    𝒩^*(Q)≲_nlog∫_Γ Q|u|^2 d/∫_Q|u|^2 d .
+
+
+
+
+	Up to a translation, we may assume that Q is centered at zero. By the monotonicity of the doubling index for non-concentric balls, Lemma <ref>, it is enough to prove that 
+	
+    𝒩(4√(n)B)≲_n  log∫_Γ Q|u|^2 d/∫_Q|u|^2 d ,
+
+	where B=B(0,1). To see this, the elliptic estimates imply 
+	
+    sup_8√(n)B|u| ≲1/Γ^n∫_Γ Q|u|^2 d,
+
+	for all sufficiently large Γ=Γ(n). On the other hand, we have 
+	
+    sup_4√(n)B|u|≳_n ∫_Q|u|^2 d ,
+
+	and Claim <ref> follows.  
+
+
+Most of the remaining section is devoted to proving the following lemma about almost monotonicity of the doubling index for non-concentric balls.
+
+lem: almost monotonicity [Almost monotonicity for non-concentric balls]
+	Let B⊂ℝ^n be any ball and let u be a harmonic function in a neighbourhood of 2B. There exists a constant C=C(n)>1 such that 
+	
+    𝒩(b) ≤ C 𝒩(B)
+
+	for all balls b with  2b⊂ B.  
+
+We will prove Lemma <ref> in several steps. The main step is to prove the following special case of the lemma when b is concentric to B. 
+
+	
+	Let B=B(0,1) ⊂^n be the unit ball and let u be a harmonic function in a neighbourhood of  2B. There exists a constant C=C(n)>1 such that  the following holds for every r ∈ (0,]:
+	
+    𝒩(rB)≤ C𝒩(B).
+
+
+
+To establish Claim <ref>, we need several auxiliary results and we prove them now.  The following claim proves Claim <ref> in two cases: when either (B) or r is bounded away from 0.
+
+
+	Let B=B(0,1) ⊂^n be the unit ball and let u be a harmonic function in a neighbourhood of  2B. Then the following hold.
+	
+		
+  * If (B) ≥ c >0, then 
+		
+    𝒩(rB) ≲_n,c𝒩(B),      ∀ r ∈ (0,].
+ 
+		
+  * For every t ∈ (0,), there is a dimensional constant C_t >0 such that 
+		
+    (rB) ≤ C_t·(B),     ∀ r ∈ [t, ].
+
+	
+
+ We first show the first part of the claim. 	Recall from Lemma <ref> that
+	
+    𝒩(rB) ≤ 2𝒩(B) + C, ∀ r ∈ (0,]
+
+	for some constant C= C(n)>1. If (B) ≥ c >0, then it follows from (<ref>) that
+	
+    𝒩(rB) ≤ (2 + Cc) ·𝒩(B), ∀ r ∈ (0,],
+
+	and we get the desired conclusion. 
+	2mm
+	We now prove the second part of the claim. If (B) ≥ C, then  (<ref>) implies
+	
+    (rB) ≤ 3 (B), ∀ r ∈ (0,].
+
+	Hence it suffices to prove (<ref>) in the case when ( B) <C, and we do this below. We fix t ∈ (0,), and let r ∈  [t, ]. Again it follows from (<ref>) that if ( B) <C, then (rB) ≤ 3C. 
+	Multiplying u by a constant, we may assume that 
+	
+    sup_rB|u|=1,   and  sup_B|u|=sup_B u =: M.
+
+	Let p∈∂ B be a point such that u(p)=M, and put M'= sup_2B|u|. With the above notation, since 2r≤ 1, one has
+	
+    (rB) ≤log M	,  and  (B) = logM'/M.
+
+	Finally, define 
+    D:= B(p,1),  D_1:= D∩ rB,  D_2:= D∩ (B\ rB),  and  D_3:= D∩ (2B\ B).
+ By the mean value theorem for harmonic functions, we have 
+	
+    M=u(p)= 1/ (D)∫_D u  d≤1/(D)((D_1) + M (D_2) +  M'(D_3) ).
+ 
+	Since (D) = (D_1)  + (D_2)+ (D_3), we obtain  
+	
+    (M-1) (D_1)≤ (M'-M)(D_3),
+
+	that is 
+	
+    M +(M-1)(D_1)/(D_3)≤ M'.
+
+	Let c= c(t)= (D ∩ t B)/(D_3), since (D ∩ t B) ⊆ D_1, we have 
+	
+    1 + cM-1/M≤M'/M.
+
+	To conclude (<ref>), we consider two cases: the first being when M is very close to 1, and when M is not very close to 1. 
+	In the first case M= 1+ε, for some small ε≤ε_0. Then
+	
+    𝒩(rB) ≤log M =  log (1+ε)≍ε.
+
+	And from (<ref>) we get 
+	
+    𝒩(B)≥log(1+cε/1+ε)≍ cε.
+
+	Thus (<ref>) follows. Let us consider the second case: M≥ 1+ε_0. Then (<ref>) implies that there exists some constant c_1=c_1(n,ε_0)>0 such that 
+	
+    𝒩(B)≥ c_1,
+
+	which implies (<ref>), in light of the fact that 𝒩(rB)≤ 3C. This completes the proof of Claim <ref>. 
+
+
+The following claim gives a comparison of the doubling indices in two balls when their radii are much larger than the distance between their centers.  
+  Let B=B(0,1) ⊂^n be the unit ball, and let u be a harmonic function in a neighbourhood of  2B. 
+	Let r >0, and p,q ∈ B such that |p-q|< r. Also assume that 8r <1, then 
+	
+    (p,2r) ≲_n (q,4r).
+
+
+
+Observe that 
+	
+    B(q,r) ⊂ B(p,2r) ⊂ B(p,4r) ⊂ B(q,8r).
+
+	Thus one has
+	
+    sup_B(p,4r)|u|/sup_B(p,2r)|u|≤sup_B(q,8r)|u|/sup_B(q,r)|u| = sup_B(q,8r)|u|/sup_B(q,4r)|u|·sup_B(q,4r)|u|/sup_B(q,2r)|u|·sup_B(q,2r)|u|/sup_B(q,r)|u|,
+
+	from which one gets
+	
+    (p,2r) ≤(q,4r) + (q,2r) + (q,r).
+
+	It follows from part two of Claim <ref> that both (q,r), (q,2r) ≲_n (q,4r). So we get the desired conclusion (p,2r) ≲_n (q,4r). 
+
+
+With  Claim <ref> and Claim <ref> in hand, we conclude in the following claim that if the doubling index of a harmonic function in a ball is small enough, then it is non-vanishing in a smaller concentric ball.
+
+
+ 
+ Let B=B(0,1) ⊂^n be the unit ball, and let u be a harmonic function in a neighbourhood of  2B. If (14B) ≪_n 1, then u is non-vanishing in 116B. 
+
+ Assume that there is a point p ∈116B where u vanishes. Then it follows from  Claim <ref> that (p,18) ≥ c, where c>0 is as  in Claim <ref>. Using Claim <ref> for u with q=0, p as above, and r= 1/16, one can conclude that 
+	
+    c ≤(p,18) ≲_n  (0,14)=(14B).
+
+	Hence if u vanishes somewhere in 116B, then (14B) ≳_n 1. This proves Claim <ref>. 
+
+
+
+We now present one final auxiliary  result before proving Claim <ref>. The following claim will be helpful for comparing doubling indices in two sub-balls when  the harmonic function has very small doubling index in a ball. 
+
+
+	Let B=B(0,1) ⊂^n be the unit ball, and let u be a positive harmonic function in a neighbourhood of 2B with u(0)=1.  There exist small dimensional constants ℓ, c_0 >0 such that if (B) ≤ c_0,  then (B) ≳_n sup_(ℓ/2) B |u-1|. 
+
+
+
+ 
+	We start by choosing ℓ. Claim <ref> and Claim <ref> guarantee the existence of constants C>1 and c>0 respectively such that the following holds. For any non-constant harmonic function f in a neighbourhood of 2B vanishing at its center, one has
+	
+    _f(B) ≥log C,   and  sup_2Bf ≥ c sup_B|f|.
+	
+	Fix a large k ∈ such that  c· C^k≥ 4. For this  k, let ℓ∈ (0,1) be  such that 18≤ 2^k ℓ≤14. The choice of  c_0 ∈ (0,1) will be made later. 
+	
+	
+	For u  as in the statement of the claim, define v:= u-u(0) = u-1. Then v is harmonic in 2B and  vanishes at its center. Using the first conclusion of (<ref>) repeatedly for v, one gets
+	
+    sup_2^kℓ B |v| ≥ C^ksup_ℓ B |v|.
+
+	This together with the second conclusion of (<ref>) gives
+	
+    sup_2^k+1ℓ Bv ≥ c ·sup_2^kℓ B |v| ≥ c· C^ksup_ℓ B |v| ≥ c· C^ksup_ℓ B v.
+
+	By the choice of k, we have c · C^k≥ 4, and hence
+	
+    sup_2^k+1ℓ Bv ≥ 4 sup_ℓ B v.
+
+	Hence
+	
+    sup_2^k+1ℓ Bu ≥ 1+ 4 sup_ℓ B v.
+
+	We now get a lower bound for the doubling index of u in B. We have
+	
+    1+ 4 sup_ℓ B v /1 + sup_ℓ B v≤_(<ref>)sup_2^k+1ℓ B u /sup_ℓ B u    = sup_2^k+1ℓ B u /sup_2^kℓ B u·sup_2^kℓ B u /sup_2^k-1ℓ B u⋯sup_2ℓ B u /sup_ℓ B u.
+
+	Thus
+	
+    log1+ 4 sup_ℓ B v /1 + sup_ℓ B v≤∑_j=0^k(2^j ℓ B) ≲_n(B),
+
+	where the last inequality holds because each term in the sum is ≲(B) by the second part of Claim <ref>. 
+	
+	Since u is positive in 2B and u(0) = 1, by Harnack's inequality one has u ≍_n 1 in B. Hence there is a dimensional constant c_1 >0 such that 
+	
+    1+ 4 sup_ℓ B v /1 + sup_ℓ B v  = 1+ 3sup_ℓ B v /sup_ℓ B u≥ 1 + c_1 sup_ℓ B v.
+
+	Thus from (<ref>) and (<ref>), one has
+	
+    log (1 + c_1 sup_ℓ B v) ≲_n (B).
+
+	Note that if (B) ≪ 1, then 
+	
+    1≫(B) ≳_n log (1 + c_1 sup_ℓ B v) ≍sup_ℓ B v ≥_(<ref>) c sup_(ℓ/2) B|v|.
+
+	 Hence if c_0 >0 is small enough, then (B) ≤ c_0 implies (B) ≳_nsup_(ℓ/2) B |u-1|.
+
+	
+
+
+We are finally ready to prove Claim <ref>. 
+ 
+	
+	Recall that in Claim <ref>, it was shown that (rB) ≲(B) holds whenever either r or (B) is separated from 0. 
+	Hence it suffices to prove that there exist dimensional constants r_0 ∈ (0,1) and C_0 >1 such that 
+	
+    (rB) ≤ C_0 ·(B), ∀ r ∈ (0,r_0).
+
+	Let c_0,ℓ >0 be as in Claim <ref>. Let c_1 >0 be a small dimensional constant, to be chosen later. 
+	We now prove (<ref>) for r_0 := ℓ/2^10. If (14B) > c_1, then it follows from part two of Claim <ref> that (B) ≳(14B) ≥  c_1, and from part one of Claim <ref> we get that 
+	
+    (rB) ≲_n(B), ∀ r∈ (0,12].
+
+	Hence it suffices to consider the case when (14B)≤ c_1. Claim <ref> guarantees that if c_1 is small enough,  then u is non-vanishing in 116B. We will choose c_1 satisfying  this and an additional condition to be specified soon.
+	2mm
+	Let >0 and 2r∈ (0,r_0) be such that (rB) =. We will now show that  with the above assumption of u being non-vanishing in 116B, one has  (116B) ≳_n/r and this will prove (<ref>). Let M = sup_rB u, then sup_2rB u = 2^M. Hence there is a point p ∈ 2rB ⊂ℓ2^10B such that 
+	
+    |∇ u(p)| ≳M(2^-1)/r≳M/r.
+
+	Multiplying u by a constant, we may assume that u(p) = 1, in which case by Harnack's inequality M ≍_n 1. Hence we have the following bound for the gradient at p: 
+	
+    |∇ u(p)| ≳/r.
+
+	From the standard gradient estimates (Claim <ref>), we get 
+	
+    sup_B(p,ℓ/2^6) |u-1| ≳ |∇ (u-1)(p)| = |∇ u(p)| ≳/r.
+
+	Recalling that ℓ <1, we have the following comparison for the doubling indices  from Claim <ref> (applied twice):
+	
+    (p,132) ≲(0,14)=(14B) ≤ c_1.
+
+	We will choose c_1 small enough so that the above inequality implies (p,132) ≤ c_0. This together with (<ref>) implies that we can use Claim <ref> to conclude that (p,132) ≳r. Once again using Claim <ref>, one can conclude that 
+	
+    (116B) = (0,116) ≳(p,132) ≳/r≥ = (rB).
+
+	This completes the proof of Claim <ref>. 
+
+
+
+
+
+	
+		We prove this claim in several steps. 
+		2mm
+		Step 1: We first show that if (B) is bounded below by a positive constant, then the conclusion of the claim holds.  
+		Recall from Lemma <ref> that
+		
+    𝒩(rB) ≤ 2𝒩(B) + C_1, ∀ r ∈ (0,]
+
+		for some constant C_1= C_1(n)>1. Suppose (B) ≥ c_1 >0, then it follows from (<ref>) that 
+		
+    𝒩(rB) ≤ (2 + C_1c_1) ·𝒩(B), ∀ r ∈ (0,]
+
+		and hence the claim follows. 
+		2mm
+		Step 2: We next show that the claim is true when r is away from 0. We will now show that for every ℓ∈ (0,), there is C_ℓ >0 such that 
+		
+    (rB) ≤ C_ℓ·(B), ∀ r ∈ [ℓ, ].
+
+		Observe that if (B) ≥ C_1, then  (<ref>) implies
+		
+    (rB) ≤ 3 (B), ∀ r ∈ (0,].
+
+		This shows that it suffices to prove (<ref>) in the case when ( B) <C_1, and we do this below. Again it follows from (<ref>) that if ( B) <C_1, then (rB) ≤ 3C_1. We fix ℓ∈ (0,), and let r ∈  [ℓ, ].
+		Multiplying u by a constant, we may assume that 
+		
+    sup_rB|u|=1,   and  sup_B|u|=sup_B u =: M.
+
+		Let p∈∂ B be a point such that u(p)=M, and put M'= sup_2B|u|. With the above notation, since 2r≤ 1, one has
+		
+    (rB) ≤log M	,  and  (B) = logM'/M.
+
+		Finally, define 
+    D:= B(p,1),  D_1:= D∩ rB,  D_2:= D∩ (B\ rB),  and  D_3:= D∩ (2B\ B).
+ By the mean value theorem for harmonic functions, we have 
+		
+    M=u(p)= 1/(D)∫_D u  d≤1/(D)((D_1) + M (D_2) +  M'(D_3) ).
+ 
+		Since (D) = (D_1)  + (D_2)+ (D_3), we obtain  
+		
+    (M-1) (D_1)≤ (M'-M)(D_3),
+
+		that is 
+		
+    M +(M-1)(D_1)/(D_3)≤ M'.
+
+		Let c= c(ℓ)= (D ∩ℓ B)/(D_3), since (D ∩ℓ B) ⊆ D_1, we have 
+		
+    1 + cM-1/M≤M'/M.
+
+		To conclude (<ref>), we consider two cases: the first being when M is very close to 1, and the other is when M is not very close to 1. 
+		In the first case M= 1+ε, for some small ε≤ε_0. Then
+		
+    𝒩(rB) ≤log M =  log (1+ε)≍ε.
+
+		And from (<ref>) we get 
+		
+    𝒩(B)≥log(1+cε/1+ε)≍ cε.
+
+		Thus (<ref>) follows. Let us consider the second case: M≥ 1+ε_0. Then (<ref>) implies that there exists some constant c_1=c_1(n,ε_0)>0 such that 
+		
+    𝒩(B)≥ c_1,
+
+		which implies (<ref>), in light of the fact that 𝒩(rB)≤ 3C_1. This completes Step 2. 
+		2mm
+		Step 3: We now show that there is r_0 >0 small enough and C_0 >1 such that 
+		
+    (rB) ≤ C_0 ·(B), ∀ r ∈ (0,r_0).
+
+		In this step, we consider two cases: the first being when 172B contains a zero of u, and the other when u is non-vanishing in 172B. Let us consider the first case now. Let q ∈172B be such that u(q)=0. Then 
+		
+    14 B ⊂ B(q,2072) ⊂ B(q,3072) ⊂ B.
+
+		From this and Claim <ref>, it follows that (14B) ≥ c, for some c=c(n)>0. This together with the conclusion of Step 2  implies that (B) ≳_n 1, and hence  the claim follows from Step 1. 
+		
+		We now consider the case when u is non-vanishing on 172B. In light of Step 2, it suffices to prove that
+		
+    (rB) ≤(14· 72B), ∀ r ∈ (0,116· 72).
+
+		Because of this, we may assume w.l.o.g. that u>0 in 2B, u(0)=1, and show that
+		
+    (rB) ≤( B), ∀ r ∈ (0,18).
+
+		Consider the harmonic function v := u - u(0). Then from the standard gradient estimates (Claim <ref>), one has
+		
+		
+	
+
+
+
+
+
+
+The following claim  gives a comparison between the  doubling indices of a sub-ball and a ball, when the center of the sub-ball is close to the center of the ball.  
+ Let B=B(0,1) ⊂^n be the unit ball and let u be a harmonic function in 2B. Then there is a constant C=C(n)>1 such that for every z ∈12B, the following holds:
+	
+    (z,1-|z|2) ≤ C (B).
+
+	Also, for any ball b which is centered at z and  satisfies 2b ⊂ B, we have 
+	
+    (b) ≤ C (B).
+
+
+
+
+	
+	
+	We first observe that D = B(z,1-|z|2) is the largest ball centered at z such that 2D ⊂ 2B. Using |z|<12, one has
+	
+    B(0,14) ⊆ B(z,1-|z|2) ⊆ B(z,2-|z|) ⊆ B(0,2).
+
+	Hence 
+	
+    sup_B(z,2-|z|)|u|/sup_B  (z,1-(|z|/2)) |u|≤sup_B(0,2)|u|/sup_B(0,14)|u| = sup_B(0,2)|u|/sup_B(0,1)|u|·sup_B(0,1)|u|/sup_B(0,12)|u|·sup_B(0,12)|u|/sup_B(0,14)|u|.
+
+	Therefore
+	
+    (z,1-|z|2) ≤(0,1) + (0,12) + (0,14) ≲(0,1),
+
+	where the last inequality follows from Claim <ref>, and this proves the first part (<ref>) of the claim.  
+	
+	Let b=B(z,ℓ). Since 2b ⊂ B, one has 
+	
+    2ℓ≤ 1-|z| ≤ 1-|z|2,
+
+	and hence 2b ⊂ D.  Now using Claim <ref> and (<ref>), one can conclude
+	
+    (z,ℓ) ≲(z,1-|z|2) ≲(0,1),
+
+	and this proves the last  part (<ref>) of the claim.
+	
+	
+	
+	
+	
+	
+
+
+
+ OLD VERSION OF THE ABOVE CLAIM
+ Let B=B(y,R) ⊂^n be a ball and let u be a harmonic function in 2B. Then there is a constant C=C(n)>1 such that for every z ∈12B, the following holds:
+	
+    (z,R-|z-y|2) ≤ C (B).
+
+	Also, for any ball b = B(z,ℓ) with 2b ⊂ B, we have 
+	
+    2b ⊂ B(z, R - |z-y|2)
+
+	and  the following holds:
+	
+    (b) ≤ C (B).
+
+
+
+
+	Because of the scaling and translation invariance of the doubling index, we may assume w.l.o.g. that B=B(0,1) and  |z| ≤. In this setting, (<ref>) translates to 
+	
+    (z,1-|z|2) ≲(B).
+
+	We first observe that D = B(z,1-|z|2) is the largest ball centered at z such that 2D ⊂ 2B. One has
+	
+    B(0,14) ⊆ B(z,1-|z|2) ⊆ B(z,2-|z|) ⊆ B(0,2).
+
+	Hence 
+	
+    sup_B(z,2-|z|)|u|/sup_B  (z,1-(|z|/2)) |u|≤sup_B(0,2)|u|/sup_B(0,14)|u| = sup_B(0,2)|u|/sup_B(0,1)|u|·sup_B(0,1)|u|/sup_B(0,12)|u|·sup_B(0,12)|u|/sup_B(0,14)|u|.
+
+	Therefore
+	
+    (z,1-|z|2) ≤(0,1) + (0,12) + (0,14) ≲(0,1),
+
+	where the last inequality follows from Claim <ref>, and this proves the first part (<ref>) of the claim.  
+	
+	Since 2b ⊂ B, one has ℓ≤1- |z|2. Since 
+    2ℓ≤ 1-|z| ≤ 1-|z|2,
+  (<ref>) follows. Now using Claim <ref> and (<ref>), one can conclude
+	
+    (z,ℓ) ≲(z,1-|z|2) ≲(0,1),
+
+	and this proves the last  part (<ref>) of the claim.
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+We are finally ready to prove Lemma <ref>. 
+
+
+Once again, we may assume w.l.o.g. that B=B(0,1). Let b = B(x,r) be such that 2b ⊂ B. If |x| ≤, then (<ref>) in Claim <ref> immediately implies the conclusion of the lemma.
+
+We now prove the lemma when |x| ∈ (,1). Let x = |x| θ, where θ∈∂ B(0,1). Let C be as in Claim <ref>. By (<ref>) of Claim <ref> one has 
+
+    (12θ, 34) ≤ C (B).
+
+and 
+
+    𝒩(78θ, 916)≤ 	C(12θ, 34) ≤ C^2 (B).
+
+Recall that 2b⊂ B(x,1-|x|). We observe that, if |x|∈ [12,78], then 
+
+    2b ⊂  B(x,1-|x|)⊂ B(12θ, 12)⊂ B(12θ, 34),
+
+
+and x∈12B(12θ, 34). Using (<ref>) of Claim <ref> for B(12θ, 34) gives 
+
+    𝒩(b)≤  C	(12θ, 34) ≤ C^2 (B).
+
+If x∈ [78,1],  as illustrated in Figure <ref>, we have 
+
+    2b ⊂ B(x,1-|x|)⊂ B(78θ, 18)⊂ B(78θ, 916),
+
+and x∈12B(78θ, 916). Using (<ref>) of Claim <ref> for the ball B(78θ, 916)  gives 
+
+    𝒩(b)≤  C	(78θ, 916)≤ C^3 𝒩(B),
+
+as required. 
+
+
+
+
+
+
+
+
+We end this section by showing how Proposition  <ref> implies the following modified version of it. 
+cor_of_prop4.1 [A modified version of Proposition <ref>] Let a unit cube Q ⊂^n be  partitioned into K^n equal subcubes {q_α: 1≤α≤ K^n}. Let u be a harmonic function in 4√(n) Q.  Let ^*(2Q) = N. If K ≫_n 1, then we have
+
+    #{α :^*(100√(n)q_α) ≥max(N· 2^-clog K/loglog K,C)}≤ K^n-1-c,
+
+where c,C >0 are dimensional constants. 
+
+
+ Partition 2Q into L^n many equal subcubes {s_j : 1≤ j ≤ L^n}, where 
+
+    L := ⌊K/100√(n)⌋.
+
+Hence the side length of each s_j is at least 200√(n)/K. 
+Let c_0 and C_0 denote the constants given by Proposition <ref>. Using Proposition <ref> for the cube 2Q with the above partition, one can conclude that if L ≫_n 1 (which is equivalent to K ≫_n 1, since K ≍_n L), then
+
+    #{1 ≤ j ≤ L^n: ^*(s_j) > max(Nexp(-c_0 log L/loglog L), C_0)}≤ L^n-1-c_0.
+
+For  cubes 100√(n)q_α and s_j, one has
+
+    ^*(100√(n)q_α)    = sup{(x,r): x∈ 100√(n)q_α and r≤ 100n/K},
+    ^*(s_j)    ≥sup{(x,r): x∈ s_j  and r≤ 200n/K}.
+
+It is easy to see that  every cube 100√(n)q_α can be covered by cubes from {s_j}_j; and there is M ∈ such that for every s_j, there are at most M many cubes in {100√(n)q_α}_α which have non-trivial intersection with s_j. From the above discussion, it follows that ^*(100√(n)q_α) can be large only when 100√(n)q_α non-trivially intersects s_j for which ^*(s_j) is large. Hence we have
+
+    #{α: ^*(100√(n)   q_α) ≥max(Nexp(-c_0 log L/loglog L), C_0)},
+       ≤ M ·#{j : ^*(s_j) ≥max(Nexp(-c_0 log L/loglog L), C_0)}.
+
+The desired conclusion now follows from (<ref>) since K ≍_n L.
+
+
+
+
+
+
+
+
+§ FEW WORDS ABOUT THE PROOF OF PROPOSITION <REF>
+
+
+Maximal Doubling index for cubes. For a given cube Q in ℝ^n, we denote by 2Q the cube, which is the homothetic copy of Q with same center and with homothety coefficient 2.  
+
+In some of the multiscale arguments it is convenient to work with a maximal version N^*_u(Q) of the doubling index:
+
+
+    N^*_u(Q) = sup_x ∈ Q, r ≤(Q) logmax_B(x, 2 r)|u|/max_B(x,r)|u|
+
+because N^*_u(Q) is a monotone function of a set.
+
+
+
+ §.§ Informal guide to the proof of Proposition <ref>
+
+In the proof of the lower effective bound in Nadriashvili's conjecture we used once Proposition <ref> as a black box. Let us remind the formulation of the Proposition. 
+  
+
+
+
+prop: lemma 1.
+Let a cube Q in ℝ^n be partitioned into A^n equal subcubes Q_i. 
+ Let u be a harmonic function in 2Q. There exist numerical (depending only on the dimension n) constants A_0,C > 1 and c>0  such that  if A>A_0, then the number of Q_i with 
+    N^*_u(Q_i)>max(N^*_u(Q)/exp(- c log A/ loglog A ), C)
+
+ is smaller than A^n-1-c
+ 
+
+The goal of this section is to provide an informal guide for those who would like to understand the proof of the Proposition <ref>. In order to understand the full details the reader may read pages 221-231 in <cit.> and pages 249-254 in <cit.>, but there are only two facts about harmonic functions, which are used in the proof.
+The first fact is the monotonicity property of the frequency, which is a powerful tool.
+The second fact is quantitative Cauchy uniqueness property.
+
+ The monotonicity property of the frequency and some considerations from Euclidean geometry imply the following  quasi-additive property of the  doubling index.
+ 
+ 
+
+
+
+There exist a small number c>0 and and a large number C>1, depending on the dimension n, such that the following holds for any harmonic function u in ℝ^n. Suppose that  n+1 points x_1,x_2, ..., x_n+1 in ℝ^n form an equilateral simplex S with side length r. 
+Assume that 
+    max_1≤ i ≤ n+1 N_u(B(x_i,ρ)) ≥ A,
+ where A is any positive number and ρ≤ r/2.
+Let x be the center of S. 
+Then 
+    N_u(B(x,C r)) ≥ A(1+c) - C.
+
+
+ 
+
+In the statement above one can replace n+1 balls with centers at the vertices of the equilateral simplex by any other n+1 balls, whose centers form a non-degenerate simplex and the radii are bounded by the diameter of the simplex. But the constants c>0 and C>1 depend on how degenerate the simplex is. We refer to the formal statement of simplex lemma in <cit.>, where the constants depend on the ratio of the width of the simplex and its diameter.
+
+
+ The second fact about harmonic functions, which is used in the proof of Proposition <ref>, is quantitative Cauchy uniqueness property.
+ 
+ 
+
+
+
+Consider a half-ball 
+
+    B_+ = {(x,y)∈ℝ^n-1×ℝ: |x|^2+y^2< 1, y> 0 } .
+
+
+There exist  α∈(0,1) and C>0 such that if h is harmonic in B_+, h∈ C^1(B_+) and satisfies the inequalities |h|≤ 1, |∇ h|≤ 1 in B_+ and |h|≤ε, |∂_y h|≤ε on {(x,y)∈B_+, y=0}, ε≤ 1, then 
+
+    |h(x)|≤ Cε^α  when   x∈1/3B_+.
+
+
+
+
+ We refer to Appendix of <cit.> for elementary proof. Quantitative Cauchy uniqueness property is used to prove another quasi-additive property of the frequency.
+ 
+ 
+
+
+
+ There exists a large integer  K>100 and C>1 such that the following holds. Let u be a harmonic function in ℝ^3. 
+Consider a finite lattice of points 
+    L_K:={ (i,j,0): i=- K, …, K, j=-K, …, K }.
+
+If  N(B(x,1)) ≥ A for each x∈ L_K and some number A>C, then 
+    N(B(0,K))≥ 2A.
+
+
+
+
+In the statement of the hyperplane lemma 
+ one can replace the finite lattice of balls B(x,1), x ∈ L_K  by any collection of balls B(p_x,r),x ∈ L_K, with the centers p_x ∈ B(x,1) and any radius r≤ 1, and the statement will remain true.
+ In the n-dimensional version of hyperplane lemma one should take (n-1)-dimensional lattice of balls.
+ 
+ 
+ Hyperplane lemma and simplex lemma can be combined together to get the following useful fact about distribution of doubling indices.
+ 
+
+  Let u be a harmonic function in ℝ^n.   There exist numerical  (depending only on the dimension n) constants A_0 ∈ℕ, C > 1 and c_1>0  such that  if we partition a cube Q in ℝ^n  into A_0^n equal subcubes Q_i, then the number of Q_i with 
+    N^*_u(Q_i)>max(N^*_u(Q)/(1+c_1), C)
+
+ is smaller than 1/2 A_0^n-1.
+
+
+
+ In the proof Theorem 5.1 from <cit.> the following intuitive principle is used. The simplex lemma implies that “bad" Q_i with N^*_u(Q_i) > N^*_u(Q)/(1+c_1) should be close to some (n-1)-dimensional hyperplane, and then  one can find a finite “lattice" of “bad" cubes  and arrive to contradiction with the hyperplane lemma. We refer to <cit.> for details.
+ 
+ 
+
+
+Proposition <ref> follows from Theorem 5.1 from <cit.> by iterative subdivision of Q into smaller and smaller cubes. One can think that A=A_0^k,  and we subsequently chop cubes into 1/A_0 smaller subcubes and each time we apply Theorem 5.1 to get more information on the distribution of doubling indices.
+The formal iterative argument is given on pages 249-254 in <cit.>.
+
+
+
+
+§ DONNELLY AND FEFFERMAN'S BOUND FOR THE DOUBLING INDEX
+
+
+The aim of this section is to show how Proposition <ref> follows from the work of Donnelly and Fefferman on complex extensions of real-analytic functions, more precisely from <cit.>. We now recall the statement of Proposition <ref>:
+
+lem: half of the doubling index
+Let Q be a unit cube in ^n and let u be a harmonic function in 4√(n)· Q. Let ε>0 and 	let  Q  be partitioned into  equal subcubes {Q_i}_i of side length  ≍_nc_u^*(Q) for some sufficiently small c=c(n,ε)>0.  There exists a constant C = C(n,ε) > 1 such that 
+	
+    ^*(Q_i)≤ C
+
+for at least (1-ε) portion of the Q_i. 
+
+
+Proposition <ref> follows with the help of the following fact about holomorphic function <cit.>:
+
+	
+	Let k be a sufficiently large integer depending on n. Let G(z) be holomorphic in |z|≤ 3^k, z∈ℂ^n, and satisfying 
+	
+    max_|z|≤ 2^k |G(z)|≤ |G(0)| exp (D),
+
+	for some D≥ 1 sufficiently large depending on n. Assume that G(z) is real and non-negative for real x∈ Q_0:={(x_1,...,x_n)∈ℝ^n: |x_i|≤ 1,  1≤ i≤ n }. Suppose that R⊂12Q_0 is a sub-cube and subdivide R into equal sub-cubes R_i of side length ≍_n 1/D. Let ε>0 be given. Then there exists a subset E⊂ Q_0 of measure (E)≤ε and some constant C=C(n,ε)≥ 1 such that 
+	
+    |log G(x)- log(1/ (R_i)∫_R_i G d)|≤ C for all x∈ R_i\ E.
+
+
+
+
+		
+		Let k be a sufficiently large integer depending on n. Let G(z) be holomorphic in |z|≤ 3^k, z∈ℂ^n, and satisfying 
+		
+    max_|z|≤ 2^k |G(z)|≤ |G(0)| exp (D),
+
+		for some D≥ 1 sufficiently large depending on n. Assume that G(z) is real and non-negative for real x∈ Q_0:={(x_1,...,x_n)∈ℝ^n: |x_i|≤ 1,  1≤ i≤ n }. Let δ>0, suppose that R⊂12Q_0 is a sub-cube and subdivide R into equal sub-cubes R_i of side length ≲_n c/D for some sufficiently small c=c(n,δ)>0. Then we have  
+		
+    ∫_R_i G d≍_δ∫_2R_i G d
+
+		for (1-δ) portion of the R_i.
+
+
+
+
+
+
+We apply Proposition <ref> twice, for D and D'≫ D instead of D, to obtain two sets E and E' of volume ≤ε (to be chosen later) and two collections of sub-rectangles R_i and R_i'   of side length ≍1D and ≍aD, correspondingly, for some a to be chosen later  subject to  0<a≪ 1.   For all x ∈ R \ (E ∪ E'), x∈ R_i ∩ R_j' for some i,j, and  
+	
+    ∫_R_i G d≍ G(x)(R_i)≍  G(x)(R_j')≍∫_R_j' G d,
+
+	where the constant implied in the ≍ notation depend on n,ε,a. We will call R_j' good if 2R_j'⊂ R_i for some R_i and 	R_j' has at least one point in R\ (E∪ E'). The portion of good R_j' is at least (1-δ) if ε and a are small enough (depending on δ). For good R_j' we have 
+	
+    ∫_2R_j' G d≤∫_R_i G d≍∫_R_j' G d,
+
+	as required. 
+
+
+
+
+One may change conclusion (<ref>) to
+
+    ∫_R_i G d≍∫_Γ R_i G d,
+
+fo any parameter Γ≥ 2, and the statement of Corollary <ref> will remain true with c and the constant implied in the ≍ notation also depending on Γ (and δ>0). 
+
+
+In order to use Proposition <ref> in the proof of Lemma <ref>, we will need a claim about the complex extension of a harmonic function u, denote by u^ℂ, to a subset of ℂ^n.
+
+	
+ There exists some constant C=C(n)≥ 1 such that for any  harmonic function u on a ball B⊂ℝ^n centered at 0 the following holds. There exists a holomorphic function u^ℂ defined in
+ 
+    Ω:={x+ iy ∈ℂ^n: x∈15B , y∈15B}
+
+ such that u^ℂ(x)= u(x) for all x∈15B and 
+ 
+    sup_Ω |u^ℂ| ≤ C sup_B |u|.
+ 
+
+
+By considering a slightly smaller ball and rescaling, we may assume that B=B(0,1)⊂ℝ^n and u is continuous on B. Then u has a Poisson representation in terms of its boundary values given by 
+
+    u(x) = ∫_∂ B P(x,ζ) u(ζ)dS(ζ),     where     P(x,ζ)=  c_n 1 - |x|^2 /|x-ζ|^n.
+
+The holomorphic extension of the Poisson kernel is 
+
+    P(x+iy,ζ)=  c_n 1 - ∑_k (x_k +iy_k)^2 /(√(∑_k (x_k +iy_k-ζ_k)^2))^n,
+
+where x=(x_1,...,x_n), y=(y_1,...,y_n) and ζ=(ζ_1,...,ζ_n). Indeed, since √(z) is a well-defined holomorphic function for |1-z|<1, it is enough to check
+
+    | 1-∑_k  (x_k +iy_k-ζ_k)^2|<1.
+
+For all x+iy ∈Ω, we have 
+
+    |∑_k (x_k+iy_k)^2|≤ 2 (∑_k x_k^2 +y_k^2)≤4/25,
+ 
+and, since ζ∈∂ B, 
+
+    |1-∑_k (x_k +iy_k-ζ_k)^2| = | ∑_k(x_k +i y_k)^2 + 2ζ_k(x_k +iy_k)| 
+    ≤| ∑_k(x_k +i y_k)^2| +2 √(∑_k ζ_k^2)·√(∑_k (x_k+iy_k)^2)≤4/25 + 4/5=1-1/25.
+ 
+Therefore, P(x+iy,ζ) is a well-defined holomorphic function of x+iy in  Ω and ζ∈∂ B. Moreover, 
+
+    |∑_k (x_k +iy_k-ζ_k)^2| ≥1/25.
+
+Thus, the absolute value of the denominator in (<ref>) is uniformly bounded from below, and 
+
+    sup_x+iy ∈Ω|P(x+iy,ζ)|≤ C_n.
+
+Hence, the Poisson representation gives a holomorphic extension of u onto Ω 
+
+    u^ℂ(x+iy) = ∫_∂ B P(x+iy ,ζ) u(ζ)dS(ζ),
+
+satisfying 
+ 
+    sup_Ω |u^ℂ| ≤ C sup_B |u|.
+ 
+
+
+
+
+
+
+	
+	Let k be a sufficiently large integer depending on n. Let u(x) be a harmonic function in |x|≤ 5· 3^k, x∈ℝ^n, and satisfying 
+	
+    max_|x|≤ 5· 2^k |u(x)|≤ |u(0)| exp (D),
+
+	for some D≫_n 1. Let Q_0:={(x_1,...,x_n)∈ℝ^n: |x_i|≤ 1,  1≤ i≤ n } and suppose that R⊂12Q_0 is a sub-cube. Let ε>0. Subdivide R into equal sub-cubes R_i of side length ≲_n c/D for some sufficiently small c=c(n,ε)>0. Then there exists some constant C=C(n,ε)>1 such that 
+	
+    𝒩^*(R_i)≤ C,
+
+	for at least (1-ε) portion of the R_i.
+
+
+Thanks to Claim <ref>, we can extend u holomorphically onto |z|≤ 3^k. Therefore, the function G(z)=(u^ℂ(z))^2 is holomorphic for |z|≤ 3^k, non-negative and real on Q_0. Moreover, G satisfies   
+	
+    max_|z|≤ 2^k |G|≤ |G(0)| exp (2D).
+
+Therefore, we may apply Corollary  <ref> and Remark <ref> to see that 
+
+    ∫_Γ R_i|u|^2 d/∫_R_i|u|^2 d ≤ C_1,
+
+for at least (1-ε) portion of the R_i. Hence, Claim <ref> finishes the proof of Lemma  <ref>. 
+
+
+We are finally ready to present the proof of Proposition <ref>.
+
+
+	 Let N=𝒩^*(Q) and partition Q into equal sub-cubes Q_j of side length ≍_ncN for some c=c(n,ε)>0 to be chosen later. We wish to cover the unit cube Q with at most C_n balls B_i=B(x_i,r) of small radius 0<r=r(n)≪_n 1 such that 
+	
+    sup_2^10k B_i|u|≤ u(x_i)exp(C N),
+
+	where k=k(n) is as in Lemma <ref>. We start with any covering of the unit cube by C_n balls B_i' of radius r/2. Put B_i=B(x_i,r), and let x_i be the point in ∂ B_i such that sup_B_i'|u| = |u(x_i)|. For each B_i',  we have  𝒩(2^10k+2 B_i')≤ N (by the definition of the doubling index of the cube and assuming that r is sufficiently small). Therefore, the almost monotonicity of the doubling index, Lemma <ref>, implies  
+	
+    sup_2^10k B_i |u|≤sup_2^10k+2 B_i'|u|≤sup_B_i'|u|exp(C k N)= |u(x_i)| exp(2k N).
+
+	 We may assume that k is sufficiently large. Consider a cube R_i with the following properties. The faces of R_i are parallel to the faces of Q, R_i is a union of a finite number of sub-cubes Q_j, and  
+	 
+    B_i⊂ R_i ⊂ 2^k B_i .
+ 
+	Since the B_i cover Q, every cube Q_j is contained in at least one of the R_i.  We apply rescaled Lemma <ref> to the cube R_i partitioned into the Q_j which lie inside R_i. We conclude that, if c=c(n,ε)>0 (the parameter in the side length of the Q_j) is sufficiently small, there exists C=C(n,ε)>1 such that the following holds. For at least (1-ε) portion of the Q_j in R_i, we have  
+	
+    𝒩^*(Q_j) ≤ C.
+
+	Finally, considering all the C_n choices of R_i, we find that, for	at least (1-C_nε) portion of all the Q_j, we have  
+	
+    𝒩^*(Q_j) ≤ C.
+
+
+
+
+
+
+siam
 
 

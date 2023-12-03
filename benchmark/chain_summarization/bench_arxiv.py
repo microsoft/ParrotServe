@@ -54,7 +54,7 @@ def get_refine_functions(file_name: str):
 
     first_func = vm.define_function(
         func_name="first_func",
-        func_body="""Write a concise summary of the following:
+        func_body="""Write an one-sentence summary (AS SHORT AS POSSIBLE) of the following:
 {{text}}
 CONCISE SUMMARY:{{summary}}""",
         cache_prefix=False,
@@ -74,11 +74,11 @@ CONCISE SUMMARY:{{summary}}""",
     rets.append(first_func)
 
     refine_template = (
-        "Your job is to produce a final summary\n"
+        "Your job is to produce an one-sentence summary (AS SHORT AS POSSIBLE) for a long document.\n"
+        "!!!IMPORTANT!!! The summary should be less than 25 words.\n "
         "We have provided an existing summary up to a certain point: {{existing_answer}}\n"
         "We have the opportunity to refine the existing summary"
         "(only if needed) with some more context below.\n"
-        "!!!IMPORTANT!!! Never let your summary exceeds 50 words.\n"
         "------------\n"
         "{{text}}\n"
         "------------\n"
@@ -91,7 +91,7 @@ CONCISE SUMMARY:{{summary}}""",
         func = vm.define_function(
             func_name=f"refine_func_{i}",
             func_body=refine_template,
-            cache_prefix=False,
+            cache_prefix=True,
             params=[
                 P.Parameter(name="existing_answer", typ=P.ParamType.INPUT_LOC),
                 P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
@@ -118,17 +118,11 @@ if __name__ == "__main__":
         # NOTE(chaofan): We only get the final result, let the intermediate results be
         # flown in the system.
 
-        bs = 8
-        next_inputs = [None for _ in range(bs)]
-
-        for i in range(bs):
-            next_inputs[i] = funcs[0](text=chunks[0])
+        next_input = funcs[0](text=chunks[0])
 
         for func, chunk in zip(funcs[1:], chunks[1:]):
-            for i in range(bs):
-                next_inputs[i] = func(existing_answer=next_inputs[i], text=chunk)
+            next_input = func(existing_answer=next_input, text=chunk)
 
-        for i in range(bs):
-            next_inputs[i].get()
+        next_input.get()
 
     vm.run(main, timeit=True)
