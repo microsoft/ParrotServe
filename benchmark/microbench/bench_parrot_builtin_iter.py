@@ -13,11 +13,12 @@ def _init(model):
         num_kv_cache_blocks=1000,
         attn_func="xformers_fill_vllm_paged_attention_generate",
         block_size=16,
+        max_seq_len=4096,
     )
 
     runner = BuiltinRunner(model_name=model, config=config)
 
-    prompt_len = 1024
+    prompt_len = 3000
 
     fill1 = Fill(pid=0, tid=0, context_id=0, parent_context_id=-1, token_ids=[100])
 

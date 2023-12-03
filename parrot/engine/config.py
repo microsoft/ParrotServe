@@ -30,6 +30,7 @@ class BuiltinConfig:
     dtype: Union[Literal["float16", "float32"], torch.dtype] = "float16"
     device: Union[str, torch.device] = "cuda"  # cpu, cuda, cuda:x
     block_size: int = 1
+    max_seq_len: Optional[int] = None  # Override the original model length
     attn_func_name: Optional[str] = None
     mem_layout: Optional["MemLayout"] = None
     model_arch: Optional[str] = None

@@ -23,6 +23,7 @@ from parrot.utils import (
     redirect_stdout_stderr_to_file,
 )
 from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
+from parrot.testing.latency_simulator import get_latency
 
 
 logger = get_logger("OS Server")
@@ -71,17 +72,20 @@ async def register_vm(request: Request):
 @app.post("/submit_call")
 async def submit_call(request: Request):
     # Sleep simulate network latency
-    latency = os.environ.get("SIMULATE_NETWORK_LATENCY_PRT", None)
+    latency_open = os.environ.get("SIMULATE_NETWORK_LATENCY_PRT", None)
     assert (
-        latency is not None
-    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY"
+        latency_open is not None
+    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY_PRT"
     try:
-        latency = float(latency)
-    except ValueError:
-        return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
+        latency_open = int(latency_open)
+        assert latency_open == 0 or latency_open == 1
+    except:
+        return ValueError("SIMULATE_NETWORK_LATENCY must 0/1.")
 
     # RTT
-    await asyncio.sleep(latency)
+    if latency_open == 1:
+        latency = get_latency()
+        await asyncio.sleep(latency / 2)
 
     payload = await request.json()
     pid = payload["pid"]
@@ -93,6 +97,9 @@ async def submit_call(request: Request):
     else:
         call = SemanticCall.unpickle(payload["call"])
         pcore.submit_semantic_call(pid, call)
+
+    if latency_open == 1:
+        await asyncio.sleep(latency / 2)
 
     return {}
 

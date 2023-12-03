@@ -380,17 +380,22 @@ async def create_chat_completion(request: ChatCompletionRequest):
     """Creates a completion for the chat message"""
 
     # HACK(chaofan): Simulate network latency
-    latency = os.environ.get("SIMULATE_NETWORK_LATENCY_FS", None)
+    latency_open = os.environ.get("SIMULATE_NETWORK_LATENCY_FS", None)
     assert (
-        latency is not None
+        latency_open is not None
     ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY_FS"
     try:
-        latency = float(latency)
-    except ValueError:
-        return ValueError("SIMULATE_NETWORK_LATENCY must be a float.")
+        latency_open = int(latency_open)
+        assert latency_open == 0 or latency_open == 1
+    except:
+        return ValueError("SIMULATE_NETWORK_LATENCY must 0/1.")
 
     # RTT
-    await asyncio.sleep(latency)
+    if latency_open == 1:
+        from parrot.testing.latency_simulator import get_latency
+
+        latency = get_latency()
+        await asyncio.sleep(latency / 2)
 
     error_check_ret = await check_model(request)
     if error_check_ret is not None:
@@ -430,6 +435,10 @@ async def create_chat_completion(request: ChatCompletionRequest):
             request.model, gen_params, request.n, worker_addr
         )
 
+        # HACK(chaofan): Simulate network latency
+        if latency_open == 1:
+            await asyncio.sleep(latency / 2)
+
         return StreamingResponse(generator, media_type="text/event-stream")
 
     choices = []
@@ -456,6 +465,10 @@ async def create_chat_completion(request: ChatCompletionRequest):
             task_usage = UsageInfo.parse_obj(content["usage"])
             for usage_key, usage_value in task_usage.dict().items():
                 setattr(usage, usage_key, getattr(usage, usage_key) + usage_value)
+
+        # HACK(chaofan): Simulate network latency
+        if latency_open == 1:
+            await asyncio.sleep(latency / 2)
 
     return ChatCompletionResponse(model=request.model, choices=choices, usage=usage)
 

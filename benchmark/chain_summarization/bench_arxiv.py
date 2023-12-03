@@ -75,7 +75,6 @@ CONCISE SUMMARY:{{summary}}""",
 
     refine_template = (
         "Your job is to produce an one-sentence summary (AS SHORT AS POSSIBLE) for a long document.\n"
-        "!!!IMPORTANT!!! The summary should be less than 25 words.\n "
         "We have provided an existing summary up to a certain point: {{existing_answer}}\n"
         "We have the opportunity to refine the existing summary"
         "(only if needed) with some more context below.\n"

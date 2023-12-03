@@ -50,6 +50,12 @@ class BuiltinRunner:
         # Load Model
         self.hf_model_config = AutoConfig.from_pretrained(model_name)
 
+        # Override max seq len
+        if self.builtin_config.max_seq_len is not None:
+            self.hf_model_config.max_position_embeddings = (
+                self.builtin_config.max_seq_len
+            )
+
         self.model = instantiate_model(
             model_name, self.hf_model_config, self.builtin_config
         )
