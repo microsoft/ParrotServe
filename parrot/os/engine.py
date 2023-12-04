@@ -37,6 +37,8 @@ class ExecutionEngine:
 
         # ---------- Runtime Info ----------
         self.runtime_info = EngineRuntimeInfo()
+
+        # We maintain a instant list of threads in this engine.
         self.threads: List["Thread"] = []
 
     @property

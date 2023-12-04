@@ -88,6 +88,7 @@ class Thread:
         # ---------- Flags ----------
         self.finished_flag = False
         self.prefix_flag = False
+        self.is_last_op_flag = False
 
         # ---------- Operators queue ----------
         self.operators: Queue[PrimitiveOperator] = Queue()
@@ -203,10 +204,14 @@ class Thread:
 
         prefix_context = self.prefix_context
 
-        for i in range(math.ceil(buffer_len / chunk_size)):
+        chunk_num = math.ceil(buffer_len / chunk_size)
+
+        for i in range(chunk_num):
             chunked_tokens = self._fill_tokens_buffer[
                 i * chunk_size : (i + 1) * chunk_size
             ]
+
+            end_flag = self.is_last_op_flag and i == chunk_num - 1
 
             if not self.prefix_flag:
                 primitive = Fill(
@@ -214,6 +219,7 @@ class Thread:
                     tid=self.tid,
                     context=prefix_context,
                     token_ids=chunked_tokens,
+                    end_flag=end_flag,
                 )
             else:
                 primitive = Fill(
@@ -221,6 +227,7 @@ class Thread:
                     tid=self.tid,
                     context=self.ctx,
                     token_ids=chunked_tokens,
+                    end_flag=end_flag,
                 )
 
             if not self.prefix_flag and self.prefix_mode == PrefixMode.SKIP:
@@ -286,6 +293,7 @@ class Thread:
             pid=self.process.pid,
             tid=self.tid,
             context=self.ctx,
+            end_flag=self.is_last_op_flag,
             sampling_config=op.sampling_config,
         ).astream()
 
@@ -310,6 +318,7 @@ class Thread:
                 pid=self.process.pid,
                 tid=self.tid,
                 context=prefix_context,
+                end_flag=self.is_last_op_flag,
                 text=text,
             )
         else:
@@ -317,6 +326,7 @@ class Thread:
                 pid=self.process.pid,
                 tid=self.tid,
                 context=self.ctx,
+                end_flag=self.is_last_op_flag,
                 text=text,
             )
 
@@ -345,6 +355,7 @@ class Thread:
             pid=self.process.pid,
             tid=self.tid,
             context=self.ctx,
+            end_flag=self.is_last_op_flag,
             sampling_config=op.sampling_config,
         ).apost()
         op.output_holder.set(resp.generated_text)
@@ -352,6 +363,9 @@ class Thread:
     async def executing(self):
         while not self.operators.empty():
             op = self.operators.get(timeout=0.5)
+
+            if self.operators.empty():
+                self.is_last_op_flag = True
 
             try:
                 if isinstance(op, TokenIdPlaceholderGenerate):

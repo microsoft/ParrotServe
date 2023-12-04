@@ -17,7 +17,7 @@
     "scheduler": {
         "max_batch_size": 256,
         "max_num_batched_tokens": 2560,
-        "max_total_tokens": 6000
+        "max_total_tokens": 4096
     },
     "os": {
         "host": "localhost",

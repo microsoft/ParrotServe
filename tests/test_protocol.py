@@ -171,6 +171,7 @@ def test_fill():
             pid=0,
             tid=NONE_THREAD_ID,
             context=context,
+            end_flag=False,
             token_ids=[1, 2, 3],
         )
         st = time.perf_counter_ns()
@@ -197,6 +198,7 @@ def test_generate():
             pid=0,
             tid=0,
             context=context,
+            end_flag=False,
             sampling_config=SamplingConfig(),
         )
 

@@ -10,34 +10,39 @@ import numpy as np
 
 
 def proc1(barrier: mp.Barrier):
-    vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
+    vm = P.VirtualMachine(
+        os_http_addr="http://localhost:9000",
+        mode="debug",
+    )
 
     test_func = vm.import_function(
         "chain_sum_test",
         "benchmark.workloads.test_examples.chain_summarization",
-        mode="debug",
     )
 
     input_workload = "Test " * 100
 
     chunk_num = 20
 
-    def main():
-        next_input = input_workload
-        for _ in range(chunk_num):
-            next_input = test_func(next_input)
-        next_input.get()
-
-    def baseline():
-        next_input = input_workload
-        for _ in range(chunk_num):
-            next_input = test_func(next_input)
-            # with cprofile("get"):
-            next_input.get()
+    async def main_async():
+        outputs = [P.variable(name=f"output_{i}") for i in range(chunk_num)]
+        coroutines = []
+        for i in range(chunk_num):
+            if i == 0:
+                coro = test_func.ainvoke(
+                    previous_document=input_workload, refined_document=outputs[i]
+                )
+            else:
+                coro = test_func.ainvoke(
+                    previous_document=outputs[i - 1], refined_document=outputs[i]
+                )
+            coroutines.append(coro)
+        await asyncio.gather(*coroutines)
+        outputs[-1].get()
 
     barrier.wait()
 
-    vm.run(main, timeit=True)
+    vm.run(main_async, timeit=True)
 
 
 def proc2(barrier: mp.Barrier, request_rate: float):
@@ -51,25 +56,26 @@ def proc2(barrier: mp.Barrier, request_rate: float):
 
     outputs = []
 
-    barrier.wait()
+    with vm.running_scope():
+        barrier.wait()
 
-    for _ in range(requests_num):
-        output = test_func("Test")
-        outputs.append(output)
-        interval = np.random.exponential(1.0 / request_rate)
-        time.sleep(interval)
+        for _ in range(requests_num):
+            output = test_func("Test")
+            outputs.append(output)
+            interval = np.random.exponential(1.0 / request_rate)
+            time.sleep(interval)
 
-    for i in range(requests_num):
-        outputs[i].get()
+        for i in range(requests_num):
+            outputs[i].get()
 
 
 def main(request_rate: int):
     barrier = mp.Barrier(2)
-    proc1 = mp.Process(
+    p1 = mp.Process(
         target=proc1,
         args=(barrier,),
     )
-    proc2 = mp.Process(
+    p2 = mp.Process(
         target=proc2,
         args=(
             barrier,
@@ -77,12 +83,13 @@ def main(request_rate: int):
         ),
     )
 
-    proc1.start()
-    proc2.start()
+    p1.start()
+    p2.start()
 
-    proc1.join()
-    proc2.join()
+    p1.join()
+    p2.join()
 
 
 if __name__ == "__main__":
-    main()
+    # main(1.0)
+    main(10.0)

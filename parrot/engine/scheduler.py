@@ -97,24 +97,11 @@ class Scheduler:
         cur_num_batched_tokens = len(
             self.running_jobs
         )  # Note: running jobs must be all Gen jobs.
-        cur_total_tokens = 0
 
-        visited_context_ids = (
-            set()
-        )  # This is to avoid compute the same context multiple times.
-
-        for job in self.running_jobs:
-            parrot_assert(
-                isinstance(job, Generate), "Running job must be a Generate job."
-            )
-            ctx = job.context
-            if ctx.context_id not in visited_context_ids:
-                cur_total_tokens += ctx.get_this_context_len()
-                visited_context_ids.add(ctx.context_id)
-            parent_ctx = ctx.parent_context
-            if parent_ctx and parent_ctx.context_id not in visited_context_ids:
-                cur_total_tokens += parent_ctx.get_this_context_len()
-                visited_context_ids.add(parent_ctx.context_id)
+        # TODO(chaofan): In shared prefix mode, we should only count the prefix context once.
+        cur_total_tokens = sum(
+            [job.context.get_context_len() for job in self.running_jobs]
+        )
 
         # print(
         #     f"Scheduling: Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}"
@@ -128,19 +115,25 @@ class Scheduler:
                 if isinstance(job, Generate) or job.token_ids is None
                 else len(job.token_ids)
             )
-            job_total_tokens = job.context.get_this_context_len()
-            if (
-                job.context.parent_context
-                and job.context.parent_context.context_id not in visited_context_ids
-            ):
-                job_total_tokens += job.context.parent_context.get_this_context_len()
-
             # Constraints
             if cur_num_jobs + 1 > self.max_batch_size:
                 break
             if cur_num_batched_tokens + job_num_tokens > self.max_num_batched_tokens:
                 break
-            if cur_total_tokens + job_total_tokens > self.max_total_tokens:
+
+            # TODO(chaofan): Only do this in shared prefix mode.
+            # if ctx.context_id not in visited_context_ids:
+            #     cur_total_tokens += ctx.get_this_context_len()
+            #     visited_context_ids.add(ctx.context_id)
+            # parent_ctx = ctx.parent_context
+            # if parent_ctx and parent_ctx.context_id not in visited_context_ids:
+            #     cur_total_tokens += parent_ctx.get_this_context_len()
+            #     visited_context_ids.add(parent_ctx.context_id)
+
+            # For normal mode, we repeatly count prefix because it's repeated loaded.
+            ctx = job.context
+            cur_total_tokens += ctx.get_context_len()
+            if cur_total_tokens > self.max_total_tokens:
                 break
 
             self.running_jobs.append(job)
@@ -151,7 +144,11 @@ class Scheduler:
             # Update
             cur_num_jobs += 1
             cur_num_batched_tokens += job_num_tokens
-            cur_total_tokens += job_total_tokens
+
+        # Check total tokens constraint and do preemption
+
+        # This is to avoid compute the same context multiple times.
+        # visited_context_ids = set()
 
         # NOTE(chaofan): Use copy() to avoid list modification.
         ret = self.running_jobs.copy()

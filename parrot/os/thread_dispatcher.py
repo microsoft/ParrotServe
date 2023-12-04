@@ -164,6 +164,9 @@ class ThreadDispatcher:
                             next_thread.ready_to_dispatch()
                             and next_thread.unique_id in self.threads
                         ):
+                            logger.debug(
+                                f"Thread (tid={next_thread.tid}) promoted by thread {thread.tid}."
+                            )
                             priority[next_thread.unique_id] = 1
 
         # Reorder

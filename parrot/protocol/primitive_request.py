@@ -30,6 +30,7 @@ class Primitive:
     pid: int
     tid: int
     context: "Context"
+    end_flag: bool
 
 
 @dataclass
@@ -57,6 +58,7 @@ class Fill(Primitive):
                 pid=self.pid,
                 tid=self.tid,
                 context_id=self.context.context_id,
+                end_flag=self.end_flag,
                 parent_context_id=self.context.parent_context_id,
                 token_ids=self.token_ids,
                 text=self.text,
@@ -86,6 +88,7 @@ class Fill(Primitive):
                     pid=self.pid,
                     tid=self.tid,
                     context_id=self.context.context_id,
+                    end_flag=self.end_flag,
                     parent_context_id=self.context.parent_context_id,
                     token_ids=self.token_ids,
                     text=self.text,
@@ -122,6 +125,7 @@ class Generate(Primitive):
                     pid=self.pid,
                     tid=self.tid,
                     context_id=self.context.context_id,
+                    end_flag=self.end_flag,
                     parent_context_id=self.context.parent_context_id,
                     sampling_config=asdict(self.sampling_config),
                 )
@@ -146,6 +150,7 @@ class Generate(Primitive):
                     pid=self.pid,
                     tid=self.tid,
                     context_id=self.context.context_id,
+                    end_flag=self.end_flag,
                     parent_context_id=self.context.parent_context_id,
                     sampling_config=asdict(self.sampling_config),
                 ):

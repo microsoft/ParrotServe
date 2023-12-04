@@ -126,6 +126,10 @@ class Worker:
         )
         num_cpu_blocks = int(cpu_swap_space // cache_block_size)
         num_gpu_blocks = max(num_gpu_blocks, 0)
+
+        # HACK(chaofan): Latency-sensitive blocks constraint.
+        num_gpu_blocks = 4096 // block_size
+
         num_cpu_blocks = max(num_cpu_blocks, 0)
         torch.cuda.empty_cache()
 

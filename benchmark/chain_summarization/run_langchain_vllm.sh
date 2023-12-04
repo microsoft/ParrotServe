@@ -9,7 +9,7 @@ export OPENAI_API_KEY=EMPTY
 
 sleep 1
 
-python3 chain_summarization_langchain_baseline.py
+python3 bench_test_langchain.py
 
 sleep 1
 
