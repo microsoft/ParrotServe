@@ -128,7 +128,9 @@ def test_dispatcher_order():
     # 1 engine with threads_capacity=1
     tokenizer = Tokenizer()
     engine_config = EngineConfig(
-        threads_capacity=1, tokenizer="hf-internal-testing/llama-tokenizer"
+        threads_capacity=1,
+        tokens_capacity=99999,
+        tokenizer="hf-internal-testing/llama-tokenizer",
     )
     engines = {
         0: ExecutionEngine(engine_id=0, config=engine_config, tokenizer=tokenizer)
@@ -303,8 +305,8 @@ def test_token_capacity():
 
 
 if __name__ == "__main__":
-    # test_default_policy()
-    # test_dag_aware_policy()
-    # test_dispatcher_order()
-    # test_app_fifo()
+    test_default_policy()
+    test_dag_aware_policy()
+    test_dispatcher_order()
+    test_app_fifo()
     test_token_capacity()

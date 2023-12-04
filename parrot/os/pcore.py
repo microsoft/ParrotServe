@@ -73,7 +73,6 @@ class PCore:
         self.dispatcher = ThreadDispatcher(
             config=dispatcher_config,
             engines=self.engines,
-            tokenizer=self.tokenizer,
             ping_engine_method=_ping_engine_method,
         )
 

@@ -18,7 +18,11 @@ def init():
     mem_space = MemorySpace()
     tokenizer = Tokenizer()
     engine_id = 0
-    engine = ExecutionEngine(engine_id, engine_config)
+    engine = ExecutionEngine(
+        engine_id=engine_id,
+        config=engine_config,
+        tokenizer=tokenizer,
+    )
     dispatcher = ThreadDispatcher(config=dispatcher_config, engines={engine_id: engine})
 
     pid = 0

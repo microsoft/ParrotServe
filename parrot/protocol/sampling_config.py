@@ -12,7 +12,7 @@ class SamplingConfig:
 
     temperature: float = 1.0
     top_p: float = 1.0
-    max_gen_length: int = 1024
+    max_gen_length: int = 512
     ignore_tokenizer_eos: bool = False
     stop_token_ids: List[int] = field(default_factory=list)
     stop_str: Optional[str] = None

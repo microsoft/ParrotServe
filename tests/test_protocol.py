@@ -7,6 +7,7 @@ import parrot as P
 from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.os.engine import ExecutionEngine
+from parrot.os.tokenizer import Tokenizer
 from parrot.os.memory.context import Context
 from parrot.constants import NONE_THREAD_ID
 
@@ -163,7 +164,12 @@ def test_register_engine():
 
 def test_fill():
     engine_config = _get_opt_125m_engine_config()
-    engine = ExecutionEngine(engine_id=0, config=engine_config)
+    tokenizer = Tokenizer()
+    engine = ExecutionEngine(
+        engine_id=0,
+        config=engine_config,
+        tokenizer=tokenizer,
+    )
     context = Context(context_id=0, engine=engine)
 
     async def main():
@@ -190,7 +196,12 @@ def test_fill():
 
 def test_generate():
     engine_config = _get_opt_125m_engine_config()
-    engine = ExecutionEngine(engine_id=0, config=engine_config)
+    tokenizer = Tokenizer()
+    engine = ExecutionEngine(
+        engine_id=0,
+        config=engine_config,
+        tokenizer=tokenizer,
+    )
     context = Context(context_id=0, engine=engine)
 
     async def main():
