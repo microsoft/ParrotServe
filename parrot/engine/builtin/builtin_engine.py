@@ -76,6 +76,7 @@ class BuiltinEngine(LLMEngine):
             tid=payload["tid"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
+            end_flag=payload["end_flag"],
             token_ids=payload["token_ids"],
         )
 
@@ -93,6 +94,7 @@ class BuiltinEngine(LLMEngine):
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             sampling_config=SamplingConfig(**payload["sampling_config"]),
+            end_flag=payload["end_flag"],
         )
         self._add_job(generation_job)
 
@@ -114,6 +116,7 @@ class BuiltinEngine(LLMEngine):
         context_id = payload["context_id"]
         parent_context_id = payload["parent_context_id"]
         sampling_config = SamplingConfig(**payload["sampling_config"])
+        end_flag = payload["end_flag"]
 
         generation_job = Generate(
             pid=pid,
@@ -121,6 +124,7 @@ class BuiltinEngine(LLMEngine):
             context_id=context_id,
             parent_context_id=parent_context_id,
             sampling_config=sampling_config,
+            end_flag=end_flag,
         )
         self._add_job(generation_job)
 

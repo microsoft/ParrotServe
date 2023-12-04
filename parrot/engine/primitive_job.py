@@ -19,9 +19,11 @@ class PrimitiveJob:
         tid: int,
         context_id: int,
         parent_context_id: int,
+        end_flag: bool,
     ) -> None:
         self.pid = pid
         self.tid = tid
+        self.end_flag = end_flag
         self.context_id = context_id
         self.parent_context_id = parent_context_id
         self.context: Optional[LowLevelContext] = None
@@ -44,10 +46,11 @@ class Fill(PrimitiveJob):
         tid: int,
         context_id: int,
         parent_context_id: int,
+        end_flag: bool = False,
         token_ids: Optional[List[int]] = None,
         text: Optional[str] = None,
     ) -> None:
-        super().__init__(pid, tid, context_id, parent_context_id)
+        super().__init__(pid, tid, context_id, parent_context_id, end_flag)
         self.token_ids = token_ids
         self.text = text
 
@@ -73,8 +76,9 @@ class Generate(PrimitiveJob):
         context_id: int,
         parent_context_id: int,
         sampling_config: SamplingConfig,
+        end_flag: bool = False,
     ) -> None:
-        super().__init__(pid, tid, context_id, parent_context_id)
+        super().__init__(pid, tid, context_id, parent_context_id, end_flag)
         self.sampling_config = sampling_config
         self.output_queue: AsyncQueue[int] = AsyncQueue()  # For token streaming
         self.gen_text = ""  # For text generation

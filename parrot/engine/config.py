@@ -130,7 +130,7 @@ class EngineConfig:
     threads_capacity: int = 256
 
     # For non-builtin engines, it's useless.
-    tokens_capacity: int = 4096
+    tokens_capacity: int = 262144
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:

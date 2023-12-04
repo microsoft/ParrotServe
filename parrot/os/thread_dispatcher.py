@@ -219,8 +219,12 @@ class ThreadDispatcher:
                 f"Dispatched {len(dispatched_threads)} threads. Results: \n"
                 + "\n".join(
                     [
-                        f"  tid={thread.tid} -> engine: id={thread.engine.engine_id}, name={thread.engine.name}, "
-                        f"num_threads={thread.engine.num_threads}, num_threads_upperbound={thread.engine.requests_num_upperbound}, "
+                        f"  Thread {thread.unique_id} -> engine: id={thread.engine.engine_id}, name={thread.engine.name}, "
+                        f"num_threads={thread.engine.num_threads}, "
+                        f"thread_capacity={thread.engine.config.threads_capacity}, "
+                        f"tokens_capacity={thread.engine.config.tokens_capacity}, "
+                        f"num_threads_upperbound={thread.engine.requests_num_upperbound}, "
+                        f"tokens_num={thread.engine.tokens_num}, "
                         for thread in dispatched_threads
                     ]
                 )

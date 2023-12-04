@@ -236,7 +236,7 @@ class Thread:
                 filled_len += len(chunked_tokens)
             else:
                 logger.debug(
-                    f"Thread {self.tid} submit Fill primitive (size: {len(primitive.token_ids)})"
+                    f"Thread {self.tid} (pid={self.process.pid}) submit Fill primitive (size: {len(primitive.token_ids)})"
                 )
                 resp = await primitive.apost()
                 filled_len += resp.filled_len
@@ -286,7 +286,7 @@ class Thread:
         await self._flush_fill_tokens_buffer()
 
         logger.debug(
-            f"Thread {self.tid} submit Generation primitive (operator: {op}, max_len: {op.sampling_config.max_gen_length})"
+            f"Thread {self.tid} (pid={self.process.pid}) submit Generation primitive (operator: {op}, max_len: {op.sampling_config.max_gen_length})"
         )
 
         generator = Generate(
@@ -335,7 +335,7 @@ class Thread:
             # Skip
         else:
             logger.debug(
-                f"Thread {self.tid} submit Fill primitive (text len: {len(text)})"
+                f"Thread {self.tid} (pid={self.process.pid}) submit Fill primitive (text len: {len(text)})"
             )
             resp = await primitive.apost()
 

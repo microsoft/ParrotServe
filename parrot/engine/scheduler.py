@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 
-from typing import List
+from typing import List, Dict
 import time
 
 from parrot.exceptions import parrot_assert
@@ -28,15 +28,31 @@ class Scheduler:
 
         self.policy = config.policy
 
+        # Use context id as key. Different jobs with the same context id can't
+        # present at the same time.
+        self._job_arrival_time: Dict[int, int] = {}
+
+        # pid_tid as key.
+        self._thread_arrival_time: Dict[str, int] = {}
+
     def add_job(self, job: PrimitiveJob):
         """Add a job to the scheduler."""
 
         self.waiting_jobs.append(job)
+        cur_time = int(time.perf_counter())
+        self._job_arrival_time[job.context_id] = cur_time
+        key = f"{job.pid}_{job.tid}"
+        if key not in self._thread_arrival_time:
+            self._thread_arrival_time[key] = cur_time
 
     def remove_job(self, job: PrimitiveJob):
         """Remove a job from the scheduler."""
 
         self.running_jobs.remove(job)
+        self._job_arrival_time.pop(job.context_id)
+        if job.end_flag:
+            key = f"{job.pid}_{job.tid}"
+            self._thread_arrival_time.pop(key)
 
     @property
     def num_running_jobs(self) -> int:
@@ -98,11 +114,6 @@ class Scheduler:
             self.running_jobs
         )  # Note: running jobs must be all Gen jobs.
 
-        # TODO(chaofan): In shared prefix mode, we should only count the prefix context once.
-        cur_total_tokens = sum(
-            [job.context.get_context_len() for job in self.running_jobs]
-        )
-
         # print(
         #     f"Scheduling: Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}"
         # )
@@ -121,21 +132,6 @@ class Scheduler:
             if cur_num_batched_tokens + job_num_tokens > self.max_num_batched_tokens:
                 break
 
-            # TODO(chaofan): Only do this in shared prefix mode.
-            # if ctx.context_id not in visited_context_ids:
-            #     cur_total_tokens += ctx.get_this_context_len()
-            #     visited_context_ids.add(ctx.context_id)
-            # parent_ctx = ctx.parent_context
-            # if parent_ctx and parent_ctx.context_id not in visited_context_ids:
-            #     cur_total_tokens += parent_ctx.get_this_context_len()
-            #     visited_context_ids.add(parent_ctx.context_id)
-
-            # For normal mode, we repeatly count prefix because it's repeated loaded.
-            ctx = job.context
-            cur_total_tokens += ctx.get_context_len()
-            if cur_total_tokens > self.max_total_tokens:
-                break
-
             self.running_jobs.append(job)
             if job.start_time == -1:
                 job.start_time = time.perf_counter_ns()
@@ -148,7 +144,33 @@ class Scheduler:
         # Check total tokens constraint and do preemption
 
         # This is to avoid compute the same context multiple times.
+        # TODO(chaofan): Only do this in shared prefix mode.
         # visited_context_ids = set()
+        # if ctx.context_id not in visited_context_ids:
+        #     cur_total_tokens += ctx.get_this_context_len()
+        #     visited_context_ids.add(ctx.context_id)
+        # parent_ctx = ctx.parent_context
+        # if parent_ctx and parent_ctx.context_id not in visited_context_ids:
+        #     cur_total_tokens += parent_ctx.get_this_context_len()
+        #     visited_context_ids.add(parent_ctx.context_id)
+
+        # For normal mode, we repeatly count prefix because it's repeated loaded.
+
+        self.running_jobs.sort(key=lambda job: self._job_arrival_time[job.context_id])
+        self.running_jobs.sort(
+            key=lambda job: self._thread_arrival_time[f"{job.pid}_{job.tid}"]
+        )
+
+        new_running: List[PrimitiveJob] = []
+        cur_total_tokens = 0
+        for job in self.running_jobs:
+            # NOTE(chaofan): In shared prefix mode, we should only count the prefix context once.
+            job_tokens = job.context.get_context_len()
+            if cur_total_tokens + job_tokens > self.max_total_tokens:
+                break
+            new_running.append(job)
+            cur_total_tokens += job_tokens
+        self.running_jobs = new_running
 
         # NOTE(chaofan): Use copy() to avoid list modification.
         ret = self.running_jobs.copy()
@@ -162,6 +184,7 @@ class Scheduler:
             if not job.finish_event.is_set():
                 new_running.append(job)
             else:
+                self.remove_job(job)
                 job.end_time = time.perf_counter_ns()
                 logger.debug(
                     f"Job {job} finished. Latency: {(job.end_time - job.start_time) / 1e6} ms"

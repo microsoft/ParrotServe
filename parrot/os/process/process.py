@@ -70,7 +70,7 @@ class Process:
         return thread
 
     def _free_thread(self, thread: Thread):
-        logger.info(f"Free thread {thread.tid}")
+        logger.info(f"Process (pid={self.pid}): Free thread {thread.tid}")
         self.threads_pool.free(thread.tid)
         self.threads.remove(thread)
 

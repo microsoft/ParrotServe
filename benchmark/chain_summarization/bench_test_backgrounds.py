@@ -92,4 +92,4 @@ def main(request_rate: int):
 
 if __name__ == "__main__":
     # main(1.0)
-    main(10.0)
+    main(1.0)
