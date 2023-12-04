@@ -69,12 +69,13 @@ class PCore:
         def _ping_engine_method(engine: ExecutionEngine):
             self._ping_engine(engine)
 
+        self.tokenizer = Tokenizer()
         self.dispatcher = ThreadDispatcher(
             config=dispatcher_config,
             engines=self.engines,
+            tokenizer=self.tokenizer,
             ping_engine_method=_ping_engine_method,
         )
-        self.tokenizer = Tokenizer()
 
         # ---------- Id Allocator ----------
         self.pid_pool = RecyclePool(PROCESS_POOL_SIZE)
@@ -180,6 +181,7 @@ class PCore:
         engine = ExecutionEngine(
             engine_id=engine_id,
             config=config,
+            tokenizer=self.tokenizer,
         )
         self.engines[engine_id] = engine
         self.engine_last_seen_time[engine_id] = time.perf_counter_ns()

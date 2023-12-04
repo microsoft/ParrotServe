@@ -22,6 +22,7 @@ class SVPlaceholder:
         self.id = id
         self.name = name
         self.content = None
+        self.max_length = 0
 
         # Events
         self.start_event: Event = Event()

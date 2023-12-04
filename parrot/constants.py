@@ -38,6 +38,15 @@ ENGINE_POOL_SIZE = 4096
 
 # ---------- Engine ----------
 LATENCY_ANALYZER_RECENT_N = 20
+# EngineType(Enum)
+ENGINE_TYPE_BUILTIN = "builtin"
+ENGINE_TYPE_OPENAI = "openai"
+ENGINE_TYPE_MLCLLM = "mlcllm"
+ENGINE_TYPES = [
+    ENGINE_TYPE_BUILTIN,
+    ENGINE_TYPE_OPENAI,
+    ENGINE_TYPE_MLCLLM,
+]
 
 # ---------- None Number ----------
 NONE_THREAD_ID = -1

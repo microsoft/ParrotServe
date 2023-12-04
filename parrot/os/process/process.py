@@ -140,6 +140,11 @@ class Process:
                         # make a new node for the next segment
                         cur_edge = DAGEdge(call)
                         call.edges.append(cur_edge)
+
+                        # Update max length of the placeholder
+                        sv_placeholder.max_length = (
+                            region.param.sampling_config.max_gen_length
+                        )
         else:
             """Native Call has only one edge."""
             for name, value in call.bindings.items():

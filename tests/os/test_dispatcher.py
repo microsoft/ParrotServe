@@ -22,13 +22,16 @@ def test_default_policy():
     )
 
     # 4 identical engines
-    engine_config = EngineConfig()
-    engines = {i: ExecutionEngine(engine_id=i, config=engine_config) for i in range(4)}
+    tokenizer = Tokenizer()
+    engine_config = EngineConfig(tokenizer="hf-internal-testing/llama-tokenizer")
+    engines = {
+        i: ExecutionEngine(engine_id=i, config=engine_config, tokenizer=tokenizer)
+        for i in range(4)
+    }
 
     # init dispatcher
     dispatcher = ThreadDispatcher(config=dispatcher_config, engines=engines)
     mem_space = MemorySpace()
-    tokenizer = Tokenizer()
     process = Process(
         pid=0,
         dispatcher=dispatcher,
@@ -38,6 +41,7 @@ def test_default_policy():
 
     # 8 threads
     call = test("a")
+    process.rewrite_call(call)
     for i in range(8):
         thread = Thread(tid=i, process=process, call=call, context_id=0)
         dispatcher.push_thread(thread)
@@ -77,13 +81,16 @@ def test_dag_aware_policy():
     )
 
     # 4 identical engines
-    engine_config = EngineConfig()
-    engines = {i: ExecutionEngine(engine_id=i, config=engine_config) for i in range(4)}
+    tokenizer = Tokenizer()
+    engine_config = EngineConfig(tokenizer="hf-internal-testing/llama-tokenizer")
+    engines = {
+        i: ExecutionEngine(engine_id=i, config=engine_config, tokenizer=tokenizer)
+        for i in range(4)
+    }
 
     # init dispatcher
     dispatcher = ThreadDispatcher(config=dispatcher_config, engines=engines)
     mem_space = MemorySpace()
-    tokenizer = Tokenizer()
     process = Process(
         pid=0,
         dispatcher=dispatcher,
@@ -94,6 +101,8 @@ def test_dag_aware_policy():
     # 16 threads, with 8 throughput threads and 8 latency threads
     call1 = test_func_throughput("a")
     call2 = test_func_latency("a")
+    process.rewrite_call(call1)
+    process.rewrite_call(call2)
     for i in range(8):
         thread = Thread(tid=i, process=process, call=call1, context_id=0)
         dispatcher.push_thread(thread)
@@ -116,14 +125,18 @@ def test_dispatcher_order():
         max_queue_size=1024,
     )
 
-    # 1 engine with max_threads_num=1
-    engine_config = EngineConfig(max_threads_num=1)
-    engines = {0: ExecutionEngine(engine_id=0, config=engine_config)}
+    # 1 engine with threads_capacity=1
+    tokenizer = Tokenizer()
+    engine_config = EngineConfig(
+        threads_capacity=1, tokenizer="hf-internal-testing/llama-tokenizer"
+    )
+    engines = {
+        0: ExecutionEngine(engine_id=0, config=engine_config, tokenizer=tokenizer)
+    }
 
     # init dispatcher
     dispatcher = ThreadDispatcher(config=dispatcher_config, engines=engines)
     mem_space = MemorySpace()
-    tokenizer = Tokenizer()
     process = Process(
         pid=0,
         dispatcher=dispatcher,
@@ -182,14 +195,18 @@ def test_app_fifo():
         max_queue_size=1024,
     )
 
-    # 1 engine with max_threads_num=1
-    engine_config = EngineConfig(max_threads_num=1)
-    engines = {0: ExecutionEngine(engine_id=0, config=engine_config)}
+    # 1 engine with threads_capacity=1
+    tokenizer = Tokenizer()
+    engine_config = EngineConfig(
+        threads_capacity=1, tokenizer="hf-internal-testing/llama-tokenizer"
+    )
+    engines = {
+        0: ExecutionEngine(engine_id=0, config=engine_config, tokenizer=tokenizer)
+    }
 
     # init dispatcher
     dispatcher = ThreadDispatcher(config=dispatcher_config, engines=engines)
     mem_space = MemorySpace()
-    tokenizer = Tokenizer()
     process = Process(
         pid=0,
         dispatcher=dispatcher,
@@ -230,8 +247,64 @@ def test_app_fifo():
         thread.engine.remove_thread(thread)  # Free loc
 
 
+@P.semantic_function()
+def test_1000(
+    b: P.Output(
+        sampling_config=P.SamplingConfig(max_gen_length=1000),
+    )
+):
+    """This is a function {{b}}"""
+
+
+def test_token_capacity():
+    dispatcher_config = DispatcherConfig(
+        dag_aware=False,
+        app_fifo=False,
+        max_queue_size=1024,
+    )
+
+    # 4 identical engines
+    tokenizer = Tokenizer()
+    engine_config = EngineConfig(
+        tokens_capacity=2048,
+        tokenizer="hf-internal-testing/llama-tokenizer",
+    )
+
+    # 1 engine
+    engines = {
+        0: ExecutionEngine(engine_id=0, config=engine_config, tokenizer=tokenizer)
+    }
+
+    # init dispatcher
+    dispatcher = ThreadDispatcher(config=dispatcher_config, engines=engines)
+    mem_space = MemorySpace()
+    process = Process(
+        pid=0,
+        dispatcher=dispatcher,
+        tokenizer=tokenizer,
+        memory_space=mem_space,
+    )
+
+    # 8 threads
+    call = test_1000()
+    process.rewrite_call(call)
+    for i in range(8):
+        thread = Thread(tid=i, process=process, call=call, context_id=0)
+        dispatcher.push_thread(thread)
+
+    dispatched_threads = dispatcher.dispatch()
+    assert len(dispatched_threads) == 2
+
+    engines[0].remove_thread(dispatched_threads[0])
+    engines[0].remove_thread(dispatched_threads[1])
+
+    dispatched_threads = dispatcher.dispatch()
+    assert len(dispatched_threads) == 2
+
+
 if __name__ == "__main__":
     # test_default_policy()
     # test_dag_aware_policy()
-    test_dispatcher_order()
+    # test_dispatcher_order()
     # test_app_fifo()
+    test_token_capacity()

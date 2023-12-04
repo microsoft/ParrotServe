@@ -10,6 +10,8 @@ from parrot.constants import (
     FILL_NO_CHUNK,
     DEFAULT_SERVER_HOST,
     DEFAULT_ENGINE_SERVER_PORT,
+    ENGINE_TYPE_BUILTIN,
+    ENGINE_TYPES,
 )
 
 from .builtin.mem_layout import MemLayout, ATTN_FUNC_LAYOUT_MAP
@@ -89,17 +91,6 @@ class SchedulerConfig:
     policy: Literal["fifo", "tgi"] = "fifo"
 
 
-# EngineType(Enum)
-ENGINE_TYPE_BUILTIN = "builtin"
-ENGINE_TYPE_OPENAI = "openai"
-ENGINE_TYPE_MLCLLM = "mlcllm"
-ENGINE_TYPES = [
-    ENGINE_TYPE_BUILTIN,
-    ENGINE_TYPE_OPENAI,
-    ENGINE_TYPE_MLCLLM,
-]
-
-
 @dataclass
 class EngineConfig:
     # The model used in this engine.
@@ -136,7 +127,10 @@ class EngineConfig:
     device: str = "cuda"  # cpu, cuda, cuda:x
 
     # Max threads the engine can handle.
-    max_threads_num: int = 256
+    threads_capacity: int = 256
+
+    # For non-builtin engines, it's useless.
+    tokens_capacity: int = 1024
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:

@@ -2,13 +2,14 @@
 # Licensed under the MIT license.
 
 
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Callable, Optional
 from enum import Enum
 from dataclasses import dataclass
 from queue import Queue
 
 from parrot.utils import get_logger, cprofile
 from parrot.exceptions import ParrotOSUserError, parrot_assert
+
 from .process.thread import Thread
 from .engine import ExecutionEngine
 
@@ -35,7 +36,7 @@ class ThreadDispatcher:
         self,
         config: DispatcherConfig,
         engines: Dict[int, ExecutionEngine],
-        ping_engine_method=None,
+        ping_engine_method: Optional[Callable] = None,
     ):
         self.config = config
         self.engines = engines
@@ -68,7 +69,12 @@ class ThreadDispatcher:
             if self.config.dag_aware and request_upperbound <= engine.num_threads:
                 return False
 
-            # Check whether the engine has enough remain locs.
+            # Check whether the engine has enough token capacity.
+            token_nums = engine.count_thread_token_nums(thread)
+            if engine.tokens_num + token_nums > engine.config.tokens_capacity:
+                return False
+
+            # Check whether the engine has enough remain locs (threads num capacity).
             return engine.remain_thread_locs > 0
 
         # Get the available engines.
@@ -87,7 +93,7 @@ class ThreadDispatcher:
         # Get the best candidate engine.
         if self.config.dag_aware:
             # DAG Aware policy: select the engine with the least remain locs first,
-            # preventing threads with a relaxed max_threads_num requirement from
+            # preventing threads with a relaxed threads_capacity requirement from
             # occupying the engine with a smaller remain locs.
             best_candidate = None
             for engine in engines_list:

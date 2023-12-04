@@ -5,7 +5,7 @@
     "port": 9001,
     "engine_type": "openai",
     "random_seed": 0,
-    "max_threads_num": 64,
+    "threads_capacity": 64,
     "instance": {
         "api_key": "xxx",
         "api_endpoint": "completion",

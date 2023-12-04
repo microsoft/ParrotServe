@@ -7,7 +7,7 @@
     "random_seed": 0,
     "tokenizer": "hf-internal-testing/llama-tokenizer",
     "fill_chunk_size": -1,
-    "max_threads_num": 1,
+    "threads_capacity": 1,
     "instance": {
         "block_size": 16,
         "num_kv_cache_blocks": 4000,

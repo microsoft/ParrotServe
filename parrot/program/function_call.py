@@ -24,6 +24,7 @@ class BasicCall(ABC):
 
         # ---------- Runtime ----------
         self.edges: List["DAGEdge"] = []
+        # idx of region -> edge. For native call, always 0.
         self.edges_map: Dict[int, "DAGEdge"] = {}
 
         self.set_bindings(args, kwargs)
