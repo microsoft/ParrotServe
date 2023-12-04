@@ -24,7 +24,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 
-llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=20)
 chain = load_summarize_chain(llm, chain_type="refine")
 
 loader = TextLoader("test.txt")

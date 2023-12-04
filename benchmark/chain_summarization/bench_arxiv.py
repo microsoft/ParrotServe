@@ -8,15 +8,11 @@ import parse
 
 vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
-chunk_size = 1024
 
-
-def get_chunks(file_name: str):
+def get_chunks(file_name: str, chunk_size: int):
     from langchain.document_loaders import TextLoader
     from langchain.text_splitter import CharacterTextSplitter
     from transformers import AutoTokenizer
-
-    global chunk_size
 
     loader = TextLoader(f"../workloads/arxiv-march-2023/arxiv-sampled/{file_name}.txt")
     docs = loader.load()
@@ -34,21 +30,8 @@ def get_chunks(file_name: str):
     return [doc.page_content for doc in split_docs]
 
 
-def get_refine_functions(file_name: str):
+def get_refine_functions(file_name: str, chunk_num: int, output_len: int):
     global vm
-    global chunk_size
-
-    output_len_file_path = f"../workloads/arxiv-march-2023/arxiv-sampled/chunksize-{chunk_size}/{file_name}-chain-outputlen.txt"
-    output_lens = []
-
-    with open(output_len_file_path, "r") as f:
-        lines = f.readlines()
-        for line in lines:
-            result = parse.parse("Step {step}: Output Len={output_len}", line)
-            if result is not None:
-                output_lens.append(int(result["output_len"]))
-
-    # print(output_lens)
 
     rets = []
 
@@ -65,7 +48,7 @@ CONCISE SUMMARY:{{summary}}""",
                 typ=P.ParamType.OUTPUT_LOC,
                 sampling_config=P.SamplingConfig(
                     ignore_tokenizer_eos=True,
-                    max_gen_length=output_lens[0],
+                    max_gen_length=output_len,
                 ),
             ),
         ],
@@ -86,7 +69,7 @@ CONCISE SUMMARY:{{summary}}""",
         "{{summary}}"
     )
 
-    for i, output_len in enumerate(output_lens[1:]):
+    for i in range(1, chunk_num):
         func = vm.define_function(
             func_name=f"refine_func_{i}",
             func_body=refine_template,
@@ -109,11 +92,16 @@ CONCISE SUMMARY:{{summary}}""",
     return rets
 
 
-if __name__ == "__main__":
-    chunks = get_chunks("article_0")
-    funcs = get_refine_functions("article_0")
+def main(file_name: str, chunk_size: int, output_len: int):
+    chunks = get_chunks(file_name, chunk_size)
+    funcs = get_refine_functions(file_name, len(chunks), output_len)
 
-    async def main():
+    print(
+        f"file_name: {file_name}, chunk_size: {chunk_size}, output_len: {output_len}",
+        flush=True,
+    )
+
+    async def _main():
         # NOTE(chaofan): We only get the final result, let the intermediate results be
         # flown in the system.
 
@@ -124,4 +112,27 @@ if __name__ == "__main__":
 
         next_input.get()
 
-    vm.run(main, timeit=True)
+    for _ in range(5):
+        latency = vm.run(_main, timeit=True)
+        print(f"Time: {latency:.4f}", flush=True)
+        time.sleep(3)
+
+
+def warmup():
+    global vm
+    test_func = vm.import_function(
+        "chain_sum_test", "benchmark.workloads.test_examples.chain_summarization"
+    )
+    with vm.running_scope():
+        holder = test_func("Test " * 100)
+        holder.get()
+
+
+if __name__ == "__main__":
+    warmup()
+
+    print("warmup done", flush=True)
+
+    for i in range(10):
+        for ol in [25, 50, 75, 100]:
+            main(f"article_{i}", 1024, ol)

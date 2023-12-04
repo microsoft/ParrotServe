@@ -275,7 +275,9 @@ class VirtualMachine:
             if timeit:
                 ed = time.perf_counter_ns()
                 self.stat_run_time = (ed - st) / 1e9
-                print(f"[Timeit] E2E Program Execution Time: {self.stat_run_time} (s).")
+                logger.info(
+                    f"[Timeit] E2E Program Execution Time: {self.stat_run_time} (s)."
+                )
 
     def run(
         self,
