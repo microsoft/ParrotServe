@@ -3,12 +3,13 @@
 
 import time
 import asyncio
+import multiprocessing as mp
 import parrot as P
 from parrot.utils import cprofile
 import numpy as np
 
 
-def proc1():
+def proc1(barrier: mp.Barrier):
     vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
     test_func = vm.import_function(
@@ -34,10 +35,12 @@ def proc1():
             # with cprofile("get"):
             next_input.get()
 
+    barrier.wait()
+
     vm.run(main, timeit=True)
 
 
-def proc2(request_rate: float):
+def proc2(barrier: mp.Barrier, request_rate: float):
     vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
     test_func = vm.import_function(
@@ -47,6 +50,8 @@ def proc2(request_rate: float):
     requests_num = 100
 
     outputs = []
+
+    barrier.wait()
 
     for _ in range(requests_num):
         output = test_func("Test")
@@ -58,21 +63,26 @@ def proc2(request_rate: float):
         outputs[i].get()
 
 
+def main(request_rate: int):
+    barrier = mp.Barrier(2)
+    proc1 = mp.Process(
+        target=proc1,
+        args=(barrier,),
+    )
+    proc2 = mp.Process(
+        target=proc2,
+        args=(
+            barrier,
+            request_rate,
+        ),
+    )
+
+    proc1.start()
+    proc2.start()
+
+    proc1.join()
+    proc2.join()
+
+
 if __name__ == "__main__":
-    # print(test_func.body)
-
-    # with cprofile("e2e"):
-    #     vm.run(single_call, timeit=True)
-    # vm.run(single_call, timeit=True)
-
-    # test_baseline()
-    test_main()
-    # test_main_async()
-
-    # for _ in range(10):
-    # test_baseline()
-    # test_main()
-    #   test_main_async()
-
-    # latency = vm.profile(main)
-    # print(latency)
+    main()

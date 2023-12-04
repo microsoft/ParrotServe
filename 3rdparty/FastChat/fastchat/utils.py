@@ -327,6 +327,9 @@ def get_context_length(config):
     else:
         rope_scaling_factor = 1
 
+    # HACK(chaofan): Hack the max seq len.
+    return 16384
+
     for key in SEQUENCE_LENGTH_KEYS:
         val = getattr(config, key, None)
         if val is not None:

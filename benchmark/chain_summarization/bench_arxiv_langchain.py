@@ -82,9 +82,20 @@ def main(file_name: str, chunk_size: int, output_len: int):
 
 
 if __name__ == "__main__":
+    # Warmup
     main("article_8", 1024, 1)
 
+    # main("article_0", 2048, 50)
+
     # for i in range(1, 10):
-    for i in [0]:
-        for ol in [25, 50, 75, 100]:
-            main(f"article_{i}", 1024, ol)
+    # for i in [0]:
+    #     for ol in [25, 50, 75, 100]:
+    #         main(f"article_{i}", 1024, ol)
+
+    # for i in [0]:
+    #     for bs in [512, 1024, 1536, 2048]:
+    #         main(f"article_{i}", bs, 50)
+
+    for i in range(0, 10):
+        for bs in [512, 1024, 1536, 2048]:
+            main(f"article_{i}", bs, 50)

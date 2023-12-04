@@ -1,4 +1,4 @@
-# Parrot: Serving LLM-based Agents with Dependent Semantic Variables
+# Parrot: Efficient Serving of LLM-based Application with Semantic Variables
 
 This project is a research prototype for now. Being eargerly iterated.
 

@@ -1,0 +1,8 @@
+file_name: article_0, chunk_size: 512, output_len: 50
+Time: 274.0399s
+file_name: article_0, chunk_size: 1024, output_len: 50
+Time: 141.5189s
+file_name: article_0, chunk_size: 1536, output_len: 50
+Time: 99.3593s
+file_name: article_0, chunk_size: 2048, output_len: 50
+Time: 79.0837s
