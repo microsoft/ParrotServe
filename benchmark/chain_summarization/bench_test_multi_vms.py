@@ -37,7 +37,7 @@ def process(barrier: Barrier, is_baseline: bool = True):
     vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
     test_func = vm.import_function(
-        "chain_sum_test", "benchmark.bench_codelib.chain_summarization"
+        "chain_sum_test", "benchmark.workloads.test_examples.chain_summarization"
     )
 
     proc_func = baseline if is_baseline else main

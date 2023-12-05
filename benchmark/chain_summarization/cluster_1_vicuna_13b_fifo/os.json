@@ -6,6 +6,6 @@
     "dispatcher": {
         "dag_aware": false,
         "app_fifo": true,
-        "max_queue_size": 2048
+        "max_queue_size": 4096
     }
 }

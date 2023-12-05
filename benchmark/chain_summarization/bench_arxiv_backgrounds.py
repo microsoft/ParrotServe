@@ -187,7 +187,12 @@ if __name__ == "__main__":
 
     print("warmup done", flush=True)
 
+    # for i in range(10):
+    #     for reqs in [1, 2, 3]:
+    #         main(f"article_{i}", reqs)
+    #         time.sleep(10)
+
     for i in range(10):
-        for reqs in [1, 2, 3]:
+        for reqs in [3.5]:
             main(f"article_{i}", reqs)
             time.sleep(10)

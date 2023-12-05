@@ -58,3 +58,23 @@ file_name: article_9, request_rate: 2
 Time: 125.613174707 s
 file_name: article_9, request_rate: 3
 Time: 189.919218564 s
+file_name: article_0, request_rate: 3.5
+Time: 320.557354734 s
+file_name: article_1, request_rate: 3.5
+Time: 166.403785882 s
+file_name: article_2, request_rate: 3.5
+Time: 207.619706185 s
+file_name: article_3, request_rate: 3.5
+Time: 153.791197368 s
+file_name: article_4, request_rate: 3.5
+Time: 246.796895102 s
+file_name: article_5, request_rate: 3.5
+Time: 238.591003372 s
+file_name: article_6, request_rate: 3.5
+Time: 493.744202677 s
+file_name: article_7, request_rate: 3.5
+Time: 453.777469968 s
+file_name: article_8, request_rate: 3.5
+Time: 172.989541208 s
+file_name: article_9, request_rate: 3.5
+Time: 249.306754497 s
