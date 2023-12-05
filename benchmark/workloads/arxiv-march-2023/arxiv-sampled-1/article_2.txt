@@ -1,0 +1,3296 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+plain
+propositionProposition
+lemmaLemma
+theoremTheorem
+assumptionAssumption
+*conjectureConjecture
+*subconjectureSubconjecture
+corollaryCorollary
+mainMain Result
+*definitionDefinition
+remarkRemark
+
+           
+          
+            
+         
+
+
+
+
+IndRemark
+  
+
+  0.95
+  
+
+
+
+
+
+
+IndAssumption
+  
+
+  0.95
+  
+
+
+
+
+
+
+IndProposition
+  
+
+  0.95
+  
+
+
+
+
+
+
+
+
+
+a
+b
+η
+g
+σ
+ℓ
+L
+e
+p
+f
+F
+T
+Q
+S
+Ψ
+H
+Σ
+
+∇
+g
+L
+…s
+Ξ
+d
+Φ
+T
+F
+
+
+
+
+
+
+
+
+
+
+
+
+
+,1]Justin Feng
+  [E-mail address:justin.feng@tecnico.ulisboa.pt]
+,2]Edgar Gasperín
+  [E-mail address:edgar.gasperin@tecnico.ulisboa.pt]
+
+  [1,2] CENTRA, Departamento de Física, Instituto Superior
+    Técnico IST, Universidade de Lisboa UL, Avenida Rovisco Pais 1,
+    1049 Lisboa, Portugal
+
+
+Linearised conformal Einstein field equations
+    [
+    March 30, 2023
+=============================================
+
+
+  The linearisation of a second-order formulation of the conformal
+  Einstein field equations (CEFEs) in Generalised Harmonic Gauge (GHG),
+  with trace-free matter is derived.  The linearised equations are
+  obtained for a general background and then particularised for the
+  study linear perturbations around a flat background —the inversion
+  (conformal) representation of the Minkowski spacetime— and the
+  solutions discussed. We show that the generalised Lorenz gauge
+  (defined as the linear analogue of the GHG-gauge) propagates.
+  Moreover, the equation for the conformal factor can be trivialised
+  with an appropriate choice for the gauge source functions; this
+  permits a scri-fixing strategy using gauge source functions for the
+  linearised wave-like CEFE-GHG, which can in principle be generalised
+  to the nonlinear case. As a particular application of the linearised
+  equations, the far-field and compact source approximation is employed
+  to derive quadrupole-like formulae for various conformal fields such
+  as the perturbation of the rescaled Weyl tensor.
+
+
+Keywords: conformal boundary, conformal
+Einstein field equations, scri-fixing.
+
+
+
+
+
+§ INTRODUCTION
+
+
+
+
+Although nowadays gravitational wave effects can be studied using the
+full non-linear Einstein field equations, linear perturbation theory
+remains an active area of research, e.g. black hole perturbation
+theory, quasinormal modes, post-Newtonian and post-Minkowskian
+expansions.  As it is well-known, the concept of gravitational radiation
+can be traced back to 1918 to the study of the linearisation of the
+Einstein field equations around flat spacetime and the derivation of the
+celebrated quadrupole formula. However, a rigorous formulation of the
+notion of gravitational radiation had to wait for further development of
+mathematical aspects of the theory put forward by Bondi, Sachs, Newman
+and Penrose and others in the decade of 1960 —see <cit.> for a historical review.  The notion of null-infinity (and
+more generally the notion of a conformal boundary) developed in the
+aforementioned theory proved crucial for the modern understanding of
+gravitational radiation.
+
+
+
+Null-infinity ℐ corresponds to an idealisation of the
+asymptotic region of the physical spacetime (ℳ̃,
+) and it is defined through a conformally related manifold
+(ℳ,) where =Ξ^2 so that
+ℐ can be identified with the region where Ξ=0 —but
+∇_a Ξ≠ 0.  Unfortunately, the Einstein field equations
+(EFEs) are not conformally invariant so evaluating quantities at
+ℐ is non-trivial. To circumvent this problem, there are
+different approaches aimed at specific goals. For instance, the
+hyperboloidal approach in their different renditions <cit.>
+represents a compromise between the preservation of standard
+formulations of the EFEs used in Numerical Relativity and the inclusion
+of  ℐ at the expense of dealing with formally singular (but
+numerically tractable) equations.  On the other hand, there exists
+another strand of research that stems from taking further the conformal
+approach while insisting on having formally regular equations.  This
+conformally regular approach was initiated in 1981 when H. Friedrich
+derived in <cit.> a reformulation of the Einstein field equations
+known as the conformal Einstein field equations (CEFEs) —see
+<cit.> for an exhaustive discussion. One of the distincive
+features of the CEFEs is that the conformal factor is a variable, hence
+the location of the conformal boundary is not fixed a priori. Strategies
+for fixing the conformal boundary, or scri-fixing, have been
+introduced for the CEFEs in <cit.> for vacuum and <cit.> for trace-free
+matter, but they require the existence of a congruence of conformal
+curves.
+
+
+
+Despite many advances in the mathematical analysis of spacetimes and
+numerical evolutions with the CEFEs  <cit.>, the application of the CEFEs
+to physical problems has been surprisingly limited. This is evident in
+(and possibly a result of) the fact that the application of linear
+perturbation theory to the CEFEs has not been studied in the existing
+literature. Such an analysis is needed to make contact with standard
+(linear) metric approaches to characterising gravitational radiation.
+This article aims to provide a first step in this direction by
+studying the linearisation of the CEFEs in a form that resembles
+standard formulations of the linearised Einstein field equations. 
+
+
+
+The core of the CEFEs are the Bianchi identities, which provide a set of
+evolution and constraint equations for the Weyl curvature (coupled with
+other fields in the non-linear case). One approach to the linearised
+problem concerns the study of the spin-2 equation in a fixed background
+spacetime, which can be thought as the linearisation of the Weyl sector
+of the CEFEs in spinorial form. The spin-2 equation on a particular
+background known as the Minkowski i^0-cylinder has been analysed in
+<cit.>.  The spin-2 equation
+∇_A'^Aϕ_ABCD=0, although elegant, looks very different
+to the standard linearisation of metric formulations of the Einstein
+field equations.  Hence, in this article, we study the linearisation not
+of the original set of CEFEs but rather we start from a metric and
+second-order formulation of the CEFEs which is closer in spirit to
+standard hyperbolic reductions of the EFEs in generalised harmonic gauge
+(GHG) employed in Numerical Relativity. This non-linear wave-like
+formulation of the CEFEs was originally derived in the vacuum case in
+<cit.> and has been extended for the case of trace-free matter in
+<cit.>. In this paper, we linearise these equations around a
+general background and then the solutions to the linearised equations
+around flat spacetime are studied. As a concrete application of the
+linearisation, we derive, in the far-field approximation,
+quadrupole-like formulae for the conformal fields, obtaining in
+particular a quadrupole-like formula for the perturbation of the
+rescaled Weyl tensor. As a byproduct, we show how the gauge source
+functions can be chosen so that the conformal factor remains
+unperturbed. This can be regarded as a “scri-fixing” strategy for the
+linearised CEFEs for trace-free matter. We then argue that the same
+strategy carries over to the non-linear wave-CEFEs in the context of the
+hyperboloidal initial value problem, providing a simpler alternative to
+the scri-fixing strategy in <cit.> based on conformal
+curves.
+
+
+
+
+ §.§ Notations and conventions
+
+
+
+The signature convention for (Lorentzian) spacetime metrics will be (-,+,+,+). Latin indices from the first half of the alphabet
+a,b,c,,... will be used as abstract tensor indices while Greek indices
+will denote spacetime coordinate indices, taking values from the set
+{0,1,2,3}.  If an adapted coordinate system (with coordinates
+x^μ) is introduced, x^0=t represents the time coordinate, and
+Latin indices from the second half of the alphabet represent spatial
+indices, taking values from the set {1,2,3}. Symmetrisation and
+antisymmetrisation of tensors will be denoted with round and square
+brackets and taking the trace-free part of a tensor will be denoted by
+adding {} on the relevant indices. For instance T_(ab):=
+12(T_ab + T_ba), T_[ab]:=12(T_ab -
+T_ba) and T_{ab}:= T_ab - 14g_abT.  The curvature
+conventions are fixed by the relation
+
+    (∇_a ∇_b -∇_b ∇_a) v^c = R^c_dab v^d.
+
+Although we will occasionally refer to expressions in spinorial form (as
+much of the literature on the CEFEs employs spinor notation), all
+calculations in this article are performed in tensor notation.
+
+
+
+
+ §.§ Organisation of the paper
+
+
+
+Section <ref> gives a brief summary of the CEFEs and the
+wave-like hyperbolic reduction of <cit.>. This is included to
+give a concise reference to the reader and to provide the non-linear
+context of the equations studied in this paper.  Section
+<ref> contains the linearisation of the wave-CEFEs
+in GHG around a general background.  Section <ref>
+particularises the equations for a flat background and discusses the
+perturbed solutions via Green's functions methods and, in the far-field
+approximation, quadrupole-like formulae for the conformal fields are
+derived.
+
+
+
+
+
+§ THE CONFORMAL EINSTEIN FIELD EQUATIONS
+
+
+
+
+
+The conformal Einstein field equations (CEFEs) are a reformulation of
+the Einstein field equations (EFEs) with the aim of dynamically
+implementing R. Penrose's conformal approach. The CEFEs were originally
+introduced in <cit.> and encode a set of differential conditions
+satisfied by the geometry of a conformal extension (ℳ,)
+of a spacetime (ℳ̃,) (with
+=Ξ^2) satisfying the EFEs. To differentiate between
+these two, the pair (ℳ,) is called the unphysical
+spacetime while the pair (ℳ̃,) is called
+the physical spacetime.  The feature that distinguishes the CEFEs
+from other reformulations of the EFEs is that (for trace-free matter)
+the CEFEs are formally regular at Ξ=0 —see
+<cit.>. To see this and concisely introduce the
+CEFEs, it is convenient to define the following zero-quantities
+—see <cit.> for an extensive discussion:
+
+
+    Z_ab := ∇_a∇_bΞ +Ξ L_ab - s g_ab -
+      1/2Ξ^3T_{ab}=0 ,
+      
+           Z_a := ∇_as +L_ac∇ ^cΞ -
+     1/2Ξ^2T_{ab}∇^bΞ -
+     1/6Ξ^3∇^bT_{ba}=0 , 
+          δ_bac := ∇_aL_bc-∇_bL_ac -
+     d^d_cab∇_dΞ -Ξ T_abc =0 ,
+     
+          λ_abc:=
+     ∇_ed^e_abc-T_bca=0 , 
+           P^c_dab :=  R^c_dab - Ξ d^c_dab - 
+     2( δ^c_[aL_b]d -
+       g_d[aL_b]^c).
+     
+           Z := λ - 6 Ξ s + 3 ∇_aΞ∇^aΞ
+     -1/4Ξ^4T=0
+           M_a:=∇^bT_ba - Ξ^-1T∇_aΞ=0.
+
+
+where Ξ is the conformal factor, s is the Friedrich scalar,
+L_ab is the Schouten tensor, R^a_bcd is the Riemann
+tensor, d^a_bcd is the rescaled Weyl tensor, T_ab is
+the rescaled energy-momentum tensor with trace T:=g^abT_ab
+and T_abc is the rescaled Cotton tensor. The zero-quantities
+Z_ab, Z_a, δ_abc,λ_abc , Z and M_a are defined
+simply as a bookkeeping device in the sense that the CEFEs are satisfied
+when a collection of fields
+
+    {g_ab,  Ξ,   s ,L_ab,  d_abcd,  T_ab,   T_abc}
+
+solve the equations
+
+    Z_ab=0,    Z_a=0,   δ_abc=0,   λ_abc=0,     P^d_abc=0,    Z=0,    M_a=0.
+
+
+
+   Observe that the only singular terms in the zero-quantities
+  (<ref>) appear with the trace of the unphysical
+  energy-momentum tensor, specifically in equation
+  (<ref>). However for trace-free
+  matter all the equations implied by the zero-quantities
+  (<ref>) are formally regular at Ξ=0. 
+
+
+
+The geometric variables are defined via
+
+    s   := 14∇_a∇^aΞ +
+      124RΞ,
+     L_ab   :=12R_ab-112Rg_ab,
+      
+     d^a_bcd   :=Ξ^-1C^a_bcd.
+
+where R_ab and R denote the Ricci tensor and Ricci scalar of
+(ℳ,) while C^a_bcd is the conformally invariant
+Weyl tensor. Given a solution to the CEFEs, it can be verified that the
+associated physical metric g̃_ab=Ξ^-2g_ab will satisfy
+the Einstein field equations:
+
+    R̃_ab-1/2R̃g̃_ab + λg̃_ab= T̃_ab ,
+ 
+where T̃_ab is the physical energy-momentum tensor, λ
+is the cosmological constant, and R̃_ab and R̃ are
+the respective Ricci tensor and Ricci scalar. The matter variables in
+(<ref>) are related to their physical counterparts
+as:
+
+    T_ab    :=Ξ^-2T̃_ab,      T:=Ξ^-4T̃,
+          T̃:=g̃^abT̃_ab ,
+      
+    
+      T_abc    :=Ξ^-1∇̃_[aT̃_b]c
+      -1/3Ξ^-1g̃_c[b∇̃_a]T̃ .
+
+Here T̃_ab is the physical energy-momentum tensor and
+∇̃ is the Levi-Civita connection of g̃_ab. A
+comprehensive discussion and derivation of the CEFEs can be found in
+<cit.>.
+
+
+
+   Though the conceptually clean setup is the vaccum case, we
+  include matter primarily for the purpose of deriving quadrupole-like formulae in subsection <ref>.
+
+
+
+
+
+  
+  From this point onward, it will be assumed that only trace-free
+  matter models are in consideration. Notice that the conditions T=0
+  and T_{ab}=T_ab simplify some of the matter terms in the
+  zero-quantities (<ref>).
+  
+
+
+
+We now consider some properties of the rescaled Cotton tensor under the
+trace-free matter assumption. Under this assumption, the rescaled Cotton
+tensor can be written in terms of the unphysical energy-momentum tensor
+as
+
+    T_abc    :=Ξ∇_[aT_b]c
+      + 3 T_c[b∇_a]Ξ -g_c[aT_b]e∇^eΞ .
+
+Observe as well that the Cotton tensor has the symmetries
+T_abc=T_[ab]c and T_[abc]=0. Furthermore, the trace-free
+assumption and ∇̃^aT̃_ab=0 implies that
+
+    ∇^aT_ab=0,     ∇_cT_ab^c     = 0.
+
+Additionally, using again equations (<ref>),
+(<ref>)
+ and  exploiting Z_ab=0 gives
+
+    ∇ _aT_b^a_c =   
+      - 12Ξ∇ _a∇ ^aT_bc
+      - (4 s - 13Ξ  R)T_bc  +  Ξ ^3 T_b^a T_ca
+      - 12Ξ ^2 T^ad d_bacd  
+       - 14Ξ ^3 T_ad T^ad g_bc
+       
+      + ∇ ^aΞ  (-2 ∇ _aT_bc +  ∇ _(bT_c)a).
+
+
+
+
+  The Ricci scalar R is not determined by the CEFEs and in fact, it
+  encodes the conformal gauge freedom. Given two conformal extensions of
+  the same physical spacetime  =Ξ^2 and
+  =Ξ̌^2 one has that
+  =ϰ^2 with ϰ := Ξ̌/Ξ
+  and ϰ≃𝒪(1) at the conformal boundary.
+  Hence, their Ricci scalars are related via
+  
+    6 ∇_a ∇^a ϰ -R ϰ =- Řϰ^3.
+
+  Observe that if Ř is considered as a given scalar function in
+  (ℳ,) then, this equation can always be solved locally
+  for ϰ. Thus, the Ricci scalar in the CEFEs is a gauge
+  quantity that is called the conformal gauge source function
+  —see <cit.> for further discussion.
+  
+
+
+
+In this article, we will adhere to the metric formulation of the CEFEs
+which consists of using the definition of the Schouten tensor to obtain
+ an equation for the metric. Namely, from
+
+    R_ab=2L_ab + 1/6Rg_ab,
+
+one substitutes the expression for the Ricci tensor as second
+derivatives of the metric respect to some coordinate basis x^μ and
+reads L_μν as a source term in the resulting equation. The
+source term L_μν is then coupled to the rest of the variables
+via equations (<ref>).
+
+
+
+  
+   In view that the Ricci scalar is the conformal gauge source function,
+   to have a clean split between gauge quantities and non-gauge
+   quantities one could opt for using the trace-free Ricci tensor as
+   variable instead of L_ab,
+  
+    Φ_ab := 1/2(R_ab - 1/4Rg_ab).
+
+  The factor 1/2 in its definition is conventional and it is put so
+  that Φ_ab corresponds to the tensorial counterpart of the
+  trace-free Ricci spinor Φ_AA'BB' of the Newman-Penrose
+  formalism. In this case, the evolution equation for the metric is read
+  of from
+  
+    R_ab=2Φ_ab + 1/4Rg_ab.
+
+  For convenience, we employ such a splitting, and will use the
+  trace-free Ricci tensor rather than the Schouten tensor as a dynamical
+  variable.
+  
+
+
+
+There are different hyperbolic reduction strategies to turn the
+tensorial expressions (<ref>) into partial
+differential equations.  In the next section, we revisit a hyperbolic
+reduction that is most appropriate for the aims of this article. 
+
+
+
+
+ §.§ Geometric wave equations
+
+
+
+
+A first derivation of the metric conformal Einstein field equations as a
+set of wave equations was given in <cit.> for the vacuum case and
+in <cit.> for the case of trace-free matter. Our discussion
+differs in the use of the trace-free Ricci tensor instead of the Schouten
+tensor; we do this to make transparent the split between gauge and
+non-gauge quantities. Since we only make a simple variable change, the
+derivation will not be repeated here. The geometric wave equations read
+
+
+    □Ξ  = 4 s - 16Ξ R ,
+       □ s = ΞΦ _abΦ ^ab
+      - 16∇ _aR ∇ ^aΞ
+      - 16 s R + (R12)^2 Ξ
+      + 14Ξ ^5 T_ab T^ab
+      - Ξ ^3 T^abΦ _ab
+      + Ξ  T_ab∇ ^aΞ∇ ^bΞ,
+      
+      
+       □Φ_ab = 4 Φ _a^cΦ _bc
+      - Φ _cdΦ ^cd g_ab
+      -2 ΞΦ ^cd d_acbd + 13Φ _ab R
+      + 16∇ _b∇ _aR
+      - 124 g_ab□ R 
+                                             
+      +   12Ξ ^3 T^dc d_adbc
+      - Ξ∇ _cT_b^c_a
+      - 2T_(a|c|b)∇ ^cΞ,
+      
+      
+       □ d_abcd =  12 d_abcd R
+      + 2 Ξ  d_a^e_d^p d_becp
+      -2 Ξ  d_a^e_c^p d_bedp
+      -2 Ξ  d_ab^ep d_cedp
+              - Ξ^2T_[c^ed_d]eab
+      - Ξ^2T_[a^ed_b]ecd
+      + Ξ^2T^ep( d_aep[cg_d]b - d_bep[cg_d]a )
+      + 2 ∇_[aT_|cd|b]
+                                           
+        +2 ∇_[cT_|ab|d]+ 2 g_d[b∇_|eT_c|^e_a]
+        + 2 g_c[a∇_|eT_d|^e_b],
+
+
+where □=∇_a∇^a denotes the geometric wave
+operator. Observe that these are tensorial in the same way as
+expressions (<ref>) and they do not include an
+equation for the metric.  When recast in this form, the original set
+of equations (<ref>) form constraints on initial
+data; the propagation of the constraints was shown in
+<cit.>.  A further discussion of these wave equations as an
+explicit system of second order hyperbolic PDEs is given in Appendix
+<ref> —see also <cit.>.
+
+
+
+   
+  To obtain a set of equations for the matter fields encoded in T_ab
+  and T_abc, an explicit matter model is required. Namely, given a
+  matter model consisting on some fields τ={τ_1, ...
+  ,τ_n} so that T_ab=T_ab(τ) —and hence
+  T_abc=T_abc(τ, ∇τ) using equation
+  (<ref>)—one has to derive wave equations for
+  each of the fields encoded in τ and their derivatives. To give
+  a concise and general discussion, the wave equations for the matter
+  fields will not be presented as this is a case-dependent analysis and
+  can be revisited for a number of trace-free matter models in
+  <cit.>.
+  
+
+
+
+
+
+
+ §.§ Wave equation for metric
+
+
+
+The wave equation for the metric is derived from the expression of the
+trace-free Ricci tensor in some fiduciary coordinate system x^μ.
+Here and in what follows, Γ^μ_αβ will denote the
+Christoffel symbols of the Levi-Civita connection ∇ of  in
+the coordinate basis x^μ.  First, one defines the GHG-constraint as
+
+    C^μ := Γ^μ + ℋ^μ,
+
+where Γ^μ:=g^αβΓ^μ_αβ are
+the contracted Christoffel symbols and ℋ^μ are the
+coordinate gauge source functions.  Recall that Γ^μ =
+- ∇_α∇^αx^μ so that setting C^μ=0 is
+equivalent to imposing the generalised harmonic gauge condition
+
+    ∇_α∇^αx^μ= ℋ^μ.
+
+with the above definitions, the reduced Ricci tensor
+ℛ_μν is defined as
+
+    ℛ_μν:=R_μν - ∇_(μC_ν).
+
+A customary calculation —see for instance <cit.>— shows that the reduced Ricci tensor can be
+expressed in terms of derivatives of the metric as
+
+    ℛ _μν = - 12 g_μν -
+      ∇ _(μℋ_ν)  + g^σδg^αβ
+      (Γ_νδβΓ_σμα +
+      2Γ_δνβΓ_(μν) α )
+
+where := g^αβ∂_α∂_β is
+the standard reduced wave operator.  Similarly, recalling that
+the Ricci scalar of  encodes the conformal gauge freedom, one
+introduces
+
+    C := R - F
+
+where F is the conformal gauge source function.  Imposing the
+constraint C=0 is equivalent to choosing a representative from the
+conformal class [] in the same way that imposing C^μ=0 is
+equivalent to choosing the coordinates to satisfy equation
+(<ref>) —see Remark <ref>.
+Therefore, using equation (<ref>) and imposing the
+GHG-coordinate and conformal gauge constraints
+
+    C^μ=0,      C=0,
+
+we obtain the following reduced wave equation for the components of the
+unphysical metric in the x^μ coordinates:
+
+    g_μν = - 4Φ_μν - 1/2F g_μν - 2
+    ∇ _(μℋ_ν)  - g^σδg^αβ
+    (Γ_νδβΓ_σμα +
+    2Γ_δνβΓ_(μν) α ).
+
+One can perform a similar procedure on the remaining wave equations
+(<ref>) to obtain them in their reduced form, but since it is
+not absolutely necessary for the discussion that follows, that
+discussion is provided in Appendix <ref>.
+
+
+
+
+
+§  THE CONFORMAL EINSTEIN FIELD EQUATIONS IN THE LINEAR 
+  APPROXIMATION 
+
+
+
+
+
+In this section the linearisation of the wave equations (<ref>)
+is obtained. To set up the notation regarding linearisation, first, we
+outline the general procedure. Consider a one-parameter family of fields
+ϕ(ε) which satisfy an equation
+
+    ℰϕ(ε)=0,
+
+where ℰ is some (non-linear) differential operator.  Then,
+the field ϕ:=ϕ(0) will be called the background
+solution as it satisfies the equation ℰϕ=0.
+Let D denote the linearisation operator:
+
+    D(ℰϕ):=d/dε(ℰϕ(ε))|_ε=0
+
+Then, using that  Dϕ=0, one obtains
+ℒδϕ=0 where ℒ is a linear operator
+acting on δϕ:=
+dϕ/dε|_ε=0. Issues of linearisation
+stability (the existence and correspondence between exact and linearised
+solutions) will not be addressed here.
+
+
+
+For the ongoing discussion ϕ = (φ, ), where
+φ encodes all the geometric variables while  and 
+respectively encode the gauge and matter variables. Namely, for the
+geometric sector φ, one is considering an approximate
+solution of the form
+
+    g_μν=g_μν + δ g_μν,     Φ_μν= Φ_μν + δΦ_μν,
+          Ξ = Ξ + δΞ,      s= s +
+      δ s
+
+For the gauge sector  one has the split
+
+    F=F + δ F,     ℋ_μ = ℋ_μ 
+      + δℋ_μ.
+
+For the matter sector  one has the split
+
+    T_μν=T_μν + δ T_μν,      
+      T_μνα = T_μνα 
+        + δ T_μνα.
+
+From this point forward (unless otherwise stated), indices will be
+raised and lowered with the background metric g_μν.
+
+
+
+
+ §.§ Equation for the metric perturbation
+
+
+
+
+
+One of the advantages of the wave formulation of the CEFEs is that the
+metric sector of the equations resembles conventional formulations of
+General Relativity. This can be seen clearly even in the non-linear
+equation (<ref>) where this equation is formally
+identical to the standard (non-conformal) Einstein field equations in
+generalised harmonic gauge with a source term in this case given by
+-4Φ_ab-1/2Fg_ab which could be thought conceptually as
+some artificial “geometric matter term”. To exploit the latter
+viewpoint let us define
+
+    𝒲_ab:=2Φ_ab + 1/4Fg_ab,
+
+so that equation (<ref>) agnostically reads:
+
+    R_ab=𝒲_ab.
+
+Expressing the equation for the metric in this way is advantageous since
+one can follow the classical discussion for linearising the Einstein
+field equations with respect to a general background g_ab
+—see for instance Sec. 7.5 of <cit.>.  Since a few gauge
+transformations are needed and we want to reserve the symbol δ
+g_μν for the last transformation, we first decompose the metric
+as g_μν=g_μν + h_μν. Then, a
+straightforward linearisation of equation (<ref>) gives
+
+    □ h_μν =
+      - 2 δ𝒲_μν 
+      + ^αβ _β _μh_να 
+      + ^αβ _β _νh_μα 
+      - ^αβ _μ _νh_αβ
+
+where □ :=
+∇_μ∇^μ with ∇
+denoting the Levi-Civita connection of . Then, upon
+commuting covariant derivatives and defining the trace-reversed metric
+perturbation ĥ_μν:=h_μν-1/2
+h_α^α_μν, we obtain
+ 
+  □ĥ _μν     = -2 δ𝒲_μν + δ𝒲_α^α
+  g_μν -2 R_μανβ
+  ĥ^αβ + 2 R_(ν^α
+  ĥ_μ) α - g_μν _β_α ĥ^αβ + 2_(μ_|α| ĥ_ν) ^α
+
+where δ𝒲_α^α:=^αβδ𝒲_αβ, and R_μναβ and
+R_μν are the Riemann and Ricci tensors of
+, which can be written in terms of the rescaled Weyl
+tensor and trace-free Ricci tensors via the decomposition:
+
+    R_μναβ = 
+      Ξd_μναβ
+       -2 Φ _β  [μg_ν] α
+       +2 Φ _α [μg_ν]  β
+       + 112R (g_μαg_νβ
+       - g_μβg_να).
+
+To avoid unnecessarily long expressions, background curvature terms will
+not be expanded out. Notice that equation (<ref>)
+contains only divergences of ĥ_μν and derivatives of the
+trace are absent. To obtain hyperbolic equations, the divergence terms
+_αĥ_ν^α are removed by
+employing a slight generalisation of the procedure outlined in
+<cit.>; one begins by recognising that the quantity q_μν :=
+h_μν + 2_(μξ_ν) is a gauge transformation of
+the metric perturbation h_μν. Introduce its trace-reversed
+version 
+δ g_μν=q̂_μν:=
+q_μν-12q_c^cg_μν.
+Since the vector field ξ_ν is arbitrary, one can choose a gauge
+in which ξ_ν satisfies an inhomogeneous wave equation. In
+particular, the divergence of δ g_μν:
+
+    _νδ g_μ^ν =  F_μ,
+
+may be rewritten as the following wave equation:
+
+    □ξ_μ + R_μνξ^ν +
+      _νĥ_μ^ν =  F_μ ,
+
+where F_μ is a given set of functions of the coordinates
+x^α and the evolved fields (but not their derivatives), which
+we call the Lorenz gauge source functions.  These are related to
+the linearisation of the coordinate gauge source functions
+ℋ^μ as discussed in Remark <ref>.  If
+ξ_ν satisfies the above wave equation, then δ
+g_μν satisfies the gauge (<ref>). The
+gauge condition in (<ref>) is a linear analogue
+of the generalised harmonic gauge condition, and as such we called it
+the generalised Lorenz gauge —a similar definition is given
+also in <cit.> in the non-conformal context
+assuming a flat background.  Working in the generalised Lorenz gauge,
+we obtain the following equation for the metric perturbation:
+
+  □ δg_μν     = 
+  - 2 δ𝒲_μν 
+  + δ𝒲^α_α
+  g_μν
+  - 2 R_μανβ 
+      δg^αβ
+  + 2 R^α_(ν δg_μ)  α
+  - _μν _αF^α
+  + 2 _(μF_ν)   
+
+subject to the gauge condition (<ref>).
+
+
+ 
+  The analogy between the Lorenz and Harmonic gauge is more subtle
+  when dealing with a non-flat background since the direct linearisation
+  of the generalised harmonic condition C^μ:=Γ^μ +
+  ℋ^μ=0 renders
+  
+    δ C^μ=
+      _βδ g^βμ 
+        - ℋ^αδ g^μ_α 
+        - Γ^μ_αβδ g^αβ + 
+         δℋ^μ =0.
+
+  Comparing equations (<ref>) and
+  (<ref>) one concludes that :
+  
+    F^μ = ℋ^αδ g^μ_α 
+        + Γ^μ_αβδ g^αβ 
+        - δℋ^μ .
+
+  Observe that even for the harmonic case ℋ^μ =
+  δℋ^μ=0 equation (<ref>) reduces to
+  
+    _βδ g^βμ =
+        Γ^μ_αβδ g^αβ,
+
+  retrieving the Lorenz gauge condition only if the background
+  connection vanishes Γ^μ_αβ=0.
+  
+
+
+
+To complete the discussion now we look at the expression for δ𝒲_μν.  It follows from the definition of
+𝒲_ab in equation (<ref>) that
+
+    δ𝒲_μν = 2 δΦ _μν 
+      + 14Fδ g_μν 
+      - 18Fδ g^α_α_μν 
+      +  14δ F _μν.
+
+Recalling that the conformal gauge constraint has been imposed C:= R -
+F=0, observe that the linearisation of this condition leads to the
+following constraint:
+
+    δ C = 
+      δ𝒲^μ_μ 
+      - R^μνδ g_μν 
+      + 12Rδ g^μ_μ 
+      - δ F =0.
+
+For consistency, the background conformal gauge source function and the
+background Ricci scalar should be identified:
+R=F.  Then, with this identification and using
+equations (<ref>) the linearisation of the conformal
+constraint reads
+
+    δ C = 2δΦ_μ^μ -2 Φ^μνδ g_μν=0.
+
+The latter equation states that although Φ_μν is trace-free,
+in general, its perturbation may not be. Nonetheless, the trace of the
+perturbation is fixed by equation (<ref>).  In
+particular, notice that if the background is flat, this condition
+reduces to δΦ_μ^μ=0.
+
+To obtain the final expression for the metric perturbation equation is
+then enough to substitute equation (<ref>) into equation
+(<ref>).  Although the resulting equation for δ
+g_μν looks more complicated than the usual expression for the
+metric perturbation this is mainly because the linearisation was
+performed with respect to a general background and due to the use of the
+generalised Lorenz gauge. Later on, when the background is fixed the
+expressions presented in this section will simplify considerably.
+
+
+
+
+ §.§ Equations for the perturbation of other conformal fields
+
+
+
+The linearisation of the rest of the conformal fields can be obtained
+systematically.  The main calculation involves obtaining a suitable
+expression for the linearisation of the geometric wave operator acting
+on each of the conformal fields.  To do the calculation in the scalar
+sector, first notice that for a scalar field φ one has that
+
+    D□φ = □δφ
+      - h^νμ _ν_μφ
+      - ^μα _αh_νμ ^νφ
+      + 12^μα
+      _νh_μα ^νφ
+
+where φ denotes a background quantity and δφ the perturbation. Performing the same gauge transformations of
+subsection <ref> for the metric perturbation h_μν
+and imposing the generalised Lorenz gauge one obtains:
+
+    D □φ = □δφ +
+      12δ g^μ_μ□φ
+      - δ g^μν _ν _μφ
+      - F^μ _μφ.
+
+A direct calculation using the latter expression and exploiting that the
+background fields ϕ satisfy the CEFEs in the form of
+equations (<ref>) as well as equations
+(<ref>), give the following equation for the
+perturbation of the conformal factor
+
+    □δΞ  =  
+      - 16FδΞ
+      - 16δ F
+      + 4 δ s 
+      -  ^μνδ g_μν
+      +( 124F 
+      - s )δ g^μ_μ 
+      + F^μ _μ
+      + 12 ^3 ^μνδ g_μν
+
+A similar calculation gives the linearised wave equation for the
+Friedrich scalar. The explicit expression is lengthy and has been put in
+Appendix <ref>. For tensor fields the calculation is slightly
+more involved. To give an abridged discussion consider now the case of
+the linearisation of □ w_μ, where w_a is some covector
+field.  A direct calculation gives,
+
+    D □ w_μ    =  □δ w_μ
+      - 12w^ν□ h_μν  
+      + w^ν _α _[νh_μ] ^α
+        - h_να ^α ^νw_μ
+      + 2  ^αw^ν _[νh_μ] α
+      -  _αh_μν ^αw^ν
+       
+      -  ^νw_μ
+      ( _αh_ν^α 
+      - 12 _νh^α_α)
+
+where w_μ denotes a background quantity and δ
+w_μ the associated perturbation. Substituting the term
+□ h_μν using equation
+(<ref>) and rewriting the equation in
+terms of the trace-reversed metric perturbation ĥ_μν
+renders
+
+    D □ w_μ    = □δ w_μ
+      - w^ν _α _μĥ_ν^α +
+      δ𝒲_μ^νw_ν
+      -  ^αw^ν(  _αĥ_μν
+      - 12_μν _αĥ^β_β)
+      
+           -2  ^αw^ν ( _[μĥ_ν] α 
+      - 12 g_α [ν _μ] ĥ^β_β)
+      - ^α^νw_μ(ĥ_να
+      - 12ĥ^β_β_να)
+      -  _αĥ_ν^α ^νw_μ
+
+Commuting covariant derivatives on the second term in the right-hand
+side of equation (<ref>), performing the
+gauge transformation described in subsection <ref> and
+imposing the generalised Lorenz gauge one obtains
+
+    D    □ w_μ =□δ w_μ
+      + 12δ g^ν_ν□w_μ
+      - δ g_να ^α ^νw_μ
+      - δ  g_ν^αR_μαw^ν
+      + δ g^αβR_μανβw^ν
+      - ℒ_w_μ
+        
+      + δ𝒲_μ^νw_ν 
+      + 2  ^αw^ν
+        (  _[ν(δ g)_μ] α
+      -12 _αδ g_μν) 
+      + ^νδ g^α_α _[νw_μ] 
+      + 12_μδ g^α_α _νw^ν
+
+where ℒ_ denotes the Lie-derivative along F^μ.
+Extending the latter calculation on tensors of higher valence is a long
+but straighforward calculation. The latter leads to the following
+linearised equations for the conformal fields:
+
+    □δ g_μν   =
+        H^g_(μν)(δϕ,
+        δϕ  ;  ϕ, , 
+        ϕ,
+         )
+        
+    □δΞ    = H^Ξ_(δϕ, δϕ  ;  ϕ, , ϕ )  
+    □δ  s 
+            = 
+        H^s(δϕ, δϕ  ;  ϕ, , ϕ,
+         )   
+    □δΦ_μν   = 
+        H^Φ_(μν)(δϕ,
+        δϕ  ;  ϕ, , ϕ,
+          ,  F, 
+          δ F )
+        
+    □δ  d_μναβ    =
+        H^d_[μν][αβ](δϕ, 
+        δϕ  ;  ϕ, , ϕ,
+        ϕ,  ) .
+
+Here we recall that ϕ schematically represents the conformal
+fields, and the gauge sources are schematically denoted as ;
+containing the Lorenz gauge source functions F^μ as well as
+F and δ F. The semicolon separates the arguments
+which do not contain the evolved perturbation variables explicitly.
+Observe that only the equation for δΦ_μν contains
+second derivatives of δ F which restricts the allowed choices for
+δ F—see Remark <ref>. The expressions
+for H^g_μν, and H^Ξ are given in the respective
+equations (<ref>) and (<ref>).
+The expressions for H^s, H^Φ_μν and
+H^d_μναβ are lengthy and are given explicitly in
+Appendix <ref>.
+
+
+
+
+
+§ ANALYSIS OF WAVE SOLUTIONS AROUND FLAT SPACETIME
+
+
+
+
+
+
+
+
+ §.§ Fixing the background solution
+
+
+
+The discussion given in the last section is general in the sense that
+neither the background solution ϕ nor the gauge
+source functions  have been fixed.  The first observation to be
+made is that, although the expression for H^d_μναβ is
+complicated, in fact, if one restricts the analysis to the vacuum
+case and a conformally flat background (so that
+d_μναβ=0 but Φ_μν≠
+0 and R≠ 0), then the equation for the perturbation of
+the rescaled Weyl tensor reduces to
+
+    □ δ d_μναβ
+      = 1/2Fδ d_μναβ,
+
+and this equation decouples from the rest.  This is to be expected since
+as one way to study linearised gravity is through the spin-2 equation
+for which the metric perturbation plays no role —see <cit.>. Since the aim of this article is to give a first analysis
+into the linearised version of the CEFEs, it is relevant to now examine
+the complete system even if some of the equations decouple as in the
+case described above.
+
+The simplest choice of background is one in which the background
+geometry is flat. Naively, one would think that this forces the
+background conformal factor to be constant, Ξ=1, and the
+equations trivialise to the standard non-conformal case; this would
+defeat the purpose of considering the CEFEs in the first place, as one
+would not be able to incorporate the conformal boundary
+in such an analysis. Fortunately, there
+exists a non-trivial conformal transformation that maps the Minkowski
+spacetime into itself such that spatial infinity and null infinity for
+the physical Minkowski spacetime are respectively mapped to the
+origin and the lightcone through the origin of the (conformally
+transformed) unphysical Minkowski spacetime. The evaluation of
+the field at the conformal boundary of the physical spacetime
+corresponds to evaluation at finite coordinate locations in the
+unphysical spacetime.  We point out that such a conformal transformation
+does not necessarily yield a full compactification, as some points (such
+as the physical origin) are mapped to infinity —see Figure
+<ref>.  This choice for a flat background, which we call the
+inversion representation of the Minkowski spacetime, is the
+simplest non-trivial case (in the sense that it can incorporate the
+conformal boundary) that one can analyse in the conformal set-up.
+Therefore, the following analysis can be regarded as the conformal
+counterpart of the standard discussion of linearised (physical) Einstein
+field equations around flat spacetime. The inversion representation of
+the Minkowski spacetime is a compelling choice not only for its
+simplicity, but also because it is related to the
+i^0-cylinder representation of the Minkowski spacetime
+(see for instance <cit.>) which has
+d_μναβ=0, R = 0 with a
+non-trivial trace-free Ricci tensor Φ_μν≠ 0.
+While an analysis on the i^0-cylinder background
+would be of great interest, the sources  in
+the equations for the fields other than δ d_μναβ
+(see Appendix <ref>) become cumbersome when
+Φ_μν≠ 0; this will be pursued in future work.
+
+
+
+
+
+ §.§ The inversion conformal representation of the Minkowski spacetime
+
+
+
+
+The inversion representation of the Minkowski spacetime described in the
+preceding paragraph is a standard conformal representation detailed in
+<cit.>, which we now
+summarise. In what follows (ℝ^4, ) will denote
+the (physical) Minkowski spacetime.  Let x̃^μ̃=
+(t̃,x̃^ĩ), represent physical Cartesian
+coordinates.  The associated coordinate basis vectors and covectors are
+denoted by ∂_μ̃ and
+𝐝x̃^μ̃, respectively. The components of an
+arbitrary abstract tensor S_ab in the physical Cartesian coordinate
+basis are denoted by S_μ̃ν̃. The Minkowski metric
+reads 
+
+    =
+    η_μ̃ν̃𝐝x̃^μ̃⊗𝐝x̃^ν̃,
+
+where η̃_μ̃ν̃=diag(-1,1,1,1).
+Defining the physical radial coordinate via ρ̃^2=
+δ_ĩj̃x̃^ĩx̃^j̃
+where δ_ĩj̃=diag(1,1,1) and considering
+an arbitrary choice of coordinates on 𝕊^2 the physical
+Minkowski metric can be written as
+
+    =-𝐝t̃⊗𝐝t̃
+    +𝐝ρ̃⊗𝐝ρ̃+ρ̃^2
+    σ,
+
+with t̃∈(-∞, ∞), ρ̃∈ [0,∞)
+where σ denotes the standard metric on 𝕊^2. 
+
+We now introduce the unphysical Cartesian coordinates
+x^μ=(t,x^i), and denote the associated vector and covector basis
+with ∂_μ and 𝐝x^μ, respectively. As
+before, the components of an arbitrary tensor S_ab in the unphysical
+Cartesian coordinate basis will be denoted as S_μν. The
+relationship between the physical and unphysical Cartesian coordinates
+is given by:
+
+    x^μ
+    =
+    δ_μ̃^μ x̃^μ̃/X̃^2, 
+        X̃^2 
+    ≡η̃_μ̃ν̃x̃^μ̃x̃^ν̃,
+    
+    x̃^μ̃=δ^μ̃_μ x^μ/X^2,
+        
+    X^2=η_μνx^μx^ν.
+
+where δ_μ̃^μ=diag(1,1,1,1),
+X^2=1/X̃^2 and η_μν=diag(-1,1,1,1). This
+coordinate transformation is valid in the complement of the lightcone at
+the origin in the physical Minkowski spacetime where X̃^2 > 0.
+
+
+
+   The notational reason for having a tilde over the physical
+  coordinate indices is to distinguish the physical and unphysical
+  coordinate bases denoted by ∂_μ and
+  ∂_μ̃.  The latter requires the use of
+  δ_μ̃^μ in the expressions
+  (<ref>) to keep the tilded and
+  untilded indices balanced. This notation is inspired by that of the
+  dual foliation formalism of <cit.>.
+  
+
+
+
+
+
+
+ 
+
+
+
+
+From the relation between the physical and the (unphysical) inversion
+coordinate bases one can construct the Jacobians
+
+    J_μ̃^μ:= 
+        ∂ x^μ/∂x̃^μ̃
+        =
+        X̃^-2(δ_μ̃^μ
+        - 2 x^μx̃_μ̃),      
+       J_μ^μ̃:=
+       ∂x̃^μ̃/∂ x^μ=
+        X^-2
+          (δ^μ̃_μ-2x̃^μ̃x_μ)
+
+To identify a suitable conformal metric, it is enough to compute
+η_μν𝐝x^μ⊗𝐝x^ν =
+ η_μν
+  J_μ̃^μJ_ν̃^ν𝐝x̃^μ̃⊗𝐝x̃^ν̃.
+Introducing  η=η_μν𝐝x^μ⊗𝐝x^ν, we write this compactly as:
+
+    η=Ξ^2 ,
+
+with Ξ =X^2. This demonstrates that the inversion (unphysical)
+Minkowski spacetime can be recast as a conformal transformation of the
+physical Minkowski spacetime.  Although, in most of the upcoming
+discussion, all tensor components will be expressed in just one
+coordinate basis (the unphysical one), notice that, the relation
+between the components of a tensor S_ab in the physical and the
+unphysical bases is then
+given by
+
+    S_μ̃ν̃= Ξ^2(δ_μ̃^μ 
+      - 2x^μx̃_μ̃)
+      (δ_ν̃^ν -2x^νx̃_ν̃)S_μν.
+
+To complete the discussion, one can construct an unphysical spherical
+polar coordinate system. Upon introducing
+ρ^2=δ_ijx^ix^j, a calculation shows that the unphysical
+ (conformal) metric η and conformal factor Ξ read
+
+    η=-𝐝t⊗𝐝t +𝐝ρ⊗𝐝ρ+ρ^2 σ,     Ξ=ρ^2 -t^2,
+
+with t∈(-∞,∞) and ρ∈ [0,∞).  Notice that
+spatial infinity i^0 of the physical Minkowski spacetime
+(ℝ^4, ) is mapped to the origin (t=0,ρ=0)
+in (ℝ^4,η). Also, future and past null infinity
+ℐ^± of the physical Minkowski spacetime are mapped to the
+lightcone passing through the origin. In other words, introducing the
+unphysical retarded and advanced times u:=t-ρ and v:=t+ρ,
+future/past null infinity ℐ^± is located at v=0 and
+u=0 respectively.  To round up the discussion between the relation the
+physical and unphysical coordinates, here we record that
+
+    t=t̃/ρ̃^2-t̃^2,     ρ =
+       ρ̃/ρ̃^2-t̃^2.
+
+
+
+
+
+
+
+
+ §.§ Linearised equations around the Minkowski-inversion 
+            background
+
+
+
+
+
+
+  §.§.§ The background solution
+
+
+We now fix the background solution ϕ to be the
+Minkowski inversion background discussed in the previous subsection,
+<ref>. This yields the following expressions for
+the background fields
+
+    g_μν= η_μν,     Ξ=
+      ρ^2-t^2,     s= 2,     T_μν=0, 
+          T_μνα=0.
+
+the latter implies that the curvature
+R_μναβ=0 vanishes which, in terms of its
+irreducible decomposition implies that
+
+    Φ_μν=0,     R=0,
+        d_μναβ=0.
+
+Since one has that R=F, this fixes the
+background conformal gauge source function. Nonetheless, the remaining
+gauge source functions encoded in F^μ and δ F need not
+vanish and will (along with matter perturbation quantities) be left
+unspecified. This gives the following equations
+
+
+    □δ g _μν    = 
+      - 4 δΦ _μν
+      + 2 δΦ ^α_αg_μν
+      - g_μν _αF^α
+      + 2 _(μF_ν)  
+      + 12δ F _μν
+    □δΞ    = 4 δ s  
+      - sδ g ^μ_μ 
+      + F^μ_μΞ - 16δ F
+    □δ s      = 
+      δ T^μν_μ_ν
+      - 16sδ F 
+      - 16_μδ F ^μ
+    □δΦ_μν    = -2 δ T_(μ^α_ν)_α 
+      - _αδ T_μ^α_ν
+      + 16_{μ_ν}δ F 
+      
+    □δ d_μναβ =     
+      2 _[μδ T_|αβ|ν] 
+      +2  _[αδ T_|μν|β] + 2
+      _β[ν_|σδ T_α|^σ_μ] 
+      + 2
+      _α[μ_|σδ T_β|^σ_ν].
+
+
+
+
+  
+  The Lorenz gauge source functions F^μ are allowed to
+  depend on the variables δϕ as they appear only with first
+  derivatives in equations (<ref>). However, the
+  conformal gauge source function δ F is only allowed to depend
+  on the coordinates due to the second derivatives of δ F in
+  the equation (<ref>).
+
+
+
+
+
+  Although for simplicity we have fixed the notation in
+    subsection <ref> so that x^μ denotes
+    the unphysical Cartesian system of coordinates, in fact, equations
+    (<ref>) are not bound to these coordinates, the only
+    assumption used was that the background Riemann curvature
+    R^μ_αβν vanishes. In other
+    words, in deriving equation (<ref>), the vanishing
+    of the (background) Christoffel symbols
+    Γ^α_μν has not been assumed,
+    consequently, formally identical equations to
+    (<ref>) will hold in any coordinate
+    system. Nonetheless, the unphysical Cartesian system x^μ will
+    be assumed in the discussion of subsection <ref>
+    so that one may apply standard techniques such as expressing the
+    solutions in terms of Greens functions and multipolar expansion
+    approaches.
+
+
+
+
+
+
+  §.§.§ The matter relations
+
+
+The matter equations depend on the particular matter model in question,
+however, since the background matter terms are assumed to vanish, the
+direct linearisation of the general relations, combined with the
+symmetries of T_abc and T_ab described in section
+<ref>, yield a set of formally identical expressions that the
+perturbations must satisfy:
+
+
+    δ T_μ^μ=0,     _νδ T_μ^ν=0,
+          δ T_αβμ= δ T_[αβ]μ,
+          δ T_[αβμ]=0,     _αδ T_μν^α=0.
+
+Also, one has the relations:
+
+    δ T_αβγ    := _[αδ T_β]γ
+      + 3 δ T_γ[β_α]Ξ
+      -_γ[αδ T_β]λ^λ,
+      
+     _αδ T_μ^α_ν   =- 12Ξ□δ T_μν
+      -4 sδ T_μν  
+      -2  _αδ T_μν ^αΞ
+      +  ^αΞ _(μδ T_ν)  α.
+
+
+
+
+
+
+  §.§.§ Propagation of the generalised Lorentz gauge
+
+
+Tracing equation (<ref>) and using equations
+(<ref>) shows that
+
+    □δΦ_μ^μ=0.
+
+Recall that the linearisation of the conformal gauge constraint,
+translates in the present case, to the condition
+
+    δΦ_μ^μ=0.
+
+This, in particular, simplifies equation (<ref>):
+
+    □δ g _μν    = 
+      - 4 δΦ _μν
+      - g_μν _αF^α
+      +  _μF_ν +  _νF_μ
+      + 12δ F _μν .
+
+The condition (<ref>) is trivially propagated by equation
+(<ref>). Namely, if initial data is given such that
+
+    δΦ_μ^μ=0     and    _n δΦ_μ^μ=0     on    Σ ,
+
+where  _n:=n^μ_μ and n^μ denotes the normal
+to a spacelike hypersurface Σ. Then, by existence and uniqueness
+of solutions to the flat-wave equation (<ref>), one has
+
+    δΦ_μ^μ=0     on    𝒰⊂𝒟^+(Σ).
+
+where 𝒰 is an open set and 𝒟^+(Σ) denotes
+the future domain of dependence of Σ. This result can be
+understood as the propagation of the conformal constraint in the linear
+setting. To show that generalised Lorenz gauge condition
+(<ref>) propagates one needs to use the
+contracted Bianchi identity. In the CEFE language this is encoded in
+equation (<ref>). Hence, for completeness and
+future reference, we linearise the CEFEs as defined in equations
+(<ref>) and (<ref>)
+and record the result in Remark <ref>.
+
+
+  
+  
+  Using equation equation (<ref>) to express
+  (<ref>) using the trace-free Ricci tensor and
+  linearising around a flat background gives
+  
+  
+    _μδ s  = 
+        - δΦ _μν ^ν
+        + 12 ^2  δ T_μν ^ν
+        -124δ F _μ, 
+        _μδΦ _αν  
+        -  _νδΦ _αμ
+        = δ T_μνα
+        - δ d_αβμν ^β
+        +  112_α  [μ _ν]  δ F,
+        
+        ^μδ d_μναβ =  
+        δ T_αβν, 
+        _μ _νδΞ  =
+        Γ[q]^λ_μν_λ 
+        +sq_μν 
+        + (δ s - 124δ F)_μνδΦ_μν + 12δ T_μν,
+        
+       δ R_μναβ=
+        δ d_μναβ 
+        + 2δΦ _[ν | β_α| μ]     
+        + 2δΦ _[μ | α_β| ν]  
+        + 16δ F _[μ|  α_β |ν]   ,
+
+  where
+  
+    Γ[q]^α_μν  :=
+        12g^αβ(  _μ  q_νβ
+        +   _ν  q_μβ 
+        -   _β q_μν) ,
+            δ R_μναβ :=
+        2 _[α _|[ν q_μ  ]|β]  .
+
+  
+  where the expressions have been written using q_μν instead of
+  δ g_μν to avoid long expressions. Recall that  δ
+  g_μν is simply the trace-reversed version of q_μν.
+  
+
+
+
+Contracting equation (<ref>), gives _νδΦ_μ^ν= _μδΦ_ν^ν +
+18_μδ F and using equation
+(<ref>) one obtains
+
+    _νδΦ_μ^ν= 1/8_μδ F.
+
+The divergence-fixed condition (<ref>) is also
+propagated by the wave equations (<ref>). To see this,
+notice that applying ∇^μ to equation (<ref>),
+using (<ref>), and after trivially commuting the
+flat-covariant derivative  one obtains
+
+    □ (^μδΦ_μν
+      - 18_νδ F)=0.
+
+Hence, if initial data is given on Σ such that ^μδΦ_μν=18_νδ F and
+_n ( ^μδΦ_μν
+-18_νδ F) =0 then condition
+(<ref>) is satisfied in 𝒰⊂𝒟^+(Σ). To show propagation of the generalised Lorenz
+gauge (<ref>), one proceeds analogously, taking a
+divergence of equation (<ref>) and using equations
+(<ref>) and (<ref>) gives the
+following equation
+
+    ^μ□δ g_μν = 
+    □ F_ν
+
+which can be rewritten as
+
+    □ (^μδ g_μν -F_ν) = 0.
+
+Hence, if one gives initial data on Σ such that ^μδ g_μν -F_ν=0 and _n(^μδ g_μν -F_ν)=0 then by virtue of equation
+(<ref>) one has that
+(<ref>), namely ^μδ g_μν
+=F_ν, is satisfied on 𝒟^+(Σ). In other words, the
+generalised Lorenz gauge propagates. This discussion is
+summarised in the following
+
+
+  The linearisation of the wave-CEFEs around
+  the inversion-Minkowski unphysical spacetime is given by
+  
+  
+    □δ g_μν    = 
+        -4 δΦ _μν
+        - g_μν _αF^α
+        + 2 _(μF_ν )   +
+        12δ F _μν
+    □δΞ    = 4 δ s  
+      - sδ g ^μ_μ 
+      + F^μ_μΞ - 16δ F
+      
+    □δ s      = 
+      δ T^μν_μ_ν
+      - 16sδ F 
+      - 16_μδ F ^μ
+    □δΦ_μν    = -2 δ T_(μ^α_ν)_α 
+      - _αδ T_μ^α_ν
+      + 16_{μ_ν}δ F
+      
+    □δ d_μναβ =   
+        2  _[μδ T_|αβ|ν] 
+        + 2  _[αδ T_|μν|β] 
+        + 2 _β[ν_|σδ T_α|^σ_μ] 
+        + 2 _α[μ_|σδ T_β|^σ_ν].
+
+  
+  where the matter sources satisfy the relations in equation
+  (<ref>). The conditions δΦ_μ^μ=0, and ^μδΦ_μν=1/8_μδ F, along with the
+  generalised Lorenz gauge condition ^μδ
+  g_μν=F_μ, propagate.
+  
+
+
+
+
+
+  
+  Observe that if δ F=0 is set then δΦ_μν is a
+  TT-tensor (transverse and tracefree).
+  Furthermore, if the Lorenz gauge condition is chosen, F_μ=0,
+  equation (<ref>) looks formally identical to the
+  textbook linearisation Einstein equations with an geometric-artificial
+  matter term δΦ_μν.
+  
+
+
+
+
+
+  The initial data for the wave equations (<ref>) is
+  not free as it needs to satisfy equations (<ref>) on
+  Σ. The propagation of the (first order) CEFEs by the wave-CEFEs
+  has been proven at the non-linear level in <cit.> and the
+  result at the linear level follows from linearisation of the
+  subsidiary system obtained in <cit.>.  Also, a procedure to
+  obtain initial data for the conformal wave CEFEs at the non-linear
+  level has been outlined in <cit.>: one starts by solving the
+  conformal Einstein constraint equations on Σ which constitute
+  the spatial parts of the zero-quantities
+  (<ref>). Then, the time derivatives of the
+  evolved fields on Σ can be read from the zero-quantities using
+  the solution to the conformal Einstein constraints.  An analogous
+  procedure can be performed for the linear case to obtain initial data
+  for the wave equations (<ref>). Observe that from
+  equations (<ref>) and (<ref>)
+  one only needs to consider their trace-free parts as the traces give
+  the wave equations (<ref>) and (<ref>),
+  respectively. 
+
+
+
+
+
+
+  §.§.§ Scri-fixing gauge
+
+
+A difficulty with the standard CEFEs concerns the fact that in general,
+the conformal boundary is not fixed with respect to the coordinates.
+Although there exist a generalisation of the CEFEs, the extended
+CEFEs (see for instance <cit.>) that allows to have an explicit
+expression the conformal factor, this approach is based on gauge adapted
+to a congruence of conformal geodesics, called the conformal Gaussian
+gauge. The latter requires the use of more general type of connections
+known as Weyl connections and it is in general difficult to write
+explicitly the line element of physically relevant solutions in the
+coordinates adapted to the conformal Gaussian gauge.  Here, we give an
+alternative simpler approach based on exploiting the gauge source
+functions in the wave formulation of the standard CEFEs. In the linear
+case, the key is to find a gauge choice such that equation (<ref>)
+is homogeneous. This amounts to choosing the Lorenz gauge source
+functions such that F^μ satisfies
+
+    F^μ_μ = - 4 δ s + sδ
+    g_μ^μ + 1/6δ F.
+
+Thus, if trivial initial data is given to equation (<ref>) on the
+initial hypersurface then the trivial solution δΞ=0 is
+obtained in the development. Hence, Ξ= and that the location
+of the conformal boundary of the perturbed linearised solution coincides
+with that of the background spacetime. Observe that to solve equation
+(<ref>) one needs _μ≠ 0 and
+although this condition does not hold at i^0, this is not a problem
+for foliations that end at a cut 𝒞 of ℐ (e.g.
+the hyperboloidal and null foliations) —see Figure <ref>.
+
+In the non-linear case one can proceed in a similar way.  The non-linear
+version of the wave equation for the conformal factor reads:
+  
+    Ξ = - 16Ξ F -
+        ℋ^μ∇_μΞ + 4 s
+
+where := g^μν∂_μ∂_ν and x^μ is
+a fiduciary coordinate system —see Appendix <ref>. One can
+follow the same approach as in the linear case and think of Ξ as a
+given function of the coordinates and solve for the gauge source
+functions. Although this approach is of limited use for the Cauchy
+problem as ∇_μΞ vanishes at i^0, this is not an issue for
+foliations which end at a cut 𝒞 of ℐ for which
+∇_μΞ≠ 0.  As a concrete example and to make contact with
+the hyperboloidal framework of <cit.> consider an unphysical coordinate system x^μ=(τ, r,
+ϑ^A) with A=1,2, related to physical coordinates
+x̃^μ̃ =(t̃, r̃, ϑ^A) according
+to the standard hyperboloidal prescription t̃= τ +
+H(r̃) and r̃= r/Ω (r) where H and
+Ω are known as the height and compression functions. If one sets
+Ξ= Ω(r) then equation (<ref>) fixes one of the
+components of the coordinate gauge source functions
+  ℋ^μ as:
+  
+    ℋ^r = - Ω”/Ω'g^rr +
+        4s/Ω' - Ω/6Ω' F.
+
+where Ω' := dΩ/dr. If the slice is hyperboloidal
+then Ω' ≠ 0 at ℐ.
+
+ 
+   In <cit.> a similar gauge-fixing is
+  developed, however in the previous work the evolution equations are
+  formally singular while in the CEFE approach of this paper the
+  equations are formally regular.  Also, the general strategy put
+  forward here is not bound to the hyperboloidal and asymptotically flat
+  set-up as a similar scri-fixing procedure could be adapted to study
+  spacetimes with de-Sitter (and anti-de-Sitter) asymptotics using CEFEs
+  similar to the case of <cit.> and <cit.> where the
+  gauge was fixed using, instead, a congruence of conformal geodesics.
+
+
+
+
+
+   Recall that g_ab=Ξ^2g̃_ab, hence for the linear
+  perturbations one has:
+  
+    δ g_μν=Ξ^2δg̃_μν +
+        2Ξg̃_μνδΞ .
+
+  Using the above described gauge to set δΞ=0, then equation
+  (<ref>) reduces to δ
+  g_μν=Ξ^2 δg̃_μν.  However, it
+  should be stressed that δg̃_μν≠δg̃_μ̃ν̃. Namely, δg̃_μν denotes the components of the physical metric
+  perturbation δg̃_ab in the unphysical Cartesian
+  coordinate basis ∂_μ. Using equation
+  (<ref>) one sees that the expression for the physical
+  metric perturbation in the physical Cartesian coordinate basis
+  ∂_μ̃ is given by
+  
+    δg̃_μ̃ν̃ =
+        (δ_μ̃^μ -2x^μx̃_μ̃)
+        (δ_ν̃^ν -2x^νx̃_ν̃) δ
+        g_μν .
+
+  
+
+
+
+
+
+
+ §.§ General solutions to the linearised equations
+
+
+
+
+
+
+
+  §.§.§ The vacuum equations
+
+In this subsection an analysis of the linearisation of the wave CEFEs in
+vacuum is given (later, we extend the discussion to the case where
+matter is included and with a more general gauge choice). To start the
+discussion in the simplest possible set up, consider the vacuum case
+with vanishing gauge source functions F_μ=δ F=0 so that the
+equations read
+
+    
+    □δ  g_{μν}    = 
+          -4 δΦ _μν, 
+    □δΞ    = 4 δ s  -
+          sδ g^μ_μ,  
+    □δ g^μ_μ    = 0 ,
+          
+    □δ s     =0, 
+    □δΦ_μν    =0 ,
+          
+    □δ d_μναβ    =0  
+          ,
+
+
+subject to the constraints imposed by equations (<ref>)
+with vanishing matter terms. Note that we have split the metric
+perturbation into its trace δ g_μ^μ and its trace-free part
+δ g_{μν}. In this manner, one can identify the variables
+that satisfy homogeneous equations.
+
+
+
+
+  §.§.§ Solutions to the homogeneous equations
+
+
+The solutions of homogeneous wave equations in flat spacetime are widely
+known and understood, but since the initial data are subject to the
+initial constraints (<ref>), it is perhaps appropriate to
+briefly discuss how one might write the solutions explicitly in terms of
+the initial data. For a field δ_H satisfying a homogeneous
+wave equation □δ_H=0, the solution may be
+written in the form <cit.>:
+
+    δ_H(x) 
+         = - ∫_Σ d Σ^'_λ[ δ_H(x^') 
+            ∂^λ D(x,x^')
+            - D(x,x^') 
+            ∂^λδ_H(x^')
+          ] ,
+
+where d Σ^'_λ = (1/3!)ϵ_λαβγ dx^'α∧ dx^'β∧
+dx^'γ is the surface element on Σ, the underline
+denotes evaluation of a quantity on Σ, and the quantity
+D(x,x^'):=G^+(x,x^')-G^-(x,x^') is the difference
+between the retarded (-) and advanced (+) Green's functions, defined
+as 
+
+    G^±(x,x^')
+      
+         := - δ(x^0-x^' 0±|x⃗-x⃗^'|)/4π |x⃗-x⃗^'|
+      ,
+
+and satisfying the inhomogeneous equation □
+G^±(x,x^') = -δ^4(x-x^'). That (<ref>)
+is a solution of (<ref>-<ref>) can be seen
+by noting that D(x,x^'), being the difference of two Green's
+functions, is a solution of the homogeneous wave equation. It is
+straightforward to show that D(x,x^')=0 if x^0=x^0',
+and one can also show <cit.> that D(x,x^')
+satisfies the properties:
+
+
+    -.
+      ∫_Σ d Σ^'_τ[ 
+              _H(x^') 
+              ∂^τ D(x,x^') 
+        ]
+      |_x ∈Σ   = _H(x ∈Σ) ,
+      
+    .
+                ∂^2 D(x,x^')/∂Δ t^2|_Δ t=0   = 0
+      
+      .
+  
+ 
+where Δ t:=x^0-x^' 0. Equation (<ref>)
+follows from the fact that for a given |x⃗-x⃗^'|,
+D(x,x^') is by construction an odd function in Δ t. Given
+(<ref>), one can verify that the coefficients in
+(<ref>) do in fact coincide with the initial data (though
+note that (<ref>) only depends on the time derivatives of
+the fields). Of course, as indicated earlier, the initial data for the
+fields must satisfy the vacuum version of (<ref>).
+
+Given the simplicity of the vacuum wave equations and their resemblance
+to wave equations in ordinary Minkowski space it is tempting to write
+the solutions in terms of plane waves. While one can certainly obtain
+solutions to the wave equations in this manner, a difficulty arises from
+the fact that even in the vacuum case, the constraints
+(<ref>) are nontrivial, since the background expression
+for Ξ in the inversion coordinates is explicitly
+coordinate dependent. As a result, solutions satisfying the constraints
+do not have a clean mode separation in a Cartesian Fourier expansion
+(though perhaps an alternative mode decomposition may be appropriate).
+
+
+
+
+  §.§.§ Solutions to the inhomogeneous equations and including 
+matter
+
+
+For completeness, we discuss the solutions of equations
+(<ref>) and (<ref>). One may begin by
+assuming that one has in hand initial data satisfying the constraints
+(<ref>). We note that the structure of the vacuum
+equations has a hierarchy: one can first solve for δ s, δΦ_μν, δ d_μναβ, and δ
+g^μ_μ, then use the result to solve for δ g_{μν} and δΞ. Schematically, one may then write the
+inhomogeneous wave equations for the latter two in the following form
+(where S is a source that depends on the background field
+expressions and δ s, δΦ_μν, and δ
+g^μ_μ):
+
+    □δ_I(x) =  S(x),
+
+which yields a particular solution (with x^0=t, 
+x^' 0=t^'):
+
+    δ_I_0(x) 
+             = δ_H_0(x) 
+            - ∫_t_0^t dt^'∫ d^3x⃗^'[ 
+              G^-(x,x^')  S(x^')
+            ] ,
+
+where δ_H_0(x) is a solution to the homogeneous equation
+with initial conditions chosen so that the particular solution δ_I_0(x) has trivial initial conditions δ_I_0(x)=0 and ∂_t δ_I_0(x)=0 on
+Σ; this can in principle be done by evaluating the integral term
+and its derivative on Σ to obtain -δ_H_0(x^') and -∂_t δ_H_0(x^'). Finally, to obtain the solution corresponding to
+the prescribed initial data, one can then add to δ_I_0(x) a homogeneous solution of the form in equation
+(<ref>). Since we are interested in the initial value
+problem, we have chosen the retarded Green's function
+G^-(x,x^') in (<ref>). This is (as the reader
+might be aware) because G^-(x,x^') is only nontrivial for x^0
+> x^' 0, so that for a given point x, the field contributions
+from the integral in (<ref>) depend on the values of the
+source in the past of x (specifically over the past light cone of
+x).
+
+We note that the procedure described for the inhomogeneous equation can
+be straightforwardly extended to the full set of non-vacuum equations
+(<ref>), subject to the constraints (<ref>) on
+the initial data. As in the vacuum case, one has a hierarchy in which
+one can first specify the matter sources, then solve for the variables
+δ s, δΦ_μν, δ d_μναβ,
+and δ g_μν, and finally solve for the conformal
+perturbation δΞ using the previously obtained results. Of
+course, the preceding discussion glosses over the problem of solving the
+matter equations, however such analysis is matter-model dependent. Hence
+in the present analysis they are simply regarded as given sources in the
+equations.
+
+
+
+
+ §.§ The far-field approximation and quadrupole-like formulae
+
+
+
+
+As emphasised before, an appealing property of the wave formulation of
+the CEFEs is that the metric sector of the equations looks as the
+standard non-conformal Einstein field equations with some
+artificial-geometric matter term. This suggests that some of the
+standard techniques and approximation methods can be applied to the
+linearised wave CEFEs such as solving them in the far-field regime and
+obtaining quadrupole-like formulae.
+
+
+
+
+  §.§.§ The far-field approximation
+
+
+To derive the far-field approximation, we focus our attention not to the
+homogeneous part of the solution to equation (<ref>) but
+to the part generated by the sources. For simplicity, we omit nontrivial
+homogeneous solutions and δ_H_0(x) in the particular
+solution (which corresponds to an appropriate choice of initial data),
+so that the solution consists only of the integral in equation
+(<ref>). Upon evaluating the time integral, one obtains:
+
+    δ= -1/4π∫_Σ(t-|x⃗-x⃗^'|,x⃗^')/|x⃗-x⃗^'|d^3x⃗^'.
+
+This is of course just the standard expression one can find in standard
+textbooks—see  <cit.>.  To obtain a far-field expression in the
+unphysical set-up we start by recalling that the origin in the inversion
+(unphysical) Minkowski spacetime corresponds to spatial infinity i^0
+for the physical Minkowski spacetime so the far-field region in physical
+Minkowski spacetime corresponds to a neighbourhood of the origin in the
+inversion Minkowski spacetime.  Let ' and  be a points in
+the physical Minkowski spacetime with physical Cartesian coordinates
+(0, x̃^' i) and (0, x̃^i) respectively.
+Expressed in unphysical Cartesian coordinates, these points correspond
+to (0, x^' i) and (0,x^i). Hence, the distance r between
+' and  can be expressed through the vector
+
+ 
+    r⃗:=x⃗-x⃗^'=x⃗̃⃗
+          -x⃗̃⃗^'.
+
+In terms of the physical coordinates, imposing the far-field
+approximation means |x⃗̃⃗|>>|x⃗̃⃗^'|.
+Consequently,
+ 
+    r:=|r⃗| = |x⃗̃⃗-x⃗̃⃗^'| 
+       ≃ |x⃗̃⃗|
+       =1/|x⃗|= 1/ρ.
+
+Therefore, in the far-field approximation one can write
+  
+    δ≃ -ρ/4π∫_ℝ^3 
+        (t-r,x⃗^')d^3x⃗^'.
+
+
+In particular, for the case where δ is either δΦ_μν, δ g_μν or δ d_αβμν
+one can derive quadrupole-like formulae. To do so, it is necessary to
+compute the divergence of the source terms appearing in equations
+(<ref>), (<ref>) and (<ref>).
+Let's define
+
+    𝒮_μν    :=-4 δΦ _μν
+        - g_μν _αF^α
+        +  _μF_ν +  _νF_μ +
+        12δ F _μν
+    
+       S_μν   :=-2 δ T_(μ^α_ν)_α 
+      - _αδ T_μ^α_ν
+      + 1/6_{μ_ν}δ F, 
+    
+       S_μναβ   :=
+      2 _[μδ T _|αβ|ν] 
+      + 2 _[αδ T_|μν|β] 
+      + 2 _β[ν_|σδ T_α|^σ_μ] 
+      + 2 _α[μ_|σδ T_β|^σ_ν].
+
+Recall that the fields encoded in ϕ satisfy the
+CEFEs, hence the background conformal factor satisfies
+Z_ab=0 as defined in equation
+(<ref>), which for the flat background
+case reduces to _μ _ν =  s_μν. A direct calculation using the latter expression  and
+the matter relations (<ref>) shows that
+
+    ^ν𝒮_μν=□F_μ,     ^ν  S_μν= 
+      18□_νδ F,     ^λ  S_λασβ =
+      □δ T_σβα.
+
+The first two equations simply encode equations
+(<ref>) and (<ref>)  in a
+divergence-like format. The third equation in (<ref>) shows
+that equation (<ref>) propagates.
+
+
+
+  
+  For the scalar variables δ s and δΞ, the leading
+  order source terms can be evaluated directly. In the case of rank-2
+  tensors, a reason for reducing the sources to quadrupole form is
+  to make the field dependent on a single (the time-time) component of 
+  the source tensor.
+  
+
+
+
+
+
+
+  §.§.§ A quadrupole-like formula for δΦ_μν and 
+δ g_μν
+
+
+
+Here, we derive quadrupole-like formulae for δΦ_μν and
+δ g_μν, which we discuss in tandem. Since the source term
+𝒮_μν contains δΦ_μν [cf. equation
+(<ref>)] first one solves for δΦ_μν
+and then for δ g_μν.  Let δ Q_μν = δΦ_μν or δ g_μν and ℱ_μ =
+18_μδ F  or  F_μ, and
+σ_μν = S_μν or 𝒮_μν,
+respectively.  Exploiting that equations (<ref>)
+and (<ref>) can be collectively written as
+^νδ Q_μν= ℱ_μ one has that
+
+    _0 δ Q_00=^iδ Q_i0 -ℱ_0,
+          _0 δ Q_0i=^jδ Q_ij
+      -ℱ_i,
+
+Thus, once δ Q_ij is determined, δ Q_0i can be
+obtained by formally integrating the second equation in
+(<ref>). In turn, δ Q_00 is obtained by
+integrating the first equation in (<ref>).  For the
+particular case of δΦ_μν one could instead use that
+δΦ_μ^μ=0 to solve algebraically for δΦ_00.
+Thus, one can reduce the discussion to that of obtaining a
+quadrupole-like formula for δ Q_ij. Recall that the far-field
+approximation reads
+
+    δ Q_ij≃ -ρ/4π∫_Σσ_ij(t-r,x⃗^')d^3x⃗^'.
+
+If one were to restrict the calculations to gauge source functions
+satisfying □F^μ = □_μδ F= 0 (in particular, F^μ= δ F=0) then the integrand
+would satisfy ^νσ_μν=0 leading to an
+expression which is formally identical to the quadrupole formula in the
+non-conformal set-up for the physical metric perturbation —see for
+instance <cit.>.  However, it is instructive to keep the
+gauge source function terms since it will serve as model for the
+derivation of the quadrupole-like formula for the rescaled Weyl tensor
+where the divergence of the source term S_μναβ cannot
+be set to zero by gauge considerations —see the last equation in
+ (<ref>). Here, we only assume that the gauge source
+functions are specified. The first two equations (<ref>) in the
+current notation read ^νσ_μν =
+□ℱ_μ, which in components read
+
+    _0σ^00 + _iσ^i0
+      =□ℱ^0,     _0σ^0i
+      + _jσ^ij = □ℱ^i.
+
+Integrating _i(σ^ikx^' j) over a region
+Ω⊂Σ and using Gauss' law gives the following
+identity
+
+    ∫_∂Ωσ^ik x^' j ds_i =∫_Ωσ^jkd^3x⃗^' + ∫_Ω x^' j_i
+      σ^ikd^3x⃗^',
+
+where we have used _i x^' j = δ_i^j and
+ds_i is the surface element of ∂Ω.
+
+
+   It will be assumed that the matter fields encoded in
+  S_μν and S_μναβ, as defined in equation
+  (<ref>), have compact support in Ω⊂ℝ^3.  
+
+
+
+
+
+  
+Recall that  □Φ_μν=S_μν, then
+under assumption <ref> it follows that
+δΦ_μν has compact support in Ω.
+Furthermore, choosing
+the gauge source function F^μ appropriately,
+one can then assume that that 𝒮_μν [as given in equation
+(<ref>)] has compact support in Ω.
+
+
+
+
+Using assumption <ref> and Remark
+<ref>, equations (<ref>) and
+(<ref>) give
+
+    ∫_Ωσ^jkd^3x⃗^'=-∫_Ωx^'(j□ℱ^k)d^3x⃗^' +
+      d/dt^'∫_Ωx^'(jσ^k)0d^3x⃗^'.
+
+Similarly, integrating _k(σ^0kx^' ix^'
+  j) over a region Ω and proceeding as before, making use of
+Gauss' law one obtains
+
+    ∫_∂Ωσ^0kx^' ix^' j ds_k
+      =∫_Ω x^' ix^' j_k
+      σ^0kd^3x⃗^' + 2 ∫_Ω x^' (iσ^j)0d^3x⃗^'.
+
+Then using Remark <ref> and equations
+(<ref>) and (<ref>) renders
+
+    ∫_Ω x^'(iσ^j)0d^3x⃗^'  =
+      -1/2∫_Ω x^' ix^' j□ℱ^0 d^3x⃗^'
+      + 1/2d/dt^'∫_Ω x^' ix^' jσ^00d^3x⃗^'
+
+Combining equations (<ref>)
+and (<ref>) one gets
+
+    ∫_Ωσ^jkd^3x⃗^' =
+         1/2d^2/dt^'^2∫_Ω x^' i x^' jσ^00d^3x⃗^'-1/2d/dt^'∫_Ω x^' ix^' j□ℱ^0 d^3x⃗^'
+       -∫_Ωx^'(j□ℱ^k)d^3x⃗^'
+
+therefore, using the far-field approximation (<ref>)
+gives
+
+    δ Q_ij≃ -ρ/8πd^2ℐ_ij(t')/dt'^2|_t'=t-r +ρ/8πd𝒥_ij(t')/dt'|_t'=t-r -ρ/4π𝒦_ij(t')|_t'=t-r
+
+where
+
+    ℐ^ij:= ∫_Ωσ^00x^' ix^'
+        jd^3x⃗^',     𝒥^ij := ∫_Ω
+      x^' ix^' j□ℱ^0d^3x⃗^',     𝒦^ij := ∫_Ω□ℱ^(ix^' j) d^3x⃗^'.
+
+
+As discussed earlier, the gauge source functions could be set to zero, 
+but in certain applications, it can be useful to consider general gauge 
+source functions. Of course, one may wish to implement a scri-fixing 
+gauge for this situation, but such a gauge may be incompatible with the
+assumption that 𝒮_μν has compact support in Ω.
+However, the purpose of the present analysis is to provide a template
+for deriving the quadrupole formula for the Weyl tensor, in which such a
+scri-fixing gauge can be implemented.
+
+
+
+  
+  The reader might wonder whether quadrupole-like formulae are
+  appropriate for trace-free energy-momentum tensors, which often
+  corresponds to that of radiation. The concern is that in order to
+  implement the far-field approximation, one implicitly assumes a
+  slow-motion approximation, which is inconsistent with radiation
+  propagating at the speed of light. However, geons
+  <cit.> and
+  photon stars
+  <cit.>
+  provide examples of stationary compact sources formed from
+  self-gravitating radiation, which may at the very least provide useful
+  toy models (the extension of our results to the case of nonvanishing
+  trace will be discussed elsewhere). Nevertheless, the primary reason
+  for the preceding analysis is to provide a template for deriving the
+  quadrupole formula for the rescaled Weyl tensor, which can be
+  straightforwardly generalised to the case with trace. This is discussed
+  further in Remark <ref>. 
+  
+
+
+
+
+
+
+  §.§.§ A quadrupole-like formula for the rescaled Weyl tensor 
+perturbation
+
+
+We now turn to the case of the rescaled Weyl tensor δ
+Q_αβμν=δ d_αβμν. Here, the source
+term S_αβμν is given entirely in terms of matter fields
+—see equation (<ref>). Expanding in components the
+divergence equation (<ref>) one has
+
+    _0 S^0μσν + _k
+      S^kμσν = □δ
+      T^σνμ
+
+Considering the case σ=j in equation (<ref>) one has
+
+    _0 S^0μ j ν + _k S^kμ j ν =
+      □δ T^j νμ
+
+Integrating _k ( S^k μ j ν x^' i) over Ω
+and using Gauss' law gives
+
+    ∫_∂Ω S^k μ j νx^' i ds_k = 
+      ∫_Ω S^iμ jν d^3x⃗^' 
+      + ∫_Ω x^' i_k S^k μ j ν
+      d^3x⃗^'
+
+Using assumption <ref> the boundary term in the
+left-hand side of (<ref>) vanishes. Solving for the
+integral with S^iμ j ν and substituting _k S^k μ
+  j ν using equation (<ref>), gives the following
+expression (after symmetrising the spatial indices):
+
+    ∫_Ω S^(i |μ| j) νd^3x⃗^' =
+      - ∫_Ω x^' (i□δ T^j)νμ
+      d^3x⃗^'
+      +  d/dt^'∫_Ω  x^' (i|  S^0μ |j) ν
+      d^3x⃗^' .
+
+Now, considering the case σ =0 in equation (<ref>) one
+has
+
+    _0  S^0ν 0 μ  + _k  S^k ν 0 μ
+      =  □δ T^0 μν.
+
+Integrating  _k ( S^0 μ k ν x^' ix^' j)
+over Ω and using Gauss' law gives
+
+    ∫_∂Ω S^0 μ k νx^' ix^' j ds_k =
+      2 ∫_Ω  S^0 μ (j |ν| x^' i) d^3x⃗^'
+      + ∫_Ω x^' ix^' j_k  S^0 μ k ν d^3x⃗^'.
+
+Using assumption <ref> to remove the boundary terms and
+exploiting the pair-interchange-symmetry of S_μναβ to
+rewrite _k S^0 μ k ν in using equation
+(<ref>) renders
+
+    ∫_Ω S^0 μ (j |ν| x^' i)d^3x⃗^' =
+      -1/2∫_Ω x^' ix^' j□δ T^0 μν d^3x⃗^' +
+      1/2d/dt^'∫_Ω x^' ix^' j
+      S^0ν 0 μd^3x⃗^'.
+
+Together, equations (<ref>) and
+(<ref>) give
+
+    ∫_Ω S^(i |μ| j) ν d^3x⃗^' = 1/2d^2/dt^'^2∫_Ω x^' ix^' j
+      S^0ν 0 μd^3x⃗^' -1/2d/dt^'∫_Ω x^' ix^' j□δ T^0
+        μνd^3x⃗^' - ∫_Ω x^' (i□δ T^j)νμ d^3x⃗^'.
+
+To employ equation (<ref>) one needs to perform an
+electric-magnetic decomposition of the tensors involved in the current
+discussion.  Consider any tensor W_abcd with the symmetries of the
+Weyl tensor and let n^a be a normalised timelike vector such that
+n_an^a=-1. Define the associated projector as
+h_a^b:=g_a^b + n_an^b. Then, the electric part E_ab
+and magnetic part B_ab of W_abcd are given by
+
+    E_ab:=W_efgdn^fn^dh_a^eh_b^d,     
+    B_ab:=W^*_efgdn^fn^dh_a^eh_b^d,
+
+where B_ab=-12ϵ_cd^efW_abef with
+ϵ_abcd is the (4-dimensional) volume-form of g_ab.  In
+practice (particularly when working in an adapted frame), instead of
+working directly with B_ab it is simpler to use
+
+    B_abc:=W_efghn^fh_a^eh_b^gh_c^h,
+
+which is related to B_ab via B_ab= -
+1/2B_acdϵ_b^cd where
+ϵ_abc:=ϵ_fabcn^f is the (3-dimensional) volume-form
+of h_ab —see <cit.> for further discussion on the
+electric-magnetic decomposition. In the present case, since the
+background is flat, one can simply take the normal vector to be n^ν=
+δ_0^ν so that the electric-magnetic split of
+d_μναβ simply correspond to
+
+    δ d_ij:= δ d_i0j0,     δ d_ijk:=δ
+    d_i0jk.
+
+The wave equation for δ d_μναβ, which compactly
+written  reads □δ d_μναβ=
+S_μναβ, can then be split into the wave equations for
+d_ij and d_ijk:
+
+    □δ d_ij= S_ij,     □δ d_ijk= S_ijk,
+
+where S_ij:=  S_i0j0 and S_ijk:= S_i0jk. Using the
+far-field approximation expression (<ref>) and equation
+(<ref>) then gives
+
+    δ d_iμ j ν≃ -ρ/8πd^2I_ijμν(t')/dt'^2|_t'=t-r +ρ/8πdJ_ijμν(t')/dt'|_t'=t-r +ρ/4π
+     K_ijμν(t')|_t'=t-r,
+
+where
+
+    I^ij μν:=∫_Ω y^iy^j δ S^0ν 0 μd^3y⃗,
+           J^ij μν:=∫_Ω y^iy^j □δ
+      T^0 μνd^3y⃗,      K^ij μν:= ∫_Ω y^(i□δ T^j)νμ d^3y⃗.
+
+In particular, setting μ=0 and ν=0 one gets the quadrupole-like
+expression for δ d_ij and similarly taking μ=0 and ν =
+k for δ d_ijk.  Proceeding as described before and exploiting
+the symmetries of S^μναβ (those of the Weyl tensor) and
+those of δ T^αμν [cf. equation
+(<ref>)] renders
+
+    δ d_ij≃ρ/4π K_ij00(t')|_t'=t-r ,
+          δ d_ijk≃ρ/4π K_ijk0(t')|_t'=t-r,
+
+Recall that the rescaled Cotton tensor T_αμν can be
+expressed in terms of the derivatives of the unphysical energy momentum
+tensor. Therefore equation (<ref>) allows one to
+express the perturbation to the rescaled Weyl tensor in the far-field
+approximation in terms  derivatives of the perturbation to the
+unphysical energy momentum tensor δ T_μν and background
+quantities via equation (<ref>).
+
+
+ 
+   Although the focus of this article has been in the conformal
+  spacetime set-up —and hence restricted to trace-free matter models—
+  an analogous calculation can be performed directly in the physical
+  spacetime, lifting then the trace-free  matter restriction,
+  obtaining a quadrupole-like formula for perturbations of the Weyl
+  tensor.  Observe that, for the derivation of the wave equation
+  satisfied by the rescaled Weyl tensor, the specific form of the
+  rescaled Cotton tensor (in terms of the unphysical energy-momentum
+  tensor) is never used. It follows that for the physical set-up, one 
+  gets a
+  formally identical equation.  The wave equation for the Weyl tensor
+  has been derived for instance in <cit.> and <cit.>.
+  Therefore, the analysis of section <ref> would still
+  hold replacing the rescaled Weyl tensor d_abcd with the Weyl
+  tensor C_abcd and the rescaled Cotton tensor T_abc by its
+  physical counterpart T̃_abc which written in terms of the
+  physical energy-momentum reads:
+  
+    T̃_abc:= ∇̃_[aT̃_b]c +
+        1/3g̃_c[b∇̃_a](λ- T̃).
+
+
+
+
+ 
+   We note that the expression for S_μναβ is
+  independent of the choices for the gauge source function. For this
+  reason, one can choose the scri-fixing gauge independently of the
+  assumption that S_μναβ has compact support in
+  Ω; the quadrupole-like formula we obtain for the rescaled Weyl
+  tensor is therefore compatible with any gauge choice, in particular
+  the scri-fixing gauge introduced earlier.
+
+
+
+
+
+
+
+
+§ SUMMARY AND DISCUSSION
+
+
+
+
+In this article, we have presented the linearisation of the wave-like
+hyperbolic reduction of the CEFEs in a GHG gauge for a general
+background. As a first step toward studying the linear perturbations of
+spacetimes using the conformal CEFE approach, the equations have been
+particularised to the case where the background is the inversion
+(unphysical) Minkowski spacetime. Conceptually, when studying
+perturbations of the physical Minkowski spacetime, one can in principle
+use any conformally flat metric so that
+d_μναβ=0. However having a non-vanishing
+Φ_μν makes the equations quite cumbersome. Hence,
+as a first analysis, we have opted to use as a background the inversion
+Minkowski spacetime for which Φ_μν=R=0.
+For this background, we discuss the propagation of the gauge (the
+generalised Lorenz gauge and the linear version of the conformal
+constraints). The fact that the chosen background is flat permits the
+use of techniques similar to those of the classical methods in physical
+spacetime to study gravitational waves. In this manner, we have obtained
+the conformal CEFE counterpart of the classical linearisation of the
+(physical) Einstein field equations.
+
+
+
+
+Nevertheless, one may wish to consider linearising around non-flat
+conformal representations of the Minkowski spacetime. A particularly
+interesting choice is the i^0-cylinder representation of Minkowski
+spacetime, as this is particularly useful for studying the gravitational
+field close to the critical sets ℐ^±—the region where
+null-infinity ℐ and spatial infinity i^0 meet.  Although
+this analysis has been done via the spin-2 equation
+∇_A'^Aϕ_ABCD=0 in <cit.> (see also
+<cit.> for a discussion of the solutions of
+wave equations in this background) where it has been shown that the
+(linearisation of rescaled Weyl spinor) spin-2 field develops
+logarithmic terms, it would be of interest to see how these logarithmic
+terms manifest in the metric, which is the variable employed in most
+perturbation schemes in physics (such as the post-Minkowskian
+expansions). Another interesting class of backgrounds are Petrov type D
+spacetimes such as Kerr, so that a conformal Teukolsky-like equation may
+be obtained; however, a different linearisation procedure (such as that
+of Chandrasekhar<cit.>), may be more appropriate in that case.
+These avenues will be pursued in future work.  More generally, the
+present work represents a first step into studying linear perturbations
+of spacetimes of physical interest within the CEFE
+framework.
+
+
+
+
+A particularly useful result of this paper is the development of a
+scri-fixing strategy using gauge source functions for CEFEs.  Our
+strategy provides an alternative to more abstract gauges based on
+conformal curves and conformal geodesics <cit.>, one that is
+particularly well-suited for numerical implementation. Though the
+strategy is initially developed for the linearised equations (which are
+expected to be good approximation in the weak field region of
+asymptotically flat spacetimes of physical interest), the generalisation
+to the nonlinear case, as discussed in the main text, is
+straightforward. A minor limitation of this scri-fixing strategy in the
+asymptotically flat setting is that the initial data must be prescribed
+on slices that intersect future null infinity (as opposed to spatial
+infinity), nonetheless our scri-fixing strategy fits well within the
+hyperboloidal approach to Numerical Relativity.
+
+
+
+
+Finally, we have constructed quadrupole-like formulae for the CEFEs
+linearised around a flat background. While the quadrupole-like formulae
+for δ g_μν and δΦ_μν require gauge
+source functions with compact support and a trace-free energy-momentum
+tensor, the quadrupole-like formula we obtain for the Weyl tensor is
+independent of gauge choice and is formally identical to the case where
+the energy-momentum tensor has nonvanishing trace. Since the Weyl tensor
+yields an unambigious notion of gravitational radiation at future null
+infinity, our result provides a familiar prescription for computing
+gravitational waveforms at null infinity generated by weakly gravitating
+sources in the linear approximation.
+
+
+
+
+
+
+ §.§ Acknowledgements
+
+
+
+
+We have profited from conversations with Juan Valiente Kroon and David
+Hilditch and Alex Vañó Viñuales.  We also thank J. Valiente
+Kroon for sharing a Mathematica notebook where  the main
+calculations of <cit.> were done.  EG holds a FCT (Portugal)
+investigator grant 2020.03845.CEECIND.  JF acknowledges support from
+FCT (Portugal) program UIDB/00099/2020. JF is grateful to the Yukawa
+Institute for Theoretical Physics, Kyoto University, which hosted a
+visit during which a part of this work was performed.
+
+
+
+
+
+
+
+
+
+§ EXPLICIT EXPRESSIONS FOR LINEARISED CEFES
+
+
+
+
+
+Here, we provide expressions for the right-hand side of the linearised
+wave-CEFEs, which are given below (ϕ and  schematically
+representing the respective field variables and gauge sources):
+
+    □δ g_μν   =
+        H^g_(μν)(δϕ,
+        δϕ  ;  ϕ, , 
+        ϕ,
+         )
+        
+    □δΞ    = H^Ξ_(δϕ, δϕ  ;  ϕ, , ϕ )  
+    □δ  s 
+            = 
+        H^s(δϕ, δϕ  ;  ϕ, , ϕ,
+         )   
+    □δΦ_μν   = 
+        H^Φ_(μν)(δϕ,
+        δϕ  ;  ϕ, , ϕ,
+          ,  F, δ F )
+        
+    □δ  d_μναβ    =
+        H^d_[μν][αβ](δϕ, 
+        δϕ  ;  ϕ, , ϕ,
+        ϕ,  ) .
+
+
+To give more concise expressions, the quantities  on the
+right-hand side of the equations above are provided below without
+explicit (anti)symmetrisation; the appropriate (anti)symmetrisation of
+indices is indicated in equation (<ref>).  This
+calculation has been performed using the xPert package of the
+suite xAct  in Mathematica <cit.> for metric
+perturbation theory.
+
+
+    H^g_μν   := -4 δΦ _μν +8 
+      _(μ^αδ g_ν )α -2 δ
+      g^αβd_(μ |α |ν )β 
+      + 16δ
+      g_μν + δ g^α_α (-2  _μν
+      - 16_μν)
+      + 2  _(μ_ν )
+       
+      + _μν
+      (12δ F + 2 δΦ ^α_α -2
+      ^αβδ g_αβ - 
+      _α^α)
+
+
+
+  H^Ξ_     := - 16 δΞ- 16
+  δF + 4 δs + (12 ^3 ^μν - ^μν) δg_μν +
+  (124 - s) δg^μ_μ +
+  ^μ _μ
+
+
+    H^s    := (12)^2 (δΞ
+      - 14δ g^μ_μ)
+      +  ^μν (2 δΦ _μν
+      -  ^3 δ T_μν 
+      + _μν 
+      (δΞ + 12δ g^α_α)
+      + 112δ g_μν
+      -  sδ g_μν
+        
+      - _μ^αδ g_να)
+      
+      + ^μν (-  ^3 δΦ _μν 
+      + 12 ^5 δ T_μν
+      -  12 ^2  _μν 
+      (6 δΞ + δ g^α_α)
+      + 18 ^4 _μν 
+      (10 δΞ + δ g^α_α) 
+       
+      + 12 ^2  δ g_μν
+      ( s  -  112 )
+      + (  ^3  _μ^α
+        - 14 ^5  _μ^α
+        )
+      δ g_να) +
+      24 
+      (
+        sδ g^μ_μ + 13 
+        (δ F  - 12 δ s  
+        - 3  ^μ _μ )
+      )
+      
+       
+      + 16 ^μ (3 δ  g^να
+      ( ^2  _α_μν
+      -2   _α _μν) 
+      -  _μδ  F)  
+      - 16 ( sδ F  
+      + _μδΞ ^μ)
+      - ^μ _μν ^ν
+       
+      + (δ T_μν
+      - _μ^αδ g_να)
+       ^μ ^ν 
+      + 18δ g_μν ^μ ^ν +  _μν
+      (12 ^2 ^μ^ν  
+      + 2   ^μ ^νδΞ
+       
+      + (δΞ + 12δ g^α_α)
+       ^μ ^ν)
+
+
+
+    H^Φ_μν    := 13δΦ _μν
+      + 12 ^3 ^αδδ d_μανδ
+      - 2  _μ^δ _νδδ g^α_α
+      - 112 _μν 
+        (2 δ F  + δ g^α_α)
+      - 2  _μ^αδ g^δβ_νδαβ
+       
+      + _μανδ 
+      (-2  ^αδδΞ
+      + 12  (3 ^αδδΞ
+      - 4 δΦ ^αδ 
+      +  ^2 δ T^αδ))
+      + 124 (δ g^α_α_μν
+      - 12δ g_μν) □ _
+       
+      + (4  ^αδδ g_α^β
+        - ^δβδ g^α_α
+        + 14 ^3 (
+            -4 ^αδδ g_α^β
+            + ^δβδ g^α_α)
+        ) _μδνβ
+      - 2 δ T_μ^α_ν _α
+       
+      +  ^αδ (
+        - 2 δ d_μανδ
+        - 2  _μνδ g_αδ
+        -  _αδδ g_μν
+        - 2 δΦ _αδ_μν
+        + 2  _α^βδ g_δβ_μν)
+      - 2 _μ^α_ν _αδΞ
+       
+       + ^α (_μαν 
+       +  _α _μν)
+       + δ g^αδ _α_μδν
+       +  _αδ g_νδ (
+          - ^αδ_μ
+          + 12_μ^αδ
+          + 2  ^α _μ^δ)
+      
+       
+        -  ^αδ T_μαν
+      - δΞ ^α_μαν
+      + 2 δ g^αδ_μαν _δ
+      + (- 12_μ^αδ
+        -2  ^α _μ^δ) 
+         _δδ g_να
+       
+      + 112 _αδ g_μν ^α
+      + 124_μν(
+        -  _αδ g^δ_δ^α
+        + ^α _α
+        + δ g^αδ _δ _α)
+      + δ g^αδ _δ _α _μν
+       
+      +  _αδ g^δ_δ (
+        - 34_μ^α_ν
+        -  ^α _μν 
+        +  _μ _ν^α)
+      - 16 ^α _μδ g_να
+      - ( 14_μ^α_α
+      +  ^α _μα)  _νδ g^δ_δ
+       
+      +  _μ^α (4 δΦ _να
+      + 2  _ν^δδ g_αδ
+      + 16δ g_να 
+      + 2  _α^δδ g_νδ
+      + 2  _ν_α) 
+      + (12_μ^αδ
+      + 2  ^α _μ^δ) 
+         _νδ g_αδ
+       
+      + 112 _μ _νδ g^α_α
+      - 112δ g^α_α _ν _μ
+      + 16 _{ν _μ}δ F
+
+
+
+
+    H^d_μναβ    :=
+      12δ d_μναβ
+      - ^2 _α^δδ d_μνβδ
+      -  ^2 _μ^δδ d_νδαβ
+      - ( 12δ F  
+        + 4  ^δσδ g_δσ
+        + 112δ g^δ_δ) 
+        _μναβ
+       
+      + (-2 _α^δδΞ  
+        + 4 δΦ _α^δ
+        -  ^2 δ T_α^δ  
+        - 16δ g_α^δ
+        + 2  _α^δδ g^σ_σ) _μνβδ
+      - 2 δ d_α^δ_β^σ_μνδσ
+       
+      + (-2  ^δσδ g_αδ
+        +  ^2 _α^δδ g_δ^σ
+        - 6  _α^δδ g_δ^σ)
+        _μνβσ
+      - 2_αδβσ 
+        ( δ d_μν^δσ
+        +  δΞ_μν^δσ)
+      
+       
+      - (2 _μ^δδΞ
+        - 4 δΦ _μ^δ  
+        +  ^2 δ T_μ^δ
+        + 16δ g_μ^δ
+        - 2  _μ^δδ g^σ_σ) 
+        _νδαβ
+      + 4 δ g_μα _δ_β^δ_ν
+      + _μαβ _νδ g^δ_δ
+       
+      - 2(4 δ d_μ^δ_α^σ
+        +  ^2 ^δσδ g_μα
+        + 2 δΞ_μ^δ_α^σ) 
+        _νδβσ
+      + ( ^2 _μ^δδ g_δ^σ
+        - 6  _μ^δδ g_δ^σ
+        -2  ^δσδ g_μδ) 
+        _νσαβ
+       
+      + 2δ g^δσ (
+        _βδσγ_μνα^γ
+        + _μ^γ_αβ_νδσγ)
+      + 4 δ g^δσ (
+        _ασβγ_μνδ^γ
+        + _μ^γ_αδ_νγβσ 
+        + _μδα^γ_νσβγ) 
+      
+       
+      - δ g^δ_δ
+      ( _ασβγ_μν^σγ
+      + 2 _μ^σ_α^γ_νσβ  g)
+      - 2   (2 ^δσδΞ
+        + δ T^δσ) 
+        _μδασ_νβ
+      + F ^δ _δ_μναβ
+       
+      + ^δσδ g_δ^γ
+        (2^2_μγασ_νβ  
+        + 2  ^2 _μσαγ_νβ)
+      + 2  _αδ T_μνβ
+      + 2 _μναδ _β^δ
+      - _μαν _βδ g^δ_δ
+       
+      + _νβ 
+        (-2 ( ^2 ^δσδ d_μδασ
+            + 2 ^δ_αδμ)
+        + (4 _α^δ_μ 
+          + _μα^δ
+          + _μ^δ_α) 
+           _δδ g^σ_σ)
+      - _μβ_α^δ_δ _νδ g^σ_σ
+       
+      + 2  _μδ T_αβν
+      - δ g^δ_δ 
+        (  _α_μνβ
+        +  _μ_αβν)
+      + 2 _μδαβ _ν^δ
+      + 4 _(α^δ_μ ) 
+        (  _βδ g_δν 
+        +  _νδ g_βδ
+        -   _δδ g_βν)
+        
+       
+      + 4 ^δσ_μ_να _σδ g_βδ
+      + 2 _μβ_α^δσ
+        (  _δδ g_νσ
+        +  _νδ g_δσ
+        -  _σδ g_νδ)
+        + 4  _[δ_|μνβ|  σ] ^σδ g_α^δ
+       
+      + _μα 
+        (4  _δδ T_β^δ_ν
+        - 4 δ g^δσ _σ_βδν
+        - 2 δ g^δ_δ _σ_β^σ_ν)
+      - 2  _αδ g^δσ _σ_μνβδ
+      - 2  _μδ g^δσ _σ_νδαβ
+       
+      + 8  _[σ_δ] ναβ ^σδ g_μ^δ
+      - 2 (  _[α_|μνβ| σ]  
+          +  _[μ_|ν| σ]αβ ) 
+           ^σδ g^δ_δ
+      + δ g^δσ _σ _δ_μναβ
+
+
+
+
+
+
+
+
+§ REDUCED WAVE EQUATIONS
+
+
+
+
+
+In this appendix, we extend the analysis leading up to
+(<ref>) to the other wave equations listed in
+(<ref>) for the sake of completeness. In particular, we wish to
+recast (<ref>) explicitly as a system of second order
+hyperbolic equations.  This non-linear system of wave equations was
+originally derived in <cit.> using slightly different set of
+variables and a different reduced wave operator.
+
+
+
+First observe that in general, the geometric wave operator acting on a
+tensor will give rise to derivatives of the Christoffel symbols. Since
+the metric is a variable of the system, this is problematic for
+hyperbolicity. In particular, for a covector w_a one has
+
+    □ w_μ=   w_μ
+      - w^ν∇ _αΓ_νμ^α
+      -2 Γ_νμα∇ ^αw^ν
+      - Γ _ν∇ ^νw_μ
+      - Γ^α_μ^βΓ_ναβ w^ν
+      - Γ_νμ^αΓ _α w^ν.
+
+In this appendix, indices are raised and lowered with the metric g_μν. Observe that the second term in the right-hand side of equation
+(<ref>) represents second derivatives of the metric.
+However, one can replace these derivatives of the Christoffel symbols by
+noticing the identity
+
+    g^μα∇ _αΓ ^β_νμ = -
+      R_ν^β+Γ^βμαΓ _μνα - Γ^β_νμΓ ^μ + ∇
+      _νΓ^β.
+
+Exploiting the identity (<ref>) a direct calculation gives
+
+    □ w_μ =   w_μ +
+      1/4 R w_μ + 2 Φ _μν w^ν
+      - ℒ_Γ  w_μ
+      -2 Γ_νμα∇ ^αw^ν
+      -2 Γ^α_μ^βΓ_ναβ w^ν
+
+where ℒ_Γ is the Lie-derivative along Γ^a. Using
+the definition of the conformal and the GHG-constraints one can rewrite
+the last expression as
+
+    □  w_μ =   w_μ +
+      1/4 C w_μ - ℒ_C  w_μ + 
+      1/4 F w_μ
+      + ℒ_ℋ  w_μ + 𝒬(w)_μ
+
+where ℒ_C and ℒ_ℋ are the Lie
+derivative along C^a and ℋ^a respectively and
+
+    𝒬(w)_μ := 2 Φ _μν w^ν
+      -2 Γ_νμα∇ ^αw^ν
+      -2 Γ^α_μ^βΓ_ναβ w^ν
+
+One can generalise the latter calculation for tensor of type (0,n) as
+follows
+
+    □  w_μ_1 ...μ_n =  w_μ_1
+        ...μ_n + n/4 C w_μ - ℒ_C w_μ_1
+        ...μ_n + n/4 F w_μ_1 ...μ_n 
+        + ℒ_ℋ
+      w_μ_1 ...μ_n + 𝒬(w)_μ_1 ...μ_n
+
+where
+
+    𝒬(w)_μ_1 ...μ_n :=     2 Φ _μ_1ν
+      w^ν_μ_2...μ_n -2 Γ_νμ_1α∇
+      ^αw^ν_μ_2...μ_n -2 Γ^α_μ_1^βΓ_ναβ w^ν_μ_2...μ_n +
+      ...+ 
+        + 2 Φ _μ_nν w_μ_1...ν_n-1^ν -2
+      Γ_νμ_nα∇ ^αw_μ_1...μ_n-1^ν -2 Γ^α_μ_n^βΓ_ναβ w_μ_1...μ_n-1^ν.
+
+Then, by imposing the conformal and GHG-constraints are satisfied so
+that C=0 and C^a=0 one effectively has effectively removed the
+problematic terms for hyperbolicity:
+
+    □ w_μ_1 ...μ_n =  w_μ_1 ...μ_n
+      + n/4 F w_μ_1 ...μ_n + ℒ_ℋ
+      w_μ_1 ...μ_n + 𝒬(w)_μ_1 ...μ_n
+
+Applying the latter rule on each of the fields appearing on the
+geometric wave equations one obtains a set of hyperbolic non-linear
+wave equations which read as follows.
+
+
+
+For the components of the metric:
+
+
+
+
+    g_μν = - 4Φ_μν 
+    - 12F g_μν -
+    2 ∇ _(μℋ_ν)  - g^σδg^αβ
+    (Γ_νδβΓ_σμα +
+    2Γ_δνβΓ_(μν) α ).
+
+
+For the components of the trace-free Ricci tensor:
+
+
+
+    Φ_μν = - 16Φ _μν F
+      -ℒ_ℋΦ_μν - 𝒬(Φ)_μν 
+        + 16∇ _{μ∇ _ν}F + 
+      4 Φ _μ^αΦ _να
+      - Φ _αβΦ ^αβ g_μν
+      -2 ΞΦ ^αβ d_μανβ
+                                           
+      +   12Ξ ^3 T^βα d_μβνα
+      - Ξ∇ _αT_ν^α_μ
+      - 2T_(μ|α|ν)∇ ^αΞ.
+
+
+
+For the components of the rescaled Weyl tensor:
+
+    d_μναβ  
+      =    -12F d_μναβ
+      -ℒ_ℋd_μναβ 
+      -𝒬(d)_μναβ + 2
+      Ξ d_μ^σ_β^λ
+      d_νσαλ -2 Ξ
+      d_μ^σ_α^λ d_νσβλ
+      -2 Ξ d_μν^σλ d_ασβλ
+        - Ξ^2T_[α^σd_β]σμν -
+      Ξ^2T_[μ^σd_ν]σαβ +
+      Ξ^2T^σλ( d_μσλ[αg_β]ν -
+      d_νσλ[αg_β]μ ) + 2
+      ∇_[μT_|αβ|ν]
+                              
+      +2  ∇_[αT_|μν|β] + 2
+      g_β[ν∇_|σT_α|^σ_μ] + 2
+      g_α[μ∇_|σT_β|^σ_ν].
+
+    
+
+For the Friedrich scalar:
+
+
+    s =       - 16 F s 
+      - ℒ_ℋ s   
+      - 16 g_μν∇ ^μΞ∇ ^νF
+      + (F12)^2 Ξ 
+      + ΞΦ _μνΦ ^μν
+      + 14Ξ^5 T_μν T^μν
+      - Ξ ^3 T^μνΦ _μν
+                                                             
+      + Ξ  T_μν∇ ^μΞ∇ ^νΞ.
+
+
+For the conformal factor:
+
+
+    Ξ = - 16Ξ F
+      - ℒ_ℋΞ   + 4 s .
+
+
+
+
+   In vacuum, the hyperbolicity of the wave equations
+  (<ref>) is clear. However, for the case with matter
+  T_ab=T_ab(τ, ∇τ), one could at first instance
+  question their hyperbolicity due to the presence of first derivatives
+  of the rescaled Cotton tensor T_abc which encode second
+  derivatives of the energy-momentum tensor T_ab —hence the
+  equations contain two (or more) derivatives of the matter fields
+  τ. Nonetheless, one can still ensure hyperbolicity
+  constructing wave equations for τ and ∇τ so that
+  T_abc is expressed in terms of evolved fields only. For instance,
+  in the case of the conformally invariant scalar field
+  T_ab=T_ab(ϕ, ∇ϕ)  one needs to construct wave
+  equations for ϕ and a reduction variable φ=∇ϕ
+  —see <cit.>.  Since this is a case-dependent analysis and
+  this has been done in <cit.> for a number of matter models,
+  further discussion is omitted. 
+
+
+
+In <cit.> the reduced wave operator is defined so that the
+lower order contributions (along with terms involving the gauge source
+functions) are absorbed into the definition of the operator
+▪ in such a way that the reduced equations look formally
+identical to the geometric ones. Here the standard reduced wave operator
+:=g^αβ∂_α∂_β used in most
+discussions of generalised harmonic gauge in Numerical Relativity was
+employed instead. The initial data for the reduced wave equations
+(<ref>) have to satisfy
+
+    Z_μν|_Σ=0,    Z_μ|_Σ=0,   δ_μνσ|_Σ=0,   λ_μνσ|_Σ=0,    Z|_Σ=0.
+
+where Σ⊂ℳ is a spacelike hypersurface on which
+the initial data is prescribed. It should also be noticed that the
+GHG-constraint C^μ and the conformal constraint C are not
+independent, in fact a calculation shows C=∇_μ C^μ.
+Propagation of the gauge and a full discussion of the propagation of the
+constraints [i.e. propagation of the zero-quantities
+(<ref>)] has carefully been done in
+<cit.> and will not be reproduced here.  The aim of revisiting
+the derivation of the reduced wave equations (<ref>) is
+simply to provide context and the non-linear analogue of the
+linearised equations derived in Section <ref>.
+
+
+
+unsrt
+
+10
+
+HilNur16
+C Denson Hill and Pawel Nurowski.
+How the green light was given for gravitational wave search, 2016.
+
+BieGarYun17
+Lydia Bieri, David Garfinkle, and Nicolas Yunes.
+Gravitational waves and their mathematics.
+2017.
+
+Zen08
+Anil Zenginoglu.
+Hyperboloidal evolution with the Einstein equations.
+Class. Quant. Grav., 25:195025, 2008.
+
+VanHusHil14
+Alex Vañó-Viñuales, Sascha Husa, and David Hilditch.
+Spherical symmetry as a test case for unconstrained hyperboloidal
+  evolution.
+Class. Quant. Grav., 32(17):175010, 2015.
+
+Van15
+Alex Vañó-Viñuales.
+Free evolution of the hyperboloidal initial value problem in
+  spherical symmetry.
+PhD thesis, U. Iles Balears, Palma, 2015.
+
+VanHus17
+Alex Vañó-Viñuales and Sascha Husa.
+Spherical symmetry as a test case for unconstrained hyperboloidal
+  evolution II: gauge conditions.
+Class. Quant. Grav., 35(4):045014, 2018.
+
+HilHarBug16
+David Hilditch, Enno Harms, Marcus Bugner, Hannes Rüter, and Bernd
+  Brügmann.
+The evolution of hyperboloidal data with the dual foliation
+  formalism: Mathematical analysis and wave equation tests.
+Class. Quant. Grav., 35(5):055003, 2018.
+
+GasHil18
+Edgar Gasperín and David Hilditch.
+The Weak Null Condition in Free-evolution Schemes for Numerical
+  Relativity: Dual Foliation GHG with Constraint Damping.
+Class. Quant. Grav., 36(19):195016, 2019.
+
+DuaFenGasHil22
+Miguel Duarte, Justin C Feng, Edgar Gasperín, and David Hilditch.
+Regularizing dual-frame generalized harmonic gauge at null infinity.
+Classical and Quantum Gravity, 40(2):025011, dec 2022.
+
+Fri81
+H. Friedrich.
+On the Regular and the Asymptotic Characteristic Initial Value
+  Problem for Einstein's Vacuum Field Equations.
+Proc. R. Soc. Lond. A, 375(1761):169–184, March 1981.
+
+Val16
+Juan-Antonio Valiente-Kroon.
+Conformal Methods in General Relativity.
+Cambridge University Press, Cambridge, 2016.
+
+Fra04
+Jörg Frauendiener.
+Conformal infinity.
+Living Rev. Relativity, 7(1), 2004.
+
+Fri95
+H. Friedrich.
+Einstein equations and conformal structure - Existence of anti de
+  Sitter type space-times.
+J. Geom. Phys., 17:125–184, 1995.
+
+LueVal12
+Christian Lübbe and Juan Antonio Valiente Kroon.
+The extended conformal einstein field equations with matter: The
+  einstein–maxwell field.
+Journal of Geometry and Physics, 62(6):1548–1570, jun 2012.
+
+Fri02
+Helmut Friedrich.
+Spin-2 fields on minkowski space near spacelike and null infinity.
+Classical and Quantum Gravity, 20(1):101–117, dec 2002.
+
+LueVal09
+C. Lübbe and J. A. Valiente Kroon.
+On de Sitter-like and Minkowski-like spacetimes.
+26:145012, 2009.
+
+GasVal17
+Edgar Gasperin and Juan A. Valiente Kroon.
+Perturbations of the asymptotic region of the schwarzschild–de
+  sitter spacetime.
+Annales Henri Poincaré, pages 1–73, 2017.
+
+DouFra16
+Georgios Doulis and Jörg Frauendiener.
+Global simulations of minkowski spacetime including spacelike
+  infinity.
+Phys. Rev. D, 95:024035, Jan 2017.
+
+Hub99
+Peter Hübner.
+A scheme to numerically evolve data for the conformal Einstein
+  equation.
+Class. Quantum Grav., 16:2823–2843, 1999.
+
+Hub01
+Peter Hübner.
+From now to timelike infinity on a finite grid.
+Class. Quantum Grav., 18:1871–1884, 2001.
+
+Hus02b
+Sascha Husa.
+Problems and successes in the numerical approach to the conformal
+  field equations.
+volume 604 of Lecture Notes in Physics, pages 239–260.
+  Springer, 2002.
+
+Val03a
+J. A. Valiente Kroon.
+Polyhomogeneous expansions close to null and spatial infinity.
+In J. Frauendiener and H. Friedrich, editors, The Conformal
+  Structure of Spacetimes: Geometry, Numerics, Analysis, Lecture Notes in
+  Physics, page 135. Springer, 2002.
+
+BeyDouFra13
+Florian Beyer, George Doulis, Jörg Frauendiener, and Ben Whale.
+The spin-2 equation on minkowski background.
+In Springer Proceedings in Mathematics and Statistics, pages
+  465–468. Springer Berlin Heidelberg, sep 2013.
+
+Pae13
+T.-T. Paetz.
+Conformally covariant systems of wave equations and their equivalence
+  to Einstein's field equations.
+Ann. Henri Poincaré, 16:2059, 2013.
+
+CarHurVal
+Diego A. Carranza, Adem E. Hursit, and Juan A. Valiente Kroon.
+Conformal wave equations for the einstein-tracefree matter system.
+General Relativity and Gravitation, 51(7), jul 2019.
+
+Fri81a
+H. Friedrich.
+On the regular and the asymptotic characteristic initial value
+  problem for Einstein's vacuum field equations.
+Proc. R. Soc., 375:169, 1981.
+
+Fri81b
+H. Friedrich.
+The asymptotic characteristic initial value problem for Einstein's
+  vacuum field equations as an initial value problem for a first-order
+  quasilinear symmetric hyperbolic system.
+Proc. R. Soc., 378:401, 1981.
+
+Cho08
+Yvonne Choquet-Bruhat.
+General Relativity and the Einstein Equations.
+Oxford University Press, 12 2008.
+
+Fri96
+H. Friedrich.
+Hyperbolic reductions for Einstein's equations.
+Class. Quantum Gravit., 13:1451–1469, 1996.
+
+Fri85
+H. Friedrich.
+On the hyperbolicity of Einstein's and other gauge field equations.
+Comm. Math. Phys., 100:525–543, 1985.
+
+LinSchKid05
+Lee Lindblom, Mark A. Scheel, Lawrence E. Kidder, Robert Owen, and Oliver
+  Rinne.
+A new generalized harmonic evolution system.
+Class. Quant. Grav., 23:S447–S462, 2006.
+
+Wal84
+Robert M. Wald.
+General relativity.
+The University of Chicago Press, Chicago, 1984.
+
+Rainho_master_thesis
+Inês Rainho.
+Linearized general relativity on hyperboloidal slices.
+Master Thesis.
+  https://blackholes.tecnico.ulisboa.pt/gritting/theses.html#section-5, 2022.
+
+PenRin84
+R. Penrose and W. Rindler.
+Spinors and space-time. Volume 1. Two-spinor calculus and
+  relativistic fields.
+Cambridge University Press, 1984.
+
+PenRin86
+R. Penrose and W. Rindler.
+Spinors and space-time. Volume 2. Spinor and twistor methods
+  in space-time geometry.
+Cambridge University Press, 1986.
+
+GasVal20
+Edgar Gasperin and Juan Antonio Valiente Valiente Kroon.
+Zero rest-mass fields and the Newman-Penrose constants on flat
+  space.
+J. Math. Phys., 61(12):122503, 2020.
+
+GasVal21a
+E Gasperín and J A Valiente Kroon.
+Staticity and regularity for zero rest-mass fields near spatial
+  infinity on flat spacetime.
+Classical and Quantum Gravity, 39(1):015014, dec 2021.
+
+MinMacVal22
+Marica Minucci, Rodrigo Panosso Macedo, and Juan Antonio Valiente Kroon.
+The maxwell-scalar field system near spatial infinity, 2022.
+
+ValAli22
+Mariem Magdy Ali Mohamed and Juan A. Valiente Kroon.
+Asymptotic charges for spin-1 and spin-2 fields at the critical sets
+  of null infinity.
+Journal of Mathematical Physics, 63(5):052502, may 2022.
+
+DuaFenGasHil23
+Miguel Duarte, Justin Feng, Edgar Gasperín, and David Hilditch.
+The good-bad-ugly system near spatial infinity on flat spacetime.
+Classical and Quantum Gravity, 40(5):055002, feb 2023.
+
+Ste91
+J. Stewart.
+Advanced general relativity.
+Cambridge University Press, 1991.
+
+Hil15
+David Hilditch.
+Dual Foliation Formulations of General Relativity.
+arXiv:1509.02071, 2015.
+
+MinVal23
+Marica Minucci and Juan Antonio Valiente Kroon.
+On the non-linear stability of the cosmological region of the
+  schwarzschild-de sitter spacetime, 2023.
+
+BarutElectrodynamics
+A.O. Barut.
+Electrodynamics and Classical Theory of Fields & Particles.
+Dover Books on Physics Series. Dover Publications, 1980.
+
+Mag07a
+Michele Maggiore.
+Gravitational Waves. Vol. 1: Theory and Experiments.
+Oxford University Press, Oxford, 2007.
+
+Wheeler1955geons
+John Archibald Wheeler.
+Geons.
+Phys. Rev., 97:511–536, Jan 1955.
+
+BrillHartle1964geon
+Dieter R. Brill and James B. Hartle.
+Method of the self-consistent field in general relativity and its
+  application to the gravitational geon.
+Phys. Rev., 135:B271–B278, Jul 1964.
+
+AndersonBrill1997geon
+Paul R. Anderson and Dieter R. Brill.
+Gravitational geons revisited.
+Phys. Rev. D, 56:4824–4833, Oct 1997.
+
+Sorkin:1981wd
+Rafael D. Sorkin, Robert M. Wald, and Zhen Jiu Zhang.
+Entropy of self-gravitating radiation.
+Gen. Rel. Grav., 13:1127–1146, 1981.
+
+Schmidt:1999tr
+Heinz-Jurgen Schmidt and Felix Homann.
+Photon stars.
+Gen. Rel. Grav., 32:919–931, 2000.
+
+mitra2010likely
+Abhas Mitra and Norman K Glendenning.
+Likely formation of general relativistic radiation pressure supported
+  stars or ‘eternally collapsing objects’.
+Monthly Notices of the Royal Astronomical Society: Letters,
+  404(1):L50–L54, 2010.
+
+Kim:2016jfh
+Hyeong-Chan Kim.
+Classifying self-gravitating radiations.
+Phys. Rev. D, 95(4):044021, 2017.
+
+Hol22
+Jan W. van Holten.
+Curvature dynamics in general relativity, 2022.
+
+Bie14
+Lydia Bieri and David Garfinkle.
+Perturbative and gauge invariant treatment of gravitational wave
+  memory.
+Physical Review D, 89(8), apr 2014.
+
+Cha83a
+S. Chandrasekhar.
+The Mathematical Theory of Black Holes.
+Oxford University Press, Oxford, England, 1983.
+
+xAct_web
+José M. Martín-García.
+xAct: tensor computer algebra.
+<http://www.xact.es/>.
+
+
+
+
+
+
+
+
+
+
+
+

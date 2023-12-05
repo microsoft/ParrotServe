@@ -1,0 +1,1184 @@
+
+Appendix
+    Mengchao He
+    March 30, 2023
+==================
+
+
+
+This paper adapts ideas from social identity theory to set out a new framework for modelling conspicuous consumption. Notably, this approach can explain two stylised facts about conspicuous consumption that initially seem at odds with one another, and to date have required different families of models to explain each: (1) people consume more visible goods when their neighbours' incomes rise, but (2) consume less visible goods when incomes of those with the same race in a wider geographic area rise. The first fact is typically explained by `Keeping up with the Joneses' models, and the second by signalling models. Our model also explains related features of conspicuous consumption: that the rich are more sensitive to others' incomes than the poor, and that the effect of income inequality on consumption differs qualitatively across groups. Importantly, it explains this fourth stylised fact without falling back on differences in preferences across groups, as required in other models. In addition, our model delivers new testable predictions regarding the role of network structure and income inequality for conspicuous consumption.
+
+
+ 
+
+
+JEL:  D63, D85, D91 
+ Keywords:  Social identity, Keeping Up with the Joneses, networks, centrality,
+
+ income inequality
+
+
+Appendix
+    Mengchao He
+    March 30, 2023
+==================
+
+
+
+
+
+
+Economists widely recognise that people's consumption decisions respond to the consumption decisions of others. Existing literature documents two main stylised facts about these responses. First, an influential paper by <cit.> documents that, holding their own permanent income fixed, people in the US consume less when average income of those of the same race and who live in the same state is higher. Second, work by <cit.> shows that people consume more when average income of their geographic neighbours increases. This is often called a “Keeping up with The Joneses” effect. 
+One the face of it, these two stylised facts may appear to conflict. Plus, the classes of models typically used to rationalise each of them – signalling models for the <cit.> result and social comparisons models for the <cit.> result – cannot capture both simultaneously.
+
+We present a simple model of social identity that explains both of these stylised facts as a single phenomenon. In it, people derive status directly from  consuming visible goods themselves, and from belonging to an identity that consumes lots of visible goods. In our model, this identity group status depends on average consumption of visible goods by members of the identity group, and we assume there is some substitutability between status from each of these two sources.
+People also feel pressure to conform to some benchmark for their identity, and we assume it depends only on a person's neighbours rather than their entire identity group. These two features are both core components of social identity theory <cit.>. 
+
+Our model is also able to speak to the first stylised fact without relying on the characteristics of the very poorest person – which is needed in signalling models. This aligns our model and its predictions more closely with the kind of data typically available. 
+
+We also explain a third and a fourth stylised fact, both of which are related to the main two facts. Third, <cit.> finds that richer people are more sensitive to changes in the income of others. Our model predicts exactly this behaviour. Fourth, 
+
+<cit.> find that higher dispersion of income within a person's reference group leads to lower conspicuous consumption among Whites, but higher conspicuous consumption among Blacks. Our model is flexible enough to capture these contrasting behaviours. It can do so because it finds that the overall impact of a change in inequality depends on the network structure. Therefore we can explain both of these findings if Blacks and Whites have different network structures. 
+
+We believe explaining the fourth stylised fact in this way is a useful contribution because it does not rely on differences in preferences across racial groups. <cit.> stress that an advantage of their signalling model is that they can explain their main empirical findings without falling back on racial differences in preferences. But they rely on exactly these differences to explain their findings regarding inequality.
+
+On the way to explaining these four stylised facts, we provide a simple characterisation of behaviour. It shows that consumption depends critically on a measure of network centrality that is closely related to Bonacich centrality <cit.> – a well-known metric in the networks literature. Both an agent's own centrality and the average centrality among her identity group are important. Centrality is increasing in the strength of network connections, in an agent's own income and in the income of those share her identity and whom she is connected to in the network (whether directly or indirectly). Related to this, we find that stronger homophily – when people are more tightly connected to those like themselves – increases consumption. This is because being more focused on people with her own identity increases the pressure an agent feels to conform – which here pushes up consumption.
+
+We also study the effect of inequality. Doing so requires some simplifying assumption to keep the model tractable. We approach this from two different angles. The first shuts down some of the complex network effects by assuming that people only interact with others who have the same income. Here, the impact of redistribution depends on the relatively network density of groups whose income change, rather than on whether redistribution raises or lowers inequality. It is this viewpoint that explains our fourth stylised fact. The second approach imposes a regularity condition on the network, but retains interactions between people with different incomes. With this approach, redistribution increases average consumption if (and only if) the redistribution reduces inequality.
+
+It is now helpful to discuss social identity models, and the key features of ours, in a little more detail. Social identity theory assumes people have an identity, and that this affects their utility in three ways. First, they gain status benefits associated with their identity – typically based on some summary statistic of all the people who share their identity. Second, there is some pressure to conform – they bear some dissonance costs if they differ from a prototype for their identity. Third, ties to others sharing their identity affect dissonance costs. Status benefits come from average visible goods consumption of people holding a given identity. 
+
+Our model makes two assumptions that are not standard in existing models of social identity. First, that people derive some status benefit from their own consumption, and that this component of status is a substitute for the status from the social identity. An intuitive way to view this substitutability is to assume that people simply get status from both sources – their own visible consumption and the average income of their identity – but that utility is concave in total status. Second, we assume the status associated with an identity depends on the whole population, while dissonance depends only on a set of neighbours. Intuitively, a person's view of what they should be conforming to depends on who they know.  
+
+That status depends on a population average is standard. However, the assumption that dissonance costs depend on neighbours' decisions is much richer than normal. Existing models of social identity assume the prototype is exogenous. In contrast, we both demand consistency between actual behaviour and the prototype. By using an explicit network, we also allow this prototype to differ across people.[Using an exogenous fixed prototype will often result in (average) equilibrium consumption for an identity being different from the prototype. However, the prototype is supposed to capture what is `normal' consumption for that identity. We consider this an undesirable tension because it allows permanent differences between what is actually normal behaviour for an identity and what is supposed to be normal behaviour for that identity. The network can of course be asymmetric. For example, people may feel pressure to conform with celebrities they have never met personally, but these celebrities likely do not feel corresponding pressure to conform to them.] 
+In light of this, we make a simplifying assumption in the interest of tractability – we assume the social identity is exogenously fixed.
+
+
+To see how this model explains both main stylised facts, suppose that incomes increase for some people. These people increase their consumption of visible goods – the traditional direct response to an increase in own income. Now let us focus on a single person whose income did not change. The change in other people's income creates two spillover effects. First, it increases the status benefits for the single person, by increasing the average income of those who share her identity. This then pushes her to consume fewer visible goods – because the status from her identity and the status from her consumption of visible goods are substitutes. Second, it increases her neighbours' consumption, which increases the pressure to consume visible goods through the dissonance costs. This pushes her to consume more visible goods. 
+
+Which of the two forces wins out depends on how closely connected the single person is to the people whose incomes increase. This is what delivers both of the stylised facts. When the people whose incomes increase are close neighbours (as in <cit.>) we should expect the second force to win out – so she consumes more visible goods. In contrast, when these people are not closely connected to her (as in <cit.>) we should expect the first force to win out – delivering the seemingly counter-intuitive result that she consumes fewer visible goods.
+
+
+
+The rest of the paper is organised in the usual way. <Ref> briefly reviews related literature. <Ref> presents the model. <Ref> presents the results. <Ref> shows how our model explains the stylised facts. Then <Ref> examines the impact of inequality. 
+
+
+
+
+
+ §.§ CG version
+
+
+The utility individuals receive from consumption of a commodity goes often beyond its egoistic value. This is revealed by a price which is higher than the marginal egoistic utility. A specific consumption behaviour might be the evidence of envy or altruism. It can be associated to the adoption of a social identity, for example an Indian caste. The literature typically uses the notion of status good when the consumption of the good is meant to reveal the social status of the individual, for example her income, cast, or education. 
+
+
+In this paper we wish to propose a single model able to capture the consumption behaviour of a status good in a variety of situations, some of which appearing at first sight unrelated. 
+
+
+The leading situation we want to capture has been studied in an influential paper by Charles et al. They showed that for individuals of any given permanent income, black people consume more luxury goods than whites. Surprisingly, by comparing different US states, they also find that the lower is the average income in the state the higher is the consumption of luxury goods for a given income, this result holding for both black and whites. 
+
+
+Charles et al. propose a signalling model to capture these findings. Signalling models have the feature that the equilibrium is determined by the behaviour of the poorest individual.  Charles et al. signalling model capture the data provided that a lower mean is associated to the existence of poorer individuals at the bottom of the distribution. As the data concerns the means, the model does not provide an exhaustive explanation of the data. 
+
+
+To capture this stylised fact we adopt the view that consumption of a visible status good is governed by the social identity adopted by the individual. Social Identity theory determines precisely the main factors affecting the utility of a given identification. These are the status associated to the identity, the dissonance to the group and the ties with the group. 
+  
+
+We make some important assumptions. First, status depends both on the status of the individuals in the society with that identity as well as the status of the individual herself. We assume that status is increasing in both inputs and that these two inputs are substitutes. Second, we assume that status of the identity depends on the whole population while dissonance is evaluated in respect to her neighbours. As status is linked to conspicuous consumption, dissonance gives rise to a conformist action by the individual in response to her neighbours. 
+
+
+The mechanism by which the present model is able is able to rationalise the counter intuitive regularity about the effect of the mean on conspicuous conspicuous consumption is as follows. When the mean income of the identity group falls, their consumption of status good falls, and their status follows. An individual with a given income would then substitute the identity status with her own status, rising her own consumption of the status good. Delivering the surprising result.  
+
+
+Our model is able also to capture another important stylised fact. Kuhn et al. (2008) have shown that when individuals in a geographical neighbourhood receive a positive unexpected positive shock to their income, as a lottery gain, the other neighbours follow the changes in the visible consumption of the lucky ones. There are several other situations in which this behaviour, known as keep up with the Jones, has been observed. Our model captures this pattern mainly via the dissonance term. 
+
+
+We then use our model to analyse the role of inequality on the consumption of status goods. Signalling models have the feature that as the equilibrium is determined by the behaviour of the poorest individual, she is only affected by the income distribution between her and the poorest individual. Consequently, consumption may increase or decrease with income inequality. Consumption would increase with inequality if the Engel curves, that is consumption as a function of income, are convex, but data seems to suggest the opposite, see Heffetz (2011). Our model captures the role of inequality in a more natural way that fits with the stylized facts. Our model is also able to capture the role of the social network. We provide results on the type of networks that are favorable to a large consumption of status goods. 
+
+
+
+To conclude, the substitutability in the two contributors of status and the tendency to conform with neighbours, deliver the necessary forces to obtain both empirical regularities. We believe this is an important contribution as previous explanations not relying on social identity required completely different models. The present paper advances the literature in other three directions.
+
+ 
+1) The model is able to capture the link between average income of a group and the individual consumption for a given income. This contrasts with signalling models that rely on the characteristics of the poorest consumers, which is hardly testable.
+
+ 
+2) The model allows to make predictions about the role of inequality on conspicuous consumption.
+
+
+3) The model allows to capture the effect of the social network.
+
+
+
+
+
+
+§ LITERATURE
+
+This paper relates to a very large literature on interpersonal comparisons in consumption decisions.[See <cit.> for an interesting survey of the wider topic of social pressure.] Work on this aspect of consumer behaviour span a diverse range of disciplines, including marketing, sociology, politics, social psychology, economics and neuroscience. It is variously referred to as `conspicuous consumption' or `status consumption'.[<cit.> present empirical evidence showing that while `status consumption' and `conspicuous consumption' are not entirely identical in principle, they substantially overlap in practice.]
+See <cit.> and <cit.> for recent reviews in psychology, and <cit.> for up to date references within economics.
+
+
+
+
+
+There is also an influential literature within economics that focuses on direct income comparisons across individuals, rather than consumption comparisons. This literature shows that people's happiness is negatively affected by others' income. Recent empirical evidence on this front includes <cit.> and <cit.>, and relative income concerns are also found in a range of laboratory experiments <cit.>.[Early contributions to this literature include <cit.> and <cit.>.] 
+
+
+
+
+Our model is one of conspicuous consumption in the sense that people care directly about others' consumption. But others' income has an indirect effect, via its influence on their consumption. So we will examine how income, and especially income inequality, affects people's consumption. 
+
+
+
+Within this vast literature, our work is most closely related to: the signalling and social comparisons models currently used to explain the main stylised facts, to the social identity theory work we build, and to work on the relationship between inequality and conspicuous consumption. 
+
+
+Signalling. At the heart of signalling models is the idea that agents take actions to advertise their underlying type. This provides one clean rationale for consumption of visible and luxury goods – signalling otherwise unobservable income, when income carries social status. 
+
+<cit.> use a signalling model – which follows <cit.> very closely – to explain the first stylised fact. There, people use consumption of visible goods to signal their (unobservable) income. In this family of models, people signal to differentiate themselves from those who have lower income. Equilibrium is ultimately determined by the behaviour of the poorest person; who never does any signalling in equilibrium. A consequence of this framework is that a person's consumption is unaffected by changes in incomes among those richer than herself. The model therefore cannot provide an exhaustive explanation of the data – which concerns changes in mean incomes, regardless of which part of the distribution is driving the change in the mean.[Changes to the income of the poorest person (i.e. to the support of the income distribution) is what drives changes in visible goods consumption in the <cit.> signalling model. While <cit.> draw an analogy between reducing the minimum income in the distribution and reducing the mean, they need not go together. Strictly speaking, the model and the data do not look at exactly the same quantity.] 
+Additionally, with no explicit notion of `neighbours', these models struggle to explain the second stylised fact – that people consume more when their neighbours' incomes rise. 
+
+
+Social Comparisons. In contrast to signalling models, most of the literature on conspicuous consumption assumes that visible and luxury goods carry status directly, and so focuses directly on interpersonal comparisons in the consumption of these goods. Such `social comparisons' models can explain the second stylised fact – that people consume more when their neighbours' incomes increase. This family of models posits that people desire high consumption relative to others, not just in absolute terms. It is often called a `Keeping Up With the Joneses' effect. Our paper is most closely connected to a relatively recent strand that uses an explicit network to allow for very rich patterns of social comparisons. The broader literature on social comparisons in consumption is very old – dating at least to <cit.> and <cit.> in economics – and far too large to survey here. Explicit networks were first introduced into social comparison models by <cit.>.[Before explicit networks were introduced, most authors either assumed that people care about their consumption relative to the population average <cit.> or about their rank within the population <cit.>. More recent contributions include <cit.> and <cit.>.]
+
+Other recent contributions include <cit.> and <cit.>.[By also using an explicit network, our paper relates to the literature of network games – <cit.> and <cit.> provide detailed surveys. A paper in this literature for our purposes is <cit.>, which introduces a measure of network centrality – called Bonacich centrality (first defined by <cit.> and <cit.>) – as the Nash equilibrium of a game of social interactions. Our contribution to this literature is to show how network games of this kind can be added to models from social identity theory.] 
+
+These models can cleanly explain why someone consumes more visible goods if their neighbours' incomes increase. However, they cannot fit the first stylised fact. Because these models embed a desire to `Keep Up With the Joneses', an increase in the incomes of some people must (weakly) increase everyone's consumption of visible goods. 
+
+
+Social Identity. Our model builds on existing models of social identity theory in economics. <cit.> and <cit.> make seminal contributions, formalising social identity in economics and introducing the notions status dissonance costs which are core parts of the modelling framework (see <cit.> for a survey). A number of recent papers extend or apply Shayo's approach (see for example, <cit.>, and <cit.>). These papers allow people to choose their identity, but keep each identity's prototype (the benchmark for `normal') exogenously fixed.
+
+In contrast, we make the prototype endogenous – in effect demanding that there are not persistent differences between actual behaviour in equilibrium and the benchmark for `normal' behaviour. However, we do not allow people to choose their identity. We keep identity exogenously fixed in the interest of tractability, and because it is not needed to explain the stylised facts we focus on. For each identity, we follow the utility formulation in <cit.> but we make the prototype endogenous, and base our formulation of the prototype on factors <cit.> identifies as key for social identity. Clearly, there are other factors affecting which identity becomes salient including the cognitive cost of switching identities <cit.>. 
+
+
+Inequality and conspicuous consumption. Formal models within economics provide ambiguous results on the link between inequality and conspicuous consumption. In <cit.>, equilibrium only depends on the poorest consumer, so redistribution of income from a poorer person to a richer person has an ambiguous effect on total consumption. The poorer person will consume less, and the richer person will consume more. but total consumption only increases if consumption is a convex function of income, which is not a uniform property of the data <cit.>. Similar predictions come out of other versions of the signalling model (for example, <cit.> and <cit.>). Finally, <cit.> confirms that with ordinal utility, inequality reduces conspicuous consumption while with cardinal status inequality may increase conspicuous consumption.
+
+The effects of inequality on luxury goods consumption has recently been studied in consumer psychology. <cit.> find that income inequality is associated with high frequency and greater positivity of tweets mentioning luxury brands, and less frequent tweets mentioning low status brands (see also <cit.>). Relatedly, <cit.> find that inequality has an effect on the consumption of luxury goods by poor individuals in India (see also <cit.>). Formal models of this literature also predict a positive link between inequality and conspicuous good consumption, as for example the models on social rank proposed by <cit.> and by <cit.>.
+The link appears to depend on circumstances. In a laboratory experiment, <cit.> find that reducing inequality reduces conspicuous consumption when poorer consumers do not care about status, but increases their conspicuous consumption when they do.
+
+
+
+
+
+Existing literature also hints at the idea that the link between income inequality and conspicuous consumption depends on the social network; that is, on the granular details of who compares themselves with whom <cit.>. By including an explicit social network that is able to capture very rich patterns of interpersonal comparisons, this is something our setup is able to investigate more formally. 
+
+
+
+
+
+NOTE??: Frank, Levine, Dijk (2014) find that higher inequality within a
+reference group leads to lower savings (i.e. higher consumption) %
+
+
+
+
+
+
+
+References
+
+
+
+  * Dubois, D., and N. Ordabayeva, Social Hierarchy, Social
+Status, and Status Consumption, The Cambridge Handbook of Consumer
+Psychology, Cambridge Handbooks in Psychology. Ed., M. I. Norton, D. D.
+Rucker, and C. Lamberton, March 2017, Paperback ISBN: 9781107641426.
+
+
+  * Dubois, D., S. Jung, and N. Ordabayeva, The psychology of
+luxury consumption, Current Opinion in Psychology 2021, 39:82–87.
+
+
+  * Costa-Font, J., and F. Cowell, Social identity and redistributive
+preferences: a survey. Journal of Economic Surveys (2015) Vol. 29, No. 2,
+pp. 357–374
+
+
+  * Daly, Boyce, and Wood (2015) A social rank explanation of how money
+influences health. Health Psychology, 34, 222–230.
+
+
+  * Walasek and Brown (2016). Income inequality,income, and internet
+searches for status goods: A cross-national study of the association between
+inequality and well-being. Social Indicators Research,129, 1001–1014.
+https://doi.org/10.1007/s11205-015-1158-4
+
+
+  * Walasek L, Brown GD, Income inequality and status seeking: searching
+for positional goods in unequal US states. Psychol Sci 2015, 26:527-533
+http://dx.doi.org/10.1177/ 0956797614567511.
+
+
+  * Walasek L, Bhatia S, Brown GD, Positional goods and the social rank
+hypothesis: income inequality affects online chatter about high-and
+low-status brands on Twitter. J Consum Psychol 2018, 28:138-148,
+http://dx.doi.org/10.1002/jcpy.1012.)
+
+
+  * Nave G, Nadler A, Dubois D, Zava D, Camerer C, Plassmann H,
+Single-dose testosterone administration increases men's preference for
+status goods. Nat Commun 2018, 9:1-8 http://dx.
+doi.org/10.1038/s41467-018-04923-0.
+
+
+  * O'Cass, A., and  H. McEwen (2004). Exploring consumer status
+and conspicuous consumption. Journal of Consumer Behaviour, 4(1), 25–39.
+https://doi.org/10.1002/cb.155
+
+
+  * Zinn, Anna K., Lavric, Aureliu, Levine, Mark and Koschate, Miriam
+(2022).Social identity switching: How effective is it?. Journal of
+Experimental Social Psychology, 101 104309. doi: 10.1016/j.jesp.2022.104309
+
+
+  * Garcia, Stephen M., Kimberlee Weaver, and Patricia Chen. "The status
+signals paradox." Social Psychological and Personality Science 10.5 (2019):
+690-696.
+
+
+  * Podolny, J. M. (2010). Status signals: A sociological study of market
+competition. Princeton, NJ: Princeton University Press.
+
+
+  * Bursztyn, L., and R. Jensen, Social Image and Economic
+Behavior in the Field: Identifying, Understanding, and Shaping Social
+Pressure, Annual Review of Economics 2017 9:1, 131-153
+
+
+  * Mason, Roger. "Conspicuous consumption: A literature review." European
+journal of Marketing 18.3 (1984): 26-39.
+
+
+  * Jinkins, David (2016) Conspicuous consumption in the United States and
+China", Journal of Economic Behavior & Organization, 127: 115-132.
+
+
+  * Alvarez-Cuadrado, F., Casado, J. M., Labeaga, J. M. (2016) Envy and
+habits: Panel data estimates of interdependent preferences", Oxford Bulletin
+of Economics and Statistics, 78 (4), 443-469.
+
+
+  * Heffetz, O. (2011). A test of conspicuous consumption: Visibility and
+income elasticities. Review of Economics and Statistics, 93(4), 1101-1117.
+
+
+  * Frank, Robert H. 1985b. “The Demand for Unobservable
+and Other Nonpositional Goods.” American Economic Review
+75 (1): 101–16.
+
+
+  * Clark, Andrew E., Paul Frijters, and Michael A. Shields (2008) 
+\Relative income, happiness,and utility: An
+explanation for the Easterlin paradox and other puzzles", Journal of
+Economic Literature 46(1), 95-144.
+
+
+  * Hopkins, Ed and Tatiana Kornienko (2004) \
+Running to Keep in the Same Place: Consumer Choice as a Game of Status",
+American Economic Review, September 2004, 94 (4), 1085-1107.
+
+
+  * Bramoullé, Y and C. Ghiglino (2022), “DP17181 Loss Aversion and Conspicuous Consumption in
+Networks”, CEPR Press Discussion Paper No. 17181.
+https://cepr.org/publications/dp17181
+
+
+  * Festinger, L.. 1954. “A Theory of Social Comparison
+Processes.” Human Relations 7 (2): 117–40.
+
+
+  * van de Stadt, H., A. Kapteyn, and S. van de Geer. 1985.
+“The Relativity of Utility: Evidence from Panel
+Data.” Review of Economics and Statistics 67 (2): 179–87.
+
+
+  * Luttmer, Erzo F. P. 2005. “Neighbors as Negatives:
+Relative Earnings and Well-Being.” Quarterly Journal of
+Economics 120 (3): 963–1002.
+
+
+  * Frank, Robert H. 1985b. “The Demand for Unobservable
+and Other Nonpositional Goods.” American Economic Review
+75 (1): 101–16.
+
+
+  * Clark, A., P. Frijters, and M. Shields (2008) Relative income,
+happiness, and utility: An explanation for the Easterlin paradox and other
+puzzles", Journal of Economic Literature 46(1), 95-144.
+
+
+  * Brown, G.,  J. Gardner, A. J. Oswald, and J. Qian (2008), Does wage
+rank affect employees' well-being?", Industrial Relations: A Journal of
+Economy and Society, 47(3), 355-389.
+
+
+  * Cooper, David J., and John H. Kagel (2016) "Other-regarding
+preferences", The Handbook of Experimental Economics, Vol 2, J. Kagel and A.
+Roth (eds.), Princeton:Princeton University Press.
+
+
+  * De Giorgi, G., A. Frederiksen, L. Pistaferri, Consumption Network
+Effects, The Review of Economic Studies, Volume 87, Issue 1, January 2020,
+Pages 130–163, https://doi.org/10.1093/restud/rdz026
+
+
+  * Hopkins, E., and T. Kornienko (2004) Running to Keep in the Same
+Place: Consumer Choice as a Game of Status", American Economic Review,
+September 2004, 94 (4), 1085-1107.
+
+
+  * Ireland, N. J. (2001) Optimal income tax in the presence of status
+effects", Journal of Public Economics, 81.2, 193-212.
+
+
+  * Drechsel-Grau, M., Schmid, K. (2014) Consumption savings decisions
+under upward looking comparisons", Journal of Economic Behavior and
+Organization, 106, 254-268.
+
+
+  * Bilancini, E., and L. Boncinelli (2012) Redistribution and the notion
+of social status", Journal of Public Economics 96.9: 651-657.
+
+
+  * Moav, O., and Z. Neeman (2012) \Saving rates and
+poverty: The role of conspicuous consumption and human capital", The
+Economic Journal, 122(563), 933-956.
+
+
+
+
+
+
+§ MODEL
+
+Agents and endowments. There are J agents, with typical agent j. Each agent is endowed with income w_j > 0 and a fixed identity θ_j, from a finite set of possible identities Θ. Further, agents are embedded in a network that is represented by a J × J non-negative matrix G. We say that agent k is a neighbour of j if G_jk > 0, and assume that j is not her own neighbour (so G_jj = 0 for all j).[The network is weighted and directed as we allow G_jk∈ℝ^+ and G_jk≠ G_kj, respectively.]
+Let I(θ) = { k : θ_k = θ} be the set of agents who have identity θ. Then I(θ_j) = { k : θ_k = θ_j } is the set of agents who have the same identity as j (including herself). 
+
+
+Consumption and prototypes. Agents simultaneously choose consumption of a visible good, x_j ≥ 0. 
+Each identity θ has a prototype, Y(θ) = 1/|I(θ)|∑_k ∈ I(θ) x_k, which is simply the average consumption of agents who have that identity. 
+
+Additionally, each agent j has a reference point, Y_j = ∑_k ∈ I(θ_j) G_jk x_k, which is a weighted sum of the consumption of their neighbours who share their identity. The reference point is similar to the prototype, but (a) only includes people j is connected to in the social network, and (b) allows the weights to be heterogeneous. 
+
+
+Benefits and costs: status and dissonance. Agent j gets status benefits that is increasing in her identity's prototype, Y(θ_j), and in her own consumption, x_j. We assume that own consumption and prototypical consumption are substitutes. Agent j also experiences dissonance costs when her consumption differs from her reference point. 
+Specifically, we assume dissonance is convex in the difference between her own consumption and her reference point. 
+
+Note that j's prototype depends on everyone who shares her identity, but her reference point depends only on her neighbours who share her identity. As is standard, there is also a convex cost of consumption. Both absolute and marginal cost of consumption are decreasing in own income. This cost function captures spending on other goods (which are outside of our model) in a reduced form way; implicitly assuming some concave benefits from consuming the unmodelled goods. 
+
+
+Preferences. In order to fix ideas and to show the results more clearly, we impose a particular functional form. We assume agents have the following preferences:
+
+
+    u_j = α x_j + Y(θ_j) + γ x_j/Y(θ_j)_Status - β (x_j - Y_j)^2 _Dissonance - 1/w_j x_j^2 _Cost,
+
+with α > 0, β > 0, γ > 0. This strong functional form assumption allows for more transparent analysis, especially regarding the role of the network. In <Ref>, we replace <Ref> with a far more general functional form and show that there is still a unique equilibrium. The generalisation does not provide new economic insight, but does suggest that our results are driven by the social identity framework rather than by the particulars of the functional form we chose.
+
+Recall that Y(θ_j) = 1/|I(θ_j)|∑_k ∈ I(θ_j) x_k and Y_j = ∑_k ∈ I(θ_j) G_jk x_k. With this functional form, our assumption that the status benefits are increasing in Y(θ_j) may not always be met. We will impose an assumption on the network structure that guarantees it is always met in equilibrium. Economically, it amounts to a requirements that the dispersion in network centrality is `not too high'. As is standard, we will also impose an assumption on the network structure needed to guarantee that our measure of network centrality is well-defined. Before stating these assumptions formally, we first need to introduce some machinery. 
+
+
+Machinery. 
+First, only the with-identity links in the network will matter. This is because we assumed that in both the status and dissonance functions, an agent only cares about those who share her identity. So we work with a sub-network containing only the within-identity links. Formally, define G such that G_jk = G_jk·1{θ_j = θ_k} for all j,k, where 1{·} is an indicator function. 
+
+
+Second, a variant on Bonacich centrality (a well-known measure of network centrality) will play a key role in our results. The definition is a little terse, but is intuitively much the same as a standard measure of Bonacich centrality, except that the network is weighted by the importance of the dissonance function, β, and by agent's income, w_j. For this, define a network H where H_jk = β w_j/β w_j + 1G_jk for all j,k. It will be important to bear in mind that the network H is a function of G, agents' incomes, and of β.
+
+ 
+The centrality of agent j is:
+
+    C^b_j = ∑_k[ ∑_t=0^∞ H^t  ]_jk·w_k/β w_k + 1
+
+
+
+In the interest of brevity, and because it the centrality measure that matters in our model, we will just refer to this as `centrality'.
+It will also be convenient to define the average centrality of agents with a given identity. Formally, let C̅^b_θ = 1/|I(θ)|∑_k ∈ I(θ) C^b_k be the average centrality of agents with identity θ. 
+
+Unsurprisingly, we need centrality to exist and be well-defined. A standard result is that centrality is well-defined if and only if the largest eigenvalue of the matrix is strictly less than one <cit.>. This condition ensures that the infinite sum in <Ref> converges. The result extends straightforwardly to our definition of centrality.
+
+
+    |λ_1| < 1, where λ_1 is the largest eigenvector modulus of the matrix H.
+
+
+Finally, we need to ensure that the status benefits are increasing in both arguments in equilibrium. A necessary and sufficient condition for this is that no agent's centrality is `too far' above the average. Formally, it amounts the the following restriction.
+
+
+Assume that for all agents j: 
+
+    C^b_j < 2 Z^3/1 + (1 + α) Z,   where  Z = α/4C̅^b_θ_j + 1/4· (αC̅^b_θ_j)^0.5· (αC̅^b_θ_j + 8 γ/α)^0.5.
+
+
+
+Intuitively, each agent's centrality must be less than some (increasing) function of the average centrality.[The right-hand side of the restriction in <Ref> is increasing in C^b_j. This is because centralities must always be (weakly) larger than one – so the same must be true of average centrality.] 
+To our knowledge, there is no strong intuition behind the particular functional form on this restriction. Nevertheless, it is clear that the higher the average centrality, the more dispersion in centralities is possible.
+
+We impose <Ref> and <Ref> throughout the paper. We will not restate this for each result. 
+
+
+Discussion: the prototype and reference point. Before moving the the results, it is helpful to briefly discuss the prototype and reference point in our model. Existing literature on social identity theory in economics assumes the prototype and reference point are exogenous. A limitation of this assumption is that it allows for inconsistency between what is considered `normal' behaviour for an identity group (the prototype) and the actual behaviour of that group. In the short run, this inconsistency may be natural. But in the long run,it is a demanding assumption – in effect it requires that society never learns that its prototype is incorrect.
+
+In contrast, we suppose that both the prototype and the reference point are determined endogenously. That is, our model demands consistency between the prototypical consumption of an identity group and the actual consumption of people in that group. We view this consistency as an important in our setting. As a further step, we allow the reference point to depend on an agent's position in a network. This follows the now-common notion that people compare themselves to those they actually interact with (e.g. <cit.>). The trade-off is that we treat identity as fixed in order to keep the model tractable and ensure clean results.
+
+
+
+
+
+
+
+
+§ RESULTS
+
+This section analyses behaviour in our model. We characterise equilibrium behaviour, present some comparative statics, and show the link between homophily – the tendency for people to be connected to those similar to themselves – and consumption. These results are of independent interest, and are also needed to to show how the model explains the stylised facts (which we show in the next section).
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Solving the Game
+
+Having set out the necessary machinery and assumptions in <Ref>, we can immediately characterise equilibrium behaviour.
+
+
+There exists a unique equilibrium. For all j equilibrium consumption is:
+    
+    x_j^* = 1/2( α + γ/1/4αC̅^b_θ_j + 1/4 (αC̅^b_θ_j)^0.5· (αC̅^b_θ_j + 8 γ/α)^0.5) C_j^b.
+
+
+
+The dissonance costs create pressure to keep up with their neighbours. This creates strategic complementarities in consumption. An agent wants to consume more visible goods when her neighbours consume more. Further, agents' best responses are linear in neighbours' consumption. It is easy to see this by differentiating <Ref> with respect to x_j and rearranging. These two features are the common thread to many models where Bonacich centrality (or, in our case, a generalised version of it) plays an critical role. As is standard in these types of games, the restriction on the eigenvalue of the network is there to ensure that these strategic complementarities are not too strong. If it is violated, then successive best responses leads to unbounded growth in consumption, so there would be no equilibrium.
+
+Were we to follow <cit.> and assume that the prototype, Y(θ_j), was fixed exogenously, then the actions would be directly proportional to centrality. The average centrality would not appear. We would simply replace the terms containing average centrality with an exogenous term Y(θ_j). This would be mathematically very similar to a range of network games, including models of social comparisons (<cit.> and <cit.> perhaps being the closest).
+
+An additional feature of our model, however, is that actions also depend on the average centrality of agents who share the same identity. Importantly, average centrality works in the opposite direction to own centrality. This is because of assumption there is some substitutability between own consumption and average consumption within an identity. Higher average consumption within an identity raises the status of that identity, all else equal reducing the incentive for a given agent to consume.
+
+
+
+ §.§ Comparative Statics
+
+With the exact characterisation of equilibrium behaviour provided by <Ref>, the relationship between centrality and consumption is clear. And some links between the primitives of the model and centrality will come from examining our definition of centrality (<Ref>).
+
+Before stating the result, it is helpful to recall that agents only care about those who share their identity. So only the within-identity links that matter. This observation allows us to restrict attention to agents who share an identity when thinking about comparative statics results. It is clear that an agent j is unaffected by others who have a different identity.[This is because it is G, not G, that appears in H. So if agents j,k have different identities, there cannot be a walk between them. This is obviously a consequence of our assumption that each agent has only one identity. Allowing for multiple identities, with some held more strongly than others, would relax this stark benchmark, but at a significant cost to tractability.] 
+
+The first part of the result shows how income and the network each affect centrality. The second part then shows how centrality affects equilibrium consumption.
+
+
+Assume that agents j and ℓ share an identity and that there is a walk from ℓ to j. 
+
+(i) C_j^b is strictly increasing in w_ℓ, and in G_ℓ m, for all j,ℓ. 
+    
+(ii) x_j^* is strictly increasing in C_j^b, and (iii) strictly decreasing in C̅^b_θ_j, for all j.
+
+
+
+
+
+
+
+
+
+
+Higher income for agent j increases her consumption directly. This is because the marginal cost of consumption falls when w_k rises, so re-optimisation leads to an increase in own consumption. This pushes up her neighbours' reference points, in turn increasing their consumption (due to the strategic complementarities). This then pushes up her neighbours' neighbours' reference points, and so on. This process affects everyone who is connected to k in the network G. Mathematically, this appears in two places. An increase in w_ℓ increases elements in the matrix H, and it also increases w_ℓ/(β w_ℓ + 1) (which appears once when summing over k in <ref>).
+
+Adding, or strengthening, links in G has much the same effect. It pushes up agent ℓ's reference point, increasing her consumption. This increases her neighbours' reference points, and hence their consumption, and so on.
+
+
+The second part of the result is due to the dissonance function. The higher an agent's own centrality, the higher her reference point, and hence the more she needs to consume in order to conform with those around her. The third part is due to the substitutability between status derived from her own consumption and status derived from her identity. When average centrality in her identity group is high, then average consumption in her identity group is also high. This in turn brings high status benefits from her identity. And this reduces the marginal benefit of status from her own consumption, due to the substitutability between the two sources of status. Overall, higher average centrality in her identity group pushes her consumption down.
+
+
+
+ §.§ Homophily
+
+Proposition <ref>(i) shows the impact of adding (or removing) links from the network. While not directly related to the two main stylised facts – which concern the impact of changes in income – we can characterise the impact of somewhat richer changes to the network structure. Specifically, we focus on the impact of changing a link. This amounts to removing a link between agents j and k, and replacing it with a link between agents j and ℓ.[This is, in effect, adding a link and removing a link. Note that this is not covered by <Ref>(i). That result shows the qualitative impact of adding or removing a link, but does not show the net impact of both together.] 
+
+We noted above that links between agents with different identities behave very differently from links between agents with the same identity. This has important implications for the role of homophily – the tendency for people to be disproportionately connected ti those similar to themselves, and one of the most ubiquitous features of social networks (see, for example, <cit.> or <cit.> for detailed discussions of homophily). 
+
+Before going further, we now need a formal definition of homophily. There are many in the literature, but we use the homophily index as one of the simplest available. It requires agents one group, from a set of possible groups. The identities, θ, map neatly onto these groups. The homophily index is specific to an agent and simply measures the proportion of total links that are with agents in the same group. 
+
+
+
+For an agent j in group θ:
+
+    ϕ_j = ∑_k ∈ I(θ) G_jk/∑_k G_jk
+
+
+
+It is clear from this definition that changing a link G_jk to a link G_j ℓ only affects the homophily index of agent j. So, when examining the effect of changing a link, we can conflate changes in the homophily index for agent j and homophily more broadly without problems. There are four possible cases when changing a link G_jk to a link G_j ℓ: (1) j,k share an identity and ℓ has a different one, (2) j, ℓ share an identity and k has a different one, (3) j has a different identity to both k and ℓ, and (4) j,k and ℓ all share an identity.[In case (3) it does not matter whether or not k and ℓ have the same identity because the link between k and ℓ (if it exists) is not affected.]
+
+It follows easily from the definition that homophily falls in case (1), rises in case (2), and does not change in cases (3) and (4). To see this, first notice that the denominator on the right-hand side of <ref> never changes – this is because we are only changing links. So homophily falls if changing the link reduces the number of within-identity links. Similarly, homophily rises if changing the link increases the number of within-identity links. And finally homophily is unaffected if the number of within-identity links is unaffected.
+
+Since it is only within-identity links that matter for equilibrium behaviour (recall that it is the matrix G rather than the matrix G that appears in the definition of centrality), changing a link in the network G in a way that increases homophily adds a links in the network G. This observation allows us to say that increasing homophily increases agents' centralities. The reverse is obviously also true: changing a link in the network G in a way that reduces homophily removes a link in the network G, so centralities fall. It also means that swapping a between-identity link for a different between-identity link has no effect. This is because neither link appear in the matrix G – the one that matters for behaviour.
+
+The final case, where we swap one between-identity link for an different between-identity link is a little trickier. Here, both adding the link G_j ℓ and removing G_jk have an impact on behaviour. However, high centrality is driven by being linked to people who themselves have high centrality. So j's centrality rises if swapping the link connects her to someone who has higher centrality. Conversely, if the swap connects her to someone with lower centrality, her own centrality falls. 
+
+
+
+    Swap a link G_jk for a link G_j ℓ. 
+
+    (i) if homophily rises, then C_m^b rises for all m ∈ I(θ_j), 
+ 
+    (ii) if homophily falls, then C_m^b falls for all m ∈ I(θ_j), 
+ 
+    (iii) if homophily does not change and j has a different identity to both k and ℓ, then centralities do not change 
+
+    (iv) if homophily does not change and j,k, ℓ have the same identity, then C_m^b rises for all m ∈ I(θ_j) 
+    if and only if C_ℓ^b > C_k^b.
+
+
+
+
+§ EXPLAINING THE STYLISED FACTS
+
+The main aim of this section is to show how the model explains the two stylised facts set out by <cit.> (so far explained by signalling models) and <cit.> (so far explained by social comparisons models). We then also show how the model explains a related stylised fact set out by <cit.>: that people with higher income are more sensitive to changes in other's income.[A large part of the contribution in <cit.> is to extend the analysis in <cit.> to a lower income country – South Africa. He replicates the findings for Black South Africans (who make up the large majority of the South African population), but not for White South Africans. But the finding regarding sensitivity is novel to <cit.>.] 
+
+While the comparative statics from the previous section link the primitives of the model to centrality, and centrality to behaviour, an important limitation is that they do not cleanly link the primitives directly to behaviour. This is because a change in agents' incomes, or in the network structure, affects both a given agent's centrality and, in turn, the average centrality in their identity group. But own centrality and average centrality in the identity group impact behaviour in different directions. So in general it is not obvious which of these two forces dominates.
+
+We therefore focus on a stark benchmark network where agents are split up into disconnected groups – sometimes called an `Islands model'. This allows us to isolate the two effects, and cleanly show how we get behaviour consistent with the first stylised fact when one of these effects wins out, and behaviour consistent with the second stylised fact when the other effect wins out.
+
+
+
+
+
+
+
+In this benchmark network, agents with a given identity θ are separated into N different partitions such that there are no links between agents in different partitions. In other words, each agent is on an “island” and there are no links between different islands. In order to clarify the analysis we also assume that each partition is strongly connected within G and that there are many partitions.[A walk in G from j to k is a sequence of agents j, j',...,k',k such that G_j'k'>0 for all j',k' in the sequence. A network is strong connected if there exists a walk from j to k for all j and all k.]
+
+
+Agents are partitioned into N equal-sized, disjoint subsets, called `islands' with typical island n.
+
+    
+  * There are many islands (N is large).
+    
+  * For any pair of agents j,k with the same identity:
+    
+        
+  (i) if j and k are in different islands, they are not connected 
+        
+  (ii) if j and k are in the same island, there is a walk from one to the other in G 
+    
+
+
+
+This stylised benchmark is helpful because changes to primitives affect an agent's own centrality if and only if they occur within her partition. Changes that happen in other partitions affect the average centrality but not her own centrality. And changes that happen within her partition affect only her partition. Because there are, by assumption, many partitions, the impact on her own centrality dominates the effect on average centrality. This feature allows us to isolate the two forces. When a change happens within an agent's partition, the impact on her own centrality with dominate the effect on average centrality. Conversely, when a change happens outside of an agent's partition, there is an impact on average centrality but not on own centrality.
+
+Before stating our result, it is helpful to quickly recap our two main stylised facts. This will help make the link between them and the behaviour predicted by our model easier to see.
+
+
+    
+  * People in the US consume less visible goods when the average income of others of the same race in their state is higher <cit.>.
+    
+  * People in the Netherlands consume more when the average income of their geographic neighbours increases <cit.>.
+
+
+With these in mind, we can now state our result.
+
+
+    Consider an islands network. Suppose income increases for some set of agents with identity θ in partition n. 
+
+    (i)  Consumption decreases for all agents  with identity θ in partitions other than n, 
+
+    (ii) Consumption increases for all agents with identity θ in partition n.
+    
+
+
+
+The mapping from <Ref> into the two stylised facts is fairly direct. An increase in income in other partitions corresponds to higher average income of others of the same race in the same state.[We use the term `income' in our model for convenience. Where appropriate, this should be taken to mean the `permanent income' examined in the empirical analysis.] 
+<Ref> then suggests the reason for this observed behaviour is that agents whose identity group has higher average consumption gains more status from their identity. They then feel less need to seek status through their own consumption of visible goods. The mapping is obviously not perfect. There could be changes to the income distribution that affect both the agent's own partition and other partitions. <Ref> is silent in this case because the comparative static is ambiguous. 
+
+An increase in income within an agent's partition – i.e. amongst her neighbours – causes her to increase her consumption. This is because the higher consumption by her neighbours (which is due to their own higher income) raises the bar for what is considered normal. So dissonance costs push her to consume more herself. Again, the mapping is not perfect. <Ref> only applies to agents who share the same identity, and there is no absolute guarantee that geographic neighbours in fact have the same identity. But there are two main reasons to believe this result is useful. First, there is well-documented prevalence of homophily and sorting along geographic lines <cit.>. So it is likely that an agent's neighbours actually do share her identity. Second, the formal result in fact only requires that an agent only shares her identity with one person whose income increased.  
+
+
+
+
+
+
+
+
+
+
+
+ §.§ The third stylised fact
+
+Closely related to our first stylised fact, <cit.> finds that a given change in reference group income has a larger impact on the conspicuous consumption of richer agents than of poorer agents. In other words, richer agents are more sensitive to changes in others' income. This relationship is monotonic – the richer the agent, the more sensitive they are.  
+
+Our model is completely consistent with this stylised fact. It is relatively straightforward to see from the characterisation of equilibrium consumption in <Ref>. Changes in the income of agents on other islands only affects average centrality, C̅^b_θ_j. The marginal impact of a change in average centrality, and hence of a change in the income of agents on other islands, is increasing in an agent's own centrality. This is because own centrality, C_j^b, multiplies a function of average centrality in <Ref>. And own centrality is increasing income in own income (<Ref>).
+
+Putting this together yields the result: richer agents are more sensitive to changes in the income of other people (for tractability, our formal result restricts this to people on other islands). 
+
+
+    Suppose j and k are on different islands. The marginal effect of k's income on j's consumption is increasing in j's own income.
+
+
+Intuitively, this is connected to the fact that agents with higher income have a lower marginal cost of consumption, and this marginal cost rises more slowly. When the marginal status benefits of consumption rises, as happens when the prototype Y(θ_j) decreases, it should not come as a surprise that agents increase their consumption in response. But by how much they adjust their consumption depends on how quickly the marginal cost rises as consumption rises. It is precisely higher income agents whose marginal costs rise more slowly, and so who make greater adjustments. 
+
+Again, it is useful to note that our model does not rely critically on the income of the very poorest agent (as in the signalling model used by <cit.> and <cit.>). Rather, it focuses on the average income more directly.
+
+
+
+
+§ INEQUALITY
+
+
+We now turn to the role of income inequality – a natural question for a model of social identity and conspicuous consumption. However, a key barrier to tractable results is the multiple ways income affects centrality. Recall that in <Ref> H is a function of the w_j's. This means that higher income of one agent plays an analogous role to having stronger (outward) links. So increasing the income of some agents and lowering the income of others is in a sense equivalent to makes some links stronger and others weaker. It is in general difficult to characterise the overall impact this complex change to the network structure has on centrality. Compounding this, income also appears outside of H as a weighting.
+In most network games where Bonacich centrality plays a role, only the network structure appears in H, and income does not weight its components.[See, for example, <cit.>.]
+
+Given this, we take two different simplifying approaches. They give complementary views of the role of inequality. First, we use the Islands Network from <Ref> and assume that all agents on a given island have the same income. This simplifies the link between income and centrality, while retaining rich network effects. It allows us to focus more clearly on the interaction of network structure and inequality.
+
+The second approach imposes a regularity condition on the network. It assumes agents are equally well connected to each different `level' of income. This simplifies the network effects, while retaining a richer link between centrality and income. It allows us to focus on the role of income inequality directly, abstracting from the more complex network effects.
+ 
+
+
+
+
+
+
+ §.§ Island Networks
+
+
+The simplifying assumption. Here, we use the islands model from the previous section (<Ref>) and add the assumption that income is homogeneous within each island.
+
+This simplifies matters significantly as changes in income on an island must all be in the same direction. It also gives equal weight to all components of the infinite sum.[The islands model is critical here – it creates disconnected components with no interactions between them. When calculating centrality, we can consider each island in isolation – giving us most of the benefits of homogeneous income from a tractability perspective, while retaining significant heterogeneity in society as a whole. The assumption that all islands are the same size also helps make results cleaner here: it allows a transfer of income from one island to another to have a symmetric impact, in the sense of raising per-capita income on one island by the same amount as it reduces per-capita income on the other.] 
+While the assumption shuts down the possibility of inequality on a given island, it still permits significant inequality in society as a whole (as there are many islands). 
+
+
+Two building blocks. At this point, it is helpful to define a property of the network and show a key implication of our simplifying assumption. They will be useful for the substantive results.  
+
+
+The density of the network on an island n is: 
+
+    D_n 
+        = ∑_j,k[ ∑_t=0^∞G^t ]_jk
+
+
+
+Readers familiar with network games where Bonacich centrality plays a critical role will notice that our definition of `density' is the sum of centralities of all agents on the island (using the `standard' definition of Bonacich centrality that only involves the network, rather than our variant that also includes income). 
+It is not exactly density as conventionally defined. Nevertheless, it captures some measure of how closely connected agents on an island are on aggregate. As some reassurance, adding links within the island always increases our density metric. 
+
+The islands network guarantees that agents are only connected to – both directly and indirectly – others on the same island (at least amongst with the same identity; as discussed earlier links to those with a different identity are ignored and so play no role). So our assumption that income is homogeneous within each island means that everyone an agent is connected to – both directly and indirectly – has the same income. It turns out that this drastically simplifies the equation for centrality in <Ref>.
+
+
+Suppose the network is an islands network (a la <Ref>), all islands are the same size and all agents on a given island, P_n, have the same income, w_n.
+
+Then C_j^b = w_n·∑_k (I - G)^-1_jk for all j ∈ P_n.
+
+
+So in this special case, centrality is linear in income. 
+
+This result is useful because it separates out the impact of income from the impact of the network. 
+We now know how income affects centrality subject to these benchmark assumptions, and we know from earlier how centrality affects consumption. This allows us to analyse the impact of redistribution in a much more tractable manner. 
+
+
+Impact of redistribution. We focus on a particularly simple form of redistribution – a transfer from one island to another, keeping average income in society constant. It is reduces income inequality if the island receiving the transfer is poorer than the island giving the transfer (and similarly increases income inequality if the island receiving is richer).[We will not consider the case where the transfer changes which island is richer. In that case, the impact on inequality is ambiguous.] 
+Richer changes to the income distribution can obviously be built from a series of these changes.
+
+Interestingly, the impact of this transfer on overall consumption does not depend on whether it increases or decreases inequality. Rather, it depends on the relative densities of the networks on the two islands that are party to the transfer. If the island receiving the transfer has a denser network, then the increase in centrality there is greater than the fall in centrality on the island giving the transfer. Then, average centrality rises, which in turn reduces consumption on all other islands.
+
+
+
+Consider a transfer of income from island n to island n'.
+
+    
+  (i) Consumption falls on island n and rises on island n',
+    
+  (ii) Consumption on all other islands rises if and only if D_n' < D_n.
+    
+
+
+
+The first part of this result is unsurprising. When everyone on an island has more income, they consume more. There is a direct effect of higher income, due to the lower marginal cost of consumption. And there is an indirect effect through the dissonance cost, as higher consumption by others on the island raises the references level an agent feels pressure to conform to. Recall that there is also a third effect – higher consumption by others in an agent's identity group raises her status, and in doing reduces the marginal status benefit of her own consumption. But with many islands, this effect is dominated by the other two. Everything works in reverse when everyone on an island has less income.
+
+For all the islands whose own income remains unchanged, so the only force that applies here is how the transfer from island n to n' affects average centrality. Average centrality – and hence consumption – rises if and only if the (positive) effect on island n' is larger than the (negative) effect on island n.
+
+It is the simplified characterisation of centrality in <Ref> allows us to determine this. From it, we can see that the marginal impact of a change in income on an agent's centrality is some measure of their network connectedness. The density measure in <Ref> calculates the total of this `connectedness' across all agents on the island. So the density measure captures the marginal impact on total centrality of changing income on an island. From this it is clear that average centrality rises if and only if the marginal (positive) impact on island n' is larger than the marginal (negative) impact on island n.
+
+
+
+
+ §.§ The fourth stylised fact
+
+The fourth stylised fact also comes from <cit.>, and relates to inequality. They find that higher dispersion in income (i.e. higher inequality) among Whites in a given state leads to lower consumption of visible goods (i.e. conspicuous consumption) by Whites in that state. But they find the reverse for Blacks: higher dispersion in income among Blacks in a given state leads to higher consumption of visible goods by Whites in that state.[Note that there appears to be a typographical error in <cit.>. The sentence states they “find that greater dispersion of reference group income is associated with lower visible spending for minorities”. But this conflicts with the regression results, reported in Table VII (column 2), on which the paragraph is based.]
+
+<Ref> can help us understand this seemingly puzzling empirical finding. According to the result, a change in inequality an either raise or lower agents' consumption. The direction of the effect depends critically on the relative network density of the agents whose incomes change. If the agents whose incomes rise have denser social networks than the agents whose income falls, then everyone else's consumption falls (by `everyone else', we mean the agents whose income did not change). And the same applies equally in reverse.
+
+Therefore, we can rationalise the empirical finding as being due to differences in network structures across different racial groups. One drawback of this explanation is that it relies on the density of agents' social networks, which is likely to be challenging to measure empirically. Nevertheless, we view it as an advance on the explanation proposed by Charles et al's  signalling model, which must appealing to racial differences in preferences to explain this empirical finding. Note that <cit.> repeatedly stress shortcomings of an explanation relies on racial differences in preferences. They say that “[t]his argument is consistent with the basic facts, but is essentially tautological. Moreover, an argument centered on racial differences in preferences yields no prediction that is falsifiable in the data.”
+
+So despite empirical challenges, we at least progress beyond a reliance on racial differences in preferences. 
+
+
+
+
+ §.§ A Regularity Condition
+
+The simplifying assumption. Our second approach imposes a regularity condition on the network. We need each agent to have the same number of neighbours (in the weighted sense) with those of each different income level. For example, if there are two different level of income, w_1 and w_2, then each agent must have L neighbours with income w_1, and also L neighbours with income w_2.[Note that if every agent in the network has a unique income level, then this assumption requires that the network is complete. But we believe that there being a small number of different levels of income is a reasonable first-order approximation of reality.] 
+Note that this is stronger than assuming the network is regular (which would only require that each agent has L links in total, regardless of the neighbours' incomes).
+
+To formalise this, assume there are M different levels of income, with typical income level w_m. Then let ℳ = { j : w_j = w_m } denote the set of agents with income w_m. The assumption is then:
+
+
+Each agent j has exactly L links to agents k ∈ℳ, for each ℳ.[This is in the weighted sense. This is a restriction on the total weight of links from agent j to each group 𝒵. It does not matter if there are a small number of strong links, or a large number of weak links.]
+
+
+Intuitively, <Ref> ensures that how strongly j is connected to others is unrelated to how much income those other people have. Colloquially, she is, on average, connected to “Mr and Mrs Average”. This retains the network effects, but “smooths them out” so that they apply equally throughout the network. 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A building block. Similar to our use of the islands network with homogeneous income on each islands, <Ref> allows us to find a significantly simplified expression for agents' centralities. In turn, this will allow us to analyse the impact of changing inequality much more precisely.
+
+
+    Under <Ref>; C_j^b = βΓ_j / (1 - Γ̅), where Γ_j = w_j/β w_j + 1 Γ̅ = 1/J∑_k Γ_j.
+
+
+In contrast to <Ref>, an agent's centrality here is concave in her own income.[If J=1 (i.e. there is only one agent in total), then an agent's centrality is linear in her own income. But thin this case, there is no network, so this should not be a surprise. And related to <Ref>, centrality is also linear in income if all agents have the same income.]  
+This is because we are allowing agents to interact with others who have different incomes. It shows that interactions between people with different incomes is an important part of the role networks have in determining consumption. 
+
+
+Impact of redistribution. Again, we focus on a transfer of income from agents with income w_z to agents with income w_z'. This is the same as our transfer in the previous subsection, except the network structure is different – here agents with different incomes interact with one another in the network. It reduces in equality if the agents receiving the transfer are poorer than the agents giving the transfer (and similarly increasing inequality if the agents receiving are richer).
+
+Here, the impact of the transfer depends critically on whether it increases or decreases inequality (i.e. whether it's regressive or progressive). This is closely linked to the concavity we can see in <Ref>. Because Γ_j = w_j/β w_k + 1 is concave in w_j, a given change in income has a larger impact on lower income agents. So the mean, Γ̅, rises when there is a regressive transfer of income (from a richer group to a poorer group). This then pushes the centrality of agents not party to the transfer down. Finally, this pushes average centrality down and hence consumption up.
+
+
+Consider a transfer of income from agents in group ℳ to agents in group ℳ' such that the ranking of the two groups' income does not change. 
+
+    
+  (i) Consumption falls for agents in ℳ and rises for agents in ℳ'.
+    
+  (ii) Consumption of all other agents rises if and only if the transfer increases inequality (i.e. w_m' > w_m).
+    
+  (iii) Average consumption rises if and only if the transfer reduces inequality (i.e. w_m' < w_m).
+
+
+
+An agent consumes more when her income rises (part (i)). This is because her own income effect dominates the network effects. This is standard. But consumption is concave in her own income.[This is fairly transparent from the equation in <Ref>, but we provide a proof in the appendix for completeness.] 
+Intuitively, this is linked to the convex cost function (<Ref>). So a regressive transfer (one which makes the rich richer and the poor poorer, increasing inequality) reduces average consumption. 
+
+But this reduction in average consumption has a spillover effect for everyone else: lower average consumption reduces the status from the identity group. This drop in status induces agents who were not party to the transfer to increase their own consumption to compensate – due to the substitutability between status from own consumption and status from the identity (part (ii)).
+
+Finally, part (iii) notes that the increase in consumption by the agents not (directly) affected by the transfer cannot dominate the decrease in consumption by the directly affected ones. To see why this must be the case, bear in mind that the agents not party to the transfer are only responding to a fall in average consumption. If their own response led average consumption to be higher than before the transfer, then they would respond to that by reducing their consumption – leading to a contradiction. 
+
+The key insight is that a transfer which increases inequality has an important impact on agents whose incomes do not change. This is because agents derive status from consumption by others who share their identity. And this `status identity' is substitutable with status derived from their own consumption – so lower status identity leads them to compensate with more of their own consumption. The result apes existing results in the conspicuous consumption literature, but our mechanism is novel. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+abbrvnat
+tocsectionReferences
+
+equationsection
+thmsection
+propsection
+defnsection
+remsection
+lemsection
+corsection
+
+
+
+§ PROOFS
+
+
+
+ §.§ Proposition 1
+
+
+First, we find the best response function, holding Y(θ_j) constant (the first derivative is linear and decreasing in x_j, and is positive when x_j = 0, so a unique solution exists). Note that we have substituted in Y_j = ∑_k ∈ I(θ_j) G_jk x_k = ∑_k G_jk x_k.
+
+    x_j^*    = 1/2( β w_j + 1/w_j)^-1 [α +  γ Y(θ_j)^-1 + 2 βG_jk x_k]
+
+Some rearranging yields:
+
+    x_j - β w_j/β w_j + 1G_jk x_k = 1/2w_j/β w_j + 1 [α +  γ Y(θ_j)^-1]
+
+Then recall that we defined the matrix H such that H_jk = β w_j/β w_j + 1G_jk. We now substitute this in to the equation and switch to matrix notation. (In an abuse of notation use the same notation for a vector of constants as for the equivalent scalar, and we let 𝐖 denote the vector where the j^th entry is w_j/β w_j + 1. And recall that ⊙ is the Hadamard, or element-wise, product.)
+
+    𝐱 - H 𝐱 = 1/2𝐖⊙ [α +  γ Y(θ)^-1].
+
+We have assumed that |λ_1| < 1 (<Ref>),[Where λ_1 is the largest eigenvector modulus (i.e. the largest in magnitude) of the matrix H.], so (I - H) is invertible (<cit.>). Therefore:
+
+    𝐱 = (I - H)^-1·1/2𝐖⊙ [α +  γ Y(θ)^-1].
+
+Reverting to scalar notation:
+
+    x_j = ∑_k [(I - H)^-1]_jk·1/2w_j/β w_j + 1 [α +  γ Y(θ_k)^-1].
+
+A comment: by construction, G is a block matrix with off-diagonal blocks being all zero. This is because an agent j can only have a link to agent k if j and k share the same identity (i.e. if θ_j = θ_k). Therefore H is also a block matrix. As a result, H_jk will be zero whenever j and k have different identities (i.e. whenever θ_j ≠θ_k). An important consequence of this is that θ_k = θ_j whenever [(I - H)^-1]_jk > 0. This means we can treat the term Y(θ_k)^-1 as a constant an pull it out of the sum. So
+
+    x_j = 1/2 [α +  γ Y(θ_k)^-1] ·∑_k [(I - H)^-1]_jk·w_j/β w_j + 1,
+
+and we then using <Ref> gives us:
+
+    x_j = 1/2 [α +  γ Y(θ_j)^-1] C_j^b.
+
+This would give equilibrium actions for a fixed value of the prototype. 
+But Y(θ_j) is endogenous. Recall that by definition Y(θ_j) = 1/|I(θ_j)|∑_k ∈ I(θ_j) x_k. Hence, by substituting our equation for consumption into this definition:
+
+    Y(θ_j)    = 1/|I(θ_j)|∑_k ∈ I(θ_j)1/2 [α +  γ Y(θ_j)^-1] C_k^b
+    
+        Y(θ_j)    = 1/2 [α +  γ Y(θ_j)^-1] ·1/|I(θ_j)|∑_k ∈ I(θ_j) C_k^b.
+
+The term after the dot is, by definition, C^b_θ_j (the average Bonacich centrality of agents with identity θ_j, see definition immediately after <ref>). Using this definition and rearranging terms yields: 
+
+    2 Y(θ_j)^2 - αC̅^b_θ_j Y(θ_j) - γC̅^b_θ_j = 0
+
+Then apply the usual quadratic formula and ignore the negative root (because we rule out x_j < 0 by assumption and hence cannot have Y(θ_j)<0).
+
+    Y(θ_j) = 1/4αC̅^b_θ_j + 1/4 (αC̅^b_θ_j)^0.5· (αC̅^b_θ_j + 8 γ/α)^0.5
+
+Finally, substitute in this equilibrium value of Y(θ_j) into our equation for x_j^*.
+
+    x_j^* = 1/2( α + γ/1/4αC̅^b_θ_j + 1/4 (αC̅^b_θ_j)^0.5· (αC̅^b_θ_j + 8 γ/α)^0.5) C_j^b
+
+
+
+
+
+ §.§ Proposition 2
+
+
+(i) An increase in w_ℓ strictly increases w_k / (β w_k + 1) when k = ℓ, and leaves it unchanged whenever k ≠ℓ. It also weakly increases all elements of the matrix H. Because there is a walk from ℓ to j by assumption, the (j ℓ)^th entry of the infinite sum is strictly positive. It is then clear from the definition (<Ref>) that centrality strictly increases.
+
+An increase in G_ℓ m strictly increases the (ℓ m)^th entry of the infinite sum. Because there is a walk from ℓ to j by assumption, this also increases the (j ℓ)^th entry of the infinite sum.
+
+(ii) and (iii) follow straightforwardly from the characterisation of equilibrium consumption in <Ref> (<Ref>).
+
+
+
+
+ §.§ Corollary 1
+
+
+Notice that adding/removing/changing links that appear in G but not in G has no impact on consumption. (i) for the link swap to increase homophily, it must be the case that ℓ has the same identity as j, but k does not (i.e. ℓ∈ I(θ_j) and k ∉ I(θ_j)). This means the link G_j ℓ also appears in G, but the link G_jk does not. So removing the link G_jk has no impact, and this becomes equivalent to just adding G_j ℓ. With this observation, the result follows from <Ref>(i). (ii) inverse of part (i). (iii) Follows from the observation that links not in G have no impact, and neither G_jk nor G_j ℓ appear in G. (iv) This result is essentially a restatement of  Proposition 3 in <cit.> (and a generalisation, Proposition G.4, ibid). It follows from the proofs of those results.
+
+
+
+
+ §.§ Corollary 2
+
+
+The marginal effect of others' income on an agent j's consumption is d x_j^*/d w_k. When j,k are on different islands, then w_k does not affect C_j^b (<Ref>). Using this, plus the equation for x_j^* from <Ref> yields:
+
+    d x_j^*/d w_k = 1/2 C_j^b ·d/d w_k( γ/1/4αC̅^b_θ_j + 1/4 (αC̅^b_θ_j)^0.5· (αC̅^b_θ_j + 8 γ/α)^0.5).
+
+We know from <Ref> that C_j^b is strictly increasing in w_j. And because there are many islands (by assumption, in <Ref>), w_j has a negligible impact on C̅^b_θ_j. Therefore d x_j^*/d w_k is increasing in w_j.
+
+
+
+
+ §.§ Proposition 3
+
+
+We prove this in two steps. First, we show the link between income and centrality. Second, we show the link between centrality and consumption. 
+
+Step 1. Notice that under <Ref>, each island is a disconnected component in the network G. Therefore, we can treat each island separately. So we can replace G with G_n, which is the graph for island n only.[This is because the matrix for an islands network can be arranged as a diagonal block matrix, and it is well known that the inverse of a diagonal block matrix is the inverse of each block arranged along the diagonal.] 
+(i) Then it is clear that wealth of agent j, w_j, does not affect the centrality of agent k, C_k^b, if agents j and k are only different islands. This is because the definition of C_k^b does not contain w_j. 
+(ii) <Ref> shows that C_ℓ^b is increasing in w_k if there is a walk from j to ℓ. For two agents on the same island, this walk exists by assumption (<Ref>).
+(iii) An increase in w_j increases Bonacich centrality for some agents, and leaves centrality unaffected for the rest. Therefore an increase in w_j must increase average Bonacich centrality of agents with the same identity as j, C^b_θ_j.  
+
+Step 2. The result then follows from <Ref>. (i) We know from Step 1 that for all agents k on a different island to j, an increase in w_j increases C^b_θ_j = C^b_θ_k, but does not affect C_k^b. It is then clear from <Ref> that x_k^* is decreasing in w_j. (ii) We know from Step 1 that for all agents k on the same island to j, an increase in w_j increases both C^b_θ_j = C^b_θ_k and C_k^b. The assumption (in <Ref>) that there are many islands means that the impact on C^b_θ_j = C^b_θ_k must be small relative to the effect on C_k^b. Therefore the increase in C_k^b (which pushes x_k^* up) must dominate the increase in C^b_θ_j = C^b_θ_k (which pushes x_k^* down).
+
+
+
+
+
+
+ §.§ Lemma 1
+
+
+Start with the definition of Bonacich centrality (<Ref>).
+
+
+
+First, notice that under <Ref>, each island is a disconnected component in the network G. Therefore, we can treat each island separately. So we can replace G with G_n, which is the graph for island n only. Second, recall that all agents on island n have the same income, w_n.
+
+    C^b_j = ∑_k[ ∑_t=0^∞( β w_n/β w_n + 1G_n )^t  ]_jk·w_n/β w_n + 1.
+
+Now the w_n/β w_n + 1 term at the end (far right) can be pulled out the front, and the same term that appears within the infinite sum can be separated from the G_n term, and can also be pulled out of the summation over k.
+
+    C^b_j = w_n/β w_n + 1·∑_t=0^∞( β w_n/β w_n + 1)^t ·∑_k[ ∑_t=0^∞G^t  ]_jk
+
+Then apply the standard closed form solution for the infinite sum of a geometric series (which always exists because w_n/β w_n + 1 < 1 by construction), and notice that the result (partially) cancels with the w_n/β w_n + 1 term. This yields:
+
+    C^b_j = w_n ·∑_k[ ∑_t=0^∞G^t  ]_jk
+
+Finally, to complete the proof, the Neumann series representation gives the fact that
+
+    ∑_k[ ∑_t=0^∞G^t  ]_jk = ∑_k (I - G)^-1_jk.
+
+
+
+
+
+
+ §.§ Proposition 4
+
+
+The proof follows the same structure as the proof to <Ref>.
+
+It follows straightforwardly from <Ref> that centrality rises on island n' and falls on island n. Next, we can express average Bonacich centrality as the sum over agents on each island, then summed over islands (rather than the sum over agents directly), finally divided by J (the number of agents in society). That is:
+
+    C^b_θ = 1/J∑_n ∑_j ∈ P_n w_n ∑_k (I - G_n)^-1_jk.
+
+Then, we can pull w_n through the middle summation, and then substitute in for <Ref>. This yields:
+
+    C^b_θ = 1/J∑_n w_n D_n
+
+It is then clear that a transfer from island n to n' increases average Bonacich centrality if and only if D_n' > D_n.
+
+(i) For the islands n and n', the effect of own centrality dominates the effect on average centrality (because there are many islands). Centrality, and hence consumption, rises [resp. falls] for island n' [resp. n].
+
+(ii) For the other islands, own centrality does not change. Only average centrality matters. The result then follows from the claims shown above, and the observation that consumption is decreasing in average centrality.
+
+
+
+<Ref> implies that ∑_k Γ_k G_jk - 1/J∑_k Γ_k ·∑_k G_jk = 0, where Γ_k ≡w_k/β w_k + 1.[This is equivalent to corr(G_jk, Γ_k) = 0.]
+
+
+Begin with ∑_k Γ_k G_jk, and notice that Γ_k is a constant for all k ∈𝒵. Therefore, ∑_k Γ_k G_jk = ∑_z Γ_z ∑_k ∈𝒵G_jk. Then <Ref> requires that each agent j has exactly L links to agents with income w_z, for each z. This means ∑_k ∈𝒵G_jk = L for all j and for all z. Therefore ∑_k Γ_k G_jk = L ∑_z Γ_z. Next, it must be the case that 1/J∑_k Γ_k = 1/Z∑_z Γ_z (these are just two different ways of calculating the average value of Γ, and J ≡ n · Z). Finally, using the assumption that ∑_k G_jk = 1 for all j, and the implication that L = 1/Z. Together, these yield ∑_k Γ_k G_jk = 1/J∑_k Γ_k ·∑_k G_jk
+
+
+
+
+ §.§ Lemma 2
+
+
+We begin by restating the definition of Bonacich centrality (<Ref>), with Γ_k ≡w_k/β w_k + 1:
+
+    1/β C^b_j = ∑_k[ ∑_t=0^∞( ΓG)^t  ]_jk·Γ_k.
+
+We have moved the β term to the left-hand side simply to avoid carrying it around in the calculations.
+Expand out the infinite sum and consider each term.  
+We deal with the first two terms individually, and then all further terms by induction. 
+
+Clearly ∑_k Γ_k 1{ j=k } = Γ_k. Then ∑_k Γ_k (ΓG)_jk = ∑_k Γ_k Γ_j G_jk = Γ_j ∑_k  Γ_k G_jk. Apply <Ref>, and the assumption that ∑_k G_jk = 1. This yields: = Γ_j ·Γ̅. 
+
+Induction: for t=2;
+
+    ∑_kΓ_k (ΓG)^2_jk   = ∑_kΓ_k ∑_s (ΓG)_js (ΓG)_sk		= ∑_kΓ_k ∑_sΓ_jG_jsΓ_sG_sk		= Γ_j∑_sΓ_sG_js∑_kΓ_k  G_sk
+
+By <Ref> and the assumption that ∑_jG_sj = 1: ∑_sΓ_s G_js= Γ∑_sG_js = Γ. Applying this twice (to the sum over k and then to the sum over s) yields: ∑_k (ΓG)^2_jk	= α_j·Γ^2.
+
+Now assume that for t=τ > 2, ∑_k (ΓG)^τ_jk = Γ_j·Γ^τ. Then show for t=τ+1. 
+By definition ∑_k (ΓG)^τ+1_jk = ∑_j [(ΓG) · (ΓG)^τ]_jk. For clarity of exposition, we let (ΓG)^τ_jk = 𝒜_jk.
+
+    ∑_k (ΓG)^τ+1_jk = ∑_k∑_sΓ_jG_js𝒜_sk		= Γ_j∑_sG_js∑_k𝒜_sk
+
+
+Using the assumption for t=τ, namely ∑_k𝒜_sk = Γ_sΓ^τ, yields: ∑_k (ΓG)^τ+1_jk = Γ_j·Γ^τ∑_sG_isΓ_s. Applying <Ref> and the assumption that ∑_jG_sj = 1 once more yields Γ_j·Γ^τ + 1. By induction, we have calculated each term in the infinite sum.
+
+Having calculated each term in the infinite sum, we can now express it more simply: 1/β C_j^b = Γ_j (1 + Γ + Γ^2 + Γ^3 + ...) Therefore, finally:
+
+    C_j^b = β Γ_j/1 - Γ.
+
+
+
+
+
+ §.§ Proposition 5
+
+
+Consider a transfer of income such that: (i) w_z ↑, w_z'↓, (iii) w_z + w_z' unchanged. Now notice that Γ_j is increasing and concave in w_j (by the definition of Γ_j). Step 1. So the transfer causes: (i) Γ_z ↑, (ii) Γ_z'↓, and (iii) (Γ_z + Γ_z') ↑ if and only if w_z < w_z' [and hence Γ̅↑ if and only if w_z < w_z', because the transfer does not affect Γ_z” for any z”≠ z, z'].
+
+Step 2. In turn these imply: (i) C^b_z↑, (ii) C^b_z'↓, and (iii) C̅^b_θ↑ if and only if w_z < w_z'. Note that for (i), C_z^b is increasing in both Γ_z and Γ̅, but these may move in different directions. However, there are many islands by assumption, so the the transfer must have a much larger impact on Γ_z than on Γ̅, so the effect of Γ_z dominates. The same argument applies to (ii).
+
+Step 3. Finally, recall the definition of x_j^* from <Ref>. Our findings in Step 2 in turn imply that: (i) x_z^* ↑, (ii) x_z'^* ↓, and (iii) x_z”^* ↑ if and only if w_z < w_z'. Again, point (i) [resp. point (ii)] rely on the assumption that there are many islands to ensure that the effect of the change in C^b_z [resp. C^b_z'] dominates the effect of the change in C^b_z'.
+
+
+
+
+
+
+
+ §.§ Additional Proofs
+
+Here, we formalise the claims we made about the necessity and sufficiency of Assumptions <ref> and <ref>. 
+
+
+    (i) Bonacich Centrality exists and is well defined if and only if <Ref> holds.
+
+    (ii) In equilibrium, α x_j + Y(θ_j) + γ x_j/Y(θ_j) is increasing in Y(θ_j) if and only if <Ref> holds.
+
+
+    (i) Bonacich centrality is well-defined if and only if the infinite sum ∑_t=0^∞( β/β + 1/𝐰G)^t converges. In this case then, by a Neumann Series representation, it equals (I - β/β + 1/𝐰G)^-1. <cit.> then shows that this matrix inverse is well-defined and non-negative if and only if |λ_1| < 1.
+
+    (ii) Start with the equilibrium status benefit S = α x_j^* + Y^*(θ_j) + γ x_j^* Y^*(θ_j)^-1. Then substitute in x_j^* = 0.5 (α + Y^*(θ_j)^-1) C_j^b (shown in the proof to <Ref>), and take partial derivatives with respect to Y^*(θ_j). This (plus some rearranging) yields:
+
+    d S/d Y^*(θ_j)   = 1 - 0.5 C_j^b (Y^*(θ_j))^-2 (1 + α + (Y^*(θ_j))^-1)
+
+Some further rearranging shows that this is greater than zero if and only if
+
+    C_j^b < 2 (Y^*(θ_j))^3/1 + (1+α) Y^*(θ_j).
+
+
+
+
+
+
+
+
+Noticing that Y^*(θ_j) = α/4C̅^b_θ_j + 1/4· (αC̅^b_θ_j)^0.5· (αC̅^b_θ_j + 8/α)^0.5 completes the result (this is shown in the proof to <Ref>).
+
+
+
+
+
+§ NON-PARAMETRIC MODEL
+
+This section generalises the main model from <Ref> by relaxing the functional form assumptions made in <Ref>. It first restates the model in its more general form, and then shows that this generalised model has a unique equilibrium. 
+There is no new economic insight gained by doing this. But it aims to provide reassurance that the results are driven by the general social identity framework and not by the particulars of the functional forms we chose. 
+
+
+Model. The model is as in <Ref>, except we replace <Ref> with the following, more general, utility function for a typical agent:
+
+    u_j = S(Y(θ_j), x_j) - D(x_j - Y_j) - C(x_j, w_j)
+
+where all functions are continuously differentiable with S'_1>0, S'_2>0, S”_22≤ 0, S”_12<0, C'_1>0, C”_11 > 0 C'_2<0, C”_12<0, D'>0 if x_j>Y_j, D'<0 if x_j<Y_j, and D”>0.  
+
+
+Equilibrium. We now show that the model has a unique equilibrium. Without an explicit functional form, the strategy we used to prove <Ref> will not work here. We prove it in several steps. First, we show every agent always has a unique best response (taking as given the actions of all other agents), and characterise it. Second, we show bounds on the derivatives of the best response with respect to the agent's reference point. Specifically, we show an agent responds less than one-for-one to a change in her reference point. Third, we state a variant of the Mean Value Theorem that applies to vector valued functions. Finally, we use steps two and three to show the best responses are a contraction mapping and use the Banach Fixed Point Theorem to complete the proof. 
+
+
+
+    There exists a unique equilibrium.
+
+
+
+
+Step 1: Unique Best Responses. For any agent j, a unique best response always exists. Consider the first and second partial derivatives with respect to x_j.
+
+    d u_j/d x_j≡ Z    = S'_2 + S'_1/|I(θ_j)| - D' - C'_1, 
+    d^2 u_j/d x_j^2≡d Z/d x_j   = S”_22 + 2 S”_12/|I(θ_j)| + S”_11/|I(θ_j)|^2 - D” - C”_11,
+
+and recall that S”_22≤ 0, D” > 0, and C”_11 > 0.[Notice that because Y(θ_j) = 1/|I(θ)|∑_k ∈ I(θ) x_k by definition, x_j appears in Y(θ_j). However, as j's identity group becomes large, the impact this has becomes small. In contrast, x_j does not appear in Y_j.] 
+Hence d^2 u_j / d x_j^2 < 0, and so the first derivative is monotonically decreasing in x_j. Therefore there is a unique best response (i.e. x_j^* that solves d u_j / d x_j = 0). 
+
+
+
+
+Step 2: Bounding responses. An agent's best response changes less than proportionately in the actions of other agents.
+We want to find d x_j^*/d x_k, but we don't have an expression for x_j^*. Nevertheless, we can find it from some things we do have expressions for. 
+Suppose we start at a best response, and then x_k increases by Δ units (where Δ is small). Then Z increases by Δd Z/d x_k. To restore a best response (i.e. return Z to 0), we need x_j to `undo' that increase in Z. Since Z is decreasing in x_j, it must increase by γΔ units, such that γΔd Z/d x_j + Δd Z/d x_k = 0. Therefore 
+
+    γ = d B_j(𝐱_-j)/d x_k = - d Z/d x_k / d Z/d x_j
+
+
+
+
+We have an expression for Z, and hence can express d Z/d x_k and d Z/d x_j as follows:
+
+    d Z/d x_k   = G_jk· D” + S”_12/|I|·S”_11/|I|^2  > 0, 
+    d Z/d x_j   = - D” + 2 S”_12/|I| + S”_11/|I|^2 - C”_11 < 0.
+
+Therefore, for all j,k:
+
+    d B_j(𝐱_-j)/d x_k =  G_jk D”  + S”_12/|I|·S”_11/|I|^2/ D” - 2 S”_12/|I| - S”_11/|I|^2 + C”_11
+
+
+Upper bound.
+Since S”_12≤ 0 and S”_11≤ 0 by assumption, we must then have
+
+    d B_j(𝐱_-j)/d x_k≤ G_jk· D”/ D” - 2 S”_12/|I| - S”_11/|I|^2 + C”_11
+
+Then recall that C”_11 > 0 and V” < 0. So D” - 2 S”_12/|I| - S”_11/|I|^2 + C”_11 > D”. Therefore we must have
+
+    d B_j(𝐱_-j)/d x_k < G_jk
+
+Lower bound. Since G_jk≥ 0 by assumption, we must also have
+
+    d B_j(𝐱_-j)/d x_k   ≥S”_12/|I| + S”_11/|I|^2/D” - 2 S”_12/|I| - S”_11/|I|^2 + C”_11
+       ≥ -1 · - S”_12 + S”_11· |I|^-1/  |I| · (D” + C”_11) - (2 S”_12 + S”_11· |I|^-1)
+
+At this point we impose a purely technical assumption. Assume that (D” + C”_11) ≥ - S”_12 + S”_11· |I|^-1.
+
+Intuitively, this requires that the substitutability between own action and average action in the identity group is “not too high” in the status benefits function. Mathematically, it is sufficient to guarantee that 
+
+    d B_j(𝐱_-j)/d x_k   ≥ - 1/|I|
+
+To summarise: we have d B_j(𝐱_-j)/d x_k∈ (-1/|I|, G_jk) for all j,k. 
+
+
+
+Step 3: Mean Value Inequality. Here, we restate a result from <cit.>.[Adjusting the notation to align with our model.]
+
+    Let U ⊂ℝ^J be open and B:U →ℝ^J be differentiable on U with continuous derivative. Let 𝐱, 𝐲∈ U be such that [𝐱,𝐲] ⊂ U. Then
+    
+    ||B(𝐲) - B(𝐱)|| ≤max{ ||B'(𝐜)|| : c ∈ [𝐱,𝐲] } || 𝐲 - 𝐱 ||
+
+where ||B'(𝐜)|| = max{||B'(𝐜) 𝐱|| : || 𝐱 || = 1 }, and || · || denotes the Euclidean norm in ℝ^J.
+
+
+
+Notice that B'(c) is the J × J Jacobian Matrix. Therefore B'(c) 𝐱 is a J × 1 vector, where the k^th entry is x_k ·∑_j d B_j/d x_k. It is then clear that maximising ||B'(𝐜) 𝐱|| subject to || 𝐱 || = 1 involves finding j ∈max_j ∈ J |∑_j d B_j/d x_k | and placing all weight on that entry.
+
+We know from earlier that -1I| < d B_j/d x_k < G_jk. So |∑_j d B_j/d x_k| < max{∑_j G_jk, 1 }. By assumption ∑_j G_jk < 1 for all k. Notice that this is also independent of the argument that B(·) takes. Therefore we have max{ ||B'(𝐜)|| : c ∈ [𝐱,𝐲] } < 1.
+
+
+
+
+
+
+Step 4: Contraction Mapping. It is well-known that (ℝ^J, ||·||), where ||·|| is the Euclidean norm, constitutes a complete metric space. Therefore the function B: ℝ^J →ℝ^J is a contraction mapping if there exists some k ∈ [0,1) such that ||B(𝐲) - B(𝐱)|| ≤ k || 𝐲 - 𝐱 || for all 𝐱,𝐲∈ℝ^J. 
+
+Let k = max{ ||B'(𝐜)|| : c ∈ [𝐱,𝐲] }, where ||B'(𝐜)|| = max{||B'(𝐜) 𝐱|| : || 𝐱 || = 1 }. We have shown in part 3 above that this is strictly between 0 and 1. So B(·) is a contraction mapping. Therefore, by the Banach Fixed Point Theorem, there exists a unique fixed point 𝐱^*. This completes the proof.
+
+
+
+
+    
+
+    w_j ↑ x_j ↑
+
+
+    w_j ↑ C'_1(x_j,w_j) ↓ (for any given x_j) x_j ↑.
+
+
+
+    Suppose α→ 0 and β > 0. Then w_k ↑ for k ∈ B(θ_j)  x_j ↑.
+
+
+    With α→ 0, the status benefits drop out. Recall that w_k ↑ x_k ↑ (by the remark above). Then x_k ↑ Y_j ↑. (i) If x_j < Y_j then D(·) and D'(·) are decreasing in x_j and increasing in Y_j.  Y_j ↑ D' ↑ x_j ↑. (ii) If x_j ≥ Y_j then D(·) and D'(·) are increasing in x_j and decreasing in Y_j.  Y_j ↑ D' ↓ x_j ↑.
+
+    This is a bit hard to follow without some proper explanation of the best response functions.
+
+
+
+    Suppose α > 0 and β→ 0. Then w_k ↑ for k ∈ B(θ_j)  x_j ↓.
+
+
+    With β→ 0, the dissonance costs drop out. Recall that w_k ↑ x_k ↑ (by the remark above). Then x_k ↑ Y_j ↑ S'_1 ↓ x_j ↓.
+
+
+

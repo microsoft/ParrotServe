@@ -1,0 +1,1197 @@
+
+
+[
+    Wenzheng Kuang
+    March 30, 2023
+==================
+
+
+
+
+We analyze the touring regions problem: find a (1+ϵ)-approximate Euclidean shortest path in d-dimensional space that starts at a given starting point, ends at a given ending point, and visits given regions R_1, R_2, R_3, …, R_n in that order. 
+
+Our main result is an 𝒪(n/√(ϵ)log1/ϵ + 1/ϵ)-time algorithm for touring disjoint disks. We also give an 𝒪 (min(n/ϵ, n^2/√(ϵ)) )-time algorithm for touring disjoint two-dimensional convex fat bodies. Both of these results naturally generalize to larger dimensions; we obtain 𝒪(n/ϵ^d-1log^21/ϵ+1/ϵ^2d-2) and 𝒪(n/ϵ^2d-2)-time algorithms for touring disjoint d-dimensional balls and convex fat bodies, respectively.
+
+
+
+
+§ INTRODUCTION
+
+
+We analyze the touring regions problem: find a (1+)-approximate Euclidean shortest path in d-dimensional space that starts at a given starting point, ends at a given ending point, and visits given regions R_1, R_2, R_3, …, R_n in that order. We present algorithms for the cases where the regions R_i are constrained to be unions of general convex bodies, convex fat bodies, or balls. To the best of our knowledge, we are the first to consider the cases where regions are disjoint convex fat bodies or balls in arbitrary dimensions. Consequently, our algorithms use techniques not previously considered in the touring regions literature (<ref>). Our algorithms work under the assumption that a closest point oracle is provided; closest point projection has been extensively used and studied in convex optimization and mathematics <cit.>.
+
+Most prior work focuses on d=2 or significantly restricts the convex bodies. The special case where d=2 and all regions are constrained to be polygons is known as the touring polygons problem. Dror et al. <cit.> solved the case where every region is a convex polygon exactly, presenting an |V|n log|V|/n-time algorithm when the regions are disjoint as well as an |V|n^2 log|V|-time algorithm when the regions are possibly non-disjoint and the subpath between every two consecutive polygons in the tour is constrained to lie within a simply connected region called a fence. Here, |V| is the total number of vertices over all polygons. Tan and Jiang <cit.> improved these bounds to |V|n and |V|n^2-time, respectively, without considering subpath constraints. 
+
+For touring nonconvex polygons, Ahadi et al. <cit.> proved that finding an optimal path is NP-hard even when polygons are disjoint and constrained to be two line segments each. Dror et al. <cit.> showed that approximately touring nonconvex polygons with constraining fences is a special case of 3D shortest path with obstacle polyhedra, which can be solved in e^4/ϵ^2 time by applying results of Asano et al. <cit.>, where e is the total number of edges over all polyhedra. Mozafari and Zarei <cit.> improved the bound for the case of nonconvex polygons with constraining fences to |V|^2n^2/^2 time. Ahadi et al. <cit.> also solve the touring objects problem exactly in polynomial time, in which the R_i are disjoint, nonconvex polygons and the objective is to visit the border of every region without entering the interior of any region.
+
+For touring disjoint disks, a heuristic algorithm with experimental results was demonstrated by Chou <cit.>. Touring disjoint unit disks was given in a programming contest and was a source of inspiration for this paper; an n/ϵ^2-time algorithm was given <cit.>. The main result that we show for disks is superior to both of these algorithms.
+
+Polishchuk and Mitchell <cit.> showed the case where regions are constrained to be intersections of balls or halfspaces in d dimensions to be a special instance of a second-order cone program (SOCP), which runs in d^3c^1.5n^2log1/ϵ time using SOCP time bounds as a black box. Here, c is the number of halfspace or ball constraints.
+
+The touring regions problem can be seen as the offline version of chasing convex bodies, in which convex bodies are given sequentially, and the algorithm must choose which point to go to on a convex body before the next convex body is revealed. Bubeck et al. <cit.> and Sellke <cit.> showed competitive ratios of 2^d and √(d logn), respectively. 
+
+
+
+ §.§ Formal problem description
+
+
+
+Given n sets of points (regions) R_1, R_2, …, R_n each a subset of ^d, a starting point p_0, and an ending point p_n+1,[For convenience, some of our results define the degenerate regions R_0≜{p_0} and R_n+1≜{p_n+1}. ] define the function D (^d)^n → as D(p_1, p_2, …, p_n) ≜∑_i=0^np_i-p_i+1_2.
+
+
+Let 𝒜≜{(p_1, p_2, …, p_n) |∀ i, p_i ∈ R_i}⊆ (^d)^n. Find a tuple of points (tour) (p_1',p_2',…,p_n')∈𝒜 such that D(p_1', p_2', …, p_n') ≤ (1+)min_x ∈𝒜 D(x).
+
+
+
+
+
+We consider three main types of regions: unions of convex bodies, convex fat bodies with constant bounded fatness, and balls.
+
+
+
+We call a region R ⊂^d a union of k convex bodies if R = C_1 ∪ C_2 ∪…∪ C_k and each C_i is convex and compact. The C_i are allowed to intersect.
+
+
+We primarily restrict to the case where k ≤1. 
+
+
+
+We say that a convex region R ⊂^d is fat if there exist balls h, H with radii 0<r_h ≤ r_H, respectively, that satisfy h ⊆ R ⊆ H ⊂^d and r_H/r_h =1. 
+
+
+Fat objects have been previously considered in a variety of computational geometry settings <cit.>.
+
+One element of the problem that has not yet been determined is how we represent the sets of points R_1, R_2, …, R_n; this depends on what we restrict the regions to be:
+
+    
+  * Unions of convex bodies: We are given each region in the form R_i = C_i, 1∪ C_i, 2∪…∪ C_i, k_i. Each of the convex bodies C_i, j may be accessed via a closest point oracle. This oracle allows us to call the function _i,j(p) on some point p, which returns the point p' ∈ C_i, j such that p-p' is minimized in 1 time (note that p' is unique due to convexity).
+    
+    
+  * Convex fat bodies: We have access to each of the convex bodies R_i via a closest point oracle. Additionally, for each region, we are given the radius r_h of the inscribed ball (as described in <ref>), and a constant upper bound on the quantity r_H/r_h over all regions. 
+    
+    
+  * Balls: For each ball in the input we are given its center  c ∈^d and its radius r ∈_>0.
+
+
+We consider the 2-dimensional and general d-dimensional cases separately. In the d-dimensional case, we assume d is a constant (for example, we say 2^d = 1). We also consider the possibly non-disjoint versus disjoint cases separately, where the latter is defined by the restriction R_i ∩ R_j = ∅ for all 0≤ i<j≤ n+1. 
+
+
+
+  
+*Motivation for our model
+When considering general convex bodies,  it is natural to augment the model of computation with oracle access to the bodies, including membership, separation, and optimization oracles <cit.>. In fact, when solving the touring regions problem for general convex bodies, a closest point oracle is necessary even for the case of a single region, where the starting point is the same as the ending point and the optimal solution must visit the closest point in the region to the starting point. Closest point oracles can be constructed trivially when the bodies are constant sized polytopes or balls. Closest point oracles have been used in the field of convex optimization <cit.>.
+
+Our representations for unions of convex bodies, convex fat bodies, and balls, have the nice structure that each “contains” the next: we can trivially construct a closest point oracle for balls. Additionally, a ball is a specific type of convex fat body, which in turn is a specific type of convex body. We justify considering convex fat bodies as they are in some sense “between” balls and general convex bodies: they obey some of the packing constraints of balls. Considering unions of convex bodies allows us to represent a variety of non-convex and disconnected regions.
+
+
+
+ §.§ Summary of results
+
+
+Our results and relevant previous results are summarized in <ref> and <ref>. We obtain a bound of n^2d-1(loglog n+1/^2d-2) time for the most general case of touring unions of convex bodies in d dimensions, where each region is a union of 1 convex bodies. This significantly improves to n/^2d-2 time if we restrict the regions to be disjoint convex fat bodies. Notice that this latter bound is linear in n; in fact, we show that any FPTAS for touring convex fat bodies can be transformed into one that is linear in n (<ref>). If the regions are further restricted to be balls, we can apply our new technique of placing points nonuniformly, and the time complexity improves to n/^d-1log^21/+1/^2d-2, which roughly halves the exponent of 1/ϵ compared to the convex fat bodies algorithm while retaining an additive 1/ϵ^2d-2 term. 
+
+Our 2D-specific optimizations allow us to obtain superior time bounds compared to if we substituted d=2 into our general dimension algorithms. In most cases, we save a factor of 1/ϵ. Notably, for convex fat bodies, we obtain an algorithm with linear time dependence on both n and 1/ϵ. For our main result of touring disjoint disks, we combine our optimizations for convex fat bodies and balls with 2D-specific optimizations.
+
+theoremnonIsectDisksTwoD
+
+There is an n/√()log1/+ 1/-time algorithm for touring disjoint disks.
+
+
+
+With a new polygonal approximation technique, we use the result of <cit.> for touring polygons as a black box to obtain algorithms with a square root dependence on 1/ϵ, most notably an n^3.5/√(ϵ)-time algorithm for touring 2D convex bodies and an n^2/√(ϵ)-time algorithm for touring 2D disjoint convex fat bodies.
+
+Approximation algorithms for touring polygons in 2D have been well-studied. As mentioned in the introduction, Tan and Jiang <cit.> improved on Dror et al.'s <cit.> exact solution for convex polygons, while Mozafari and Zarei <cit.> approximated unions of nonconvex polygons, which we include in <ref> for reference. One of our 2D-specific techniques can be used to improve the result of  <cit.> from |V|^2n^2/^2 to |V|nlog |V|loglog n+|V|n/log|V|/+|V|^2α(|V|) time, where α is the inverse Ackermann function, obtaining a strictly better running time for the problem of touring possibly non-disjoint unions of polygons in 2 dimensions.
+
+The c^1.5n^2log1/ϵ-time result for touring d dimensional convex bodies given by <cit.>, where each body is an intersection of balls and half spaces (with a total of c constraints) can be applied specifically to balls to yield an n^3.5log1/ϵ-time algorithm. Our algorithms for touring disjoint disks and balls all take time linear in n and are thus superior when ϵ is not too small.
+
+
+
+
+
+
+
+
+
+ §.§ Organization of the paper
+
+
+We start in <ref> by considering unions of general convex bodies, using the closest point projection, pseudo-approximation, and 2D-specific optimizations. We then use the ideas of packing and grouping to obtain algorithms for convex fat bodies in <ref>. Finally, we optimize specifically for balls in <ref> by placing points non-uniformly.
+
+
+
+ §.§ Summary of techniques
+
+
+Here, we introduce the techniques mentioned in the previous subsection.
+
+
+
+  
+*Placing points uniformly (<ref>)
+
+A general idea that we use in our approximation algorithms is to approximate a convex body well using a set of points on its boundary. For previous results involving polygons or polyhedra <cit.>, this step of the process was trivial, as points were equally spaced along edges. In order to generalize to convex bodies in arbitrary dimensions, we equally space points on boundaries using the closest point projection oracle with a bounding hypercube (<ref>). 
+
+After discretizing each body into a set of points, we can solve the problem in polynomial time using dynamic programming (DP): for each point, we find and store the optimal path ending at it by considering transitions from all points on the previous region.
+
+
+
+
+
+
+
+
+
+
+
+  
+*Pseudo-Approximation (<ref>)
+
+Let OPT be the optimal path length for touring regions. Consider some guess of the optimal path length for touring convex bodies L_APPROX≥ OPT, and then consider constructing a hypercube of side length 2L_APPROX centered at the starting point. We then equally space points on the boundary of the portions of the convex bodies which are inside the hypercube, and solve the problem assuming that the optimal path must travel through these points, which adds some additive error proportional to L_APPROX to the optimal path length. This is called a pseudo-approximation because the error bound only holds if L_APPROX≥ OPT, and if L_APPROX is much bigger than OPT, the additive error is very large.
+
+The idea for using this pseudo-approximation to compute an actual approximation is to start with some naive large approximation of the optimal path length, and then continuously guess smaller values of the optimal path length and run the pseudo-approximation as a subroutine to generate better approximations, eventually finding a constant approximation in loglogn iterations. Once a constant approximation is found, the pseudo-approximation algorithm becomes an actual approximation algorithm, and is then used to find a (1+ϵ)-approximation. This method was used previously by <cit.> and <cit.>. An exposition about pseudo-approximation can be found in <cit.>.
+
+
+
+  
+*2D-specific optimizations (<ref>)
+
+Previous approximation algorithms for related problems discretize the boundary of each convex region using 1/ϵ points. We present a new approach to approximate each boundary using a convex polygon with 1/√(ϵ) vertices (<ref>). This allows us to use previous exact algorithms for touring convex polygons as black boxes. 
+
+A separate approach is to use additively weighted Voronoi diagrams (<ref>) to optimize dynamic programming (DP) transitions from quadratic to near-linear time. When we additionally assume the input shapes are disjoint, we use properties of Monge matrices to optimize the transitions to expected linear time (<ref>).
+
+
+
+  
+*Packing and grouping (<ref>)
+While our general algorithm for unions of convex regions has runtime (n^2d-1/^2d-2 ), we are able to improve this to n/^2d-2 time for convex fat bodies. The key ideas behind this improvement are packing and grouping.
+
+We use a simple packing argument to show that the path length for visiting n disjoint convex fat bodies with radius r must have length at least Ω(r · n) for sufficiently large n (<ref>). This was used by <cit.> for the case of unit disks. However, it is not immediately clear how to use this observation to obtain improved time bounds when convex fat regions are not all restricted to be the same size.
+
+The idea of grouping is to split the sequence of regions into smaller contiguous subsequences of regions (groups). In each group, we find the minimum-sized region, called a representative region, which allows us to break up the global path into smaller subpaths between consecutive representatives. The earlier packing argument now becomes relevant here, as we can show a lower bound on the total length of the optimal path in terms of the sizes of the representatives.
+
+
+
+  
+*Placing points non-uniformly (<ref>)
+
+Previous approximation methods rely on discretizing the surfaces of bodies into evenly spaced points. For balls, we use the intuition that the portion of the optimal path from one ball to the next is “long” if the optimal path does not visit the parts of the surfaces that are closest together. This allows us to place points at a lower density on most of the surface area of each ball, leading to improved time bounds. We use this technique in conjunction with packing and grouping. For disks, we additionally apply the previously mentioned 2D-specific optimizations.
+
+
+
+
+§ CONVEX BODIES
+
+
+
+First, we consider the most general case of convex bodies (or unions of convex bodies), as variations of these techniques also apply to later results. We split the discussion into the general d-dimensional case and the 2-dimensional case. Omitted proofs for this section may be found in <ref>.
+
+
+
+ §.§ General dimensions
+
+
+For the theorems in this section, we let |R_i| denote the number of convex bodies that together union to region R_i. Recall that the convex bodies which make up region R_i may overlap.
+
+The first main ingredient is the closest point projection, which allows us to equally space points on each convex body. The proof is deferred to the appendix.
+
+
+For a convex region C, define closest_C(p)≜argmin_c∈ Cc-p. For any two points p_1 and p_2, closest_C(p_1)-closest_C(p_2)≤p_1-p_2.
+
+
+For any closed set X, let ∂ X denote the boundary of X.
+
+
+
+Given a convex body C for which we have a closest point oracle and a hypercube ℋ with side length r, we can construct a set S⊂ C of 1/^d-1 points such that for all p ∈ (∂ C) ∩ℋ, there exists p' ∈ S such that p-p'≤ r.
+
+
+
+First, we prove the statement for C = ℋ. For this case, it suffices to equally space points on each face of an axis-aligned hypercube defined by [0, r]^d. For example, for the face defined by x_d = 0, we place points in a lattice at all coordinates (x_1, x_2, …, x_d-1, x_d) that satisfy x_d = 0 and x_i = k_i · r for all integers k_i∈[0, 1/]. For C ≠ℋ, equally space points on ℋ as we stated to create a set S_ℋ. Then define S≜{_C(s) | s ∈ S_ℋ}. The proof that S satisfies the conditions of the lemma is deferred to the appendix.
+
+
+Now, we introduce the concept of the pseudo-approximation, which takes in an accuracy parameter γ and an estimate of the optimal path length L_APPROX≥ OPT and reduces each region R_i to a finite set of points S_i ⊂ R_i such that the optimal tour for touring S_i is also a tour for R_i, and has length at most OPT + γ L_APPROX. 
+
+Note that when the regions are possibly non-disjoint, it is not true that the optimal path must visit each ∂ R_i, so more care must be taken. In particular, we use the fact that the only time an optimal path does not visit the boundary of R_i is when it visited the boundary of some region ∂ R_l for some l < i and then remained on the interior of regions R_l+1, R_l+2, …, R_i, in which case the optimal path has moved 0 distance when visiting these regions. This requires more effort to bound the error from the optimal length and makes the dynamic programming transitions more complex, but both algorithms achieve the same time bound when all |R_i| ≤𝒪(1) (that is, when all regions are unions of a constant number of convex bodies). 
+
+
+Given an estimate of the optimal path length L_APPROX and 0 < γ≤ 1, if OPT ≤ L_APPROX, we can construct a valid solution with length at most OPT + γ L_APPROX. If all R_i are disjoint, this construction takes n/γ^2d-2∑_i=1^n-1 |R_i||R_i+1| time. When the R_i are possibly non-disjoint, the runtime increases to n/γ^2d-2max_j|R_j|∑_i=1^n |R_i|.
+
+
+
+
+We construct finite sets of points S_i ⊂ R_i such that there exists a path of the desired length that tours regions S_i. 
+
+Assume OPT≤ L_APPROX and consider a hypercube ℋ centered at p_0 with side length 4 · L_APPROX. We define the construction as follows: For each of the convex bodies 
+C_i, 1, C_i, 2, C_i, 3, …, C_i, |R_i| that make up R_i, apply the construction given in <ref> with ϵ≜γ/16n, r ≜ 4L_APPROX, and set S_i to be the union of all |R_i| constructed sets of points. This uses 1/ϵ^d-1 = n/γ^d-1 points per convex body. 
+
+Given the sets S_i, the path of length OPT + γ L_APPROX can be computed directly using dynamic programming. When the R_i are disjoint, transitions occur from points on S_i to S_i+1. Transitions are slightly different for the possibly non-disjoint case since points in the set S_i can transition to points on S_j for j > i+1. The details of the dynamic programming and the proof that the length of the returned path is bounded above by OPT+γ L_APPROX are deferred to the appendix.
+
+
+
+
+
+
+
+
+
+
+
+
+To convert our pseudo-approximation algorithm into an actual approximation, we start with an n-approximation of the optimal path length; the construction is deferred to the appendix.
+
+
+
+There is a trivial (2n+1)-approximation for touring general regions that can be computed in n time given a closest point oracle.
+
+
+Now, our goal is to construct a constant approximation starting from our trivial approximation. The idea, first presented in <cit.> for the problem of 3D shortest path with obstacles, is to run the pseudo-approximation loglog n times with γ=1. The resulting runtime is much faster than if one were to naively apply <ref> with γ = ϵ/n. The proof is deferred to the appendix.
+
+
+There is an 
+
+n^2d-2loglogn· (∑_i=1^n-1 |R_i| |R_i+1|)-time algorithm that obtains a 4-approximation for touring disjoint unions of convex bodies in d dimensions. If the unions can intersect, the runtime increases to n^2d-2loglogn· (∑_i=1^n |R_i| max_j |R_j|).
+
+
+Finally, we combine all of the lemmas of the section to give the main results.
+
+
+There is an n^2d-2(loglogn+1/^2d-2) · (∑_i=1^n-1 |R_i| |R_i+1|)-time algorithm for touring disjoint unions of convex bodies in d dimensions. When the bodies are allowed to intersect, the runtime becomes (n^2d-2(loglogn+1/^2d-2) · (∑_i=1^n |R_i| max_j |R_j|)).
+
+
+
+
+For the disjoint case, apply <ref> to get a constant approximation in (n^2d-2loglogn· (∑_i=1^n-1 |R_i| |R_i+1|)) time, then use <ref> with L_APPROX as our constant approximation and γ = ϵ/4 to obtain a (1+)-approximation in n^2d-2(1/^2d-2) · (∑_i=1^n-1 |R_i| |R_i+1|) additional time. The possibly non-disjoint case is similar.
+
+
+
+
+ §.§ Two dimensions
+
+
+When the unions of convex bodies are constrained to lie in 2D, there are two main avenues for further improvements: first, by speeding up the dynamic programming (DP) transitions when all regions have been discretized into point sets, and second, by approximating convex bodies by convex polygons instead of sets of points. In this section, “union of convex bodies” refers to a union of 1 convex bodies per region.
+
+
+
+  §.§.§ Dynamic programming speedup
+
+
+The first speedup comes as a result of observing that the DP in <ref> is similar to closest point queries, which can be computed efficiently.
+
+
+
+Given two lists of points B=[b_1,…,b_m] and A=[a_1,a_2,…,a_n] and a real weight [w_1,…,w_n] for each point in A, we can compute min_1≤ j≤ nw_j+a_j-b_i for each i∈ [1,m] in (m+n)log n time.
+
+
+
+
+This problem is equivalent to constructing and querying a Voronoi diagram for additively weighted point sets. Constructing the diagram can be done in nlog n time by a variant of Fortune's algorithm <cit.>. For each b_i we can search the Voronoi diagram for the a_j corresponding to the minimum in log n time.
+
+
+
+The Touring Regions Problem in 2D, where all R_i are sets of finitely many points S_i, can be solved exactly in ∑_i=1^n|S_i|log|S_i| time. 
+
+
+
+
+
+Recall the dynamic programming method from <ref>, which computes the DP value for each point in S_i+1 in |S_i| time, meaning that each pair of adjacent regions contributes |S_i||S_i+1| to the runtime. Substituting <ref> in place of this step, the runtime improves to
+∑_i=1^n-1(|S_i|+|S_i+1|)log |S_i|≤∑_i=1^n|S_i|log |S_i|. 
+
+
+
+For disjoint convex regions, we use a stronger guarantee than <ref>:
+
+
+Given are the vertices of two disjoint convex polygons B=[b_1,…,b_m] and A=[a_1,a_2,…,a_n] in counterclockwise order and real weights [w_1,…,w_n], one for each vertex of A. Define d(i,j)≜ w_j+a_j-b_i. Then  min_1≤ j≤ nd(i,j) may be computed for all i∈ [1,m] in m+n expected time.
+
+
+
+We first discuss the case where all w_i=0. Aggarwal and Klawe <cit.> showed how to reduce the computation of min_1≤ j≤ n, a_j visible from b_id(i,j) and 
+min_1≤ j≤ n, a_j not visible from b_id(i,j) for all i∈ [1,m] to computing the row minima of several Monge partial matrices with dimensions m_1× n_1, m_2× n_2,…, m_k× n_k such that ∑ (m_i+n_i)≤(m+n) in (m+n) time. Here, a_j is said to be visible from b_i if the segment a_jb_i intersects neither the interiors of polygons A nor B. The definition of Monge partial matrix can be found in <cit.>. 
+
+Chan <cit.> recently introduced an m+n expected time randomized algorithm for computing the row minima of an m× n Monge partial matrix.[The Monge partial matrix does not have to be given explicitly; it suffices to provide an oracle that returns the value of any entry of the matrix in 𝒪(1) time.] Thus, the case of w_i=0 can be solved in m+n expected time. 
+
+The key claim that Aggarwal and Klawe <cit.> use to show that all the matrices they construct are Monge partial is as follows:
+
+[Lemma 2.1 of <cit.>, adapted]
+Assume all w_j=0. Suppose j≠ j' and i≠ i'. If a_ja_j'b_i'b_i form a convex quadrilateral in that order then d(i,j)+d(i',j')≤ d(i,j')+d(i',j).
+
+
+The claim above holds by the triangle inequality, and it is easy to check that it still holds without the assumption w_j=0. Thus the algorithm from <cit.> generalizes to the case of nonzero w_j with minor modifications.
+
+
+
+The Touring Regions Problem in 2D, where all R_i are sets of finitely many points S_i that each form a convex polygon in counterclockwise order and the convex hulls of all S_i are disjoint, can be solved exactly in ∑_i=1^n|S_i| expected time.
+
+
+Using these techniques, we obtain the following speedups. <ref> follows due to similar reasoning as <ref>, as a polygon with |V| vertices can be triangulated in |V| time due to Chazelle <cit.>.
+
+
+There is an n^2loglog n+1/-time algorithm for touring disjoint unions of convex bodies in 2D where each union consists of 1 convex bodies. When the bodies are possibly non-disjoint, the bound is n^3loglog n+1/+log 1//n time.
+
+
+
+For the first bound, use <ref> with <ref> to speed up DP transitions. For the second bound, use <ref> but with an extension of <ref> to speed up DP transitions. 
+
+
+
+There is an |V|nlog |V|loglog n+|V|n/log|V|/-time algorithm for touring disjoint unions of polygons. When the polygons are allowed to intersect each other, the time complexity increases by |V|^2α(|V|).
+
+
+
+
+  §.§.§ Polygonal approximation algorithms
+
+
+Up until now, we have approximated the perimeter of a convex region using points. We can alternatively approximate the perimeter using a convex polygon with fewer vertices, which can be computed using our closest point projection oracle. The proof is deferred to the appendix.
+
+
+Given a closest point oracle for a convex region C and a unit square U, we may select ^-1/2 points in C such that every point within C∩ U is within distance  of the convex hull of the selected points.
+
+
+The polygonal approximation allows us to immediately obtain the following result. The proof is deferred to the appendix.
+
+
+
+There is a n^2.5/√()-time algorithm for touring disjoint convex bodies in 2D. When the convex bodies are possibly non-disjoint, the bound is n^3.5/√() time.
+
+
+
+Let's start with the disjoint case.
+We first use <ref> with 1+ϵ = 2 to obtain a path of length L_APPROX that satisfies L_APPROX≤ 2· OPT in o(n^2.5) time.
+
+Consider constructing a square ℋ of side length 2L_APPROX centered at p_0. Let ϵ' = ϵ/8n. 
+Now, we apply <ref> to select a set S_i of size |S_i| ≤ϵ'^-1/2 points on each region R_i, such that every point within R_i ∩ℋ is within distance  ϵ' · L_APPROX of some point in the convex hull of S_i.  
+
+Define C_i to be the convex hull of S_i in counterclockwise order, which we can compute in linear time because the construction given in <ref> returns points that are all on the convex hull. Now, run <cit.> to solve the touring disjoint convex polygons problem for C_i exactly in |V|n = n^2 ϵ'^-1/2≤n^2.5/√(ϵ) time. Recall that |V| is the total number of vertices over all polygons.
+
+It remains to show that the solution we find from the convex polygons problem is a 1+ϵ approximation of the answer. Consider an optimal solution p_0 ∈ R_0, p_1 ∈ R_1, …, p_n ∈ R_n, p_n+1∈ R_n+1. Now, for every i, define p_i' to be the closest point on C_i to p_i, where <ref> guarantees p_i-p_i'≤ϵ' · L_APPROX≤ 2ϵ' · OPT. Thus, 
+
+    ∑_i=0^np_i'-p_i+1'   ≤∑_i=0^np_i-p_i+1 + p_i-p_i' + p_i+1-p_i+1'
+       ≤ OPT + (n+1) · 4ϵ' · OPT ≤ (1+ϵ)OPT,
+
+as desired.
+
+For the intersecting case, we first use <ref> with 1+ϵ = 2 to obtain a constant approximation of the optimal length in o(n^3.5) time. The rest of the proof is identical, except now the C_i can intersect, which changes the runtime of the application of <cit.> to |V|n^2 = n^3 ϵ'^-1/2≤n^3.5/√(ϵ).
+
+
+
+
+§ DISJOINT CONVEX FAT BODIES
+
+
+In this section, we present packing and grouping techniques for touring disjoint convex fat bodies and show how they can be applied to obtain minn/,n^2/√()-time algorithms for touring disjoint convex fat bodies in 2 dimensions. Omitted proofs for this section may be found in <ref>.
+
+
+
+ §.§ Techniques
+
+
+
+
+  §.§.§ Packing
+
+
+A packing argument shows that the length of the optimal path length is at least linear in the number of bodies and the minimum r_h (that is, the minimum radius of any inscribed ball). Intuitively, if we place n disjoint objects of radius at least 1 that are close to being disks on the plane, the length of the optimal tour that visits all of them should be at least linear in n for sufficiently large n. The details are in the appendix.
+
+
+Assume a fixed upper bound on r_H/r_h. Then there exists n_0= 1 such that the optimal path length OPT for touring any n ≥ n_0 disjoint convex fat objects is Ω(n ·min r_h). For balls, n_0=3.
+
+
+The packing lemma allows us to obtain a strong lower bound on the length of the optimal tour in terms of the size of the regions, which will be crucial in proving that our algorithms have low relative error. 
+
+
+
+Let r_i denote the ith largest r_h. For all i≥ n_0, r_i≤OPT/i.
+
+
+
+
+Consider dropping all regions except those with the i largest inner radii and let OPT_i be the optimal length of a tour that visits the remaining disks in the original order. By <ref>, for i≥ n_0, OPT≥ OPT_i≥Ω(i· r_i) r_i≤OPT/i.
+
+
+
+
+The optimal path length for touring n disjoint convex fat bodies is Ω( ∑_i≥ n_0 r_i/logn), and there exists a construction for which this bound is tight.
+
+
+
+
+Using <ref>,
+
+    ∑_i≥ n_0r_i/log n≤∑_i≥ n_0OPT/i/log n≤OPT/log n∑_i=n_0^n1/i≤OPT.
+
+We display the construction in <ref>; we defer the full description to the appendix. The idea is to place disjoint disks of radii 1/1, 1/2, 1/3, … such that they are all tangent to a segment of the x-axis of length 1.
+
+
+
+
+
+
+  §.§.§ Grouping
+
+
+We now show that we can split up the optimal path into smaller subpaths by splitting the sequence of bodies into groups of consecutive bodies, finding the minimum-sized body in each group, and considering the subpaths between these small bodies. By the packing lemma, the sum of the radii of the representatives is small compared to the total path length.
+
+In particular, using groups of size 1/ϵ, we can compress the smallest sized region into a single point, meaning that we can consider touring regions between these points independently from each other. This allows us to turn any polynomial time approximation scheme for touring disjoint convex fat bodies into one that is linear in n. 
+
+
+
+Given an algorithm for touring disjoint convex fat bodies in d dimensions that runs in f(n, ) time, where f is a polynomial, we can construct an algorithm that runs in (n+1) · f(1/, ) time (for ≤(1)).
+
+
+
+We describe an algorithm achieving a (1+())-approximation. To achieve a (1+)-approximation, scale down  by the appropriate factor.
+ 
+Define s ≜⌈1/ϵ⌉ and let n_0 be the constant defined in the statement of <ref>. We will prove the statement for all ϵ satisfying 1/ϵ≥ n_0. First, we divide the n+2 regions (including R_0 and R_n+1) into k=maxn+2/s,2≤n+1 consecutive subsequences, each with exactly s regions (except the starting and ending subsequences, which are allowed to have fewer).
+
+Let M_i be the region with minimum inscribed radius r_h in the ith subsequence; note that M_1=R_0 and M_k=R_n+1. For each i ∈[1,k], pick an arbitrary point p_i∈ M_i. Let OPT' be the length of the shortest tour of R_0,…,R_n+1 that passes through all of the p_i. The p_1,…,p_k form k-1 subproblems, each with at most 2s regions. Therefore, we can (1+)-approximate OPT' by (1+)-approximating each subproblem in
+(k-1) · f(2s,ϵ)≤ (n+1) · f(1/, ) time.
+
+It remains to show that OPT' is a (1+O(ϵ))-approximation for OPT. Let r_i be shorthand for the radius r_h of M_i (r_1=r_k=0). By the definition of fatness, the distance between any two points in M_i is at most r_i. By following through OPT and detouring to each point p_i, we get a path through points p_i with length at most OPT+∑ r_i, and OPT' is at most this amount. 
+
+The last remaining step is to show ∑ r_i≤ϵ· OPT. We apply <ref> to each subsequence, and obtain that r_is≤OPT_i, where OPT_i is the optimal distance to tour regions in subsequence i. Note that although the starting and ending subsequences can have sizes less than s, they satisfy r_i=0, so this bound holds for all subsequences. Therefore, ∑ r_i≤ϵ·∑ OPT_i≤ϵ· OPT.
+
+
+
+
+ §.§ Algorithms for convex fat bodies
+
+
+Using a similar grouping argument, but using constant sized instead of 1/ϵ sized groups, along with earlier methods of using estimates of the path length to place points on the boundaries of the convex fat bodies yields the following results.
+
+
+There is an n/^2d-2-time algorithm for touring disjoint convex fat bodies in d dimensions.
+
+
+
+We proceed in a similar fashion as <ref>, except we define s ≜ n_0, i.e., using constant sized groups instead of ⌈1/ϵ⌉ sized groups. Let the M_i be defined as in the proof of <ref>, and define m_i to be the outer radius of M_i.
+
+For each pair of regions M_i,M_i+1, pick arbitrary points a∈ M_i,b∈ M_i+1, and use <ref> to
+obtain a 4-approximation D_approx of the length of the shortest path from a to b in 1 time.
+Suppose that the optimal path uses p∈ M_i, q∈ M_i+1 and the shortest path from a to b has distance OPT_a,b;
+by the triangle inequality, we must have
+
+    1/4 D_approx≤ OPT_a,b≤ OPT_i + 2m_i + 2m_i+1.
+
+
+Now, consider the path where we start at p and then travel along the line segment from p to a, the approximate path of length D_approx from a to b (visiting the regions in between M_i and M_i+1), and the line segment from b to q. This path has length at most D_approx+2m_i+2m_i+1, and upper bounds the length of the optimal path between p and q. So, the entire path between p and q lies within a ball of radius D_approx+4m_i+2m_i+1 centered at a; call this ball L. Note that L has radius l = D_approx+4m_i+2m_i+1≤OPT_i+m_i+m_i+1.
+
+For each region R_j between M_i and M_i+1 inclusive, we apply <ref> with the region and a hypercube containing
+L, which has side length 2l. Note that points are placed twice on each M_i; this is fine. <ref> guarantees
+the existence of a point in R_j that is 2lϵ close to the point OPT uses by placing 1/ϵ^d-1 points on each region.
+
+We now bound the difference between the optimal and the shortest paths using only the points we placed.
+The difference is at most
+
+    ∑_i=1^k(2 l_iϵ· n_0)
+        =ϵ·∑_i=1^k l_i
+        =ϵ·OPT + ∑_i=1^k m_i=ϵ· OPT,
+
+where the last step is due to <ref> applied on each subsequence: in particular, the optimal path length visiting all the regions in subsequence i has length at least Ω(m_i), so summing this inequality over all subsequences, we have ∑_i=1^k m_i ≤OPT.
+
+We have now reduced the problem to the case where each region has only finitely many points.
+We finish with dynamic programming. Since we have 1/ϵ^d-1 points on each of the n regions, the runtime is
+n/ϵ^2d-2, as desired.
+
+
+
+There is an n/-time algorithm for touring disjoint convex fat bodies in 2 dimensions.
+
+
+
+This is almost the same as <ref>, where 1/ϵ^d-1 = 1/ϵ points are placed on each body,
+except that we use <ref> to more efficiently solve the case where each region is a finite point set.
+
+
+
+
+
+
+
+
+There is an n^2/√()-time algorithm for touring disjoint convex fat bodies in 2 dimensions.
+
+
+
+<ref> through the construction of <ref> places 1/ϵ points on an arc of length R on each convex fat body to guarantee additive error ≤ϵ R. We can achieve the same additive error using a convex polygon with ϵ^-1/2 vertices using <ref>. Then, recall that <cit.> gives an |V|n-time exact algorithm for touring convex polygons, so we can recover a solution in |V|n = (n ·ϵ^-1/2) · n time.
+
+
+
+
+
+§ BALLS
+
+
+
+We can improve the results in previous sections by discretizing the surfaces non-uniformly, placing fewer points on areas of each hypersphere that are farther away from the previous and next ball in the sequence. This reduces the dependence on  by a square root compared to <ref> and <ref>. Omitted proofs for this section may be found in <ref>. We first state the results:
+
+
+
+
+There is an n/^d-1log^21/+1/^2d-2-time algorithm for touring disjoint balls in d dimensions.
+
+
+
+The crucial lemma we use for these results follows. We defer its proof to the appendix.
+
+
+A tour of disjoint balls is globally optimal if and only if for each intermediate ball, the tour either passes straight through the ball or perfectly reflects off its border (see <Ref> for an example).
+
+
+
+
+We start with the special case of unit disks and then generalize to non-unit disks (<ref>). First, we provide intuition through a simple example where n=1 and R_1 is a line.
+
+
+Given start and endpoints p_0=(-1,1) and p_2=(1,1), select p_1 from the x-axis such that OPT=p_0-p_1+p_1-p_2 is minimized.
+
+
+
+To solve this exactly, choose p_1=(0,0) such that the path perfectly reflects off the x-axis. This gives OPT=2√(2). 
+
+Now suppose that we are only interested in an approximate solution. Tile the x-axis with points at regular intervals such that every two consecutive points are separated by distance d, and round p_1 to the closest such point p_1'. Since p_1-p_1'≤ d,
+
+    OPT'   ≜p_0-p_1'+p_1'-p_2
+       ≤√(1+(1-d)^2)+√(1+(1+d)^2)≤√(2-2d+d^2)+√(2+2d+d^2)
+       ≤√(2)(1-d/2+1+d/2+d^2)≤ 2√(2)(1+d^2).
+
+
+So, to attain OPT'≤ (1+)OPT, it suffices to take d=Θ(√()) rather than d=Θ() because p_1'-p_1 is parallel to the x-axis. We can apply a similar idea to replace the middle region with a point set when R_1 is a circle rather than a line since circles are locally linear. However, this doesn't quite work when either p_0-p_1 or p_1-p_2 is small. For example, if p_0 was very close to the x-axis (say, p_0=(-d,d)) then rounding p_1 to the nearest p_1' could cause OPT' to increase by Θ(d)≫ d^2. So when we replace each circle with a point set, we need to be careful about how we handle two circles that are close to touching; the solution is to space points more densely near where they touch.
+
+
+
+There is an n/√()log1/-time algorithm for touring disjoint unit disks.
+
+
+
+We describe how to place a set of 1/√()log1/ points S_i on each unit circle c_i so that the length of an optimal path increases by at most n after rounding each p_i to the nearest p_i'∈ S_i.
+
+Define (x)=x/x. Let o_i≜ p'_i-p_i for all i∈ [0,n+1] (note that o_0=o_n+1=0), where o stands for offset. Also, define vectors 
+
+    d_i≜ p'_i+1-p'_i=p_i+1+o_i+1-p_i-o_i
+
+and scalars
+
+    a_i≜ d_i·(p_i+1-p_i)=p_i+1-p_i+(o_i+1-o_i)·(p_i+1-p_i),
+
+where a_i is the component of d_i along the direction of p_i+1-p_i. Then the total path length after rounding each p_i to p_i' is:
+
+    ∑_i=0^nd_i   =∑_i=0^n√([d_i·(p_i+1-p_i)]^2+[d_i·(p_i+1-p_i)^⊥]^2)
+       =∑_i=0^n√(a_i^2+[(o_i+1-o_i)·(p_i+1-p_i)^⊥]^2)
+       =∑_i=0^n[a_i+(√(a_i^2+[(o_i+1-o_i)·(p_i+1-p_i)^⊥]^2)-a_i)] 
+       =OPT+∑_i=1^n o_i· ((p_i-p_i-1)-(p_i+1-p_i))^extra_1(i)
+          +∑_i=0^n(√(a_i^2+[(o_i+1-o_i)·(p_i+1-p_i)^⊥]^2)-a_i)^extra_2(i)
+       =OPT+∑_i=1^nextra_1(i)+∑_i=0^nextra_2(i).
+
+We defer the construction of the sets S_i so that both extra terms are small to <ref>. Then we can finish with dynamic programming (<ref>).
+
+
+
+It is possible to choose S_i in the proof of <Ref> such that |S_i|≤1/√()log1/, extra_1(i)≤, and extra_2(i)≤ for all i.
+
+
+
+First, we present the construction. For every pair of adjacent disks i and i+1 we describe a procedure to generate points on their borders. Then we set S_i to be the union of the generated points on the border of disk i when running the procedure on disks (i,i+1), and the generated points on the border of disk i when running the procedure on disks (i-1,i). Finally, we show that extra_1(i) and extra_2(i) are sufficiently small for all i for our choice of S_i.
+
+
+
+    Procedure
+ Reorient the plane that c_i=(0,y) and c_i+1=(0,-y) for some y>1. 
+ Let ℝ_≥ 0→ℝ_>0 be a function that is nonincreasing with respect to |ϕ| that we will define later. Given , we use the following process to add points to S_i (and symmetrically for S_i+1):
+
+
+    
+  * Set ϕ=0.
+    
+  * While ϕ≤π:
+    
+        
+  * Add (sinϕ, y-cosϕ) to S_i.
+        
+  * ϕ+=(ϕ).
+    
+    
+  * Repeat steps 1-2 but for ϕ from 0 to -π.
+
+This procedure has the property that for any ϕ∈ [-π,π], the point (sinϕ, y-cosϕ) is within distance (|ϕ|) of some point in S_i. In particular, if the optimal path has p_i=(sinϕ_i,y-cosϕ_i) then it is guaranteed that o_i≤(ϕ_i). To compute |S_i|, note that as long as (ϕ) is sufficiently smooth that (ϕ)/ϕ+(ϕ)=Θ(1) for all ϕ, the number of points added to S_i will be at most a constant factor larger than the value of the definite integral ∫_-π^π1/(ϕ)  dϕ. 
+
+Next, we construct  so that |S_i|=1/√()log1/. Intuitively, by <ref>, we should have (ϕ)=Θ() closer to circle i+1 (when ϕ≈ 0) and (ϕ)=Θ(√()) farther from circle i+1 (when ϕ=Θ(1)). Thus, we set (ϕ)=max(,√()ϕ). The total number of added points is on the order of:
+
+    ∫_0^π1/(ϕ)  dϕ   =1/√()(∫_0^√()1/√()  dϕ+∫_√()^π1/ϕ  dϕ)
+       =1/√()(1+log(π/√()))≤1/√()log1/.
+
+
+Finally, we show that both extra terms are small for our choice of S_i.
+
+*Part 1: extra_1(i). 
+
+We note that (p_i-p_i-1)-(p_i+1-p_i) must be parallel to p_i-c_i for an optimal solution p. To verify this, it suffices to check the two possible cases from <Ref>:
+
+    
+  * The points p_i-1,p_i,p_i+1 are collinear, in which case (p_i-p_i-1)-(p_i+1-p_i)=0.
+    
+  * The path reflects perfectly off circle i, in which case (p_i-p_i-1)-(p_i+1-p_i) is parallel to p_i-c_i.
+
+
+If we ensure that spacing(ϕ)≤√() for all ϕ, then |o_i·(p_i-c_i)|≤ because o_i is always nearly tangent to the circle centered at c_i at point p_i. The conclusion follows because extra_1(i)≤ 2|o_i·(p_i-c_i)|≤ 2.
+
+*Part 2: extra_2(i).
+
+We upper bound extra_2(i) by the sum of two summands, the first associated only with o_i and the second associated only with o_i+1.
+
+
+Letting ycoord(·) denote the y-coordinate of a point,
+
+    extra_2(i)≤ 2·( min(o_i,4o_i^2/ycoord(p_i))+min(o_i+1,4o_i+1^2/-ycoord(p_i+1))).
+
+
+
+
+We do casework based on which term is smaller on each of the mins.
+
+    
+  * o_i≥ycoord(p_i)/4, o_i+1≥-ycoord(p_i+1)/4
+    
+    The result, extra_2(i)≤ 2(o_i+o_i+1), follows by summing the following two inequalities:
+    
+    
+    √(a_i^2+[(o_i+1-o_i)·(p_i+1-p_i)^⊥]^2)-p_i+1-p_i
+       =p_i+1-p_i+o_i+1-o_i-p_i+1-p_i
+       ≤o_i+o_i+1
+
+    and p_i+1-p_i-a_i≤o_i+o_i+1.
+    
+    
+  * o_i≤ycoord(p_i)/4, o_i+1≤-ycoord(p_i+1)/4
+    
+    Then o_i, o_i+1≤p_i+1-p_i/4 so a_i≥p_i+1-p_i/2, and
+    
+    extra_2(i)   ≤o_i+1-o_i^2/2a_i≤2(o_i+1^2+o_i^2)/2a_i
+       ≤ 2·o_i+1^2+o_i^2/p_i-p_i+1≤ 2·(o_i^2/ycoord(p_i)+o_i+1^2/-ycoord(p_i+1)).
+
+    
+    
+  * o_i≤ycoord(p_i)/4, o_i+1≥-ycoord(p_i+1)/4
+    
+    Define extra'(i) to be the same as extra_2(i) with o_i+1 set to 0. Then
+    
+    extra'(i)   ≜p_i+1-p_i-o_i-(p_i+1-p_i-o_i·(p_i+1-p_i))
+       =√((p_i+1-p_i-o_i·(p_i+1-p_i))^2+[o_i·(p_i+1-p_i)^⊥]^2)
+          -(p_i+1-p_i-o_i·(p_i+1-p_i))
+       ≤o_i^2/2·3/4p_i-p_i+1≤o_i^2/2·3/4·ycoord(p_i)
+
+    and by similar reasoning as case 1, extra_2(i)-extra'(i)≤ 2o_i+1.
+    
+    
+  * o_i≥ycoord(p_i)/4, o_i+1≤-ycoord(p_i+1)/4
+    
+    Similar to case 3. 
+
+
+Now that we have a claim showing an upper bound on extra_2(i), it remains to show that min(o_i,o_i^2/ycoord(p_i))≤ for our choice of . Indeed, when ϕ≤√() we have o_i≤(ϕ)≤, while for ϕ>√() we have o_i^2/ycoord(p_i)≤(ϕ)/ϕ^2≤.
+
+
+With small modifications to the proof of <Ref>, we have the following corollary:
+
+
+Consider the case of non-unit disks. If the ith disk has radius r_i, then we can place 1/√()_ilog1/_i points on its border such that the additive error associated with c_i —specifically, extra_1(i) plus the components of extra_2(i-1) and extra_2(i) associated with o_i —is r_i_i. Consequently,
+OPT+∑_i=1^nextra_1(i)+∑_i=0^nextra_2(i)≤ OPT+∑_i=1^nr_i_i.
+
+
+Now, we finally prove <ref>.
+
+
+We first present a slightly weaker result, and then show how to improve it. Recall that by <ref>, the ith largest disk has radius OPT/i for i≥ 3. So if we set _i='=/log n for each of the ith largest disks for i≥ 3, the total additive error contributed by these disks becomes
+
+    ∑_i=3^nOPT/i·_i≤OPT·'·∑_i=3^n1/i≤ OPT
+
+by <ref>. For the two largest disks, we use the previous naive discretization (placing 1/ points uniformly on the intersection of the circles with a square of side length OPT centered about the starting point). We may assume we have already computed a constant approximation to OPT in n time by applying <ref> with =1. After selecting the point sets, we can finish with <ref>. The overall time complexity is
+n/√(')log1/'+1/≤n√(log n)/√()loglog n/+1/.
+
+We can remove the factors of log n by selecting the _i to be an increasing sequence. Set _i=Θ i^2/3/n^2/3 for each i∈ [3,n] such that more points are placed on larger disks. Then the total added error remains
+
+    OPT·+∑_i=3^n_i/i   =
+    OPT·+∑_i=3^n1/i· i^2/3/n^2/3
+       =OPT·1+n^-2/3·∑_i=3^ni^-1/3≤OPT,
+
+and the factors involving log n drop out from the time complexity:
+
+    ∑_i=3^n1/√()_ilog1/_i+1/   ≤∫_i=3^n1/√()n^1/3i^-1/3logn^2/3/i^2/3di +1/
+       ≤3n^1/3/2√(ϵ)i^2/3logn^2/3/i^2/3ϵ+1|_3^n+1/ϵ
+       ≤n/√()log1/+1/.
+
+
+
+We note that under certain additional assumptions, the time complexity of <Ref> can be slightly improved. We summarize these in the following corollary, which we state without proof.
+
+
+If any of the following conditions hold:
+
+    
+  * the two largest disks are not adjacent in the order
+    
+  * the two largest disks are separated by distance Ω(OPT)
+    
+  * the second-largest disk has radius OPT
+
+then a generalization of <Ref> may be applied to remove the 1/ term from the time complexity of <Ref>.
+
+
+To extend to multiple dimensions, we generalize the construction from <Ref>.
+
+
+ As in <Ref>, set (ϕ)=max(,√()ϕ) for a point p_i satisfying m∠ p_ic_ic_i+1=ϕ, meaning that there must exist p_i'∈ S_i satisfying p_i-p_i'≤ r_i·(ϕ). The total number of points |S_i| placed on the surface of a d-dimensional sphere is proportional to
+
+    ∫_0^πsin^d-2(ϕ)/(ϕ)^d-1  dϕ   ≤1/(√())^d-1∫_0^πϕ^d-2/max(√(),ϕ)^d-1  dϕ
+       =1/^(d-1)/2∫_0^√()ϕ^d-2/(√())^d-1  dϕ + ∫_0^√()1/ϕ  dϕ
+       ≤1/^(d-1)/2log1/.
+
+where the derivation of the integration factor sin^d-2(ϕ) can be found in <cit.>. 
+
+It remains to describe how to space points so that they satisfy the given spacing function. For each spacing s=, 2, 4, …, √(), we can find a d-dimensional hypercube of side length O(s/√()) that encloses all points on the hypersphere with required spacing at most 2s. Evenly space points with spacing s across the surface of this hypercube according to <Ref>, and project each of these points onto the hypersphere. There are a total of log1/ values of s, and each s results in 1/^(d-1)/2 points being projected onto the hypersphere, for a total of 1/^(d-1)/2log1/ points.
+
+
+
+
+
+
+
+
+
+
+
+
+§ APPENDIX
+
+
+Organization: The three subsections contain omitted proofs from sections 2, 3, and 4, respectively.
+
+
+
+ §.§ Convex bodies: omitted proofs
+
+
+
+Define c_1≜closest_C(p_1) and c_2≜closest_C(p_2). Since C is convex, C must contain all points on the segment connecting c_1 and c_2. Thus, it must be the case that (p_1-c_1)· (c_2-c_1)≤ 0, or some point on the segment connecting c_1 and c_2 would be closer to p_1 than c_1. Similarly, it must be the case that (p_2-c_2)· (c_2-c_1)≥ 0. To finish,
+
+    (p_2-p_1)· (c_2-c_1)   ≥ (p_2-c_2+c_2-c_1+c_1-p_1)· (c_2-c_1)
+       ≥ (c_2-c_1)· (c_2-c_1)≥c_2-c_1^2,
+
+implying p_2-p_1≥c_2-c_1.
+
+
+
+Consider some point p ∈ (∂ C) ∩ℋ. By the convexity of C and because p lies on its boundary, there exists some unit vector v⃗ such that p ·v⃗≥ x ·v⃗ for any x ∈ C. Let the intersection of ℋ with the ray starting at p and going in the direction of v⃗  be the point s. Notice that _C(s) = p. 
+
+Now, define s' ∈ S_ℋ to be the closest such point to s. From our construction of S_ℋ, s-s'≤ r. From our construction of S, _C(s') ∈ S, and since _C(s) = p, after applying <ref>, we have p-_C(s')≤ r.
+
+
+
+First, we show that there exists a path p' touring the S_i that is nearly as short as the shortest path touring the R_i.
+
+
+If OPT≤ L_APPROX, there exists an increasing sequence 0 = z_0 < z_1 < … < z_l = n+1 and points p_z_i' such that p_z_i' ∈ S_z_i for all i and p_z_i' ∈ R_j for all i, j satisfying 0 ≤ i ≤ l-1, z_i ≤ j < z_i+1, and ∑_i=0^l-1p_z_i'-p_z_i+1'≤ OPT+γ L_APPROX. Additionally, if the regions are disjoint, there exists a sequence that satisfies the above conditions that also satisfies z_i = i for all i.
+
+
+
+Define D(z_t, p_z_t') to be the minimum distance for touring regions R_z_t, R_z_t+1, …, R_n starting at p_z_t' and ending at p_n+1. We show by induction that for all t≤ l, there exists a sequence p_z_0,…,p_z_t satisfying the invariant
+
+    ∑_i=0^t-1p_z_i'-p_z_i+1' + D(z_t, p_z_t) ≤ OPT+t/2n·γ L_APPROX.
+
+Note that for t=l, (<ref>) implies
+
+    ∑_i=0^l-1p_z_i'-p_z_i+1'≤ OPT + l/2n·γ L_APPROX≤ OPT + γ L_APPROX,
+
+as desired.
+
+Base Case: First, define z_0 = 0, p_z_0' = p_0. The invariant holds for t=0. 
+
+Inductive Step: Suppose we have already constructed z_0, z_1, …, z_t and p_z_0', p_z_1', …, p_z_t'. It remains to show how to construct z_t+1, p_z_t+1' from z_t, p_z_t' such that the invariant is maintained.
+
+Let z_t+1≤ n be the smallest integer greater than z_t such that p_z_t' ∉ R_z_t+1. If all R_i are disjoint, then clearly z_t+1 = z_t+1. If no such z_t+1 exists, then we set z_t+1 = n+1. Consider an optimal path q_z_t, q_z_t+1, q_z_t+2, …, q_n+1 for touring regions R_z_t, R_z_t+1, …, R_n starting at q_z_t = p_z_t' and ending at q_n+1 = p_n+1, with total length D(z_t, p_z_t'). Because q_z_t = p_z_t' ∈ R_j for all z_t ≤ j < z_t+1, we can consider an optimal path that satisfies q_z_t = q_z_t+1 = q_z_t+2 = … = q_z_t+1-1, and q_z_t+1 lies on the boundary of R_z_t+1. In other words, the optimal path does not need to move from its starting point if it is contained within some prefix of the regions, and it can always choose q_z_t+1 to be its first point of contact with R_z_t+1. Therefore q_z_t+1∈∂ C_z_t+1, w for some 1≤ w≤ |R_z_t+1|. 
+
+Furthermore, a path exists from p_0 to p_z_t' = q_z_t to p_n+1 with length 
+
+    ∑_i=0^t-1p_z_i'-p_z_i+1' + D(z_t, p_z_t') ≤ OPT+t/2n·γ L_APPROX≤ OPT + L_APPROX≤ 2L_APPROX,
+
+indicating that q_z_t+1-p_0≤ 2L_APPROX, which in turn implies q_z_t+1∈ℋ.
+
+Thus, q_z_t+1∈ (∂ C_z_t+1, w)∩ℋ, so by <ref> there exists some point p_z_t+1' ∈ S_z_t+1 such that p_z_t+1'-q_z_t+1≤ϵ· r = γ/16n· 4 L_APPROX. Now, we can show that the invariant holds for t+1:
+
+    ∑_i=0^tp_z_i'-p_z_i+1' + D(z_t+1, p_z_t+1') 
+       ≤∑_i=0^tp_z_i'-p_z_i+1' + p_z_t+1'-q_z_t+1+∑_i=z_t+1^nq_i-q_i+1
+       ≤∑_i=0^t-1p_z_i'-p_z_i+1' +
+        p'_z_t-q_z_t+1 + 2p_z_t+1'-q_z_t+1+∑_i=z_t+1^nq_i-q_i+1
+       ≤∑_i=0^t-1p_z_i'-p_z_i+1' + p'_z_t-q_z_t+1 + 2 r +∑_i=z_t+1^nq_i-q_i+1
+       = 2 r + ∑_i=0^t-1p_z_i'-p_z_i+1'  + D(z_t, p_z_t') 
+       ≤ 2  r + OPT + t/2n·γ L_APPROX
+       = OPT + γ L_APPROX/2n + t/2n·γ L_APPROX = OPT + t+1/2n·γ L_APPROX.
+
+(<ref>) follows from p_z_t+1', q_z_t+1+1, …, q_n+1 being a valid tour of regions R_z_t+1, R_z_t+1+1, …, R_n, while (<ref>) follows from the triangle inequality.
+
+Recall that if all R_i are disjoint, then z_t+1 = z_t+1  z_i = i for all i.
+
+
+It remains to show that we can recover a path touring the S_i that is at least as good as p'. For each point p ∈ S_i for some i, define successor(p) to be the minimum j > i such that p ∉ R_j. Notice that successor(p_z_i') = z_i+1. Now, define pred(S_j) for each S_j to be the set of all points p such that successor(p) = j.
+
+We use dynamic programming: first, set dp(p_0) = 0. Then, iterate over the sets S_i in increasing i. For each point x ∈ S_i, we will set dp(x)≜min_y ∈ pred(S_j)dp(y)+x-y. By storing the optimal transition for each point, we can recover a path q_0, q_1, …, q_l_q that tours the R_i regions. Because successor(p_z_i') = z_i+1 for the path (p_i'), we must have that the path recovered from dynamic programming has length at most ∑_i=0^l-1p_z_i'-p_z_i+1'.
+
+If the R_i are disjoint, then pred(S_j) = S_j-1 and the total number of transitions in the DP is given by
+
+    ∑_i=0^n |S_i||S_i+1| = ∑_i=0^n |R_i|n/γ^d-1· |R_i+1| n/γ^d-1,
+
+as desired. If the R_i are possibly non-disjoint, notice that the total number of transitions in the DP is given by 
+
+    ∑_i=0^n∑_p ∈ S_i|S_successor(p)|n/γ^d-1   ≤∑_i=0^n∑_p ∈ S_imax_j |R_j| n/γ^d-1
+       ≤∑_i=0^n |R_i|n/γ^d-1max_j |R_j| n/γ^d-1
+       ≤n/γ^2d-2∑_i=0^n |R_i|max_j|R_j|.
+
+
+
+
+Using the oracle to project p_0 onto each of the regions R_1, R_2, …, R_n to obtain points p_1, p_2, …, p_n. Now, let OPT be the total length of the optimal solution for the problem. Clearly, we must have p_i-p_0≤ OPT. Thus,
+
+    ∑_i=0^np_i+1-p_i   ≤p_1-p_0 + ∑_i=1^np_i+1-p_0+p_i-p_0
+       ≤ OPT + 2n · OPT = (2n+1)OPT.
+
+
+
+
+First, apply <ref> to get a 1+2n approximation. Label the path length of this approximation L_0. Define B_0 = 1+2n, where we know L_0/B_0≤ OPT≤ L_0. Our goal is to show that given some L_t, B_t, we can generate L_t+1, B_t+1 so that L_t+1/B_t+1≤ OPT≤ L_t+1, and B_t+1≤ 2√(B_t). 
+
+We apply <ref> with γ = 1, L_APPROX = L_t/√(B_t). Let L_APPROX' be the length of the optimal tour that visits S_0, S_1, …, S_n+1. There are two possible cases.
+
+
+    
+  * L'_APPROX≤ 2L_APPROX. In this case, we know that 
+    L_t/B_t≤ OPT≤ L'_APPROX≤ 2L_APPROX=2L_t/√(B)_t, so we can set L_t+1=2L_t/√(B)_t and B_t+1=2√(B_t).
+    
+    
+  * L'_APPROX > 2L_APPROX. In this case we know that OPT>L_APPROX, because <ref> guarantees that if OPT ≤ L_APPROX, then L'_APPROX≤ OPT + γ L_APPROX≤ 2L_APPROX. Thus,
+    L_t/√(B)_t=L_APPROX< OPT≤ L_t,
+    so we can set L_t+1=L_t and B_t+1=√(B)_t.
+
+
+Thus, we can generate the sequences (L_i) and (B_i) until we reach some B_l ≤ 4 for some l ≤loglogn in loglogn· n^2d-2∑_i=1^n-1|R_i||R_i+1| time. This gives us some L_l such that OPT ≤ L_l ≤ 4 · OPT, a constant approximation of OPT.
+
+
+
+
+The bulk of the time for the second bound is spent computing successor(p) for every one of the n^2/ points in the discretization, which could take Θ(n) calls to the oracle, contributing the factor of n^3/. On the other hand, the actual dynamic programming updates contribute only n^2/logn^2/.
+
+
+
+Here we describe how to modify the method of <cit.> to achieve the desired time complexity. The approach we describe in this paper is a more general method (which can be modified similarly).
+
+As in our approach, the method of <cit.> involves a pseudo-approximation: the idea is to intersect every one of the |V| edges with a disk of radius L_APPROX centered at p_0, discretize every one of the |V| edges into n/ evenly spaced points, and then apply dynamic programming as described in the previous subsection. Naively, these DP transitions run in |V|n/^2 time, but <ref> speeds these transitions up to |V|n/log|V|/ time. The first term in the time complexity corresponds to the time required to obtain a constant approximation by setting =1, as described in <ref>.
+
+When the regions can possibly intersect, we additionally need a data structure that will compute successor(p) for any p∈∂ R_i in log |V| time. The construction of such a data structure contributes the additional term to the time complexity.
+
+Now, we describe how to generate a separate data structure for each edge e∈δ R_i such that each data structure can answer successor(p) for any p∈∂ e in log |V| time. This construction runs in |V|^2α(|V|) time.
+
+First, for each edge  e∈δ R_i we need to compute which parts of it belong to each other region R_j where j>i. To do so, we need to know
+
+    
+  * For each such region, whether the endpoints of e are contained within that region.
+    
+  * The intersection points of e with all such regions in sorted order along the edge (at most |V|, assuming non-degeneracy).
+
+These quantities can be computed in |V|^2 time due to Balaban <cit.>. 
+
+The intersection points partition e into ranges such that the first j>i such that a point belongs to R_j is the same for all points within the range (see <ref>). If we have computed the first j>i for every such range, we can answer queries in log v time via binary search.
+
+
+
+To do so, we start by iterating over all intervals of e contained within R_i+1 and setting all ranges that they cover to have successor=i+1. This determines the answer for three of the ranges in <ref>. Then do the same for R_i+2,R_i+3,… and so on. Note that there are |V| intervals in total.
+
+Naively, such an implementation would run in |V|^2 time; however, using Tarjan's disjoint set union data structure <cit.>, we can speed up this process to |V|α(|V|) time, where α is the inverse Ackermann function.  We assume an implementation of DSU that initially assumes that every range is its own representative, and supports both of the following operations in amortized α(|V|) time:
+
+    
+  * (x): Return the representative of range x.
+    
+  * (x,y): Given a range x such that (x)=x, for each range that x is a representative of, set its representative to be (y).
+
+
+For an interval covering ranges [l,r] belonging to R_j, we use the following process to set the answers for every range it covers whose successor has not been set yet:
+
+    
+  * Set l=(l).
+    
+  * If l>r, break.
+    
+  * Set successor(l)=j
+    
+  * Call (l,l+1).
+    
+  * Return to step 1.
+
+The correctness of this procedure follows from the DSU maintaining the invariant that the representative for a range is the first range that succeeds it whose successor has not been set yet.
+
+
+
+
+First, see <ref> for the case where C lies strictly within U. Next, we describe what needs to be changed when this is not the case:
+
+If we have exact access to ∂(U)∩ C, then we can convert a closest point oracle for C into a closest point oracle for C∩ U and apply the previous lemma to select points on ∂ (C∩ U). Note that due to the convexity of C, the intersection of each side of U with C is a line segment if it is nonempty, and the endpoints of this line segment can be approximated to arbitrary precision using the oracle to binary search. 
+
+Specifically, if C intersects a side s⊆∂(U), we can approximate this intersection by binary searching on s. Say we take some p∈ s such that p∉C; then the direction of the vector from p to _C(p) tells us which side of s∩ C p lies on). After log1/ queries, we either end up with:
+
+    
+  * A point within C∩ s, and approximations of both endpoints of C∩ s to within distance o(ϵ) each.
+    
+  * A segment of length o(ϵ) containing C∩ s.
+
+In either case, given an estimate of an endpoint of C∩ s that is within o(ϵ) of an endpoint of C∩ s, by projecting the estimate onto C we get an estimate of the endpoint that is within o(ϵ) to the true endpoint (and now is part of C).
+
+When querying the closest point in C∩ U to a point p, 
+
+    
+  * Compute the closest point in U to p. If the point is within C, return it.
+    
+  * Otherwise, query the oracle for the closest point in C to p. If the point is within U, return it.
+    
+  * Otherwise, return the closest estimated endpoint (which is guaranteed to be within o(ϵ) of the true answer). 
+    
+    
+
+
+
+
+
+
+
+
+
+
+Given a closest point oracle for a convex region C that is strictly contained within a unit square U, we may select ^-1/2 points on ∂ C such that every point within C is within distance  of the convex hull of the selected points.
+
+
+
+Let S denote the set of all selected points. First, we state a sufficient pair of conditions for S to satisfy the desired property: For every pair of consecutive points s_1 and s_2 in S, 
+
+    
+  * The distance between s_1 and s_2 along the border of C is at most √().
+    
+    
+  * The difference in angle θ between the normals to C at s_1 and s_2 is at most √().
+
+
+To see that this is true, consider any point p on ∂ C lying between s_1 and s_2, and define d≜dist(p,s_1s_2). See <Ref> for an illustration. Then 
+
+    d/sin∠ ps_1s_2+d/sin∠ ps_2s_1=|s_1-s_2|   d/sin∠ s_1ps_2< |s_1-s_2| 
+       d/sinθ < |s_1-s_2| 
+       d/√()<√() d<
+
+
+Inequality (<ref>) follows from m∠ s_1ps_2>π-θ.
+
+It remains to construct S satisfying both of the desired conditions. Note that we can actually construct two separate sets of points S_1 and S_2, one for each of the two conditions, and then set S=S_1∪ S_2. Let S' denote a set of 41/√() points spaced equally about the border of U.
+
+
+    
+  * Form S_1 by projecting each point in S' onto C.
+    
+    
+  * Form S_2 by dilating each point in S' by a sufficiently large constant about the center of U and then projecting each of these points onto C. Essentially, we use the closest point oracle to implement a tangent line oracle.  There is an alternate proof of <ref> that only involves querying the closest point oracle at points on the border of U.
+
+
+Since the distance between any two consecutive points in S' is at most 1/√(), S_1 satisfies condition 1 by a stronger version of <Ref>. Furthermore, condition 1 continues to be satisfied as points from S_2 are added to S. Similarly, it's easy to verify that S_2 satisfies condition 2, and that condition 2 continues to be satisfied as points from S_1 are added to S.
+
+
+
+
+There is no need to query the closest point oracle for points that can be infinitely far away from C (which is done in the original proof). Let's start with a set S' containing a single point on the border of U. While there are two consecutive points s_1' and s_2' in S' such that the clockwise distance between s_1' and s_2' along the border of U times the difference in angle between the normals to C at (s_1') and (s_2') is greater than , insert an additional point m into S such that m is the midpoint of the portion of ∂(U) that goes clockwise about U from s_1' and s_2'. Once no such pair of points exists in S', set S={(s')| s'∈ S'}.
+
+Here is a different way to interpret this process. Start with a list of pairs initially containing only (4,2π), corresponding to the length of the border of U and the measure of a full angle, respectively. While there exists a pair (x,y) satisfying xy>, remove it from the list and add the pairs (x/2,r) and (x/2,y-r) to the list, where r∈ [0,y]. Here,
+
+
+    
+  * x represents an upper bound on the distance from (s_1') to (s_2') along ∂(C), and x/2 is an upper bound on both the distances from (s_1') to (m) and the distances from (m) to (s_2') along ∂(C).
+    
+  * y is the difference in angle between the normals to C at (s_1') and (s_2'). Adding m in between s_1' and s_2' splits this angle into two parts.
+
+
+The correctness of the stopping condition can be proved similarly to the original proof of <Ref>.  It remains to prove that the size of the list upon the termination of this process is 1/√(). Define 𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(x,y)=max(1,4√(xy/)). We claim that 𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(4,2π)≤1/√() is an upper bound on the size of the list upon termination. It suffices to show that whenever xy>, the following inequality holds for any choice of r:
+
+    𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(x,y)≥𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(x/2,r)+𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(x/2,y-r).
+
+
+This may be rewritten as:
+
+    4√(xy/)≥max2,4√(x/2· y/)+1,4√(x/2· r/)+4√(x/2· (y-r)/)
+
+
+which can easily be verified. Equality holds when r=y/2.
+
+
+
+
+ §.§ Disjoint convex fat bodies: omitted proofs
+
+
+
+	We first see that it suffices to find an n such that the optimal path must be Ω(min r_h).
+	Once we find such an n, we can use the bound on subsequences of size n to obtain the desired result.
+
+	Let m≜min r_h. Suppose that OPT<m; it suffices to show that n= 1.
+
+	Let C(P, r) be the sphere centered at P with radius r.
+	Pick an arbitrary point p on OPT. Observe that all of OPT lies inside C(p, m), and for each region R, there is a point q∈ R∩ C(p,m). 
+	
+	
+		
+		For all convex fat regions R with r_h≥ m, we must have
+		(C(q,m)∩ R)≥Ω((C(q,m))).
+		
+	
+	
+	If the claim holds, since the regions C(q,m)∩ R are disjoint subsets of C(p,2m),
+	we would have n·Ω((C(q,m)))≤(C(p,2m)),
+	implying the desired result n= 1.
+
+	
+		Let R_c be the center of a ball contained in R with radius r_h.
+		Consider the case that R_c-q> 1/2 m.
+		By convexity, since q∈ R and (C(R_c,r_h))⊆ R,
+		the image of a dilation of (C(R_c,r_h)) with center q and ratio m/2R_c-q≤ 1
+		is also a subset of R.
+		Let image of the dilation be (C(R_c',r_h')).
+		We have that q-R_c'=1/2 m and
+		r_h'=r_h·m/R_c-q≥ r_h·m/r_H≥Ω(m).
+		Therefore, it suffices to prove that
+		(C(q,m)∩ C(R_c, Ω(m)))≥Ω((C(q,m)))
+		for all points q-R_c≤1/2 m.
+
+		WLOG Ω(m)≤1/2 m. Then C(R_c, Ω(m)) lies entirely inside (C(q,m)), so
+		(C(q,m)∩ C(R_c, Ω(m)))= ( C(R_c, Ω(m))) ≥Ω((C(q,m))),
+		as desired.
+	
+
+	
+	
+		The bound for balls is n_0=3.
+	
+
+	
+		First, we reduce this claim to the 2D case.  More specifically, we want to show that in the case of three balls,
+		the optimal path must lie on the plane P containing the centers of the balls. 
+		
+		For any path p, the projection p' of p onto P is also a valid path
+		and has length at most the length of p. We note that projection never increases
+		the length of a segment; therefore, the distances of the points on the path to
+		the centers of their respective balls must have decreased. Therefore, p' still passes through all three balls, and the length of p' is at most that of p.
+
+		It remains to show the claim in the 2D case. We claim that we must have OPT≥1/100( min r_h). We proceed similarly to the general case:
+		Assume the contradiction, and let m≜1/10( min r_h).
+		Then the optimal path lies in a disk C(p, 1/10m).
+		For each region R, let q be any point in p∩ R. Then Cq, m is contained inside Cp, 1+1/10m.
+		Note that this differs from the general case as we assumed OPT<1/10m instead of
+		OPT<m.
+
+		Therefore, to create a contradiction, it remains to show that
+		
+    (C(q, m)∩ R)> 1/3Cp, 1+1/10m=
+    		1/31+1/10^2(C(p, m)),
+
+		where R is any disk with radius at least 10m and q∈ R.
+
+		Let r be the center of R, and a be any point inside C(q,m).
+		Also let x≜r-q, y≜q-a, and z≜r-a.
+		By the Law of Cosines,
+		z^2=x^2 + y^2 -2xy cos∠rqa.
+
+		Suppose that we have cos∠rqa≥1/20;
+		we claim that this implies z≤ 10m.
+		Note that from our constraints we have x≤ 10m and y≤ m≤ 10m,
+		so we have
+		
+    (x-10m)(y-10m)=xy-10mx-10my+100m^2≥ 0.
+
+		Next, we have
+		
+    z^2
+    				   ≤ x^2 + y^2
+    				  -1/10xy 
+       ≤ x^2 + y^2
+    				  -1/1010mx+10my-100m^2
+       = x-1/2m^2 + y-1/2 m^2
+    				  +19/2m^2 
+       ≤10m-1/2m^2 + m-1/2 m^2
+    				  +19/2m^2 
+       =100m^2.
+
+		To conclude,
+		
+    (C(q, m)∩ R)≥2arccos1/20/2π(C(q, m))>
+    		1/3Cq, 1+1/10m,
+
+		as desired.
+	
+
+
+
+
+
+
+For the construction, we'll address the case where all the bodies are disks on the 2D plane; the result can trivially be extended to higher dimensions. Let x_i be the x-coordinate of the center of the ith largest disk. We will show that it is possible to have r_i=1/i for all i such that every disk is tangent to the segment connecting (0,0) and (8,0), every disk has center above the x-axis, and no two disks intersect. As ∑ r_i=Θ(log n) and OPT≤ 8, this would give the desired bound.
+
+We claim that regardless of how x_1,x_2,…,x_i-1 have been selected, there is always a valid choice for x_i such that the ith disk does not intersect with any of the first i-1. Observe that x_i is valid if |x_i-x_j|≥√((r_i+r_j)^2-(r_i-r_j)^2)= 2√(r_ir_j) for all j∈ [1,i-1], where r_j denotes the radius of the jth disk. The total length of the x-axis rendered invalid by any of the first i-1 disks is at most
+
+    ∑_j=1^i-14√(r_ir_j)=4/√(i)∑_j=1^i-11/√(j)< 8√(i)/√(i)< 8.
+
+
+Therefore, some x∈ [0,8] must exist that was not rendered invalid and is thus a valid candidate for x_i.
+
+
+
+
+ §.§ Balls: omitted proofs
+ 
+
+
+As the problem of touring disks be formulated as a convex optimization problem by <ref> and the optimal value is lower bounded, a global optimum is guaranteed. This global optimum must be locally optimal, in the sense that it should not be able to decrease the objective by moving any single p_i. This means that
+
+    
+  * For all p_i satisfying |p_i-c_i|<r_i, the gradient of the objective with respect to p_i must be 0.
+    
+  * For all p_i satisfying |p_i-c_i|=r_i, the gradient of the objective with respect to p_i must be perpendicular to the ith circle.
+
+The gradient of the objective with respect to p_i is precisely (p_i-p_i-1)+(p_i-p_i+1), where (x)≜x/x. Case 1 corresponds to the tour passing straight through the ith disk while case 2 corresponds to reflecting off the ith circle.
+
+Conversely, given a locally optimal solution, we can certify its optimality by choosing z_i=(p_i+1-p_i), where z_i is defined in the proof of <ref>.
+
+
+
+The touring balls problem can be formulated as a convex optimization problem (specifically, a second-order cone problem).
+
+
+
+Stated in <cit.>. We restate a possible formulation here:
+
+*Primal.
+
+Constants: c_i ∈^d, ∀ i∈ [0,n+1]. r_i ∈^+, ∀ i∈ [0,n+1].
+
+Decision Variables: p_i ∈^d, ∀ i∈ [0,n+1]. d_i ∈^+, ∀ i∈ [0,n].
+
+Constraints: p_i-c_i≤ r_i, ∀ i ∈ [0, n+1]. p_i+1-p_i≤ d_i, ∀ i ∈ [0, n].
+
+Objective: min∑_i=0^nd_i
+
+*Dual.
+
+Constants: Same as primal.
+
+Decision Variables: 
+
+    
+  * Associate a variable y_i∈^d, ∀ i∈ [0,n+1] and a real w_i∈^+, ∀ i∈ [0,n+1] for each constraint of the first type (y_i· (p_i-c_i)≤ w_i· r_i).
+    
+  * Associate a variable z_i∈^d, ∀ i∈ [0,n] for each constraint of the second type (z_i· (p_i+1-p_i)≤ d_i).
+
+
+Constraints: z_i≤ 1, ∀ i∈ [0,n]. y_i=z_i-z_i-1, ∀ i∈ [0,n+1]. y_i≤ w_i, ∀ i∈ [0,n+1]. 
+
+Objective: max-∑_i=0^n+1w_ir_i-∑_i=0^n+1y_i· c_i.
+

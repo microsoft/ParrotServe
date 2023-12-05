@@ -59,6 +59,6 @@ if __name__ == "__main__":
     indices = loader.sample_articles_length_greater_than(20000, 20)
 
     for i, index in enumerate(indices):
-        with open(f"arxiv-sampled/article_{i}.txt", encoding="utf-8", mode="w") as f:
+        with open(f"arxiv-sampled-1/article_{i}.txt", encoding="utf-8", mode="w") as f:
             print(len(loader.data[index]["tokenized_text"]))
             f.write(loader.data[index]["text"])

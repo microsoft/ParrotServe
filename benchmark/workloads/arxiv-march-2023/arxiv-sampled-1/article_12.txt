@@ -1,0 +1,1678 @@
+
+
+
+
+Study of Multiuser Scheduling with Enhanced Greedy Techniques for Multicell and Cell-Free Massive MIMO Networks 
+
+    Saeed Mashdour^⋆, Rodrigo C. de Lamare ^⋆,† and João P. S. H. Lima ^ 
+  ^⋆ Centre for Telecommunications Studies, Pontifical Catholic University of Rio de Janeiro, Brazil 
+
+^† Department of Electronic Engineering, University of York, United Kingdom 
+
+^ CPqD, Campinas, Brazil 
+
+smashdour@gmail.com, delamare@cetuc.puc-rio.br, jsales@cpqd.com.br  
+
+
+This work was supported by CNPq and CPqD.
+    
+==========================================================================================================================================================================================================================================================================================================================================================================================================
+
+plain
+plain
+
+
+
+
+
+
+
+Under what circumstances does the “closeness" of two functions  imply the “closeness" of their respective sublevel sets? In this paper, we answer this question by showing that if a sequence of functions converges strictly from above/below to a function, V, in the L^∞ (or L^1) norm then these functions yield a sequence sublevel sets that converge to the sublevel set of V with respect to the Hausdorff metric (or volume metric). Based on these theoretical results we propose Sum-of-Squares (SOS) numerical schemes for the  optimal outer/inner polynomial sublevel set approximation of various sets, including intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points. We present several numerical examples demonstrating the usefulness of our proposed algorithm 
+including approximating sets of discrete points to solve machine learning binary classification problems and  approximating Minkowski sums to construct C-spaces for computing optimal collision-free paths for Dubin's car.
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+ 
+The notion of a set is a fundamental object of the modern mathematical toolkit, simply defined as a collection of elements. Sets are ubiquitous throughout control theory and are the language we use to represent frequently encountered concepts such as uncertainty <cit.>, regions of attraction <cit.>, reachable states <cit.>, attractors <cit.>, admissible inputs <cit.>, feasible states <cit.>, etc. Even for simple, low-dimensional problems, such sets can contain vast complexities and be numerically challenging to manipulate and analyze. Take the Lorenz attractor, for example. As modern engineering systems become increasingly complex, we can expect that this problem will be exacerbated as the sets we encounter become ever more unwieldy. In this context, we present several fundamental results for the approximation of sets, along with associated implementable numerical schemes based on Sum-of-Square (SOS) programming.
+
+
+
+For some given set X ⊂^n, the goal of this paper is to find an outer or inner set approximation of X. Specifically, we would like to compute another set Y ⊂^n such that X ⊆ Y (outer approximation) or Y ⊆ X (inner approximation) and Y ≈ X, where the approximation is defined with respect to some set metric. 
+
+Previous attempts at solving this set approximation problem were based on the fact that the volume of an ellipsoid, {x ∈^n: x^⊤ A x <0 }, is proportional to (A^-1).  Then an equivalent optimization problem can be constructed for computing outer ellipsoid approximations by minimizing the convex objective function -log(A) <cit.>. This approach of determinant maximization has been heuristically generalized to the problem of computing outer SOS polynomial sublevel approximations <cit.>. Alternative heuristic matrix trace maximization schemes have also been proposed <cit.>. More recently, in the special case of using star convex semialgebraic sets, an heuristic approach based on sublevel set scaling has been proposed in <cit.>, demonstrating impressive numerical set approximation results based on SOS programming. An approach based on L^1 maximization, similar to some of the schemes proposed in this paper, has been proposed in <cit.>. However, the work of  <cit.> only considers the specific problem of approximating Pontryagin differences and is still heuristic in the sense that convergence of the proposed numerical schemes is not shown. The only previous work that proposes a non-heuristic numerical method for set approximation is <cit.>. In <cit.> sets defined by quantifiers are approximated in the volume metric to arbitrary accuracy.  In this paper we extend <cit.> to the volume metric approximation of more general sets, represented as sublevel sets of integrable functions. Moreover, we propose a new fundamental result for the approximation sets in the Hausdorff metric. Other works that have dealt with the problem of set approximation in the Hausdorff metric include the excellent work of <cit.> that considered the problem of mollifying feasible constraints and helped to inspire the proof of the Hausdorff set approximations in this paper.
+
+
+
+The main contributions of this paper is to show that when X ⊂^n can be written as a sublevel set of some function V the following holds:
+
+	
+  * Approximating V in the L^∞ norm from above by some function J yields a sublevel set Y={x ∈Λ : J(x)<γ} that provides an arbitrarily accurate inner approximation of X in the Hausdorff metric.
+		
+  * Approximating V in the L^1 norm from above by some function J yields a sublevel set Y={x ∈Λ : J(x)<γ} that provides an arbitrarily accurate inner approximation of X in the volume metric.
+
+The above sublevel set approximation results provide us with guiding principles for the design of numerical procedures for set approximation. Firstly, given a set, X, we must write X as a sublevel set of some function V. Fortunately, this requirement is not difficult to satisfy for many of the sets encountered in control theory and in this work we find V is explicitly for intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points. Secondly, given a function V we must approximate V from above. That is we must find a function J that minimizes ||V-J|| such that V(x) ≤ J(x), where ||·|| is the L^1 or L^∞ norm. By introducing auxiliary variables we show that this optimization problem can be lifted to a convex optimization problem and solved by tightening the inequality constraints to SOS constraints. Further to this we establish that we can approximate these sets in the Volume/Hausdorff metric by a polynomial sublevel set arbitrarily well by solving the resulting SOS optimization problems with sufficiently large polynomial degrees.
+
+
+
+
+
+ §.§ Application to Path Planning and Obstacle Avoidance
+
+The path planning of autonomous systems is the computational problem of finding the sequence of inputs that moves a given object from an initial condition to a target set while avoiding obstacles. Computing optimal paths is a well researched subject, with a broad range of practical uses ranging from the navigation of UAVs <cit.> to the precise movements of robotic manipulators <cit.>.
+
+ Many popular algorithms for solving the path planning problem, such as A^* or Dijkstra, do not inherently account for the size and shape of the object. A common method for overcoming this problem is to transform the workspace of the problem to a Configuration-space (C-space), where in C-space the object is represented by a single point and obstacles are enlarged to account for the loss of size and shape of the object. The enlarged obstacles in C-space are given by the Minkowski sum of the sets representing the object and obstacles. In special convex cases the Minkowski sum can be found as a closed form solution <cit.>, however,  unfortunately there is no analytical expression for the Minkowski sum of two general sets.
+
+In the absence of an analytical expression for Minkowski sums we rely on numerical approximations. Numerical schemes have previously been proposed for the case of ellipsoid objects and convex objects <cit.> and also for more general sets using SOS and log heuristics <cit.>. In this paper we apply our proposed SOS based numerical scheme  for set approximation, with convergence guarantees, to the problem of approximating Minkowski sums in order to construct C-spaces. In this C-space we then apply the methods proposed in <cit.> to compute the optimal input sequence that drives a Dubin's car to a target set in a minimum number of steps while avoiding obstacles.
+
+
+
+
+
+§ NOTATION
+ 
+
+
+
+
+
+
+For A ⊂^n we denote the indicator function by 1_A : ^n → that is defined as 1_A(x) =     1  if  x ∈ A
+    0  otherwise. For B ⊆^n,  μ(B):=∫_^n1_B (x) dx is the Lebesgue measure of B. We denote the Hausdorff metric (given in Eq. (<ref>)) by D_H and the volume metric (given in Eq. (<ref>)) by D_V. We denote the power set of ^n, the set of all subsets of ^n, as P(^n)={X:X⊂^n }. For two sets A,B ∈^n we denote A/B= {x ∈ A: x ∉ B}. For x ∈^n we denote ||x||_p= ( ∑_i =1^n x_i^p )^1/p. For η>0 and y ∈^n we denote the set B_η(y)= {x∈^n : ||x-y||_2< η}. We say f: Ω→ is such that f ∈ L^1(Ω,) if ||f||_L^1(Ω,):=∫_Ω |f(x)| dx < ∞. We define the L^∞ norm as ||f||_L^∞(Ω,):=sup_x ∈Ω |f(x)|. We denote the space of polynomials p: ^n → by [x] and polynomials with degree at most d ∈ by _d[x]. We say p ∈_2d[x] is Sum-of-Squares (SOS) if there exists p_i ∈_d[x] such that p(x) = ∑_i=1^k (p_i(x))^2. We denote ∑_SOS^d to be the set of SOS polynomials of at most degree d ∈ and the set of all SOS polynomials as ∑_SOS. For two sets A,B ⊂^n we denote the Minkowski sum by A ⊕ B (defined in Eq. (<ref>)) and Pontryagin difference by A ⊖ B (defined in Eq. (<ref>)). If M is a subspace of a vector space X we denote equivalence relation ∼_M for x,y ∈ X by x ∼_M y if x-y ∈ M. We denote quotient space by X  M:={{y ∈ X: y ∼_M x }: x ∈ X}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ SUBLEVEL SET APPROXIMATION
+ 
+For a given set X ⊂^n the goal of this paper is to solve the following problem,
+
+    Y^* ∈inf_Y ∈ C D_S(X,Y),
+
+where D_S: P(^n) × P(^n) → [0, ∞) is some set metric providing a notion of how close set Y^* is to X and C ⊂ P(^n) is the set of feasible sets.
+
+The decision variables in Opt. (<ref>) are sets, which are uncountable objects. This poses a challenge as it is difficult to search and hence optimize over sets effectively. To make such set optimization problems tractable, we need to find ways to parameterize our decision variables. The approach we take to overcome this problem is to consider problems where both our target set, X, and our decision variable, Y, are sublevel sets of functions, taking the following forms X={x ∈Λ: V(x)<γ} and Y={x ∈Λ: J(x)< γ}, where Λ⊂^n and γ∈. Then, rather than attempting to directly solve the “geometric" set optimiziation problem in Eq (<ref>), we consider the following associated “algebriac" optimization problem, 
+
+    J^* ∈inf_J ∈ F D_F(V,J),
+
+ where D_F: L^1(^n , ) × L^1(^n , ) → [0,∞) is some function metric providing a notion of the distance between the functions V and J and F is some finite dimensional function space.
+
+The decision variables of Opt. (<ref>) are functions and hence can be easily optimized over by parametrizing the decision variables using basis functions. We next turn our attention to the question of when does solving Opt. (<ref>) yield a close solution to Opt. (<ref>)? More specifically, if X={x ∈Λ: V(x)<  γ}, Y={x ∈Λ: J(x)<  γ} and J ≈ V when is it true that X ≈ Y? In the following subsections we answer this question by showing that, for a given function, V:^n →, a compact set, Λ⊂^n, and a sequence of functions, {J_d}_d ∈, the following hold:
+
+	
+  * If J_d(x) ≥ V(x) for all x ∈Λ and J_d → V as d →∞ in the L^∞(Λ,^n) norm then for any γ>0 we have that {x ∈Λ: J_d(x)< γ}→{x ∈Λ: V(x)< γ} with respect to the Hausdorff metric (defined in Eq. (<ref>)).
+	
+  * If V(x) ≤ J_d(x) for all  x ∈Λ  and J_d → V as d →∞ in the L^1(Λ,^n) norm then for any γ>0 we have that {x ∈Λ: J_d(x) < γ}→{x ∈Λ: V(x) < γ} in the volume metric (defined in Eq. (<ref>)). 
+
+
+
+
+ §.§ Sublevel Set Approximation In The Hausdorff Metric
+
+For sets A,B ⊂^n, we denote the Hausdorff metric as D_H(A,B), defining
+
+    D_H(A,B):=max{ H(A,B), H(B,A)  } ,
+
+where H(A,B):=sup_x ∈ A D(x,B) and D(x,B):=inf_y ∈ B{x-y_2}.
+
+
+We now show that uniform convergence of functions yields sublevel approximation in the Hausdorff metric.
+ 
+	Consider a compact set Λ⊂^n, a function V : Λ→, and a family of functions {J_d }_d ∈ that satisfies the following properties:
+
+	
+  * For any d ∈ we have V(x) ≤ J_d(x) for all x ∈Λ.
+	
+  * lim_d →∞sup_x ∈Λ |V(x) -J_d(x)| =0.
+
+Then for all γ∈ we have that,
+
+    lim_d →∞	D_H ({x ∈Λ: J_d(x)< γ},{x ∈Λ: V(x)< γ})=0.
+
+
+ Throughout this proof we use the following notation X_d:={x ∈Λ: J_d(x)< γ} and X^*:={x ∈Λ: V(x)< γ}. 
+	
+Now, recall from Eq. (<ref>) that the Hausdorff metric for two sets  X_d, X^* ⊂^n is defined as the maximum of two terms, D_H(X_d,X^*):=max{ H(X_d,X^*), H(X^*,X_d)  }, where H(X_d,X^*):=sup_x ∈ X_d D(x,X^*) and D(x,X^*):=inf_y ∈ X^*{x-y_2}. This naturally leads us to split the remainder of the proof into two parts. In Part 1 of the proof we show that the first term is such that H(X_d,X^*)=0 for all d ∈. In Part 2 of the proof we show that for all >0 there exists N ∈ such that for all d>N the second term is such that H(X^*,X_d)<. Then Parts 1 and 2 of the proof can be used together to show Eq. (<ref>), completing the proof.
+	
+	Part 1 of proof: In this part of the proof we show H( X_d,X^*)=0 for all d ∈. 
+	
+	Since V(x) ≤ J_d(x) for all x ∈Λ it follows that X_d ⊆ X^* for any d ∈. Thus for all d ∈ and x ∈  X_d we have that D(x,X^*)=0. Therefore it clearly follows H(X_d,X^*)=sup_x ∈ X_d D(x,X^*)=0 for all d ∈.
+	
+	Part 2 of proof: In this part of the proof we show that for all >0 there exists N ∈ such that for all d>N we have H(X^*, X_d)<. For contradiction suppose the negation, that there exists δ>0 such that
+	
+    H(X^*, X_d) > δ for all  d ∈.
+
+	Then for each d ∈ there exists x_d ∈ X^* such that 
+	
+    D(x_d,X_d) ≥δ for all  d ∈.
+
+
+	
+	 Now, X_d ⊆Λ and Λ is compact. Therefore the sequence {x_d}_d ∈⊆Λ is bounded. Thus, by the Bolzano Weierstrass Theorem (Thm. <ref> found in Appendix <ref>), there exists a convergent subsequence {y_n}_n ∈⊆{x_d}_d ∈. Let us denote the limit point of {y_n}_n ∈ by y^* ∈Λ. 
+	 
+	 Since {x_d}_d ∈ satisfies Eq. (<ref>) and  {y_n}_n ∈⊆{x_d}_d ∈ it follows
+	 
+    D(y_n,X_n) ≥δ for all  n ∈.
+
+	 
+	 
+	 Moreover, because x_d ∈ X^* for all d ∈ and {y_n}_n ∈⊆{x_d}_d ∈ it follows y_n ∈ X^* for all n ∈. Hence, _n:=γ - V(y_n)  >0 for all n ∈. 
+	 
+	 On the other hand, since lim_d →∞sup_x ∈Λ |V(x) -J_d(x)| =0 it follows for each n ∈ there exists N_n ∈ such that
+	 
+    J_d(y_n) - V(y_n)< _n  for all  d> N_n.
+
+	 Since _n := γ - V(y_n)  >0, it follows by Eq. (<ref>) that
+	 	 
+    J_d(y_n) < γ for all  d> N_n,
+
+	 which implies y_n ∈ X_d for all d> N_n. 
+	
+	 
+	 Now, since y_n → y^* there exists N ∈ such that ||y_n - y^*||_2< δ/4 for all n >N. Fixing n >N and selecting d>max{N,N_n} (as in Eq. (<ref>) so y_n ∈ X_d for d>N_n) we have that
+	 
+    D(y_d, X_d)= inf_x ∈ X_d ||y_d - x ||_2 
+           ≤ ||y_d - y_n||_2 ≤ ||y_d - y^*||_2 + ||y_n - y^*||_2 ≤δ/2,
+
+	 contradicting Eq. (<ref>). Thus it follows that for all >0 there exists N ∈ such that for all d>N we have H(X^*, X_d)<. 
+ 
+ 
+ 	The conditions that V(x) ≤ J_d(x) and lim_d →∞sup_x ∈Λ |V(x) -J_d(x)| =0 in Thm. <ref> cannot be relaxed. In Section <ref> we have presented two counterexamples showing that if either of these conditions are relaxed then it is not necessary true that the sublevel sets of J_d converge to the sublevel set of V in the Hausdorff metric.
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ §.§ Sublevel Set Approximation in The Volume Metric
+ 
+
+For Lebesgue measurable sets A,B ⊂^n, we denote the volume metric as D_V(A,B), where
+
+    D_V(A,B):=μ( (A/B) ∪ (B/A) ),
+
+recalling from Sec. <ref> that we denote μ(A) as the Lebesgue measure of the set A ⊂^n. 
+
+
+ 
+	Consider a Lebesgue measurable set Λ⊂^n, a function V ∈ L^1(Λ, ), and a family of functions {J_d ∈ L^1(Λ, ): d ∈} that satisfies the following properties:
+	
+		
+  * For any d ∈ we have V(x) ≤ J_d(x) for all x ∈Λ.
+		
+  * lim_d →∞ ||V -J_d||_L^1(Λ, ) =0.
+	
+	Then for all γ∈ we have that
+	
+    lim_d →∞	D_V ({x ∈Λ: J_d(x) < γ} , {x ∈Λ: V(x) < γ}) =0.
+ 
+
+
+		Let us denote Ṽ(x)=-V(x) and J̃_d(x)= - J_d(x). It follows that J̃_d(x) ≤Ṽ(x) for all x ∈Λ and lim_d →∞ ||Ṽ -J̃_d||_L^1(Λ, ) =0. Therefore, by Prop. <ref> (found in the appendix) it follows that for any γ∈ we have that,
+	
+    lim_d →∞	D_V ({x ∈Λ : Ṽ(x) ≤γ}, {x ∈Λ : J̃_d(x) ≤γ}) =0.
+
+	
+	Now, Λ={x ∈Λ : V(x) < γ}∪{x ∈Λ : V(x) ≥γ} = {x ∈Λ : V(x) < γ}∪{x ∈Λ : Ṽ(x) ≤ -γ}. Therefore
+	
+    {x ∈Λ : V(x) < γ} = Λ / {x ∈Λ : Ṽ(x) ≤ -γ},
+
+	and by a similar argument
+	
+    {x ∈Λ : J_d(x) < γ} = Λ / {x ∈Λ : J̃_d(x) ≤ -γ}.
+
+	Thus, by Lem. <ref> (found in the appendix) and since {x ∈Λ : J̃_d(x) ≤γ}⊆Λ, we have that
+	
+    D_V ({x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})
+        = D_V ( Λ/ {x ∈Λ : Ṽ(x) < -γ}, Λ/ {x ∈Λ : J̃_d(x) < -γ}) 
+        = D_V ({x ∈Λ : Ṽ(x) ≤ -γ}, {x ∈Λ : J̃_d(x) ≤ -γ}).
+
+	Now by Eqs (<ref>) and (<ref>) it follows that Eq. (<ref>) holds.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+
+§ SUBLEVEL SET APPROXIMATION USING SOS PROGRAMMING
+ 
+ Given  some set X ⊂^n we would like to approximate, Theorems <ref> and <ref> illuminate the following steps we must take:
+
+	
+  * Write the set X as a sublevel set of some function V.
+	
+  * Approximate the function V by a uniformly bounding function in the L^∞ norm or L^1 norm (depending whether or not the set approximation is required to be with respect to the Hausdorff or volume metric).
+
+Step 1 is always viable since by Prop. <ref> (found in the appendix), it follows that for any compact set X ⊂^n there always exists a smooth function V such that X={x ∈^n: V(x) ≤ 0}. However, for numerical implementation it will be necessary to have an analytical expression of such a function V. Later, in the following subsections, we will present several analytical expressions of V for various classes of sets including intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points. Before proceeding to these subsections we next briefly discuss the general approach we take to solving Step 2 in our strategy, approximating V by a uniformly bounding function in either the L^∞ or L^1 norm.
+
+
+  
+An optimization problem for L^∞ approximation
+
+For a given function V ∈ C^∞(^n,) let us consider the problem of approximating V  uniformly from above in the L^∞ norm, 
+
+    J_d^* ∈   inf_J_d ∈_d[x]sup_x ∈Λ |V(x)-J_d(x)|
+       such that  V(x) ≤ J_d(x)  for all  x ∈Λ.
+
+
+
+Unfortunately, the objective function of Opt. (<ref>) , sup_x ∈Λ |V(x)-J_d(x)|, is not differentiable. This lack of differentiability causes problems later as our numerical implementation uses polynomial optimization to solve this problem. Fortunately, it is possible to lift the problem to a convex problem by introducing extra decision variables in the following way,
+
+    J_d^* ∈   inf_J_d ∈_d[x],
+    	P_d ∈_d[x], γ∈γ
+       such that  P_d(x) ≤ V(x) ≤ J_d(x)  for all  x ∈Λ,  
+        J_d(x)-P_d(x)< γ for all  x ∈Λ.
+
+Now, any solution, J_d^*, to Opt. (<ref>) is feasible to Opt. (<ref>) and minimizes the objective of Opt. (<ref>) to a value of less than or equal to γ. 
+
+
+  
+An optimization problem for L^1 approximation For a given function V ∈ C^∞(^n,) let us consider the problem of approximating V  uniformly from above in the L^1 norm, 
+
+    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ |J_d(x)-V(x)| dx 
+       such that  V(x)  ≤ J_d(x)   for all  x ∈Λ.
+
+
+Unfortunately, we have a similar problem as we did with Opt. (<ref>), that the objective function of Opt. (<ref>) is not differentiable and hence Opt. (<ref>) is not readily solvable using polynomial optimization.  However, since the constraints of Opt. (<ref>) enforce V(x) ≤ J_d(x) it follows that ∫_Λ |J_d(x)-V(x)| dx= ∫_Λ J_d(x) dx- ∫_Λ V(x) dx. Since ∫_Λ V(x) dx is a constant it is equivalent to minimize ∫_Λ J_d(x) dx as it is to minimize ∫_Λ |J_d(x)-V(x)| dx. Hence, rather than solving Opt. (<ref>) we solve, 
+
+    J_d^* ∈   inf_J_d ∈_d[x]∫_Λ J_d(x) dx 
+       such that  V(x) ≤ J_d(x)    for all  x ∈Λ.
+
+Opt. (<ref>) only yields inner sublevel set approximations of {x ∈Λ: V(x)< γ} since V(x) ≤ J_d(x) implies {x ∈Λ: J_d(x) ≤γ}⊆{x ∈Λ: V(x) ≤γ}. In contrast Opt. (<ref>) yields both inner and outer sublevel set approximations since {x ∈Λ: J_d(x) ≤γ}⊆{x ∈Λ: V(x) ≤γ}⊆{x ∈Λ: P_d(x) ≤γ}. It is also useful to consider a similar optimization problem to Opt. (<ref>) that yields outer sublevel set approximations
+
+    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ J(x) dx 
+       such that  J_d(x) ≤ V(x)    for all  x ∈Λ.
+
+
+
+  
+SOS implementation of L^∞ and L^1 approximation
+To solve Opts (<ref>) (<ref>) and (<ref>) we tighten the problem by replacing all inequality constraints to SOS constraints. This tightening results in a SOS optimization problem that yields a single polynomial sublevel set approximation of several types of sets. Unfortunately, it is non-trivial to tighten Opts (<ref>) (<ref>) and (<ref>) because, as we will see, for many set approximation problems the associated V is non-polynomial and hence we cannot directly constrain V(x) ≤ J_d(x) or P_d(x) ≤ V(x) using SOS. In the subsequent subsections we consider the following cases,
+
+	
+  * V(x)=max_1 ≤ i ≤ m g_i(x) associated with intersections of semialgebraic sets (see Lemma <ref>).
+	
+  * V(x):=min_1 ≤ i ≤ m g_i(x) associated with intersections unions of semialgebraic sets (see Lemma <ref>).
+	
+  * V(x):=inf_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x-w) associated with intersections Minkowski sums (see Lemma <ref>).
+	
+  * V(x):=sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w) associated with intersections Pontryagin differences (see Lemma <ref>).
+	
+  * V(x):=1-1_{x_i}_i=1^N(x) associated with discrete points (see Lemma <ref>).
+
+For brevity we next only discuss the case of using SOS to constrain V(x) ≤ J_d(x) or P_d(x) ≤ V(x) when V(x)=max_1 ≤ i ≤ m g_i(x) and g_i ∈[x] for each 1 ≤ i ≤ m. Other forms of V can also be constrained using a similar approach since, with the exception of discrete points, each V involves max/min operators. 
+
+For V(x)=max_1 ≤ i ≤ m g_i(x) it is straightforward to constrain V(x) ≤ J_d(x) by enforcing g_i(x) ≤ J_d(x) for 1 ≤ i ≤ m which tightens to the SOS constraint J_d-g_i ∈∑_SOS for 1 ≤ i ≤ m. On the other hand it is slightly more difficult to constrain P_d(x) ≤ V(x). This is because if we set P_d(x) ≤ g_i(x) for all 1 ≤ i ≤ m then P_d(x) ≤min_1 ≤ i ≤ m g_i(x) <max_1 ≤ i ≤ m g_i(x)=V(x) implying that P_d cannot be made arbitrarily close to V since |V(x)-P_d(x)| ≥max_1 ≤ i ≤ m g_i(x)-min_1 ≤ i ≤ m g_i(x)>0.  To enforce P_d(x) ≤ V(x) in a non-conservative manner we enforce
+
+    P_d(x) ≤ g_i(x)  for  x ∈{y∈Λ: g_i(y)≥ g_j(y)  for all  i  j  }.
+
+ This constraint is now a polynomial inequality over a semialgebraic set and therefore can be readily tightened to an SOS constraint.
+
+
+ §.§ Approximation of Semialgebraic Sets
+ 
+In this subsection we solve the problem of approximating semialgebraic sets, sets of the form X={x ∈^n: g_i(x) < 0  for all  1 ≤ i ≤ m }, where g_i ∈[x] for 1 ≤ i ≤ m. Throughout this section we will assume X ⊂^n is a compact set and hence WLOG we assume 
+ 
+    X={x ∈Λ: g_i(x) < 0  for all  1 ≤ i ≤ m },
+
+ where Λ⊂^n is some sufficiently large compact set and g_i ∈[x] for 1 ≤ i ≤ m. 
+ 
+ In the following Lemma we show that semialgebraic sets can be written as a sublevel set of a single function.
+ 
+	Consider X={x ∈Λ: g_i(x) < 0  for all  1 ≤ i ≤ m } then 
+
+	
+    X={x ∈Λ: V(x)<0 },
+
+where V(x):=max_1 ≤ i ≤ m g_i(x).
+
+
+
+
+
+
+
+Suppose y ∈ X then g_i(y) < 0  for all  1 ≤ i ≤ m and hence V(y)=max_1 ≤ i ≤ m g_i(y)<0. Hence, y ∈{x ∈Λ: V(x)<0 } implying that X ⊆{x ∈Λ: V(x)<0 }. On the other hand suppose y ∈{x ∈Λ: V(x)<0 }. Then V(y)=max_1 ≤ i ≤ m g_i(y)<0 implying g_i(y) < 0  for all  1 ≤ i ≤ m and hence y ∈ X. Therefore {x ∈Λ: V(x)<0 }⊆  X. Hence {x ∈Λ: V(x)<0 }  =	  X. 
+
+
+It is now clear from Lemma <ref> and Theorems <ref> and <ref> that in order to approximate the set in Eq. (<ref>) we must solve Opt. (<ref>) or Opt. (<ref>) for V(x)=max_1 ≤ i ≤ m g_i(x). 
+
+WLOG we assume Λ⊂^n is a ball with sufficiently large radius, that is Λ={x ∈^n: ||x||_2<r}. We now propose the following SOS tightening of Opt. (<ref>) for V(x):=max_1 ≤ i ≤ m g_i(x),
+
+    (J_d^*,P_d^*,γ_d^*) ∈inf_J_d ∈_d[x],
+    	P_d ∈_d[x], γ∈γ     such that 
+    
+        (g_i(x)   -  P_d(x))   -   s_i,1(x)(r^2   -   ||x||_2^2) 
+        - ∑_j=1^m   s_i,j,2(x)(g_i(x)   -  g_j(x)) ∈∑_SOS^d   for all  1 ≤ i ≤ m, 
+    
+        J_d(x)-g_i(x) - s_i,3(x)(r^2 - ||x||_2^2)  ∈∑_SOS^d   for all  1 ≤ i ≤ m,  
+       γ -( J_d(x)-P_d(x)) -s_4(x)(r^2 - ||x||_2^2)  ∈∑_SOS^d,
+        s_i,1(x)  ∈∑_SOS^d,  s_i,j,2(x)  ∈∑_SOS^d,   s_i,3(x)   ∈∑_SOS^d,
+         s_4(x)   ∈∑_SOS^d   for all  i,j   ∈{1,...,m}.
+
+
+
+In a similar way to how we tightened Opt. (<ref>) to get Opt. (<ref>) we next tighten Opt. (<ref>) for V(x):=max_1 ≤ i ≤ m g_i(x) to get,
+
+    J_d^* ∈   inf_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
+        J_d(x) - g_i(x) - s_i(x)(r^2 - ||x||_2^2) ∈∑_SOS^d    for  1 ≤ i ≤ m, 
+         s_i(x) ∈∑_SOS^d  for  1 ≤ i ≤ m.
+
+
+
+
+ 
+
+
+
+ §.§ Approximation of Unions of Semialgebraic Sets
+ 
+In this subsection we solve the problem of approximating the union of semialgebraic sets, 
+
+    X= ∪_i=1^m_1{x ∈Λ: g_i,j(x) < 0  for all  1 ≤ j ≤ m_2 },
+
+ where g_i,j∈[x] for 1 ≤ i ≤ m_1 and 1 ≤ j ≤ m_2. For simplicity we will only consider the case m_2=1. 
+ 
+
+ 
+ 
+ 
+ 
+ 
+  In the following Lemma we show that unions of semialgebraic sets can be written as a sublevel set of a single function.
+  
+	Consider X=∪_i=1^m {x ∈Λ: g_i(x) < 0 } then 
+	
+    X={x ∈Λ: V(x)<0 },
+
+	where V(x):=min_1 ≤ i ≤ m g_i(x).
+
+
+
+
+
+
+
+	Follows by a similar argument as Lem. <ref>.
+
+To approximate sets of the form given in Eq. (<ref>) we now propose the following SOS tightening of Opt. (<ref>) for V(x):=min_1 ≤ i ≤ m g_i(x), 
+
+    (J_d^*,P_d^*,γ_d^*) ∈inf_J_d ∈_d[x],
+    		P_d ∈_d[x], γ∈γ     such that 
+        (g_i(x)   -  P_d(x))   -   s_i,1(x)(r^2   -   ||x||_2^2)   ∈∑_SOS^d  for all  1 ≤ i ≤ m, 
+        (J_d(x)-g_i(x)) - s_i,2(x)(r^2 - ||x||_2^2)  
+        - ∑_j=1^m   s_i,j,3(x)(g_j(x)   -  g_i(x)) ∈∑_SOS^d   for all  1 ≤ i ≤ m,  
+       γ -( J_d(x)-P_d(x)) -s_4(x)(r^2 - ||x||_2^2)  ∈∑_SOS^d,
+        s_i,1(x)  ∈∑_SOS^d,  s_i,2(x)   ∈∑_SOS^d,  s_i,j,3(x)  ∈∑_SOS^d,   ,
+        s_4(x) ∈∑_SOS^d   for all  i,j   ∈{1,...,m}.
+
+
+
+We next propose the following SOS tightening of Opt. (<ref>) for V(x):=min_1 ≤ i ≤ m g_i(x),
+
+    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
+        g_i(x) - J_d(x) - s_i(x)(r^2 - ||x||_2^2) ∈∑_SOS^d    for  1 ≤ i ≤ m, 
+         s_i (x)∈∑_SOS^d  for  1 ≤ i ≤ m.
+
+
+ Note, solving Opt. (<ref>) results in both a lower (P_d) and upper (J_d) approximation of V(x):=min_1 ≤ i ≤ m g_i(x), whereas, solving Opt. (<ref>) only results in a lower approximation. Unfortunately, Theorems <ref> and <ref> only apply for upper function approximations and hence we are unable to use these theorems to show Opt. (<ref>) yields an arbitrary accurate sublevel set approximation of the set given in Eq. (<ref>). We could construct a similar SOS problem to Opt. (<ref>) that results in a upper approximation in a non-conservative way using a similar argument as in Eq. (<ref>) but this would result in more SOS decision variables. Alternatively, we will later show that Opt. (<ref>) yields a sublevel approximation to the non-strict/relaxed version the set given of Eq. (<ref>). That is, Opt. (<ref>) can be used to approximate the following set,
+ 
+    X= ∪_i=1^m{x ∈Λ: g_i(x) ≤ 0},
+
+ where g_i ∈[x] for 1 ≤ i ≤ m.
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Approximation of Minkowski Sums
+ 
+
+
+Given two sets A,B ⊂^n their Minkowski sum is defined as
+
+    A ⊕ B = {a+b ∈^n : a ∈ A  and  b ∈ B }.
+
+
+We next consider the problem of approximating the set X=A ⊕ B, where A,B ⊂^n can be written as sublevel sets. That is we consider the problem of approximating the following,
+
+    X={x ∈Λ: g_1(x) ≤ 0 }⊕{x ∈Λ: g_2(x) ≤ 0 },
+
+where g_1,g_2 ∈ C^∞. Note that this is non-restrictive since Prop. <ref> shows any compact set can be written as a sublevel set and Lemmas <ref> and <ref> give this sublevel set in an analytical form for intersections or unions of semialgebraic sets. 
+
+In the following lemma we show sets satisfying Eq. (<ref>) can be written as the sublevel set of a single function. 
+ 
+	Consider X:={x ∈Λ: g_1(x) ≤ 0 }⊕{x ∈Λ: g_2(x) ≤ 0 }, where Λ⊂^n is a compact set and g_1,g_2 ∈ C(Λ,), then 
+	
+    X={x ∈Λ: V(x) ≤ 0 },
+
+	where V(x):=inf_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x-w).
+
+
+
+
+
+
+
+	Suppose x ∈ X then there exists z_1 ∈{x ∈Λ: g_1(x) ≤ 0 } and z_2 ∈{x ∈Λ: g_2(x) ≤ 0 } such that x =z_1+z_2. Hence,
+	
+    V(x)= inf_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x-w) ≤ g_1(x-z_2)= g_1(z_1) ≤ 0,
+
+since z_1 ∈{x ∈Λ: g_1(x) ≤ 0 }. Therefore, x ∈{y ∈Λ: V(y) ≤ 0 } implying X ⊆{x ∈Λ: V(x) ≤ 0 }.
+
+On the other hand suppose x ∈{y ∈Λ: V(y) ≤ 0 }. Note that by Lem. <ref> (found in the appendix) it follows that {z ∈Λ: g_2(z) ≤ 0 } is compact. Now, by the extreme value theorem, continuous functions attain their extreme values over compact sets implying that there exists z_2 ∈inf_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x-w) such that g_1(x-z_2)=V(x). Let z_1=x-z_2. Because V(x) ≤ 0 it follows that g_1(z_1)= g_1(x-z_2)=V(x) ≤ 0. Hence, z_1 ∈{x ∈Λ: g_1(x)  ≤ 0 }. Therefore it follows that x ∈ X and hence X ⊂{y ∈Λ: V(y) ≤ 0 }. Thus X={x ∈Λ: V(x)  ≤ 0 }.
+
+For simplicity we next consider the special case of approximating A ⊕ B where A is a union of sublevel sets and B is a semialgebraic set. That is we consider the problem of approximating the following set,
+
+    X:=   ∪_i=1^m_1{x ∈Λ: g_1,i(x) ≤ 0 }
+               ⊕{x ∈Λ: g_2,j(x) ≤ 0  for  1 ≤ j ≤ m_2 },
+
+where g_1,i, g_2,j∈[x] for all 1 ≤ i ≤ m_1 and 1 ≤ j ≤ m_2. Other cases where one or both of A or B is a union or intersection of semialgebraic sets can be handled by a similar methodology. Now, by similar arguments to Lemmas <ref> and <ref> and the use of Lemma <ref> it is clear that X, given in Eq. (<ref>), is such that X={x ∈Λ: V(x) ≤ 0 } where
+
+    V(x)=inf_w  ∈{z ∈Λ: max_1 ≤ j ≤ m_2 g_2,j(z) ≤ 0 }min_1 ≤ i ≤ m_1 g_1,i(x-w).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+Unlike in Subsections <ref> and <ref>, in this subsection we do not provide a SOS tightening of Opt. (<ref>) due to the complexity of using SOS to enforce the constraint V(x)≤ J_d(x) when V is given in Eq. (<ref>). Indeed, we could increase the problems dimension and enforce,
+
+    J_d(x) - g_1,i(x-w) - s_i,0(x,u,w)(g_1,i(x-u) - g_1,i(x-w)) 
+        -∑_j=1^m_2 s_i,j,1(x,w,u)(g_1,j(x-w) -g_1,i(x-w))  
+        + ∑_j=1^m_2 s_i,j,2(x,w,u)g_2,j(w)+ ∑_j=1^m_2 s_i,j,3(x,w,u)g_2,j(u) 
+        - s_i,4(x,w,u)(r^2 - ||(x,u,w)||_2^2) ∈∑_SOS for  1 ≤ i ≤ m_1,
+        s_i,0,s_i,j,1, s_i,j,2, s_i,j,3, s_i,4∈∑_SOS for  1 ≤ i ≤ m_1 & 1 ≤ j≤ m_2
+ 
+
+However, this approach results in a very large SOS optimization problem. Fortunately, it is relatively easy to enforce the constraint J_d(x) ≤ V(x). This is the only constraint that is required to be tightened in Opt. (<ref>). Thus, to approximate sets of the form given in Eq. (<ref>) we now propose the following SOS tightening of Opt. (<ref>) for V(x):=inf_w  ∈{z ∈Λ: max_1 ≤ j ≤ m_2 g_2,j(z) ≤ 0 }min_1 ≤ i ≤ m_1 g_1,i(x-w),
+
+    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
+        g_1,i(x-w) - J_d(x) - s_i,1(x,w)(r^2 - ||(x,w)||_2^2)
+            +∑_j=1^m_2 s_i,j,2(x,w)g_2,j(w)  ∈∑_SOS^d    for  1 ≤ i ≤ m_1, 
+         s_i,1(x) ∈∑_SOS^d  for  1 ≤ i ≤ m_1, 
+        s_i,j,2(x) ∈∑_SOS^d  for  1 ≤ i ≤ m_1  and  1 ≤ j ≤ m_2.
+
+
+
+
+ §.§ Approximation of Pontryagin Differences
+ 
+
+
+	Given two sets A,B ⊂^n their Pontryagin difference is defined as
+	
+    A ⊖ B = {a ∈ A: a+b ∈ A  for all  b ∈ B   }.
+
+
+We next show that the Pontryagin difference of two sublevel sets can be written as a sublevel set of a single function.
+ 
+	Consider X:={x ∈Λ: g_1(x) < 0 }⊖{x ∈Λ: g_2(x) ≤ 0 }, where Λ⊂^n is a compact set and g_1,g_2 ∈ C(Λ,), then 
+	
+    X={x ∈Λ: V(x) < 0 },
+
+	where V(x):=sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w).
+	
+	
+	
+		
+		
+
+
+	We first show Eq. (<ref>). Suppose x ∈ X then it must follow that g_1(x+w)<0 for all w ∈{z ∈Λ: g_2(z) ≤ 0 }. Note that by Lem. <ref> (found in the appendix) it follows that {z ∈Λ: g_2(z) ≤ 0 } is compact. Now, by the extreme value theorem continuous functions attain their extreme values over compact sets implying that there exists w^*  ∈{z ∈Λ: g_2(z) ≤ 0 } such that g_1(x+w^*)=sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w). Hence V(x)=sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w)=g_1(x+w^*)<0 implying that x ∈{z ∈Λ: V(z) < 0 } and hence X ⊆{x ∈Λ: V(x) < 0 }.
+	
+	On the other hand if x ∈{z ∈Λ: V(z) < 0 } it follows that sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w)<0. Hence, g_1(x+w) ≤sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w) < 0 for all w  ∈{z ∈Λ: g_2(z) ≤ 0 } implying x+w ∈{x ∈Λ: g_1(x) <	 0 } for all w  ∈{z ∈Λ: g_2(z) ≤ 0 } . Thus it follows that x ∈ X.
+	
+	
+
+
+For simplicity we consider the special case of approximating A ⊖ B where both A and B are semialgebraic sets. Other cases where one or both of A or B is a union or intersection of semialgebraic sets can be handled by a similar methodology. That is we consider the problem of approximating the following set,
+
+    X:=   {x ∈Λ: g_1,i(x) < 0  for  1 ≤ i ≤ m_1 }
+               ⊖{x ∈Λ: g_2,j(x) ≤ 0  for  1 ≤ j ≤ m_2 },
+ 
+where g_1,i, g_2,j∈[x] for all 1 ≤ i ≤ m_1 and 1 ≤ j ≤ m_2. Other cases where one or both of A or B is a union or intersection of semialgebraic sets can be handled by a similar methodology. Now, by Lemmas <ref> and <ref> it is clear that X, given in Eq. (<ref>), is such that X={x ∈Λ: V(x) < 0 } where
+
+    V(x)=sup_w  ∈{z ∈Λ: max_1 ≤ j ≤ m_2 g_2,j(z) ≤ 0 }max_1 ≤ i ≤ m_1 g_1,i(x+w).
+
+Similarly to Subsection <ref>, we do not provide a tightening of the Opt. (<ref>) due to the complexity of using SOS to enforce the constraint J_d(x) ≤ V(x) when V is given in Eq. (<ref>) 
+
+To approximate sets given in Eq. (<ref>) we now propose the following SOS tightening of Opt. (<ref>) for V(x):=sup_w  ∈{z ∈Λ: max_1 ≤ j ≤ m_2 g_2,j(z) ≤ 0 }max_1 ≤ i ≤ m_1 g_1,i(x+w),
+	
+    J_d^* ∈   inf_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
+        J_d(x)- g_1,i(x+w)  - s_i,1(x,w)(r^2 - ||(x,w)||_2^2)
+            +∑_j=1^m_2 s_i,j,2(x,w)g_2,j(w)  ∈∑_SOS^d    for  1 ≤ i ≤ m_1, 
+         s_i,1∈∑_SOS^d  for  1 ≤ i ≤ m_1, 
+        s_i,j,2∈∑_SOS^d  for  1 ≤ i ≤ m_1  and  1 ≤ j ≤ m_2.
+
+
+	
+
+
+
+ §.§ Approximation of Discrete Points
+ 
+In this section we consider the problem of approximating a set of discrete points, {x_i}_i=1^N ⊂^n. We first note that it is possible to write a set of discrete points as a sublevel set of a polynomial without any computation by considering the function V(x)= ∏_i=1^N (x_i - x)^2. However, this polynomial function has a very large degree, double the number of data points. We next  show that sets of discrete points can be written as a sublevel set of a simpler function. This will allow us to derive an SOS optimization problem to approximate this simple function by a polynomial with relatively small degree, yielding a low degree polynomial sublevel approximation of {x_i}_i=1^N ⊂^n.
+ 
+Consider X={x_i}_i=1^N ⊂Λ. Then
+
+    X={x ∈Λ: V(x) ≤ 0 },
+
+where V(x)=1-1_{x_i}_i=1^N(x).
+
+
+	Follows trivially.
+
+
+
+We do not provide an SOS tightening for Opt. (<ref>) when V(x)=1-1_{x_i}_i=1^N(x) because in order for us to prove that the resulting polynomial sublevel set approximation can be arbitrarily small with respect to the Hausdorff metric we rely on Thm. <ref>. Thm. <ref> requires that our polynomial approximations of V converge in the L^∞ norm. Unfortunately, this V is not continuous so it is not possible to approximate it uniformly using smooth functions like polynomials. Fortunately, V is an integrable function so it is possible to approximate it by a polynomial in the L^1 norm using the following SOS tightening of Opt. (<ref>),
+
+    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
+        J_d(x_i) <0   for  1 ≤ i ≤ N, 
+         1-J_d(x) - s_0(x)(r^2 -||x||_2^2) ∈∑_SOS^d,    s_0(x) ∈∑_SOS^d.
+
+
+
+
+
+
+
+§ CONVERGENCE OF OUR PROPOSED SOS PROGRAMS
+ 
+In the previous sections we proposed several SOS optimization problems to approximate various functions, V, whose sublevel sets yield several important classes of sets (intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points). In this section we use Theorems <ref> and <ref> to prove that the sequences of solutions to our SOS problems produce sequences of sublevel sets that each converge to the associated target set in the Hausdorff or volume metric. We begin this section with showing convergence in the Hausdorff metric. 
+
+ 
+	It holds that,
+		
+    lim_d →∞	D_H ({x ∈Λ: J_d^*(x)<0} , X ) =0,
+               {x ∈Λ: J_d^*(x)<0}⊆ X,
+
+where Λ:={x ∈^n: ||x||_2 ≤ r} and the set X and the sequence of functions {J_d^*}_d ∈⊂[x] satisfy either of the following:
+	
+		
+  * X is a semialgebraic set, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] solve the family of d-degree SOS optimization problems given in Eq. (<ref>).
+		
+  * X is a union of semialgebraic sets given by Eq. (<ref>) and {J_d^*}_d ∈⊂[x] solve the family of d-degree SOS optimization problems given in Eq. (<ref>).
+	
+
+
+
+
+
+
+
+
+
+
+	Convergence to semialgebraic sets:	We first prove the first case where X is a semialgebraic set, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] solve the family of d-degree SOS optimization problems given in Eq. (<ref>).
+	
+Now, it follows that if we show that
+	
+    J_d^*(x) ≥ V(x)  for all  x ∈Λ,
+    lim_d →∞||J_d^*-V||_L^∞(Λ,)=0,
+
+	where V(x):=max_1 ≤ i ≤ m g_i(x), then Eqs (<ref>) and (<ref>) hold and the proof is complete. This is because Lem. <ref> shows that X={x ∈Λ: V(x)<0} and therefore if Eq. (<ref>) holds then clearly Eq. (<ref>) must hold. Moreover, if Eqs (<ref>) and (<ref>) hold then by Theorem <ref> it must follow that lim_d →∞	D_H ({x ∈Λ: J_d^*(x)<0} , {x ∈Λ: V(x)<0} ). It is then clear Eq. (<ref>) holds.
+	
+	We first show Eq. (<ref>). Because J_d^* solves Opt. (<ref>) it follows that it must be feasible to Opt. (<ref>) and hence satisfies each constraint. In particular there must exist SOS variables s_2,i∈∑_SOS^d such that 
+	
+    J_d^*(x) - g_i(x) -s_2,i(x)(r^2 - ||x||_2^2) ∈∑_SOS^d  for  1 ≤ i ≤ m.
+
+	Hence, it follows by Eq. (<ref>) and the positivity of SOS polynomials that J_d^*(x) ≥ g_i(x) for all x ∈Λ and 1≤ i ≤ m. Therefore J_d^*(x) ≥max_1 ≤ i ≤ m g_i(x)=V(x) and thus Eq. (<ref>) holds. 
+	
+	We next show that Eq. (<ref>) holds. Let >0, by Cor. <ref>, found in Appendix <ref>, there exists H_1,H_2 ∈[x] such that, 
+	
+    sup_ x ∈Λ |V(x) - H_j(x) | < /4 for  j ∈{1,2}, 
+        H_1(x) > g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m,
+        H_2(x) < g_i(x)  for all  x ∈ B_r(0) ∩Y̅_̅i̅ and  1 ≤ i ≤ m,
+
+	where  Y̅_̅i̅ :={y ∈Λ: g_i(y) ≥ g_j(y)  for  1 ≤ j ≤ m  }. 
+	
+	Since H_1(x)-g_i(x) >0 for all x ∈ B_r(0) and 1 ≤ i ≤ m and also since B_r(0) is compact semialgebraic set it follows by Thm. <ref> that there exists SOS polynomials {s_2,i}_i ∈{1,..,m}⊂∑_SOS and s_0,1	∈∑_SOS such that,
+	
+    H_1(x)-g_i(x)-s_2,i(x)(r^2 - ||x||_2^2)=s_0,1	(x).
+
+	Moreover, by a similar argument, since g_i(x)- H_2(x) >0 for all x ∈  B_r(0) ∩Y̅_̅i̅ and 1 ≤ i ≤ m and also since B_r(0)∩Y̅_̅i̅ is compact semialgebraic set it follows by Thm. <ref> that there exists SOS polynomials {s_1,i,j}_(i,j) ∈{1,..,m}×{1,..,m}⊂∑_SOS, {s_1,i}_i ∈{1,..,m}⊂∑_SOS  and s_0,2	∈∑_SOS such that,
+	
+    g_i(x)-H_2(x) -s_1,i(x)     (r^2 - ||x||_2^2) 
+        -∑_j=1^m s_1,i,j(x)(g_i(x)-g_j(x))     =s_0,2(x).
+
+	Now clearly, H_2(x)< max_1 ≤ i ≤ m g_i(x) =V(x)< H_1(x) for all x ∈  B_r(0) implying
+	
+    γ_H -(H_2(x) - H_1(x)) ≥ (H_2(x) - H_1(x)) 
+        = (H_2(x)-V(x))+ (V(x) - H_1(x))>0  for all  x ∈ B_r(0),
+
+	where γ_H :=2 sup_x ∈ B_r(0){H_2(x) - H_1(x)}. Therefore by Thm. <ref> there exists SOS polynomials s_3∈∑_SOS and and s_0,3	∈∑_SOS such that,
+	
+    γ_H -(H_2(x) - H_1(x)) -s_3(x)(r^2 - ||x||_2^2) =s_0,3(x).
+
+	Furthermore, by Eq. (<ref>) it follows that
+	
+    γ_H≤  2sup_x ∈ B_r(0)|H_2(x)-V(x)| +   2sup_x ∈ B_r(0)|V(x)-H_1(x)| < .
+
+	
+	Now, let d_0:=max{ deg(H_1),deg(H_2), max_i,j ∈{1,...,m}{s_1,i,j}, max_i ∈{1,...,m}{s_2,i}, s_3, max_i ∈{1,2,3}{s_0,i}}. It then follows by Eqs (<ref>), (<ref>) and (<ref>) that (H_2,H_1,γ_H) is a feasible solution to Opt. (<ref>) for degree d ≥ d_0. Hence, the value of the objective resulting from the optimal solutions, (J_d^*,P_d^*, γ_d^*) for d ≥ d_0, will be less than or equal to the value of the objective function resulting from the feasible solution (H_2,H_1,γ_H). Therefore by Eq. (<ref>) we have that,
+	
+    γ^*_d≤γ_H< for all  d ≥ d_0.
+
+	
+	Now, since (J_d^*,P_d^*, γ_d^*) is the optimal solution to Opt. (<ref>) it satisfies all of the constraints of Opt. (<ref>). Since SOS polynomials are non-negative it then follows
+	
+    J^*_d(x)   ≥ g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m, 
+    
+    		P^*_d(x)    ≤ g_i(x)  for all  x ∈ B_r(0) ∩Y̅_̅i̅ and  1 ≤ i ≤ m,
+    
+    		J^*_d(x)- P^*_d(x)    ≤γ_d^*  for all  x ∈ B_r(0),
+
+	implying P^*_d(x) ≤ V(x) ≤ J^*_d(x) for all B_r(0) and hence 
+	
+    |J^*_d(x) - V(x)|     = J^*_d(x) - V(x) ≤ J^*_d(x) - P^*_d(x)
+       ≤γ_d^*  for all  x ∈ B_r(0).
+
+	Therefore, by Eqs (<ref>) and (<ref>) it follows that
+	
+    sup_x ∈ B_r(0)	|J^*_d(x) - V(x)|≤γ_d^*<  for  d ≥ d_0.
+
+	Now, >0 was arbitrarily chosen and thus Eq. (<ref>) shows Eq. (<ref>), completing the proof.
+	
+		Convergence to unions of semialgebraic sets: Consider the case when X is given by Eq. (<ref>) and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>). Then  Eqs (<ref>) and (<ref>) hold by a similar argument to the proof of convergence to to semialgebraic sets, where instead of showing lim_d →∞||J_d^*-max_1 ≤ i ≤ m g_i||_L^∞(Λ,)=0 (as in Eq. (<ref>)) we show lim_d →∞||J_d^*-min_1 ≤ i ≤ m g_i||_L^∞(Λ,)=0.
+
+
+Note, the solutions, {J_d}_d ∈, to Opts (<ref>) and (<ref>) provide inner sublevel set approximations as shown in Eq. (<ref>). However, it is still possible to construct an outer sublevel set approximation using P_d^* since in both cases P_d^*(x) ≤ V(x) and lim_d →∞ ||P_d- V||_L^∞(Λ,)=0. Unfortunately, as shown in Counterexample <ref> (found in the appendix), it is not necessarily true that {x ∈Λ: P^*_d(x)<γ}→{x ∈Λ: V(x)<γ} in the Hausdorff metric. Fortunately, it is fairly straight forward to show {x ∈Λ: P^*_d(x) ≤γ}→{x ∈Λ: V(x) ≤γ} in the volume metric using Prop. <ref>.
+
+
+
+We next use Theorem <ref> to show that the SOS programs we proposed in Section <ref>, that approximate in the L^1 norm from above, yield polynomial sublevel sets that converge in the volume metric to semialgebraic sets or Pontryagin differences.
+ 
+	It holds that,
+	
+    lim_d →∞	D_V ({x ∈Λ: J_d^*(x) < 0} , X ) =0, 
+               {x ∈Λ: J_d^*(x)<0}⊆ X,
+
+	where Λ:={x ∈^n: ||x||_2 ≤ r} and the set X and the sequence of solutions {J_d^*}_d ∈⊂[x] satisfy either of the following:
+	
+		
+  * X is a semialgebraic set, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
+		
+  * X is a Pontryagin difference, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
+	
+
+
+Convergence to semialgebraic sets:	We first show Eqs (<ref>) and (<ref>) hols in the case X is a semialgebraic set, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
+
+
+ Now, it follows that if we show that
+	
+    J_d^*(x) ≥ V(x)  for all  x ∈Λ,
+    lim_d →∞||J_d^*-V||_L^1(Λ,)=0,
+
+	where V(x):=max_1 ≤ i ≤ m g_i(x), then Eqs (<ref>) and (<ref>) hold and the proof is complete. This is because by Lem. <ref> we have that X={x ∈Λ: V(x)<0}. Then if Eqs (<ref>) and (<ref>) hold then clearly Eq. (<ref>) is satisfied and, by Thm. <ref>, it must follow that lim_d →∞	D_V({x ∈Λ: J_d^*(x)<0} , {x ∈Λ: V(x)<0} ). It is then clear Eq. (<ref>) holds.
+	
+	We first show Eq. (<ref>). Because J_d^* solves Opt. (<ref>) it follows that it must be feasible to Opt. (<ref>) and hence satisfies each constraint. In particular there must exist SOS variables s_i∈∑_SOS^d such that 
+	
+    J_d^*(x) - g_i(x) -s_i(x)(r^2 - ||x||_2^2) ∈∑_SOS^d  for  1 ≤ i ≤ m.
+
+	Hence, it follows by Eq. (<ref>) and the positivity of SOS polynomials that J_d^*(x) ≥ g_i(x) for all x ∈Λ and 1≤ i ≤ m. Therefore J_d^*(x) ≥max_1 ≤ i ≤ m g_i(x)=V(x) and thus Eq. (<ref>) holds. 
+	
+	We next show Eq. (<ref>). Consider the sequence of functions, {G_d^*}_d ∈⊂[x], that solve the family of d-degree SOS optimization problems given in Eq. (<ref>). This sequence of functions is also feasible to Opt. (<ref>). Therefore the value of the objective function of Opt. (<ref>) resulting from G_d^* will be greater than the optimal solution J_d^*. That is
+	
+    ∫_Λ J_d^*(x) dx ≤∫_Λ G_d^*(x) dx.
+
+	Moreover, by Eq. (<ref>), in the proof of Thm. <ref>, we have that 
+	
+    lim_d →∞||G_d^*-V||_L^∞(B_r(0),)=0.
+
+	Hence,
+	
+    lim_d →∞∫_Λ |V(x) - J_d^*(x)| dx = lim_d →∞∫_Λ V(x) - J_d^*(x) dx
+       ≤lim_d →∞∫_Λ V(x) - G_d^*(x) dx ≤lim_d →∞μ(Λ) ||V-G_d||_L^1(B_r(0),)=0.
+
+	Therefore, Eq. (<ref>) is shown completing the proof.
+	
+	
+			
+					Convergence to Pontryagin differences: 	Consider the case where X is given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>). Note, in Eq. (<ref>) that it was shown that X={x ∈Λ: V(x) < 0 }, where 
+    V(x):=sup_w  ∈{z ∈Λ: max_1 ≤ i ≤ m_2 g_2,i(z) ≤ 0 }max_1 ≤ i ≤ m_1 g_1,i(x-w).
+
+					
+					The rest of the proof follows by a similar argument to the convergence to semialgebraic sets proof, where we use Cor. <ref> (found in the appendix) to approximate V uniformly from above by a polynomial. We then show that this polynomial approximation is feasible to Opt. (<ref>) for sufficiently large d ∈ using Theorem <ref> (found in the appendix). Because this feasible solution to Opt. (<ref>) is arbitrarily close to V, it can then be shown that the true solution of Opt. (<ref>) approximates V from above with arbitrary precision with respect to the L^1 norm. Hence, Eq. (<ref>) follows by Thm. <ref>. It is also clear that Eq. (<ref>) since J_d^*(x) ≥ V(x).
+
+
+Thm. <ref> shows that the SOS programs we proposed in Section <ref>, that approximate in the L^1 norm from above, converge to various sets defined by strict sublevel sets. We next show that the SOS programs we proposed in Section <ref>, that approximate in the L^1 norm from below, yield polynomial sublevel sets that converge in the volume metric to unions of semialgebraic sets or Minkowski sums or discrete points defined by  non-strict sublevel sets.
+
+It holds that,
+
+    lim_d →∞	D_V ({x ∈Λ: J_d^*(x)  ≤ 0} , X ) =0,
+                	 X ⊆{x ∈Λ: J_d^*(x) ≤ 0},
+
+where Λ:={x ∈^n: ||x||_2 ≤ r} and the set X and the sequence of solutions {J_d^*}_d ∈⊂[x] satisfy either of the following:
+
+	
+  * X is a union of semialgebraic sets, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
+	
+  * X is a Minkowski sum, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
+	
+  * X is a set of discrete points, given by X={x_i}_i=1^N⊂^n, and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
+
+
+
+		Convergence to unions of semialgebraic sets:  Consider the case when X is given by Eq. (<ref>) and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).	By a similar argument to the proof of Thm. <ref> that showed Eqs (<ref>) and (<ref>) hold, it is possible to use Prop. <ref> to show that
+	
+    V(x) ≥ J_d^*(x)   for all  x ∈Λ,
+    lim_d →∞||J_d^*-V||_L^1(Λ,)=0,
+
+	for V(x):=min_1 ≤ i ≤ m g_i(x). Then by Prop. <ref> it follows that lim_d →∞ D_V({x ∈Λ: V(x) ≤ 0}, {x ∈Λ: J_d(x) ≤ 0 } )=0. By a similar argument to Lem. <ref> it follows that X={x ∈Λ: V(x) ≤ 0}, where X is given by Eq. (<ref>).  Therefore it is clear Eq. (<ref>) holds. Moreover, since V(x) ≥ J_d^*(x) it is clear that Eq. (<ref>) holds.
+	
+	Convergence to Minkowski sums: Consider the case where X is given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>). Note in Eq. (<ref>) that it was shown that X={x ∈Λ: V(x) ≤ 0 }, where 
+    V(x):=inf_w  ∈{z ∈Λ: max_1 ≤ i ≤ m_2 g_2,i(z) ≤ 0 }min_1 ≤ i ≤ m_1 g_1,i(x-w).
+
+	
+	The rest of the proof follows by a similar argument to the convergence to unions of semialgebraic sets proof, where we use Lem. <ref> (found in the appendix) to approximate V uniformly from below by a polynomial. We then show this polynomial approximation is feasible to Opt. (<ref>) for sufficiently large d ∈ using Theorem <ref> (found in the appendix). Because this feasible solution to Opt. (<ref>) is arbitrarily close to V, it can then be shown that the true solution of Opt. (<ref>) approximates V from below with arbitrary precision with respect to the L^1 norm. Hence, Eq. (<ref>) follows by Prop. <ref>. Moreover, since V(x) ≥ J_d^*(x) it is clear that Eq. (<ref>) holds.
+	
+		Convergence to Discrete Points: Consider the case where X={x_i}_i=1^N, and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>). Note in Lem. <ref> it was shown that X={x ∈Λ: V(x) ≤ 0 }, where 
+    V(x):=1 - 1_{x_i}_i=1^N(x).
+
+		
+		The rest of this proof again follows by a similar argument to proof of convergence to unions of semialgebraic sets or Minkowski sums. This time we use Prop. <ref> to approximate V uniformly from below by a polynomial. We then show that this polynomial is feasible to Opt. (<ref>) for sufficiently large enough degree using Theorem <ref>. Because this feasible solution to Opt. (<ref>) is arbitrarily close to V, it can then be shown that the true solution of Opt. (<ref>) approximates V from below with arbitrary precision with respect to the L^1 norm. Hence, Eq. (<ref>) follows by Prop. <ref>. Moreover, since V(x) ≥ J_d^*(x) it is clear that Eq. (<ref>) holds.
+
+
+
+
+
+
+
+
+
+
+§ NUMERICAL EXAMPLES
+
+In this section we use the SOS programs we proposed in Sec. <ref> to approximate various sets. We first approximate unions of semialgebraic sets in the Hausdorff and volume metric. We then approximate Minkowski sums and Pontryagin differences in the volume metric. We finish the section with three numerical examples that have practical motivations, the approximation of Region of Attractions (ROAs) and attractor sets of nonlinear systems via the outer bounding sets of discrete points, and the Minkowski sum of obstacles and vehicle shape sets to construct a C-space in which collision free path planning can be computed in. All SOS programs are solved using Yalmip <cit.> with SDP solver Mosek <cit.>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[Approximation of unions of semialgebraic sets] 
+	Consider the union of semialgebraic sets
+	
+    ∪_i=1^3 X_i= ∪_i=1^3 {x ∈^2: g_i(x)<0 }
+    where 
+    
+    	g_1(x)     = x_1^2 + x_2^2 -0.075 , 
+    
+    	g_2(x)     = (x_1-0.15)^2 + (x_2-0.15)^2 -0.025, 
+    
+    	g_3(x)     = (x_1+0.25)^2 + (x_2 + 0.25)^2  -0.001.
+
+
+
+	In Fig. <ref> we have plotted ∪_i=1^3 X_i as the green region along with several approximations of the form {x∈^n: P(x)<0 }. For our Hausdorff approximation P=P_d and P_d is found by solving SOS Opt. (<ref>). For our volume approximation P=J_d and J_d is found by solving SOS Opt. (<ref>). Fig. <ref> shows several outer approximations for d=2,10 & 18. As expected from the convergence proofs given in Sec. <ref>, in both cases we see as the degree increases our set approximation improves. Interestingly the degree 18 Hausdorff approximation seems to give a better representation of the topology than the degree 18 volume approximation by showing some separation between X_2 and X_3. 
+	
+	
+
+
+[Approximation of Minkowski sums and Pontryagin differences]  In <cit.> the Minkowski sum of the following sets was heuristically approximated,
+	
+    X_1     ={x ∈^2:x_1^2+x_2^2 - 0.25^2<0  }
+    
+    		X_2     = {x ∈^2: x_1-0.5<0, -0.5-x_1<0,
+           -x_2-0.5<0, x_2-x_1-0.5<0,x_1+x_2-0.5<0  }
+
+
+
+
+
+
+
+In Fig <ref> we have plotted both the sets X_1 and X_2 as the gold and purple regions respectively (note that there is an axis scale change between Sub-figures <ref> and <ref>).
+
+In Fig. <ref> we have plotted X_1 ⊕ X_2 as the green region, which was found by discretizing both X_1 and X_2 and adding each element together. We have also plotted our outer approximations of X_1 ⊕ X_2 that take the form {x∈^2: J_d(x) ≤ 0} where J_d is found by solving SOS Opt. (<ref>) for d=2,6 & 12. 
+
+In Fig. <ref> we have plotted X_1 ⊖ X_2 as the green region, which was found by discretizing both X_1 and X_2. We have also plotted our inner approximations of X_1 ⊖ X_2 that take the form {x∈^2: J_d(x) < 0} where J_d is found by solving SOS Opt. (<ref>) for d=8,10 & 16.  As expected from the convergence proofs given in Sec. <ref>, in both cases we see as the degree increases our set approximation improves.
+
+
+
+
+[Approximation of ROAs] 
+
+
+
+The ROA is defined as the set of initial conditions for which a systems trajectories tend to an equilibrium point. We next consider the problem of approximating the ROA of the single machine infinite bus system given by the following nonlinear Ordinary Differential Equation (ODE):
+
+    [ ẋ_1(t); ẋ_2(t) ]=[                                   x_2(t); (1/2H)(P_m-P_e sin(x_1(t)+δ_ep)-Dx_2(t)) ],
+
+	where H=0.0106, X_t=0.28, P_m=1, E_s=1.21, V=1, P_e=(E_s V)/(P_m X_t), D=0.03 and δ_ep=sin^-1(1/P_e).
+	
+	Using a similar method to <cit.> we simulate ODE (<ref>) for various initial conditions, x(0)=x_0 ∈^2. Using these simulations we construct a labelled data set where each data point represents an initial condition that is either an element of the ROA or not. To approximate the ROA we must then solve this machine learning binary classification problem by computing the decision boundary of our labelled data set. We solve this problem by only considering the stable data points, {x_i}_i=1^N. We then use our proposed SOS algorithm to compute an outer approximation of {x_i}_i=1^N. In Fig. <ref> we have plotted  our estimation of the ROA as the red region, that is of the form {x∈^2: J_d(x)  ≤ 0} where J_d is found by solving SOS Opt. (<ref>) for d=14.
+	
+
+
+[Approximation of attractor sets]  The Lorenz system can be modelled as the following nonlinear ODE,
+
+    [ ẋ_1(t); ẋ_2(t); ẋ_3(t) ]=[              σ( x_2(t)-x_1(t) ); ρ x_1(t) -x_2(t) -x_1(t) x_3(t);        x_1(t) x_2(t) - β x_3(t) ],
+
+	where (σ, ρ,β)=(10,28,8/3). It is well known that the Lorenz system exhibits a global attractor set in which all trajectories converge towards. The problem of approximating the Lorenz attractor from data can be posed as a machine learning classification problem <cit.>. One way to approach this classification problem is by collecting discrete points, {x_i}_i=1^N, of terminal points of trajectories simulated for large amounts of time. Assuming our simulation time is sufficiently large, each of the discrete points, {x_i}_i=1^N, will be inside the attractor set. In Fig. <ref> we have plotted our approximation of {x_i}_i=1^N as the red region, that is of the form {x∈^3: J_d(x)  ≤ 0} where J_d is found by solving SOS Opt. (<ref>) for d=15.
+	
+	
+
+
+[Approximation of C-space for collision free path planning]  
+	
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+	Dubin's car is the name given to the following discrete time system,
+	
+    x(t+1)=[ x_1(t) + νcos(x_3(t)); x_2(t) + νsin(x_3(t)); x_3(t) + ν/Ltan(u(t)) ],
+
+	where (x_1(t), x_2(t)) ∈^2 is the position of the car at time t ∈, x_3(t) ∈ denotes the
+	angle that the car is pointing towards, u(t) ∈ is the steering angle input, ν∈ is the fixed speed of the car, and L>0 is a parameter that determines the turning radius of the car.
+	
+	In Fig. <ref> Dubin's car at various time stages is described by the set coloured purple and is given by
+	
+    X_1={x ∈^2: x_1^2 + x_2^2 -0.1^2<0 }.
+
+	Furthermore, several obstacles are described by golden coloured sublevel sets X_2:=∩_i=1^6 {x ∈^2: g_i(x)<0 }, where
+	
+    g_star(x) =0.1-2.5 x_1^2 x_2^2-0.05(x_1+x_2)^2,
+        g_1(x)  = g_star(5x+[0.2, -0.2]^⊤ ) 
+        g_2(x)  = [                         0.75+x_1;                             -x_1;                        -x_2+0.85; -((0.85-0.7)/(0.75))x_1-0.85+x_2 ]
+        g_3(x) = g_2([  cos((π+1)/2) -sin((π+1)/2);  sin((π+1)/2)  cos((π+1)/2) ]^-1 x ) 
+        g_4(x)  = [       x_1;  0.25-x_1; 0.85+ x_2;  -0.8-x_2 ],   g_5(x)  = [  x_1-0.1;  0.5-x_1; 0.4+ x_2; -0.2-x_2 ] , 
+         g_6(x)  = [  x_1-0.4; 0.75-x_1; 0.4+ x_2;  0.8-x_2 ].
+
+Note, some of the sets that describe our obstacles were taken from the previous works of <cit.> and <cit.>.
+
+
+In Fig. <ref> we have plotted our outer sublevel set approximation of X_1 ⊕ X_2 as the red region. This approximation was obtained by solving Opt. (<ref>) for d=12. Based on this approximation of  X_1 ⊕ X_2 we then applied the Dynamic Programming (DP) algorithm proposed in <cit.> to compute the optimal path collision free path. That is we derived a sequence of inputs u(0), u(1), …,  u(T) that drives the system described in Eq. (<ref>) from an initial condition, x(0)=x_0, to the target set, given by the blue square, in the minimum number of steps while avoiding the enlarged obstacles in the C-space, given by our approximation of X_1 ⊕ X_2. As shown in Fig. <ref>, solving the path planning problem in C-space for obstacles X_1 ⊕ X_2, ensures that there is no collisions in the workspace when the shape of Dubin's car is accounted for. 
+	
+	
+	
+
+
+
+
+
+
+§ CONCLUSION
+
+
+We have established a link between the L^∞ and L^1 function metrics and the Hausdorff and volume set metrics, respectively, allowing us to construct SOS programs for accurately approximating sets encountered throughout control theory. Specifically, we have shown that if functions are close in the L^∞ norm and one uniformly bounds the other, their sublevel sets are close in the Hausdorff metric. Likewise, if we change the function metric to the L^1 norm, the respective sublevel sets are close in the volume metric. By applying our methodology to approximating sets of discrete points, we have proposed a new machine learning binary classification algorithm that accurately finds decision boundaries for problems with low-dimensional, error-free, and dense data sets. We have applied this new classification algorithm to the problem of approximating ROAs or attractor sets of nonlinear ODEs. Furthermore, our set approximation approach allows us to numerically approximate Minkowski sums, which can be used to compute optimal collision-free paths.
+
+
+[
+    < g r a p h i c s >
+]Morgan Jones received the Mmath degree in
+	mathematics from The University of Oxford, England in 2016 and PhD degree from Arizona State University, USA in 2021.
+	Since 2022 he has been a lecturer in the department of Automatic Control and Systems Engineering at the University of Sheffield. His research primarily
+	focuses on the estimation of reachable sets, attractors and regions of attraction for nonlinear ODEs. Furthermore,
+	he has an interest in extensions of the dynamic programing framework to non-separable cost functions.
+
+
+
+ieeetr
+
+
+
+
+§ APPENDIX
+
+
+
+
+ §.§ The Volume Metric
+ 
+Recall from Section <ref> that
+
+    D_V(A,B):=μ( (A/B) ∪ (B/A) ),
+ where μ(A) is the Lebesgue measure of A ⊂^n.
+
+ 
+	D: X × X → is a metric if the following is satisfied for all x,y ∈ X,
+	
+	
+	
+		
+			
+  * D(x,y) ≥ 0,
+			
+  * D(x,y)=0 iff x=y,
+			
+  * D(x,y)=D(y,x),
+			
+  * D(x,z) ≤ D(x,y) + D(y,z).
+		
+		
+	
+		
+		
+		
+		
+		
+	
+		
+		
+		
+		
+		
+
+
+
+The sublevel approximation results presented in this appendix are required in the proof of Theorem <ref>. 
+
+
+
+
+ 
+	Consider the quotient space,
+		
+    X:=  B {X ⊂^n : X ∅, μ(X) =0 },
+  where B is the set of all Lebesgue measurable sets. Then D_V: X × X → is a metric.
+
+
+
+
+
+
+ 
+	Consider Lebesgue measurable sets A,B ⊂^n. Suppose A and B have finite Lebesgue measure and B ⊆ A, then
+	
+    D_V(A,B)    =μ(A/B)= μ(A)- μ (B).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+	Consider a Lebesgue measurable set Λ⊂^n, a function V ∈ L^1(Λ, ), and a family of functions {J_d ∈ L^1(Λ, ): d ∈} that satisfies the following properties:
+	
+		
+  * For any d ∈ we have J_d(x) ≤ V(x) for all x ∈Λ.
+		
+  * lim_d →∞ ||V -J_d||_L^1(Λ, ) =0.
+	
+	Then for all γ∈
+	
+    lim_d →∞	D_V ({x ∈Λ : V(x) ≤γ}, {x ∈Λ : J_d(x) ≤γ}) =0.
+
+
+
+
+
+ §.§ Counterexamples: When Close Functions Have Distant Sublevel Sets
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+We first show that if we slightly change the conditions of Thm. <ref> to have J_d(x)≤ V(x) (rather than V(x) ≤ J_d(x)) then we can no longer establish that the sublevel sets of V and J_d will be close.
+ 
+We show there exists γ∈, Λ⊂, V ∈ L^1(Λ,) and {J_d}_d ∈⊂ L^1(Λ,) such that J_d(x)≤ V(x) for all x ∈Λ and lim_d →∞  ||V(x) - J_d(x)||_L^∞(Λ,) dx=0 but
+	
+    lim_d →∞ D_H({ x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})   0.
+
+	Let Λ:=[-10,10], γ:=1, V(x):=1-1_[1,2](x) and J_d(x)= 1-1_[1,2](x) - 1/d. Clearly, lim_d →∞  ||V(x) - J_d(x)||_L^∞(Λ,) dx=lim_d →∞1/d=0. However,
+	
+    { x ∈Λ : V(x) < 1 }   = [1,2].
+    { x ∈Λ : J_d(x) < 1 }   = Λ.
+
+
+Note, Counterexample <ref> does not contradict Prop. <ref> that deals with the same case where J_d lower bounds V. This is because Prop. <ref> shows that the non-strict sublevel sets are close in the volume metric. Indeed, { x ∈Λ : V(x) ≤  1 }= { x ∈Λ : J_d(x) ≤  1 } so there is no contradiction in this case.
+
+
+We consider what happens if we change the other condition of Thm. <ref> where instead of having ||J_d - V||_L^∞(Λ,)→ 0 we only have ||J_d - V||_L^1(Λ,)→ 0.
+ 
+	We show there exists γ∈, Λ⊂, V ∈ L^1(Λ,) and {J_d}_d ∈⊂ L^1(Λ,) such that V(x) ≤ J_d(x) for all x ∈Λ and lim_d →∞  ||V(x) - J_d(x)||_L^1(Λ,) =0 but
+	
+    lim_d →∞ D_H({ x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})   0.
+
+	Let Λ:=[-10,10], γ:=1, V(x): =1_[1,2](x)-1 and J_d(x):= 1_[1,2](x)-1 + 1_[0,1/d](x). Clearly, lim_d →∞  ||V(x) - J_d(x)||_L^∞(Λ,) =lim_d →∞sup_x ∈Λ1_[0,1/d](x) =1  0 and lim_d →∞  ||V(x) - J_d(x)||_L^1(Λ,)= lim_d →∞∫_Λ1_[0,1/d](x) dx = lim_d →∞∫_0^1/d 1dx =0. However,
+	
+    { x ∈Λ : V(x) < 1 }   = [1,2]  .
+    { x ∈Λ : J_d(x) < 1 }   = [0,1/d] ∪[1,2].
+
+Hence 
+
+    lim_d →∞ D_H({ x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})
+        = lim_d →∞ D_H( [1,2], [0,1/d] ∪[1,2])=1  0
+
+
+Although Counterexample <ref> shows that if functions are close in the L1 norm then their sublevel sets may not be close in the Hausdorff metric this does not contradict Theorem <ref>, that shows that these sublevel sets must be close in the volume metric. This holds true in the case of Counterexample <ref> since 
+
+    lim_d →∞ D_V({ x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})
+        = lim_d →∞ D_V( [1,2], [0,1/d] ∪[1,2])=  lim_d →∞μ([0,1/d])=   0
+
+
+
+
+
+
+
+
+ §.§ Polynomial Approximation
+ 
+In Sec. <ref> we characterized several sets (intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points) by sublevel sets of various functions. We now show that we can approximate these functions arbitrarily well by polynomials that are also feasible to our associated SOS optimization problems. In order to approximate these functions we use the Weierstrass approximation theorem.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+	Let E ⊂^n be an open set and f ∈ C^1(E, ). For any compact set K ⊆ E and >0 there exists  g ∈[x] such that
+	
+    sup_x ∈ K| f(x) -  g(x)| < .
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=min_1 ≤ i ≤ m g_i(x), whose sublevel set characterizes the set given in Eq. (<ref>).
+ 
+	Consider a compact set Λ⊂^n, functions g_i ∈ LocLip(Λ,) for 1 ≤ i ≤ m, a scalar r>0, and V(x):= min_1 ≤ i ≤ m{ g_i(x) }. Then for any >0 there exists H_1,H_2 ∈[x] such that
+	
+    sup_ x ∈Λ |V(x) - H_j(x) | <  for  j ∈{1,2}, 
+        H_1(x) < g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m,
+        H_2 (x)> g_i(x)  for all  x ∈ B_r(0)  ∩ Y_i  and  1 ≤ i ≤ m,
+
+	where Y_i  :={y ∈Λ: g_i(y) ≤ g_j(y)  for  1 ≤ j ≤ m  }.
+
+
+
+
+
+
+
+
+
+
+
+ We first show the existence of H_1 ∈[x] that satisfies Eq. (<ref>). Since Λ⊂^n and B_r(0) are compact sets it follows that there exists R>0 such that Λ∪ B_r(0) ⊂ B_R(0). Let >0. Since V is continuous by Lem. <ref> it follows by Thm. <ref> that there exists P ∈[x] such that sup_ x ∈ B_R(0) |V(x) - P(x) | </4. Let H_1(x):=P(x) - /4. Then
+	
+    |V(x) - H_1(x) |     = |V(x) - P(x) + /2| < |V(x) - P(x)| + /4
+        < /2  for all  x ∈ B_R(0),
+
+	and hence sup_ x ∈Λ |V(x) - H_1(x) | ≤/2 <. 
+	
+	Moreover, since |V(x) - P(x)|</4 for all x ∈ B_R(0) we have that P(x)<V(x) + /4 for all x ∈ B_R(0) . Hence H_1(x)<V(x) + /4-/4= V(x)= min_1 ≤ j ≤ m{ g_j(x) }≤ g_i(x) for all 1 ≤ i ≤ m and x ∈ B_r(0) ⊂ B_R(0).
+	
+	We next show the existence of H_2 ∈[x] that satisfies Eq. (<ref>). This time let H_2(x):=P(x) +/4. Then
+	
+    |V(x) - H_2(x) |     = |V(x) - P(x) - /2| < |V(x) - P(x)| + /4
+        < /2  for all  x ∈ B_R(0),
+
+	and hence sup_ x ∈Λ |V(x) - H_2(x) | <. 
+	
+	Moreover, since |V(x) - P(x)|</4 for all x ∈ B_R(0) we have that P(x) > V(x) -  /4 for all x ∈ B_R(0). Hence H_2(x)>V(x) - /4 + /4=V(x) for all x ∈ B_R(0). Now, when x ∈ Y_i we have V(x)=g_i(x). Therefore, H_2(x)>V(x)=g_i(x) for all x ∈ Y_i ∩ B_r(0).
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=max_1 ≤ i ≤ m g_i(x), whose sublevel set characterizes the set given in Eq. (<ref>).
+ 
+	Consider a compact set Λ⊂^n, g_i ∈ LocLip(Λ,) for 1 ≤ i ≤ m and V(x):= max_1 ≤ i ≤ m{ g_i(x) }. Then for any >0 there exists H_1,H_2 ∈[x] such that
+	
+    sup_ x ∈Λ |V(x) - H_j(x) | <  for  j ∈{1,2}, 
+        H_1(x) > g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m,
+        H_2(x) < g_i(x)  for all  x ∈ B_r(0) ∩Y̅_̅i̅ and  1 ≤ i ≤ m,
+
+where Y̅_̅i̅ :={y ∈Λ: g_i(y) ≥ g_j(y)  for  1 ≤ j ≤ m  }.
+
+
+Note that max_1 ≤ i ≤ m{ g_i(x) }= -min_1 ≤ i ≤ m{ -g_i(x) }. Let Ṽ(x):=min_1 ≤ i ≤ m{ -g_i(x) }= -V(x). By Prop. <ref> there exists H̃_̃1̃, H̃_̃2̃∈[x] such that 
+	
+    sup_ x ∈Λ |Ṽ(x) - H̃_̃j̃(x) | <  for  j ∈{1,2}, 
+       H̃_̃1̃(x) < -g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m, 
+       H̃_̃2̃(x) > -g_i(x)   for all  x ∈ B_r(0) ∩Ỹ_̃ĩ and  1 ≤ i ≤ m,
+
+where Ỹ_̃ĩ :={y ∈Λ: -g_i(y) ≤- g_j(y)  for  1 ≤ j ≤ m  } = {y ∈Λ: g_i(y) ≥ g_j(y)  for  1 ≤ j ≤ m  } = Y̅_̅i̅.
+
+Let H_1(x):=-H̃_̃1̃(x) and H_2(x):=-H̃_̃2̃(x). Clearly H_1 and H_2 satisfies Eq. (<ref>), completing the proof.
+
+
+We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=inf_w  ∈{z ∈Λ: g_2,i(z) ≤ 0  for  1 ≤ i ≤ m_2 }min_1 ≤ i ≤ m_1 g_1,i(x-w), whose sublevel set characterizes the set given in Eq. (<ref>).
+
+ 
+	Consider a compact set Λ⊂^n, g_i ∈ LocLip(Λ,) for 1 ≤ i ≤ m and V(x):= inf_w  ∈{z ∈Λ: g_2,i(z) ≤ 0  for  1 ≤ i ≤ m_2 }min_1 ≤ i ≤ m_1 g_1,i(x-w). Then for any >0 there exists H ∈[x] such that
+
+    sup_ x ∈Λ |V(x) - H(x) | < , 
+        H(x) < g_1,i(x-w)   for all  x ∈ B_r(0), 
+            w ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 } and  1 ≤ i ≤ m_1.
+
+
+
+	Since Λ⊂^n and B_r(0) are compact sets there exists R>0 such that Λ∪ B_r(0) ⊂ B_R(0). Now, by Lem. <ref> it follows that V is a continuous function. Hence, by Thm. <ref>, for any >0 there exists a polynomial P ∈[x] such that
+	
+    sup_ x ∈ B_R(0) |V(x) - P(x) | < /4.
+
+Let us consider H(x):=P(x) -  /4. Then
+
+    |V(x) - H(x)|  ≤ 	|V(x) - P(x)|  + /4 < /2 for  x ∈ B_R(0).
+
+Hence, 	sup_ x ∈Λ |V(x) - H(x) | <.
+
+Also note that since |V(x) - P(x)| < /4 for all x ∈ B_R(0) it follows that P(x)< V(x) + /4 and hence H(x)= P(x)- /4< V(x) for all x ∈ B_r(0) ⊂ B_R(0). Therefore
+
+    P(x)    < V(x)= inf_u  ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 }min_1 ≤ j ≤ m_1 g_1,j(x-u)
+       ≤inf_u  ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 }  g_1,i(x-u) 
+       ≤ g_1,i(x-w)  for all  x ∈ B_r(0), 1 ≤ i ≤ m_1,   and 
+                 w ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 }.
+
+Thus we have shown Eq. (<ref>) completing the proof.
+
+
+We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=sup_w  ∈{z ∈Λ: g_2,i(z) ≤ 0  for  1 ≤ i ≤ m_2 }max_1 ≤ i ≤ m_1 g_1,i(x+w), whose sublevel set characterizes the set given in Eq. (<ref>).
+
+ 
+	Consider a compact set Λ⊂^n, g_i ∈ LocLip(Λ,) for 1 ≤ i ≤ m and V(x):= sup_w  ∈{z ∈Λ: g_2,i(z) ≤ 0  for  1 ≤ i ≤ m_2 }max_1 ≤ i ≤ m_1 g_1,i(x+w). Then for any >0 there exists H ∈[x] such that
+	
+    sup_ x ∈Λ |V(x) - H(x) | < , 
+        H(x) > g_1,i(x+w)   for all  x ∈ B_r(0), 
+            w ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 } and  1 ≤ i ≤ m_1.
+
+
+
+	Follows by a similar argument to Lem. <ref>.
+
+
+We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=1-1_{x_i}_i=1^N(x), whose sublevel set characterizes the set given by X={x_i}_i=1^N. 
+
+ 
+Consider a compact set Λ⊂^n and some discrete points {x_i}_i=1^N ⊂Λ. Then, for any >0 there exists a polynomial H ∈[x] such that
+
+    ||H(x) - V(x)||_L^1(Λ,)< , 
+    
+    	H(x_i)<0  for all  i ∈{1,...,N}, 
+    
+    	H(x) < 1  for all  x ∈Λ,
+
+where V(x)=1-1_{x_i}_i=1^N(x). 
+
+
+	We first show that there exists a smooth function that satisfies Eq. (<ref>). We then approximate this function by a polynomial.
+	
+	Let F(x):=1-∑_i=1^N η( x-x_i/δ), where η∈ C^∞(^n, [0,∞))  is the bump function given by
+	
+    η(x) =  2e exp( 1/||x||_2^2 -1)  for  ||x||_2<1
+    
+    			0  otherwise.
+
+
+For more information on bump functions see <cit.>.
+
+Let C:=∫_^nη(x) dx < ∞ and 0<δ< ( /2 NC)^1/n, then
+
+    ||V(x) - F(x)||_L^1(Λ,)≤∑_i=1^N ∫_^nη( x-x_i/δ) dx
+        =δ^n ∑_i=1^N ∫_^nη(x) dx=δ^n NC</2.
+
+Moreover,
+
+    F(x_i)=1 - η(0) - ∑_j uη( x_i-x_j/δ) ≤ 1 - η(0)= -1<0.
+
+Furthermore, since η(x) ≥ 0 for all x ∈^n it is clear that
+
+    F(x) = 1-∑_i=1^N η( x-x_i/δ) ≤ 1  for all  x ∈^n.
+
+
+Since Λ is a compact set there exists R>0 such that Λ⊂ B_R(0). Now, η∈ C^∞(^n, [0,∞)) and therefore F ∈ C^∞(^n, ). Hence, by Thm. <ref>, there exists a polynomial P ∈[x] such that
+
+    sup_ x ∈ B_R(0) |F(x) - P(x) | < /4 (1 + μ(Λ)).
+
+Let us consider H(x):=P(x) -  /4(1 + μ(Λ)). Then
+
+    |F(x) - H(x)|     ≤ 	|F(x) - P(x)|  + /4(1 + μ(Λ))
+        < /2(1 + μ(Λ)) for  x ∈ B_R(0).
+
+Eqs (<ref>) and (<ref>) imply that
+
+    || V- H||_L^1(Λ, )   ≤ || V- F||_L^1(Λ, )  + || F- H||_L^1(Λ, )
+       ≤/2 + μ(Λ)  ||F- H||_L^∞(Λ, )
+        < .
+
+
+Moreover, by Eq. (<ref>) we have P(x) < F(x) +/4(1 + μ(Λ)) for x ∈ B_R(0) and hence H(x)=P(x) - /4(1 + μ(Λ))< F(x). Therefore by Eqs (<ref>) and (<ref>) it follows that 
+
+    H(x_i)    <F(x_i)<0  for all  i ∈{1,...,N}, 
+    
+    	H(x)     <F(x)< 1  for all  x ∈Λ.
+
+
+
+
+
+ §.§  Miscellaneous Results
+ 
+ 
+	Consider a sequence {x_n}_n ∈⊂^n that is bounded, that is there exists M>0 such that x_n < M for all n ∈. Then there exists a convergent subsequence {y_n}_n ∈⊂{x_n}_n ∈. 
+
+
+ 
+	Consider the semialgebriac set X = {x ∈^n: g_i(x) ≥ 0  for  i=1,...,k}. Further suppose {x  ∈^n : g_i(x) ≥ 0 } is compact for some i ∈{1,..,k}. If the polynomial f: ^n → satisfies f(x)>0 for all x ∈ X, then there exists SOS polynomials {s_i}_i ∈{1,..,m}⊂∑_SOS such that,
+	
+
+    f - ∑_i=1^m s_ig_i ∈∑_SOS.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+Consider some compact set X ⊂^n and polynomial functions {g_i}_i=1^m ∈[x]. Suppose
+	
+    V_1(x)     := inf_w ∈ Xmin_1 ≤ i ≤ mg_i(x-w),    
+    	V_2(x)  := sup_w ∈ Xmax_1 ≤ i ≤ m g_i(x+w) ,
+
+	then V_1 and V_2 are continuous functions.
+
+
+
+
+
+
+
+ 
+For each compact set X ⊂^n there exists a bounded function p∈ C^∞(^n,) such that 
+
+    X=	{x ∈^n: p(x) ≤ 0}.
+
+
+
+ 
+	If f:^n → is a continuous function then {x ∈^n: f(x) ≤γ}, where γ∈, is a closed set. Furthermore, if Λ⊂^n is compact then {x ∈Λ: f(x) ≤γ} is a compact set. 
+
+
+	Consider a converging subsequence {x_k}_k=1^∞⊂{x ∈Λ: f(x) ≤γ} such that x_k → x^*. By continuity we have f(x_k) → f(x^*). Since f(x_k) ≤γ for all k it follows f(x^*) ≤γ. Hence, x^* ∈{x ∈Λ: f(x) ≤γ} implying that {x ∈Λ: f(x) ≤γ} is closed. Now, {x ∈Λ: f(x) ≤γ}⊂Λ and Λ is bounded. Since {x ∈Λ: f(x) ≤γ} is closed and bounded it follows that it is compact.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

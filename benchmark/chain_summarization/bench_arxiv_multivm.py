@@ -1,45 +1,146 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
-import importlib
+from numpy import mean
 import time
-
-module = importlib.import_module(f"benchmark.bench_codelib.chain_summarization")
-fake_long_document_chunk = getattr(module, "fake_long_document_chunk")
-
-chunk_num = 20
-
-full_document = (fake_long_document_chunk + "\n\n") * chunk_num
-
-with open("test.txt", "w") as f:
-    f.write(full_document)
+import parrot as P
+from multiprocessing import Barrier
+from parrot.testing.multiproc_manager import MultiProcessManager
+from parrot.utils import cprofile
 
 
-### Langchain part
+def get_chunks(file_name: str, chunk_size: int):
+    from langchain.document_loaders import TextLoader
+    from langchain.text_splitter import CharacterTextSplitter
+    from transformers import AutoTokenizer
 
-from langchain.chains.summarize import load_summarize_chain
-from langchain.chat_models import ChatOpenAI
-from langchain.document_loaders import TextLoader
-from langchain.text_splitter import CharacterTextSplitter
+    loader = TextLoader(
+        f"../workloads/arxiv-march-2023/arxiv-sampled-1/{file_name}.txt"
+    )
+    docs = loader.load()
 
-llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
-chain = load_summarize_chain(llm, chain_type="refine")
+    tokenizer = AutoTokenizer.from_pretrained("hf-internal-testing/llama-tokenizer")
 
-loader = TextLoader("test.txt")
-docs = loader.load()
-text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=650,
-    chunk_overlap=0,
-)
-split_docs = text_splitter.split_documents(docs)
+    text_splitter = CharacterTextSplitter.from_huggingface_tokenizer(
+        tokenizer=tokenizer,
+        chunk_size=chunk_size,
+        chunk_overlap=0,
+        separator=" ",
+    )
+    split_docs = text_splitter.split_documents(docs)
 
-for i, doc in enumerate(split_docs):
-    print(i, len(doc.page_content.split(" ")))
+    return [doc.page_content for doc in split_docs]
 
-for _ in range(10):
-    st = time.perf_counter_ns()
-    chain.run(split_docs)
-    ed = time.perf_counter_ns()
-    with open("langchain_stdout.log", "a+") as f:
-        print(f"Time: {(ed - st) / 1e9} s", file=f, flush=True)
-    time.sleep(3)
+
+def get_functions(vm: P.VirtualMachine, output_len: int):
+    first_func = vm.define_function(
+        func_name="first_func",
+        func_body="""Write an one-sentence summary (AS SHORT AS POSSIBLE) of the following:
+{{text}}
+CONCISE SUMMARY:{{summary}}""",
+        cache_prefix=False,
+        params=[
+            P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
+            P.Parameter(
+                name="summary",
+                typ=P.ParamType.OUTPUT_LOC,
+                sampling_config=P.SamplingConfig(
+                    ignore_tokenizer_eos=True,
+                    max_gen_length=output_len,
+                ),
+            ),
+        ],
+    )
+
+    refine_template = (
+        "Your job is to produce an one-sentence summary (AS SHORT AS POSSIBLE) for a long document.\n"
+        "We have provided an existing summary up to a certain point: {{existing_answer}}\n"
+        "We have the opportunity to refine the existing summary"
+        "(only if needed) with some more context below.\n"
+        "------------\n"
+        "{{text}}\n"
+        "------------\n"
+        "Given the new context, refine the original summary in English. "
+        "If the context isn't useful, return the original summary.\n"
+        "{{summary}}"
+    )
+
+    func = vm.define_function(
+        func_name=f"refine_func",
+        func_body=refine_template,
+        cache_prefix=False,
+        params=[
+            P.Parameter(name="existing_answer", typ=P.ParamType.INPUT_LOC),
+            P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
+            P.Parameter(
+                name="summary",
+                typ=P.ParamType.OUTPUT_LOC,
+                sampling_config=P.SamplingConfig(
+                    ignore_tokenizer_eos=True,
+                    max_gen_length=output_len,
+                ),
+            ),
+        ],
+    )
+
+    return first_func, func
+
+
+def process(barrier: Barrier, article_no: int):
+    chunk_size = 1024
+    output_len = 50
+
+    vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
+
+    chunks = get_chunks(f"article_{article_no}", chunk_size)
+    chunk_num = len(chunks)
+    func1, func2 = get_functions(vm, output_len)
+
+    async def main_async():
+        outputs = [P.variable(name=f"output_{i}") for i in range(chunk_num)]
+        vm.set_batch()
+        for i in range(chunk_num):
+            if i == 0:
+                func1(text=chunks[0], summary=outputs[i])
+            else:
+                func2(
+                    existing_answer=outputs[i - 1],
+                    text=chunks[i],
+                    summary=outputs[i],
+                )
+        await vm.submit_batch()
+        outputs[-1].get()
+
+    barrier.wait()
+
+    latency = vm.run(main_async, timeit=True)
+    # print(f"Time: {latency:.4f}", flush=True)
+    # time.sleep(3)
+
+    return latency
+
+
+def main(clients_num: int):
+    # print("chunk_size:", chunk_size, flush=True)
+    print("clients_num:", clients_num, flush=True)
+    # clients_num = 8
+
+    manager = MultiProcessManager()
+    barrier = Barrier(clients_num)
+
+    for i in range(clients_num):
+        manager.add_proc(process, (barrier, i))
+
+    manager.run_all()
+    print(manager.data)
+    print(f"Avg. JCT {mean(list(manager.data.values())):.2f} (s)")
+
+
+if __name__ == "__main__":
+    # test_baseline()
+    # main(10)
+    # main(4)
+    # time.sleep(10)
+    # main(6)
+    # time.sleep(10)
+    main(8)

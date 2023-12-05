@@ -1,0 +1,1836 @@
+
+
+
+
+
+
+
+
+
+
+
+[1]
+
+
+
+
+
+#1
+    #1
+
+ =
+
+    theoremTheorem[section]
+    lemmaLemma[section]
+    definitionDefinition[section]
+    
+    
+    =9000
+    
+    
+    
+    jborissova@perimeterinstitute.caPerimeter Institute, 31 Caroline Street North, Waterloo, ON, N2L 2Y5, CanadaDepartment of Physics and  Astronomy, University of Waterloo, 200 University Avenue West, Waterloo, ON, N2L 3G1, Canadabdittrich@perimeterinstitute.caPerimeter Institute, 31 Caroline Street North, Waterloo, ON, N2L 2Y5, Canada
+    
+    Lorentzian quantum gravity is believed to cure the pathologies encountered in Euclidean quantum gravity, such as the conformal factor problem. We show that this is the case for the Lorentzian Regge path integral expanded around a flat background. We illustrate how a subset of local changes of the triangulation, so-called Pachner moves, allow to isolate the indefinite nature of the gravitational action at the discrete level. The latter can be accounted for by oppositely chosen deformed contours of integration. Moreover, we construct a discretization-invariant local path integral measure for 3D Lorentzian Regge calculus and point out obstructions in defining such a measure in 4D.  We see the work presented here as a first step towards establishing the existence of the non-perturbative Lorentzian path integral for Regge calculus and related frameworks such as spin foams.  
+    
+    An extensive appendix  provides an overview of Lorentzian Regge calculus, using the recently introduced concept of the complexified Regge action, and derives useful geometric formulae and identities needed in the main text.
+    
+    
+    
+    Lorentzian quantum gravity via Pachner moves: one-loop evaluation
+        Bianca Dittrich
+        March 30, 2023
+    =================================================================
+    
+    
+    
+    § INTRODUCTION
+    
+     
+     
+     Path integrals for quantum gravity aim to define quantum transition amplitudes by formally summing over all spacetime histories satisfying suitable boundary conditions and weighted by the exponential of  times the action in units of Planck's constant ħ. Prominent path integral approaches for quantum gravity are spin foams <cit.>, quantum Regge gravity <cit.>, group field theories <cit.>, or (causal) dynamical triangulations <cit.>, and as such they depend on a variety of choices. These choices include the type of histories to sum over, for instance defining the set of spacetime geometries, specifying configuration variables to parametrize this set, and imposing additional regularity conditions on these. The other essential ingredients for gravitational path integrals are the choice of action dictating the dynamics and the measure over the space of geometries, i.e. equivalence classes of metrics modulo diffeomorphisms.
+    
+    Path integrals with oscillatory weights exp( S) are challenging as the integrations are
+    typically over unbounded domains, leading to integrals which are not absolutely converging, and for which there are only few effective tools for their evaluation available <cit.>. This is one of the main motivations for turning to Euclidean quantum gravity
+    approaches <cit.>. These are based on the argument that a formal Wick rotation changes Lorentzian metrics into Euclidean ones and changes the Lorentzian weight exp( S_L) into the Euclidean non-oscillatory weight exp(-S_E). This allows to apply e.g. Monte-Carlo simulations.  
+     
+    But Euclidean quantum gravity approaches suffer from two crucial drawbacks: firstly the fact that the gravitational action is not bounded from below, and can be made arbitrarily negative by maximizing the kinetic term for the conformal factor <cit.>. To obtain a convergent Euclidean path integral it is argued that the conformal mode needs to be Wick rotated in the opposite direction from the other modes <cit.>. In praxis it is necessary to flip the sign in front of the conformal mode, but the latter is hard to identify in non-perturbative approaches. Secondly, the space of Lorentzian  geometries is very different from the space of Euclidean  geometries,  a one-to-one mapping does not exist <cit.>.
+    
+    This motivates facing the Lorentzian path integral <cit.>. We here consider the Lorentzian path integral for Regge calculus <cit.>. Regge calculus provides a discretization for the Einstein-Hilbert action and thus a regularization for the gravitational path integral.  
+    The  main questions we will analyze here are: 
+    (a) Can we expect a convergent Lorentzian path integral, so that the conformal factor problem is cured?  Additionally, can we establish a relation between the deformation of the integration contour in the Lorentzian case and Euclidean quantum gravity? In other words, can we justify the procedure of Euclidean quantum gravity? 
+    (b) Another set of questions we will consider are  related to fixing the measure in the path integral by demanding invariance under a change of (bulk) discretization of the path integral and thus a regularization-independent path integral. This has been successfully implemented for three-dimensional Euclidean gravity in <cit.>, and has allowed interesting applications, e.g. the computation of one-loop partition functions and confirmation of a holographic duality in three-dimensional quantum gravity (without a cosmological constant) <cit.>. On the other hand, it has been shown in <cit.>, that four-dimensional Regge gravity does not admit a local discretization-independent measure. More specifically, there does not even exist a local measure, which is invariant under a specific class of changes of triangulation, which leave the action invariant.  These results reflect the topological nature of three-dimensional gravity on the one hand, and the fact that four-dimensional gravity has local propagating degrees of freedom on the other hand. For the latter we have to expect that discretizations break diffeomorphism symmetry <cit.>, which implies also a dependence of the path integral on the discretization and thus regulator <cit.>. We expect to find similar results in the Lorentzian case. Indeed, we will succeed in constructing an invariant measure for the three-dimensional Lorentzian path integral, and the Lorentzian case will add an interesting twist to the Euclidean discussion, related to how the conformal factor is treated in Euclidean quantum gravity.
+    
+    The Regge action constitutes a complicated non-polynomial function in the edge lengths, which are taken as fundamental variables in Regge calculus. Additionally one has to implement generalized triangle inequalities. One can therefore not hope for an exact analytical evaluation of the path integral. We will therefore consider a perturbative approach and evaluate the path integral to one-loop order, on a flat background. We will see, that this allows us to be, on the one hand, most general, and on the other hand still derive explicit (and quite simple) expressions for the path integral. 
+    
+    To achieve these simple expressions, we will break down the general discrete path integral into a sequence of so-called Pachner moves. Similar to applying a coarse gaining framework, this allows to perform the path integral in terms of smaller steps. We will see that these steps always involve only a one-dimensional integration (and for a certain class of Pachner moves, a gauge fixing).
+    
+    The main technical task is then to derive an expression for the Hessian of the Regge action for the various Pachner move configurations. We will do so starting from some identities for a measure over flat-space geometries  <cit.>, which previously have been applied to the construction of a triangulation-invariant partition function <cit.> for topological BFCG theory <cit.>. These techniques were adjusted and applied to the computation of the Pachner move Hessians in Euclidean Regge gravity in <cit.>. The paper <cit.> streamlined this derivation by introducing a Caley-Menger determinant associated to the Pachner move configurations. We will pick up this technique and apply a further simplification, which will allow us to derive a simple expression for the Lorentzian Regge Hessian for all Pachner moves in general dimensions (larger than two). Using this new simplification we will in particular be able to determine the various signs appearing in the Pachner moves, which will be important to determine the deformations of the integration contour in the Lorentzian path integral, and thus the relation between Lorentzian and Euclidean path integrals.
+    
+     
+    
+    Our paper is structured as follows. In Section <ref> we review the definition of complex dihedral angles and deficit angles needed to define the Lorentzian Regge action and Lorentzian Regge path integral. Section <ref> discusses Pachner moves in general dimensions with primary focus on 3D and 4D, as well as on the properties of a Caley-Menger determinant associated to Pachner moves. In Section <ref> we expand the Lorentzian Regge action around a flat background and derive a simple form for the Hessians for all Pachner moves, which will show that these Hessians factorize. Section <ref> defines the path integral for Lorentzian Regge calculus in a flat background expansion to second order, for a given Pachner move, and collects identities on one-dimensional and multi-dimensional Gaussian integrals with imaginary exponent. In Sections <ref> and <ref> we analyze the path integral for the 3-2 and 4-1 moves in 3D, as well as for the 5-1 and 4-2 moves in 4D, and discuss the relation between Lorentzian and Euclidean path integral. As expected, we will manage to construct a discretization-invariant local measure in 3D, and illustrate that such a measure in 4D does not exist. We finish with a discussion and outlook in Section <ref>.
+    
+    Our paper is supplemented by an extended appendix providing an in-depth  overview on the geometry of Lorentzian and Euclidean simplices. The reason for doing so is that such an cohesive overview, in particular with regard to Lorentzian simplices, seems to be missing from the literature, and a large number of geometrical identities will be needed to follow the discussion the main text. Our overview includes Caley-Menger determinants, generalized triangle inequalitites and length Gram matrices, as well as dual or angle Gram matrices. The appendix  reviews the steps towards defining and computing complex dihedral angles. This includes a discussion on how to project out a hinge and the definition of angles in Euclidean and Minkowskian planes. This allows us to construct  the complex Regge action which unifies the Euclidean and Lorentzian action into one compact form. Finally, we derive the Schläfli identity for Euclidean and Lorentzian triangulations and an extremely useful formula for the derivatives of dihedral angles, needed in the main text.
+    
+    
+    
+     
+     
+     
+     
+     
+     
+    
+    
+    § LORENTZIAN (QUANTUM) REGGE CALCULUS
+    
+    
+    
+    Regge calculus <cit.> provides a coordinate-free formulation of general relativity on a piecewise flat discretization of the spacetime manifold. The basic building blocks in a piecewise flat[Formulations with homogeneously curved building blocks also exist <cit.>.] discretization of a d-dimensional spacetime  are d-simplices glued along shared (d-1)-subsimplices.  The framework has been originally defined for Euclidean spacetimes, a formulation for Lorentzian spacetimes has been provided by Sorkin <cit.>. Recent work <cit.> extended Regge calculus to a complexified configuration space, which allows a unified framework for Euclidean and Lorentzian geometries. In particular, <cit.> finds a relationship between the violation of causality conditions and the branch cut structure of the action.
+    
+    In (length) Regge calculus the metric tensor which serves as the fundamental variable in the continuum metric formulation of gravity, is replaced  by geometric degrees of freedom associated to the edges e of the simplicial building blocks.[There exist also other variants of Regge caculus, which are important for spin foam gravity <cit.>. On the one hand, there is area Regge calculus in four dimensions <cit.>, whose discrete equations of motion differ from length Regge calculs, but whose perturbative construction of the continuum limit agrees with the one of length Regge calculus <cit.>.  On the other hand, there is area angle Regge calculus <cit.>, which, through adjusting constraints, can interpolate between a discretization of a topological field theory and the equation of motion for length Regge calculus. Area and length Regge calculus are also available in a first-order formulation <cit.>.] On a Lorentzian triangulation these can be taken as the set of signed squared edge lengths s_e ≡e⃗·e⃗, defined by the norms of the edge vectors with respect to the Minkowski metric η = diag(-1,+1,+1,+1). Thus s_e >0 for a space-like edge, s_e<0 for a time-like edge and s_e=0 for a null edge. We will call these quantities s_e signed length squares. The geometry of a flat d-simplex σ is completely characterized by the geometric data {s_e|e ⊂σ}.
+    
+    Curvature in a simplicial complex is concentrated at codimension two subsimplices h ⊂σ, so-called “hinges", and parametrized by deficit angles ϵ_h. The latter provide a measure for the angular gap between the d-simplices σ meeting at a given hinge h which would arise after flattening the d-simplices to d-dimensional Minkowski space. The deficit angles can be deduced from successive projections of adjacent d-simplices onto planes orthogonal to the hinges, whereby the resulting solid angles correspond to the d-dimensional dihedral angles θ_σ,h at h⊂σ. 
+    
+    We provide in Appendix <ref> an overview how to define and compute the dihedral and deficit angles for Lorentzian (and also Euclidean) triangulations, using the formalism of complex angles in <cit.>. There are two versions θ^±_σ,h for the complex angles, in the following we will use θ^+_σ,h, but drop the superscript +. This complex dihedral angle can be defined in terms of the signed length squares as
+    
+    θ^+_σ,h = -log_- (d^2/𝕍_h∂𝕍_σ/∂ s_h̅  -   √(__+  𝕍_ρ_a/𝕍_h𝕍_ρ_b/𝕍_h     -( d^2/𝕍_h∂𝕍_σ/∂ s_h̅ )^2
+    	)/√(__+  𝕍_ρ_a/𝕍_h)√(__+  𝕍_ρ_b/𝕍_h) )   .
+    
+    Here we indicate with ρ_a and ρ_b  the two (d-1)-subsimplices  which share the hinge h and s_h̅ denotes the signed length square of the edge opposite to h in the d-simplex σ. The signed volume square 𝕍_X of a simplex X can be computed from its associated Caley-Menger determinant and gives the positive (negative) square of the volume if X is spacelike (timelike), see Appendix <ref>. 
+    
+    For z ∈ℂ with (z) ∈ (-π,π) we adopt the principal branch for the logarithm log_-(z) and the square root √(__+   z). But, along the branch cut when z is a negative real number -r<0, we use log_-(-r)=log(r)-π and √(__+   -r)=√(r). Later, we will only deal with the derivatives of the dihedral angle. Here we have dlog_-(z)= dz/z and d√(__+   z)= dz/(2 √(__+   z)). 
+    Thus we are only left with √(__+  z ), and as the square root adopts the principal value for the branch cut, we will henceforth omit the subscript +. 
+    
+    
+    The (complex) deficit and boundary curvature angles are then given as 
+    ϵ^(bulk)_h =2π + ∑_σ⊃ hθ_σ,h ,     
+    ϵ^(bdry)_h = π k + ∑_σ⊃ hθ_σ,h .
+     
+    The sum in (<ref>) runs over all d-simplices σ in the d-dimensional  triangulation ^(d), which contain the hinge h. The parameter k for the boundary curvature angle depends on the number of pieces glued together at this boundary, e.g. k=1 if two pieces are glued together.
+    
+    
+    As detailed in  Appendix <ref>, the Lorentzian Regge action for a triangulation ^(d) of d-dimensional spacetime with vanishing cosmological constant can be written as <cit.> S_Regge = ∑_h⊂^(d)√(𝕍_h) ϵ_h ,
+    
+    where we again use √(z)=√(__+  z ). Note that S_Regge is real, if (a) the generalized Lorentzian triangle inequalities are satisfied, see Appendix <ref> and if, (b), the triangulation has no light cone irregularities, see <cit.>.  Small perturbations around a triangulation of flat space will be light cone regular.
+    
+    
+    
+    
+     
+    
+    
+    The Lorentzian path integral for Regge gravity can then be defined as 
+    
+    Z = ∫_s_e| e ⊂bdry∏_e⊂bulks_eμ(s_e)exp S_Regge .
+    
+    Here μ(s_e) denotes a suitable measure factor depending on the configuration variables which are taken to be the signed squared edge lengths s_e. As boundary conditions we assume fixed signed length squares  for the edges in the boundary of the triangulation. In all expressions natural units and therefore ħ=1 is implied.
+    
+     The configurations included in the integral (<ref>) are required to satisfy the Lorentzian generalized triangle inequalities which guarantee the “realizability" of a given set of edge data as edge data of a triangulation, where each d-simplex can be embedded into d-dimensional Minkowskian spacetime, see Appendix <ref>. Note that the Lorentzian generalized triangle inequalities and the Euclidean generalized triangle inequalities specify disjoint data sets, if we demand also non-degenerate simplices. 
+     
+    In this way (<ref>) gives  times the Lorentzian Regge action for Lorentzian data. But it gives minus the Euclidean action for Euclidean data <cit.>, see also Appendix <ref>. One can thus easily adjust the results for the Hessian of the Regge action developed in the main text to Euclidean space times.
+    
+    Apart from the generalized triangle inequalities one also needs to specify how to deal with Lorentzian data that feature light cone irregular structures. E.g. one can have vertices, where  more or less than two light cones meet. A certain class of light cone irregular structures lead to branch cuts for the Regge action. Thus, of one decides to integrate over these structures one has also to specify the side of the branch cut. Note that (<ref>) implements a certain choice of branch cut, which, however does not need to be adopted for the path integral. See <cit.> for explicit examples and a more in-depth discussion.
+    
+    
+    The dihedral angles (<ref>) are complicated functions of the signed squared edge lengths.  Additionally one has to satisfy the generalized triangle inequalities and possibly implement (rather involved) conditions for a regular light cone structure.
+    
+    Thus one can in general not compute the path integral (<ref>) analytically.[The two-dimensional case might be an exception, as the Regge action is a topological invariant. Therefore there is only the measure term. In the following we will consider a perturbative expansion of the Regge action and therefore restrict to dimensions d≥ 3.] Even a symmetry reduction of the degrees of freedom to a Regge model describing cosmology and featuring only one integration variable still requires numerical integration techniques <cit.>.
+    
+    In the following, we therefore consider Lorentzian Regge calculus linearized around a flat background solution, which is assumed to satisfy the generalized inequalities. Only perturbations around the classical background, viewed as quantum fluctuations, will be integrated over in the path integral.
+    
+    
+    
+    § PACHNER MOVES AND THEIR PROPERTIES
+    
+    
+    Pachner moves <cit.> describe local changes of the bulk triangulation which keep the boundary triangulation and thus the extrinsic geometry fixed.  Any two triangulations of a piecewise linear manifold can be related by a finite sequence of such Pachner moves <cit.>.
+    
+    
+    An n_ i-n_ f Pachner move, with n_ i+n_ f=d+2, changes an initial complex of n_ id-simplices into a final complex of n_ fd-simplices. In d dimensions there are d+1 different types of moves denoted by (d+1)-(1), (d)-(2),⋯,(1)-(d+1).
+    
+    One way to visualize an n_ i-n_ f Pachner move in a d-dimensional triangulation is as follows, e.g. <cit.>: The initial sub-complex C_ i of n_ id-simplices involved in the Pachner move has to be identifiable with a corresponding sub-complex  C' of n_ id-simplices in a (d+1)-simplex σ^d+1.  The Pachner move can be visualized as a gluing of σ^d+1 onto the d-dimensional triangulation, such that C_ i is identified with the corresponding sub-complex of the (d+1)-simplex. In effect, one replaces C_ i, the sub-complex of n_ id-simplices,  with C_ f=   σ^(d+1)/ C', i.e. the sub-complex obtained by removing the n_ id-simplices in C' from σ^(d+1).
+    
+    Here, we will consider the initial and final Pachner move configuration itself as d-dimensional triangulations with boundary. We start with a complex C_ i of n_ id-simplices and replace it with the complex C_ f=σ^(d+1)/ C_ i, which contains n_ fd-simplices. 
+    
+    Now, for 1≤ n ≤ (d+1), consider a sub-complex of nd-simplices in a (d+1)-simplex as a d-dimensional triangulation with boundary. This d-dimensional triangulation has a unique lowest dimensional  bulk sub-simplex. Its dimension is given by (d+1-n).  E.g. for n=(d+1) the lowest dimensional bulk sub-simplex is a vertex, and for n=d it is an edge. For n=1 the bulk is given by one d-simplex.
+    
+    Thus, we can also characterize a Pachner move by the lowest dimensional bulk simplex in either the initial or the final configuration. E.g. a (d+1)-(1) Pachner move has a bulk vertex in the initial configuration and the lowest dimensional  bulk simplex in the final configuration is the final d-simplex itself. The bulk vertex in the initial configuration is connected to (d+1) bulk edges.
+    A (d)-(2) Pachner move has a bulk edge but no bulk vertex in the initial configuration, and the lowest dimensional sub-simplex in the final configuration is a (d-1)-simplex.  Pachner moves with n_ i<d do not have bulk edges in their initial configuration. 
+    
+    Later, we will be interested in particular in those Pachner moves which involve in their initial configuration bulk edges, but not in their final configuration. We can integrate out the length variables associated to the bulk edges from the initial configuration and in this way interpret the Pachner moves as coarse graining moves <cit.>.
+    We see, that for d≥ 3 such coarse graining Pachner moves (for length Regge calculus) only include the (d+1)-(1) and (d)-(2) moves. 
+    
+    We will also need information about the boundary and bulk hinges, that is the boundary and bulk (d-2)- simplices, in the initial Pachner move configuration C_ i and in the final Pachner move configuration C_ f=σ^(d+1)/ C_ i. Firstly, not that C_ i and σ^(d+1)/ C_ i, seen as d-dimensional triangulation with boundary, have by construction, the same boundary complex. Thus, the set of boundary hinges in the initial configuration agrees with the set of boundary hinges in the final configuration. 
+    
+    Also by construction, we have that the set of bulk hinges in the initial configuration C_i is disjoint from the set of bulk hinges in the final configuration C_ f=σ^(d+1)/ C_i. 
+    
+     
+    
+    In this work we will deal with initial and final Pachner move configurations, which can be embedded into flat (Minkowski) space. The reason is that we will consider a perturbative evaluation of the path integral, and use the flatly embeddable configurations as backgrounds around which we allow quantum fluctuations (which can include curvature fluctuations).
+    
+    Such flatly embeddable Pachner moves can be constructed as follows:
+    Start with a set of (d+2) vertices 0,1,…,d+1 embedded into d-dimensional Minkowski space, such that they form a degenerate (d+1)-simplex. Assume that all the  (d+1)d-simplices, which are sub-simplices of the degenerate (d+1)-simplex, are non-degenerate.  For an n_ i-n_ f Pachner move one identifies n_ i of the (d+1)d-simplices as initial configuration and n_ f of the (d+1)d-simplices as final configuration.[To lighten notation we will however assume that all d-simplices in the initial and final configuration have positive orientation. (See <cit.> for how to allow positive and negative orientation.) Given a configuration of (d+2) vertices this requirement constrains which d-simplices one can choose as initial and which as final.]
+    
+    In the following we denote with σ_i the d-simplex obtained by removing the vertex i, and all adjacent simplices, from the complex. 
+    We will assume, without loss of generality, that the initial complex includes the d-simplices σ_n_ f, …, σ_d+1 and the final complex includes the d-simplices σ_0, …, σ_n_ f-1.
+    
+    
+    
+    
+    
+    
+    
+    
+    Below we will give a short description of Pachner moves in three and four dimensions.
+    
+    
+    
+    
+    
+    
+     
+     
+    
+    
+     §.§ 3D
+    
+    
+    In three dimensions we can construct the flatly embedded Pachner moves from a set of vertices {0,1,2,3,4} embedded into flat space.
+    
+    The 3-simplices (or tetrahedra) in the initial complex  C_ i and final complex C_ f are given by
+    
+    3-2:        C_ i⊃{σ_2̅,σ_3̅,σ_4̅} ,  C_ f⊃{σ_0̅,σ_1̅} , 
+    4-1:        C_ i⊃{σ_1̅,σ_2̅,σ_3̅,σ_4̅} , C_ f⊃{σ_0̅}  .
+    
+    
+    The 3-2 move is depicted in Fig. <ref>. The bulk edge (01) shared by the three tetrahedra in the initial triangulation and is removed, and a bulk triangle in the final triangulation is 'inserted', leading to two tetrahedra. 
+    
+    
+    
+    
+    
+    The 4-1 move is depicted in Fig. <ref>. Here the bulk vertex 0 and all adjacent simplices are removed from the initial configuration, including the bulk edges (0k), for k≥ 1. This leads to the final tetrahedron σ_0̅. 
+    
+    
+    
+    
+    
+    
+    
+    
+     §.§ 4D
+    
+    
+    In four dimensions we consider the 3-3, the 4-2 and the 5-1 Pachner move. The Pachner moves involve the vertex set {0,1,…,5} and feature the following set of 4-simplices in their initial and final complexes
+    
+    3-3:        C_ i⊃{σ_3̅,σ_4̅,σ_5̅} ,    C_ f⊃{σ_0̅,σ_1̅,σ_2̅} , 
+     4-2:        C_ i⊃{σ_2̅,σ_3̅,σ_4̅,σ_5̅} ,  C_ f⊃{σ_0̅,σ_1̅}  ,
+    5-1:        C_ i⊃{σ_1̅,σ_2̅,σ_3̅,σ_4̅,σ_5̅} , C_ f⊃{σ_0̅}  .
+    
+    
+    
+    
+    The lowest-dimensional bulk simplex in the initial configuration of the 3-3 move, depicted in Fig. <ref> is the triangle (012), shared by all three initial 4-simplices. The lowest-dimensional bulk simplex in the final configuration is the triangle (345), which is shared by all three final 4-simplices.
+    
+    In the 4-2 move, depicted in Fig. <ref> the bulk edge (01), shared by the initial 4-simplices, is removed from the configuration and a (bulk) tetrahedron (2345), shared by the two final 4-simplices, is inserted.
+    
+    
+    
+    For the 5-1 move, depicted in Fig. <ref>, the bulk vertex 0 and all adjacent simplices are removed from the initial configuration. This leaves the final 4-simplex (12345).
+    
+    
+    
+    
+     §.§ Degenerate Caley-Menger matrices
+    
+    
+    In Sec. <ref> we discussed that flatly embeddable Pachner moves in d dimensions can be constructed by embedding (d+2) vertices into d-dimensional flat space.
+    These  (d+2) vertices therefore form a degenerate (d+1)-simplex, i.e. the signed (d+1)-volume square 𝕍^d+1 of the vertex configuration has to vanish. The latter is given by
+    𝕍^d+1    =     - (-1)^d+1/ 2^(d+1) ((d+1)!)^2(C) 
+    where C is the so-called Caley-Menger matrix
+    
+    C =    (
+    
+    	0     1     1     1    ⋯    1 
+    
+    	1     0     s_01    s_02   ⋯    s_0(d+1)
+    
+    	1     s_01    0     s_12   ⋯    s_1(d+1)
+    ⋮   ⋮   ⋮   ⋮   ⋱   ⋮
+    
+    	1     s_0(d+1)    s_1(d+1)    s_2(d+1)   ⋯    0
+    )  .
+    
+    Here s_ij denotes the signed squared length of the vector connecting vertices i and j with i,j=0,1,…,d+1. 
+    Thus the requirement that the (d+2) vertices form a degenerate (d+1)-simplex is satisfied if the Caley-Menger determinant vanishes. This means that the matrix C has a null vector. As the d-simplices contained in the (d+2) vertex configuration are required to be non-degenerate, C has exactly one null vector whose form has been derived in <cit.>. In the next subsection we provide a summary of this derivation.  Using this form of C will allow us to derive an explicit and simple form for the Regge action Hessians associated to the Pachner moves, and in particular show that these Hessians factorize.
+    
+    
+    
+    
+    
+      §.§.§ Null vector
+    
+    
+    Denote by c_ab the (a,b)-th minor of C defined by the determinant of the submatrix of C obtained by removing the a-th row and b-th column, with a,b=1,…,d+3. Note that from (<ref>), c_(i+2)(i+2) for i∈{0,…,d+1} is proportional to the signed d-volume square of the simplex obtained by removing vertex i from the initial configuration,
+    
+    c_(i+2)(i+2) = -(-1)^d2^d(d!)^2 𝕍_i.
+    
+    Any such simplex describes a non-degenerate d-simplex embedded in d-dimensional Minkowski space and thus has negative signed volume square, 𝕍_i<0. Consequently the signs of the minors c_(i+2)(i+2) are fixed by the global Lorentzian signature to sign(c_(i+2)(i+2)) = (-1)^d.
+    
+    The minors of C satisfy the relation <cit.>
+    c_aa  c_bb - c_ab c_ba∝(C) = 0  .
+    
+    Moreover, due to the symmetry of the Cayley-Menger matrix, c_ab=  c_ba. Note also that  c_ab∈ℝ, as these are polynomials in the real entries of C. 
+    We can thus conclude that
+    
+    c_ab = (-1)^sign(a,b)√(c_aa)√(c_bb) .
+    
+     Here  the signs sign(a,b)=0,1  depend a priori on the pair (i,j). For the determinant of C we use the Laplace formula and expand around an arbitrary row i,
+    (C) = ∑_b=1^d+3(-1)^a+bc_ab C_ab =  
+    ∑_b=1^d+3(-1)^a+b(-1)^sign(a,b)√(c_aa)√(c_bb) C_ab = 0 .
+    
+    The coefficients multiplying C_ab in the sum (<ref>) can be understood as the components of a null vector. That a unique null vector exists follows from the previous discussions. We can thus conclude that sign(a,b) factorizes in its dependence on a and b. The single null vector of C can be derived by expanding the determinant of C with respect to different rows and takes the form <cit.>v⃗_C = ((-1)^s√(c_11), (-1)^s_0√(𝕍_0),…,(-1)^s_d+1√(𝕍_d+1)) ,
+    
+    where we made use of (<ref>).
+    In the following subsection we will discuss the signs s, s_0,…,s_d+1 as these will be central for determining the components of the Hessian of the Regge action expanded around a flat background. As we can multiply the null vector with an arbitrary factor  we can only fix the relative signs, e.g. (s_0+s) and (s_0+s_i).
+    
+    
+    
+    
+      §.§.§ Signs
+    
+    
+    The relative signs (s_0+s) and (s_0+s_i) characterizing the null vector (<ref>) of the Caley-Menger matrix can be determined by acting with the matrix on v⃗_C. The condition from the first row and the conditions  from the remaining rows give respectively <cit.>∑_i=0^d+1(-1)^s_i√(𝕍_i)   = 0 , 
+    ∀ j≥ 0:    (-1)^s √(c_11) + ∑_i=0^d+1(-1)^s_i 2^d/2d! s_ij√(𝕍_i)   = 0  .
+    
+    The first condition fixes the relative signs (s_0+s_i), so that for fixed (positive) orientation  these are fully specified by the given type of Pachner move.[Here we assume that all simplices have positive orientation. It is possible to extend the discussion to allow for positive and negative orientation <cit.>. The signs will then depend on these orientations.]   For an n_ i-n_ f Pachner move, we have
+    
+    s_0 + s_i =
+    
+    0   mod  2,    i=1, …, n_ f-1, 
+    
+    1   mod  2,    i=n_ f,…, d+1,
+    
+    where we remind the reader that 𝕍_0, …, 𝕍_n_ f-1 are the signed volume squares of the d-simplices after the move, and 𝕍_n_ f, …, 𝕍_d+1 are the signed volume squares of the d-simplices before the move.
+    
+    
+    Note that the signs (s_0+s_i) do not depend on the spacetime signature as only the (positive) volumes of the d-simplices enter the first condition. By contrast, the sign (s_0+s) depends on the choice of Euclidean/Lorentzian signature, and, in general, on the geometric configuration under consideration. In fact, after fixing the signs (s_0+s_i), the second condition in (<ref>) can be used for any j to determine the remaining relative sign (s_0+s) via
+       (-1)^s_0+s√(c_11) = -  ∑_i=0^d+1(-1)^s_0+s_i 2^d/2d! s_ij√(𝕍_i) .
+    
+    As the signed squared edge lengths can be positive or negative in Lorentzian signature, s will generally depend on the spacelike/timelike nature of the edges, see Sec. <ref>. Note also, that the sum on the right hand side of (<ref>) actually does not depend on the choice of j.
+    
+    
+    
+      §.§.§ Variation of the determinant
+    
+    
+    To compute the Hessian of the Regge action expanded around a flat background, we will need the variation of the determinant of the Caley-Menger matrix with respect to the signed squared edge lengths evaluated on the flat hypersurface {(C)=0}. Introducing the adjugate matrix Adj(C) defined as the transpose of the matrix of cofactors Cof(C)_ab≡ (-1)^a+bc_ab of C, Jacobi's formula allows us to express the derivative of the determinant of C as
+    (C)s_ij=(Adj(C)Cs_ij) .
+    
+    Using the property Adj(C)C = CAdj(C) = (C)𝕀, it follows from (C)=0 that the components of the adjugate matrix are determined by the single null vector of C in the form Adj(C)_ab∝ v_C^a v_C^b. Using in this form for the adjugate matrix the expression (<ref>) for v⃗_C leads to
+    (C)s_ij_(C) = 0 =  
+    
+    N  (-1)^s_i (-1)^s_j√(𝕍_i̅)√(𝕍_j̅) ,
+    
+    where N is a global factor, which for now will be left unspecified.
+    
+    
+    
+    § LINEARIZED REGGE CALCULUS
+    
+    
+     §.§ Flat background expansion
+    
+    
+    In the following we assume a classical background solution {s^(0)_e} satisfying the generalized triangle inequalities and Regge equations of motion 
+    S_Regges_e_s^(0)_e = 0 .
+    
+    Moreover, we assume that the background solution is locally flat and therefore the associated bulk deficit angles vanish,
+    ϵ^(bulk)_h_s^(0)_e = 0 .
+    
+    Now we expand the signed squared edge lengths as
+    
+    s_e = s^(0)_e + λ_e ,
+    
+    where {λ_e} represent small perturbations around the classical background. Then the Regge action (<ref>) to second order in the fluctuations takes the form
+     S_Regge = S_Regge_s^(0)_e + S_Regges_e_s^(0)_eλ_e + /2[2]S_Regges_es_e'_s^(0)_eλ_e λ_e' + … .
+    
+    Here the zeroth order term represents the Regge action evaluated on the flat background, whereas the first-order term vanishes for bulk edges due to the equation of motion (<ref>). The second-order term defines the Hessian of second derivatives of the Regge action with respect to the signed squared edge lengths,
+    
+    H_ee'≡[2]S_Regges_e's_e_s^(0)_e .
+    
+    We assume a background configuration around which the Regge action is real, S_Regge∈ℝ, and thereby exclude light cone irregularities <cit.>. Using moreover the exchange symmetry of partial derivatives it then follows that the Hessian matrix is real and symmetric. Inserting the definition of the Regge action (<ref>) leads to
+    
+    H_ee'   = 1/[2]s_e's_e_s^(0)_e∑_h√(𝕍_h)ϵ_h
+       =  1/s_e'_s^(0)_e∑_h(√(𝕍_h)s_eϵ_h + √(𝕍_h)ϵ_hs_e)
+       =  1/∑_h( [2]√(𝕍_h)s_e's_eϵ_h + √(𝕍_h)s_eϵ_hs_e')_s^(0)_e . 
+    In the second line the last term was dropped using the Schläfli identity for Lorentzian triangulations, ∑_h √(𝕍_h)θ_h=0. See Appendix <ref> for a proof. When evaluating (<ref>) on a flat background, terms with ϵ_h, where h⊂bulk, vanish due to (<ref>). Moreover, terms with ϵ_h, where h⊂boundary, will not be affected during Pachner moves as these keep the extrinsic geometry fixed.
+    
+    
+    
+     §.§ Hessian for Pachner moves
+    
+    
+    In the following we associate an action to a given n_ i-n_ f Pachner move[We assume that the Pachner move describes a change from an initial configuration with n_ id-simplices to a final configuration with n_ fd-simplices, where n_ i≥ n_ f.] defined by the difference of the actions for the initial and final complex,
+    
+    S_Regge^Pachner =S_Regge^( i)- S_Regge^( f) .
+    
+    The actions on the right hand side of (<ref>) for the initial and final configurations of the Pachner move are defined in (<ref>).  The action associated to the Pachner move is of the same form as in (<ref>),
+     S_Regge^Pachner = ∑_h√(𝕍_h)ϵ̃_h  .
+    
+    To define ϵ̃_h we remind the reader, that the initial and final simplicial complexes have the same boundary, and hence the same set of boundary hinges h^ bdry, and that the set of initial bulk hinges h^ iblk and final bulk hinges h^ fblk is distinct, see Section <ref>.  We therefore have
+    ϵ̃_h^ iblk   =   2π + ∑_σ^ i⊃ h^ iblkθ_σ^ i,h^ iblk, ϵ̃_h^ fblk = -2π - ∑_σ^ f⊃ h^ fblkθ_σ^ f,h^ fblk, 
+    ϵ̃_h^ bdry   =   (π k + ∑_σ^ i⊃ h^ bdryθ_σ^ i, h^ bdry^(i)) - (π k + ∑_σ^ f⊃ h^ bdryθ_σ^ f, h^ bdry)  .
+    
+    With these definitions we obtain
+    ϵ̃_h_s^(0)_e = 0
+    
+    for  all (bulk and boundary) hinges on a flat background. Repeating the steps (<ref>)-(<ref>) leads to the Hessian associated to the given Pachner move,
+    
+    H_ee'^Pachner = 1/∑_h√(𝕍_h)s_eϵ̃_hs_e'_s^(0)_e .
+    
+    
+    Now recall that a Pachner move in d dimensions is characterized by a set of (d+2) vertices embedded into flat d-dimensional spacetime such that the involved d-simplices are non-degenerate. The condition of embedability in d-dimensional spacetime implies that the determinant of the Caley-Menger matrix vanishes, (C)=0, whereas the requirement that the d-simplices are non-degenerate implies that there exists exactly one null vector given by (<ref>). Moreover, demanding flatness for the bulk geometry while keeping the extrinsic geometry at the boundary fixed leads to ϵ̃_h=0 for all hinges in a flat background expansion. Thus, variations of the deficit angles and the Caley-Menger determinant are related and can be parametrized by associating an implicit function f_h for each hinge,
+    ϵ̃_h = f_h (C) .
+    
+    As a consequence, on the {(C)=0} surface and in a flat background expansion, the variation of the deficit angle at a hinge can be expressed as 
+    δϵ̃_h_s^(0)_e = f_h δ((C))_s^(0)_e    
+    =   f̃_h ∑_i<j (-1)^s_i (-1)^s_j√(𝕍_i̅)√(𝕍_j̅) δ s_ij =: f̃_h ∑_e g(e) δ s_e
+    where we used (<ref>) and reabsorbed the N appearing there into  f̃_h=N f_h.
+    
+    As the full dependence of the deficit angles on data from the hinge is now encoded in the function f̃_h, we can express the Hessian (<ref>) as
+    
+    H_ee'^Pachner = 1/  g(e') ∑_h√(𝕍_h)s_ef̃_h _s^(0)_e .
+    
+    The variation of the Caley-Menger determinant with respect to the signed squared edge length s_mn of an edge e'=(mn) was derived in Sec. <ref> and is given by the signed product of the volumes of the two d-simplices obtained by removing the vertices m and n, cf. (<ref>). Using the fact that the Hessian is symmetric under the exchange of edges e=(ij) and e'=(mn), we arrive at the first main result for the Hessian associated to a Pachner move in arbitrary spacetime dimensions,
+    
+    H_(ij)(mn)^Pachner = N^Pachner (-1)^s_i+s_j+s_m+s_n√(𝕍_i̅)√(𝕍_j̅)√(𝕍_m̅)√(𝕍_n̅) .
+    
+    Here the signs s_k have to satisfy (<ref>). Thus it remains to determine the factor N^Pachner.
+    
+    
+    Finally, note that the Hessian matrix for an arbitrary Pachner move has a factorizing structure of the form
+    
+    H_(ij)(mn)^Pachner∝ h_(ij)h_(mn) .
+    
+    
+     §.§ Global factor
+    
+    
+    The global factor in the Hessian (<ref>) can be derived by computing H_ee'^Pachner explicitly via equation (<ref>) for a selected pair of edges. To that end, we first note that the derivative of the dihedral angle at a hinge h with respect to an edge e=h̅ opposite of this hinge, has remarkably simple form
+    θ_σ,hs_h̅ =  -
+    1/21/d(d-1)√(𝕍_h)/√(𝕍_σ) ,
+    
+    see Appendix <ref>.
+    
+    To continue, we first discuss the global factor for Pachner moves in three dimensions and then for Pachner moves in four and higher dimensions. To that end, we remind the reader that we consider n_ i-n_ f Pachner moves with n_ i≥ n_ f and n_ i+n_ f=d+2. Thus, we have in three dimensions the 3-2 and the 4-1 Pachner moves and in four dimensions the 4-2, 5-1 and 3-3 move.
+    
+     
+    
+      §.§.§ 3D
+    
+    We detailed the 3D Pachner moves in Sec. <ref>. With the notation from this section we 
+    will consider the derivative of ϵ̃_h with hinge edge h=(01) with respect to the edge e=(34)
+    ϵ̃_(01)s_34   =    -  (-1)^s_0+s_2θ_2̅,(01) s_34  =  
+     (-1)^s_0+s_21/12√(𝕍_(01))/√(𝕍_2̅)  ,
+    
+    where, for the first equation, we used the solution (<ref>) for the relative signs, to express the factor (-1) as  (-1)^s_0+s_2 and equation (<ref>), which defines ϵ̃. For the second equation we utilized (<ref>).
+    
+    Therefore
+    
+     H_(01)(34)^Pachner = 1/√(𝕍_(01))s_01ϵ̃_(01)s_34_s^(0)_e     =   1/24  (-1)^s_0+s_21/√(𝕍_2̅)
+        =   
+    - 1/24  (-1)^s_0+s_21/√(𝕍_2̅) .
+    
+    In the second line, we used that  with our conventions √(-1)=
+     and that 𝕍_2̅ is always negative.
+    
+    On the other hand, we have according to (<ref>) 
+    
+    H_(01)(34)^Pachner = N^Pachner (-1)^s_0+s_1+s_3+s_4√(𝕍_0)√(𝕍_1)√(𝕍_3)√(𝕍_4) .
+    
+    With the solution (<ref>) for the relative signs, we have that for our three-dimensional Pachner moves
+    
+    N^Pachner   =   1/24  (-1)^s_Pachner1/∏_l√(𝕍_l̅)   with  
+     (-1)^s_Pachner
+    =
+    
+    +1    for the    3-2  move
+    
+    -1    for the    4-1  move  .
+    
+    
+    We therefore obtain for the general Hessian matrix element
+    
+    H_(ij)(mn)^Pachner = 1/24 (-1)^s_Pachner  (-1)^s_i+s_j+s_m+s_n√(𝕍_i̅)√(𝕍_j̅)√(𝕍_m̅)√(𝕍_n̅)/∏_l√(𝕍_l̅) .
+    
+    
+      §.§.§ 4D
+    
+    
+    We described the 4D Pachner moves in Sec. <ref>. To determine the global pre-factor for the Hessian we will apply a slightly different strategy from the three-dimensional case.
+    To make use (only) of the simpler case (<ref>) for the derivative of the dihedral angle at an hinge h with respect to the signed length squared of an opposite edge, we will  first determine the factors f̃_h in (<ref>).
+    
+    
+    To this end, we consider the derivative of ϵ̃_h with hinge triangle h=(ijk) with respect to the signed length squared of edge e=(mn), were (ijkmnp) is an arbitrary permutation of (012345). Note that  only the d-simplex σ_p̅ includes the vertices i,j,k and m,n. Thus
+    ϵ̃_(ijk)s_mn   =    -  (-1)^s_0+s_pθ_p̅,(ijk) s_mn  =  
+     (-1)^s_0+s_p1/24√(𝕍_(ijk))/√(𝕍_p̅)  =  
+     (-1)^s_0+s_p1/24√(𝕍_(ijk))/√(|  𝕍_p̅|) .
+    
+    Here we again referred to (<ref>) and the solution (<ref>) for the relative signs, which states that (-1)^s_0+s_p=+1 if σ_p̅ is in the final configuration and (-1)^s_0+s_p=-1 if σ_p̅ is in the initial configuration. In the last equation we used the fact, that σ_p̅ is a Lorentzian d-simplex and has negative signed volume square.
+    
+    We compare this case with equation (<ref>), which yields
+    ϵ̃_(ijk)s_mn_s^(0)_e   =   f̃_(ijk)
+     (-1)^s_m+s_n√(𝕍_m̅)√(𝕍_n̅)  .
+    
+    Thus
+    f̃_(ijk)   =   (-1)^s_0/24𝕍_(ijk)  (-1)^s_i+s_j+s_k√(𝕍_i̅)√(𝕍_j̅)√(𝕍_k̅)/∏_l  (-1)^s_l√(𝕍_l̅)  .
+    
+    Now, according to (<ref>) we have
+    
+    
+     H_ee'^Pachner = 1/  g(e') ∑_h√(𝕍_h)s_ef̃_h _s^(0)_e  with g((mn))= (-1)^s_m+s_n√(𝕍_m̅)√(𝕍_n̅) .
+    
+    
+    Hence we have for a general choice of i≠ j and m≠ n
+    H_(ij)(mn)^Pachner   =   (-1)^s_Pachner/48 
+    (-1)^s_i+s_j+s_m+s_n√(𝕍_i̅)√(𝕍_j̅)√(𝕍_m̅)√(𝕍_n̅)/∏_l√(𝕍_l̅)∑_k ≠ i,j𝕍_(ijk)
+    s_ij 
+        (-1)^s_k+s_0√(𝕍_k̅) ,
+    
+    with (-1)^s_Pachner=(-1)∏_l (-1)^s_l. Our choice for  distributing the sign factors illustrates more obviously that the over-all result does not depend on the choice for s_0: all exponents x in (-1)^x involve an even number of s_i. 
+    
+    We can determine (-1)^s_Pachner for the various Pachner moves listed in (<ref>) using the solutions for the relative signs in (<ref>):
+    
+    (-1)^s_Pachner
+    =
+    
+    +1    for the    3-3  move
+    
+    -1    for the    4-2  move
+    
+    +1    for the    5-1  move  .
+    
+    
+    Comparing the Hessian in (<ref>) with the one in (<ref>) we see that the factor 
+    
+    D_ij=  ∑_k ≠ i,j𝕍_(ijk)
+    s_ij 
+        (-1)^s_k+s_0√(𝕍_k̅)  =:   D
+    
+    cannot depend on (ij).  This can be shown explicitly <cit.>:  Using (<ref>) for the signed  area square of a triangle, 𝕍_(ijk)=𝔸_(ijk), we compute 
+    
+    D    =   ∑_k ≠ i,j𝕍_(ijk)s_ij 
+    (-1)^s_k+s_0√(𝕍_k̅)
+        =   (-1)^s_0/8∑_k ≠ i,j (-1)^s_k(s_ik+s_jk-s_ij) √(𝕍_k̅)
+       =   (-1)^s_0/8∑_k  (-1)^s_k(s_ik+s_jk) √(𝕍_k̅) - (-1)^s_0/8((-1)^s_js_ij√(𝕍_j̅) + (-1)^s_is_ij√(𝕍_i̅)) 
+           - (-1)^s_0/8∑_k≠ i,j(-1)^s_ks_ij√(𝕍_k̅)
+       =   (-1)^s_0/8∑_k  (-1)^s_k(s_ik+s_jk) √(𝕍_k̅) - (-1)^s_0/8s_ij∑_k (-1)^s_k√(𝕍_k̅) .
+    
+     Using the first condition in (<ref>), the last term vanishes. For the first expression we can use the second condition in (<ref>) to relate the sum to the minor √(c_11). This leads to
+    
+    D   =  1/4∑_k  (-1)^s_0+s_k s_ik√(𝕍_k̅)  =  -(-1)^s+s_0/4× 2^d/2d!√(c_11) ,
+    
+    where the first equation holds for an arbitrary choice of i=0,…,d+1.
+    
+    The sign of D (and therefore (-1)^s+s_0) depends on the Pachner move under consideration and on the specifics of the configuration. 
+    
+    Consider, for example, the 5-1 Pachner move and two special cases, namely that the edges involved in this move are (a) all space-like  and (b) all time-like.[To construct such examples, take any configuration of six vertices embedded into four-dimensional Minkowski space, and assume that none of the vectors connecting the vertices has vanishing time coordinate or vanishing spatial coordinates. To produce a configuration where all edges are space-like, multiply the spatial coordinates of these vertices with a sufficiently large constant. For a configuration where all edges are time-like, multiply the time coordinates of these vertices with a sufficiently large constant.]  Using the solutions (<ref>)
+    for the relative sign, and (<ref>) for i=0, we see that D is negative in case (a), and positive in case (b): 
+    
+    D^(5-1)  =    -1/4∑_k= 1^5  s_0k√(𝕍_k̅) .
+    
+    
+    For the 4-2 Pachner move, we can write D as (see second line in (<ref>))
+    
+    D^(4-2)  =   -1/8∑_k= 2^5 (s_0k+s_1k-s_01) √(𝕍_k̅) .
+    
+    Thus the sign of D^(4-2) depends on the geometric configuration. We can again consider special cases, e.g. (a) all edges (0k) and (1k) with k≥ 2 are space-like, whereas (01) is time-like.[To construct such a configuration, start with a space-like tetrahedron (2345), which is in the plane orthogonal to the time axis and has its barycentre at the origin of the coordinate system. Choose the edge (01) to lie along the time axis with its barycentre also at the origin of the coordinate system. Now scale the tetrahedron  (2345) with a sufficiently large factor, so that all edges (0k) and (1k), with k≥ 2 are space-like.] In this case D^(4-2) is negative. 
+    
+    This extends to the case (a'), in which all triangles (01k) with k≥ 2 are time-like and have only time-like edges. In this case the triangle inequalities demand that one edge has greater time-like length (or proper time) then the sum of the other two edges. Assume that this `longest' edge is (01) for all triangles (01k). This ensures that (s_0k+s_1k-s_01) is positive, and D^(4-2) negative.  
+    
+    On the other hand, consider the case (b), in which all edges (0k) and (1k) with k≥ 2 are time-like, whereas (01) is space-like.[ Choose the vertices 0 and 1 to lie in the t=0 plane and vertices k with k≥ 2, such that the absolute value of their time coordinates is sufficiently large.]
+     This yields a positive D^(4-2).  This extends to the case (b'),  in which all triangles (01k) with k≥ 2 are time-like but have only space-like edges, and where (01) is the longest edge for all such triangles.
+    
+    
+      §.§.§ Higher dimensions
+    
+    
+    The calculation for the four-dimensional case can be straightforwardly generalized to higher dimensions: in d≥ 4 dimensions we start by considering the derivative of ϵ̃_h with h=(ijk_1⋯ k_d-3) with respect to the signed length squared of edge e=(mn), where (ijk_1 ⋯ k_d-3 mnp)  is an arbitrary permutation of (012⋯ (d+1)). The general matrix element of the Hessian is thereby found as
+    
+    H_(ij)(mn)^Pachner   =   (-1)^s_Pachner/4 d(d-1) 
+    (-1)^s_i+s_j+s_m+s_n√(𝕍_i̅)√(𝕍_j̅)√(𝕍_m̅)√(𝕍_n̅)/∏_l√(𝕍_l̅)×
+          ∑_k_1<⋯ <k_d-3: k_α≠ i,j𝕍_(ijk_1 ⋯ k_d-3)
+    s_ij 
+        (-1)^s_0+s_k_1+⋯ + s_k_d-3√(𝕍_k_1)⋯√(𝕍_k_d-3) ,
+    with (-1)^s_Pachner=(-1)∏_l (-1)^s_l. From the symmetry of the Hessian we can again conclude that the factor in the second line does not depend on (ij). We have furthermore for even space-time dimensions d
+    (-1)^s_Pachner
+    =
+    
+    +1    if    n_ i,n_ f  are odd
+    
+    -1    if   n_ i,n_ f  are even  ,
+    
+    and for odd space-time dimensions d
+    (-1)^s_0(-1)^s_Pachner
+    =
+    
+    -1    if    n_ i  is even
+    
+    +1    if   n_ i  is odd  .
+    
+    
+    § PATH INTEGRAL
+    
+    
+    In the following we investigate the path integral (<ref>) for a d-dimensional triangulation with fixed boundary edge lengths. Specifically, we will examine the path integral for Pachner moves, which can be interpreted as coarse graining moves. As we discussed in Sec. <ref>, this includes only the (d+1)-(1) and (d)-(2) moves.
+    
+    The path integral for  Regge calculus can in general not be computed analytically since the dihedral angles in the Regge action are complicated functions of the squared length variables and moreover the configuration to be summed over have to satisfy the generalized triangle inequalities. To circumvent these difficulties we expanded the Regge action around a flat classical background solution {s_e^(0)} and  only quantize (i.e. integrate over) the perturbations {λ_e} around the classical background. 
+    
+    Now, the zeroth and first order terms in the expansion of the Regge action (<ref>) on a flat background are the same before and after the Pachner move and only involve boundary  variables. We remind the reader that we defined S_Regge^Pachner =S_Regge^( i)- S_Regge^( f).  For the perturbative evaluation of the path integral we use the second-order expansion of the action ^(2)S_Regge, which leads to
+    
+    Z^Pachner  =exp(  ^(2)S_Regge^( f) )  ∫∏_ẽ⊂bulkλ_ẽμ^Pachnerexp(∑_e,e'1/2H_ee'^Pachnerλ_e λ_e') .
+    
+    Here μ^Pachner(s_e^(0)) denotes a measure factor assumed to depend only on the background variables. To compute integrals of the type (<ref>) we first collect some general results on Gaussian integrals with imaginary argument in the exponential function.
+    
+    
+    
+     §.§ Gaussian integrals with imaginary exponent and factorizing Hessians
+    
+    
+    
+    
+    Consider the one-dimensional Gaussian integral
+    ∫_ℝ dλ  e^/2 h λ^2
+    over the real axis, where h∈ℝ∖{0} is a constant. (<ref>) is not well-defined as a Lebesgue integral. Nevertheless, the integral can be computed by deforming the integration contour in the complex plane and taking the path of steepest descent at the origin, as shown in Fig. <ref>, see e.g. <cit.>. Positive h>0 produce a factor of e^π/4, whereas negative h<0 produce a factor of e^-π/4. Altogether, applying the steepest descent method to compute (<ref>) for h≠ 0 leads to
+    ∫_ℝ dλ   e^/2 h λ^2  = 
+    	e^-π/4√(-2π/h)   ,   h < 0
+    
+    	e^π/4√(2π/h)   ,   h > 0
+     = e^π/4sign(h)√(2 π/h) = √(2π/h) .
+    
+    The last equality holds if the complex square root function is defined by its principal value on the first Riemann sheet.
+     
+    
+    The result can be generalized to multidimensional Gaussian integrals with purely imaginary argument of the exponent, 
+    ∫_ℝ^nλ⃗ e^/2λ⃗^T Hλ⃗ = √(2π/h_1)⋯√(2π/h_n) .
+    
+    where H is assumed to be a regular real symmetric n× n matrix and h_i,i=1,…, n are its eigenvalues. 
+    If only r<n  of the variables λ⃗=(λ_1,…,λ_r,λ_r+1,…,λ_n)≡ (λ⃗_(r), λ⃗_(n-r)) are integrated over, we can split the matrix H into submatrices
+    
+    H = (
+    
+    	H_r× r   ℍ
+    ℍ^T     H_(n-r)× (n-r)) 
+    and compute
+    ∫_ℝ^rλ⃗_(r) e^/2λ⃗^T H λ⃗    =   √(2π/h_1)⋯√(2π/h_r)  
+    e^/2λ⃗_(n-r)^TH̃λ⃗_(n-r) ,
+    H̃   ≡     H_(n-r)× (n-r) - ℍ^T 	H_r× r^-1ℍ ,
+    
+    where h_i, i=1,…,r are the eigenvalues of H_r× r.
+    Note that here it is sufficient to demand only that H_r× r is regular. Integrals of this type will be needed to compute partition functions for the (d+1)-(1) and the (d)-(2) Pachner moves.
+    
+    
+    Let us start with the (d)-(2) Pachner moves. Here we have only one bulk edge, thus we have in (<ref>) r=1.  Furthermore, we know from (<ref>) that the Hessians for the Pachner moves are factorizing H^ Pachner _ee'∝ h_e h_e'. A straightforward computation shows that this implies for H̃^ Pachner _ee' in (<ref>)
+    H̃^ Pachner _ee'=0  .
+    
+    Thus, integrating out the bulk edge in the (d)-(2) Pachner moves changes the action only from the Regge action for the initial configuration S^( i)_ Pachner to the Regge action for the final configuration S^( f)_ Pachner, see (<ref>), without any additional terms. Therefore integrating out the bulk edges in the (d)-(2) Pachner move configuration leaves the Regge action form-invariant.
+    
+    For the (d+1)-(1) moves we have (d+1) bulk edges. But the factorizing form of the Pachner move Hessian implies that it has only one non-vanishing eigenvalue, and thus (d+2)(d+1)/2-1 null vectors. In particular, there are d null vectors, which restrict to the (d+1) bulk edges, and describe therefore gauge degrees of freedom. These correspond to a discrete remnant of diffeomorphism symmetry <cit.>, which exist on flat Regge backgrounds <cit.>. Indeed, on a flat background, where all the (bulk) deficit angles are vanishing,  we can displace the bulk vertex 0 in the embedding flat space, and in this way induce a change in the length squares of the bulk edges, without changing the bulk deficit angles and without changing the extrinsic curvature angles of the initial configuration, and thus without changing the value of the Regge action.
+    
+    We will deal with these gauge symmetries by only integrating out one of the bulk edges, say (01) (we therefore assume H_(01)(01)≠ 0), and by absorbing the remaining integrals into a measure over the gauge orbit.  We thus apply again (<ref>) with r=1. The factorizing form of the Hessian implies again, that H̃^ Pachner _ee'=0. This also shows, that the resulting action term does not depend on any of the variables we did not integrate over.
+    
+    In summary, both types of coarse graining Pachner moves, the (d+1)-(1) move and the (d)-(2) move, leave the Regge action form-invariant. The intuitive reason for this form invariance is that, given a set of  boundary length squares satisfying the generalized triangle inequalities, a d-simplex and a neighboring pair of d-simplices can always be embedded into d-dimensional flat space. The initial configurations for the (d+1)-(1) moves and (d)-(2) moves result from inserting (d+1) edges and one edge into the (flatly embeddable) d-simplex and the glued pair of d-simplices, respectively. There exist therefore flat solutions for the length squares of the bulk edges.[For special configurations there might exist also configuration with curvature, but these have to be considered as discretization artifacts, and are therefore expected to be situated outside a neighbourhood around the flat solutions. Here we are considering perturbations around flat solutions, such curved solutions are therefore not relevant. 
+    
+    ] In the process of removing these bulk edges we insert these flat solutions into the initial Regge action. This yields the Regge action for the final Pachner move configuration.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    To furthermore study the form invariance of the measure, we will consider the various Pachner moves in more detail. Here we will restrict to three and four dimensions. Already in four dimensions we will see, that we cannot find a form-invariant measure. Additionally, there is the 3-3 move, which does not leave the action form-invariant. In higher dimensions there are more and more Pachner moves, for which this applies. 
+    
+    
+    
+    
+    
+    § 3D PACHNER MOVES
+    
+    
+    In three dimensions we have the 3-2 and 4-1 Pachner moves, which are of coarse graining type, and their respective inverses, the 2-3 and 1-4 moves. 
+    
+    We discussed above that the (linearized) action is form-invariant for the coarse graining moves. That is solving for the bulk  lengths and inserting these solutions into the action, we find the Regge action for the final configurations of the move.  Since in three dimensions the Regge equation of motion impose flatness,  form invariance of the action applies also to the full action.
+    
+    The statement of form invariance can be extended to the inverses of these coarse graining moves: here we just add to the action of the initial configuration the terms that arise from having new bulk hinges. 
+    
+    Two triangulations with the same boundary can be connected via a finite sequence of Pachner moves. This form invariance of the action implies that the Hamilton-Jacobi function, defined as the action evaluated on the solution, will not depend on the choice of bulk triangulation, and also not on the choice of the (flat) background values for the bulk lengths.  The Hamilton-Jacobi function only depends on the choice of boundary and boundary data.  In the following we will study whether this statement extends to the path integral.
+    
+    
+    
+     §.§ 3-2
+    
+    
+    
+    For the path integral associated to the 3-2 Pachner move we have
+    
+    Z^(3-2) = exp(  ^(2)S_Regge^( f) )  ∫λ_01μ^(3-2)exp(∑_e,e'1/2H_ee'^(3-2)λ_e λ_e') ,
+    
+    where we only integrate over the perturbation variable λ_(01) associated to the one bulk edge (01).  As we discussed in the previous section, due to the factorizing form of the Pachner move Hessian, we have H̃_ee'^(3-2)=0 for the exponential factor resulting from the Gaussian integral. The Gaussian integral leads furthermore to the factor 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    √(2π/H^(3-2)_(01)(01)) =e^π/4√(48π)𝕍_2𝕍_3𝕍_4/𝕍_0𝕍_1^1/4 =e^π/4√(48π)√(V_2 V_3V_4/V_0V_1) ,
+    
+    where V_i denotes the positive volume of tetrahedron τ_i̅. Note that H^(3-2)_(01)(01)>0 (see <ref>), and we therefore need to choose the integration contour 𝒞_+ in Fig. <ref> for the Gaussian integral.
+    
+     Form invariance of the partition function can thus be achieved by choosing the measure factor as 
+    μ^(3-2) =1/∏_e⊂bdry√(√(48π))1/∏_e⊂bulk√(48π)∏_τ e^-π/4/∏_τ√(V_τ) .
+     
+    Here we wrote the measure factor in a form which allows generalization to arbitrary triangulations with boundary, and is consistent under gluing.
+    
+    We also made a choice in associating the e^-π/4 factors to the tetrahedra. We will later discuss that such a phase factor also appears for the Lorentzian Ponzano-Regge model. An alternative choice, which gives also form invariance for the 3-2 move,  is to associated the phase factors to the edges of the triangulation. 
+    
+    
+    
+    
+    
+     §.§ 4-1
+    
+    
+    The path integral for the 4-1 move takes the form
+    
+    Z^(4-1) = exp(  ^(2)S_Regge^( f) ) ∫∏_i∈{1,2,3,4}λ_0iμ^(4-1)exp(∑_e,e'1/2H_ee'^(4-1)λ_e λ_e') .
+    
+    As described in Sec. <ref>, we have three gauge degrees of freedom, and we therefore only integrate explicitly over one variable, which without loss of generality, we choose as λ_01. We have again, that due to the factorizing form of the Pachner move Hessian, H̃_ee'^(4-1)=0. The Gaussian integral over λ_01 leads to a factor
+    
+    √(2π/H^(4-1)_(01)(01)) =e^-π/4√(48π)𝕍_2𝕍_3𝕍_4/𝕍_0𝕍_1^1/4 =e^-π/4√(48π)√(V_2 V_3V_4/V_0V_1) .
+    
+    Note that here H^(4-1)_(01)(01)<0 (see <ref>), that is we have the opposite sign as compared to the (3-2)-move. We therefore need to choose the integration contour 𝒞_- in Fig. <ref> for the Gaussian integral.
+    
+    
+    
+    
+    Now, let us choose the measure μ^(4-1) to be of the same form[Again, one can also decide to associate the e^-π/4 to the edges.] as the measure for the 3-2 move (<ref>), i.e., 
+    μ^(4-1) =1/∏_e⊂bdry√(√(48π))1/∏_e⊂bulk√(48π)∏_τ e^-π/4/∏_τ√(V_τ) .
+     
+    Performing the integral over λ_01 we are left with an integral  
+    Z^(4-1) = exp(  ^(2)S_Regge^( f) )
+    1/∏_e⊂bdry√(√(48π))e^-π/4/√(V_0̅)∫∏_i=2,3,4λ_0i1/√(48π)(-1)/48π V_1̅ .
+    
+    We aim to identify the last factor as an integral over the gauge orbit. This gauge freedom results from the symmetry of the action under displacements of the vertex 0 in the initial Pachner move configuration. It can be understood as a discrete remnant of the diffeomorphism symmetry in the continuum <cit.>.
+    
+    
+    
+    Given a simplex σ with vertices (0,1,…,d), embedded into d-dimensional Euclidean or Minkowskian spacetime, we have shown in Appendix <ref>, that we have the following identity between integration measures 
+    ∑_orientation of σ∏_a=1^d  s_0a/2^d d! V_σ = ∏_α=1^d  v_0^α  ,
+    
+    where  v_0^α are the coordinates of the vertex 0.  We can therefore interpret the integration over λ_0i,i=1,2,3 as an integration over a gauge orbit. For our three-dimensional case, we obtain invariance of the path integral by setting 
+    ∫∏_i=2,3,4λ_0i1/√(48π)(-1)/48π V_1̅  →   1      .
+    
+    One can also include in the measure a factor of (-1) for each vertex. We can then remove the (-1) from the gauge contribution (<ref>). 
+    
+    We mentioned that for the 3-2 move, one can also associate the e^-π/4 factor to the edges. This is also possible for the 4-1 move, but one has  then to set a complex factor equal to 1:
+    
+    e^-π/4∫∏_i=2,3,4λ_0i1/√(48π)(-1)/48π V_1̅  →   1     .
+    
+    Alternatively, these phase factors can be again associated to the vertices of the triangulation.
+    
+    
+    
+     §.§ Summary for 3D Pachner moves
+    
+    
+    We see that we can provide a measure for the three-dimensional path integral, which leads to form invariance at the one-loop level. Thus the (perturbative) path integral will, to one-loop order, not depend on the choice of bulk triangulation, but only on the boundary triangulation and data. This triangulation invariance is a reflection of diffeomorphism symmetry <cit.>.
+    
+    The Ponzano-Regge model <cit.> constitutes a non-perturbative model of three-dimensional quantum gravity and is available in Euclidean signature (but implements exp( S_E) amplitudes and not the exp(-S_E) amplitudes of Euclidean quantum gravity) and Lorentzian signature <cit.>.  The Ponzano-Regge model leads (with appropriate gauge fixing) also to triangulation-invariant amplitudes. 
+    
+    This is the reason why the results we found here mirror closely the semi-classical limit of the amplitude associated to one tetrahedron, which is given by <cit.>1/√(V_τ)cos( ∑_e∈τ |l_e| ψ̃_e  ±π4)      .
+    
+    Here ψ̃_e is the Euclidean or Lorentzian  exterior dihedral angle at e⊂τ, and the ± sign is equal to +1 for the Euclidean case and equal to -1 for the Lorentzian case.  The cosine results from a sum over orientations of the tetrahedra, and the fact that the action associated to oppositely oriented tetrahedra differs by a global sign.  The π4 contribution can again be understood[To determine the semi-classical limit one does apply a saddle point approximation <cit.>.] to arise from a Gaussian integration with imaginary exponent, and the fact that the two saddle points come with Hessians of opposite sign.  In short, the π4 contribution to the phase in the semi-classical limit of the Ponzano-Regge amplitude arises because of the sum over orientations.
+    
+    It speaks to the power of our method that we also find this π4 contribution, but via a very different mechanism. Here we do  not sum over orientations. Rather, we  associated the π4 phase to the tetrahedra because the signs for the Hessian matrix element  in the 3-2 and 4-1 move are (a) independent from the specific configuration and (b) opposite to each other.
+    
+    
+    Such a phase factor does not arise for Euclidean Regge calculus <cit.> with exp(-S_E) amplitudes, because these signs are enforced to be the same for the 3-2 and 4-1 move: One identifies the non-gauge degree of freedom in the 4-1 move as conformal mode, as the Hessian element has negative sign, and the path integral is a priori divergent. Therefore this sign is changed by hand, as suggested for the conformal mode in Euclidean (perturbative) quantum gravity <cit.>. 
+    
+    Working with exp( S_L) amplitudes we `solve' the conformal factor problem, as we (a) work with an oscillatory amplitude and (b) the integration contour is deformed according to the sign of the Hessian matrix element. The conformal factor problem is a main obstacle for non-perturbative lattice approaches to Euclidean quantum gravity, which often rely on Monte-Carlo simulations <cit.>.  These simulations tend to drive the systems to configurations which minimize the action, but due to the conformal mode problem the action is unbounded from below. For Regge calculus such configurations are so-called spikes <cit.>. E.g. in the 4-1 move we obtain a spike configuration by choosing all bulk edge lengths to be very large.  
+    
+    From this we can take away a lesson for (non-perturbative) Lorentzian Regge calculus: in evaluating the path integral we have to make sure to pick a deformation of the integration contour, which leads to a convergent result, e.g. by using Picard-Lefschetz techniques <cit.> or more implicit methods <cit.>.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    § 4D PACHNER MOVES
+    
+    
+     The set of coarse graining Pachner moves in four dimensions includes the 4-2 and 5-1 move. As discussed in Section <ref> the linearized action is form invariant under these moves. In the same way as discussed for the 3D Pachner moves, this can be  extended to the 2-4 and 1-5 moves.  The full action is also form invariant, under the condition that one takes only the flat solution (which always exist) into account, and not curved solutions, which might arise as discretization artifacts.
+    
+    In a 3-3 move no edges are integrated out. This move only features one bulk hinge whose (linearized) deficit angle is completely determined by the boundary data, and is in general not vanishing.  The Hessian H^Pachner_ee' in (<ref>) gives therefore directly the difference of the linearized Regge action before and after the move. The action is therefore in general[The initial action is equal the final action if the linearized deficit angle induced by the boundary data vanishes. This implies that the factor D in (<ref>) vanishes.] not form-invariant under 3-3 moves. This implies that the Hamilton-Jacobi function will in general depend on the choice of bulk triangulation. This is one feature of discretizations with broken diffeomorphism symmetry <cit.>. 
+    
+    One can still ask, whether one can find a measure such that the path integral is form-invariant (to one-loop order) under 5-1 or 4-2 moves. In this context <cit.> found already for Euclidean Regge calculus, that such a  local[There are non-local constructions for such measures, see <cit.>.]  measure does not exist. 
+    
+    Thus we do not expect to find such a measure in the Lorentzian case. Nevertheless, we will examine the path integral in order to understand the similarities and differences to the Euclidean case.
+    
+    
+    
+    
+    
+     §.§ 4-2
+    
+    
+    For the path integral associated to the 4-2 Pachner move we have
+    
+    Z^(4-2) = exp(  ^(2)S_Regge^( f) )  ∫λ_01μ^(4-2)exp(∑_e,e'1/2H_ee'^(4-2)λ_e λ_e') ,
+    
+    where we  only integrate over the perturbation variable λ_(01) associated to the one bulk edge (01).  Due to the factorizing form of the Pachner move Hessian, we have H̃_ee'^(4-2)=0 for the exponential factor resulting from the Gaussian integral. The Gaussian integral results in the factor 
+    √(2π/H^(4-2)_(01)(01)) = √(96π)e^-sign(D)π/41/√(|D|)𝕍_2𝕍_3𝕍_4𝕍_5/𝕍_0𝕍_1^1/4
+       = √(96π)e^-sign(D)π/41/√(|D|)√(V_2 V_3V_4V_5/V_0V_1) .
+    
+    Choosing the measure
+    μ^(4-2) =1/∏_e⊂bdry√(√(96π))1/∏_e⊂bulk√(96π)1
+    
+    /∏_σ√(V_σ)   ,
+    
+    we do not obtain full invariance, but rather remain with 
+    
+    Z^(4-2) = exp(  ^(2)S_Regge^( f) ) /∏_e⊂bdry√(√(96π))√(V_0̅)√(V_1̅) × e^-sign(D)π/4/√(|D|) .
+    
+    If there was only the first factor on the right hand side of (<ref>), we would have form invariance, but we also have a factor  1/√( D). It has been shown in <cit.>, that D does not factorize over the simplices, and that therefore it is not possile not define a local measure (that is a measure which factorizes over simplices and sub-simplices) leading to form invariance.
+    
+    We also discussed in Section <ref>, that the sign of D is configuration-dependent. Different from the three-dimensional case we can therefore not absorb the phase e^-sign(D)π/4 into terms which only depend on the number of simplices and possibly sub-simplices.
+    
+    
+    
+    
+    
+    
+     §.§ 5-1
+    
+    
+    For the 5-1 move the path integral is given by
+    
+    Z^(5-1) = exp(  ^(2)S_Regge^( f) ) ∫∏_i∈{1,2,3,4,5}λ_0iμ^(5-1)exp(∑_e,e'1/2H_ee'^(5-1)λ_e λ_e') .
+    
+    Due to the factorizing Hessian four of the five variables in the integral correspond to gauge degrees of freedom. Thus, we integrate only over λ_01, which leads to a factor 
+    √(2π/H^(5-1)_(01)(01)) = √(96π)e^sign(D)π/41/√(|D|)𝕍_2𝕍_3𝕍_4𝕍_5/𝕍_0𝕍_1^1/4
+       = √(96π)e^sign(D)π/41/√(|D|)√(V_2 V_3V_4V_5/V_0V_1) .
+    
+    
+    Choosing the measure
+    μ^(5-1) =1/∏_e⊂bdry√(√(96π))1/∏_e⊂bulk√(96π)1
+    
+    /∏_σ√(V_σ)   ,
+    
+    we remain with 
+    
+    Z^(5-1) = exp(  ^(2)S_Regge^( f) ) /∏_e⊂bdry√(√(96π))√(V_0̅)√(V_1̅) × e^sign(D)π/4/√(|D|)∫∏_i=2,3,4,5λ_0i1/(96π)^21/V_1̅  .
+    
+    With the same argument as for the 4-1 moves we can associate 
+    ∫∏_i=2,3,4,5λ_0i1/(96π)^21/V_1̅→ 1
+    
+    to an integral over a gauge orbit and set it to one.  We still do not obtain form invariance, as we obtained an additional factor of √(/D).
+    
+    
+    
+    
+     §.§ Summary for 4D Pachner moves
+    
+    
+    As expected, we find that the path integrals for the four-dimensional Pachner moves have much less invariance properties than for the three-dimensional Pachner moves. 
+    
+    This starts at the classical level: whereas the action is form-invariant under 4-2 and 5-1 Pachner moves, it is not invariant under 3-3 moves. Restricting the path integral to the 4-2 and 5-1 Pachner moves we cannot find a local measure that would lead to form invariance. 
+    
+    This is  because of the factor D appearing in the Hessian, which does not factorize over simplices. This issue already exist for Euclidean Regge calculus <cit.>. In the Lorentzian case we additionally encounter the phase e^-sign(D)π/4 for the (4-2) move and the phase e^sign(D)π/4 for the 5-1 move. 
+    We saw in Section <ref>, that the sign of D can depend on the type of the Pachner move and also on the configuration, and we can therefore not absorb these phase factors into contributions that only depend on the number of simplices or sub-simplices.
+    
+    As we discussed already for the Pachner moves in three dimensions, in the Euclidean case configurations for which the Hessian matrix element has negative sign are interpreted as conformal mode degrees of freedom, and the sign is changed by hand. E.g. one can show that the sign for the 5-1 move in Euclidean gravity is always negative <cit.>.
+    
+    The Lorentzian path integral has the advantage that such sign rotations by hand are not necessary. It would be indeed quite problematic as the sign of D appears to be much more configuration dependent for the Lorentzian case. We  find that the different signs lead to different deformations of the integration contour and that one can always make the integral convergent and thus avoid the conformal factor problem. 
+    
+    A similar mechanism was found for the non-perturbative Regge path integral applied to cosmology <cit.>. In this case, the deformation of the contour was defined via Picard-Lefschetz theory <cit.>, and different boundary data led to different deformations of the contour. But if one isolates the behaviour of the action for large bulk edge lengths, the contours fell only into two classes, and emulated either a left-handed or right-handed Wick rotation, depending on whether the conformal factor dominated in the action or not. This mechanism of resolving the conformal factor problem is therefore the same as we encountered here for the Pachner moves.
+    
+    We saw that in the three-dimensional Lorentzian case, the signs of the Hessian matrix elements  only dependent on the type of Pachner move, and not on the other specifics of the configuration. This holds also for three-dimensional Euclidean Regge gravity <cit.>. Thus in this case one can argue for a relation between Euclidean and Lorentzian gravity via Wick rotation: the different types of Pachner moves separate the cases with positive and negative sign for the Hessian element respectively. These come with separate deformations of the integration contour, and confirm the description of `rotating by hand' the sign for the conformal factor (in the 4-1 move) for three-dimensional Euclidean quantum gravity <cit.>. As discussed in Section <ref>, there is a π/4 phase factor that is missed by this description, but it can be easily reconstructed.
+    
+    In contrast, in the four-dimensional Lorentzian case, the signs of the Hessian matrix elements does not only depend on the type of Pachner move, but also on the further specifics of the configuration. Different configurations for e.g. the 5-1 Pachner move might therefore require different deformations of the integration contour. But the sign for the (bulk) diagonal Hessian elements in the 5-1 move is in the  Euclidean case always the same, namely negative. We can therefore  not match the deformations of the Lorentzian contour with the sign rotations for the conformal factor in the Euclidean case.
+    
+    
+    
+    
+    
+    
+    
+    
+    § DISCUSSION AND OUTLOOK
+    
+    
+    In this work we considered the path integral for Lorentzian Regge calculus, to one-loop order.  We split this path integral into smaller steps defined by Pachner moves.  The advantage of doing so is that we only have to consider one-dimensional integrals for each Pachner move, and that we can derive an explicit and factorizing form for the Hessian of the action associated to such moves.  We then analyzed the path integral for the three-dimensional and four-dimensional case in more depth. We found considerable differences between these two cases.
+    
+    For the three-dimensional case, we can define a  path integral measure that leads to form invariance (to one-loop order) of the Lorentzian path integral, and therefore to discretization independence. This will allow to evaluate path integrals for three-dimensional Lorentzian Regge gravity, by choosing the coarsest bulk triangulation. This has been utilized for Euclidean quantum gravity in <cit.>, in order to compute partition functions for the solid torus and to extend holographic dualitities to finite boundary <cit.>. Such strategies can now also be applied to Lorentzian gravity.
+    
+    We have also seen that in the three-dimensional case the different types of Pachner moves separate the conformal mode from the remaining modes. That is the 4-1 and 3-2 Pachner move Hessians have opposite signs in the Lorentzian and in the Euclidean case.  The non-gauge degree of freedom in the 4-1 move can be identified as the conformal mode. The opposite signs for the Hessian require different deformations of the integration contour for the Lorentzian path integral, corresponding to Wick rotations in opposite directions. This justifies a posteriori the change of sign for the conformal mode in Euclidean, three-dimensional, quantum gravity <cit.>.
+    
+    On the other hand we do find an additional (complex) contribution to the measure in the Lorentzian case, as compared to the Euclidean case <cit.>. This additional contribution can be absorbed into a shift by π/4 for the phase of the amplitude associated to the tetrahedra. Interestingly, such a phase shift is also found for the asymptotics of the Lorentzian Ponzano-Regge model <cit.>. This illustrates the power of the method applied here, that is to construct invariant path integral measures by demanding invariance under changes of the discretization, see also <cit.>.
+    
+    In the four-dimensional case we cannot find a local path integral measure, that would lead to form invariance of the path integral. This holds even for Pachner moves for which the classical action is form invariant. This does  not mean that one cannot achieve discretization or regularization invariance. One way out is to construct so-called perfect actions or discretizations <cit.> that are typically non-local <cit.>. E.g. <cit.> constructs an invariant measure (to one-loop measure) for a particular family of discretizations of Euclidean four-dimensional  quantum gravity, based on Regge gravity. This can now be extended to the Lorentzian case. Another way out is to abandon the notion of fundamental building blocks (and therefore locality) and use the consistent boundary formalism <cit.>. This framework suggests to start with a discrete approximation to the path integral, e.g. Regge gravity, and provides iterative methods to achieve results, which depend less and less on the choice of discretization.
+    
+    In the four-dimensional case we also do not find such a straightforward relation between the deformation of the integration contour for the Lorentzian path integral and  the change of sign for the conformal mode in the Euclidean path integral, as for three-dimensional gravity. The sign for the (bulk) Hessian matrix elements depends in the Lorentzian case not only on the type of the Pachner move, but also on the specifics of the configuration. E.g. we find that the sign for the 5-1 Pachner move can be positive or negative for the Lorentzian bulk Hessian matrix element. In contrast, one finds that the Euclidean bulk Hessian matrix element for the 5-1 move has negative sign and therefore requires a change of sign. Thus, we have to apply in the Lorentzian case deformations of the integration contour, which depend on the configuration. But we have  to always change the sign for the Euclidean Hessian for the 5-1 move.
+    
+    Luckily, in the Lorentzian case we do not need to apply a `change of sign by hand' for the conformal mode. The deformation of the integration contour is rather determined by the convergence properties of the integrand, and leads for our quadratic actions always to a convergent path integral.  We can thus take as a lesson for the non-perturbative path integral, that one either needs to have a well-defined procedure to establish the correct deformation contour, e.g. Picard-Lefschetz theory <cit.>, which has already been applied in <cit.> to Lorentzian Regge cosmology. Or it is necessary to find evaluation methods for the Lorentzian path integral that are independent of such a contour deformations <cit.>.
+    
+    
+    
+    This brings us to possible extensions and further applications of the results presented in this work. We considered here the path integral to one-loop order. It would be interesting to see how much can be said about the non-perturbative path integral. We cannot hope for an exact analytical evaluation. But, we can hope to establish the asymptotic behaviour of the complex action for the various coarse graining Pachner moves. Indeed, we have seen that these Pachner moves (with gauge fixing) always lead to just a one-dimensional integration.  We can therefore hope that the asymptotic behaviour for large edge lengths will be sufficient to determine the required deformation of the integration contour, and to establish an integration measure such that the path integral (with gauge fixing) converges. This could help to establish the existence of the Lorentzian non-perturbative path integral for (Regge) gravity. Knowing the (approximate) behaviour of this path integral under coarse graining Pachner moves would help to understand crucial properties of Lorentzian renormalization. See <cit.> for a related strategy in the context of  spin foams.
+    
+    
+    The strategy presented in this work can also be generalized to other forms of Regge gravity, e.g. for homogeneously curved simplices <cit.>,  as well as to effective spin foams <cit.>. In Area Regge gravity (defined for four-dimensional triangulations) one uses areas instead of length as fundamental degrees of freedom <cit.>. One thus avoids the factor D in the Hessian, whose appearance in length Regge calculus hinders the definition of a local path integral measure.  On the other hand, the action includse the inverse of the Jacobian associated to the change of variables from length to areas.  Effective spin foams <cit.> are based on the Area Regge action, a perturbative path integral evaluation could therefore rely on similar techniques as presented here. Non-perturbative evaluations of the effective spin foam path integral have been already achieved for the 3-3 move configuration <cit.> and also for  triangulations with a bulk edge <cit.>. These in particular show that effective spin foams implement discrete gravitational equations of motion.  For the EPRL spin foam model <cit.> one can evaluate  3-3 Pachner move configurations numerically <cit.> and configurations with internal edges via a saddle point approximations <cit.>.  The classical aspects of this class of models can be described by the Area-Angle Regge action <cit.>. This action can also turned to describe a topological model, namely SU(2) BF theory. A Pachner move analysis of this action, along the lines presented here, might therefore allow to construct a path integral measure with enhanced invariance properties.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    § GEOMETRY OF LORENTZIAN AND EUCLIDEAN SIMPLICES
+    
+    
+    The following is an overview on the geometry of Lorentzian and Euclidean simplices. We will largely follow the conventions of <cit.>, but will also provide extended material not covered in <cit.>. We will include the definition of Euclidean and Lorentzian Regge actions (and thus of Euclidean and Lorentzian dihedral and deficit angles), but utilize for this the notion of complex angles and complex Regge action from <cit.>. Additionally, we provide here a proof for the Euclidean and Lorentzian Schläfli identity (using the conventions employed in this paper),  and a formula for the derivatives of  dihedral angles, which are needed in the main text.   
+    
+    To this end we will prove a number of geometrical identities for Lorentzian and Eucludian simplices. This work will pay off once we come to the proof of the Schläfli identity and to the formula detailing the derivative of the dihedral angle.
+    
+     
+    
+    
+    
+    In the following we consider a d-simplex σ embedded in either Minkowskian or Euclidean spacetime equipped with a Cartesian coordinate system. We denote the coordinates of the simplex vertices with v_i^α where i=0,1,…, d and α=1,…,d. Below we will choose v_0 as reference vertex and consider the set of edge vectors originating from v_0, that is 
+    
+    x_a^α =v_a^α -v_0^α ,  a=1,…, d  .
+    
+    These edge vectors form a basis of the Minkowskian or Euclidean spacetime.  We can encode these edge vectors into a quadratic matrix X with elements
+    
+    X_aα =  x_a^α .
+    
+    We assume that we have a non-degenerate simplex, and that the basis {x_a}_a=1^d is positively oriented. The  (absolute) volume is then given by
+    
+    V  = 1/d! X   .
+    
+    
+    
+    
+    Denoting by η_αβ either the Minkowskian or Euclidean spacetime the signed length squared of the edges are given by
+    
+    s_ij = ∑_α,β (v_i^α  -v_j^α)η_αβ  (v_i^β  -v_j^β)
+    =:⟨  v_i -v_j  |  v_i  -v_j⟩ .
+    
+    
+     §.§ Caley-Menger determinants and generalized triangle inequalities
+    
+    
+    The signed  volume square of a d-simplex can be also computed via a Caley-Menger determinant, see e.g. <cit.>. This gives the signed volume square directly in terms of the signed length squares:
+    𝕍^d    =     - (-1)^d/ 2^d (d!)^2(
+    
+    	0     1     1     1    ⋯    1 
+    
+    	1     0     s_01    s_02   ⋯    s_0d
+    
+    	1     s_01    0     s_12   ⋯    s_1d
+    ⋮   ⋮   ⋮   ⋮   ⋱   ⋮
+    
+    	1     s_0d    s_1d    s_2d   ⋯    0
+    )  .
+    
+    For example, we have for the signed area square of a triangle
+    𝔸_ijk = -1/16(s_ij^2+s_ik^2+s_jk^2 - 2(s_ijs_ik+s_ijs_jk+s_iks_jk)) .
+    
+    
+    Given the signed squared edge lengths of a d-simplex σ, we say it is either realizable as a Euclidean simplex or a Lorentzian simplex, if there exist a geometry-preserving embedding of this simplex in either Euclidean or Minkowskian spacetime, respectively. 
+    
+    A Euclidean simplex is realizable (and non-degenerate) if its signed  volume square and the signed  volume squares of all its sub-simplices are strictly positive. 
+    
+    A Lorentzian simplex σ is realizable (and non-degenerate) if its signed  volume square is strictly negative and if the following requirement for all its sub-simplices is satisfied <cit.>,
+    ρ⊂σ, 𝕍_ρ≤ 0   ⟹  ∀ρ' ⊃ρ: 𝕍_ρ'≤ 0  .
+    
+    Note that we set the signed volume square associated to any vertex equal to 1.  The condition (<ref>) ensures that if a given sub-simplex ρ is time-like or null, then all the sub-simplices containing this sub-simplex ρ are also time-like or null. 
+    
+    
+    
+     §.§ Gram matrix of edge vectors and Gram matrix of normals
+    
+    
+    
+    Above we defined the edge vectors x_a, where a=1,…, d, which start from the vertex v_0, and form a basis for ℝ^d. 
+    The  metric tensor can be expressed in this basis as 
+     
+     G_ab   =   ⟨ x_a |  x_b⟩ = 12 ( s_a0 + s_b0 -s_ab)  .
+     
+     The latter equation follows from inverting the relations
+     
+    s_ab =   ⟨ x_a-x_b |  x_a-x_b⟩   = G_aa-2G_ab+G_bb  ,
+    
+    s_a0 =   ⟨ x_a |  x_a⟩   = G_aa .
+    
+     
+     
+    Note that G coincides with the Gram matrix of the set of edge vectors {x_a}_a=1^d. Thus we can write G also as
+    
+    G =  X ·η· X^T ,
+     
+    where we understand (η)_αβ=η_αβ as matrix. 
+     
+    
+    The adjugate Adj(X) to a matrix X satisfies 
+    
+    X·Adj(X)  = Adj(X)· X  =  (X)  𝕀  = d! V   𝕀  .
+    
+    Thus, the columns of Adj(X) are the normal one-forms[The corresponding normal vectors are inward pointing.], which satisfy
+    ∑_α  n_a α x_b^α =  d! V  δ_abwhere n_aα =Adj(X)_α a  .
+    
+    To determine the normalization of the normal one-forms we split x_a into a part parallel to the normal vector and a part orthogonal to it:
+    
+    x_a^α = ∑_β h_a 1/|n_a|  n_aβη^αβ + y^αwith∑_α n_aαy^α=0    ,
+    
+    where η^αβ denotes the inverse (Minkowskian or Euclidean) metric and |n_a|=√( |∑_α,β n_aαη^αβn_aβ|).  The coefficient h_a defines the height of the d-simplex σ with respect to the sub-simplex σ_a̅, which is obtained from σ by removing the vertex v_a and all its adjacent sub-simplices.
+    
+    Using (<ref>) we have
+    ∑_αβ  n_a αη^αβ n_a β =     h_a  sign(n_a) |n_a|  =    d! V  .
+    
+    The height h_a in a d-simplex can also be defined by
+    
+    h_a= d!/(d-1)!V/V_a̅  ,
+    
+    where V_a̅ is the (absolute) volume of the sub-simplex σ_a̅.  Thus |n_a|=(d-1)! V_a̅. With this normalization the closure relation for the normals associated to the faces of a simplex holds. That is, we can define the normal to the face σ_0̅ as
+    
+    n_0 =- ∑_a=1^d n_a ⇒∑^d_i=0 n_i  =  0   .
+     
+    
+    Let us now consider the Gram matrix G̃ associated to the set of normals {n_a}_a=1^d, that is
+    G̃_ab   =   ∑_αβ n_aαη^αβ n_bβorG̃ = Adj(X)^T ·η^-1·Adj(X)  .
+    
+    Using (<ref>) we can conclude
+    
+    G ·G̃ = G̃· G  = (  X)^2 𝕀
+    As G=( X)^2 η we have
+    G̃ = (η^-1) Adj(G)   .
+    
+    
+    Later we will need the matrix elements of  Adj(G). We remind the reader that the adjugate of G can be also defined from the matrix of minors Mr(G) of G. The matrix element  (Mr(G))_ab is defined as determinant of the matrix G^a̅b̅, which is obtained from G by removing the a-th row and b-th column. The adjugate of G is then given by
+    
+    ( Adj(G))_ba=(-1)^a+b (Mr(G))_ab  .
+     
+    
+    In the following we will denote with  𝕍 the signed volume square of σ and with 𝕍_a the signed volume square of the sub-simplex σ_a̅. The matrix elements of the adjugate of G can then be expressed as
+    ( Adj(G))_ab=  ((d-1)!)^2  𝕍_a     for  a = b 
+     
+    -(d!)^2 ∂𝕍/∂ s_ab    for  a ≠ b    .
+    
+    To see this, notice that in the case a=b we have  Mr(G)_aa=Adj(G)_aa and  Mr(G)_aa is given by the determinant of the (edge vector) Gram matrix associated to the sub-simplex σ_a̅.  Adj(G)_aa gives therefore ((n-1)!)^2  𝕍_a̅.
+    
+    In the case i≠ j we can use Jacobi's formula for the variation of the determinant of a square matrix:
+    ∂det G/∂ s_ab =tr( Adj(G) ∂ G/∂ s_ab)
+    
+    for b>a. The result follows by using that det G=(d!)^2  𝕍 and that the matrix elements of G are given in terms of edge lengths by (<ref>). 
+    
+     
+    
+    
+     §.§ Projecting out a hinge
+    
+    
+    The hinge σ_ab is a (d-2)-simplex obtained from the d-simplex σ by removing the vertices v_a and v_b, as well as all adjacent sub-simplices.
+    
+    The dihedral angle θ_ab at a hinge σ_ab is the angle between the hyper-planes defined by the sub-simplices σ_a̅ and σ_b̅, which intersect in σ_ab. To find this dihedral angle, we need to project the simplex metric onto the plane orthogonal to the hinge.
+    
+    To do so, we assume without loss of generality, that the hinge is σ_(d-1)(d).
+    The Gram matrix G for the d-simplex can then be written as 
+    
+    G = [   H   B; B^T  H̅ ]   = [             H         B_d-1           B_d;       B^T_d-1 H̅_(d-1)(d-1)   H̅_(d-1)(d);         B^T_n   H̅_(d-1)(d)     H̅_(d)(d) ] ,
+    
+    where H contains the metric components of  the hinge and H̅ is the 2× 2 metric associated to the triangle defined by {v_0,v_(n-1),v_n}.  
+    
+    
+    To find the metric orthogonal to the hinge we project out from  x_c=v_c-v_0 with c=(d-1) or c=d  all parts parallel to the remaining vectors x_a with a=1,…,(d-2).  These projections are given by
+    
+    x^proj_c   =    x_c - ∑_a,b=1^d-2⟨ x_c | x_a⟩ (H^-1)_ab   x_b    .
+    
+    It is then straightforward to compute the contractions between the {x^proj_(d-1), x^proj_d}, which can be encoded in the Gram matrix
+    
+    P =  [ P_(d-1)(d-1)   P_(n-1)(n);   P_(n-1)(n)     P_(n)(n) ]  =  H̅ - B^T ( H^-1 ) B    .
+    
+    
+    We now consider the minors (Mr(G))_cc' of G with c=(d-1),(d) and c'=(d-1),(d). Using the form (<ref>) for G these minors are given by 
+    
+    ( Mr(G))_cc' = [      H    B_c; B^T_c' H̅_cc' ]  =  H ( H̅_cc' - B^T_c' H^-1 B_c ) =  H   P_cc'   ,
+    
+    where in the second equation we used an identity for the determinant of block matrices[M = (A) (D-CA^-1B) for a matrix M=[ A B; C D ].], and in the third equation we used the form of P in (<ref>). 
+    The matrix H is the metric associated to the hinge and hence we have H =  ((n-2)!)^2 𝕍_(d-1)(d).  Thus, using the explicit form for the adjugate in (<ref>) and its relation to the minors in (<ref>), we obtain for the metric of the projected triangle 
+    
+    P = (d-1)^2/𝕍_(d-1)(d)[             𝕍_(d-1) d^2 ∂𝕍/∂ s_(d-1)(d); d^2 ∂𝕍/∂ s_(d-1)(d)               𝕍_(d) ].
+    
+    The elements of P give us the inner product between the vectors p_d-1 and p_d, which are obtained by projecting σ_(d-1) and σ_(d) onto the plane orthogonal to the hinge σ_(d-1)(d).
+    
+    We can however generalize this conclusion for the vertex pair (v_(d-1),v_(d)) to any vertex pair (v_i,v_j) in σ, and conclude that the inner product between the corresponding vectors p_i,p_j is given by
+    ⟨ p_i | p_i⟩   =(d-1)^2 𝕍_i̅/𝕍_ij , ⟨ p_j | p_j⟩   =(d-1)^2 𝕍_j̅/𝕍_ij , ⟨ p_i | p_j⟩    = d^2(d-1)^2/𝕍_ij∂𝕍/∂ s_ij   .
+     
+    
+    
+    To close this subjection we derive an identity which will allow us to express the derivative of the volume in terms of products of volumina. To this end note that (<ref>) and (<ref>), together with the identity for the determinant of block matrices in Footnote <ref>, implies
+     G =  H    P ⇒
+    (d!)^2 𝕍 =  ((d-2)!)^2 𝕍_ij(d-1)^4/𝕍_ij^2( 𝕍_i̅𝕍_j̅-d^4 (  ∂𝕍/∂ s_ij)^2) 
+    and thus
+    (  ∂𝕍/∂ s_ij)^2 = 1/d^4𝕍_i̅𝕍_j̅ -1/ d^2 (d-1)^2𝕍𝕍_ij  .
+    
+    
+     §.§ Defining angles in Euclidean and Minkowskian planes
+    
+    
+    Next we will discuss how to define angles of a (convex) wedge spanned by two vectors a,b in the Euclidean or Minkowskian plane. 
+    
+    In the Euclidean case the angle ψ_E∈ [0,π] is defined by
+    ψ_E  = cos^-1( ⟨â | b̂⟩)   ,
+    
+    where â=a/|a| and |a|=√(⟨â | â⟩). It can be understood to measure the distance between two points on a unit circle, which goes through the end points of â and b̂ and is centred at the source point of these vectors.
+    
+    In the case of the Minkowskian plane the unit circle is replaced with four disconnected hyperbolae branches, see Fig. <ref>.  To characterize the distance between points of different branches one allows the angles to be complex  <cit.>. The imaginary part comes in multiples of ∓π/2 and counts how many light rays are included in the wedge spanned by the vectors a and b. Here the sign appears as a choice of convention and leads to two different angles denoted by ψ_L±. We will see, that these two angles arise from different choices of paths for the analytical continuation of the Euclidean angle to Lorentzian data. 
+    
+     The two different choices  lead to the same Lorentzian Regge action for data which have a light cone regular structure. A  two-dimensional triangulation with a light cone regular structure has always four light rays (or two light cones) meeting at a vertex <cit.>. Complexifying the configuration space of length (square) variables the Regge action has branch cuts along data describing light cone irregular triangulations <cit.>. In this case the two choices mentioned above give the values for the Regge action at the two opposite sides of the branch cut. This also means that the two choices reproduce equivalent analytical continuations of the (complexified) Regge action <cit.>.
+    
+    
+    
+      
+    To start with we specify the angles ψ_L±  case by case (as done in <cit.>), depending on which quadrant the two vectors a and b are positioned in, see Figure <ref>.[
+     Here we will work with non-oriented angles. That is the angle for a wedge spanned by two vectors a and b is the same for clock-wise or anti-clockwise ordering of the vectors. We will furthermore assume that the wedge is convex, the angle can in this case  be uniquely specified by the vectors a and b. The definition of angles can be extended to non-convex wedges, by demanding that the angles are additive <cit.>.  We will exclude  the case that one or both of the vectors is null, see <cit.> for an extensive discussion of this case.
+     ]
+    
+    
+    
+     
+     Let us denote a normalized vector by â=a/|a| where |a|=√(|a· a|). The Lorentzian angles can then be defined as
+    ψ_L±   =   cosh^-1 ( ⟨â | b̂⟩ )if a   in quadrant I  &   b  in quadrant I
+    ψ_L±   =   sinh^-1 (⟨â | b̂⟩  ) ∓π2if a   in quadrant I  &   b  in quadrant II
+    ψ_L±   =    -cosh^-1 (-⟨â | b̂⟩  ) ∓π if a   in quadrant I  &   b  in quadrant III
+    ψ_L±   =    -cosh^-1 (-⟨â | b̂⟩  )  if a   in quadrant II  &   b  in quadrant II
+    ψ_L±   =   cosh^-1 (⟨â | b̂⟩  ) ∓π    if a   in quadrant II  &   b  in quadrant IV    . 
+    
+    Here we define cosh^-1(x) ∈ℝ_+ with x ≥ 1.  
+    
+    The Euclidean and  Lorentzian angle arise as special cases from the following definition of  complex angles <cit.>θ^±   =      -log_∓⟨ a |  b⟩∓√(__±  ⟨ a |  a⟩⟨ b |  b⟩ - ⟨ a |  b⟩^2 )/√(__±  ⟨ a |  a⟩)√(__±  ⟨ b |  b⟩) .
+    
+    Here  √(__±z) and log_± z are defined via their principal branch values for z=re^ϕ and r>0 and ϕ∈ (-π,π). For the branch cut along the real negative axis, we define for r>0log_± (-r)  = log(r) ±π ,√(__±-r) = ±√(r)  .
+    
+    
+    With these choices the complex angles reproduce the Euclidean and Minkowskian angles as follows <cit.>:
+    θ^±_Eucl. = ∓ψ_E  ,θ^±_Mink. =  -ψ_L±  .
+    
+    For Euclidean data  ⟨ a |  a⟩⟨ b |  b⟩ - ⟨ a |  b⟩^2 is positive and ⟨ a |  a⟩, ⟨ b |  b⟩ are positive. Thus, for generic[The cases that a and b are parallel or anti-parallel can also be reproduced correctly, see <cit.>.] Euclidean data,  we do not encounter the branch cuts and  the result (<ref>) follows. 
+    
+    For Minkowskian data ⟨ a |  a⟩⟨ b |  b⟩ - ⟨ a |  b⟩^2 is negative and thus the numerator in (<ref>) is the same for θ^+ and θ^- and is real. If a is time-like and b is space-like, the denominator in (<ref>) will be imaginary and have opposite signs for θ^±. Thus one avoids the branch cut for the logarithm, but the argument in the logarithm is imaginary and has opposite signs for θ^±, leading to θ^±=ψ_L±.
+    
+    If a and b are both space-like or both time-like, one can show that the argument of the logarithm is positive real if a and b are from the same quadrant, and is negative real if a and b are from opposite quadrants. Thus, for the case that a and b are from opposite quadrants we encounter the branch cut of the logarithm, and the values for θ^±=ψ_L± differ. For the case that a and b are from the same quadrant, the values for θ^±=ψ_L± agree. See <cit.> for a more explicit analysis of all these cases.
+    
+    
+    Now, the dihedral angle θ_σ,h^± in a d-simplex σ, at a hinge h, is given by the angle between the vectors which result by projecting the (d-1)-dimensional sub-simplices ρ_a and ρ_b, which share h, onto the plane orthogonal to h. We computed the inner product between these vectors (for h given by σ_ij) in (<ref>).  We thus obtain
+      θ_σ,h^± = -log_∓(d^2/𝕍_h∂𝕍_σ/∂ s_h̅∓ √(__±  𝕍_ρ_a/𝕍_h𝕍_ρ_b/𝕍_h-( d^2/𝕍_h∂𝕍_σ/∂ s_h̅ )^2
+    	)/√(__±  𝕍_ρ_a/𝕍_h)√(__±  𝕍_ρ_b/𝕍_h) ) 
+        .
+    
+    Here s_h is the signed length squared of the edge in σ, which is opposite form the hinge h.
+    
+    Note that  (<ref>) gives the dihedral angle in the form θ=-log( x/y  ∓  (√(y^2-x^2))/y). We can thus conclude, that
+      cos(θ_σ,h^±)  =  d^2    
+     1/𝕍_h√(__±  𝕍_ρ_a/𝕍_h)√(__±  𝕍_ρ_b/𝕍_h)∂𝕍_σ/∂ s_h̅    .
+    
+    Using the fact, that if 𝕍_h is negative, so are (according to the generalized triangle inequalities) 𝕍_ρ_a and 𝕍_ρ_b we can write this expression as
+      cos(θ_σ,h^±)  =  d^2    
+     1/√(__±  𝕍_ρ_a)√(__±  𝕍_ρ_b)∂𝕍_σ/∂ s_h̅    .
+    
+    
+    Applying (<ref>) to the argument of the square root in the numerator of (<ref>), we also obtain
+      sin(θ_σ,h^±)  = ∓d/(d-1)√(__±  𝕍_h)√(__±  𝕍_σ)/√(__±  𝕍_ρ_a)√(__±  𝕍_ρ_b)    ,
+    
+    where we made again use of the fact, that 𝕍_h<0 implies that all other signed volume squares appearing in the equation above are negative.
+    
+    We regain equation (<ref>), by plugging (<ref>) and (<ref>) into the relation cos^2(θ)+sin^2(θ)=1.
+    
+    
+    
+    
+     §.§ The Regge action
+    
+    
+    Given the notion of complex dihedral angle θ_σ,h^± in (<ref>) we define the notion of complex deficit angle at a hinge h as the difference between the sum of the dihedral angles attached to h and the flat space value. The latter is given by ∓ 2π. Thus, we define the bulk deficit angles
+    ϵ^±(bulk)_h =2π±∑_σ⊃ hθ^±_σ,h
+    and the boundary curvature angles
+    ϵ^±(bdry)_h =π k ±∑_σ⊃ hθ^±_σ,h  ,
+    
+    where the choice of k depends on how many boundary pieces one glues together at h. The complex Regge action is then given by
+       S^±_Regge = ∑_h⊂^(d)√(__±  𝕍_h) ϵ^±_h    ,
+    
+    where ^(d) denotes the d-dimensional triangulation.  
+    
+    Note that the Euclidean and Lorentzian Regge actions are defined as <cit.>  S_ E = -∑_h |V_h| (ϵ_ E)_h       , 
+     S_L± = ∑_h: t-like  |V_h| (ϵ_E)_h + ∑_h: s-like  |V_h| (ϵ_L±)_h   ,
+    
+    where 
+    
+    (ϵ_E)_h = π k - ∑_σ⊃ hψ_E^σ,h,
+    (ϵ_L±)_h = ∓π k - ∑_σ⊃ hψ_L±^σ,h,
+    and k=2 for a bulk hinge, and appropriately chosen for a boundary hinge.
+    
+    Using  (<ref>) we can conclude that
+     S^±_Regge_Eucl. data =  - S_E  , S^±_Regge_Lor. data = ± S_L±  .
+    
+    The reason for the  appearance of the global sign can be understood as follows: The complex Regge action (<ref>), with the dihedral angles defined in (<ref>), is analytic around generic Euclidean data. In contrast to the Euclidean case, we might encounter the branch cuts of the square roots and logarithms, if we consider Lorentzian data.  The different signs appear because we approach these branch cuts from opposite sides. Consider for instance a triangulation for which we can introduce a global Wick rotation (see <cit.> for an example). Let the Wick rotation angle ϕ=0 represent Euclidean data and ϕ=±π Lorentzian data. For Euclidean data, that is for ϕ=0, we have S^+_Regge=S^-_Regge. Thus S^+_Regge and S^-_Regge determine the same analytical continuation. S^+_Regge evaluated at Lorentzian data represents the analytical continuation by increasing ϕ from ϕ=0 to ϕ=+π. Similarly, S^-_Regge evaluated at Lorentzian data represents the analytical continuation by decreasing ϕ from ϕ=0 to ϕ=-π. In fact, the full analytical continuation leads at least to a double cover for ϕ, that is ϕ can be extended to (-2π,2π], with ϕ=2π representing another copy of Euclidean data. Here, if the Lorentzian data have a light cone regular structure, the analytically continued complex Regge action evaluates to +S_E.  Light cone irregular Lorentzian data can lead to branch cuts and thus to an even more involved structure of the Riemann surface. We refer to <cit.> for a more detailed analysis and explicit examples.
+    
+    
+    
+    
+    
+    
+     §.§ Schläfli identity for Euclidean and Lorentzian simplices
+    
+    
+    The Schläfli identity for an Euclidean or Lorentzian d-simplex σ states that 
+    ∑_i<j√(__±  𝕍_ij)  θ^±_ij    =0   ,
+    
+    for variations  of the simplex geometry. A basis of such variations is given by s_kl.
+    
+    Here i,j run from 0 to d and denote the vertices of σ.  𝕍_ij is the signed volume square of the hinge σ_ij, which is obtained by removing from σ the vertices i and j and all adjacent sub-simplices. θ^±_ij is the complex dihedral angle at σ_ij.
+    
+    Note that with (<ref>) holding for d-simplices, we will have for a more general triangulation
+    ∑_h⊂^(d)√(__±  𝕍_h) ∑_σ⊃ hθ^±_h,σ=0   .
+    
+    This identity can be regarded as the discrete analog of the term containing the variation of the Ricci tensor in the variation of the continuum Einstein-Hilbert action. The latter produces only a vanishing total divergence and thereby guarantees that the resulting field equations are of second order.
+    
+    To prove (<ref>) we will make use of many formulae derived in this appendix. We start with (<ref>), which states that G̃_ab gives the inner product between the normal one forms n_a associated to the faces σ_a. As we choose v_0 as reference vertex, we defined a to run from 1 to d. But we can also include the normal n_0 into the Gram matrix, and thus work with G̃_ij.  Using (<ref>), (<ref>) and (<ref>), we can conclude that (as the form of the following equation is invariant under a relabeling of the vertices)
+    G̃_ij = (η^-1)
+     ((d-1)!)^2  𝕍_i̅    for  i = j 
+     
+    -(d!)^2 ∂𝕍/∂ s_ij    for  i ≠ j   =  - ((d-1)!)^2 (η^-1)  cos(θ_ij^±) 
+     √(__±  𝕍_i̅)√(__±  𝕍_j̅)  .
+    
+    Here we defined cosθ^±_ii=-1 (and accordingly sinθ^±_ii=0). Now, starting from the closure relation for the normals results in
+    ∑_i=0^d n_i = 0 ⇒∑_i=0^d G̃_ij= 0 ⇒∑_i=0^d  cos(θ_ij^±)  √(__±  𝕍_i̅) = 0 for   j=0, …,d .
+    
+    Applying d to the last equation in (<ref>) we obtain
+    
+    -∑_i=0^d √(__±  𝕍_i̅)  sin(θ_ij^±) θ_ij^±   +  ∑_i=0^d  cos(θ_ij^±)  √(__±  𝕍_i̅) = 0   .
+    
+    We multiply (<ref>) with √(__±  𝕍_j̅) and sum over j. This summation annihilates the second term in (<ref>). We are therefore left with
+    ∑_i,j=0^d √(__±  𝕍_i̅)√(__±  𝕍_j̅)  sin(θ_ij^±) θ_ij^± =  0 
+      (<ref>)⟹∑_i,j=0^d √(__±  𝕍_ij)  θ_ij^± =  0   .
+    
+    As θ_ii^± =0 the last equation implies the Schläfli identity (<ref>).
+    
+    
+    
+    
+    
+     §.§ Derivatives of the dihedral angle 
+    
+    
+    In (<ref>) used the derivative of the dihedral angle θ_ij at a hinge σ_ij in a simplex σ, with respect to the signed length squared s_ij of the edge opposite to this hinge.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    To prove this formula we will use again (<ref>) and (<ref>).  We take the derivative of equation (<ref>), which defines sinθ^±_ij and utilize that ∂𝕍_i̅/∂ s_ij=∂𝕍_j̅/∂ s_ij=0 and ∂𝕍_ij/∂ s_ij=0. We obtain
+      cos(θ_ij^±) θ^±_ijs_ij   =   ∓d/2(d-1)√(__±  𝕍_ij)/√(__±  𝕍_i̅)√(__±  𝕍_j̅)√(__±  𝕍)𝕍s_ij
+    
+         (<ref>)=   
+      ∓1/2(d-1)d√(__±  𝕍_ij)/√(__±  𝕍) cos(θ_ij^±)     .
+    
+    
+    Thus 
+      θ^±_ijs_ij  =  ∓1/2(d-1)d√(__±  𝕍_ij)/√(__±  𝕍)
+         
+        
+      
+          .
+    
+    
+    As θ^± reproduces ∓ψ_E for Euclidean data, we also reproduce the formula for the derivative of the Euclidean dihedral angle in <cit.>.
+    
+    Using (<ref>) and (<ref>) we can also obtain a formula for the derivative of the dihedral angle with respect to the other signed length squared variables
+      cos(θ_ij^±) θ^±_ijs_kl   =   ∓d/2(d-1)√(__±  𝕍_ij)√(__±  𝕍)/√(__±  𝕍_i̅)√(__±  𝕍_j̅)(
+    1/𝕍𝕍 s_kl+
+    1/𝕍_ij𝕍_ij s_kl  
+    -
+    1/𝕍_i𝕍_i s_kl -
+    1/𝕍_j𝕍_j s_kl)   ,
+    
+    which allows us to conclude
+     θ^±_ijs_kl  =  1/2sin(θ_ij^±)/cos(θ_ij^±)(
+    1/𝕍𝕍 s_kl+
+    1/𝕍_ij𝕍_ij s_kl 
+    -
+    1/𝕍_i𝕍_i s_kl -
+    1/𝕍_j𝕍_j s_kl)     .
+    
+    
+    § INTEGRATION MEASURE FOR GAUGE ORBITS
+    
+    
+    Here we derive an identity between an integration measure in terms of the signed length squares of an (embedded) d-simplex and a measure in terms of the coordinates of one of its vertices <cit.>. 
+    
+    We consider a d-simplex σ embedded into flat Minkowskian or Euclidean space and vertex coordinates v_0^α, v_1^α, …, v_d^α. The signed length squares for the edges (0a), with a=1,…,d are given by 
+    s_0a = ∑_α,β (v_0^α-v_a^α)η_αβ(v_0^β-v_a^β).
+    We can express the integration measure as
+    ∏_a=1^d  s_0a = ∏_α=1^d  v_0^α|  (  s_0av^β_0)   |  .
+    
+    The determinant of the Jacobian gives
+    |  (  s_0av^β_0)   |  
+       =   
+    2^d |(η)|    |(v_0^γ-v_a^γ)| 
+      (<ref>)=  2^d d!   V  ,
+    
+    where V is the absolute volume of the simplex. One can then write
+    ∑_orientation of σ∏_a=1^d  s_0a/2^d d! V  =  ∏_α=1^d  v_0^α .
+    
+    The sum over the two orientations of σ appears because of the following:  Given the vertex v_0 we assume that it is not in the hyper-plane defined by the vertices v_1,…, v_d (which is the case if σ is not degenerate). Constructing the mirror image of v_0 with respect to this hyper-plane we obtain a d-simplex, which has the same edge lengths as before but opposite orientation.
+    
+    As we consider a perturbative evaluation, we do however not include a sum over orientations in our path integral. In the main text, we therefore ignore this sum over orientations, but nevertheless associate the integral over the s_0a to an integral over the gauge orbit, resulting from displacements of the vertex v_0. In fact, if one does not include the sum  over orientations into the action, the action is only invariant under such displacements as long as the vertex is inside the coarser simplex.
+    
+    
+    
+    
+    We thank Dongxue Qu for collaboration during the initial phase of the project and  Seth Asante and José Padua-Argüelles for helpful discussions. JNB is supported by an NSERC grant awarded to BD.
+    Research at Perimeter Institute is supported in part by the Government of Canada through the Department of Innovation, Science and Economic Development Canada and by the Province of Ontario through the Ministry of Colleges and Universities.	
+    
+    
+    98PerezLR
+    A. Perez,
+    “The Spin Foam Approach to Quantum Gravity,”
+    Living Rev. Rel.  16 (2013) 3
+    [arXiv: 1205.2019].
+    
+    WilliamsReview 
+    T. Regge and R. M. Williams,
+    “Discrete structures in gravity,”
+    J. Math. Phys. 41 (2000), 3964-3984
+    
+    [arXiv:gr-qc/0012035 [gr-qc]].
+    
+    Oriti:2006se
+    D. Oriti,
+    “The Group field theory approach to quantum gravity,”
+    [arXiv:gr-qc/0607032 [gr-qc]].
+    
+    Loll:2019rdj
+    R. Loll,
+    “Quantum Gravity from Causal Dynamical Triangulations: A Review,”
+    Class. Quant. Grav. 37 (2020) no.1, 013002
+    
+    [arXiv:1905.08669 [hep-th]].
+    
+    Visser 
+    K. Tate and M. Visser,
+    “Fixed-Topology Lorentzian Triangulations: Quantum Regge Calculus in the Lorentzian Domain,”
+    JHEP 11 (2011), 072
+    
+    [arXiv:1108.4965 [gr-qc]].
+    
+    Dittrich:2014mxa
+    B. Dittrich, S. Mizera and S. Steinhaus,
+    “Decorated tensor network renormalization for lattice gauge theories and spin foam models,”
+    New J. Phys. 18 (2016) no.5, 053009
+    
+    [arXiv:1409.2407 [gr-qc]].
+    
+    Delcamp:2016dqo
+    C. Delcamp and B. Dittrich,
+    “Towards a phase diagram for spin foams,”
+    Class. Quant. Grav. 34 (2017) no.22, 225006
+    
+    [arXiv:1612.04506 [gr-qc]].
+    
+    Turok J. Feldbrugge, J. L. Lehners and N. Turok,
+    “Lorentzian Quantum Cosmology,”
+    Phys. Rev. D 95 (2017) no.10, 103508
+    
+    [arXiv:1703.02076 [hep-th]].
+    
+    Ding
+    D. Jia,
+    “Complex, Lorentzian, and Euclidean simplicial quantum gravity: numerical methods and physical prospects,”
+    Class. Quant. Grav. 39 (2022) no.6, 065002
+    
+    [arXiv:2110.05953 [gr-qc]].
+    
+    ADP21
+    S. K. Asante, B. Dittrich and J. Padua-Argüelles,
+    “Complex actions and causality violations: Applications to Lorentzian quantum cosmology,”
+    [arXiv:2112.15387 [gr-qc]].
+    
+    toappear B. Dittrich, J. Padua-Arguelles, “Quantum cosmology with effective spin foams,"  to appearLollLR
+    R. Loll,
+    “Discrete approaches to quantum gravity in four-dimensions,”
+    Living Rev. Rel. 1 (1998), 13
+    
+    [arXiv:gr-qc/9805049 [gr-qc]].
+    
+    ConformalFactor
+    G. W. Gibbons, S. W. Hawking and M. J. Perry,
+    “Path Integrals and the Indefiniteness of the Gravitational Action,”
+    Nucl. Phys. B 138 (1978), 141-150.
+    
+    CDT1
+    J. Ambjorn and R. Loll,
+    “Nonperturbative Lorentzian quantum gravity, causality and topology change,”
+    Nucl. Phys. B 536 (1998), 407-434
+    
+    [arXiv:hep-th/9805108 [hep-th]].
+    
+    CDT2
+    J. Ambjorn, J. Jurkiewicz and R. Loll,
+    “A Nonperturbative Lorentzian path integral for gravity,”
+    Phys. Rev. Lett. 85 (2000), 924-927
+    
+    [arXiv:hep-th/0002050 [hep-th]].
+    
+    deBoer:2022zka
+    J. de Boer, B. Dittrich, A. Eichhorn, S. B. Giddings, S. Gielen, S. Liberati, E. R. Livine, D. Oriti, K. Papadodimas and A. D. Pereira, et al.“Frontiers of Quantum Gravity: shared challenges, converging directions,”
+    [arXiv:2207.10618 [hep-th]].
+    
+    Regge
+    T. Regge,
+    “General relativity without coordinates,”
+    Nuovo Cim. 19 (1961), 558-571
+    Dittrich:2011vz
+    B. Dittrich and S. Steinhaus,
+    “Path integral measure and triangulation independence in discrete gravity,”
+    Phys. Rev. D 85 (2012), 044032
+    
+    [arXiv:1110.6866 [gr-qc]].
+    
+    Bonzom:2015ans
+    V. Bonzom and B. Dittrich,
+    “3D holography: from discretum to continuum,”
+    JHEP 03 (2016), 208
+    
+    [arXiv:1511.05441 [hep-th]].
+    
+    Dittrich:2017hnl
+    B. Dittrich, C. Goeller, E. Livine and A. Riello,
+    “Quasi-local holographic dualities in non-perturbative 3d quantum gravity I – Convergence of multiple approaches and examples of Ponzano–Regge statistical duals,”
+    Nucl. Phys. B 938 (2019), 807-877
+    
+    [arXiv:1710.04202 [hep-th]].
+    
+    Dittrich:2014rha
+    B. Dittrich, W. Kamiński and S. Steinhaus,
+    “Discretization independence implies non-locality in 4D discrete quantum gravity,”
+    Class. Quant. Grav. 31 (2014) no.24, 245009
+    
+    [arXiv:1404.5288 [gr-qc]].
+    
+    Dittrich:2008pw
+    B. Dittrich,
+    “Diffeomorphism symmetry in quantum gravity models,”
+    Adv. Sci. Lett. 2, 151
+    
+    [arXiv:0810.3594 [gr-qc]].
+    
+    Bahr:2009ku
+    B. Bahr and B. Dittrich,
+    “(Broken) Gauge Symmetries and Constraints in Regge Calculus,”
+    Class. Quant. Grav. 26 (2009), 225011
+    
+    [arXiv:0905.1670 [gr-qc]].
+    
+    Dittrich:2011ien
+    B. Dittrich,
+    “How to construct diffeomorphism symmetry on the lattice,”
+    PoS QGQGS2011 (2011), 012
+    
+    [arXiv:1201.3840 [gr-qc]].
+    
+    DittrichBook14 
+    B. Dittrich,
+    “The continuum limit of loop quantum gravity - a framework for solving the theory,”
+    [arXiv:1409.1450 [gr-qc]].
+    
+    Asante:2022dnj
+    S. K. Asante, B. Dittrich and S. Steinhaus,
+    “Spin foams, Refinement limit and Renormalization,”
+    [arXiv:2211.09578 [gr-qc]].
+    
+    Korepanov:2000jp
+    I. G. Korepanov,
+    “Multidimensional analogues of the geometric s – t duality,”
+    Theor. Math. Phys. 124 (2000), 999-1005
+    Korepanov:2000aj
+    I. G. Korepanov,
+    “Invariants of PL manifolds from metrized simplicial complexes: Three-dimensional case,”
+    J. Nonlin. Math. Phys. 8 (2001), 196-210
+    
+    [arXiv:math/0009225 [math.GT]].
+    
+    Baratin:2006yu
+    A. Baratin and L. Freidel,
+    “Hidden Quantum Gravity in 3-D Feynman diagrams,”
+    Class. Quant. Grav. 24 (2007), 1993-2026
+    Baratin:2006gy
+    A. Baratin and L. Freidel,
+    “Hidden Quantum Gravity in 4-D Feynman diagrams: Emergence of spin foams,”
+    Class. Quant. Grav. 24 (2007), 2027-2060
+    
+    [arXiv:hep-th/0611042 [hep-th]].
+    
+    Baratin:2014era
+    A. Baratin and L. Freidel,
+    “A 2-categorical state sum model,”
+    J. Math. Phys. 56 (2015) no.1, 011705
+    
+    [arXiv:1409.3526 [math.QA]].
+    
+    Girelli 
+    F. Girelli, H. Pfeiffer and E. M. Popescu,
+    “Topological Higher Gauge Theory - from BF to BFCG theory,”
+    J. Math. Phys. 49 (2008), 032503
+    
+    [arXiv:0708.3051 [hep-th]].
+    
+    Asante:2019lki
+    S. K. Asante, B. Dittrich, F. Girelli, A. Riello and P. Tsimiklis,
+    “Quantum geometry from higher gauge theory,”
+    Class. Quant. Grav. 37 (2020) no.20, 205001
+    
+    [arXiv:1908.05970 [gr-qc]].
+    
+    Bahr:2009qc
+    B. Bahr and B. Dittrich,
+    “Improved and Perfect Actions in Discrete Gravity,”
+    Phys. Rev. D 80 (2009), 124030
+    
+    [arXiv:0907.4323 [gr-qc]].
+    
+    NewRegge
+    B. Bahr and B. Dittrich,
+    “Regge calculus from a new angle,”
+    New J. Phys. 12 (2010), 033010
+    
+    [arXiv:0907.4325 [gr-qc]].
+    
+    Sorkin1974 R. Sorkin,
+    “Time Evolution Problem in Regge Calculus,”
+    Phys. Rev. D 12 (1975), 385-396
+    [erratum: Phys. Rev. D 23 (1981), 565-565]
+    
+    Sorkin2019 R. D. Sorkin,
+    “Lorentzian angles and trigonometry including lightlike vectors,”
+    [arXiv:1908.10022 [gr-qc]].
+    
+    EffSF1
+    S. K. Asante, B. Dittrich and H. M. Haggard,
+    “Effective Spin Foam Models for Four-Dimensional Quantum Gravity,”
+    Phys. Rev. Lett. 125 (2020) no.23, 231301
+    [arXiv:2004.07013 [gr-qc]].
+    
+    Barrettetal
+    J. W. Barrett, M. Rocek and R. M. Williams,
+    “A Note on area variables in Regge calculus,”
+    Class. Quant. Grav. 16 (1999), 1373-1376
+    
+    [arXiv:gr-qc/9710056 [gr-qc]].
+    
+    ADHAreaR
+    S. K. Asante, B. Dittrich and H. M. Haggard,
+    “The Degrees of Freedom of Area Regge Calculus: Dynamics, Non-metricity, and Broken Diffeomorphisms,”
+    Class. Quant. Grav. 35 (2018) no.13, 135009
+    
+    [arXiv:1802.09551 [gr-qc]].
+    
+    HC1
+    B. Dittrich,
+    “Modified Graviton Dynamics From Spin Foams: The Area Regge Action,”
+    [arXiv:2105.10808 [gr-qc]].
+    
+    HC2
+    B. Dittrich and A. Kogios,
+    “From spin foams to area metric dynamics to gravitons,”
+    [arXiv:2203.02409 [gr-qc]].
+    
+    DittrichSpeziale
+    B. Dittrich and S. Speziale,
+    “Area-angle variables for general relativity,”
+    New J. Phys. 10 (2008), 083006
+    
+    [arXiv:0802.0864 [gr-qc]].
+    
+    BarrettFO
+    J. W. Barrett,
+    “First order Regge calculus,”
+    Class. Quant. Grav. 11 (1994), 2723-2730
+    
+    [arXiv:hep-th/9404124 [hep-th]].
+    
+    DGS
+    B. Dittrich, S. Gielen and S. Schander,
+    “Lorentzian quantum cosmology goes simplicial,”
+    Class. Quant. Grav. 39 (2022) no.3, 035012
+    
+    [arXiv:2109.00875 [gr-qc]].
+    
+    Pachner:1991
+    U. Pachner, 
+    “P.L. Homeomorphic Manifolds are Equivalent by Elementary Shellings,"
+    Europ. J. Combinatorics  12 (1991), 129-145
+    
+    DittrichHoehnCanSimp
+    B. Dittrich and P. A. Hohn,
+    “Canonical simplicial gravity,”
+    Class. Quant. Grav. 29 (2012), 115009
+    
+    [arXiv:1108.1974 [gr-qc]].
+    
+    TimeEvol  B. Dittrich and S. Steinhaus,
+    “Time evolution as refining, coarse graining and entangling,”
+    New J. Phys. 16 (2014), 123041
+    
+    [arXiv:1311.7565 [gr-qc]].
+    
+    Kokkendorff:2007
+    S. L. Kokkendorff,
+    “Polar duality and the generalized law of sines,”
+    Journal of Geometry  86 no. 1-2, (2007) 140–149
+    
+    Baldazzi:2019kim
+    A. Baldazzi, R. Percacci and V. Skrinjar,
+    “Quantum fields without Wick rotation,”
+    Symmetry 11 (2019) no.3, 373
+    
+    [arXiv:1901.01891 [gr-qc]].
+    
+    Rocek:1981ama
+    M. Rocek and R. M. Williams,
+    “Quantum Regge Calculus,”
+    Phys. Lett. B 104 (1981), 31
+    Bahr:2011uj
+    B. Bahr, B. Dittrich and S. Steinhaus,
+    “Perfect discretization of reparametrization invariant path integrals,”
+    Phys. Rev. D 83 (2011), 105026
+    
+    [arXiv:1101.4775 [gr-qc]].
+    
+    Davids S. Davids,
+    “A State sum model for (2+1) Lorentzian quantum gravity,”
+    [arXiv:gr-qc/0110114 [gr-qc]].
+    
+    Freidel L. Freidel,
+    “A Ponzano-Regge model of Lorentzian 3-dimensional gravity,”
+    Nucl. Phys. B Proc. Suppl. 88 (2000), 237-240
+    
+    [arXiv:gr-qc/0102098 [gr-qc]].
+    
+    Ponzano:1969
+    G. P. Ponzano and T. E. Regge,
+    “Semiclassical limit of Racah Coefficients,”
+    in F Bloch (Ed.),   Spectroscopic and
+    	Group Theoretical Methods in Physics, pp. 1-58. North-Holland Publ. Co., Amsterdam, Netherlands, 1968.
+    
+    Roberts:1998zka
+    J. Roberts,
+    “Classical 6j-symbols and the tetrahedron,”
+    Geom. Topol. 3 (1999) no.1, 21-66
+    
+    [arXiv:math-ph/9812013 [math-ph]].
+    
+    Davids:1998bp
+    S. Davids,
+    “Semiclassical limits of extended Racah coefficients,”
+    J. Math. Phys. 41 (2000), 924-943
+    
+    [arXiv:gr-qc/9807061 [gr-qc]].
+    
+    AmbjornSpikes
+    J. Ambjorn, J. L. Nielsen, J. Rolf and G. K. Savvidy,
+    “Spikes in quantum Regge calculus,”
+    Class. Quant. Grav. 14 (1997), 3225-3241
+    
+    [arXiv:gr-qc/9704079 [gr-qc]].
+    
+    PL E. Witten,
+    “A New Look At The Path Integral Of Quantum Mechanics,”
+    [arXiv:1009.6032 [hep-th]].
+    
+    Asante:2021blx
+    S. K. Asante and B. Dittrich,
+    “Perfect discretizations as a gateway to one-loop partition functions for 4D gravity,”
+    JHEP 05 (2022), 172
+    
+    [arXiv:2112.03307 [gr-qc]].
+    
+    Asante:2019ndj
+    S. K. Asante, B. Dittrich and F. Hopfmueller,
+    “Holographic formulation of 3D metric gravity with finite boundaries,”
+    Universe 5 (2019) no.8, 181
+    
+    [arXiv:1905.10931 [gr-qc]].
+    
+    Bahr:2010cq
+    B. Bahr, B. Dittrich and S. He,
+    “Coarse graining free theories with gauge symmetries: the linearized case,”
+    New J. Phys. 13 (2011), 045009
+    
+    [arXiv:1011.3667 [gr-qc]].
+    
+    Asante:2018kfo
+    S. K. Asante, B. Dittrich and H. M. Haggard,
+    “Holographic description of boundary gravitons in (3+1) dimensions,”
+    JHEP 01 (2019), 144
+    
+    [arXiv:1811.11744 [hep-th]].
+    
+    Dittrich:2012jq
+    B. Dittrich,
+    “From the discrete to the continuous: Towards a cylindrically consistent dynamics,”
+    New J. Phys. 14 (2012), 123004
+    
+    [arXiv:1205.6127 [gr-qc]].
+    
+    Bonzom:2013ofa
+    V. Bonzom and B. Dittrich,
+    “Bubble divergences and gauge symmetries in spin foams,”
+    Phys. Rev. D 88 (2013), 124021
+    
+    [arXiv:1304.6632 [gr-qc]].
+    
+    Riello
+    A. Riello,
+    “Self-energy of the Lorentzian Engle-Pereira-Rovelli-Livine and Freidel-Krasnov model of quantum gravity,”
+    Phys. Rev. D 88 (2013) no.2, 024011
+    doi:10.1103/PhysRevD.88.024011
+    [arXiv:1302.1781 [gr-qc]].
+    
+    Banburski:2014cwa
+    A. Banburski, L. Q. Chen, L. Freidel and J. Hnybida,
+    “Pachner moves in a 4d Riemannian holomorphic Spin Foam model,”
+    Phys. Rev. D 92 (2015) no.12, 124014
+    
+    [arXiv:1412.8247 [gr-qc]].
+    
+    Dona:2023myv
+    P. Donà and P. Frisoni,
+    “Summing bulk quantum numbers with Monte Carlo in spin foam theories,”
+    [arXiv:2302.00072 [gr-qc]].
+    
+    EffSF3 S. K. Asante, B. Dittrich and J. Padua-Arguelles,
+    “Effective spin foam models for Lorentzian quantum gravity,”
+    Class. Quant. Grav. 38 (2021) no.19, 195002
+    
+    [arXiv:2104.00485 [gr-qc]].
+    
+    EffSF2 S. K. Asante, B. Dittrich and H. M. Haggard,
+    “Discrete gravity dynamics from effective spin foams,”
+    Class. Quant. Grav. 38 (2021) no.14, 145023
+    
+    [arXiv:2011.14468 [gr-qc]].7
+    
+    EPRL
+    J. Engle, E. Livine, R. Pereira and C. Rovelli,
+    “LQG vertex with finite Immirzi parameter,”
+    Nucl. Phys. B 799 (2008), 136-149
+    
+    [arXiv:0711.0146 [gr-qc]].
+    
+    Gozzini
+    F. Gozzini,
+    “A high-performance code for EPRL spin foam amplitudes,”
+    Class. Quant. Grav. 38 (2021) no.22, 225010
+    
+    [arXiv:2107.13952 [gr-qc]].
+    
+    Dona:2022yyn
+    P. Dona, M. Han and H. Liu,
+    “Spinfoams and high performance computing,”
+    [arXiv:2212.14396 [gr-qc]].
+    
+    Qu1
+    M. Han, Z. Huang, H. Liu and D. Qu,
+    “Complex critical points and curved geometries in four-dimensional Lorentzian spinfoam quantum gravity,”
+    Phys. Rev. D 106 (2022) no.4, 044005
+    
+    [arXiv:2110.10670 [gr-qc]].
+    
+    Qu2 
+    M. Han, H. Liu and D. Qu,
+    “Complex critical points in Lorentzian spinfoam quantum gravity: 4-simplex amplitude and effective dynamics on double-Δ_3 complex,”
+    [arXiv:2301.02930 [gr-qc]].
+    
+    Visser2 
+    K. Tate and M. Visser,
+    “Realizability of the Lorentzian (n,1)-Simplex,”
+    JHEP 01 (2012), 028
+    
+    [arXiv:1110.5694 [gr-qc]].
+    
+    Hartle
+    J. B. Hartle,
+    “Simplicial minisuperspace I. General discussion,”
+    J. Math. Phys. 26 (1985), 804-814.
+    
+    Dittrich:2007wm
+    B. Dittrich, L. Freidel and S. Speziale,
+    “Linearized dynamics from the 4-simplex Regge action,”
+    Phys. Rev. D 76 (2007), 104020
+    
+    [arXiv:0707.4513 [gr-qc]].

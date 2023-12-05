@@ -9,7 +9,7 @@ export OPENAI_API_KEY=EMPTY
 
 sleep 1
 
-python3 bench_arxiv_langchain_backgrounds.py > 2.log
+python3 bench_arxiv_multivm_langchain.py > 2.log
 
 sleep 1
 

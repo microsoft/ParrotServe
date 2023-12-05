@@ -1,0 +1,985 @@
+
+	
+	
+	1]Juan Chen
+	1]Yingchun Zhou Corresponding author:  yczhou@stat.ecnu.edu.cn
+	[1]Key Laboratory of Advanced Theory and Application in Statistics
+		and Data Science-MOE, School of Statistics, East China Normal University.
+	
+	
+	Weighted Euclidean balancing for a matrix exposure in estimating causal effect
+    [
+    
+==============================================================================
+
+
+		In many scientific fields such as biology, psychology and sociology, there is an increasing interest in estimating the causal effect of a matrix exposure on an outcome.  Covariate balancing is crucial in causal inference and both exact balancing and approximate balancing methods have been proposed in the past decades. However, due to the large number of constraints, it is difficult to achieve exact balance or to select the threshold parameters for approximate balancing methods when the treatment is a matrix. To meet these challenges, we propose the weighted Euclidean balancing method, which approximately balance covariates from an overall perspective. This method is also applicable to high-dimensional covariates scenario. Both parametric and nonparametric methods are proposed to estimate the causal effect of matrix treatment and theoretical properties of the two estimations are provided. Furthermore, the simulation results show that the proposed method outperforms other methods in various cases. Finally, the method is applied to investigating the causal relationship between children's participation in various training courses and their IQ. The results show that the duration of attending hands-on practice courses for children at 6-9 years old has a siginificantly positive impact on children's IQ.
+	
+	Keywords: causal inference, matrix treatment, weighting methods, overall imbalance, observational study. 
+	
+	
+
+§ INTRODUCTION
+
+	For decades, causal inference has been widely used in many fields, such as biology, psychology and economics, etc. Most of the current research is based on univariate treatment (binary, multivalued or continuous treatment)  (<cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>). However, one may be interested in the causal effect of a matrix treatment. For example, in studying the impact of children's participation in training courses on children's intelligence (measured by IQ), the exposure is a matrix, whose rows represent different age groups, columns represent the types of trainging courses and each element represents the number of hours of class per week. The existing methods are not suitable for matrix exposure and there have been few research on this. Therefore, the goal of this paper is to develop a new method to estimate the causal effect function for matrix exposure.
+	To estimate causal effects in observational studies, it is common to use propensity scores (<cit.>; <cit.>; <cit.>). There are several classes of propensity score-based methods, such as matching, weighting and subclassification, that have become part of applied researchers' standard toolkit across many scientific displines (<cit.>; <cit.>). In this article we focus on the weighting method. 
+	In the past decade, various weighting methods have been proposed to balance covariates in the estimation procedure (<cit.>; <cit.>; <cit.>). The key idea of these methods is to estimate propensity score ( <cit.>; <cit.>; <cit.>; <cit.>).
+	
+	When using the parametric method to model the propensity score, the estimation bias of the causal effect will be large if the model is mis-specified. Therefore, some nonparametric methods for estimating the propensity score have been proposed, such as the kernel density estimation (<cit.>). In addition, in recent years, some studies have used optimized weighting methods to directly optimize the balance of covariates (<cit.>; <cit.>; <cit.>).
+	
+	These methods avoid the direct construction of the propensity scores, therefore the obtained estimate achieves higher robustness. One of the methods, the entropy balancing method, has been established as being doubly robust, in that a consistent estimate can still be obtained when one of the two models, either the treatment assignment model or the outcome model, is correctly specified (<cit.>).
+	
+	Furthermore, this method can be easily implemented by solving a convex optimization problem. Here we extend the entropy balancing method to the matrix treatment scenario to balance the covariates.
+	The methods mentioned above assume that all balancing conditions hold exactly, that is, they are exact balancing methods. However, the balancing conditions cannot hold exactly when the dimension of covariate or treatment is high as there will be too many equations to hold simultaneously. For matrix treatment, it is even more difficult for the balancing conditions to hold exactly. To meet this challenge, literatures have shown that approximate balance can trade bias for variance whereas exact balance cannot and the former works well in practice in both low- and high-dimensional settings (<cit.>; <cit.>). The potential limitations of the existing approximate balancing methods are that they directly control univariate imbalance, which cannot guarantee the overall balance especially in the high-dimensional scenario. Besides, there is no principled way to select the threshold parameters simultaneously in practice. Another potential issue of the univariate approximate balancing methods is that it is difficult to handle high-dimensional constraints since the theoretical results require that the number of the balancing constraints should be much smaller than the sample size(<cit.>).
+	To alleviate the limitations of univariate balancing methods, we propose an overall balancing approach, which is called Weighted Euclidean balancing method. The weight is obtained by optimizing the entropy function subject to a single inequality constraint, hence the issue of tuning multiple threshold parameters in univariate balancing methods is solved. The Weighted Euclidean distance is defined to measure the overall imbalance and a sufficient small value of the distance suggests that the covariates are approximately balanced from the overall perspective. Moreover, we propose an algorithm to deal with high-dimensional constraints, so that the proposed method is not restrictive to the low-dimensional setting.
+	The main contributions of the paper are summarized as follows. First, an overall balancing method (Weighted Euclidean balancing method) is proposed, which extends the binary univariate entropy approximate balancing method to the matrix treatment scenario. Unlike univariate approximate balancing method, the Weighted Euclidean balancing method controls the imbalance  from the overall perspective. Moreover, to the best of our knowledge, it is the first time that matrix treatment is studied by weighting method in causal inference literature. Second, both parametric and nonparametric causal effect estimation methods for matrix treatment are proposed. Under the parametric framework, a weighted optimization estimation is defined and its theoretical properties are provided. Under the nonparametric framework, B-splines are used to approximate the causal effect function and the convergence rate of the estimation is provided. Third, the proposed method is applied to explore the impact of children's participation in training courses on their IQ and meaningful results are obtained.
+	The remainder of this article is organized as follows: In Section 2, the preliminaries are introduced. In Section 3, the Weighted Euclidean balancing method (WEBM) is proposed. In Section 4, the theoretical properties of the WEBM method are shown. In section 5, a numerical simulation is performed to evaluate the performance of the WEBM method under finite samples. In Section 6, the WEBM method is applied to analyze a real problem. The conclusions and discussions are summarized in Section 7.
+	
+	
+	
+	
+	
+	
+
+§ PRELIMINARY
+
+	
+
+ §.§ Notation and assumptions
+
+	Suppose an independent and identically distributed sample (𝐙_1,…,𝐙_n) is observed, where the support of 𝐙 = (𝐓,𝐗,Y) is 𝒵=(𝒯×𝒳×𝒴). Here 𝐓∈ R^p× q denotes a matrix exposure, 𝐗∈ R^J denotes a vector of covariates, and Y ∈ R denotes the observed outcome. Since the causal effect is characterized by potential outcome notion, let Y(t) for all t∈𝒯 denotes the potential outcome that would be observed under treatment level 𝐭, i.e. Y = Y(t) if T= t.  
+	
+	In this paper, our goal is to estimate the causal effect function 𝔼(Y(𝐭)), which is defined in terms of potential outcomes that are not directly observed. Therefore, three assumptions that commonly employed for indentification are made (<cit.>; <cit.>).
+
+	
+	
+	Assumption 1 (Ignorability):
+
+	
+
+	T_i ⊥ Y_i(t) |X_i, which implies that the set of observed pre-treatment covariates 𝐗_i, is sufficiently rich such that it includes all confounders , i.e. there is no unmeasured confounding.
+	
+
+	
+	Assumption 2 (Positivity):
+
+	
+
+	f_T|X(T_i = t|X_i ) > 0 for all t∈𝒯, which means that treatment is not assigned deterministically.
+
+	
+	
+	Assumption 3 (SUTVA):
+
+	
+
+	Assume that there is no interference among the units, which means that each individual's outcome depends only on their own level of treatment intensity.
+	
+
+	
+	Under the above assumptions, we first define the stabilized weight as
+
+	
+    w_i = f(T_i)/f(T_i |X_i),
+
+	then one can estimate the causal effect function based on the stabilized weight with observational data.
+	
+	
+
+ §.§ Exact entropy balancing and approximate entropy balancing for matrix exposure
+
+	The entropy balancing method (<cit.>)
+	
+	is used to determine the optimal weight for inferring causal effects. It has been used for univariate treatment and here this method is extended to matrix exposure and to balance covariates approximately.	
+	Note that the stabilized weight 
+
+	
+    w_i = f(T_i)/f(T_i |X_i)
+
+	satisfies the following conditions for any suitable functions u(𝐓) and v(𝐗):
+	
+    𝔼(w_iu(𝐓_i)v(𝐗_i)) =    ∬f(T_i)/f(T_i |X_i)u(𝐓_i)v(𝐗_i)f(𝐓_i, X_i)dT_idX_i 
+       =∫{f(T_i)/f(T_i |X_i)u(T_i)f(T_i |X_i)dT_i } v(X_i)f(X_i)dX_i 
+       =𝔼(u(𝐓_i))𝔼(v(𝐗_i))
+
+	Besides, it also satisfies that 
+	
+    𝔼(w_i) = ∬f(T_i)/f(T_i |X_i)f(T_i, X_i)dT_idX_i = 1.
+
+	However, Equation (2) implies an infinite number of moment conditions, which is impossible to solve with a finite sample of observations. Hence, the finite dimensional sieve space is considered to approximate the infinite dimensional function space. Specifically, let 
+	
+    u_K1(𝐓) = (u_K1,1(𝐓), u_K1,2(𝐓),…, u_K1,K1(𝐓))^', 
+    
+    		v_K2(𝐗) = (v_K2,1(𝐗), v_K2,2(𝐗), …, v_K2,K2(𝐗))^'
+
+	denote the known basis functions, then 
+	
+    𝔼(w_i u_K1(𝐓_i) v_K2(𝐗_i)^') = 𝔼(u_K1(𝐓_i))𝔼(v_K2(𝐗_i)^').
+
+	
+	In practice, the covariate balancing conditions given in Equation (4) cannot hold exactly with high dimensional covariates or treatments. It is even more difficult to hold exactly for matrix exposure. To overcome this difficulty, approximate balance is considered rather than exact balance, which has been demonstrated to work well in practice in both low- and high-dimensional settings (<cit.>; <cit.>; <cit.>). Specifically, the balancing weights that approximately satisfy the conditions in Equation (4) are the global minimum of the following optimization problem:
+	
+    min_𝐰∑_i=1^nw_ilog(w_i)
+
+	s.t.
+	
+    |1/n∑_i=1^nw_i u_K1,l(𝐓_i)v_K2,l̃(𝐗_i) - (1/n∑_i=1^n u_K1,l(𝐓_i)) (1/n∑_i=1^nv_K2,l̃(𝐗_i)) |≤δ_l,l̃,
+
+	where u_K1,l(𝐓_i) and v_K2,l̃(𝐗_i) denote the lth and l̃th components of u_K1(𝐓_i) and v_K2(𝐗_i), respectively.
+	Let m_K(𝐓_i, 𝐗_i) = vec(1/n u_K1(𝐓_i)v_K2(𝐗_i)^') and m̅_K = vec (1/nu̅_K1v̅_K2^')  denote two column vectors with dimension K, where K= K1 K2, the lth and l̃th components of u̅_K1 and v̅_K2 are defined as
+	
+    u̅_K1,l = 1/n∑_i=1^n u_K1,l(𝐓_i)  and v̅_K2,l̃ = 1/n∑_i=1^n v_K2,l̃(𝐗_i),
+
+	then condition (5) is equivalent to 
+	
+    min_w ∑_i=1^nw_ilog(w_i)
+
+	s.t.
+	
+    |∑_i=1^nw_i m_K,k(𝐓_i, 𝐗_i)  -  nm̅_K,k|≤δ_k,  k= 1,…,K.
+
+	However, there is a large number of tuning parameters (δ_1,…,δ_K) which is very time-consuming to determine and there is lack of guideline on tuning these parameters simultaneously in practice. 
+	
+	
+	
+
+§ METHODOLOGY
+
+	Due to the potential issues of univariate approximate balancing methods, the weighted Euclidean balancing method is proposed in this section, whose key idea is to control the overall imbalance in the optimization problem (7). 
+	
+
+ §.§ Weighted Euclidean balancing method
+
+	
+	Define the following weighted Euclidean imbalance measure (WEIM) as a weighted version of the squared Euclidean distance:
+	
+    WEIM = ∑_k=1^K{λ_k^2 [∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)]^2 }.
+
+	The weighted Euclidean balancing obtains the balancing weights that approximately satisfy the condition (4) by solving the following convex optimization problem:
+	
+    min_w ∑_i=1^nw_ilog(w_i)
+
+	s.t.
+	
+    ∑_k=1^K{λ_k^2 [∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)]^2 }≤δ,
+
+	where (λ_1,…, λ_K) is a pre-sepecified weight vector and δ≥ 0 is a threshold parameter. Assume that condition (3) holds exactly, whose sample condition is 1/n∑_i=1^n w_i = 1.
+	
+	
+	Note that univariate exact balance is equivalent to the overall exact balance, in the sense that ∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)=0, k= 1,…,K  is equivalent to WEIM=0. However, the univariate approximate balance does not imply the overall approximate balance since it is possible that ∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k), k= 1,…,K is small while the WEIM is large.
+	The pre-specified vector  (λ_1,…, λ_K) reflects the importance of each univariate constraint. In this paper, we set λ_k= σ_k^-1, where σ_k^2 is the variance of m_K,k(𝐓,𝐗). Since problem (9) is difficult to solve numerically, its dual problem is considered here, which can be solved by numerically efficient algorithms. Theorem 1 provides the dual formulation of problem (9) as an unconstrained problem.
+	
+
+	
+	Theorem 1.  Assume that max_i (max_k |λ_km_K,k(𝐓_i,𝐗_i) |) < ∞, the dual of problem (9) is equivalent to the following unconstrained problem 
+	
+    min_θ∈ R^K∑_i=1^nexp( ∑_k=1^Kθ_j λ_j (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))  + √(δ)||θ||_2,
+
+	
+	and the primal solution ŵ_i is given by 
+	
+    ŵ_i = exp{∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) -1} ,  i=1,…,n,
+
+	where θ̂ is the solution to the dual optimization problem (10). 
+	The proof of Theorem 1 is in Appendix A.1. 
+	
+	
+
+  §.§.§ Selection of tuning parameter
+
+	Another practical issue that arises with weighted Euclidean weights is how to choose the degree of approximate balance δ. A tuning algorithm is proposed as follows. First, determine a range of positive values 𝒟 for δ, then the optimal value of δ is selected by the following algorithm.
+	
+
+	
+	 Algorithm 1. Selection of δ.
+
+	For each δ∈𝒟,
+	
+		
+  1.  Compute the dual parameters θ̂ by solving the dual problem (10);
+		
+  2.  Compute the estimated weights ŵ_i using equation (11);
+		
+  3.  Calculate WEIM in (8) using ŵ_i;
+	
+	Output δ^* that minimizes WEIM.
+	
+	
+
+  §.§.§ Weighted Euclidean balancing with high-dimensional covariates
+
+	In the high-dimensional or ultra high-dimensional covariate setting with K relatively large compared to n or K>>n, it becomes difficult to control the overall imbalance using the Weighted Euclidean balancing method. To meet this challenge, we propose an algorithm to select a small subset of the covariates in the sparse setting. Specifically, consider v_K2(𝐗) = (1, 𝐗) in the high-dimensional setting. Let Bcor_j be the ball correlation (<cit.>) between X_j and 𝐓, j=1,…,L. Rank X_1, …,X_L as X_(1),…,X_(L) such that X_(1) has the largest Bcor value, X_(2) has the second largest Bcor value, and so forth. The covariates are added successively according to the rank of ball correlation until there is a break point of WEIM's, and the set added before the break point appears is the target set. The key idea hings on WEIM, which represents the contribution of the j most imbalanced covariates to the overall imbalance after WEBM weighting.  If WEIM remains stable as j inceases, it indicates that the overall imbalance can be controlled. However, if there is a break point at Step j, it implies that adding the  jth covariates greatly inceases WEIM, which is harmful to the control of the overall imbalance. Therefore, the algorithm should be stopped and print the outputs at Step j-1. Specifically, procedures to select the subset of covariates are given by the following algorithm.
+
+	
+	
+	 Algorithm 2. Subset selection of covariates in the high dimensional case.
+
+	For each j ∈{ 1,…, L},
+	
+		
+    compute the estimated weights ŵ_i^(j) using v_K2(𝐗) = (1,X_(1),…, X_(j));
+		
+     calculate WEIM^(j) in (8) using ŵ_i^(j);
+		
+    add (j,WEIM^(j)) to the x-y plot and observe whether there is a break point at (j,WEIM^(j)):
+		
+			
+    If no, let j=j+1;
+			
+    If yes, stop and output L_0 = j-1.
+		
+	
+	The selected subset of the covariates is (X_(1),…, X_(L_0)).
+	
+	
+	
+	
+
+ §.§ Causal effect estimation
+
+	
+	In this subsection, both parametric and nonparametric approaches are developed to estimate the causal effect function. A weighted optimization estimation is defined under the parametric framework and broadcasted nonparametric tensor regression method (<cit.>) is used to estimate the causal effect function under the nonparametric framework.
+	
+
+  §.§.§ Parametric approach
+
+	The causal effect function is parametrized as s(𝐭;β), assume that it has a unique solution  β^* defined as
+	
+    β^* = agrmin_β∫_𝒯𝔼[Y(t)- s(𝐭;β) ]^2f_T(t)dt.
+
+	
+	The difficulty of solving Equation (12) is that the potential outcome Y(t) is not observed for all t. Hence, Proposition 1 is proposed to connect the potential outcome with the observed outcome. 
+
+	
+	Proposition 1  Under Assumption 1, it can be shown that
+	
+    𝔼[w(Y- s(𝐭;β) )^2] = ∫_𝒯𝔼[Y(t)- s(𝐭;β) ]^2f_T(t)dt.
+
+	The proof of Proposition 1 can be found in Appendix A.2. Note that Y(t) on the right hand side of Equation (13) represents the potential outcome and Y on the left hand side represents the observed outcome. Proposition 1 indicates that by having w on the left hand side of Equation (13), one can represent the objective function with the potential outcome (right side) by that with the observed outcome (left side). Therefore, the true value β^* is also a solution of the weighted optimization problem:
+	
+    β^* = argmin_β𝔼[w(Y- s(𝐭;β))^2].
+
+	This result implies that the true value β^* can be identified from the observational data.
+	One can obtain the estimator based on the sample, which is
+	
+    β̂ = argmin_β∑_i=1^nŵ_̂î(Y_i- s(𝐓_i;β) )^2.
+
+	
+	
+
+  §.§.§ Nonparametric approach
+
+	Suppose 𝔼(Y(𝐭)) = s(𝐭). In a similar manner to the proof of Proposition 1, it can be shown that 
+	
+    𝔼(wY |𝐓=t) = 𝔼(Y(𝐭)).
+
+	Existing work of nonparametric tensor regression suffers from a slow rate of convergence due to the curse of dimensionality. Even if one flattens the tensor covariate into a vector and applies common nonparametric regression models such as additive models or single-index models to it, this issue still exists. Besides, when dealing with a vectorized tensor covariate, one would ignore the latent tensor structure and this might result in large bias. To meet these challenges, we adopt the broadcasted nonparametric tensor regression method (<cit.>) to estimate the causal effect function s(𝐭).
+	The main idea of the broadcasted nonparametric tensor regression is to use the (low-rank) tensor structure to discover important regions of the tensor so as to broadcast a nonparametric modeling on such regions. Specifically, assume that 
+	
+    s(𝐓) = c+1/pq∑_r=1^R<β_1^(r)∘β_2^(r), F_r(𝐓)>,
+
+	where c∈ R,  𝐓∈ R^p × q,  F_r(𝐓) = ℬ(f_r, 𝐗), ℬ is a broadcasting operator, which is defined as
+	
+    (ℬ(f,𝐓))_i_1,i_2 = f(T_i_1,i_2),  for all i_1,i_2.
+
+	The broadcasted functions f_r, r=1,…,R, will be approximated by B-spline functions, i.e.,
+	
+    f_r(x) ≈∑_d=1^Dα_r,db_d(x),
+
+	where 𝐛(x) = (b_1(x),…,b_D(x))^' is a vector of B-spline basis functions and α_r,d's are the corresponding spline coefficients. Define α_r = (α_r,1,…,α_r,D)^' and (Φ(𝐓))_i_1,i_2,d = b_d(T_i_1,i_2), the regression function (16) can be approximated by 
+	
+    s(𝐓) ≈ c+1/pq∑_i=1^R<β_1^(r)∘β_2^(r)∘α_r, Φ(𝐓)>.
+
+	To separate out the constant effect from f_r's, the condition ∫_0^1 f_r(x) dx=0 is imposed, which leads to 
+	
+    ∫_0^1∑_d=1^Dα_r,db_d(x)dx=0,  r=1,…, R.
+
+	Then the following optimization problem is considered:
+	
+    argmin_c,𝐆 ∑_i=1^n (ŵ_iY_i- c-1/pq<𝐆,Φ(𝐓_i)>)^2
+
+	s.t.
+	
+    𝐆 = ∑_r=1^Rβ_1^(r)∘β_2^(r)∘α_r  
+    ∑_d=1^Dα_r,d∫_0^1 b_d(x)dx =0,  r=1,…,R,
+
+	and the estimated regression function is 
+	
+    ŝ(𝐓) = ĉ+1/pq <𝐆̂,Φ(𝐓)>,
+
+	where (ĉ,𝐆̂) is a solution of (20). 
+	Since optimization problem (20) contains too many constraints, it is not computationally efficient to solve it directly. To further simplify the optimization problem, an equivalent truncated power basis (<cit.>) is used to reduce the constraints. Specifically, let b̃_d(x), d=1,…,D denote the truncated basis:
+	
+    b̃_1(x)=1,b̃_2(x)=x,…, b̃_ς(x) = x^ς-1,
+    b̃_ς+1(x) = (x-ξ_2)_+^ς-1,…, b̃_D(x)=(x-ξ_D-ς+1)_+^ς-1,
+
+	where ς and (ξ_2,…,ξ_D-ς+1) are the order and the interior knots of the aforementioned B-spline, respectively. Based on these basis functions, consider the following optimization
+	
+    argmin_c̃,𝐆̃ ∑_i=1^n (ŵ_iY_i- c̃-1/pq<𝐆̃,Φ̃(𝐓_i)>)^2
+
+	s.t.
+	
+    𝐆̃ = ∑_r=1^Rβ_1^(r)∘β_2^(r)∘α̃_r,
+
+	where Φ̃(𝐓)_i_1,i_2,d = b̃_d+1(𝐓_i_1,i_2), d=1,…,D and α̃_r ∈ R^D-1 is the vector of coefficients. Compared with (20), the mean zero constraints are removed by reducing one degree of freedom in the basis functions. According to <cit.>, Lemma B.1, one can show that
+	
+    ŝ(𝐓) = ĉ̃̂+1/pq <𝐆̂̃̂,Φ̃(𝐓)>,
+
+	where (ĉ̃̂,𝐆̂̃̂) is the solution of (22). 
+	The optimization problem (22) can be solved by the scaled-adjusted block-wise descent algorithm (<cit.>).
+	
+	
+
+§ THEORETICAL PROPERTIES
+
+	In this section, the large sample properties of the proposed estimators in section 3 are established. First the consistency of the estimated weight in section 3.1 is shown, then the consistency of the parametric estimator in section 3.2.1 and the convergence rate of the nonparametric estimator in section 3.2.2 are shown. The following assumptions are made. 
+	
+
+	Assumption 4
+	
+	
+	
+		
+		
+		
+		
+		
+  * There exists a constant c_0 such that 0 < c_0 < 1, and c_0 ≤exp (z-1) ≤ 1-c_0 for any z= M̃_K(𝐭,𝐱)^'θ with θ∈int(Θ). Besides, exp (z-1) = O(1) in some neighborhood of z^* = M̃_K(𝐭,𝐱)^'θ^*, where M̃_K(𝐭,𝐱)= Λ (m_K(𝐭,𝐱)-m̅_K) and Λ= diag(λ_1,…,λ_K).
+		
+  * There exists a constant C such that 
+		E {M̃_K(𝐓_i, 𝐗_i)M̃_K(𝐓_i, 𝐗_i)^'}≤ C. 
+		
+  * δ = o(n).
+		
+  * sup_(𝐓,𝐗) exp{∑_j=1^Kθ_j^* λ_j [m_K,j(𝐓,𝐗)-Em_K,j(𝐓,𝐗)] } = O(1).
+	 
+	
+	
+	Assumption 5
+	
+		
+  * The parameter space Θ_1 is a compact set and the true parameter β_0 is in the interior of Θ_1.
+		
+  * (Y-s(T;β))^2 is continuous in β, 𝔼[sup_β(Y-s(T;β))^2] < ∞ and sup_β𝔼[(Y-s(T;β))^4]  < ∞.
+	 
+	
+	
+	Assumption  6
+	
+		
+  * s(𝐭;β) is twice continuously differentiable in β∈Θ_1 and let h(𝐭;β) ≡▽_β s(𝐭;β).
+		
+  * 𝔼{ w(Y-s(𝐓;β))h(𝐓;β) } is differentiable with respect to β and 
+
+		U ≡ - ▽_β𝔼{ w(Y-s(𝐓;β))h(𝐓;β) }|_β=β^* is nonsingular.
+		
+  * 𝔼[sup_β| Y-s(T;β) |^2+δ] < ∞ for some δ >0 and there extists some finite positive constants a and b such that 𝔼[sup_β_1:  ||β_1-β||  < δ_1| s(T;β_1) - s(T;β) |^2]^1/2 < a·δ_1^b for any β∈Θ_1 and any small δ_1 >0.
+	
+	
+	
+	
+	Assumption 7
+	
+		
+  * The treatment 𝐓∈ [0,1]^p× q has a continuous probability density function f, which is bounded away from zero and infinity.
+		
+  * The vector of random errors, ϵ = (ϵ_1,…,ϵ_n)^', has independent and identically distributed entries. Each ϵ_i is sub-Gaussian with mean 0 and sub-Gaussian norm σ < ∞.
+		
+  * The true broadcasted functions f_0r∈ℋ, r= 1,…,R_0. Here ℋ is the space of functions from [0,1] to R satisfying the Hölder condition of order ω, i.e.,
+		
+    ℋ = { g: | g^(l) (x_1)-g^(l) (x_2) |≤ S_1| x_1-x_2 |^ω, ∀ x_1,x_2 ∈ [0,1] },
+
+		for some constant S_1>0, where g^(l) is the l-th derivative of g, such that ω∈ (0,1] and τ = l+ω >1/2.
+		
+  * The order of the B-spline used in (16) satisfies ς≥τ+1/2. Let 0= ξ_1 < ξ_2 <… < ξ_D-ς+2=1 denote the knots of B-spline basis and assume that
+		
+    h_n = max_d=1,…, D-ς+1|ξ_d+1
+    			-ξ_d |≍ D^-1 and h_n/min_d=1,…, D-ς+1|ξ_d+1
+    				-ξ_d |≤ S_2
+
+		for some constant S_2>0.
+	 
+	
+	Assumption 4(1) enables consistency of θ̂ to translate into consistency of the weights.  Assumption 4(2) is a standard technical condition that restricts the magnitude of the basis functions; see also Assumption 4.1.6 of <cit.> and Assumption 2(2) of <cit.>. Assumption 4(3) requires that the threshold parameter δ should be much smaller than the sample size. Assumption 4 (4) is needed for consistency of the estimated weight. Assumption 5(1) is a commonly used assumption in nonparametric regression. Assumption 5(2) is an envelope condition applicable to the uniform law of large numbers. Assumption 6(1) and (2)  impose sufficient regularity conditions on the causal effect function and its derivative function. Assumption 6(3) is a stochastic equicontinuity condition, which is needed for establishing weak convergence (<cit.>). Assumption 7(1), (3) and (4) are common in nonparametric regression models. In particular, Assumption 7(3) and (4) regularize the space where the true broadcasted functions lie in and guarantee that they can be approximated welll by B-spline functions. Similar assumptions can be found in <cit.> and <cit.>. Assumption 7(2) is a standard tail condition of the error. Based on these assumptions, the following theorems are established. 
+
+	
+
+	
+	Theorem 2. 	Let θ̂ denote the solution to Problem (10) and 
+	
+    ŵ_i = exp{∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) -1} ,  i=1,…,n,
+
+	then under Assumptions 1-4,
+
+	
+		
+		
+  * ∫|𝐰̂-𝐰^* |^2 dF(𝐭,𝐱) = O_p(n^-1).
+		
+  * 1/n∑_i=1^n|ŵ_i- w_i^* |^2 = O_p(n^-1).
+	
+	Based on Theorem 2, we can establish the consistency of the parametric estimator and the convergence rate of the nonparametric estimator.
+
+	
+	Theorem 3  
+	
+		
+  * Under Assumptions 1-5, ||β̂-β^* || →_p 0. 
+		
+  * Under Assumptions 1-6, √(n)(β̂-β^*) →_d N(0,V), where 
+		
+    V = 4U^-1·𝔼{ w^2(Y-s(𝐓;β^*))^2h(𝐓;β^*)h(𝐓;β^*)^'}· U^-1
+
+	
+	
+	Theorem 4  If Assumptions 1-4 and 7 hold, R≥ R_0, and 
+	
+    n > S_1 h_n^-2-2/log(h_n)(log^-2(h_n))(R^3+R(p+q)+RD)
+
+	for some large enough constant S_1>0, then 
+	
+	
+	
+	
+	
+	
+	
+	
+    ||ŝ(𝐓)-s_0(𝐓) ||^2 = O_p  ( R^3+R(p+q)+RD/n )+O_p  ( {∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ ),
+
+	where s_0(𝐓) = c_0+1/pq∑_r=1^R_0<β_1^(0r)∘β_2^(0r), F_0r(𝐓)> represents the true regression function.
+	The proofs of Theorem 2, 3 and 4 can be found in Appendix A.3, A.4 and A.5, respectively. 
+	
+	
+	
+
+§ SIMULATION
+
+	To evaluate the finite sample performance of the proposed method, simulation studies are carried out under different data settings. The main motivation of the simulation is to compare the proposed method with three other methods when the outcome model are linear and nonlinear in various ways.
+	
+
+ §.§ The low-dimensional covariate setting
+
+	In this subsection, we compare the performance of the proposed method (WEBM) with the unweighted method (Unweighted), entropy balancing method (EB) and univariate approximate balancing method (MDABW) in the low-dimensional covariate setting, where EB refers to the method proposed by <cit.> that balances covariates exactly and MDABW refers to the method proposed by <cit.> that balances covariates approximately.
+	Since the covariates are shared across all scenarios, their data generating process is first described. Specifically, we independently draw 5 covariates from a multivariate normal distribution with mean 0, variance 1 and covariance 0.2, that is,
+	
+	
+    𝐗 = (X_1,....,X_5)^'∼  N_5(μ,Σ)  with μ= [ 0; ⋮; 0 ]and Σ=[     1   0.2     …   0.2;   0.2     1 0.2 …   0.2;     4;   0.2   0.2     …     1 ]_5×5.
+
+	
+
+	
+	Consider a linear treatment assignment model, which is defined as
+	
+    𝐓_i= X_i1𝐁_1+X_i2𝐁_2+X_i3𝐁_3+𝐄_i,
+
+	where 𝐁_j = [ 1 0; 0 1; 1 1 ]_3×2, j=1,2,3 denotes the jth coefficient matrix, and 𝐄_i ∈ R^3× 2 denotes the error matrix, whose element follows a standard normal distribution. For the outcome model, we consider four scenarios and conduct 100 Monte Carlo simulations for each scenario. The first two scenarios assume an outcome model that is linear in treatment and the others assume a nonlinear relationship.
+	In scenario 1, the linear outcome model is defined as
+	
+    Y_i = 1+ <𝐁, 𝐓_i>+X_i1+(X_i2+1)^2+X_i4^2+ϵ_i,
+
+	where 𝐁 = [ 1 0; 0 1; 1 1 ]_3×2 and ϵ_i ∼ N(0,2^2). In this scenario, v_k2(𝐗) = (1, 𝐗, 𝐗*𝐗)^', where * represents the Hadamard product of two matrices, and the corresponding element of 𝐗*𝐗 is (X*X)_ij = (x_ijx_ij).
+	
+	In scenario 2, the linear outcome model is defined as
+	
+    Y_i = 1+ <𝐁, 𝐓_i>+X_i2+X_i3+X_i1X_i2+…+X_i4X_i5+ϵ_i,
+
+	where 𝐁 and ϵ_i are the same as in Equation (21). In this scenario, the interaction terms are strong confounders, hence set v_k2(𝐗) = (1, 𝐗, X_jX_k)^', 1≤ j < k ≤ 5.  
+	
+	In scenarios 3 and 4, the nonlinear outcome models are considered and are defined as
+	
+    Y_i = 1+ <𝐁, F_1(𝐓_i)>+X_i1+(X_i2+1)^2+X_i4^2+ϵ_i,
+
+	and
+	
+    Y_i = 1+ <𝐁, F_1(𝐓_i)>+X_i2+X_i3+X_i1X_i2+…+X_i4X_i5+ϵ_i,
+
+	respectively.
+	Here 𝐁 and ϵ_i are the same as in Equation (24), (F_1(𝐓))_k_1,k_2= f_1(T_k_1,k_2)= T_k_1,k_2+0.6sin{2π(T_k_1,k_2-0.5)^2 }. For all four scenarios, consider u_K1(𝐓) =(1, vec(𝐓)^')^' for simplicity.
+	For each method, the mean RMSE and its standard deviation of the coefficient estimates for the linear outcome model, and those of the fitted values for the nonlinear outcome model are reported based on 100 data replications. 
+	
+	Table 1 shows the mean RMSE and its standard deviation of the coefficient matrix for the linear outcome model. Observe that the mean RMSE of WEBM is the smallest among the four methods, and the standard deviation of WEBM is the second smallest while that of Unweighted is the smallest in both scenario 1 and scenario 2. Besides, the results of scenario 2 indicate that MDABW and EB  have poor performance when the basis function of covariates includes interaction entries, and their mean RMSEs are even larger than those of Unweighted. The mean RMSE and standard deviation of all methods decreases as the sample size increases.
+	Table 2 shows the mean RMSE and its standard deviation of the fitted values of the nonlinear outcome model. As can be seen, the results for both scenario 3 and 4 are similar to those in Table 1, that is, WEBM performs the best with both the smallest mean RMSE in all cases. Similarly, MDABW and EB methods have poor performance when the basis function of covariates includes interaction entries and the mean RMSE and standard deviation of all methods decreases as the sample size increases.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+ §.§ The high-dimensional covariate setting
+
+	In this subsection, since the MDABW and EB methods can only deal with the low-dimensional covariate case, we compare the performance of the proposed method (WEBM) with the Unweighted method and the method (Mapping) proposed by <cit.>, which selects a small important subset of covariates by a joint screening procedure, 
+	in the high-dimensional covariate setting. Since the Mapping method can only deal with linear outcome model, these two methods are compared in the linear outcome model setting.
+	For both methods, set the sample size n=500 and the dimension of 𝐓 to be 3 × 2. Consider two scenarios (scenario 5-6) with the dimension of covariates  L=49 and L=99, respectively. The motivation for such settings is to consider the number of constraints K < n (scenario 5) and K>n (scenario 6), respectively. For the basis functions, u_K1(𝐓)= (1,vec(𝐓)^')^' and v_K2(𝐗) = (1,𝐗^')^' are considered.
+	Additionally, covariates are drawn from a multivariate normal distribution with mean 0, variance 1 and covariance 0.2. For each scenario, consider a linear treatment assignment model, which is defined as
+	
+    𝐓_i= X_i1𝐁_1+X_i2𝐁_2+…+X_i5𝐁_5+𝐄_i,
+
+	where 𝐁_j = [ 1 0; 0 1; 1 1 ]_3×2, j=1,2,3,4,5 denotes the jth coefficient matrix, and 𝐄_i ∈ R^3× 2 denotes the error matrix, whose element follows a standard normal distribution. 
+	Moreover, the linear outcome model is defined as
+	
+    Y_i = 1+ <𝐁, 𝐓_i>+X_i1+X_i2+…+X_i5+ϵ_i,
+
+	
+	
+	
+	
+	
+	where 𝐁=[ 1 0; 0 1; 1 1 ]_3×2, ϵ_i ∼ N(0,2^2).
+	For each method, the mean RMSE and its standard deviation of the tensor regression estimation for the linear outcome model are reported based on 100 data replications.  
+	Table 3 shows the mean RMSE and its standard deviation of coefficent matrix for the linear outcome model in the high-dimensional covariate setting. The results indicate that WEBM performs the best with the smallest mean RMSE in all cases.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+§ APPLICATION
+
+	Intelligence Quotient (IQ) is based on biological attributes, most of which are inherited from parents. It mainly refers to a person's cognitive abilities, such as logical reasoning, pattern recognition, and short-term memory. Of course, due to genetic mutations, parents with average IQ may have offspring with superior intelligence, and vice versa. But IQ also has social attributes. Studies have found that IQ has obvious plasticity, and environmental factors affect IQ levels. From 1947 to 2002, the IQ level of developed countries rose steadily at a rate of 3% every 10 years, which is called the "Flynn effect." This effect has been repeatedly observed in various countries, various age groups, and a large number of different environments, and has become a reliable evidence that "environment affects IQ" (<cit.>). In particular, literatures have shown that taking training lessons, such as music, sports, chess and so on, can significantly enhance children's IQ (<cit.>; <cit.>; <cit.>; <cit.>). 
+	Unfortunately, there are some limitations of existing studies. First, existing studies have only analyzed the relevant effects of attending single training course at a fixed age on children's IQ. In practice, however, a child may attend different training courses at the same age and participation may also vary by age. Second, existing studies mainly investigated the impact of whether or not to attend training classes, ignoring the effect of class duration. Third, existing studies only analyzed the correlation between children's participation in training courses on children's IQ, while their causal relationship is much more of a concern. To overcome the aforementioned limitations, the proposed method is applied to a matrix treatment, which contains the structural information of children's participation in training courses, to investigate their causal impact on children's IQ.
+	The data are obtained from the Brain Science Innovation Institute of East China Normal University's Child Brain Intelligence Enhancement Project, whose goal is to explore brain development and help improve brain power. The treatment we are interested in is a 2 × 5 matrix about children's participation in training courses, whose rows represent age groups, including 3-6 years old and 6-9 years old, columns represent the types of training courses, including knowledge education (Chinese, mathematics and English, etc.), art (music, art, calligraphy, etc.), sports (swimming, ball games, etc.), hands-on practice (STEM, Lego, etc.) and thinking training (logical thinking, EQ education, attention, etc.), and each element of the matrix represents the number of hours of class per week. The outcome is children's IQ and the pre-treatment covariates include children's gender as well as parental education, which have been shown to be associated with both the treatment and outcome variables (<cit.>; <cit.>; <cit.>; <cit.>). A complete-case analysis is conducted with a sample of 103 participants.  
+	Before estimating the causal effect, we first examine the covariate balancing of WEBM, MDABW and EB methods based on the WEIM statistics. The statistic WEIM defined in equation (8) is 0.1050 for the WEBM method, 0.3761 for the MDABW method and 0.9881 for the EB method, which implies that WEBM balances covariates well while EB does not. Assume a linear tensor outcome model and the bootstrap method with 200 replicates is used to obtain confidence intervals for the parameter estimates. The results are shown in Table 4.
+	
+		
+		
+		
+	
+	Table 4 shows the estimated causal effects of the duration of attending different classes at different ages on children's IQ. It can be seen that most methods (except EB) suggest that the duration of attending hands-on practice courses at 6-9 years old has a siginificantly positive impact on children's IQ. This finding is not only consistent with previous findings that participation in hands-on practice classes can improve children's IQ (<cit.>; <cit.>; <cit.>),  but further suggests that longer participation in hands-on practice classes is more beneficial to children's IQ.
+	
+	The results imply that future work of an intervention study about attending hands-on practice training courses, which in turn may improve children's IQ, is suggested. Besides, the width of confidence interval of the estimated causal effect based on WEBM is the smallest, which implies that the estimation accuracy of WEBM is the highest. 
+	
+	
+	
+	
+	
+
+§ CONCLUSION AND DISCUSSION
+	
+	In this study, the weighted Euclidean balancing method is proposed, which obtains stabilized weights by adopting a single measure that represents the overall imbalance. An algorithm for the high-dimensional covariate setting is also proposed. Furthermore, parametric and nonparametric methods are developed to estimate the causal effect and their theoretical properties are provided. The simulation results show that the proposed method balances covariates well and produces a smaller mean RMSE compared to other methods under variaous scenarios. In the real data analysis, the WEBM method is applied to investigate causal effect of children's participation in training courses on their IQ. The results show that the duration of attending hands-on practice at 6-9 years old has a siginificantly positive impact on children's IQ.
+	Since the causal effect function 𝔼(Y(t)) is more general, we mainly consider it as the estimand for matrix treatment in this paper. Actually, one can also consider the average treatment effect  (𝔼(Y(t+ t)-Y(t))) or average partial effect (𝔼Y(t+ t)-𝔼Y(t)/ t)  , which can be easily estimated based on the estimates of causal effect function  (<cit.>). Indeed, the causal effect function provides a complete description of the causal effect, rather than a summary measure. Moreover, parametric and nonparametric methods are developed to estimate the causal effect function. Parametric method is recommended when reasonable assumptions can be made about the true model since it is easier to implement and requires less sample size. Despite nonparametric method has higher requirements of the sample size, one can choose to use it according to the real situations due to its higher flexibility. Besides, this paper mainly focuses on the small-scale matrix treatment. Large-scale matrix treatment with low-rank structure can also be considered. In such case, one may control the overall imbalance by only balancing their non-zero elements based on some decomposition technology, and this will be investigated in future work.
+	
+	
+	
+	*
+	apalike
+	
+	
+	
+
+§ APPENDIX
+
+	
+
+ §.§ A.1.Proof of Theorem 1
+ 
+	The primal problem is
+	
+    min_𝐰∑_i=1^nw_ilog(w_i)
+
+	s.t.
+	
+    ∑_j=1^K{λ_j^2 [∑_i=1^n w_i (m_K,j(𝐓_i,𝐗_i)-m̅_K,j)]^2 }≤δ.
+
+	
+	Let ||θ||_2 = √(θ_1^2+…+θ_K^2) be the l_2 norm for an arbitrary K-dimensional vector θ =(θ_1,…,θ_K)^' and Λ = diag(λ_1,…,λ_K), then the inequality constraint in the primal problem can be rewritten as ||∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K) ||_2 ≤√(δ). Let 𝒜⊆ R^K be a convex set such that 𝒜 = { a ∈ R^K: || a||_2 ≤√(δ)}. Define I_𝒜(a) = 0 if a ∈𝒜 and I_𝒜(a) = ∞ otherwise. Then, the primal problem (15) is equivalent to the following optimaization problem:
+	
+    min_𝐰 ∑_i=1^nw_ilog(w_i)+I_𝒜( ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K)).
+ 
+	Let h(w) = ∑_i=1^n w_i log(w_i), the conjugate function of h is 
+	
+    h^*(w)    = sup_t(∑_i=1^n w_i t_i-∑_i=1^n w_i log(w_i)) 
+       = sup_t ∑_i=1^n (w_i t_i-w_i log(w_i)) 
+       = ∑_i=1^n sup_t_i(w_i t_i-w_i log(w_i)) 
+       =  ∑_i=1^n f^*(w_i),
+
+	where f^*(w_i) = sup_t_i(w_i t_i-w_i log(w_i)) is the conjugate function of f(w_i) = w_i log(w_i). Let g(θ) = I_𝒜(θ) for any θ∈ R^K, then the conjugate function of g is 
+	
+    g^*(θ)    = sup_a (∑_k=1^Kθ_ka_k -T_𝒜(a) ) 
+       = sup_|| a ||_2 ≤√(δ) (∑_k=1^Kθ_ka_k) 
+       = sup_|| a ||_2 ≤√(δ)  (||θ||_2 || a ||_2) 
+       = √(δ)||θ||_2.
+
+	Define the mapping H: R^n → R^K such that Hw = ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K), then H is a bounded linear map. Let H^* be the adjoint operator of H, then for all θ = (θ_1,…,θ_K)^'∈ R^K,
+	
+    H^*θ = (∑_k=1^Kθ_k λ_k (m_K,k(𝐓_1,𝐗_1)-m̅_K,k), …, ∑_k=1^Kθ_k λ_k (m_K,k(𝐓_n,𝐗_n)-m̅_K,k) )^'.
+
+	Define θ̃ = Hw̃ = 1/n^r∑_i=1^nΛ (m_K(𝐓_i,𝐗_i)-m̅_K), where w̃ = (1/n^r,…,1/n^r)^'∈ dom(F). Here, we choose b to be sufficiently large such that ||θ̃||_2 ≤√(δ), then we obtain that g(θ̃) = 0 and g is continuous at θ̃. Therefore, θ̃∈ H(dom(F) ∩ cont(g)), which implies that H(dom(F) ∩ cont(g)) ≠∅. Here, dom(F) and cont(g) denotes the domain of F and the continuous set of g, respectively. Therefore, the strong duality condition of the Fenchel duality theorem is verified. Moreover,
+	
+    F(H^*θ)+g^*(-θ) = ∑_i=1^n f^*(∑_k=1^Kθ_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))+√(δ)||θ||_2.
+
+	According to the Fenchel duality theorem (Mohri et al. (2018), Theorem B.39), we have 
+	
+    min_w  ∑_i=1^nw_ilog(w_i)+I_𝒜( ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K)) 
+       = min_w  ∑_i=1^n f^*(∑_k=1^Kθ_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))+√(δ)||θ||_2.
+ 
+	Furthermore, since the strong duality condition holds, we can conclude that H^*θ̂ is a subgradient of F at ŵ. That is, 
+	
+    ∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) = log(ŵ_i)+1.
+
+	Therefore, ŵ_i = exp(∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)-1). The proof of theorem 1 is completed.
+	
+	
+	
+
+ §.§ A.2.Proof of Proposition 1
+
+	Using the law of total expectation and Assumption 1, we can deduce that
+	
+    𝔼[w(Y- s(𝐓;β) )^2]
+       =E[f(T)/f(T|X)(Y-s(𝐓;β)  )^2]
+       = 𝔼(𝔼[f(T)/f(T|X)(Y- s(𝐓;β)  )^2] |T=t,X=x )
+       = 𝔼(f(t)/f(t|x)𝔼([(Y- s(𝐓;β)  )^2] |T=t,X=x) )
+       = ∫_𝒯×𝒳f(t)/f(t|x)𝔼[(Y(T)- s(𝐓;β)  )^2 |T = t, X= x]f(t|x)dtdx
+       =∫_𝒯×𝒳𝔼[(Y(T)- s(𝐓;β)  )^2 |T = t, X= x]f(t)f(x)dtdx
+       = ∫_𝒯×𝒳𝔼[(Y(t)- s(𝐓;β) )^2 |X= x]f(t)f(x)dtdx   (using Assumption 1)
+       = ∫_𝒯𝔼[(Y(t)- s(𝐓;β)  )^2] f(t)dt  .
+
+	Hence, we complete the proof of Proposition 1.
+	
+	
+
+ §.§ A.3.Proof of Theorem 2
+
+	The first order optimality condition for the dual probblem (10) is 
+	
+    ∑_i=1^nexp{∑_j=1^Kθ̂_jλ_jM_K,j(𝐓_i,𝐗_i) }·λ_jM_K,j(𝐓_i,𝐗_i) +√(δ)θ̂_j/||θ̂||_2 =0,   j=1,…,K,
+
+	where M_K,j(𝐓_i,𝐗_i) = m_K,j(𝐓_i,𝐗_i)- m̅_K,j, M_K(𝐓_i,𝐗_i)= (M_K,1(𝐓_i,𝐗_i), …, M_K,K(𝐓_i,𝐗_i))^'.
+	Let Λ = diag(λ_1,…,λ_K) and 
+	
+    1/n∑_i=1^nΦ(𝐓_i,𝐗_i;θ) = 1/n∑_i=1^nexp{∑_j=1^Kθ_jλ_j[m_K,j(𝐓_i,𝐗_i)-𝔼(m_K,j)] }Λ [m_K(𝐓_i,𝐗_i) -𝔼(m_K)],
+
+	which is a set of K estimating functions. Note that
+	
+    |𝔼( Φ(𝐓_i,𝐗_i;θ^*)) |
+       = |𝔼{exp{∑_j=1^Kθ_j^*λ_j[m_K,j(𝐓_i,𝐗_i)-Em_K,j] }Λ [m_K(𝐓_i,𝐗_i) -Em_K] }|
+       ≤sup_(𝐓_i,𝐗_i) exp{∑_j=1^Kθ_j^*λ_j[m_K,j(𝐓_i,𝐗_i)-Em_K,j] }·|𝔼Λ [m_K(𝐓_i,𝐗_i) -Em_K] |
+       ≤ O(1) ·0 = 0,
+
+	hence we have 𝔼( Φ(𝐓_i,𝐗_i;θ^*))=0, which implies that θ^* is the unique solution of 𝔼( Φ(𝐓_i,𝐗_i;θ))=0. Therefore, by the estimating equation theory (Van der Vaart (2000)), the solution of the estimating equations 
+	
+    1/n∑_i=1^nΦ(𝐓_i,𝐗_i;θ) = 0,
+ 
+	denoted by θ̃, is asymptotically consistent for θ^*. Furthermore, by the Taylor expansion, we have
+	
+    √(n)(θ̃ - θ^*) →_d N(0, Σ),
+
+	where Σ = { E(∂Φ/∂θ^') }^-1 E(ΦΦ^'){ E(∂Φ/∂θ) }^-1.
+	Moreover, by the assumption that δ = o(n), we have 1/n√(δ)θ_j/||θ||_2 = o_p(n^-1/2) for any θ∈ int(Θ). Therefore, by the Slutsky's theorem, we obtain that 
+	
+    √(n)(θ̂ - θ^*) →_d N(0, Σ).
+
+	Let M̃_K,j(𝐓_i,𝐗_i) = λ_j(m_K,j(𝐓_i,𝐗_i)- m̅_K,j),
+	then 
+	
+    ŵ_i    = exp{∑_j=1^Kθ̂_j λ_j (m_K,j(𝐓_i,𝐗_i)-m̅_K,j) -1}
+       = exp{M̃_K(𝐓_i,𝐗_i)^'θ̂ -1}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	By Mean Value Theorem, we can deduce that
+	
+    ∫|ŵ-w^*|^2dF(𝐭,𝐱) 
+       ≤sup_(𝐭,𝐱) |exp{M̃_K(𝐭,𝐱)^'θ_1 -1}|^2 ×∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) 
+       ≤ O_p(1) ·∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱),
+
+	where θ_1 lies between θ̂ and θ^*.
+	Since 
+	
+    ∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) 
+        	= ∫M̃_K(𝐭,𝐱)^'(θ̂-θ^*)(θ̂-θ^*)^'M̃_K(𝐭,𝐱) dF(𝐭,𝐱)
+       = tr{ (θ̂-θ^*)(θ̂-θ^*)^'∫M̃_K(𝐭,𝐱)M̃_K(𝐭,𝐱)^'dF(𝐭,𝐱) }
+       ≤ C tr{ (θ̂-θ^*)(θ̂-θ^*)^'}
+       = C||θ̂-θ^*||^2 
+       = O_p(n^-1).
+
+	Then we have 	
+	
+    ∫|ŵ-w^*|^2dF(𝐭,𝐱) = O_p(n^-1).
+
+	Furthermore, one can show that 
+	
+    1/n∑_i=1^n|M̃_K(𝐭,𝐱)^'(δ̂-δ^*) |^2 - ∫|M̃_K(𝐭,𝐱)^'(δ̂-δ^*) |^2 dF(𝐭,𝐱)=o_p(1).
+
+	Hence,
+	
+    1/n∑_i=1^n|ŵ_i- w_i^*|^2 
+       ≤sup_(𝐭,𝐱) |exp{M̃_K(𝐭,𝐱)^'θ_1 -1}|^2 ·1/n∑_i=1^n|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 
+       ≤ O_p(1) ∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) +o_p(1) 
+       = O_p(n^-1)
+
+	Therefore, the proof of Theorem 2 is completed.
+	
+	
+
+  §.§.§ A.4.Proof of Theorem 3
+
+	
+	
+	We first show that the conclusion of Theorem 3(1). 
+
+	
+	Since β̂ (as a estimator of β^*) is a unique minimizer of 1/n∑_i=1^nŵ_i(Y_i-s(T_i;β))^2(regarding 𝔼[w(Y-s(T;β))^2], according to the theory of M-estimation (van der Vaart, 2000, Theorem 5.7), if
+	
+    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |→_p 0,
+
+	then β̂→_p β^*.
+	Note that
+	
+    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |
+    ≤sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |
+    
+    		+sup_β∈Θ_1|1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |.
+
+	We first show that sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 | is o_p(1). Using the Causchy-Schwarz inequality and the fact that ŵ→^L^2 w, we have
+	
+    sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |   ≤{1/n∑_i=1^n(ŵ_̂î-w_i)^2 }^1/2sup_β∈Θ_1{1/n∑_i=1^n(Y_i-s(T_i;β))^2 }^1/2
+       ≤ o_p(1){sup_β∈Θ_1𝔼[w(Y-s(T;β))^2]+o_p(1) }^1/2
+       =o_p(1).
+
+	Thereafter, under Assumption 5, we can conclude that sup_β∈Θ_1|1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) | is also o_p(1) (Newey and McFadden (1994), Lemma 2.4). Hence, we complete the proof for Theorem 3(1). Next, we give the proof of Theorem 3(2). Define
+	
+    β̂^* = argmin_β∑_i=1^n w_i(Y_i-s(𝐓_i;β))^2.
+
+	Assume that 1/n∑_i=1^n w_i(Y_i - s(𝐓_i;β̂^*))h(𝐓_i;β̂^*)) = o_p(n^-1/2) holds with probablility to one as n →∞
+	
+	By Assumption 5 and the uniform law of large number, one can get that
+	
+    1/n∑_i=1^n w_i(Y_i-s(T_i;β))^2 →𝔼{ w(Y-s(T;β))^2 } in probability uniformly over  β,
+
+	which implies ||β̂^* -β^* ||→_p 0. Let
+	
+    r(β) = 2𝔼{ w(Y-s(T;β))h(T;β) },
+
+	which is a differentiable function in β and r(β^*) = 0. By mean value theorem, we have
+	
+    √(n)r(β̂^*)- ▽_β r(ζ) ·√(()n)(β̂^* - β^*) =√(n)r(β^*) =0
+
+	where ζ lies on the line joining β̂^* and β^*. Since ▽_β r(β) is continuous at β^* and ||β̂^* -β^* ||→_p 0, then
+	
+    √(n)(β̂^* - β^*)  = ▽_β r(β^*)^-1·√(n) r(β̂^*) +o_p(1)
+
+	Define the empirical process
+	
+    G_n(β)= 2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β))h(T_i;β) - 𝔼{ w(Y-s(T;β))h(T;β)  }}.
+
+	Then we have
+	
+    √(n)(β̂^* - β^*)
+       =  ▽_β r(β^*)^-1·{√(n) r(β̂^*) -  2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β̂^*))h(T_i;β̂^*)  + 2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β̂^*))h(T_i;β̂^*)  }
+       =  -▽_β r(β^*)^-1· G_n(β̂^*)+o_p(1)
+       = U^-1·{ G_n(β̂^*)-G_n(β^*) +G_n(β^*) } +o_p(1).
+
+	By Assumption 5, 6, Theorem 4 and 5 of Andrews(1994), we have G_n(β̂^*)-G_n(β^*) →_p 0. Thus,
+	
+    √(n)(β̂^* - β^*) = U^-12/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β^*))h(T_i;β^*) } +o_p(1),
+
+	then we can get that the asymptotic variance of √(n)(β̂^* - β^*) is V.
+	Therefore, √(n)(β̂^* - β^*) →_d N(0,V). Next, we will prove β̂→_p β̂^*.
+	Since
+	
+	
+    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2) |
+    ≤sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |
+    ≤{1/n∑_i=1^n(ŵ_̂î-w_i)^2 }^1/2sup_β∈Θ_1{1/n∑_i=1^n(Y_i-s(T_i;β))^2 }^1/2
+    ≤ o_p(1){sup_β∈Θ_1𝔼[w(Y-s(T;β))^2]+o_p(1) }^1/2
+    
+    		=o_p(1),
+
+	which implies β̂^* →_p β̂. Then by Slutskey's Theorem, we can draw the conclusion that √(n)(β̂ - β^*) →_d N(0,V). Therefore, we have completed the proof of Theorem 3. 
+	
+	
+
+  §.§.§ A.5.Proof of Theorem 4
+
+	For convenience, we use a mapping Ω: R^p× q × D× R → R^p× q × D to represent the operator of absorbing the constant into the coefficients of B-spline basis for the first predictor. More precisely, Ω is defined by 
+	
+    𝐆^b= Ω(𝐆,c),
+
+	where 𝐆_i_1,i_2,d= 𝐆_i_1,i_2,d for (i_1,i_2) ≠ (1,1) and 𝐆_1,1,d=𝐆_1,1,d+pqc, d=1,…,D. It then follows from the property of B-spline functions that
+	
+    c+1/pq<𝐆,Φ(𝐓)> = 1/pq <𝐆^b,Φ(𝐓)>.
+
+	We also write 𝐆_0= ∑_r=1^R_0𝐁_0r∘α_0r, r= 1,…, R_0. Suppose 𝐆̂,ĉ) is a solution to (19) and 
+	
+    𝐆̂ = ∑_r=1^Rβ̂_1^(r)∘β̂_2^(r)∘α̂_r,
+
+	then by <cit.>, Lemma B.1, there exists č∈ R and 
+	
+    𝐆̌ = ∑_r=1^Rβ̂_1^(r)∘β̂_2^(r)∘α̌_r,
+
+	such that
+	
+    č+1/pq<𝐆̌ ,Φ(𝐓)> = ĉ+1/pq<𝐆̂ ,Φ̃(𝐓)>,
+
+	where α̌_r= (α̌_r,1,…,α̌_r,D )^' satisfying
+	
+    ∑_d=1^Dα̌_r,du_d=0
+
+	with u_d= ∫_0^1 b_d(x)dx.
+	Using (27), 
+	we have
+	
+    ∑_i=1^n (ŵ_iy_i-č-1/pq<𝐆̌,Φ(𝐓_i)>)^2 ≤∑_i=1^n (ŵ_iy_i-c_0-1/pq<𝐆_0,Φ(𝐓_i)>)^2.
+ 
+	Let 𝐆̌^b= Ω(α̌,č) and 𝐆_0^b = Ω(𝐆_0,c_0), then 
+	
+    ∑_i=1^n (ŵ_iy_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2 ≤∑_i=1^n (ŵ_iy_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2.
+
+	Therefore, we have
+	
+    ∑_i=1^n ((ŵ_i-w_i+w_i)y_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2 ≤∑_i=1^n ((ŵ_i-w_i+w_i)y_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2,
+
+	which leads to 
+	
+    ∑_i=1^n (w_iy_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2    ≤∑_i=1^n (w_iy_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2 
+       +2 ∑_i=1^n (ŵ_i-w_i)y_i(1/pq<𝐆̌^b-𝐆_0,Φ(𝐓_i)).
+
+	Let 𝐆^# =𝐆̌^b-𝐆_0^b,  𝐚^# =vec(𝐆^# ),  𝐚_0^b =vec(𝐆_0^b), 𝐚̌^b= vec(𝐆̌^b) and 𝐙
+	= (𝐳_1,…,𝐳_n)^'∈ R^n× pqD, where 𝐳_i = vec(Φ(𝐓_i)),i=1,…,n. 
+	Let y_ŵ= (ŵ_1y_1,…, ŵ_ny_n)^' and y_w = (w_1y_1,…, w_ny_n)^', then using (31) and working out the squares, we obtain
+	
+    1/p^2q^2||𝐙𝐚^#||^2   ≤  2<1/pq𝐙𝐚̌^b,y_w>-2<	1/pq𝐙𝐚_0^b,y_w>
+       -21/p^2q^2<𝐙𝐚^#,𝐙𝐚_0^b>+2<1/pq𝐙𝐚^#, y_ŵ-y_w>  
+       = 2<1/pq𝐙𝐚^#,y_ŵ-y_w>+2<1/pq𝐙𝐚^#,ϵ>+2<	1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b>
+
+	First, we show the upper bound of <1/pq𝐙𝐚^#,y_ŵ-y_w>. Using the Cauchy-Schwarz inequality, we have
+	
+    <1/pq𝐙𝐚^#,y_ŵ-y_w> 
+       ≤||ŵ-w ||_2 ·||1/pq𝐙𝐚^#||_2 
+       ≤C_1√(nh_n)/pq·||ŵ-w ||_2 ·||𝐚^#||_2
+
+	
+	By the conclusion of Theorem 2(2), we have 
+	
+    ||ŵ-w ||_2 = O_p(1).
+
+	Applying (37) to (36), we can obtain that
+	
+    <1/pq𝐙𝐚^#,y_ŵ-y_w> ≤C_2√(nh_n)/pq||𝐚^#||_2.
+
+	Second, by the conclusion of <cit.>, (A.18) and (A.20), we can obtain the upper bound of
+	<1/pq𝐙𝐚^#,ϵ> and <	1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b>, which are
+	
+    <1/pq𝐙𝐚^#,ϵ> ≤C_3/pq||𝐚^#||_2 { nh_n(R^3+R(p+q)+RD)}^1/2.
+
+	and
+	
+    <1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b> ≤C_4/pq||𝐚^#||_2 {∑_r=1^R_0||vec(𝐁_0r)||_1/pq}n√(h_n)/D^τ
+
+	Therefore, applying (38), (39) and (40) to (35), we have
+	
+    C_5/pq||𝐚^#||_2^2 ≤ R_1 ||𝐚^#||_2,
+
+	where  R_1 = C_6√(D/n)+C_7  {D(R^3+R(p+q)+RD)/n}^1/2+C_8{∑_r=1^R_0||vec(𝐁_0r)||_1/pq}1/D^τ-1/2.
+	
+	By solving the second order inequality (41), we have
+	
+    C_5/pq||𝐚^#||_2 ≤ R_1
+
+	Further, by Assumption 6 and <cit.>, (A.38) of Lemma A.2, we have
+	
+    ||ŝ(𝐓) -s(𝐓) ||^2   ≤ C_9 h_n 1/p^2q^2||𝐚^#||^2 
+       = C_10R_1^2/D
+       = O_P(1/n)+O_p(R^3+R(p+q)+RD/n)+O_p({∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ) 
+       =O_p(R^3+R(p+q)+RD/n)+O_p({∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ).
+
+	Hence, the proof of Theorem 4 is completed. 
+	
+	
+
+§ APPENDIX REFERENCE
+
+	Mohri, M., Rostamizadeh, A., and Talwalkar, A. (2018). Foundations of ma- chine learning. MIT press.
+	0.2cm
+	Newey, W. K. and McFadden, D. (1994). Large sample estimation and hypoth- esis testing. Handbook of econometrics, 4:2111–2245.
+	0.2cm
+	Van der Vaart, A. W. (2000). Asymptotic statistics, volume 3. Cambridge university press.
+	0.2cm
+	Zhou, Y., Wong, R., and He, K. (2020). Broadcasted nonparametric tensor regression.

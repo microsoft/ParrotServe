@@ -1,0 +1,3466 @@
+
+
+Brownian motion with asymptotically normal reflection]Brownian motion with asymptotically normal reflection in unbounded domains:
+from  transience to stability
+
+ 
+Department of Statistics, University of Warwick, UK
+miha.bresar@warwick.ac.uk
+ 
+Department of Statistics, University of Warwick, The Alan Turing Institute, UK
+a.mijatovic@warwick.ac.uk
+
+Department of Mathematical Sciences, Durham University, UK
+andrew.wade@durham.ac.uk
+
+
+[
+    Andrew Wade
+    March 30, 2023
+==================
+
+
+
+
+We quantify the asymptotic behaviour of  multidimensional drifltess diffusions in 
+ domains unbounded in a single direction, with asymptotically normal reflections from the boundary. 
+We identify the critical growth/contraction rates of the domain that separate   stability, null recurrence and transience. In the stable case we prove existence and uniqueness of the invariant distribution and establish the polynomial rate of decay of its tail. We also establish matching polynomial upper and lower bounds on the rate of convergence to stationarity in total variation. 
+All exponents are explicit in the model parameters that determine the asymptotics of the growth rate of the domain, the interior covariance, and the reflection vector field.
+
+Proofs are probabilistic, and use upper and lower 
+tail bounds for additive functionals up to return times to compact sets, 
+for which we develop  
+novel sub/supermartingale criteria, applicable to general continuous semimartingales. Narrowing domains fall outside of the standard literature, 
+
+in part because boundary local time can accumulate arbitrarily rapidly. Establishing Feller continuity (essential for characterizing stability) thus requires an extension of the usual approach. 
+
+Our recurrence/transience classification 
+extends previous work on strictly normal reflections, and expands the range of phenomena observed across all dimensions. For all recurrent cases, we provide quantitative information through upper and lower bounds on tails of return times to compact sets 
+(see <cit.> for a short https://www.youtube.com/watch?v=oDDDWdbPx74YouTube video describing the results).
+
+
+
+
+
+
+
+
+
+Key words:  Reflected diffusion; normal reflection; generalized parabolic domains; recurrence; transience; tails of return-times; invariant distribution; convergence rate in total variation.
+
+
+
+AMS Subject Classification 2020:  60J60 (Primary); 60J25, 60J65 (Secondary).
+
+
+
+
+
+
+
+§ INTRODUCTION AND MAIN RESULTS
+
+We study the asymptotic behaviour of a multidimensional diffusion in an unbounded,
+generalized parabolic domain, with asymptotically normal reflection from the boundary. Our model includes Brownian motion with normal reflection. 
+We show that the phase transition between recurrence and transience occurs for asymptotically expanding domains. If the domain narrows asymptotically, we identify the phase transition between  null and positive recurrence.
+In the recurrent case we characterise the asymptotic behaviour of the tails of the return times. Moreover, in the positive-recurrent case we prove the existence of the invariant distribution of the reflected diffusion and establish the polynomial rate of decay of its tail. Finally, we establish 
+the polynomial rate of convergence to stationarity by proving matching 
+upper and lower bounds on the total variation distance
+between the marginal and the invariant distribution (see a short https://www.youtube.com/watch?v=oDDDWdbPx74YouTube video describing these results <cit.>).
+
+All the aforementioned  phenomena depend on the asymptotic behaviour of the boundary and are exhibited by a normally reflected Brownian motion. In particular, this implies that a normally reflected Brownian motion in an unbounded domain of any dimension (greater than 1) may 
+converge in total variation to its invariant distribution, which has heavy tails.  
+
+Before stating our results, we briefly describe  our setting. For any d∈, define a closed domain  := {(x,y) ∈_+×^d: y_d ≤ b(x)} in ^d+1, where 
+·_d is the standard Euclidean norm on ^d,
+:=[0,∞) and
+b: _+ →_+ is a smooth function with b(0)=0 and b> 0 on (0,∞).
+Let W = (W_t)_t ∈ be a standard Brownian motion in ^d+1 and Σ a matrix-valued function on , taking values in positive-definite square matrices  of dimension (d+1).
+Denote by Σ^1/2 the symmetric square root of Σ and let ϕ: ∂→^d+1 be a vector field  on ∂.
+Let 
+the processes Z = (Z_t)_t ∈ [0,) 
+and L=(L_t)_t∈[0,)
+with state spaces  and , 
+respectively, 
+satisfy
+the stochastic differential equation (SDE)
+
+    Z_t = z + ∫_0^t Σ^1/2(Z_s)  W_s + ∫_0^t ϕ(Z_s)  L_s 
+      &   L_t = ∫_0^t 1{Z_s ∈∂} L_s,    t ∈ [0,),
+
+where ∈ [0,∞] is a possibly finite explosion time
+and L denotes the local time process of Z at the boundary ∂.
+For any starting point Z_0=z∈, 
+by <cit.>, SDE (<ref>) has a unique strong solution (with law denoted by _z)
+under the assumptions in ass:covariance1, ass:domain1 and ass:vector1 stated in Section <ref> below. 
+Informally, ass:covariance1 requires Σ to be bounded, Lipschitz and uniformly elliptic, ass:domain1 
+requires regularity of b at zero to make the domain  smooth,
+and ass:vector1 stipulates that the smooth bounded vector field ϕ points into the interior of .
+Unlike in the case of oblique reflection <cit.>, asymptotically normal reflection
+does not exhibit explosions.  Theorem <ref>, stated and proved below, asserts that =∞ _z-a.s. for all starting points z∈,
+which we assume in the remainder of the introduction. 
+
+
+
+ §.§ The main results
+
+The asymptotic growth of the domain  
+is described by the parameter 
+
+    β := lim sup_x →∞x b'(x)/b(x),
+
+typically  equal to the limit lim_x →∞x b'(x)/b(x)
+(e.g. if  
+b(x) = ax^β for x ≥ x_0 > 0 and some a > 0, or, more generally, if
+b is regularly varying and b' is eventually monotone <cit.>).
+For local time in SDE (<ref>) to influence the long-time behaviour of the reflected process Z, we have to assume in ass:domain2 below 
+that β  in (<ref>)  lies in the interval (-∞,1) (cf. Section <ref> below), making the growth of  sublinear (see Remark <ref> below) and, possibly, asymptotically narrowing. 
+Assumption ass:covariance2 below
+permits Σ to vary smoothly with z =(x,y)∈⊂×^d, but asserts 
+that, as x→∞, the diagonal entry of Σ in the x-direction and the sum of the remaining diagonal entries converge to positive
+values σ_1^2 and σ_2^2, respectively.
+Assumption ass:covariance2 ensures that the process does not stop interacting with the boundary far away from the origin. 
+
+ 
+
+
+Assumption ass:vector2 specifies linear factors s_0, c_0 ∈ (0,∞), which 
+scale the projections of the vector field ϕ in the x and normal directions, so that, as x→∞, the former projection is
+
+asymptotic to s_0 b'(x) while the latter converges to 
+c_0.
+
+Since b'(x) → 0 (as β < 1), the assumption ass:vector2 makes the vector field ϕ asymptotically normal. Strictly normal reflection has s_0 = c_0.
+
+
+
+
+
+
+
+The reflected process Z
+is
+transient (resp. recurrent) if lim_t →∞Z_t_d+1 = ∞ 
+(resp. there exists r_0 ∈ satisfying lim inf_t →∞Z_t_d+1≤ r_0) _z-a.s.
+The recurrence/transience 
+transition occurs at the critical growth rate of the boundary 
+
+    β_c := c_0σ_1^2/s_0σ_2^2.
+
+
+
+
+
+Suppose that Assumptions ass:domain2, ass:covariance2, ass:vector2 hold and the process 
+Z solves SDE (<ref>). Then the following statements hold for all starting points z∈:
+
+    
+  (a) if β < β_c, then Z is recurrent;
+    
+  (b) if β > β_c, then Z is transient;
+    
+  (c) if β = β_c and Assumptions ass:vector2plus, ass:domain2plus and ass:covariance2plus are satisfied, then  Z is recurrent.
+
+
+
+
+
+Write Z = (X,Y) ∈ in coordinates, so that X_t ∈ for t∈_+.  For any r∈, let 
+
+    ς_r := inf{ t ∈: X_t ≤ r}
+
+(with convention inf∅ :=∞) be the return time of Z to ∩[0,r]×^d.
+ 
+
+Define
+
+    m_c  := (1-β/β_c)/2.
+
+Note that, if β<β_c, then m_c>0. In this case the following result
+implies that the return time
+ς_r
+is a.s. finite, with m_c being the critical moment exponent.
+
+
+
+Suppose that Assumptions ass:domain2, ass:covariance2, ass:vector2 hold and the process 
+Z solves SDE (<ref>). Then the following statements hold. 
+
+    
+  (a) If β∈(β_c,1), then for any level r∈(0,∞) and starting point z∈∩(r,∞)×^d, there is positive probability that component X does not reach level r,
+    
+    i.e., 
+    _z(ς_r = ∞) > 0.
+    
+  (b) If β∈ (-∞,β_c), then 
+    for any >0, there exists x_0∈(0,∞), such that for every r>x_0 and z∈∩(r,∞)×^d, there exist constants   C_1,C_2∈(0,∞)
+for which
+    
+    C_1t^-m_c-≤_z(ς_r≥ t) ≤ C_2t^-m_c+  for all t∈(1,∞).
+
+
+
+
+
+
+
+
+We say that the process Z is positive recurrent if
+_z[ς_r] < ∞ holds for all z ∈ and sufficiently large r.
+The process Z is null recurrent if it is recurrent but not positive recurrent. 
+Theorem <ref>(b) implies that Z is positive (resp. null) recurrent if β < -β_c
+(resp. -β_c<β<β_c).
+
+ By Theorem <ref>(b), positive recurrence of Z occurs if 
+ β < -β_c. In this case, we study properties of the invariant distribution of Z on .
+Recall that, by <cit.>, the process Z is strong Markov. An invariant distribution
+π of Z is a probability measure on the Borel σ-algebra ℬ() generated by  the open subsets of ,
+satisfying  ∫__z [f(Z_t)]π( z)=∫_ f(z)π( z) for all bounded measurable functions f:→ and all t∈.
+A total variation distance between two probability measures φ_1 and φ_2, defined on ℬ, is given by 
+φ_1-φ_2_TV=sup_B∈ℬ|φ_1(B)-φ_2(B)|.
+Define  
+    M_c := -(1+β/β_c)/2,
+ 
+and note that, in the case β < -β_c, we have M_c>0.
+
+
+
+Suppose ass:domain2, ass:covariance2, ass:vector2 hold, 
+Z solves SDE (<ref>), and
+β < -β_c.
+Then the reflected process Z possesses  a unique invariant distribution π. Moreover, for any ϵ>0, the following statements hold:
+
+    
+  (a) there exist  constants c_π, C_π∈(0,∞)  such that 
+
+    c_π  r^-2M_c-ϵ≤π({z∈:z_d+1≥ r})≤ C_π r^-2M_c+ϵ,  for all r∈[1,∞);
+
+    
+  (b) for any starting point z∈ of Z,
+there exist constants c_TV,C_TV∈(0,∞) 
+such that
+
+    c_TV t^-M_c - ϵ≤_z(Z_t∈·)-π_TV≤ C_TVt^-M_c + ϵ,  for all  t∈[1,∞).
+
+
+
+
+
+The total variation distance between two probability measures P̃ and Q̃ on a σ-algebra  of the state space Ω̃ is defined via
+
+    P̃-Q̃_TV := sup_A ∈|P̃(A)-Q̃(A)|.
+
+
+
+
+
+
+Theorem <ref> shows that, surprisingly, a reflected Brownian motion Z in ⊂^d+1 with normal reflection 
+(i.e., Z in the class of models with σ_1^2=1, σ_2^2=d, and 
+c_0=s_0, so that β_c=1/d)
+on an unbounded domain may be polynomially ergodic if the domain narrows sufficiently fast, i.e. β<-1/d.
+In this case the tail 
+π({z∈:z_d+1>r}) 
+of the invariant distribution π decays asymptotically as r^1+dβ when r→∞. Note that if β<-1/d,   the domain  has finite volume in ^d+1. However, by modifying either the covariance matrix or the reflection vector field so that β_c<1/d, for any β∈(-1/d,-β_c) we obtain polynomial stability of the reflected Brownian motion in a domain with infinite volume.  
+
+ Theorem <ref>(a)
+characterises the critical moment of the invariant distribution π of the reflected process Z in a domain  with β<-β_c:
+for any α in [0,2M_c) (resp. (2M_c,∞)), the moment ∫_z_d+1^απ( z)  is finite (resp. infinite).
+Moreover, by Remark <ref> below, for every z∈ we have _z(Z_t∈∂)=0 for Lebesgue almost every t∈. By Theorem <ref>(b), this implies π(∂)=0.
+
+
+
+
+The polynomial rate of convergence in total variation of Z_t to stationarity, given in Theorem <ref>(b), is half of the rate of decay of the tail of its stationary measure. Differently put, by Theorem <ref>, we have
+
+    lim_t →∞log_z(Z_t∈·)-π_TV/log t =1/2lim_r→∞logπ({z∈:z_d+1>r})/log r = -M_c.
+
+
+
+
+
+ §.§ Discussion of the main results
+
+The fact that ϕ is an asymptotically normal reflection implies that, in the case with β > 0, the process accumulates a positive drift in the horizontal direction when it reaches the boundary. Here, we observe phase transitions between recurrence and transience depending on the model parameters. When β < 0, the process accumulates a negative drift in horizontal direction. In this case, the process is always recurrent, and in some cases the invariant distribution exists. 
+
+We now comment on the comment on the structure of the proofs and discuss features of the theorems in the previous section. A key step in the proofs of 
+Theorems <ref>, <ref> and <ref> consists of reducing the problem to certain super/submartingale
+conditions that can be verified. We stress that the processes involved (that turn out to be super/submartingales) in all non-critical cases, covering phenomena from transience to stability, are transformations of the reflected process in SDE (<ref>) via a single parametric family of Lyapunov functions. The class of functions we use are not, and should not be, harmonic because the analysis of the return times and quantitative properties of the invariant distribution and rate of convergence require the presence of a sufficiently strong drift.
+
+
+
+
+  §.§.§ Positive recurrence
+
+
+Theorem <ref> 
+provides detailed information on the ergodicity of the reflected process Z, with lower bounds matching the upper bounds.  
+To the best of our knowledge, this is the first  characterisation of the  rate convergence to stationarity in the context of reflecting diffusion, including the ones with drift. Upper bounds abound: for example <cit.> provide upper bounds on the rate of convergence for various reflected diffusions with drift via drift conditions in <cit.> (due to the presence of the drift, the upper bounds in this case are sub-exponential). 
+
+
+
+In contrast, the literature for lower bounds is scarce. 
+Our approach to the lower bounds on the rate of convergence is purely probabilistic. It rests on 
+novel continuous super/submartingale methods, based on Lemma <ref> below,
+which provide a general setting where the full force of the  idea behind <cit.> (see Lemma <ref> in Appendix <ref> below)
+can be exploited.  
+The approach is robust to the underlying stochastic model and appears to be applicable to a general continuous ergodic Markov processes.   
+
+
+
+
+The first step in the proof of Theorem <ref>
+consists of establishing the Feller continuity (Theorem <ref> below) and 
+irreducibility (Proposition <ref> below) for the reflected process Z. The key technical challenge in this step consists of controlling the growth of the local time (cf. Section <ref> below), which requires establishing Feller continuity of the stopped process first (see proof of Theorem <ref> for details).
+
+Once Feller continuity and irreducibility of Z have been established, the upper bounds in Theorem <ref> are proved 
+using supermartingale conditions together with the classical convergence results in <cit.>, applicable in the 
+subexponential case. This yields finiteness of moments of the invariant distribution π, which is then translated into upper bounds on the tails  in Theorem <ref> via Markov's  inequality. 
+
+The lower bounds in Theorem <ref> require a lower bound on the tail of the invariant distribution π. In contrast to the upper bounds, characterising infinite moments of π
+alone does not yield a lower bound on the tail of π. In order to circumvent this problem, we give a criterion for ∫_ H π=∞ for any  non-decreasing function H (not only polynomial). This criterion is obtained by Lemma <ref>.
+Once established, the criterion 
+yields lower bounds on the tail of π via elementary methods (see proof of Lemma <ref> below). The lower bound on the rate of convergence in total variation in Theorem <ref> follow from a supermartingale property of a transformed reflected diffusion in (<ref>), the lower bounds on the tail of the stationary distribution π
+and a general result in <cit.> (see Lemma <ref> in Appendix <ref> below) that converts the tails of the stationary distribution to a lower bound on the convergence rate in total variation. 
+
+Finally we note that, in Theorem <ref>, the critical case β=-β_c is omitted for brevity. Its analysis would require additional assumptions and a new Lyapunov function, analogous to the ones used in the proof of the critical case of Theorem <ref>(c). We expect that, under appropriate assumptions, such analysis would yield ergodicity of the normally reflected Brownian motion with logarithmic decay in any dimension. 
+
+
+
+
+
+
+  §.§.§ Return times
+
+If the reflected process is transient, return times to compact sets are not finite almost surely (we will thus discuss Theorem <ref>(a) in Section <ref> below). In the recurrent case,
+the upper bound on the tail of the return time in Theorem <ref>(b) is established via a supermartingale condition of a transformation of the reflected process, which (via <cit.>) implies the finiteness of the moments of return times. The upper bounds in the theorem then follow by Markov's inequality. 
+
+
+
+The lower bound in  Theorem <ref>(b) is established via certain submartingale conditions and 
+lower bounds on the tails of return times to bounded sets in Lemma <ref>.
+As in the proof of Theorem <ref> discussed above,
+ Lemma <ref> is again critical here (as the infinite moment criterion of <cit.> cannot be applied to obtain the lower bounds on the tail). Note that 
+ Lemma <ref> is applicable in the entire recurrent regime.
+ This is key in the 
+ proof of Theorem <ref>(b), in contrast to the proof of Theorem <ref>, where Lemma <ref> is applied in the positive-recurrent case only. 
+ 
+
+
+
+
+
+
+ As our modelling assumptions ass:covariance2, ass:domain2, ass:vector2 are asymptotic (i.e., they only specify the limiting behaviour both of the coefficients of SDE (<ref>), the domain  and the reflection vector field as x →∞, see Section <ref> below for details), it is natural for Theorem <ref>(b) to assert the tail behaviour of return times for sufficiently large levels r only. However, with some further work,
+using an argument based on uniform ellipticity and
+escape from the boundary, extending
+the ideas of <cit.> and Section <ref> below
+from first moment to higher moments estimates, this requirement could be removed.
+
+
+
+
+
+
+
+Note also that, by Assumption ass:domain2, the function b is sublinear as x →∞, implying that there exist positive constants c < C, such that c x ≤z_d+1≤ Cx for all z=(x,y)∈∩ (1,∞)×^d.
+Theorem <ref> may thus be restated for return times of Z=(X,Y), given in terms of Z_d+1, instead of the scalar process X.
+
+
+
+ 
+
+Recall that for the modulus of the scalar Brownian motion, the critical exponent for return times equals 1/2, with moments of order less (resp. greater) than 1/2 being finite (resp. infinite).
+By Theorem <ref>(b), for domains with asymptotically increasing 
+(resp. decreasing) boundary function b, i.e. β > 0 (resp. β<0), the critical exponent m_c for the return times of the reflected process satisfies 0<m_c<1/2 (resp. 1/2<m_c). Differently put, the reflected process in an asymptotically expanding (resp. narrowing) domain is, due to the asymptotically positive (resp. negative) projection of the reflection vector field in the x-direction,
+“less” (resp. “more”) recurrent than the modulus of the scalar Brownian motion.
+
+
+In the case β = 0, the boundary function b may (but need not, see Lemma <ref> below) be asymptotically constant, see the discussion in Remark <ref> below. 
+
+
+In this case, the projection of the reflection vector field converges to zero sufficiently fast, so that the critical moment exponent of the return time equals m_c= 1/2,
+regardless of other model parameters. 
+
+
+
+
+  §.§.§ The recurrence/transience dichotomy
+
+
+Theorem <ref>  characterises the recurrence/transience dichotomy for the reflected process defined by the SDE in (<ref>) above. 
+Its proof relies on a generalisation to continuous time, given in  Section <ref> below, of the classical Foster–Lyapunov criteria for transience and recurrence. We stress that our approach is purely probabilistic: our criteria are phrased in terms of continuous-time supermartingale conditions. In particular,  neither the Markov property nor any explicit knowledge of the infinitesimal characteristics of the process are required (cf. discussion about the approach in <cit.> in Section <ref> below). Both of these features are crucial in the proof of Theorem <ref>.
+
+
+
+The critical asymptotic growth rate 
+β_c is always positive (see Assumptions ass:covariance2 and ass:vector2). 
+By Theorem <ref>, if β_c ≥ 1, then Z is recurrent 
+for all boundary functions b satisfying ass:domain2. 
+This is for example the case for the two-dimensional Brownian motion 
+(σ_1^2=σ_2^2=1 and d=1)
+with normal reflection (c_0=s_0) in ⊂^2, as 
+in this case we have 
+β_c = 1.
+Note that, in any dimension d∈,
+the critical growth rate β_c may be greater than one, implying recurrence for all boundary functions satisfying ass:domain2.
+
+Theorem <ref>(a) strengthens transience 
+of Z, stated in Theorem <ref>(b). Theorem <ref>(a) shows
+that for any r>0 and  z ∈∩(r,∞)×^d,
+the process Z does not visit the set 
+∩[0,r]×^d
+with positive probability (under _z), even though x-r>0 can be arbitrarily small (where z=(x,y)). The proof of Theorem <ref>(b)
+establishes only that, with positive probability, the process Z does not return 
+to ∩[0,r]×^d
+ after reaching the set
+ ∩(r_1,∞)×^d
+for a sufficiently large r_1∈(r,∞).
+As our assumptions are asymptotic, this extension requires proving, using basic analytical techniques, that,  with positive probability, the reflected process reaches an arbitrarily high level before visiting a neighbourhood of the origin.
+
+
+
+ §.§ A heuristic
+
+
+
+
+  To give some intuition behind the main results, we describe a heuristic comparison with reflecting Brownian motion in an interval.
+
+We try to estimate how much horizontal drift the process accumulates via reflections by heuristic renewal argument <cit.>. Suppose that the process is at the horizontal position x. Over the short time scale we can approximate the of the vertical coordinate by a reflecting diffusion Y_t/b(x) on the unit sphere 𝕊^d-1, where b(x) = r, for some r∈. This diffusion has zero drift and combined infinitesimal variance of σ_2^2/b(x)^2 along with the vertical reflection of magnitude c_0/b(x). For r∈ define τ_r = inf{t ≥ 0: Y_t_d = r}. Let y_r denote the starting point for the process Y satisfying y_r_d = r. Let _y_r denote the expectation with respect to the process Y started at Y_0 = y_r. Recall that b(x)=r. We apply Itô’s formula for diffusions with reflection to the process r^-2Y_t_d^2. Note that from the infinitesimal variance, it follows that the drift of the process is of magnitude r^-2σ_2^2 and the boundary reflection is at -2r^-1c_0.
+
+In the first case we start at y_r/2 and terminate at τ_r, and in the second case we start at y_r and terminate at τ_r/2. We obtain
+
+    1 = _y_r/2[r^-2Y_τ_r^2] = 4^-1 + r^-2_y_r/2[∫_0^τ_rσ_2^2 t] = 4^-1 + r^-2σ_2^2_y_r/2[τ_r],
+
+and
+
+    4^-1 = r^-2_y_r[Y_τ_r/2^2] = 1 + r^-2σ_2^2_y_r[τ_r/2] - 2r^-1 c_0 _y_r[L_τ_r/2].
+
+Clearly L_τ_r = 0 _y_r/2-a.s.
+From the above equation we obtain
+
+    _z_r/2[L_τ_r] + _z_r[L_τ_r/2]/_z_r[τ_r/2] + _z_r/2[τ_r] = σ_2^2/2rc_0.
+
+Since r = b(x), the expected local time accumulated by Y_t at { y _d= r}, over  the  complete cycle starting at y_r/2_d = r/2 and ending again at y_r/2_d = r/2, is equal to σ_2^2/2c_0b(x). 
+
+
+Recall that X denotes the x-component of the reflected process Z in (<ref>).
+An informative heuristic argument in <cit.>, based on the renewal theorem, 
+estimates that the average local time 
+
+accumulates as 
+
+
+Suppose the process is at horizontal position x.
+Over short time-scales, 
+imagine we may approximate the behaviour of the vertical coordinate by a diffusion on the interval [-b(x),b(x)].
+This diffusion has zero drift and infinitesimal variance about σ^2.
+The (vertical) reflection is effectively of magnitude c_0. After a transformation, this is
+equivalent to unit-magnitude reflection for Brownian motion on [-b(x)/c_0,b(x)/c_0] with variance σ^2/c_0^2.
+By an heuristic renewal argument similar to <cit.>, this process should accrue boundary local time on average at rate about σ^2/2c_0 b(x).
+
+
+
+    L_t≈σ_2^2/(2c_0b(x)) t,    when  X_t is at level x.
+
+By SDE (<ref>) and the definition of β in (<ref>), the total instantaneous drift of X
+(when X_t=x)
+is thus approximately equal to
+s_0 σ_2^2 b'(x)/(2c_0 b(x)) ≈ s_0 σ_2^2 β/(2c_0 x) for large x∈. 
+Consequently, the large-scale behaviour of the horizontal coordinate X of Z is resembles that of the solution of the SDE
+X̃_t = s_0 σ_2^2 β/(2c_0 X̃_t) t+σ_1W̃_t
+for large times t and values X̃_t,
+where  β∈(-∞,1) and W̃ is a one-dimensional Brownian motion. After time-changing the SDE for X̃ 
+by t↦ tσ_1^2, we obtain  a Bessel-type process 
+
+whose drift coefficient is determined by
+the ratio β/β_c. For β > 0, we have a Bessel process of dimension 
+2β/β_c and
+
+
+the transition between recurrence and transience in the heuristic matches that of the result in Theorem <ref>. In the case β<0,  the standard literature on Langevin diffusions <cit.> implies that the invariant distribution exists if β< -β_c, the tail of invariant distribution decays at the rate x^β/β_c+1 (as x→∞) and the convergence to the invariant distribution is polynomial with the critical exponent (1+β/β_c)/2. Again the heuristic coincides with our results in Theorem <ref>.
+
+ 
+The definition of the asymptotically normal reflection requires the projection of the vector field ϕ in the x-direction to decay as s_0 b'(x)→0, when x→∞. 
+The heuristic in (<ref>) further motivates this definition: allowing a rate of decay 
+of the projection of ϕ in the x-direction
+different from that of b'(x) 
+would miss phase transitions and other criticality phenomena.  
+Moreover, heuristic (<ref>) and the definition of β in (<ref>) suggest that, in the super-linear case  
+ β>1, the drift of X produced by the reflection at the boundary is asymptotically decays as x^-β for large x ∈.  Such a drift is too weak to influence the long-term behaviour of the reflected process, because the process does not interact with the boundary sufficiently often. 
+
+
+
+
+
+Finally we note that the heuristic in (<ref>)
+illustrates the difference between our domain , satisfying ass:domain2,
+and the smooth domains studied in <cit.>. 
+Recall from <cit.> that  the domain  with asymptotically narrowing boundary does not satisfy the assumptions of <cit.>. This difference is more than just a technical caveat: one of the crucial features of the domains considered in <cit.> is the availability of bounds, uniform in the starting point, of the increments of expected local time. In contrast, for a narrowing domain 
+ (i.e., b(x)→ 0 when x→∞), by (<ref>),
+an increment of local time over a short time period cannot be bounded uniformly in the starting point because its growth is proportional to 1/b(x).
+
+We circumvent this issue via localisation, resulting in more involved proofs of fundamental properties such as the Feller continuity (see Theorem <ref>).
+Moreover, in the case of asymptotically oblique reflection, 
+a narrowing domain  may result in an explosive reflected 
+Brownian motion and explosive local time <cit.>, suggesting further that local time in 
+can grow arbitrarily fast.
+
+
+
+
+
+ §.§ Related literature
+
+
+
+The theory of reflecting diffusions began with <cit.>.
+A large literature is dedicated to reflecting diffusions in bounded domains (see e.g. <cit.>). In the unbounded case, the classical domains are cones  (see e.g. <cit.>). Reflecting diffusions have been extensively studied due to their vast applications, including queueing theory <cit.> and mathematical finance <cit.>.
+
+Our domain  in the case of (strictly)
+normal reflection has been  studied in <cit.>.
+Theorem <ref>  can be viewed as a generalisation
+of a result in <cit.>, which 
+considers the case where Σ(z)
+equals the identity matrix and the reflection vector field is given by the unit normal on the entire boundary ∂. In the context of our model, this setting is within the subclass σ_1^2=1, σ_2^2=d 
+and c_0=s_0=1 (recall that these constants specify only the limiting values of Σ(z) and the reflection field ϕ
+on ∂ as x→∞).
+
+By <cit.>, the  (d+1)-dimensional Brownian motion with normal reflection has phase transitions between transience and recurrence at β_c = 1/d, cf. (<ref>).
+In particular, when dimension d is large, recurrence occurs only when the the boundary function grows at 
+rate slower than 1/d, i.e., very slowly.
+In addition, Theorem <ref>(a) reveals that a (d+1)-dimensional reflected Brownian motion may be recurrent for a boundary function b with growth close to linear if 
+the projection of the reflection vector field ϕ in the x-direction decays as 
+ s_0 b'(x)→0, when x→∞, for a sufficiently small constant s_0>0 (note that the projection in the x-direction of the normal reflection 
+decays precisely at the rate b'(x)→0).
+Moreover, Theorem <ref>(a) and the formula in (<ref>) imply that Z 
+with normal reflection (i.e. s_0=c_0)
+may be recurrent for the growth rate β (of the boundary function b) arbitrarily close to one, if the instantaneous variance of Z in the x-direction is greater than the sum of the variances in all other directions. 
+
+ A general result in <cit.>, for domains satisfying existence and uniqueness conditions of <cit.>,  states
+that a (d+1)-dimensional Brownian motion with normal reflection is positive recurrent if and only if  has finite volume. As in the case of Theorem <ref> above,
+ Theorem <ref> and formula (<ref>)  contrast with the result of <cit.>. 
+ It is easy to see that the right choice of parameters results in 
+ positive (resp. null) recurrence in the domains with infinite (resp. finite) volume, e.g. β<-1/(s_0d) (resp. 
+ -1/(s_0d)<β<1/(s_0d)) in the example in the previous paragraph.
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+As discussed in Section <ref> above, some of the technical difficulties in our paper arise due to the fact that our domain 
+ with the function b decreasing to zero (e.g. β < 0)
+violates the smoothness condition of domains in <cit.>.
+A general framework, via submartingale problems, for a large family of domains that fail to satisfy the assumptions <cit.> was developed in <cit.>. Similar ideas were employed in <cit.> to characterise stationary distribution for large family of reflecting diffusions with piecewise smooth boundaries.
+Finally we note that the invariant distribution and the rate of convergence of the reflecting Brownian motion with drift have been studied in <cit.>, motivated by applications in particle systems (see Section <ref> above  for a brief discussion of the relation between our result and those in <cit.>).
+The structure of the paper is given in the table of contents above.
+
+ 
+
+
+
+
+
+
+§ MODELLING ASSUMPTIONS AND PRELIMINARY RESULTS
+
+
+
+
+
+ §.§ Modelling assumptions
+
+For any  d ∈ := {1,2,…}, let ·_d denote the Euclidean norm on ^d. 
+
+Define the closed domain ⊂×^d, where  [0,∞), by
+
+    := { z =(x,y)∈×^d:  y _d ≤ b(x)},  where b: →
+
+is
+strictly positive and differentiable on (0,∞) with b(0)=0.
+Let 
+∂={z∈:y_d =b(x)} be the boundary of  in ^d+1 and denote the unit sphere in ^d by 𝕊^d-1 := { u ∈^d: u _d = 1}. Let e_x := (1,0) ∈𝕊^d⊂×^d denote the unit vector in the x-direction and, for any u ∈𝕊^d-1, define e_u := (0,u) ∈𝕊^d. 
+We can express z=(x,y)∈ 
+as z=xe_x+y_d e_ŷ, 
+where ŷ := y /  y _d∈𝕊^d-1 for y _d > 0
+(if 
+y _d =0, we may chose ŷ to be any vector in 𝕊^d-1).
+
+
+
+
+Recall that the functions Σ: →_d+1^+
+and ϕ:∂→^d+1
+are the instantaneous variance and the reflection vector field at the boundary of the domain  in SDE (<ref>) above. Throughout we denote 
+by 
+_d+1^+ 
+the group of positive  definite square matrices  of dimension (d+1).
+
+
+
+
+
+
+
+
+
+
+
+  ass:domain1(D1)
+Let b be a continuous function on , with b(0) = 0 and b(x) > 0 for x > 0. Suppose that b is twice continuously differentiable  on (0,∞), such that (i) lim inf_x → 0 (b(x)b'(x)) > 0, and (ii) lim_x → 0(b”(x)/b'(x)^3) exists in (-∞,0].
+
+
+ 
+
+  ass:covariance1(C1) 
+Let Σ: →_d+1^+ be bounded, globally Lipschitz, and uniformly elliptic, i.e., there exists δ_Σ > 0 such that, for every u  ∈𝕊^d and all z ∈, we have ⟨Σ(z)u,u⟩≥δ_Σ.
+ 
+ 
+
+
+
+
+ 
+
+
+  ass:vector1(V1) 
+Suppose ϕ: ∂→^d+1 is a C^2-vector field, satisfying sup_z ∈∂ϕ(z)_d+1 < ∞ and 
+ 
+    inf_x > 0inf_ŷ∈𝕊^d-1⟨ϕ(x,b(x) ŷ),n(x,b(x) ŷ) ⟩ > 0,
+
+ where n(z)=n(x,b(x) ŷ) 
+ is the inwards-pointing unit normal vector at z=(x,y)∈∂.
+ 
+  
+  
+  Assumption ass:vector1 requires the vector field ϕ to be smooth, of bounded magnitude and have a uniformly positive component in the normal direction (throughout the paper, ⟨·,·⟩ denotes the standard inner product on ^d+1).
+  Assumption ass:domain1 guarantees that the boundary ∂ is sufficiently regular everywhere, including the origin (see <cit.> for details). 
+Assumption ass:covariance1 ensures that the process Z is not locally constrained in any direction. Throughout we use the  
+
+
+matrix norm  Σ(z)_op := sup_v∈𝕊^dΣ(z) v_d+1.
+(In particular, since Σ^1/2(z)_op^2 = sup_v ∈𝕊^d⟨Σ(z)v,v⟩=Σ(z)_op equals the largest eigenvalue of Σ, the boundedness of Σ implies the boundedness of Σ^1/2.)
+  
+  
+
+
+Under assumptions ass:vector1, ass:domain1 and ass:covariance1, the process Z may explode with positive probability. In fact, by <cit.>, we may have (<∞)=1. 
+
+The following additional assumptions preclude explosion (i.e., as we shall see, imply (=∞)=1) and allow us to characterise transience and recurrence of the process Z;
+see Theorem <ref> above for a detailed statement.
+
+
+
+  ass:domain2(D2) 
+Suppose that ass:domain1 holds, lim_x →∞ b'(x) = lim_x →∞ b”(x) = 0, the limit in (<ref>) exists and satisfies lim_x→∞ xb'(x)/b(x)=β∈ (-∞,1).
+ 
+  ass:covariance2(C2) 
+ Suppose that ass:covariance1 holds and that there exist σ_1^2,σ_2^2 ∈ (0, ∞) such that
+
+    ⟨Σ(z)e_x,e_x⟩ = σ_1^2(1+o_(1))   and  Σ(z) -σ_1^2 = σ_2^2(1+o_(1))  as x→∞.
+
+
+  ass:vector2(V2) 
+Suppose that ass:vector1 holds and that there exist s_0,c_0 ∈ (0,∞) such that 
+ 
+    ⟨ϕ(z),e_x ⟩ = s_0b'(x)(1+o_∂(1))  and  ⟨ϕ(z),-e_ŷ⟩ =c_0(1+o_∂(1))  as x→∞.
+
+
+
+Here and throughout,
+for any g:→(0,∞)
+and ∈{,∂}, 
+o_(g(x)) 
+as x→∞
+denotes a function f:→ 
+satisfying
+
+
+
+
+
+
+lim_x→∞sup_y:(x,y) ∈|f(x,y)|/g(x) = 0.
+
+
+
+
+Since Assumption ass:domain2 requires lim_x→∞ xb'(x)/b(x)=β < 1, 
+for any β' ∈ (β,1) we have
+b(x) < C_0x^β' for some positive constant C_0 and all sufficiently large x ∈, implying that b has sublinear growth as x →∞. Note however that, as x →∞, Assumption ass:domain2 allows b to have any of the following limits: infinity (requiring β≥ 0), a positive finite limit (requiring β = 0) or a limit equal to 0 (requiring β≤ 0). Interestingly, in the case β=0 the boundary function b  may exhibit a variety of different behaviours at infinity. For instance, b may grow to infinity (e.g. b(x) ≈log x), converge to 0 (e.g. b(x) ≈ 1/log x), or be asymptotically constant. Furthermore, it is also possible for the function b to oscillate, 
+
+i.e.  lim sup_x →∞b(x) = ∞ and lim inf_x →∞ b(x) = 0. For example, any function b satisfying 
+    b(x) ≈ (1 + (loglog x)^-2 + sinloglog x)loglog x  as x→∞,
+
+exhibits such behaviour (see Appendix <ref> for proof that such a function satisfies ass:domain2).
+
+Assumption ass:covariance2 ensures that the instantaneous covariance of the process Z stabilises at a positive level in the x-direction as x tends to infinity, without taking up all of the volatility of the process (Σ denotes the sum of the diagonal elements of Σ). 
+Since for the unit normal n(x,y) at (x,y)∈∂, the inner products ⟨ n(x,y),e_x⟩
+and 
+⟨ n(x,y),-e_ŷ⟩
+are asymptotically equivalent to b'(x) and 1, respectively,
+as x→∞, Assumption ass:vector2 requires that the vector field ϕ has the same asymptotic behaviour as the unit normal n(x,y) up to positive constants. As we shall see, it is precisely this property that precludes explosions of the process Z and gives rise to the phenomena studied in this paper. 
+
+
+Theorem <ref> above gives rise to the critical exponent β_c,
+defined in (<ref>) above,
+at which the global behaviour of Z transitions between recurrence and transience.  
+Quantification of the limits in  Assumptions ass:vector2, ass:domain2 and ass:covariance2 are required to understand the behaviour of Z if the boundary of the domain grows at the critical rate   
+β=β_c (see (<ref>) above for the link between the growth rate of the boundary and exponent β).
+
+
+
+
+
+
+  ass:domain2plus(D2+)
+Assume ass:domain1 and that there exists  β∈ (0, 1)  such that
+
+    x b'(x) = β b(x)(1+o(b(x)^2x^-2)  )   as x →∞.
+
+
+  ass:covariance2plus(C2+)
+Assume ass:covariance1 and that there exist σ_1^2,σ_2^2 ∈ (0, ∞) and  ϵ > 0 such that, as x→∞,
+
+    ⟨Σ(z)e_x,e_x⟩ = σ_1^2(1+o_(x^-))   and  Σ(z) - σ_1^2 = σ_2^2(1+o_(x^-ϵ)).
+
+
+  ass:vector2plus(V2+)
+Assume ass:vector1 and that there exist s_0,c_0 ∈ (0,∞) such that, as x→∞, 
+ 
+    ⟨ϕ(z),e_x ⟩ = s_0b'(x)(1+o_∂(b(x)^2x^-2))   and  ⟨ϕ(x,y),-e_ŷ⟩ =c_0(1+o_∂(b(x)^2x^-2)).
+
+
+
+
+
+
+
+
+
+ §.§ Itô's formula for the reflected process
+and Lyapunov functions
+
+
+We start by noting that under Assumptions ass:covariance1, ass:domain1 and ass:vector1,  by <cit.>, SDE (<ref>) has a unique strong solution (Z,L,) for any starting point in a generalised parabolic domain  defined in (<ref>).
+In Section <ref> we prove Theorem <ref>
+(which shows that =∞, a.s.) and Theorem <ref>. 
+Sections <ref> and <ref>
+prove Theorems <ref> and <ref>, respectively.
+
+A key step in each of these proofs consists of the application of Itô's formula to an appropriate Lyapunov function. More precisely,
+let f:→ denote a C^2-function on the open domain ∖∂, such that its gradient ∇ f (i.e., the vector of the partial derivatives of f) has a continuous extension to the closed domain  (e.g. if 
+ f has a C^2-extension to an open set in ^d+1 containing , which is typically the case in applications below).
+By  Itô’s formula <cit.> we obtain
+
+    f(Z_t) = f(Z_0) + M_t 
+        + 1/2∫_0^t Δ_Σ f(Z_s) s + ∫_0^t ⟨∇ f(Z_s),ϕ(Z_s)⟩ L_s,  0≤ t<,
+
+where Δ_Σ f :=  (Σ^1/2H(f)Σ^1/2)=(Σ H(f))
+
+is the Σ-Laplacian of f (recall that the Hessian matrix H(f):→_d+1^+ consists of the second partial derivatives of f). The (scalar) process M and its quadratic variation [M] on the stochastic interval [0,) are given by 
+
+    M_t := ∫_0^t ⟨∇ f(Z_s),Σ^1/2(Z_s) W_s⟩&
+    [M]_t=∫_0^t Σ^1/2(Z_s)∇ f(Z_s)_d+1^2  s,0≤ t<.
+
+
+The strategy of the proofs that follow consists of  applying the continuous semimartingale results of Section <ref> below
+to the process κ=f(Z) 
+for suitable C^2-Lyapunov functions f.
+In particular, we will 
+use the representation of the quadratic variation [M]
+in (<ref>) to conclude that the appropriately stopped process M is a true martingale. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Pick w ∈∖{0}.
+Define
+k_w:=1+ sup_x ∈(|w(1-w)|^1/2b(x)-x).
+
+Note that, under ass:domain2, the function b has sublinear growth at infinity (see Remark <ref> above), implying 1 ≤ k_w < ∞. 
+For any z=(x,y)∈ and parameter γ∈ define
+
+    f_w,1(z):=(x+k_w)(1  + w(1-w)y _d^2/2(x+k_w)^2)^1/w  &   f_w,γ(z):=f_w,1(z)^γ.
+
+Since, for (x,y) ∈, we have y_d ≤ b(x), the definition of k_w implies  
+
+    1/2≤ 1  + w(1-w)y _d^2/(2(x+k_w)^2)≤ 3/2   for all 
+    w∈∖{0}.
+
+Thus
+(x+k_w)2^-1/| w|≤ f_w,1(x,y)≤ (x+k_w)2^1/| w| for all parameter values w∈∖{0}. Moreover, 
+for any (x,y) ∈ we have 
+
+    (x+k_w)^γ2^-|γ|/| w|≤ f_w,γ(x,y)≤ (x+k_w)^γ2^|γ|/| w|    for all  γ∈.
+
+
+Note that, for γ>0
+(resp. γ <0), the function 
+f_w,γ tends to infinity (resp. zero) as x→∞, 
+
+making it suitable for the application of the results in Section <ref>.
+Moreover, it is clear that (for all choices of parameters γ and w) 
+f_w,γ is a C^2-function on the open domain ∖∂ and its gradient ∇ f_w,γ has a continuous extension to the closed domain .
+
+The Lyapunov function f_w,γ is inspired by a generalisation of a polynomial approximation of the 2-dimensional harmonic function h_w(z) = r^wcos(wθ) (given in polar coordinates z=(r,θ) of the plane), previously used in the analysis of the reflected processes in wedges <cit.>. 
+
+
+
+
+
+
+The following lemma provides asymptotic properties of the relevant derivatives of f_w,γ.
+
+
+
+Let assumptions ass:vector2, ass:domain2 and ass:covariance2 hold and fix 
+γ∈ and w∈∖{0}. Then
+
+
+    Δ_Σ f_w,γ(z) = γ f_w,1(z)^γ-2(σ_1^2(γ-1)+σ_2^2(1-w)  +o_(1))  as x→∞.
+
+There exists a constant C>0, such that
+
+    ∇ f_w,γ(z)_d+1^2 ≤ C (x+k_w)^2(γ-1) for all  z=(x,y)
+    ∈.
+
+Moreover, 
+if γ (s_0 β/c_0 - 1 + w)<0 (resp. >0), then 
+there exists a positive x_0 such that for all z=(x,y) ∈∂∩ [x_0,∞)×^d  we have
+⟨∇ f_w,γ(z),ϕ(z)⟩ < 0 (resp. > 0).
+
+
+
+
+
+Note that the constants in o_(1), as well as C and x_0, in Lemma <ref>
+depend on the values of the parameters γ∈ and w∈∖{0}.
+
+
+
+Denote 
+v(x,y):=y/(x+k_w)∈^d and define the scalar
+
+h(z):=1  + w(1-w) v(z)_d^2/2.
+For any z=(x,y)∈ we have y_d≤ b(x) 
+and, by ass:domain2 (see also Remark <ref> above), b(x)=o(x^β') as x→∞ for any β'∈(β,1).
+Hence v(z)_d=o_(1) and, for any r∈, h(z)^r = 1 + o_(1) as x→∞.
+Since
+h(z)>0 
+(by (<ref>))
+and 
+f_w,1(z)=(x+k_w)h(z)^1/w
+for any z=(x,y)∈,  we obtain 
+
+    ∇ f_w,1(z)   =h(z)^1/w(
+    e_x(1-(1-w)v(z)_d^2/h(z)) + e_ŷ (1-w)v(z)_d/h(z))
+    
+    
+    
+    
+    
+       =
+    (1+ o_(1))(e_x+e_ŷ(1-w)v(z)_d)
+    
+    
+    
+    
+      as x→∞.
+
+(See the first paragraph of Section <ref>
+for the definition of ŷ, e_x and e_ŷ.)
+Moreover, since
+v(z)_d=o_(1) as x→∞
+and
+∇ f_w,γ(z)=γ f_w,γ-1(z)∇ f_w,1(z), 
+by (<ref>)
+there exists a positive constant C satisfying
+
+    ∇ f_w,γ(z)_d+1^2    = γ^2f_w,γ-1(z)^2 (1 + o_(1)) ≤ C(x+k_w)^2(γ-1)  for all z=(x,y)∈.
+
+
+
+
+
+
+Recall that f_w,γ-1(z)>0 by (<ref>) for all z∈.
+Thus, for z∈∂,
+the signs of 
+⟨∇ f_w,γ(z),ϕ(z)⟩
+and
+γ⟨∇ f_w,1(z),ϕ(z)⟩
+are equal.
+Assumption ass:vector2 implies
+⟨ e_x,ϕ(z)⟩=s_0b'(x)(1+o_∂(1))
+and 
+⟨ e_ŷ,ϕ(z)⟩=-c_0(1 +o_∂(1)) 
+
+as x→∞. 
+Note that for z=(x,y)∈∂
+we have v(z)_d=b(x)/(x+k_w).
+By (<ref>) we thus obtain
+
+
+
+    γ⟨∇ f_w,1(z),ϕ(z)⟩   = γ (s_0b'(x) -c_0 (1-w)v(z)_d)(1 + o_∂(1))
+    
+       =γ  b(x) (x+k_w)^-1( s_0 (x+k_w) b'(x)/b(x) - c_0 (1-w)) (1+ o_∂(1)) 
+       = γ b(x)(x+k_w)^-1(  s_0 β - c_0 (1-w) + o_∂(1)) (1+ o_∂(1))
+       =  c_0 b(x)(x+k_w)^-1[γ(s_0 β/c_0 - 1 + w )+ o_∂(1)],
+
+where the third equality in the display follows from the definition of β in ass:domain2.
+By ass:vector2, the model parameter c_0 is positive. Thus for
+z=(x,y)∈∂ with x sufficiently large,
+the sign of γ⟨∇ f_w,1(z),ϕ(z)⟩
+equals that of γ(s_0 β/c_0 - 1 + w ) as claimed in the lemma. 
+
+
+
+By definition we have f_w,γ(z) = f_w,1(z)^γ. Hence, for any z ∈, the Hessian takes the form
+
+    H(f_w,γ)(z)=γ(γ-1)f_w,1(z)^γ-2∇ f_w,1(z)(∇ f_w,1(z))^ 
+    +γ f_w,1(z)^γ-1H(f_w,1)(z),
+
+where (∇ f_w,1(z))^ denotes the (d+1)-dimensional row vector with coordinates given by the first partial derivatives of f_w,1(z).
+Since Δ_Σ f_w,γ = (Σ^1/2H(f_w,γ)Σ^1/2)=(Σ H(f_w,γ)), for z = (x,y)∈ we have
+
+    Δ_Σ f_w,γ(z) =γ(γ-1)f_w,1(z)^γ-2⟨Σ(z)∇ f_w,1(z),∇ f_w,1(z)⟩
+    +γ f_w,1(z)^γ-1Δ_Σ f_w,1(z).
+
+By ass:covariance2 and (<ref>), we have
+⟨Σ(z)∇ f_w,1(z),∇ f_w,1(z)⟩  =⟨Σ(z)e_x,e_x⟩ + o_(1) = σ_1^2 (1+ o_(1)). 
+
+Note that ∂_x h(z) = -w(1-w)y_d^2(x+k_w)^-3
+and
+∂_y_i h(z) = w(1-w)y_i (x+k_w)^-2
+for any z=(x,y)∈ (y_i is the i-th coordinate of y∈^d).
+An elementary (but tedious) calculation, based on the representation f_w,1(z)=(x+k_w)h(z)^1/w, yields
+
+    ∂_y_i^2f_w,1(z)    =(1-w)(x+k_w)^-1h(z)^1/w-1 +o_((x+k_w)^-1)
+       =(1-w)(x+k_w)^-1(1+o_(1))    as x→∞
+
+for every i∈{1,…,d}
+(recall that h(z)^1/w-1=1+o_(1)).
+Moreover, all other elements of the Hessian 
+H(f_w,1)(z) are of order o_((x+k_w)^-1)
+as x→∞.
+Thus, by definition
+Δ_Σ f_w,1(z)=(Σ(z)H(f_w,1)(z)) and the fact that Σ is bounded by ass:covariance1 (contained in ass:covariance2)
+we get
+
+    Δ_Σ f_w,1(z)=((Σ(z))-⟨Σ(z)e_x,e_x⟩)(1-w)(x+k_w)^-1(1+o_(1))  as x→∞.
+
+By Assumption ass:covariance2,
+it thus follows that 
+Δ_Σ f_w,1(z)=σ_2^2(1-w)(x+k_w)^-1(1+o_(1)) as x→∞.
+The expression in (<ref>) is now a direct consequence of (<ref>).
+
+
+    ∂_x h(z)    = -w(1-w)y_d^2 (x+k_w)^-3
+    ∂_x f_w,1(z)    = h(z)^1/w-(1-w)y_d^2(x+k_w)^-2h(z)^1/w-1
+    ∂_x^2 f_w,1(z)    =(1-w)v(z)_d^2(x+k_w)^-1h(z)^1/w-1[1+(1-w)^2v(z)_d^2h(z)^-1]
+       = (1-w)v(z)_d^2(x+k_w)^-1(1+ o_(1))  as x→∞
+    ∂_y_i∂_x f_w,1(z)    = -(1-w)y_i(x+k_w)^-2h(z)^1/w-1[1+(1-w)v(z)_d^2h(z)^-1]
+
+
+
+    ∂_y_i h(z)    = w(1-w)y_i (x+k_w)^-2
+    ∂_y_i f_w,1(z)    =(1-w)(x+k_w)^-1y_ih(z)^1/w-1
+
+
+
+    ∂_x∂_x f_w,1(z)    = -(1-w)v(z)_d^2(x+k_w)^-1h(z)^1/w, 
+    ∂_x∂_y_i f_w,1(z)    = (1-w)y_i(x+k_w)^-2h(z)^1/w-1, 
+    ∂_y_i∂_y_jf_w,1(z)    =1{i=j}(1-w)(x+k_w)^-1h(z)^1/w-1 + (1-w)^3 y_iy_j(x+k_w)^-3h(z)^1/w-2,
+
+we have 
+
+    Δ_Σf_w,1(z)    = ((Σ(z))-⟨Σ(z)e_x,e_x⟩)(1-w)(x+k_w)^-1h(z)^1/w-1 + o_((x+k_w)^-1)    
+       =σ_2^2(1-w)(x+k_w)^-1(1+o_(1)),
+
+where the second equality follows from the assumption ass:covariance2.
+By (<ref>) can estimate the Δ_Σ f_w,γ(z) for z = (x,y) ∈,
+
+    Δ_Σ f_w,γ(z)    = γ(γ-1)f_w,1(z)^γ-2(σ_1^2 + o_(1)) 
+          + γ f_w,1(z)^γ-1(x+k_w)^-1(σ_2^2(1-w) + o_(1)) 
+       = γ f_w,1(z)^γ-2(σ_1^2(γ-1)+σ_2^2(1-w)  +o_(1)).
+
+
+
+
+
+By Lemma <ref>, the function f_w,γ 
+controls the sign of the inner product
+⟨∇ f_w,γ(z),ϕ(z)⟩
+for z=(x,y)∈∂
+with sufficiently large x∈.
+Controlling the sign of
+⟨∇ f_w,γ(z),ϕ(z)⟩
+for all z=(x,y)∈∂
+is crucial for analysing the moments of Z_t at a fixed time t (see the proof of Theorem <ref>) as well as establishing drift conditions in the case of positive recurrence (see Lemma <ref> in Section <ref> below). This requires a slight modification of the function f_w,γ, which we now describe.
+
+Fix arbitrary x_0,x_1∈(0,∞), satisfying x_0<x_1, and define
+the function m:×^d→[0,1] as follows: for  z=(x,y)∈×^d let 
+
+    m(z)    := exp((x_1-x_0)^-2-((x_1-x_0)^2-(x_1-x)^2)^-1)1{x_0<x<x_1}+1{x_1≤ x}.
+
+The function m is smooth, ∂_x m(z)≥ 0 for all z∈×^d, 
+and the following holds: for any 
+ z_i=(x_i,y)∈×^d, i∈{0,1}, we have
+m(z_0) = ∂_x m(z_0) = ∂_x^2 m(z_0)  = 0 and m(z_1) = 1, ∂_x m(z_1) = ∂_x^2 m(z_1) = 0.
+For any constant  k∈(0,∞), define
+
+    F_w,γ(z) := f_w,γ(z)m(z)+k(1-m(z)),   z∈.
+
+The function F_w,γ 
+is clearly a C^2-function on the open domain ∖∂ and its gradient ∇ F_w,γ has a continuous extension to the closed domain 
+(for all  parameters γ∈ and w∈∖{0}). 
+
+
+
+Let Assumptions ass:vector2, ass:domain2 and ass:covariance2 hold and fix 
+γ∈ and w∈∖{0}. Then, if γ(β s_0/c_0 -1 + w) < 0, there exist k∈(0,∞)  and 0<x_0<x_1 such that 
+
+    ⟨∇ F_w,γ(z),ϕ(z)⟩≤ 0    for all  z∈∂.
+
+
+
+
+Note that for any constants 0<k<∞ and 0<x_0<x_1, for all z∈
+we have
+
+    ⟨∇ F_w,γ(z),ϕ(z) ⟩
+           = (f_w,γ(z)-k)∂_x m(z)⟨ e_x,ϕ(z)⟩ + m(z)⟨∇ f_w,γ(z),ϕ(z)⟩.
+
+Since γ(β s_0/c_0 -1 + w) < 0, by Lemma <ref>, there exists x_0'>0 such that ⟨∇ f_w,γ(z),ϕ(z)⟩ < 0  for all z∈∂∩ [x_0',∞)×^d.
+By Assumption ass:vector2, 
+⟨ϕ(z), e_x⟩ = s_0 b'(x)(1+f(z)) for all z∈∂,
+where f:∂→ satisfies sup_y:(x,y)∈∂ |f(x,y)|→0 as x→∞.
+Pick x_0”∈ such that sup_y:(x,y)∈∂ |f(x,y)|<1/2 for all x∈[x_0”,∞).
+
+
+There are two possibilities. 
+
+
+
+(I) There exists x_0∈[max{x_0',x_0”},∞) such that  |b'(x_0)|>0.
+If 
+b'(x_0)>0 (resp. b'(x_0)<0), by the continuity of b', there exists x_1∈(x_0,∞), such that b'(x)>0 (resp. b'(x)<0) for all x∈[x_0,x_1].
+Since s_0>0 by Assumption ass:vector2, for any z=(x,y)∈∂ with x∈[x_0,x_1], we have 
+⟨ϕ(z), e_x⟩ = s_0 b'(x)(1+f(z))>s_0b'(x)/2>0
+(resp. ⟨ϕ(z), e_x⟩ = s_0 b'(x)(1+f(z))<s_0b'(x)/2<0).
+By (<ref>),  f_w,γ is a positive bounded
+function on the set ∩[x_0,x_1]×^d.
+Thus we may pick k in the interval (sup_(x,y)∈∂:x_0≤ x≤ x_1 f_w,γ(x,y),∞) (resp. (0,inf_(x,y)∈∂:x_0≤ x≤ x_1 f_w,γ(x,y))).
+Since the function m, defined above, satisfies min{∂_x m(z),m(z)}≥0  for all z∈, ∂_x m(z)=0 for all z=(x,y) with x∈[x_1,∞)
+and ∂_x m(z)=m(z)=0 for all z=(x,y) with x∈[0,x_0],
+by (<ref>) it follows ⟨∇ F_w,γ(z),ϕ(z) ⟩≤ 0 for all z∈∂.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(II) |b'(x)|=0 for all x∈[max{x_0',x_0”},∞).
+
+Thus, for any x_0, x_1∈[max{x_0',x_0”},∞) with x_0<x_1, 
+we have ∂_x m(z)⟨ e_x,ϕ(z)⟩= ∂_x m(z)s_0 b'(x)(1+f(z))=0 for all z∈.
+Hence, for any k∈(0,∞), by (<ref>)  we have  ⟨∇ F_w,γ(z),ϕ(z)⟩ = m(z)⟨∇ f_w,γ(z),ϕ(z)⟩≤ 0 for all z∈∂.
+
+
+The function  f_w,γ suffices  to establish Theorem <ref>(a)–(b) when the asymptotic exponent β is away from the critical value β_c defined in (<ref>). In the critical case β=β_c,
+logarithmic (rather than polynomial) growth 
+of the Lyapunov function is required. 
+
+
+The function we now define for this purpose is inspired by the analysis of the reflecting Brownian motion and random walk in a wedge in <cit.>.
+Pick an arbitrary constant δ∈(0,∞) and
+let g_δ:→ (1,∞) be a continuous function, twice differentiable in the interior of , satisfying
+
+    g_δ(z) = log (x) -x^-δ + σ_1^2/σ_2^2y_d^2/2x^2 (1+δ x^-δ)+1  for z = (x,y) ∈ with x ∈ (,∞),
+
+with σ_1^2 and σ_2^2 given in ass:covariance2plus.
+Since for any (x,y)∈ we have y_d≤ b(x) and b is sublinear by ass:domain2plus (cf. Remark <ref>), there exists a positive constant C_δ∈ (0,∞) such that
+    log x ≤ g_δ(z) ≤ C_δ + log x,    for z=(x,y)∈ with x > .
+
+The relevant asymptotic properties of the derivatives of g_δ are in the next lemma. 
+
+
+
+Assume 
+β = β_c,
+where β (resp. β_c) is defined in (<ref>) (resp. (<ref>)).
+Let Assumptions ass:vector2plus, ass:domain2plus and ass:covariance2plus hold and choose δ∈(0, min{ϵ, 1 - β}), where ϵ > 0 is the rate of decay in Assumption ass:covariance2plus.
+Then there exists an x_0 > 0 such that 
+
+    Δ_Σ g_δ < 0 on ∩[x_0,∞)×^d  and  ⟨∇ g_δ,ϕ⟩ 
+        < 0 on ∂∩[x_0,∞)×^d.
+
+
+
+
+
+
+
+
+
+
+Recall that β=β_c=c_0σ_1^2/(s _0σ_2^2). By (<ref>), for z = (x,y)∈ with x>, we have
+
+    ∇ g_δ(z)      =  e_x(x^-1(1+δ x^-δ) -σ_1^2/σ_2^2y_d^2/x^3(1-δ x^-δ(1+δ/2)) ) 
+        + e_ŷ(σ_1^2/σ_2^2y_d/x^2(1+δ x^-δ ));
+
+see the first paragraph of Section <ref>
+for the definition of ŷ, e_x and e_ŷ. 
+
+
+
+By ass:vector2plus we have
+⟨ e_x,ϕ(z)⟩=s_0b'(x)(1+o_∂(b(x)^2x^-2))
+
+=s_0β b(x)x^-1(1+o_∂(b(x)^2x^-2)) as x→∞,
+where the second equality follows from ass:domain2plus,
+and 
+⟨ e_ŷ,ϕ(z)⟩=-c_0(1+o_∂(b(x)^2x^-2)) 
+
+as x→∞. 
+Since z = (x,y)∈∂ satisfies y_d =b(x) as x→∞, by (<ref>) we obtain
+
+    ⟨∇ g_δ(z),ϕ(z)⟩   =s_0β b(x)x^-2 (1+δ x^-δ)o_∂(b(x)^2x^-2)
+        -s_0^2β^2c_0^-1 b(x)^3x^-4(1+o_∂(b(x)^2x^-2)) 
+       = -s_0^2c_0^-1β^2 b(x)^3x^-4+ o_∂(b(x)^3x^-4)  as x→∞.
+
+Thus there exists x_0>0, such that ⟨∇ g_δ(z),ϕ(z)⟩<0 for all z=(x,y)∈∂∩ [x_0,∞)×^d.
+
+By Remark <ref> above, for any β'∈(β,1) it holds 
+b(x)=o(x^β') as x→∞, implying 
+y_d/x=o_(1) as x→∞. 
+By assumption δ∈(0,1-β). Thus b(x)=o(x^β+δ), implying  b(x)^2x^-4 = o(x^-2-δ) and b(x)x^-3 = o(x^-2-δ) as x→∞. 
+Recall from (<ref>) that,
+for any i ∈{1,…,d}, 
+the i-th partial derivative ∂_y_i g_δ along the coordinate y_i of y equals 
+∂_y_i g_δ(z)=β s_0c_0^-1y_i x^-2(1+δ x^-δ) for x>,
+implying 
+∂^2_y_i g_δ(z)=β s_0c_0^-1x^-2(1+δ x^-δ).
+By the representation of the gradient (<ref>) and the fact y_d≤ b(x) for every z=(x,y)∈, we have ∂_x^2 g_δ(z) = -x^-2(1+δ(1+δ)x^-δ)+o_(x^-2-δ), while 
+all mixed derivatives in the Hessian H(g_δ)(z) are of order b(x)x^-3 = o_(x^-2-δ) as x →∞.
+Thus, by the definition
+Δ_Σ g_δ(z)=(Σ(z)H(g_δ)(z)) and the fact that
+∂^2_y_i g_δ
+does not depend on the index i ∈{1,…,d} and is bounded for x>,
+we get
+
+
+
+    Δ_Σ g_δ(z) =   ⟨Σ(z)e_x,e_x⟩∂_x^2 g_δ(z)  +((Σ(z))-⟨Σ(z)e_x,e_x⟩) ∂^2_y_1 g_δ(z) 
+    
+    +o_(x^-2-δ) 
+    
+    =    -x^-2 (1+δ(1+δ)x^-δ) (σ_1^2 + o_(x^-))
+    + (σ_2^2+o_(x^-))β s_0c_0^-1 x^-2(1+δ x^-δ)
+        + o_(x^-2-δ) 
+    =  -σ_1^2δ^2x^-2-δ  +o_(x^-2-δ)  as x→∞,
+
+where the last equality follows form the identity  s_0βσ_2^2/c_0=σ_1^2 and 
+the fact δ<ϵ. Hence, the sign of Δ_Σ g_δ(z) is negative for z∈(x,y)∈ with x sufficiently large as claimed in lemma.
+
+
+
+
+§ NON-EXPLOSION, RECURRENCE/TRANSIENCE CRITERIA, AND RETURN TIMES OF CONTINUOUS SEMIMARTINGALES
+
+
+
+This section develops certain semimartingale tools for classifying asymptotic behaviour via Foster–Lyapunov criteria.
+The general theory developed in this section is expected to have broad applicability. In the present paper, it will be applied to study the reflected process Z, given by SDE (<ref>), via the Lyapunov functions constructed and analysed in Section <ref> above.
+
+Fix a probability space (Ω,,) and a filtration (_t)_t ∈ satisfying the usual conditions. Consider an (_t)-adapted  continuous process κ = (κ_t)_t ∈, taking values in [0,∞].
+
+Let  denote the set of all [0,∞]-valued stopping times with respect to (_t)_t∈.
+For any ℓ,r ∈ and stopping time T ∈, define the first entry times (after T) by
+
+    λ_ℓ,T :=  T + inf{s ∈: T < ∞, κ_T+s≤ℓ}, 
+    ρ_r,T :=  T + inf{s ∈: T < ∞,  κ_T+s≥ r},
+
+where we adopt the convention inf∅ := +∞. If T = 0, we write λ_ℓ := λ_ℓ,0 and ρ_r := ρ_r,0. Almost sure limits ρ_∞ := lim_r →∞ρ_r and ρ_∞,T = lim_r →∞ρ_r,T exist by monotonicity. 
+Explosion of the process κ occurs
+if the event {ρ_∞ < ∞} has positive  probability. 
+Since ρ_r,T = ρ_r on the event {T < ρ_r }, we have ρ_∞ = ρ_∞,T on the event { T < ρ_∞}.  
+For r_0≤ r,
+we define the first exit time from the interval [r_0,r] after some stopping time T ∈ by 
+
+    S_r,T := λ_r_0,T∧ρ_r,T.
+
+Here and throughout we denote x∧ y:=min{x,y} and 
+x∨ y:=max{x,y}
+for any x,y∈[0,∞].
+
+
+
+
+ §.§ Non-explosion
+
+We first establish criteria for κ not to explode.
+
+
+The main application of this result in the present paper is to prove that the reflected process with asymptotically normal reflection cannot explode. 
+
+This should be contrasted with the case of the asymptotically oblique reflection, where explosion may occur, see the characterisation in <cit.>.
+The non-explosion criteria in <cit.> are more delicate than the ones in Lemma <ref>, but require transience of the underlying semimartingale, making them inapplicable to the entire class of processes considered here. The following result is more robust (i.e. with simpler assumptions), has an elementary proof and covers all the models analysed in this paper. 
+
+
+
+Let κ  = (κ_t)_t ∈ be an [0,∞]-valued (_t)-adapted continuous process 
+
+and V: → (0,∞) a continuous function with lim_x →∞ V(x) = ∞. Suppose there exist r_0,η∈, such that for all r ∈ (r_0,∞) and any  T ∈, such that [V(κ_T)1{T<ρ_∞}]<∞, the process ζ^T,r = (ζ^T,r_t)_t ∈,
+defined by
+
+    ζ^T,r_t := (V(κ_(t+T)∧ S_r,T)-η(t ∧ (S_r,T-T)))1{T < ρ_∞},
+
+is an (_t+T)-supermartingale, i.e., for 0 ≤ s ≤ t < ∞, 
+
+    [ζ^T,r_t|_s + T] ≤ζ^T,r_s ,
+
+Then (ρ_∞ = ∞) = 1.
+
+Furthermore, if for the (possibly random) starting value κ_0, we assume [V(κ_0)]<∞ then [V(κ_t)] < ∞ for all t∈.
+
+
+
+
+Choose r_1∈(r_0,∞) 
+and define recursively the upcrossing and downcrossing times of the process κ over the interval [r_0,r_1] as follows: θ_1 := 0, and if θ_k has been defined for some k∈, then 
+θ_k := λ_r_0,θ_k and  θ_k+1 := ρ_r_1,θ_k. Thus we have 0=θ_1≤θ_1≤⋯≤θ_k ≤θ_k ≤θ_k+1≤⋯.
+Moreover, for any t ∈, we denote 
+    D(t,r_0,r_1) :=sup{ k ∈; θ_k ≤ t},
+ 
+the number of downcrossings of the interval [r_0,r_1] up to time t for the process κ. Since any continuous function on the compact interval [0,t] 
+crosses an interval of positive length at most finitely many times, we have D(t,r_0,r_1) < ∞ a.s.
+
+Assume  now (ρ_∞ < ∞) > 0. Then there exists t_0 ∈ such that (ρ_∞ < t_0) > 0.  We will prove by induction that {θ_k<ρ_∞}∩{ρ_∞ < t_0}={ρ_∞ < t_0} a.s. holds for all k ∈.
+The induction hypothesis holds for k=1 since
+θ_1=0 < ρ_∞ a.s.
+Assume the almost-sure equality of events holds for some k∈.
+
+Set T := θ_k and note 
+V(κ_T)1{T<ρ_∞}= V(r_1)1{T<ρ_∞}, since the paths of κ are continuous and, on the event {T<ρ_∞}, we have T<∞. In particular, V(κ_T)1{T<ρ_∞} is bounded and hence integrable.
+
+
+
+
+
+Pick any r ∈ (r_1,∞) and consider 
+ the supermartingale ζ^T,r defined in (<ref>).
+ Note that (T∨ t_0)-T is a bounded (_T+t)-stopping time since,
+ for any s∈, we have {T ∨ t_0 -T ≤ s} = {t_0 ∨ T≤  T+s }∈_T+s as both t_0∨ T and s+T are (_t)-stopping times.
+ Applying the optional sampling theorem to ζ^T,r
+ at (T∨ t_0)-T yields:
+
+    (ρ_r,T<λ_r_0,T∧ (T∨ t_0), T<ρ_∞|_T) V(r)- η t_0    ≤[ζ_(T∨ t_0)-T^T,r|_T] 
+       ≤ζ^T,r_0 = V(r_1)1{T<ρ_∞}.
+
+Taking expectations on both sides, we obtain the following inequality for every r∈(r_1,∞):
+
+    (ρ_r,T<λ_r_0,T∧ (T∨ t_0), T<ρ_∞)≤  (V(r_1)+ η t_0)/V(r).
+
+Thus, by the monotone convergence theorem, we obtain
+
+    0≤(ρ_∞≤λ_r_0,T∧ (T∨ t_0),T<ρ_∞ )     =
+    lim_r→∞(ρ_r,T<λ_r_0,T∧ (T∨ t_0),T<ρ_∞ ) 
+       ≤lim sup_r→∞(V(r_1)+t_0η)/V(r)=0,
+
+implying
+{T<ρ_∞}=
+{ρ_∞>λ_r_0,T∧ (T∨ t_0)}∩{T<ρ_∞}
+a.s.
+We hence 
+obtain 
+
+    {ρ_∞ < t_0}    ={T<ρ_∞}∩{ρ_∞<t_0}
+    =
+    {ρ_∞>λ_r_0,T∧ (T∨ t_0)}∩{T<ρ_∞}∩{ρ_∞<t_0}
+        =
+    {λ_r_0,T<ρ_∞}∩{ρ_∞<t_0} a.s.
+
+The first equality in this display holds by the induction hypothesis, the second holds by (<ref>),  and the third equality follows from the fact that T≤λ_r_0,T by definition (<ref>).
+
+
+
+
+
+Since the 
+
+equality 
+{θ_k = λ_r_0,T < ρ_∞}={ρ_r_1,θ_k =θ_k+1 < ρ_∞} holds almost surely,
+
+we proved that {θ_k+1<ρ_∞}∩{ρ_∞ < t_0}={ρ_∞ < t_0} almost surely,
+thus verifying the induction step.
+
+We conclude that 
+
+    {θ_1<…<θ_k<ρ_∞<t_0}= ⋂_i=1^k{θ_i < ρ_∞ < t_0} = {ρ_∞ < t_0}  a.s. for all k∈.
+  
+Since {θ_i<θ_i+1}={θ_i<θ_i<θ_i+1} for every i∈ and
+D(t_0,r_0,r_1) < ∞ a.s., it follows that (ρ_∞ < t_0) = 0, contradicting our assumption (ρ_∞<∞)>0.
+
+
+
+For any t∈, by the assumptions in the lemma, for any r ∈ (r_0,∞) and any stopping time T∈, satisfying [V(κ_T)1{T<∞}] < ∞, it holds that
+
+    [V(κ_(t+T) ∧λ_r_0,T∧ρ_r,T)1{T<∞}|_T] ≤η t + V(κ_T)1{T < ∞}    a.s.
+
+Moreover, since the process κ does not explode we have  lim_r→∞ρ_r,T = ∞ a.s. 
+Thus,
+by Fatou's lemma for conditional expectations, which applies since the function  V is positive, and the inequality in (<ref>), we get
+
+    [V(κ_(t+T)∧λ_r_0,T)1{T<∞}|_T]   =
+    [lim inf_r→∞V(κ_(t+T) ∧λ_r_0,T∧ρ_r,T)1{T<∞}|_T]
+       ≤lim inf_r→∞[V(κ_(t+T) ∧λ_r_0,T∧ρ_r,T)1{T<∞}|_T] 
+       ≤η t + V(κ_T)1{T < ∞}    a.s.
+
+
+To prove that V(κ) is an integrable process, we will again make use of the crossing times over the interval [r_0,r_1], denoted by θ_k,θ_k, for k-th downcrossing and upcrossing times respectively. We pick t∈ and estimate,
+
+    [V(κ_t)]    = [V(κ_t) ∑_k=1^∞( 1{θ_k≤ t ≤θ_k} + 1{θ_k < t <θ_k+1})] 
+       ≤sup{V(r):r∈[0,r_1]} + ∑_k=1^∞[V(κ_t) 1{θ_k ≤ t≤θ_k }].
+
+
+On the event {θ_k ≤ t≤θ_k }, we have V(κ_t) = V(κ_t ∧λ_r_0,θ_k), since λ_r_0,θ_k = θ_k a.s. Moreover, if k = 1, then V(κ_θ_1) = V(κ_0) and if k≥ 2, then V(κ_θ_k) =  V(r_1) holds on the event  {θ_k ≤ t≤θ_k }∈_θ_k, implying
+
+    [V(κ_t)^1/21{θ_k ≤ t≤θ_k }]
+       = [[ V(κ_((t-θ_k)+θ_k) ∧λ_r_0,θ_k)^1/21{θ_k ≤ t≤θ_k }|_θ_k]] 
+       ≤[[ V(κ_((t-θ_k)+θ_k) ∧λ_r_0,θ_k)|_θ_k] 1{θ_k ≤ t≤θ_k }|_θ_k] 
+       ≤[η t1{θ_k < t <  θ_k} + V(κ_θ_k)1{θ_k ≤ t≤θ_k }] 
+       ≤η t(θ_k ≤ t≤θ_k ) + (V(r_1)  + [V(κ_0)] )(θ_k ≤ t ≤θ_k).
+
+This inequality, which holds for every k∈, and (<ref>) implies
+
+    [V(κ_t)] ≤ 2V(r_1) + [V(κ_0)] + η t < ∞    for every t∈(0,∞).
+
+
+
+
+
+
+
+ §.§ Transience and recurrence criteria for continuous semimartingales
+
+
+Lemmas <ref> and <ref> of the present subsection  provide sufficient conditions for recurrence and transience, respectively, for a continuous semimartingale  κ. They are continuous-time analogues to the Foster-Lyapunov criteria for discrete-time processes discussed in  e.g. <cit.>.
+
+
+
+Let
+V: → (0,∞) be a continuous function with lim_x →∞ V(x) = ∞ and
+ κ  = (κ_t)_t ∈ an -valued (_t)-adapted continuous process satisfying lim sup_t →∞κ_t  = ∞ a.s. If there exists such r_0 > 0, such that for all t_0 ∈ and r ∈ (r_0,∞), the process (V(κ_(t+t_0)∧ S_r,t_0))_t ∈ is an (_t+t_0)-supermartingale (recall that r_0 features in S_r,t_0=λ_r_0,t_0∧ρ_r,t_0 by definition (<ref>)), i.e., 
+ [V(κ_t_0)]<∞ and
+ for 0 ≤ s ≤ t < ∞,
+
+    [V(κ_(t + t_0) ∧ S_r,t_0)|_s + t_0] ≤ V(κ_(s + t_0) ∧ S_r,t_0),
+
+then (lim inf_t →∞κ_t  ≤ r_0)  =  1.
+
+
+
+Up to requiring verification over a smaller class of stopping times, the hypotheses of Lemma <ref>
+essentially imply those of Lemma <ref> with η=0. Thus, a Lyapunov function that implies recurrence will also often yield non-explosion. In the case of a transient process, however, η>0 is typically needed for Lemma <ref> to be applicable.
+
+
+
+
+
+Pick t_0 ∈, r ∈ (r_0,∞) and consider the (_t+t_0)-supermartingale (V(κ_(t+t_0)∧ S_r,t_0))_t∈.
+
+Note that the assumption lim sup_t →∞κ_t = ∞ a.s. implies S_r,t_0 < ∞ a.s. and hence 
+
+it holds that lim_t →∞V(κ_(t+t_0) ∧ S_r,t_0) = V(κ_S_r,t_0) a.s. 
+
+The supermartingale property, Fatou's lemma, definition (<ref>) and the continuity of κ imply
+
+    ∞>[V(κ_t_0)]     ≥   lim inf_t →∞[V(κ_(t + t_0) ∧ S_r,t_0)] ≥[lim inf_t →∞V(κ_(t + t_0) ∧ S_r,t_0)] 
+        =    [V(κ_S_r,t_0)] ≥(ρ_r,t_0 < λ_r_0,t_0) V(r).
+
+Thus, for all r∈(r_0,∞), we obtain
+
+    (inf_t ≥ t_0κ_t ≤ r_0) ≥(λ_r_0,t_0 < ∞) ≥(λ_r_0,t_0 <ρ_r,t_0) ≥ 1 - [V(κ_t_0)]/V(r).
+
+Since  lim_r →∞V(r) =∞ by assumption, it follows that (inf_t ≥ t_0κ_t ≤ r_0) = 1 for any fixed t_0 ∈, implying (lim inf_t →∞κ_t  ≤ r_0)=(∩_t_0∈{inf_t ≥ t_0κ_t ≤ r_0})=1.
+
+
+
+
+
+
+
+Let
+V: → (0,∞) be a continuous function with lim_x →∞ V(x) = 0 and
+ κ  = (κ_t)_t ∈ an -valued (_t)-adapted continuous process satisfying lim sup_t →∞κ_t  = ∞ a.s.
+If there exists r_0 > 0, such that for all T ∈, satisfying  T < ∞ a.s., and r ∈ (r_0,∞), the process (V(κ_(t+T)∧ S_r,T))_t ∈, is an (_t+T)-supermartingale, i.e., for 0 ≤ s ≤ t < ∞,
+
+    [V(κ_(t + T) ∧ S_r,T)|_s + T] ≤ V(κ_(s + T) ∧ S_r,T),
+
+then 
+
+(lim_t →∞κ_t = ∞) = 1.
+
+
+
+
+Note that the function V in Lemma <ref> is assumed to be continuous and have limit zero at infinity, making it bounded. Thus, for any T ∈, satisfying  T < ∞ a.s., we have [V(κ_T)]<∞. Once we have such a candidate function V, in order to apply Lemma <ref>, we only need to check the (_t+T)-supermartingale property in (<ref>).
+
+
+
+
+Pick an arbitrary ℓ∈(r_0,∞). For any
+r, r_1∈, satisfying ℓ<r_1<r,  define T := ρ_r_1. 
+Since lim sup_t →∞κ_t = ∞ a.s., we have T = ρ_r_1<∞ a.s. and ρ_r,T<∞ a.s., implying further by definition (<ref>) that 
+S_r,T=λ_r_0,T∧ρ_r,T≤ρ_r,T<∞ a.s.
+
+Define the process ξ = (ξ_t)_t ∈ by 
+ξ_t:= V(κ_(t + T)∧λ_ℓ,T∧ρ_r,T),
+t ∈.
+
+Since λ_ℓ,T∧ρ_r,T≤ S_r,T a.s., 
+the process ξ equals the (_t+T)-supermartingale 
+(V(κ_(t+T)∧ S_r,T))_t ∈ stopped 
+at the (_t+T)-stopping time 
+λ_ℓ,T∧ρ_r,T-T.
+Thus, by Remark <ref> and <cit.>, the process ξ is a positive  (_t+T)-supermartingale. 
+
+Hence, for all t ∈, we have 
+
+    V(κ_T) = ξ_0 ≥[ξ_t |_T] ≥[ξ_t 1{λ_ℓ,T≤ρ_r,T}|_T].
+
+
+Since κ is continuous, 
+it holds
+lim_t→∞ξ_t 1{λ_ℓ,T≤ρ_r,T}
+=V(ℓ)1{λ_ℓ,T≤ρ_r,T}
+and V(κ_T)=V(r_1) a.s. 
+The (conditional) Fatou's lemma yields
+
+    (λ_ℓ,T≤ρ_r,T|_T)
+    V(ℓ)    = [lim inf_t →∞ξ_t1{λ_ℓ,T≤ρ_r,T}|_T] 
+       ≤lim inf_t →∞[ξ_t1{λ_ℓ,T≤ρ_r,T}|_T]≤ξ_0 = V(κ_T)= V(r_1).
+
+Since, by assumption,
+κ_t∈ a.s. for all t∈, κ does not explode. Thus 
+lim_r →∞ρ_r,T = ∞ a.s. and, since
+ρ_r,T<∞ a.s. for all r∈(r_1,∞),
+we get (recall V(ℓ)>0)
+
+    (λ_ℓ,T < ∞)=(∪_r∈∩(r_1,∞){λ_ℓ,T≤ρ_r,T}) =lim_r→∞(λ_ℓ,T≤ρ_r,T) ≤ V(r_1)/V(ℓ).
+
+
+Recall T=ρ_r_1<∞ a.s. and 
+note {lim inf_t →∞κ_t≤ℓ}⊂{λ_ℓ,ρ_r_1 < ∞} for all r_1∈(ℓ,∞).
+The inequality
+(lim inf_t →∞κ_t≤ℓ) ≤(λ_ℓ,ρ_r_1 < ∞)
+for all r_1∈(ℓ,∞),
+the upper bound in (<ref>) and the hypotheses V(r_1)→0 as r_1→∞ imply
+
+    (lim inf_t →∞κ_t≤ℓ) ≤lim sup_r_1 →∞(λ_ℓ,ρ_r_1 < ∞) = 0.
+
+Thus lim inf_t →∞κ_t>ℓ a.s.
+Since ℓ∈(r_0,∞) was arbitrary, transience follows.
+
+
+
+
+ §.§ Lower bounds on the tails of return times and associated additive functionals
+
+
+
+In this subsection we establish lower bounds for the tails of the return times of continuous semimartingales and associated additive functionals. In the Markovian setting, there exists a rich theory providing upper bounds for additive functionals considered here, in the context of establishing related upper bounds on the tails of the invariant distribution (see <cit.> and the references therein). Moreover, in the continuous semimartingale setting, <cit.> establishes upper bounds on the return-time moments. Comparatively, the literature dedicated to lower bounds on the tails of the return times is scarce. Some results in this direction can be found in <cit.>, however the assumptions are too restrictive to be used in our model. 
+Our approach, based on the maximal inequality in Proposition <ref> below, is inspired by the discrete-time results in <cit.>.
+
+
+
+The link between between additive functionals studied in the present subsection and the invariant distributions in the Markovian setting, described in <cit.>,
+enables the application of Lemma <ref> below
+in the proofs of lower bounds on the tails of the invariant distribution and the sub-exponential convergence rate
+in total variation (stated in  Theorem <ref>).
+Lemma <ref> is also crucial for 
+establishing the lower bounds on the tails of return times in Theorem <ref>.
+
+
+
+Let ξ = (ξ_t)_t∈ be an -valued (_t)-adapted continuous process and f:^2 → a measurable function. For some r > 0, let τ_r:=inf{t∈:ξ_t≥ r}
+(with inf∅ =∞) and assume
+ 
+(ξ_t∧τ_r- ∫_0^t∧τ_r f(u,ξ_u) u)_t∈
+is an (_t)-supermartingale. 
+Then, for any s∈(0,∞), we have (sup_0≤ t ≤ sξ_t≥ r|_0)≤ r^-1(ξ_0 + [∫_0^s∧τ_r f(u,ξ_u) u|_0]).
+
+
+
+Pick s∈(0,∞) and consider the  stopping time τ_r ∧ s, bounded above by s. By assumption we have [ξ_τ_r ∧ s - ∫_0^τ_r ∧ s f(u,ξ_u) u|_0] ≤ξ_0, which implies that
+
+    [ξ_τ_r ∧ s|_0] ≤ξ_0 + [∫_0^τ_r ∧ s f(u,ξ_u) u |_0].
+
+Moreover, by the definition of τ_r in the proposition we have {τ_r ≤ s}={sup_u∈[0,s]ξ_u≥ r}
+a.s. Since the equality ξ_τ_r ∧ s = r holds on this event, by (<ref>)
+we have
+
+    (sup_0≤ t ≤ sξ_t ≥ r|_0) = r^-1[ξ_τ_r ∧ s1{τ_r ≤ s}|_0] ≤ r^-1(ξ_0 + [∫_0^τ_r ∧ s f(u,ξ_u) u|_0]),
+
+implying the proposition.
+
+
+Note that, in the case 
+[∫_0^s∧τ_r f(u,ξ_u) u]=∞, both the statement and the proof of Proposition <ref>
+are formally correct, but not informative. In particular, 
+when applying Proposition <ref> we need 
+[∫_0^s∧τ_r f(u,ξ_u) u]<∞, which follows easily 
+if, for example, the function f is continuous (and hence bounded on [0,s]×[0,r]).
+
+
+
+Let κ = (κ_t)_t∈ be an -valued (_t)-adapted continuous process satisfying lim sup_t→∞κ_t =∞ a.s. Suppose that there exist  p∈(0,∞), ℓ∈(0,∞), and C ∈ (0,∞), such that the following hold for all r∈(ℓ,∞):
+
+
+  *  the process (κ_t∧λ_ℓ∧ρ_r^p)_t∈ is an (_t)-submartingale;
+
+
+  *  for any  q∈(0,1) and r_q := (1-q)^-1r, the process 
+
+    (κ_(ρ_r_q+t)∧λ_r,ρ_r_q^-2 - C∫_ρ_r_q^(ρ_r_q + t) ∧λ_r,ρ_r_qκ_u^-4 u)_t∈,
+
+is an (_ρ_r_q+t)-supermartingale.
+
+Let h:→ be a non-decreasing measurable function. Then 
+for all r∈(ℓ,∞),  q∈(0,1)
+and ∈(0,C^-1q(1-q)],
+we have 
+
+    (∫_0^λ_ℓ h(κ_s) s ≥ h(r)r^2|_0)≥ qmin{(κ_0^p-ℓ^p) (1-q)^pr^-p, 1},   on the event {κ_0 > ℓ}.
+
+In particular, for all t∈(ℓ,∞) (with h≡1  and =C^-1q(1-q)), we have
+
+    (λ_ℓ≥ t|_0) ≥ qmin{(κ_0^p-ℓ^p)((1-q)^3q/C)^p/2t^-p/2, 1},  on the event {κ_0 > ℓ}.
+
+
+
+
+Pick q∈ (0,1), r ∈(ℓ,∞) and note that it suffices to prove the lemma for =C^-1q(1-q). We start by establishing the following inequality: 
+
+    (λ_r,ρ_r_q > ρ_r_q  +  r^2|_ρ_r_q) ≥ q  a.s.
+
+
+
+
+
+Define (ξ_t)_t∈ by ξ_t := κ_ρ_r_q + t^-2 and note that (<ref>) yields
+τ_r^-2:=inf{t>0:ξ_t ≥ r^-2}=λ_r,ρ_r_q-ρ_r_q.
+
+By Assumption <ref>, the process (ξ_t∧τ_r^-2 - ∫_0^t∧τ_r^-2 Cξ_u^2 u)_t∈ is an (_ρ_r_q+t)-supermartingale.  By Proposition <ref> applied to ξ and the stopping time τ_r^-2,  we obtain
+
+    (λ_r,ρ_r_q ≤ρ_r_q +t|_ρ_r_q )    = (τ_r^-2≤ t|_ρ_r_q )=(sup_0≤ u ≤ tξ_u ≥ r^-2|_ρ_r_q) 
+       ≤ r^2( ξ_0 + [∫_0^t∧τ_r^-2 Cξ_u^2 u|_ρ_r_q] ) 
+       = r^2(κ_ρ_r_q^-2 +[ C∫_ρ_r_q^(ρ_r_q+t)∧λ_r,ρ_r_qκ_u^-4 u|_ρ_r_q ]) 
+       ≤ r^2(r_q^-2 + Ctr^-4) ≤ (1-q)^2 + Cr^-2t
+          for any t∈(0,∞).
+
+It follows that (λ_r,ρ_r_q  > ρ_r_q  + t) ≥ 1 - ((1-q)^2 + Cr^-2t). Taking t =  r^2, we obtain (<ref>).
+
+
+
+
+
+
+
+
+
+Note that on the event {λ_r,ρ_r_q  > ρ_r_q +  r^2}, we have h(κ_ρ_r_q + t)≥ h(r) for all t∈[0, r^2] and measurable non-decreasing functions h:→.
+Since r>ℓ, the inclusion
+
+    {∫_0^λ_ℓ h(κ_t)  t ≥ h(r)r^2 }⊃{ρ_r_q  < λ_ℓ}∩{λ_r,ρ_r_q  > ρ_r_q  +  r^2}
+ holds and,
+by the inequality in (<ref>), we obtain 
+
+    ( ∫_0^λ_ℓ h(κ_t)  t ≥ h(r)r^2|_0)    ≥[1{ρ_r_q  < λ_ℓ}(λ_r,ρ_r_q  > ρ_r_q  +  r^2|_ρ_r)  |_0] 
+       ≥ q(ρ_r_q <λ_ℓ|_0).
+
+
+By assumption
+lim sup_t→∞κ_t =∞ a.s. and thus 
+ρ_r_q ∧λ_ℓ<∞ a.s. 
+Since (κ_t∧ρ_r_q∧λ_ℓ^p)_t∈ is a continuous (_t)-submartingale by Assumption <ref>, dominated convergence implies
+
+    κ_0^p ≤lim_t→∞[κ_t∧λ_ℓ∧ρ_r_q ^p|_0] = [κ_λ_ℓ∧ρ_r_q ^p|_0] ≤ℓ^p + (ρ_r_q <λ_ℓ|_0)r_q^p.
+
+On the event {κ_0 > ℓ} we obtain (ρ_r_q<λ_ℓ|_0) ≥ ((κ_0^p-ℓ^p)r_q^-p)∧ 1. Combining this result with (<ref>) implies the  general case of the lemma. The special case follows by setting h≡1.
+
+
+
+
+
+
+
+
+§ NON-EXPLOSION AND RECURRENCE/TRANSIENCE DICHOTOMY FOR THE REFLECTED PROCESS
+ 
+
+
+
+ §.§ Diffusivity and non-explosion under asymptotically normal reflection
+
+
+The non-explosion of Z is essentially due to Assumption ass:vector2, which stipulates that the horizontal projection of the reflection  vanishes sufficiently fast when Z_t is far from the origin. In contrast, in the asymptotically oblique case <cit.>, the horizontal projection of the reflection vector field
+has
+
+a strictly positive limit as Z_t_d+1→∞, which  in a domain 
+that narrows sufficiently fast, may lead to explosive behaviour τ_ < ∞ a.s.
+
+
+
+Suppose that Assumptions ass:domain2, ass:covariance2, ass:vector2 hold and
+let (Z,L) satisfy SDE (<ref>) in the domain  on the stochastic interval [0,).
+For any starting point z∈, the process Z 
+does not explode,  i.e. _z(τ_=∞)=1, and 
+
+the second moment of Z_t  is finite and diffusive,
+i.e.,
+sup_t∈_z Z_t_d+1^2/(1+t)<∞. 
+
+
+ 
+The finiteness of the first moment of Z_t_d+1, implied by Theorem <ref>, is crucial in the proof of recurrence in Theorem <ref>(a) and Theorem <ref>(c) (see Section <ref> below for details).
+A minor modification of the final step in the proof of Theorem <ref>
+would imply that the p-th moment of Z_t is also diffusive for any p∈(0,∞),
+i.e., sup_t∈_z Z_t_d+1^p/(1+t)^p/2<∞
+(see Remark <ref>, after the proof of Theorem <ref> below).
+
+
+    Assume ass:vector2, ass:domain2 and ass:covariance2 are satisfied.
+Consider the process  f_w,γ(Z)
+for any γ∈(-∞,1] and w∈∖{0},
+where the function f_w,γ is 
+given in (<ref>).
+Itô's formula applied to f_w,γ(Z)
+on the stochastic interval [0,) is given in (<ref>). The quadratic variation of the local martingale M in (<ref>)
+grows at most linearly in time. Indeed, 
+the representation in (<ref>) and the bound in (<ref>) of Lemma <ref> (recall that γ≤ 1) imply
+
+    [M]_t ≤∫_0^t Σ(Z_s)_op∇ f_w,γ(Z_s)_d+1^2  s≤ C_γ t,  for 0 ≤ t < τ_,
+
+for a   constant C_γ∈. 
+The inequality in (<ref>) relies on the norm
+Σ_op=Σ^1/2_op^2
+being bounded via
+Assumption ass:covariance1. 
+
+Our first task is to prove _z(=∞)=1 for any z∈. Pick w ∈(-∞, 1-β s_0/c_0)∖{0}, ensuring by Lemma <ref> that ⟨∇ f_w,1(z),ϕ(z)⟩ < 0
+for all z=(x,y)∈ with sufficiently large x, and define the process κ := f_w,1(Z). 
+Recall the definition of the stopping times ρ_r (for any r∈_+ and T=0) in (<ref>) and ρ_∞=lim_r→∞ρ_r, both
+given in Section <ref>
+for the process κ.
+By (<ref>), the function f_w,1 has linear growth at infinity, implying the equality of the events
+{<∞}={ρ_∞<∞}.
+
+We will apply Lemma <ref> with the identity function V(r) = r for all r ∈ (2^-1/|w|-1,∞)
+to conclude (ρ_∞<∞)=0. Since γ=1, by (<ref>) in Lemma <ref>,
+we have 
+
+    Δ_Σ f_w,1(z) = f_w,1(z)^-1σ_2^2(1-w) + o_(1)  as x→∞.
+
+Thus, by (<ref>), there exists η>0 satisfying |Δ_Σ f_w,1(z)|<η for all z∈.
+Moreover,
+by Lemma <ref>, there exists r_0>0 such that 
+⟨∇ f_w,1(z),ϕ(z)⟩ < 0
+for all z=(x,y)∈ satisfying x≥ r_02^-1/|w|-k_w.
+Note that the upper bound on f_w,1 in (<ref>) 
+implies that 
+any z∈ with 
+f_w,1(z)≥ r_0
+must satisfy 
+x≥ r_02^-1/|w|-k_w (and hence 
+⟨∇ f_w,1(z),ϕ(z)⟩ < 0).
+
+
+For any stopping time T ∈,
+recall the definition in (<ref>) of the exit time S_r,T
+of the process κ from the interval (r_0,r) after time T.
+In order to apply Lemma <ref>, 
+assume that the stopping time T is such that [κ_T1{T < ρ_∞}] < ∞.
+Then, by Itô's formula in (<ref>) and the choice of the constants η and r_0, the process ζ^T,r=(ζ_t^T,r)_t∈, defined for any t∈ by  
+ζ_t^T,r := (κ_(t+T) ∧ S_r,T - η ( t ∧ ( S_r,T - T ) ) ) 1{T < ρ_∞},
+ satisfies 
+ 
+    ζ_t^T,r-ζ_s^T,r≤(M_(t+T) ∧ S_r,T-M_(s+T) ∧ S_r,T)1{T < ρ_∞}  a.s. for any 0≤ s≤ t,
+ 
+  where M is the local martingale arising in (<ref>) (for the function f_w,1). Since κ is continuous, on the event {T < ρ_∞} it holds that S_r,T < ρ_∞. Thus, by (<ref>), we get
+ 
+    [M]_(t+T) ∧ S_r,T-[M]_T ≤ C_1((t+T) ∧ S_r,T-T)≤ C_1t   for all t∈,
+
+ ensuring that (M_(t+T) ∧ S_r,T)_t∈ is a true (_t+T)-martingale and implying 
+ [ζ_t^T,r-ζ_s^T,r|_s+T] ≤ 0
+ for all 0≤ s≤ t.
+ Since ζ^T,r is an (_t+T)-supermartingale
+ for all r∈(r_0,∞), Lemma <ref>
+ yields (ρ_∞=∞)=1. Thus, 
+ _z(τ_ = ∞)=1
+ for all z∈. 
+ In the remainder of the section we assume that Z satisfies SDE (<ref>)
+on the entire time interval . 
+
+
+
+
+
+
+
+
+We now prove there exists a constant C_2>0 such that _zZ_t_d+1^2≤ C_2 (t+z_d+1^2+1) holds for any z∈ and t∈.
+Pick w∈(-∞,1-β s_0/c_0)∖{0}, note β s_0/c_0-1+w<0 and apply Lemma <ref> to find the constants 0<x_0<x_1 and k∈(0,∞) such that the corresponding function  F_w,2, defined in (<ref>), satisfies ⟨∇ F_w,2(z),ϕ(z)⟩≤ 0 for all z∈∂. Moreover, by (<ref>), we have Δ_Σ F_w,2(z)=Δ_Σ f_w,2(z) for all z=(x,y)∈∩ [x_1,∞)×^d. Since F_w,2 is smooth on a neighbourhood of 
+and, by (<ref>) in  Lemma <ref>,
+the function z↦|Δ_Σ f_w,2(z)| is bounded on ,
+there exists a constant 
+C_0'∈(0,∞) satisfying |Δ_Σ F_w,2(z)|<C_0' for all z∈.
+By Assumption ass:domain2, the boundary function b is sublinear (cf. Remark <ref> above): there exist constants C_1',C_2'∈(0,∞) such that b(x)^2<C_1'x^2+C_2' for all x∈.
+Thus, by the definition of F_w,2 in (<ref>)
+and the lower bound on f_w,2 in (<ref>), there exist positive constants C_i'∈(0,∞), i∈{3,4,5,6},  satisfying 
+
+    z_d+1^2≤ x^2+b(x)^2≤ 
+    (C_1'+1)x^2+C_2'≤
+    C_3' F_w,2(z)+C_4'≤ C_5' z_d+1^2 +C_6'  for all z∈.
+
+
+Recall that the coordinates of Z=(X,Y), taking values in , satisfy X_t∈ and Y_t∈^d for all t∈. Define the passage time of the level r∈ for the process X by
+
+    ϱ_r := inf{t∈: X_t≥ r},
+
+(with inf∅ =∞).
+Fix r and assume that the starting point z∈ of the process Z
+lies in [0,r)×^d or, equivalently, _z(ϱ_r>0)=1.
+The definition of F_w,2 in the previous paragraph and
+Itô's formula in (<ref>) applied to the process
+(F_w,2(Z_t∧ϱ_r))_t∈
+yield the following inequalities for all t∈:
+
+    F_w,2(Z_t∧ϱ_r)≤ F_w,2(z)+ 1/2∫_0^t∧ϱ_rΔ_Σ F_w,2(Z_s) s + M_ϱ_r∧ t+≤ 
+    F_w,2(z)+ tC_0' + M_ϱ_r∧ t.
+
+
+
+
+
+Moreover, the quadratic variation of M_ϱ_r∧· in (<ref>) is almost surely bounded 
+and hence integrable,
+since the gradient 
+∇ F_w,2 is bounded on compact sets. Thus 
+_zM_t∧ϱ_r=0 for all t,r∈, implying the inequality 
+_z  F_w,2 (Z_t∧ϱ_r) ≤ tC_0' + F_w,2(z)
+for all t,r∈ and z∈∩ [0,r)×^d.
+
+Since Z does not explode in finite time and has continuous paths,
+we have ϱ_r→∞ a.s. as r→∞ and hence 
+Z_t∧ϱ_r→ Z_t
+a.s. as r→∞.
+By Fatou's lemma and the inequalities in (<ref>),
+for all t∈ and z∈, we obtain
+
+    _zZ_t_d+1^2= _z lim inf_r→∞Z_t∧ϱ_r_d+1^2≤lim inf_r→∞_zZ_t∧ϱ_r_d+1^2
+    
+    ≤ tC_0'C_3'+ C_5'  z_d+1^2 +C_6',
+
+concluding the proof of Theorem <ref>.
+
+
+
+ 
+The proof of Theorem <ref> can be modified to get
+sup_t∈_z Z_t_d+1^2p/(1+t)^p<∞
+for any p∈(0,∞).
+For p∈, we note that F_w,2p
+can be constructed by Lemma <ref> as above, so that
+⟨∇ F_w,2p(z),ϕ(z)⟩≤ 0 for all z∈∂.
+By (<ref>) in  Lemma <ref> there exists
+C_0'∈(0,∞) satisfying |Δ_Σ F_w,2p(z)|<C_0'F_w,2(p-1)(z) for all z∈.
+This inequality, combined with the modification of (<ref>) for z_d+1^2p
+and F_w,2p(z), and induction on p∈ yields the diffusive property of moments for all even powers. 
+The statement for all positive real powers p can be deduced from the even powers via 
+Lyapunov's
+
+inequality. As the generalisation 
+of the p=1 is not essential for the development in the present paper, the details are omitted for brevity.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Proof of recurrence/transience classification
+
+
+By Theorem <ref>, in the remainder of the section we may assume without loss of generality that Z satisfies SDE (<ref>)
+on the entire time interval . 
+The proof of Theorem <ref>
+starts with a lemma about non-confinement, essential  for the applications of Lemmas <ref> and <ref> in the proof of recurrence/transience dichotomy.
+
+
+
+Under ass:vector1, ass:domain1 and ass:covariance1, the process Z=(X,Y) defined by SDE (<ref>), started at any z∈, satisfies
+
+    lim sup_t→∞X_t=lim sup_t→∞f_w,1(Z_t)=lim sup_t→∞F_w,1(Z_t)=lim sup_t→∞g_δ(Z_t)=∞  _z-a.s.
+ 
+for any w∈∖{0} and δ∈(0,∞), where the functions f_w,1, F_w,1 and g_δ are given  in (<ref>), (<ref>) and (<ref>), respectively.
+
+
+
+Under ass:vector1, ass:domain1, ass:covariance1, <cit.> implies that the process Z=(X,Y) cannot be confined to a compact set:
+
+lim sup_t →∞ X_t = ∞ _z-a.s. for all z∈. 
+
+
+In particular, by the inequality in (<ref>) (resp. (<ref>)), for any parameter value w∈∖{0}
+(resp. δ∈(0,∞))
+the process f_w,1(Z) (resp. g_δ(Z)) is also not confined: lim sup_t →∞f_w,1(Z_t) = ∞ (resp. lim sup_t→∞g_δ(Z_t)=∞) a.s. Since, by (<ref>), the functions f_w,1 and F_w,1 coincide on the complement of a neighbourhood of the origin, the lemma follows.    
+
+
+
+    Since Assumptions ass:vector1, ass:domain1, ass:covariance1 hold if ass:vector2, ass:domain2, ass:covariance2 are satisfied, we may apply Lemma <ref> in the proofs of this section.
+
+
+
+
+
+(a) Recurrence for β<β_c.
+The definition of β_c in (<ref>) and the assumption  β<β_c imply that β s_0/c_0<σ_1^2/σ_2^2 (recall the the definition of σ_1^2,σ_2^2 and s_0,c_0
+in Assumptions ass:covariance2 and ass:vector2, respectively).
+Pick w∈(1-σ_1^2/σ_2^2,1-β s_0/c_0)∖{0}
+and note that
+0<1-(1-w)σ_2^2/σ_1^2. Choose γ∈(0,min{1,1-(1-w)σ_2^2/σ_1^2})
+and observe the inequalities:
+
+    σ_1^2(γ-1)+σ_2^2(1-w)<0  and  γ(s_0β/c_0-1+w)<0.
+
+Lemma <ref> and the inequalities in (<ref>) and (<ref>) imply that there exists
+r_0∈(0,∞) such that for all z=(x,y)∈ with x≥ 2^-1/|w|r_0-k_w
+we have
+
+    Δ_Σ f_w,γ(z)<0  and  ⟨∇ f_w,γ(z),ϕ(z)⟩ < 0.
+
+
+
+Consider the process κ = f_w,1(Z) and a continuous function V:→(0,∞), satisfying V(r) = r^γ for all r∈(2^-1/|w|-1,∞).
+Since, by (<ref>), f_w,1(z)≥ 2^-1/|w| for all z∈,
+we have V(κ)=f_w,γ(Z). Moreover, by (<ref>) and the fact that 0<γ<1, there exist constants D_1,D_2∈(0,∞) such that the inequality f_w,γ(z) ≤ D_1 z_d+1+D_2 
+holds
+for all z∈. Thus, by Theorem <ref>, we get 0<[V(κ_t)]=_z[f_w,γ(Z_t)] ≤ D_1 _z Z_t_d+1+D_2< ∞ for any t∈ and z∈.
+
+For any fixed t_0∈ and any r∈(r_0,∞),
+recall the definition in (<ref>) of
+the exit time S_r,t_0
+of the process κ from the interval (r_0,r) after time t_0.
+The choice of r_0, the inequalities in (<ref>), and 
+Itô's formula in (<ref>), applied to the process
+V(κ_(·+t_0) ∧ S_r,t_0)=f_w,γ(Z_(·+t_0) ∧ S_r,t_0)
+ imply 
+
+    f_w,γ(Z_(t+t_0) ∧ S_r,t_0)- f_w,γ(Z_t_0)-(M_(t+t_0) ∧ S_r,t_0-M_t_0)≤ 0  a.s.
+
+The local martingale (M_t)_t∈ has integrable quadratic variation by (<ref>), making it a true martingale and implying [V(κ_(t+t_0)∧ S_r,t_0) -V(κ_(s+t_0)∧ S_r,t_0)|ℱ_s+t_0]≤ 0 for all 0 ≤ s≤ t. Since
+V(κ_t_0∧ S_r,t_0)=V(κ_t_0)
+is integrable, the process
+(V(κ_(t+t_0)∧ S_r,t_0))_t∈ is an (_t+t_0)-supermartingale for all r∈(r_0,∞). By Lemma <ref>,
+we have lim sup_t →∞κ_t = ∞ a.s. Since lim_r →∞V(r) = ∞, we may apply Lemma <ref> to conclude that κ= f_w,1(Z) is recurrent. By (<ref>) and (<ref>), the recurrence of Z follows.
+
+
+
+(b) Transience for β>β_c.
+The definition of β_c in (<ref>) and the assumption  β>β_c imply that σ_1^2/σ_2^2<β s_0/c_0. Pick w ∈ (1-β s_0/c_0,1-σ_1^2/σ_2^2)∖{0} and note that 1-σ_2^2/σ_1^2(1-w)<0. Choose γ∈ (1-σ_2^2/σ_1^2(1-w),0) and observe the inequalities:
+
+    γ(σ_1^2(γ-1)+σ_2^2(1-w))<0  and  γ(s_0β/c_0-1+w)<0.
+
+Lemma <ref>, along with the inequalities in (<ref>) and (<ref>) imply that there exists 
+r_0∈(0,∞) such that for all z=(x,y)∈ with x≥ 2^-1/|w|r_0-k_w
+we have
+
+    Δ_Σ f_w,γ(z)<0  and  ⟨∇ f_w,γ(z),ϕ(z)⟩ < 0.
+
+Consider the process κ = f_w,1(Z) and a continuous function V:→(0,∞), satisfying V(r) = r^γ for all r∈(2^-1/|w|-1,∞).
+Since, by (<ref>), f_w,1(z)≥ 2^-1/|w| for all z∈,
+we have V(κ)=f_w,γ(Z).
+For any 
+stopping time T ∈, satisfying  T < ∞ a.s.,
+we have _zV(κ_T)<∞ for all z∈ since the function V is bounded.
+Pick r∈(r_0,∞)
+and recall the definition in (<ref>) of
+the exit time S_r,T
+of the process κ from the interval (r_0,r) after time T.
+The choice of r_0 and 
+Itô's formula in (<ref>), applied to the process
+V(κ_(·+T ∧ S_r,T)=f_w,γ(Z_(·+T) ∧ S_r,T),
+imply
+
+    f_w,γ(Z_(t+T) ∧ S_r,T)- f_w,γ(Z_T)-(M_(t+T) ∧ S_r,T-M_T)≤ 0  a.s.
+
+Moreover, local martingale (M_t)_t∈ has integrable quadratic variation by (<ref>), making it a true martingale, and for any t∈, [V(κ_t)] < ∞ by the fact that V is bounded. This implies [V(κ_(t+T)∧ S_r,T)-V(κ_(s+T)∧ S_r,T)|_s+T]≤ 0 for all 0 ≤ s ≤ t.  Thus, (V(κ_(t+T)∧ S_r,T)_t∈ is an (_t+T)-supermartingale for all r∈(r_0,∞).  Since lim sup_t →∞κ_t = ∞ a.s. and lim_r →∞V(r) = 0, Lemma <ref> yields transience of κ=f_w,1(Z).
+By (<ref>), the transience of Z follows.
+
+
+
+(c) The critical case β=β_c. Assume β=β_c and ass:domain2plus, ass:vector2plus, ass:covariance2plus. Consider the process κ := g_δ(Z) with g_δ defined in (<ref>) and the parameter δ chosen to satisfy the assumption in Lemma <ref>.
+Then, by Lemma <ref>, there exists  x_0>0 such that the inequalities in (<ref>) hold.
+Define r_0:=C_δ + log x_0 and note that, 
+by (<ref>), the inequality
+r_0≥ g_δ(z) (where z=(x,y))
+implies 
+x∈[x_0,∞).
+Set V(r) = r for all r ∈ (1/2,∞)
+and note V(κ_t) =κ_t= g_δ(Z_t) (recall g_δ > 1 on ).
+Pick t_0∈ and r∈(r_0,∞)
+and 
+recall the definition in (<ref>)
+of the exit time S_r,t_0 
+of the process κ from the interval (r_0,r) after time t_0.
+The choice of r_0, the inequalities in (<ref>) and 
+Itô's formula in (<ref>), applied to the process
+κ_(·+t_0) ∧ S_r,t_0=g_δ(Z_(·+t_0) ∧ S_r,t_0),
+imply
+
+    g_δ(Z_(t+t_0) ∧ S_r,t_0)- g_δ(Z_t_0)-(M_(t+t_0) ∧ S_r,t_0-M_t_0)≤ 0  a.s.
+
+By continuity, the gradient ∇ g_δ(z)_d+1^2 is bounded on compact sets and Σ_op is bounded by Assumption ass:covariance1. Thus, by the representation in (<ref>), we can bound the quadratic variation
+
+    [M]_(t+t_0) ∧ S_r,t_0-[M]_t_0≤∫_t_0^(t+t_0) ∧ S_r,t_0Σ(Z_s)_op∇ g_δ(Z_s)_d+1^2ds ≤C̃_1t  a.s.,
+
+where C̃_1∈(0,∞) is a positive constant. Thus the process (M_(t+t_0) ∧ S_r,t_0-M_t_0)_t∈ is a true martingale.
+Moreover, since g_δ(z) ≤C̃_2z_d+1 + C̃_3 holds for all z∈ for some positive constants C̃_2,C̃_3, Theorem <ref> implies _z[κ_t]=_z[g_δ(Z_t)]≤C̃_2 _
+z Z_t_d+1 +C̃_3<∞ for any t∈ and z∈.
+Thus, [κ_(t+t_0)∧ S_r,t_0 -κ_(s+t_0)∧ S_r,t_0|ℱ_s+t_0]≤ 0 for all 0 ≤ s≤ t, and hence (κ_(t+t_0)∧ S_r,t_0)_t∈ is an (_t+t_0)-supermartingale for all r∈(r_0,∞) and any t_0∈. Moreover, by 
+Lemma <ref>,
+we have
+ lim sup_t →∞κ_t=∞ a.s.
+Since lim_r →∞V(r) = ∞, we may apply Lemma <ref> to conclude that κ= g_δ(Z) is recurrent. By (<ref>) and (<ref>), the recurrence of Z follows.
+
+
+
+
+
+
+
+§ RETURN TIMES, DRIFT CONDITIONS, AND THE PROOF OF THEOREM <REF>
+
+
+
+The tails of return times are controlled by Propositions <ref> and <ref>,
+established in this section. The two propositions are crucial
+in the proof of Theorem <ref>(b);
+see Remark <ref> below for more details.
+Moreover, Propositions <ref> is key in obtaining the lower bounds on the tails of the  invariant distribution of Z in the positive-recurrent regime:
+see the proof of Theorem <ref>
+in Section <ref> below. The drift conditions in Lemma <ref>, proved in the present section, are used for establishing finite moments (and hence upper bounds on the tails) of the invariant distribution and the rate of convergence to stationarity of Z
+in the positive-recurrent regime (see the proof of Proposition <ref> in Section <ref> below). The common theme of the proofs of the results in this section is that they are all based on the supermartingale property of certain processes. 
+
+Recall the definitions of the return time ς_r (for r∈(0,∞)) in (<ref>) and  of the critical exponent m_c=(1-β/β_c)/2 in (<ref>).
+
+
+
+Suppose that ass:domain2, ass:covariance2, ass:vector2 hold and β < β_c. Then, for every p ∈(0,m_c), there exists x_0>0 such that for all x_1 ∈(x_0,∞) and z∈  there exists a constant C ∈ (depending only on z and p) for which
+
+    _z(ς_x_1 > t) ≤ Ct^-p    for all t∈(0,∞).
+
+
+Moreover, equivalently, for every p ∈ (0,m_c) and every z ∈, we have _z[ς_x_1^p] < ∞.
+
+
+
+Pick γ∈ (0,(1-β/β_c)/2).  Then we can choose w ∈  (-∞,1-β s_0/c_0)∖{0}, such that σ_1^2(2γ -1) + σ_2^2(1-w)<0.
+Thus, for any ∈(0,-(σ_1^2(2γ -1) + σ_2^2(1-w))),
+Lemma <ref> implies the existence of ℓ_0 ∈(0,∞),  such that for all z=(x,y)∈ with x > 2^-1/|w|ℓ_0 -k_w (the constant k_w
+is given above display (<ref>)), 
+the function f_w,2γ defined in (<ref>) 
+satisfies
+
+    Δ_Σ f_w,2γ(z) + f_w,2γ-2(z) < 0    and  ⟨∇ f_w,2γ(z),ϕ(z)⟩ < 0.
+
+
+Having chosen the parameters γ, w, and , consider the process κ = f_w,1(Z).
+The key step in the proof of the proposition consists of the application of <cit.> to deduce that,  for any z∈ with κ_0=f_w,1(z)> ℓ_0, 
+the return time λ_ℓ_0 of κ
+below the level ℓ_0, defined in (<ref>), has finite γ-moment, i.e.,
+_z[λ_ℓ_0^γ] < ∞. 
+This will hold by <cit.>
+if we establish that the process 
+(ξ_t)_t∈, given by 
+ξ_t:=κ_t ∧λ_ℓ_0^2γ + ϵ∫_0^t ∧λ_ℓ_0κ_u^2γ - 2 u,
+is a supermartingale. 
+
+With this in mind, take an arbitrary r∈(ℓ_0,∞) and consider the stopped process 
+(ξ_t ∧ρ_r)_t∈,
+where the stopping time ρ_r, defined in (<ref>), is the first time the process κ reaches level r.
+Since 0≤ξ_t ∧ρ_r≤max{r^2γ,f_w,2γ(z)}+ t max{r^2γ-2,ℓ_0^2γ-2}
+for all t∈, we have _z[ξ_t ∧ρ_r]<∞.
+Moreover, by Itô's formula in (<ref>), the inequalities
+in (<ref>)
+and the fact that κ_t≥ℓ_0 for all t∈,
+for any two times 0≤ s ≤ t < ∞ we have
+ξ_t ∧ρ_r-ξ_s ∧ρ_r-M_t ∧λ_ℓ_0∧ρ_r+M_s ∧λ_ℓ_0∧ρ_r≤ 0 a.s.
+Since the local martingale M has, by (<ref>)
+ and ass:covariance2, bounded quadratic variation for each 
+t∈ with probability one,
+ the stopped process (ξ_t ∧ρ_r)_t∈
+ is a supermartingale for any r∈(ℓ_0,∞).
+ By Theorem <ref>
+ we have lim_r→∞ρ_r=∞.
+ Thus ξ_t=lim inf_r→∞ξ_t∧ρ_r for all t∈.
+ Since the process 
+ (ξ_t)_t∈ is non-negative, the conditional Fatou lemma implies that it is a supermartingale.
+ Hence, by <cit.>, we have
+ _z[λ_ℓ_0^γ] < ∞. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Recall that f_w,1(Z)=κ. Hence the second inequality in (<ref>) implies that, for x_0:= 2^1/|w|ℓ_0-k_w, we have ς_x_0≤λ_ℓ_0 a.s., and thus  _z[ς_x_0^γ]<∞. Moreover, for any 
+x_1∈(x_0,∞), we have 
+ _z(ς_x_0≥ς_x_1)=1 
+ and hence 
+ _z(ς_x_1 > t)≤_z(ς_x_0>t) for all t∈.
+ Since,
+for any γ∈(0,m_c), 
+Markov's inequality implies 
+_z(ς_x_0>t)≤_z[ς_x_0^γ]/t^γ<∞ for all t∈(0,∞), we have  
+
+    _z(ς_x_1 > t)≤_z(ς_x_0>t) ≤ Ct^-p   for all t∈, p∈(0,m_c) and
+
+the constant C:=_z[ς_x_0^p]∈(0,∞), independent of x_1∈(x_0,∞).
+
+
+
+
+The next proposition provides lower bounds on the tails of return times and related path functionals in the recurrent case. This result is a key ingredient in the proof of Theorems <ref>(b), as well as in the proof of lower bounds in Theorem <ref>.
+The proof of Proposition <ref>
+is based on an application of Lemma <ref> of Section <ref> above.
+Recall m_c=(1-β/β_c)/2 defined in (<ref>).
+
+
+
+
+
+Suppose that ass:domain2, ass:covariance2, ass:vector2 hold with β < β_c. Then, for every p∈(2m_c,∞), there exist x_0∈(0,∞) and constants c_1,c_2∈(1,∞)
+such that,
+for every 
+non-decreasing measurable function h:→,
+q∈(0,1),
+x_1∈(x_0,∞)
+and z=(x,y)∈∩ (c_1x_1+c_2,∞)×^d
+
+we have 
+
+
+    _z(∫_0^ς_x_1 h(c_1(X_s + c_2)) s ≥ r^2h(r)) ≥ qmin{(c_1^-p(x-c_2)^p-x_1^p)(1-q)^pr^-p,1},
+
+for all r∈(c_1x_1+c_2,∞) and all sufficiently small >0. In particular, 
+    _z(ς_x_1≥ t) ≥ qmin{(c_1^-p(x-c_2)^p-x_1^p)^p/2(1-q)^p t^-p/2,1},
+ for every t∈(c_1x_1+c_2,∞) and all  sufficiently small >0.
+
+
+
+
+
+Propositions <ref> and <ref> provide crucial estimates in the proof of Theorem <ref>(b) in Section <ref> below.
+The only assertion of 
+Theorem <ref>(b) not contained in Propositions <ref> and <ref>
+is that the lower bound in 
+Propositions <ref>
+actually holds for all z∈∩ (x_0,∞)×^d
+and not only for the starting points z sufficiently far (in the x-direction) from x_0. This generalisation requires uniform ellipticity and will be established in Section <ref>.
+
+
+
+
+ Pick p∈ (1-β/β_c,∞) and note p>0. Then there exists w ∈(1-β s_0/c_0,∞)∖{0}, such that p  > 1 - σ_2^2/σ_1^2(1-w). Lemma <ref> implies that there exist ℓ_0> 0 and a constant C ∈ such that, for all z=(x,y)∈ with x > 2^-1/|w|ℓ_0 -k_w (the constant k_w
+is defined above display (<ref>)),
+we have
+
+    Δ_Σ f_w,p(z)  > 0      and  ⟨∇ f_w,p(z),ϕ(z)⟩ > 0,
+    Δ_Σ f_w,-2(z)  ≤ Cf_w,-4(z)       and  ⟨∇ f_w_1,-2(z),ϕ(z)⟩ < 0.
+
+
+Define κ := f_w,1(Z)
+and recall the return time λ_ℓ_0 of κ
+below the level ℓ_0, defined in (<ref>).
+By (<ref>), on the event {κ_t=f(Z_t)≥ℓ_0}, the first coordinate X_t  of Z_t satisfies
+X_t > 2^-1/|w|ℓ_0 -k_w.
+Itô's formula in (<ref>) 
+applied to  κ = f_w,1(Z) and the inequalities in (<ref>)
+imply that, for all r>ℓ≥ℓ_0 and 0≤ s ≤ t < ∞, we have 
+κ_t∧λ_ℓ∧ρ_r ^p - M_t∧λ_ℓ∧ρ_r≥κ_s ∧λ_ℓ∧ρ_r ^p - M_s ∧λ_ℓ∧ρ_r.
+ The process M is a true martingale, since its quadratic variation is bounded by (<ref>) and ass:covariance2. Thus,
+ since  _z[κ_t∧λ_ℓ∧ρ_r^p] ≤max{r^p, f_w,p(z)}, the process (κ_t∧λ_ℓ∧ρ_r^p)_t∈ is an (_t)-submartingale.
+
+
+ Pick r∈(ℓ_0,∞), q∈(0,1) and set r_q := r/(1-q). Recall that f_w,1(Z_t) = κ and define the process ξ=(ξ_t)_t∈ by ξ_t :=  κ_(ρ_r_q + t)∧λ_r,ρ_r_q^-2 - C∫_ρ_r_q^t ∧λ_r,ρ_r_qκ_u^-4 u,
+ where the constant C>0 is as in (<ref>).
+ By Itô's formula in (<ref>) and the inequalities in (<ref>),  for every  0≤ s ≤ t < ∞, we have 
+ 
+    ξ_t - ξ_s - (M_(ρ_r_q + t)∧λ_r,ρ_r_q- M_(ρ_r_q + s)∧λ_r,ρ_r_q) ≤ 0  a.s.
+
+ Since the process ξ is bounded, an analogous argument to the one in the previous paragraph implies that ξ is a supermartingale.
+ 
+ 
+ 
+ We have now proved that  Assumptions (a) and (b) of Lemma <ref> are satisfied. 
+ Moreover, by 
+ Lemma <ref>,
+  we have lim sup_t→∞κ_t=∞ a.s.
+Hence, by Lemma <ref>, for any 
+
+ z∈ and ℓ>ℓ_0, satisfying f_w,1(z) > ℓ, any non-decreasing measurable function h:→ and all sufficiently small >0, 
+ we obtain
+ 
+    _z(∫_0^λ_ℓ h(f_w,1(Z_s))  s≥ r^2h(r)) ≥ qmin{(f_w,1(z)^p-ℓ^p)(1-q)^pr^-p,1},
+      r∈(ℓ,∞).
+
+ 
+
+
+Define x_0:=2^-1/|w|ℓ_0-k_w,
+c_1:=2^1/|w| 
+and
+c_2:=k_w. Then, for any x_1∈(x_0,∞)
+there exists ℓ>ℓ_0,
+such that 
+x_1=2^-1/|w|ℓ-k_w.
+The second inequality  in (<ref>) implies
+ς_x_1≥λ_ℓ
+and 
+h(f_w,1(Z_s))≤ h(2^1/|w|(X_s+k_w))
+for all non-decreasing measurable functions h:→ and s∈[0,λ_ℓ].
+Thus the inequality 
+∫_0^λ_ℓ h(f_w,1(Z_s))  s≤∫_0^ς_x_0 h(2^1/|w|(X_s+k_w))  s
+holds, implying  by (<ref>) the inequality in the proposition
+for all r∈(2^1/|w|x_0+k_w,∞).
+The special case follows by choosing h≡1.
+
+
+
+
+The next result establishes a drift condition (in the positive-recurrent case), used in the proofs of the upper bounds 
+of Theorem <ref>
+concerning the finite moments of the invariant distribution π of Z and the total variation distance between _z(Z_t∈·) and π.
+
+The proof of Lemma <ref> is analogous to the proof of Proposition <ref>.
+For any r∈, denote
+
+    ^(r) := ∩ [0,r]×^d.
+
+
+
+
+Suppose that ass:covariance2, ass:vector2 and ass:domain2 hold with β < -β_c. Then, for any  γ∈(0,1-β/β_c), there exist parameters w ∈(-∞,1-β s_0/c_0)∖{0} and x_0,x_1,k∈, defining the function F_w,γ in (<ref>), and
+x_2∈, C_1,C_2∈, such that the process ξ = (ξ_t)_t∈,
+
+    ξ_t := F_w,γ(Z_t) + C_1∫_0^t  F_w,γ-2(Z_u) u - C_2∫_0^t1_^(x_2)(Z_u) u,
+
+is an (_t)-supermartingale.
+
+
+
+
+
+
+
+Note that the process  F_w,γ(Z) in Lemma <ref> gets a non-positive push 
+(by Lemma <ref>)
+when Z hits the boundary ∂. The constant C_1 (resp. C_2)  needs to be 
+sufficiently small (resp. large) for the process ξ to have non-positive drift in the entire interior of .
+
+
+Pick 
+γ∈(0,1-β/β_c) 
+and note that 
+1+σ_1^2/σ_2^2(γ-1)<1-β s_0/c_0, since
+β_c=c_0σ_1^2/(s_0σ_2^2) by definition (<ref>).
+
+Pick 
+w∈(1+σ_1^2/σ_2^2(γ-1),1-β s_0/c_0)∖{0}
+and note that 
+γ(β s_0/c_0-1+w)< 0. Lemma <ref> implies that there exist 
+x_0,x_1,k∈(0,∞) such that the function F_w,γ defined in (<ref>) satisfies  ⟨∇ F_w,γ(z),ϕ(z)⟩ < 0 for all z∈∂.
+
+
+By (<ref>) we have  F_w,γ(z)=f_w,γ(z) on z∈∩(x_1,∞)×^d
+and (<ref>) yields
+
+    Δ_Σ F_w,γ(z) = γ F_w,1(z)^γ-2(σ_1^2(γ-1)+σ_2^2(1-w)  +o_(1))  as x→∞,
+
+where o_(1) is defined after Assumption ass:vector2. 
+
+Since σ_1^2(γ-1)+σ_2^2(1-w)<0, there exists x_2∈(x_1,∞), 
+such that for 
+C_1:=-(σ_1^2(γ-1)+σ_2^2(1-w))γ/4
+we have 
+
+
+    1/2Δ_Σ F_w,γ(z) + C_1F_w,γ-2(z) ≤ 0   on  z ∈∩(x_2,∞)×^d.
+
+ Thus, since the functions Δ_Σ F_w,γ and Σ are bounded on the compact set _x_2,
+ there exists C_2∈
+ such that 
+
+    1/2Δ_Σ F_w,γ(z) + C_1F_w,γ-2(z) ≤ C_21_^(x_2)(z)    for all  z∈.
+
+
+ Recall the definition of ξ in (<ref>)
+ and set κ:=F_w,1(Z). 
+ Note that by definition (<ref>), there exist δ_0>0 such that  inf_z∈F_w,1(z)>δ_0.
+ For any r>max{1,δ_0}, the stopped process (ξ_t∧ρ_r)_t∈, where the stopping time ρ_r, defined in (<ref>)
+ as the first time the process κ crosses level r, satisfies 
+ -C_2 t ≤_z[ξ_t ∧ρ_r] ≤max{F_w,γ(z),r^γ} +C_1 tmax{ r^γ-2,δ_0^γ-2} for all t∈. Thus _z | ξ_t∧ρ_r | <∞ for all t∈ and z∈. 
+ Moreover, the inequality (<ref>) and  Itô's formula (<ref>) applied to F_w,γ(Z) imply that, for any 0 ≤ s ≤ t<∞, we have ξ_t∧ρ_r-ξ_s∧ρ_r - (M_t∧ρ_r - M_s∧ρ_r) ≤ 0 a.s. Since, by (<ref>) and ass:covariance2,
+ [M]_t∧ρ_r≤ C_0 t a.s. for all t∈ and some constant C_0>0,  (ξ_t∧ρ_r)_t∈ is a supermartingale for any r∈. By Theorem <ref> we have lim_r→∞ρ_r = ∞. Thus, ξ_s = lim inf_r→∞ξ_s∧ρ_r for all s∈. Since ξ_s≥ -C_2t for all s∈[0,t], the conditional Fatou lemma implies that for any 0≤ s ≤ t <∞, we have 
+    _z[ξ_t |_s] = _z[lim inf_r→∞ξ_t∧ρ_r|_s] ≤lim inf_r→∞_z[ξ_t∧ρ_r|_s] ≤ξ_s,
+
+ in addition we deduce the integrability of ξ_t by choosing s=0 and noting that _z[ξ_0]= F_w,γ(z), hence ξ is an (_t)-supermartingale.
+
+
+
+
+ §.§ Proof of Theorem <ref>
+
+
+Recall the definition of the first crossing time ϱ_r (over r) in (<ref>) and the return time ς_r (below r) in (<ref>). We start with the following claim.
+
+Claim. For any z=(x,y)∈ and r_0<x<r_1, we have _z(ϱ_r_1<ς_r_0)>0.
+
+Proof of Claim.
+Consider the process started at z = (x,y) ∈ and satisfying r_0<x<r_1. There are two possibilities. 
+
+(I) z∈∖∂.
+Fix  0<h'<h<∞.
+Let _h := {z”∈: ∃ z'∈∂ such that z”-z'_d+1<h} and  _r_0,r_1,h := (∖_h) ∩ [r_0,r_1]×^d, such that z∈_r_0,r_1,h, and 
+
+    _r_0,r_1,h⊂_r_0,r_1,h'⊂_r_0,r_1,h',   _r_0,r_1,h”∩{r_1}×^d  = _r_0,r_1,h'∩{r_1}×^d   for some h”∈(h',h),
+
+where _r_0,r_1,h' is a closed domain with C^2 boundary.
+Note that the closed domain _r_0,r_1,h' can be obtained from _r_0,r_1,h' by smoothing its corners appropriately. 
+
+A Dirichlet problem on _r_0,r_1,h' with boundary condition f: ∂_r_0,r_1,h'→ is given by 
+
+    1/2Δ_Σu    = 0  on _r_0,r_1,h'∖∂_r_0,r_1,h'; 
+    
+        u    = f,  on ∂_r_0,r_1,h'.
+
+ Choose a continuous function f: ∂_r_0,r_1,h'→, such that f ≡ 1 on _r_0,r_1,h∩{r_1}×^d = ∂_r_0,r_1,h∩{r_1}×^d and f ≡ 0 on ∂_r_0,r_1,h'∖ (_r_0,r_1,h'∩{r_1}×^d ). Then, by <cit.>, the function
+
+    u(z) := _z[f(Z_τ)],   where τ:= inf{t∈:Z_t∈∂_r_0,r_1,h'},
+
+solves the Dirichlet problem in (<ref>)–(<ref>). Moreover, f(Z_τ) ≤1{ϱ_r_1 < ς_r_0}, _z-a.s., implying u(z) ≤_z(ϱ_r_1 < ς_r_0). Since f is continuous, _r_0,r_1,h' has a C^2 boundary and thus satisfies the inside the sphere property (see <cit.> for definition), and coefficients in (<ref>)–(<ref>) are continuous and uniformly elliptic by assumption ass:covariance2, the maximum principle <cit.>, applied to -u, yields u(z) > 0.
+
+(II) z∈∂.
+Define the stopping time v_h := inf{t>0:Z_t∈∖_h}. For the process started at z ∈∂∩ (r_0,r_1)×^d, the continuity of paths implies _z[ς_r_0]>0. Moreover, Assumptions ass:domain2, ass:vector2 and ass:covariance2 imply the conditions of <cit.>, implying that 
+for some δ_Σ>0 and all
+sufficiently small h > 0, we have _z[v_h ∧ϱ_r_1] ≤ 2h^2/δ_Σ. Hence, there exists h∈(0, (δ_Σ_z[ς_r_0]/2)^1/2) such that _z[v_h ∧ϱ_r_1] < _z[ς_r_0]. In particular, this implies  _z(v_h ∧ϱ_r_1 < ς_r_0) > 0. If _z({v_h ∧ϱ_r_1 < ς_r_0}∩{ϱ_r_1 <v_h} ) > 0 the proof is complete. Otherwise,  {v_h ∧ϱ_r_1 < ς_r_0}  = 
+{v_h ∧ϱ_r_1 < ς_r_0}∩{ϱ_r_1 >v_h}=
+{v_h < ς_r_0}, _z-a.s. Thus _z(v_h < ς_r_0)=_z(v_h ∧ϱ_r_1 < ς_r_0) > 0.
+By the strong Markov property at v_h and step (I) of the proof, the claim follows. 
+
+Proof of (a): in this case we have β > β_c. By Theorem <ref> the process Z is transient.  
+The Lyapunov function f_w,γ(x,y) (with γ<0) tends to zero  by (<ref>) as x→∞. Analogous to the proof of Theorem <ref>(b), an application of Lemma <ref> (and in particular
+the bound in (<ref>) with κ=f_w,1(Z), V(u)=u^γ),  implies that for every x_0∈, there exist c(x_0), such that for all z∈∩ [x_0+c(x_0),∞)×^d, we have _z(ς_x_0 = ∞) > 0. Moreover, the Claim implies that 
+for all z∈∩ (x_0,∞)×^d we have 
+_z(ϱ_x_0+c(x_0)<ς_x_0)>0. 
+The strong Markov property at the stopping time 
+ϱ_x_0+c(x_0) concludes the proof of Theorem <ref>(a).
+
+Proof of (b): in this case we have β < β_c. Recall the definition of m_c in (<ref>). The upper bound holds by Proposition <ref>. Moreover, Proposition <ref> implies that, for any p∈(m_c,∞), there exist constants x_0∈(0,∞) and c_1,c_2∈(1,∞), such that for all x_1∈[x_0,∞) and z∈∩ (c_1(x_1+1)+c_2,∞)×^d we have _z(ς_x_1 > t) ≥ Ct^-p, for some constant C and all t ≥ 1, say. By the Claim, for any z∈∩ (x_1,c_1(x_1+1)+c_2)×^d we have _z(ϱ_c_1(x_1+1)+c_2<ς_x_1)>0. Hence the strong Markov property applied at the stopping time ϱ_c_1(x_1+1)+c_2 implies  Theorem <ref>(b).
+
+
+
+
+§ FELLER CONTINUITY AND IRREDUCIBILITY OF THE REFLECTED PROCESS AND APPLICATIONS
+
+
+
+The existence of the invariant distribution of Z requires positive recurrence (see definition preceding Theorem <ref> above). The study of its moments requires certain technical results established in the present section. Section <ref> is dedicated to the proofs of Feller continuity and irreducibility of the process Z. In Section <ref> we apply these two properties to prove that the reflected process Z
+is Harris recurrent with an irreducible skeleton chain and that the set ∩ [0,r]×^d is petite for any r ∈(0,∞).
+Moreover, in Section <ref> we will also show that every petite set for Z is bounded. 
+
+
+
+ §.§ Feller continuity and irreducibility of the reflected process
+
+
+In this section we prove
+that the reflected process Z is Feller-continuous (see Theorem <ref> below) and that 
+the (d+1)-dimensional Lebesgue measure 
+_d+1
+on 
+the Borel σ-algebra () on 
+is absolutely continuous with respect to 
+its marginals of the reflected process at positive times (Proposition <ref> below).
+We start with the latter.
+
+
+
+
+
+
+Let ass:domain2, ass:covariance2, ass:vector2 hold. Then, for any z∈ and t∈(0,∞) and any A∈(), such that 
+_d+1(A)>0, we have _z(Z_t ∈ A)>0. 
+
+
+
+The proofs of Proposition <ref> and Theorem <ref> below require the following lemma.
+For small h>0, define a “thin” neighborhood of ∂ in  by _h := {z∈: ∃ z'∈∂ such that z-z'_d+1<h}.
+
+
+
+Let ass:domain1, ass:covariance1, ass:vector1 hold.
+Then there exists a functions G:→, twice-differentiable on a neighbourhood of ⊂^d+1 
+and strictly positive on the open set ∖∂. Moreover, the function g(z) := G(z)^2 satisfies ∇ g(z) = 0  for all z∈∂ and for any r>0 there exist h_r>0, δ > 0,  such that the following hold
+
+
+  (a) 
+Σ^1/2(z)∇ G(z)_d+1^2> δ  for all z∈_h_r∩[0,r]×^d;
+
+  (b)
+⟨ϕ(z),∇ G(z)⟩ >  δ for all z∈∂∩[0,r]×^d.
+
+
+
+
+Recall that Assumptions ass:domain2, ass:covariance2, ass:vector2 imply Assumptions ass:domain1, ass:covariance1, ass:vector1.
+
+
+
+Extend the function 
+G:→, defined by G(z):=b(x)^2-y_d^2
+for any z=(x,y)∈, to a 
+C^2-function on a neighbourhood of  in ^d+1.  Hence 
+∇ G(z)_d+1^2=4(b(x)^2b'(x)^2+y_d^2)
+for all z=(x,y)∈ and ∇ g(z) = 2G(z)∇ G(z) = 0 for all z∈∂, since G(z) = 0 on ∂. 
+Recall that ass:domain1 yields lim inf_x→0b(x)b'(x)>0. Thus, for any r>0, there exists a sufficiently small h_r>0, such that 0<inf_z∈_h_r∩[0,r]×^d∇ G(z)_d+1^2=:δ_h_r
+(we restrict to x∈[0,r] because of functions b with β≤ 0, e.g. example in Lemma <ref>).
+Moreover, by ass:covariance1, there exists δ_Σ>0
+such that 
+Σ^1/2(z)∇ G(z)_d+1^2=⟨Σ(z)∇ G(z),∇ G(z)⟩≥δ_Σ∇ G(z)_d+1^2≥δ_Σ·δ_h_r>0
+for all z∈_h_r∩[0,r]×^d, implying (a).
+
+Note that gradient ∇ G(z) for any z∈∂ equals 
+n(z)∇ G(z)_d+1, where n(z) is the inwards-pointing unit normal vector to ∂ at z. Hence, by ass:vector1, there exists a δ_ϕ>0 such that ⟨ϕ(z),∇ G(z)⟩≥δ_h_r^1/2⟨ϕ(z), n(z)⟩ > δ_ϕ·δ_h_r^1/2>0 for all z∈∂∩ [0,r]×^d.
+
+
+
+
+We start by proving that Z spends no time at the boundary. 
+
+Claim 0. The equality ∫_0^∞Z_t∈∂ t=0 
+holds _z-a.s. 
+for any starting point z∈.
+
+Proof of Claim 0. Let G be a function whose existence is guaranteed by Lemma <ref>. Define the non-negative continuous semimartingale ξ=(ξ_t)_t∈, 
+ξ_t:=G(Z_t), denote its local time field by (L_t^u(ξ))_t,u∈
+(see <cit.> for definition and properties)
+and note that ξ_t=0
+if and only if Z_t∈∂, since G>0 on ∖∂ by  Lemma <ref>.
+Thus the local-time process L in SDE (<ref>) satisfies
+L^0(ξ)=L.  
+Itô's formula in (<ref>), applied to G(Z),
+yields that the quadratic variation [ξ] equals  [M] given in (<ref>). 
+Pick any t,r∈(0,∞).
+The occupation times formula in <cit.> applied to the indicator  u↦_{0}(u) of zero,
+the representation of the quadratic variation [M] in (<ref>),
+the property in Lemma <ref>(a)
+and the fact that ξ_s=0
+is equivalent to 
+ Z_s∈∂ for all s∈
+yield
+
+    0=∫__{0}(u)L_t∧ϱ_r^u(ξ) u = ∫_0^t∧ϱ_r_{0}(ξ_s) [M]_s≥δ∫_0^t∧ϱ_rZ_s∈∂ s≥0,
+
+implying 0=∫_0^t∧ϱ_rZ_s∈∂ s. 
+Since ϱ_r, given in (<ref>), satisfies lim_r→∞ϱ_r=∞ a.s. (by Theorem <ref>)
+and t>0 is arbitrary, our claim follows.
+
+Fubini's theorem and Claim 0 yield 
+∫_0^∞_z(Z_t∈∂) t=_z∫_0^∞Z_t∈∂ t=0
+for any z∈
+(since Z is continuous, it is progressively measurable, implying the  various integrals are well defined and measurable).
+In particular, denoting := ∖∂, for any z∈ and t>0, it holds that ∫_0^t _z(Z_s∈) s = t.
+
+
+
+Claim 1. For every z∈, t>0 and A∈() the following holds: if _d+1(A) > 0 then ∫_0^t _z(Z_s∈ A) s > 0.
+
+In order to prove Claim 1, we need Claims 2 and 3 below. For z∈ and h>0, define the open ball in  by B(z,h) := { z'∈: z-z'_d+1 < h}.
+
+Claim 2. Pick any z∈, s∈ and any ball B(z',h)⊂ 
+and
+A∈().
+The inequalities 
+_z(Z_s∈ B(z',h))>0 and 
+_d+1(B(z',h)∩ A)>0
+imply
+_z(Z_v∈ B(z',h)∩ A) >0
+for all v∈(s,s+h^2).
+
+
+
+Proof of Claim 2. Since B(z',h)⊂,
+the stopping time τ_∂ B(z',h):=inf{t∈: Z_t∉ B(z',h)}
+is strictly positive _z”-a.s. for all 
+z”∈ B(z',h).
+Moreover, the process Z on the stochastic interval [0,τ_∂ B(z',h)), started at any z”∈ B(z',h), coincides with a uniformly elliptic diffusion on ^d+1, stopped upon exiting the ball B(z',h).
+Thus, <cit.> is applicable and, together with the strong Markov property of Z <cit.>, yields the claim.
+
+Claim 3.
+For any z∈, t>0 and A_0∈(), such that _d+1(A_0)>0,
+there exist  z_0∈, h_0>0
+and s∈(0,t) satisfying
+B(z_0,h_0)⊂,  _d+1(A_0 ∩ B(z_0,h_0)) > 0 and _z(Z_s ∈ B(z_0,h_0)) > 0.
+
+ 
+
+Proof of Claim 3. Since ∫_0^t _z(Z_s ∈)  s = t, there exist s < t, z'∈ and h>0, such that B(z',h)⊂ and  _z(Z_s∈ B(z',h)) > 0.
+Moreover, the assumption _d+1(A_0) > 0 implies that there exists a ball B(z_0,h_0) ⊂ such that _d+1(B(z_0,h_0) ∩ A_0) > 0.
+
+It remains to prove that for some s∈(0,t) we have _z(Z_s ∈ B(z_0,h_0)) > 0.
+If B(z_0,h_0)∩ B(z',h)≠∅, then, since
+_d+1(B(z_0,h_0) ∩ B(z',h))>0,
+by Claim 2 applied with 
+A:=B(z_0,h_0)
+and 
+_z(Z_s∈ B(z',h))>0,
+there exist v∈(s,t)
+with
+_z(Z_v∈ B(z_0,h_0))>0.
+If B(z_0,h_0)∩ B(z',h)=∅,
+then there exists a  sequence of n∈ balls
+B(z_i,h_i)⊂, where  i∈{1,…,n},
+ such that z_n=z_0, h_n=h_0 and 
+z_1=z', h_1=h  and B(z_i,h_i)∩ B(z_i+1,h_i+1)≠∅ for all i∈{1,…,n-1}.
+Since 
+_z(Z_s∈ B(z_1,h_1))>0,
+by Claim 2 (applied with A:=B(z_2,h_2)),
+there exists time v_1∈(s,t), such that 
+_z(Z_v_1∈ B(z_2,h_2))>0.
+The Markov property at v_1 and Claim 2
+imply the existence of v_2∈(v_1,t)
+such that 
+_z(Z_v_2∈ B(z_3,h_3))>0.
+Construct inductively the increasing sequence v_1,v_2,…,v_n-1∈(0,t), set s:=v_n-1
+and note _z(Z_v_n-1∈ B(z_n,h_n))>0, implying  Claim 3.
+
+Proof of Claim 1. Assume that Claim 1 does not hold. More precisely, there exist t>0, z∈ and A_0 ∈(), such that _d+1(A_0)>0 and ∫_0^t _z(Z_v∈ A_0) v = 0.
+
+
+
+
+By Claim 3 there exist a ball B(z_0,h_0) in  and s∈(0,t) such that 
+_d+1(A_0 ∩ B(z_0,h_0)) > 0 and _z(Z_s ∈ B(z_0,h_0)) > 0.
+Claim 2 (applied with z':=z_0, h:=h_0 and A:=A_0) yields the contradiction:
+0=∫_0^t_z(Z_v∈ A_0) v ≥∫_s^t ∧ (s+h_0^2)_z(Z_v∈ B(z_0,h_0)∩ A_0)  v>0.
+
+
+
+
+
+To conclude the proof of the proposition, we strengthen Claim 1. 
+Suppose there exist z∈, t>0 and A∈() with _d+1(A)>0, such that _z(Z_t∈ A)=0. Since there exists a ball B(z',h)∈(), such that _d+1(A ∩ B(z',h)) > 0, 
+by Claim 1 applied to A ∩ B(z',h) we have
+ ∫_0^h^2_z(Z_v ∈ A ∩ B(z',h)) v > 0
+for all z∈.
+We may assume h^2∈(0,t).
+Since  Z is Markov, we have
+∫_t-h^2^t _z(Z_s ∈ A ∩ B(z',h)) s > 0
+and hence _z(Z_s ∈ A ∩ B(z',h)) > 0
+for some s∈(t-h^2,t). Thus t∈(s, s+h^2).
+By Claim 2
+we get 
+
+_z(Z_t∈ A) ≥_z(Z_t ∈ A ∩ B(z',h))>0, completing the proof of the proposition.
+
+
+
+    
+    By Claim 0 in the proof of Proposition <ref>  above, for any z∈, the equality _z(Z_t∈∂)=0
+    holds for Lebesgue almost every t∈. 
+    Note also that the proof of Claim 0
+    uses only the occupation times formula for continuous semimartingales and basic properties of the solution of SDE (<ref>). 
+
+
+Domain , defined in (<ref>), with increasing boundary (e.g. β>0, see (<ref>) for definition) satisfies the conditions of <cit.>, which establishes Feller continuity for reflecting processes Z. However, as explained in <cit.>, 
+the assumptions of <cit.> are not satisfied if the boundary function b decreases to zero (e.g. β<0). In the case β=0, the domain , may but need not, satisfy the assumptions of <cit.>, see example in Lemma <ref> below.
+Since the case β<0 is when positive recurrence occurs, we develop a new approach to Feller continuity of Z, relying on the localisation of the process. This is  more involved than the standard approach in the literature (see e.g. <cit.>)
+due to the difficulty of obtaining a global bound on the growth of the local time in the case 
+β<0, which requires localisation.
+
+
+
+Let ass:domain2, ass:covariance2, ass:vector2 hold. For a
+continuous bounded function f:→,
+t∈,
+and a convergent sequence (z_n)_n∈ in  with limit lim_n→∞z_n= z_∞∈, we have 
+
+    _z_n[f(Z_t)] →_z_∞[f(Z_t)]  as n→∞.
+
+
+
+The proof of Theorem <ref>
+requires Lemmas <ref>
+and <ref>. Lemma <ref> provides growth estimates required for the proof of tightness via the Aldus's criterion <cit.>.
+
+
+
+Let ass:domain2, ass:covariance2, ass:vector2 hold.
+Fix any r>0, T>0 and θ∈(0,T]. Then there exist positive constants C_i, for i∈{1,2,3,4},
+such that for any z∈ and (_t)-stopping times S_1,S_2  ((_t)_t∈ is the Brownian filtration  in (<ref>)), satisfying S_1≤ S_2≤ S_1+θ≤ T,
+for any >0 the following hold:
+
+
+  (a)_z(L_S_2∧ϱ_r-L_S_1∧ϱ_r≥) ≤  (C_1 θ + C_2θ^1/2)/; 
+
+  (b)_z(Z_S_2∧ϱ_r - Z_S_1∧ϱ_r_d+1^2≥) ≤ (C_3θ+ C_4θ^1/2)/.
+   
+Moreover, _z[L_T ∧ϱ_r]<∞ holds.
+
+
+
+Let G be the function whose existence is guaranteed by Lemma <ref> and let g(z) := G(z)^2,  z∈. Since the first and second derivatives of functions G and g are continuous on , and Σ is bounded by ass:covariance2, it follows that Σ^1/2∇ G_d+1^2, Σ^1/2∇ g_d+1^2, |Δ_Σ G| and  |Δ_Σ g|  are bounded on ^(r)= ∩ [0,r]×^d for any r>0.
+
+Pick r>0,  T>0 and θ∈ (0,T]. Recall from Lemma <ref> that ∇ g(z) = 0 and ⟨ϕ(z),∇ G(z)⟩ >  δ_r for all z∈∂∩[0,r]×^d and some positive constant δ_r.
+Let the bounded stopping times S_1,S_2 be as in the statement of the lemma.
+Itô's formula (<ref>) applied to the processes g(Z) and G(Z) on the stochastic interval [S_1∧ϱ_r,S_2∧ϱ_r]
+(recall the definition of ϱ_r in (<ref>))
+yields 
+
+    g(Z_S_2 ∧ϱ_r) = g(Z_S_1 ∧ϱ_r) + M_S_2∧ϱ_r^g-M_S_1∧ϱ_r^g + 1/2∫_S_1∧ϱ_r^S_2∧ϱ_rΔ_Σ g(Z_u) u,    _z-a.s.,
+
+and 
+
+    δ_r (L_S_2 ∧ϱ_r-L_S_1∧ϱ_r)≤  G(Z_S_2∧ϱ_r) - G(Z_S_1∧ϱ_r) - M_S_2 ∧ϱ_r^G+ M_S_1 ∧ϱ_r^G - 1/2∫_S_1∧ϱ_r^S_2∧ϱ_rΔ_Σ G(Z_u) u, _z-a.s.
+
+ for any z∈.
+ 
+ 
+ Note that (M^g_t∧ϱ_r)_t∈ and (M^G_t∧ϱ_r)_t∈ are true martingales by (<ref>). The
+optional sampling theorem 
+at the bounded stopping time S_2∧ϱ_r
+yields _z[M_S_2∧ϱ_r^g-M_S_1∧ϱ_r^g|_S_1∧ϱ_r]=0, _z-a.s. and _z[M_S_2∧ϱ_r^G-M_S_1∧ϱ_r^G|_S_1∧ϱ_r]=0, _z-a.s.
+There exists a constant C_1>0 such that |Δ_Σ g(z)|≤ 2C_1 for all z∈^(r), which implies that
+
+    _z[g(Z_S_2∧ϱ_r) |_S_1∧ϱ_r] ≤  g(Z_S_1∧ϱ_r) + C_1θ,  _z-a.s.
+
+holds for any z∈. Moreover, there exists a constant C_2 such that |Δ_Σ G(z)|≤ 2C_2 for z∈^(r).
+Using the fact that g(z) = G(z)^2, and applying the optional sampling theorem at the bounded stopping time S_2∧ϱ_r implies 
+
+    δ_r _z[L_S_2 ∧ϱ_r - L_S_1 ∧ϱ_r]    ≤_z[_z[G(Z_S_2 ∧ϱ_r)|_S_1 ∧ϱ_r] - G(Z_S_1 ∧ϱ_r)+ C_2 (S_2-S_1)] 
+       ≤_z[_z[g(Z_S_2 ∧ϱ_r)|_S_1 ∧ϱ_r]^1/2 - G(Z_S_1 ∧ϱ_r)+ C_2 θ] 
+       ≤_z[(C_1 θ + g(Z_S_1 ∧ϱ_r))^1/2 - G(Z_S_1 ∧ϱ_r) + C_2 θ] 
+       ≤ (C_1 θ)^1/2 + C_2 θ,
+
+ where we used the Cauchy-Schwarz inequality, the inequality in (<ref>) and the triangle inequality in the 
+ second, third and fourth inequalities in the display above, respectively. Application of Markov inequality to (<ref>) implies  (a). Moreover, since  L_0 = 0, setting S_1 = 0, S_2 = T, θ = T in (<ref>), we get _z[L_T ∧ϱ_r]<∞, as claimed.
+
+To prove (b), define the function V_z_0:→ by V_z_0(z) := z-z_0_d+1^2 for a parameter z_0∈. Pick r>0, T>0 and θ∈(0,T]. 
+Since first and second derivatives of V_z_0(z) are continuous on  in both variable z and parameter z_0, it follows by ass:vector2 and ass:covariance2 that there exist constants C̃_1,C̃_2,C̃_3 such that  sup_z_0∈^(r)⟨∇ V_z_0(z),ϕ(z)⟩≤C̃_1, sup_z_0∈^(r)|Δ_Σ V_z_0(z)|≤ 2C̃_2, and sup_z_0∈^(r)Σ(z)^1/2∇ V_z_0(z)_d+1^2≤C̃_3 hold for every z∈^(r).
+Itô's formula (<ref>) applied to V_z_0(Z), with Z started at z_0, gives
+
+    V_z_0(Z_S∧ϱ_r) =  M_S∧ϱ_r^V_z_0 + ∫_0^S∧ϱ_r⟨∇ V_z_0(Z_u),ϕ(Z_u)⟩ L_u + 1/2∫_0^S∧ϱ_rΔ_Σ V_z_0(Z_u) u,  _z_0-a.s.,
+
+for any stopping time S and any z_0∈.
+Moreover, by (<ref>) the process (M^V_z_0_t∧ϱ_r)_t∈ is a true martingale.  By (<ref>), for S  satisfying S≤θ,  we have sup_z_0∈^(r)_z_0[L_S∧ϱ_r]≤(C_1 θ)^1/2 + C_2 θ. Hence, the optional sampling theorem at the bounded stopping time S∧ϱ_r yields
+
+    _z_0[Z_S∧ϱ_r-Z_0_d+1^2] = _z_0[V_z_0(Z_S∧ϱ_r)] ≤C̃_1 _z_0[L_S∧ϱ_r] + C̃_2 θ≤C̃_1((C_1θ)^1/2+C_2θ)+C̃_2 θ,
+
+for any S≤θ and z_0∈^(r), where C_1,C_2 come from part (a) of this lemma.  
+It follows from the strong Markov property that for any stopping times S_1,S_2 satisfying assumptions of the lemma, and any z_0∈ we have
+
+    _z_0[Z_S_2∧ϱ_r-Z_S_1∧ϱ_r_d+1^2] =_z_0[_z_0[Z_S_2∧ϱ_r-Z_S_1∧ϱ_r_d+1^2|_S_1∧ϱ_r]] ≤C̃_1((C_1θ)^1/2+C_2θ)+C̃_2 θ.
+
+Application of Markov inequality gives part (b) of the lemma.
+
+
+   
+Let ass:domain2, ass:covariance2, ass:vector2 hold. 
+Suppose that for any t>0, any continuous bounded function f:→, and a convergent sequence z_n→ z_∞∈ (as n→∞), there exists a sequence (r_k)_k∈ satisfying lim_k→∞r_k = ∞, such that for every k∈ the following holds:
+
+    _z_n[f(Z_t∧ϱ_r_k)]→_z_∞[f(Z_t∧ϱ_r_k)]  
+      as n→∞.
+
+Then the process Z is Feller continuous, that is, _z_n[f(Z_t)] →_z_∞[f(Z_t)] as n→∞.
+
+
+
+Fix t>0. For any r>0, define the events _r := {ϱ_r≤ t} (and their complements  _r^c). 
+
+Claim. For any convergent sequence  z_n → z_∞∈ and  >0, there exists r_0>0 such that for all r∈[r_0,∞) we have sup_n∈_z_n(_r)≤ and _z_∞(_r)≤.
+
+Proof of claim. Pick w∈ (-∞,1-β s_0/c_0). Lemma <ref> guarantees the existence of constants k,x_0,x_1∈ in the definition of the function F_w,1 such that ⟨∇ F_w,1(z),ϕ(z)⟩≤0 for all z∈∂. By (<ref>), we have F_w,1(z)=f_w,1(z) for all z=(x,y)∈∩ [x_1,∞)×^d. Since F_w,1 is smooth on a neighbourhood of , by (<ref>) and (<ref>) in  Lemma <ref>,
+the functions z↦|Δ_Σ F_w,1(z)| and z↦Σ(z)^1/2∇ F_w,1(z)_d+1^2 are bounded on . Hence,
+there exist constants 
+C̃_1,C̃_2∈(0,∞) satisfying |Δ_Σ F_w,1(z)|≤ 2C̃_1 and Σ(z)^1/2∇ F_w,1(z)_d+1^2≤C̃_2 for all z∈. 
+Define the process κ := 2^1/| w|F_w,1(Z),  and recall the definition of ρ_r in (<ref>). Since F_w,1(z) = f_w,1(z) for z∈∩ [x_1,∞)×^d, (<ref>) implies that for r∈[x_1,∞) we have ρ_r≤ϱ_r.
+Moreover, application of Itô's formula (<ref>) implies that the process
+κ_t∧ρ_r - C(t∧ρ_r)
+is a supermartingale for C=2^1/|w|C̃_1, and any r>0, where the local martingale appearing in Itô's formula is a true martingale by (<ref>). Thus, applying Proposition <ref> (with ξ=κ and a constant function f≡ C) we infer that for any r≥ x_1 and any z∈,
+
+    _z(_r)≤_z(ρ_r ≤ t) ≤ r^-1(2^1/|w|F_w,1(z) 
+    + C t).
+
+Since (2^1/|w|sup_n∈F_w,1(z_n)+Ct) is finite by the continuity of F_w,1, there exists r_0 as claimed.
+
+To prove the lemma, pick an arbitrary continuous bounded function f:→, >0, and a convergent sequence z_n→ z_∞.  Let  the sequence (r_k)_k∈ tend to infinity and satisfy (<ref>) for every k∈.
+ Since f is bounded, the Claim above implies that there exists k∈ such that sup_z∈| f(z)|(_z_n(_r_k)+_z_∞(_r_k))</3 holds for every n∈. 
+Thus, as f(Z_t)=f(Z_t∧ϱ_r_k)1(_r_k^c)+f(Z_t)1(_r_k), for every n∈ we get
+
+    |_z_n[f(Z_t)]-_z_∞[f(Z_t)]|   ≤|_z_n[f(Z_t∧ϱ_r_k)1(_r_k^c)]-_z_∞[f(Z_t∧ϱ_r_k)1(_r_k^c)]| +
+    /3.
+
+Next, by (<ref>), for all large n∈ we have |_z_n[f(Z_t∧ϱ_r_k)] - _z_∞[f(Z_t∧ϱ_r_k)]| </3. 
+ Since
+ f(Z_t∧ϱ_r_k)1(_r_k^c)=f(Z_t∧ϱ_r_k)-f(Z_t∧ϱ_r_k)1(_r_k),
+ the triangle inequality yields 
+
+    |_z_n[f(Z_t∧ϱ_r_k)1(_r_k^c)   ]-_z_∞[f(Z_t∧ϱ_r_k)1(_r_k^c)]|
+    ≤|_z_n[f(Z_t∧ϱ_r_k)]    - _z_∞[f(Z_t∧ϱ_r_k)] | + sup_z∈| f(z)|(_z_n(_r_k)+_z_∞(_r_k)) ≤ 2/3,
+
+which, together with (<ref>),
+implies |_z_n[f(Z_t)]-_z_∞[f(Z_t)]|<
+for all large n∈.
+
+
+
+
+
+
+
+
+
+ 
+By Lemma <ref>, it suffices to prove that for any f:→,
+T∈ and a convergent sequence z_n→ z_∞∈ (as n→∞), there exists a sequence (r_k)_k∈ tending to infinity, such that for any k∈ we have
+
+    _z_n[f(Z_T∧ϱ_r_k)] →_z_∞[f(Z_T∧ϱ_r_k)]
+    
+      as n→∞.
+
+The first step is to prove that, for a fixed r>0, the laws of
+(Z_·∧ϱ_r,L_·∧ϱ_r,W_·) under _z_n are tight. 
+
+The second step consists of proving that 
+every subsequence converges to the law of 
+(Z_·∧ϱ_r,L_·∧ϱ_r,W_·) 
+under _z_∞.
+
+
+
+Let E^(1) :=E_1× E_2× E_3, where E_1:=, E_2:= and E_3:=^d+1, and denote by D_E^(1)([0,∞))  the space of càdlàg  functions (i.e. right-continuous functions with left limits), mapping the interval [0,∞) into the metric space E^(1). Denote by C_E^(1)([0,∞)) ⊂ D_E^(1)([0,∞)) the subspace of continuous functions. Endow D_E^(1)([0,∞)) with the Skorohod topology and its Borel σ-algebra ^1, see e.g. <cit.> for details. Any function ω∈ D_E^(1)([0,∞))
+can be expressed as ω = (a^(1),a^(2),a^(3)), for some “coordinate” càdlàg functions a^(i): [0,∞)→ E_i for i=1,2,3.
+For any t∈[0,∞), define maps A^(i)_t:D_E^(1)([0,∞))→ E_i
+by
+A^(i)_t(ω):=a^(i)(t), i∈{1,2,3}. 
+
+
+Define a σ-algebra 
+_t^1 := σ{A^(i)_s:0≤ s≤ t, i∈{1,2,3}}⊂^1 generated by  continuous maps A^(i)_s.
+By <cit.> we have _∞^1=^1.
+
+
+
+
+
+
+For any z∈, 
+by <cit.>, there exists a filtered probability space (Ω,(_t)_t∈,,_z),
+
+supporting the  processes (Z,L,W), taking values in E^(1)
+such that, under _z,
+the SDE in (<ref>) holds and 
+W is a standard (_t)-Brownian motion.
+We may assume that the filtration (_t)_t∈ is complete (i.e. _0
+contains all _z-null sets of ) and right continuous (i.e. _t = ∩_t<s_s).
+
+
+Pick arbitrary r_0∈ and T>0, and recall the stopping time 
+ϱ_r_0, defined in (<ref>), is the first time the coordinate X
+of Z=(X,Y)
+reaches level r_0.
+The stopped process   
+(Z_t ∧ϱ_r_0∧ T,L_t ∧ϱ_r_0∧ T,W_t∧ T)_t∈
+produces a measurable map 
+(Z_·∧ϱ_r_0∧ T,L_·∧ϱ_r_0∧ T,W_·∧ T):(Ω,)→(D_E^(1)([0,∞)),^1) 
+and induces the probability measure Q_z^1(·):=_z((Z,L,W)∈·) on ^1.
+
+Moreover, using the notation 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Z^(z)_t(ω):=A^(1)_t(ω) = (A_t^(1,X)(ω),A_t^(1,Y)(ω))∈×^d,
+L^(z)_t(ω):=A^(2)_t(ω),
+W^(z)_t(ω):=A^(3)_t(ω),
+ϱ^(z)_r := inf{t>0:A_t^(1,X)≥ r} for any r∈(0,∞), ω∈ D_E([0,∞))
+and t∈[0,∞),
+the following holds for any r∈(0,∞) and t∈[0,T]:
+
+    
+  (a)  Z^(z)_t∧ϱ_r^(z) = z + ∫_0^t∧ϱ_r^(z)Σ^1/2(Z^(z)_s) W^(z)_s + ∫_0^t∧ϱ_r^(z)ϕ(Z^(z)_s)  L^(z)_s, Q_z-a.s.
+    
+  (b) L^(z)_t∧ϱ_r^(z) = ∫_0^t∧ϱ_r^(z)Z^(z)_s∈∂ L^(z)_s, Q_z-a.s.
+    
+  (c) Under Q_z, the process W^(z) is an (_t)-Brownian motion stopped at time T.
+
+
+
+
+
+
+
+
+Moreover, it is easy to see that the equality in (b) above is equivalent to ∫_0^t∧ϱ_r^(z) (b(X^(z)_s)^2 - Y^(z)_s_d^2)  L^(z)_s = 0, Q_z-a.s.
+Indeed, since b(x)^2-y_d^2=0 for all (x,y)∈∂, (b) implies 
+∫_0^t∧ϱ_r^(z) (b(X^(z)_s)^2 - Y^(z)_s_d^2)  L^(z)_s =
+∫_0^t∧ϱ_r^(z) (b(X^(z)_s)^2 - Y^(z)_s_d^2) Z^(z)_s∈∂ L^(z)_s=
+0.
+Conversely, since b(x)^2-y_d^2>0 for all (x,y)∈∖∂, the sets _n:={(x,y)∈:b(x)-y_d∈[1/n+1,1/n)}
+are pairwise disjoint and satisfy ∪_n∈_n=∖∂
+and 0≤∫_0^t∧ϱ_r^(z)Z^(z)_s∈_n L^(z)_s≤ (n+1)∫_0^T (b(X^(z)_s)^2 - Y^(z)_s_d^2) Z^(z)_s∈_n L^(z)_s=0. Note 
+L^(z)_t∧ϱ_r^(z) = ∫_0^t∧ϱ_r^(z)Z^(z)_s∈∂ L^(z)_s +∑_n∈∫_0^t∧ϱ_r^(z)Z^(z)_s∈_n L^(z)_s
+=∫_0^t∧ϱ_r^(z)Z^(z)_s∈∂ L^(z)_s.
+
+We will show that if z_n→ z_∞, for all but countably many r∈(0,r_0), the limiting point of laws of the processes (Z_t∧ϱ_r^(z_n)^(z_n))_n∈ coincides with the law of Z_t∧ϱ_r^(z_∞)^(z_∞).
+
+
+Denote by (D_E^(1)([0,∞)),^1) the space of probability measures on the measurable space (D_E^(1)([0,∞)),^1) and endow it with the topology of weak convergence (see <cit.> for details). We say that the sequence of measures (Q_n)_n∈∈(D_E^(1)[0,∞),^1) is C-tight, if every subsequence of (Q_n)_n∈ has a convergent subsequence and the limiting probability measure Q_* charges only the set C_E^(1)([0,∞)), i.e. Q_*(C_E^(1)[0,∞)) = 1. 
+
+
+Recall that the measures Q_z^1, for z∈, are defined by the laws of the stopped processes (Z_·∧ϱ_r∧ T,L_·∧ϱ_r∧ T,W_·∧ T) under the measure _z.
+Lemma <ref>, and the fact that W is a Brownian motion, imply that for any θ>0 there exist positive constants C_1,C_2 such that for any stopping times S_1,S_2∈_T satisfying S_1≤ S_2≤ S_1+θ≤ T,
+for any n∈ we have 
+
+    _z_n( (Z_S_2∧ϱ_r_0,L_S_2 ∧ϱ_r_0,W_S_2)-(Z_S_1∧ϱ_r_0,L_S_1 ∧ϱ_r_0,W_S_1)_2d+3^2 ≥) ≤ (C_1 θ + C_2θ^1/2)/.
+ 
+There exists a positive constant C>0, such that  sup_t∈_+Z_t∧ϱ_r_0_d+1≤  C _z_n-a.s. for all n∈.  Since Lemma <ref> bounds the expected growth of the local time L, for any >0, there exists K>0, such that for all n∈ we have _z_n(sup_0≤ s≤ T(Z_s ∧ϱ_r_0,L_s∧ϱ_r_0,W_s)_2d+3≥ K)≤. Thus we may apply Aldous's tightness criterion <cit.> to deduce that the sequence of measures  (Q_z_n^1)_n∈ is tight. Moreover, since Q_z_n^1(C[0,∞)) = 1 for every n∈, <cit.> implies that the sequence (Q_z_n^1)_n∈ is C-tight.
+It follows that there exists a subsequence 
+
+(Q_z_n_k^1)_k∈ that converges weakly to a probability measure  Q_*^1, satisfying Q_*^1(C[0,∞)) = 1. For notational convenience we assume that the sequence (Q_z_n^1)_n∈ itself converges to Q_*^1. 
+
+Our aim is to prove that (A^(1),A^(2),A^(3)), under the measure Q_*^1, solves SDE (<ref>). 
+
+Consider the process :=_·∧ T, where 
+
+    :=(Z_·∧ϱ_r_0,L_·∧ϱ_r_0,W_·,∫_0^·Σ^1/2(Z_u) W_u,∫_0^·∧ϱ_r_0ϕ(Z_u) L_u,∫_0^·∧ϱ_r_0(b(X_u)^2 - Y_u_d^2) L_u).
+ 
+The state space of  is E^(2) := E^(1)× E_4× E_5× E_6, where E_4 = ^d+1,E_5=^d+1 and E_6=. Let  (D_E^(2)([0,∞)),(_t^2)_t∈[0,∞), ^2) be the filtered measurable space with coordinate projections A^(i):D_E^(2)([0,∞))→ D_E_i([0,∞)) for i∈{1,…,6} (note that A^(i), for i∈{1,2,3}, agrees with the definition in the beginning of the second paragraph of this proof).  Moreover, a measurable map :(Ω,)→(D_E^(2)([0,∞)),^2)
+ induces the probability measure Q_z^2(·):=_z(∈·) on ^2. Note that Q_z^2((A^(1),A^(2),A^(3))^-1(·)) = Q_z^1(·) for all z∈. Hence 
+ the first three coordinates converge weakly under  (Q_z_n^2)_n∈.
+
+
+
+Denote A^(1) = (A^(1,X),A^(1,Y)), where A^(1,X):D_E^(2)([0,∞)) → D_([0,∞)) and A^(1,Y):D_E^(2)([0,∞)) → D_^d([0,∞)).
+ 
+ Note that for each z∈, L and W under the measures _z are adapted to the complete, right-continuous filtration (_t)_t∈ and have continuous sample paths, which are thus in D_E_2([0,∞)) and D_E_3([0,∞)), respectively.[We work with càdlàg paths because we apply <cit.> to conclude the stability of the stochastic integrals.] Moreover, the processes W,L are semimartingales, which satisfy _z_n[L_t∧ϱ_r_0∧ T]<∞ (by Lemma <ref>)  and  _z_n[[W]_t∧ T] ≤ T for any t∈ and n∈. Thus, Assumption <cit.> is satisfied with the deterministic time τ^α_n := α+1, where α∈(0,∞), n∈ are arbitrary parameters and τ^α_n is a sequence of stopping times in <cit.>. Since   the functions z↦Σ(z), z↦ϕ(z), z↦ b(x)^2-y_d+1^2 are continuous for z=(x,y)∈ and _z(∈·) = Q_z^2(·), <cit.> implies that there exists a probability measure Q_*^2 on (D_E^(2)([0,∞)),^2), such that
+ 
+
+    A :=(A^(1)_·,A_·^(2),A_·^(3),∫_0^·Σ^1/2(A^(1)_u) A_u^(3),∫_0^·ϕ(A^(1)_u) A^(2)_u,∫_0^· (b(A_u^(1,X))^2 - A^(1,Y)_u_d^2) A^(2)_u),
+
+under the measure Q_z_n^2, converges weakly
+(as n→∞) to
+A
+under Q_*^2. In particular,<cit.> ensures that A^(2),A^(3) are semimartingales under Q_*^2.
+Note that all limiting processes have continuous paths Q_*^2-a.s., which follows from the fact that A^(1),A^(2) and A^(3) have continuous paths Q_*^2-a.s.
+We now extend (using <cit.>) the weak convergence to stopping times ϱ_r and the corresponding stopped processes.
+
+For a^(1,X)∈ D_([0,∞)) and r>0, denote τ_r(a^(1,X)) := inf{ t>0: a^(1,X)_t ≥ r  or  a^(1,X)_t-≥ r}, where a^(1,X)_t- denotes the left limit of a^(1,X) at time t. Since, for any z∈, the process X has _z-a.s. continuous paths, we have τ_r(X) = ϱ_r, _z-a.s.
+We now  make the final extension of the state space, which will capture the convergence of the stopping times. Denote E^(3) := E^(2)×, and let (D_E^(3)([0,∞)),(_t^3)_t∈[0,∞), ^3) be the filtered measurable space with coordinate projections A^(i), for i∈{1,…,7}.
+For any r∈ (0,∞), a measurable map (,ϱ_r):(Ω,)→(D_E^(3)([0,∞)),^3)
+ induces the probability measure Q_z^3,r(·):=_z((,ϱ_r)∈·) on ^3. 
+ Furthermore, for any r∈(0,∞), it holds that Q_z^3,r(A^-1(·)) = Q_z^2(·).
+
+As before, A under Q^3,r_z_n converge to Ã under some probability measure Q^3,r_*.
+Moreover, A^(1,X) has Q_*^3,r-a.s. continuous paths.
+Thus, <cit.> implies that for all but at most countably many r∈(0,r_0), the map D_([0,∞))→, given by a^(1,X)↦τ_r(a^(1,X)), is continuous at A^(1,X), Q_*^3,r-a.s. (recall that r_0>0 is an arbitrary number, fixed at the beginning of the proof). Pick r_1∈(r_0/2,r_0) such that a^(1,X)↦τ_r_1(a^(1,X)) is continuous at a^(1,X), Q_*^r_1-a.s. The  Continuous mapping theorem <cit.> implies that (Ã,τ_r_1(A^(1,X))), under Q_z_n^3,r_1, converges weakly  to (Ã,τ_r_1(A^(1,X))) under Q_*^3,r_1. 
+The convergence of the stopped processes follows by applying <cit.> to the stochastic integral ∫_0^t 1{s≤ϱ_r_1}_s  (condition <cit.> is satisfied with τ^α_n := α+1 as above). Since _z((,ϱ_r_1)∈·) =Q_z^3,r_1(·), it follows that
+(Ã_·∧τ_r_1(A^(1,X))), under Q_z_n^3,r_1, converges weakly as n→∞ to (Ã_·∧τ_r_1(A^(1,X))) under the probability measure Q_*^3,r_1.
+
+To conclude the proof, we have to show that the process (A^(1),A^(2),A^(3)) under Q_*^3,r_1 solves SDE (<ref>).
+Denote by 0∈ D_E_1([0,∞)) 
+the function mapping every t∈[0,∞) into the origin of ^d+1.
+For every n∈, we have
+
+    A^(1)_·∧τ_r_1(A^(1,X)) - z_n -∫_0^·∧τ_r_1(A^(1,X))ϕ(A^(1)_u) A^(2)_u - ∫_0^·∧τ_r_1(A^(1,X))Σ^1/2(A^(1)_u) A^(3)_u≡0,   Q_z_n^3,r_1-a.s.
+
+Since the set {0} is closed in 
+D_E_1([0,∞)), <cit.> implies that 
+    A_·∧τ_r_1(A^(1,X))^(1) -z_∞ - ∫_0^·∧τ_r_1(A^(1,X))Σ^1/2(A^(1)_u) A_u^(3) - ∫_0^·∧τ_r_1(A^(1,X))ϕ(A^(1)_u) A^(2)_u≡0,   Q_*^3,r_1-a.s.
+
+
+Note that since A^(3) is a Brownian motion under 
+Q_z_n^3,r_1 for every n∈, it is also a Brownian motion under the weak limit Q_*^3,r_1.
+
+It remains to prove that, under Q^3,r_1_*, A^(2) is a local time
+of A^(1) at the boundary ∂. For any z∈, 
+the local time has to satisfy L_t∧ϱ_r = ∫_0^t∧ϱ_rZ_s∈∂ L_s, _z-a.s.
+This requirement is equivalent to 
+
+    ∫_0^t∧ϱ_r (b(X_s)^2 - Y_s_d^2)  L_s = 0,   _z-a.s.
+
+Indeed, since b(x)^2-y_d^2=0 for all (x,y)∈∂, we have
+∫_0^t∧ϱ_r (b(X_s)^2 - Y_s_d^2)  L_s =
+∫_0^t∧ϱ_r (b(X_s)^2 - Y_s_d^2) Z_s∈∂ L_s=
+0, _z-a.s., by the definition of local time.
+Conversely, since b(x)^2-y_d^2>0 for all (x,y)∈∖∂, the sets _k:={(x,y)∈:b(x)^2-y_d^2∈[1/(k+1),1/k)}
+are pairwise disjoint and satisfy ∪_k∈_k=∖∂.
+Moreover, we have
+0≤∫_0^t∧ϱ_rZ_s∈_k L_s≤ (k+1)∫_0^t∧ϱ_r (b(X_s)^2 - Y_s_d^2) Z_s∈_k L_s=0, implying (<ref>) via
+L_t∧ϱ_r = ∫_0^t∧ϱ_rZ_s∈∂ L_s +∑_k∈∫_0^t∧ϱ_rZ_s∈_k L_s
+=∫_0^t∧ϱ_rZ_s∈∂ L_s.
+
+Note that ∫_0^·∧τ_r_1(A^(1,X)) (b(A^(1,X))^2 - A^(1,Y)_d^2) A^(2)_u ≡0, Q_z_n^3,r_1-a.s., for every n∈, where 0  now denotes the zero function in D_E_6([0,∞)) (recall that E_6=).
+Thus, by <cit.>,
+we get ∫_0^·∧τ_r_1(A^(1,X)) (b(A^(1,X))^2 - A^(1,Y)_d^2) A^(2)_u ≡ 0, Q_*^3,r_1-a.s. Hence, the condition in (<ref>) implies that 
+A^(2) is indeed the local time of A^(1)
+at the boundary ∂.
+
+
+
+ We have thus proved that (A^(1)_·∧τ_r_1(A^(1,X)),A^(2)_·∧τ_r_1(A^(1,X)),A^(3)_·∧τ_r_1(A^(1,X))), under Q_*^3,r_1 (and hence under Q_*^1), solves SDE (<ref>) on the stochastic interval [0,ϱ_r_1]. The pathwise uniqueness <cit.> of solutions of SDE (<ref>) implies 
+ that every sub-sequential limit Q_*^1 of the sequence of (Q_z_n^1)_n∈ 
+ equals Q_z_∞^1, implying the
+ Feller continuity for the process stopped at ϱ_r_1, i.e. the limit in (<ref>) holds for r_1.
+ Since  r_0 was chosen arbitrarily and r_1∈(r_0/2,r_0), we can inductively construct a sequence (r_k)_k∈ with lim_k→∞r_k = ∞, such that (<ref>) holds for every k∈. An application of Lemma <ref> concludes the proof of Theorem <ref>.
+
+
+
+
+
+
+ §.§ Application to petite sets and Harris recurrence
+
+
+
+The family of probability measures 
+_z(Z_t ∈·) on (), indexed by t∈
+and z∈ 
+constitutes a Markov transition kernel by <cit.> and Theorem <ref>.
+
+A non-empty set B ∈() is called petite if there exists  
+a probability measure a on (,()), which does
+not charge zero (i.e.  a({0})=0), and 
+a non-trivial measure φ_a  on (,())  satisfying
+
+    K_a(z, ·) ≥φ_a(·)    for all z ∈ B,
+
+where the Markov transition function
+K_a: ×() → is given by
+
+    K_a(z,·) := ∫__z(Z_t∈·)a( t).
+
+The measurability of  z↦ K_a(z,A) for any
+A∈() follows from <cit.>.
+
+Let φ be a σ-finite measure on the Borel σ-algebra (). 
+
+The  process Z is Harris recurrent if  φ(A) > 0 implies  ∫_0^∞1_A(Z_s)  s = ∞, _z-a.s., for all A∈() and z ∈. 
+
+
+
+
+
+
+
+Suppose that ass:covariance2, ass:vector2 and ass:domain2 hold. Then all compact subsets of  are petite. Moreover, if β<β_c, the process Z is Harris recurrent.
+
+
+
+
+
+
+Fix z_0∈∖∂=
+and h_0>0, such that 
+B(z_0,2h_0)={z∈:z-z_0_d+1<2h_0}⊂.
+We now prove that the ball B(z_0,h_0) is petite.
+Recall that 
+the stopping time τ_∂ B(z_0,2h_0):=inf{t∈: Z_t∉ B(z_0,2h_0)}
+is strictly positive _z-a.s. for all 
+z∈ B(z_0,h_0).
+Moreover, the process Z on the stochastic interval [0,τ_∂ B(z_0,2h_0)), started at any z∈ B(z_0,h_0), coincides with a uniformly elliptic diffusion on ^d+1, stopped upon exiting the ball B(z_0,2h_0).
+Thus, by <cit.>, we have inf_z∈ B(z_0,h_0)_z(Z_h_0^2∈·)≥φ(·), where 
+φ is the Lebesgue measure multiplied by a positive scalar and supported in B(z_0,h_0). 
+
+Hence, for any z∈ B(z_0,h_0),  condition (<ref>) holds with a_1( t) = δ_h_0^2( t), where δ_h_0^2 is the Dirac delta concentrated at h_0^2>0, and taking the non-trivial measure φ_a_1:=φ on (,()). 
+
+We now prove that  an arbitrary compact set D in  is also petite. Since B(z_0,h_0) is an open set, Theorem <ref> and <cit.> imply that the function z↦_z(Z_1∈ B(z_0,h_0)) is lower semi-continuous on . Moreover, by Proposition <ref>, we have _z(Z_1∈ B(z_0,h_0))>0 for all z∈ D. Hence, by compactness of D and the lower semi-continuity of the function z↦_z(Z_1∈ B(z_0,h_0)), we get inf_z∈ D_z(Z_1∈ B(z_0,h_0))>0. 
+
+For any z∈ D, the Markov property of Z implies 
+    _z(Z_1+h_0^2∈·)≥_z(Z_1∈ B(z_0,h_0))  inf_z'∈ B(z_0,h_0)_z'(Z_h_0^2∈·)≥inf_z”∈ D_z”(Z_1∈ B(z_0,h_0))φ_a_1(·).
+ 
+Thus the set D satisfies condition (<ref>)   with the probability measure a_2( t) = δ_1+h_0^2( t) and non-trivial measure φ_a_2 := inf_z∈ D_z(Z_1∈ B(z_0,h_0))φ_a_1 on (,()), making D petite.
+
+
+ In particular, the set ∩ [r_0,∞)×^d is a petite set for every r_0∈(0,∞). Moreover, if β<β_c, Proposition <ref> implies that, for all sufficiently large  r_0∈(0,∞), we have _z(ς_r_0 < ∞) = 1 for all z ∈. We conclude that the process Z is Harris recurrent by <cit.>. 
+
+
+
+
+
+
+The following proposition is crucial for establishing the lower bounds on the tail of the invariant distribution  of the reflected process Z in Theorem <ref> (the proof of Theorem <ref> requires an estimate of the return times to an arbitrary petite set).
+
+
+
+Suppose that ass:covariance2, ass:vector2 and ass:domain2 hold with β < β_c. Then every petite set is bounded.
+
+
+
+ Let B be an arbitrary petite set and let the probability measure a on _+ and a non-zero measure φ_a on (,()) be such that (<ref>) holds,
+ with K_a as in (<ref>). 
+ Denote ^(r)=∩ [0,r]×^d for any r>0. 
+  Since φ_a is a non-trivial measure on (,()), there exists r_0∈(0,∞), such that c:=φ_a(^(r_0))> 0.
+ 
+
+
+
+ Proposition <ref> implies that for every q∈(0,1), p∈(1-β/β_c,∞) and z=(x,y)∈, there exists r_1∈(0,∞) such that  for  every r∈(r_1,∞) there exist constants c_1,c_2∈(1,∞) and ∈(0,∞) satisfying
+
+    _z(ς_r ≥ t_0) ≥ qmin{(c_1^-p(x-c_2)^p-r^p)(1-q)^p^-1/2 t_0^-p/2,1}
+
+for all t_0∈(c_1 r_1+c_2,∞)
+(recall that the return time ς_r_0 is defined in (<ref>)).
+Since a is a probability measure, there exists t_0∈(c_1 r_1+c_2,∞) satisfying
+a([t_0,∞)) < c/2.
+
+We now show that there exists x_0∈(0,∞), such that 
+_z(ς_r_0 <t_0) < c/2
+for all z∈∖^(x_0). 
+Indeed, fix
+r ≥max{r_0,r_1} (note  ς_r≤ς_r_0), q ∈(1-c/2,1) and p∈(1-β/β_c,∞). 
+Pick x_0>0, such that (c_1^-p(x-c_2)^p-r^p)(1-q)^p^-1/2 t_0^-p/2≥ 1 for all x∈(x_0,∞). 
+Note that this choice of x_0 implies 
+x_0>r and, in particular, x_0∈(r_0,∞).
+For any z=(x,y)∈∖^(x_0), the inequality in (<ref>)
+implies _z(ς_r_0 < t_0) ≤_z(ς_r < t_0) < 1-q <c/2. 
+
+By (<ref>), we have 
+K_a(z,^(r_0))≤∫_0^t_0_z(Z_t∈^(r_0))a( t)+a([t_0,∞)).  Since, for all z∈∖^(x_0), we have _z(Z_t∈^(r_0))≤_z(ς_r_0 < t_0)<c/2 for all t∈[0,t_0], the inequality 
+φ_a(^(r_0)) =c> K_a(z,^(r_0)) holds for all
+z∈∖^(x_0). 
+Since the petite set B satisfies (<ref>),
+we must have B⊂^(x_0), making B bounded.
+
+
+
+
+
+
+§ STABILITY: THE PROOF OF THEOREM <REF>
+ 
+
+
+Existence and uniqueness of the invariant distribution of Z, the upper bounds on the tails of
+the invariant distribution and upper bounds on the rate of convergence of Z to stationarity will be established using the drift condition (i.e. supermartingale property) given in Lemma <ref> (see Section <ref>) and the fact that every compact set in  is petite for the reflected process Z (see Proposition <ref> in Section <ref> above). The lower bounds on the tails of the invariant distribution and the rate of convergence to stationarity will follow from the fact that every petite set of Z is bounded (see Proposition <ref> above) and the control we have established on the return time and length of excursions away from bounded sets (see Proposition <ref>).
+Theorem <ref> follows easily from Propositions <ref> and <ref> proved in this section. 
+
+ 
+
+ §.§ Existence, uniqueness, and upper bounds
+
+The upper bounds on the tails of the invariant distribution are obtained by establishing finiteness of certain moments and applying the Markov inequality. In Section <ref> below we show that these bounds cannot be improved. 
+ 
+
+
+Suppose that ass:covariance2, ass:vector2 and ass:domain2 hold with β < -β_c
+and recall 
+M_c = -(1+β/β_c)/2>0.
+Then there exists the unique invariant distribution π on (,())  for the process Z. Pick ϵ>0. There exists a constant C_π∈(0,∞), such that
+
+    π({z∈:z_d+1≥ r})≤ C_π r^-2M_c+ϵ    for all r∈[1,∞).
+
+Furthermore, for every  z∈ there exists a constant C_TV∈(0,∞), such that 
+ 
+    _z(Z_t∈·)-π_TV   ≤  C_TVt^-M_c +   for all t∈[1,∞).
+
+
+
+
+
+By Proposition <ref>, the process Z admits an irreducible skeleton chain. Moreover, by Proposition <ref> the sets ^(r)=∩[0,r]×^d, defined in (<ref>), are petite for every r>0. Pick arbitrary ∈(0,1-β/β_c-2) and note that γ:=1-β/β_c - >2. By Lemma <ref>, the process ξ, defined in (<ref>), is a supermartingale. Note that by definition of F_w,γ in (<ref>), we have F_w,γ(z)^(γ-2)/γ = F_w,γ-2(z) for z∈∩[x_1,∞)×^d, where x_1 is the constant appearing in the definition of the function m in (<ref>). We may thus apply <cit.> (with V=F_w,γ, ϕ(u) = C_1 u^(γ-2)/γ, b=C_2 and the petite set ^(x_2) from Lemma <ref>), to deduce the existence and uniqueness of the invariant distribution π of Z and ∫_F_w,γ-2(z)π( z)<∞. From the definition of F_w,γ(z) in (<ref>) and the lower bound in (<ref>) it follows that C̃_π:=∫_z=(x,y)∈x^2M_c-π( z)<∞. Moreover, Markov's inequality implies 
+    π(∩ [r,∞)×^d)≤∫_ (x/r)^2M_c-ϵπ( z)≤C̃_π r^-2M_c+ϵ    for all r∈[1,∞).
+
+
+Recall that 
+for any z = (x,y)∈ we have x ≤z_d+1≤ (x^2+b(x)^2)^1/2 and the boundary function b has sublinear growth (cf. Remark <ref>), implying  (x^2+b(x)^2)^1/2/x → 1 as x →∞. Thus, the upper bound π(∩ [r,∞)×^d)≤C̃_π r^-2M_c+ϵ implies the existence of the constant C_π∈(0,∞) such that the bound on the tail  π({z ∈:z_d+1≥ r})≤ C_π r^-2M_c+ϵ holds for all r∈[1,∞) as claimed in the proposition.
+
+Recall that _d+1 is a Lebesgue measure on ^d+1. The process Z admits an _d+1-irreducible skeleton chain, since for every A∈(), such that  _d+1(A) > 0, and z ∈, by Proposition <ref>, we have _z(Z_k∈ A) > 0 for every k ∈. In particular, Assumption (i) in <cit.> is satisfied for Z.
+For γ = 1-β/β_c-,  Lemma <ref> ensures that Assumption (ii) of <cit.> is satisfied. By <cit.>, with the pair of functions Ψ = (Id,1), where Id,1:→ denote the identity and the constant functions, respectively, we obtain
+
+    r_*(t)_z(Z_t∈·)-π_TV≤  F_w,γ(z)    for all t≥ 0,
+
+where r_*(t) = φ∘ H_φ^-1(t). Here, the function φ is positive, satisfying φ(u) = C̃_1u^(γ-2)/γ for u≥ 1, and H_φ^-1 is the inverse of the increasing function H_φ, satisfying H_φ(u) = ∫_1^u φ(s)^-1 s for u≥ 1. This implies r_*(t) = C̃_2 (t+1)^γ/2-1 for a positive constant C̃_2∈(0,∞) and t∈(0,∞). 
+
+
+
+
+ §.§ Lower bounds
+ 
+
+The lower bounds on the tails of the invariant distribution π of the reflected process Z 
+are closely related to the tail behaviour of 
+certain additive functionals of the paths of Z until the return time to a petite set. For a measurable subset D ⊂ and δ > 0, define the return time of the process Z  to the set D after the time δ>0 by τ_δ(D) := inf{ t > δ: Z_t ∈ D} (with convention inf∅=∞).
+
+
+
+Suppose that ass:domain2, ass:covariance2, ass:vector2 hold with β < β_c and pick p ∈(1-β/β_c,∞), a bounded measurable set D⊂ and z∈. Then there exist constants 
+δ∈ (0,∞) and 
+C,r_0,c_1,c_2,ϵ∈(0,∞), such that for every 
+non-decreasing continuous function H:→
+with r_H:=inf{r'≥:H(r')>0}<∞,
+we have
+
+    _z(∫_0^τ_δ(D) H(c_1(X_s +c_2)) s ≥ r) ≥ C/ G(r/ϵ)^p  for all r∈(r_0,∞),
+
+where G:→ is the inverse of the strictly increasing function defined on [r_H,∞) by the formula v↦ v^2 H(v).
+
+
+
+
+    (a) The assumption β < β_c in Proposition <ref>
+    covers both the null-recurrent and positive-recurrent cases.
+    However, the main application of Proposition <ref> in the proof of 
+    Lemma <ref>
+     below requires only the positive-recurrent case.
+     Since Lemma <ref> is crucial in the proof of 
+     Proposition <ref>, 
+the bound in Proposition <ref> is key for 
+     the lower bounds in Theorem <ref>.
+     
+
+    (b) The statement of Proposition <ref>
+    in fact holds for every δ>0. 
+    In the proof of Proposition <ref> below, we apply the non-confinement property of Z, given in Lemma <ref>, to conclude that δ>0  exists. 
+    However, since  by Proposition <ref> Z is irreducible, the event  {X_δ > c_1(d_0+1)+c_2} has positive probability for every δ>0. Since the existence of δ>0 is sufficient for our analysis of the lower bound on the tail of the invariant distribution and non-confinement is weaker (and easier to prove) than irreducibility, we use the formulation of Proposition <ref> above.
+
+    (c) The assumed continuity of the function H in Proposition <ref> is not necessary: measurability would be sufficient but it would complicate the formulation of the proposition.
+
+
+
+Pick  a non-decreasing continuous function H:→ 
+with r_H=inf{r':H(r')>0}<∞.
+Proposition <ref> implies that for every p ∈ (1-β/β_c,∞) and q∈(0,1), there exist constants x_0∈(0,∞), c_1,c_2∈(1,∞) and (q)∈(0,∞), such that for every x_1∈(x_0,∞) and z=(x,y)∈∩ (c_1x_1+c_2,∞)×^d and function H̅(r):=H(c_1(r+c_2)), r∈, we have
+
+    _z(∫_0^ς_x_1H̅(X_s) s ≥ v^2H(v)) ≥ qmin{(c_1^-p(x-c_2)^p-x_1^p)v^-p,1},
+
+for all v∈(c_1x_1+c_2,∞).
+Recall here that ς_x_1, defined in (<ref>) above,  is the return time of the first coordinate X (of Z) below the level x_1 and X_0=x _z-a.s.
+Note that the following elementary inequality holds since the function is monotonically increasing as p>0:
+
+    c_1^-p(x-c_2)^p-x_1^p≥ (x_1+1)^p-x_1^p  for all x∈(c_1(x_1+1)+c_2,∞).
+
+
+
+
+
+Since v↦ v^2H(v) is strictly increasing on [r_H,∞) with range equal to , for any r∈(c_1x_1+c_2,∞) we 
+can define v:=G(r/ϵ), implying
+r=ϵ v^2 H(v). 
+ Thus, for every z=(x,y)∈∩ (c_1(x_1+1)+c_2,∞)×^d
+ and any  C_x_1∈(0,q((x_1+1)^p-x_1^p)/G(c_1x_1+c_2/ϵ)^p)
+ we have
+
+    _z(∫_0^ς_x_1H̅(X_s) s ≥ r)
+    
+       ≥ qmin{((x_1+1)^p-x_1^p)/G(r/ϵ)^p,1}
+    
+       ≥ C_x_1 /G(r/ϵ)^p   for all r∈(c_1x_1+c_2,∞),
+
+where the first inequality in (<ref>) follows from (<ref>) above.
+
+Fix z∈ and a bounded set D⊂.
+Let m_D:=sup{x:(x,y)∈ D}∈ satisfy D⊂ [0,m_D]×^d∩ (note that m_D<∞ by assumption on D) 
+and denote d_0 := max{m_D,x_1}. Since, by Lemma <ref>, X is not confined
+to any compact set, there exists δ > 0, such that _z(X_δ > c_1(d_0+1)+c_2)  > 0. 
+Note that, on the event 
+{X_δ > c_1(d_0+1)+c_2}, _z-a.s.
+we have 
+Z_δ∈∩ (c_1(x_1+1)+c_2,∞)×^d. The
+Markov property of Z and (<ref>) thus imply that for every p∈(1-β/β_c,∞) and 
+r_0:=c_1 d_0+c_2,
+there exists a constant C_d_0∈(0,q((d_0+1)^p-d_0^p)/G(c_1d_0+c_2/ϵ)^p), such that
+
+    _z(∫_0^ς_x_1H̅(X_s)  s ≥ r)    ≥_z( ∫_0^τ_δ(D)H̅(X_s) s ≥ r, X_δ > r_0+c_1)
+       ≥_z[X_δ > r_0+c_1·_Z_δ( ∫_0^τ_δ(D)H̅(X_s) s ≥ r)]
+       ≥_z[X_δ > r_0+c_1·_Z_δ( ∫_0^ς_d_0H̅(X_s) s ≥ r)]
+       ≥_z(X_δ > r_0+c_1) C/G(r/ϵ)^p   for all r∈(r_0,∞).
+
+
+
+
+We can now establish the lower bounds on the tail of the the invariant distribution of Z.
+
+
+
+Suppose that ass:domain2, ass:covariance2, ass:vector2 hold with β < -β_c and recall M_c = -(1+β/β_c)/2. Let π be the invariant distribution of the process Z and pick >0. There exists a  constant
+c_π∈(0,∞)
+ such that
+
+    c_π r^-2M_c-ϵ≤π({z∈:z_d+1≥ r})    for all r∈[1,∞).
+
+Furthermore, for any z∈, there exists a constant c_TV∈(0,∞), such that 
+
+    c_TVt^-M_c-ϵ≤_z(Z_t∈·)-π_TV    for all t∈[1,∞).
+
+
+
+The key step in the proof of Proposition <ref>
+is the following lemma.
+
+
+
+Suppose that ass:domain2, ass:covariance2, ass:vector2 hold with β < -β_c.
+For any ϵ>0 there exists a constant c_π∈(0,∞),
+such that 
+c_π r^1+β/β_c-≤π(∩ [r,∞)×^d) for all r∈[1,∞).
+
+
+
+The reflected process Z is positive Harris recurrent, i.e., Z is Harris recurrent (by Proposition <ref>) and admits an invariant distribution (by Proposition <ref>). Thus, by <cit.>, a measurable function f: → [1,∞) satisfies ∫_z ∈f(z)π( z) < ∞ if and only if sup_z ∈ D_z[∫_0^τ_δ(D)f(Z_s) s]< ∞ for some closed petite set D⊂ and all δ > 0, where τ_δ(D)= inf{ t > δ: Z_t ∈ D} is the return time to the set D after time δ (defined before the statement of Proposition <ref> above). Since by Proposition <ref> all petite sets are bounded, Proposition <ref>
+implies that for any closed petite set D
+of Z there exists δ>0 such that for any
+non-decreasing continuous function H̃:→[1,∞)
+we have 
+_z[∫_0^τ_δ(D)H̃(c_1(X_s+c_2)) s]≥ C∫_r_0^∞ G(r/ϵ)^-p r
+for all z∈ and p∈(1-β/β_c,∞),
+where G:→
+is the inverse of the function v↦ v^2H̃(v)
+and the positive constants ϵ, r_0, C, c_1,c_2 are as in Proposition <ref>.
+By the criterion in <cit.> stated above we thus obtain that 
+
+    ∫_r_0^∞ G(r/ϵ)^-p r = ∞   implies   ∫_z=(x,y)∈H̃(c_1(x+c_2))π( z)=∞.
+
+
+
+
+The proof of Lemma <ref> proceeds by contradiction. Note that the statement in the lemma is equivalent to the following: for every ϵ>0
+there exists r_0∈(0,∞) such that 
+    r^1+β/β_c-≤π(∩ [r,∞)×^d)    for all r∈[r_0,∞).
+
+Assume to the contrary that there exists ϵ>0, such that for every r_0>0 there exists r_1∈[r_0,∞) satisfying
+r_1^1+β/β_c->π(∩ [r_1,∞)×^d).
+We may pick r_0>1 and r_1>2r_0. Using a recursive construction, we obtain a sequence (r_n)_n∈, such that 
+r_n+1>2r_n and r_n^1+β/β_c->π(∩ [r_n,∞)×^d) for all n∈.
+Using this sequence, we now construct a function H 
+satisfying ∫_ H(x)π( z)<∞ 
+
+but which violates the implication in (<ref>).
+
+
+Set α := -(1+β/β_c)+ and define the function 
+μ:→ by 
+μ(x):=1 for x∈[0,r_1) and
+μ(x) := r_n^-α for x∈ [r_n,r_n+1), n∈.  
+Since the function x↦π(∩ [x,∞)×^d) is non-increasing, we have  
+π(∩ [x,∞)×^d)≤μ(x) for all x∈. 
+Let H:→[1,∞) be a differentiable function such that H(x) = 1 
+for x∈[0,r_1) and, for x∈[r_n,r_n+1), we have
+
+    H'(x) = 
+    r_n^α-/2,   x∈ [r_n,r_n+1);
+    
+    1/(r_n+1-r_n),   x∈ [r_n+1,r_n+1).
+
+Since μ is non-increasing by definition, for x∈[r_n,r_n+1), we have μ(x) ≤ r_n^-α and 
+
+    H'(x)μ(x) = 
+    r_n^-/2,   x∈[r_n,r_n+1); 
+    
+    r_n^-α/(r_n+1-r_n),   x∈[r_n+1,r_n+1).
+
+The inequality π(∩[x,∞)×^d)≤μ(x) and Tonelli's theorem (with H(0)=1) imply
+
+    ∫_z=(x,y)∈ H(x)π( z)    ≤ 1+∫_r_1^∞ H'(x)π(∩ [x,∞)×^d) x 
+     ≤ 1+ ∫_r_1^∞ H'(x)μ(x) x
+       =1+∑_n=1^∞(∫_r_n^1+r_nH'(x)μ(x) x + ∫_1+r_n^r_n+1H'(x)μ(x) x )
+       ≤1+∑_n=1^∞r_n^-/2 + ∑_n=1^∞ r_n^-α<∞,
+
+where the final inequality follows from 2^n-1r_1≤ r_n for every n∈ and α>>0.
+
+Let >0 and c_1, c_2∈(1,∞) whose existence is guaranteed by Proposition <ref>. Let
+H̃:→[1,∞) be a non-decreasing differentiable function  satisfying H̃(x)=H(x/c_1- c_2) for all x∈(c_1 c_2,∞).
+ 
+ 
+ 
+ 
+ 
+ 
+Pick p∈(1-β/β_c,1-β/β_c+/2) and note
+that p>2 and
+2-p+α-/2>0.
+Let G:→ be the inverse of the function u↦ u^2 H̃(u). 
+Introduce the substitution 
+ r=ϵ u^2 H̃(u)
+ into the first integral in (<ref>) to obtain
+ 
+    ∫_1^∞G(r/)^-p r    = ∫_G(1/ϵ)^∞ u^-p(2uH̃(u) + u^2H̃'(u)) u 
+       ≥∑_n=n_0^∞∫_c_1(r_n+c_2)^c_1(2r_n+c_2) u^1-pH̃(u) u=
+    ∑_n=n_0^∞H(r_n)∫_c_1(r_n+c_2)^c_1(2r_n+c_2) u^1-p u
+     
+       =/(p-2)∑_n=n_0^∞ r_n^α-/2 c_1^2-p((r_n-c_2)^2-p-(2r_n-c_2)^2-p) 
+       ≥/(p-2)∑_n=n_0^∞ r_n^α-/2(r_n-c_2)^2-p (1-((2r_n-c_2)/(r_n-c_2))^2-p)
+       ≥(1-2^2-p)/(p-2)∑_n=n_0^∞ (r_n-c_2)^2-p+α-/2 =∞,
+
+where n_0∈ is sufficiently large so that  
+c_1(r_n+c_2)>G(1/ϵ) and r_n>c_2 hold for all n≥ n_0. The first inequality in the previous display uses the fact that H̃ is non-decreasing and positive, while the second follows from c_1>1 and 2-p<0.
+
+Note that H̃(c_1(x+c_2))=H(x) for every x∈.
+Thus, the implication  in (<ref>) 
+and the estimate in (<ref>)
+yield   
+ 
+    ∞  = ∫_z=(x,y)∈H̃(c_1(x+c_2))π( z) = ∫_z=(x,y)∈H(x)π( z).
+ 
+ This contradicts (<ref>) and concludes the proof of the lemma.
+
+
+
+ 
+Note that 
+π({z∈:z_d+1≥ r}) ≥π(∩ [r,∞)×^d)
+for every r∈.
+Thus, the lower bound on the invariant distribution π follows form Lemma <ref>.
+
+Pick arbitrary '∈(0,1). Lemma <ref> implies that for  and γ := 1-β/β_c - ', there exists w∈(-∞,1-β s_0/c_0), some constant x_0,x_1,d∈, defining the function F_w,γ, and a constant 
+C_3∈(0,∞)
+such that _z[F_w,γ(Z_t)] ≤ F_w,γ(z)+C_3t for all t∈ and z∈. Since F_w,γ(z) = f_w,γ(z) on z=(x,y)∈∩[x_1,∞)×^d, the upper bound in (<ref>) 
+implies that 
+
+    π({z∈:F_w,γ(z) ≥ r})    ≥π({z=(x,y)∈:x ≥ 2^γ/|w|r^1/γ-k_w})   for all r∈(x_1,∞).
+
+This inequality and the lower bound on the invariant distribution 
+in Lemma <ref>
+imply that there exists a constant C_4∈(0,1) such that 
+
+    π({z∈:F_w,γ(z) ≥ r})    ≥  C_4r^(1 + β/β_c - ϵ')/γ= C_4r^(1 + β/β_c - ϵ')/(1-β/β_c-ϵ')
+
+for all r∈(x_1,∞). By further reducing C_4>0
+if necessary, we may assume that the inequality in the last display holds for all r∈[1,∞).
+
+
+ Define the functions f: [1,∞) → (0,1], f(a)  := C_4 a^(1 + β/β_c - ϵ')/(1-β/β_c-ϵ')
+ and F(a):=af(a)= C_4 a^(2 -2ϵ')/(1-β/β_c-ϵ') and note that F is strictly increasing with  lim_a →∞ F(a) = ∞. By Lemma <ref>, applied  with  functions G(z) = F_w,γ(z) (recall from the previous display that π({z∈:G(z)≥ r})≥ f(r) for all r∈[1,∞)) and  g(z,t) := F_w,γ(z)+C_3 t≥_z[G(Z_t)], yields  constants C_2,C_5∈(0,∞), such that for all t∈[1,∞) we get 
+
+    C_2t^(1+β/β_c-')/(2-2')≤C_5/2(2g(z,t))^(1+β/β_c-ϵ')/(2-2ϵ')≤_z(Z_t_n∈·)-π_TV.
+
+
+
+Pick arbitrary ∈(0,1) and let ϵ'∈(0,1) 
+be such that 
+0>(1+β/β_c-')/(2-2')>(1+β/β_c)/2-. 
+Then the bound in the proposition follows from (<ref>).
+
+
+
+
+
+
+
+
+
+
+
+§ A LOWER BOUND ON THE CONVERGENCE TO STATIONARITY OF A MARKOV PROCESS
+
+
+Fix m∈ and 
+let κ=(κ_t)_t∈ be a Markov process on an unbounded domain _κ in ^m 
+with an invariant distribution π_κ satisfying π_κ(·) = ∫__κ_u(κ_t∈·) π_κ( u) for every t>0.
+Via a suitable Lyapunov function, the following lemma converts a lower bound estimate on the tail of invariant distribution π_κ into a lower bound on the rate of convergence in total variation of the law of κ_t  to the invariant distribution π_κ. The elementary proof of Lemma <ref> below is adapted from <cit.>. This  lemma is key in the proof of the lower bound on the rate of convergence in total variation stated in Theorem <ref>(b).
+
+
+
+Let 
+ _κ be an an unbounded domain in ^m and
+κ = (κ_t)_t∈ a _κ-valued Markov process with invariant distribution π_κ. Assume the function G:_κ→ [1,∞) satisfies: 
+
+
+  (a) there exists  f:[1,∞)→(0,1], such that the function F:y↦ yf(y) is increasing, lim_y↑∞F(y)=∞ and  π_κ({v∈_κ:G(v)≥ y})≥ f(y) for all y∈[1,∞);
+
+  (b) there exists g:_κ×→[1,∞), such that for every u∈_κ 
+the function t↦ g(u,t) is continuous and increasing to infinity and 
+
+_u[G(κ_t)] ≤ g(u,t) for all t∈.
+
+Then, for any starting point u∈_κ
+we have 
+
+    π_κ(·)-_u(κ_t∈·)_TV≥1/2f(F^-1(2g(u,t)))
+        for all t∈.
+
+
+
+
+A good choice for the function G in Lemma <ref>
+has the following properties:  the expectation   
+_u [G(κ_t)]
+is bounded as a function of the starting point u and time t
+and 
+the function 
+y↦π_κ(G^-1([y,∞)))
+satisfies
+lim_y→∞π_κ(G^-1([y,∞)))=0
+and
+lim_y→∞yπ_κ(G^-1([y,∞)))=∞.
+The proof of Lemma <ref>
+shows that if the assumption in (a) holds for y
+sufficiently large, then the conclusion of the lemma is valid for all t sufficiently large. 
+
+
+
+The definition of the total variation distance (together with assumption (a)) and the Markov inequality (together with assumption (b)) imply  that for every
+u∈_κ and 
+t∈ the following inequalities hold for all y∈[1,∞):
+
+    π_κ(·)-_u(κ_t∈·)_TV≥π_κ({v∈^d:G(v)≥ y})-_u(G(κ_t)≥ y)≥ f(y) -g(u,t)/y.
+
+Since F(y)→∞ (as y→∞) and t↦ g(u,t) is increasing and continuous, for all y∈[F^-1(2g(u,0)),∞) (where F^-1 is the inverse of the increasing function F
+defined in (a)), there exists 
+a unique t∈
+satisfying
+F(y)=2g(u,t)∈[1,∞). 
+Differently put, for every t∈, there exists
+y_t∈[F^-1(1),∞)⊂ [1,∞)
+satisfying y_t=F^-1(2g(u,t)).
+Thus, for every t∈, we have 
+f(y_t)-g(u,t)/y_t=f(F^-1(2g(u,t)))/2.
+
+
+
+
+§ ASYMPTOTICALLY OSCILLATING DOMAIN
+
+
+
+
+Let b:→ (0,∞) be a C^2 function with b(0)=0, satisfying
+
+    b(x) = loglog x(1 + (loglog x)^-2 + sinloglog x)    for  x > exp(+1).
+
+Then lim sup_x→∞b(x) = ∞ and lim inf_x →∞b(x) = 0. Moreover the function b satisfies assumption ass:domain2 with β=0, i.e. lim_x→∞xb'(x)/b(x)=β=0, and lim_x→∞b'(x)=lim_x→∞b”(x)=0
+
+
+To show lim inf_x→∞b(x) = 0, consider ℓ_k := exp(exp(-π/2 + 2kπ)), for any k∈. It follows that 
+
+    lim_k→∞b(ℓ_k) = lim_k→∞(loglogℓ_k)^-1= lim_k→∞(-π/2 + 2kπ)^-1 = 0.
+
+Similarly, to show lim sup_x→∞b(x)=∞, consider ℓ̃_k := exp(exp(2kπ)), for any k∈. We obtain
+
+    lim_k→∞b(ℓ̃_k) = lim_k→∞(ℓ̃_k + (loglogℓ̃_k)^-1)= lim_k→∞2kπ + (2kπ)^-1 =∞.
+
+The first two derivatives of b on x > exp(+1) take the form
+
+    b'(x)    = (xlog x)^-1(1-(loglog x)^-1 + sinloglog x + cosloglog x),
+    
+        b”(x)    = (xlog x)^-2((1+log x)(1 -(loglog x)^-2 + sinloglog x+cosloglog x) + 2(loglog x)^-3),
+
+implying that lim_x→∞ b'(x) =lim_x→∞ b”(x) = 0. For the result about β it is enough to show lim sup_x→∞ |xb'(x)|/b(x) ≤ 0. We estimate
+
+    lim sup_x→∞xb'(x)/b(x)   =  lim sup_x→∞(log x)^-1|1-(loglog x)^-1 + sinloglog x + cosloglog x)/loglog x(1 + (loglog x)^-2 + sinloglog x)
+       ≤lim sup_x→∞loglog x(3 + (loglog x)^-1)/log x = 0,
+
+this concludes the proof.
+
+
+
+
+§ ACKNOWLEDGEMENTS
+
+
+
+MB is funded by the CDT in Mathematics and Statistics at The University of Warwick.
+AM is supported by EPSRC under grants EP/W006227/1 & EP/V009478/1 and by The Alan Turing
+Institute under the EPSRC grant EP/X03870X/1.
+The work of AW is supported by EPSRC grant EP/W00657X/1.
+
+
+amsplain
+
+

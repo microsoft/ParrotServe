@@ -10,8 +10,8 @@ from parrot.utils import cprofile
 
 input_workload = "Test " * 100
 
-chunk_num = 4
-clients_num = 20
+chunk_num = 20
+clients_num = 8
 
 
 def main(test_func):
@@ -47,9 +47,7 @@ def process(barrier: Barrier, is_baseline: bool = True):
     latency = vm.run(
         proc_func,
         timeit=True,
-        args=[
-            test_func,
-        ],
+        args=[test_func],
     )
 
     return latency
@@ -79,7 +77,7 @@ def test_main():
         manager.add_proc(process, (barrier, False))
 
     manager.run_all()
-    # print(manager.data)
+    print(manager.data)
     print(f"Avg. JCT {mean(list(manager.data.values())):.2f} (s)")
     time.sleep(3)
 

@@ -1,0 +1,935 @@
+
+=1 
+             
+
+ 
+                     
+
+ 
+
+
+
+
+ 
+ 
+ 
+
+
+
+
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+ 
+*mps* 
+
+
+1.2
+
+
+=10000
+
+
+    a,1]Harshal Kulkarnib,2]and Stuart Raby
+        [a]Department of Physical Sciences, Indian Institute of Science Education and Research Kolkata, Mohanpur, West Bengal 741246, India[b]Department of Physics, The Ohio State University, Columbus, Ohio 43210, USA
+        hck18ms056@iiserkol.ac.inraby.1@osu.eduAn additional generation of quarks and leptons and their SUSY counterparts, which are vector-like under the Standard Model gauge group but are chiral with respect to the new U(1)_3-4 gauge symmetry, are added to the Minimal Supersymmetric Standard Model (MSSM). We show that this model is a GUT and unifies the three SM gauge couplings and also the additional U(1)_3-4 coupling at a GUT scale of ≈ 5 × 10^16 GeV and explains the experimentally observed deviation of the muon g-2. We also fit the quark flavor changing processes consistent with the latest experimental data and look at the effect of the new particles on the W boson mass without obviously conflicting with the observed masses of particles, CKM matrix elements, neutrino mixing angles, their mass differences, and the lepton-flavor violating bounds. This model predicts sparticle masses less than 25 TeV, with a gluino mass ≈ 2.3 - 3 TeV consistent with constraints, and one of the neutralinos as the LSP with a mass of ≈ 480 - 580 GeV, which is a potential dark matter candidate. The model is string theory motivated and predicts the VL quarks, leptons, a massive Z' and two Dirac neutrinos at the TeV scale and the branching ratios of μ⟶ e γ, τ⟶μγ and τ⟶ 3μ with BR(μ⟶ e γ) within reach of future experiments. An SU(5)× U(1)^' SUSY GUT with a "vector-like chiral" fourth family to fit all low energy data, including the muon g - 2
+            [
+            March 30, 2023
+        =========================================================================================================================
+        
+        
+        
+        § INTRODUCTION
+        
+        The Standard Model (SM) is very successful in predicting and explaining most of the experimental measurements. However, one of the discrepancies between the Standard Model and the experimental measurement that has been known for a long time is the muon anomalous magnetic moment. The discrepancy between the SM prediction and the measured value is <cit.> :
+        
+            Δ a_μ = a_μ^exp - a_μ^SM = 251(59) × 10^-11
+        
+        In addition to that, the b ⟶ s l^+l^- transitions related to tests of lepton flavor non-universality in the observables R(K) and R(K^*)<cit.>, semi-leptonic branching ratios <cit.> and angular distributions <cit.> also showed deviations from the SM predictions. However, recent LHCb measurements <cit.> suggest that there is no lepton non-universality.
+        
+        It has been shown that an extension of the SM involving VL leptons that couple only with the muons can explain the discrepancy of the muon g - 2 <cit.>.
+         It has also been shown that both the muon g - 2 and the b ⟶ s l^+l^- transitions related to tests of lepton flavor non-universality can be solved by introducing VL leptons, VL quarks and an additional massive Z' boson corresponding to the spontaneously broken U(1)_μ - τ<cit.>.  However, in light of the recent evidence for the absence of lepton flavor non-universality, it is most appropriate to fit all of the Wilson coefficients, resulting from beyond the Standard Model physics, C_9, C_10, C_9' and C_10' of the effective Hamiltonian <cit.>:
+        
+            ℋ_eff = -4G_F/√(2)V_tbV_ts^*e^2/16 π^2∑_j = 9,10(C_j 𝒪_j + C'_j𝒪'_j) + h.c.
+        
+        where
+        
+            𝒪_9 = (sγ_μ P_L b)(μγ^μμ),  𝒪'_9 = (sγ_μ P_R b)(μγ^μμ)
+        
+        and
+        
+            𝒪_10 = (sγ_μ P_L b)(μγ^μγ_5 μ),  𝒪'_10 = (sγ_μ P_R b)(μγ^μγ_5 μ)
+        
+        to zero. This is what will be realized in our analysis, where we fit all the four Wilson coefficients within a value of ± 0.1.
+        
+        In addition, it was shown in <cit.> that an additional 4th family which is VL with respect to the SM but chiral with respect to the new spontaneously broken U(1)_3-4 symmetry solves the muon g - 2 anomaly without directly conflicting with experimental data. The analysis performed there, however, is restricted to the second and third  families and is non-supersymmetric. However, since string theory gives a supersymmetric theory,  in this paper, we generalize to include supersymmetry and present a complete analysis involving the three SM families and a VL-chiral family throughout. Finally, experimental evidence shows a deviation of the W boson mass from its value predicted by the SM <cit.>. It was shown in <cit.> that the W boson mass can be fit by considering VL leptons and an additional U(1) gauge group. In our analysis, we extend the model of <cit.> and also study the effect of the new vector-like chiral leptons of our model on the W boson mass.
+        
+        In our model, the third SM family, the left-handed VL family and their SUSY counterparts have charges +1 and -1 respectively under the new U(1)_3-4 gauge group and all other fermions and their sparticles are neutral. This model is motivated by heterotic string orbifold constructions <cit.> which give the full MSSM spectrum, states which are VL under the SM gauge group and chiral under new U(1)' gauge symmetries. In addition, there are many SM singlet scalars that break the additional gauge symmetries and give mass to the new vector bosons and the VL particles. In many previous constructions, the additional particles gained mass at the string scale; however, in this model, we consider the case when at least one of the families of the VL particles is light enough (∼ 1 TeV), hence making it possible to observe them in future experiments. We consider the Lagrangian involving this additional VL family and the corresponding sparticles, but the higher mass modes predicted by string theory are assumed to be integrated out.
+        
+        It will be seen that the model simultaneously fits the observed quark and lepton masses of the three SM families, the Higgs mass, the strong and U(1)_em gauge couplings, the CKM matrix elements, and neutrino mass differences and mixing angles. It also fits the muon anomalous magnetic moment and the deviation of the W boson mass from its SM value without violating the data from quark flavor changing processes (i.e. Lepton Flavor Violating (LFV) decay bounds) and the cosmological upper bound on the sum of neutrino masses, i.e. ∑_i = 1^3m_ν_i < 0.12 eV. The new VL leptons, VL quarks, Dirac neutrinos as well as the Z' boson all have mass
+         at the TeV scale. The model being supersymmetric predicts all the sparticle masses less than 25 TeV and also gives a ≈ 480 - 580 GeV neutralino, which is the lightest supersymmetric particle (LSP) of the model and has the potential to be a dark matter candidate.
+        
+        
+        
+        
+        § MODEL
+        
+        The model under consideration is the MSSM with three right-handed neutrinos, one additional generation of left-handed and right-handed chiral fields, and their supersymmetric counterparts – which correspond to the VL particles. Further, we also have an additional U(1)_3-4 under which the third SM family and the left-handed chiral part of the fourth additional generation are charged. This U(1)_3-4 gauge symmetry is spontaneously broken by the nonzero vacuum expectation value (VEV) of the scalar components of the superfields Φ and Φ̅. All the relevant scalar, fermionic fields of the model and their quantum numbers are given in terms of the superfields in the Table 1 below.
+        
+        
+        
+        
+        The superpotential relevant for our analysis is:
+        
+            𝒲   = - u_iy^u_ijq_jH_u - d_iy^d_ijq_jH_d - e_iy^e_ijl_jH_d - ν_iy^ν_ijl_jH_u 
+                - λ_LRUU Q H_u -  λ_LRDD Q H_d - λ_LREE L H_d - λ_LRNN L H_u 
+                - λ_RLUQ U H_d -  λ_RLDQ D H_u - λ_RLEL E H_u - λ_RLNL N H_d 
+                - Φ̅( λ_3Q q^3 Q + λ_UU U + λ_DD D + λ_3L l^3 L + λ_EE E + λ_NN N )
+               - Φ (λ_Q Q Q + λ_3Uu^3 U + λ_3Dd^3 D + λ_L L L + λ_3Ee^3 E + λ_3Nν^3 N) 
+               - λ_2Q_aQ q^a - λ_2L_aL l^a - λ_2U_au^a U - λ_2D_ad^a D
+                - λ_2E_ae^a E - λ_2N_aν^a N - μ H_u H_d - μ_ΦΦ̅Φ
+        
+        where i,j = 1,2,3 and the Yukawa matrices y^u_ij, y^d_ij, y^e_ij and y^ν_ij are block diagonal due to the constraint of the Lagrangian being invariant under the U(1)_3-4 gauge symmetry. Almost all of the Yukawa parameters are taken to be real. The Yukawa couplings y^d_12, y^d_21, y^d_22, y^u_33 = y^d_33 = y^e_33 (in the GUT sense) and λ_3Q, λ_3U and λ_3D are taken to be complex to get the complex parameters in the CKM matrix. The 2⊕1 flavor structure of the SM families can, in principle, originate from a D_4 flavor symmetry <cit.>, however this is beyond the scope of the present paper.  The quantities {λ_2Q_a, λ_2L_a, λ_2U_a, λ_2D_a, λ_2E_a, λ_2N_a} are effective μ-like parameters with mass dimension 1. We will present a detailed analysis of the flavor physics of all the three SM families. 
+        
+        
+        We consider the generic soft SUSY breaking Lagrangian:
+        
+            ℒ_soft = -1/6h^ijkϕ_i ϕ_j ϕ_k - 1/2b^ijϕ_i ϕ_j - 1/2 (m^2)^i_j ϕ^*jϕ_i - 1/2M_a λ_a λ_a
+        
+        where the scalar fields ϕ_i are the sparticle fields, the Higgs and new scalar fields of our model and the λ_a are the four gaugino fields. The RG flow of the soft SUSY breaking sparticle and gaugino mass parameters have also been analyzed. We also consider Majorana neutrino mass terms in the superpotential, given by the addition of:
+        
+            𝒲_maj = 1/2 M_L N N + 1/2 M_R^abν̅^a ν̅^b + M_R N̅ν̅^3 .
+        
+        This then gives the Lagrangian terms for the fermions (in Dirac notation)
+        
+            ℒ_maj = -1/2M_L N_L^𝒞 N_L -1/2 M_R^ab( ν̅_L^a)^𝒞ν̅_L^b - (M_R N̅_L^𝒞ν̅_L^3+h.c.) + h.c.
+        
+        We take the Majorana mass terms M_L, M_R, M_R^ab to be much larger than the VEVs  v_Φ, v_Φ̅ >  v_H_u, v_H_d. Hence, we can integrate out the heavy states. The details of this calculation are presented in [sec:7.1]Appendix  <ref>sec:7.1. After integrating out the heavy states, we get an effective Lagrangian given by:
+         
+            ℒ^eff   =  (l^d_L)^C (y^ν_d e)^T H_u (M_R^-1)_e a y^ν_db l^b_LH_u  +  1/M_Rλ_LRN  (y^ν_33) (l^3_L)^C H_u  L_L H_u  
+                - L̅_L^C(  λ_2L_a l_L^a + λ_3 LΦ̅l^3_L + λ_L Φ L_L   ) +   1/M_Lλ_RLNλ_RLNL̅_L^C H_d  L̅_L H_d  + h.c.
+        
+        This effective Lagrangian is considered for RG flow and for the physics below the right-handed Majorana neutrino mass scale.
+        
+        At the weak scale,  the scalar fields obtain vacuum expectation values and the above effective Lagrangian becomes:
+        
+            ℒ^eff   =  (l^d_L)^C (y^ν_d e)^T (M_R^-1)_e a y^ν_db l^b_L v_H_u^2  +  1/M_Rλ_LRN  y^ν_33 (l^3_L)^C L_L  v_H_u^2   
+                - (N̅^'_L)^C(  λ_2L_aν_L^a + λ_3 L v_Φ̅ν^3_L + λ_L v_Φ N^'_L ) - E̅^'_R (  λ_2L_a e_L^a + λ_3 L v_Φ̅ e^3_L + λ_L v_Φ E^'_L   ) 
+               + 1/M_Lλ_RLNλ_RLNL̅_L^CL̅_L  v_H_d^2 + h.c.
+        
+        There are only 5 light neutrino states at the weak scale. Of these, one linear combination of {ν_L^1,  ν_L^2,  ν_L^3,  N^'_L} obtains mass at the heavier scale {∼ v_Φ, v_Φ̅}.  This is a Dirac mass term and includes two Weyl spinors. The other 3 linear combinations only obtain mass at the scale of order v_H_u^2/M_R, etc.
+        
+        
+        
+         §.§ Quark and charged lepton masses
+        
+        We can write the 5 × 5 Dirac mass matrices as:
+        
+            e_R ℳ^e e_L = (e_Ri E_R  E'_R) [ v_H_dy^e_11 v_H_dy^e_12           0           0      λ_2E_1; v_H_dy^e_21 v_H_dy^e_22           0           0      λ_2E_2;           0           0 v_H_dy^e_33           0     v_Φλ_3E;           0           0           0  v_H_dλ_LRE     v_Φ̅λ_E;      λ_2L_1      λ_2L_2    v_Φ̅λ_3L      v_Φλ_L  v_H_uλ_RLE ][ e_Li; E'_L;  E_L ]
+        
+            u_R ℳ^u u_L = (u_RiU_R U'_R) [ v_H_uy^u_11 v_H_uy^u_12           0           0      λ_2U_1; v_H_uy^u_21 v_H_uy^u_22           0           0      λ_2U_2;           0           0 v_H_uy^u_33           0     v_Φλ_3U;           0           0           0  v_H_uλ_LRU     v_Φ̅λ_U;      λ_2Q_1      λ_2Q_2    v_Φ̅λ_3Q      v_Φλ_Q  v_H_dλ_RLU ][ u_Li; U'_L;  U_L ]
+        
+            d_R ℳ^d d_L = (d_RiD_R D'_R) [ v_H_dy^d_11 v_H_dy^d_12           0           0      λ_2D_1; v_H_dy^d_21 v_H_dy^d_22           0           0      λ_2D_2;           0           0 v_H_dy^d_33           0     v_Φλ_3D;           0           0           0  v_H_dλ_LRD     v_Φ̅λ_D;      λ_2Q_1      λ_2Q_2    v_Φ̅λ_3Q      v_Φλ_Q  v_H_uλ_RLD ][ d_Li; D'_L;  D_L ]
+        
+        where we have assumed the scalar VEVs to be real. The weak scale Yukawa matrices and the dimension 1 parameters being used in the above computation are given in [sec:7.5]Appendix <ref>sec:7.5 and [sec:7.8]Appendix <ref>sec:7.8 for the two fit points. The VEVs v_H_u and v_H_d are related to the Higgs VEV by:
+        
+            v^2/2 = v_H_u^2 + v_H_d^2
+        
+        and:
+        
+            tanβ = v_H_u/v_H_d
+        
+        These together imply:
+        
+            v_H_d = v/√(2(1+tan^2β)),  v_H_u = v tanβ/√(2(1+tan^2β))
+        
+        Denoting the electrically charged fermions by f = e, u, d, the mass basis is defined as:
+        
+            f̂_L = (U^f_L)^† f_L,  f̂_R = (U^f_R)^† f_R
+        
+        The unitary matrices U^f_L and U^f_R diagonalize the Dirac mass matrices:
+        
+            (U^e_R)^†ℳ^e U^e_L = diag(m_e, m_μ, m_τ, m_E_1, m_E_2)
+        
+            (U^u_R)^†ℳ^u U^u_L = diag(m_u, m_c, m_t, m_U_1, m_U_2)
+        
+            (U^d_R)^†ℳ^d U^d_L = diag(m_d, m_s, m_b, m_D_1, m_D_2)
+        
+        where the m_E_a, m_U_a and m_D_a for a = 1,2 are the masses of the new charged fermions due to the introduction of a 4th vector-like chiral family. The masses are arranged in increasing order.
+        
+        
+        
+         §.§ The Extended CKM matrix
+        
+        From the U^f_L and U^f_R obtained after diagonalization, the extended CKM matrix can be given by:
+        
+            V_CKM = (U^u_L)^† P_5̅ U^d_L
+        
+        where P_5̅ = diag(1,1,1,1,0) is a projection operator. As can be clearly seen from above, the extended CKM matrix is not unitary. The 3 × 3 submatrix of this extended CKM matrix is the SM CKM matrix.
+        
+        We will show that the point in parameter space that we have considered will, within error, reproduce the observed quark and charged lepton masses for the 3 SM families and the CKM matrix. The weak scale CKM matrix for the two fit points can be found in [sec:7.6]Appendix <ref>sec:7.6 and [sec:7.9]Appendix <ref>sec:7.9.
+        
+        
+        
+         §.§ Neutrino mixing angles and mass differences
+        
+        From the effective Lagrangian at the weak scale mentioned earlier, the mass matrix for the light neutrinos is given by:
+        
+            ( [  ν_L^1 C  ν_L^2 C  ν_L^3 C  N_L^' C N̅_L^' C ]) ( [  ( y^ν T (M_R^ab)^-1 y^ν )_11 v_u^2  ( y^ν T (M_R^ab)^-1 y^ν )_12 v_u^2                                   0                                   0                              λ_2L_1; ( y^ν T (M_R^ab)^-1 y^ν )_21  v_u^2  ( y^ν T (M_R^ab)^-1 y^ν )_22 v_u^2                                   0                                   0                              λ_2L_2;                                   0                                   0                                   0               λ_LRN y^ν_33v_u^2/M_R                          λ_3 L v_Φ̅;                                   0                                   0               λ_LRN y^ν_33v_u^2/M_R                                   0                             λ_L v_Φ;                              λ_2L_1                              λ_2L_2                          λ_3 L v_Φ̅                             λ_L v_Φ                   λ_RLN^2 v_d^2/M_L ])
+               ( [  ν_L^1;  ν_L^2;  ν_L^3;  N_L^'; N̅_L^' ])
+        
+        The set of parameters for the two fit points has been given in [sec:7.5.2]Appendix <ref>sec:7.5.2 and [sec:7.8.2]Appendix <ref>sec:7.8.2. 
+        
+        The neutrino mass matrix M_ν can be diagonalized as follows:
+        
+            U_ν^T M_ν U_ν = diag(m_ν_1,m_ν_3,m_ν_3,m_ν_4,m_ν_5)
+        
+        From this, one can obtain the extended PMNS matrix given by:
+        
+            U_PMNS = (U_L^e)^† P_5̅ U_ν
+        
+        As can be clearly seen from the above definition, the extended PMNS matrix is not unitary. The 3 × 3 submatrix of this extended PMNS matrix is the standard PMNS matrix. This is the same as saying that, the PMNS matrix is the matrix that diagonalizes the neutrino mass matrix when it is represented in the  basis in which the charged lepton mass matrix is diagonal. The three mixing angles (sin^2θ_12, sin^2θ_23, sin^2θ_13) can then be extracted from the PMNS matrix. The light neutrino masses are given by m_i = √(m_v_i^* m_v_i) (i = 1,2,3) and we get 2 neutrinos with mass of order 1 TeV. From the masses of the three light neutrinos we can get the three mass differences Δ m^2_12, Δ m^2_23 and Δ m^2_13. We also get the CP violating phase δ_CP and Jarlskog invariant defined by: 
+        
+            J = Imag(U_PMNS^23 U_PMNS^13* U_PMNS^12 U_PMNS^22*)
+        
+        which is consistent with the 3σ confidence interval for δ_CP found in <cit.>.
+        
+        
+        
+         §.§ RG flow of the U(1)_3-4  coupling g'
+        
+        We consider two loop RG equations for the gauge couplings and 1 loop RG equations for the Yukawa parameters and for the soft SUSY breaking dimensionful parameters - the sparticle mass parameters, gaugino mass paramaters and the parameter h^ijk. 
+        
+        We have an additional constraint on the value of the g' coupling due to the presence of a Landau pole at high energies. The RGE of the coupling g' to 1-loop is given by:
+        
+            dg'/d lnμ = g'^3/16π^2 (∑_i Q^'(i) - 3C(G))
+        
+        Here C(G) = 0 in our case, since G = U(1)_3-4≡ U(1)^'.  Q^'(i) is the U(1)^' charge. The sum is over all the supermultiplets which are charged under the U(1)_3-4 group. Hence, we get:
+        
+            dg'/d lnμ = 34 g'^3/16π^2
+        
+        This implies:
+        
+            Λ_g' = μ_Z' exp(8π^2/34 g'(μ_Z')^2)
+        
+        where Λ_g' is the scale of the Landau pole. The plot for the scale of the Landau pole as a function of g'( ∼ 1 TeV) is given in Figure 1 above.
+        
+        For our case, we consider our model to hold true roughly up to M_GUT≈ 5 × 10^16 GeV and consider μ(Z') ∼ TeV scale, within reach of future experiments at the HL-LHC. This already gives a constraint g'(μ_Z') < 0.271 for the U(1)_3-4 coupling in our model. It should be noted that this is an estimate obtained only from the 1 loop RG equations and not considering the 2 loop effects or the 1 loop threshold corrections, which is what we will be considering for a more detailed analysis.
+        
+        
+        
+         §.§ Couplings of quarks and charged leptons with Z'
+        
+        The Lagrangian for the coupling of the quarks and charged leptons with the new Z' boson is given by:
+        
+            ℒ_Z' = g'Z'_μ(f^a_L [g^f_L]_abf^b_L + f^a_R [g^f_R]_abf^b_R)
+        
+        where f = u,d,e and
+        
+            g^f_L = (U^f_L)^† g_L U^f_L,  g^f_R = (U^f_R)^† g_R U^f_R
+        
+        with the U(1)_3-4 charge matrices given by:
+        
+            g_L = g_R = diag(0,0,1,-1,0)
+        
+        In a completely analogous manner, the Z' gaugino similarly couples to the quarks, charged leptons and their sparticles. Since the structure of the Lagrangian is not different for them, we won't bother writing it down explicitly. It is worth noting that the Z' coupling is not symmetric in the 4 and the 4̅ families because of the difference in the U(1)_3-4 charges in the 4 and 4̅ families and the difference in the way the f_R and f_L are represented. The flavor-changing currents between the SM 1 and 2 families and the SM 2 and 3 families mediated by the Z' boson are small, leading to suppressed branching ratios for lepton flavor violating processes. This will be explicitly seen in the results of our model's analysis.
+        
+        
+        
+        § OBSERVABLES
+        
+        
+         §.§ Masses of the particles
+        
+        We fit the SM quark and charged lepton masses by diagonalizing the 5 × 5 Dirac mass matrices mentioned in the previous section. The light SM neutrino masses are obtained as mentioned in the previous section. We get that U_ν^T M_ν U_ν is approximately diagonal (with the non-diagonal entries being ≲ 0.01 times the diagonal ones) and the PMNS matrix being approximately unitary.
+        
+        The tree level W and Z boson masses are given by:
+        
+            M_W = 1/2vg_SU(2),  M_Z = 1/2v √(g_SU(2)^2 + g_U(1)^2)
+        
+        where v is the Higgs VEV, g_SU(2) = g_2 and g_U(1) = √(3/5)  g_1. However, there are contributions of the new vector-like chiral leptons to the W boson mass, which cause the value of the W boson to deviate from the SM value. W boson mass corrections have been discussed in <cit.>. In our case, we consider the correction to W boson mass due to vector-like chiral leptons given by <cit.>:
+        
+            δ M_W^2/M_W^2|_SM≈α_e cos^2(θ_W)/cos^2(θ_W) - sin^2(θ_W) T
+        
+        where the oblique parameter T is approximately given by:
+        
+            T ≈1/16 π sin^2(θ_W) cos^2(θ_W)2(m_L^-^2 - m_L^0^2)^2/3 M_Z^2 M^2_L
+        
+        with M^2_L = λ_L^2 v_Φ^2 + λ_2L_1^2 + λ_2L_2^2. The two fit points of our model predict a significant deviation of the W boson mass from its SM value. 
+        
+        
+        The Higgs mass is given by:
+        
+            m^2_h^0 = 1/2(m^2_A^0 + m^2_Z - √((m^2_A^0-m_Z^2)^2 + 4m^2_Zm^2_A^0sin^2(2β))) + Δ(m^2_h^0)
+        
+        where Δ(m^2_h^0) consists of the radiative corrections to the tree level Higgs mass. The precise expressions are given in detail in the [sec:7.2]Appendix <ref>sec:7.2. 
+        
+        The Z^' boson mass in our model is given by:
+        
+            M_Z^' = g^'√(2(v_Φ^2 + v_Φ̅^2))
+        
+        Its value for the two fit points can be found in Table 4.
+        
+        
+        
+         §.§ Masses of the sparticles
+        
+        We work in the Generalized Mirage Mediation (GMM) model <cit.> and set the boundary conditions for the sparticle and gaugino masses, and the trilinear soft coupling to be:
+        
+            M_a = M_s(l_a α + b_a g_a^2)
+        
+            A_ijk = M_s(-a_ijkα + γ_i + γ_j + γ_k)
+        
+            m^2_i = M_s^2(c_i α^2 + 4αξ_i - γ_i)
+        
+        where M_s = m_3/2/16π^2 (m_3/2 is the gravitino mass), b_a are the gauge β function coefficients for the gauge group a and g_a are the corresponding gauge couplings and ξ_i = ∑_j,k a_ijky_ijk^2/4 - ∑_a l_a g_a^2 C^a_2(f_i) with C^a_2(f_i) being the quadratic Casimir for the a'th gauge group corresponding to the representation to which the sfermion f_i belongs. The anomalous dimension γ_i and γ_i = 8π^2∂γ_i/∂ logμ is given by:
+        
+            γ_i = 2∑_a g_a^2 C^a_2(f_i) - ∑_y_i |y_i|^2
+        
+            γ_i = 2∑_a g_a^4 b_a C^a_2(f_i) - ∑_y_i |y_i|^2 b_y_i
+        
+        We consider a universal parameter a_ijk = a_0 and a universal c_i = c_m for all the sparticles except for m^2_H_u and m^2_H_d for which we consider the coefficients c_H_u and c_H_d. Hence the input parameters for these soft SUSY breaking sector include M_s, l_a, α, a_0, c_m, c_H_u and c_H_d. The values for these input parameters at the GUT scale are mentioned in [sec:7.5.3]Appendix <ref>sec:7.5.3 and [sec:7.8.3]Appendix <ref>sec:7.8.3.
+        The sparticle masses predicted by the model are all less than 25 TeV. The gluino mass is ∼  2.3 - 3 TeV and satisfies the bound > 1.9 TeV. The VL particle and the Z' masses are all of the ∼ TeV scale within reach of future experiments. The neutralino and chargino masses are found by diagonalizing the 7 × 7 and 2 × 2 matrices given in the [sec:7.3]Appendix <ref>sec:7.3.
+        
+        
+        
+         §.§ Lepton Non-Universality
+        
+        Our model gives rise to Lepton Non-Universality in the operators 𝒪_i = 9,10 and 𝒪'_i = 9,10. The effective contributions to the Wilson coefficients are given by:
+        
+            C_i = -g^'^2√(2)/G_F1/V_tbV_ts^*π/α_e1/2M_Z^'^2 g_eff,i
+        
+        and
+        
+            C'_i = -g^'^2√(2)/G_F1/V_tbV_ts^*π/α_e1/2M_Z^'^2 g'_eff,i
+        
+        with the couplings:
+        
+            g_eff,9 = [g^d_L]_23[g^e_R + g^e_L]_22,  g_eff,10 = [g^d_L]_23[g^e_R - g^e_L]_22
+        
+        and
+        
+            g'_eff,9 = [g^d_R]_23[g^e_R + g^e_L]_22,  g'_eff,10 = [g^d_R]_23[g^e_R - g^e_L]_22
+        
+        Our analysis presented here is only concerned with all the rare B decays i.e. the b ⟶ s μμ observables, LFU observables and the B_s ⟶μ^+ μ^- branching ratio. The relevant Wilson coefficients have been calculated by using the g matrices in [sec:7.7]Appendix <ref>sec:7.7 and [sec:7.10]Appendix <ref>sec:7.10 for the two fit points I and II respectively. Recent results <cit.> suggest that the rare B decay anomalies found earlier are not present and hence in this scenario, we must fit the Wilson coefficients to C^μ_9, C^μ_10, C^'^μ_9 and C^'^μ_10 to approximately zero. This is realized in our model where we fit them to 0.0 ± 0.1.
+        
+        
+        
+         §.§ Electric dipole moment of the muon
+        
+        Following <cit.>, the muon electric dipole moment is given by:
+        
+            d_μ = d^h_μ + d^Z_μ + d^W_μ
+        
+        where
+        
+            d^h_μ = - √(4πα_e)/16π^2 M_Higgs^2∑_i = 2,4,5 Im(λ_i2λ_2i) m_i g_h(r_i)
+        
+        where r_i = m_i^2/M_Higgs^2 and λ_ij are the Yukawa couplings between the charged leptons f_i and f_j. Since λ_i2 and λ_2i are real for both our fit points, d^h_μ = 0. d^Z_μ and d^W_μ are given by:
+        
+            d_μ^Z = √(4πα_e)/16π^2 M_Z^2∑_i=2,4,5 Im([g_L^Z]_i2 [g_R^Z*]_i2) m_i g_Z(r_i)
+        
+        where g_L^Z and g_R^Z are the left and right handed couplings of charged leptons to the Z boson.
+        
+            d_μ^W = √(4πα_e)/16π^2 M_W^2  Im([g_L^W]_42 [g_R^W*]_42) m_ν_4 g_W(r_4)
+        
+        Here r_4 = m_ν_4^2/M_W^2, and g_L^W and g_R^W are the left and right handed couplings of charged leptons to the W boson. The functions g_h(r_i), g_h(r_i) and g_h(r_i) can be found in <cit.>. The muon electric dipole moment in our model is consistent with the latest experimental data.
+        
+        
+        
+         §.§ Electric dipole moment of the electron
+        
+        Again following <cit.>, the electron electric dipole moment is given by:
+        
+            d_e = d_e^hVγ + d_e^WWγ
+        
+        where V = γ, Z and
+        
+            d_e^hVγ = √(4πα_e) g_ν^Vee g_s^ee/32 π^4∑_i,j = 2,4,5∫_0^1 dx Im(c_O^Vij) I^ij_hV
+        
+        where g_ν^Vee and g_s^ee are the SM couplings of the electron to vector bosons V = γ, Z and Higgs boson. Their precise expressions and those of other functions appearing in the above equation can be found in <cit.>. In our model d_e^hVγ is zero because c_O^Vij is purely real because the only complex charged lepton Yukawa coupling in our model is y_τ. 
+        
+        The expression of d_e^WWγ is given by:
+        
+            d_e^WWγ = e g^2/256 π^4∑_j = 4,5∑_i = 1,2,3,4,5m_e m_i m_ν_j/M_W^2 Im([g_L^W]_ji [g_R^W*]_ji) ∫_0^1 dx I^ji_WW
+        
+        where
+        
+            I^ji_WW(x) = (1-x)/-x(1-x)M_W^2 + (1-x)m^2_i + x m_ν_j^2 ln(1-x)m^2_i + x m_ν_j^2/x(1-x)M_W^2
+        
+        with j ∈{4,5}. We find that the electric dipole moment of the electron d_e for the two fit points of our model is consistent with the latest experimental bounds.
+        
+        
+        
+         §.§ Anomalous magnetic moment of the muon
+        
+        There are discrepancies between experiments and the SM prediction for the magnetic moment of the muon:
+        
+            Δ a_μ = a_μ^exp - a_μ^SM = 251(59) × 10^-11
+        
+        The W and  Z contributions to the anomalous magnetic moment of the muon are very close to their SM values and hence we do not consider them here. Since we are working in the large tanβ regime, there might be sizeable contributions to the anomalous magnetic moment of the muon from the Higgs. Moreover, there are SUSY contributions to the muon g - 2 as well and the Z' contribution can be sizeable due to the off-diagonal muon-Z' couplings to the VL leptons which contribute significantly to the muon g - 2 loop.
+        
+        The leading order contribution to the muon g - 2 is then given by:
+        
+            Δ a_μ = Δ a_μ^Z' + Δ a_μ^Higgs + Δ a_μ^SUSY
+        
+        where the leading order contribution to the muon g - 2 arising from the Z' coupling to leptons is given by (for example <cit.>):
+        
+            Δ a_μ^Z' = - g^'^2m_μ^2/8 π^2 M_Z'^2∑_a[(|[g^e_L]_2a|^2 + |[g^e_R]_2a|^2)F(x_a) + Re([g^e_L]_2a[g^e*_R]_2a) m_a/m_μG(x_a)]
+        
+        where x_a = (m_a/M_Z')^2 and
+        
+            F(x) = (5x^4 - 14x^3 + 39x^2 - 38x - 18x^2ln(x) + 8)/(12 (1 - x)^4)
+        
+            G(x) = (x^3 + 3x - 6xln(x) - 4)/(2 (1 - x)^3)
+        
+        and the Higgs contribution is given by <cit.>:
+        
+            Δ a_μ^Higgs≈ 21+tan^2β/16π^2m_μ m_μ^LE/v^2
+        
+        where
+        
+            m_μ^LE = λ_2L_2λ_2E_2λ_RLE/m_E_1m_E_2 v_H_u
+        
+        and the SUSY contributions to the muon g - 2 are as given in <cit.>. In our analysis, we have found fit points with λ_2E_2 = 0 and hence, this gives a vanishing value of Δ a_μ^Higgs. The Δ a_μ^SUSY in our model are also smaller than the Δ a_μ^Z' and the muon g - 2 is hence dominated by Δ a_μ^Z'. It is worth mentioning that one might also solve the muon g - 2 anomaly by making λ_2E_2∼λ_2L_2 but keeping λ_RLE small enough (of the order of 10^-6). In such scenarios, the muon g - 2 is dominated by Δ a_μ^Higgs and the contribution of Δ a_μ^Z' is much smaller in these cases.
+        
+        
+        
+        
+         §.§ Lepton Flavor violating processes
+        
+        The new Z' coupling induces the Lepton flavor violating decays μ⟶ e γ, τ⟶μγ and τ⟶μμμ. Apart, from this, there are also dominant SUSY contributions to BR(μ⟶ e γ) and BR(τ⟶μγ). There is a constraint on the branching ratios of these decays due to the latest experimental measurements giving rise to upper bounds on these branching ratios. 
+         Using the general expressions in <cit.>, we can calculate the branching ratios of μ⟶ e γ and τ⟶μγ. (See also <cit.>)
+        
+        The branching ratio for the process μ⟶ e γ is given by:
+        
+            BR(μ⟶ e γ) ≈1/Γ_μα_e m_μ^3/1024 π^4g^'^2/2 M_Z^'^2(|∑_a ∈ VL[g^e_L]_1a[g^e_R]_a2|^2 + |∑_a ∈ VL[g^e_R]_1a[g^e_L]_a2|^2) + BR(μ⟶ e γ)^SUSY
+        
+        The branching ratio for the process τ⟶μγ is given by:
+        
+            BR(τ⟶μγ) ≈1/Γ_τα_e m_τ^3/1024 π^4g^'^2/2 M_Z^'^2(|∑_a ∈ VL[g^e_L]_2a[g^e_R]_a3|^2 + |∑_a ∈ VL[g^e_R]_2a[g^e_L]_a3|^2) + BR(τ⟶μγ)^SUSY
+        
+        where the expressions for BR(μ⟶ e γ)^SUSY and BR(τ⟶μγ)^SUSY have been calculated using the equations (4.11) and (4.12) of <cit.>.
+        For the branching ratio of τ⟶μμμ, we follow the reference <cit.> to get:
+        
+            BR(τ⟶μμμ) ≈1/Γ_τm_τ^3/1536 π^3g^'^4/M_Z^'^4(2|[g^e_L]_22[g^e_L]_23|^2 + 2|[g^e_R]_22[g^e_R]_23|^2 + |[g^e_L]_22[g^e_R]_23|^2 + |[g^e_R]_22[g^e_L]_23|^2)
+        
+        Our model predicts these branching ratios for these processes within the known experimental bounds. The fit points we have obtained give BR(μ⟶ e γ) within reach of future experiments. One of the fit points have a BR(μ⟶ e γ) that is reasonably close to the current experimental bound while the other fit point has a relatively smaller value of BR(μ⟶ e γ).
+        
+        
+        
+         §.§ Quark Flavor changing processes
+        
+        We will discuss three quark flavor changing processes, namely B_s - B̅_s, B_s ⟶μ^+ μ^-, and K_L ⟶μ^+ μ^- and show that the model predictions at the two fit points are consistent with latest experimental data.
+        
+        
+          §.§.§ B_s - B̅_s mixing
+        
+        Adopting the numerical factors mentioned in <cit.> the relative change in the mixing matrix element due to the tree level Z^' mixing contribution to B_s ⟷B̅_s is given by:
+        
+            δ M_12≈(2.3 g^2/16π^2 M_W^2 (V_ts V_tb)^2)^-1g^'^2/M_Z^'^2 (|[ĝ^d_L]_32|^2 + |[ĝ^d_R]_32|^2 + 9.7Re([ĝ^d_L]_32[ĝ^d,*_R]_32))
+        
+        Both the fit points of our model predict a deviation of δ M_12 < ± 6% from the SM which is consistent with the most recent theoretical uncertainty and experimental data.
+        
+        
+          §.§.§ B_s ⟶μ^+ μ^-
+        
+        The new particles give rise to new physics contributions to the process B_s ⟶μ^+ μ^-. The effective Lagrangian relevant for our analysis is of the form:
+        
+            -ℒ^NP_eff = (s̅γ_μγ_5 b)([ĝ^d_L]_23 - [ĝ^d_R]_23) g^'^2/4 M_Z^'^2((μ̅γ^μμ)([ĝ^e_L]_22 + [ĝ^e_R]_22) + (μ̅γ^μγ_5 μ)([ĝ^e_R]_22 - [ĝ^e_L]_22))
+        
+        Hence, in this model, the coefficient C^V_AA is given by:
+        
+            C^V_AA = C_SM(B_s) + g^'^2/4 M_Z^'^2 ([ĝ^d_L]_23 - [ĝ^d_R]_23)([ĝ^e_R]_22 - [ĝ^e_L]_22)
+        
+        where
+        
+            C_SM(B_s) = 4 G_F/√(2)α_e/2π sin^2θ_W V_ts^* V_tbη_Y Y_o(x_t)
+        
+        and η_Y = 1.012 quantifies the QCD corrections and Y_0(x_t) is the loop function given by:
+        
+            Y_0(x_t) = x_t/8(x_t-4/x_t-1 + 3x_t/(x_t - 1)^2log(x_t))
+        
+        with x_t = m_t^2/M_W^2. 
+        
+        The ratios of the branching fractions of our model and the SM are then given by:
+        
+            R^th_B_s ⟶μμ = BR(B_s ⟶μ^+ μ^-)/BR(B_s ⟶μ^+ μ^-)_SM = 1 + A_ΔΓy_s/1 + y_s |P_s|^2
+        
+        Here, P_s = |P_s| e^iϕ_P = C^V_AA/C_SM(B_s), y_s = 0.065 and A_ΔΓ = cos(2ϕ_P - θ_S^B_s). To evaluate the phase θ_S^B_s, we follow <cit.>. Hence, we have:
+        
+            S(B_s) = S_0(x_t) + Δ S(B_s) = |S(B_s)| e^iθ_S^B_s
+        
+        where
+        
+            S_0(x_t) = 4x_t - 11x_t^2 + x_t^3/4(1-x_t)^2 - 3x_t^2 logx_t/2(1-x_t)^3
+        
+        with x_t = m_t^2/M_W^2 and
+        
+            Δ S(B_s) = ([ĝ^d_L]_32/V_tb^* V_ts)^2 4 r/M_Z^'^2 g_SM^2 + ([ĝ^d_R]_32/V_tb^* V_ts)^2 4 r/M_Z^'^2 g_SM^2 + Δ S(B_s)_LR
+        
+        where r = 0.985, g_SM^2 = 4 G_F/√(2)α_e/2π sin^2θ_W and Δ S(B_s)_LR is evaluated using the equations (23) and (25) and using the relevant values in Table 1 and 3 of <cit.>. 
+        
+        From the experimental values of B̅R̅(B_s ⟶μ^+ μ^-)<cit.> and the SM predictions <cit.>, it is known that:
+        
+            R^exp_B_s ⟶μμ = BR(B_s ⟶μ^+ μ^-)_exp/BR(B_s ⟶μ^+ μ^-)_SM = 0.75 ± 0.16
+        
+        We find that the two fit points in our model predict R^th_B_s ⟶μμ that is consistent with the above experimental evidence.
+        
+        
+          §.§.§ K_L ⟶μ^+ μ^-
+        
+        Following <cit.>, we get BR(K_L ⟶μ^+ μ^-) to be:
+        
+            BR(K_L ⟶μ^+ μ^-) = 2.08 × 10^-9[P_c(Y_K) + |V_cb|^2/λ^2 R_t |Y_A(K)| cos(β^K_Y)]^2
+        
+        where λ = 0.226, β^K_Y = β - β_s - θ^K_Y (V_td = |V_td|e^-iβ, V_ts = -|V_ts|e^-iβ_s), θ^K_Y is the phase associated with Y_A(K). P_c(Y_K) is given by:
+        
+            P_c(Y_K) = 0.113 × (1 - λ^2/2)
+        
+        and the expressions of R_t and Y_A(K) are as mentioned below:
+        
+            R_t = |V_td|/|V_us||V_cb|
+        
+        and
+        
+            Y_A(K) = |Y_A(K)| e^iθ_Y^K = η_Y Y_0(x_t) + ([ĝ^e_R]_22 - [ĝ^e_L]_22)/M_Z^'^2 g_SM^2([ĝ^d_L]_21 - [ĝ^d_R]_21)/V_ts^* V_td
+        
+        The value for BR(K_L ⟶μ^+ μ^-) predicted by our model for the two fit points is consistent with the experimental bound of BR(K_L ⟶μ^+ μ^-) ≤ 2.5 × 10^-9.
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        § METHODOLOGY
+        
+        We employ a mix of guesswork and χ^2 minimization technique in  to find the fit points in the parameter space. The analysis has been performed by considering the two-loop RG equations for the gauge couplings and their one-loop threshold corrections and one-loop RG equations for the Yukawa parameters and the soft SUSY breaking parameters by analytically deriving the RG equations for this supersymmetric "VL-chiral" model from the most general expressions in <cit.>. We start with the 1-loop RG flow of the gauge couplings and find the value of the unified coupling α_unif at ≈ 5 × 10^16 GeV and then choose the mirage mediation boundary condition parameters and some initial guess for the Yukawa parameters and RG flow these parameters down to the weak scale via 2-loop RG equations for the gauge couplings and 1-loop RG equations for all the other parameters. The coupled differential RG equations are solved using . We also require precise
+        gauge coupling unification with ϵ_3 = 0.
+        
+        With the weak scale results at hand, the value of α_GUT at the GUT scale and the GMM model parameters are then varied to get weak scale gauge couplings that are approximately close to the experimental values. Then the GUT scale Yukawa parameters are varied to fit the low energy observables approximately.
+        
+        Following that, a χ^2 function is constructed with the GUT scale parameters taken to be those found out from the previous analysis, which are known to give approximately good results at the weak scale. Then  is used to minimize the χ^2 function and due to limited computing power, the code was terminated when the results were seen to saturate to particular values. The resulting input array then gives the set of GUT scale parameters of the theory. For the neutrino sector analysis, since we have integrated out the massive states at a mass scale of ≈ 10^12 GeV, from this point to the weak scale, we RG flow the Weinberg operator along with the other parameters by using the expressions analogous to the one in <cit.> from which we extract the neutrino mixing angles and mass differences and include them in the χ^2 minimization procedure. It should be noted that all the couplings associated with the neutrino fields (which are integrated out), have been set to zero while RG flowing the other parameters from the Majorana mass scale to the weak scale. For example, the yukawa couplings y^ν, λ_LRN, λ_RLN, λ_N and λ_3N are all set to zero. Hence the coupled differential RG equations are solved twice with appropriate initial conditions, once as we go down from the GUT scale to the Majorana scale and then again as we go down from the Majorana scale to the weak scale. It is also worth mentioning that the neutrino sector observables (mass differences and mixing angles) can be entirely controlled by changing the neutrino sector parameters: especially the parameters in the matrix y^ν_ij, λ_LRN and the mass parameters that go into the Majorana Lagrangian. Moreover, since these above-mentioned Yukawa parameters are not exceedingly large, changing them by reasonable amounts (roughly by 1 %, say) does not affect the RG flow of the other Yukawa parameters much and hence keeps the other low energy observables unchanged. Hence, we expect that the neutrino sector low energy observables can be easily controlled by varying only these parameters and they are sufficient to explain the low energy neutrino sector observables without affecting the other observables significantly.
+        
+        We find two fit points that fit the low energy observables and reasonably different BR(μ⟶ e γ). Hence, we simultaneously fit the CKM matrix, masses of the charged leptons and quarks at the weak scale, neutrino mixing angles, their mass differences, the strong and U(1)_em gauge couplings, and the Higgs mass. We solve for the muon g - 2 and also see that the W boson mass deviates from its SM value, without violating the experimental bounds of the electric dipole moments, the LFV processes μ⟶ e γ, τ⟶μγ, τ⟶μμμ, the quark flavor changing processes B_s ⟶μ^+ μ^-, K_L ⟶μ^+ μ^-, B_s ⟷B̅_s and the upper bound of 0.12 eV for ∑_i=1^3 m_ν_i obtained from cosmological observations.
+        
+        The input parameters that are being varied in our χ^2 analysis can be found in [sec:7.5]Appendix <ref>sec:7.5 and [sec:7.8]Appendix <ref>sec:7.8, and the observables that are being fitted can be found in Table 2 and Table 3. Since there are more input parameters than there are observables to fit, the possibility of another point in parameter space which can fit the low energy observables with different predictions is not excluded.
+        
+        
+        
+        § RESULTS
+        
+        
+         §.§ Low energy observables
+        
+        
+        All the gauge couplings and the Yukawa parameters satisfy g < 1.5 and α_y = Y^2/4π≲ 0.7 from the weak scale up to the GUT scale and hence the theory is perturbative up to the GUT scale. At the GUT scale, we have also imposed y_t = y_b = y_τ consistent with grand unification at the GUT scale.[y_ν_τ would also be equal in SO(10).] An interesting observation which can be made from the values of these couplings at the weak scale (See [sec:7.5]Appendix <ref>sec:7.5 and [sec:7.8]Appendix <ref>sec:7.8) is that although the values of these couplings have a different magnitude, the phases associated with these three parameters are the same, even at the weak scale.
+        
+        We have found two points in the parameter space which give very good fits for the CKM matrix, quark, lepton, Higgs mass, neutrino mass differences, mixing angles and the strong and U(1)_em gauge couplings. From the results of the mass squared differences, we can also see that the model favors normal ordering over inverted ordering for neutrino masses. The quark and lepton masses of the three SM families have been fit by following the precise values of the running mass parameters obtained at the M_Z scale as in <cit.>. The total number of input parameters in the model is 63 and the total number of fitted low-energy observables is 46.  It might be possible to reduce the number of input parameters with some
+        symmetry relations.   This is however outside the scope of the present paper.
+        
+        The Wilson coefficients relevant for lepton non-universality in B decays are fit to ≈ 0 consistent with <cit.>. It is worth mentioning that the Wilson coefficients are sensitive to the coupling λ_3Q in a way that changing this parameter slightly, doesn't affect the CKM matrices or weak scale masses much, however, it leads to a change in the value of C^μ_9 that might deviate significantly from the  value we are interested in. The reality of the Wilson coefficients can also be controlled reasonably by the real and imaginary parts of the Yukawa parameter λ_3Q which determines the coupling of the 3rd SM family quark doublet and the 4̅ quark doublet. The fit points also explain the muon g - 2 anomaly and satisfy the experimental bounds of the LFV and quark flavor changing processes, and give the BR(μ⟶ e γ) within reach of future experiments. Note that the fit point predictions for BR(μ⟶ e γ) range from 𝒪(10^-15) to 𝒪(10^-13) and one of these predictions is very close to the present experimental bound on BR(μ⟶ e γ). It is worth mentioning that BR(μ⟶ e γ) can be varied easily by changing the sparticle masses, i.e. by changing m_3/2 and c_m parameters within the GMM model.
+        
+        The loop contributions to the muon g - 2 from Z, W, and Higgs are very close to their SM values while the Z^' exchange with VL leptons in the loop completely accounts for the anomaly. These good fits can be obtained by considering a point in the parameter space with λ_3E = λ_3L = λ_3N = 0 that is, by turning off the interactions between the SM 3rd family leptons with the 4̅ leptons at the GUT scale. At the weak scale as well, these parameters have values of 0 for the two fit points as can be clearly seen from the weak scale Yukawa matrices given in [sec:7.5]Appendix <ref>sec:7.5 and [sec:7.8]Appendix <ref>sec:7.8. However, it is worth noting that the BR(τ⟶μγ) and BR(τ⟶μμμ) are sensitive to these couplings and changing them to 10^-6, say leads to an enhancement of BR(τ⟶μγ) and BR(τ⟶μμμ) probably within reach of future experiments.
+        
+        Points in the parameter space with slight perturbations of the input parameters considered will all flow towards the GUT scale parameters for which we have performed the analysis after χ^2 minimization. The Higgs mass is fine-tuned by varying the GMM parameters c_H_u and c_H_d at the GUT scale and leading order radiative corrections from the top, stop loops, and loops of the VL particles to the Higgs mass have been considered. It is natural to expect the requirement of some fine-tuning for the Higgs mass since the sparticle and gaugino masses are all of the order of 1 - 30 TeV which is necessary if we want to satisfy the gluino mass bound and BR(μ⟶ e γ) within the Generalized Mirage Mediation model. As a passing note, it is also worth mentioning that scaling v_Φ, v_Φ̅ and the effective μ-like dimension 1 parameters by the same factor keeps the CKM matrix and the SM quark and lepton masses almost unchanged. Also, λ_2N_1 and λ_2N_2 do not appear in our analysis and are hence unconstrained.
+        
+        The model also predicts masses of the VL leptons and quarks satisfying the experimental bounds and within reach of future experiments. The additional Z' gauge boson and also the two Dirac neutrinos have a TeV scale mass. All the computed and experimental values of all the low energy observables (fitted and unfitted) have been presented in the Table 2,  Table 3 and Table 4  below. The model also gives sin^2(θ_W) = 0.23716 (for fit point I) and sin^2(θ_W) = 0.23740 (for fit point II) which are around 2.7% different from the experimental value of 0.23121. It is worth mentioning that the Leading Logarithmic Threshold (LLT) approximation used in calculating the threshold corrections for α_1 and α_2, which were then used to calculate sin^2(θ_W), is not consistent since the SU(2)_L × U(1)_Y symmetry is broken at a scale comparable to the scale at which we have integrated out the masses. Due to this symmetry breaking, we think of our model as the effective theory above the M_Z scale and the SU(3)_C × U(1)_em as the effective theory below the M_Z scale which allows us to consistently fit the gauge couplings α_3 and α_em and gives us a small theoretical uncertainty ∼ 2.7 % in the calculation of sin^2(θ_W). 
+        The Z boson mass is obtained from its tree level expression and is within 1 - 3% of the experimental value. The Higgs mass has been fine tuned within the 1σ bound of the experimental value. 
+        
+        Under RG flow, the m^2_Φ and m^2_Φ̅ parameters are run down to negative values at the weak scale. However, even in that case, the parameters m^2_Φ + |μ_Φ|^2 and m^2_Φ̅ + |μ_Φ|^2 that appear in the classical potential for the new scalar fields are positive and satisfy the condition of (b_Φμ_Φ)^2 > (m^2_Φ + μ_Φ^2)(m^2_Φ̅ + μ_Φ^2) for U(1)^' symmetry breaking. The respective values of m^2_Φ and m^2_Φ̅ at the weak scale are given by -211.47 TeV^2 and -98.745 TeV^2 for the fit point I and -549.88 TeV^2 and -336.16 TeV^2 for the fit point II respectively.
+        
+        
+        
+        
+        We see that the two fit points fit the known experimental low energy data pretty nicely with  χ^2 values of 23.02 and 21.54 if one considers the W boson mass measurement of <cit.> and χ^2 values of 43.91 and 41.32 for the recent W boson mass measurements <cit.>. Thus we are not able to fit the new W mass measurement. They also solve the muon g - 2 with all Wilson coefficients consistent with recent experimental data. Moreover, as can be seen in Table 4 below, the new VL quarks and leptons predicted by the model all have masses at the TeV scale consistent with the experimental bounds in <cit.> and <cit.>. The new Z' gauge boson and the two Dirac neutrinos also have a mass of ≈ 1 TeV and hence all these particles are within reach of future experiments. The model also predicts a value of sin(δ_CP) = -0.622 and the Jarlskog invariant J = -0.0276 for the fit point I and sin(δ_CP) = -0.681 and the Jarlskog invariant J = -0.0277 for the fit point II, consistent with the 3σ confidence interval of δ_CP∈ [-3.41, -0.03] found in <cit.>. 
+        
+        
+        
+        
+        
+         §.§ SUSY mass spectrum
+        
+        Our model predicts all the SUSY particles to have masses less than 25 TeV. The sparticle mass parameters for all quarks and leptons have been presented in the [sec:7.5.3]Appendix <ref>sec:7.5.3 and [sec:7.8.3]Appendix <ref>sec:7.8.3. We consider the Generalized Mirage Mediation (GMM) model and choose a universal c_m for all the sparticle mass parameters except the c_H_u and c_H_d Higgs parameters. With this choice, the RG flow of these mass parameters can be analyzed for the squarks and sleptons and it can be seen how they vary as the energy scale is reduced. 
+        
+        Figure 2 and Figure 3 show the RG flows (for fit points I and II respectively) of the sparticle mass parameters m_squarks and m_sleptons from the GUT scale (which is ≈ 5 × 10^16 GeV) to the weak scale M_Z. We have plotted the sparticle mass parameters for the 3rd, 4, and 4̅ families. Despite the messy appearance, they tell us that on average, the squark mass parameters grow much faster as compared to the slepton mass parameters, and hence, on average, the values of the squark mass parameters are more than that of the slepton mass parameters at the weak scale M_Z. This is similar to what happens in the MSSM. We can see that the soft SUSY breaking mass parameters are all less than 24 TeV and, since the VL quark and lepton masses are less than 5 TeV, the scalar sparticle masses of all the squarks and sleptons are less than 25 TeV.
+        
+        We have also plotted the RG flow of the gaugino mass parameters M_a in Figure 4 and Figure 5 for fit points I and II respectively. The plots show an important difference between the MSSM and our supersymmetric model: Along with the gaugino mass parameters for the U(1) and SU(2) gauge groups, we see that the gluino mass parameter also decreases as we RG flow to the weak scale. This is however expected because unlike the MSSM, the strong SU(3) coupling increases with energy as can be seen in Figure 6 in the Appendix.[Note, we have demanded precise gauge coupling unification in our analysis.]  The new Z' gaugino corresponding to the additional U(1)^' is the LSP of the model. From the plots, we see that the gaugino mass parameters (especially M_1, M_2 and M^') sharply fall from > 4 TeV to less than 1 TeV as we RG flow from the GUT scale to the weak scale. The fall is the sharpest for the gaugino mass parameter M^'. The model also predicts a gluino mass m_gluino = 2.3749 TeV for the fit point I and m_gluino = 3.0332 TeV for the fit point II, both of which are consistent with the constraint m_gluino≳ 1.9 TeV.
+        
+        The chargino and neutralino masses, calculated by diagonalizing the neutralino mass matrices given in the [sec:7.3]Appendix <ref>sec:7.3, are summarized in Table 5. We see that the two fit points give a light neutralino mass ranging from ≈ 480 - 580 GeV. From the SUSY mass spectrum, i.e., the sparticle mass parameters and the chargino, neutralino masses, we get that this neutralino is indeed the lightest supersymmetric particle (LSP) which makes it possible for this neutralino to be the dark matter candidate.
+        
+        
+        § CONCLUSION
+        
+        In this paper, we have studied the Standard Model extended by including supersymmetry and a complete family of vector-like fermions, including right-handed neutrinos which are vector-like with respect to the Standard Model gauge group. In addition to that, we have introduced a new U(1)_3-4≡ U(1)^' gauge group under which the third SM family of quarks and leptons has a U(1)_3-4 charge of 1 while the left chiral part of the 4th family has a charge of -1. This model is also free of gauge anomalies. In this paper, we have considered a complete supersymmetric analysis of the 4^th vector-like chiral family along with the 3 SM families.
+        
+        Our supersymmetric model unifies the four gauge couplings at M_GUT≈ 5 × 10^16 GeV. We have also shown that our model can explain the anomalies in g - 2 without conflicting with other low-energy experimental data. The model also predicts the new VL quarks, leptons, 2 Dirac neutrinos and the Z^' gauge boson to have a mass at the TeV scale and also predicts the branching ratios of μ⟶ e γ, τ⟶μγ and τ⟶μμμ with μ⟶ e γ within the reach of future experiments, but with BR(τ⟶μγ) and BR(τ⟶μμμ) highly suppressed.
+        
+        
+        
+        The model predicts a mass spectrum of the supersymmetric particles with all sparticle masses < 25 TeV and also gives a light neutralino ≈ 480 GeV for the fit point I and ≈ 578 GeV for the fit points II, which is a potential dark matter candidate. Hence, we can see that indeed the "vector-like chiral" model of <cit.> can be made into a supersymmetric grand-unified model which not only solves the muon anomalies but also explains the deviation of other low energy data from the values predicted by the Standard Model. Moreover, the model predictions and the explained anomalies are not sensitive to the neutrino sector parameters and reasonable changes to these parameters do not change the model predictions and the low energy observables of the other sectors significantly. Hence, we do not rule out the possibility that our model predictions and results might also be obtained by a different fit point with reasonably different neutrino sector Yukawa and mass parameters.
+        
+        
+        
+        § APPENDIX
+        
+        
+         §.§ Gauge coupling unification
+        
+        Our model unifies the 4 gauge couplings of the SU(3)_C × SU(2)_L × U(1)_Y × U(1)_3-4 at a GUT scale of M_G ≈ 5 × 10^16 GeV. The plot for the two-loop RG flow of the 4 gauge couplings is shown in the Figure 6.
+        
+        At the GUT scale M_G, we have:
+        
+            α_G = α_1(M_G) = α_2(M_G),  ϵ_3 = α_3(M_G) - α_G/α_G
+        
+        where the parameter ϵ_3 in our model is zero, consistent with the expectation when SU(5) gauge group is broken down to SM gauge group via a Wilson line in an extra dimension. The model achieves unification of all the 4 gauge couplings at M_G and additionally solves the low energy anomalies. Since the RG flow analysis is at the two-loop level, we also consider one-loop threshold corrections to get the gauge couplings actually observed at low energies:
+        
+            1/α_i(M_Z)_MS = 1 - α_i(M_Z)_DRΔα_i/α_i(M_Z)_DR + C_2(G_i)/12π
+        
+        where C_2(G_i) = N for SU(N) and = 0 for U(1). Δα_i is the threshold correction to the α_i(M_Z)_DR that depends on the sparticle and VL particle masses at the weak scale primarily. With the 2 loop RG equations and 1 loop threshold corrections taken into account, it gives the value of g' at the weak scale to be 0.2673 for fit point I and 0.2680 for fit point II. This is consistent with the bound of g^' < 0.271 found from the 1 loop RG equations.
+        
+        It is also worth noting that, in contrary to the SM and the MSSM, the g_3 coupling of SU(3)_C in this model is not asymptotically free and instead increases with energy, much like the other three gauge couplings.
+        
+        
+        
+         §.§ Integrating out the heavy neutrino states
+        
+        From the Lagrangian of our model, we can integrate out the heavy states. The equations of motion for the heavy fields give us:
+        
+            -δℒδ N_L^C    = M_L N_L  + λ_RLNL̅_L H_d + λ_2N_aν̅^a_L + λ_3 NΦν̅^3_L + λ_N Φ̅N̅_L     = 0 
+            
+             -δℒδN̅_L^C    =  M_R ν̅^3_L   + λ_LRN L_L H_u + Φ̅λ_N N_L                         = 0 
+            
+             -δℒδν̅_L^3^C    =  M_R N̅_L  + y^ν_33 l^3_L H_u + λ_3 NΦ N_L           = 0  
+            
+             -δℒδν̅_L^a^C    =  M_R^a bν̅^b_L  + y^ν_a b l^b_L H_u + λ_2 N a N_L           = 0
+        
+         Then, solving for the heavy fields, we get:
+         
+            N_L     =  - 1/M_L( λ_RLNL̅_L H_d + λ_2N_aν̅^a_L + λ_3 NΦν̅^3_L + λ_N Φ̅N̅_L)    
+               ∼ - 1/M_L( λ_RLNL̅_L H_d )    
+            ν̅^3_L     = - 1/M_R( λ_LRN L_L H_u + Φ̅λ_N N_L )     
+               ∼   - 1/M_R( λ_LRN L_L H_u )    
+            N̅_L     = -1/M_R( y^ν_33 l^3_L H_u + λ_3 NΦ N_L)     
+               ∼ -1/M_R( y^ν_33 l^3_L H_u )     
+            ν̅^d_L     =  - M_R^-1^d a( y^ν_a b l^b_L H_u + λ_2 N a N_L)    
+               ∼ - M_R^-1^d a( y^ν_a b l^b_L H_u )
+        
+         where we have neglected terms suppressed by two powers of the heavy mass scale. 
+        
+         Now plugging these back into the original Lagrangian, we obtain the effective Lagrangian for just the light neutrino states:
+         
+            ℒ^eff   =  (l^d_L)^C (y^ν_d e)^T H_u (M_R^-1)_e a y^ν_db l^b_LH_u  +  1/M_Rλ_LRN  (y^ν_33) (l^3_L)^C H_u  L_L H_u    
+                - L̅_L^C(  λ_2L_a l_L^a + λ_3 LΦ̅l^3_L + λ_L Φ L_L   ) +   1/M_Lλ_RLNλ_RLNL̅_L^C H_d  L̅_L H_d  + h.c.
+        
+        This effective Lagrangian is considered for RG flow and for the physics below the right-handed Majorana neutrino mass scale.
+        
+        
+        
+         §.§ Radiative corrections to the Higgs mass
+        
+        In our model, we consider the large tanβ regime with tanβ∼ 47.6. In this regime, we get |μ|^2 at the tree level as:
+        
+            |μ|^2 = 1/2(-2m^2_H_u - m_Z^2 + 2/tan^2β(m^2_H_d - m^2_H_u))
+        
+        However, in our analysis, we consider radiative corrections to the Z boson mass, which reduces the μ further to approximately give:
+        
+            |μ|^2 ≈ -m^2_H_u - m_Z^2/2 - Σ_u^u
+        
+        where Σ^u_u corresponds to the radiative corrections and its exact expression is given in the Appendix of <cit.>. We also consider the contribution of the VL squarks along with those mentioned in <cit.>.
+        Including the large radiative corrections from top quark, top squark <cit.> and VL particle masses <cit.>, the Higgs mass is given by:
+        
+            m^2_h^0 = 1/2(m^2_A^0 + m^2_Z - √((m^2_A^0-m_Z^2)^2 + 4m^2_Zm^2_A^0sin^2(2β))) + Δ_t(m^2_h^0) + Δ_VL(m^2_h^0)
+        
+        where
+        
+            Δ_t(m^2_h^0) = 3/4π^2cos^2α |y_t|^2 m_t^2 [ln(m_t_1m_t_2/m_t^2)] + Δ_threshold
+        
+        with
+        
+            Δ_threshold = c_t^2s_t^2[(m^2_t_2 - m^2_t_1)/m_t^2]ln(m^2_t_2/m^2_t_1) + c_t^4s_t^4[(m^2_t_2 - m^2_t_1)^2 - 1/2(m_t_2^4 - m_t_1^4)ln(m^2_t_2/m^2_t_1)]/m_t^4
+        
+        and
+        
+            Δ_VL(m^2_h^0) ≈ -3v^2/48 π^2|λ_RLU|^4 |μ|^4/m_S_U^4 - 3v^2/48 π^2|λ_RLD|^4 |μ|^4/m_S_D^4
+        
+        because in our model we have |λ_RLU| > |λ_LRU| and |λ_RLD| > |λ_LRD|. 
+        
+        The angle α is determined by:
+        
+            tan(2α)/tan(2β) = m^2_A^0 + m_Z^2/m^2_A^0 - m_Z^2
+        m_t_1 and m_t_2 are the top squark masses, m_S_U and m_S_D is the scale of VL scalar stop and sbottom masses and m^2_A^0 = 2|μ|^2 + m^2_H_u + m^2_H_d. 
+        
+        
+        With tanβ∼ 47.6, this model gives a reasonable μ≈ 13.6 TeV for the fit point I and  μ≈ 22.1 TeV for the fit point II. The Higgs mass can be easily fine tuned by varying c_H_u and c_H_d appropriately.
+        
+        
+        
+         §.§ The potential for the new scalar fields and self-consistency equations
+        
+        The classical scalar potential for the Φ and Φ̅ fields is given by:
+        
+            V(Φ, Φ̅) = (|μ_Φ|^2 + m^2_Φ)|Φ|^2 + (|μ_Φ|^2 + m^2_Φ̅)|Φ̅|^2 - (b_Φμ_ΦΦΦ̅+ c.c) + 1/2g^'^2(|Φ|^2 - |Φ̅|^2)^2
+        
+        It can be easily seen that this potential is indeed bounded from below. To see this, note that, except for the D-flat directions i.e. when |Φ| ≠ |Φ̅|, the above potential is clearly bounded from below since the term quartic in fields dominates for large values of |Φ| and |Φ̅|. Now if |Φ| = |Φ̅|, then the condition for V(Φ, Φ̅) to be bounded from below is given by:
+        
+            2|μ_Φ|^2 + m_Φ^2 + m_Φ̅^2 > 2 b_Φμ_Φ
+        
+        Minimizing the scalar potential:
+        
+            ∂ V/∂Φ = ∂ V/∂Φ̅ = 0
+        
+        at v_Φ and v_Φ̅ and considering real VEVs v_Φ, v_Φ̅, we get the two self-consistency equations:
+        
+            (|μ_Φ|^2 + m^2_Φ)v_Φ - b_Φμ_Φ v_Φ̅ - g^'^2 v_Φ(v_Φ̅^2 - v_Φ^2) = 0
+        
+        and
+        
+            (|μ_Φ|^2 + m^2_Φ̅)v_Φ̅ - b_Φμ_Φ v_Φ + g^'^2 v_Φ̅(v_Φ̅^2 - v_Φ^2) = 0
+        
+        With μ_Φ = 19.8232 TeV and b_Φ = 11.6600 TeV for the fit point I and μ_Φ = 29.9013 TeV and b_Φ = 14.6578 TeV for the fit point II, the above two self-consistency equations are satisfied with VEVs v_Φ and v_Φ̅ mentioned in the [sec:7.5]Appendix <ref>sec:7.5 and [sec:7.8]Appendix <ref>sec:7.8 for the two fit points respectively. Hence, the new U(1)^' gauge symmetry is consistently broken by the VEVs of the new scalar fields.
+        
+        
+        
+         §.§ Chargino and Neutralino masses
+        
+        In the basis (Z^0, Φ^0, Φ̅^0, B^0, W^0, H^0_d, H^0_u) (where Z^0 is the gaugino corresponding to the new U(1)^'), the neutralino mass matrix is given by:
+        
+            M_N = [                   M'               -g'v_Φ              -g'v_Φ̅                    0                    0                    0                    0                     ;               -g'v_Φ                    0                 -μ_Φ                    0                    0                    0                    0                     ;              -g'v_Φ̅                 -μ_Φ                    0                    0                    0                    0                    0                     ;                    0                    0                    0                  M_1                    0 -√(3/5)g_1v_H_d/√(2)  √(3/5)g_1v_H_u/√(2)                     ;                    0                    0                    0                    0                  M_2        g_2v_H_d/√(2)       -g_2v_H_u/√(2)                     ;                    0                    0                    0 -√(3/5)g_1v_H_d/√(2)        g_2v_H_d/√(2)                    0                   -μ                     ;                    0                    0                    0  √(3/5)g_1v_H_u/√(2)       -g_2v_H_u/√(2)                   -μ                    0 ]
+        
+        where M', M_1, and M_2 are the weak scale values for the soft SUSY breaking gaugino mass parameters.
+        The mass eigenstates can be obtained by diagonalizing this mass matrix using a unitary matrix N:
+        
+            N_i = N_ijψ^0_j
+        
+        where N_i are the mass eigenstates. Hence we get the diagonal neutralino mass matrix as:
+        
+            NM_NN^-1 = [ m_N_1     0     0     0     0     0     0      ;     0 m_N_2     0     0     0     0     0;     0     0 m_N_3     0     0     0     0;     0     0     0 m_N_4     0     0     0;     0     0     0     0 m_N_5     0     0;     0     0     0     0     0 m_N_6     0;     0     0     0     0     0     0 m_N_7       ]
+        
+        Similarly, the chargino masses are given in terms of the M_2 gaugino mass and the Higgsino mixing parameter μ by:
+        
+            m^2_C_1, m^2_C_2 = 1/2[M_2^2 + |μ^2| + 2m_W^2 ∓√((M_2^2 + |μ^2| + 2m_W^2)^2 - 4|μ M_2 - m_W^2 sin(2β)|^2)]
+        
+        The predictions for these masses in our model are consistent with all the constraints and also imply that the lightest supersymmetric particle (LSP) of the model is the lightest neutralino. In our model, it has the potential to be a good candidate for dark matter.
+        
+        
+        
+         §.§ Input parameters at the fit point - Fit point I
+        
+            g_1 = g_2 = g_3 = g_4 = g_GUT = 1.4729,  ϵ_3 = 0,  M_GUT = 5.012 × 10^16 GeV
+        
+            tanβ = 47.59696,  v_Φ = 3041.536  GeV,  v_Φ̅ = 2391.531  GeV
+        
+            λ_2Q_1 = 843.086  GeV,  λ_2Q_2 = 1149.109  GeV,  λ_2L_1 = λ_2L_2 = 1300.727  GeV
+        
+            λ_2U_1 = 646.234  GeV,  λ_2U_2 = 881.402  GeV,  λ_2D_1 = 989.323  GeV, λ_2D_2 = 3104.476  GeV
+        
+            λ_2E_1 = -1837.064  GeV,  λ_2E_2 = 0  GeV
+        
+        The remaining 50 input parameters are presented in the form of the Yukawa matrices at the GUT scale and the soft SUSY breaking parameters. Many of the entries in the Yukawa matrices are 0 and some of them are equal (in the GUT sense) which together give 38 of the model parameters. The Yukawa matrices at the GUT scale are:
+        
+            Y_u = [             0.00000937               0.000000               0.000000               0.000000               0.000000                       ;               0.000000               0.000000               0.000000               0.000000               0.000000                       ;               0.000000               0.000000  1.898317 e^ i0.789853               0.000000 1.705787 e^ -i0.000153                       ;               0.000000               0.000000               0.000000               0.017169               1.616310                       ;               0.000000               0.000000 0.146814 e^ -i0.038278               2.193911               2.163913;                        ]
+        
+            Y_d = [               0.002213  0.006113 e^ i1.193432               0.000000               0.000000               0.000000                       ;  0.017042 e^ i0.933044  0.043694 e^ i0.768385               0.000000               0.000000               0.000000                       ;               0.000000               0.000000  1.898317 e^ i0.789853               0.000000 2.565781 e^ -i0.000123                       ;               0.000000               0.000000               0.000000               0.000917               0.040027                       ;               0.000000               0.000000 0.146814 e^ -i0.038278               2.193911               0.797559;                        ]
+        
+            Y_e = [              0.000224              0.000188              0.000000              0.000000              0.000000                      ;              0.000186              0.000000              0.000000              0.000000              0.000000                      ;              0.000000              0.000000 1.898317 e^ i0.789853              0.000000              0.000000                      ;              0.000000              0.000000              0.000000              0.081866              0.467347                      ;              0.000000              0.000000              0.000000              0.957657              2.959867;                       ]
+        
+            Y_ν = [ 2.192903 2.315101 0.000000 0.000000 0.000000         ; 1.847680 1.891011 0.000000 0.000000 0.000000         ; 0.000000 0.000000 0.759619 0.000000 0.000000         ; 0.000000 0.000000 0.000000 2.476346 1.943457         ; 0.000000 0.000000 0.000000 0.957657 2.066375;          ]
+        
+        
+          §.§.§ Quark and charged lepton Yukawa matrices at the weak scale
+        
+            Y_ν = [ 0.00001628 e^ i0.000001   0.000007 e^ i0.000066                0.000000                0.000000                0.000000                        ;                0.000000                0.000000                0.000000                0.000000                0.000000                        ;                0.000000                0.000000   1.000457 e^ i0.789853                0.000000  0.212161 e^ -i0.000153                        ;                0.000000                0.000000                0.000000                0.018340                1.030141                        ;                0.000000                0.000000  0.143237 e^ -i0.038278                0.846612                0.737932;                         ]
+        
+            Y_d = [  0.004910 e^ i0.542198  0.009242 e^ i1.094004               0.000000               0.000000               0.000000                       ;  0.043988 e^ i0.860264  0.070637 e^ i0.786049               0.000000               0.000000               0.000000                       ;               0.000000               0.000000  0.862762 e^ i0.789853               0.000000 0.507232 e^ -i0.000123                       ;               0.000000               0.000000               0.000000               0.001187               0.056977                       ;               0.000000               0.000000 0.143237 e^ -i0.038278               0.846612               0.501296;                        ]
+        
+            Y_e = [              0.000039              0.000002              0.000000              0.000000              0.000000                      ;              0.000103             -0.000084              0.000000              0.000000              0.000000                      ;              0.000000              0.000000 0.472658 e^ i0.789853              0.000000              0.000000                      ;              0.000000              0.000000              0.000000              0.028901              0.150963                      ;              0.000000              0.000000              0.000000              0.118708              0.497205;                       ]
+        
+        
+          §.§.§ RH Neutrino mass parameters and the neutrino mass matrix at the weak scale
+        
+        The mass parameters M_L, M_R and M_R^ab in the ℒ_maj of Equation (2.3) are given by: 
+        
+            M_L = M_R = 8.55285 × 10^12 GeV
+        
+            M_R^ab = [ 1.450248 e^ -i0.159487× 10^11              3.369465 × 10^11                              ;              3.369465 × 10^11 4.117877 e^ -i0.167092× 10^11;                               ]
+        
+        These contribute to 6 additional parameters. 
+        
+        The neutrino mass matrix at the weak scale is given by:
+        
+            M_neutrino = [ 2.7816 e^ i0.4396× 10^-10 2.8478 e^ i0.6337× 10^-10                  0.000000                  0.000000               1300.727081                          ; 2.8478 e^ i0.6337× 10^-10  2.952 e^ i0.9654× 10^-10                  0.000000                  0.000000               1300.727081                          ;                  0.000000                  0.000000                  0.000000           4.5650 × 10^-11                  0.000000                          ;                  0.000000                  0.000000           4.5650 × 10^-11                  0.000000                361.055191                          ;               1300.727081               1300.727081                  0.000000                361.055191           2.1814 × 10^-14;                           ]
+        
+        All the entries in M_R^ab and M_neutrino are in GeV.
+        
+        
+        
+          §.§.§ Soft SUSY breaking parameters
+        
+        The GMM parameters for this fit point are given by:
+        
+            l_a = 1,  α = 30,  a_0 = 0,  m_3/2 =  20  TeV,  c_m = 14,  c_H_u = 19.81999,  c_H_d = 12.79353
+        
+        Here, m_3/2 is the gravitino mass and we have taken a universal a_ijk = a_0. Hence, we have 6 soft SUSY breaking parameters. 
+        
+        The weak scale soft SUSY breaking mass matrices are given by:
+        
+            m^2_Q = [             223.953696  6.047421 e^ i3.135137               0.000000               0.000000               0.000000                       ; 6.047421 e^ -i3.135137             223.721080               0.000000               0.000000               0.000000                       ;               0.000000               0.000000             110.803934               0.000000               0.000000                       ;               0.000000               0.000000               0.000000             151.289535               0.000000                       ;               0.000000               0.000000               0.000000               0.000000              94.077908;                        ]
+        
+            m^2_u̅ = [              219.191451 11.548647 e^ -i3.141563                0.000000                0.000000                0.000000                        ;  11.548647 e^ i3.141563              219.194739                0.000000                0.000000                0.000000                        ;                0.000000                0.000000               78.855963                0.000000                0.000000                        ;                0.000000                0.000000                0.000000               28.764739                0.000000                        ;                0.000000                0.000000                0.000000                0.000000               99.357419;                         ]
+        
+            m^2_d̅ = [             224.930034  0.325380 e^ i3.074355               0.000000               0.000000               0.000000                       ; 0.325380 e^ -i3.074355             224.164090               0.000000               0.000000               0.000000                       ;               0.000000               0.000000              50.041348               0.000000               0.000000                       ;               0.000000               0.000000               0.000000             133.993569               0.000000                       ;               0.000000               0.000000               0.000000               0.000000             209.549257;                        ]
+        
+            m^2_L = [ 177.008701 e^ i-0.000000  51.893498 e^ -i3.141511                 0.000000                 0.000000                 0.000000                         ;   51.893498 e^ i3.141511               171.787289                 0.000000                 0.000000                 0.000000                         ;                 0.000000                 0.000000               122.499993                 0.000000                 0.000000                         ;                 0.000000                 0.000000                 0.000000               150.724394                 0.000000                         ;                 0.000000                 0.000000                 0.000000                 0.000000                90.356545;                          ]
+        
+            m^2_e̅ = [             197.468017  1.279482 e^ i3.141585               0.000000               0.000000               0.000000                       ; 1.279482 e^ -i3.141585             197.346591               0.000000               0.000000               0.000000                       ;               0.000000               0.000000              95.752434               0.000000               0.000000                       ;               0.000000               0.000000               0.000000              63.090522               0.000000                       ;               0.000000               0.000000               0.000000               0.000000             126.769184;                        ]
+        
+            m^2_ν = [               119.902142 100.622647 e^ -i3.141512                 0.000000                 0.000000                 0.000000                         ;  100.622647 e^ i3.141512               148.270196                 0.000000                 0.000000                 0.000000                         ;                 0.000000                 0.000000               182.846500                 0.000000                 0.000000                         ;                 0.000000                 0.000000                 0.000000                77.310330                 0.000000                         ;                 0.000000                 0.000000                 0.000000                 0.000000                 5.566623;                          ]
+        
+        All the entries in the above matrices are in TeV^2. 
+        
+        The weak scale gaugino mass parameters M_a are given by:
+        
+            M_1 = 628.093  GeV,  M_2 = 992.049  GeV,  M_3 = 2.28438  TeV,  M_4 = 429.250  GeV
+        
+        
+         §.§ Extended CKM matrix at the fit point
+        
+            V̂_CKM = [  0.973997 e^ i0.137293 0.226529 e^ -i1.475268  0.003769 e^ i0.308875  0.000001 e^ i2.610939  0.000006 e^ i2.611603                       ;  0.226416 e^ i1.982142 0.973174 e^ -i2.772616  0.040843 e^ i0.060402  0.000006 e^ i2.368311  0.000065 e^ i2.322401                       ;  0.008076 e^ i1.505322 0.040214 e^ -i2.825819  0.999053 e^ i3.130504  0.000381 e^ i3.102532  0.000352 e^ i2.245719                       ; 0.000045 e^ -i2.917042 0.000432 e^ -i1.357450 0.014505 e^ -i2.697973  0.023191 e^ i3.126263 0.001407 e^ -i0.013187                       ;  0.000003 e^ i1.922230 0.000021 e^ -i2.239466 0.000684 e^ -i2.930490  0.997883 e^ i0.000004 0.060737 e^ -i3.140826;                        ]
+        
+        
+         §.§ Z' couplings at the fit point
+        
+            ĝ^u_L = [           -0.000000434 0.000319 e^ -i3.141175 0.000069 e^ -i3.078618  0.000014 e^ i3.123712 0.000572 e^ -i0.000438                       ;  0.000319 e^ i3.141175              -0.234369 0.050764 e^ -i3.084329  0.010336 e^ i3.123154 0.420433 e^ -i0.000778                       ;  0.000069 e^ i3.078618  0.050764 e^ i3.084329               0.975915 0.010109 e^ -i0.656617 0.204143 e^ -i0.026670                       ; 0.000014 e^ -i3.123712 0.010336 e^ -i3.123154  0.010109 e^ i0.656617              -0.000309  0.019742 e^ i0.053349                       ;  0.000572 e^ i0.000438  0.420433 e^ i0.000778  0.204143 e^ i0.026670 0.019742 e^ -i0.053349              -0.741236;                        ]
+        
+            ĝ^u_R = [              -0.000001  0.000489 e^ i3.141260  0.000260 e^ i3.126864  0.001072 e^ i0.000509  0.000024 e^ i3.124938                       ; 0.000489 e^ -i3.141260              -0.164348  0.087195 e^ i3.129088  0.360096 e^ i0.000731  0.008174 e^ i3.125094                       ; 0.000260 e^ -i3.126864 0.087195 e^ -i3.129088               0.899619  0.417027 e^ i0.005909 0.015488 e^ -i2.956363                       ; 0.001072 e^ -i0.000509 0.360096 e^ -i0.000731 0.417027 e^ -i0.005909              -0.734997 0.015339 e^ -i0.064909                       ; 0.000024 e^ -i3.124938 0.008174 e^ -i3.125094  0.015488 e^ i2.956363  0.015339 e^ i0.064909              -0.000273;                        ]
+        
+            ĝ^d_L = [              -0.012083 0.052099 e^ -i1.606585 0.003798 e^ -i2.934006 0.096382 e^ -i1.969962  0.005864 e^ i1.173160                       ;  0.052099 e^ i1.606585              -0.224384  0.000595 e^ i2.864449  0.416731 e^ i2.772071 0.025352 e^ -i0.368221                       ;  0.003798 e^ i2.934006 0.000595 e^ -i2.864449               0.978368  0.185601 e^ i3.130980 0.011541 e^ -i0.032619                       ;  0.096382 e^ i1.969962 0.416731 e^ -i2.772071 0.185601 e^ -i3.130980              -0.739172  0.044920 e^ i0.002430                       ; 0.005864 e^ -i1.173160  0.025352 e^ i0.368221  0.011541 e^ i0.032619 0.044920 e^ -i0.002430              -0.002730;                        ]
+        
+            ĝ^d_R = [              -0.945118 0.224121 e^ -i0.001067 0.017158 e^ -i3.135415  0.002714 e^ i0.020878 0.036574 e^ -i3.120954                       ;  0.224121 e^ i0.001067              -0.053144  0.002537 e^ i0.074178 0.000697 e^ -i3.129376  0.009398 e^ i0.012179                       ;  0.017158 e^ i3.135415 0.002537 e^ -i0.074178               0.816818 0.028594 e^ -i0.001210 0.386166 e^ -i3.140173                       ; 0.002714 e^ -i0.020878  0.000697 e^ i3.129376  0.028594 e^ i0.001210               0.000989 0.013362 e^ -i3.138935                       ;  0.036574 e^ i3.120954 0.009398 e^ -i0.012179  0.386166 e^ i3.140173  0.013362 e^ i3.138935               0.180455;                        ]
+        
+            ĝ^e_L = [         -0.0000000322 0.000176 e^ i3.141593              0.000000              0.000024             -0.000024                      ;             -0.000176             -0.962904              0.000000              0.133323             -0.133958                      ;              0.000000              0.000000              1.000000              0.000000              0.000000                      ;              0.000024              0.133323              0.000000             -0.018460              0.018548                      ;             -0.000024             -0.133958              0.000000              0.018548             -0.018636;                       ]
+        
+            ĝ^e_R = [ -0.0000000079     -0.000087      0.000000      0.000012     -0.000012              ;     -0.000087     -0.962814      0.000000      0.137147     -0.130362              ;      0.000000      0.000000      1.000000      0.000000      0.000000              ;      0.000012      0.137147      0.000000     -0.019536      0.018569              ;     -0.000012     -0.130362      0.000000      0.018569     -0.017651;               ]
+        
+        
+         §.§ Input parameters at the fit point - Fit point II
+        
+            g_1 = g_2 = g_3 = g_4 = g_GUT = 1.4206,  ϵ_3 = 0,  M_GUT = 5.012 × 10^16 GeV
+        
+            tanβ = 47.62315,  v_Φ = 3039.259  GeV,  v_Φ̅ = 2388.616  GeV
+        
+            λ_2Q_1 = 838.027  GeV,  λ_2Q_2 = 1147.758  GeV,  λ_2L_1 = λ_2L_2 = 1290.611  GeV
+        
+            λ_2U_1 = 646.556  GeV,  λ_2U_2 = 881.232  GeV,  λ_2D_1 = 989.959  GeV, λ_2D_2 = 3100.593  GeV
+        
+            λ_2E_1 = -1823.503  GeV,  λ_2E_2 = 0  GeV
+        
+        The remaining 50 input parameters are presented in the form of the Yukawa matrices at the GUT scale and the soft SUSY breaking parameters. Many of the entries in the Yukawa matrices are 0 and some of them are equal (in the GUT sense) which together give 38 of the model parameters. The Yukawa matrices at the GUT scale are:
+        
+            Y_u = [            0.000009357               0.000000               0.000000               0.000000               0.000000                       ;               0.000000               0.000000               0.000000               0.000000               0.000000                       ;               0.000000               0.000000  1.827175 e^ i0.790233               0.000000 1.188228 e^ -i0.000217                       ;               0.000000               0.000000               0.000000               0.017894               1.618202                       ;               0.000000               0.000000 0.152240 e^ -i0.043436               2.194159               1.963979;                        ]
+        
+            Y_d = [               0.002409  0.006097 e^ i1.192444               0.000000               0.000000               0.000000                       ;  0.016879 e^ i0.925307  0.044389 e^ i0.785451               0.000000               0.000000               0.000000                       ;               0.000000               0.000000  1.827175 e^ i0.790233               0.000000 2.381021 e^ -i0.000132                       ;               0.000000               0.000000               0.000000               0.001168               0.040008                       ;               0.000000               0.000000 0.152240 e^ -i0.043436               2.194159               0.795780;                        ]
+        
+            Y_e = [              0.000204              0.000184              0.000000              0.000000              0.000000                      ;              0.000186              0.000000              0.000000              0.000000              0.000000                      ;              0.000000              0.000000 1.827175 e^ i0.790233              0.000000              0.000000                      ;              0.000000              0.000000              0.000000              0.073570              0.472727                      ;              0.000000              0.000000              0.000000              0.861073              2.959575;                       ]
+        
+            Y_ν = [ 2.191883 2.316690 0.000000 0.000000 0.000000         ; 1.825601 1.838974 0.000000 0.000000 0.000000         ; 0.000000 0.000000 1.381811 0.000000 0.000000         ; 0.000000 0.000000 0.000000 1.785259 1.947156         ; 0.000000 0.000000 0.000000 0.861073 2.070352;          ]
+        
+        
+          §.§.§ Quark and charged lepton Yukawa matrices at the weak scale
+        
+            Y_u = [ 0.00001546 e^ i0.000001   0.000006 e^ i0.000060                0.000000                0.000000                0.000000                        ;                0.000000                0.000000                0.000000                0.000000                0.000000                        ;                0.000000                0.000000   0.989540 e^ i0.790233                0.000000  0.167705 e^ -i0.000217                        ;                0.000000                0.000000                0.000000                0.018252                1.024819                        ;                0.000000                0.000000  0.140206 e^ -i0.043436                0.848179                0.723105;                         ]
+        
+            Y_d = [  0.005125 e^ i0.510512  0.009232 e^ i1.085049               0.000000               0.000000               0.000000                       ;  0.043864 e^ i0.862817  0.071353 e^ i0.800050               0.000000               0.000000               0.000000                       ;               0.000000               0.000000  0.858954 e^ i0.790233               0.000000 0.493623 e^ -i0.000132                       ;               0.000000               0.000000               0.000000               0.001492               0.053696                       ;               0.000000               0.000000 0.140206 e^ -i0.043436               0.848179               0.495800;                        ]
+        
+            Y_e = [              0.000032              0.000011              0.000000              0.000000              0.000000                      ;              0.000104             -0.000083              0.000000              0.000000              0.000000                      ;              0.000000              0.000000 0.472927 e^ i0.790233              0.000000              0.000000                      ;              0.000000              0.000000              0.000000              0.028925              0.149592                      ;              0.000000              0.000000              0.000000              0.118978              0.504921;                       ]
+        
+        
+          §.§.§ RH Neutrino mass parameters and the neutrino mass matrix at the weak scale
+        
+        The mass parameters M_L, M_R and M_R^ab in the ℒ_maj of Equation (2.3) are given by: 
+        
+            M_L = M_R = 1.2504 × 10^13 GeV
+        
+            M_R^ab = [ 1.812229 e^ -i0.268412× 10^11              4.947073 × 10^11                              ;              4.947073 × 10^11 5.983751 e^ -i0.263383× 10^11;                               ]
+        
+        These contribute to 6 additional parameters. 
+        
+        The neutrino mass matrix at the weak scale is given by:
+        
+            M_neutrino = [ 2.5793 e^ i0.4362× 10^-10 2.6209 e^ i0.6416× 10^-10                  0.000000                  0.000000               1290.610742                          ; 2.6209 e^ i0.6416× 10^-10 2.7256 e^ i1.0088× 10^-10                  0.000000                  0.000000               1290.610742                          ;                  0.000000                  0.000000                  0.000000           4.6185 × 10^-11                  0.000000                          ;                  0.000000                  0.000000           4.6185 × 10^-11                  0.000000                361.606446                          ;               1290.610742               1290.610742                  0.000000                361.606446           1.6712 × 10^-14;                           ]
+        
+        All the entries in M_R^ab and M_neutrino are in GeV.
+        
+        
+        
+          §.§.§ Soft SUSY breaking parameters
+        
+        The GMM parameters for this fit point are given by:
+        
+            l_a = 1,  α = 30,  a_0 = 0,  m_3/2 =  25  TeV,  c_m = 23,  c_H_u = 19.42162,  c_H_d = 36.76136
+        
+        Here, m_3/2 is the gravitino mass and we have taken a universal a_ijk = a_0. Hence, we have 6 soft SUSY breaking parameters. 
+        
+        The weak scale soft SUSY breaking mass matrices are given by:
+        
+            m^2_Q = [             556.868567  8.408083 e^ i3.133000               0.000000               0.000000               0.000000                       ; 8.408083 e^ -i3.133000             556.200694               0.000000               0.000000               0.000000                       ;               0.000000               0.000000             269.643182               0.000000               0.000000                       ;               0.000000               0.000000               0.000000             395.189964               0.000000                       ;               0.000000               0.000000               0.000000               0.000000             221.828595;                        ]
+        
+            m^2_u = [              532.341519 15.608831 e^ -i3.141568                0.000000                0.000000                0.000000                        ;  15.608831 e^ i3.141568              532.345994                0.000000                0.000000                0.000000                        ;                0.000000                0.000000              270.150118                0.000000                0.000000                        ;                0.000000                0.000000                0.000000               96.193666                0.000000                        ;                0.000000                0.000000                0.000000                0.000000              293.824856;                         ]
+        
+            m^2_d = [             560.954916  0.625278 e^ i3.116404               0.000000               0.000000               0.000000                       ; 0.625278 e^ -i3.116404             558.846834               0.000000               0.000000               0.000000                       ;               0.000000               0.000000             122.070633               0.000000               0.000000                       ;               0.000000               0.000000               0.000000             369.859074               0.000000                       ;               0.000000               0.000000               0.000000               0.000000             530.700060;                        ]
+        
+            m^2_L = [               441.833308 106.881354 e^ -i3.141549                 0.000000                 0.000000                 0.000000                         ;  106.881354 e^ i3.141549               432.057854                 0.000000                 0.000000                 0.000000                         ;                 0.000000                 0.000000               259.406990                 0.000000                 0.000000                         ;                 0.000000                 0.000000                 0.000000               429.168777                 0.000000                         ;                 0.000000                 0.000000                 0.000000                 0.000000               250.349982;                          ]
+        
+            m^2_e = [             533.723453  1.918893 e^ i3.141586               0.000000               0.000000               0.000000                       ; 1.918893 e^ -i3.141586             533.557031               0.000000               0.000000               0.000000                       ;               0.000000               0.000000             240.370308               0.000000               0.000000                       ;               0.000000               0.000000               0.000000             205.618206               0.000000                       ;               0.000000               0.000000               0.000000               0.000000             452.394311;                        ]
+        
+            m^2_ν = [               321.872232 207.072839 e^ -i3.141549                 0.000000                 0.000000                 0.000000                         ;  207.072839 e^ i3.141549               393.081059                 0.000000                 0.000000                 0.000000                         ;                 0.000000                 0.000000               402.031334                 0.000000                 0.000000                         ;                 0.000000                 0.000000                 0.000000               152.922796                 0.000000                         ;                 0.000000                 0.000000                 0.000000                 0.000000               168.027535;                          ]
+        
+        All the entries in the above matrices are in TeV^2. 
+        
+        The weak scale gaugino mass parameters M_a are given by:
+        
+            M_1 = 811.985  GeV,  M_2 = 1.27978  TeV,  M_3 = 2.91131  TeV,  M_4 = 544.317  GeV
+        
+        
+         §.§ Extended CKM matrix at the fit point
+        
+            V̂_CKM = [  0.973993 e^ i0.134100 0.226545 e^ -i1.517993  0.003769 e^ i0.230614  0.000001 e^ i2.529773  0.000006 e^ i2.530413                       ;  0.226437 e^ i2.024459 0.973206 e^ -i2.769825  0.039961 e^ i0.048011  0.000006 e^ i2.358623  0.000066 e^ i2.315121                       ;  0.007968 e^ i1.550805 0.039341 e^ -i2.808380  0.999126 e^ i3.132113  0.000376 e^ i3.096810  0.000345 e^ i2.243055                       ; 0.000048 e^ -i2.313704 0.000388 e^ -i1.024620 0.011685 e^ -i2.644382  0.016906 e^ i3.123424 0.001051 e^ -i0.016141                       ;  0.000003 e^ i1.870152 0.000016 e^ -i2.303574 0.000542 e^ -i2.967029  0.997915 e^ i0.000001 0.062285 e^ -i3.140812;                        ]
+        
+        
+         §.§ Z' couplings at the fit point
+        
+            ĝ^u_L = [           -0.000000418 0.000312 e^ -i3.141265 0.000066 e^ -i3.089746  0.000010 e^ i3.119136 0.000562 e^ -i0.000345                       ;  0.000312 e^ i3.141265              -0.232980 0.049228 e^ -i3.094530  0.007512 e^ i3.118696 0.419792 e^ -i0.000611                       ;  0.000066 e^ i3.089746  0.049228 e^ i3.094530               0.977043 0.008631 e^ -i0.695958 0.199636 e^ -i0.021708                       ; 0.000010 e^ -i3.119136 0.007512 e^ -i3.118696  0.008631 e^ i0.695958              -0.000142  0.014486 e^ i0.064603                       ;  0.000562 e^ i0.000345  0.419792 e^ i0.000611  0.199636 e^ i0.021708 0.014486 e^ -i0.064603              -0.743921;                        ]
+        
+            ĝ^u_R = [           -0.000001265  0.000458 e^ i3.141333  0.000195 e^ i3.123410  0.001008 e^ i0.000400  0.000017 e^ i3.121793                       ; 0.000458 e^ -i3.141333              -0.166148  0.070369 e^ i3.126002  0.365452 e^ i0.000573  0.006057 e^ i3.121893                       ; 0.000195 e^ -i3.123410 0.070369 e^ -i3.126002               0.935430  0.337750 e^ i0.007258 0.011516 e^ -i2.865916                       ; 0.001008 e^ -i0.000400 0.365452 e^ -i0.000573 0.337750 e^ -i0.007258              -0.769145 0.011738 e^ -i0.073905                       ; 0.000017 e^ -i3.121793 0.006057 e^ -i3.121893  0.011516 e^ i2.865916  0.011738 e^ i0.073905              -0.000135;                        ]
+        
+            ĝ^d_L = [              -0.012002 0.051759 e^ -i1.646304 0.003709 e^ -i3.025590 0.096148 e^ -i2.012485  0.005999 e^ i1.130630                       ;  0.051759 e^ i1.646304              -0.222950 0.000290 e^ -i2.555244  0.415680 e^ i2.769248 0.025932 e^ -i0.371040                       ;  0.003709 e^ i3.025590  0.000290 e^ i2.555244               0.979294  0.181588 e^ i3.133261 0.011572 e^ -i0.029921                       ;  0.096148 e^ i2.012485 0.415680 e^ -i2.769248 0.181588 e^ -i3.133261              -0.741462  0.046211 e^ i0.002368                       ; 0.005999 e^ -i1.130630  0.025932 e^ i0.371040  0.011572 e^ i0.029921 0.046211 e^ -i0.002368              -0.002880;                        ]
+        
+            ĝ^d_R = [              -0.947128 0.220492 e^ -i0.003894 0.015890 e^ -i3.088481  0.002621 e^ i0.072084 0.034653 e^ -i3.069740                       ;  0.220492 e^ i0.003894              -0.051328  0.002191 e^ i0.153794 0.000663 e^ -i3.078312  0.008763 e^ i0.063249                       ;  0.015890 e^ i3.088481 0.002191 e^ -i0.153794               0.824729 0.028649 e^ -i0.001440 0.379471 e^ -i3.140449                       ; 0.002621 e^ -i0.072084  0.000663 e^ i3.078312  0.028649 e^ i0.001440               0.000985 0.013041 e^ -i3.138984                       ;  0.034653 e^ i3.069740 0.008763 e^ -i0.063249  0.379471 e^ i3.140449  0.013041 e^ i3.138984               0.172742;                        ]
+        
+            ĝ^e_L = [ -0.00000001   -0.000098    0.000000    0.000014   -0.000014            ;   -0.000098   -0.962232    0.000000    0.134474   -0.135125            ;    0.000000    0.000000    1.000000    0.000000    0.000000            ;    0.000014    0.134474    0.000000   -0.018793    0.018884            ;   -0.000014   -0.135125    0.000000    0.018884   -0.018976;             ]
+        
+            ĝ^e_R = [ -0.00000001   -0.000099    0.000000    0.000014   -0.000013            ;   -0.000099   -0.963023    0.000000    0.136850   -0.129930            ;    0.000000    0.000000    1.000000    0.000000    0.000000            ;    0.000014    0.136850    0.000000   -0.019447    0.018464            ;   -0.000013   -0.129930    0.000000    0.018464   -0.017530;             ]
+        
+        
+        § ACKNOWLEDGEMENTS
+        
+        We would like to thank Junichiro Kawamura for reading over the first draft and making some important comments. The work of S.R. is supported in part by the Department of Energy (DOE) under Award No. DE-SC0011726. The work of H.K. is supported by the KVPY fellowship of the Department of Science and Technology (DST), Government of India.
+        
+        
+        
+        
+        
+        
+        
+        unsrt

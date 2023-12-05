@@ -8,7 +8,7 @@
     "tokenizer": "hf-internal-testing/llama-tokenizer",
     "fill_chunk_size": -1,
     "threads_capacity": 128,
-    "tokens_capacity": 64000,
+    "tokens_capacity": 4096,
     "instance": {
         "max_seq_len": 4096,
         "block_size": 16,
