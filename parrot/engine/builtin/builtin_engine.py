@@ -131,7 +131,7 @@ class BuiltinEngine(LLMEngine):
         return generation_job.generator()
 
     # override
-    def free_context(self, payload: Dict) -> Dict:
+    async def free_context(self, payload: Dict) -> Dict:
         context_id = payload["context_id"]
         for job in self.scheduler.running_jobs:
             if job.context_id == context_id:
@@ -144,7 +144,7 @@ class BuiltinEngine(LLMEngine):
         }
 
     # override
-    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
+    async def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         # Scheduler
         num_running_jobs = self.scheduler.num_running_jobs
         num_total_jobs = self.scheduler.num_total_jobs

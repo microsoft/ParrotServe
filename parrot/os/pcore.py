@@ -128,19 +128,19 @@ class PCore:
         for process in dead_procs:
             pid = process.pid
             self.processes.pop(pid)
+            logger.info(f"VM (pid={pid}) disconnected.")
             # If a VM is dead, we need to free all its resources (garbage collection).
             process.free_process()
             self.proc_last_seen_time.pop(pid)
             self.pid_pool.free(pid)
-            logger.info(f"VM (pid={pid}) disconnected.")
 
         # Engines
         for engine in dead_engines:
             engine_id = engine.engine_id
+            logger.info(f"Engine {engine.name} (id={engine_id}) disconnected.")
             self.engines.pop(engine_id)
             self.engine_last_seen_time.pop(engine_id)
             self.engine_pool.free(engine_id)
-            logger.info(f"Engine {engine.name} (id={engine_id}) disconnected.")
 
     def _check_process(self, pid: int):
         if pid not in self.processes:
@@ -160,7 +160,7 @@ class PCore:
 
     # ---------- Public APIs ----------
 
-    def register_vm(self) -> int:
+    async def register_vm(self) -> int:
         """Register a new VM as a process in the OS."""
         pid = self.pid_pool.allocate()
         process = Process(
@@ -174,7 +174,7 @@ class PCore:
         logger.info(f"VM (pid={pid}) registered.")
         return pid
 
-    def register_engine(self, config: EngineConfig) -> int:
+    async def register_engine(self, config: EngineConfig) -> int:
         """Register a new engine in the OS."""
         engine_id = self.engine_pool.allocate()
         engine = ExecutionEngine(
@@ -187,7 +187,7 @@ class PCore:
         logger.debug(f"Engine {engine.name} (id={engine_id}) registered.")
         return engine_id
 
-    def vm_heartbeat(self, pid: int) -> Dict:
+    async def vm_heartbeat(self, pid: int) -> Dict:
         """Update the last seen time of a VM, and return required data."""
 
         self._check_process(pid)
@@ -211,7 +211,7 @@ class PCore:
 
         return asdict(vm_runtime_info)
 
-    def engine_heartbeat(
+    async def engine_heartbeat(
         self,
         engine_id: int,
         engine_runtime_info: EngineRuntimeInfo,
@@ -229,7 +229,7 @@ class PCore:
             "Runtime info: \n" + engine_runtime_info.display()
         )
 
-    def submit_native_call(self, pid: int, call: NativeCall) -> int:
+    async def submit_native_call(self, pid: int, call: NativeCall) -> int:
         """Submit a native call from a VM to the OS."""
 
         # The native call must be a short, executable and stateless call. (FaaS)
@@ -244,7 +244,7 @@ class PCore:
         # Execute it immediately
         process.execute_native_call(call)
 
-    def submit_semantic_call(self, pid: int, call: SemanticCall) -> int:
+    async def submit_semantic_call(self, pid: int, call: SemanticCall) -> int:
         """Submit a semantic call from a VM to the OS."""
 
         # Submit call will only put the call into a Queue, and the call will be executed later.

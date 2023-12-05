@@ -217,7 +217,7 @@ class MLCEngine(LLMEngine):
         raise NotImplementedError
 
     # override
-    def free_context(self, payload: Dict) -> Dict:
+    async def free_context(self, payload: Dict) -> Dict:
         context_id = payload["context_id"]
 
         assert self._current_context_id != NONE_CONTEXT_ID, "No active context."
@@ -233,7 +233,7 @@ class MLCEngine(LLMEngine):
             "context_len": 0,
         }
 
-    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
+    async def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         num_cached_tokens = UNKNOWN_DATA_FIELD
         num_running_jobs = self.scheduler.num_running_jobs
         num_total_jobs = self.scheduler.num_total_jobs

@@ -174,7 +174,7 @@ class OpenAIEngine(LLMEngine):
         raise NotImplementedError
 
     # override
-    def free_context(self, payload: Dict) -> Dict:
+    async def free_context(self, payload: Dict) -> Dict:
         context_id = payload["context_id"]
         context_len = self.context_manager.free_context(context_id)
         return {
@@ -182,7 +182,7 @@ class OpenAIEngine(LLMEngine):
         }
 
     # override
-    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
+    async def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         # NOTE(chaofan): For OpenAI Engine, mem-related fields are unknown.
         num_cached_tokens = UNKNOWN_DATA_FIELD
         cache_mem = UNKNOWN_DATA_FIELD

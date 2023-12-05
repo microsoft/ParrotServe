@@ -5,11 +5,13 @@
 from abc import ABC, abstractmethod
 from typing import Dict, AsyncGenerator
 import asyncio
+import time
+import threading
 
 from parrot.constants import ENGINE_LOOP_INTERVAL, ENGINE_HEARTBEAT_INTERVAL
 from parrot.protocol.layer_apis import register_engine, engine_heartbeat
 from parrot.protocol.runtime_info import EngineRuntimeInfo
-from parrot.utils import get_logger, set_random_seed, create_task_in_loop
+from parrot.utils import get_logger, set_random_seed
 
 from .config import EngineConfig
 
@@ -35,6 +37,11 @@ class LLMEngine(ABC):
             self.os_http_address = f"http://{os_config['host']}:{os_config['port']}"
         engine_config.pop("os")
 
+        new_event_loop = asyncio.new_event_loop()
+        self._heartbeat_thread = threading.Thread(
+            target=self._heartbeat_daemon, args=(new_event_loop,), daemon=True
+        )
+
     def _register_engine(self, engine_config: EngineConfig):
         """Register engine to OS."""
 
@@ -46,6 +53,8 @@ class LLMEngine(ABC):
             self.engine_id = resp.engine_id
         else:
             self.engine_id = 0
+
+    # ---------- Public APIs ----------
 
     @abstractmethod
     async def fill(self, payload: Dict) -> Dict:
@@ -84,7 +93,7 @@ class LLMEngine(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def free_context(self, payload: Dict) -> Dict:
+    async def free_context(self, payload: Dict) -> Dict:
         """Free context API.
 
         Args:
@@ -96,7 +105,7 @@ class LLMEngine(ABC):
         ...
 
     @abstractmethod
-    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
+    async def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         """Get runtime info of this engine.
 
         Return: EngineRuntimeInfo."""
@@ -121,25 +130,31 @@ class LLMEngine(ABC):
 
         engine_name = self.engine_config.engine_name
         engine_id = self.engine_id
-        engine_runtime_info = self.get_runtime_info(profile=False)  # Performance
+        engine_runtime_info = await self.get_runtime_info(profile=False)  # Performance
 
         logger.debug(
             f"Engine {engine_name} (id={engine_id}) heartbeat sent. "
             "Runtime info: \n" + engine_runtime_info.display()
         )
 
-        resp = await engine_heartbeat(
+        resp = engine_heartbeat(
             http_addr=self.os_http_address,
             engine_id=engine_id,
             engine_name=engine_name,
             runtime_info=engine_runtime_info,
         )
 
-    async def _heartbeat_loop(self):
-        """Loop for heartbeat. It is registered in the same event loop with engine loop."""
-        while True:
-            await self.heartbeat()  # Send heartbeat to OS
-            await asyncio.sleep(ENGINE_HEARTBEAT_INTERVAL)
+    def _heartbeat_daemon(self, event_loop):
+        """Loop for heartbeat."""
+
+        asyncio.set_event_loop(event_loop)
+
+        async def _loop():
+            while True:
+                await self.heartbeat()  # Send heartbeat to OS
+                asyncio.sleep(ENGINE_HEARTBEAT_INTERVAL)
+
+        event_loop.run_until_complete(_loop())
 
     async def engine_loop(self):
         """Engine loop, execute jobs token by token.
@@ -147,8 +162,8 @@ class LLMEngine(ABC):
         For some types of engines, e.g. OpenAI engine, the engine loop is empty loop.
         """
 
-        # Create a task for heartbeat.
-        create_task_in_loop(self._heartbeat_loop())
+        # Start heartbeat daemon
+        self._heartbeat_thread.start()
 
         while True:
             await asyncio.sleep(ENGINE_LOOP_INTERVAL)

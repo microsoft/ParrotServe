@@ -54,12 +54,12 @@ async def generate_stream(request: Request):
 async def free_context(request: Request):
     payload = await request.json()
     logger.debug(f"Received free_context request")
-    return llm_engine.free_context(payload)
+    return await llm_engine.free_context(payload)
 
 
 @app.post("/ping")
 async def ping(request: Request):
-    rt_info = llm_engine.get_runtime_info(profile=False)  # For speed
+    rt_info = await llm_engine.get_runtime_info(profile=False)  # For speed
     return {
         "runtime_info": asdict(rt_info),
     }

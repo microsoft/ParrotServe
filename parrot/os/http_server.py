@@ -61,13 +61,13 @@ async def parrot_os_internal_error_handler(
 async def vm_heartbeat(request: Request):
     pid = (await request.json())["pid"]
     logger.debug(f"VM heartbeat received: pid={pid}")
-    return pcore.vm_heartbeat(pid)
+    return await pcore.vm_heartbeat(pid)
 
 
 @app.post("/register_vm")
 async def register_vm(request: Request):
     logger.debug(f"Register VM received.")
-    allocated_pid = pcore.register_vm()
+    allocated_pid = await pcore.register_vm()
     return {"pid": allocated_pid}
 
 
@@ -95,10 +95,10 @@ async def submit_call(request: Request):
     logger.debug(f"Submit call received: pid={pid}")
     if is_native:
         call = NativeCall.unpickle(payload["call"])
-        pcore.submit_native_call(pid, call)
+        await pcore.submit_native_call(pid, call)
     else:
         call = SemanticCall.unpickle(payload["call"])
-        pcore.submit_semantic_call(pid, call)
+        await pcore.submit_semantic_call(pid, call)
 
     if latency_open == 1:
         await asyncio.sleep(latency / 2)
@@ -137,7 +137,7 @@ async def engine_heartbeat(request: Request):
     engine_name = payload["engine_name"]
     logger.debug(f"Engine {engine_name} (id={engine_id}) heartbeat received.")
     engine_info = EngineRuntimeInfo(**payload["runtime_info"])
-    pcore.engine_heartbeat(engine_id, engine_info)
+    await pcore.engine_heartbeat(engine_id, engine_info)
     return {}
 
 
@@ -146,7 +146,7 @@ async def register_engine(request: Request):
     payload = await request.json()
     logger.debug(f"Register engine received.")
     engine_config = EngineConfig(**payload["engine_config"])
-    engine_id = pcore.register_engine(engine_config)
+    engine_id = await pcore.register_engine(engine_config)
     return {"engine_id": engine_id}
 
 

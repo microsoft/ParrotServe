@@ -66,9 +66,16 @@ async def main():
     coros = []
     for i in range(chunk_num):
         coros.append(amap(i))
+
+    st = time.perf_counter_ns()
     docs = await asyncio.gather(*coros)
     docs = "\n".join(docs)
-    print(docs)
+    # print(docs)
+    resp = await reduce_chain.arun(docs=docs)
+    ed = time.perf_counter_ns()
+    with open("langchain_stdout.log", "a+") as f:
+        print(f"Time: {(ed - st) / 1e9} s", file=f, flush=True)
 
 
-asyncio.run(main())
+for _ in range(10):
+    asyncio.run(main())
