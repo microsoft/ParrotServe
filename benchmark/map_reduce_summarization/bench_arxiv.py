@@ -30,13 +30,13 @@ def get_chunks(file_name: str, chunk_size: int):
     return [doc.page_content for doc in split_docs]
 
 
-def get_refine_functions(file_name: str, chunk_num: int, output_len: int):
+def get_map_reduce_functions(file_name: str, chunk_num: int, output_len: int):
     global vm
 
     rets = []
 
-    first_func = vm.define_function(
-        func_name="first_func",
+    map_func = vm.define_function(
+        func_name="map_func",
         func_body="""Write an one-sentence summary (AS SHORT AS POSSIBLE) of the following:
 {{text}}
 CONCISE SUMMARY:{{summary}}""",
@@ -54,47 +54,47 @@ CONCISE SUMMARY:{{summary}}""",
         ],
     )
 
-    rets.append(first_func)
+    docs = ["{{" + f"chunk_{i}" + "}}" for i in range(chunk_num)]
 
-    refine_template = (
-        "Your job is to produce an one-sentence summary (AS SHORT AS POSSIBLE) for a long document.\n"
-        "We have provided an existing summary up to a certain point: {{existing_answer}}\n"
-        "We have the opportunity to refine the existing summary"
-        "(only if needed) with some more context below.\n"
-        "------------\n"
-        "{{text}}\n"
-        "------------\n"
-        "Given the new context, refine the original summary in English. "
-        "If the context isn't useful, return the original summary.\n"
-        "{{summary}}"
+    reduce_template = (
+        "The following is set of summaries:"
+        f"{docs}"
+        "Take these and distill it into a final, consolidated summary of the main themes."
+        "Helpful Answer:"
     )
 
-    for i in range(1, chunk_num):
-        func = vm.define_function(
-            func_name=f"refine_func_{i}",
-            func_body=refine_template,
-            cache_prefix=True,
-            params=[
-                P.Parameter(name="existing_answer", typ=P.ParamType.INPUT_LOC),
-                P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
-                P.Parameter(
-                    name="summary",
-                    typ=P.ParamType.OUTPUT_LOC,
-                    sampling_config=P.SamplingConfig(
-                        ignore_tokenizer_eos=True,
-                        max_gen_length=output_len,
-                    ),
-                ),
-            ],
-        )
-        rets.append(func)
+    input_params = [
+        P.Parameter(name=f"chunk_{i}", typ=P.ParamType.INPUT_LOC)
+        for i in range(chunk_num)
+    ]
 
-    return rets
+    output_param = (
+        P.Parameter(
+            name="summary",
+            typ=P.ParamType.OUTPUT_LOC,
+            sampling_config=P.SamplingConfig(
+                ignore_tokenizer_eos=True,
+                max_gen_length=output_len,
+            ),
+        ),
+    )
+
+    reduce_func = vm.define_function(
+        func_name="reduce_func",
+        func_body=reduce_template,
+        cache_prefix=False,
+        params=input_params
+        + [
+            output_param,
+        ],
+    )
+
+    return map_func, reduce_func
 
 
 def main(file_name: str, chunk_size: int, output_len: int):
     chunks = get_chunks(file_name, chunk_size)
-    funcs = get_refine_functions(file_name, len(chunks), output_len)
+    funcs = get_map_reduce_functions(file_name, len(chunks), output_len)
 
     print(
         f"file_name: {file_name}, chunk_size: {chunk_size}, output_len: {output_len}",

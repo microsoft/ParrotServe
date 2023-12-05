@@ -9,17 +9,19 @@ import parrot as P
 from parrot.utils import cprofile
 from parrot.testing.localhost_server_daemon import fake_os_server
 
-vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
+vm = P.VirtualMachine(os_http_addr="http://localhost:9000", mode="debug")
 
 map_lowupperbound = vm.import_function(
     "map_sum_test_baseline",
-    module_path="benchmark.bench_codelib.map_reduce_summarization",
+    module_path="benchmark.workloads.test_examples.map_reduce_summarization",
 )
 map_highupperbound = vm.import_function(
-    "map_sum_test_main", module_path="benchmark.bench_codelib.map_reduce_summarization"
+    "map_sum_test_main",
+    module_path="benchmark.workloads.test_examples.map_reduce_summarization",
 )
 reduce_func_test = vm.import_function(
-    "reduce_sum_test_15", module_path="benchmark.bench_codelib.map_reduce_summarization"
+    "reduce_sum_test_15",
+    module_path="benchmark.workloads.test_examples.map_reduce_summarization",
 )
 
 chunk_num = len(reduce_func_test.inputs)
@@ -63,8 +65,8 @@ def test_main():
 
 
 if __name__ == "__main__":
-    # test_baseline()
-    test_main()
+    test_baseline()
+    # test_main()
 
     # for _ in range(10):
     # test_baseline()

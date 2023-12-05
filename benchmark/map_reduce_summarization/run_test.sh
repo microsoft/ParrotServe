@@ -13,7 +13,7 @@ bash launch.sh $log_path os.log engine.log
 
 # Run benchmark
 cd ..
-python3 bench_map_reduce_summarization.py # > log/program.log
+python3 bench_test.py # > log/program.log
 sleep 1
 
 # Kill cluster
