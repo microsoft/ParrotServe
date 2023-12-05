@@ -420,4 +420,32 @@ inline __device__ void from_float(bf16_8_t& dst, Float8_ src) {
 #endif
 }
 
+// From bfloat16 to float32.
+inline __device__ float to_float(__nv_bfloat16 u) {
+  return __bfloat162float(u);
+}
+
+inline __device__ float2 to_float(__nv_bfloat162 u) {
+  float2 tmp;
+  tmp.x = __bfloat162float(u.x);
+  tmp.y = __bfloat162float(u.y);
+  return tmp;
+}
+
+inline __device__ Float4_ to_float(bf16_4_t u) {
+  Float4_ tmp;
+  tmp.x = to_float(u.x);
+  tmp.y = to_float(u.y);
+  return tmp;
+}
+
+inline __device__ Float8_ to_float(bf16_8_t u) {
+  Float8_ tmp;
+  tmp.x = to_float(u.x);
+  tmp.y = to_float(u.y);
+  tmp.z = to_float(u.z);
+  tmp.w = to_float(u.w);
+  return tmp;
+}
+
 } // namespace vllm

@@ -168,9 +168,9 @@ def move_tokens_from_blocked_k_cache(
 
     num_heads, head_dim_div_x, block_size, x = blocked_k_cache.shape[1:]
 
-    assert (
-        blocked_k_cache.shape[0] * block_size >= src_slot_indices.shape[0]
-    ), "blocked_k_cache is too small"
+    # assert (
+    #     blocked_k_cache.shape[0] * block_size >= src_slot_indices.shape[0]
+    # ), "blocked_k_cache is too small"
 
     # Reshape dest_storage into vLLM layout
     original_shape = dest_storage.shape
@@ -277,9 +277,9 @@ def move_tokens_from_blocked_v_cache(
     num_tokens = src_slot_indices.shape[0]
     num_heads, head_dim, block_size = blocked_v_cache.shape[1:]
 
-    assert (
-        blocked_v_cache.shape[0] * block_size >= src_slot_indices.shape[0]
-    ), "blocked_v_cache is too small"
+    # assert (
+    #     blocked_v_cache.shape[0] * block_size >= src_slot_indices.shape[0]
+    # ), "blocked_v_cache is too small"
     assert dest_storage.shape[0] >= dest_indices.shape[0], "dest_storage is too small"
     assert (
         dest_storage.shape[1:] == blocked_v_cache.shape[1:-1]

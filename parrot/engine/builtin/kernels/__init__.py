@@ -13,3 +13,4 @@ from .rotary_embedding import rotary_embedding
 from .rms_norm import rmsnorm_forward
 
 from .vllm import *
+from .shared_flash_decoding import flash_paged_attention, paged_flash_attention

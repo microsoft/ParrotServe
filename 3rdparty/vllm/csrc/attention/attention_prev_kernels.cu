@@ -71,7 +71,7 @@ template<
   int HEAD_SIZE,
   int BLOCK_SIZE,
   int NUM_THREADS>
-__global__ void single_query_cached_kv_attention_kernel(
+__global__ void single_query_cached_kv_prev_attention_kernel(
   scalar_t* __restrict__ out,             // [num_seqs, num_heads, head_size]
   const scalar_t* __restrict__ q,         // [num_seqs, num_heads, head_size]
   const scalar_t* __restrict__ k_cache,   // [num_blocks, num_kv_heads, head_size/x, block_size, x]
@@ -80,6 +80,8 @@ __global__ void single_query_cached_kv_attention_kernel(
   const float scale,
   const int* __restrict__ block_tables,   // [num_seqs, max_num_blocks_per_seq]
   const int* __restrict__ context_lens,   // [num_seqs]
+  float* __restrict__ qk_maxs,   // [num_seqs, num_heads]
+  float* __restrict__ exp_sums,   // [num_seqs, num_heads]
   const int max_num_blocks_per_seq,
   const float* __restrict__ alibi_slopes, // [num_heads]
   const int q_stride,
@@ -98,6 +100,7 @@ __global__ void single_query_cached_kv_attention_kernel(
   const int num_heads = gridDim.x;
   const int kv_head_idx = head_mapping[head_idx];
   const int seq_idx = blockIdx.y;
+  const int num_seqs = gridDim.y;
   const float alibi_slope = alibi_slopes == nullptr ? 0.f : alibi_slopes[head_idx];
 
   // A vector type to store a part of a key or a query.
@@ -141,6 +144,7 @@ __global__ void single_query_cached_kv_attention_kernel(
   // Each thread group fetches x elements from the key at a time.
   constexpr int x = 16 / sizeof(scalar_t);
   float qk_max = -FLT_MAX;
+  float qk_scale = scale * 1.44269504;
 
   const int* block_table = block_tables + seq_idx * max_num_blocks_per_seq;
   const int context_len = context_lens[seq_idx];
@@ -176,7 +180,7 @@ __global__ void single_query_cached_kv_attention_kernel(
 
       // Compute dot product.
       // This includes a reduction across the threads in the same thread group.
-      float qk = scale * Qk_dot<scalar_t, THREAD_GROUP_SIZE>::dot(q_vecs[thread_group_offset], k_vecs);
+      float qk = qk_scale * Qk_dot<scalar_t, THREAD_GROUP_SIZE>::dot(q_vecs[thread_group_offset], k_vecs);
       // Add the ALiBi bias if slopes are given.
       qk += (alibi_slope != 0) ? alibi_slope * (token_idx - context_len) : 0;
 
@@ -216,7 +220,7 @@ __global__ void single_query_cached_kv_attention_kernel(
   // Get the sum of the exp values.
   float exp_sum = 0.f;
   for (int i = thread_idx; i < context_len; i += NUM_THREADS) {
-    float val = __expf(logits[i] - qk_max);
+    float val = exp2f(logits[i] - qk_max);
     logits[i] = val;
     exp_sum += val;
   }
@@ -324,12 +328,19 @@ __global__ void single_query_cached_kv_attention_kernel(
       }
     }
   }
+
+  if (thread_idx == blockDim.x - 1) {
+    qk_maxs[seq_idx * num_heads + head_idx] = qk_max;
+  }
+  if (thread_idx == blockDim.x - 2) {
+    exp_sums[seq_idx * num_heads + head_idx] = exp_sum;
+  }
 }
 
 } // namespace vllm
 
-#define LAUNCH_ATTENTION_KERNEL(T, HEAD_SIZE, BLOCK_SIZE, NUM_THREADS)                        \
-  vllm::single_query_cached_kv_attention_kernel<T, HEAD_SIZE, BLOCK_SIZE, NUM_THREADS>        \
+#define LAUNCH_PREV_ATTENTION_KERNEL(T, HEAD_SIZE, BLOCK_SIZE, NUM_THREADS)                        \
+  vllm::single_query_cached_kv_prev_attention_kernel<T, HEAD_SIZE, BLOCK_SIZE, NUM_THREADS>        \
   <<<grid, block, shared_mem_size, stream>>>(                                                 \
     out_ptr,                                                                                  \
     query_ptr,                                                                                \
@@ -339,6 +350,8 @@ __global__ void single_query_cached_kv_attention_kernel(
     scale,                                                                                    \
     block_tables_ptr,                                                                         \
     context_lens_ptr,                                                                         \
+    qk_maxs_ptr,                                                                         \
+    exp_sums_ptr,                                                                        \
     max_num_blocks_per_seq,                                                                   \
     alibi_slopes_ptr,                                                                         \
     q_stride,                                                                                 \
@@ -350,7 +363,7 @@ template<
   typename T,
   int BLOCK_SIZE,
   int NUM_THREADS = 128>
-void single_query_cached_kv_attention_launcher(
+void single_query_cached_kv_prev_attention_launcher(
   torch::Tensor& out,
   torch::Tensor& query,
   torch::Tensor& key_cache,
@@ -359,6 +372,8 @@ void single_query_cached_kv_attention_launcher(
   float scale,
   torch::Tensor& block_tables,
   torch::Tensor& context_lens,
+  torch::Tensor& qk_maxs,
+  torch::Tensor& exp_sums,
   int max_context_len,
   const c10::optional<torch::Tensor>& alibi_slopes) {
   int num_seqs = query.size(0);
@@ -384,6 +399,8 @@ void single_query_cached_kv_attention_launcher(
   int* head_mapping_ptr = reinterpret_cast<int*>(head_mapping.data_ptr());
   int* block_tables_ptr = block_tables.data_ptr<int>();
   int* context_lens_ptr = context_lens.data_ptr<int>();
+  float* qk_maxs_ptr = qk_maxs.data_ptr<float>();
+  float* exp_sums_ptr = exp_sums.data_ptr<float>();
 
   constexpr int NUM_WARPS = NUM_THREADS / WARP_SIZE;
   int padded_max_context_len = ((max_context_len + BLOCK_SIZE - 1) / BLOCK_SIZE) * BLOCK_SIZE;
@@ -398,31 +415,31 @@ void single_query_cached_kv_attention_launcher(
     // NOTE(woosuk): To reduce the compilation time, we omitted head sizes
     // 32, 160, 192.
     // case 32:
-    //   LAUNCH_ATTENTION_KERNEL(T, 32, BLOCK_SIZE, NUM_THREADS);
+    //   LAUNCH_PREV_ATTENTION_KERNEL(T, 32, BLOCK_SIZE, NUM_THREADS);
     //   break;
     case 64:
-      LAUNCH_ATTENTION_KERNEL(T, 64, BLOCK_SIZE, NUM_THREADS);
+      LAUNCH_PREV_ATTENTION_KERNEL(T, 64, BLOCK_SIZE, NUM_THREADS);
       break;
     case 80:
-      LAUNCH_ATTENTION_KERNEL(T, 80, BLOCK_SIZE, NUM_THREADS);
+      LAUNCH_PREV_ATTENTION_KERNEL(T, 80, BLOCK_SIZE, NUM_THREADS);
       break;
     case 96:
-      LAUNCH_ATTENTION_KERNEL(T, 96, BLOCK_SIZE, NUM_THREADS);
+      LAUNCH_PREV_ATTENTION_KERNEL(T, 96, BLOCK_SIZE, NUM_THREADS);
       break;
     case 112:
-      LAUNCH_ATTENTION_KERNEL(T, 112, BLOCK_SIZE, NUM_THREADS);
+      LAUNCH_PREV_ATTENTION_KERNEL(T, 112, BLOCK_SIZE, NUM_THREADS);
       break;
     case 128:
-      LAUNCH_ATTENTION_KERNEL(T, 128, BLOCK_SIZE, NUM_THREADS);
+      LAUNCH_PREV_ATTENTION_KERNEL(T, 128, BLOCK_SIZE, NUM_THREADS);
       break;
     // case 160:
-    //   LAUNCH_ATTENTION_KERNEL(T, 160, BLOCK_SIZE, NUM_THREADS);
+    //   LAUNCH_PREV_ATTENTION_KERNEL(T, 160, BLOCK_SIZE, NUM_THREADS);
     //   break;
     // case 192:
-    //   LAUNCH_ATTENTION_KERNEL(T, 192, BLOCK_SIZE, NUM_THREADS);
+    //   LAUNCH_PREV_ATTENTION_KERNEL(T, 192, BLOCK_SIZE, NUM_THREADS);
     //   break;
     case 256:
-      LAUNCH_ATTENTION_KERNEL(T, 256, BLOCK_SIZE, NUM_THREADS);
+      LAUNCH_PREV_ATTENTION_KERNEL(T, 256, BLOCK_SIZE, NUM_THREADS);
       break;
     default:
       TORCH_CHECK(false, "Unsupported head size: ", head_size);
@@ -431,7 +448,7 @@ void single_query_cached_kv_attention_launcher(
 }
 
 #define CALL_KERNEL_LAUNCHER(T, BLOCK_SIZE)                         \
-  single_query_cached_kv_attention_launcher<T, BLOCK_SIZE>(         \
+  single_query_cached_kv_prev_attention_launcher<T, BLOCK_SIZE>(    \
     out,                                                            \
     query,                                                          \
     key_cache,                                                      \
@@ -440,6 +457,8 @@ void single_query_cached_kv_attention_launcher(
     scale,                                                          \
     block_tables,                                                   \
     context_lens,                                                   \
+    qk_maxs,                                                   \
+    exp_sums,                                                  \
     max_context_len,                                                \
     alibi_slopes);
 
@@ -479,7 +498,7 @@ void single_query_cached_kv_attention_launcher(
       break;                                                        \
   }
 
-void single_query_cached_kv_attention(
+void single_query_cached_kv_prev_attention(
   torch::Tensor& out,             // [num_seqs, num_heads, head_size]
   torch::Tensor& query,           // [num_seqs, num_heads, head_size]
   torch::Tensor& key_cache,       // [num_blocks, num_heads, head_size/x, block_size, x]
@@ -488,6 +507,8 @@ void single_query_cached_kv_attention(
   float scale,
   torch::Tensor& block_tables,    // [num_seqs, max_num_blocks_per_seq]
   torch::Tensor& context_lens,    // [num_seqs]
+  torch::Tensor& qk_maxs,
+  torch::Tensor& exp_sums,
   int block_size,
   int max_context_len,
   const c10::optional<torch::Tensor>& alibi_slopes) {
