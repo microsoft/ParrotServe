@@ -18,4 +18,5 @@ class MemLayout(Enum):
 ATTN_FUNC_LAYOUT_MAP = {
     "xformers_with_buffer": MemLayout.NORMAL,
     "xformers_fill_vllm_paged_attention_generate": MemLayout.VLLM,
+    "xformers_fill_shared_prompts_generate": MemLayout.VLLM,
 }
