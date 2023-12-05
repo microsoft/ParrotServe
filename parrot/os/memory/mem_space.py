@@ -7,7 +7,7 @@ from typing import Dict, List, Callable
 from parrot.protocol.layer_apis import free_context
 from parrot.utils import get_logger, RecyclePool
 from parrot.constants import CONTEXT_POOL_SIZE, NONE_CONTEXT_ID
-from parrot.exceptions import parrot_assert, ParrotOSInteralError
+from parrot.exceptions import parrot_assert, ParrotOSInternalError
 
 from ..engine import ExecutionEngine
 from .context import Context
@@ -146,7 +146,7 @@ class MemorySpace:
             logger.error(
                 f"Context: {context_id} did not free correctly: {type(e)}, {e}."
             )
-            raise ParrotOSInteralError(e)
+            raise ParrotOSInternalError(e)
         else:
             logger.debug(
                 f"Context: {context_id} freed. Freed tokens: {resp.context_len}"

@@ -20,7 +20,7 @@ from parrot.protocol.layer_apis import ping_engine
 from parrot.protocol.runtime_info import VMRuntimeInfo, EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger, cprofile
-from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
+from parrot.exceptions import ParrotOSUserError, ParrotOSInternalError
 
 from .config import OSConfig
 from .process.process import Process

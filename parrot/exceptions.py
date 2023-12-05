@@ -22,12 +22,12 @@ class ParrotEngineUserError(ParrotError):
     to the client to handle it."""
 
 
-class ParrotOSInteralError(ParrotError):
+class ParrotOSInternalError(ParrotError):
     """This type of error represents a unrecoverable error in the ParrotOS, which means
     when this error is raised, the ParrotOS will be terminated."""
 
 
-class ParrotEngineInteralError(ParrotError):
+class ParrotEngineInternalError(ParrotError):
     """This type of error represents a unrecoverable error in the ParrotEngine, which means
     when this error is raised, the ParrotEngine will be terminated."""
 

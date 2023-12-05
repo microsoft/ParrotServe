@@ -115,7 +115,7 @@ class ThreadDispatcher:
         best_candidate.accept_thread(thread)
 
         logger.info(
-            f"Thread {thread.tid} dispatched to engine {best_candidate.name} (id={best_candidate.engine_id})."
+            f"Thread {thread.unique_id} dispatched to engine {best_candidate.name} (id={best_candidate.engine_id})."
         )
 
         return True

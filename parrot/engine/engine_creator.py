@@ -7,7 +7,7 @@ from typing import Dict
 
 from parrot.utils import get_logger
 from parrot.constants import ENGINE_TYPE_BUILTIN, ENGINE_TYPE_MLCLLM, ENGINE_TYPE_OPENAI
-from parrot.exceptions import ParrotEngineInteralError
+from parrot.exceptions import ParrotEngineInternalError
 
 from .llm_engine import LLMEngine
 from .config import EngineConfig
@@ -44,7 +44,7 @@ def create_engine(
     engine_config.update(override_args)
 
     if not EngineConfig.verify_config(engine_config):
-        raise ParrotEngineInteralError(f"Invalid engine config: {engine_config}")
+        raise ParrotEngineInternalError(f"Invalid engine config: {engine_config}")
 
     engine_type = engine_config["engine_type"]
 
@@ -55,4 +55,4 @@ def create_engine(
     elif engine_type == ENGINE_TYPE_OPENAI:
         return OpenAIEngine(engine_config, connect_to_os)
     else:
-        raise ParrotEngineInteralError(f"Unsupported engine type: {engine_type}")
+        raise ParrotEngineInternalError(f"Unsupported engine type: {engine_type}")

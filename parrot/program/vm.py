@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from typing import Callable, Optional, Literal, Dict, List, Any
 
 
+from parrot.exceptions import parrot_assert
 from parrot.protocol.runtime_info import VMRuntimeInfo
 from parrot.protocol.layer_apis import (
     register_vm,
@@ -81,6 +82,9 @@ class VirtualMachine:
 
         self._anonymous_funcname_counter = 0
 
+        self._batch = []
+        self._batch_flag = False
+
         logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
 
     # ---------- Private Methods ----------
@@ -95,6 +99,25 @@ class VirtualMachine:
             self.runtime_info = VMRuntimeInfo(**resp.dict())
 
             time.sleep(VM_HEARTBEAT_INTERVAL)
+
+    def _batch_hook(self, call: BasicCall) -> bool:
+        if not self._batch_flag:
+            return False
+
+        is_native = isinstance(call.func, NativeFunction)
+
+        async def _submit_call(idx: int):
+            await asyncio.sleep(idx * 0.001)  # Order the batch, 1ms latency
+            await asubmit_call(
+                http_addr=self.os_http_addr,
+                pid=self.pid,
+                call=call,
+                is_native=is_native,
+            )
+
+        self._batch.append(_submit_call(len(self._batch)))
+
+        return True
 
     # ----------Methods for Program Interface ----------
 
@@ -142,6 +165,10 @@ class VirtualMachine:
     def submit_call_handler(self, call: BasicCall):
         """Submit a call to the OS."""
 
+        # If batching
+        if self._batch_hook(call):
+            return
+
         logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
 
         is_native = isinstance(call.func, NativeFunction)
@@ -168,6 +195,23 @@ class VirtualMachine:
         )
 
     # ---------- Public Methods ----------
+
+    # Submit batching calls with ordering!
+
+    def set_batch(self):
+        """Set the batch flag to True."""
+
+        parrot_assert(not self._batch_flag, "Batching is already set.")
+        self._batch_flag = True
+
+    async def submit_batch(self):
+        """Submit the batch to OS."""
+
+        parrot_assert(self._batch_flag, "Batching is not set.")
+        self._batch_flag = False
+
+        await asyncio.gather(*self._batch)
+        self._batch = []
 
     def define_function(
         self,

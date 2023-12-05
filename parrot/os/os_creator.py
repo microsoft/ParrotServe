@@ -10,7 +10,7 @@ from parrot.utils import get_logger
 from .pcore import PCore
 
 from parrot.os.config import OSConfig
-from parrot.exceptions import ParrotOSInteralError
+from parrot.exceptions import ParrotOSInternalError
 
 logger = get_logger("OS Creator")
 
@@ -37,6 +37,6 @@ def create_os(
     os_config.update(override_args)
 
     if not OSConfig.verify_config(os_config):
-        raise ParrotOSInteralError(f"Invalid OS config: {os_config}")
+        raise ParrotOSInternalError(f"Invalid OS config: {os_config}")
 
     return PCore(os_config)

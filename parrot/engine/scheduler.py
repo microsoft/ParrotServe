@@ -30,16 +30,16 @@ class Scheduler:
 
         # Use context id as key. Different jobs with the same context id can't
         # present at the same time.
-        self._job_arrival_time: Dict[int, int] = {}
+        self._job_arrival_time: Dict[int, float] = {}
 
         # pid_tid as key.
-        self._thread_arrival_time: Dict[str, int] = {}
+        self._thread_arrival_time: Dict[str, float] = {}
 
     def add_job(self, job: PrimitiveJob):
         """Add a job to the scheduler."""
 
         self.waiting_jobs.append(job)
-        cur_time = int(time.perf_counter())
+        cur_time = time.perf_counter()
         self._job_arrival_time[job.context_id] = cur_time
         key = f"{job.pid}_{job.tid}"
         if key not in self._thread_arrival_time:
@@ -48,7 +48,7 @@ class Scheduler:
     def remove_job(self, job: PrimitiveJob):
         """Remove a job from the scheduler."""
 
-        self.running_jobs.remove(job)
+        # self.running_jobs.remove(job)
         self._job_arrival_time.pop(job.context_id)
         if job.end_flag:
             key = f"{job.pid}_{job.tid}"
@@ -156,25 +156,43 @@ class Scheduler:
 
         # For normal mode, we repeatly count prefix because it's repeated loaded.
 
-        self.running_jobs.sort(key=lambda job: self._job_arrival_time[job.context_id])
         self.running_jobs.sort(
-            key=lambda job: self._thread_arrival_time[f"{job.pid}_{job.tid}"]
+            key=lambda job: (
+                self._thread_arrival_time[f"{job.pid}_{job.tid}"],
+                self._job_arrival_time[job.context_id],
+            )
         )
+
+        # print(f"Running jobs: {self.running_jobs}")
+        # print(self._thread_arrival_time)
 
         new_running: List[PrimitiveJob] = []
         cur_total_tokens = 0
+        preempted = False
         for job in self.running_jobs:
+            if preempted:
+                self._preempt(job)
+                continue
+
             # NOTE(chaofan): In shared prefix mode, we should only count the prefix context once.
             job_tokens = job.context.get_context_len()
             if cur_total_tokens + job_tokens > self.max_total_tokens:
-                break
+                preempted = True
+                self._preempt(job)
+                continue
+
             new_running.append(job)
             cur_total_tokens += job_tokens
+
         self.running_jobs = new_running
 
         # NOTE(chaofan): Use copy() to avoid list modification.
         ret = self.running_jobs.copy()
         return ret
+
+    def _preempt(self, job):
+        self.waiting_jobs.insert(0, job)
+        # logger.debug(f"Job {job} preempted.")
 
     def finish(self):
         """Finish jobs."""

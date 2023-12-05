@@ -18,7 +18,7 @@ from parrot.constants import (
     NONE_CONTEXT_ID,
     DETOKENIZE_CHUNK_NUM,
 )
-from parrot.exceptions import ParrotOSUserError, parrot_assert
+from parrot.exceptions import ParrotOSUserError, ParrotOSInternalError, parrot_assert
 
 from .primitive_operator import *
 from .placeholder import TokensHolder
@@ -171,7 +171,10 @@ class Thread:
         A thread is ready to be dispatched if and only if all its input placeholders are dispatched.
         """
 
-        parrot_assert(not self.dispatched, "Thread is already dispatched")
+        if self.dispatched:
+            raise ParrotOSInternalError(
+                f"Thread {self.unique_id} is already dispatched to engine {self.engine.engine_id}",
+            )
 
         for sv in self.call.func.body:
             if isinstance(sv, ParameterLoc) and sv.param.is_input_loc:

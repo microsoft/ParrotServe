@@ -67,13 +67,13 @@ def proc2(barrier: mp.Barrier, request_rate: float):
     async def _proc2():
         tasks = []
 
-        barrier.wait()
-
         async for request in _generator():
-            tasks.append(llm.ainvoke(request))
+            task = asyncio.create_task(llm.ainvoke(request))
+            tasks.append(task)
 
         await asyncio.gather(*tasks)
 
+    barrier.wait()
     asyncio.run(_proc2())
 
 
@@ -90,8 +90,8 @@ def main(request_rate: float):
     p2.start()
 
     p1.join()
-    p2.join()
+    p2.terminate()  # Directly shutdown p2
 
 
 if __name__ == "__main__":
-    main(1.0)
+    main(2.0)

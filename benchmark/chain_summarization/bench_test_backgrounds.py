@@ -26,23 +26,25 @@ def proc1(barrier: mp.Barrier):
 
     async def main_async():
         outputs = [P.variable(name=f"output_{i}") for i in range(chunk_num)]
-        coroutines = []
+        vm.set_batch()
         for i in range(chunk_num):
             if i == 0:
-                coro = test_func.ainvoke(
-                    previous_document=input_workload, refined_document=outputs[i]
-                )
+                test_func(previous_document=input_workload, refined_document=outputs[i])
             else:
-                coro = test_func.ainvoke(
-                    previous_document=outputs[i - 1], refined_document=outputs[i]
-                )
-            coroutines.append(coro)
-        await asyncio.gather(*coroutines)
+                test_func(previous_document=outputs[i - 1], refined_document=outputs[i])
+        await vm.submit_batch()
         outputs[-1].get()
 
     barrier.wait()
 
+    # time.sleep(3)
+
     vm.run(main_async, timeit=True)
+
+    # for _ in range(3):
+    #     latency = vm.run(main_async, timeit=True)
+    #     print(f"Time: {latency:.4f}", flush=True)
+    #     time.sleep(3)
 
 
 def proc2(barrier: mp.Barrier, request_rate: float):
@@ -52,7 +54,7 @@ def proc2(barrier: mp.Barrier, request_rate: float):
         "func_1i_1o_genlen_100", "benchmark.workloads.test_examples.normal_functions"
     )
 
-    requests_num = 100
+    requests_num = 1000
 
     outputs = []
 
@@ -87,7 +89,7 @@ def main(request_rate: int):
     p2.start()
 
     p1.join()
-    p2.join()
+    p2.terminate()  # Directly shutdown p2
 
 
 if __name__ == "__main__":

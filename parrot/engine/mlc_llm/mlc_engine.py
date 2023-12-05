@@ -24,7 +24,7 @@ from parrot.utils import get_logger
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.constants import NONE_CONTEXT_ID, UNKNOWN_DATA_FIELD
-from parrot.exceptions import ParrotEngineInteralError
+from parrot.exceptions import ParrotEngineInternalError
 
 from ..context.text_context import TextContext
 from ..context.context_manager import ContextManager
@@ -54,7 +54,7 @@ class MLCEngine(LLMEngine):
 
     def __init__(self, engine_config: Dict, connect_to_os: bool = True):
         if not MLC_INSTALLED:
-            raise ParrotEngineInteralError(
+            raise ParrotEngineInternalError(
                 "MLC is not installed hence can not start a MLC-LLM engine."
             )
 

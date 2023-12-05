@@ -22,7 +22,7 @@ from parrot.utils import (
     set_log_output_file,
     redirect_stdout_stderr_to_file,
 )
-from parrot.exceptions import ParrotOSUserError, ParrotOSInteralError
+from parrot.exceptions import ParrotOSUserError, ParrotOSInternalError
 from parrot.testing.latency_simulator import get_latency
 
 
@@ -50,8 +50,10 @@ async def parrot_os_internal_error_handler(request: Request, exc: ParrotOSUserEr
     )
 
 
-@app.exception_handler(ParrotOSInteralError)
-async def parrot_os_internal_error_handler(request: Request, exc: ParrotOSInteralError):
+@app.exception_handler(ParrotOSInternalError)
+async def parrot_os_internal_error_handler(
+    request: Request, exc: ParrotOSInternalError
+):
     raise exc
 
 
