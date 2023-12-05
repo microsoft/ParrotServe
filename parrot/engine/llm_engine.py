@@ -152,7 +152,7 @@ class LLMEngine(ABC):
         async def _loop():
             while True:
                 await self.heartbeat()  # Send heartbeat to OS
-                asyncio.sleep(ENGINE_HEARTBEAT_INTERVAL)
+                time.sleep(ENGINE_HEARTBEAT_INTERVAL)
 
         event_loop.run_until_complete(_loop())
 
