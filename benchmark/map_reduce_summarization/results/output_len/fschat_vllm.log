@@ -1,162 +1,161 @@
-Warning: MLC is not installed. Related functionalities will be disabled.
 warmup done
 file_name: article_0, chunk_size: 1024, output_len: 25
-Time: 7.7337
-Time: 7.5703
-Time: 7.8253
+Time: 13.7784
+Time: 13.6459
+Time: 13.5648
 file_name: article_0, chunk_size: 1024, output_len: 50
-Time: 9.8748
-Time: 9.8253
-Time: 9.8325
+Time: 21.4576
+Time: 21.6990
+Time: 21.0132
 file_name: article_0, chunk_size: 1024, output_len: 75
-Time: 12.7468
-Time: 12.7821
-Time: 13.4499
+Time: 29.5407
+Time: 29.5249
+Time: 29.4701
 file_name: article_0, chunk_size: 1024, output_len: 100
-Time: 15.2013
-Time: 15.3438
-Time: 15.4039
+Time: 37.2338
+Time: 37.4774
+Time: 37.3362
 file_name: article_1, chunk_size: 1024, output_len: 25
-Time: 5.3316
-Time: 5.2701
-Time: 5.3346
+Time: 8.9725
+Time: 9.1092
+Time: 9.0826
 file_name: article_1, chunk_size: 1024, output_len: 50
-Time: 7.0138
-Time: 6.9570
-Time: 6.9226
+Time: 13.9910
+Time: 14.0082
+Time: 13.7611
 file_name: article_1, chunk_size: 1024, output_len: 75
-Time: 8.7321
-Time: 8.7377
-Time: 8.7614
+Time: 18.6825
+Time: 18.6266
+Time: 18.6617
 file_name: article_1, chunk_size: 1024, output_len: 100
-Time: 10.7546
-Time: 10.6430
-Time: 10.6699
+Time: 24.7685
+Time: 25.1424
+Time: 25.1129
 file_name: article_2, chunk_size: 1024, output_len: 25
-Time: 6.2470
-Time: 6.1586
-Time: 6.1555
+Time: 11.1743
+Time: 11.3721
+Time: 11.1064
 file_name: article_2, chunk_size: 1024, output_len: 50
-Time: 7.9441
-Time: 7.9429
-Time: 7.9654
+Time: 16.6315
+Time: 16.9920
+Time: 17.1146
 file_name: article_2, chunk_size: 1024, output_len: 75
-Time: 9.8829
-Time: 9.8434
-Time: 9.8970
+Time: 22.6621
+Time: 22.4559
+Time: 22.7473
 file_name: article_2, chunk_size: 1024, output_len: 100
-Time: 11.9520
-Time: 12.1447
-Time: 11.9238
+Time: 28.6205
+Time: 28.5631
+Time: 28.7631
 file_name: article_3, chunk_size: 1024, output_len: 25
-Time: 5.0240
-Time: 5.0119
-Time: 5.0283
+Time: 8.7485
+Time: 8.8956
+Time: 8.9708
 file_name: article_3, chunk_size: 1024, output_len: 50
-Time: 6.6953
-Time: 6.6594
-Time: 6.8167
+Time: 13.8252
+Time: 13.5005
+Time: 13.3800
 file_name: article_3, chunk_size: 1024, output_len: 75
-Time: 8.5141
-Time: 8.4176
-Time: 8.4618
+Time: 18.3128
+Time: 18.0305
+Time: 18.1078
 file_name: article_3, chunk_size: 1024, output_len: 100
-Time: 10.3038
-Time: 10.2467
-Time: 10.2738
+Time: 22.9448
+Time: 22.9504
+Time: 23.0092
 file_name: article_4, chunk_size: 1024, output_len: 25
-Time: 6.5749
-Time: 6.5788
-Time: 6.7266
+Time: 11.5099
+Time: 11.5518
+Time: 11.3848
 file_name: article_4, chunk_size: 1024, output_len: 50
-Time: 8.5466
-Time: 8.9542
-Time: 8.4818
+Time: 17.8972
+Time: 17.3261
+Time: 17.7759
 file_name: article_4, chunk_size: 1024, output_len: 75
-Time: 10.5005
-Time: 10.5185
-Time: 10.4960
+Time: 25.0732
+Time: 24.8007
+Time: 24.8404
 file_name: article_4, chunk_size: 1024, output_len: 100
-Time: 13.0026
-Time: 12.7629
-Time: 12.6919
+Time: 31.3710
+Time: 31.4436
+Time: 31.2739
 file_name: article_5, chunk_size: 1024, output_len: 25
-Time: 6.3418
-Time: 6.2880
-Time: 6.2884
+Time: 11.2048
+Time: 11.2159
+Time: 11.1062
 file_name: article_5, chunk_size: 1024, output_len: 50
-Time: 8.2298
-Time: 8.1602
-Time: 8.1303
+Time: 16.8228
+Time: 17.2188
+Time: 17.2202
 file_name: article_5, chunk_size: 1024, output_len: 75
-Time: 10.3813
-Time: 10.1413
-Time: 10.1958
+Time: 23.3245
+Time: 22.7449
+Time: 22.9431
 file_name: article_5, chunk_size: 1024, output_len: 100
-Time: 12.3162
-Time: 12.3762
-Time: 12.2937
+Time: 29.0053
+Time: 28.8598
+Time: 28.8714
 file_name: article_6, chunk_size: 1024, output_len: 25
-Time: 11.8201
-Time: 11.9573
-Time: 11.8733
+Time: 18.7996
+Time: 19.0527
+Time: 18.5299
 file_name: article_6, chunk_size: 1024, output_len: 50
-Time: 15.2546
-Time: 15.1716
-Time: 15.1945
+Time: 29.3861
+Time: 29.0952
+Time: 29.4013
 file_name: article_6, chunk_size: 1024, output_len: 75
-Time: 18.8555
-Time: 18.7685
-Time: 18.9365
+Time: 39.6140
+Time: 39.9867
+Time: 40.2533
 file_name: article_6, chunk_size: 1024, output_len: 100
-Time: 22.6420
-Time: 22.3173
-Time: 22.4593
+Time: 51.5286
+Time: 51.6006
+Time: 51.5423
 file_name: article_7, chunk_size: 1024, output_len: 25
-Time: 12.5175
-Time: 12.6184
-Time: 12.4043
+Time: 20.2005
+Time: 19.5713
+Time: 20.1548
 file_name: article_7, chunk_size: 1024, output_len: 50
-Time: 15.7797
-Time: 15.7097
-Time: 15.5976
+Time: 30.8223
+Time: 31.1260
+Time: 30.6664
 file_name: article_7, chunk_size: 1024, output_len: 75
-Time: 19.4543
-Time: 19.1359
-Time: 19.2704
+Time: 42.1041
+Time: 41.7103
+Time: 41.7777
 file_name: article_7, chunk_size: 1024, output_len: 100
-Time: 22.7995
-Time: 23.0203
-Time: 22.8084
+Time: 53.9741
+Time: 54.0289
+Time: 54.6732
 file_name: article_8, chunk_size: 1024, output_len: 25
-Time: 5.6474
-Time: 5.5454
-Time: 5.5645
+Time: 9.5258
+Time: 9.4299
+Time: 9.0161
 file_name: article_8, chunk_size: 1024, output_len: 50
-Time: 7.2264
-Time: 7.3039
-Time: 7.2692
+Time: 14.6452
+Time: 14.7348
+Time: 14.8397
 file_name: article_8, chunk_size: 1024, output_len: 75
-Time: 9.2753
-Time: 9.0992
-Time: 9.2187
+Time: 20.4152
+Time: 20.7748
+Time: 20.4267
 file_name: article_8, chunk_size: 1024, output_len: 100
-Time: 10.9861
-Time: 11.0323
-Time: 11.0578
+Time: 25.9900
+Time: 25.6908
+Time: 25.7970
 file_name: article_9, chunk_size: 1024, output_len: 25
-Time: 7.5607
-Time: 7.6006
-Time: 7.5297
+Time: 13.1375
+Time: 13.5204
+Time: 13.1354
 file_name: article_9, chunk_size: 1024, output_len: 50
-Time: 9.5795
-Time: 9.4953
-Time: 9.6559
+Time: 20.4779
+Time: 20.6489
+Time: 20.6183
 file_name: article_9, chunk_size: 1024, output_len: 75
-Time: 12.0431
-Time: 12.2612
-Time: 12.1449
+Time: 27.5336
+Time: 27.8291
+Time: 27.3182
 file_name: article_9, chunk_size: 1024, output_len: 100
-Time: 14.3087
-Time: 14.2795
-Time: 14.2900
+Time: 34.6649
+Time: 35.6776
+Time: 34.7613

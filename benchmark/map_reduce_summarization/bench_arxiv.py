@@ -132,6 +132,10 @@ if __name__ == "__main__":
 
     # main("article_6", 1024, 75)
 
+    # for i in range(6, 10):
+    #     for ol in [25, 50, 75, 100]:
+    #         main(f"article_{i}", 1024, ol)
+
     for i in range(6, 10):
-        for ol in [25, 50, 75, 100]:
-            main(f"article_{i}", 1024, ol)
+        for cs in [512, 1024, 1536, 2048]:
+            main(f"article_{i}", cs, 50)

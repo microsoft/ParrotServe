@@ -27,9 +27,9 @@ class BlockAllocator:
         # Initialize the free blocks.
         self.free_blocks: List[PhysicalTokenBlock] = []
         for i in range(num_blocks):
-            block = PhysicalTokenBlock(device=device,
-                                       block_number=i,
-                                       block_size=block_size)
+            block = PhysicalTokenBlock(
+                device=device, block_number=i, block_size=block_size
+            )
             self.free_blocks.append(block)
 
     def allocate(self) -> PhysicalTokenBlock:
@@ -71,10 +71,8 @@ class BlockSpaceManager:
         assert watermark >= 0.0
 
         self.watermark_blocks = int(watermark * num_gpu_blocks)
-        self.gpu_allocator = BlockAllocator(Device.GPU, block_size,
-                                            num_gpu_blocks)
-        self.cpu_allocator = BlockAllocator(Device.CPU, block_size,
-                                            num_cpu_blocks)
+        self.gpu_allocator = BlockAllocator(Device.GPU, block_size, num_gpu_blocks)
+        self.cpu_allocator = BlockAllocator(Device.CPU, block_size, num_cpu_blocks)
         # Mapping: seq_id -> BlockTable.
         self.block_tables: Dict[int, BlockTable] = {}
 
@@ -85,8 +83,7 @@ class BlockSpaceManager:
         num_required_blocks = len(seq.logical_token_blocks)
         num_free_gpu_blocks = self.gpu_allocator.get_num_free_blocks()
         # Use watermark to avoid frequent cache eviction.
-        return (num_free_gpu_blocks - num_required_blocks >=
-                self.watermark_blocks)
+        return num_free_gpu_blocks - num_required_blocks >= self.watermark_blocks
 
     def allocate(self, seq_group: SequenceGroup) -> None:
         # NOTE: Here we assume that all sequences in the group have the same
@@ -147,7 +144,8 @@ class BlockSpaceManager:
             block.ref_count += 1
 
     def _get_physical_blocks(
-            self, seq_group: SequenceGroup) -> List[PhysicalTokenBlock]:
+        self, seq_group: SequenceGroup
+    ) -> List[PhysicalTokenBlock]:
         # NOTE: Here, we assume that the physical blocks are only shared by
         # the sequences in the same group.
         blocks: Set[PhysicalTokenBlock] = set()
