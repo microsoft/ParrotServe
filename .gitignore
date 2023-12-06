@@ -41,6 +41,7 @@ log
 *.pth
 data
 *.so
+*.pdf
 
 
 # We do not public our OpenAI API-Key
