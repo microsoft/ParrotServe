@@ -2,93 +2,118 @@
 
 
 
-Study of Multiuser Scheduling with Enhanced Greedy Techniques for Multicell and Cell-Free Massive MIMO Networks 
-
-    Saeed Mashdour^⋆, Rodrigo C. de Lamare ^⋆,† and João P. S. H. Lima ^ 
-  ^⋆ Centre for Telecommunications Studies, Pontifical Catholic University of Rio de Janeiro, Brazil 
-
-^† Department of Electronic Engineering, University of York, United Kingdom 
-
-^ CPqD, Campinas, Brazil 
-
-smashdour@gmail.com, delamare@cetuc.puc-rio.br, jsales@cpqd.com.br  
 
 
-This work was supported by CNPq and CPqD.
+ Bogolyubov Institute for Theoretical Physics, 03143 Kyiv, Ukraine
+ Taras Shevchenko National University of Kyiv, 03022 Kyiv, Ukraine
+Frankfurt Institute for Advanced Studies,
+
+60438 Frankfurt am Main, Germany
+
+
+ 12.40.Ee, 12.40.-y
+
+
+
+
+
+A quantum generalization of the Cooper-Fry recipe is proposed. The
+single-particle spectrum arising from relativistic collisions of
+particles and nuclei is calculated within the thermal quantum field
+theory framework. The starting point of consideration is the
+solution of the initial-value problem of particle emission from a
+space-like hypersurface. In the following steps, we obtain the
+single-particle spectrum using the “smaller” Green's function
+associated with the fireball medium. Based on this result, several
+specific examples of particle emission are considered.
+
+
+
+Single-Particle Spectra in Relativistic Heavy-Ion Collisions
+Within the Thermal Quantum Field Theory
+    D. Anchishkin
     
-==========================================================================================================================================================================================================================================================================================================================================================================================================
-
-plain
-plain
-
-
-
-
-
-
-
-Under what circumstances does the “closeness" of two functions  imply the “closeness" of their respective sublevel sets? In this paper, we answer this question by showing that if a sequence of functions converges strictly from above/below to a function, V, in the L^∞ (or L^1) norm then these functions yield a sequence sublevel sets that converge to the sublevel set of V with respect to the Hausdorff metric (or volume metric). Based on these theoretical results we propose Sum-of-Squares (SOS) numerical schemes for the  optimal outer/inner polynomial sublevel set approximation of various sets, including intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points. We present several numerical examples demonstrating the usefulness of our proposed algorithm 
-including approximating sets of discrete points to solve machine learning binary classification problems and  approximating Minkowski sums to construct C-spaces for computing optimal collision-free paths for Dubin's car.
-
-
-
-
-
-
-
-
+====================================================================================================
 
 
 
 
 
 § INTRODUCTION
- 
-The notion of a set is a fundamental object of the modern mathematical toolkit, simply defined as a collection of elements. Sets are ubiquitous throughout control theory and are the language we use to represent frequently encountered concepts such as uncertainty <cit.>, regions of attraction <cit.>, reachable states <cit.>, attractors <cit.>, admissible inputs <cit.>, feasible states <cit.>, etc. Even for simple, low-dimensional problems, such sets can contain vast complexities and be numerically challenging to manipulate and analyze. Take the Lorenz attractor, for example. As modern engineering systems become increasingly complex, we can expect that this problem will be exacerbated as the sets we encounter become ever more unwieldy. In this context, we present several fundamental results for the approximation of sets, along with associated implementable numerical schemes based on Sum-of-Square (SOS) programming.
 
 
 
-For some given set X ⊂^n, the goal of this paper is to find an outer or inner set approximation of X. Specifically, we would like to compute another set Y ⊂^n such that X ⊆ Y (outer approximation) or Y ⊆ X (inner approximation) and Y ≈ X, where the approximation is defined with respect to some set metric. 
+Models and approaches that are used to describe the processes occurring
+in the reaction region during relativistic nucleus collisions are
+investigated by comparing the predictions made with experimental data
+on one-, two-, and many-particle momentum spectra, which contain information
+about the source at an early stage (photons, dileptons) and at the stage
+of the so-called freeze-out (hadron spectra).
+The freeze-out hypersurface Σ is a kind of spatial surface moving in time,
+which is an imaginary boundary between two regions: there is strong dynamics
+inside the surface, and outside the surface, particles freely propagate outward.
 
-Previous attempts at solving this set approximation problem were based on the fact that the volume of an ellipsoid, {x ∈^n: x^⊤ A x <0 }, is proportional to (A^-1).  Then an equivalent optimization problem can be constructed for computing outer ellipsoid approximations by minimizing the convex objective function -log(A) <cit.>. This approach of determinant maximization has been heuristically generalized to the problem of computing outer SOS polynomial sublevel approximations <cit.>. Alternative heuristic matrix trace maximization schemes have also been proposed <cit.>. More recently, in the special case of using star convex semialgebraic sets, an heuristic approach based on sublevel set scaling has been proposed in <cit.>, demonstrating impressive numerical set approximation results based on SOS programming. An approach based on L^1 maximization, similar to some of the schemes proposed in this paper, has been proposed in <cit.>. However, the work of  <cit.> only considers the specific problem of approximating Pontryagin differences and is still heuristic in the sense that convergence of the proposed numerical schemes is not shown. The only previous work that proposes a non-heuristic numerical method for set approximation is <cit.>. In <cit.> sets defined by quantifiers are approximated in the volume metric to arbitrary accuracy.  In this paper we extend <cit.> to the volume metric approximation of more general sets, represented as sublevel sets of integrable functions. Moreover, we propose a new fundamental result for the approximation sets in the Hausdorff metric. Other works that have dealt with the problem of set approximation in the Hausdorff metric include the excellent work of <cit.> that considered the problem of mollifying feasible constraints and helped to inspire the proof of the Hausdorff set approximations in this paper.
+Wave function at the freeze-out times can be considered as the initial one for its
+further history, and, since its further evolution is free, it can be easily
+taken into account (we do not discuss final state interactions so far).
+Intuitively, free evolution can be reversed, making it possible that the cross
+section and other measurable physical quantities are determined through the
+initial values of the wave function,
+i.e. the values of the wave function at the times of freezing.
+Rigorous evaluations give exactly this result.
+On the other hand, the strong dynamics acting inside a freeze-out
+hyper-surface leads to the creation of a certain quantum state at freeze-out times.
+Consequently, the wave function at the freeze-out times is the final state of
+strong dynamics.
+By representing experimentally measured quantities with the
+help of these states, we can study strong interactions in dense and
+hot nuclear matter.
+Because of this creativity, the separation of the scales of interaction in space
+and time, which is carried out using the freeze-out hypersurface, looks
+very attractive.
 
 
+In this article, we consider the emission of hadrons from a space-like
+hypersurface, which is related to the initial-value problem.
+The particles are emitted by the donor system (fireball), which exhibits
+sharp kinetic freezing: space-like and time-like hypersurfaces separate the
+excited (interacting) particle system from its noninteracting stage in the
+evolutionary process.
 
-The main contributions of this paper is to show that when X ⊂^n can be written as a sublevel set of some function V the following holds:
 
-	
-  * Approximating V in the L^∞ norm from above by some function J yields a sublevel set Y={x ∈Λ : J(x)<γ} that provides an arbitrarily accurate inner approximation of X in the Hausdorff metric.
-		
-  * Approximating V in the L^1 norm from above by some function J yields a sublevel set Y={x ∈Λ : J(x)<γ} that provides an arbitrarily accurate inner approximation of X in the volume metric.
 
-The above sublevel set approximation results provide us with guiding principles for the design of numerical procedures for set approximation. Firstly, given a set, X, we must write X as a sublevel set of some function V. Fortunately, this requirement is not difficult to satisfy for many of the sets encountered in control theory and in this work we find V is explicitly for intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points. Secondly, given a function V we must approximate V from above. That is we must find a function J that minimizes ||V-J|| such that V(x) ≤ J(x), where ||·|| is the L^1 or L^∞ norm. By introducing auxiliary variables we show that this optimization problem can be lifted to a convex optimization problem and solved by tightening the inequality constraints to SOS constraints. Further to this we establish that we can approximate these sets in the Volume/Hausdorff metric by a polynomial sublevel set arbitrarily well by solving the resulting SOS optimization problems with sufficiently large polynomial degrees.
 
 
+§ NOTION OF FREEZE-OUT HYPERSURFACE
 
 
 
- §.§ Application to Path Planning and Obstacle Avoidance
 
-The path planning of autonomous systems is the computational problem of finding the sequence of inputs that moves a given object from an initial condition to a target set while avoiding obstacles. Computing optimal paths is a well researched subject, with a broad range of practical uses ranging from the navigation of UAVs <cit.> to the precise movements of robotic manipulators <cit.>.
 
- Many popular algorithms for solving the path planning problem, such as A^* or Dijkstra, do not inherently account for the size and shape of the object. A common method for overcoming this problem is to transform the workspace of the problem to a Configuration-space (C-space), where in C-space the object is represented by a single point and obstacles are enlarged to account for the loss of size and shape of the object. The enlarged obstacles in C-space are given by the Minkowski sum of the sets representing the object and obstacles. In special convex cases the Minkowski sum can be found as a closed form solution <cit.>, however,  unfortunately there is no analytical expression for the Minkowski sum of two general sets.
 
-In the absence of an analytical expression for Minkowski sums we rely on numerical approximations. Numerical schemes have previously been proposed for the case of ellipsoid objects and convex objects <cit.> and also for more general sets using SOS and log heuristics <cit.>. In this paper we apply our proposed SOS based numerical scheme  for set approximation, with convergence guarantees, to the problem of approximating Minkowski sums in order to construct C-spaces. In this C-space we then apply the methods proposed in <cit.> to compute the optimal input sequence that drives a Dubin's car to a target set in a minimum number of steps while avoiding obstacles.
+An important question that can be clarified by studying the reaction zone
+is how the space-time boundary of the fireball is
+related to the so-called sharp freeze-out hypersurface.
+(A discussion of various approaches to the design and use of freeze-out hypersurface
+can be found in
+<cit.>.)
 
+Usually, the sharp freeze-out hypersurface is defined by the parameter
+P(t, r) taking the critical value P_ c on the hypersurface.
 
 
+That is, the equation of the hypersurface has a form
 
 
-§ NOTATION
- 
+    P(t, r) =  P_ c .
 
 
+The parameter to for defining the hypersurface can be selected as:
 
 
+1) The density of particles <cit.>:   n(t, r)  =  n_ c ;
 
 
-For A ⊂^n we denote the indicator function by 1_A : ^n → that is defined as 1_A(x) =     1  if  x ∈ A
-    0  otherwise. For B ⊆^n,  μ(B):=∫_^n1_B (x) dx is the Lebesgue measure of B. We denote the Hausdorff metric (given in Eq. (<ref>)) by D_H and the volume metric (given in Eq. (<ref>)) by D_V. We denote the power set of ^n, the set of all subsets of ^n, as P(^n)={X:X⊂^n }. For two sets A,B ∈^n we denote A/B= {x ∈ A: x ∉ B}. For x ∈^n we denote ||x||_p= ( ∑_i =1^n x_i^p )^1/p. For η>0 and y ∈^n we denote the set B_η(y)= {x∈^n : ||x-y||_2< η}. We say f: Ω→ is such that f ∈ L^1(Ω,) if ||f||_L^1(Ω,):=∫_Ω |f(x)| dx < ∞. We define the L^∞ norm as ||f||_L^∞(Ω,):=sup_x ∈Ω |f(x)|. We denote the space of polynomials p: ^n → by [x] and polynomials with degree at most d ∈ by _d[x]. We say p ∈_2d[x] is Sum-of-Squares (SOS) if there exists p_i ∈_d[x] such that p(x) = ∑_i=1^k (p_i(x))^2. We denote ∑_SOS^d to be the set of SOS polynomials of at most degree d ∈ and the set of all SOS polynomials as ∑_SOS. For two sets A,B ⊂^n we denote the Minkowski sum by A ⊕ B (defined in Eq. (<ref>)) and Pontryagin difference by A ⊖ B (defined in Eq. (<ref>)). If M is a subspace of a vector space X we denote equivalence relation ∼_M for x,y ∈ X by x ∼_M y if x-y ∈ M. We denote quotient space by X  M:={{y ∈ X: y ∼_M x }: x ∈ X}.
 
 
 
@@ -100,6 +125,7 @@ For A ⊂^n we denote the indicator function by 1_A : ^n → that is defined as 
 
 
 
+2) The energy density <cit.>:   ϵ(t, r)  = ϵ_ c ;
 
 
 
@@ -112,105 +138,40 @@ For A ⊂^n we denote the indicator function by 1_A : ^n → that is defined as 
 
 
 
+3)  The temperature <cit.>:   T(t, r)  =  T_ c .
 
 
-§ SUBLEVEL SET APPROXIMATION
- 
-For a given set X ⊂^n the goal of this paper is to solve the following problem,
 
-    Y^* ∈inf_Y ∈ C D_S(X,Y),
 
-where D_S: P(^n) × P(^n) → [0, ∞) is some set metric providing a notion of how close set Y^* is to X and C ⊂ P(^n) is the set of feasible sets.
 
-The decision variables in Opt. (<ref>) are sets, which are uncountable objects. This poses a challenge as it is difficult to search and hence optimize over sets effectively. To make such set optimization problems tractable, we need to find ways to parameterize our decision variables. The approach we take to overcome this problem is to consider problems where both our target set, X, and our decision variable, Y, are sublevel sets of functions, taking the following forms X={x ∈Λ: V(x)<γ} and Y={x ∈Λ: J(x)< γ}, where Λ⊂^n and γ∈. Then, rather than attempting to directly solve the “geometric" set optimiziation problem in Eq (<ref>), we consider the following associated “algebriac" optimization problem, 
 
-    J^* ∈inf_J ∈ F D_F(V,J),
 
- where D_F: L^1(^n , ) × L^1(^n , ) → [0,∞) is some function metric providing a notion of the distance between the functions V and J and F is some finite dimensional function space.
 
-The decision variables of Opt. (<ref>) are functions and hence can be easily optimized over by parametrizing the decision variables using basis functions. We next turn our attention to the question of when does solving Opt. (<ref>) yield a close solution to Opt. (<ref>)? More specifically, if X={x ∈Λ: V(x)<  γ}, Y={x ∈Λ: J(x)<  γ} and J ≈ V when is it true that X ≈ Y? In the following subsections we answer this question by showing that, for a given function, V:^n →, a compact set, Λ⊂^n, and a sequence of functions, {J_d}_d ∈, the following hold:
 
-	
-  * If J_d(x) ≥ V(x) for all x ∈Λ and J_d → V as d →∞ in the L^∞(Λ,^n) norm then for any γ>0 we have that {x ∈Λ: J_d(x)< γ}→{x ∈Λ: V(x)< γ} with respect to the Hausdorff metric (defined in Eq. (<ref>)).
-	
-  * If V(x) ≤ J_d(x) for all  x ∈Λ  and J_d → V as d →∞ in the L^1(Λ,^n) norm then for any γ>0 we have that {x ∈Λ: J_d(x) < γ}→{x ∈Λ: V(x) < γ} in the volume metric (defined in Eq. (<ref>)). 
 
 
 
 
- §.§ Sublevel Set Approximation In The Hausdorff Metric
 
-For sets A,B ⊂^n, we denote the Hausdorff metric as D_H(A,B), defining
+It should be noted that any definition of sharp freeze-out is possible precisely
+with the selected accuracy.
 
-    D_H(A,B):=max{ H(A,B), H(B,A)  } ,
+Let us list the basic notions of the relativistic kinetic theory <cit.>.
 
-where H(A,B):=sup_x ∈ A D(x,B) and D(x,B):=inf_y ∈ B{x-y_2}.
 
 
-We now show that uniform convergence of functions yields sublevel approximation in the Hausdorff metric.
- 
-	Consider a compact set Λ⊂^n, a function V : Λ→, and a family of functions {J_d }_d ∈ that satisfies the following properties:
 
-	
-  * For any d ∈ we have V(x) ≤ J_d(x) for all x ∈Λ.
-	
-  * lim_d →∞sup_x ∈Λ |V(x) -J_d(x)| =0.
 
-Then for all γ∈ we have that,
 
-    lim_d →∞	D_H ({x ∈Λ: J_d(x)< γ},{x ∈Λ: V(x)< γ})=0.
 
 
- Throughout this proof we use the following notation X_d:={x ∈Λ: J_d(x)< γ} and X^*:={x ∈Λ: V(x)< γ}. 
-	
-Now, recall from Eq. (<ref>) that the Hausdorff metric for two sets  X_d, X^* ⊂^n is defined as the maximum of two terms, D_H(X_d,X^*):=max{ H(X_d,X^*), H(X^*,X_d)  }, where H(X_d,X^*):=sup_x ∈ X_d D(x,X^*) and D(x,X^*):=inf_y ∈ X^*{x-y_2}. This naturally leads us to split the remainder of the proof into two parts. In Part 1 of the proof we show that the first term is such that H(X_d,X^*)=0 for all d ∈. In Part 2 of the proof we show that for all >0 there exists N ∈ such that for all d>N the second term is such that H(X^*,X_d)<. Then Parts 1 and 2 of the proof can be used together to show Eq. (<ref>), completing the proof.
-	
-	Part 1 of proof: In this part of the proof we show H( X_d,X^*)=0 for all d ∈. 
-	
-	Since V(x) ≤ J_d(x) for all x ∈Λ it follows that X_d ⊆ X^* for any d ∈. Thus for all d ∈ and x ∈  X_d we have that D(x,X^*)=0. Therefore it clearly follows H(X_d,X^*)=sup_x ∈ X_d D(x,X^*)=0 for all d ∈.
-	
-	Part 2 of proof: In this part of the proof we show that for all >0 there exists N ∈ such that for all d>N we have H(X^*, X_d)<. For contradiction suppose the negation, that there exists δ>0 such that
-	
-    H(X^*, X_d) > δ for all  d ∈.
 
-	Then for each d ∈ there exists x_d ∈ X^* such that 
-	
-    D(x_d,X_d) ≥δ for all  d ∈.
 
 
-	
-	 Now, X_d ⊆Λ and Λ is compact. Therefore the sequence {x_d}_d ∈⊆Λ is bounded. Thus, by the Bolzano Weierstrass Theorem (Thm. <ref> found in Appendix <ref>), there exists a convergent subsequence {y_n}_n ∈⊆{x_d}_d ∈. Let us denote the limit point of {y_n}_n ∈ by y^* ∈Λ. 
-	 
-	 Since {x_d}_d ∈ satisfies Eq. (<ref>) and  {y_n}_n ∈⊆{x_d}_d ∈ it follows
-	 
-    D(y_n,X_n) ≥δ for all  n ∈.
 
-	 
-	 
-	 Moreover, because x_d ∈ X^* for all d ∈ and {y_n}_n ∈⊆{x_d}_d ∈ it follows y_n ∈ X^* for all n ∈. Hence, _n:=γ - V(y_n)  >0 for all n ∈. 
-	 
-	 On the other hand, since lim_d →∞sup_x ∈Λ |V(x) -J_d(x)| =0 it follows for each n ∈ there exists N_n ∈ such that
-	 
-    J_d(y_n) - V(y_n)< _n  for all  d> N_n.
 
-	 Since _n := γ - V(y_n)  >0, it follows by Eq. (<ref>) that
-	 	 
-    J_d(y_n) < γ for all  d> N_n,
 
-	 which implies y_n ∈ X_d for all d> N_n. 
-	
-	 
-	 Now, since y_n → y^* there exists N ∈ such that ||y_n - y^*||_2< δ/4 for all n >N. Fixing n >N and selecting d>max{N,N_n} (as in Eq. (<ref>) so y_n ∈ X_d for d>N_n) we have that
-	 
-    D(y_d, X_d)= inf_x ∈ X_d ||y_d - x ||_2 
-           ≤ ||y_d - y_n||_2 ≤ ||y_d - y^*||_2 + ||y_n - y^*||_2 ≤δ/2,
 
-	 contradicting Eq. (<ref>). Thus it follows that for all >0 there exists N ∈ such that for all d>N we have H(X^*, X_d)<. 
- 
- 
- 	The conditions that V(x) ≤ J_d(x) and lim_d →∞sup_x ∈Λ |V(x) -J_d(x)| =0 in Thm. <ref> cannot be relaxed. In Section <ref> we have presented two counterexamples showing that if either of these conditions are relaxed then it is not necessary true that the sublevel sets of J_d converge to the sublevel set of V in the Hausdorff metric.
- 
- 
 
 
 
@@ -219,865 +180,902 @@ Now, recall from Eq. (<ref>) that the Hausdorff metric for two sets  X_d, X^* �
 
 
 
+Invariant particle number density:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
- §.§ Sublevel Set Approximation in The Volume Metric
- 
-
-For Lebesgue measurable sets A,B ⊂^n, we denote the volume metric as D_V(A,B), where
-
-    D_V(A,B):=μ( (A/B) ∪ (B/A) ),
-
-recalling from Sec. <ref> that we denote μ(A) as the Lebesgue measure of the set A ⊂^n. 
-
-
- 
-	Consider a Lebesgue measurable set Λ⊂^n, a function V ∈ L^1(Λ, ), and a family of functions {J_d ∈ L^1(Λ, ): d ∈} that satisfies the following properties:
-	
-		
-  * For any d ∈ we have V(x) ≤ J_d(x) for all x ∈Λ.
-		
-  * lim_d →∞ ||V -J_d||_L^1(Λ, ) =0.
-	
-	Then for all γ∈ we have that
-	
-    lim_d →∞	D_V ({x ∈Λ: J_d(x) < γ} , {x ∈Λ: V(x) < γ}) =0.
- 
-
-
-		Let us denote Ṽ(x)=-V(x) and J̃_d(x)= - J_d(x). It follows that J̃_d(x) ≤Ṽ(x) for all x ∈Λ and lim_d →∞ ||Ṽ -J̃_d||_L^1(Λ, ) =0. Therefore, by Prop. <ref> (found in the appendix) it follows that for any γ∈ we have that,
-	
-    lim_d →∞	D_V ({x ∈Λ : Ṽ(x) ≤γ}, {x ∈Λ : J̃_d(x) ≤γ}) =0.
-
-	
-	Now, Λ={x ∈Λ : V(x) < γ}∪{x ∈Λ : V(x) ≥γ} = {x ∈Λ : V(x) < γ}∪{x ∈Λ : Ṽ(x) ≤ -γ}. Therefore
-	
-    {x ∈Λ : V(x) < γ} = Λ / {x ∈Λ : Ṽ(x) ≤ -γ},
-
-	and by a similar argument
-	
-    {x ∈Λ : J_d(x) < γ} = Λ / {x ∈Λ : J̃_d(x) ≤ -γ}.
-
-	Thus, by Lem. <ref> (found in the appendix) and since {x ∈Λ : J̃_d(x) ≤γ}⊆Λ, we have that
-	
-    D_V ({x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})
-        = D_V ( Λ/ {x ∈Λ : Ṽ(x) < -γ}, Λ/ {x ∈Λ : J̃_d(x) < -γ}) 
-        = D_V ({x ∈Λ : Ṽ(x) ≤ -γ}, {x ∈Λ : J̃_d(x) ≤ -γ}).
-
-	Now by Eqs (<ref>) and (<ref>) it follows that Eq. (<ref>) holds.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-
-
-
-
-
-
-§ SUBLEVEL SET APPROXIMATION USING SOS PROGRAMMING
- 
- Given  some set X ⊂^n we would like to approximate, Theorems <ref> and <ref> illuminate the following steps we must take:
-
-	
-  * Write the set X as a sublevel set of some function V.
-	
-  * Approximate the function V by a uniformly bounding function in the L^∞ norm or L^1 norm (depending whether or not the set approximation is required to be with respect to the Hausdorff or volume metric).
-
-Step 1 is always viable since by Prop. <ref> (found in the appendix), it follows that for any compact set X ⊂^n there always exists a smooth function V such that X={x ∈^n: V(x) ≤ 0}. However, for numerical implementation it will be necessary to have an analytical expression of such a function V. Later, in the following subsections, we will present several analytical expressions of V for various classes of sets including intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points. Before proceeding to these subsections we next briefly discuss the general approach we take to solving Step 2 in our strategy, approximating V by a uniformly bounding function in either the L^∞ or L^1 norm.
-
-
-  
-An optimization problem for L^∞ approximation
-
-For a given function V ∈ C^∞(^n,) let us consider the problem of approximating V  uniformly from above in the L^∞ norm, 
-
-    J_d^* ∈   inf_J_d ∈_d[x]sup_x ∈Λ |V(x)-J_d(x)|
-       such that  V(x) ≤ J_d(x)  for all  x ∈Λ.
-
-
-
-Unfortunately, the objective function of Opt. (<ref>) , sup_x ∈Λ |V(x)-J_d(x)|, is not differentiable. This lack of differentiability causes problems later as our numerical implementation uses polynomial optimization to solve this problem. Fortunately, it is possible to lift the problem to a convex problem by introducing extra decision variables in the following way,
-
-    J_d^* ∈   inf_J_d ∈_d[x],
-    	P_d ∈_d[x], γ∈γ
-       such that  P_d(x) ≤ V(x) ≤ J_d(x)  for all  x ∈Λ,  
-        J_d(x)-P_d(x)< γ for all  x ∈Λ.
-
-Now, any solution, J_d^*, to Opt. (<ref>) is feasible to Opt. (<ref>) and minimizes the objective of Opt. (<ref>) to a value of less than or equal to γ. 
-
-
-  
-An optimization problem for L^1 approximation For a given function V ∈ C^∞(^n,) let us consider the problem of approximating V  uniformly from above in the L^1 norm, 
-
-    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ |J_d(x)-V(x)| dx 
-       such that  V(x)  ≤ J_d(x)   for all  x ∈Λ.
-
-
-Unfortunately, we have a similar problem as we did with Opt. (<ref>), that the objective function of Opt. (<ref>) is not differentiable and hence Opt. (<ref>) is not readily solvable using polynomial optimization.  However, since the constraints of Opt. (<ref>) enforce V(x) ≤ J_d(x) it follows that ∫_Λ |J_d(x)-V(x)| dx= ∫_Λ J_d(x) dx- ∫_Λ V(x) dx. Since ∫_Λ V(x) dx is a constant it is equivalent to minimize ∫_Λ J_d(x) dx as it is to minimize ∫_Λ |J_d(x)-V(x)| dx. Hence, rather than solving Opt. (<ref>) we solve, 
-
-    J_d^* ∈   inf_J_d ∈_d[x]∫_Λ J_d(x) dx 
-       such that  V(x) ≤ J_d(x)    for all  x ∈Λ.
-
-Opt. (<ref>) only yields inner sublevel set approximations of {x ∈Λ: V(x)< γ} since V(x) ≤ J_d(x) implies {x ∈Λ: J_d(x) ≤γ}⊆{x ∈Λ: V(x) ≤γ}. In contrast Opt. (<ref>) yields both inner and outer sublevel set approximations since {x ∈Λ: J_d(x) ≤γ}⊆{x ∈Λ: V(x) ≤γ}⊆{x ∈Λ: P_d(x) ≤γ}. It is also useful to consider a similar optimization problem to Opt. (<ref>) that yields outer sublevel set approximations
-
-    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ J(x) dx 
-       such that  J_d(x) ≤ V(x)    for all  x ∈Λ.
-
-
-
-  
-SOS implementation of L^∞ and L^1 approximation
-To solve Opts (<ref>) (<ref>) and (<ref>) we tighten the problem by replacing all inequality constraints to SOS constraints. This tightening results in a SOS optimization problem that yields a single polynomial sublevel set approximation of several types of sets. Unfortunately, it is non-trivial to tighten Opts (<ref>) (<ref>) and (<ref>) because, as we will see, for many set approximation problems the associated V is non-polynomial and hence we cannot directly constrain V(x) ≤ J_d(x) or P_d(x) ≤ V(x) using SOS. In the subsequent subsections we consider the following cases,
-
-	
-  * V(x)=max_1 ≤ i ≤ m g_i(x) associated with intersections of semialgebraic sets (see Lemma <ref>).
-	
-  * V(x):=min_1 ≤ i ≤ m g_i(x) associated with intersections unions of semialgebraic sets (see Lemma <ref>).
-	
-  * V(x):=inf_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x-w) associated with intersections Minkowski sums (see Lemma <ref>).
-	
-  * V(x):=sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w) associated with intersections Pontryagin differences (see Lemma <ref>).
-	
-  * V(x):=1-1_{x_i}_i=1^N(x) associated with discrete points (see Lemma <ref>).
-
-For brevity we next only discuss the case of using SOS to constrain V(x) ≤ J_d(x) or P_d(x) ≤ V(x) when V(x)=max_1 ≤ i ≤ m g_i(x) and g_i ∈[x] for each 1 ≤ i ≤ m. Other forms of V can also be constrained using a similar approach since, with the exception of discrete points, each V involves max/min operators. 
-
-For V(x)=max_1 ≤ i ≤ m g_i(x) it is straightforward to constrain V(x) ≤ J_d(x) by enforcing g_i(x) ≤ J_d(x) for 1 ≤ i ≤ m which tightens to the SOS constraint J_d-g_i ∈∑_SOS for 1 ≤ i ≤ m. On the other hand it is slightly more difficult to constrain P_d(x) ≤ V(x). This is because if we set P_d(x) ≤ g_i(x) for all 1 ≤ i ≤ m then P_d(x) ≤min_1 ≤ i ≤ m g_i(x) <max_1 ≤ i ≤ m g_i(x)=V(x) implying that P_d cannot be made arbitrarily close to V since |V(x)-P_d(x)| ≥max_1 ≤ i ≤ m g_i(x)-min_1 ≤ i ≤ m g_i(x)>0.  To enforce P_d(x) ≤ V(x) in a non-conservative manner we enforce
-
-    P_d(x) ≤ g_i(x)  for  x ∈{y∈Λ: g_i(y)≥ g_j(y)  for all  i  j  }.
-
- This constraint is now a polynomial inequality over a semialgebraic set and therefore can be readily tightened to an SOS constraint.
-
-
- §.§ Approximation of Semialgebraic Sets
- 
-In this subsection we solve the problem of approximating semialgebraic sets, sets of the form X={x ∈^n: g_i(x) < 0  for all  1 ≤ i ≤ m }, where g_i ∈[x] for 1 ≤ i ≤ m. Throughout this section we will assume X ⊂^n is a compact set and hence WLOG we assume 
- 
-    X={x ∈Λ: g_i(x) < 0  for all  1 ≤ i ≤ m },
-
- where Λ⊂^n is some sufficiently large compact set and g_i ∈[x] for 1 ≤ i ≤ m. 
- 
- In the following Lemma we show that semialgebraic sets can be written as a sublevel set of a single function.
- 
-	Consider X={x ∈Λ: g_i(x) < 0  for all  1 ≤ i ≤ m } then 
-
-	
-    X={x ∈Λ: V(x)<0 },
-
-where V(x):=max_1 ≤ i ≤ m g_i(x).
-
-
-
-
-
-
-
-Suppose y ∈ X then g_i(y) < 0  for all  1 ≤ i ≤ m and hence V(y)=max_1 ≤ i ≤ m g_i(y)<0. Hence, y ∈{x ∈Λ: V(x)<0 } implying that X ⊆{x ∈Λ: V(x)<0 }. On the other hand suppose y ∈{x ∈Λ: V(x)<0 }. Then V(y)=max_1 ≤ i ≤ m g_i(y)<0 implying g_i(y) < 0  for all  1 ≤ i ≤ m and hence y ∈ X. Therefore {x ∈Λ: V(x)<0 }⊆  X. Hence {x ∈Λ: V(x)<0 }  =	  X. 
-
-
-It is now clear from Lemma <ref> and Theorems <ref> and <ref> that in order to approximate the set in Eq. (<ref>) we must solve Opt. (<ref>) or Opt. (<ref>) for V(x)=max_1 ≤ i ≤ m g_i(x). 
-
-WLOG we assume Λ⊂^n is a ball with sufficiently large radius, that is Λ={x ∈^n: ||x||_2<r}. We now propose the following SOS tightening of Opt. (<ref>) for V(x):=max_1 ≤ i ≤ m g_i(x),
-
-    (J_d^*,P_d^*,γ_d^*) ∈inf_J_d ∈_d[x],
-    	P_d ∈_d[x], γ∈γ     such that 
     
-        (g_i(x)   -  P_d(x))   -   s_i,1(x)(r^2   -   ||x||_2^2) 
-        - ∑_j=1^m   s_i,j,2(x)(g_i(x)   -  g_j(x)) ∈∑_SOS^d   for all  1 ≤ i ≤ m, 
+    n(x) = N^μ (x)   u_μ (x)  ,
+
+
+where N^μ(x) = ∫ (d^3 p/p^0)  p^μ  f(x,p) =
+(n_ lab, n_ lab v__ E) is the particle four-flow
+with f(x,p) as the distribution function,
+and
+u^μ(x) = N^μ/(N^ν N_ν)^1/2
+= (γ__ E, γ__ E v__ E)
+is the collective four-velocity (the Eckart definition).
+
+Invariant particle energy density:
+
     
-        J_d(x)-g_i(x) - s_i,3(x)(r^2 - ||x||_2^2)  ∈∑_SOS^d   for all  1 ≤ i ≤ m,  
-       γ -( J_d(x)-P_d(x)) -s_4(x)(r^2 - ||x||_2^2)  ∈∑_SOS^d,
-        s_i,1(x)  ∈∑_SOS^d,  s_i,j,2(x)  ∈∑_SOS^d,   s_i,3(x)   ∈∑_SOS^d,
-         s_4(x)   ∈∑_SOS^d   for all  i,j   ∈{1,...,m}.
+    ϵ(x) = u_μ (x)  T^μν (x)  u_ν (x)  ,
 
 
+where T^μν(x) = ∫ (d^3 p/p^0) p^μ p^ν f(x,p) is the
+energy-momentum tensor.
 
-In a similar way to how we tightened Opt. (<ref>) to get Opt. (<ref>) we next tighten Opt. (<ref>) for V(x):=max_1 ≤ i ≤ m g_i(x) to get,
+With the help of relativistic transport model, the last two equations
+(<ref>) and (<ref>) were used to determine the freeze-out
+hypersurface for pions <cit.>.
+In Fig. <ref> these freeze-out hypersurfaces, together with the
+corresponding projections on three planes, can be seen for different collision energies.
+The critical value was taken as n_ c = 0.08 fm^-3 for the particle density
+and ε_ c = 0.035 GeV/fm^3 for the energy density.
+The freeze-out hypersurfaces in the figures are represented in
+quasi-four-dimensional form, the compactification of spatial transverse coordinates
+is made in the form (x,y) → r = √(x^2+y^2).
+Then the coordinates of the four-dimensional surfaces are (t, r, z), note the
+coordinate r is reflected symmetrically to negative values.
 
-    J_d^* ∈   inf_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
-        J_d(x) - g_i(x) - s_i(x)(r^2 - ||x||_2^2) ∈∑_SOS^d    for  1 ≤ i ≤ m, 
-         s_i(x) ∈∑_SOS^d  for  1 ≤ i ≤ m.
 
 
 
 
- 
+From comparing each pair of plots for the same energy, we can see that
+there is no difference in determining the freeze-out hypersurface based
+on particle density or based on energy density.
 
 
 
- §.§ Approximation of Unions of Semialgebraic Sets
- 
-In this subsection we solve the problem of approximating the union of semialgebraic sets, 
 
-    X= ∪_i=1^m_1{x ∈Λ: g_i,j(x) < 0  for all  1 ≤ j ≤ m_2 },
+This can be considered as a statement that for the pion particle density
 
- where g_i,j∈[x] for 1 ≤ i ≤ m_1 and 1 ≤ j ≤ m_2. For simplicity we will only consider the case m_2=1. 
- 
+n = n_ c = 0.035 GeV/fm^3 or the pion energy density
+ε = ε_ c = 0.035 GeV/fm^3
+the behavior of a pion system is very close to an ideal gas
+(for details see <cit.>).
 
- 
- 
- 
- 
- 
-  In the following Lemma we show that unions of semialgebraic sets can be written as a sublevel set of a single function.
-  
-	Consider X=∪_i=1^m {x ∈Λ: g_i(x) < 0 } then 
-	
-    X={x ∈Λ: V(x)<0 },
 
-	where V(x):=min_1 ≤ i ≤ m g_i(x).
 
 
 
 
 
 
+§ RADIATION OF QUANTUM FIELDS FROM SPACE-LIKE HYPERSURFACE: THE CAUCHY PROBLEM
 
-	Follows by a similar argument as Lem. <ref>.
 
-To approximate sets of the form given in Eq. (<ref>) we now propose the following SOS tightening of Opt. (<ref>) for V(x):=min_1 ≤ i ≤ m g_i(x), 
 
-    (J_d^*,P_d^*,γ_d^*) ∈inf_J_d ∈_d[x],
-    		P_d ∈_d[x], γ∈γ     such that 
-        (g_i(x)   -  P_d(x))   -   s_i,1(x)(r^2   -   ||x||_2^2)   ∈∑_SOS^d  for all  1 ≤ i ≤ m, 
-        (J_d(x)-g_i(x)) - s_i,2(x)(r^2 - ||x||_2^2)  
-        - ∑_j=1^m   s_i,j,3(x)(g_j(x)   -  g_i(x)) ∈∑_SOS^d   for all  1 ≤ i ≤ m,  
-       γ -( J_d(x)-P_d(x)) -s_4(x)(r^2 - ||x||_2^2)  ∈∑_SOS^d,
-        s_i,1(x)  ∈∑_SOS^d,  s_i,2(x)   ∈∑_SOS^d,  s_i,j,3(x)  ∈∑_SOS^d,   ,
-        s_4(x) ∈∑_SOS^d   for all  i,j   ∈{1,...,m}.
 
 
 
-We next propose the following SOS tightening of Opt. (<ref>) for V(x):=min_1 ≤ i ≤ m g_i(x),
+The space-like  hypersurface, together with the time-like hypersurface,
+determines the boundary
+of the four-dimensional volume occupied by a many-particle system.
+Kinetic freeze-out that occurs from a space-like hypersurface (any tangent to
+this surface lies outside the light cone) can be treated as an initial-value
+problem for the radiation of particles from a fireball.
 
-    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
-        g_i(x) - J_d(x) - s_i(x)(r^2 - ||x||_2^2) ∈∑_SOS^d    for  1 ≤ i ≤ m, 
-         s_i (x)∈∑_SOS^d  for  1 ≤ i ≤ m.
+In the present approach,  we first use a simplified shape of the
+freeze-out hypersurface.
+The space-like part of the total hypersurface will simply be a surface
+of constant time t=t_0.
+It should be noted that such a condition is a standard approach that is commonly
+used in mathematical physics.
+On the other hand, we do not lose generality, because the results obtained for an
+equal-time hypersurface can be converted to results for a space-like hypersurface
+of a given shape, as we will show later.
+An example of an equal-time hypersurface for a spherically symmetric expansion of
+a fireball is shown in Fig. <ref>, on left panel.
+One more way is shown, how a complete freeze-out hypersurface, which also includes a
+time-like part, can be reduced to an equal-time space-like hypersurface
+even in the general case (see the right panel).
 
 
- Note, solving Opt. (<ref>) results in both a lower (P_d) and upper (J_d) approximation of V(x):=min_1 ≤ i ≤ m g_i(x), whereas, solving Opt. (<ref>) only results in a lower approximation. Unfortunately, Theorems <ref> and <ref> only apply for upper function approximations and hence we are unable to use these theorems to show Opt. (<ref>) yields an arbitrary accurate sublevel set approximation of the set given in Eq. (<ref>). We could construct a similar SOS problem to Opt. (<ref>) that results in a upper approximation in a non-conservative way using a similar argument as in Eq. (<ref>) but this would result in more SOS decision variables. Alternatively, we will later show that Opt. (<ref>) yields a sublevel approximation to the non-strict/relaxed version the set given of Eq. (<ref>). That is, Opt. (<ref>) can be used to approximate the following set,
- 
-    X= ∪_i=1^m{x ∈Λ: g_i(x) ≤ 0},
 
- where g_i ∈[x] for 1 ≤ i ≤ m.
 
+So, our goal is to solve the initial-value problem for the propagation of free
+particles to the detector when they are “emitted from the space-like hypersurface”.
+In fact, we would like to reproduce and generalize the Cooper-Frye formula
+<cit.> for the emission of particles from a finite
+space-time volume.
 
 
+After freeze-out, the particles propagate without interaction (this is the
+freeze-out condition).
+This system of “traveling” free particles is described by the field operator
+φ̂ (x), which satisfies the Klein-Gordon equation
 
 
+    (∂_μ∂^μ  +  m^2)  φ̂ (x)  =  0  ,
 
 
+where ∂_μ∂^μ =∂_t^2-∇⃗^2.
+The Cauchy problem or the initial conditions for this equation are specified
+on a space-like hyper-surface.
+Without loss of generality, for simplicity, this hypersurface has the form
+x^0 = t_0 = const (see Fig. <ref>)
 
 
+    φ̂ (x^0, x)|_x^0=t_0  = Φ̂_0( x)   ,      ∂φ̂(x^0, x)/∂ x^0|_x^0=t_0 
+    = Φ̂_1( x)  .
 
 
+As it is shown in the textbook <cit.>, equation (<ref>) together
+with the initial conditions (<ref>) can be written  as an
+inhomogeneous differential equation (for details see <cit.>)
 
- §.§ Approximation of Minkowski Sums
- 
 
+    (∂_μ∂^μ  +m^2)  φ̂(x) 
+    = δ(x^0-t_0)Φ̂_1( x) 
+     + δ'(x^0-t_0)Φ̂_0( x)  ,
 
-Given two sets A,B ⊂^n their Minkowski sum is defined as
 
-    A ⊕ B = {a+b ∈^n : a ∈ A  and  b ∈ B }.
+where using the δ'(t)  function is well known:
+∫ dt F(t)δ'(t)=-∫ dt dF(t)/dtδ(t).
+This equation can be solved with the help of the retarded Green's
+function of the Klein-Gordon equation (see, for example, <cit.>
+or <cit.>)
 
 
-We next consider the problem of approximating the set X=A ⊕ B, where A,B ⊂^n can be written as sublevel sets. That is we consider the problem of approximating the following,
+    (∂_μ∂^μ + m^2)G_R(x-y)  = δ ^4(x-y)  ,
 
-    X={x ∈Λ: g_1(x) ≤ 0 }⊕{x ∈Λ: g_2(x) ≤ 0 },
 
-where g_1,g_2 ∈ C^∞. Note that this is non-restrictive since Prop. <ref> shows any compact set can be written as a sublevel set and Lemmas <ref> and <ref> give this sublevel set in an analytical form for intersections or unions of semialgebraic sets. 
+where
 
-In the following lemma we show sets satisfying Eq. (<ref>) can be written as the sublevel set of a single function. 
- 
-	Consider X:={x ∈Λ: g_1(x) ≤ 0 }⊕{x ∈Λ: g_2(x) ≤ 0 }, where Λ⊂^n is a compact set and g_1,g_2 ∈ C(Λ,), then 
-	
-    X={x ∈Λ: V(x) ≤ 0 },
 
-	where V(x):=inf_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x-w).
+    G_R(x-y)    =    -∫d^4k/(2π )^4  e^- ik· (x-y)/(k_0 + iδ)^2- k^2 - m^2
+       =    i θ( x^0-y^0 ) ∫d^3k/(2π )^3 2ω ( k) [    f_ k(x)  f^*_ k(y)- f^*_ k(x)  f_ k(y) ]
 
 
+with f_ k(x)=e^- i ω ( k)x^0+i  k· x
+and ω( k) = √(m^2+ k^2).
+Hence, for the field operator, φ̂(x), from (<ref>)
+one obtains
 
 
-
-
-
-	Suppose x ∈ X then there exists z_1 ∈{x ∈Λ: g_1(x) ≤ 0 } and z_2 ∈{x ∈Λ: g_2(x) ≤ 0 } such that x =z_1+z_2. Hence,
-	
-    V(x)= inf_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x-w) ≤ g_1(x-z_2)= g_1(z_1) ≤ 0,
-
-since z_1 ∈{x ∈Λ: g_1(x) ≤ 0 }. Therefore, x ∈{y ∈Λ: V(y) ≤ 0 } implying X ⊆{x ∈Λ: V(x) ≤ 0 }.
-
-On the other hand suppose x ∈{y ∈Λ: V(y) ≤ 0 }. Note that by Lem. <ref> (found in the appendix) it follows that {z ∈Λ: g_2(z) ≤ 0 } is compact. Now, by the extreme value theorem, continuous functions attain their extreme values over compact sets implying that there exists z_2 ∈inf_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x-w) such that g_1(x-z_2)=V(x). Let z_1=x-z_2. Because V(x) ≤ 0 it follows that g_1(z_1)= g_1(x-z_2)=V(x) ≤ 0. Hence, z_1 ∈{x ∈Λ: g_1(x)  ≤ 0 }. Therefore it follows that x ∈ X and hence X ⊂{y ∈Λ: V(y) ≤ 0 }. Thus X={x ∈Λ: V(x)  ≤ 0 }.
-
-For simplicity we next consider the special case of approximating A ⊕ B where A is a union of sublevel sets and B is a semialgebraic set. That is we consider the problem of approximating the following set,
-
-    X:=   ∪_i=1^m_1{x ∈Λ: g_1,i(x) ≤ 0 }
-               ⊕{x ∈Λ: g_2,j(x) ≤ 0  for  1 ≤ j ≤ m_2 },
-
-where g_1,i, g_2,j∈[x] for all 1 ≤ i ≤ m_1 and 1 ≤ j ≤ m_2. Other cases where one or both of A or B is a union or intersection of semialgebraic sets can be handled by a similar methodology. Now, by similar arguments to Lemmas <ref> and <ref> and the use of Lemma <ref> it is clear that X, given in Eq. (<ref>), is such that X={x ∈Λ: V(x) ≤ 0 } where
-
-    V(x)=inf_w  ∈{z ∈Λ: max_1 ≤ j ≤ m_2 g_2,j(z) ≤ 0 }min_1 ≤ i ≤ m_1 g_1,i(x-w).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-Unlike in Subsections <ref> and <ref>, in this subsection we do not provide a SOS tightening of Opt. (<ref>) due to the complexity of using SOS to enforce the constraint V(x)≤ J_d(x) when V is given in Eq. (<ref>). Indeed, we could increase the problems dimension and enforce,
-
-    J_d(x) - g_1,i(x-w) - s_i,0(x,u,w)(g_1,i(x-u) - g_1,i(x-w)) 
-        -∑_j=1^m_2 s_i,j,1(x,w,u)(g_1,j(x-w) -g_1,i(x-w))  
-        + ∑_j=1^m_2 s_i,j,2(x,w,u)g_2,j(w)+ ∑_j=1^m_2 s_i,j,3(x,w,u)g_2,j(u) 
-        - s_i,4(x,w,u)(r^2 - ||(x,u,w)||_2^2) ∈∑_SOS for  1 ≤ i ≤ m_1,
-        s_i,0,s_i,j,1, s_i,j,2, s_i,j,3, s_i,4∈∑_SOS for  1 ≤ i ≤ m_1 & 1 ≤ j≤ m_2
- 
-
-However, this approach results in a very large SOS optimization problem. Fortunately, it is relatively easy to enforce the constraint J_d(x) ≤ V(x). This is the only constraint that is required to be tightened in Opt. (<ref>). Thus, to approximate sets of the form given in Eq. (<ref>) we now propose the following SOS tightening of Opt. (<ref>) for V(x):=inf_w  ∈{z ∈Λ: max_1 ≤ j ≤ m_2 g_2,j(z) ≤ 0 }min_1 ≤ i ≤ m_1 g_1,i(x-w),
-
-    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
-        g_1,i(x-w) - J_d(x) - s_i,1(x,w)(r^2 - ||(x,w)||_2^2)
-            +∑_j=1^m_2 s_i,j,2(x,w)g_2,j(w)  ∈∑_SOS^d    for  1 ≤ i ≤ m_1, 
-         s_i,1(x) ∈∑_SOS^d  for  1 ≤ i ≤ m_1, 
-        s_i,j,2(x) ∈∑_SOS^d  for  1 ≤ i ≤ m_1  and  1 ≤ j ≤ m_2.
-
-
-
-
- §.§ Approximation of Pontryagin Differences
- 
-
-
-	Given two sets A,B ⊂^n their Pontryagin difference is defined as
-	
-    A ⊖ B = {a ∈ A: a+b ∈ A  for all  b ∈ B   }.
-
-
-We next show that the Pontryagin difference of two sublevel sets can be written as a sublevel set of a single function.
- 
-	Consider X:={x ∈Λ: g_1(x) < 0 }⊖{x ∈Λ: g_2(x) ≤ 0 }, where Λ⊂^n is a compact set and g_1,g_2 ∈ C(Λ,), then 
-	
-    X={x ∈Λ: V(x) < 0 },
-
-	where V(x):=sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w).
-	
-	
-	
-		
-		
-
-
-	We first show Eq. (<ref>). Suppose x ∈ X then it must follow that g_1(x+w)<0 for all w ∈{z ∈Λ: g_2(z) ≤ 0 }. Note that by Lem. <ref> (found in the appendix) it follows that {z ∈Λ: g_2(z) ≤ 0 } is compact. Now, by the extreme value theorem continuous functions attain their extreme values over compact sets implying that there exists w^*  ∈{z ∈Λ: g_2(z) ≤ 0 } such that g_1(x+w^*)=sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w). Hence V(x)=sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w)=g_1(x+w^*)<0 implying that x ∈{z ∈Λ: V(z) < 0 } and hence X ⊆{x ∈Λ: V(x) < 0 }.
-	
-	On the other hand if x ∈{z ∈Λ: V(z) < 0 } it follows that sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w)<0. Hence, g_1(x+w) ≤sup_w  ∈{z ∈Λ: g_2(z) ≤ 0 } g_1(x+w) < 0 for all w  ∈{z ∈Λ: g_2(z) ≤ 0 } implying x+w ∈{x ∈Λ: g_1(x) <	 0 } for all w  ∈{z ∈Λ: g_2(z) ≤ 0 } . Thus it follows that x ∈ X.
-	
-	
-
-
-For simplicity we consider the special case of approximating A ⊖ B where both A and B are semialgebraic sets. Other cases where one or both of A or B is a union or intersection of semialgebraic sets can be handled by a similar methodology. That is we consider the problem of approximating the following set,
-
-    X:=   {x ∈Λ: g_1,i(x) < 0  for  1 ≤ i ≤ m_1 }
-               ⊖{x ∈Λ: g_2,j(x) ≤ 0  for  1 ≤ j ≤ m_2 },
- 
-where g_1,i, g_2,j∈[x] for all 1 ≤ i ≤ m_1 and 1 ≤ j ≤ m_2. Other cases where one or both of A or B is a union or intersection of semialgebraic sets can be handled by a similar methodology. Now, by Lemmas <ref> and <ref> it is clear that X, given in Eq. (<ref>), is such that X={x ∈Λ: V(x) < 0 } where
-
-    V(x)=sup_w  ∈{z ∈Λ: max_1 ≤ j ≤ m_2 g_2,j(z) ≤ 0 }max_1 ≤ i ≤ m_1 g_1,i(x+w).
-
-Similarly to Subsection <ref>, we do not provide a tightening of the Opt. (<ref>) due to the complexity of using SOS to enforce the constraint J_d(x) ≤ V(x) when V is given in Eq. (<ref>) 
-
-To approximate sets given in Eq. (<ref>) we now propose the following SOS tightening of Opt. (<ref>) for V(x):=sup_w  ∈{z ∈Λ: max_1 ≤ j ≤ m_2 g_2,j(z) ≤ 0 }max_1 ≤ i ≤ m_1 g_1,i(x+w),
-	
-    J_d^* ∈   inf_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
-        J_d(x)- g_1,i(x+w)  - s_i,1(x,w)(r^2 - ||(x,w)||_2^2)
-            +∑_j=1^m_2 s_i,j,2(x,w)g_2,j(w)  ∈∑_SOS^d    for  1 ≤ i ≤ m_1, 
-         s_i,1∈∑_SOS^d  for  1 ≤ i ≤ m_1, 
-        s_i,j,2∈∑_SOS^d  for  1 ≤ i ≤ m_1  and  1 ≤ j ≤ m_2.
-
-
-	
-
-
-
- §.§ Approximation of Discrete Points
- 
-In this section we consider the problem of approximating a set of discrete points, {x_i}_i=1^N ⊂^n. We first note that it is possible to write a set of discrete points as a sublevel set of a polynomial without any computation by considering the function V(x)= ∏_i=1^N (x_i - x)^2. However, this polynomial function has a very large degree, double the number of data points. We next  show that sets of discrete points can be written as a sublevel set of a simpler function. This will allow us to derive an SOS optimization problem to approximate this simple function by a polynomial with relatively small degree, yielding a low degree polynomial sublevel approximation of {x_i}_i=1^N ⊂^n.
- 
-Consider X={x_i}_i=1^N ⊂Λ. Then
-
-    X={x ∈Λ: V(x) ≤ 0 },
-
-where V(x)=1-1_{x_i}_i=1^N(x).
-
-
-	Follows trivially.
-
-
-
-We do not provide an SOS tightening for Opt. (<ref>) when V(x)=1-1_{x_i}_i=1^N(x) because in order for us to prove that the resulting polynomial sublevel set approximation can be arbitrarily small with respect to the Hausdorff metric we rely on Thm. <ref>. Thm. <ref> requires that our polynomial approximations of V converge in the L^∞ norm. Unfortunately, this V is not continuous so it is not possible to approximate it uniformly using smooth functions like polynomials. Fortunately, V is an integrable function so it is possible to approximate it by a polynomial in the L^1 norm using the following SOS tightening of Opt. (<ref>),
-
-    J_d^* ∈   sup_J_d ∈_d[x]∫_Λ J_d(x) dx      such that 
-        J_d(x_i) <0   for  1 ≤ i ≤ N, 
-         1-J_d(x) - s_0(x)(r^2 -||x||_2^2) ∈∑_SOS^d,    s_0(x) ∈∑_SOS^d.
-
-
-
-
-
-
-
-§ CONVERGENCE OF OUR PROPOSED SOS PROGRAMS
- 
-In the previous sections we proposed several SOS optimization problems to approximate various functions, V, whose sublevel sets yield several important classes of sets (intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points). In this section we use Theorems <ref> and <ref> to prove that the sequences of solutions to our SOS problems produce sequences of sublevel sets that each converge to the associated target set in the Hausdorff or volume metric. We begin this section with showing convergence in the Hausdorff metric. 
-
- 
-	It holds that,
-		
-    lim_d →∞	D_H ({x ∈Λ: J_d^*(x)<0} , X ) =0,
-               {x ∈Λ: J_d^*(x)<0}⊆ X,
-
-where Λ:={x ∈^n: ||x||_2 ≤ r} and the set X and the sequence of functions {J_d^*}_d ∈⊂[x] satisfy either of the following:
-	
-		
-  * X is a semialgebraic set, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] solve the family of d-degree SOS optimization problems given in Eq. (<ref>).
-		
-  * X is a union of semialgebraic sets given by Eq. (<ref>) and {J_d^*}_d ∈⊂[x] solve the family of d-degree SOS optimization problems given in Eq. (<ref>).
-	
-
-
-
-
-
-
-
-
-
-
-	Convergence to semialgebraic sets:	We first prove the first case where X is a semialgebraic set, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] solve the family of d-degree SOS optimization problems given in Eq. (<ref>).
-	
-Now, it follows that if we show that
-	
-    J_d^*(x) ≥ V(x)  for all  x ∈Λ,
-    lim_d →∞||J_d^*-V||_L^∞(Λ,)=0,
-
-	where V(x):=max_1 ≤ i ≤ m g_i(x), then Eqs (<ref>) and (<ref>) hold and the proof is complete. This is because Lem. <ref> shows that X={x ∈Λ: V(x)<0} and therefore if Eq. (<ref>) holds then clearly Eq. (<ref>) must hold. Moreover, if Eqs (<ref>) and (<ref>) hold then by Theorem <ref> it must follow that lim_d →∞	D_H ({x ∈Λ: J_d^*(x)<0} , {x ∈Λ: V(x)<0} ). It is then clear Eq. (<ref>) holds.
-	
-	We first show Eq. (<ref>). Because J_d^* solves Opt. (<ref>) it follows that it must be feasible to Opt. (<ref>) and hence satisfies each constraint. In particular there must exist SOS variables s_2,i∈∑_SOS^d such that 
-	
-    J_d^*(x) - g_i(x) -s_2,i(x)(r^2 - ||x||_2^2) ∈∑_SOS^d  for  1 ≤ i ≤ m.
-
-	Hence, it follows by Eq. (<ref>) and the positivity of SOS polynomials that J_d^*(x) ≥ g_i(x) for all x ∈Λ and 1≤ i ≤ m. Therefore J_d^*(x) ≥max_1 ≤ i ≤ m g_i(x)=V(x) and thus Eq. (<ref>) holds. 
-	
-	We next show that Eq. (<ref>) holds. Let >0, by Cor. <ref>, found in Appendix <ref>, there exists H_1,H_2 ∈[x] such that, 
-	
-    sup_ x ∈Λ |V(x) - H_j(x) | < /4 for  j ∈{1,2}, 
-        H_1(x) > g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m,
-        H_2(x) < g_i(x)  for all  x ∈ B_r(0) ∩Y̅_̅i̅ and  1 ≤ i ≤ m,
-
-	where  Y̅_̅i̅ :={y ∈Λ: g_i(y) ≥ g_j(y)  for  1 ≤ j ≤ m  }. 
-	
-	Since H_1(x)-g_i(x) >0 for all x ∈ B_r(0) and 1 ≤ i ≤ m and also since B_r(0) is compact semialgebraic set it follows by Thm. <ref> that there exists SOS polynomials {s_2,i}_i ∈{1,..,m}⊂∑_SOS and s_0,1	∈∑_SOS such that,
-	
-    H_1(x)-g_i(x)-s_2,i(x)(r^2 - ||x||_2^2)=s_0,1	(x).
-
-	Moreover, by a similar argument, since g_i(x)- H_2(x) >0 for all x ∈  B_r(0) ∩Y̅_̅i̅ and 1 ≤ i ≤ m and also since B_r(0)∩Y̅_̅i̅ is compact semialgebraic set it follows by Thm. <ref> that there exists SOS polynomials {s_1,i,j}_(i,j) ∈{1,..,m}×{1,..,m}⊂∑_SOS, {s_1,i}_i ∈{1,..,m}⊂∑_SOS  and s_0,2	∈∑_SOS such that,
-	
-    g_i(x)-H_2(x) -s_1,i(x)     (r^2 - ||x||_2^2) 
-        -∑_j=1^m s_1,i,j(x)(g_i(x)-g_j(x))     =s_0,2(x).
-
-	Now clearly, H_2(x)< max_1 ≤ i ≤ m g_i(x) =V(x)< H_1(x) for all x ∈  B_r(0) implying
-	
-    γ_H -(H_2(x) - H_1(x)) ≥ (H_2(x) - H_1(x)) 
-        = (H_2(x)-V(x))+ (V(x) - H_1(x))>0  for all  x ∈ B_r(0),
-
-	where γ_H :=2 sup_x ∈ B_r(0){H_2(x) - H_1(x)}. Therefore by Thm. <ref> there exists SOS polynomials s_3∈∑_SOS and and s_0,3	∈∑_SOS such that,
-	
-    γ_H -(H_2(x) - H_1(x)) -s_3(x)(r^2 - ||x||_2^2) =s_0,3(x).
-
-	Furthermore, by Eq. (<ref>) it follows that
-	
-    γ_H≤  2sup_x ∈ B_r(0)|H_2(x)-V(x)| +   2sup_x ∈ B_r(0)|V(x)-H_1(x)| < .
-
-	
-	Now, let d_0:=max{ deg(H_1),deg(H_2), max_i,j ∈{1,...,m}{s_1,i,j}, max_i ∈{1,...,m}{s_2,i}, s_3, max_i ∈{1,2,3}{s_0,i}}. It then follows by Eqs (<ref>), (<ref>) and (<ref>) that (H_2,H_1,γ_H) is a feasible solution to Opt. (<ref>) for degree d ≥ d_0. Hence, the value of the objective resulting from the optimal solutions, (J_d^*,P_d^*, γ_d^*) for d ≥ d_0, will be less than or equal to the value of the objective function resulting from the feasible solution (H_2,H_1,γ_H). Therefore by Eq. (<ref>) we have that,
-	
-    γ^*_d≤γ_H< for all  d ≥ d_0.
-
-	
-	Now, since (J_d^*,P_d^*, γ_d^*) is the optimal solution to Opt. (<ref>) it satisfies all of the constraints of Opt. (<ref>). Since SOS polynomials are non-negative it then follows
-	
-    J^*_d(x)   ≥ g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m, 
+    φ̂(x)
+       =   ∫ d^4y   G_R(x-y) [ δ(y^0-t_0)Φ̂_1( y)
+     + δ'(y^0-t_0)Φ̂_0( y) ]
     
-    		P^*_d(x)    ≤ g_i(x)  for all  x ∈ B_r(0) ∩Y̅_̅i̅ and  1 ≤ i ≤ m,
+       =   ∫ d^4y  δ(y^0-t_0)  [ G_R(x-y)   ↔∂/∂ y^0Φ̂(y^0, y) ]  ,
+
+
+where we update notations of the initial conditions in the following
+way: Φ̂_0( y) = Φ̂(y^0, y)|_y^0=t_0
+and
+Φ̂_1( y) = ∂Φ̂(y^0, y)/∂ y^0
+|_y^0=t_0.
+Indeed, we associate the field Φ̂(y^0, y) with the
+interacting system which exists before freeze-out, i.e. at the times
+which are less then that on the hyper-surface, which represents the
+initial conditions.
+In particular case of the flat hyper-surface, y^0 = t_0, the field
+Φ̂(y^0, y) exists at times y^0 < t_0.
+Hence, this field and its derivatives determine the initial
+conditions for particles emitted from the freeze-out hyper-surface
+which we described by the field φ̂(x).
+
+We note, for the arbitrary space-like hyper-surface, σ(y), solution
+(<ref>) looks like <cit.>
+
+
+    φ̂(x)  = ∫_σ dσ^μ(y) [ G_R(x-y) ↔∂/∂ y^μΦ̂(y) ] .
+
+
+
+
+
+
+On the other hand, in the free space
+for the system without interaction solution of the Klein-Gordon equation
+(<ref>) can be written as expansion over eigne functions of the operator of
+momentum with the infinite boundary conditions, that coincides with expansion
+in the Fourier integral
+
+
+    φ̂ (x^0, x)    =   ∫d^3k/(2π)^3  2ω_k [b( k) 
+    e^-iω_k t+i k· x 
+    +  b^+( k)    e^iω_k t-i k· x]
     
-    		J^*_d(x)- P^*_d(x)    ≤γ_d^*  for all  x ∈ B_r(0),
-
-	implying P^*_d(x) ≤ V(x) ≤ J^*_d(x) for all B_r(0) and hence 
-	
-    |J^*_d(x) - V(x)|     = J^*_d(x) - V(x) ≤ J^*_d(x) - P^*_d(x)
-       ≤γ_d^*  for all  x ∈ B_r(0).
-
-	Therefore, by Eqs (<ref>) and (<ref>) it follows that
-	
-    sup_x ∈ B_r(0)	|J^*_d(x) - V(x)|≤γ_d^*<  for  d ≥ d_0.
-
-	Now, >0 was arbitrarily chosen and thus Eq. (<ref>) shows Eq. (<ref>), completing the proof.
-	
-		Convergence to unions of semialgebraic sets: Consider the case when X is given by Eq. (<ref>) and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>). Then  Eqs (<ref>) and (<ref>) hold by a similar argument to the proof of convergence to to semialgebraic sets, where instead of showing lim_d →∞||J_d^*-max_1 ≤ i ≤ m g_i||_L^∞(Λ,)=0 (as in Eq. (<ref>)) we show lim_d →∞||J_d^*-min_1 ≤ i ≤ m g_i||_L^∞(Λ,)=0.
+       =   ∫d^4k/(2π)^4  2πδ( k^2-m^2)  e^-ik· x  b( k) ,
 
 
-Note, the solutions, {J_d}_d ∈, to Opts (<ref>) and (<ref>) provide inner sublevel set approximations as shown in Eq. (<ref>). However, it is still possible to construct an outer sublevel set approximation using P_d^* since in both cases P_d^*(x) ≤ V(x) and lim_d →∞ ||P_d- V||_L^∞(Λ,)=0. Unfortunately, as shown in Counterexample <ref> (found in the appendix), it is not necessarily true that {x ∈Λ: P^*_d(x)<γ}→{x ∈Λ: V(x)<γ} in the Hausdorff metric. Fortunately, it is fairly straight forward to show {x ∈Λ: P^*_d(x) ≤γ}→{x ∈Λ: V(x) ≤γ} in the volume metric using Prop. <ref>.
+where ω_k=√(m^2+ k^2),   b( k) and
+b^+( k) are the annihilation and creation operators which
+satisfy the following commutation relation
+
+
+    [b( k), b^+( p)]  =  (2π)^3   2ω_k  δ^3( k- p) .
+
+
+For the real field, which we consider, these operators should obey
+equality
+
+
+    b(- k) = b^+( k)    ⇒  φ̂^+ ( x) = φ̂ ( x)  .
+
+
+We assume that the detector measures asymptotic momentum eigenstates,
+i.e. that it acts by projecting the emitted single-particle state onto
+
+
+    ϕ^ out_ k( x,t)  =  e^ -i ω_k t+i  k· x ≡  f_ k(x)  ,
+
+
+where ω_k=ω( k)=√(m^2+ k^2) is the energy of the
+particle and we label out-state by the value of measured momentum, i.e. k.
+Evidently, these functions are the solutions of eq.(<ref>).
+So, we defined the set of the basic functions (asymptotic states)
+
+
+    f_ k(x) ≡  e^- i k· x | _k^0=ω ( k)  ,
+
+
+which are orthogonal with respect to the scalar product
+
+
+    ∫ d^3x  f^*_ k(x)   i ↔∂_x^0  f_ p(x) 
+    =  (2π )^3  2ω ( k) δ ^3( k- p) ,   ∫ d^3x  f_ k(x)  i ↔∂_x^0 f_ p(x) = 0 .
+
+
+In fact, the expansion (<ref>) is made in terms of the asymptotic states (<ref>).
+Then, if the field operator, φ̂(x), is known the annihilation
+and creation operators can be evaluated
+
+
+    b( k)  = ∫ d^3x  f^*_ k(x)   i ↔∂_x^0φ̂(x) ,   
+    b^+( k)  =  - ∫ d^3x  f_ k(x)  i ↔∂_x^0φ̂^+(x)  .
 
 
 
-We next use Theorem <ref> to show that the SOS programs we proposed in Section <ref>, that approximate in the L^1 norm from above, yield polynomial sublevel sets that converge in the volume metric to semialgebraic sets or Pontryagin differences.
+The goal of our investigation is a calculation of the single- and
+two-particle spectra which can be written with the help of
+annihilation and creation operators in the following way
+(see, for instance, <cit.>)
+
+
+    P_1( p) = ⟨  b^+( p)  b( p)  ⟩  ,
+      
+    P_2( p_1, p_2) = ⟨ 
+    b^+( p_1)  b^+( p_2)  b( p_2)  b( p_1)  ⟩ ,
+
+
+where averaging is taking with respect to the states of the donor
+system described by the field Φ̂(x).
+That is why we are interesting in exact expressions of the creation
+b^+( k) and annihilation b( k) operators at asymptotic
+times, t →∞.
+Inserting solution (<ref>) into (<ref>) one obtains
+
+
+    b( k)    =   lim_x^0 →∞ ∫ d^3x  d^4y δ(y^0-t_0) f^*_ k(x) 
+    i ↔∂/∂ x^0[ G_R(x-y) ↔∂/∂ y^0Φ̂(y) ]
+    
+       =   ∫ d^4y δ(y^0-t_0)[ f^*_ k(y)
+    i ↔∂/∂ y^0Φ̂(y) ] ,
+
+
+and
+
+
+    b^+( k)    =   lim_x^0 →∞ - ∫ d^3x   d^4y  δ(y^0-t_0)  
+    f_ k(x) i ↔∂/∂ x^0[ G_R(x-y) ↔∂/∂ y^0Φ̂^+(y) ]
+    
+       =    -∫ d^4y  δ(y^0-t_0) [ f_ k(y)
+    i ↔∂/∂ y^0Φ̂^+(y) ],
+
+
+where we use representation of the Green's function (<ref>) and
+the orthogonal relations (<ref>).
+It is seen that the projection of the donor field Φ̂(y) is
+taken at the times of the freeze-out and all evolution history of the
+free propagation (after freeze-out) is ridded out.
+
+Actually, integration over measure d^4y  δ(y^0-t_0) in
+(<ref>) and (<ref>) is nothing more as integration over
+the flat space-like hyper-surface, y^0=t_0.
+For the arbitrary space-like hyper-surface, σ(x), the
+annihilation and creation operators expressed through the field
+operator Φ̂(x) look like
+
+
+    b( k)  =  i ∫_σ dσ^μ(x) [ f^*_ k(x) ↔∂/∂ x^μ Φ̂(x) ]   ,
+       b^+( k)  =  - i ∫_σ dσ^μ(x)  [ f_ k(x) ↔∂/∂ x^μ Φ̂^+(x) ]  .
+
+
+
+
+
+
+
+
+§ SINGLE-PARTICLE SPECTRUM
+
+
+
+With creation and annihilation operators in hand we come to the
+evaluation of the single-particle spectrum.
+We write
+
+
+    2E_p d N/d^3p= ⟨  b^+( p)   b( p) ⟩  ,
+
+
+where E_p=ω_p=√(m^2+ p^2).
+Next, introducing here creation b^+( k) and annihilation b( k)
+operators from (<ref>) and (<ref>) one gets
+
+
+    2E_p d N/d^3p   =   ∫ d^4x_1  d^4x_2  δ(x_1^0-t_0)  δ(x_2^0-t_0)
+    ⟨[
+    f_ p(x_1) ↔∂/∂ x_1^0Φ̂^+ (x_1) ] [  f^*_ p(x_2)
+    ↔∂/∂ x_2^0Φ̂ (x_2) ] ⟩
+       =   ∫ d^4x_1  d^4x_2 δ(x_1^0-t_0) δ(x_2^0-t_0)
+    ⟨[
+    f_ p(x_1) ∂/∂ x_1^0Φ̂^+ (x_1)
+    - (∂/∂ x_1^0 f_ p(x_1)) Φ̂^+ (x_1)]
+    
+          ×[  
+        f^*_ p(x_2) ∂/∂ x_2^0 Φ̂ (x_2)
+    - ( ∂/∂ x_2^0  f^*_ p(x_2)) Φ̂ (x_2)
+    ] ⟩ .
+
+
+All this can be written in a compact form
+
+
+    2E_p d N/d^3p = ∫ d^4x_1   d^4x_2  δ(x_1^0-t_0)  δ(x_2^0-t_0)  [   f_ p(x_1)   f^*_ p(x_2)  ↔∂/∂ x_1^0↔∂/∂ x_2^0⟨Φ̂^+ (x_1)   Φ̂ (x_2) ⟩]  .
+
+
+
+One immediately recognize that angle brackets on the r.h.s. of this
+equation give us the correlation function or the lesser Green's function
+<cit.>
+
+
+    i  G^<(x_2,x_1)  = ± ⟨Φ̂^+(x_1) Φ̂(x_2)
+    ⟩ ,
+
+
+where the plus sign reads for bosons and the minus sign for fermions (see Appendix).
+As an example, in what follows  we consider the Bose statistics.
+
+
+Hence, for the single-particle spectrum, we obtain the following basic expression
+
+
+    2E_p d N/d^3p  =  i ∫ d^4x_1  d^4x_2 δ(x_1^0-t_0) δ(x_2^0-t_0) [   f_ p(x_1)   f^*_ p(x_2)  ↔∂/∂ x_1^0↔∂/∂ x_2^0  G^<(x_2,x_1) ]  .
+
+
+As seen from (<ref>) in covariant form the single-particle spectrum looks like
+
+
+    2E_p d N/d^3p  =  i ∫ dσ^μ(x_1)  dσ^ν(x_2) [  f_ p(x_1)  f^*_ p(x_2) ↔∂/∂ x_1^μ↔∂/∂ x_2^ν  G^<(x_2,x_1) ]  .
+
+
+The formula (<ref>) (and (<ref>)) forms the basis for further
+approximations that take into account the special properties of the system
+emitting particles.
+
+
+
+
+
+ §.§ A note on the description of fermionic radiation
+
+
+Let us assume that polarization effects are not taken into account when
+registering fermionic particles.
+In this case, all polarized states are summed, and the description of the
+free state of the propagating particle does not require the details of the
+fermionic spin state.
+Therefore, for such an experiment, it is quite satisfactory to describe
+freely propagating fermions as solutions of the Klein-Gordon equation.
+
+
+Indeed, let us consider freeze-out of the fermionic system.
+After freeze-out the fermions are described by the field
+operator ψ̂(x), which satisfies the free Dirac equation
+
+
+    (iγ^μ∂_μ -  m)  ψ̂(x)  =  0  ,
+
+
+where ψ̂ is the four-spinor (four-component column vector), and the
+γ-matrices satisfy the anticommutation relations
+{γ^μ, γ^ν} = 2g^μν with g^μν as the
+metric tensor, sign(g^μν) = (1,-1,-1,-1).
+In eq. (<ref>) the “Dirac” operator can be acted on
+from the left by the adjoint operator (iγ^ν∂_ν + m).
+Using the anticommutation relations of the γ-matrices, we obtain that
+each component of ψ̂(x) must satisfy the Klein-Gordon equation
+(<ref>), i.e., (∂_μ∂^μ + m^2)  ψ̂(x) = 0.
+
+
+So, we can conclude that if the experimental registration of fermions does not
+fix the polarization of particles, then we can use the solutions of the
+Klein-Gordon equation to describe the free propagation of fermions and use
+the quantum generalization of the kinetic approach proposed in the present paper
+to describe fermion radiation.
+
+
+
+
+
+
+
+
+
+ §.§ Single-particle spectrum from homogeneous system
+
+
+
+For a homogeneous system the correlation function can be expanded in the
+Fourier integral only with respect to a difference of coordinates
+
+
+    G^<(x_2,x_1)  =  G^<(x_2-x_1)  = ∫d^4k/(2π)^4 
+    e^-ik· (x_2-x_1)   G^<(k^0, k)  .
+
+
  
-	It holds that,
-	
-    lim_d →∞	D_V ({x ∈Λ: J_d^*(x) < 0} , X ) =0, 
-               {x ∈Λ: J_d^*(x)<0}⊆ X,
-
-	where Λ:={x ∈^n: ||x||_2 ≤ r} and the set X and the sequence of solutions {J_d^*}_d ∈⊂[x] satisfy either of the following:
-	
-		
-  * X is a semialgebraic set, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
-		
-  * X is a Pontryagin difference, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
-	
+ 
+Substituting then the Green's function in this form into (<ref>)
+we obtain
 
 
-Convergence to semialgebraic sets:	We first show Eqs (<ref>) and (<ref>) hols in the case X is a semialgebraic set, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
+    2E_p d N/d^3p   =   ∫d^4k/(2π)^4  d^3x_1   d^3x_2  
+    iG^<(k^0, k)  e^i( p- k)· ( x_1- x_2) ×
+          × ∫ dx_1^0   dx_2^0  δ(x_1^0-t_0)  δ(x_2^0-t_0)  [  e^-ip^0 (x_1^0-x_2^0)  ↔∂/∂ x_1^0↔∂/∂ x_2^0 
+     e^ik^0 (x_1^0-x_2^0)] ,
 
 
- Now, it follows that if we show that
-	
-    J_d^*(x) ≥ V(x)  for all  x ∈Λ,
-    lim_d →∞||J_d^*-V||_L^1(Λ,)=0,
-
-	where V(x):=max_1 ≤ i ≤ m g_i(x), then Eqs (<ref>) and (<ref>) hold and the proof is complete. This is because by Lem. <ref> we have that X={x ∈Λ: V(x)<0}. Then if Eqs (<ref>) and (<ref>) hold then clearly Eq. (<ref>) is satisfied and, by Thm. <ref>, it must follow that lim_d →∞	D_V({x ∈Λ: J_d^*(x)<0} , {x ∈Λ: V(x)<0} ). It is then clear Eq. (<ref>) holds.
-	
-	We first show Eq. (<ref>). Because J_d^* solves Opt. (<ref>) it follows that it must be feasible to Opt. (<ref>) and hence satisfies each constraint. In particular there must exist SOS variables s_i∈∑_SOS^d such that 
-	
-    J_d^*(x) - g_i(x) -s_i(x)(r^2 - ||x||_2^2) ∈∑_SOS^d  for  1 ≤ i ≤ m.
-
-	Hence, it follows by Eq. (<ref>) and the positivity of SOS polynomials that J_d^*(x) ≥ g_i(x) for all x ∈Λ and 1≤ i ≤ m. Therefore J_d^*(x) ≥max_1 ≤ i ≤ m g_i(x)=V(x) and thus Eq. (<ref>) holds. 
-	
-	We next show Eq. (<ref>). Consider the sequence of functions, {G_d^*}_d ∈⊂[x], that solve the family of d-degree SOS optimization problems given in Eq. (<ref>). This sequence of functions is also feasible to Opt. (<ref>). Therefore the value of the objective function of Opt. (<ref>) resulting from G_d^* will be greater than the optimal solution J_d^*. That is
-	
-    ∫_Λ J_d^*(x) dx ≤∫_Λ G_d^*(x) dx.
-
-	Moreover, by Eq. (<ref>), in the proof of Thm. <ref>, we have that 
-	
-    lim_d →∞||G_d^*-V||_L^∞(B_r(0),)=0.
-
-	Hence,
-	
-    lim_d →∞∫_Λ |V(x) - J_d^*(x)| dx = lim_d →∞∫_Λ V(x) - J_d^*(x) dx
-       ≤lim_d →∞∫_Λ V(x) - G_d^*(x) dx ≤lim_d →∞μ(Λ) ||V-G_d||_L^1(B_r(0),)=0.
-
-	Therefore, Eq. (<ref>) is shown completing the proof.
-	
-	
-			
-					Convergence to Pontryagin differences: 	Consider the case where X is given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>). Note, in Eq. (<ref>) that it was shown that X={x ∈Λ: V(x) < 0 }, where 
-    V(x):=sup_w  ∈{z ∈Λ: max_1 ≤ i ≤ m_2 g_2,i(z) ≤ 0 }max_1 ≤ i ≤ m_1 g_1,i(x-w).
-
-					
-					The rest of the proof follows by a similar argument to the convergence to semialgebraic sets proof, where we use Cor. <ref> (found in the appendix) to approximate V uniformly from above by a polynomial. We then show that this polynomial approximation is feasible to Opt. (<ref>) for sufficiently large d ∈ using Theorem <ref> (found in the appendix). Because this feasible solution to Opt. (<ref>) is arbitrarily close to V, it can then be shown that the true solution of Opt. (<ref>) approximates V from above with arbitrary precision with respect to the L^1 norm. Hence, Eq. (<ref>) follows by Thm. <ref>. It is also clear that Eq. (<ref>) since J_d^*(x) ≥ V(x).
+where p^0=ω_p.
+For two arbitrary functions we have
 
 
-Thm. <ref> shows that the SOS programs we proposed in Section <ref>, that approximate in the L^1 norm from above, converge to various sets defined by strict sublevel sets. We next show that the SOS programs we proposed in Section <ref>, that approximate in the L^1 norm from below, yield polynomial sublevel sets that converge in the volume metric to unions of semialgebraic sets or Minkowski sums or discrete points defined by  non-strict sublevel sets.
-
-It holds that,
-
-    lim_d →∞	D_V ({x ∈Λ: J_d^*(x)  ≤ 0} , X ) =0,
-                	 X ⊆{x ∈Λ: J_d^*(x) ≤ 0},
-
-where Λ:={x ∈^n: ||x||_2 ≤ r} and the set X and the sequence of solutions {J_d^*}_d ∈⊂[x] satisfy either of the following:
-
-	
-  * X is a union of semialgebraic sets, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
-	
-  * X is a Minkowski sum, given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
-	
-  * X is a set of discrete points, given by X={x_i}_i=1^N⊂^n, and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).
-
+    f(t_1,t_2)   ↔∂/∂ t_1↔∂/∂ t_2  g(t_1,t_2)
+    =
+     f ↔∂_t_1∂ g/∂ t_2
+     -
+     ∂ f/∂ t_2 ↔∂_t_1 g
+    =
+     f ∂ ^2 g/∂ t_1  ∂ t_2
+     -
+     ∂ f/∂ t_1 ∂ g/∂ t_2
+     -
+     ∂ f/∂ t_2 ∂ g/∂ t_1
+     +
+     ∂ ^2 f/∂ t_1  ∂ t_2  g
+      .
 
 
-		Convergence to unions of semialgebraic sets:  Consider the case when X is given by Eq. (<ref>) and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>).	By a similar argument to the proof of Thm. <ref> that showed Eqs (<ref>) and (<ref>) hold, it is possible to use Prop. <ref> to show that
-	
-    V(x) ≥ J_d^*(x)   for all  x ∈Λ,
-    lim_d →∞||J_d^*-V||_L^1(Λ,)=0,
-
-	for V(x):=min_1 ≤ i ≤ m g_i(x). Then by Prop. <ref> it follows that lim_d →∞ D_V({x ∈Λ: V(x) ≤ 0}, {x ∈Λ: J_d(x) ≤ 0 } )=0. By a similar argument to Lem. <ref> it follows that X={x ∈Λ: V(x) ≤ 0}, where X is given by Eq. (<ref>).  Therefore it is clear Eq. (<ref>) holds. Moreover, since V(x) ≥ J_d^*(x) it is clear that Eq. (<ref>) holds.
-	
-	Convergence to Minkowski sums: Consider the case where X is given by Eq. (<ref>), and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>). Note in Eq. (<ref>) that it was shown that X={x ∈Λ: V(x) ≤ 0 }, where 
-    V(x):=inf_w  ∈{z ∈Λ: max_1 ≤ i ≤ m_2 g_2,i(z) ≤ 0 }min_1 ≤ i ≤ m_1 g_1,i(x-w).
-
-	
-	The rest of the proof follows by a similar argument to the convergence to unions of semialgebraic sets proof, where we use Lem. <ref> (found in the appendix) to approximate V uniformly from below by a polynomial. We then show this polynomial approximation is feasible to Opt. (<ref>) for sufficiently large d ∈ using Theorem <ref> (found in the appendix). Because this feasible solution to Opt. (<ref>) is arbitrarily close to V, it can then be shown that the true solution of Opt. (<ref>) approximates V from below with arbitrary precision with respect to the L^1 norm. Hence, Eq. (<ref>) follows by Prop. <ref>. Moreover, since V(x) ≥ J_d^*(x) it is clear that Eq. (<ref>) holds.
-	
-		Convergence to Discrete Points: Consider the case where X={x_i}_i=1^N, and {J_d^*}_d ∈⊂[x] is given in Eq. (<ref>). Note in Lem. <ref> it was shown that X={x ∈Λ: V(x) ≤ 0 }, where 
-    V(x):=1 - 1_{x_i}_i=1^N(x).
-
-		
-		The rest of this proof again follows by a similar argument to proof of convergence to unions of semialgebraic sets or Minkowski sums. This time we use Prop. <ref> to approximate V uniformly from below by a polynomial. We then show that this polynomial is feasible to Opt. (<ref>) for sufficiently large enough degree using Theorem <ref>. Because this feasible solution to Opt. (<ref>) is arbitrarily close to V, it can then be shown that the true solution of Opt. (<ref>) approximates V from below with arbitrary precision with respect to the L^1 norm. Hence, Eq. (<ref>) follows by Prop. <ref>. Moreover, since V(x) ≥ J_d^*(x) it is clear that Eq. (<ref>) holds.
+Then, expression in square brackets in the last line in (<ref>)
+can be easily calculated and one can rewrite (<ref>) in the following way
 
 
-
-
-
-
-
-
-
-
-§ NUMERICAL EXAMPLES
-
-In this section we use the SOS programs we proposed in Sec. <ref> to approximate various sets. We first approximate unions of semialgebraic sets in the Hausdorff and volume metric. We then approximate Minkowski sums and Pontryagin differences in the volume metric. We finish the section with three numerical examples that have practical motivations, the approximation of Region of Attractions (ROAs) and attractor sets of nonlinear systems via the outer bounding sets of discrete points, and the Minkowski sum of obstacles and vehicle shape sets to construct a C-space in which collision free path planning can be computed in. All SOS programs are solved using Yalmip <cit.> with SDP solver Mosek <cit.>.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[Approximation of unions of semialgebraic sets] 
-	Consider the union of semialgebraic sets
-	
-    ∪_i=1^3 X_i= ∪_i=1^3 {x ∈^2: g_i(x)<0 }
-    where 
+    2E_p d N/d^3p   =   ∫d^4k/(2π)^4 d^3x_1  d^3x_2 
+    iG^<(k^0, k)  e^i( p- k)· ( x_1- x_2)( p^0+k^0 )^2
     
-    	g_1(x)     = x_1^2 + x_2^2 -0.075 , 
+          × ∫ dx_1^0  dx_2^0 δ(x_1^0-t_0) δ(x_2^0-t_0) 
+    e^-i(p^0-k^0)(x_1^0-x_2^0) ,
+
+
+what finally gives
+
+
+    2E_p d N/d^3p  = ∫d^4k/(2π)^4  i G^<(k^0, k) ∫ d^3x_1  d^3x_2 
+    e^i( p- k)· ( x_1- x_2)( E_p + k^0 )^2  .
+
+
+
+
+
+
+Expansion (<ref>) assumes that the donor many-particle system is big enough
+to neglect the surface effects.
+On the other hand, following the common point of view
+<cit.> we
+assume that the Green's function significantly different from zero only when the
+differences of arguments, x_1- x_2, are close to zero.
+Hence, the integrations on the r.h.s. of (<ref>) with respect to
+the spatial coordinates x= x_1- x_2 can be done with
+infinite limits, then, it gives the δ-function:
+(2π)^3δ^3( p- k).
+
+Thus, the single-particle spectrum in a homogeneous system in the rest
+frame of the fireball reads
+
+
+    2E_p d N/d^3p  =  V ∫dω/2π ( E_p + ω)^2  i G^<(ω, p)  ,
+
+
+where V =∫ d^3X with X=( x_1+ x_2 )/2 as the 3D-volume of
+the element from which particles are emitted.
+
+
+
+
+
+
+
+
+To represent the single-particle spectrum (<ref>) in covariant form,
+
+insert (<ref>) into (<ref>) and get
+
+
+    2E_p d N/d^3p  = ∫d^4k/(2π)^4   iG^<(k)
+    ∫ dσ^μ(x_1)  dσ^ν(x_2) [  f_ p(x_1)  f^*_ p(x_2) ↔∂/∂ x_1^μ↔∂/∂ x_2^ν
+     e^-ik· (x_2-x_1) ]  .
+
+
+Calculating the derivatives on the right-hand side of this equation,
+we find that the single-particle spectrum of particles emitted by a
+homogeneous system in covariant form is written as
+
+
+    2E_p d N/d^3p=      ∫d^4k/(2π)^4  (p+k)_μ (p+k)_ν  iG^<(k)
+    ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
     
-    	g_2(x)     = (x_1-0.15)^2 + (x_2-0.15)^2 -0.025, 
+    =      ∫d^4k/(2π)^4  iG^<(k)
+    | ∫_σ dσ^μ(x)    (p+k)_μ e^-i(p-k)· x |^2  ,
+
+
+where p^0 = E_p = √(m^2 +  p^2).
+
+
+
+
+
+
+ §.§  Single-particle spectrum from homogeneous system in
+thermodynamic equilibrium 
+
+
+
+If the system possesses a global thermodynamic equilibrium, which is
+an attribute of the homogeneous system under consideration, the
+correlation function G^<(k) can be expressed (see
+<cit.>, in particular in
+Ref. <cit.>, eq.(2.19)) with the help of the
+spectral function and the equilibrium distribution function
+
+
+
+    i  G^<(k)  = θ(k_0)  A(k)  f(k^0)  
+    - θ(-k_0)  A(k) f(-k^0)
+
+
+with
+
+
+    f(k^0)  = 1/e^ (k^0-μ)/T + a ,
+
+
+where a = - 1 for the Bose statistics, a = 1 for the Fermi statistics and
+a = 0 for the classical Boltzmann gas.
+
+To be specific, we consider the Bose statistics below and therefore take
+the Bose-Einstein distribution function, that is, a = - 1 in (<ref>).
+
+
+If the emitted 3D-area is an element of the freeze-out hyper-surface,
+one can assume an absence of interaction on this surface.
+For the system of free particles which are in thermal equilibrium
+
+(ideal gas) the spectral function expresses
+that all particles are on the mass shell.
+ 
+Hence, the spectral function of the free fields can be found as
+<cit.>
+
+
+    A_0(k)  =  2π δ(k^2-m^2)  [ θ(k^0)-θ(-k^0) ]  ,
+
+
+and satisfies the sum-rule <cit.>
+
+
+    ∫dk^0/2π  k^0  A(k^0, k) = 1  .
+
+
+Using (<ref>), we can write the representation of the Green's function
+G^<(k) given in eq. (<ref>) as follows
+
+
+    i G^<(k) =
+     π/ω_k δ(k_0-ω_k)  f__ BE (k^0)  
+    - π/ω_k δ(k_0+ω_k)  f__ BE (-k^0)  .
+
+
+For the single-particle spectrum (<ref>) we need the Green's function,
+G^<(k^0, p), where the measured momentum p is put on place of
+the momentum k
+(remind, that is due to an integration with infinite limits of the spatial
+coordinates x= x_1- x_2 in (<ref>))
+
+
+    i G^<(ω, p) =
+     π/E_p δ(ω - E_p)  f__ BE(ω) 
+    - π/E_p δ(ω + E_p)  f__ BE(-ω)  .
+
+
+Inserting this in <ref>) one gets
+
+
+    2E_p d N/d^3p =  V ∫dω/2π ( E_p + ω)^2 π/E_p [ δ(ω - E_p)  f__ BE(ω)  
+    - δ(ω + E_p)  f__ BE(-ω) ]  .
+
+
+Due to the presence of the factor (E_p + ω_p)^2 under the integral in
+(<ref>), the second term in square brackets does not contribute at all,
+because  ω = - E_p due to the delta-function.
+
+This means that antiparticles do not contribute to the particle spectrum.
+Then the single-particle spectrum in the fireball rest frame in the case of
+global thermodynamic equilibrium has the form
+
+
+    d N/d^3p =  V   f__ BE(E_p)  ,
+
+
+where V is the spatial volume of the system from which the particles are
+emitted, and the system of bosons is taken as an example.
+
+
+
+
+
+
+ §.§ The local thermodynamic equilibrium
+
+
+
+We can go further.
+In general case the Fourier expansion of the Green's function looks like
+
+
+
+    G^<(x_2,x_1)  = ∫d^4k/(2π)^4  e^-ik· x   G^<(X;k)  ,
+
+
+where we have made the following transformation of coordinates:
+x = x_1 - x_2 and X = (x_1 + x_2)/2.
+
+Inserting this representation of the Green's function into basic
+eq. (<ref>) and then calculating the derivatives on the right-hand
+side of this equation, we obtain
+
+
+    2E_p d N/d^3p = i ∫d^4k/(2π)^4
+    d^4X d^4x δ(X^0-t_0) δ(x^0) e^-i(p-k) · x
     
-    	g_3(x)     = (x_1+0.25)^2 + (x_2 + 0.25)^2  -0.001.
+    [( p^0+k^0 )^2 G^<(X;k)
+    + ∂^2 G^<(X;k)/4 ∂ X_0^2]  ,
+
+
+where p^0 = E_p = √(m^2 +  p^2) and we  used identity
+
+    dX^0  dx^0 δ(X^0+x^0/2-t_0) δ(X^0-x^0/2-t_0)  
+    =  dX^0   dx^0 δ(X^0-t_0) δ(x^0)  .
+
+In fact, eq. (<ref>) is a generalization of equation
+(<ref>), which was derived for a completely homogeneous system.
+
+
+We can write also a generalization of the formula (<ref>) for
+the single-particle spectrum of particles emitted by the
+system from a space-like freeze-out hypersurface in covariant form
+
+
+    2E_p d N/d^3p=      
+    i ∫d^4k/(2π)^4 ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+          ×[(p+k)_μ (p+k)_ν  G^<(X;k)
+    + 1/4∂^2 G^<(X;k)/∂ X_μ∂ X^ν]   ,
+
+
+where p^0 = E_p and X = (x_1 + x_2)/2.
+Here we returned  to the variables of integration (x_1,x_2) and used the
+transition d^4x_1 δ(x_1^0-t_0) p^0 = dσ^μ(x_1) p_μ
+and the same for the x_2  coordinate.
 
 
 
-	In Fig. <ref> we have plotted ∪_i=1^3 X_i as the green region along with several approximations of the form {x∈^n: P(x)<0 }. For our Hausdorff approximation P=P_d and P_d is found by solving SOS Opt. (<ref>). For our volume approximation P=J_d and J_d is found by solving SOS Opt. (<ref>). Fig. <ref> shows several outer approximations for d=2,10 & 18. As expected from the convergence proofs given in Sec. <ref>, in both cases we see as the degree increases our set approximation improves. Interestingly the degree 18 Hausdorff approximation seems to give a better representation of the topology than the degree 18 volume approximation by showing some separation between X_2 and X_3. 
-	
-	
+If the Green's function G^<(X;k) weakly depends on the
+sum of arguments, X, it can be represented in
+the form <cit.>
 
 
-[Approximation of Minkowski sums and Pontryagin differences]  In <cit.> the Minkowski sum of the following sets was heuristically approximated,
-	
-    X_1     ={x ∈^2:x_1^2+x_2^2 - 0.25^2<0  }
+    i  G^<(X; k)  = θ(k_0)  A(X; k)  f(X;k)
+     - θ(-k_0)  A(X; k) [ f(X;-k) + 1 ]   ,
+
+
+where A(X;k) is the spectral function and f(X;k) is the
+distribution function, which in the kinetic approach is defined as
+
+
+    θ(k_0)  A(X;k)  f(X;k)  = θ(k_0)  i  G^<(X;k)  .
+
+
+The unit in the square brackets on the r.h.s. of (<ref>) is due
+to the tadpole contributions and can be rid out upon subtracting of
+the vacuum values as in the case of the vacuum quantum field theory.
+Hence, we will skip it in the future.
+
+To take into account the local equilibrium of the radiating system, we use
+eq. (<ref>) with several approximations.
+Indeed, in the kinetic approach, the second derivatives of the distribution
+function are usually neglected due to the weak dependence on the
+coordinates X = (x_1 + x_2)/2.
+Therefore, we neglect the second derivative of the Green's function on the
+right-hand side of (<ref>) and write
+
+
+    2E_p d N/d^3p = i ∫d^4k/(2π)^4  d^4X  δ(X^0-t_0) 
+    (2π)^3 Δ(p-k) ( E_p+k^0 )^2   G^<(X;k)  .
+
+
+Here
+
+
+    (2π)^3  Δ(p - k)  =  ∫ d^4x  δ(x^0)   e^-i(p-k) · x ,
+
+
+is a kind of form factor that reflects the finiteness of the spatial volume of
+the system.
+As was argued before, we assume that the correlation function G^<(X,x) significantly
+different from zero only when the differences of arguments, x_1- x_2,
+are close to zero.
+Therefore, the integrations in (<ref>) can be done with infinite limits, then,
+Δ( p -  k) →δ^3( p- k).
+
+
+Further, as before, we assume that on the  freeze-out hypersurface
+G^<(X;k) ≈ G_0^<(X;k).
+Taking into account (<ref>) and (<ref>) only for particles
+(as we have seen, antiparticles do not contribute) in a system with a slowly varying
+inhomogeneity, the Green's function has the form
+
+
+    i G^<_0(X;k^0, k)  = π/ω_k δ(k^0 - ω_k) 
+    f__ BE(X;k^0)  ,
+         where    ω_k = √(m^2 +  k^2) .
+
+
+Then, by inserting (<ref>) into eq. (<ref>), one can obtain a
+formula for calculating the single-particle spectrum in the fireball rest frame
+when the radiating system has a weak inhomogeneity
+
+
+    2 E_p d N/d^3p   =   ∫d^4k/(2π)^4  d^4X  δ(X^0-t_0) 
+    (2π)^3 δ^3( k -  p)
+    ( E_p + k^0 )^2  π/ω_k δ(k^0 - ω_k) 
+    f__ BE(X;k^0)
     
-    		X_2     = {x ∈^2: x_1-0.5<0, -0.5-x_1<0,
-           -x_2-0.5<0, x_2-x_1-0.5<0,x_1+x_2-0.5<0  }
+       =   ∫ d^4X δ(X^0-t_0)  2 E_p  f__ BE(X;E_p) .
+
+
+Obviously, the formula for spectrum (<ref>) in a homogeneous system
+(without dependence on X) reduces to (<ref>).
+The right-hand side of eq. (<ref>) can be rewritten in covariant notations
+
+
+
+    d^4x δ(x^0-t_0) p^0  = (d^3x p^0 - dtdydz p^x - dtdxdz p^y - dtdxdy p^z)
+    |_t = t_0 =  const ,
+
+
+where we keep in mind that for the equal-time initial conditions it is valid
+dt = dX^0 = 0.
+So we get
+
+
+    d^4X δ(X^0-t_0) p^0  =  dσ_μ(X) p^μ .
+
+
+By inserting this into eq. (<ref>), we rewrite it in covariant
+notations as
+
+
+    E_p d N/d^3p  = ∫ dσ_μ(X) p^μ  f__ BE(X;p· u) ,
+
+
+where the particles are on the mass shell p^0=E_p=√(m^2+ p^2),
+and u(X) is the four-velocity at the point X = (X^0,  X) given on a
+space-like hypersurface, on which the initial conditions are now taken into account.
+(Remind, to be specific the boson system is considered.)
+
+
+So, for the particle spectrum we obtain covariant expression (<ref>)
+which is valid in any frame.
+This expression coincides with the Cooper-Frye formula
+<cit.>.
+To obtain it we assume the following:
+
+
+(1) The many-particle system possess a weak spatially inhomogeneity and
+a stationarity of the system is weakly broken.
+Due to that reason in the basic equation (<ref>)
+
+we have neglected the second derivative of the Green's function
+G^<(X;x) with respect to the “center of mass” coordinate X = (x_1 + x_2)/2.
+
+
+
+(2) The many-particle system is at least in the local thermodynamic equilibrium
+what is reflected in the dependencies T(X), μ(X) and u(X).
+
+
+
+(3) To obtain eq. (<ref>) and then eq. (<ref>), we assumed
+that the particles are free on the freeze-out hypersurface, which leads to
+the approximation G^<(X;k) ≈ G_0^<(X;k).
+
+
+(4) We have assumed that the correlation function G^<(x_1,x_2) differs
+significantly from zero only if the differences of the arguments
+x_1- x_2 are close to zero.
+Therefore, integrations in (<ref>) can be performed with infinite limits.
+
+In fact, this is not the case for a system close to a second-order phase
+transition, when the correlation length becomes large enough.
+
+
+Meanwhile, the covariant formula that takes into account all quantum effects is
+still (<ref>).
+Even if we take into account approximations (1), (2) and (3)
+and therefore use the Green's function in the form
+
+
+    i  G^<(X; k)  ≈  i G_0^<(X;k)  
+    = θ(k_0)   2π δ(k^2-m^2)  f(X;k)  ,
+
+
+we come to
+
+
+    2E_p d N/d^3p=      ∫d^4k/(2π)^4 ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+          ×  (p+k)_μ (p+k)_ν θ(k_0)   2π δ(k^2-m^2)  f(X;k) .
+
+
+After some simplification, we obtain
+
+
+    2E_p d N/d^3p 
+    = ∫d^3k/(2π)^3 2ω_k ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+    (p+k)_μ (p+k)_ν  f(X;k) ,
+
+
+where p^0 = √(m^2 +  p^2) and k^0 = ω_k = √(m^2 +  k^2).
+Reduction of (<ref>) to the Cooper-Frye formula (<ref>) is
+possible if we can integrate with respect to x =  x_1 -  x_2 on
+the right-hand side of eq. (<ref>).
+This integration will immediately result in delta function
+δ^3( p -  k), which helps to convert the integrand to the same form
+as in eq. (<ref>).
+However, this cannot be done for an arbitrary freeze-out hypersurface.
+Thus, we can argue that eq. (<ref>) is a generalization of the
+Cooper-Frye formula (<ref>), which takes into account quantum effects.
+Indeed, one can rewrite eq. (<ref>) as
+
+
+    2E_p d N/d^3p 
+    = ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  J_μν(x_1 - x_2,  p) ,
+
+
+were we define the tensor J_μν
+
+
+    J_μν(x_1 - x_2,  p)  =  e^-i p· (x_1-x_2)∫d^3k/(2π)^3 2ω_k 
+    e^i k· (x_1-x_2) (p + k)_μ (p + k)_ν  f(X;k) .
+
+
+As one can see, the integral in (<ref>) includes interference of
+waves with different momenta k, which are projected onto the out-state
+with momentum p.
+There is no such interference in the Cooper-Frye formula (<ref>),
+where k =  p is taken.
 
 
 
@@ -1085,47 +1083,178 @@ In this section we use the SOS programs we proposed in Sec. <ref> to approximat
 
 
 
-In Fig <ref> we have plotted both the sets X_1 and X_2 as the gold and purple regions respectively (note that there is an axis scale change between Sub-figures <ref> and <ref>).
-
-In Fig. <ref> we have plotted X_1 ⊕ X_2 as the green region, which was found by discretizing both X_1 and X_2 and adding each element together. We have also plotted our outer approximations of X_1 ⊕ X_2 that take the form {x∈^2: J_d(x) ≤ 0} where J_d is found by solving SOS Opt. (<ref>) for d=2,6 & 12. 
-
-In Fig. <ref> we have plotted X_1 ⊖ X_2 as the green region, which was found by discretizing both X_1 and X_2. We have also plotted our inner approximations of X_1 ⊖ X_2 that take the form {x∈^2: J_d(x) < 0} where J_d is found by solving SOS Opt. (<ref>) for d=8,10 & 16.  As expected from the convergence proofs given in Sec. <ref>, in both cases we see as the degree increases our set approximation improves.
-
-
-
-
-[Approximation of ROAs] 
-
-
-
-The ROA is defined as the set of initial conditions for which a systems trajectories tend to an equilibrium point. We next consider the problem of approximating the ROA of the single machine infinite bus system given by the following nonlinear Ordinary Differential Equation (ODE):
-
-    [ ẋ_1(t); ẋ_2(t) ]=[                                   x_2(t); (1/2H)(P_m-P_e sin(x_1(t)+δ_ep)-Dx_2(t)) ],
-
-	where H=0.0106, X_t=0.28, P_m=1, E_s=1.21, V=1, P_e=(E_s V)/(P_m X_t), D=0.03 and δ_ep=sin^-1(1/P_e).
-	
-	Using a similar method to <cit.> we simulate ODE (<ref>) for various initial conditions, x(0)=x_0 ∈^2. Using these simulations we construct a labelled data set where each data point represents an initial condition that is either an element of the ROA or not. To approximate the ROA we must then solve this machine learning binary classification problem by computing the decision boundary of our labelled data set. We solve this problem by only considering the stable data points, {x_i}_i=1^N. We then use our proposed SOS algorithm to compute an outer approximation of {x_i}_i=1^N. In Fig. <ref> we have plotted  our estimation of the ROA as the red region, that is of the form {x∈^2: J_d(x)  ≤ 0} where J_d is found by solving SOS Opt. (<ref>) for d=14.
-	
-
-
-[Approximation of attractor sets]  The Lorenz system can be modelled as the following nonlinear ODE,
-
-    [ ẋ_1(t); ẋ_2(t); ẋ_3(t) ]=[              σ( x_2(t)-x_1(t) ); ρ x_1(t) -x_2(t) -x_1(t) x_3(t);        x_1(t) x_2(t) - β x_3(t) ],
-
-	where (σ, ρ,β)=(10,28,8/3). It is well known that the Lorenz system exhibits a global attractor set in which all trajectories converge towards. The problem of approximating the Lorenz attractor from data can be posed as a machine learning classification problem <cit.>. One way to approach this classification problem is by collecting discrete points, {x_i}_i=1^N, of terminal points of trajectories simulated for large amounts of time. Assuming our simulation time is sufficiently large, each of the discrete points, {x_i}_i=1^N, will be inside the attractor set. In Fig. <ref> we have plotted our approximation of {x_i}_i=1^N as the red region, that is of the form {x∈^3: J_d(x)  ≤ 0} where J_d is found by solving SOS Opt. (<ref>) for d=15.
-	
-	
-
-
-[Approximation of C-space for collision free path planning]  
-	
+ §.§ Single-particle spectrum from spatially inhomogeneous
+but stationary system
 
 
 
 
 
+For the spatially inhomogeneous, but stationary system, the lesser Green's function
+can be represented as G^<(x_2,x_1) = G^<(x_2^0 - x_1^0; r_1, r_2).
+Then, after the Fourier transform with respect to the time variable
+x^0 = x_2^0 - x_1^0
 
 
+    G^<(x_2^0 - x_1^0; r_1, r_2)  = ∫dω/2π 
+    e^- i ω (x_2^0 - x_1^0)  G^<(ω; r_1, r_2)  ,
+
+
+we represent the Fourier transform of the Green's function in the form
+
+
+    iG^<(ω; r_1, r_2)  =  A(ω; r_1, r_2) f__ BE(ω)  ,
+
+
+where A(ω; r_1, r_2) is the following spectral function
+
+
+    A(ω; r_1, r_2)  = ∑_k φ_k( r_1) φ_k^*( r_2) π/ϵ_kδ(ω - ϵ_k)  .
+
+
+Here {φ_k( r)} is the orthogonal and complete set of functions
+describing the spatial distribution of particles in a fireball.
+
+Let us check the reduction to the homogeneous case.
+When particles on the freeze-out hypersurface are free, their wave
+functions will be plane waves
+φ_k( r) → (1/√(V))exp(i  k · r) and
+hence ϵ_k → E_k = √(m^2 +  k^2).
+By inserting this into eq. (<ref>) one gets
+
+
+    A(ω; r_1, r_2)  = ∫d^3k/(2π)^3 
+    e^i  k · ( r_1 -  r_2) π/E_k δ(ω - E_k)  .
+
+
+Making the Fourier transform with respect to the relative coordinate
+r =  r_1 -  r_2 we come to the spectral function
+
+
+    A(ω, p)  = ∫d^3k/(2π)^3  d^3 r  
+    e^-i ( p -  k) · r π/E_k δ(ω - E_k)
+    
+    
+    = π/E_p δ(ω - E_p)  .
+
+
+That is, in the case of a homogeneous system in thermal equilibrium, we arrive
+at the same free spectral function as in (<ref>).
+
+
+To calculate the spectrum of particles we use the basic eq. (<ref>), where
+we introduced the Green's function in the form (<ref>)
+
+
+and using representation (<ref>) we obtain
+
+
+    2E_p d N/d^3p   =   ∫ d^4x_1   d^4x_2  δ(t_1-t_0)  δ(t_2-t_0)  ∫_-∞^∞ dω/2π A(ω; r_1, r_2)  f__
+    BE(ω) ×
+          × [   f_ p(t_1, r_1)   f^*_ p(t_2, r_2)  ↔∂/∂ t_1↔∂/∂ t_2 
+     e^-iω (t_2-t_1)]  .
+
+
+
+We calculate two-side derivatives (remind,
+f_ p(x) = exp(- i E_p x^0 + i  p · x))
+
+
+    [   e^-iE_p (t_1-t_2) ↔∂/∂ t_1↔∂/∂ t_2 
+     e^-iω (t_2-t_1)] 
+     =  (ω + E_p)^2  e^-i(E_p - ω) (t_1-t_2) .
+
+
+
+Then we put everything together and rewrite (<ref>) as
+
+
+    2E_p d N/d^3p = ∫_-∞^∞ dω/2π f__ BE(ω)  (ω + E_p)^2 ∫ d^3r_1   d^3r_2   e^i p · ( r_1- r_2)
+    A(ω; r_1, r_2)  .
+
+
+Using the spectral function representation (<ref>), we can go further
+
+
+    2E_p d N/d^3p   =   ∫_-∞^∞ dω/2π 
+    f__ BE(ω)  (ω + E_p)^2 ∑_k φ_k(
+    p) φ_k^*( p) π/ϵ_kδ(ω -ϵ_k)
+    
+       =   ∑_k | φ_k( p) |^2 1/2 ϵ_k 
+    (ϵ_k + E_p)^2  f__ BE(ϵ_k) ,
+
+
+where
+
+
+    φ_k( p)  = ∫ d^3r  e^i p · r φ_k( r) .
+
+
+If the quasi-momentum k is assumed to be continuous variable, then the
+single-particle spectrum has the form
+
+
+    2E_p d N/d^3p  =  V ∫d^3k/(2π)^3 | φ_k( p) |^2 1/2 ϵ_k 
+    (ϵ_k + E_p)^2  f__ BE(ϵ_k) .
+
+
+
+For example, for a system in a box V = L^3 with the Dirichlet
+boundary conditions, the functions φ_n( r) satisfy the
+stationary Klein-Gordon equation
+
+
+    ( ϵ_ n^2 - m^2 + ∇^2 ) φ_ n( r)   =  0  .
+
+
+The solutions of this equation normalized to unity have the form
+
+
+    φ_ n( r)   = √(8/V) sin(k_x  x)  sin(k_y  y)  sin(k_z  z)  ,
+
+
+where n = (n_x,n_y,n_z) with n_i = 0, 1, 2, … and
+k = (π/L n_x, π/L n_y, π/L n_z).
+Each quantum state of the system, marked with the symbol n, has a self energy
+ϵ_ n = √(m^2 + (π/L)^2  n^2).
+Then, using the set of wave functions φ_ n( r) and the set of
+self-energies ϵ_ n, one can calculate the spectrum
+(<ref>) or for large volume of the box can use eq. (<ref>).
+
+For greater realism, one can consider a cylinder extended along the z axis,
+or a cylinder with an elliptical cross section to take into account the
+azimuthal dependence of particle radiation.
+
+
+
+
+
+
+
+ §.§ Radiation of particles from a system with a finite lifetime
+
+
+
+
+To reflect the finite lifetime of the system, we can use the parameterization
+of the spectral function in the spirit of the Bright-Wigner distribution
+function since each particle of the system is characterized by the smearing
+of its energy in the same way as resonances.
+It can be done by smearing the delta function in eq. (<ref>)
+
+
+    δ(k_0^2-ω_k^2) →  A_γ(k)  = 1/π mγ/(k_0^2-ω_k^2)^2 + (mγ)^2 ,
+
+
+where γ=1/τ with τ as the lifetime of the donor
+many-particle system.
+Here we use the limit equality
+δ(x) = lim_γ→ 01/πγ/x^2 + γ^2.
+ 
+ 
+ 
+ 
+ 
  
 
 
@@ -1135,34 +1264,380 @@ The ROA is defined as the set of initial conditions for which a systems trajecto
 
 
 
-
-	Dubin's car is the name given to the following discrete time system,
-	
-    x(t+1)=[ x_1(t) + νcos(x_3(t)); x_2(t) + νsin(x_3(t)); x_3(t) + ν/Ltan(u(t)) ],
-
-	where (x_1(t), x_2(t)) ∈^2 is the position of the car at time t ∈, x_3(t) ∈ denotes the
-	angle that the car is pointing towards, u(t) ∈ is the steering angle input, ν∈ is the fixed speed of the car, and L>0 is a parameter that determines the turning radius of the car.
-	
-	In Fig. <ref> Dubin's car at various time stages is described by the set coloured purple and is given by
-	
-    X_1={x ∈^2: x_1^2 + x_2^2 -0.1^2<0 }.
-
-	Furthermore, several obstacles are described by golden coloured sublevel sets X_2:=∩_i=1^6 {x ∈^2: g_i(x)<0 }, where
-	
-    g_star(x) =0.1-2.5 x_1^2 x_2^2-0.05(x_1+x_2)^2,
-        g_1(x)  = g_star(5x+[0.2, -0.2]^⊤ ) 
-        g_2(x)  = [                         0.75+x_1;                             -x_1;                        -x_2+0.85; -((0.85-0.7)/(0.75))x_1-0.85+x_2 ]
-        g_3(x) = g_2([  cos((π+1)/2) -sin((π+1)/2);  sin((π+1)/2)  cos((π+1)/2) ]^-1 x ) 
-        g_4(x)  = [       x_1;  0.25-x_1; 0.85+ x_2;  -0.8-x_2 ],   g_5(x)  = [  x_1-0.1;  0.5-x_1; 0.4+ x_2; -0.2-x_2 ] , 
-         g_6(x)  = [  x_1-0.4; 0.75-x_1; 0.4+ x_2;  0.8-x_2 ].
-
-Note, some of the sets that describe our obstacles were taken from the previous works of <cit.> and <cit.>.
+ 
+Then the spectral function of free fields (<ref>) is transformed
+into a new spectral function A(k), which reflects the finite life time τ
+of the system
 
 
-In Fig. <ref> we have plotted our outer sublevel set approximation of X_1 ⊕ X_2 as the red region. This approximation was obtained by solving Opt. (<ref>) for d=12. Based on this approximation of  X_1 ⊕ X_2 we then applied the Dynamic Programming (DP) algorithm proposed in <cit.> to compute the optimal path collision free path. That is we derived a sequence of inputs u(0), u(1), …,  u(T) that drives the system described in Eq. (<ref>) from an initial condition, x(0)=x_0, to the target set, given by the blue square, in the minimum number of steps while avoiding the enlarged obstacles in the C-space, given by our approximation of X_1 ⊕ X_2. As shown in Fig. <ref>, solving the path planning problem in C-space for obstacles X_1 ⊕ X_2, ensures that there is no collisions in the workspace when the shape of Dubin's car is accounted for. 
-	
-	
-	
+    A_0(k)  →  A(k)  =  2π   A_γ(k) [θ(k^0)  - θ(-k^0) ]  .
+
+
+Let us check the sum rule (<ref>) for the resulting parametrization
+(<ref>) of the spectral function
+
+
+    ∫_-∞^∞dk^0/2π  k^0  A(k^0, k)
+       =   ∫_0^∞dk^0/π k_0  mγ/(k_0^2-ω_k^2 )^2+(mγ)^2 
+    - ∫_-∞^0 dk^0/π k_0  mγ/(k_0^2-ω_k^2 )^2+(mγ)^2
+       =   
+    2∫_0^∞dk^0/π k_0  mγ/(k_0^2-ω_k^2 )^2+(mγ)^2
+       =   ∫_0^∞ds/π  mγ/(s-ω_k^2 )^2+(mγ)^2 
+    =  0.5 + 1/πarctan( m γ/ω_k^2)
+    ≈ 1  ,
+
+
+
+
+
+where the last approximation is valid if the inequality
+
+
+    mγ ≪ ω_k^2   ,    →  γ ≪  m+ k^2/m .
+
+
+Since the inverse lifetime of the system γ is an average
+value, i.e. we do not separate γ and ⟨γ⟩,
+the inequality (<ref>) can be considered as averaged for a thermal
+many-particle system at a temperature T:
+
+
+    ⟨γ⟩ ≪  m + 2⟨ k^2/2m⟩
+    = m+3T  ,
+
+
+
+where the last equality uses the nonrelativistic relation
+⟨ k^2/2m⟩=3/2 T.
+For example, for the thermal system of pions m_π=140 MeV, which
+is created in collisions of relativistic nuclei, the freeze-out temperature
+T≃ 150 MeV is known.
+
+Therefore, we can make the following estimate of the allowable width γ:
+1/τ = γ ≪  590 MeV.
+With good accuracy (∫dk^0/2π k^0 A(k) ≈ 0.95),
+the lower limit of the lifetime can be taken equal to
+τ_c≃ 2 fm/c (γ_c≃ 100 MeV).
+Then for the total lifetime of the multipion system τ greater than τ_c the
+spectral function (<ref>) satisfies the sum rule (<ref>).
+
+
+
+Following the spirit of the Breit-Wigner distribution function, we only
+use it for positive energies.
+With this in mind, we write the Green's function
+
+
+
+    i G^<(k_0, k)  =  2πθ(k_0)    A_γ(k_0, k)  f__ BE(k_0) .
+
+
+Then the single-particle spectrum (<ref>) can be expressed as
+(note, we introduce into (<ref>) the Green's function in the form
+G^<(k_0, p))
+
+
+    2E_p  d N/d^3p =  V ∫_0^∞ dk^0 ( E_p+k_0 )^2 
+    A_γ(k_0, p)  f__ BE(k_0)  .
+
+
+And, finally, we get the spectrum of particles emitted from the system with
+a finite lifetime, τ = 1/γ,
+
+
+    2E_p  d N/d^3p 
+    =  V ∫_0^∞dk^0/π ( E_p+k_0 )^2  mγ/(k_0^2-E_p^2)^2+(mγ )^2  f__ BE(k^0) .
+
+
+
+
+Let us check the convergence to the previous result.
+When γ→ 0, the integrand in (<ref>) is converted as
+
+
+    2E_p  d N/d^3p   =    V ∫_0^∞ dk^0  ( E_p+k_0 )^2 δ(k_0^2-E_p^2)  f__ BE(k_0)  .
+
+
+That leads to
+
+
+    d N/d^3p =  V   f__ BE(E_p) .
+
+
+This formula coincides with (<ref>), which gives the single-particle
+spectrum in the fireball rest frame in the case of global thermodynamic
+equilibrium.
+
+
+
+
+
+
+
+§ APPLICATIONS
+
+
+
+
+The goal of this section is to compare on the basis of the specific
+examples, the Cooper-Frye formula (<ref>) and a quantum
+generalization of the kinetic approach given in eq. (<ref>).
+
+
+
+
+
+
+ §.§ Constant time hypersurface: Rapidity distribution
+
+
+
+In case, of the constant-time space-like hypersurface, i.e., x_0 =
+t_0 = const on the hypersurface, we have dσ^μ(x) = d^4x
+δ(x_0 - t_0).
+To make the comparison as transparent as possible, we consider the pion
+system in the global thermodynamic equilibrium.
+In this case formula (<ref>) looks like
+
+
+    2E_p d N/d^3p   =   ∫d^3k/(2π)^3 2ω_k 
+    f__ BE(ω_k)
+     | ∫_σ dσ^μ(x)  (p+k)_μ  e^-i(p-k)· x |^2
+     
+    
+    
+    
+       =   ∫d^3k/(2π)^3 2ω_k  f__ BE(ω_k) 
+    (E_p + ω_k)^2
+     | ∫ d^2x_T   e^i( p_T -  k_T)· x_T ∫_0^L_z dz  e^i(p_z - k_z)z |^2   ,
+
+
+where p^0 = E_p =√(m^2 +  p^2) and k^0 = ω_k =
+√(m^2 +  k^2).
+Our goal is to calculate rapidity
+distribution, then let us assume that in the transverse direction, a
+2D volume is big enough that the integration over the transverse
+spatial coordinates in (<ref>) leads to the
+delta-function. In detail, it looks like
+
+
+    |∫ d^2x_T   e^i( p_T -  k_T)· x_T |^2   =  (2π)^2 δ^2( p_T -  k_T) ∫_(S_T)
+    d^2x_T  e^i( p_T -  k_T)· x_T   =  S_T  
+    (2π)^2 δ^2( p_T -  k_T)   ,
+
+
+where S_T is the square of the transverse cross section. After
+inserting the obtained δ-function into
+eq. (<ref>) we get k_T = p_T and consequently
+m_T(k_T) = m_T(p_T).
+Integration over z-direction over the
+longitudinal size of the system L_z gives a one-dimensional form
+factor
+
+
+    ∫_0^L_z dz  e^i(p_z - k_z)z   = e^i (p_z -
+    k_z)L_z - 1/i(p_z - k_z)  =  e^i(p_z - k_z)L_z/22sin[ (p_z - k_z)L_z/2]/i(p_z - k_z) .
+
+
+In fact, this is a particular example of the relativistic form
+factor introduced in eq. (<ref>).
+
+
+
+
+
+
+We are going to consider the rapidity distributions and transverse
+momentum spectra.
+That is why it is reasonable to make
+transform of the momentum coordinates: (p_x,p_y,p_z) → (φ,
+p_T, y), where φ is the azimuthal angle, p_T = √(p_x^2
++ p_y^2) is the transverse momentum and tanhy = p_z/E_p is the
+rapidity.
+For the differential, we get d^3p = 2π E_p p_T dp_T
+dy, where we integrate over the azimuthal angle assuming the
+azimuthal symmetry.
+Then, inserting (<ref>) and
+(<ref>) into eq. (<ref>) for dependence of the
+spectrum on variables (p_T,y) we get
+
+
+    d N/2π  p_T dp_T dy =  S_T ∫dy_k/2π 
+    f__ BE(m_T(p_T) coshy_k) 
+    (coshy + coshy_k)^2   F_L(y_k;y,p_T)  ,
+
+
+where
+
+
+    F_L(y_k;y,p_T)  = [ sin[ L_z m_T(p_T) (sinhy
+    - sinhy_k)/2]/(sinhy - sinhy_k)]^2  ,
+
+
+is the longitudinal form factor and tanhy_k = k_z/ω_k is
+the rapidity of particle with the momentum k.
+To derive eq. (<ref>) we have used that m_T(k_T) = m_T(p_T),
+what results in k_z =  m_T(p_T) sinhy_k, and then dk_z =
+m_T(p_T) coshy_k  dy_k.
+
+
+On the other hand, the Cooper-Frye spectrum in the fireball rest
+frame in the case of global thermodynamic equilibrium has the form
+(<ref>).
+In the Cooper-Frye approach, the rapidity distribution
+for the fixed transverse momentum looks like
+
+
+    d N/2π p_T dp_T dy =  S_T   L_z  m_T(p_T) coshy 
+    f__ BE(m_T(p_T) coshy)  .
+
+
+
+Here, we have factorized the volume of the system V into the
+transverse cross section S_T and the longitudinal size of the
+system L_z that is V = S_T L_z.
+To compare the spectrum (<ref>) with the spectrum
+(<ref>) we set S_T = 1.
+At the same time, to keep right dimensionality in the
+adopted system of units (c = ħ = 1) we take the numerical
+value of L_z as: N[L_z] fm → (N[L_z]/C_c) MeV^-1, where
+C_c = 197.3 (remind, C_c·MeV·fm = 1).
+
+
+The calculated rapidity distributions are depicted in
+Fig. <ref> in three panel in a correspondence with
+three values of the fixed transverse momentum of the π-meson,
+p_T = 100,  400,  800 MeV/c, respectively, and for a given
+longitudinal size of the system L_z = 10 fm.
+Parameters of the Bose-Einstein distribution function are
+T = 160 MeV, μ = 0.
+Black solid curves, which are marked as QG, reflect calculations
+with the help of eq. (<ref>), i.e., it is a quantum
+generalization of the kinetic approach.
+Red dashed curves, which are marked as CF, reflect calculations with
+the help of eq. (<ref>).
+
+It is seen that the difference between the two distributions goes up
+with an increase in the transverse momentum.
+
+
+
+
+
+
+
+ §.§ Radiation of particles from a system with a finite lifetime
+
+
+
+
+We have calculated the spectrum of pions (<ref>), as a
+dependence on the | p| = p, using a representation of the
+element of the momentum space in the form d^3p = sinθ
+dθ dφ p^2 dp.
+To get the dependence of the spectrum only
+on a modulus of the particle momentum p, we assume the isotropic
+symmetry of the pion radiation and integrate over the angles. Then,
+formula (<ref>) can be written as
+
+
+    d N/4π p^2dp =  V ∫_0^∞dk^0/π ( E_p+k_0 )^2/2E_p  mγ/(k_0^2-E_p^2)^2+(mγ )^2  f__ BE(k^0) .
+
+
+Our goal is to compare this spectrum with the Cooper-Frye formula
+(<ref>), which for the isotropic symmetry of radiation looks
+like
+
+
+    d N/4π p^2 dp =  V   f__ BE(E_p)  ,
+
+
+where E_p = √(m^2 + p^2).
+In both formulae, we take the unit volume of the pion system, V = 1.
+To show the quantum generalization we have calculated three patterns
+of the life time τ = 1/γ of the pion system, i.e.,
+γ = 50,  100,  150 MeV.
+The spectra are plotted in Fig. <ref>, left panel.
+One can see a significant difference in the dependencies
+generated by the two approaches.
+The Cooper-Frye kinetic approach is
+represented as the Bose-Einstein distribution function f__
+BE, which on a logarithmic scale is just a straight line.
+Meanwhile, the quantum generalization of the kinetic approach, which
+takes into account the finite lifetime of the radiating system
+(eq. (<ref>)), is represented by the curves, resembling power
+dependence, rather than an exponential one.
+
+
+
+
+
+
+
+
+Our following example implies a comparison of the pion transverse
+spectra at midrapidity in the case of the global thermodynamic
+equilibrium.
+To calculate the spectrum based on the quantum
+generalization of the kinetic approach we use eq. (<ref>) and
+make the transform of the momentum coordinates as in
+Section <ref>, (p_x,p_y,p_z) → (φ, p_T, y).
+For these conditions the spectrum, which depends now on on the
+transverse momentum p__T = | p__T|, looks like
+
+
+    d N/2π p_Tdp_T dy =  V ∫_0^∞dk^0/π ( m_T + k_0 )^2  mγ/(k_0^2-m_T^2)^2+(mγ )^2  f__ BE(k^0) ,
+
+
+where m_T = √(m^2_π + p_T^2) and y = 0.
+For the sake of simplicity, we consider the many-particle system as a gas at
+rest (no hydrodynamical flows).
+For instance, it is the pion system at
+midrapidity in the laboratory frame created in the central Pb+Pb
+collision in the collider experiment.
+These calculations aim to
+compare, on the most transparent basis, the spectrum of pions
+emitted by a system with a finite lifetime τ = 1/γ with
+the Cooper-Frye formula, which at midrapidity y = 0 looks like
+
+
+    d N/2π p_T dp_T =  V   m_T(p_T)   f__
+    BE(m_T(p_T))  .
+
+
+In both approaches, we assume the azimuthal symmetry. The spectra
+are plotted in Fig. <ref>, right panel. A straight
+black line marked as “CF” was obtained in the Cooper-Frye
+approach.
+Three upper curves, which represent the quantum
+generalization approach, are marked by the digits 1,2,3 following
+a value of the parameter γ = 5,  10,  50 MeV, respectively.
+Both spectra are normalized to unity at p_T = 0.
+Again, we can see a significant difference in the behavior of curves,
+which correspond to different approaches.
+The Cooper-Frye kinetic approach leads to a straight line
+(on a logarithmic scale).
+Meanwhile, the quantum generalization of the kinetic approach, which takes
+into account the finite lifetime of the radiating system (eq. (<ref>)),
+is represented by the curves, resembling power dependence at big p_T,
+rather than an exponential one.
+
+It is interesting to compare our results with pion spectrum versus
+transverse momentum at midrapidity in the transverse momentum range
+0.6 GeV/c < p_T < 12 GeV/c measured in Pb-Pb collisions at
+√(s_NN) = 2.76 TeV <cit.>.
+We will see that
+dependencies obtained in the quantum generalization approach, which
+accounts for the finite lifetime of the system, and which are
+depicted in Fig. <ref> on the right panel, have the
+same tendencies as the experimental results, or can even fit the
+data at big p_T.
+At the same time, our calculations within the approach developed in
+Section <ref> show that the same behavior has the
+spectra of particles radiating from a spatially inhomogeneous system,
+for example from a finite-size system.
+
+
 
 
 
@@ -1172,505 +1647,352 @@ In Fig. <ref> we have plotted our outer sublevel set approximation of X_1 ⊕ X
 § CONCLUSION
 
 
-We have established a link between the L^∞ and L^1 function metrics and the Hausdorff and volume set metrics, respectively, allowing us to construct SOS programs for accurately approximating sets encountered throughout control theory. Specifically, we have shown that if functions are close in the L^∞ norm and one uniformly bounds the other, their sublevel sets are close in the Hausdorff metric. Likewise, if we change the function metric to the L^1 norm, the respective sublevel sets are close in the volume metric. By applying our methodology to approximating sets of discrete points, we have proposed a new machine learning binary classification algorithm that accurately finds decision boundaries for problems with low-dimensional, error-free, and dense data sets. We have applied this new classification algorithm to the problem of approximating ROAs or attractor sets of nonlinear ODEs. Furthermore, our set approximation approach allows us to numerically approximate Minkowski sums, which can be used to compute optimal collision-free paths.
 
 
-[
-    < g r a p h i c s >
-]Morgan Jones received the Mmath degree in
-	mathematics from The University of Oxford, England in 2016 and PhD degree from Arizona State University, USA in 2021.
-	Since 2022 he has been a lecturer in the department of Automatic Control and Systems Engineering at the University of Sheffield. His research primarily
-	focuses on the estimation of reachable sets, attractors and regions of attraction for nonlinear ODEs. Furthermore,
-	he has an interest in extensions of the dynamic programing framework to non-separable cost functions.
+In this work, we investigate the propagation of particles (quantum fields)
+from the fireball to the detector by solving the corresponding initial-value problem.
+With the help of the “thermal” Green's function, which describes a system of
+many particles created in collisions of relativistic nuclei and determines
+the initial values, we are able to express the detected single-particle spectrum.
 
+For the single-particle spectrum we obtain formula (<ref>), which coincide
+with the Cooper-Frye prescription
 
+<cit.> (as an example we follow the Bose-Einstein statistics)
 
-ieeetr
 
+    E_p d N/d^3p  = ∫ dσ_μ(X) p^μ  f__ BE(X;p· u) .
 
 
+We obtained formula (<ref>) in the framework of the following  assumptions:
+(1) The many-particle system has a weak inhomogeneity;
+(2) The many-particle system is in local thermodynamic equilibrium;
+(3) Particles are in free states on the freeze-out hypersurface;
+(4) The correlation function G^<(x_1,x_2) differs
+significantly from zero only if the differences of the arguments
+x_1- x_2 are close to zero.
 
-§ APPENDIX
 
+The latter assumption (4) cannot be applied if the system is close to a second-order
+phase transition, when the correlation length becomes sufficiently large.
+At the same time, as we discussed in the Section <ref>,
+this approximation excludes quantum effects.
+Based on the same assumptions (1) - (3), taking into account, in addition to
+kinetic contributions, also quantum effects, we obtain the formula (<ref>)
+for the single-particle spectrum
 
 
+    2E_p d N/d^3p 
+    = ∫d^3k/(2π)^3 2ω_k ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+    (p+k)_μ (p+k)_ν  f(X;k) ,
 
- §.§ The Volume Metric
- 
-Recall from Section <ref> that
 
-    D_V(A,B):=μ( (A/B) ∪ (B/A) ),
- where μ(A) is the Lebesgue measure of A ⊂^n.
+where p^0 = E_p = √(m^2 +  p^2), k^0 = ω_k = √(m^2 +  k^2) and
+f(X;k) is the distribution function.
+In the case of global equilibrium, this equation  reduces to
 
- 
-	D: X × X → is a metric if the following is satisfied for all x,y ∈ X,
-	
-	
-	
-		
-			
-  * D(x,y) ≥ 0,
-			
-  * D(x,y)=0 iff x=y,
-			
-  * D(x,y)=D(y,x),
-			
-  * D(x,z) ≤ D(x,y) + D(y,z).
-		
-		
-	
-		
-		
-		
-		
-		
-	
-		
-		
-		
-		
-		
 
+    2 E_p d N/d^3p  = ∫d^3k/(2π)^3 2ω_k  f(k)  | ∫_σ dσ^μ(x)    (p+k)_μ e^-i(p-k)· x |^2  .
 
 
-The sublevel approximation results presented in this appendix are required in the proof of Theorem <ref>. 
+where p^0 = E_p and k^0 = ω_k.
 
+When stationary many-particle system is in spatially inhomogeneous state,
+as discussed in the Section <ref>, we obtain the formula
+(<ref>) to calculate the single-particle spectrum in this case.
+To reflect finite lifetime of a spatially homogeneous system of many
+particles, we propose to use a parametrization of the spectral function
+similar to the relativistic Breit-Wigner function.
+The emission of particles from a system with finite lifetime was discussed
+in Section <ref>, where the formula (<ref>) was
+obtained for calculating the single-particle spectrum in this case.
 
 
+In order to clarify the differences in the results of the Cooper-Frye
+kinetic approach and a proposed quantum generalization,
+Section <ref> presents single-particle spectra obtained
+for several specific cases.
+The rapidity distribution, momentum, and transverse momentum spectra at
+midrapidity were calculated to compare the emitted spectra of pions on
+the most transparent basis.
 
- 
-	Consider the quotient space,
-		
-    X:=  B {X ⊂^n : X ∅, μ(X) =0 },
-  where B is the set of all Lebesgue measurable sets. Then D_V: X × X → is a metric.
 
 
 
 
+In conclusion, we note that the generalization of the Cooper-Frye formula
+(<ref>), obtained in this article, takes into account quantum
+effects arising for various reasons.
 
 
- 
-	Consider Lebesgue measurable sets A,B ⊂^n. Suppose A and B have finite Lebesgue measure and B ⊆ A, then
-	
-    D_V(A,B)    =μ(A/B)= μ(A)- μ (B).
 
+First, there is a complete quantum treatment of the emission process that
+includes quantum interference, as in the formula (<ref>).
+Second, the radiation from a spatially inhomogeneous system, as in the formula
+(<ref>), which, for example, is applied to a system with
+a finite spatial volume.
+And, of course, taking into account the finite lifetime of a system of
+many particles was obtained in the formula (<ref>).
 
 
+In the next article, the author plans to consider the two-particle spectra
+arising from relativistic collisions of particles and nuclei.
+Meanwhile, the reader can gain basic knowledge in this area
+from Refs. <cit.>.
+For example, final-state interaction effects are very important when
+considering two-particle spectra (two-particle interferometry).
+An introduction to this topic can be found at
+Refs. <cit.>.
 
 
 
 
 
 
+§ ACKNOWLEDGEMENTS
 
+The author is grateful to I. Mishustin, L. Csernai, L. Satarov, H. Stoecker for
+useful discussions and comments.
+The author also thanks the referees for their valuable comments and suggestions
+for improving the manuscript.
+The work is supported by the National Academy of Sciences of Ukraine
+by its priority project "Fundamental properties of matter in the microworld,
+astrophysics, and cosmology".
 
 
 
 
 
 
- 
-	Consider a Lebesgue measurable set Λ⊂^n, a function V ∈ L^1(Λ, ), and a family of functions {J_d ∈ L^1(Λ, ): d ∈} that satisfies the following properties:
-	
-		
-  * For any d ∈ we have J_d(x) ≤ V(x) for all x ∈Λ.
-		
-  * lim_d →∞ ||V -J_d||_L^1(Λ, ) =0.
-	
-	Then for all γ∈
-	
-    lim_d →∞	D_V ({x ∈Λ : V(x) ≤γ}, {x ∈Λ : J_d(x) ≤γ}) =0.
 
+§ QUANTUM STATISTICS
 
 
 
 
- §.§ Counterexamples: When Close Functions Have Distant Sublevel Sets
- 
 
 
 
+In quantum statistics, the mean value of the operator Â is defined as:
 
 
+    ⟨ Â ⟩ 
+    = 1/Z  Tr( ρ̂ Â) 
+    = 1/Z ∑_n ⟨Ψ_n | ρ̂ Â |
+    Ψ_n ⟩ ,
+      
+    Z  = ∑_n ⟨Ψ_n | ρ̂ | Ψ_n ⟩ ,
 
 
+where {Ψ_n( r_1, r_2, … , r_N)} is the complete set of
+many-particle wave functions and ρ̂ is the density matrix.
 
 
 
+For the local thermal equilibrium the density matrix reduces to the diagonal form
 
 
+    ρ_nn'  = δ_nn' e^E_n/T .
 
 
+Then, the average of the product of two field operators in the grand canonical
+ensemble reads
 
 
+    ⟨ ψ̂^+(t_2, r_2)  ψ̂(t_1, r_1) ⟩ 
+    = 1/Z ∑_n ⟨Φ_n | e^-(H - μ N)/T ψ̂^+(t_2, r_2)  ψ̂(t_1, r_1) | Φ_n ⟩ .
 
 
+The lesser Green's function is defined on the base of this averaging
 
 
+    iħ  G^<(x_1,x_2) 
+    = ± ⟨ ψ̂^+(x_2)  ψ̂(x_1) ⟩ ,
 
 
+where x = (t,  r), the plus sign reads for bosons and the minus sign
+for fermions.
 
+In accordance with the quantum fluctuation-dissipation theorem for the system
+which in local (global) thermal equilibrium the lesser Green's function can be
+expressed as <cit.>
 
 
-We first show that if we slightly change the conditions of Thm. <ref> to have J_d(x)≤ V(x) (rather than V(x) ≤ J_d(x)) then we can no longer establish that the sublevel sets of V and J_d will be close.
- 
-We show there exists γ∈, Λ⊂, V ∈ L^1(Λ,) and {J_d}_d ∈⊂ L^1(Λ,) such that J_d(x)≤ V(x) for all x ∈Λ and lim_d →∞  ||V(x) - J_d(x)||_L^∞(Λ,) dx=0 but
-	
-    lim_d →∞ D_H({ x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})   0.
+    iħ  G^<(ω, k)  =  A(ω, k) f(ω)  ,
 
-	Let Λ:=[-10,10], γ:=1, V(x):=1-1_[1,2](x) and J_d(x)= 1-1_[1,2](x) - 1/d. Clearly, lim_d →∞  ||V(x) - J_d(x)||_L^∞(Λ,) dx=lim_d →∞1/d=0. However,
-	
-    { x ∈Λ : V(x) < 1 }   = [1,2].
-    { x ∈Λ : J_d(x) < 1 }   = Λ.
 
+where G^<(ω, k) is the Fourier transform of the Green's function
+G^<(x_1-x_2), A(ω, k) is the spectral function, f(ω) is the
+Bose-Einstein or Fermi-Dirac distribution function.
 
-Note, Counterexample <ref> does not contradict Prop. <ref> that deals with the same case where J_d lower bounds V. This is because Prop. <ref> shows that the non-strict sublevel sets are close in the volume metric. Indeed, { x ∈Λ : V(x) ≤  1 }= { x ∈Λ : J_d(x) ≤  1 } so there is no contradiction in this case.
 
 
-We consider what happens if we change the other condition of Thm. <ref> where instead of having ||J_d - V||_L^∞(Λ,)→ 0 we only have ||J_d - V||_L^1(Λ,)→ 0.
- 
-	We show there exists γ∈, Λ⊂, V ∈ L^1(Λ,) and {J_d}_d ∈⊂ L^1(Λ,) such that V(x) ≤ J_d(x) for all x ∈Λ and lim_d →∞  ||V(x) - J_d(x)||_L^1(Λ,) =0 but
-	
-    lim_d →∞ D_H({ x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})   0.
 
-	Let Λ:=[-10,10], γ:=1, V(x): =1_[1,2](x)-1 and J_d(x):= 1_[1,2](x)-1 + 1_[0,1/d](x). Clearly, lim_d →∞  ||V(x) - J_d(x)||_L^∞(Λ,) =lim_d →∞sup_x ∈Λ1_[0,1/d](x) =1  0 and lim_d →∞  ||V(x) - J_d(x)||_L^1(Λ,)= lim_d →∞∫_Λ1_[0,1/d](x) dx = lim_d →∞∫_0^1/d 1dx =0. However,
-	
-    { x ∈Λ : V(x) < 1 }   = [1,2]  .
-    { x ∈Λ : J_d(x) < 1 }   = [0,1/d] ∪[1,2].
+40
 
-Hence 
-
-    lim_d →∞ D_H({ x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})
-        = lim_d →∞ D_H( [1,2], [0,1/d] ∪[1,2])=1  0
-
-
-Although Counterexample <ref> shows that if functions are close in the L1 norm then their sublevel sets may not be close in the Hausdorff metric this does not contradict Theorem <ref>, that shows that these sublevel sets must be close in the volume metric. This holds true in the case of Counterexample <ref> since 
-
-    lim_d →∞ D_V({ x ∈Λ : V(x) < γ}, {x ∈Λ : J_d(x) < γ})
-        = lim_d →∞ D_V( [1,2], [0,1/d] ∪[1,2])=  lim_d →∞μ([0,1/d])=   0
-
-
-
-
-
-
-
-
- §.§ Polynomial Approximation
- 
-In Sec. <ref> we characterized several sets (intersections and unions of semialgebraic sets, Minkowski sums, Pontryagin differences and discrete points) by sublevel sets of various functions. We now show that we can approximate these functions arbitrarily well by polynomials that are also feasible to our associated SOS optimization problems. In order to approximate these functions we use the Weierstrass approximation theorem.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-	Let E ⊂^n be an open set and f ∈ C^1(E, ). For any compact set K ⊆ E and >0 there exists  g ∈[x] such that
-	
-    sup_x ∈ K| f(x) -  g(x)| < .
-
-	
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=min_1 ≤ i ≤ m g_i(x), whose sublevel set characterizes the set given in Eq. (<ref>).
- 
-	Consider a compact set Λ⊂^n, functions g_i ∈ LocLip(Λ,) for 1 ≤ i ≤ m, a scalar r>0, and V(x):= min_1 ≤ i ≤ m{ g_i(x) }. Then for any >0 there exists H_1,H_2 ∈[x] such that
-	
-    sup_ x ∈Λ |V(x) - H_j(x) | <  for  j ∈{1,2}, 
-        H_1(x) < g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m,
-        H_2 (x)> g_i(x)  for all  x ∈ B_r(0)  ∩ Y_i  and  1 ≤ i ≤ m,
-
-	where Y_i  :={y ∈Λ: g_i(y) ≤ g_j(y)  for  1 ≤ j ≤ m  }.
-
-
-
-
-
-
-
-
-
-
-
- We first show the existence of H_1 ∈[x] that satisfies Eq. (<ref>). Since Λ⊂^n and B_r(0) are compact sets it follows that there exists R>0 such that Λ∪ B_r(0) ⊂ B_R(0). Let >0. Since V is continuous by Lem. <ref> it follows by Thm. <ref> that there exists P ∈[x] such that sup_ x ∈ B_R(0) |V(x) - P(x) | </4. Let H_1(x):=P(x) - /4. Then
-	
-    |V(x) - H_1(x) |     = |V(x) - P(x) + /2| < |V(x) - P(x)| + /4
-        < /2  for all  x ∈ B_R(0),
-
-	and hence sup_ x ∈Λ |V(x) - H_1(x) | ≤/2 <. 
-	
-	Moreover, since |V(x) - P(x)|</4 for all x ∈ B_R(0) we have that P(x)<V(x) + /4 for all x ∈ B_R(0) . Hence H_1(x)<V(x) + /4-/4= V(x)= min_1 ≤ j ≤ m{ g_j(x) }≤ g_i(x) for all 1 ≤ i ≤ m and x ∈ B_r(0) ⊂ B_R(0).
-	
-	We next show the existence of H_2 ∈[x] that satisfies Eq. (<ref>). This time let H_2(x):=P(x) +/4. Then
-	
-    |V(x) - H_2(x) |     = |V(x) - P(x) - /2| < |V(x) - P(x)| + /4
-        < /2  for all  x ∈ B_R(0),
-
-	and hence sup_ x ∈Λ |V(x) - H_2(x) | <. 
-	
-	Moreover, since |V(x) - P(x)|</4 for all x ∈ B_R(0) we have that P(x) > V(x) -  /4 for all x ∈ B_R(0). Hence H_2(x)>V(x) - /4 + /4=V(x) for all x ∈ B_R(0). Now, when x ∈ Y_i we have V(x)=g_i(x). Therefore, H_2(x)>V(x)=g_i(x) for all x ∈ Y_i ∩ B_r(0).
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=max_1 ≤ i ≤ m g_i(x), whose sublevel set characterizes the set given in Eq. (<ref>).
- 
-	Consider a compact set Λ⊂^n, g_i ∈ LocLip(Λ,) for 1 ≤ i ≤ m and V(x):= max_1 ≤ i ≤ m{ g_i(x) }. Then for any >0 there exists H_1,H_2 ∈[x] such that
-	
-    sup_ x ∈Λ |V(x) - H_j(x) | <  for  j ∈{1,2}, 
-        H_1(x) > g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m,
-        H_2(x) < g_i(x)  for all  x ∈ B_r(0) ∩Y̅_̅i̅ and  1 ≤ i ≤ m,
-
-where Y̅_̅i̅ :={y ∈Λ: g_i(y) ≥ g_j(y)  for  1 ≤ j ≤ m  }.
-
-
-Note that max_1 ≤ i ≤ m{ g_i(x) }= -min_1 ≤ i ≤ m{ -g_i(x) }. Let Ṽ(x):=min_1 ≤ i ≤ m{ -g_i(x) }= -V(x). By Prop. <ref> there exists H̃_̃1̃, H̃_̃2̃∈[x] such that 
-	
-    sup_ x ∈Λ |Ṽ(x) - H̃_̃j̃(x) | <  for  j ∈{1,2}, 
-       H̃_̃1̃(x) < -g_i(x)  for all  x ∈ B_r(0)  and  1 ≤ i ≤ m, 
-       H̃_̃2̃(x) > -g_i(x)   for all  x ∈ B_r(0) ∩Ỹ_̃ĩ and  1 ≤ i ≤ m,
-
-where Ỹ_̃ĩ :={y ∈Λ: -g_i(y) ≤- g_j(y)  for  1 ≤ j ≤ m  } = {y ∈Λ: g_i(y) ≥ g_j(y)  for  1 ≤ j ≤ m  } = Y̅_̅i̅.
-
-Let H_1(x):=-H̃_̃1̃(x) and H_2(x):=-H̃_̃2̃(x). Clearly H_1 and H_2 satisfies Eq. (<ref>), completing the proof.
-
-
-We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=inf_w  ∈{z ∈Λ: g_2,i(z) ≤ 0  for  1 ≤ i ≤ m_2 }min_1 ≤ i ≤ m_1 g_1,i(x-w), whose sublevel set characterizes the set given in Eq. (<ref>).
-
- 
-	Consider a compact set Λ⊂^n, g_i ∈ LocLip(Λ,) for 1 ≤ i ≤ m and V(x):= inf_w  ∈{z ∈Λ: g_2,i(z) ≤ 0  for  1 ≤ i ≤ m_2 }min_1 ≤ i ≤ m_1 g_1,i(x-w). Then for any >0 there exists H ∈[x] such that
-
-    sup_ x ∈Λ |V(x) - H(x) | < , 
-        H(x) < g_1,i(x-w)   for all  x ∈ B_r(0), 
-            w ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 } and  1 ≤ i ≤ m_1.
-
-
-
-	Since Λ⊂^n and B_r(0) are compact sets there exists R>0 such that Λ∪ B_r(0) ⊂ B_R(0). Now, by Lem. <ref> it follows that V is a continuous function. Hence, by Thm. <ref>, for any >0 there exists a polynomial P ∈[x] such that
-	
-    sup_ x ∈ B_R(0) |V(x) - P(x) | < /4.
-
-Let us consider H(x):=P(x) -  /4. Then
-
-    |V(x) - H(x)|  ≤ 	|V(x) - P(x)|  + /4 < /2 for  x ∈ B_R(0).
-
-Hence, 	sup_ x ∈Λ |V(x) - H(x) | <.
-
-Also note that since |V(x) - P(x)| < /4 for all x ∈ B_R(0) it follows that P(x)< V(x) + /4 and hence H(x)= P(x)- /4< V(x) for all x ∈ B_r(0) ⊂ B_R(0). Therefore
-
-    P(x)    < V(x)= inf_u  ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 }min_1 ≤ j ≤ m_1 g_1,j(x-u)
-       ≤inf_u  ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 }  g_1,i(x-u) 
-       ≤ g_1,i(x-w)  for all  x ∈ B_r(0), 1 ≤ i ≤ m_1,   and 
-                 w ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 }.
-
-Thus we have shown Eq. (<ref>) completing the proof.
-
-
-We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=sup_w  ∈{z ∈Λ: g_2,i(z) ≤ 0  for  1 ≤ i ≤ m_2 }max_1 ≤ i ≤ m_1 g_1,i(x+w), whose sublevel set characterizes the set given in Eq. (<ref>).
-
- 
-	Consider a compact set Λ⊂^n, g_i ∈ LocLip(Λ,) for 1 ≤ i ≤ m and V(x):= sup_w  ∈{z ∈Λ: g_2,i(z) ≤ 0  for  1 ≤ i ≤ m_2 }max_1 ≤ i ≤ m_1 g_1,i(x+w). Then for any >0 there exists H ∈[x] such that
-	
-    sup_ x ∈Λ |V(x) - H(x) | < , 
-        H(x) > g_1,i(x+w)   for all  x ∈ B_r(0), 
-            w ∈{z ∈Λ: g_2,j(z) ≤ 0  for  1 ≤ j ≤ m_2 } and  1 ≤ i ≤ m_1.
-
-
-
-	Follows by a similar argument to Lem. <ref>.
-
-
-We next show that there exists a polynomial that is feasible to Opt. (<ref>) and that arbitrarily approximates the function, V(x):=1-1_{x_i}_i=1^N(x), whose sublevel set characterizes the set given by X={x_i}_i=1^N. 
-
- 
-Consider a compact set Λ⊂^n and some discrete points {x_i}_i=1^N ⊂Λ. Then, for any >0 there exists a polynomial H ∈[x] such that
-
-    ||H(x) - V(x)||_L^1(Λ,)< , 
+    huovinen-2008
     
-    	H(x_i)<0  for all  i ∈{1,...,N}, 
+    P. Huovinen,
+    Chemical freeze-out temperature in hydrodynamical description,
+    Eur. Phys. J. A 37, 121 (2008); [arXiv: 0710.4379 [nucl-th]].
+
+    adamova-2003
     
-    	H(x) < 1  for all  x ∈Λ,
+    D.Adamova (CERES Collaboration),
+    Universal Pion Freeze-out in Heavy-Ion Collisions,
+    Phys. Rev. Lett. 90, 022301 (2003); [arXiv: nucl-ex/0207008].
 
-where V(x)=1-1_{x_i}_i=1^N(x). 
-
-
-	We first show that there exists a smooth function that satisfies Eq. (<ref>). We then approximate this function by a polynomial.
-	
-	Let F(x):=1-∑_i=1^N η( x-x_i/δ), where η∈ C^∞(^n, [0,∞))  is the bump function given by
-	
-    η(x) =  2e exp( 1/||x||_2^2 -1)  for  ||x||_2<1
+    russkikh-ivanov-2006
     
-    			0  otherwise.
+    V.N. Russkikh and Y.B. Ivanov,
+    Dynamical Freeze-out in 3-Fluid Hydrodynamics,
+    Phys. Rev. C 76, 054907 (2007); [arXiv: nucl-th/0611094].
 
-
-For more information on bump functions see <cit.>.
-
-Let C:=∫_^nη(x) dx < ∞ and 0<δ< ( /2 NC)^1/n, then
-
-    ||V(x) - F(x)||_L^1(Λ,)≤∑_i=1^N ∫_^nη( x-x_i/δ) dx
-        =δ^n ∑_i=1^N ∫_^nη(x) dx=δ^n NC</2.
-
-Moreover,
-
-    F(x_i)=1 - η(0) - ∑_j uη( x_i-x_j/δ) ≤ 1 - η(0)= -1<0.
-
-Furthermore, since η(x) ≥ 0 for all x ∈^n it is clear that
-
-    F(x) = 1-∑_i=1^N η( x-x_i/δ) ≤ 1  for all  x ∈^n.
-
-
-Since Λ is a compact set there exists R>0 such that Λ⊂ B_R(0). Now, η∈ C^∞(^n, [0,∞)) and therefore F ∈ C^∞(^n, ). Hence, by Thm. <ref>, there exists a polynomial P ∈[x] such that
-
-    sup_ x ∈ B_R(0) |F(x) - P(x) | < /4 (1 + μ(Λ)).
-
-Let us consider H(x):=P(x) -  /4(1 + μ(Λ)). Then
-
-    |F(x) - H(x)|     ≤ 	|F(x) - P(x)|  + /4(1 + μ(Λ))
-        < /2(1 + μ(Λ)) for  x ∈ B_R(0).
-
-Eqs (<ref>) and (<ref>) imply that
-
-    || V- H||_L^1(Λ, )   ≤ || V- F||_L^1(Λ, )  + || F- H||_L^1(Λ, )
-       ≤/2 + μ(Λ)  ||F- H||_L^∞(Λ, )
-        < .
-
-
-Moreover, by Eq. (<ref>) we have P(x) < F(x) +/4(1 + μ(Λ)) for x ∈ B_R(0) and hence H(x)=P(x) - /4(1 + μ(Λ))< F(x). Therefore by Eqs (<ref>) and (<ref>) it follows that 
-
-    H(x_i)    <F(x_i)<0  for all  i ∈{1,...,N}, 
+    sollfrank-1999
     
-    	H(x)     <F(x)< 1  for all  x ∈Λ.
-
-
-
-
-
- §.§  Miscellaneous Results
- 
- 
-	Consider a sequence {x_n}_n ∈⊂^n that is bounded, that is there exists M>0 such that x_n < M for all n ∈. Then there exists a convergent subsequence {y_n}_n ∈⊂{x_n}_n ∈. 
-
-
- 
-	Consider the semialgebriac set X = {x ∈^n: g_i(x) ≥ 0  for  i=1,...,k}. Further suppose {x  ∈^n : g_i(x) ≥ 0 } is compact for some i ∈{1,..,k}. If the polynomial f: ^n → satisfies f(x)>0 for all x ∈ X, then there exists SOS polynomials {s_i}_i ∈{1,..,m}⊂∑_SOS such that,
-	
-
-    f - ∑_i=1^m s_ig_i ∈∑_SOS.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-Consider some compact set X ⊂^n and polynomial functions {g_i}_i=1^m ∈[x]. Suppose
-	
-    V_1(x)     := inf_w ∈ Xmin_1 ≤ i ≤ mg_i(x-w),    
-    	V_2(x)  := sup_w ∈ Xmax_1 ≤ i ≤ m g_i(x+w) ,
-
-	then V_1 and V_2 are continuous functions.
-
-
-
-
-
-
-
- 
-For each compact set X ⊂^n there exists a bounded function p∈ C^∞(^n,) such that 
-
-    X=	{x ∈^n: p(x) ≤ 0}.
-
-
-
- 
-	If f:^n → is a continuous function then {x ∈^n: f(x) ≤γ}, where γ∈, is a closed set. Furthermore, if Λ⊂^n is compact then {x ∈Λ: f(x) ≤γ} is a compact set. 
-
-
-	Consider a converging subsequence {x_k}_k=1^∞⊂{x ∈Λ: f(x) ≤γ} such that x_k → x^*. By continuity we have f(x_k) → f(x^*). Since f(x_k) ≤γ for all k it follows f(x^*) ≤γ. Hence, x^* ∈{x ∈Λ: f(x) ≤γ} implying that {x ∈Λ: f(x) ≤γ} is closed. Now, {x ∈Λ: f(x) ≤γ}⊂Λ and Λ is bounded. Since {x ∈Λ: f(x) ≤γ} is closed and bounded it follows that it is compact.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    J. Sollfrank, P. Huovinen, and P.V. Ruuskanen,
+    Mass number scaling in ultrarelativistic nuclear collisions from a
+    hydrodynamical approach,
+    Eur. Phys. J. C 6, 525 (1999).
+
+    gersdorff-1986
+    
+    H. von Gersdorff, L. McLerran, M. Kataja, and P.V. Ruuskanen,
+    Studies of the Hydrodynamic Evolution of Matter Produced in Fluctuations
+    in anti-p p Collisions and in Ultrarelativistic Nuclear Collisions,
+    Phys. Rev. D 34, 794 (1986).
+
+    strickland-2015
+    M. Nopoush, M. Strickland, R. Ryblewski, D. Bazow, U. Heinz, and M. Martinez,
+    Leading-order anisotropic hydrodynamics for central collisions,
+    Phys. Rev. C 92, 044912 (2015); [arXiv:1506.05278 [nucl-th]].
+
+    strickland-2016
+    M. Alqahtani, M. Nopoush, and M. Strickland,
+    “Quasiparticle anisotropic hydrodynamics for central collisions”,
+    Phys. Rev. C 95, 034906 (2017); [arXiv:1605.02101 [nucl-th]].
+
+
+    groot-1980
+    S.R. de Groot, W.A. van Leeuwen, Ch.G. van Weert,
+    Relativistic Kinetic Theory,
+    Noth-Holland P.C., Amsterdam, 1980.
+
+    anchishkin-2013
+    D. Anchishkin, V. Vovchenko, and L.P. Csernai,
+    Pionic freeze-out hypersurfaces in relativistic nucleus-nucleus collisions,
+    Phys. Rev. C 87, 014906 (2013).
+
+    cooper-frye-PRD-v10-1974
+    F. Cooper and G. Frye,
+    Single-particle distribution in the hydrodynamic and statistical
+    thermodynamic models of multiparticle production,
+    Phys. Rev. D 10, 186 (1974).
+
+    
+    vladimirov
+    V.S. Vladimirov,
+    Equations of the Mathematical Physics,
+    
+    Moscow: Mir Publishers, p. 464, 1983.
+
+    anch2007
+    D. Anchishkin, U. Heinz,
+    Two-particle correlations in the wave function and covariant current approaches,
+    
+    Phys. Atom. Nucl. 71, 1632-1646  (2008);
+    [arXiv: 0712.1104 [hep-ph]].
+
+    schweber
+    Silvan S. Schweber,
+    An Introduction to Relativistic Quantum Field Theory,
+    Row, Peterson and Co., N.Y., 1961.
+
+    peskin
+    Michael E. Peskin, Daniel V. Schroeder,
+    An Introduction to Quantum Field Theory,
+    Addison-Wesley Co., 1995.
+
+    GKW
+    M. Gyulassy, S.K. Kauffmann and L.W. Wilson,
+    Pion Interferometry of Nuclear Collisions. 1. Theory,
+    Phys. Rev. C 20, 2267-2292 (1979).
+
+    boal
+    D.H. Boal, C.-K. Gelbke and B.K. Jennings,
+    Intensity interferometry in subatomic physics,
+    Rev. Mod. Phys. 62, 553-602 (1990).
+
+    heinz99
+    U. Heinz and B.V. Jacak,
+    Two-particle correlations in relativistic heavy-ion collisions,
+    [arXiv: nucl-th/9902020].
+
+    anch98
+    D. Anchishkin, U. Heinz, and P. Renk,
+    Final state interactions in two-particle interferometry,
+    Phys. Rev. C 57, 1428 (1998); [arXiv: nucl-th/9710051].
+
+    chapman94
+    S. Chapman, and U. Heinz,
+    HBT correlators: Current formalism versus Wigner function formulation,
+    Phys. Lett. B 340, 250 (1994).
+
+    pratt90
+    S. Pratt, T. Csörgö, and J. Zimányi,
+    Detailed predictions for two pion correlations in
+    ultrarelativistic heavy ion collisions,
+    Phys. Rev. C 42, 2646 (1990).
+
+    kadanoff
+    L.P.Kadanoff, G.Baym,
+    Quantum statistical mechanics,
+    W.A.Benjamin, Inc., N.Y. 1962.
+
+    chou1985
+    K. Chou, Z. Su, B. Hao, and L. Yu,
+    Equilibrium and Nonequilibrium Formalisms Made Unified,
+    Phys. Rep. 118, 1 (1985).
+
+    blaizot
+    J.-P. Blaizot,
+    Quantum fields at finite temperature and density,
+    Saclay preprint SPhT/91/188.
+
+    mrowczynski-1990
+    S. Mrówczyński, P. Danielewicz,
+    Green function approach to transport theory of scalar fields,
+    Nucl. Phys. B 342, 345-380 (1990).
+
+    mrowczynski-1998
+    Stanislaw Mrówczyński,
+    Topics in the Transport Theory of Quark-Gluon Plasma,
+    [arXiv: hep-ph/9805435].
+
+abelev-2014
+B. Abelev, J. Adam, D. Adamová et al. (The ALICE Collaboration),
+Neutral pion production at midrapidity in pp and Pb-Pb collisions
+at √(s_NN) = 2.76 TeV,
+Eur. Phys. J. C 74, 3108 (2014); [arXiv: 1405.3794 [nucl-ex]].
+
+
+anch-heinz-2008
+D. Anchishkin, U. Heinz,
+Two-particle correlations in the wave function and covariant
+current approaches,
+Phys. Atom. Nucl. 71, 1632 (2008), [arXiv: 0712.1104 [hep-ph]].
+
+
+anch-anch-heinz-2006
+D. Anchishkin, Ye. Anchishkin, U. Heinz,
+Final State Distortions in Two-Particle Correlations,
+Proceedings of Science, CFRNC2006, 025 (2006), [arXiv: nucl-th/0611088].
+
+anch-1996
+D.V. Anchishkin, W.A. Zajc, G.M. Zinovjev,
+Coulomb corrections in two particle correlations for the processes
+of high multiplicity,
+Ukr. J. Phys. 41, 363 (1996).
 
 
 

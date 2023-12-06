@@ -182,7 +182,7 @@ class OpenAIEngine(LLMEngine):
         }
 
     # override
-    async def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
+    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         # NOTE(chaofan): For OpenAI Engine, mem-related fields are unknown.
         num_cached_tokens = UNKNOWN_DATA_FIELD
         cache_mem = UNKNOWN_DATA_FIELD

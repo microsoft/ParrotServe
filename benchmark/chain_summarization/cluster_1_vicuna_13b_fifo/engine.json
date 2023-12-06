@@ -7,8 +7,7 @@
     "random_seed": 0,
     "tokenizer": "hf-internal-testing/llama-tokenizer",
     "fill_chunk_size": -1,
-    "threads_capacity": 128,
-    "tokens_capacity": 4096,
+    "threads_capacity": 9999999,
     "instance": {
         "max_seq_len": 4096,
         "block_size": 16,
@@ -16,7 +15,7 @@
         "attn_func": "xformers_fill_vllm_paged_attention_generate"
     },
     "scheduler": {
-        "max_batch_size": 256,
+        "max_batch_size": 999999,
         "max_num_batched_tokens": 2560,
         "max_total_tokens": 4096
     },

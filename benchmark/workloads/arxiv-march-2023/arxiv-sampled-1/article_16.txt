@@ -1,49 +1,18 @@
 
-	
-Generation-based Code Review Automation: 
- How Far Are We?
-    Xin Zhou
-Singapore Management University 
-
-Singapore 
-
-xinzhou.2020@phdcs.smu.edu.sg
-Kisub Kim**Corresponding author. Email: kisubkim@smu.edu.sg
-Singapore Management University 
-
-Singapore 
-
-kisubkim@smu.edu.sg
-Bowen Xu
-Singapore Management University 
-
-Singapore 
-
-bowenxu@smu.edu.sg
-DongGyun Han
-Royal Holloway, University of London 
-
-UK 
-
-donggyun.han@rhul.ac.uk
-Junda He
-Singapore Management University 
-
-Singapore 
-
-jundahe@smu.edu.sg
-David Lo
-Singapore Management University 
-
-Singapore 
-
-davidlo@smu.edu.sg
-
+Anyon condensation in the string-net models
+    Fiona J. Burnell
     March 30, 2023
-======================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+===========================================
 
 
 
+
+The main purpose of this paper is to further study the structure, parameters and constructions of the recently introduced minimal codes in the sum-rank metric. These objects form a bridge between the classical minimal codes in the Hamming metric, the subject of intense research over the past three decades partly because of their cryptographic properties, and the more recent rank-metric minimal codes. We prove some bounds on their parameters, existence results, and, via a tool that we name geometric dual, we manage to construct minimal codes with few weights. A generalization of the celebrated Ashikhmin-Barg condition is proved and used to ensure minimality of certain constructions.
+
+
+Keywords: Sum-rank metric codes; minimal codes; geometric dual; bounds.
+
+Mathematics Subject Classification. Primary: 94B05, 51E20.  Secondary: 94B65, 94B27
 
 
 
@@ -53,1108 +22,1328 @@ davidlo@smu.edu.sg
 § INTRODUCTION
 
 
-Double heavy quark systems such as the J/ψ, Υ, B_c,  and B_c^* mesons are an ideal probe to study  Quantum Chromodynamics (QCD).
-The non-relativistic Quantum Chromodynamics  (NRQCD) effective theory  is a powerful theoretical framework to deal with
-the production and decay of double heavy quark systems where  quarks move with small relative
-velocity u <cit.>.
-Within the framework of NRQCD factorization, a physical observable can be separated into a perturbatively calculable short-distance coefficient (matching coefficient) multiplied with the nonperturbative  NRQCD long-distance matrix element (wave function at the origin).
-Thus NRQCD   provides the possibility to  systematically  study double heavy quark systems with  higher order calculation  in   powers of  two small parameters  α_s and  u.
+Sum-rank metric constitutes a bridge between the more classical Hamming and rank metrics, which may be considered as its special cases. It has been used implicitely first in <cit.> and explicitely introduced in the context of network coding in <cit.>. One of the main reasons why this metric has been in the spotlight in recent years is the fact that sum-rank metric codes outperform the more classical ones in
+terms of the required field size to construct codes achieving the Singleton bound in the corresponding metric <cit.>. This is due to the existence of the so-called linearized Reed–Solomon codes, a family of maximum sum-rank distance (MSRD) codes with polynomial field sizes. 
+In the survey paper <cit.>, the interested reader may find a very
+detailed summary on properties and applications of sum-rank
+metric codes in distributed storage systems, network coding, and multi-antenna communication.
+
+The main purpose of this paper is to further study the structure, parameters and constructions of minimal codes in the sum-rank metric, recently introduced in <cit.>. Minimal codes are classical objects in the Hamming metric rich of connections with different areas of mathematics, such as cryptography <cit.>, finite geometry <cit.>, and combinatorics <cit.>. One of the main concerns about these objects is to find bounds on their parameters. In particular, one difficult problem is to know how short they can be and to construct short minimal codes. In <cit.> lower bounds on the length of minimal codes are proved, whereas in <cit.> the best known upper bounds on the length of the shortest minimal codes are presented. These last are implicit existence results. Some short constructions are illustrated in <cit.> and in the upcoming <cit.>. More recently, minimal codes in the rank metric have been introduced <cit.> together with some bounds and construction. In particular, their geometry is studied, in connection with linear sets. Such codes reveal to be useful in the construction of MRD codes <cit.> or for the covering problem in the rank metric
+<cit.>. Still a direct application to cryptography of these objects is missing from the party, even if rank-metric minimal codes may be used to construct minimal codes in the Hamming metric. We will show that the same holds for minimal sum-rank metric codes.
+
+
+After recalling some main definitions and results in the preliminary Section <ref>, we introduce the main object of the paper in Section <ref>: exploiting the geometry of sum-rank metric codes studied in <cit.>, we prove first that minimal sum-rank metric codes correspond to collections of linear sets whose union forms a strong blocking set, that is a set of points in the projective space whose intersection with every hyperplane spans the hyperplane. This allows to easily get a bound on the maximum weight of minimal sum-rank metric codes, together with a characterization of minimal MSRD codes. Standard equations allow us to prove some bounds on the parameters of minimal sum-rank metric codes (see Theorem <ref>) presented also in their asymptotic version. We then focus on some existence results of short minimal sum-rank metric codes, obtained by implicit counting arguments. Section <ref> is devoted to a tool that we call geometric dual: we make use of the dual of _q-subspaces of _q^m-vector spaces studied in <cit.> to build the dual of systems associated to sum-rank metric codes and we call geometric dual the code associated to these dual systems. We prove first that such object is well-defined and we show a sort of MacWilliams' relations between the generalized weight enumerators (see Theorem <ref>). Moreover, we prove that the geometric dual is involutory. In Section <ref>, we come back to the core of the paper, which are minimal codes in the sum-rank metric. By the correspondence between sum-rank metric codes and Hamming-metric ones, we first highlight a generalization of the celebrated Ashikhmin-Barg condition, which is a sufficient condition on the weight distribution for a code to be minimal (see Theoreom <ref>). All one-weight codes result to be minimal, but remarkably there are many more one-weight codes in the sum-rank metric than in the two more classical ones. After recalling three families of one-weight sum-rank metric codes introduced in <cit.>, we read the property of being one-weight in the geometric dual, which exchanges the role of hyperplanes and points. As a consequence, we get that partitions in scattered linear sets yield one-weight codes. Doubly extended linearized Reed-Solomon of dimension 2, which correspond partition of the projective line in scattered linear sets, are short minimal codes (that meet the bound in Theorem <ref>) whose geometric dual are one-weight which are short minimal codes for quadratic extensions. We use this partition of the projective line to construct a partition of higher dimension projective spaces, yielding other examples of one-weight codes. Another construction may be done with canonical subgeometries. Finally, we show that every sum-rank metric code can be extended to a one-weight code, showing that there are several examples of one-weight codes with different geometric structures. In the last part of the section, we study some two-weight codes: these can be easily obtained by considering proper subsets of mutually disjoint scattered linear sets and taking the geometric dual of the associated codes (see Theorem <ref>). Thanks to the Ashikhmin-Barg condition, we have that if the number of blocks is sufficiently large, then such codes are minimal  (see Theorem <ref>). We finally present some examples of minimal two-weight codes with two blocks and, quite remarkably, in dimension 3 we are able to prove the minimality  by direct geometric arguments for codes not satisfying the Ashikhmin-Barg condition (see Theorem <ref>). Let us point out that their associated Hamming metric codes have few weights and in some cases they are two-weights: this make them particularly interesting for several reasons including quantum codes and strongly regular graphs; see <cit.>.
 
 
 
 
 
-The     matching coefficients  can be calculated by matching between  perturbative QCD and  perturbative NRQCD.
-In the past three decades, various  matching coefficients of double heavy quark systems have been computed to higher order using NRQCD effective theory.
-For equal heavy quark   masses case, the  two-loop correction to the vector current was first obtained in Refs. <cit.>.
-Then two-loop corrections to  vector, axial-vector, scalar and pseudo-scalar currents were accomplished  in
-in Ref. <cit.>.
-The  three-loop correction to the vector current was investigated in  a variety of  literature  <cit.>.
-And three-loop calculation allowing for all four currents were available  in
- Refs. <cit.>.
-The phenomenological applications for the leptonic
-decays of  J/ψ, Υ  and the threshold production of top quark-antiquark pairs
-can be found in the  literature <cit.>.
-For two different heavy quark   masses case, the first
-one-loop calculation for  pseudo-scalar current can be found in Ref. <cit.>.
-And  in Refs. <cit.> one can find the  one-loop  QCD corrections to
- pseudo-scalar and  vector     currents  combined with higher order relativistic corrections.
-Two-loop corrections to  pseudo-scalar and  vector     currents were calculated in the literature  <cit.>.
-At the three-loop level, the  pseudo-scalar,  vector and  scalar     currents have been numerically evaluated in Ref. <cit.>, Ref. <cit.> and Ref. <cit.>, respectively.
-For phenomenological applications of matching coefficients in B_c  and B_c^* mesons,  one can refer to various  literature <cit.>.
+
+§ PRELIMINARIES
 
 
-The   matching coefficients and the wave function at the origin are two  important building blocks of phenomenological predictions for double heavy quark systems. 
-For a complete N^3LO perturbative QCD calculation of physical  quantities such as decay constants, decay widths, cross sections, we need consider  the N^3LO corrections to both the   matching coefficients and the wave functions at the origin <cit.>.
-The higher-order perturbative correction to  the wave function at the origin can be calculated using the potential NRQCD effective theory <cit.>.
-For the  heavy quarkonia with two equal masses such as J/ψ and Υ, the wave functions at the origin up to N^3LO  are  available  in various literature <cit.>.
-For the unequal mass case, the NLO result of the wave function at the
-  origin can be obtained from Ref. <cit.> and various research on the perturbative  corrections to  potentials can be found in Refs. <cit.>. Nevertheless, higher-order corrections to the wave function at the origin for unequal masses are still missing in the literature.
+In this section we will briefly recall the main results of the theory of sum-rank metric codes and linear sets, which we will use in the rest of the paper.
+
+
+
+
+
+ §.§ Basic notions on sum-rank metric codes
+
+
+Throughout the paper,
+𝐧=(n_1,…,n_t) ∈ℕ^t denotes an ordered tuples with n_1 ≥ n_2 ≥…≥ n_t and N = n_1+…+n_t. We use the following compact notations for the direct sum of vector spaces 
+
+    _q^m^=⊕_i=1^t_q^m^n_i.
+
+
+Let start by recalling that the rank of a vector v=(v_1,…,v_n) ∈_q^m^n is defined as (v)=_ (⟨ v_1,…, v_n⟩_) and the sum-rank weight of an element x=(x_1 ,…, x_t) ∈_q^m^ is 
+
+    w(x)=∑_i=1^t (x_i).
+
+
+
+    If t=1, then the sum-rank weight is simply the rank, whereas if n_1=…=n_t=1, the sum-rank weight coincides with the Hamming weight. The sum-rank metric constitues then a bridge between the rank and the Hamming metrics. 
+
+
+We also call rank-list of x=(x_1,…,x_t) ∈_q^m^ the vector
+
+    ((x_1),…,(x_t)).
+
+Hence, the sum-rank weight of a vector corresponds to the sum of the entries of its rank-list.
+
+
+A (linear) sum-rank metric code  is an _q^m-subspace of _q^m^ endowed with the sum-rank distance defined as
+
+    d(x,y)=w(x-y)=∑_i=1^t (x_i-y_i),
+
+where x=(x_1 , … , x_t), y=(y_1 , …, y_t) ∈_q^m^. 
+Let ⊆_q^m^ be a sum-rank metric code. We will write that  is an [,k,d]_q^m/q code (or [,k]_q^m/q code) if k is the _q^m-dimension of  and d is its minimum distance, that is 
+
+    d=d()=min{d(x,y)  x, y ∈, x ≠ y  }.
+    
+
+
+Let ⊆_q^m^𝐧 be a linear sum-rank metric code. Let G=(G_1|…| G_t) ∈_q^m^k × N be a generator matrix of , that is a matrix whose lines generate , with G_1,…,G_t ∈_q^m^k ×n_i. We define  to be nondegenerate if the columns of G_i are -linearly independent for i∈{1,…,t} (this is independent of the choice of G; see <cit.>).
+
+We will only consider nondegenerate codes in this paper and this is not a restriction since we can always embed a sum-rank metric code in a smaller space in which it results to be nondegenerate, preserving its metric properties.
+So, throughout this paper we will omit the term nondegenerate and all codes considered will be nondegenerate.
+
+
+
+For sum-rank metric codes the following Singleton-like bound holds; see also <cit.>.
+
   
+     Let 𝒞 be an  code. Then 
+     
+    d ≤ N-k+1.
 
 
-In this paper we will complete the computation of three-loop QCD corrections to the     matching coefficients  for    vector, axial-vector, scalar		and pseudo-scalar currents with two different heavy quark masses, where the axial-vector case is achieved for the first time. We will not attempt to calculate the rigorous N^3LO expression of the wave function at origin for the double heavy quark system with different masses based on the pNRQCD effective theory, but employ the scale relation to obtain the   N^3LO correction to the wave functions at the origin for the vector B_c^* meson and the pseudo-scalar B_c meson   from  the known result for the equal-mass  heavy quarkonium. After  the three-loop matching coefficients are combined with the N^3LO corrections to the wave functions at the origin, the resultant decay constants for B_c^* and B_c   will test the perturbative convergence in the NRQCD effective theory.
+
+
+An  code is called a Maximum Sum-Rank Distance code (or shortly MSRD code) if d=N-k+1.
+
+
+
+The next result classifies the -linear isometries of _q^m^ equipped with the sum-rank distance, cfr. <cit.> and <cit.>.
+Before stating it, we need the following notation. 
+Let ℓ:=|{n_1,…,n_t}| and let n_i_1,…,n_i_ℓ be the distinct elements of {n_1,…,n_t}.
+By λ(𝐧)∈^ℓ we will denote the vector whose entries are
+
+    λ_j:=|{k  n_k=n_i_j}|,     j∈{1,…,ℓ}.
+
+For a vector v=(v_1,…, v_ℓ)∈ℕ^ℓ, we define 
+    S_v=S_v_1×⋯× S_v_ℓ,
+
+where S_i is the symmetric group of order i and naturally acts on the blocks of length i. 
+Similarly, we denote by (v, _q) the direct product of the general linear groups of degree v_i over _q, i.e.
+
+    (𝐯, _q) = (v_1, _q)×…×(v_t, _q).
+
+
+
+The group of _q^m-linear isometries of the space (_q^m^,d)  is
+
+    ((_q^m^∗)^t×(, _q)) ⋊𝒮_λ(),
+
+which (right)-acts as 
   
-  
+    (x_1 , …, x_t)· (𝐚,A_1,…, A_t,π) ⟼ (a_1x_π(1)A_1 |…| a_tx_π(t) A_t).
+
+
+
+We use the -linear isometries of the whole ambient space to define the equivalence of sum-rank metric codes.
 
  
-
-
-The rest of the paper is organized as follows.
-In Sec. <ref>, we introduce the  matching formula between QCD and NRQCD.
-In Sec. <ref>,  we describe details of our calculation procedure.
-In Sec. <ref>, we  present the three-loop analytical results of  the  renormalization constants and corresponding anomalous dimensions  in NRQCD.
-In Sec. <ref>, we present our numeric results of the  matching coefficients up to N^3LO.
-In Sec. <ref>, the phenomenological applications of three-loop matching coefficients to the cb̅ mesons are presented.
-Sec. <ref> contains a summary.
+Two  sum-rank metric codes _1, _2 are equivalent if there is an -linear isometry ϕ, such that ϕ(_1)=_2. The set of equivalence classes of  sum-rank metric codes is denoted by ℭ.
 
 
 
 
 
 
+ §.§ The geometry of sum-rank metric codes
 
 
-§ MATCHING FORMULA  
+We will recall now some results from <cit.>, on the connections between sum-rank metric codes and some sets of subspaces.
 
-The heavy flavor-changing  currents in the full QCD are defined by
+The following definition extends the notion of projective systems and q-systems; cfr. <cit.>.
 
-    j_v^μ = ψ̅_b γ^μψ_c,
-    
-       
-    j_p     = ψ̅_b  iγ_5 ψ_c,
-    
-       
-    j_a^μ = ψ̅_b γ^μγ_5 ψ_c,
-    
-       
-    j_s     = ψ̅_b ψ_c,
-
-which  can be expanded  in terms of NRQCD currents as follows,
-
-
-    j_v^0 = 0+ 𝒪(u^2),
-    
-       
-    j_v^i = 𝒞_vj̃_v^i + 𝒪(u^2),
-    
-       
-    j_p     = 𝒞_pj̃_p + 𝒪(u^2),
-    
-       
-    j_a^0 = 𝒞_a,0j̃_a^0 + 𝒪(u^2),
-    
-       
-    j_a^i = 𝒞_a,ij̃_a^i + 𝒪(u^3),
-    
-       
-    j_s     = 𝒞_sj̃_s + 𝒪(u^3),
-
-where u  refers   to the small relative velocity   between the bottom and charm,
- 𝒞_v,𝒞_p,𝒞_a,0,𝒞_a,i, 𝒞_s
- are the matching coefficients for the   heavy flavor-changing      vector, pseudo-scalar, the zeroth component of axial-vector, the space-like component of axial-vector, and scalar currents, respectively. And the NRQCD currents read
  
-    j̃_v^i = φ_b^†σ^i χ_c,
-    
-       j̃_p     = - i φ_b^†χ_c,
-    
-       j̃_a^0 = φ_b^†χ_c,
-    
-       j̃_a^i = 1/4 m_rφ_b^†[σ^i,k⃗·σ⃗] χ_c,
-    
-       j̃_s     = -1/2m_rφ_b^†k⃗·σ⃗χ_c,
+An [𝐧,k,d]_q^m/q-system (or simply an [𝐧,k]_q^m/q-system) U is an ordered set (U_1,⋯,U_t), where, for any i∈{1,…, t}, U_i is an _q-subspace of _q^m^k of dimension n_i, such that
+⟨ U_1, …, U_t ⟩__q^m=_q^m^k and 
 
-where  φ_b^† and χ_c denote 2-component Pauli spinor  fields annihilating the b̅ and c quarks, respectively, and j̃_p=- i j̃_a^0 means 𝒞_p=𝒞_a,0.
-|k⃗|= m_r u  refers   to the small half relative spatial  momentum  between the bottom and charm.   m_r=m_b m_c/(m_b+m_c) is the reduced  mass with bottom mass m_b and charm mass m_c.
+    d=N-max{∑_i=1^t__q(U_i∩ H) | H  is an _q^m-hyperplane of _q^m^k}.
 
+Moreover, two [𝐧,k,d]_q^m/q-systems (U_1,…,U_t) and (V_1,…, V_t) are equivalent if there exists  φ∈(k,_q^m) and  σ∈𝒮_t, such that
 
-The heavy flavor-changing  currents in Eq. (<ref>) and Eq. (<ref>) can be related to  the on-shell unrenormalized  vertex functions in QCD and NRQCD
-which we denote by Γ_J and Γ_J with
-J∈{v,p,(a,0),(a,i),s}, respectively.
-Then the matching coefficients can be determined through the conventional perturbative matching procedure. Namely, one  performs renormalization for  the on-shell vertex functions in both perturbative QCD and perturbative
-NRQCD sides, then solves the matching coefficient  order by order in α_s.
-The matching formula with renormalization procedure reads
+    φ(U_i) = a_iV_σ(i),
 
-    √(Z_2,b Z_2,c) Z_J Γ_J =
-    𝒞_J(μ_f,μ,m_b,m_c)  √(Z_2,bZ_2,c) Z_J^-1 Γ_J + 𝒪(u^2),
+for every i∈{1,…,t}.
 
-where  the left part in the equation represents the renormalization of full QCD current while the right part represents the renormalization of NRQCD current.
-𝒪(u^2) denotes higher order relativistic corrections in powers of the  relative velocity u between the bottom quark  b̅ and the charm quark c,
-and in this paper we will calculate 
-higher-order QCD corrections up to 𝒪(α_s^3)   but at the lowest order in u.
- At the leading-order (LO), we set 𝒞_J=1,
-while in a fixed high order QCD correction calculation,
-  the matching coefficient 𝒞_J(μ_f,μ,m_b,m_c) depends NRQCD factorization scale μ_f and QCD  renormalization scale μ.
-In on-shell (OS) scheme,   NRQCD  quark field renormalization constants Z_2,b=Z_2,c=1.
- Z_J is NRQCD current renormalization constant in the modified-minimal-subtraction (MS) scheme and Z_p=Z_a,0.
- Z_J is QCD  current on-shell  renormalization constant, i.e., Z_v=Z_a,0=Z_a,i=1, Z_p=Z_s=(m_b Z_m,b+m_c Z_m,c)/(m_b+m_c). Z_2 and Z_m are QCD  quark field and mass on-shell renormalization constants, respectively.
- The three-loop analytical results of  the QCD quark field and mass on-shell  renormalization constants  allowing for two different non-zero quark masses  can be found in literature <cit.>, which can be  evaluated to high numerical precision  with the package  <cit.>.
- The QCD coupling MS renormalization constant can be found in literature <cit.>.
 
+We denote the set of equivalence classes of [𝐧,k,d]_q^m/q-systems by 𝔘[𝐧,k,d]_q^m/q.
 
+The following result allows us to establish a connection between systems and codes.
 
-
-
-
-
-
-
-§ CALCULATION PROCEDURE 
-
-
-Our high-order calculation  consists of the following steps.
-
-	
-  * First, we use  <cit.>  to obtain Feynman diagrams and corresponding Feynman amplitudes. By  <cit.>, we decompose  every Feyman amplitude  into several Feynman integral families.
-	
-  * Second, we use  <cit.>/ <cit.>/ <cit.> based on Integration by Parts (IBP) <cit.> to reduce every Feynman integral family to master integral family.
-	
-  * Third,
-	based on symmetry among different integral families and using   +  + , we can realize  integral reduction among different integral families, and further on, the reduction from all of master integral families to the minimal set <cit.> of master  integral families.
-	
-  * Last, we use  <cit.>, which is a proof-of-concept implementation of the auxiliary mass flow method <cit.>, equipped with  <cit.>/ <cit.> to calculate the minimal set  family by family.
-
-In order to obtain the finite results of  high-order QCD corrections, one has to perform the  conventional renormalization procedure <cit.>. Equivalently, We can also use diagrammatic renormalization method <cit.>  with the aid of the package  <cit.>, which at N^3LO sums contributions from three-loop diagrams and four  kinds of counter-term diagrams, i.e.,  tree diagram   inserted with one α_s^3-order counter-term vertex, one-loop diagram inserted with one α_s^2-order counter-term vertex, one-loop diagram inserted with two α_s-order counter-term vertexes, two-loop diagrams inserted with one α_s-order counter-term vertex. Our final finite results by these two renormalization methods are in agreement with each other.
-
-
-
-
-
-
-
-
-
-
-
-
-We want to mention that all contributions up to NNLO have been evaluated for general gauge parameter ξ and the NNLO results of the  matching coefficients   for the heavy flavor-changing   currents   are all independent of ξ, which constitutes an important check on our calculation.
-At N^3LO, we work in  Feynman gauge. To check  the correctness of
-our results, we also calculated the three-loop matching coefficient  for the  flavor-changing heavy quark pseudo-scalar current with keeping  the linear ξ-dependence terms and we have
-verified these terms vanish  in the final results of the matching coefficient. Therefore, we conjecture the matching coefficients, the NRQCD current renormalization constants and the corresponding anomalous dimensions for flavor-changing heavy quark currents  are gauge invariant up to all order of α_s.
-By FeynCalc, there are 1, 1, 13, 268 bare Feynman diagrams for the QCD vertex function with every heavy flavor-changing   current  at tree, one-loop, two-loop, three-loop orders in α_s, respectively.
-Some representative Feynman diagrams up to  three loops  are displayed in Fig. <ref> and Fig. <ref>.
-In the calculation of multi-loop diagrams, we have allowed for n_b bottom quarks with mass m_b, n_c charm quarks  with mass m_c and n_l massless quarks appearing in the quark loop.
-To facilitate our calculation, we take full advantage of computing numerically. Namely, before generating amplitudes, m_b and m_c are chosen to be particular rational numbers values <cit.>.
-
-Following the literature <cit.>, we employ the projectors constructed for the heavy flavor-changing   currents   to obtain intended QCD vertex functions, which means one need extend    the projectors for   various   currents   with equal heavy quark masses in Eq.(7)  and Eq.(8) of Ref. <cit.> to the different heavy quark masses case. We choose q_1=m_c/m_b+m_cq+k and q_2=m_b/m_b+m_cq-k denoting the on-shell charm and bottom momentum, respectively, and present the projectors for the heavy flavor-changing  currents  as
-
-    P_(v),μ =   1/2(D-1)(m_b+m_c)^2(m_c/m_b+m_cq + m_c
-    ) γ_μ(-m_b/m_b+m_cq + m_b
-    ),
-    
-    
-    P_(p) =   1/2(m_b+m_c)^2(m_c/m_b+m_cq + m_c
-    ) γ_5 (-m_b/m_b+m_cq + m_b
-    ),
-    
-    
-    P_(a,0),μ =    -1/2(m_b+m_c)^2(m_c/m_b+m_cq + m_c
-    ) γ_μγ_5 (-m_b/m_b+m_cq + m_b
-    ),
-    
-    
-    P_(a,i),μ =    -1/2(m_b+m_c)^2{1/D-1m_c/m_b+m_c(m_c/m_b+m_cq + m_c
-    ) γ_μγ_5(m_b/m_b+m_cq + m_b
-    )
-    
-       
-    +1/D-1m_b/m_b+m_c(-m_c/m_b+m_cq + m_c
-    ) γ_μγ_5(-m_b/m_b+m_cq + m_b
-    )
-    
-       
-    - 1/D-22 m_b m_c/m_b+m_c(m_c/m_b+m_cq + m_c
-    ) -k_μ + γ_μk/k^2γ_5 (-m_b/m_b+m_cq + m_b) },
-    
-    P_(s) =    1/2(m_b+m_c)^2{m_c/m_b+m_c(m_c/m_b+m_cq + m_c
-    )  1(m_b/m_b+m_cq + m_b)
-    
-       
-    +m_b/m_b+m_c(-m_c/m_b+m_cq + m_c
-    )  1(-m_b/m_b+m_cq + m_b)
-    
-       
-    +2 m_b m_c/m_b+m_c(m_c/m_b+m_cq + m_c) k/k^2(-m_b/m_b+m_cq + m_b) },
-
-where the small momentum k refers to  relative movement  between the bottom and charm, q represents the total momentum of the bottom and charm, q_1^2=m_c^2, q_2^2=m_b^2, q^2=(m_b+m_c)^2+𝒪(k^2) <cit.>, q· k=0. With the help of projectors, the  on-shell heavy flavor-changing current vertex functions in full QCD can be obtained as
-
-    Γ_v = [ P_(v),μΓ_(v)^μ] ,
-    
-       Γ_p = [ P_(p)Γ_(p)] ,
-    
-       Γ_a,0 = [ P_(a,0),μΓ_(a)^μ] ,
-    
-       Γ_a,i = [ P_(a,i),μΓ_(a)^μ] ,
-    
-       Γ_s = [ P_(s)Γ_(s)] ,
-
-where Γ_(v)^μ, Γ_(p), Γ_(a)^μ, Γ_(s)    denote QCD amplitudes with tensor structures for the vector, pseudo-scalar, axial-vector, scalar currents, respectively.
-
-Since contributions from soft, potential and ultrasoft loop momenta in full QCD and NRQCD are identical,  thus they drop out from both sides of the matching formula in Eq. (<ref>).
-Then we set  Γ_J=1 <cit.> in Eq. (<ref>) and   Γ_J  turns into  the hard  part of the full QCD, which entirely   determines   the matching coefficients  to all orders.
-To match with NRQCD and obtain the matching coefficients, one need extract the contribution from the hard region in full QCD amplitudes for the heavy flavor-changing currents.
-For the vector current, the pseudo-scalar current and the zeroth component of the axial-vector current case, we can simply set  the   small momentum  k=0 in the QCD amplitudes.
-However, for  the space-like component of the axial-vector current and the scalar current  case, since NRQCD currents include contributions at 𝒪(k/m_r) from Eq. (<ref>) and Eq. (<ref>), accordingly,
-one need first introduce the small  momentum k to momenta in the QCD amplitudes  and then series expand propagator denominators with respect to k up to 𝒪(k) in  the hard region of loop momenta <cit.>, which will cancel k^2 in the denominators of the   projectors in Eq. (<ref>) and Eq. (<ref>) so that we can obtain the finite final results   as k^2 → 0.
-
-Due to the expansion in powers of k, the number and powers of propagators in Feynman integrals constituting the amplitudes for the space-like component of the axial-vector current and the scalar current will remarkably increase compared with  the vector current case, the pseudo-scalar current and the zeroth component of the axial-vector current case. In our practice, the total number  of propagators in a three-loop Feynman integral family is 12 for the former two currents and 9 for the latter three currents. In our calculation, the most difficult and   time-consuming is
-the reduction from three-loop Feynman integrals    with rank 5, dot 4, and 12  propagators   to master integrals. By trial and  error, we find it is more  appropriate for  Fire6 <cit.> to deal with this problem than  <cit.> or  <cit.>.
-For  every heavy flavor-changing current, after  using  ++ to achieve the minimal set of master integral families  from  all of master integral families    based on symmetry among different integral families, the number of three-loop master integral families is reduced from 830s  to 26, meanwhile the number of three-loop master integrals is reduced from 13000s  to 300.
-
-
-
-
-
-
-
-
-
-
-§ NRQCD CURRENT RENORMALIZATION CONSTANTS 
-
-
-After implementing the quark field and  mass on-shell renormalization, and  the QCD coupling constant MS renormalization, the QCD vertex function gets rid of ultra-violet (UV) poles, yet still contains  uncancelled infra-red (IR) poles starting from order α_s^2.  The remaining IR poles in QCD should be exactly  cancelled by the UV divergences of Z_J in NRQCD,  rendering the matching coefficient finite.  With the aid of the obtained high-precision numerical results, combined with the structures and features of NRQCD  current renormalization constants investigated in other known literature <cit.>,    we have successfully reconstructed the exact analytical expressions of the NRQCD  renormalization constants for the heavy flavor-changing   currents
- through the PSLQ algorithm and 
-
-numerical fitting recipes <cit.>. Here we directly present the final results  as following
-
-    Z_J(x, μ^2_f m_b m_c )   =1+(α_s^(n_l)(μ_f)/π)^2Z_J^(2)(x)
-     +(α_s^(n_l)(μ_f)/π)^3Z_J^(3)(x, μ^2_f m_b m_c )+𝒪(α_s^4).
-
-
-    Z_v^(2)(x )   =π^2C_F1/ϵ(3x^2+2x+3/24(1+x)^2C_F+1/8C_A),
-    
-    Z_v^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [3 x^2-x+3/36ϵ ^2 (x+1)^2 
-    +1/ϵ(
-    19 x^2+5 x+19/36 (x+1)^2-2 /3ln 2
-    .
-       .
-    +x^3-4 x^2-2 x-3/12 (x+1)^3ln x
-    +1/6ln (x+1)
-    	+3 x^2-x+3 /12 (x+1)^2lnμ _f^2/m_b
-    		m_c)]
-    
-       
-    +
-    C_F C_A [
-    x/216ϵ ^2 (x+1)^2 
-    +
-    1/ϵ(
-    39 x^2+148	x+39/162 (x+1)^2.
-       .
-    -x+11 /48 (x+1)ln x
-    +1/4ln (x+1)
-    +11 x^2+8 x+11/48 (x+1)^2lnμ _f^2/m_b
-    	m_c)]
-    
-       
-    +C_A^2  [
-    -1/16 ϵ ^2+1/ϵ(
-    2/27+1/6ln2-1/24ln x+1/12ln (x+1) +
-    1/24lnμ _f^2/m_b	m_c)]
-    
-       
-    + C_F T_F n_l[
-    3 x^2+2
-    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+58 x+21/324 ϵ (x+1)^2 ]
-    +C_A  T_F n_l [
-    1/36 ϵ ^2-37/432 ϵ]
-    
-       
-    +C_F  T_F n_b
-     x^2 /15ϵ (x+1)^2  
-    +C_F  T_F n_c
-     1 /15ϵ (x+1)^2  }.
-
-
-    Z_p^(2)(x )   = π^2C_F1/ϵ(x^2+6 x+1/8 (x+1)^2C_F+1/8C_A),
-    
-    Z_p^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [
-    3 x^2-x+3/36ϵ ^2 (x+1)^2 
-    +1/ϵ(19 x^2+29 x+19/36 (x+1)^2-2 /3ln 2
-    .
-       .
-    +x^4-5 x^3-22 x^2-x+3 /12 (x-1) (x+1)^3ln x+1/6ln (x+1)
-    +3	x^2-x+3/12 (x+1)^2lnμ _f^2/m_b	m_c)]
-    
-       
-    +
-    C_F C_A [
-    -5 x/24ϵ ^2 (x+1)^2 
-    +
-    1/ϵ(
-    26 x^2+93	x+26/108 (x+1)^2.
-       .
-    +-x^2+2 x+11 /48 (x-1) (x+1)ln x+1/4ln (x+1)+
-     11 x^2+36 x+11 /48 (x+1)^2lnμ _f^2/m_b	m_c)]
-    
-       
-    +C_A^2  [
-    -1/16 ϵ ^2+1/ϵ(
-    2/27+1/6ln 2-1/24ln x+1/12ln (x+1)+1/24lnμ _f^2/m_b	m_c)]
-    
-       
-    + C_F T_F n_l[
-    x^2+6 x+1/36 ϵ ^2 (x+1)^2-7 x^2+30 x+7/108 ϵ 	(x+1)^2]
-    +C_A  T_F n_l [
-    1/36 ϵ ^2-37/432 ϵ]
-    
-       
-    +C_F  T_F n_b
-     x^2 /15ϵ (x+1)^2  
-    +C_F  T_F n_c
-     1 /15ϵ (x+1)^2  }.
-
-
-    Z_a,i^(2)(x )   = π^2C_F1/ϵ(3x^2+4x+3/24(1+x)^2C_F+1/24C_A),
-    
-    Z_a,i^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{C_F^2/ϵ[171 x^2-296 x+171/216
-    	(x+1)^2-ln 2/3
-       
-    +-57 x^4+89 x^3+274 x^2+89 x-57/216 (x-1) (x+1)^3ln x]
-    
-       
-    +
-    C_F C_A [	-22 x^2+31	x+22/432ϵ ^2 (x+1)^2 
-    +
-    1/ϵ(
-    379 x^2+675 x+379/1296 (x+1)^2-ln 2/18.
-       .
-    -5 x+11/144 (x+1)ln x+1/9ln (x+1)
-    +11 x^2+13 x+11/144	(x+1)^2lnμ _f^2/m_b
-    	m_c)]
-    
-       
-    +C_A^2  [-1/48 ϵ ^2+1/648 ϵ(34+72 ln2-9 ln x+18 ln (x+1)+9 lnμ _f^2/m_b m_c)]
-    
-       
-    + C_F T_F n_l[
-    3 x^2+4
-    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+41 x+21/324 ϵ (x+1)^2 ]
-    
-       
-    +C_A  T_F n_l [1/108 ϵ ^2-53/1296 ϵ] }.
-
-
-    Z_s^(2)(x )   = π^2C_F1/ϵ(3x^2+10x+3/24(1+x)^2C_F+1/24C_A),
-    
-    Z_s^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{C_F^2/ϵ[57x^2+146x+57/216(x+1)^2-ln2/3]
-    
-       
-    +
-    C_F C_A [-11 x^2+41 x+11/216ϵ ^2	(x+1)^2 
-    +
-    1/1296 ϵ(379 x^2+1086 x+379/(x+1)^2-72 ln2
-    .
-       .
-    -9 (5 x+11) /x+1ln x+144 ln (x+1)+9 (11 x^2+28 x+11) /(x+1)^2lnμ _f^2/m_b
-    	m_c)]
-    
-       
-    +C_A^2  [-1/48 ϵ ^2+1/648 ϵ(34+72 ln2-9 ln x+18 ln (x+1)+9 lnμ _f^2/m_b m_c)]
-    
-       
-    + C_F T_F n_l[3 x^2+10
-    	x+3/108ϵ ^2 (x+1)^2 -21 x^2+74 x+21/324 ϵ (x+1)^2 ]
-    
-       
-    +C_A  T_F n_l [1/108 ϵ ^2-53/1296 ϵ] },
-
-where C_A=3, C_F=4/3 and T_F=1/2 are QCD constants and we have defined a dimensionless parameter x representing the ratio of two heavy quark masses
-
-    x= m_c m_b.
-
-
-Then the corresponding anomalous dimension γ̃_J for the heavy flavor-changing   NRQCD  currents  is related to Z_J by <cit.>
-
-    γ̃_J(x, μ^2_f m_b m_c )    ≡d lnZ_J d lnμ_f 
-    ≡-2 ∂Z_J^[1]/∂lnα_s^(n_l)(μ_f)
-       
-     =(α_s^(n_l)(μ_f)/π)^2 γ̃_J^(2)(x )
-    +(α_s^(n_l)
-    	(μ_f)/π)^3γ̃_J^(3)(x, μ^2_f m_b m_c )+𝒪(α^4_s),
-
-where Z_J^[1] denotes the coefficient of the 1/ϵ pole in Z_J, and within the NRQCD frame we use μ_f to denote the  NRQCD factorization scale, 
- so that both  Z_J and  γ̃_J explicitly depend on  μ_f but not the QCD renormalization scale μ <cit.>. Explicitly, γ̃_J^(2) and γ̃_J^(3) read
-
-    γ̃_v^(2)(x )   =-π^2C_F [C_F 3 x^2+2	x+3/6(x+1)^2+C_A/2],
-    
-    γ̃_v^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [
-    -19 x^2+5 x+19/6 (x+1)^2+4 ln 2
-    
-       
-    +-x^3+4 x^2+2 x+3/2 (x+1)^3ln x-ln (x+1)
-    +-3 x^2+x-3 /2 (x+1)^2lnμ_f^2/m_b m_c]
-    
-       
-    +C_F C_A [
-    -39 x^2+148 x+39/27	(x+1)^2+x+11 /8( x+1)ln x
-    
-       
-    -3/2ln (x+1)
-    -11 x^2+8 x+11/8 (x+1)^2lnμ_f^2/m_b m_c]
-    
-       	
-    +C_A^2 [
-    -4/9-ln 2+1/4ln x-1/2ln (x+1)
-    -1/4lnμ_f^2/m_b m_c]
-     
-       
-    +C_F T_F n_l 21 x^2+58 x+21/54 (x+1)^2
-    +37/72 C_A T_F n_l
-    
-       	
-    -2 x^2 /5 (x+1)^2 C_F T_F n_b
-    -2/5 (x+1)^2 C_F T_F n_c
-    }.
-
-
-    γ̃_p^(2)(x )   =
-    -π^2C_F [x^2+6 x+1 /2 (x+1)^2C_F+C_A /2],
-    
-    γ̃_p^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [
-    -19 x^2+29 x+19/6 (x+1)^2+4 ln 2
-    
-       
-    +-x^4+5 x^3+22 x^2+x-3 /2 (x-1)	(x+1)^3ln x-ln (x+1)+-3 x^2+x-3/2 (x+1)^2lnμ_f^2/m_b m_c]
-    
-       
-    +C_F C_A [
-    -26 x^2+93 x+26/18	(x+1)^2--x^2+2 x+11 /8(x-1)(x+1)ln x
-    
-       
-    -3/2ln (x+1)
-    -11 x^2+36 x+11/8 (x+1)^2lnμ_f^2/m_b m_c]
-    
-       	
-    +C_A^2 [
-    -4/9-ln 2+1/4ln x-1/2ln (x+1)
-    -1/4lnμ_f^2/m_b m_c]
-    
-       
-    +C_F T_F n_l 7 x^2+30	x+7/18 (x+1)^2
-    +37/72 C_A T_F n_l
-    
-       	
-    -2 x^2 /5 (x+1)^2 C_F T_F n_b
-    -2/5 (x+1)^2 C_F T_F n_c
-    }.
-
-
-    γ̃_a,i^(2)(x )   =
-    -π^2C_F [C_F 3 x^2+4	x+3/6(x+1)^2+C_A/6],
-    
-    γ̃_a,i^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [-171 x^2+296 x-171/36 (x+1)^2+2 ln 2
-    
-       
-    +57 x^4-89 x^3-274 x^2-89 x+57 /36 (x-1) (x+1)^3ln x]
-    
-       
-    +C_F C_A [-379 x^2+675 x+379/216 (x+1)^2+ln 2/3
-       
-    +5 x+11/24( x+1)ln x
-    -2/3ln (x+1)
-    	-11 x^2+13 x+11/24 (x+1)^2lnμ
-    		_f^2/m_b m_c]
-    
-       	
-    +C_A^2 [
-    -17/54-2 /3ln 2+1/12ln x-1/6log (x+1)-1/12lnμ_f^2/m_b m_c]
-    
-       
-    +C_F T_F n_l 21 x^2+41 x+21/54 (x+1)^2
-    +53/216 C_A T_F n_l }.
-
-
-    γ̃_s^(2)(x )   =
-    -π^2C_F [C_F 3 x^2+10	x+3/6(x+1)^2+C_A/6],
-    
-    γ̃_s^(3)(x, μ^2_f m_b m_c )   =
-    π^2C_F{
-    C_F^2 [-57 x^2+146 x+57/36 (x+1)^2+2 ln 2]
-    
-       
-    +C_F C_A [-379 x^2+1086 x+379/216 (x+1)^2
-    +ln 2/3
-       
-    +5 x+11 /24 (x+1)ln x-2/3ln (x+1)-11 x^2+28 x+11/24 (x+1)^2lnμ
-    	_f^2/m_b m_c]
-    
-       	
-    +C_A^2 [-17/54-2 /3ln 2+1/12ln x-1/6ln (x+1)-1/12lnμ_f^2/m_b m_c]
-    
-       
-    +C_F T_F n_l 21 x^2+74 x+21/54 (x+1)^2
-    +53/216 C_A T_F n_l }.
-
-Note that the above analytical expressions of Z_a,i and γ̃_a,i for the space-like  component  of the heavy flavor-changing  axial-vector   current  are new.
-The obtained Z_J and γ̃_J have been checked with several different values of m_b and m_c.
-To verify the correctness of our results, on the one hand, one can check that the above Z_J (also γ̃_J) is  symmetric/invariant under the exchange m_b↔ m_c meanwhile n_b↔ n_c, on the other hand, in the equal quark masses case x=1, our Z_J and γ̃_J are in full agreement with the known results in Refs. <cit.>.
-
-
-
-In our calculation, we include the contributions from the loops of charm quark and bottom quark in full QCD, which however are decoupled in the NRQCD.
-To match QCD with NRQCD, one need twice apply the decoupling relation <cit.> of  α_s :
-
-    α_s^(n_l+1)(μ)/α_s^(n_l)(μ) =    1-α_s^(n_l)(μ)/π
-    	(1-I_0 ϵ )/3  ϵT_F
-    +
-    ( α_s^(n_l)(μ)/π)^2
-     T_F {C_A (I_0^2 ϵ(4 ϵ ^3+4 ϵ ^2-11 ϵ -10)/8
-    		(ϵ -2) (2 ϵ +1) (2 ϵ +3).	
-       .	
-    	-5/24 ϵ)	
-    	+C_F (-I_0^2 ϵ(4 ϵ ^3-7 ϵ -1)/4
-    		(ϵ -2) (2 ϵ -1) (2 ϵ +1)-1/8 ϵ)+T_F (1-I_0 ϵ )^2/9 ϵ ^2}
-    + 𝒪(α_s^3),
-
-where I_0= e^γ_E  ϵ (ϵ -1) Γ (ϵ -1) (μ
-	^2/m_Q^2)^ϵ and m_Q is the on-shell mass of the decoupled heavy
-quark.
-
-
-
-Besides, we  can evolve the strong coupling from the scale μ_f to the scale μ with  renormalization group running equation <cit.> in D=4-2 ϵ dimensions  as following
-
-    α_s^(n_l)(μ_f)=
-    α_s^(n_l)(μ)(μ/μ_f)^2ϵ[1+α_s^(n_l)(μ)/πβ_0^(n_l)/4ϵ((μ/μ_f)^2ϵ-1)+ 𝒪(α_s^2)] .
-
-To calculate the values of the strong coupling  constant  α_s,  we  also use the renormalization group running equation <cit.> in D=4 dimensions as
-
-    α_s^(n_l)(μ)=
-    4π/β_0^(n_l)L_Λ[1-b_1 ln L_Λ/β_0^(n_l)L_Λ+b_1^2(ln^2 L_Λ-ln L_Λ-1)+b_2/(β_0^(n_l)L_Λ)^2+𝒪((1/L_Λ)^3)],
-
-where L_Λ=ln(μ^2/Λ_QCD^(n_l)^2),  b_i=β_i^(n_l)/β_0^(n_l). And β_0, β_1,  β_2 are the one-loop, two-loop and three-loop coefficients of
-the QCD β function <cit.>, respectively, which read
-
-    β_0^(n_l)=11/3C_A-4/3 T_F n_l,
-    
-       β_1^(n_l)=34/3C_A^2-20/3 C_A T_F n_l-4 C_F T_F n_l,
-    
-       β_2^(n_l)=2857/54C_A^3-(1415/27 C_A^2+205/9 C_A C_F-2C_F^2) T_F n_l+(158/27 C_A+44/9  C_F) T_F^2 n_l^2.
-
-In our numerical evaluation,  n_b=n_c=1, n_l=3 are fixed through the decoupling region from μ=0.4 GeV to μ=7 GeV,
-and the typical QCD scale Λ_QCD^(n_l=3)=0.3344GeV  is  determined using three-loop formula with the aid of the package  <cit.>  by inputting the initial value  α_s^(n_f=5)(m_Z=91.1876GeV)=0.1179.
-
-
-
-
-
-
-
-
-
-§ MATCHING COEFFICIENTS 
-
-Following Refs. <cit.>, the dimensionless matching coefficient 𝒞_J for the heavy flavor-changing  currents  can be decomposed as:
-
-    𝒞_J(μ_f,μ,m_b,m_c) =1+α_s^(n_l)(μ)/π𝒞_J^(1)(x)
-    +(α_s^(n_l)(μ)/π)^2
-    (𝒞_J^(1)(x)β_0^(n_l)/4lnμ^2/m_b m_c.
-       .
-    +γ̃_J^(2)(x)/2lnμ_f^2/m_b m_c+𝒞_J^(2)(x))
-     +(α_s^(n_l)(μ)/π)^3{(𝒞_J^(1)(x)/16β_1^(n_l)+𝒞_J^(2)(x)/2β_0^(n_l))lnμ^2/m_b m_c
-       
-    +𝒞_J^(1)(x)/16β_0^(n_l)^2ln^2
-    μ^2/m_b m_c
-    +1/8(dγ̃_J^(3)(x,μ_f^2/m_b m_c)/d lnμ_f-β_0^(n_l)γ̃_J^(2)(x))ln^2μ_f^2/m_b m_c
-       
-    +1/2(𝒞_J^(1)(x) γ̃_J^(2)(x)+γ̃_J^(3)(x,1))lnμ_f^2/m_b m_c
-    +β_0^(n_l)/4γ̃_J^(2)(x)lnμ_f^2/m_b m_c  lnμ^2/m_b m_c
-    + 𝒞_J^(3)(x) }
-       
-    +𝒪(α_s^4),
-
-where n_l=3 denotes the massless flavours. 𝒞_J^(n)(x)(n=1,2,3), as a function of x=m_c/m_b, independent of μ and μ_f, corresponds to the nontrivial part at 𝒪(α_s^n) of 𝒞_J.
-It's well known that 𝒞_J and 𝒞_J^(n)(x) satisfy the following symmetry properties <cit.>:
-
-    𝒞_J(μ_f,μ,m_b,m_c)=𝒞_J(μ_f,μ,m_c,m_b)|_   n_b↔ n_c,
-    
-       𝒞_J^(n)(x)=𝒞_J^(n)(1/x)|_   n_b↔ n_c.
-
-
-
-The nontrivial one-loop piece  𝒞_J^(1)(x) can be analytically achieved as:
-
-    𝒞_v^(1)(x)=3/4C_F(x-1/x+1 ln x-8/3),
-    
-       𝒞_p^(1)(x)=3/4C_F(x-1/x+1 ln x-2),
-    
-       𝒞_a,i^(1)(x)=3/4 C_F (x-1/x+1 ln x-4/3),
-    
-       𝒞_s^(1)(x)=3/4 C_F (x-1/x+1 ln x-2/3).
-
-
-
-
-And the nontrivial two-loop and three-loop pieces in Eq. (<ref>) are  𝒞_J^(2)(x) and 𝒞_J^(3)(x), respectively, which following the convention of Refs. <cit.>, can be further decomposed  in terms of different color/flavor structures:
-
-    𝒞_J^(2)(x) =    C_F   C_F  𝒞_J^FF(x)+C_F   C_A 𝒞_J^FA(x)
-    
-       
-    +C_F   T_F  n_b  𝒞_J^FB(x) +C_F   T_F  n_c 𝒞_J^FC(x) +C_F   T_F  n_l 𝒞_J^FL(x),
-    
-    𝒞_J^(3)(x) =      C^3_F  𝒞_J^FFF(x)+C_F^2  C_A  𝒞_J^FFA(x)
-    +C_F  C_A^2  𝒞_J^FAA(x)
-    
-       
-     +C_F^2  T_F  n_l 𝒞_J^FFL(x) +C_F C_A T_F  n_l 𝒞_J^FAL(x)
-    +C_F T_F^2   n_c   n_l 𝒞_J^FCL(x)   
-     
-       
-    +C_F T_F^2   n_b   n_l 𝒞_J^FBL(x) +C_F T_F^2  n_l^2 𝒞_J^FLL(x)
-        +C_F  T_F^2   n_b   n_c  𝒞_J^FBC(x)
-     
-       
-        +
-    C_F^2 T_F   n_c 𝒞_J^FFC(x)
-        +C_F  C_A T_F   n_c 𝒞_J^FAC(x)+
-     C_F  T_F^2   n_c^2 𝒞_J^FCC(x)
-    
-         + C_F^2   T_F  n_b 𝒞_J^FFB(x)+C_F  C_A T_F  n_b 𝒞_J^FAB(x)+C_F T_F^2  n_b^2 𝒞_J^FBB(x).
-
-
-Due to limited computing resources,
-we choose to calculate the matching coefficient 𝒞_J at three rational numerical points: the physical point  {m_b=475/100 GeV, m_c=150/100 GeV} (i.e.,x=x_0=150/475),   the check  point x=1/x_0 and the equal mass point x=1, respectively.
-The results 𝒞_J obtained at the physical point and the check  point verify the symmetric features of 𝒞_J and 𝒞_J^(n)(x) in Eq. (<ref>). Our results 𝒞_J obtained at the equal mass point x=1 are consistent with the known results 𝒞_J for all four currents in the equal quark masses case in the literature <cit.>. Furthermore, our calculation  have verified   the three-loop matching coefficients  for the  heavy flavor-changing    pseudoscalar current  and   the zeroth component of  the heavy flavor-changing   axial-vector current are identical, i.e., 𝒞_p≡𝒞_a,0.
-To confirm our calculation,  we have also calculated   𝒞_p and  𝒞_v at the reference point {m_b=498/100 GeV, m_c=204/100 GeV},  where  our results   agree with the known results in Refs. <cit.>.
-
-
-
-
-In the following, we will present the highly accurate numerical results of 𝒞_J^(2)(x) and 𝒞_J^(3)(x) at the physical heavy quark mass ratio  x=x_0=150/475  with about 30-digit precision.
-The various color-structure components of C_v^(2)(x_0) and  C_v^(3)(x_0)  read:
-
-	
-    𝒞_v^FF(x_0) = -13.71289080533129643353786882415,
-    	
-       𝒞_v^FA(x_0) = -6.585499135192203408065908804167,
-    	
-       𝒞_v^FB(x_0) = 0.0947676481125652606487968503976,
-    	
-       𝒞_v^FC(x_0) = 0.585796563729044305159251023619,
-    	
-       𝒞_v^FL(x_0) = 0.486237497534452686364818186481.
-    
-       𝒞_v^FFF(x_0) =20.18969417129305999911571842286 ,
-    	
-       𝒞_v^FFA(x_0) = -203.4349264860295194232572876813,
-    	
-       𝒞_v^FAA(x_0) = -102.7968727737777422224763578788,
-    	
-       𝒞_v^FFL(x_0) = 50.93775016890326146248907065956,
-    	
-       𝒞_v^FAL(x_0) = 40.22574662383519955538190917802,
-    	
-       𝒞_v^FCL(x_0) = -0.776339576123527777867508257477,
-    	
-       𝒞_v^FBL(x_0) =-0.0556259617628169261333544284783 ,
-    	
-       𝒞_v^FLL(x_0) = -2.08814878247962216692347776970,
-    	
-       𝒞_v^FBC(x_0) = 0.0903048438843974616499880474411,
-    	
-       𝒞_v^FFC(x_0) = -1.6854789447153670526748653364,
-    	
-       𝒞_v^FAC(x_0) = 0.464663487323886298396191419941,
-    	
-       𝒞_v^FCC(x_0) = 0.166410566769625472334622650374,
-    	
-       𝒞_v^FFB(x_0) = -0.125493504901815435721244899040,
-    	
-       𝒞_v^FAB(x_0) = -0.207735042283005003179604843189,
-    	
-       𝒞_v^FBB(x_0) = 0.0155302263395316874159466507910.
-
-
-The various color-structure components of C_p^(2)(x_0) and  C_p^(3)(x_0)  read:
-
-	
-    𝒞_p^FF(x_0) = -13.2664163032173887184051674623,
-    	
-       𝒞_p^FA(x_0) =-8.01693280168379244869854709253,
-    	
-       𝒞_p^FB(x_0) =0.128918313022470380156209778800 ,
-    	
-       𝒞_p^FC(x_0) = 0.709389226649688045706906749579,
-    	
-       𝒞_p^FL(x_0) =0.0583586106180016483840747484073 .
-    
-       𝒞_p^FFF(x_0) = -19.1073059443195339789160242369,
-    	
-       𝒞_p^FFA(x_0) = -199.368217320524804838849517451,
-    	
-       𝒞_p^FAA(x_0) = -108.136868017309597645533701505,
-    	
-       𝒞_p^FFL(x_0) = 54.7202915496511304152624843564,
-    	
-       𝒞_p^FAL(x_0) = 40.1950559961352476805071968834,
-    	
-       𝒞_p^FCL(x_0) = -0.72340116280534841918416586699,
-    	
-       𝒞_p^FBL(x_0) = -0.019622466229502871214841024261,
-    	
-       𝒞_p^FLL(x_0) = -1.2331473244200630628135034057,
-    	
-       𝒞_p^FBC(x_0) = 0.157356536599972434859830922842,
-    	
-       𝒞_p^FFC(x_0) =4.93713785637736911159215602248 ,
-    	
-       𝒞_p^FAC(x_0) = -0.837019369825724302408030392435,
-    	
-       𝒞_p^FCC(x_0) = 0.256031525456388447241169171007,
-    	
-       𝒞_p^FFB(x_0) = 1.74108819472094062081877632041,
-    	
-       𝒞_p^FAB(x_0) = -0.675630407239784126013977083266,
-    	
-       𝒞_p^FBB(x_0) = 0.030203809353562550021046660214.
-
-
-The various color-structure components of C_a,i^(2)(x_0) and  C_a,i^(3)(x_0)  read:
-
-
-    𝒞_a,i^FF(x_0) = -7.55810100985517328528944527445,
-    
-       𝒞_a,i^FA(x_0) = -4.00029433499832597188660997837,
-    
-       𝒞_a,i^FB(x_0) = 0.01402013116548156662918961686909,
-    
-       𝒞_a,i^FC(x_0) = 0.1451892135460458985527809307761,
-    
-       𝒞_a,i^FL(x_0) = 0.06421749358957698454852728485104.
-    
-       𝒞_a,i^FFF(x_0) = -8.42643917300377651280522219395,
-    	
-       𝒞_a,i^FFA(x_0) = -93.2038302986321307103761492345,
-    	
-       𝒞_a,i^FAA(x_0) = -63.7233070196452524188390331877,
-    	
-       𝒞_a,i^FFL(x_0) = 30.26464969513072132366156126441,
-    	
-       𝒞_a,i^FAL(x_0) = 21.16033670918183535060836071864,
-    	
-       𝒞_a,i^FCL(x_0) = -0.3153222090952701782698048799971,
-    	
-       𝒞_a,i^FBL(x_0) = -0.04600893146925268206019173772344,
-    	
-       𝒞_a,i^FLL(x_0) = -0.5156996834396487701112794535693,
-    	
-       𝒞_a,i^FBC(x_0) = -0.0118687507006037939590736816982,
-    	
-       𝒞_a,i^FFC(x_0) = 1.972145133214113574301216956655,
-    	
-       𝒞_a,i^FAC(x_0) = -0.2648389457862748902646421554436,
-    	
-       𝒞_a,i^FCC(x_0) = 0.005739492344304311786485592038925,
-    	
-       𝒞_a,i^FFB(x_0) = 0.468239957569145876297846606135,
-    	
-       𝒞_a,i^FAB(x_0) = -0.128836049327094055088259653772,
-    	
-       𝒞_a,i^FBB(x_0) = -0.0047313889291568923452785036443.
-
-
-The various color-structure components of C_s^(2)(x_0) and   C_s^(3)(x_0)   read:
-
-
-    𝒞_s^FF(x_0) = -6.96020737354849312657205418357,
-    	
-       𝒞_s^FA(x_0) = -4.12970820397051570036738297443,
-    	
-       𝒞_s^FB(x_0) = 0.048170796075386686136602545271,
-    	
-       𝒞_s^FC(x_0) = 0.268781876466689639100436656736,
-    	
-       𝒞_s^FL(x_0) = -0.363661393326874053432216153222.
-    
-       𝒞_s^FFF(x_0) = -12.6512824902497489841790999287,
-    	
-       𝒞_s^FFA(x_0) = -91.3076763843495687930187876995,
-    	
-       𝒞_s^FAA(x_0) = -67.2034246352357623358462321068,
-    	
-       𝒞_s^FFL(x_0) = 31.12323218543900065296825277243,
-    	
-       𝒞_s^FAL(x_0) = 19.49987491622541782889333507621,
-    	
-       𝒞_s^FCL(x_0) = -0.262383795777090819586462489511,
-    	
-       𝒞_s^FBL(x_0) = -0.0100054359359386271416783335057,
-    	
-       𝒞_s^FLL(x_0) = 0.3393017746199103339986949104357,
-    	
-       𝒞_s^FBC(x_0) = 0.0551829420149711792507691937024,
-    	
-       𝒞_s^FFC(x_0) = 4.4105666464862568415402096694718,
-    	
-       𝒞_s^FAC(x_0) = -0.6861454400278606762848799078670,
-    	
-       𝒞_s^FCC(x_0) = 0.09536045103106728669303211267177,
-    	
-       𝒞_s^FFB(x_0) = 1.1373781611175929139065523549900,
-    	
-       𝒞_s^FAB(x_0) = -0.318775996588438248091557753877,
-    	
-       𝒞_s^FBB(x_0) = 0.00994219408487397025982150577842.
-
-
-From the above numerical values, we find the dominant contributions in 𝒞_J^(2)(x_0) and 𝒞_J^(3)(x_0) come from the components corresponding to the color structures C_F^2, C_FC_A, C_F^2C_A and C_FC_A^2, and the contributions from the bottom and charm quark loops are negligible.
-
-Fixing the renormalization scale μ=μ_0=3GeV, m_b=4.75GeV, m_c=1.5GeV, and setting the factorization scale μ_f=1.2 GeV, Eq. (<ref>) then reduces to
-
-    𝒞_v
-     =1-2.067273 α_s^(3)(μ_0)/π-29.29166(α_s^(3)(μ_0)/π)^2
-     -1689.867(α_s^(3)(μ_0)/π)^3
-     +𝒪(α_s^4),
-    
-       𝒞_p
-     =1-1.400607 α_s^(3)(μ_0)/π-27.80076(α_s^(3)(μ_0)/π)^2
-     -1781.283(α_s^(3)(μ_0)/π)^3
-     +𝒪(α_s^4),
-    
-       𝒞_a,i =1-0.7339400 α_s^(3)(μ_0)/π-18.16765(α_s^(3)(μ_0)/π)^2
-    -922.7452(α_s^(3)(μ_0)/π)^3
-    +𝒪(α_s^4),
-    
-       𝒞_s =1-0.06727332 α_s^(3)(μ_0)/π-15.46391(α_s^(3)(μ_0)/π)^2
-    -935.4686(α_s^(3)(μ_0)/π)^3
-    +𝒪(α_s^4).
-
-
-
-With the values of α_s^(n_l=3)(μ) calculated by the renormalization group running equation Eq. (<ref>),
-we investigate the renormalization scale dependence of the matching coefficients 𝒞_J for the heavy flavor-changing  currents
-at LO,  NLO,  NNLO and N^3LO accuracy in Fig. <ref>.
-The middle lines correspond to the choice of μ_f=1.2 GeV for the NRQCD factorization scale, and the upper and lower  edges   of the error bands
-correspond to μ_f=0.4 GeV and μ_f=2 GeV, respectively.
-
-We also present our precise numerical results of the matching coefficients 𝒞_J  at LO,  NLO ,  NNLO and N^3LO in Table <ref>, where the uncertainties from μ_f and μ are included.
-
-From Eq. (<ref>), Fig. <ref> and Table <ref>, one can find the higher order QCD corrections have larger values, especially, the O(α_s^3) correction looks quite sizable, which confirms the nonconvergence behaviors of the matching coefficients investigated in previous literature <cit.>. From  Fig. <ref> and Table <ref>, it seems that both the NRQCD factorization scale dependence and the QCD renormalization scale dependence become larger at higher order.
-Note, at each truncated perturbative order, the matching coefficient 𝒞_J  is renormalization-group invariant <cit.>, e.g., at N^3LO, 𝒞_J obeys the following renormalization-group running invariance:
-
-    𝒞_J^ N^3LO(μ_f,μ,m_b,m_c) =𝒞_J^ N^3LO(μ_f,μ_0,m_b,m_c) +𝒪(α_s^4),
-
-where 𝒞_J^ N^3LO(μ_f,μ,m_b,m_c) has dropped the 𝒪(α_s^4) terms in Eq. (<ref>). So the  μ-dependence of the  N^3LO results is at the 𝒪(α_s^4) order. Though the  μ-dependence is suppressed by α_s^4, the coefficients of α_s^4  in  above equation  contain μ-independent terms such as 𝒞_J^(3)(x) and lnμ_f, which come from the 𝒪(α_s^3) order in Eq. (<ref>), and have   considerably large values by aforementioned  calculation within the framework of NRQCD factorization. As a result, these terms will lead to a significantly larger renormalization scale dependence at N^3LO. From Fig. <ref>, we also find the NRQCD factorization scale μ_f has a dominant influence on the higher order QCD corrections.
-When μ_f decreases, both the convergence of α_s expansion  and the independence of μ will improve.
-
-Since  the  matching coefficients   on their own  are nonphysical, in order to obtain  a  reliable higher order correction to a physical quantity, the large α_s-expansion nonconvergence  and the strong scale  dependence of the  matching coefficients at higher order  especially  𝒪(α_s^3)     have to be  compensated by other higher order corrections.
-Within the NRQCD effective  theroy,  physical quantities such as    the   beauty-charmed meson B_c and B^*_c decay constants   are factorized to the  matching coefficients   multiplied  with the long-distance nonperturbative NRQCD matrix elements (the Schrödinger  wave functions at the origin), therefore we  not only need to calculate the  higher   order  QCD  corrections to the matching coefficients, but also need to perform the  higher   order corrections to the    wave functions at the origin.
-Besides, it is also  indispensable to take into account  higher order relativistic corrections, resummation techniques and so on ( also see   Refs. <cit.> for more discussions).
-
-
-
-
-
-
-§ PHENOMENOLOGICAL ANALYSIS 
-
-Before starting our discussions about phenomenological applications of the matching coefficients, one can  review related  discussions in Refs. <cit.>. For  an explicit example, one can also see Eq.(4) in Ref. <cit.>, where the leptonic decay width of Υ meson was calculated up to N^3LO within NRQCD and pNRQCD effective theory and 
-a large cancellation between three-loop perturbative QCD corrections to the matching coefficient and N^3LO perturbative corrections to the wave function at the origin was presented.
-As following, we will confirm this phenomenon is also in the cb̅ meson systems and   evaluate three-loop corrections to the decay constants, leptonic decay widths and corresponding branching ratios of the beauty-charmed mesons B_c and B^*_c.
-
-We use the following formulas  <cit.> to compute
-the decay constants  f_B_c^* of the  vector  B_c^* meson and f_B_c of the pseudoscalar  B_c meson:
-
-    f_B_c^*=2 √(N_c/m_B_c^*) [𝒞_v+d_v E_B_c^*/12(8/M-3/m_r)]
-     |Ψ_B_c^*(0)|,
-       
-    f_B_c=2 √(N_c/m_B_c) [𝒞_p-d_p E_B_c/4m_r]
-     |Ψ_B_c(0)|,
-
-where M=m_b+m_c, m_r=m_b m_c/(m_b+m_c) is the reduced mass, m_B_c^* and m_B_c are the masses of the vector and pseudoscalar  cb̅ mesons, respectively.
-Note that,  in our calculation we do not  employ the expansion  m_B_c^*(m_B_c)=m_b+m_c+E_B_c^*(E_B_c) as Refs. <cit.> (in Table <ref> and Table <ref> we will see the influence from the expansion is small), but directly adopt the following physical values <cit.> for the cb̅ mesons masses:
-
-    m_B_c=6.274 GeV,   m_B_c^*=6.331 GeV.
-
-
-
-d_v and d_p are matching coefficients between QCD and NRQCD in sub-leading order of relative velocity for the vector  B_c^* meson and pseudoscalar  B_c meson, respectively.
-One-loop results of d_v and d_p can be found in Refs. <cit.>
-
-    d_v=1-α_s^(n_l)(μ)/πC_F(x+1)^2/3 x^2-2 x+3(4 /3 +(x-1) (7
-    	x^2+6 x+7) /4  (x+1)^3ln x+4 lnμ_f ^2/m_b m_c)+𝒪(α_s^2),
-       
-    d_p=1+α_s^(n_l)(μ)/π C_F (x^2+98 x+1/18 (x+1)^2-(x-1) (7 x^2+46 x+7) /12
-    	(x+1)^3ln x-4/3lnμ_f ^2/m_b m_c)+𝒪(α_s^2).
-
-
-E_B_c^* and   |Ψ_B_c^*(0)| are  the binding energy and the wave function  at the origin for B_c^*, respectively, while E_B_c and |Ψ_B_c(0)| are for B_c.   
-In the previous sections, we have calculated higher-order perturbative corrections to the matching coefficient by extracting the hard contribution using the NRQCD effective theory. Similarly, the  higher-order perturbative corrections to the binding energy and the wave function  at the origin can be calculated allowing for the soft, potential and ultrasoft contributions from the Coulomb potential, non-Coulomb potentials and ultrasoft gluon exchange     using the potential NRQCD effective theory  (pNRQCD) <cit.>.
-Since the pseudoscalar meson B_c(1^1S_0) and vector meson B_c^*(1^3S_1) are respectively  the  lowest-lying  spin-singlet and   spin-triplet S-wave bound state, i.e., B_c and B_c^* have different spin quantum  numbers, E_B_c and     |Ψ_B_c(0)| are slightly different (see Refs. <cit.>) from E_B_c^* and |Ψ_B_c^*(0)|, respectively. 
-However, the binding energies of the double heavy quark systems are spin-independent  up to NLO (see Refs. <cit.>), hence E_B_c^NLO≡ E_B_c^*^NLO, which 
-can be obtained from Refs. <cit.> as
-
-    E_B_c^NLO≡ E_B_c^*^NLO= E^(0){1+α_s^(n_l)(μ_f) /π[β _0^(n_l)(ln( μ _f/2 m_r C_F α_s^(n_l)(μ_f))+11/6)-4/3 C_A ]},
  
-where  E^(0)=-m_r/2(α_s^(n_l)(μ_f)C_F)^2,  n_l=3. For simplicity, we have set the pNRQCD factorization scale equal to the NRQCD factorization scale μ_f [ This is not a problem because, in strict fixed order computations it is
-not necessary to distinguish between factorization scales as they all cancel to the required accuracy  once all contributions to an observable are added <cit.>.],  which separates contributions coming from the hard and soft momentum regions.   α_s^(n_l)(μ_f) can be translated into α_s^(n_l)(μ)  by the coupling running equation in Eq.(<ref>).
-Based on Eq. (<ref>) and Eq. (<ref>), the NLO results in Eq. (<ref>), Eq. (<ref>) and Eq. (<ref>) are    sufficient  for the N^3LO calculation of the decay constants.
+Let  be an [,k,d]_q^m/q. Let G=(G_1|…| G_t) be a generator matrix of .
+Let U_i ⊆_q^m^k be the _q-span of the columns of G_i, for i∈{1,…,t}.
+The sum-rank weight of an element x G ∈, with x=(x_1,…,x_k) ∈_q^m^k is
 
-For phenomenological analysis of the pseudoscalar B_c meson, we will use the approximation  |Ψ_B_c(0)|≈ |Ψ_B_c^*(0)|, so that the only  missing piece  in Eq. (<ref>) and Eq. (<ref>) is |Ψ_B_c^*(0)|. 
-In order to obtain |Ψ_B_c^*(0)|, we  employ the scale relation explored  by Collins et al. <cit.>:
+    w(x G) = N - ∑_i=1^t _(U_i ∩ x^⊥),
 
-    |Ψ_B_c^*(0)|=|Ψ_J/ψ(0)|^1-y |Ψ_Υ(0)|^y,
+where x^⊥={y=(y_1,…,y_k) ∈_q^m^k ∑_i=1^k x_iy_i=0}. In particular, the minimum distance of  reads as follows
 
-where  y∈[0.3,0.4] with the central value y=y_c=ln((1+m_c/m_b)/2)/ln(m_c/m_b) [
-	The central value y=y_c=ln((1+m_c/m_b)/2)/ln(m_c/m_b)  can be exactly derived from the scale law of the wave function at the origin: |ψ_μ^n(0)|^2=f(n,a)(Aμ)^3/(2+a) for any reduced mass μ and any class of power-law potentials V(r)=A r^a+C, where f(n,a) is only a function of the radial quantum number n and the power a. 
-	To cover the uncertainties from various potentials, the maximal (minimal) value of y is simply taken to be 0.4 (0.3) independent of the quark masses. 
-For more details, see Ref. <cit.> (where y=0.35 was chosen as the only optimal solution) .] is the scale power. |Ψ_J/ψ(0)| and |Ψ_Υ(0)| are the wave functions at the origin for the vector heavy quarkonia  J/ψ and   Υ, respectively.
-From literature <cit.>,  the full N^3LO  corrections to the wave function at the origin for the lowest-lying vector heavy quarkonium QQ̅  can be expressed as 
+    d=N- max{∑_i=1^t _(U_i ∩ H)   H_q^m_q^m^k  }.
 
-    |Ψ_QQ̅^V(0)|^2/|Ψ_QQ̅^(0)(0)|^2=   1+α_s^(n_f)(μ_f) /π6 β^(n_f)_0 L_s+c_ψ,1^C/4 
-    +(α_s^(n_f)(μ_f) /π)^2 {3/2β _0^(n_f)^2 L_s^2
-    
-       
-    +L_s/24[9 β _1^(n_f)-18 β_0^(n_f)^2+12 β _0^(n_f)
-    c_ψ,1^C+8 π ^2 C_F (3 C_A+2 C_F)]
-    
-       
-    +1/144[2 π ^2 C_F (162 C_A+89 C_F)+9 c_ψ,2^C]
-    }
-       
-    +
-    (α_s^(n_f)(μ_f) /π)^3π ^2 {
-    C_A^3 [-L_s/4+L_m/4-ln(C_F)-π ^2/12+1/2]
-    
-       
-    +C_A^2 C_F [
-    -2/3	L_s^2+L_s (4/3 L_m+4ln 2+17/18)-L_m^2/6
-       
-    + L_m(31/9-ln 2)
-    +2/9ln(C_F) (9 ln(C_F)+12 ln 2-44)]
-    
-       
-    +C_A C_F^2 [-9/4L_s^2 +L_s (9 /2L_m+4ln
-    2-25/54)-3 /8L_m^2
-    
-       
-    + L_m(61/9-ln  2)
-    +4/3ln(C_F) (4 ln(C_F)+ln 2-10)]
-    
-       
-    +
-    C_A C_F [2 β_0^(n_f) L_s^2+ L_s/72(β_0^(n_f)(423-12 π ^2) -218 T_F n_f )]
-    
-       
-    +C_F^3 [-3/2 L_s^2+L_s (3 L_m-8 ln
-    2+47/18)-L_m^2/4
-       
-    +L_m(2ln 2+59/36) 
-    +8/9ln(C_F) (3 log(C_F)-9 ln 2+2)]
-    
-       
-    +C_F^2 T_F [L_s(2/15-59/27 n_f)
-    +L_m/15]
-    +β_0^(n_f) C_F^2 [4 /3L_s^2+L_s(53/16-π
-    	^2/9) ]
-    
-       
-    +1/π ^2[
-    5/4β_0^(n_f)^3 L_s^3
-    +β_0^(n_f)L_s^2/32(27 β_1^(n_f)-54 β_0^(n_f)^2+20 β_0^(n_f) c_ψ,1^C) 
-    
-       
-    + L_s/32(12 β_0^(n_f)^3-12 β_1^(n_f)β_0^(n_f)+3 β_2^(n_f)-8 β_0^(n_f)^2 c_ψ,1^C.
-       .
-    +4 β_1^(n_f) c_ψ,1^C+5 β_0^(n_f)
-    c_ψ,2^C)
-    
-    +c_ψ,3^C+c_ψ,3^nC/64]
-    +δ_1^us}+𝒪(α_s^4),
+So (U_1,…,U_t) in an [,k,d]_q^m/q-system. 
 
-where |Ψ_QQ̅^(0)(0)|^2=(mα_s^(n_f)(μ_f)C_F)^3/(8π),  L_s=ln[μ_f/(mα_s^(n_f)(μ_f)C_F)], L_m=ln(μ_f/m), m is the mass of Q, n_f is  flavours   lighter than  Q, and the non-logarithmic terms of the Coulomb, non-Coulomb and ultrasoft corrections read
 
-    c_ψ,1^C   = 2.62290 - 1.61351 n_f,
-    
-    
-    c_ψ,2^C   = 1800.745 - 193.4887 n_f + 3.50376 n_f^2,
-    
-    
-    c_ψ,3^C   = -39854.2 + 2005.08 n_f + 19.79845 n_f^2 + 3.61806 n_f^3,
-    
-    
-    c_ψ,3^nC   = -44754.7 - 3126.52 n_f,
-    
-    δ_1^us   = 353.06.
+
+Note that, as a consequence of (<ref>), the rank-list of a codeword x G of   is given by
+
+    (n_1-_(U_1 ∩ x^⊥),…,n_t-_(U_t ∩ x^⊥)).
+
+
+
+
+As in <cit.>, we can then observe that there is a one-to-one  correspondence  between  equivalence  classes  of  sum-rank nondegenerate [𝐧,k,d]_q^m/q code and equivalence classes of [𝐧,k,d]_q^m/q-systems via two maps
+
+    Ψ :  ℭ[𝐧,k,d]_q^m/q   →𝔘[𝐧,k,d]_q^m/q
+    Φ : 𝔘[𝐧,k,d]_q^m/q   →ℭ[𝐧,k,d]_q^m/q,
+
+that act as follows.
+For any []∈ℭ[𝐧,k,d]_q^m/q, let G=(G_1|…| G_t) be a generator matrix of . Then Ψ([]) is defined as the equivalence class of [𝐧,k,d]_q^m/q-systems [U], where U=(U_1,…,U_t) is defined as in Theorem <ref>. In this case U is also called a system associated with . Viceversa, given [(U_1,…,U_t)]∈𝔘[𝐧,k,d]_q^m/q, define G_i as the matrix whose columns are an _q-basis of U_i for any i. Then Φ([(U_1,…,U_t)]) is the equivalence class of the sum-rank metric code  generated by G=(G_1|…| G_t). In this case  is also called a code associated with U. See <cit.> for the proof that these maps are well-defined.
+
+
+
+
+
+ §.§ Supports
+
+
+We start by observing that a sum-rank metric code in _q^m^𝐧 can also be seen as an -subspace in ⊕_i=1^t _q^m_i × n_i.
+
+For every r ∈{1,…,t}, let Γ_r=(γ_1^(r),…,γ_m^(r)) be an ordered -basis of _q^m, and let Γ=(Γ_1,…,Γ_t). Given   x=(x_1, … ,x_t) ∈_q^m^, with x_i ∈_q^m^n_i, define the element 
+    Γ(x)=(Γ_1(x_1), …, Γ_t(x_t)) ∈Π,
+ where
+
+    x_r,i = ∑_j=1^m Γ_r (x_r)_ijγ_j^(r),      i ∈{1,…,n_r}.
+
+In other words, the r-th block of Γ(x) is the matrix expansion of the vector x_r with respect to the -basis Γ_r of _q^m and this also preserves its rank; cfr. <cit.>.
+
+
+Let x=(x_1,…, x_t)∈_q^m^𝐧 and  Γ=(Γ_1,…,Γ_t) as above.
+The sum-rank support of x is defined as the space
+
+    _𝐧(x)=(colsp(Γ_1(x_1)), …, colsp(Γ_t(x_t))) ⊆^,
+
+where colsp(A) is the -span of the columns of a matrix A.
+
+
+As proved in <cit.> for the rank-metric case, the support does not depend on the choice of Γ and we can talk about the support of a vector without mentioning Γ. For more details see <cit.>.
+
+
+
+
+
+ §.§ Generalized weights
+
+
+Generalized rank weights have been introduced several times with different definitions, see e.g. <cit.>, whereas the theory of sum-rank generalized weights is more recent and first introduced in <cit.>.
+
+In this paper we will deal with the definition given in <cit.> and more precisely to the geometric equivalent, which can be derived as for the rank metric in <cit.>. For more details we refer to <cit.>.
+
+
+Let  be an [𝐧,k,d]_q^m/q sum-rank metric code and let U=(U_1,…,U_t) be an  associated system.
+For any r ∈{1,…,k}, the r-th generalized sum-rank weight is
+
+    d_r()=N- max{∑_i=1^t _(U_i ∩ H)   H_q^m_q^m^kr  }.
+
+
+
+In order to keep track of the metric properties of the code, as done in <cit.>, we can define the generalized sum-rank weight enumerator of a code, which extend the classical weight enumerator of a code (up to the addition of X^N).
+
+
+Let  be an [𝐧,k,d]_q^m/q sum-rank metric code and let U=(U_1,…,U_t) be an associated system.
+For any r ∈{1,…,k}, the r-th generalized sum-rank weight enumerator is
+
+    W_^r(X,Y)=∑_w=0^N A_w^r X^N-wY^w,
+
+where A_w^r is the number of _q^m-subspace of _q^m^k of codimension r such that
+
+    w=N- ∑_i=1^t _(U_i ∩ H).
+
+
+
+Clearly, the first generalized sum-rank weight enumerator corresponds with the classical weight enumerator.
+
+
+
+
+
+ §.§ The associated Hamming-metric codes
+
+
+Every sum-rank metric code can also be regarded as an Hamming-metric code as shown in <cit.> (see also <cit.> for the rank-metric codes).
+
+For a collection of multisets (_1,m_1), …, (_t,m_t) of (k-1,q^m). We can define their disjoint union as
+
+    _i=1^t (_i,m_i)=(,m),
+
+where =_1∪…∪_t, and m(P)=m_1(P)+…+m_t(P) for every P∈(k-1,q^m).
+For every n-dimensional _q-subspace U of _q^m^k, it is possible to associate the multiset (L_U,m_U), where  L_U is the _q-linear set defined by U (see next subsection), that is
+
+    L_U={⟨ u⟩__q^m| u∈ U∖{ 0}}⊆(k-1,q^m),
+
+and 
+    m_U(⟨ v⟩__q^m)=q^w_L_U(⟨ v⟩__q^m)-1/q-1.
+
+This means that the multiset (L_U,m_U) of (k-1,q^m) has size (counted with multiplicity) q^n-1/q-1. 
+We can now apply this procedure to the elements of an [𝐧,k]_q^m/q system (U_1,…,U_t). In this way we can define the multiset 
+
+    (U_1,…,U_t)= _i=1^t (L_U_i,m_U_i).
+
+Then (U_1,…,U_t) is a multiset of points of size q^n_1+… +q^n_t-t/q-1 in (k-1,q^m).
+
+Hence, we can give the following definition.
+
+
+Let  be a linear sum-rank [𝐧,k]_q^m/q code. Let (U_1,…,U_t) be a system associated with . Any code ^H ∈Ψ((U_1,…,U_t)) is called an associated Hamming-metric code to .
+
+
+The weight distribution of the Hamming-metric code associated with a sum-rank-metric codes can be determined as follows.
+For x ∈𝔽_q^m^n denote by w_H(x) the Hamming weight of x, that is the number of its non-zero components. 
+
+
+ Let G=(G_1  | … |  G_t)∈^k× N be a generator matrix of an  code, and let v ∈^k ∖{0}. 
+ Denote by G_∈^k× M to be any generator matrix of a Hamming-metric code ^H in Ψ((U_1,…,U_t)), where M= q^n_1+…+q^n_t-t/q-1.
+ Then
  
-Equivalently, Eq. (<ref>) can  be simplified in a numerical form
+    w_(vG_)= ∑_i=1^tq^n_i-q^n_i-(vG_i)/q-1.
 
-    |Ψ_QQ̅^V(0)|^2/|Ψ_QQ̅^(0)(0)|^2=   1+
-    α_s^(n_f)(μ_f) [L_s (5.252113122  -0.3183098862 n_f)-0.1283989789 n_f
-    
-       
-    +0.2087238344]
-    +(α_s^(n_f)(μ_f))^2 [L_s^2(0.06754745576 n_f^2-2.229066040 n_f
-    .
-       .
-    +18.38979483)
-    + L_s(0.02072049126 n_f^2-0.3544823646 n_f+1.327477963)
-    
-       
-    +0.02218780425 n_f^2-1.225281344 n_f+22.60088339]
-    
-       
-    +(α_s^(n_f)(μ_f))^3 [L_s^3(-0.01194501275 n_f^3+0.5912781313 n_f^2
-    -9.756089166 n_f
-    .
-       .
-    +53.65849041)
-    +L_s^2(0.001670726641 n_f^3
-    -0.06791901544 n_f^2
-    .
-       .
-    +0.6172398127 n_f-6.696584076)
-    +L_s (14.99593242
-    L_m
-    .
-       .
-    -0.009572483336 n_f^3+0.8198924520 n_f^2
-    -23.92535721 n_f
-    +192.0183234)
-    
-       
-    +0.001823251079 n_f^3+0.009977039176 n_f^2
-    -0.5651253308 n_f
-    
-       
-    +50.45825046
-    -1.461867625 L_m^2+25.28876373 L_m
-    ]+𝒪(α_s^4).
-
-With |Ψ_QQ̅^V(0)| known, we can obtain  |Ψ_J/ψ(0)| and |Ψ_Υ(0)|  as following
-
-    Ψ_J/ψ(0)   =Ψ_QQ̅^V(0)|_m→ m_c,n_f→ n_l,
-    
-    Ψ_Υ(0)   =Ψ_QQ̅^V(0)|_m→ m_b,n_f→ n_l+1,
-
-where n_l=3 denotes the massless flavours. Furthermore, we  use the decoupling relation in Eq. (<ref>) (but up to 𝒪(α_s^3)) to translate α_s^(n_l+1)(μ_f) into α_s^(n_l)(μ_f), which can further be translated into α_s^(n_l)(μ) by the coupling running equation in Eq. (<ref>) (but up to 𝒪(α_s^3)).
-By Eq. (<ref>), we can finally express |Ψ_B_c^*(0)| in power series of α_s^(n_l=3)(μ) and we have checked the obtained series expansion in α_s^(n_l=3)(μ) of |Ψ_B_c^*(0)| obeys the  renormalization-group running invariance as Eq. (<ref>).
-
-As following, we will present the numeric results for the matching coefficients d_v and d_p for sub-leading order relativistic corrections, the binding energies, the wave functions at the origin, the decay constants, leptonic decay widths and corresponding branching ratios for the pseudoscalar and vector cb̅ mesons.
-In spirit of perturbation theory, through all our calculations we expand all of above quantities  in power series of α_s^(n_l=3)(μ) by the decoupling relation with coupling running, and truncate them up to a fixed order. 
-Choosing  the scale power y=y_c and  fixing  the factorization scale μ_f=1.2 GeV, the renormalization scale μ=μ_0=3 GeV, m_b=4.75GeV, m_c=1.5GeV, we present the  α_s-expansion  of   these quantities in Table <ref> and Table <ref>, where the leading-order of the wave functions at the origin and the decay constants are determined by Eq. (<ref>), Eq.(<ref>)  and Eq.(<ref>) as:  
-
-    |Ψ^(0)_B_c(0)|^2=|Ψ^(0)_B_c^*(0)|^2   =(m_rα_s^(n_l=3)(μ)C_F)^3/π,
-    
-    
-    f_B_c^*^(0)   =2√(N_c/m_B_c^*)|Ψ^(0)_B_c^*(0)|,
-    
-    
-    f_B_c^(0)   =2√(N_c/m_B_c)|Ψ^(0)_B_c(0)|.
+In particular, the minimum distance of ^ is given by
  
-From  Table <ref> and Table <ref>, we find  the influences of d_v, d_p, E_B_c^*  and E_B_c  on the decay constants in Eq. (<ref>) and Eq. (<ref>) are inconsiderable compared  with the matching coefficients  𝒞_v and 𝒞_p. Both 𝒞_v (𝒞_p) and |Ψ_B_c^*(0)| (|Ψ_B_c(0)|) have a large  α_s-expansion nonconvergence at the third order, however, after a large cancellation between the matching coefficient  and the wave function at the origin, the perturbative α_s-expansion of the  decay constant becomes  convergent  up to N^3LO.
+    d(^)= min_𝐫∈S(){∑_i=1^tq^n_i-q^n_i-r_i/q-1},
+
+ where S() is the set of rank-lists of . 
+
+
+
+
+
+
+ §.§ Linear sets
+
+
+Let V be a k-dimensional vector space over _q^m and consider Λ=(V,_q^m)=(k-1,q^m).
+Let U be an -subspace of V of dimension n. Then the point-set
+
+    L_U={ u_𝔽_q^m :  u∈ U∖{ 0}}⊆Λ
+
+is called an -linear set of rank n.
+Another important notion is the weight of a point.
+Let P=⟨ v⟩__q^m be a point in Λ. The weight of P in L_U is defined as 
+
+    w_L_U(P)=_(U∩⟨ v⟩__q^m).
+ 
+An upper bound on the number of points that a linear set contains is
+
+    |L_U| ≤q^n-1/q-1.
+
+Furthermore, L_U is called scattered (and U as well) if it has the maximum number q^n-1/q-1 of points, or equivalently, if all points of L_U have weight one. Blokhuis and Lavrauw provided the following bound on the rank of a scattered liner set.
+
+
+The rank of a scattered -linear set in (k-1,q^m) is at most mk/2.
+
+
+A scattered -linear set of rank km/2 in (k-1,q^m) is said to be maximum scattered and U is said to be a maximum scattered -subspace as well. 
+
+In the next result we summarize what is known on the existence of maximum scattered linear sets/subspaces.
+
+
+If mk is even, then there exist maximum scattered subspaces in _q^m^k.
+ 
+
+We refer to <cit.> for further details on linear sets and their connections.
+
+
+
+
+
+§ MINIMAL SUM-RANK METRIC CODES AND CUTTING SYSTEMS
+
+
+In this section we introduce the notion of sum-rank metric minimal codes and we investigate their parameters. The geometry of minimal codes have been important in order to construct and give bounds in both Hamming and rank metric (see <cit.>), via the so called strong blocking sets. These, introduced first in <cit.> in relation to saturating sets, are sets of points in the projective space such that the intersection with every hyperplane spans the hyperplane. In <cit.> strong blocking sets are referred to
+as generator sets and they are constructed as union of disjoint lines. They have gained very recently a renovated interest in coding theory, since <cit.>, in which they are named cutting blocking sets and they are used to construct minimal codes. Quite surprisingly, they have been shown to be the geometric counterparts of minimal codes in <cit.>.
+
+
+
+
+
+ §.§ Definition and first properties
+
+
+In this subsection we introduce minimal codes in the sum-rank metric and their geometry, together with some structure results.
+
+
+Let  be an [𝐧,k]_q^m/q sum-rank metric code. A codeword c ∈ is said minimal if for every c'∈ such that _𝐧(c')⊆_𝐧(c) then c'=λ c for some λ∈_q^m. We say that  is minimal if all of its codewords are minimal. 
+
+
+
+An [𝐧,k]_q^m/q system (U_1,…,U_t) is called cutting  if for any hyperplane H of 𝔽_q^m^k  
+
+    ⟨ U_1∩ H,…, U_t∩ H⟩_𝔽_q^m=H,
+
+that is, if L_U_1∪…∪ L_U_t is a strong blocking set in (k-1,q^m).
+
+
+The following is a generalization of the geometric characterization of minimal codes in the Hamming and in the rank metric <cit.>.
+
+ 
+A sum-rank metric code is minimal if and only if an associated system is cutting.
+
+
+Thanks to this correspondence, we can easily prove, as in <cit.>, a bound on the maximum weight of a minimal sum-rank metric code.
+
+
+Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code and denote by w() the maximum weight of the codewords in  . Then
+
+    w()≤ N-k+1.
+
+
+
+Let (U_1,…,U_t) be a system associated with . Since  is minimal, by Theorem <ref>, for any hyperplane H of 𝔽_q^m^k we have 
+
+    ⟨ U_1∩ H,…, U_t∩ H⟩_𝔽_q^m=H,
+
+which implies 
+
+    ∑_i=1^t _𝔽_q(U_i∩ H)≥ k-1.
+
+By Theorem <ref> the maximum weight of  is
+
+    w()=N-min{∑_i=1^t _𝔽_q(U_i∩ H)  H  is an 𝔽_q^m-hyperplane of 𝔽_q^m^k},
+
+and by (<ref>) the assertion follows.
+
+
+We can provide a characterization of MSRD codes which are minimal.
+
+
+An MSRD code with parameters [𝐧,k]_q^m/q is minimal if and only if it is a one-weight code with minimum distance N-k+1.
+
+
+Let  be an MSRD, that is its minimum distance is d=N-k+1. 
+By Theorem <ref>, we also know that w()≤ N-k+1, therefore d=w()= N-k+1. 
+The converse trivially holds. 
+
+
+We consider now the Standard Equations, extending <cit.>. Let us recall here that
+
+    N  K_q^m=∏_i=0^K-1q^N-q^i/q^K-q^i
+
+denotes the number of K-dimensional subspaces of _q^m^N and it is called the Gauss binomial coefficient.
+
+
+Let U=(U_1,…,U_t) an [𝐧,k]_q^m/q-system and let
+
+    Λ_r={ W  W  is an r-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k }.
+
+Then 
+
+    ∑_W ∈Λ_r, i ∈{1,…,t} |W ∩ U_i∖{0}| =(q^n_1+…+q^n_t-t)k-1  r-1_q^m.
+
+
+
+The assertion follows from the fact that for any i ∈{1,…,t}, <cit.> implies
+
+    ∑_W ∈Λ_r |W ∩ U_i∖{0}| =(q^n_i-1)k-1  r-1_q^m,
+
+and
+
+    ∑_W ∈Λ_r, i ∈{1,…,t} |W ∩ U_i∖{0}| = ∑_i ∈{1,…,t}(∑_W ∈Λ_r |W ∩ U_i∖{0}| ).
+
+
+
+
+
+
+
+ §.§ Bounds on the parameters of minimal sum-rank metric codes
+
+
+By extending a minimal sum-rank metric code by adding new columns and/or blocks we get a minimal code as well.
+
+
+Let  be a minimal sum-rank metric code with parameters [𝐧,k]_q^m/q. Let ' be the code generated by G', where G' is obtained by adding any columns or blocks to any generator matrix G of . Then ' is minimal.
+
+
+This is an immediate consequence of Theorem <ref>.
+
+
+In view of Proposition <ref>, it is natural to look for short minimal sum-rank metric codes, when the number of blocks is given. 
+
+The Standard Equations allow to prove the following bound on the parameters of minimal sum-rank metric codes.
+
+
+Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code.
+
+If t≥ k, then
+
+    (q^n_1+…+q^n_t-t)(q^m(k-1)-1)≥ (q-1)(k-1)(q^km-1)
+
+If t≤ k-1 then
+
+    (q^n_1+…+q^n_t-t)(q^m(k-1)-1)≥ t(q^⌊k-1/t⌋-1)(q^km-1).
+
+
+
+By Theorem <ref>, for any hyperplane
+
+    ∑_i ∈{1,…,t}_𝔽_q (H∩ U_i)≥ N-w()≥ k-1,
+
+therefore
+
+    ∑_i ∈{1,…,t} |H ∩ U_i∖{0}|≥  (q-1)(k-1).
+
+It follows that 
+
+    ∑_H ∈Λ_k-1,  i ∈{1,…,t} |H ∩ U_i∖{0}| ≥ (q-1)(k-1)k  1_q^m,
+
+so that, by Lemma <ref>,
+
+    (q^n_1+…+q^n_t-t)k-1  1_q^m≥ (q-1)(k-1)k  1_q^m,
+
+which is (<ref>).
+
+If t≤ k-1, then (<ref>) implies that 
+
+    _(U_i ∩ H)≥⌊k-1/t⌋,
+
+for any i ∈{1,…,t} and for any hyperplane H. Arguing as before we obtain (<ref>).
+
+
+
+Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code.
+
+If t≥ k, then, for large q,
+
+    N ≥ t+m+⌈log_q(k)⌉,
+
+If t≤ k-1 then, for large q,
+
+    N≥⌊k-1/t⌋+m+⌈log_q(t)⌉+t-1.
+
+
+
+
+Noting that q^N-t+1+(t-1)q≥ q^n_1+…+q^n_t the asymptotic bounds follow.
+
+
+
+For t=N (Hamming-metric case), the bound (<ref>) becomes 
+
+    N≥⌈(q^m)^k-1/(q^m)^k-1-1· (k-1)⌉.
+
+This last is in general slightly weaker than the known lower bound on the length of minimal codes (see <cit.>), recently improved in <cit.> and <cit.> for large k. Note that for k=2, the above bound is sharp.
+
+For t=1 (rank-metric case), the bound (<ref>) reduces to 
+
+    N≥ m+k-1,
+ which is exactly the bound proved for rank-metric codes <cit.>, which is shown to be sharp for k=2 and for k=3, the last with some additional conditions on m (see <cit.> for the precise statement). 
+
+Bound (<ref>) is tight for every q, m, t=q+1 and k=2 as we will show in Remark <ref>.
+Moreover, for k=3 and q>2, consider a code  associated with the [𝐧,3]_q^m/q-system 
+
+    U=(U_1,…,U_t),
+
+where U_1 is a scattered -subspace of dimension m+2 (which exists under some conditions, see again <cit.>) and U_2,…,U_t any -subspaces of dimension one spanned by random nonzero vectors in _q^m^k.
+By <cit.> and Theorem <ref>,  is a minimal sum-rank metric code with N=m+2+t-1=m+t+1 which gives the equality in bounds (<ref>) (for t≥ 3) and (<ref>) (for t=2).
+
+
+
+
+
+
+ §.§ Existence of minimal codes
+
+
+A first result immediately follows from <cit.> on the existence of minimal codes in the rank metric.
+
+
+For any m,k≥ 2, t and n_2,…,n_t, there exists a minimal code of parameters [(2k+m-2,n_2,…,n_t),k]_q^m/q.
+
+
+<cit.> ensures the existence of a minimal _q^m-linear rank-metric code of length 2k+m-2 of dimension k. Then we can extend such a code to a minimal sum-rank metric code via Proposition <ref>.
+
+
+However, the codes described in Proposition <ref> are quite unbalanced, since we look only to the first block and we do not care of the rest. The following result will give a more general existence condition. We  follow the proof of <cit.> to give a condition on the parameters which ensures the existence of a minimal sum-rank metric code. The main difference with the proof of <cit.> consists in computing the size of the analog of the set denoted by 𝒫 in <cit.>.
+
+
+If n_i≥ m for any i ∈{1,…,t} and
+
+    (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1)-1/2∑_i_1,…,i_t=2^m1/q^m-1∏_r=1^tm  i_r_q ∏_j_r=0^i_r-1 (q^n_r-q^j_r) ( q^mi_r-1/q^m-1-1 )
+ 
+is positive, then there exists a linear sum-rank metric code with parameters [𝐧,k]_q^m/q which is minimal.
+
+
+Denote by 𝒬 a set of nonzero representatives of the one-dimensional _q^m-subspaces of _q^m^k. A non-minimal linear code in 𝔽_q^m^𝐧 is any sum-rank metric code containing an element of the following set
+
+    𝒫={ (x,y) ∈𝒬^2  x y, supp^srk(x)⊆supp^srk(y)  or supp^srk(y)⊆supp^srk(x) }.
+
+Therefore, the number of minimal sum-rank metric codes in 𝔽_q^m^𝐧 is at least
+
+    N  k_q^m- |𝒫| N-2  k-2_q^m=N-2  k-2_q^m( (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1) - |𝒫| ),
+
+and hence if we prove that (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1) - |𝒫|>0, then we ensure the existence of a minimal sum-rank metric code.
+Finally we compute the size of 𝒫 as follows:
+
+    2 |𝒫|    =∑_i=1^tm |{ (x,y) ∈𝒬^2  x y, w(y)=i,  supp^srk(x)⊆supp^srk(y)  }|
+       = ∑_i_1,…,i_t=1^m∑_y ∈𝒬,  w(y)=i_1+…+i_t  |{ x ∈𝒬 x y, supp^srk(x)⊆supp^srk(y)  }|
+       = ∑_i_1,…,i_t=1^m∑_y ∈𝒬,  w(y)=i_1+…+i_t  |{ x ∈𝒬 x y, supp^rk(x_ℓ)⊆supp^rk(y_ℓ)  ∀ℓ∈{1,…,t}}|
+       =∑_i_1,…,i_t=2^m1/q^m-1∏_r=1^tm  i_r_q ∏_j_r=0^i_r-1 (q^n_r-q^j_r) ( q^mi_r-1/q^m-1-1 ).
+
+
+
+
+If n_i≥ m for any i ∈{1,…,t} and
+for sufficiently large q, if 
+    N≥ 2k+tm-(t+1),
+
+then there exists a linear sum-rank metric code with parameters [𝐧,k]_q^m/q which is minimal.
+
+
+
+As in the proof of <cit.> we have the 
+(<ref>) is greater than
+
+    q^2m(N-k)-1/2(q^m-1)^t+1∑_i_1,…,i_t=2^m∏_r=1^tm  i_r_q q^i_r(m+n_r),
+
+which is greater than (with the same arguments as in the proof of <cit.>)
+
+    q^2m(N-k)-f(q)^t/2(q^m-1)^t+1·∑_i_1,…,i_t=2^m
+    q^∑_r=1^t 2mi_r-i_r^2+n_ri_r,
+
+where 
+
+    f(q):=∏_i=1^∞q^i/q^i-1.
+
+Now, by simple analytic arguments, the largest exponent in the sum on the right is
+tm^2+mN, so that, for q large enough, we get
+
+    q^2m(N-k)-f(q)^t/2· q^tm^2+mN-mt-m.
+
+The thesis again follows by analytic arguments.
+
+
+
+
+
+
+
+§ THE GEOMETRIC DUAL OF SUM-RANK METRIC CODES
+
+
+In this section we define a new operation which take an element in ℭ[𝐧,k,d]_q^m/q and it associates to it an element in ℭ[𝐧',k,d]_q^m/q, where 𝐧=(n_1,…,n_t) and 𝐧'=(mk-n_1,…,mk-n_t). It involves systems and
+we call it geometric dual. We will show some of its properties and, in the next section, we will show how this object helps in constructing minimal sum-rank metric codes.
+
+
+
+
+
+ §.§ Dual of -subspaces of _q^m-vector spaces
+
+
+Let V be an _q^m-vector space of dimension k and let σ V × V →_q^m be any nondegenerate reflexive sesquilinear form of V and consider 
+    [                σ':              V × V                  ⟶                 _q;                                 (x,y)                  ⟼ Tr_q^m/q (σ(x,y)), ]
+ 
+where V is seen as an -vector space of dimension mk.
+So, σ' is a nondegenerate reflexive sesquilinear form on V seen as an -vector space of dimension km. Then we may consider ⊥ and ⊥' as the orthogonal complement maps defined by σ and σ', respectively. For an _q-subspace U of  V of dimension n, the _q-subspace U^⊥' is the dual (with respect to σ') of U, which has dimension km-n; see <cit.>.
+
+An important property that σ' satisfies is that the dual of an _q^m-subspace W of V is an _q^m-subspace as well and W^⊥'=W^⊥. Moreover, the following result will be widely used in the paper.
+
+
+Let U be an -subspace of V and W be an _q^m-subspace of V.
+Then 
+
+    _(U^⊥'∩ W^⊥)=_(U∩ W)+_(V)-_(U)-_(W).
+
+
+
+In <cit.>, it has been proved that if we replace σ by another form with the same properties, with this procedure we obtain an -subspace of V which turns out to be Γ L(k,q^m)-equivalent to U^⊥'.
+For this reason, from now on we will assume that σ is fixed and we will just write U^⊥', without mentioning the form σ used.
+
+
+
+
+
+ §.§ Geometric dual
+
+
+We are now ready to give the definition of geometric dual of an _q^m-linear sum-rank metric code, taking into account the dual described in Section <ref>.
+
+
+Let  be an [,k,d]_q^m/q and let U=(U_1,…,U_t) be an associated system to  with the property that U_1∩…∩ U_t does not contain a 1-dimensional _q^m-subspace.
+Then a geometric dual ^⊥_𝒢 of  (with respect to ⊥') is defined as ', where ' is any code associated with the system (U_1^⊥,…,U_t^⊥).
+
+
+
+In the above definition we need that U_1∩…∩ U_t does not contain a 1-dimensional _q^m-subspace, otherwise (U_1^⊥,…,U_t^⊥) would not be a system.
+Indeed, suppose that (U_1^⊥,…,U_t^⊥) is not a system, then 
+
+    ⟨ U_1^⊥',…, U_t^⊥'⟩__q^m⊆ H,
+
+where H is an _q^m-hyperplane of _q^m^k. This implies that 
+
+    U_1^⊥'+…+U_t^⊥'⊆ H,
+
+and by duality
+
+    U_1∩…∩ U_t⊇ H^⊥,
+
+a contradiction since __q^m(H^⊥)=1.
+
+
+We will now prove that the geometric dual of a linear sum-rank metric code is well-defined and we will give a relation on the weight distributions among the two codes.
+
+
+
+
+Let  be an [,k,d]_q^m/q sum-rank metric code, with =(n_1,…,n_t), and let U=(U_1,…,U_t) be an associated system to .
+Assume that U_1∩…∩ U_t does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k. 
+Then, up to equivalence, a geometric dual ^⊥_𝒢 of  does not depend on the choice of the associated system and on the choice of code in [], hence ⊥_𝒢 is well-defined.
+The parameters of ^⊥_𝒢 are [(km-n_1,…,km-n_t),k]_q^m/q.
+The generalized weight enumerators of  and ^⊥_𝒢 are related as follows
+
+    w_^k-r(X,Y)= X^tmk-trm-NY^trm-Nw_^⊥_𝒢^r(X,Y).
+
+In particular,
+
+    d_1()=d_k-1(^⊥_𝒢)+N-t(k-1)m.
+
+
+
+We now prove that ⊥_𝒢 is well-defined on the equivalence classes of linear sum-rank metric codes, that is, the geometric dual of equivalent codes are equivalent (note that this also implies that the geometric dual does not depend on the choice of the system).
+Let ' be a code equivalent to  and let U'=(U_1',…,U_t') be an associated system to '. Then U and U' are equivalent systems and hence there exist ρ∈𝒮_t, a_1,…,a_t ∈_q^m^* such that for every i ∈{1,…,t}
+
+    U_i'=a_i U_ρ(i).
+
+Note that this also implies that U_1'∩…∩ U_t' does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k, since the U_i's satisfy this condition.
+Then for every i ∈{1,…,t}
+
+    (U_i')^⊥'={v ∈𝔽_q^m^k σ'(v,a_i u)=0  ∀ u ∈ U_ρ(i)}=a_i^-1 U_ρ(i)^⊥',
+
+since σ'(v,a_i u)=Tr_q^m/q(a_iσ (v,u))=σ'(a_iv, u).
+
+This implies that the systems (U_1^⊥',…,U_t^⊥') and (U_1'^⊥',…,U_t'^⊥') are equivalent and hence ^⊥_𝒢 and '^⊥_𝒢 are equivalent as well.
+So, we proved that ⊥_𝒢 is well-defined.
+
+Now, observe that the code ^⊥_𝒢 has dimension k since ⊥' does not change the dimension of the ambient space of the U_i's. Since _(U_i^⊥')=mk-_(U_i) for any i, it follows that ^⊥_𝒢 has parameters [(km-n_1,…,km-n_t),k].
+To determine the r-th generalized sum-rank weight enumerator of  we need to compute
+
+    N-∑_i=1^t_(U_i∩ W),
+
+for any _q^m-subspace W of _q^m^k of dimension r, where N=n_1+…+n_t.
+By Proposition <ref>, we obtain that
+
+    N-∑_i=1^t_(U_i∩ W)=N-∑_i=1^t_(U_i^⊥'∩ W^⊥)+tmk-N-trm=
+
+
+    tmk-N -∑_i=1^t_(U_i^⊥'∩ W^⊥)+N-trm,
+
+which correspond to a weight appearing in the (k-r)-th generalized sum-rank weight enumerator of ^⊥_𝒢 plus N-trm.
+Therefore, if 
+
+    W_^k-r(X,Y)=∑_w=0^N A_w X^N-wY^w       W_^⊥_𝒢^r(X,Y)=∑_w=0^N B_w X^tmk-N-wY^w,
+
+we have that 
+
+    A_w=B_w-N+trm,
+
+for any w.
+Therefore,
+
+    W_^⊥_𝒢^r(X,Y)     =∑_w'=0^N B_w'X^tmk-N-w'Y^w'
+       =∑_w=0^N B_w-N+trm X^tmk-w-trmY^w-N+trm
+       = ∑_w=0^N A_w X^tmk-trm-wY^w-N+trm,
+ 
+that is the assertion.
+
+
+
+With the notation of Theorem <ref> and by denoting G a generator matrix of , by Remark <ref> we have that the rank list of the codeword xG is
+
+    (n_1-_(U_1∩ x^⊥),…,n_1-_(U_t∩ x^⊥)),
+
+which, by Proposition <ref>, is equal to
+
+    (m-_(U_1^⊥'∩⟨ x⟩__q^m),…,m-_(U_t^⊥'∩⟨ x⟩__q^m)).
+
+
+
+
+The geometric dual is involutory.
+
+
+This immediately follows by the definition of geometric dual and from the fact that ⊥' is involutory.
+
+
+
+The geometric dual operation can be applied to both Hamming and rank metric. In the first case, the geometric dual of a Hamming-metric code of length n and dimension k will give a sum-rank metric code with parameters [(mk-1,…,mk-1),k]_q^m/q, which is far from being an Hamming-metric code. For rank-metric codes with parameters [n,k]_q^m/q, the geometric dual gives a rank-metric code as well, with parameters [mk-n,k]_q^m/q.
+
+
+
+
+
+
+§ MINIMAL CODES WITH FEW WEIGHTS
+
+
+In this section we will mainly deal with explicit construction of minimal codes in the sum-rank metric. We will make extensive use of the geometric dual introduced above.
+
+As in the Hamming and in the rank metrics (see e.g. <cit.>), all the one-weight sum-rank metric codes are minimal.
+
+ 
+Let  be an [𝐧,k]_q^m/q sum-rank metric. If all the codewords of  have the same sum-rank metric weight then  is a minimal sum-rank metric code.
+
+
+The main difference is that in Hamming and rank metrics, simplex codes are essentially the only  one-weight codes; see <cit.>. In the sum-rank metric, we have more examples as we will see later on and as it has been proved in <cit.>.
+
+Another way to get examples, is to obtain information on minimal codes in sum-rank metric by looking at the associated Hamming-metric codes, cfr. Section <ref>.
+
+
+Let  be an [𝐧,k]_q^m/q sum-rank metric code. Then  is minimal if and only if any associated Hamming-metric code ^H is minimal.
+
+
+Thanks to the above proposition, we can use some conditions proved in the Hamming-metric to ensure that a Hamming-metric code is minimal. More precisely, we will now describe a generalization of the celebrated Ashikhmin-Barg condition (see <cit.>).
+
+
+Let  be an [𝐧,k]_q^m/q sum-rank metric code.
+Denote by
+
+    δ_max=max_r ∈ S(){q^n_i-q^n_i-r_i/q-1}
+
+and 
+
+    δ_min=min_r ∈ S(){q^n_i-q^n_i-r_i/q-1},
+
+where S() is the set of rank-lists of .
+If 
+
+    δ_max/δ_min< q^m/q^m-1,
+
+then the code  is minimal.
+
+
+Let ^H be an associated Hamming-metric code to .
+The minimum distance of ^H is δ_min and its maximum weight is δ_max.
+By <cit.> and because of the assumptions on δ_min and δ_max, the code ^H is minimal.
+Since the sum-rank metric code  is minimal if and only if ^H is a minimal code in the Hamming-metric, the assertion is proved.
+
+
+If a sum-rank metric code satisfies the assumption of Theorem <ref>, we say that it satisfies the AB-condition.
+
+
+
+In the following subsections, we will first see old and new constructions of one-weight sum-rank metric codes (proving that this is a very large family) and then we will show examples of minimal codes with few weights, where some of them satisfy the AB-condition and some of them do not.
+
+
+
+
+
+ §.§ Sum-rank one-weight codes
+
+
+Some constructions of one-weight codes have been given in <cit.>, which can be divided in three families:
+
+
+    
+  * orbital construction (extending the simplex code);
+    
+  * doubly extended linearized Reed-Solomon;
+    
+  * linear sets construction.
+
+
+In particular, the last two constructions give 2-dimensional one-weight codes in the sum-rank metric, whereas the first one give constructions of any dimension.
+In <cit.>, the authors also showed that the last two families cannot be obtained from the orbital construction. It is natural to ask whether or not there are examples of one-weight codes which cannot be obtained from the orbital constructions also for larger dimensions.
+
+We start by recalling the orbital construction.
+
+Let 𝒢 be a subgroup of (k,q^m) and consider the action ϕ_𝒢  of 𝒢 on _q^m^k∖{0}, that is
+
+    [           ϕ_𝒢 : 𝒢× (_q^m^k∖{0})               ⟶      _q^m^k∖{0};                           (A,v)               ⟼             vA. ]
+
+For any n and r such that r divides m, this action naturally induces an action also on the n-dimensional _q^r-subspaces of _q^m^k with kernel 𝒢∩𝔻_q^r, where 𝔻_q^r={α I_k α∈_q^r^*}. In order to get a shorter code, we can consider the action of the group 𝒢=𝒢/(𝒢∩𝔻_q^r) on the n-dimensional _q^r-subspaces of _q^m^k, that we denote by ϕ_𝒢^r,n. Finally, we say that 𝒢≤(k,q^m) is transitive if the action ϕ_𝒢^m,1 is transitive;
+see <cit.> for a more detailed discussion.
+
+[Orbital construction <cit.>]
+Let U be an _q-subspace of _q^m^k of dimension n over _q. Let 𝒢≤(k,q^m) be a transitive subgroup and let 𝒪=(ϕ_𝒢^1,n(A,U))_A ∈𝒢 be the orbit (counting possible repetition) of the action of ϕ_𝒢^1,n. When 𝒢 is the Singer subgroup of GL(k,q^m) we call the orbit 𝒪 an  n-simplex.
+A sum-rank metric code associated with the system 𝒪=(U_1,…,U_t) is an [(n,…,n),k]_q^m/q one-weight sum-rank metric code. 
+
+
+
+Let 𝒪 and 𝒪' two distinct orbits as in the above construction, the system obtained by plugging together 𝒪 and 𝒪' gives rise to a one-weight code and the considered system is union of orbits. So, in order to provide a construction of a sum-rank metric code  which is one-weight but does not arise from the orbital construction, we need to show that a system associated with  cannot be obtained as union of orbits.
+
+
+We now read the property of being one-weight in the geometric dual of the code.
+
+
+Let  be an [𝐧,k]_q^m/q sum-rank metric code and let (U_1,…,U_t) be an associated system. Assume that U_1∩…∩ U_t does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k. Then  is a one-weight code if and only if ^⊥_𝒢 is a one-weight code with respect to the generalized weights of order k-1, that is 
+
+    d_k-1(^⊥_𝒢)=N- ∑_i=1^t __q (U_i^⊥'∩⟨ w ⟩_𝔽_q^m),
+
+for any w ∈_q^m^k∖{0}.
+In particular, if d_1()  tm then
+
+    ⋃_i=1^t L_U_i^⊥'=(k-1,q^m).
+
+
+
+
+The code  is one-weight if and only if w_^1(X,Y) only presents one monomial, that is
+
+    w_^1(X,Y)= (||-1) X^N-d_1()Y^d_1().
+
+By Theorem <ref>, this happens if and only if w_^⊥_𝒢^k-1(X,Y) presents only one monomial, and hence the first part of the assertion. 
+For the last part, observe that if  is one-weight, by the first part of the assertion we have
+
+    ∑_i=1^t_(U_i^⊥'∩⟨ w⟩__q^m)=∑_i=1^t w_L_U_i^⊥'(⟨ w⟩__q^m)=tmk-N-d_k-1(^⊥_𝒢),
+
+for any w ∈_q^m^k∖{0}.
+Suppose that ⋃_i=1^t L_U_i^⊥'(k-1,q^m). Then, because of (<ref>), we can only have that  tmk-N=d_k-1(^⊥_𝒢).
+Theorem <ref> implies also that
+
+    d_1()=d_k-1(^⊥_𝒢)+N-t(k-1)m,
+
+and hence d_1()=tm, a contradiction.
+
+
+
+By Proposition <ref>, and more precisely from (<ref>), a partition in scattered linear set gives a one-weight code. Indeed, the construction of doubly extended linearized Reed-Solomon code with parameters [(m,…,m,1,1),2]_q^m/q can be read via an associated system (U_1,…,U_q+1) with the following properties:
+
+    
+  * _(U_i)=m for every i∈{1,…,q-1};
+    
+  * _(U_q)=_(U_q+1)=1;
+    
+  * U_i's are scattered -subspaces of _q^m^2.
+
+Since in _q^m^2 the hyperplanes coincide with the 1-dimensional _q^m-subspaces of _q^m^2 and since the code is MSRD, we have
+
+    ∑_i=1^q+1_(U_i∩⟨ w ⟩__q^m)=1,
+
+for any w ∈𝔽_q^m^2∖{0}.
+Therefore, these codes are one-weight codes and by Proposition <ref> they are also minimal codes.
+Moreover, they meet the lower bound (<ref>).
+By Proposition <ref>, the geometric dual of a doubly extended linearized Reed-Solomon code is a one-weight code with parameters 
+    [(m,…,m_q-1 times,2m-1,2m-1),2]_q^m/q.
+
+Note that for m=2, such code meets the lower bound (<ref>). We give its generator matrix in the next remark.
+
+In particular, a partition in scattered subspaces/linear sets gives via Proposition <ref> a
+one-weight code with nonzero weight equals to N-t(k-1)m+1. 
+
+
+
+We can determine a generator matrix for the geometric dual of a 2-dimensional doubly extended linearized Reed-Solomon code.
+Let α_1,…,α_q-1∈𝔽_q^m having pairwise distinct norm over  and define
+
+    U_i={(x,a_i x^q)  x ∈_q^m},
+
+for any i ∈{1,…,q-1}.
+Consider the following sesquilinear form
+
+    σ'  ((x,y),(z,t)) ∈𝔽_q^m^2 ↦Tr_q^m/q(xt-yz) ∈.
+
+Then
+
+    U_i^⊥'={ (y^q,a_i^q^n-1y)  y ∈_q^m}={ (y,a_i^q^n-1y^q^n-1)  y ∈_q^m},
+
+for any i, since 
+
+    σ'((x,a_i x^q),(y^q,a_i^q^n-1y))=Tr_q^m/q(a_i^q^n-1xy-a_ix^q y^q)=0,
+
+for every x,y ∈𝔽_q^m.
+By definition of σ' we also have that
+
+    ⟨ (1,0)⟩_^⊥'={ (α,β) α,β∈_q^m  and  Tr_q^m/q(β)=0 }
+
+and 
+
+    ⟨ (0,1)⟩_^⊥'={ (α,β) α,β∈_q^m  and  Tr_q^m/q(α)=0 }.
+
+Therefore, if B={b_1,…,b_m} is an -basis of  and C={c_1,…,c_m-1} is an -basis of (Tr_q^m/q), then a generator matrix for the geometric dual of a 2-dimensional linearized Reed-Solomon code is as follows:
+
+    
+  * the i-th blocks has as j-th column (b_j^q,a_i b_j), for i ∈{1,…,q-1} and j ∈{1,…,m};
+    
+  * the q-th block has as j-th column (b_j,0) if j ∈{1,…,m} and (0,c_j-m) if j ∈{m+1,…,2m-1};
+    
+  * the last block has as j-th column (0,b_j) if j ∈{1,…,m} and (c_j-m,0) if j ∈{m+1,…,2m-1}.
+
+
+
+In the Remark <ref>, we have seen that we can find q-1 maximum scattered -linear set in (1,q^m) which are pairwise disjoint and cover (1,q^m) except for two points (which can be arbitrarily chosen). 
+
+
+We can use this fact to construct partition in scattered -linear sets for higher dimensions. 
+
+[partition in scattered linear sets]
+We start with the plane: consider P=⟨ v⟩__q^m a point in (2,q^m) and a line ℓ=(W,_q^m) not passing through P.
+Denote by 
+
+    ℓ_1=(W_1,_q^m),…,ℓ_q^m+1=(W_q^m+1,_q^m)
+ the lines through P and denote by Q_i=ℓ∩ℓ_i=⟨ v_i⟩__q^m for any i ∈{1,…,q^m+1}.
+For any i ∈{1,…,q^m+1} consider
+
+    U_i,1,…,U_i,q-1
+
+maximum scattered -subspaces of W_i for which the associated linear sets form a partition of ℓ_i∖{P,Q_i}, which exists because of Remark <ref>.
+Consider 
+
+    U_q^m+2,1,…,U_q^m+2,q-1
+
+maximum scattered -subspaces of W for which the associated linear sets form a partition of ℓ∖{Q_1,Q_2}. 
+The -linear sets associated with U_i,j's together with ⟨ v ⟩_,  ⟨ v_1 ⟩_ and ⟨ v_2 ⟩_ give a partition in scattered -linear sets of (2,q^m).
+This gives a code of parameters
+
+    [(m,…,m_(q-1)(q^m+2) times,1,1,1),3]_q^m/q
+
+whose geometric dual has parameters
+
+    [(2m,…,2m_(q-1)(q^m+2) times,3m-1,3m-1,3m-1),3]_q^m/q.
+
+
+
+
+For larger dimension: suppose that we have U_1,…,U_r scattered -subspaces with the property that the associated linear sets cover a projective space of dimension k-1. 
+Consider a point P=⟨ v ⟩__q^m∈(k-1,q^m) and a hyperplane H not passing through P, then we can proceed to cover with scattered linear sets all of the lines through P, except for the point P and the intersection of the line with H. As we have done for the plane, adding the U_i's and ⟨ v ⟩__q to these subspaces, we obtain a family of scattered subspace covering the entire space.
+
+
+The above construction contains a large number of blocks. It is possible, under certain restrictions, to consider a smaller number of subspaces with the use of canonical subgeometries. 
+
+A canonical subgeometry of (k-1,q^m) is any (k-1,q) which is embedded in (k-1,q^m).
+The following result gives condition on k and m which allows us to construct a partition of (k-1,q^m) in canonical subgeometries.
+
+
+There exists a partition of (k-1,q^m) into canonical subgeometries if and only if (k,m)=1.
+
+
+
+Suppose that (k,m)=1 and let 
+
+    U_1,…,U_t
+
+be -subspaces of _q^m of dimension k such that L_U_1,…,L_U_t a partition of (k-1,q^m) into canonical subgeometries, with t=(q^mk-1)(q-1)/(q^m-1)(q^k-1). A code associated with (U_1,…,U_t) has parameters [(k,…,k),k,(t-1)k]_q^m/q and it is one-weight.
+Its geometric dual has parameters [(k(m-1),…,k(m-1)),k,t(k-1)]_q^m/q, via Theorem <ref>.
+
+
+
+
+
+
+  §.§.§ Lift construction
+
+
+In this section we describe a procedure to construct one-weight sum-rank metric codes starting from any sum-rank metric code, extending the construction described in <cit.>. 
+
+Let U_1,…,U_t be _q-subspaces in _q^m^k and define
+
+    M=max{∑_i=1^t w_L_U_i(P) |  P ∈(k-1,q^m)}.
+
+
+Define ℳ(U_1,…,U_t) the lift of U_1,…,U_t as a vector of -subspaces whose entries are
+
+    
+  * U_1,…,U_t;
+    
+  * c copies of ⟨ v ⟩__q^m and a d-dimensional subspace of ⟨ v ⟩__q^m, for any P=⟨ v ⟩__q^m∈(k-1,q^m), where M-∑_i=1^t w_L_U_i(P)=c · m+d with c,d ∈ℕ and d<m.
+
+
+Clearly, by construction
+
+    ∑_U ∈ℳ(U_1,…,U_t) w_L_U(P)=M,
+
+for every point P∈(k-1,q^m).
+
+So, consider ∈Φ ([ℳ(U_1,…,U_t)]) then by  applying Proposition <ref> we obtain that ^⊥_𝒢 is a linear one-weight sum-rank metric code of dimension k.
+Any code in Φ([ℳ(U_1,…,U_t)]) will be called the lifted code of U_1,…,U_t.
+
+In the next result we show that we can construct a one-weight sum-rank metric code starting from any sum-rank metric code.
+
+
+Every sum-rank metric code can be extended to a one-weight code.
+
+
+Let (U_1,…,U_t) an associated system to  and G=(G_1|…|G_t) a generator matrix of  such that the column span of G_i is U_i for any i. Consider the lift 
+    ℳ(U_1^⊥',…,U_t^⊥')=(U_1^⊥',…,U_t^⊥',W_t+1,…,W_s).
+
+Let 𝒟∈Φ([ℳ(U_1^⊥',…,U_t^⊥')]), then by duality U_1^⊥'∩…∩ U_t^⊥' does not contain any one-dimensional _q^m-subspace and hence by Theorem <ref> 𝒟^⊥_𝒢 is a one-weight code and a system associated with 𝒟^⊥_𝒢 is 
+
+    (U_1,…,U_t,W_t+1^⊥',…,W_s^⊥'),
+
+and hence it is an extension of , since a generator matrix of 𝒟^⊥_𝒢 has the following shape
+
+    (G_1|…|G_t|G_t+1|…|G_s),
+
+where the the column span of G_i is W_i^⊥' for any i ∈{t+1,…,s}.
+
+
+In the following result we prove that there are linear sum-rank metric codes which cannot be obtain from the orbital construction for any possible value of the dimension, already proved in <cit.> in the two-dimensional case.
+
+
+For every k, there are one-weight sum-rank metric codes which are not equivalent to a sum-rank metric code obtained from the orbital construction.
+
+
+Consider  a [n,k]_q^m/q sum-rank metric code (that is, a rank-metric code) with the property that n>m. 
+Let U be any system associated with  and consider ℳ(U) the lift of U and follow the proof of Theorem <ref> to construct a one-weight sum-rank metric code '.
+Since U is the only -subspace in ℳ(U) having dimension larger than m, then in ℳ(U) there cannot the an orbit of U and hence ' cannot be obtained as (union) of orbital constructions.
+
+
+
+In the proof of the above theorem, we started from a rank-metric code, but then we can start from any code whose associated systems do not form an orbit under a transitive group of an -subspace of dimension greater than m.
+
+
+
+In <cit.>, the author showed that in some cases extending an MSRD code by adding new blocks does not preserve the property of being MSRD.
+
+
+
+
+
+
+ §.§ Constructions of two-weight minimal sum-rank metric codes
+
+
+In this section we will give examples of minimal sum-rank metric codes with two weights, in some cases by using the AB-condition and some other by exploiting the geometry behind them.
+Let us start with the first construction.
+
+
+Consider t mutually disjoint scattered 𝔽_q-linear sets L_U_1,…,L_U_t in (k-1,q^m) of rank n_1, … , n_t, respectively, with n_1≥…≥ n_t. 
+Suppose also that L_U_1∪…∪ L_U_t≠(k-1,q^m).
+Denote by (U_1^⊥',…,U_t^⊥') the geometric dual of a code associated with (U_1,…,U_t).
+
+
+The metric properties of the above construction are described in the following result.
+
+
+Let  be as in Construction <ref>. Its parameters are [(mk-n_1,…,mk-n_t),k]_q^m/q and it has two distinct nonzero weights:
+
+    tm  and  tm-1.
+
+Moreover, its set of rank-lists is 
+
+    S()={ (m,…,m),(m-1,m,…,m),(m,m-1,…,m),…,(m,…,m,m-1) }.
+
+
+
+Let start by observing that (U_1^⊥',…,U_t^⊥') is a system with parameters [(mk-n_1,…,mk-n_t),k]_q^m/q. 
+By Theorem <ref>, the weights of (U_1^⊥',…,U_t^⊥') correspond to the possible values that the following expression can assume
+
+    tm- ∑_i=1^t _(U_i^⊥'∩⟨ w ⟩_𝔽_q^m),
+
+where w ∈𝔽_q^m^k∖{0}.
+Since the L_U_i's are scattered and disjoint, we have that _(U_i^⊥'∩⟨ w ⟩_𝔽_q^m)∈{0,1} and can be one at most for one i ∈{1,…,t} for every w, hence the weight distribution is determined.
+The possible rank-lists of the codewords of (U_1^⊥',…,U_t^⊥') (see Remark <ref>) correspond to determine 
+
+    (m-_𝔽_q(U_1∩⟨ w ⟩_𝔽_q^m),…, m-_𝔽_q(U_t∩⟨ w ⟩_𝔽_q^m)),
+
+because of the assumptions on the L_U_i's, we have that either _𝔽_q(U_1∩⟨ w ⟩_𝔽_q^m)=0 for any i or there exist j ∈{1,…,t} such that _𝔽_q(U_j∩⟨ w ⟩_𝔽_q^m)=1 and _𝔽_q(U_i∩⟨ w ⟩_𝔽_q^m)=0 for any the remaining values of i.
+
+
+The codes with the parameters as those in Construction <ref> all arise from Construction <ref>.
+
+
+If  is a sum-rank metric code with the parameters as in Construction <ref> then  can be obtain as in Construction <ref>.
+
+
+Assume that  is an [𝐧,k]_q^m/q sum-rank metric code with n=(mk-n_1,…,mk-n_t) and with two distinct weights tm and tm-1. Denote by N=n_1+…+n_t and let (U_1,…,U_t) any system associated with .
+By Theorem <ref>, we have that for any hyperplane of _q^m^k
+
+    ∑_i=1^t _(U_i ∩ H) ∈{ tm(k-1),tm(k-1)+1 },
+
+and applying Proposition <ref> we obtain
+
+    ∑_i=1^t _(U_i^⊥'∩⟨ w ⟩__q^m) ∈{ 0,1 },
+
+for any 1-dimensional _q^m-subspace of _q^m^k.
+Therefore, for any point P ∈(k-1,q^m) we have that
+
+    ∑_i=1^t w_L_U_i^⊥'(P)  ∈{ 0,1 },
+
+and so L_U_i^⊥''s are pairwise disjoint scattered _q-linear sets.
+
+
+Thanks to Theorem <ref>, we can determine the weight distribution of the Hamming metric codes associated with those in Construction <ref>.
+
+
+An associated Hamming metric code to the codes of Construction <ref> has length N=tkm-n_1…-n_t, dimension k and exactly |{n_1,…,n_t}|+1 nonzero distinct weights, which are
+
+    δ_max=∑_i=1^tq^mk-n_i-q^mk-n_i-m/q-1,
+
+
+    w_j=q^mk-n_j-q^mk-n_j-m+1/q-1 + ∑_i∈{1,…,t}∖{j}q^mk-n_i-q^mk-n_i-m/q-1,  j ∈{1,…,t},
+
+and 
+
+    δ_min=q^mk-n_t-q^mk-n_t-m+1/q-1 + ∑_i=1^t-1q^mk-n_i-q^mk-n_i-m/q-1.
+
+
+
+By taking into account the set of rank-lists of a code as in Construction <ref> determined in Theorem <ref>, by Proposition <ref> the possible weights of an associated  code is given by the following formula
+
+    q^mk-n_j-q^mk-n_j-m+1/q-1 + ∑_i∈{1,…,t}∖{j}q^mk-n_i-q^mk-n_i-m/q-1,
+
+for any j ∈{1,…,t} and by
+
+    ∑_i=1^tq^mk-n_i-q^mk-n_i-m/q-1.
+
+Therefore, the number of distinct weights is given by the number of the different n_i's plus one.
+
+
+
+In the case in which n_1=…=n_t=n, such  codes are two-weight Hamming metric codes, with weights
+
+    δ_max=t·q^mk-n-q^mk-n-m/q-1,
+
+and 
+
+    δ_min=q^mk-n-q^mk-n-m+1/q-1 + (t-1)·q^mk-n-q^mk-n-m/q-1.
+
+Note also that if the n_i's are not all equal, then from a two-weight code in the sum-rank metric we obtain an Hamming metric code with more than two weights. This is a remarkable difference with the rank metric.
+
+
+
+Let  be a code as in Construction <ref> with n_1=…=n_t=n.
+If 
+
+    t>(q-1)·q^m/q^m-1,
+
+then  is minimal  and it satisfies the AB-condition.
+
+
+We will prove the minimality of  with the aid of the AB-condition.
+To this aim
+
+    δ_max/δ_min= t(q^m-1)/q^m-q+(t-1)(q^m-1)=1+q-1/tq^m-q-t+1,
+
+since t>(q-1)q^m/(q^m-1) we have 
+
+    δ_max/δ_min < q^m/q^m-1
+
+and hence Theorem <ref> implies the assertion.
+
+
+
+Consider Construction <ref> by using more than (q-1)·q^m/q^m-1 mutually disjoint subgeometries (which exists for instance when (m,k)=1, see Theorem <ref>). The above theorem implies that  Construction <ref> gives minimal codes.
+
+
+Note that in the above result if we consider t=2 and q>2, then the AB-condition is not satisfied (it is indeed satisfied for q=2). In the next result, we show that when t=2, even if the AB-condition is not satisfied, Construction <ref> still gives minimal codes and the two rank-metric codes defined by the two blocks are not minimal.
+
+
+Let U_1 and U_2 be two trivially intersecting scattered _q-subspaces of dimension m contained respectively in W_1 and W_2, where W_1 and W_2 are two distinct 2-dimensional 𝔽_q^m-subspaces of _q^m^3. The geometric dual (U_1^⊥',U_2^⊥') of a code associated with (U_1,U_2) is a minimal sum-rank metric code, which satisfies the AB-condition if and only if q=2.
+Moreover, the codes associated with U_1^⊥' and U_2^⊥', respectively, are not minimal.
+
+
+Let start by computing the possible dimension of intersection between the U_i^⊥''s and the _q^m-subspaces of _q^m^3 with dimension either one or two with the aid of Proposition <ref>:
+
+    _𝔽_q(U_i^⊥'∩ W^⊥)=_𝔽_q(U_i∩ W)∈{0,1,m},
+
+for any 2-dimensional 𝔽_q^m-subspace W and _𝔽_q(U_i^⊥'∩ W^⊥)=m if and only if W=W_i, for any i ∈{1,2}, also
+
+    _𝔽_q(U_i^⊥'∩⟨ w⟩_𝔽_q^m^⊥)=_𝔽_q(U_i∩⟨ w⟩_𝔽_q^m)+m∈{m,m+1},
+
+for any 1-dimensional 𝔽_q^m-subspace ⟨ w⟩_𝔽_q^m. 
+In terms of linear sets, this means that 
+
+    w_L_U_i^⊥'(P) ∈{0,1,m}  and   w_L_U_i^⊥'(ℓ) ∈{m,m+1},
+
+for any point P and any line ℓ of (2,q^m).
+We now show that (U_1^⊥',U_2^⊥') is a cutting system (which is equivalent to show that (U_1^⊥',U_2^⊥') is minimal by Theorem <ref>), which is equivalent to show that any line ℓ of (2,q^m) meets L_U_1^⊥'∪ L_U_2^⊥' in at least two points.
+Note that since L_U_1^⊥' and L_U_2^⊥' have rank 2m, which is greater than m+1, then every line meet L_U_1^⊥' and L_U_2^⊥' in at least one point.
+Denote by P_1 and P_2 the points defined by W_1^⊥' and W_2^⊥', respectively. 
+Let ℓ be any line through P_1, since P_1 P_2 and P_1 ∉ L_U_2^⊥', then ℓ meets L_U_2^⊥' in at least another point. Therefore, |ℓ∩ (L_U_1^⊥'∪ L_U_2^⊥')|≥ 2. Similar arguments can be performed when considering lines through P_2, so assume that ℓ is a line not passing through neither P_1 nor to P_2. Since all the points different from P_1 and P_2 have weight either one or zero and the weight of ℓ is either m or m+1, then |ℓ∩ L_U_1^⊥'|≥ 2 and hence (U_1^⊥',U_2^⊥') is a cutting system.
+Finally, we show that U_1^⊥' and U_2^⊥' are not cutting. Indeed, by contradiction assume that U_1^⊥' is a cutting system. Any line ℓ through P_1 has weight m+1, since w_L_U_1^⊥'(P_1)=m and L_U_1^⊥'∩ℓ has at least two points. This implies that all the lines through P_1 are contained in L_U_1^⊥' and hence
+
+    |L_U_1^⊥'| ≥ (q^m+1)q^m+1,
+
+which is a contradiction to the fact that |L_U_1^⊥'| ≤q^2m-1/q-1 by (<ref>). 
+Now, let 
+
+    δ_max=2(q^(k-1)m-q^(k-2)m)/q-1
+
+and
+
+    δ_min=2q^(k-1)m-q^(k-2)m+1-q^(k-2)m/q-1.
+
+Then δ_max/δ_min<q^m/(q^m-1) if and only if
+
+    --3q^m+2+q^m+1/(-q^m+q-q^m+1)(q^m-1) <0
+
+and hence if and only if
+
+    -3q^m+2+q^m+1<0,
+
+and, since it can be rewritten as q^m(q-3)<-2, this happens if and only if q=2. Therefore, the assumption of Theorem <ref> are satisfied if and only if q=2.
+
+
+
+Let 
+
+    U_1={(x,x^q,0)  x ∈𝔽_q^m}  and   U_2={(0,x,x^q)  x ∈𝔽_q^m}.
+
+It is easy to see that they satisfy the assumptions of Theorem <ref>.
+Consider σ' as the following sesquilinear form
+
+    σ'  ((x,y,t),(x',y',z')) ∈𝔽_q^m^3 ↦Tr_q^m/q(xx'+yy'+zz') ∈_q.
+
+Then
+
+    U_1^⊥'= { (x^q^m-1,-x,y)  x,y ∈_q^m}
+
+and 
+
+    U_2^⊥'= { (y,x^q^m-1,-x)  x,y ∈_q^m}.
+
+Therefore, a generator matrix of 𝒞(U_1^⊥',U_2^⊥') is
+
+    G=( 
+    [ a_1^q^m-1         … a_m^q^m-1         0         …         0       a_1         …       a_m         0         …         0;      -a_1         …      -a_m         0         …         0         0         …         0 a_1^q^m-1         … a_m^q^m-1;         0         …         0       a_1         …       a_m         0         …         0      -a_1         …      -a_m ])∈_q^m^3× 4m,
+
+where {a_1,…,a_m} is an -basis of _q^m.
+
+
+
+In the above example, we may replace x^q with any scattered polynomial; see <cit.> and the references therein.
+
+
+In the next result we show that when t=2 in Construction <ref> with n_1 and n_2 having a distinct value, then the code obtained satisfies the AB-condition if n_1 and n_2 are enough close distinct numbers.
+
+
+Let U_1 and U_2 be two trivially intersecting scattered _q-subspaces of dimension n_1 and n_2=n_1-r with 1≤ r ≤ m, respectively. The geometric dual (U_1^⊥',U_2^⊥') of a code associated with (U_1,U_2) is a minimal sum-rank metric code which satisfies the AB-condition.
+
+
+As in the previous proof, we start by computing the possible dimension of intersection between the U_i^⊥''s and the _q^m-subspaces of _q^m^k with dimension k-1:
+
+    _𝔽_q(U_i^⊥'∩⟨ w⟩__q^m^⊥)=_𝔽_q(U_i∩⟨ w⟩__q^m)+(k-1)m-n_i∈{(k-1)m-n_i, (k-1)m-n_i+1},
+
+for any one-dimensional _q^m-subspace ⟨ w⟩__q^m in _q^m^k.
+Therefore, by Remark <ref> we have that the rank lists of the code (U_1^⊥',U_2^⊥') are 
+
+    (m,m), (m-1,m)   and   (m,m-1).
+
+Considering (U_1^⊥',U_2^⊥')^H we have
+
+    δ_max=q^km-n_1-q^(k-1)m-n_1+q^km-n_2-q^(k-1)m-n_2/q-1
+
+and
+
+    δ_min=q^km-n_1-q^(k-1)m-n_1+1+q^km-n_2-q^(k-1)m-n_2/q-1.
+
+Replacing n_1=n_2+r, δ_max/δ_min<q^m/q^m-1 is equivalent to 
+
+    --2q^m+1-q^r+m+q^r+q^m+1/(-q^m+q-q^r+m+q^r)(q^m-1) <0
+
+and hence
+
+    -2q^m+1-q^r+m+q^r+q^m+1<0,
+
+which holds true as m≥ r and r≥ 1. Therefore, the assertion follows by applying Theorem <ref>.
+
+
+
+
+
+
+§ ACKNOWLEDGMENTS
+
+The first author was partially supported by the ANR-21-CE39-0009 - BARRACUDA (French Agence Nationale de la Recherche). The second author was supported by the project “VALERE: VAnviteLli pEr la RicErca" of the University of Campania “Luigi Vanvitelli” and by the Italian National Group for Algebraic and Geometric Structures and their Applications (GNSAGA - INdAM). He is very grateful for the hospitality of the Université Paris 8, France, where he was a visiting researcher for two weeks during the development of this research. 
+
+
+
+abbrv
+
 

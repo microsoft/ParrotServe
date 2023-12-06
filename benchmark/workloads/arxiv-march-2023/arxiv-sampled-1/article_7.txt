@@ -1,15 +1,146 @@
 
-Modelling self-consistently beyond General Relativity
-    Luis Lehner
+
+theoremTheorem
+corCorollary
+exampleExample
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Distance Evaluation to the Set of Defective Matrices
+    
+Alexei Yu. Uteshev[The corresponding author], Elizaveta A. Kalinina, Marina V. Goncharova 
+
+
+
+1010
+
+St. Petersburg State University
+
+1010Faculty of Applied Mathematics 
+
+1010St. Petersburg, Russia
+
+99^1 {alexeiuteshev,ekalinina,marina.yashina}@gmail.com
+
+
+
+
+
+101099
     March 30, 2023
-=====================================================
+==============================================================================================================================================================================================================================================================================
+
+empty
 
 
 
 
-We propose a novel approach to concentration for non-independent random variables. 
-  The main idea is to “pretend” that the random variables are independent and pay a multiplicative price measuring how far they are from actually being independent. This price is encapsulated in the Hellinger integral between the joint and the product of the marginals, which is then upper bounded leveraging tensorisation properties. Our bounds represent a natural generalisation of concentration inequalities in the presence of dependence: we recover exactly the classical bounds (McDiarmid's inequality) when the random variables are independent. Furthermore, in a “large deviations” regime, we obtain the same decay in the probability as for the independent case, even when the random variables display non-trivial dependencies.
-  To show this, we consider a number of applications of interest. First, we provide a bound for Markov chains with finite state space. Then, we consider the Simple Symmetric Random Walk, which is a non-contracting Markov chain, and a non-Markovian setting in which the stochastic process depends on its entire past. To conclude, we propose an application to Markov Chain Monte Carlo methods, where our approach leads to an improved lower bound on the minimum burn-in period required to reach a certain accuracy. In all of these settings, we provide a regime of parameters in which our bound fares better than what the state of the art can provide.
+We treat the problem of the Frobenius distance evaluation from a given matrix A ∈ℝ^n× n with distinct eigenvalues to the manifold  of matrices with multiple eigenvalues. On restricting considerations to the  
+rank 1 real perturbation matrices, we prove that the distance in question equals √(z_∗) where 
+z_∗ is a  positive (generically, the least positive) zero of the algebraic equation
+
+    ℱ(z) = 0,   ℱ(z):= 𝒟_λ( 
+    [ (λ I - A)(λ I - A^⊤)-z I_n ] )/z^n
+
+and 𝒟_λ stands for the 
+discriminant of the polynomial treated with respect to λ. In the framework of this approach we also provide the procedure for finding the nearest to A matrix with multiple eigenvalue. Generalization of the problem to the case of complex perturbations is also discussed. Several examples are presented clarifying the computational aspects of the approach.
+
+
+
+
+Keywords: Wilkinson's problem, defective matrix, multiple eigenvalues, distance equation
+
+
+MSC 2010: 68W30, 15A18 , 12D10, 58C40
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -17,1111 +148,1310 @@ We propose a novel approach to concentration for non-independent random variable
 
 § INTRODUCTION
 
-It is well-known that, given a sequence X^n=(X_1,…, X_n) of independent, but not necessarily identically distributed, random variables with joint measure _X^n, one can prove that for every function f satisfying proper Lipschitz assumptions:
-	
-    _X^n(|f-_X^n(f)|≥ t) ≤ 2exp(-t^2/k ‖ f‖_Lip^2).
-
-	Here, ‖ f‖_Lip^2 depends on the metric structure of the measure space, and k is a constant depending on the approach used to prove the inequality, e.g., transportation-cost inequalities, log-Sobolev inequalities, martingale method, see the survey <cit.>. 
-	One notable example is McDiarmid's inequality for functions with “bounded jumps”: i.e., if for every x^n,x̂ and every 1≤ i ≤ n one has that 
-    |f(x_1,…,x_i,…,x_n)-f(x_1,…,x̂,…,x_n)|≤ 
-    c_i ,
- then the following holds <cit.>:
-	
-    _X^n(|f-_X^n(f)|≥ t) ≤ 2exp(-2t^2/∑_i=1^n c^2_i).
 
 
 
 
 
-	This represents the “golden standard” of concentration. Interestingly, as underlined above, McDiarmid's inequality does not require the X_i's to be identically distributed; it does, however, require the random variables to be independent.
-Most of the methods in the literature that tried to relax the latter assumption 
- required the development of novel techniques. However, existing results generally do not recover the rate of decay provided in the independent setting.
+
+
+
+
+
+The origin of the problem of finding the distance from a matrix A ∈ℂ^n× n
+to the set 𝔻 of matrices with multiple eigenvalues can be traced back to Wilkinson <cit.> who posed it in relation to the sensitivity analysis of matrix eigenvalues. The desired distance  further will be treated  with respect to either the 2-norm or to the Frobenius norm in ℂ^n× n and will be 
+denoted d(A, 𝔻). It is usually referred to as the Wilkinson
+distance of A <cit.>. Alternatively, 
+d(A, 𝔻) can be defined as the 
+infA-B where B belongs to the subset of defective matrices, i.e. those possessing at least one eigenvalue 
+whose geometric multiplicity  is less than its algebraic multiplicity.
+
+
+
+
+
+Starting from  Wilkinson's works <cit.>, 
+the problem of evaluation of d(A, 𝔻) has been
+studied intensively in <cit.>. The most recent result is presented in the work <cit.>. 
+We briefly trace the developed approaches. Most of them are in the framework of singular value analysis of appropriate parameter dependent matrices.
+
+The following theorem gives the min-max representation of d(A,𝔻) obtained by Malyshev <cit.>.
+
+ Let A∈ℂ^n× n.
+Let the singular values of the matrix
+
+    [[ A-λ I_n   γ I_n;  𝕆_n× n A-λ I_n ]]
+
+be ordered like
+σ_1(λ,γ)≥σ_2(λ,γ)≥…≥σ_2n(λ,γ)
+≥ 0. Then the  2-norm distance  d(A,𝔻) can be evaluated as 
+
+    d(A,𝔻)=min_λ∈ℂmax_γ≥0σ_2n-1(λ,γ)  .
+
+
+
+The straight computation of this distance is quite difficult, so to find this distance, in many works the notion of pseudospectra <cit.> is used.
+
+Definition. For both the 2-norm and the Frobenius norm, the ε-pseudospectra of a matrix A
+is
+
+    Λ_ε(A)={σ_min<ε}
+
+where ε>0 and σ_min stands for the smallest
+singular value of the matrix A-zI.
+
+Equivalently,
+
+    Λ_ε(A)={ z∈ℂ | (A+E-zI)=0,  E∈ℂ^n× nE <ε}  .
+
+If Λ_ε has n components, then A+E has n
+distinct eigenvalues for all perturbations
+E∈ℂ^n× n and hence A+E is not defective.
+
+In subsequent papers, the pseudospectra approach is used to find the distance to the nearest defective matrix. 
+
+In <cit.>, a geometric solution to the problem of finding d(A,𝔻) in Frobenius norm is given. The nearest defective
+matrix is related to the critical points of 
+the minimal singular value σ_min(x,y) of the matrix A-(x+𝐢 y)I that could
+be obtained by examination of pseudospectra of A. For an
+approximation of a multiple eigenvalue of the nearest defective
+matrix, the averaging heuristic by Puiseux series is proposed. Also
+an iterative method for finding this eigenvalue
+together with the minimal perturbation is presented.
+
+In <cit.>, it is proposed to find the smallest
+perturbation E such that the components of the pseudospectra of
+A+E coalesce. The problem is reformulated as follows. One needs to
+find
+z∈ℂ,ε∈ℝ,ε>0 and U,V∈ℂ^n,such that[Hereinafter ^⊤ stands for the transpose while ^𝖧 stands for the Hermitian transpose.]
+
+    (A-zI)V-ε U=𝕆_n× 1,ε V-(A-zI)^𝖧 U=𝕆_n× 1,  U^𝖧 V=0   .
+
+The algorithm to solve the system of equations presented in this
+work is rather expensive because it requires the repeated
+calculation of pseudospectra. Also any condition of coalescence of
+two pseudospectral curves is necessary.
+
+In <cit.>, a new computational approach to approximating the nearest defective matrix by a variant of Newton's method is  suggested. 
+
+The Implicit Determinant Method based on standard Newton's method
+is used to solve the system (<ref>) in <cit.>.
+
+There are several works considering generalizations of Wilkinson's problem for the cases of prescribed eigenvalues or their  multiplicities  <cit.>,
+ and matrix pencils <cit.>.
+
+The approaches developed in the above cited papers could be characterized as related to the Numerical Linear Algebra. The present paper aims at solving the stated problem for the case of Frobenius norm within the framework of symbolic computation approach. Namely, we reduce the problem to that of the univariate polynomial equation solving. As a matter of fact, the manifold 𝔻 of  matrices with multiple eigenvalues in the ℝ^n^2 space of their entries is an algebraic one, i.e. it is represented by a multivariate polynomial equation. If we slightly modify  Wilkinson's problem to that of finding d^2(A,𝔻), then the constrained optimization problem becomes an algebraic one in the sense that both the objective function and the constraint be polynomials.  Application of the Lagrange multipliers method reduces the problem to that of system of algebraic equations solving. The latter can be resolved, at least in theory, via the analytical procedure of elimination of variables consisting in the multivariate resultant computation or the Gröbner basis construction. Application of these procedures to the system of equations of the treated problem, complemented with z-d^2(A,𝔻)=0, results in a univariate equation ℱ(z)=0 whose zero set contains all the  critical values of the squared distance function. This equation will be further referred to as the distance equation and its computation is the priority of the present paper. 
+
+This approach has been developed in <cit.>.
+Unfortunately, soon after that publication, a significant gap in reasoning was discovered. It was assumed that the value d(A, 𝔻) could be provided by only the rank 1 perturbation matrix E_∗ and that the nearest to A matrix B_∗=A+E_∗ in 𝔻 might possess only a double real eigenvalue.
+In Section <ref>, an example of the order 4 matrix A is given where the nearest  in 𝔻  matrix
+  possesses a pair of double complex-conjugate eigenvalues. 
+As yet we failed to manage this scenario for the general statement of the problem; neither do we able to claim that it is a zero probability event. 
+
+We confine ourselves here to considering the case where the critical values of d^2(A,𝔻) are provided only by the rank 1 perturbation matrices. For this case,  
+the practical implementations of the elimination of variables procedure mentioned above  can be reduced to just only two bivariate equations. 
+One of these equations follows quite naturally from the developed in <cit.> approach. This is 
+
+    Φ(λ,z)=0   Φ(λ,z):=
+    [ (λ I - A)(λ I - A^⊤)-z I_n ]
+       .
+
+The more difficulties causes the deduction of the second equation. It happens to be 
+    ∂Φ(λ,z)/ ∂λ =0   .
+
+To obtain the distance equation, it is then sufficient to eliminate the variable λ from the obtained system. This can be managed with the aid of discriminant computation, i.e. the function of the coefficients of a polynomial responsible for the existence of a multiple zero for this polynomial.
+We recall some basic features of this function in Section <ref>.
+
+In Section <ref>, we prove the main result of the paper, namely that the value d^2(A,𝔻) is in the set of non-negative zeros of the distance equation. If A ∉𝔻 then generically d^2(A,𝔻) equals the least positive zero z_∗ of this equation. We also detail here the structure of the matrix B_∗ nearest  to A in 𝔻. It appears that the multiple eigenvalue of  B_∗ coincide with the multiple zero of the polynomial Φ(λ,z_∗).
+
+In Section <ref>, computational aspects of the proposed approach are discussed via solving the  problem for the two families of matrices treated in  the literature. 
+
+In Section <ref>, we address to the generalization of Wilkinson's problem to the case of complex perturbations. Here the results are presented in a very concise manner with the potential intention of returning to them in future articles.
+
+Notation is kept to correlate with <cit.>. For a matrix A ∈ℝ^n× n,
+f_A(λ) denotes its characteristic polynomial,
+
+d(A, 𝔻) denotes the distance from A to the set 𝔻 of matrices possessing a multiple eigenvalue.  E_∗ and B_∗ = A+ E_∗ stand for, respectively, the (minimal) perturbation matrix and the nearest to A  matrix in 𝔻 (i.e. d(A,𝔻)=A- B_∗); we then term by λ_∗ the multiple eigenvalue of B_∗. I (or I_n) denotes the identity matrix (of the corresponding order). 𝒟 (or 𝒟_λ) denotes the discriminant of a polynomial (with subscript indicating the variable).
+
+Remark. All the computations were performed in CAS Maple 15.0 with those approximate done within the accuracy 10^-40. In the paper they are presented rounded to 10^-6.
+
+
+
+§ ALGEBRAIC PRELIMINARIES
+
+
+
+
+
+
+
+
+It is well-known that in the (N+1)-dimensional space of the polynomial 
+
+    F(x)=a_0x^N + a_1x^N-1 +…+a_N ∈ℂ[x],   a_0 0, N ≥ 2
+
+coefficients, the manifold of polynomials with multiple zeros 
+is given by the equation
+
+    D(a_0,a_1,…,a_N)=0    
+    D:=𝒟_x(F(x))
+
+denotes the discriminant of the polynomial. Discriminant is formally defined as a symmetric function of the zeros {λ_1,…, λ_N } of the polynomial F(x)
+
+    D_x(F(x))= a_0^2N-2∏_1≤ j < k ≤ N (λ_k - λ_j)^2   .
+
+This representation gives rise to further transformation of the discriminant into the homogeneous polynomial D(a_0,a_1,…,a_N) of the order 2N-2 with respect to the coefficients of F(x). Such a transformation  can be implemented through a preliminary representation of discriminant in an appropriate determinantal form. We will follow the approach based on the Hankel matrix formalism <cit.>.
+
+
+For this aim, find first the Newton sums s_0,s_1,…,s_2N-2 of the polynomial F(x) with the aid of recursive formulas
+
+    s_0=N, s_1=-a_1/a_0,
+
+
+    s_k={[ -(a_1s_k-1+a_2s_k-2+…+a_k-1s_1+a_kk)/a_0,                                    k≤ N ,;      -(a_1s_k-1+a_2s_k-2+…+a_Ns_k-N)/a_0,                                   k > N , ].
+
+and compose the Hankel matrix
+
+    S=[s_j+k]_j,k=0^N-1 =
+    [[    s_0    s_1    s_2      …  s_N-2  s_N-1;    s_1    s_2    s_3      …  s_N-1    s_N;    s_2    s_3    s_4      …    s_N  s_N+1;      …                    …;  s_N-1    s_N  s_N+1      … s_2N-3 s_2N-2 ]]_N× N .
+
+Denote by S_1,…, S_N= S its leading principal minors.
+
+   One has
+
+    𝒟(F)=a_0^2N-2 S_N   .
+
+The condition 
+
+    S_N=0, …, S_N-k+1=0, S_N-k 0
+
+is the necessary and sufficient for the polynomial F(x) to possess k 
+common zeros with F^' (x).
+In particular, if S_N=0, S_N-1 0, then F(x) possesses a unique multiple zero and the multiplicity of this zero equals 2. This zero can be computed via the formula
+
+    λ = 
+    s_1-1/S_N-1|
+    [    s_0    s_1      …  s_N-3  s_N-1;    s_1    s_2      …  s_N-2    s_N;      ⋮                           ⋮;  s_N-2  s_N-1      … s_2N-1 s_2N-3 ]|    .
+
+The determinant in the right-hand side is constructed by deleting the last row and the last but one column in 
+S.
+
+
+
+Consequently, the set 𝔻 of matrices with multiple eigenvalues is given by the equation
+
+    𝒟_λ( (λ I-B) ) =0   .
+
+
+For the case of polynomials with real coefficients, the sequence of leading principal minors of the matrix S permits one to establish the exact number of real zeros for F(x) <cit.>.
+
+ Let 
+
+    S_N=0, …, S_N-k+1=0, S_N-k 0,…,S_1  0
+
+Then the number of distinct pairs of complex-conjugate zeros for F(x) ∈ℝ[x] equals
+
+    𝒱(1,S_1,…, S_N-k)
+
+where 𝒱 denotes the number of variations of sign in the given sequence.
+
+
+In the space ℝ^N+1 of polynomials (<ref>) with real coefficients, the discriminant manifold (<ref>) separates the domains of vectors providing the coefficients of polynomials with the same number of real zeros. 
+
+The last comment of the present section relates to application of discriminant to one problem from Elimination Theory. Consider a bivariate polynomial F(x,y)∈ℝ[x,y],  F ≥ 2. The discriminant furnishes the tool for eliminating the variable x from the system of equations
+
+    F(x,y)=0, ∂ F(x,y)/ ∂ x=0   .
+    
+
+Namely, if (x_0,y_0) is a solution to the system (<ref>), then y_0  is necessarily a zero of the algebraic univariate equation
+
+    𝒴(y)=0   𝒴(y):=𝒟_x(F(x,y))   .
+
+The reverse statement is subject to an extra assumption. If y_1∈ℂ is a zero for 𝒴(y), then there exists a multiple zero for the polynomial F(x,y_1).  Under the assumption that y_1 is a simple zero for 𝒴(y),
+x_1 is a  unique multiple zero and its  multiplicity equals 2. Then it can be expressed as a rational function of y_1  using the result of Theorem <ref>. These considerations are valid for all the solutions of the system (<ref>) provided that 𝒟_y(𝒴(y)) 0.
+
+
+
+
+
+
+§ DISTANCE EQUATION
+
+
+
+
+
+
+
+
+
+
+In terms of the discriminant manifold referred to in the previous section, the problem of evaluation of d^2 (A,𝔻) is equivalent to that of constrained optimization
+
+    minB-A^2    𝒟_λ(f_B(λ))=0, B∈ℝ^n× n  .
+
+Here the constraint is an algebraic equation with respect to the entries of the matrix B.
+Traditional application of the Lagrange multipliers method reduces the problem to that of solving a system of n^2+1 nonlinear algebraic equations. Under the additional assumption the matrix B_∗∈ℝ^n× n providing a solution to this system possesses only one multiple eigenvalue and its multiplicity equals 2, it is possible to  reduce the number of variables in the constrained optimization approach. The following result is presented in <cit.>:
+
+
+
+The value d^2(A,𝔻) belongs to the set of critical values of the objective function
+
+    G(U):=U^⊤A A^⊤ U - ( U^⊤AU )^2
+
+for the constrained optimization problem under constraints 
+
+    U^⊤U=1, U ∈ℝ^n   .
+
+If U_∗ be the point providing d^2(A,𝔻), then the perturbation can be computed as
+
+    E_∗=U_∗ U_∗^⊤ (κ I-A)    κ:= U_∗^⊤ A U_∗  .
+
+
+
+The new optimization problem still have significant number of variables. We aim to eliminate all of them but introduce an extra one responsible for the critical values of the objective function. 
+
+Stationary points of the function
+(<ref>) under the constraints
+(<ref>) can be found via Lagrange  method applied to the function G(U)- μ (U^⊤U-1). This results into the system
+
+    AA^⊤U-(U^⊤ A U)(A+A^⊤)U-μ U = 𝕆_n× 1  .
+
+Denote
+
+    λ:=U^⊤ A U   .
+
+ Then the equation (<ref>) has a nontrivial solution with respect to  U if and only if
  
- In this paper, we present a novel approach that 
- outperforms the state of the art in various settings and regimes. Specifically, we show improved bounds for 
- finite-state space Markov chains (<Ref>), the Simple Symmetric Random Walk (SSRW, <Ref>), a non-Markovian process (<Ref>), and Monte Carlo Markov Chain (MCMC, <Ref>).
-  In the case of the SSRW, our improvements are the most dramatic: in sharp contrast with existing techniques, we are able to capture the correct scaling between the distance from the average t, the number of variables n, and the decay probability in the concentration bound. 
-We remark that our new method – based on a change of measure argument – is rather flexible and can be employed in most settings. In fact, it only requires the absolute continuity between the joint and the product of the marginals, while existing approaches generally have more restrictive assumptions (e.g., Markovity with stationary distribution <cit.> or contractivity <cit.>). The key idea is to shift the focus 
-from proving concentration to bounding an information measure (i.e., the Hellinger integral, see <Ref>) between the joint distribution and the product of the marginals. Crucially, the Hellinger integral satisfies tensorisation properties that allow us to easily upper bound it, even in high-dimensional settings (see <Ref>).
-We highlight that our approach provides a natural generalisation of the existing concentration of measure results to dependent random variables, in the sense that we recover exactly McDiarmid's inequality when the random variables are independent. Furthermore, for sufficiently large t, namely, in a “large deviations” regime, we approach the decay rate (<ref>) for the independent case, even when the random variables are actually dependent.
+    (AA^⊤-λ (A+A^⊤)-μ I)=0   .
 
-The rest of the paper is organized as follows. In <Ref>, we discuss related work in the area.
-in <Ref> we cover the preliminaries, namely, information measures (<Ref>), Markov kernels (<Ref>), and strong data-processing inequalities (SDPIs, <Ref>). We then provide the main result of this work in <Ref>, which is then applied in <Ref> to four different settings: finite-state space Markov chains (<Ref>), the SSRW (<Ref>) a non-Markovian stochastic process (<Ref>), and MCMC methods (<Ref>). Concluding remarks are provided in <Ref>. Part of the proofs and additional discussions are deferred to the appendices. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- §.§ Related Work
-
- The problem of concentration for dependent random variables has been addressed in multiple ways. The first results in the area are due to Marton <cit.> who heavily relied on transportation-cost inequalities (Pinsker-like inequalities) and an elegant mixture of information-theoretic and geometric approaches. Another important contribution, building upon Marton's work, was given by Samson in <cit.> where some of Marton's results were extended to include Φ-mixing processes. More recent advances, complementing and generalising the work by Samson and Marton, were provided in <cit.>, where the Martingale method was employed to prove concentration for dependent (but defined on a countable space) processes and in <cit.>, where Marton's couplings were exploited. In particular, the results derived in <cit.> are equivalent to the ones advanced in <cit.> but obtained through couplings rather than linear programming. All of these approaches measure the degree of dependence by looking at distances between conditional distributions (organised in matrices whose norms are then computed, see <Ref>) or by constructing “minimal couplings” between conditional distributions (see <Ref>). The resulting quantities, which are necessary in order to 
- analyse the corresponding probabilities, can be difficult to compute, especially in non-Markovian settings. 
- Another approach similar in spirit to ours is given in <cit.>, where a generalisation of Hoeffding's inequality for stationary Markov chains is provided. Other related work can be found in <cit.>. These results aim to establish Hoeffding-like inequalities for Markov chains by relating it to a different Markov chain whose cumulant generating function can be bounded under different assumptions:
+ Under this condition, multiplication of 
+  (<ref>) by U^⊤ yields
  
-  <cit.> are restricted to discrete and ergodic Markov chains, while <cit.> extends to general state-space but requires geometric ergodicity. All these generalisations of Hoeffding's inequality do not, however, allow for arbitrary functions of a sequence of random variables, but they are restricted to (sums of) bounded functions applied to each individual sample and they all require the existence of a stationary distribution.  Given that the approach presented in <cit.> is more general than the one proposed in <cit.>, our results will be compared directly with <cit.>.
-    Another (less related) approach can be found in <cit.>, where the strength of the dependence is measured in a different way with respect to both this work and the related work mentioned above. Moreover, the approach in <cit.> is mostly restricted to empirical averages of bounded random variables and includes an additional additive factor that grows with the number of samples. Finally, we remark that 
-	<cit.> exploits a technique similar to what is pursued in this work, in order to extend McDiarmid's inequality to the case where the function f depends on the random variables themselves (while the random variables remain, in fact, independent). Said result was then applied to a learning setting.
+    U^⊤AA^⊤U=2λ^2+μ  .
 
-
+ Wherefrom it follows that the critical values of the objective function
+  (<ref>) are given by 
  
+    z=λ^2+μ  .
 
-§ PRELIMINARIES
-
-
- In this section, we will define the main objects utilised throughout the document and define the relevant notation.
-	We will 
- adopt a measure-theoretic framework.
-	Given a measurable space (,ℱ) and two measures μ,ν which render it a measure space, if ν is absolutely continuous with respect to μ (denoted with ν≪μ), then we will represent with dν/dμ the Radon-Nikodym derivative of ν with respect to μ. Given a (measurable) function f:→ℝ and a measure μ, we denote with μ(f) = ∫ f dμ the 
-Lebesgue integral of f with respect to the measure μ. 
-The Radon-Nikodym derivatives represent the main building-block of the following fundamental objects.
-
-	
-
- §.§ Hellinger integral, α-norm and Rényi's α-divergence
-
- An important ingredient of this work are information measures. In particular, we will focus on Hellinger integrals which can be seen as a transformation of the L^α-norms and of 
- Rényi's α-divergences. 
-	
-
-  §.§.§ Rényi's α-divergences
-
-	Introduced by Rényi as a generalization of the KL-divergence, the α-divergence has found many applications in 
- statistical inference <cit.>, and it has  
- 
- several 
- operational interpretations (e.g., hypothesis testing, and the cut-off rate in block coding <cit.>).
-	It can be defined as follows <cit.>.
-	
-		Let (Ω,,),(Ω,,) be two probability spaces. Let α>0 be a positive real number different from 1. Consider a measure μ such that ≪μ and ≪μ (such a measure always exists, e.g., μ=(+)/2)) and denote with p,q the densities of , with respect to μ. Then, the α-divergence of  from  is defined as 
-		
-    D_α():=1/α-1log∫ p^α q^1-α dμ.
-
-	
-
-		Definition <ref> is independent of the chosen measure μ. 
-		In fact, 
-		∫ p^αq^1-α dμ = ∫(q/p)^1-αd and, whenever ≪ or 0<α<1, we have ∫ p^αq^1-α dμ= ∫(p/q)^αd, see <cit.>. Furthermore, it can be shown that, if α>1 and ≪̸, then D_α()=∞. The behavior of the measure for α∈{0,1,∞} can be defined by continuity. In general, one has that D_1() = D() which denotes the KL-divergence between  and ; furthermore, if D()=∞ or there exists β>1 such that D_β()<∞, then lim_α↓1D_α(Q)=D() <cit.>. For an extensive treatment of α-divergences and their properties, we refer the reader to <cit.>. 
- 
-	
-	
-	
-	
-
-  §.§.§ φ-divergences
-
-	Another generalization of the KL-divergence is obtained by considering a generic convex function φ:ℝ^+→ℝ 
- with the 
- constraint 
- φ(1)=0. The constraint can be ignored as long as φ(1)<+∞ by simply considering a new mapping φ̃(x) = φ(x) - φ(1). 
-	
-		Let (Ω,,),(Ω,,) be two probability spaces. Let φ:ℝ^+→ℝ be a convex function such that φ(1)=0. Consider a measure μ such that ≪μ and ≪μ. Denoting with p,q the densities of the measures with respect to μ, the φ-divergence of  from  is defined as 
-		
-    D_φ():=∫ q φ(p/q) dμ.
-
-	
-	Despite the fact that the definition uses μ and the densities with respect to this measure, 
- φ-divergences are 
- independent from the dominating measure. In fact, 
- when absolute continuity between , holds, i.e., ≪,[We will make this assumption throughout the paper.] 
- we obtain 
- <cit.>
-	
-    D_φ()= ∫φ(d/d)d.
-
-
-The KL-divergence is retrieved by setting φ(t)=tlog(t). Other common examples are the Total Variation distance (φ(t)=1/2|t-1|), the Hellinger distance (φ(t)=(√(t)-1)^2), and Pearson χ^2-divergence (φ(t)=t^2-1). We remark that 
-φ-divergences do not include the family of Rényi's α-divergences.
-
-	Particularly relevant to us will be the family of parametrized divergences that stems from φ_α(x)=x^α for α>1. The function φ_α(x) is convex on the positive axis for every α>1. However, it does not satisfy the property that φ(1)=0. Said requirement 
- can 
- be lifted with the consequence of losing the property that _φ(νμ)=0 if and only if ν = μ. We will call the family of divergences stemming from such functions the Hellinger integrals of order α.
-	
-		Let (Ω,,ν),(Ω,,μ) be two probability spaces, and let 
-  φ_α:ℝ^+→ℝ be defined as 
-  φ_α(x)=x^α. Let μ and ν be two probability measures such that ν≪μ, then the Hellinger integral of order α is given by
-		
-    H_α(νμ):= D_φ_α(νμ) = ∫(dν/dμ)^α dμ.
-
-	
-
-	    Let us highlight that 
-     we are not considering Hellinger divergences of order α (including the so-called χ^2-divergence) which consists of divergences stemming from 
-     x^α-1/(α-1), but rather a transformation of said family. In fact, the Hellinger divergences are 
-     equal to 0 if and only if the measures coincide. In contrast, the Hellinger integral is equal to 1 if the two (probability) measures coincide. 
-
-
-	Another notable object for this work will be the 1/α power of the Hellinger integral, i.e.,
-	
-    H_α^1/α(νμ)= ‖dν/dμ‖_L^α(μ),
-
-	which 
- represents the L^α-norm of the Radon-Nikodym derivative with the respect to the measure μ.
-    Moreover, the following holds 
-    <cit.>:
-    
-    H_α^1/α(νμ) = exp(α-1/αD_α(νμ)).
-
-   
-    
-
- §.§ Markov kernels
-
-    Most of the comparisons with the state of the art will be drawn in 
-    Markovian settings. In this section, we will define the main objects necessary in order to carry out said confrontation.
-    
-    Let (Ω,ℱ) be a measurable space. A Markov kernel K is a mapping K:ℱ×Ω→ [0,1] such that:
-    
-        
-  * for every x∈Ω, the mapping E∈ℱ→ K(E|x) is a probability measure on (Ω,ℱ);
-        
-  * for every E∈ℱ the mapping x ∈Ω→ K(E|x) is an ℱ-measurable real-valued function.
-    
-    
-    A Markov kernel can be seen as acting on measures “from the right”, i.e., given a measure μ on (Ω, ℱ), 
-    
-    μ K(E) = μ(K(E|·)) = ∫ dμ(x) K(E|x),
-
-    and on functions “from the left”,  i.e., given a function f:Ω→ℝ,
-    
-    K f(x) = ∫ dK(y|x) f(y).
-
-    Given a sequence of random variables (X_n)_n∈ℕ, one says that it represents a Markov chain if, given i≥ 1,  there exists a Markov kernel K_i such that for every measurable event E:
-    
-    ℙ(X_i ∈ E | X_1,…,X_i-1) = ℙ(X_i ∈ E | X_i-1) = K_i(E|X_i-1)     almost surely.
-
-    If for every i≥ 1, K_i = K for some Markov kernel K, then the Markov chain is said to be time-homogeneous. Whenever the index is suppressed from K, we will be referring to a time-homogeneous Markov chain. The kernel K of a Markov chain describes the probability of getting from x to E in one step, i.e., for every i≥ 1, 
-    K(E|x) = ℙ(X_i ∈ E| X_i-1=x). One can then define (inductively) the κ-step 
-    kernel K^κ as follows:
-    
-    K^κ(E|x) = ∫ K^κ-1(E|y)dK(y|x).
-
-    Note that K^κ is also a Markov kernel, and it represents the probability of getting from x to E in κ steps: K^κ(E|x)= ℙ(X_κ+1∈ E|X_1=x).
-    If (X_n)_n∈ℕ is the Markov chain associated to the kernel K and X_0 ∼μ, then μ K^m denotes the measure of X_m+1 at every m∈ℕ. Furthermore, a probability measure π is a stationary measure for K if π K(E) = π(E) for every measurable event E. We also note that, if the state space is discrete, then K can be represented using a stochastic matrix. 
-    
-    Given this dual perspective on Markov operators (acting on measures or functions), one can then study their contractive properties. In particular, let us define 
-    
-    ‖ K‖_α→α := sup_f≠ 0‖ K f‖_α/‖ f ‖_α.
-
-    Then, Markov kernels are generally contractive <cit.>, meaning that ‖ K‖_α→α≤ 1 and, consequently, ‖ Kf ‖_α≤‖ f ‖_α for every f.
-        Similarly, given γ≤α, one can define the following quantity 
-    ‖ K‖_α→γ := sup_f≠ 0‖ K f‖_α/‖ f ‖_γ.
-
-        It has been proven that many Markovian operators are hyper-contractive <cit.>, meaning that ‖ K‖_α→γ≤ 1
-        for some γ < α.  Given a kernel K and α>1, we denote by γ^⋆_K(α) the smallest γ such that K is hyper-contractive, i.e., such that  ‖ K‖_α→γ≤ 1. Said coefficient has been characterised for some Markov operators <cit.>. In case the Markov kernel is not time-homogeneous, in order to simplify the notation, instead of denoting the corresponding coefficient with γ^⋆_K_i(α), we will simply denote it with γ^⋆_i(α). 
-        
-        Given a Markov kernel K and a measure μ, one can also define the adjoint/dual operator (or backward channel) K^← as the operator such that
-         ⟨ g, Kf⟩ = ⟨ K^← g, f⟩ for all g and f <cit.>. While one can define dual Markovian operators more generally, here we will focus on discrete settings where they can be explicitly specified via K and μ <cit.>:
-    
-    K_μ^←(y|x) = K(y|x)μ(x)/μ K (y).
-
-     
-
- §.§ Strong Data-Processing Inequalities
-
-    An important property shared by divergences is the Data-Processing Inequality (DPI): given two measures μ,ν and a Markov kernel K, one has that, for every convex φ,
-    
-    D_φ(ν Kμ K) ≤ D_φ(νμ).
-
-    This property holds as well for Rényi's α-divergences, despite them not being a φ-divergence <cit.>.
-    DPIs represent a widely used tool and a line of work has focused on tightening them. In particular, in many settings of interest, given a reference measure μ, one can show that D_φ(ν Kμ K) is strictly smaller than D_φ(νμ)  unless ν=μ. Furthermore, the characterization of the ratio D_φ(ν Kμ K)/D_φ(νμ) has lead to the study of “strong Data-Processing Inequalities” <cit.>.  
-    
-
-    Given a probability measure μ, a Markov kernel K and  a convex function φ, we say that K satisfies a φ-type Strong Data-Processing Inequality (SDPI) at μ with constant c∈[0,1) if
-    
-    D_φ(ν Kμ K) ≤ c· D_φ(νμ),
-
-    for all ν≪μ. The tightest such constant c is denoted by
-
-    η_φ(μ,K)    = sup_ν≠μD_φ(ν Kμ K) /D_φ(νμ), 
-    η_φ(K)    = sup_μη_φ(μ,K).
-
-
- [SDPI for the KL and the BSC]
-     Let μ=Ber(1/2), ϵ<1/2 and K=BSC(ϵ), i.e., K(y|x) =ϵ if x=y and K(y|x) =1-ϵ otherwise. Then, one has that η_xlog x(μ,K)=(1-2ϵ)^2 <cit.>, which implies that  η_xlog x(μ,K) < 1 for all ϵ>0. 
-  
- While η_φ can be a difficult object to compute even for simple channels, some universal upper and lower bounds are known <cit.>:
- 
-    η_φ(K) ≤sup_x,x̂‖ K(·|x)-K(·|x̂)‖_TV = η_|x-1|(K)=η_TV(K),
-
-  
-    η_φ(μ,K) ≥η_(x-1)^2(μ,K) = η_χ^2(μ,K).
-
- We remark that these bounds hold for functions φ such that φ(1)=0 or, equivalently, when the divergence D_φ(νμ) is defined to be μ(φ(dν/dμ))-φ(1). For general convex functions φ, as well as for Rényi's divergences, the DPI holds and SDPI constants are still defined analogously, however one cannot use common techniques to bound said quantities. The following counter-example highlights the issue.
- [Counter-example for Hellinger integrals and Rényi's divergences] 
-     Let ν=(1/3,2/3) and K_1=BSC(1/3). Then, the stationary distribution π is given by (1/2,1/2) and ν K_1= (5/9,4/9). A direct calculation gives that H_2(ν K_1π K_1) = 82/81 and H_2(νπ) = 10/9. Moreover, if K=BSC(λ), one has that η_TV(K)=|1-2λ| (see <cit.>  and <Ref>). Thus,  
-        
-    H_2(ν K_1π K_1)/H_2(νπ) = 41/45 > η_TV(K_1) = 1/3,
-
-        which means that the inequality (<ref>) is violated. This is due to the fact that φ_2(x)=x^2 is not equal to 0 at x=1. In fact, 
-        renormalising H_2 leads to the χ^2-divergence, which satisfies 
-    H_2(ν K_1π K_1)-1/H_2(νπ)-1=χ^2(ν K_1π K_1)/χ^2(νπ )=1/9 < η_TV(K_1) = 1/3.
-
-        
-  Similarly, let K_2=BSC(1/5), which gives that η_TV(K_2)=3/5. Consider now D_α(K_2(·|0)π)=D_α(δ_0 K_2 π K) = 1/α-1log ( 2^1-α( 0.2^α +(0.8)^α)). Moreover, D_α(δ_0π) = log(2). Thus, by setting α=6, one has that
-     
-    η_D_α(K_2) > D_α(δ_0 K_2 π K_2)/D_α(δ_0π) = 0.6138 > η_TV(K_2) = 0.6,
-
-     which violates again the inequality (<ref>).
- 
-    
-
-§ MAIN RESULT
-
-
-    
-    Let _X^n be the joint distribution of (X_1,…, X_n), _X_i the marginal corresponding to X_i, and _⊗_i=1^n X_i the joint measure induced by the product of the marginals.     
-  Suppose that (X_1,…, X_n) are Markovian under _X^n, i.e., _X_i|X^i-1 = _X_i|X_i-1 almost surely. If _X^n≪_⊗_i=1^n X_i, for any function f satisfying <Ref>, any t>0 and 
-  α>1, 
-  one has
-  
-    
-    _X^n(| f-_⊗_i=1^n X_i(f)|≥ t )   ≤ 2^1/βexp(-2t^2/β∑_i=1^n c_i^2)H_α^1/α(_X^n_⊗_i=1^n X_i) 
-       ≤ 2^1/βexp(-2t^2/β∑_i=1^n c_i^2)(∏_i=2^nH^α_i)^1/α,
-
-    with β=α/(α-1), H_i^α = _X_i-1^1/β_i-1(H_αα_i^β_i-1/α_i(_X_i|X_i-1_X_i)), α_i>1 for i≥ 0, β_0=1, α_n=1 , and β_i = α_i/(α_i-1). 
-    
-    The proof of <Ref> is in <Ref>. 
-    
-    
-    If the function f satisfies <Ref> with c_i=1/n, like in the case of the empirical mean, one obtains 
-    
-    _X^n(| f-_⊗_i=1^n X_i(f)|≥ t ) ≤ 2^1/βexp(-n(2t^2/β-1/nαlog H_α(_X^n_⊗_i=1^n X_i))).
-
-    This means that if 
-    t > √(1/2n(α-1)log H_α(_X^n_⊗_i=1^n X_i)),
-
-    then <Ref> guarantees an exponential decay. If the sign of the inequality (<ref>) is reversed, then the bound actually becomes trivial, for n large enough. The threshold behavior just described characterises the main difference of this bound with respect to existing approaches: while there are no restrictive assumptions required (other than absolute continuity of the measures at play), the bound can be trivial if the joint distribution is “too far” from the product of the marginals. In contrast, other approaches, like the one described in <cit.>, do not generally exhibit such a “phase transition-like” behavior. Next, we will characterize the behaviour of the key quantity H_α(_X^n_⊗_i=1^n X_i) as a function of n 
-    in the concrete examples of <Ref>. Before doing that, a 
-    few additional remarks are in order. 
-    
-        The expression on the RHS of <Ref> can be complicated to compute, especially due to the presence of {α_i}_i=2^∞. 
-        Making a specific choice, which meaningfully reduces the number of parameters (i.e., taking α_i→ 1 for every i≥ 2), <Ref> boils down to the following, simpler, expression:
-   
-    _X^n(| f-_⊗_i=1^n X_i(f)|≥ t ) ≤ 2^1/βexp(-2t^2/β∑_i=1^n c_i^2)·∏_i=2^n max_x_i-1 H_α^1/α(_X_i|X_i-1=x_i-1_X_i).
-
-    Moreover, <Ref> can be re-written as follows:
-    
-    _X^n(| f-_⊗_i=1^n X_i(f)|≥ t ) ≤ 2^1/βexp(1/β(-2t^2/∑_i=1^n c_i^2+∑_i=2^n max_x_i-1 D_α(_X_i|X_i-1=x_i-1_X_i))).
-
-     <Ref> allows to exploit the SDPI coefficient for D_α (see <Ref>), which in some settings improves upon leveraging <Ref> along with hypercontractivity, see <Ref>.
-    
-    
-<Ref> can be proved in more generality. Indeed, for any measurable event E, one can say that, for every α>1, 
-    _X^n(E) ≤^1/β_⊗_i=1^n X_i(E)· H_α(_X^n_⊗_i=1^n X_i).
- Thus, our framework is not restricted to a McDiarmid-like setting, but it can be used to generalise any concentration of measure approach to dependent random variables. The idea is that concentration holds when random variables are independent, namely, _⊗_i=1^n X_i(E) decays exponentially in n under suitable assumptions. Then, <Ref> shows that a similar 
-exponential decay 
-holds also in the presence of dependence, as long as the measure of the joint is not “too far” from the product of the marginals. The “distance” between joint and product of the marginals is captured by the Hellinger integral H_α. In particular, if the joint measure corresponds to the product of the marginals, then H_α^1/α(_X^n_⊗_i=1^nX_i)=1 for every α. Thus, taking the limit of α→∞, one recovers 
-
-    _⊗ X_i(E)= _X^n(E ) ≤_⊗ X_i(E).
-
-
-
-On the RHS of both <Ref>, the probability term is raised to the power α-1/α and multiplied by the α-norm of the Radon-Nikodym derivative. On the one hand, as α grows, the α-norm grows as well, which increases the Hellinger integral; on the other hand, as α grows, α-1/α tends to 1, which reduces the probability. This introduces a trade-off between the two quantities that renders the optimisation over α non-trivial. We highlight that considering the limit of α→∞ provides the fastest exponential decay and it recovers the probability for independent random variables. This has the cost of rendering the multiplicative constant larger, and we will discuss in detail the choice of α in the various examples of <Ref>.
-
-
-
- Note that the first inequality in <Ref> holds without the Markovity assumption. The second inequality, instead, leverages tensorisation properties of H_α which are particularly suited for Markovian settings. In the general case,  
-one can still 
-reduce 
-H_α(_X^n_⊗_i=1^n X_i) (a divergence between n-dimensional measures) to n one-dimensional objects, see <Ref> for details about the tensorisation of both the Hellinger integral H_α and Rényi's α-divergence D_α. 
-In particular, following the approach undertaken to derive <Ref>, one obtains 
-   
-    _X^n(| f-_⊗_i=1^n X_i(f)|≥ t ) ≤ 2^1/βexp(-2t^2/β∑_i=1^n c_i^2)  ·∏_i=2^n max_x^i-1 H_α^1/α(_X_i|X^i-1=x^i-1_X_i).
-
-Note that <Ref>
-gives a natural generalisation of concentration inequalities to the case of arbitrarily dependent random variables (just like <Ref> generalises them to Markovian settings). Indeed, if _X^n=_⊗_i X_i, then taking the limit of β→ 1 in both <Ref> and <Ref>, one recovers the classical concentration bound for independent random variables (see the discussion in <Ref> recalling that β=α/(α-1)). 
-
-    
-    We will now compare our bounds with a number of related works: 1) the approach proposed in <cit.> and based on the martingale method; 2) the approach proposed in <cit.> which leverages properties of contracting Markov chains; and finally 3) the approach advanced in <cit.> showing concentration around the median via transportation-cost and isoperimetric inequalities. 
-  
-
-§ APPLICATIONS
-
-    Let us now apply <Ref> to four settings:
-    
-        
-  * In <Ref>, we consider a discrete Markovian setting. Here, we specialise <Ref>  leveraging the  properties of the Markov kernel along with the discrete structure of the problem, 
-        thus showing that 
-        in certain parameter regimes our bound fares better than what the state of the art can provide;
-        
-  * In <Ref>, we consider a non-contracting Markovian setting that  does not admit a stationary distribution. Both these properties do not allow the application of most of the existing work in the literature. In contrast, not only our approach can be applied, but it provides exponentially decaying probability bounds, while <cit.> can only provide an upper bound that does not vanish as n grows;
-        
-  * In <Ref>, we consider a non-Markovian setting where the entire past of the process influences each step.  Here, to the best of our knowledge, we provide the first bound that exponentially decays in n and has a closed-form expression, while existing approaches either cannot be employed or require the computation of complicated quantities (e.g., <Ref>);
-        
-  * Finally, in <Ref>, we apply <Ref> to provide error bounds on Markov Chain Monte Carlo methods. Similarly to the other settings, we propose a regime of parameters in which our results fare better and, consequently, provide an improved lower bound on the minimum burn-in period necessary to achieve a certain accuracy in MCMC.
-    
-  We will hereafter assume, for simplicity of exposition, that c_i=1/n in <Ref> like in the case of the empirical mean. All the results hold for general c_i's, but the expressions and comparisons would become more cumbersome.
- 
-    
-
- §.§ Discrete Markov chains
- 
-    
-    Consider a discrete setting and a Markov chain (X_n)_n∈ℕ determined by a sequence of transition matrices (K_n)_n∈ℕ. Assume that X_1∼ P_1 and let X_i denote the random variable whose distribution is given by P_1 K_1… K_i-1.[One can also see X_i as the outcome of X_i-1 after being passed through the channel K_i-1.] 
-   
-   
-    
-        For i≥ 1, suppose K_i is a discrete-valued Markov kernel, and let γ^⋆_i(α) be the smallest parameter making it hyper-contractive, see <Ref>.
-        Then, for every function f satisfying <Ref> with c_i=1/n and every α>1, 
-        
-    _X^n(| f-_⊗_i=1^n X_i(f)|≥ t) ≤ 2^1/βexp(-2nt^2/β+∑_i=1^n-1( log‖ K_i^←‖_α→γ^⋆_i(α) - 1/γ̅_i^⋆(α)min_j∈supp(_i)log P_i(j))).
-
-        Moreover, if the Markov kernel is time-homogeneous, i.e., K_i=K for every i≥ 1, then 
-        
-    _X^n   (| f-_⊗_i=1^n X_i(f)|≥ t)
-       ≤ 2^1/βexp(-2nt^2/β+(n-1) log‖ K^←‖_α→γ^⋆_K(α) - 1/γ̅^⋆_K(α)∑_i=1^n-1(min_j∈supp(_i)log P_i(j)))
-       ≤ 2^1/βexp(-2nt^2/β+(n-1) log‖ K^←‖_α→γ^⋆_K(α) - n-1/γ̅^⋆_K(α)(min_i=1,…,(n-1)min_j∈supp(_i)log P_i(j))).
-
-    In the above equations γ̅_i^⋆(α) and γ̅_K^⋆(α) denote the Hölder conjugates of, respectively, γ_i^⋆(α) and γ_K^⋆(α).
-    
-
-
-        The main object one has to bound, according to <Ref>, is the following:
-    
-    max_x_i-1 H_α(_X_i|X_i-1=x_i-1_X_i),  with  i≥ 2.
-
-From the properties of the Markov kernel, one has that
-P_X_i = P_X_i-1 K_i-1. Furthermore, P_X_i|X_i-1=x_i-1 can be seen as δ_x_i-1 K_i-1 where δ_x_i-1 is a Dirac-delta measure centered at x_i-1. Thus, recalling the definition of 
-γ^⋆_i-1(α) from 
-<Ref>, 
-
-    H^1/α_α(_X_i|X_i-1=x_i-1_X_i)     = H^1/α_α(δ_x_i-1K_i-1_X_i-1K_i-1)
-       = ‖dδ_x_i-1K_i-1/d_X_i-1K_i-1‖_L^α(_X_i-1K_i-1)
-       ≤‖ K_i-1^←‖_α→γ^⋆_i-1(α) H_γ^⋆_i-1(α)^1/γ^⋆_i-1(α)(δ_x_i-1_X_i-1),
-
-where <Ref> follows from <cit.>. 
-Moreover, for every κ>1,
- 
-    H^1/κ_κ(δ_x_i-1_X_i-1) = _X_i-1({x_i-1})^1-κ/κ = _X_i-1({x_i-1})^-1/κ̅,
-
- where κ̅ denotes the Hölder's conjugate of κ and _X_i-1({x_i-1}) the measure that _X_i-1 assigns to the point x_i-1.
- Thus, the following sequence of steps, along with <Ref>, concludes the argument:
- 
-    ∏_i=2^n max_x_i-1 H^1/α_α(_X_i|X_i-1=x_i-1_X_i)    ≤∏_i=2^nmax_x_i-1‖ K^←_i-1‖_α→γ^⋆_i-1(α) H^1/γ^⋆_i-1(α)_γ^⋆_i-1(α)(δ_x_i-1_X_i-1) 
-        = (∏_i=2^n‖ K^←_i-1‖_α→γ^⋆_i-1(α))(∏_i=2^n  max_x_i-1(_X_i-1({x_i-1})^-1/γ̅^⋆_i-1(α)))
-       = (∏_i=1^n-1‖ K^←_i ‖_α→γ^⋆_i(α))(∏_i=1^n-1(min_x_i_X_i({x_i}))^-1/γ̅^⋆_i(α)).
-
- Moreover, given the discrete setting, one can replace the measure _X_i with the corresponding pmf which is denoted by P_i.
- the norm which gives the for a given 
-
-    H^1/α_α(_X_i|X_i-1=x_i-1_X_i) = H^1/α_α(δ_x_i-1K_X_i-1K) ≤ c H^1/α_α(δ_x_i-1_X_i-1),
-
- with c≤ 1. The inequality in <Ref> follows from interpreting H_α in one of two ways:
- 
-     
-  * as a φ-divergence, then the inequality follows from the Data-Processing Inequality that H_α satisfies (a consequence itself of the convexity of x^α and Jensen's inequality). In this case c can be seen as the “Strong Data-Processing Inequality Coefficient” of H_α raised to the 1/α power <cit.>;
-     
-  * as the L^α-norm of the Radon-Nikodym derivative and the inequality following from contractivity of the Markov Oeprators K and K^← (along with the fact that dν K/dμ K = K^←(dν/dμ) <cit.>). In this case c can be seen as the contractive coefficient of the operators K and the induced adjoint K^← according to <Ref>.  
- 
- 
-   
-        If 
-        the Markov kernel K_i is only contractive (and not hyper-contractive), then 
-        γ^⋆_i(α)=α and γ̅^⋆_i(α)=β, which allows to simplify <Ref>. 
- 
-  
-   
-    
-     
-        
-      
-       
-       
-       
-
-
-
-
-
-   In this case, 
-if 
-   
-    t^2    ≥β/2n-1/nlog‖ K^←‖_α→α - n-1/2n(min_i min_j log P_i(j))
-       = (1+o_n(1))(β/2log‖ K^←‖_α→α^β -1/2(min_i min_j log P_i(j)) ),
-
-   then <Ref> gives 
-   exponential (in n) concentration even in the case of dependence. 
-   
-   
-   
-    
-    Another perspective naturally 
-    stems from <Ref>. Indeed, similarly to <Ref>, one has 
-    
-        
-    _X^n(| f-_⊗_i=1^n X_i(f)|≥ t)     ≤ 2^1/βexp(-1/β(2nt^2-∑_i=2^n max_x_i-1 D_α(_X_i|X_i-1=x_i-1_X_i)))
-       ≤ 2^1/βexp(-1/β(2nt^2-η_α(K)  ∑_i=2^nmax_x_i-1 D_α(δ_x_i-1_X_i-1))) 
-        = 2^1/βexp(-1/β(2nt^2+η_α(K)  ∑_i=2^nmin_x_i-1log P_i-1(x_i-1))).
-
-    We remark that 
-    D_α can also be hyper-contractive with respect to some Markovian operators, meaning that in <Ref> for instance, one could consider D_γ(δ_x-1_X_i-1) with γ < α (this is equivalent to hyper-contractivity of Markov operators, <cit.>). One such example is the Ornstein–Uhlenbeck channel with noise parameter t, cf. <cit.>, for which one can prove hyper-contractivity with respect to D_α <cit.>. Moreover, in some settings, leveraging SDPIs for D_α can provide an improvement over <Ref>, see <Ref> for a detailed
-    comparison.
-    
-   
-    We now compare the concentration bound provided by <Ref> with existing bounds in the literature. In this section, the comparison concerns a general Markov kernel, and the explicit calculations for a binary kernel are deferred to <Ref>. 
-    
-    
-    
-
-  §.§.§ Comparison with <cit.>
-  Let us consider the same setting as in <Ref>. Then, <cit.> gives 
-
-    
-    ℙ(|f-_X^n(f)|≥ t ) ≤ 2 exp(-nt^2/2 M_n^2),
-
-    where M_n = max_1≤ i≤ n-1(1+∑_j=i^n-1∏_k=i^j η_KL(K_k) ) and we recall that η_KL(K_i)=sup_x,x̂TV(K_i(·|x),K_i(·|x̂)) is the contraction coefficient of the Markov kernel K_i. First, note that, 
-    if the random variables are independent and thus _X^n=_⊗ X_i, then <Ref> reduces to 
-    _X^n(E) ≤ 2 exp(-nt^2/2),
- while <Ref> with γ^⋆_K(α)=α→∞ and γ̅^⋆_K(α)=β→ 1 recovers McDiarmid's inequality with the correct constant in front of n, i.e.,
-    
-    _X^n(E) ≤ 2 exp(-2nt^2).
+ Substitution this into (<ref>) results in the equation connecting  z and λ:
+
+    Φ(λ,z)=0
+
+ where
+
+    Φ(λ,z):=
+    [ A A^⊤- λ (A+A^⊤)+(λ^2-z) I ]
+
+
+    =[ (λ I - A)(λ I - A)^⊤-z I ]
+
+Zeros z_1,…, z_n of the polynomial Φ(λ,z)  with respect to the variable z are evidently real since they are the squares of the singular values for the matrix λ I-A.
+
+Our further task is to deduce an extra equation connecting 
+λ and z.
+
+ The value d^2(A,𝔻) belongs to the set of non-negative zeros of 
+the polynomial
+
+    ℱ(z)≡𝒟_λ(Φ(λ,z))/z^n   .
+
+
+
+
+Proof. Under the condition (<ref>), there exists  a nontrivial solution  for (<ref>) with respect to the column  U
+
+    (λ I-A)(λ I-A)^⊤U=z  U    .
+
+This equality means that U is the right 
+singular vector for the matrix λ I - A corresponding to the singular value √(z). The corresponding left singular vector for that matrix can be found from the equality
+
+    √(z)V:=(λ I - A)^⊤U   .
+
+Dual relationship is valid for U:
+
+    √(z)U=(λ I - A)V   .
+
+From the conditions (<ref>) and (<ref>)
+
+
+
+
+it follows that
+
+    U^⊤(λ I - A)U=0   .
+
+Multiply (<ref>) from the left by U^⊤. From (<ref>), it follows that
+
+    √(z)=U^⊤(λ I - A)V   .
+
+Multiply (<ref>) from the left by V^⊤ and utilize (<ref>):
+
+    √(z)V^⊤V=V^⊤(λ I - A)^⊤U=√(z)  .
+
+Wherefrom the two alternatives follow
+
+    V^⊤V=1     √(z)=0   .
+
+Similarly, multiplication of (<ref>) from the left by U^⊤ and further application of (<ref>) yields
+
+    √(z)U^⊤V=0   .
+
+This also leads to two alternatives:
+
+    U^⊤V=0     √(z)=0   .
+
+Ignore the case √(z)=0. 
+
+    V^⊤V=1,  U^⊤V=0   .
+
+Consider the equation (<ref>) as a definition of the √(z) as the function of λ. Differentiate this relation with respect to λ:
+
+    d √(z)/d λ=U^⊤V+d  U^⊤/d λ (λ I - A)V+U^⊤ 
+    (λ I - A)  d  V/d λ  .
+
+With the aid of (<ref>) and (<ref>) transform this into
+
+    U^⊤V+√(z)[ d  U^⊤/d λ U + V^⊤d  V/d λ]   .
+
+Due to (<ref>) and (<ref>), we arrive at 
+
+    d √(z)/d λ = 0   .
+
+
+Equation (<ref>) defines implicit function z(λ). Differentiation of the identity Φ(λ,z(λ))≡ 0 with respect to λ yields the identity
+
+    Φ^'_λ(λ,z)+Φ^'_z(λ,z) d  z/d λ≡ 0   .
+
+Under the condition (<ref>), the variables λ and z are linked by an extra relationship
+
+    Φ^'_λ(λ,z)=0   .
+
+Together with (<ref>),  the deduced condition composes the system of algebraic equations
+
+    Φ (λ,z)=0, Φ^'_λ(λ,z)=0    .
+
+According with the results of Section <ref>, elimination of λ from this system can be implemented with the aid of the discriminant computation, i.e. the variable z should  satisfy the equation
+
+    𝒟_λ (Φ (λ,z))=0   .
+
+To prove the validity of (<ref>), it is necessary to additionally confirm that the left-hand side of the last equation is divisible by z^n. This is indeed the case, since the polynomial Φ(λ,0) possesses n multiple zeros coinciding with the eigenvalues of the matrix A. 
+
+With ℱ(z) given by (<ref>), the distance equation ℱ(z) =0 is now well-defined and in Section <ref> we discuss some of related features and computational aspects. 
+
+To conclude the present section, we have to detail the properties of the λ-component for the solution of the system (<ref>).
+Let the polynomial ℱ(z) defined by (<ref>) possess a positive real zero z_0 and this zero be simple. Then the polynomial Φ (λ,z_0) has a unique multiple zero and multiplicity of this zero equals 2. We denote by λ_0. It is evidently real and can be expressed as a rational function of z_0 via, for instance, formula (<ref>). 
+
+The less evident conclusion is as follows: this multiple zero coincides with the multiple eigenvalue of the matrix in 𝔻 providing the critical value z_0 for the function d^2(A,𝔻). 
+
 
  
-    
-    Assume now that the Markov kernel is time-homogeneous and has a contraction coefficient η_TV(K) < 1. Then, M_n = max_1≤ i≤ n-11-η_TV(K)^n+1-i/1-η_TV(K)= 1-η_TV(K)^n/1-η_TV(K). For compactness, define P_i^⋆(j^⋆):=min_imin_j P_i(j). Making a direct comparison, one has that if 
-    
-    t^2    > n-1/n(2M_n^2/4M_n^2-β)log‖ K^←‖_α→α^β/P_i^⋆(j^⋆)
-       = (1+o_n(1)) (2/4-β(1-η_TV(K))^2)log‖ K ^←‖_α→α^β/P_i^⋆(j^⋆),
+For any real solution (λ_0,z_0) of the system (<ref>)  where
+z_0 0, there exists the rank 1 perturbation E_0 such that 
+E_0=√(z_0) and the matrix B_0=A+E_0 possesses the multiple eigenvalue 
+λ_0.
 
-    then <Ref> (with γ^⋆_K(α)=α and γ̅^⋆_K(α)=β) provides a faster exponential decay than <Ref>. The explicit calculations for the special case of a binary kernel are provided in <Ref>.
 
-  
-  Considering this setting,  one has the following bound:
+Proof. The number √(z_0) is a singular value  for the matrix λ_0 I - A. We intend to prove that the matrix from the theorem statement is defined by the formula
 
-    
-    _X^n(E) ≤ 2^1/βexp(-1/β(2nt^2- (n-1)log(m ‖ K‖_α→α^β))).
+    E_0:=√(z_0)U_0 V_0^⊤  ,
 
-    Consequently, one can guarantee an exponential decay whenever 
-    
-    t^2 > (1+o_n(1))log(m ‖ K‖_α→α^β)/2.
+where U_0 and V_0 are respectively the left and the right singular vectors of the unit norm for the matrix
+ λ_0 I-A corresponding to √(z_0).
 
-    However, in this setting one can say something more specific. In particular, one can compute the ratio 
-    H^1/α_α(_X_i|X_i-1=x_i-1_X_i)/H^1/α_α(δ_x_i-1_X_i-1) = r_α(i)
- explicitly. 
-    K is a m× m matrix characterised by a vector λ̅ of m parameters λ_j such that ∑_j=1^m λ_j=1 and each row is a permutation of these parameters in such a way that every column also sums to 1 (Da elaborarci su, conseguenza del Birkhoff–von Neumann theorem? Non sono 100% sicuro che sia corretto o se sia da assumere. Anche la notazione non mi piace r_α(i) ma poi ci riflettiamo). Hence one can see that 
-    
-    r_α(i) = ‖λ̅‖_ℓ^α = (∑_j=1^m λ_j^α)^1/α.
-  This implies that one does not need the quantity ‖ K ‖_α→α and can provide the following, tighter bound:
-    
-    _X^n(E) ≤ 2^1/βexp(-1/β(2nt^2- (n-1)log(m ‖λ̅‖^β))).
+Indeed, the matrix B_0=A+E_0  has λ_0 as the eigenvalue corresponding to the eigenvector V_0: 
 
-    We will now compare <Ref>, with m=2 for simplicity (Controllo poi se posso ricalcolare tutto per m generale negli altri lavori e fare un confronto senza settare m=2. Un altro motivo per considerare m=2 viene dal fatto che si può calcolare esplicitamente l'ipercontrattività perche il caso della DSBS è stato ampliamente studiato)., with the current state of the art. 
-    One can then consider the limit of α→∞ which renders β→ 1. On the one hand, this implies a larger multiplicative coefficient (as H_α grows with α, see <Ref>) and, consequently, it increases the minimum value of t one can consider in <Ref>. On the other hand, it guarantees a faster exponential decay in eq:generalResultDiscreteHomogeneousHypereq:generalResultDiscreteHomogeneous2Hyper. 
- In fact, as β→ 1, the RHS of (<ref>) scales as exp(-2nt^2(1+o_n(1))) for large enough t, which matches the behavior of <Ref>. 
- Let us highlight that, to the best of our knowledge, our approach is the first to recover the same exponential decay rate obtained in the independent case, even in the presence of correlation among the random variables. 
+    B_0V_0=(A+E_0)V_0 
+    (<ref>)= 
+    AV_0+√(z_0)U_0
+    (<ref>)
+    =AV_0+(λ_0I-A)V_0=λ_0V_0   .
+
+If (B_0-λ_0 I)<n-1 then the theorem is proved. Assume that (B_0-λ_0 I)=n-1. Let us prove the existence of a column W such  that
+
+    (B_0-λ_0 I)W=V_0   .
+
+The necessary and sufficient condition for resolving this equation consists in the fulfillment of the equality
+
+    (B_0-λ_0I)(B-λ_0I)^+V_0=V_0
+
+where ^+ stands for the Moore-Penrose inverse of the matrix. It can be easily verified that
+
+    (B_0-λ_0I)(B_0-λ_0I)^+=I-U_0U_0^⊤
+
+(by assumption, (B_0-λ_0 I)=n-1), and the condition (<ref>) is fulfilled:
+
+    (B_0-λ_0I)(B_0-λ_0I)^+V_0=
+    (I-U_0U_0^⊤)V_0
+    (<ref>)=
+    V_0   .
+
+
+The columns V_0 and W are linearly independent. 
+Indeed, if
+
+    α V_0+ β W=𝕆_n × 1   {α, β}⊂ℝ
+
+then on multiplying this equality from the left by
+B_0-λ_0 I it follows that
+ β V_0 = 𝕆_n × 1, and thus β=0. But then α=0 since V_0 is a nonzero column. 
  
-We remark that the convergence results in <Ref> and <Ref> are with respect to different constants: <Ref> considers the concentration of f around _⊗_i=1^n X_i(f), while <Ref> around _X^n(f). 
-However, given the faster rate of convergence guaranteed by our framework – for this example and, even more impressively so, for the one in <Ref> – the mean of f under the product of the marginals might be regarded as a natural object to consider when proving concentration results for these processes.  
-    
-    This hypothesis is corroborated by the approach presented in <cit.>, where concentration for stationary Markov chains is provided around the mean with respect to the stationary measure π. Indeed, when X_1∼π, the product of the marginals reduces to the tensor product of the stationary measure π^⊗ n. 
-   
+Hence, 
  
-    To make a direct comparison with <cit.>, one can leverage <cit.> (reproduced in <Ref>) and either reduce both results to concentration bounds around the median, or transform <Ref> in a result on concentration around the mean with respect to _X^n. This would introduce additional constants, rendering the comparison cumbersome and outside the scope of this work. 
- 
+    (B_0-λ_0I)^2V_0=  𝕆,  (B_0-λ_0I)^2W=  𝕆
 
-     
+ for the linear independent V_0 and W. Consequently,
+ (B_0-λ_0 I)^2≤ n-2 and this gives evidence that λ_0 should be a multiple eigenvalue for B_0. 
+If A ∉𝔻,  then
 
-  §.§.§ Comparison with <cit.>
- 
-     
-<cit.> considers a more restricted setting in which f is the sum of n bounded functions that separately act on each of the n random variables, i.e., f=∑_i=1^n f_i(X_i) with f_i ∈ [a_i,b_i].[This choice of f in <Ref> transforms the result in a generalisation of Hoeffding's inequality to dependent settings. It is easy to see that if f_i∈ [a_i,b_i] then (<ref>) holds with c_i = (b_i-a_i) and the statement follows.] By assuming further that a_i=0 and b_i=1/n for every i (e.g., empirical mean), we are in a setting in which <Ref> holds as it is. Moreover, the setting in <cit.> requires the Markov chain to be time-homogeneous and admit a stationary distribution π (notice that none of these assumptions are necessary for Theorems <ref> and <ref> to hold). In this case <cit.> gives:
+    d(A,𝔻) = √(z_∗)  ,
 
-    _X^n(|f -  π^⊗ n(f)| ≥ t ) ≤ 2 exp(-1-λ/1+λ2nt^2),
+where z_∗ is the minimal positive zero of the polynomial (<ref>) provided that this zero is not a multiple one. Minimal perturbation is evaluated by the formula
 
-where (1-λ) denotes the absolute spectral gap of the Markov chain, see <cit.>, which characterizes the speed of convergence to the stationary distribution. Comparing with <Ref> with γ^⋆_K(α)=α→∞ and γ̅^⋆_K(α)=β→ 1,[As mentioned earlier, this optimizes the rate of convergence, at the expense of the value of t from which we obtain an improvement.] one has that if
+    E_∗=U_∗U_∗^⊤ (λ_∗I-A)   .
 
-    t^2 > (1+o_n(1))1+λ/4λlog‖ K^←‖_∞→∞/P_i^⋆(j^⋆),
-
-then <Ref> provides a faster decay than <Ref>. A more explicit comparison in which the absolute spectral gap is computed for a binary Markov kernel can be found in <Ref>.
-   
+Here λ_∗ is the multiple zero for the polynomial Φ(λ,z_∗) and U_∗∈ℝ^n, U_∗=1 is the left singular vector of the matrix λ_∗I-A corresponding to the singular value √(z_∗).
 
 
-  §.§.§ Comparison with <cit.>
-    
-    Let us now derive the corresponding result of concentration around the median in order to compare with <cit.>. Leveraging <cit.> (see also <Ref>) along with <Ref> (again, with γ^⋆_K(α)=α→∞ and γ̅^⋆_K(α)=β→ 1), we have 
-    
-    _X^n(|f-m_f|≥ t) 
-     ≤ 2 exp(-2n(t-√(ln4+C_n/2n))^2+C_n),
+The significance of condition for simplicity of the minimal positive zero z_∗ can be explained as follows. Since we are looking for only real perturbations, formula (<ref>) yields such a matrix if λ_∗ is real. For the matrices of the order n≥ 4, it might happen that the system (<ref>) possesses a solution (z_∗, λ_∗) with an imaginary λ_∗ (we give an example of such a matrix in Section <ref>). Then the system necessarily possesses the solution (z_∗,λ_∗). This implies (v. the last comment from Section <ref>) that  z_∗ should be a multiple zero for (<ref>). Therefore, the condition for simplicity of z_∗is sufficient to prevent such an occasion. Formal verification of this condition can be replaced by a more general one relating the discriminant of ℱ(z): 
 
-    where C_n=(n-1)log(‖ K^←‖_∞→∞/P_i^⋆(j^⋆)). 
-    This also implies (see, e.g., <cit.> or <cit.>) that, if t>√(log4+C_n/2n) and given any event E such that _X^n(E)≥1/2, then 
-    
-    _X^n(E^c_t)    ≤ 2 exp(-2n(t-√(log4+C_n/2n))^2+C_n)
-       = 1/2exp(-2nt^2+2t√(2n(log4+C_n))),
-
-    where E_t = {y∈^n : d(x,y)≤ t  for some  x∈ E} and d denotes the normalised Hamming metric. 
-    
-    Let us denote 
-    a:=1-max_i max_x,x̂ TV(_X_i|X_i-1=x,_X_i|X_i-1=x̂).
-    
-    Hence, assuming t>1/a√(log(1/_X^n(E))/n), <cit.> give
-    
-    _X^n(E^c_t)    ≤exp(-2n(at -√(log(1/_X^n(E))/2n))^2) 
-       ≤exp(-2nt^2a^2+2ta√(2nlog2)).
-
-    Ignoring multiplicative constants and comparing the exponents of (<ref>) and (<ref>), one can see that, whenever
-     
-    t ≥(1+o_n(1))√(2log(‖ K^←‖_∞→∞/P_i^⋆(j^⋆)))/(1-a^2)
-    ,
- 
-    
-    t ≥√(2ln2)(1-a)-√(2(ln4+C_n))/√(2n)(1-(1-a)^2),
-    then our approach improves upon <cit.>. 
-    
-    The Dobrushin coefficient of the kernel, captured by the quantity (1-a), measures the degree of dependence of the stochastic model. The smaller 1-a is, the less “dependent” the model is. If _X^n reduces to a product distribution then a=1. In this case, <Ref> 
-    boils down to McDiarmid's inequality. In contrast, the larger 1-a is, the worse the behavior of <Ref>. If a=0, then the Markov chain is not contracting and violates the assumption of <cit.>. Our approach, instead, can still provide meaningful results, as we will see in <Ref>. A more explicit comparison for the case of a binary kernel can be found in <Ref>.
-    
-    
-
- §.§ A non-contracting Markov chain
-
-     In order to provide concentration for Markov chains, existing work 
-    requires either contractivity of the Markov chain
-     <cit.>, stationarity
-     <cit.> or some form of mixing <cit.>.
-    A well-known Markov chain that evades most of these concepts is the SSRW. Suppose to have a sequence of i.i.d. Rademacher random variables, i.e., ℙ(X_i =  -1)=ℙ(X_i= +1)=1/2, for i≥ 1; the initial condition is X_0=0 w.p. 1. Then, a SSRW is the Markov chain (S_i)_i∈ℕ defined as S_i = S_i-1 + X_i. 
-    This Markov chain does not admit a stationary distribution, it is not contracting, but it is expanding (in this case, both towards the positive and the negative axes of the real line). Let us denote with K_i the kernel at step i. Then, at each step i>2, one can always find two different realisations of S_i-1, let us call them s_1,s_2, such that  supp(K_i(·|s_1))∩supp(K_i(·|s_2))=∅, i.e., the support of S_i is constantly growing. 
-    This implies that the approaches in <cit.> cannot be employed, while <cit.> yields:  
-    
-    ℙ(| f-_X^n(f)|≥ t) ≤ 2exp(-t^2/2n).
-
-    A meaningful regime (given also the expanding nature of the Markov chain along the integers)[The standard deviation of S_n is √(n), hence it is expected that S_n is ± O(√(n)).] 
-    arises when considering t ≳√(n).
-    Let us now compute the Hellinger integral in this specific setting. This is done in the lemma below, proved in <Ref>.
-    
-    Let i≥ 1, x∈supp(S_i-1), 0≤ j≤ i, and α≥ 1. Then,
-    
-    H_α^1/α(_S_i|S_i-1=x_S_n) ≤ 2^i 1/β-1+1/α,
-
-        and thus
+    𝒟_z(ℱ(z)) 0   .
 
 
 
-    
-    H_α^1/α(_S^n_⊗_j=1^n S_j) ≤ 2^n(n-1)/2β.
 
-    
-   
-   Denoting  with 1/β= α-1/α, <Ref> implies that
-    
-    H_α^1/α(_S^n_⊗_j=1^n S_j)    ≤∏_i=2^n max_x∈suppS_i-1 H_α^1/α(_S_i|S_i-1=x_S_i) 
-       ≤∏_i=2^n 2^1/α-1 + i/β
-       = 2^1/β∑_j=1^n-1 j = 2^n(n-1)/2β.
-Combining <Ref> and <Ref>, one has that
-    
-    ℙ(| f-_⊗_i=1^n X_i(f)|≥ t )≤ 2^1/βexp(-2nt^2/β+ n(n-1)/2βln 2).
 
-    It is easy to see that, whenever t > √((n-1)ln(2))/2, <Ref> gives an exponential decay. For instance, choosing t =√(n),  
-    one retrieves
-    
-    ℙ(| f-_⊗_i=1^n X_i(f)|≥√(n)) ≤ 2^1/βexp(-n^2/β(2 - ln2/2 +ln2/2n)).
 
-    In contrast, the same choice in <Ref> gives
-    
-    ℙ(| f-_X^n(f)|≥√(n)) ≤ 2exp(-1/2).
+§ PROPERTIES OF THE DISTANCE EQUATION
 
-    More generally, selecting t of order √(n) suffices to achieve an exponential decay in <Ref>, while to obtain a similar speed of decay in <Ref> t needs to be at least of order n. The approach advanced in this work can, thus, not only be employed in settings where most of the other approaches fail (e.g., <cit.>), but it also brings a significant improvement over the rate of decay that one can provide.
+
+
+
+
+
+
+
+
+
+ The distance equation for the matrix A=[a_jk ]_j,k=1^2 is found in the form
+
+    ℱ(z):=16[ (a_11-a_22)^2+(a_12+a_21)^2 ]·{[4z- 𝒟 (f_A(λ)) ]^2-16(a_12-a_21)^2z }=0  .
+
+Polynomial in braces has only real zeros with respect to z since its discriminant equals
+
+    256(a_12-a_21)^2[(a_11-a_22)^2+ (a_12+a_21)^2 ] ≥ 0   .
+
+
+
+
+
+
+Some terms in the canonical representation of the polynomial (<ref>) can be explicitly expressed via the entries of the matrix A:
+
+    Φ(λ,z)≡λ^2n- 2 (A) λ^2n-1 +(-nz+ (AA^⊤)+p_2  )  λ^2n-2 +… +
+    (AA^⊤-zI)   .
+
+Here p_2 is the coefficient of λ^n-2 in the characteristic polynomial  f_A + A^⊤(λ):= (λ I - A-A^⊤). It happens that this polynomial is also responsible for the order of the distance equation.
+
+  One has 
+
+    ℱ(z)≡ 4^n [ 𝒟_λ (f_A+A^⊤(λ)) ]^2 z^n(n-1) +  z   .
     
 
- §.§ A non-Markovian Process
- 
-    Next, we consider a non-Markovian setting in which each step of the stochastic process depends on its entire past: 
 
-    
-    X_n = 
-        +1,     with probability ∑_i=0^n-1p_iX_i, 
-    
-        -1,     with probability  
-        1 - ∑_i=0^n-1p_iX_i,
+Proof. Let {μ_1,…, μ_n } be the spectrum of the matrix A+A^⊤ while P∈ℝ^n× n be an orthogonal matrix reducing it to the diagonal form: 
 
-    for n≥ 1, p_i>0 and X_0=+1 with probability 1.
-    The choice of the parameters p_i is arbitrary (given the constraint that ∑_i=0^n-1 p_i < 1) but for concreteness we will set p_i = 2^-i-1 for every i≥ 0. Then, ℙ_X_1(1|x_0)=1/2=ℙ_X_1(-1|x_0) and for each n≥ 1,
-    
-    ℙ_X_n(1|x_0^n-1)=1/2+ ∑_i=1^n-1p_ix_i= ∑_i=0^n-1x_i 2^-i-1= 1- ℙ_X_n(-1|x_0^n-1),
- 
-    
-    with x_0=1.
-    Consequently, following the calculations detailed in <Ref>, we have
-    
-    H_α(_X_n(·|x_0^n-1) (1/2,1/2)) 
-           < 2∑_j=0^⌊α/2⌋⌊α⌋2j(2∑_i=1^n-1p_ix_i)^2j,
+    P^⊤(A+A^⊤) P=  (μ_1,…, μ_n)    .
 
+Apply the same transformation to the determinant (<ref>):
 
-which, as p_i = 2^-i-1, gives 
-    
-    max_x_1^n-1H_α(_X_n(·|x_0^n-1) (1/2,1/2))  < 2^α.
- Thus, H_α^1/α(_X^n(1/2,1/2)^⊗ n)< 2^n-1 and an application of Theorem <ref> yields:
-    
-    ℙ({| f-_⊗_i=1^n X_i(f)|≥ t}) ≤inf_β>1 2^1/βexp(-2n/β(t^2-n-1/nβln2/2)),
+    Φ(λ,z) ≡[
+    P^⊤AA^⊤P +  (λ^2-μ_1 λ-z,…,
+    λ^2-μ_n λ-z)   .
+    ]
 
-    with exponential decay whenever
-    
-    t^2 > (1+o_n(1))βln2/2.
+The leading term  of the polynomial 𝒟_λ (Φ(λ,z)) with respect to z coincide with that of 
 
-    
-    Like before, choosing a larger β slows down the exponential decay, but it reduces the multiplicative coefficient introduced via H_α. For n 
-    and t large enough, one can pick β→ 1 and retrieve a McDiarmid-like exponential decay.
-     Given that this setting does not characterise a Markovian dependence (at each step the stochastic process depends on its entire past), one cannot employ the technique described in <cit.> or in <cit.>. One can, however, employ the technique described in <cit.> and <cit.>. Both these approaches require the computation of {θ̅_ij}_1≤ i < j ≤ n with
-    
-    θ̅_ij:=   sup_x^i-1, w,ŵ‖ℒ(X_j^n|X^i=(x^i-1, w)) - ℒ(X_j^n|X^i=(x^i-1,ŵ)) ‖_TV,
+    𝒟_λ(∏_j=1^n (λ^2-μ_j λ-z))   .
 
-    where ℒ(X_j^n|X^i=(x^i-1,w)) denotes the conditional distribution of X_j^n given X^i=(x^i-1,w). The θ̅'s are then organised in n× n upper-triangular matrices whose norms are computed in order to provide an upper bound on the probability of interest. In particular, <cit.> requires the ℓ_2-norm, while <cit.> requires the operator norm of the matrix.  
-    
-    ℒ(X_j^n = x_j^n|X^i=x^i-1w) = ∑_x_i+1^j-1∏_k=i+1^n (1/2 + x_k(∑_m≠ i^k-1 p_m x_m + p_iw )).
+The set of zeros of the polynomial under the discriminant sign is as follows
 
-    Even for the simpler case j=i+1, computing <Ref> is not easy. Indeed, one has  that:
-    
-    ℒ(X_i+1^n = x_i+1^n|X^i=x^i-1w) =  ∏_k=i+1^n (1/2 + x_k(∑_m≠ i^k-1 p_m x_m + p_iw )).
+    {1/2(μ_j ±√(μ_j^2+4z)) }_j=1^n   .
 
-    Moreover,denoting with a_i+τ = 1/2 + x_i+τ∑_m≠ i^k-1p_mx_m, with 𝒮^i = {1,…, n-i} and with 𝒮^i_q the set of all the subsets of 𝒮^i of size q one can see that
-    
-    η̅_i,i+1   = sup_(x^i-1∈ ,w,ŵ)1/2|∑_x_i+1^n∑_p=1^n-i∑_q=1^n-ip(w^|𝒮^i∖𝒮^i_q|-ŵ^|𝒮^i∖𝒮^i_q|) p_i^|𝒮^i∖𝒮^i_q|∏_τ∈𝒮^i_q a_i+τ∏_τ̃∈𝒮^i∖𝒮^i_q x_i+τ̃|
+Using the definition (<ref>) of the discriminant, one gets 
 
-    and it is not clear, a priori, how to compute such a supremum with respect to w,ŵ and x^i-1. Picking a general j>i renders the computations even more difficult.Similarly, to employ the technique provided in <cit.> one would need to compute the following quantity
-    
-    C̅ = max_1≤ i ≤ nsup_x^i-1∈^i-1
-     w,ŵ∈inf_π∈Π(ℒ(X^n|x^i,w), ℒ(X^n|x^i,ŵ))π(d).
+    𝒟_λ(∏_j=1^n (λ^2-μ_j λ-z)) = 
+    ∏_j=1^n (4 z + μ_j^2) 
+    ∏_1≤ j < k ≤ n[ z^2 (μ_k-μ_j)^4]   .
 
-    Here, d denotes the normalised Hamming metric and Π(ℒ(X^n|x^i,w), ℒ(X^n|x^i,ŵ)) represents the set of all the couplings defined on ^n×^n such that the corresponding marginals are ℒ(X^n|x^i,w) and ℒ(X^n|x^i,ŵ). However, computing any of these objects in practice can be complicated even in simple settings. In contrast, with the framework proposed here and thanks to the tensorisation properties of the Hellinger integral, one can easily bound the information measure and provide an exponentially  decaying probability (whenever the probability of the same event under independence decays exponentially and for opportune choices of the parameters).
-    
-    
+Coefficient of the monomial z^n^2 in the right-hand side can be recognized, via (<ref>),  as the square of the  discriminant of the characteristic polynomial of A+ A^⊤. 
 
- §.§ Markov Chain Monte Carlo
+As for the determining the structure of the free term of ℱ(z), our successes are restricted to the following 
 
-    An intriguing application of the method proposed in <cit.> consists in providing error bounds for Markov Chain Monte Carlo methods. For instance, assume that one is trying to estimate the mean π(f)  for some function f and some measure π which cannot be directly sampled. A common approach consists in considering a Markov chain {X_i}_i≥ 1 whose stationary distribution is π and estimating π(f) via empirical averages of samples {X_i}_n_0+1^n_0+n, where n_0 characterises the so-called “burn-in period”. This period ensures that enough time has passed and the Markov chain is sufficiently close to the stationary distribution π before sampling from it. <cit.> gives that 
-    
-    ℙ(1/n∑_i=1^n f(X_n_0+i)-π(f) > t ) ≤ C(ν,n_0,α)exp(-1/β·1-max{λ_r,0}/1+max{λ_r,0}·2nt^2/(b-a)^2),
+Hypothesis. If computed symbolically with respect to  the entries of A, ℱ(0) has a factor [𝒟_λ (f_A(λ)) ]^2.
 
-    where f:→ [a,b] is uniformly bounded, λ_r represents the right-spectral gap (see <cit.>), α∈(1,+∞), β denotes its Hölder's conjugate and C is a constant depending on the burn-in period n_0, the Radon-Nikodym derivative between the starting measure ν and the stationary measure π, and α.
-    Using the tools provided in this work, we obtain:
-      
-    ℙ(1/n∑_i=1^n f(X_n_0+i)-π(f) > t )    ≤exp(-2nt^2/β(b-a)^2) H_α^1/α(ν K^n_0π) ∏_i=2^n max_x_n_0+i-1 H_α^1/α(K(·|x_n_0+i-1)π)
-       ≤ C(ν,n_0,α)exp(-2nt^2/β(b-a)^2)max_xπ({x})^-n-1/β ,
+According to Theorem <ref>, the polynomial ℱ(z) can be constructed in the form of determinant of a suitable Hankel matrix.
+For this aim, compute first the Newton sums {s_j(z)}_j=0^4n-2 for  the polynomial Φ(λ,z) treated with respect to λ. Direct utilization of the formulas (<ref>) requires the canonical representation (<ref>) for the polynomial Φ(λ,z) while initially we have just only its representation in the determinantal form (<ref>). Fortunately, the Newton sums can be computed in an alternative way. 
+Indeed, 
 
-   where <Ref> follows from the fact that H^1/α_α(ν K^n_0π) represents the L^α(π)-norm of the Radon-Nikodym derivative and can thus be bounded like in <cit.>.
-  Using the tools provided in this work, we obtain 
-    
-    ℙ(1/n∑_i=1^n f(X_n_0+i)-π(f) > t ) ≤exp(-2nt^2/β (b-a)^2)H_α^1/α(_X_n_0+1… X_n_0+nπ^⊗ n).
-The idea behind the result is as follows. Given that one is trying to estimate the mean of f under π using empirical averages, if one had samples taken in an i.i.d. fashion from π, the exponential convergence would be guaranteed. However, the issue is that one does not have access to samples of π. Thus, changing the measure to an n-fold tensor product of π, one can still guarantee an exponential decay at the cost of a multiplicative price depending on how far the samples are from the stationary distribution.
-    By making a direct comparison,  assuming λ_r>0, one can see that if 
-    t^2    ≥n-1/n(b-a)^2/21+λ_r/2λ_rlog(1/min_x π({x}))
-       =(1+o_n(1))(b-a)^2/21+λ_r/2λ_rlog(1/min_x π({x})),
- then the RHS of <Ref> decays faster than the RHS of <Ref>. A comparison for the binary symmetric channel, with the computations of all the parameters,  can be found in <Ref>. 
-Let K be a discrete contractive Markov kernel (as in <Ref>) and, for simplicity, take n_0=0 (no burn-in period). Pick q→ 1 in <Ref>, which gives that C= ‖dν/dπ‖_L^∞(π), i.e.,
-   
-    ℙ(1/n∑_i=1^n f(X_i)-π(f) > t ) ≤exp(-1-max{λ_r,0}/1+max{λ_r,0}·2nt^2/(b-a)^2)‖dν/dπ‖_L^∞(π).
+    Φ(λ,z) ≡ (λ I_2n- W)    
+    W:=[ [      A^⊤ √(z) I_n; √(z) I_n        A ]]
 
-Furthermore, <Ref> can be rewritten as
-     
-    ℙ(1/n∑_i=1^n f(X_i)-π(f) > t )    ≤exp(-2nt^2/β(b-a)^2) H_α^1/α(νπ) ∏_i=2^n max_x_i-1 H_α^1/α(K(·|x_n_0+i-1)π)
-       ≤exp(-2nt^2/β(b-a)^2)H_α^1/α(νπ) max_xπ({x})^-n-1/β  .
+and it is known that the Newton sums of the characteristic polynomial of a matrix can be computed as the traces of matrix powers:
 
-    Taking then the limit of α→∞ (which allows to compare the fastest exponential decays between our approach and <cit.>), one has 
-    
-    ℙ(1/n∑_i=1^n f(X_i)-π(f) > t ) ≤exp(-2nt^2/(b-a)^2)  ‖dν/dπ‖_L^∞(π)(1/min_xπ({x}))^n-1.
+    s_j(z) ≡(W^j)    j ∈{0,1,…}
+
+Thus, one has
+
+    s_2(z)=2 ((A^2)+nz), s_3(z)=2((A^3)+3  z (A)), …
+
+Compose the Hankel matrix
+
+    S(z):=[ s_j+k(z) ]_j,k=0^2n-1
+
+and compute the sequence of its leading principal minors S_1(z),…,S_2n(z). Due to 
+(<ref>) and (<ref>),  
+
+    S_2n(z)≡𝒟_λ(Φ(λ,z))≡ℱ(z) z^n   .
+
+Evidently, the polynomial Φ(λ,0) possesses only n double zeros, and they all are distinct provided that A ∉𝔻. Consequently, due to Theorem <ref>, one  has
+S_n+1(0)=0,…, S_2n(0)=0.
 
 
+ Polynomial ℱ(z) does not have negative zeros.
+The number of its positive zeros lying within the interval
+[0,z_0], z_0>0 is not less than 
 
-    
-    
-    Similarly to <cit.>, one can also show that an exponential decay is guaranteed in <Ref> if n_0 = Ω(log n). Furthermore, as <Ref> improves the exponential decay for t satisfying <Ref>, in the same regime the induced lower bound over n_0 will be improved as well. Finally, we highlight that  
-    <Ref> applies to a much larger family of functions f than what can be handled by  <cit.>. 
-    
-    
-    
-   
-    
-    n_0 > α/2log(1/λ)log(2^2/β‖dν/dπ-1‖_L^α(π)/2nt^2/d^2β+n-1/βlogπ^⋆),
-
-   where, similarly to before, d^2=(b-a)^2 and π^⋆ denotes max_x π({x}). Moreover, in the same regime of t as the one depicted in <Ref> then <Ref> improves over the lower bound which can be achieved from  <cit.>.
-    L'espressione mi sembra abbia senso, se lo spectral  gap λ è piccolo, allora la MC converge velocemente alla stazionaria ed n_0 diminuisce. Più campioni considero (n grande) meno vincoli ho su n_0. Se ν=π allora ‖dν/dπ-1‖_L^α(π)=0 e non ho vincoli su n_0.
-    
-    Da qui in poi non so bene cosa voglio ottenere, più o meno capire cosa posso ottenere con SDPI
-    
-    We also know that 
-    
-    H^1/α_α(ν K^n_0π )    =H^1/α_α(ν K^n_0π K^n_0 ) 
-       = ((α-1)ℋ_α(ν K^n_0π K^n_0) + 1)^1/α
-       ≤ ((α-1)η_α(K^n_0)ℋ_α(νπ) + 1)^1/α
-       = (η_α(K^n_0)(H_α(νπ)-1) + 1)^1/α
-       = (η_α(K^n_0)H_α(νπ) - η_α(K^n_0) + 1)^1/α
-       = H_α(νπ)^1/α(η_α(K^n_0)-η_α(K^n_0)/H_α(νπ)+1/H_α(νπ))^1/α
-       =(η_α(K^n_0) H_α(νπ))^1/α(1- 1/H_α(νπ)+η_α(K^n_0)/H_α(νπ))^1/α
-       ≤ (2(1-(1-η_α(K))^n_0)H_α(νπ))^1/α
-
-   
-
-   
-
-§ CONCLUSIONS
-
-   We introduced a novel approach to the concentration of measure for dependent random variables. The generality of our framework allows to consider arbitrary kernels without requiring either stationarity (as opposed to <cit.>) or contractivity (as opposed to <cit.>). Moreover, our technique applies to any family of functions which is known to concentrate when the random variables are actually independent. Said technique is employed and compared to the state of the art in four different settings: finite-state Markov chains, a non-contractive one (the SSRW), a non-Markovian process, and Monte Carlo Markov Chain methods. In each of these settings, we provide a regime of parameters in which we guarantee a McDiarmid-like decay and improve over existing results. 
-    The improvement is the most striking in the case of the SSRW, where the only (closed-form) alternative approach gives a constant probability of deviation from the average, as opposed to the exponentially decaying probability guaranteed by our framework.
-    The bounds provided are usually characterised by a phase-transition-like behavior in terms of the accuracy t, i.e., one can show concentration only for values of t larger than a threshold depending on the Hellinger integral (and its scaling with respect to the number of variables n). 
-    Consider for instance <Ref>: if t^2> β/2nln H^1/α_α≈ (1+o_n(1))(βln(2)/2), then the exponent is negative and one has exponential concentration, otherwise the exponent becomes positive and the bound trivialises to something larger than 1. We believe this to be an artifact of the analysis and not an intrinsic property of the concentration of measure phenomenon.
-    
-
-§ ACKNOWLEDGMENTS
-
-The authors are partially supported by the 2019 Lopez-Loreta Prize. They would also like to thank Professor Jan Maas for providing valuable suggestions and comments on an early version of the work.
-IEEEtran
-
-
-
-
-
-
-
-sectionappendix
-subsectionappendix
-
-
-
-§ PROOF OF <REF>
-
-
-
-Assume that E={|f-_⊗_i=1^n X_i(f)|≥ t}. Then, one has that
-
-    _X^n(E)    = ∫1_E d_X^n
-       =  ∫1_E d_X^n/d_⊗_i=1^n X_i d_⊗_i=1^n X_i
-       ≤(∫1_E d_⊗_i=1^n X_i)^α-1/α(∫(d_X^n/d_⊗_i=1^n X_i)^α d_⊗_i=1^n X_i)^1/α
-       = _⊗_i=1^n X_i^1/β(E) H_α^1/α(_X^n_⊗_i=1^n X_i),
-
-where the inequality in the third line follows from Hölder's inequality. Moreover, 
-
-    H_α(_X^n_⊗_i=1^n X_i)     =  _X_1(_⊗_i=2^n X_i(d_X_2^n|X_1/d_⊗_i=2^n X_i)^α) 
-       =_X_1(_X_2((d_X_2|X_1/d_X_2)^α(_⊗_i=3^n X_i(d_X_3^n|X_2/d_⊗_i=3^n X_i)^α))) 
-       ≤_X_1(_X_2((d_X_2|X_1/d_X_2)^αα_2)^1/α_2_X_2((_⊗_i=3^n X_i(d_X_3^n|X_2/d_⊗_i=3^n X_i)^α)^β_2)^1/β_2)  
-       = H_α^2 ·_X_2((_⊗_i=3^n X_i(d_X_3^n|X_2/d_⊗_i=3^n X_i)^α)^β_2)^1/β_2,
-
-where the inequality follows from Hölder's inequality, the fact that the expectation is taken with respect to the product measure _⊗_i X_i as well as the Markovity of _X^n. H_α^2 = _X_1^1/β_1(H_αα_2^β_1/α_2(_X_2|X_1_X_2)) with β_1=1 will now be the only term depending on X_1. Repeating the same sequence of steps (an application of the Disintegration Theorem <cit.> to a Markovian setting, like in <cit.>, followed by Hölder's inequality) (n-2) more times leads to the product of H_α^i as defined in the statement of the theorem.
-The result then follows by noticing that 
-    ^1/β_⊗_i X_i(E)≤ 2^1/βexp(-2nt^2/β),
- by McDiarmid's inequality.  
-
-
-
-
-§ CONCENTRATION AROUND MEAN AND MEDIAN
-
-  The following result is a useful tool that allows us to compare concentration around a constant, concentration around the mean and concentration around the median. It is used in order to compare our results with the ones proposed in <cit.>. A proof can be found in <cit.> and the statement is provided here for ease of reference.
-    Let f be a measurable function on a probability space (,Ω,μ). Assume that, for some a_f∈ℝ and a non-negative function h:ℝ_+→ℝ_+ such that lim_r→∞ h(r)=0,
-    
-    μ({|f-a_f|≥ r })≤ h(r)
- for all r>0, then
-    
-    μ({|f-m_f|≥ r +r_0})≤ h(r),
-
-    where m_f is the median of f and r_0 is such that h(r_0)<1/2. Moreover, if h̅ = ∫_0^∞ h(x)dx < ∞, then f is μ-integrable, |a_f-μ(f)|≤h̅ and, for every r>0, 
-    
-    μ({|f-μ(f)|≥ r +h̅})≤ h(r).
-
-    In particular, if h(r)≤ Cexp(-cr^p) with 0<p<∞, then
-    
-    μ({|f-M|≥ r })≤ C'exp(-κ_pcr^p),
-
-    where C' depends only on C and p, κ_p depends only on p, and M is either the mean or the median.
-    
+    | 𝒱(1,S_1(z_0),…,S_2n(z_0)) - 𝒱(1,S_1(0),…,S_n(0)) |   .
  
 
-§ TENSORISATION
-
-      Many information measures satisfy tensorisation properties, meaning that, if ν and μ are measures acting on an n-dimensional space (typically an n-fold Cartesian product of one-dimensional spaces), it is possible to compute the divergence between ν and μ using “one-dimensional projections”. This is particularly useful when the second measure is a product-measure. Indeed, if  and  are two probability measures on the space ^n and  is a product-measure, denoting with X̅^i the (n-1)-tuple (X_1,…,X_i-1,X_i+1,…,X_n), then <cit.> gives that
-    
-    D() ≤∑_i=1^n ∫ d_X̅^i D(Q_X_i|X̅^iP_X_i),
-
-    where D() denotes the KL-divergence between  and . 
-    Hence, having access to a bound on D(Q_X_i|X̅^iP_X_i) for every 1≤ i≤ n implies a bound on the KL-divergence between the two n-dimensional measures  and . This property is pivotal in proving concentration results in a variety of ways <cit.>. Since of independent interest, we will now state the tensorisation properties of H_α as explicit results, as well as the corresponding Rényi's D_α analogues. 
-    In particular, whenever the second measure is a product measure while the first one is Markovian, it is possible to prove the following.
-    
-    Let  and  be two probability measures on the space ^n such that ≪, and assume that  is a product measure (i.e., =⊗_i=1^n P_i). Assume also that  is a Markov measure induced by Q_1 and the kernels Q_i(·|·) with 1≤ i≤ n, i.e., (x^n) = Q_1(x_1)∏_i=2^n Q_i(x_i|x_i-1). Moreover, given a constant c, let X_0=c (almost surely) be an auxiliary random variable, then, 
-    
-    H_α(Q) ≤∏_i=1^n_X_i-1^1/β_i-1(H_αα_i^β_i-1/α_i(Q_i(·|X_i-1)P_X_i)),
-
-    where α_i≥ 1 for i≥ 0, β_0=1, α_n=1, and β_i = α_i/(α_i-1). 
-    Moreover, selecting α_i→ 1^+ which implies β_i→∞ for every i≥ 1, one recovers 
-    
-    H_α() ≤ H_α(Q_1P_1)·∏_i=2^n max_x_i-1∈ H_α(Q_i(·|x_i-1) P_i).
-
-    
-    
-        The proof follows from the steps undertaken in eq:startTensoreq:endTensor along with the discussion immediately after, but replacing _X^n with 𝒬. 
-    
-    
-    Let us denote with h=d/d the density of  with respect to . Denote then with h_1 the marginal density h_1 = ∫_^n-1 h d
-    
-    H_α() = (h^α)    = ((h_1h_2^n)^α) 
-       = P_1(h_1^α P^2… n((h_2^n)^α)) 
-       ≤ P_1((h_1^α)^β)^1/β P_1((P^2… n((h_2^n)^α))^γ)^1/γ
-       = P_1((h_1^α)) _P_1P^2… n((h_2^n)^α),
-
-    where <Ref> follows from Fubini's theorem as well as the fact that  is a product-measure and <Ref> follows from Hölder's inequality with 1/β+1/γ=1 and β,γ >1. <Ref> follows from letting β→ 1 and, consequently, γ→∞.
-    The argument follows from repeating the same procedure in an iterated fashion and noticing that being  a Markovian product-measure, Q_2 (and the corresponding density with respect to P_2) will only depend on x_1 and x_2, Q_3 will only depend on x_2 and x_3 and so on. 
-    
-    (Could be more formal). <Ref>, which involves products of Hellinger integrals, can be re-written as a sum by considering Rényi's divergences, due to the relationship connecting the two quantities (see <Ref>). 
-    
-    Under the same assumptions as in <Ref>, one has that
-    
-    D_α() ≤1/α-1∑_i=1^n 1/β_i-1log_X_i-1(exp((αα_i-1)β_i-1/α_i(D_αα_i(Q_i(·|X_i-1)P_X_i))),
-
-     where α_i≥ 1 for i≥ 0, β_0=1, α_n=1 and β_i = α_i/(α_i-1). 
-    Moreover, selecting α_i→ 1^+ which implies β_i→∞ for every i≥ 1, one recovers 
-        
-    D_α() ≤ D_α(Q_1P_1) + ∑_i=2^n max_x_i-1 D_α(Q_i(·|x_i-1) P_i).
-
-    
-    
-   
-  
-    This result allows us to control from above the Hellinger integral of two n-dimensional objects using the Hellinger integral of simpler 1-dimensional objects.
-    For instance, if the first measure represents the distribution induced by a time-homogeneous Markov chain, then all the kernels Q_i coincide and the expression becomes even easier to compute, as one can see in <Ref>.
-    
-    A similar approach can also be employed to provide a result in cases where  is an arbitrary measure.
-     
-    Let  and  be two probability measures on the space ^n such that ≪, and assume that  is a product-measure (i.e., =⊗_i=1^n P_i). Then, 
-    
-    H_α() ≤ H_α(Q_1P_1)·∏_i=2^n max_x_1^i-1=x_1… x_i-1∈^i-1 H_α(Q_i(·|x_1^i-1) P_i).
-
-    Similarly, one has that 
-     
-    D_α() ≤ D_α(Q_1P_1) + ∑_i=2^n max_x_1^i-1=x_1… x_i-1∈𝒳^i-1 D_α(Q_i(·|x_1^i-1) P_i).
-
-    
-    The proof follows from the same argument of <Ref>. The key difference is that, without making any additional assumptions on , the entire “past” of the process needs to be considered. 
-    This is why writing an expression similar to <Ref> without Markovity would be rather cumbersome, and we restrict ourselves to the setting where the additional parameters are all considered to be such that  β_j→∞. 
-    
-    Finally, we show some lower bounds on Hellinger integrals and Rényi's divergences. 
-    
-        Let  and  be two probability measures on the space ^n such that ≪, and assume that  is a product-measure (i.e., =⊗_i=1^n P_i). Assume also that  is a Markov measure induced by Q_1 and the kernels Q_i(·|·) with 1≤ i≤ n, i.e., (x^n) = Q_1(x_1)∏_i=2^n Q_i(x_i|x_i-1). Moreover, given a constant c, let X_0=c (almost surely) be an auxiliary random variable, then, 
-    
-    H_α(Q) ≥∏_i=1^n_X_i-1^1/β_i-1(H_αα_i^β_i-1/α_i(Q_i(·|X_i-1)P_X_i)),
-
-    and
-    
-    D_α() ≥1/α-1∑_i=1^n 1/β_i-1log_X_i-1(exp((
-            α_i)(αα_i-1)β_i-1/α_i(D_αα_i(Q_i(·|X_i-1)P_X_i))),
-
-   where α_i≤ 1 for i≥ 1, β_0=1, α_n=1 and β_i = α_i/(α_i-1). 
-    Moreover, selecting α_1→1^- which implies β_i→-∞ for every i≥ 1, one recovers 
-    
-    H_α() ≥ H_α(Q_1P_1)·∏_i=2^n min_x_i-1∈ H_α(Q_i(·|x_i-1) P_i),
-
-    which, in the case of Rényi's divergences, specialises to
-    
-    D_α() ≥ D_α(Q_1P_1) + ∑_i=2^n min_x_i-1∈𝒳 D_α(Q_i(·|x_i-1) P_i).
-
-        
-    
-   
-   
-   
-    
-        The proof follows from similar arguments as  the proof of <Ref>. The sole difference is that, instead of using Hölder's inequality at each step, one uses reverse Hölder's inequality. 
-    
-
-
-§ EXPLICIT COMPARISON FOR A BINARY KERNEL
-
-The setting is the following: let K be a time-homogeneous Markov chain  characterised by a doubly-stochastic transition matrix characterised by the vector of parameters λ̅= (λ_1,…,λ_m) (i.e., the rows and columns of K are permutations of λ̅ with the constraints  ∑_i K_i,j = ∑_j K_i,j = 1). In this case, the Markov chain admits a stationary distribution π which corresponds to the uniform distribution over the sample space. Hence, if one is considering an m-dimensional space, then π({x})=1/m for x∈{1,…,m}.
-    In this case, if P_1 ∼π, then P_i ∼π for every i≥ 1. Moreover, one can prove that K=K^← and the bound of <Ref> reduces to 
-    _X^n({| f-_⊗_n X_n(f)|≥ t ) ≤ 2^1/βexp(-1/β(2nt^2- (n-1)log(m ‖λ̅‖_ℓ^α^β))),
-
-    Henceforth, we will consider m=2 for simplicity and, thus, ‖λ̅‖_ℓ^α:=(∑_i=1^mλ_i^α)^1/α can be expressed as (λ^α + (1-λ)^α)^1/α. Specialising <Ref> to this setting, one obtains the following result.
-    
-    
-      Let n>1, and let X_1,…,X_n be a sequence of random variables such that X_1∼π. For every α>1 and every function f such that <Ref> holds true, one has that  
-      
-    ℙ(| f-_⊗_i=1^n X_i(f)|≥ t )≤ 2^1/βexp(-2nt^2/β +n-1/βln(2((1-λ)^α+λ^α)^1/α-1)) .
-
-      
-
-
- §.§ Comparison with <cit.>
-The bound obtained via the techniques of <cit.> is
-      
-    ℙ(| f-_X^n(f)|≥ t)   ≤
-              2exp(-2λ^2 nt^2/((1-2λ)^n-1)^2).
-
-      Let us denote κ_α := ((1-λ)^α+λ^α))^1/α-1 <1. Then, by direct comparison, it is possible to see that, whenever 
-    t^2>((1-2λ)^n-1)^2(1-1/n)ln(2κ_α)/2((1-2λ)^n-1)^2-βλ^2):=t̅^2,
- 
-    then the RHS of (<ref>) decays faster than the RHS of (<ref>). In particular, for a given λ<1/2 and if  α>4/3, then
-    
-    lim_n→+∞   ((1-2λ)^n-1)^2(1-1/n)ln(2κ_α)/2((1-2λ)^n-1)^2-βλ^2)
-       =ln(2 κ_α)/2(1-βλ^2)<2/4-βln2.
-
-    t̅^2= (1+o_n(1))ln(2κ_α)/2(1-βλ^2) < (1+o_n(1))2ln2/4-β.
 
 
 
+Proof. The first claim of the theorem follows from the positive definiteness of the matrix (λ I - A)(λ I - A)^⊤-z I for z< 0.
+
+By Theorem <ref>, the number 𝒱(1,S_1(z_0),…,S_2n(z_0)) equals the number of complex-conjugate pairs of zeros for the polynomial Φ(λ,z_0). When the parameter z varies from 0 to z_0, the discriminant 𝒟_λ (Φ(λ,z)) vanishes at any value of z where a pair of real zeros of Φ(λ,z) transforms to a pair complex-conjugate ones or vice versa. The discriminant vanishes at these values. 
+
+Theorem <ref> claims that the degree of the distance equation generically equals n(n-1). One can immediately watch that for the skew-symmetric matrix A this estimation is not valid. Moreover, for this type of matrices, polynomial ℱ(z) vanishes identically. Some other types of matrices that permit explicit representation  
+for the polynomial Φ(λ,z), and, as a consequence, for the value d(A, 𝔻), in terms of the spectrum of A can be found in <cit.>. We summarize those results in the following 
+
+  Let all the eigenvalues λ_1,…,λ_n of A be distinct. One has:
+
+    Φ(λ,z)≡∏_j=1^n [(λ-c)^2-(λ_j-c)^2-z]    A= + cI_n  ,
+
+where c ∈ℝ is an arbitrary scalar;
+
+    Φ(λ,z)≡∏_j=1^n (λ^2-z+1-2λ(λ_j))    A   ;
 
 
-    
- 
-   Here, one can explicitly see the trade-off between the probability term and the Hellinger integral, described in <Ref> and mediated by the choice of α. Taking the limit α→∞ in <Ref> leads to the following upper bound
-    
-    ℙ(| f-_⊗_i=1^n X_i(f)|≥ t )≤ 2exp(-2nt^2 + (n-1)ln(2(1-λ))) .
-
-    In this setting, in order to improve over <Ref>, one needs t^2>t̅^2, with
-    
-    t̅^2 = (1+o_n(1))ln(2(1-λ))/2(1-λ^2)< (1+o_n(1))2ln2/3.
-
-    Clearly, 1-λ>κ_α for every α>1. Hence, on the one hand, <Ref> introduces a worse multiplicative constant (a larger α implies a larger Hellinger integral, and we are considering the limit of α→∞) and increases the minimum value of t one can consider for a given λ<1/2 (<Ref> is increasing in α). On the other hand, it provides a faster exponential decay with n. In fact, as β→ 1, the RHS of (<ref>) scales as exp(-2nt^2(1+o_n(1))) for large enough t, which matches the behavior of <Ref>. 
-    
-
- §.§ Comparison with <cit.>
-
-    In the setting considered above, <cit.> gives
-
-
-
-    
-    ℙ(| f-π^⊗ n(f)|≥ t ) ≤ 2exp(-2λ/1-λnt^2).
-
-
-    This means that, considering the decay provided by <Ref> (which optimises the speed of decay for large enough t) whenever 
-    t^2 > 1/2(1-λ)/(1-λ-βλ)ln(2
-        κ_α)(1+o_n(1)),
-
-    then <Ref> decays faster than <Ref>. 
-    
+    Φ(λ,z)≡∏_j=1^n [(λ-λ_j)^2-z ]     A  .
 
   
-   In particular, given β>1 one can choose λ = 1/β+1<1/2 and render <Ref> arbitrarily large. However, with the characterisation provided in <Ref> one can see that in this case, one has that whenever 
-    
-    t^2 > 1-λ/2-4λln(2(1-λ))(1+o_n(1)),
-
-    then <Ref> leads to a faster decay than <Ref>. 
-    
-
- §.§ Comparison with <cit.>
+  
+For the case (<ref>), Φ(λ,z) has a multiple zero if n≥ 2. For the case (<ref>), 
+ Φ(λ,z) has a multiple zero if n≥ 3. For the both cases, the distance d(A, 𝔻) is attained at the continuum of matrices in 𝔻 <cit.>.
  
-    For the kernel considered in this appendix, <Ref> holds with C_n= (n-1)log(2(1-λ)). Furthermore, for every i and x, x̂, we have that
-    TV(_X_i|X_i-1=x,_X_i|X_i-1=x̂)=(1-2λ). Consequently, assuming t>1/(2λ)√(ln(1/_X^n(E))/n), <cit.> give
-    
-    _X^n(E^c_t)    ≤exp(-2n(t(2λ) -√(ln(1/_X^n(E))/2n))^2) 
-       ≤exp(-8nt^2λ^2+8tλ√(nln2/2)).
+ Find d(A,𝔻) for the skew-symmetric matrix
 
-    Comparing <Ref> with C_n=(n-1)log(2(1-λ)) with <Ref>, one can see that, whenever
-     
-    t ≥√(2ln(2(1-λ)))/(1-4λ^2)(1+o_n(1)),
-
-then <Ref> improves over <Ref>. 
-
-A similar comparison can be drawn with respect to the tools in <cit.> (in which the degree of dependence is measured differently), but it would lead to a worse bound than that expressed in <Ref>.
+    A=[ [   0  -4   2  -1;   4   0   7   3;  -2  -7   0  11;   1  -3 -11   0 ]]   .
 
 
- §.§ MCMC
 
-Considering the same setting detailed in the previous subsections, one can more explicitly characterise the parameters determining <Ref>. In particular, one has that π = (1/2,1/2) and the spectral gap is equal to 1-2λ. Consequently, if n_0=0 and one considers α→∞, <Ref> becomes:
+Solution. Here
 
-    ℙ(1/n∑_i=1^n f(X_n_0+i)-π(f) > t ) ≤ 2exp(-λ/1-λ·2nt^2/(b-a)^2)·max{ν({0}),ν({1})},
+    Φ(λ,z)≡( λ^4-2 λ^2z+200 λ^2+z^2-200
+     z+3249 )^2  ,
 
-while <Ref> boils down to the following:
+and 𝒟_λ (Φ(λ,z)) ≡ 0. However, if we take 
 
-    ℙ(1/n∑_i=1^n f(X_n_0+i)-π(f) > t ) ≤ 2exp(-2nt^2/(b-a)^2)(2-2λ)^n-1·max{ν({0}),ν({1})}.
+    𝒟_λ (√(Φ(λ,z)))=
+    𝒟_λ(λ^4-2 λ^2z+200 λ^2+z^2-200
+     z+3249)
 
-Making a direct comparison one can see that if
+the result is the true distance equation
 
-    t^2 ≥((1-1/n)ln(2-2λ))(b-a)^2/21-λ/1-2λ,
+    11667456256 z^2-2333491251200 z+37907565375744=0   .
 
-then <Ref> provides a faster decay than <Ref>.
+Its least positive zero equals 
+
+    100-√(6751) =1/4(√(314)-√(86))^2
+ 
+where ± 1/2 𝐢 (√(314)-√(86)) are the eigenvalues of A. 
+
+Remark. Similar trick works also for the case of orthogonal matrices.
 
 
- §.§ Comparison between SDPI for D_α
-and hypercontractivity
+
+§ EXAMPLES AND COMPUTATIONAL ASPECTS
 
 
-If μ=(1/2,1/2) and K=BSC(λ), then μ K= μ and one has, following Wyner's notation <cit.>, the so-called Doubly-Symmetric Binary Source “DSBS(λ)”. In this setting, the hyper-contractivity constant is given by <cit.> 
-    γ^⋆(α)=(1-2λ)^2(α-1)-1 .
-Moreover, one can analytically see that, for every μ,
 
-    D_α(Kμ K)/D_α(δ_0μ) < (1-2λ)^(1+1/α)/(1-λ)^(α-1)/α.
 
-As α→1^+, the LHS of <Ref> approaches a ratio between KL-divergences, while the RHS approaches (1-2λ)^2, which equals η_KL(K) <cit.>. Furthermore, taking the limit of α→∞ (which optimises the exponential rate of decay), the expression in <Ref> provides an improvement over simply using DPI, while <Ref> trivialises to γ^⋆(+∞) = +∞. Hence, denoting with E={|f-_⊗ X_i(f)|≥ t}, one has that, 
-for every α>1,
 
-    _X^n(E) ≤ 2^1/βexp(-2nt^2/β)·exp((1-2λ)^2(α-1)-2/(1-2λ)^2(α-1)-1(n-1)log2)   via <Ref>&<Ref>, 
-    exp(1/β(1-2λ)^(1+1/α)/(1-λ)^(α-1)/α (n-1)log2)    via <Ref>&<Ref>.
 
-One can see that, for α large enough, <Ref> improves upon <Ref> for every λ. In fact, taking α→∞ gives
 
-    _X^n(E) ≤ 2 exp(-2nt^2  )·exp((n-1)log2)   via <Ref>&<Ref>, 
-    exp((1-2λ)/(1-λ) (n-1)log2)    via <Ref>&<Ref>.
 
+
+
+Once the canonical form of the distance equation is computed, Wilkinson's problem is nearly solved.
+Indeed, for a univariate algebraic equation, the  exact number of real zeros, as well as their location, could be trustworthy determined via purely algebraic procedures. 
+
+Remark. Theorem <ref> claims that generically the degree of the distance equation equals n(n-1). The both examples below fall into this genericity. For instance,  one has ℱ(z)=870 
+for n=30.
+
+
+   Find d(F_n,𝔻) for  Frank's matrix <cit.>
+
+    F_n=[
+    [   n n-1 n-2   …   2   1; n-1 n-1 n-2   …   2   1;   0 n-2 n-2   …   2   1;   0   0 n-3   …   2   1;   ⋮   ⋮       ⋱   ⋮   ⋮;   0   0   0   …   1   1 ]]   .
+
+
+
+Solution. For n=3, one has
+
+    Φ(λ,z)=
+    λ^6-12 λ^5+ ( -3 z+48 ) λ^4
+    + ( 24 z-74 ) λ^3
+
+
+    + ( 3 z^2-73 z+48
+     ) λ^2+ ( -12 z^2+70 z-12 ) λ-
+    z^3+25 z^2-33 z+1
+
+and
+
+    ℱ(z)=
+    23839360000 z^6-476315200000 z^5+3522206312000 z^4-
+    11668368222400 z^3
+
+
+    +16297635326400 z^2-6895772352000 z+
+    230443315200   .
+
+Distance equation has only real zeros, namely
+
+    z_1 ≈ 0.036482,  z_2 ≈ 0.648383, z_3 ≈ 2.316991,  
+    z_4 ≈ 4.954165, z_5 ≈ 5.274176,  z_6 = 27/4=6.75   .
+
+Thus, d(F_3,𝔻)=√(z_1)≈ 0.191004. To find the corresponding perturbation via (<ref>), first evaluate the multiple zero for Φ(λ,z_1) via (<ref>):
+
+    λ_∗≈ 0.602966   .
+
+Then evaluate the unit left singular vector of the matrix λ_∗ I - A corresponding to √(z_1):
+
+    U_∗≈[0.639244,  -0.751157,  -0.164708]^⊤
+
+Finally, 
+
+    E_∗≈[[ -0.019161 -0.041159  0.113343;  0.022516  0.048365 -0.133186;  0.004937  0.010605 -0.029204 ]]   .
+
+The nearest to F_3 matrix in 𝔻 
+
+    B_∗=F_3+E_∗≈[[ 2.980838 1.958840 1.113343; 2.022516 2.048365 0.866813; 0.004937 1.010605 0.970795 ]]
+
+possesses the spectrum {λ_∗, λ_∗, 6-2λ_∗≈ 4.794067 }.
+
+  For n>3, the set of nonreal zeros for the distance equation becomes nonempty, and its cardinality, relative to that of real, increases fastly with n.
+
+
+
+
+n      d(F_n,𝔻)  ≈       coefficient size      number of real zeros     timing (s) 
+
+ 5     4.499950  × 10^-3     ∼ 10^50      12     - 
+
+ 10     3.925527 × 10^-8     ∼ 10^300     30     - 
+
+ 12     1.849890 × 10^-10     ∼ 10^480     34     0.13 
+
+  20     3.757912 × 10^-21     ∼ 10^1690     62       5 
+
+ 30     1.638008 × 10^-36     ∼ 10^4450     102       30 
+.
+
+
+The results for F_10 and F_12 confirm estimations d_10≈ 3.93·10^-8 and d_12≈ 1.85· 10^-10 given in <cit.>. 
+
+ Find d(K_n,𝔻) for Kahan's matrix <cit.>
+
+    K_n=[
+    [       1      -c      -c       …      -c      -c;       0       s     -sc       …     -sc     -sc;       0       0     s^2       …   -s^2c   -s^2c;                       ⋱       …                ;       0       0       0       ⋱   s^n-2 -s^n-2c;       0       0       0       …       0   s^n-1 ]]    s^2+c^2=1   .
+
+
+
+Solution. We present computational results for two specialization of parameter values. The first one is s= 3/5, c=4/5:
+
+
+
+
+
+n      d(K_n,𝔻)  ≈      
+coefficient size      number of real zeros 
+    timing (s) 
+
+ 5     1.370032 × 10^-3      ∼ 10^310      8     - 
+
+ 10     5.470834 × 10^-6     ∼ 10^2970     48     - 
+
+ 15     2.246949 × 10^-8      ∼ 10^10590      138     6.7 
+
+  20     9.245309 × 10^-11     ∼ 10^25730      288       145.4 
+
+ 25     3.984992× 10^-10     ∼ 10^52910       258       218.23  
+
+ 30     1.240748× 10^-11     ∼ 10^92460     464     937.66
  
 
 
-§ PROOF OF <REF>
+
+
+The second test series correspond to a specialization s^n-1=1/10 treated in <cit.>. For this case, an extra difficulty results from approximation of the entries of the matrix K_n as rational numbers. This results in increasing the length of the coefficients of the distance equation. Compared with the previous case, the timing increases drastically, i.e. more than 10^2 times for the same specializations of n.   
 
 
 
-    For every n≥ 0, we have 
-    supp(S_n)=⋃_j=0^n { n-2j}.
- Moreover, given 0≤ j ≤ n, 
 
-    ℙ(S_n= n-2j) = nn-j2^-n.
- Furthermore, given x∈supp(S_n-1) and 0≤ j≤ n,
-    
-    ℙ_S_n|S_n-1=x(n-2j)= 1/21_{n-2j-x=1} + 1/21_{n-2j-x=-1}.
 
-Therefore, the following chain of inequalities holds:
-        
-    H_α (P_S_n|S_n-1=xP_S_n)    = ∑_j=0^n ℙ^α_S_n|S_n-1=x(n-2j) ·ℙ_S_n^1-α(n-2j) 
-       = 2^-α(ℙ_S_n^1-α(x+1)+ℙ_S_n^1-α(x-1))
-       = 2^-α((nn+x+1/2 2^-n)^1-α+(nn+x-1/2 2^-n)^1-α)
-       = 2^-α+n(α-1)((nn+x+1/2)^1-α+(nn+x-1/2)^1-α)
-       ≤ 2^-α+n(α-1)((n/n+x+1/2)^n+x+1/2(1-α)+(n/n+x-1/2)^n+x-1/2(1-α)) 
-    
-           
-               = 2^-α+n(α-1)((n+x+1/2n)^n+x+1/2(α-1)+(n+x-1/2n)^n+x-1/2(α-1))
-       ≤ 2^-α+n(α-1)((n+x+1/2n)^n+x+1/2(α-1)+(n+x+1/2n)^n+x-1/2(α-1)) 
-       = 2^-α+n(α-1)(n+x+1/2n)^n+x-1/2(α-1)·(1+(n+x+1/2n)^(α-1)) 
-       ≤ 
-            2^-α+n(α-1)+1.
-      
-        Here, the inequality (<ref>) follows from the fact that nk≥(n/k)^k along with 1-α≤ 0; the inequality (<ref>) follows from the fact that n+x+1/2n>0. 
-        Moreover, it is easy to see that  n+x+1/2= n+x-1/2+1 and thus the factorisation in <Ref> follows. To conclude, it suffice to notice that  n+x+1/2n≤ 1.
-        Denoting  with 1/β= α-1/α, the computations just above imply that
-    
-    H_α^1/α(_S^n_⊗_j=1^n S_j)    ≤∏_i=2^n max_x∈suppS_i-1 H_α^1/α(_S_i|S_i-1=x_S_i) 
-       ≤∏_i=2^n 2^1/α-1 + i/β =  ∏_i=2^n 2^-1/β+ i/β = 2^1/β∑_i=2^n (i-1) = 2^1/β∑_j=1^n-1 j = 2^n(n-1)/2β.
+n      d(K_n,𝔻)  ≈       number of real zeros  
+
+ 6     4.704940 × 10^-4     10  
+
+ 10     1.538157 × 10^-5     18  
+
+ 15     4.484974 × 10^-7      28  
+
+  20     1.904858 × 10^-8      38  
 
 
 
-    
-
-§ PROOF OF THE INEQUALITIES IN (<REF>) AND (<REF>)
-
-    
-    
-Given the setting, denoting with y_n = ∑_i=1^n-1p_ix_i, one has that
-
-    H_α(_X^n|X^n-1=x_1^n-1(1/2,1/2))    = (1/2)^1-α((1/2+∑_i=1^n-1p_ix_i)^α+(1/2-∑_i=1^n-1p_ix_i)^α) 
-       ≤(1/2)^1-α((1/2+∑_i=1^n-1p_ix_i)^⌊α⌋+(1/2-∑_i=1^n-1p_ix_i)^⌊α⌋) 
-       = (1/2)^1-α(∑_k=0^⌊α⌋⌊α⌋k(1/2)^⌊α⌋-ky_n^k + ∑_k=0^⌊α⌋⌊α⌋k(1/2)^⌊α⌋-k(-y_n)^k) 
-       = (1/2)^1-α(∑_k=0^⌊α⌋⌊α⌋k(1/2)^⌊α⌋-k(y_n^k +(-y_n)^k))
 
 
-    = (1/2)^1-α(∑_j=0^⌊α/2⌋⌊α⌋2j(1/2)^⌊α⌋-2j2y_n^2j) 
-       ≤ 2∑_j=0^⌊α/2⌋⌊α⌋2j (2y_n)^2j.
+The results for K_6,K_15 and K_20 confirm estimations  given in <cit.>. 
 
-Moreover, setting p_i = 2^-i-1 gives 
+It should be emphasized however that computation of the whole sets of real zeros for the distance equation is redundant for evaluation of d(A,𝔻). We need to find just only  the least positive zero of ℱ(z). For this aim, the determinantal representation (<ref>) for this polynomial might be sufficient for the real zero localization. According to Theorem <ref>, the lower estimate for the number of real zeros of ℱ(z) lying within the interval [0,z_0], z_0 >0 is given by the number (<ref>). If this number is not zero then at least one real zero for ℱ(z) lies in [0,z_0], and the next step in its localization might be the treatment of the matrix  S(z_0/2). 
 
-    max_x_1^n-1H_α(_X^n|X^n-1=x_1^n-1(1/2,1/2))    ≤2max_x_1^n-1∑_j=0^⌊α/2⌋⌊α⌋2j(2∑_i=1^n-1p_ix_i)^2j
-       =2 ∑_j=0^⌊α/2⌋⌊α⌋2j(∑_i=1^n-12^-i)^2j
-       =2∑_j=0^⌊α/2⌋⌊α⌋2j(1-2^-n+1)^2j
-       ≤ 2∑_j=0^⌊α/2⌋⌊α⌋2j = 2^⌊α⌋≤ 2^α.
+Experiments with the Frank's matrix (<ref>) demonstrate 
+the unambiguity of the zero isolation process. For the matrix F_10, one has
+𝒱(1,S_1(0),…,S_10(0))=0, i.e. all the eigenvalues of A are real. Then (<ref>) coincides with 
+
+    𝒱_z_0:= 𝒱(1,S_1(z_0),…,S_10(z_0),…, S_20(z_0))   .
+
+Some specializations for z_0
+
+
+
+z_0      10^-3       10^-9     2× 10^-15
+    10^-15 
+
+𝒱_z_0     5      3     1     0 
+
+
+
+demonstrate that the number of real zeros of ℱ(z) lying in any interval [0,z_0] happens to be equal to 𝒱_z_0. For instance, there are precisely 
+5 zeros within the interval [0,10^-3], namely
+
+    1.540976× 10^-15,  7.739368×  10^-15, 7.463686 × 10^-13,  1.403045 × 10^-9, 1.412301 × 10^-5  .
+
+However, for the case of the matrix
+
+    [ [  1  1 -2;  2  1  0; -3  1  1 ]]
+
+variations 𝒱_0.4=0,  𝒱_0.5=1,  𝒱_2.25=0 permit one to locate single zeros within the intervals [0.4, 0.5] and [0.5,2.25] but are unable to detect this number for [0.4, 2.25].
+
+
+
+
+§ COUNTEREXAMPLES
+
+
+
+
+
+
+
+
+
+We exemplify here two cases
+
+
+  (a)  The minimal positive zero of the distance equation not always provides the value d^2(A,𝔻) even if we restrict ourselves to the rank 1 perturbation matrices;
+
+  (b) The distance d(A,𝔻) is not always provided by the rank 1 perturbations.
+
+
+
+ For the matrix
+
+    A(ϵ)=
+    [ [  0  1  1  0; -1  0  0  1;  ϵ  0  0  1;  0  0 -1  0 ]]   ,
+
+find d(A(ϵ),𝔻) for ϵ >0.
+
+
+Solution. Distance equation is provided by the polynomial
+
+    ℱ(z)≡ 65536ϵ^8 [(ϵ+2)^4 z^2 -2ϵ(ϵ+8)(ϵ+2)^2 z + ϵ^2(ϵ-8)^2]^2
+    ·[(ϵ+1)z-3ϵ-1]^4
+
+
+    × (z^2-3 z+1)  
+    [z^2-( ϵ^2+3 ) z+(ϵ+1)^2]   .
+
+Its zeros are
+
+    z_1=ϵ(√(ϵ)-√(8))^2/(ϵ+2)^2, z_2=ϵ(√(ϵ)+√(8))^2/(ϵ+2)^2, z_3=3ϵ+1/ϵ+1,
+
+
+    z_4=3-√(5)/2≈ 0.381966,  z_5=3+√(5)/2≈ 2.618033   ,
+
+
+    z_6=1/2(ϵ^2+3-|ϵ-1| √(ϵ^2+2 ϵ^2+5)), z_7=
+    1/2(ϵ^2+3+|ϵ-1| √(ϵ^2+2 ϵ^2+5))
+
+are all real. Zero z_4 is simple, it coincides with the square of a singular value of the matrix A, and the polynomial Φ(λ,z_4) has the real double zero λ_4=0. The corresponding value of the distance function from A to 𝔻 does not depend on ϵ, it equals[Amazing coincidence with the reciprocal to the golden ratio!]
+
+    √(z_4)=√(5)-1/2≈ 0.618033   .
+
+The corresponding perturbation and matrix in 𝔻 are as follows:
+
+    E_4=1/10[[        0   √(5)-5 (3√(5)-5        0;        0        0        0        0;        0        0        0        0;        0  -2 √(5)   5-√(5)        0 ]], B_4=1/10[[       0  5+√(5) 5+3√(5)       0;     -10       0       0      10;     10ϵ       0       0      10;       0  -2√(5) -5-√(5)       0 ]]   .
+
+Double eigenvalue of B_4 is just 0.
+
+Next, we do not need to treat the zeros z_6, z_7 and z_3, since they are greater than z_4. Also z_2 >z_1, therefore, the two zeros that can compete for the distance value are z_1 and z_4.  It can be verified that 
+
+    z_1 ≤ z_4    ϵ≤ϵ_2  ϵ_2 = 2√(2)(√(5)+3)√(√(5)+2)+7√(5)+15≈ 61.133652   .
+
+It looks like d(A,𝔻)=√(z_1) for ϵ≤ϵ_2. However, this is not true for some subinterval in [0,ϵ_2]. Indeed, z_1 is a double zero for ℱ(z), and polynomial  Φ(λ,z_1) possesses two double zeros:
+
+    λ_1,2=±√(K(ϵ))/ϵ+2   K(ϵ):=√(2)(ϵ-√(2)√(ϵ)+2)(√(ϵ)+1/√(2))(√(ϵ)+√(5)+1/√(2))(√(ϵ)-√(5)-1/√(2))   .
+
+These zeros are real only for  
+
+    ϵ≥ϵ_1  ϵ_1:=3-√(5)≈ 0.763932   .
+ 
+For the values ϵ < ϵ_2, the minimal positive zero of the distance equation is not responsible for the distance from A to 𝔻.
+
+It seems that d(A,𝔻)=√(z_4) for ϵ < ϵ_2. However, this statement is also invalid for some subinterval of the parameter values. The matrix
+
+    E(ϵ):=
+    ϵ (8-ϵ)/(ϵ^2+16)^2[ [    0 -4 ϵ  ϵ^2    0; -4 ϵ    0    0  ϵ^2;  -16    0    0  4 ϵ;    0  -16  4 ϵ    0 ]]
+
+represents a rank 2 perturbation that provides for the matrix A(ϵ) + E(ϵ) a pair of double eigenvalues 
+
+    λ_1,2 =±1/ϵ^2+16√(( ϵ^2+4 ϵ-16 )  ( 3 ϵ^
+    2+4 ϵ+16 ))   .
+
+These eigenvalues are non-real for ϵ < 2(√(5)-1) ≈ 2.472136.  For these parameter values, one has
+
+    E(ϵ) =√(2)ϵ (8-ϵ)/ϵ^2+16
+
+and this value is lesser than √(z_1) for ϵ < ϵ_c where ϵ_c denotes the least positive zero of the polynomial 
+
+    ϵ^8-80 ϵ^7-368 ϵ^6-1024 ϵ
+    ^5+64 ϵ^4-9216 ϵ^3-16384 ϵ^2-
+    32768 ϵ+65536   ;
+
+i.e. ϵ_c ≈ 1.055249.
+
+
+
+[t]125mm
+
+
+    < g r a p h i c s >
+
+
+
+
+
+
+
+Figure 1.  
+
+
+
+
+Summarizing:
+
+    d(A(ϵ), 𝔻)=
+    {[  √(2)ϵ (8-ϵ)/(ϵ^2+16)           ϵ∈ [0, ϵ_c]; √(ϵ)|√(ϵ)-√(8)|/(ϵ+2)        ϵ∈ [ ϵ_c, ϵ_2];            (√(5)-1)/2               ϵ > ϵ_2 ].
+
+The plot is displayed in Fig. 1 (the first formula — red, the second one — blue, the third one — green). 
+
+Remark. As it is mentioned in Introduction, the case where d(A,𝔻) is achieved at the rank 2 matrix (i.e. the nearest in 𝔻 matrix possesses two double imaginary eigenvalues) is beyond our consideration. We are not able even to conjecture whether this is a zero probability event or not. 
+
+
+
+
+
+§ COMPLEX PERTURBATIONS
+
+
+
+
+
+
+
+
+
+The method proposed above can be extended to the case of complex perturbations. For a real matrix A, we are now looking for the distance to the nearest complex matrix B with multiple eigenvalue:
+
+    d_C(A,𝔻):=minB-A   𝒟_λ(f_B(λ))=0, B∈ℂ^n× n  .
+
+
+Warning. The present section should be considered as a draft of a separate publication to be prepared sometime afterwards. We skip here the details of algebraic backgrounds, proofs of theoretical results and do not bother ourselves with mentioning that the validity of some of the declared results is subject to several extra assumptions preventing the appearance of  
+troubles similar to those dealt with in the previous section.
+
+Consider the polynomial
+
+    Θ(a,b,z)=[((a+b 𝐢)I-A)((a-b𝐢)I-A^⊤)-zI]
+
+and generate the system of algebraic equations
+
+    Θ=0, ∂Θ /∂
+    a =0,  ∂Θ/ ∂ b=0   .
+
+We are looking for the real solutions to this system.
+Since 
+
+    Θ(a,0,z)  (<ref>)≡Φ(a,z)   ,
+ 
+this solution set includes that for the system (<ref>).
+
+
+  If the system (<ref>) possesses a solution (a_0,b_0,z_0) with b_0 0 then it has the solution 
+(a_0,-b_0,z_0).
+
+
+Proof. 
+Polynomial Θ(a,b,z) is even in b:
+
+    Θ(a,-b,z)=[ ((a+𝐢 b)I-A^⊤)((a-𝐢 b)I-A) - zI ]
+
+
+    =[ {((a+𝐢 b)I-A^⊤)((a-𝐢 b)I-A)}^⊤ - zI ]
+
+
+    =[((a-𝐢 b)I-A^⊤) ((a+𝐢 b)I-A)  - zI ]=Θ(a,b,z)   .
+
+Consequently Θ^'_a is even in b while Θ^'_b  is odd b. The latter becomes even on dividing by b. 
+
+Our aim is to eliminate the variables a and b from the system (<ref>), i.e. to find the bivariate discriminant 
+𝒟_a,b(Θ) for the polynomial Θ(a,b,z) treated with respect to these variables. 
+
+The discriminant 𝒟_x,y(F)  of a polynomial F(x,y,z) ∈ℂ[x,y,z] is formally defined as the result of elimination of variables x and y from the system of equations
+
+    F=0, ∂ F / ∂ x=0,  ∂ F / ∂ y=0   .
+
+This is a polynomial in z and its vanishment at z=z_0 ∈ℂ is the necessary and sufficient condition for the existence of solution (x_0,y_0,z_0) ∈ℂ^3 to the system (<ref>), or equivalently, for the existence of the multiple zero (x_0,y_0) for the polynomial F(x,y,z_0). Constructive computation of discriminant 
+can be implemented in several ways, and we will exemplify below the procedure based of the Bézout construction of the resultant <cit.>.
+
+
+ The discriminant 𝒟_a,b(Θ(a,b,z))  is factorized as follows:
+
+    𝒟_a,b(Θ(a,b,z))≡ z^n(n+1)/2ℱ(z) ℱ(z)     .
+
+Here  ℱ(z) is defined by (<ref>), while 
+
+    ℱ(z) ∈ℝ[z],  ℱ(z) =n(n-1)(n-2)/2   ,
+
+(For n=2 polynomial ℱ(z) is just a constant).
+
+
+According to Section <ref>, the distance equation ℱ(z)=0 is responsible for the rank 1 real perturbation that provides the distance d(A,𝔻).
+It turns out that the equation
+
+    ℱ(z) = 0
+ 
+ is responsible for the rank 1 imaginary perturbation. Its real zero z_0 corresponds to a pair of multiple zeros 
+of the polynomial Θ(a,b, z_0), and these zeros are either in the form  (a_0, ±β_0) or in the form
+(a_0, ±𝐢β_0) with real β_0. We are definitely interested only in the real solutions for the 
+system (<ref>).
+
+
+
+
+
+ Let the system (<ref>) possess a real solution (a_0,b_0,z_0) with z_0 >0,b_0 0.
+Denote U_0∈ℂ^n,  U_0=1 the left singular vector for the matrix 
+(a_0+𝐢 b_0)I-A corresponding to the singular value 
+√(z_0).
+Then  the rank 1 perturbation
+
+    E_0=U_0 U_0^𝖧 ((a_0+𝐢 b_0) I-A)
+
+is such that E_0= √(z_0) and the matrix B_0=A+E_0 ∈ℂ^n× n possesses the double eigenvalue a_0+𝐢 b_0.
+
+
+Remark. Evidently, the matrix E_0 provides for the matrix 
+B_0=A+E_0 the double
+eigenvalue a_0-𝐢 b_0.
+
+In view of Theorem <ref>, the distance d_C(A,𝔻) results from the competition between the least positive zero of ℱ(z) and that minimal positive zero of 
+ℱ(z) that corresponds to the real solution for the system (<ref>).
+
+
+Computation of the polynomial ℱ(z) can be simplified if we take into account Theorem <ref>. Substitute 
+
+    𝔟:=b^2
+ 
+in the polynomials of the system (<ref>) and denote
+
+    Ξ(a,𝔟,z):=Θ(a,b,z),  Ξ_a(a,𝔟,z):=Θ^'_a(a,b,z),  Ξ_𝔟(a,𝔟,z):=Θ^'_b(a,b,z)/b    .
+
+
+ The result of elimination of variables a and 𝔟 from the system
+
+    Ξ=0, Ξ_a=0, Ξ_𝔟=0
+
+is the equation 
+
+    z^n(n-1)/2ℱ(z)=0   .
+
+
+
+If z_0 is a positive zero of ℱ(z), the corresponding real solution to the system (<ref>) might have the 𝔟-component either positive or negative. We are interested only in the positive variant.
+
+ Find d_C(A,𝔻) for
+
+    A= [ [   0   1   0;   0   0   1; -91 -55 -13 ]]   .
+
+
+
+Solution. First compute the polynomial  ℱ(z) via (<ref>):
+
+    ℱ(z) := 33076090700402342058246544 z^6-377039198861306289080145178864  z^5
+
+
+    +937864902703881321034450183916 z^4-771868276098720970149792503999 z^3
+
+
+    +211070978787821517684022650624 z^2
+
+
+    -510584100140452518540394496 z+319295875259784560640000   .
+
+Its real zeros  are as follows
+
+    z_1≈ 0.739336,  0.765571, 0.980468,  11396.658548   .
+
+Next compose the polynomial Ξ(a,𝔟,z):
+
+    Ξ(a,𝔟,z)=-z^3+(3a^2+3𝔟+26a+11477)z^2
+
+
+    -(3 a^4+6 a^2𝔟+3 𝔟^2+52a^3+52a𝔟+11756a^2+11536𝔟+11466 a+19757)z
+
+
+    +( a^2+𝔟+14 a+49 )  ( (a^2+𝔟+6 a+13)^2-
+    16 𝔟)   .
+
+Now we trace briefly the procedure  of elimination of a and 𝔟 from the system (<ref>). Consider the monomial sequence
+
+    𝕄:={𝔪_j(a,𝔟)}={1,a,𝔟, 𝔟^2}  .
+
+It is possible to reduce the polynomial 𝔪_j  Ξ modulo Ξ_a and Ξ_𝔟, i.e. to 
+find the polynomials {β_jk(z) }_j,k=1^4 ⊂ℝ[z] and {p_11(a,𝔟,z), p_j2(a,𝔟,z)}_j=1^4 ⊂ℝ[a,𝔟,z] satisfying the identity
+
+    m_j  Ξ≡β_j1(z)+ β_j2(z) a + β_j3(z) 𝔟 + β_j4(z) 𝔟^2 +  p_j1Ξ_a  + p_j2Ξ_𝔟  j∈{1,2,3,4}  .
+
+For instance, 
+
+    β_11(z)= -17718805921 z^2+610367232 z+22937600,  β_12(z)= -39353600  z+5324800,
+
+
+    β_13(z)=146694400 z-512000, β_14(z)=-307200, …,
+
+
+    β_44(z)=
+    - 76550493273549926400 z^3+ 162810741053705011200 z^2- 1867736871075840000 z- 50331648000000  .
+
+Compose the Bézout matrix 
+
+    𝔅(z):= [ β_jk(z) ]_j,k=1^4   .
+
+Then
+
+    𝔅(z) ≡  z^3ℱ(z)
+
+where
+
+    ℱ(z) =  412324266119803814719539025 z^3+
+    33923334498676415590177600 z^2
+
+
+    +691077589890510378371072 z-
+    899669298077697638400   .
+
+For any zero z_0 of this polynomial, the corresponding a  and 𝔟 components of the solution to the system (<ref>) can be obtained in the following way. Denote by {𝔅_4j}_J=1^4 the cofactors of 
+𝔅 corresponding to the entries of the last row of the matrix 𝔅. Then the a-component of solution is connected with the z-component as
+
+    a=𝔅_42/𝔅_41= 43719663040898080379 z^2+2929017747573439808 z+
+    29336262189312000/2(624300876564482975 z^2-226254560538037856 z-3469512291865600)
+
+while the 𝔟-component as
+
+    𝔟=𝔅_43/𝔅_41=  3083432482762007609519 z^3+ 1101690698089389073600 z^2+ 67186386329988787456 z- 129087561954918400/16(624300876564482975 z^2-226254560538037856 z-3469512291865600)
+
+Polynomial ℱ(z) possesses a single real zero, namely[All the decimals in the following approximation are error-free.]
+
+    z_1 ≈ 0.0012268490707391199222512104943   ,
+
+and substitution of this value into the last formulas yields
+
+    a= a_1 ≈ -4.403922040624116177182912013601,  𝔟 = 𝔟_1 ≈  0.750705046015830894563798035515   .
+
+Since 𝔟_1>0, one may claim that  
+
+    d_C(A,𝔻)=√(z_1)≈ 0.035026405335676681771543151648   .
+
+The two  perturbations in ℂ^3× 3 providing this distance correspond to the solutions
+
+    (a_1,b_1,z_1)   (a_1,-b_1,z_1)    b_1=√(𝔟_1)≈ 0.866432366671415902596255690462   .
+
+of the system (<ref>). Let us compute via (<ref>) the one  corresponding to (a_1,-b_1,z_1). 
+The unit left singular vector of
+(a_1-𝐢 b_1)I-A corresponding to the singular value 
+√(z_1) is as follows 
+
+    U_1 ≈[ 
+     0.930609,  
+     0.360923+
+     0.039918 𝐢, 
+     0.045052+
+     0.008866 𝐢]^⊤
+
+and the minimal perturbation
+
+    E_1≈[[  0.001289-0.000442 𝐢 -0.007120+0.000832 𝐢  0.031666+0.002551 𝐢;  0.000519-0.000116 𝐢 -0.002797+0.000017 𝐢  0.012172+0.002348 𝐢;  0.000067-0.000009 𝐢 -0.000353-0.000028 𝐢  0.001509+0.000425 𝐢 ]]  .
+
+The spectrum of the matrix A+E_1 is 
+
+    { a_1-𝐢 b_1, a_1-𝐢 b_1 ,-13-2(a_1-𝐢 b_1) ≈ -4.192156-1.732865 𝐢}  .
+
+
+
+To test the performability of the algorithm sketched in the present section, we chose the next  matrix from the Matlab gallery('grcar',6).
+
+ Find d_C(A,𝔻)  for
+
+    A= [ [  1  1  1  1  0  0; -1  1  1  1  1  0;  0 -1  1  1  1  1;  0  0 -1  1  1  1;  0  0  0 -1  1  1;  0  0  0  0 -1  1 ]]   .
+
+
+
+Solution. Here the minimal zero of ℱ(z) equals
+z_1≈ 0.116565 
+and that of ℱ(z) equals
+
+    z_1 ≈ 0.04630491415327188209539627157   .
+
+The latter corresponds to the real solution for the system (<ref>):
+
+    (a_1,± b_1, z_1)   a_1 ≈ 
+     0.753316,  b_1 ≈ -1.591155   .
+
+Thus, one obtains
+
+    d_C(A,𝔻) = √(z_1)≈ 0.2151857666140395125353   .
+
+This confirms estimation d_C(A,𝔻) ≈ 0.21519
+from <cit.>. 
+
+For the solution (a_1,b_1, z_1), the spectrum of the nearest to A matrix in 𝔻 is as follows
+
+    { 0.361392-1.944783 𝐢,1.139422-1.239762 𝐢,1.502453-0.616966 𝐢,1.490100+0.619201 𝐢,a_1+𝐢 b_1, a_1+𝐢 b_1 }  .
+
+
+
+
+
+
+
+§ CONCLUSION
+
+
+
+We have investigated Wilkinson's problem for the distance evaluation from a given matrix to the set of matrices possessing multiple eigenvalues. The proposed approach consists in the construction of distance equation with the zero set containing the critical values of the squared distance function. This construction is realized in the ideology of symbolic computations, i.e. the procedure consists of a finite number of elementary algebraic operations on the entries of the matrix. 
+
+The representation of the distance equation with the aid of the discriminant function should not be taken as a complete surprise. Indeed, the Wilkinson's  problem is the one of evaluation the distance to the discriminant manifold in the space of matrix entries. Hence, in view of this circumstance, the appearance of the discriminant in a solution to the problem is somehow natural. The more astonishing is the emergence of the discriminant in nearly any problem of distance evaluation from a point to an algebraic manifold in a multidimensional space <cit.>.
+
+
+Direction for further research is clearly related the stuff of Section <ref>, i.e. the problem of existence the rank 2 minimal perturbation providing d(A,𝔻). 
+
+
+
+
+
+
+
+99
+
+
+AhmadAlam Ahmad, Sk.S., Alam, R.: On Wilkinson's problem for matrix pencils. ELA, 30, pp. 632–648 (2015)
+
+
+AkFrSp Akinola, R. O., Freitag, M. A., Spence A.: The calculation of the distance to a nearby defective matrix. Numerical Linear Algebra with Applications. 21:3, pp. 403–414 (2014) 
+
+AlamBora Alam, R., Bora, S.: On sensitivity of eigenvalues and
+eigendecompositions of matrices. Linear Algebra Appl. 396, pp. 273–301 (2005)
+
+AlamBoraByersOverton Alam, R., Bora, S., Byers, R., Overton, M. L.: Characterization and construction of the nearest defective matrix via coalescence of pseudospectral components. Linear Algebra Appl. 435, pp. 494–513 (2011)
+
+ArmGraVel Armentia, G., Gracia, J.-M., Velasco, F.-E.: Nearest matrix with a prescribed eigenvalue of bounded multiplicities. Linear Algebra Appl., 592, 188–209 (2020)
+
+BikkerUteshev Bikker P., Uteshev A.Yu.: On the Bézout construction of the resultant. J.Symbolic Comput., 1999, 28,  No 1. 45–88 (1999)
+
+Demmel Demmel, J.W.: Computing stable eigendecompositions of matrices. Linear Algebra Appl., 79, pp. 163–193 (1986)
+
+Demmel1 Demmel, J.W.: On condition numbers and the distance to the nearest ill-posed problem, Numer.Math. 51, pp. 251–289 (1987)
+
+Frank
+Frank, W.L.: Computing eigenvalues of complex matrices by determinant evaluation and by methods of Danilewski and Wielandt. J. Soc. Indust. Appl. Math. 6(4), pp. 378–392 (1958).
+
+Gantmacher Gantmacher, F.R.: The Theory of Matrices. 
+Chelsea, New York (1959)
+
+Gracia Gracia, J.-M.: Nearest matrix with two prescribed eigenvalues. Linear Algebra Appl. 401, pp. 277–294 (2005)
+
+Kahan Kahan, W.: Numerical linear algebra. Canad. Math. Bull. 9, pp. 757–801 (1966)
+
+Kalinina_Uteshev_CASC22 Kalinina, E., Uteshev, A.: Distance evaluation to the set of matrices with multiple eigenvalues.  LNCS, 13366. Springer, Cham, pp.206–224 (2022)
+
+
+
+KokLogKar
+Kokabifar, E., Loghmani, G.B., Karbassi, S.M.: Nearest matrix with prescribed eigenvalues and its applications. J. Comput. Appl. Math.
+298,  pp. 53–63 (2016)
+
+Lippert Lippert, R.A.: Fixing multiple eigenvalues by a minimal perturbation. Linear Algebra Appl. 432, pp. 1785–1817 (2010)
+
+LipEdel
+Lippert, R.A., Edelman, A.: The computation and sensitivity of double eigenvalues, in: Z. Chen, Y. Li, C.A. Micchelli, Y. Xu (Eds.), Advances in Computational Mathematics: Proc. Gaungzhou
+International Symposium, Dekker, New York, pp. 353–393 (1999)
+
+Malyshev Malyshev, A.: A formula for the 2-norm distance from a matrix to the set of matrices with multiple eigenvalues. Numer. Math. 83, pp. 443–454 (1999)
+
+Mengi Mengi, E.: Locating a nearest matrix with an eigenvalue of prespecified algebraic multiplicity. Numer. Math. 118, pp. 109–135 (2011) 
+
+Ruhe Ruhe, A.: Properties of a matrix with a very ill-conditioned eigenproblem. Numer. Math. 15, pp. 57–60 (1970)
+
+TrEmb Trefethen, L. N., Embree, M.: Spectra and Pseudospectra, Princeton University Press, Princeton, NJ (2005)
+
+
+UteshevCherkasov Uteshev, A.Yu., Cherkasov, T.M.:  The search for the maximum of a polynomial.J. Symbolic Comput. 25 (5). pp. 587–618 (1998) 
+
+UteshevYashina2015 Uteshev, A.Yu., Yashina M.V.: Metric problems for quadrics in multidimensional space. J.Symbolic Comput.,  68, Part I, pp. 287–315 (2015)
+
+
+Wilkinson Wilkinson, J.H.: The Algebraic Eigenvalue Problem, Oxford University Press, New York (1965)
+
+Wilkinson2 Wilkinson, J.H.: Note on matrices with a very ill-conditioned eigenproblem. Numer. Math. 19, 176–178 (1972)
+
+Wilkinson1 Wilkinson, J.H.: On neighbouring matrices with quadratic elementary divisors, Numer. Math. 44, 1–21 (1984)
+
+Wilkinson3 Wilkinson, J.H.: Sensitivity of eigenvalues, Util. Math. 25, 5–76 (1984)
+
+
 
 

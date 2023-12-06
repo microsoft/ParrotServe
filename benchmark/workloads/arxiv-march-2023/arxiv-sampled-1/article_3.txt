@@ -1,985 +1,936 @@
 
-	
-	
-	1]Juan Chen
-	1]Yingchun Zhou Corresponding author:  yczhou@stat.ecnu.edu.cn
-	[1]Key Laboratory of Advanced Theory and Application in Statistics
-		and Data Science-MOE, School of Statistics, East China Normal University.
-	
-	
-	Weighted Euclidean balancing for a matrix exposure in estimating causal effect
-    [
+Better than square-root cancellation]Better than square-root cancellation for random multiplicative functions
+
+
+Department of Mathematics, Stanford University, Stanford, CA, USA
+maxxu@stanford.edu
+
+
+
+
+    We investigate when the better than square-root cancellation phenomenon exists for ∑_n≤ Na(n)f(n), where a(n)∈ℂ and f(n) is a random multiplicative function. We focus on the case where a(n) is the indicator function of R rough numbers. We prove that loglog R ≍ (loglog x)^1/2 is the threshold for the better than square-root cancellation phenomenon to disappear.
+
+[
+    Max Wenqiang Xu
     
-==============================================================================
+===================
 
 
-		In many scientific fields such as biology, psychology and sociology, there is an increasing interest in estimating the causal effect of a matrix exposure on an outcome.  Covariate balancing is crucial in causal inference and both exact balancing and approximate balancing methods have been proposed in the past decades. However, due to the large number of constraints, it is difficult to achieve exact balance or to select the threshold parameters for approximate balancing methods when the treatment is a matrix. To meet these challenges, we propose the weighted Euclidean balancing method, which approximately balance covariates from an overall perspective. This method is also applicable to high-dimensional covariates scenario. Both parametric and nonparametric methods are proposed to estimate the causal effect of matrix treatment and theoretical properties of the two estimations are provided. Furthermore, the simulation results show that the proposed method outperforms other methods in various cases. Finally, the method is applied to investigating the causal relationship between children's participation in various training courses and their IQ. The results show that the duration of attending hands-on practice courses for children at 6-9 years old has a siginificantly positive impact on children's IQ.
-	
-	Keywords: causal inference, matrix treatment, weighting methods, overall imbalance, observational study. 
-	
-	
+
+
 
 § INTRODUCTION
 
-	For decades, causal inference has been widely used in many fields, such as biology, psychology and economics, etc. Most of the current research is based on univariate treatment (binary, multivalued or continuous treatment)  (<cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>). However, one may be interested in the causal effect of a matrix treatment. For example, in studying the impact of children's participation in training courses on children's intelligence (measured by IQ), the exposure is a matrix, whose rows represent different age groups, columns represent the types of trainging courses and each element represents the number of hours of class per week. The existing methods are not suitable for matrix exposure and there have been few research on this. Therefore, the goal of this paper is to develop a new method to estimate the causal effect function for matrix exposure.
-	To estimate causal effects in observational studies, it is common to use propensity scores (<cit.>; <cit.>; <cit.>). There are several classes of propensity score-based methods, such as matching, weighting and subclassification, that have become part of applied researchers' standard toolkit across many scientific displines (<cit.>; <cit.>). In this article we focus on the weighting method. 
-	In the past decade, various weighting methods have been proposed to balance covariates in the estimation procedure (<cit.>; <cit.>; <cit.>). The key idea of these methods is to estimate propensity score ( <cit.>; <cit.>; <cit.>; <cit.>).
-	
-	When using the parametric method to model the propensity score, the estimation bias of the causal effect will be large if the model is mis-specified. Therefore, some nonparametric methods for estimating the propensity score have been proposed, such as the kernel density estimation (<cit.>). In addition, in recent years, some studies have used optimized weighting methods to directly optimize the balance of covariates (<cit.>; <cit.>; <cit.>).
-	
-	These methods avoid the direct construction of the propensity scores, therefore the obtained estimate achieves higher robustness. One of the methods, the entropy balancing method, has been established as being doubly robust, in that a consistent estimate can still be obtained when one of the two models, either the treatment assignment model or the outcome model, is correctly specified (<cit.>).
-	
-	Furthermore, this method can be easily implemented by solving a convex optimization problem. Here we extend the entropy balancing method to the matrix treatment scenario to balance the covariates.
-	The methods mentioned above assume that all balancing conditions hold exactly, that is, they are exact balancing methods. However, the balancing conditions cannot hold exactly when the dimension of covariate or treatment is high as there will be too many equations to hold simultaneously. For matrix treatment, it is even more difficult for the balancing conditions to hold exactly. To meet this challenge, literatures have shown that approximate balance can trade bias for variance whereas exact balance cannot and the former works well in practice in both low- and high-dimensional settings (<cit.>; <cit.>). The potential limitations of the existing approximate balancing methods are that they directly control univariate imbalance, which cannot guarantee the overall balance especially in the high-dimensional scenario. Besides, there is no principled way to select the threshold parameters simultaneously in practice. Another potential issue of the univariate approximate balancing methods is that it is difficult to handle high-dimensional constraints since the theoretical results require that the number of the balancing constraints should be much smaller than the sample size(<cit.>).
-	To alleviate the limitations of univariate balancing methods, we propose an overall balancing approach, which is called Weighted Euclidean balancing method. The weight is obtained by optimizing the entropy function subject to a single inequality constraint, hence the issue of tuning multiple threshold parameters in univariate balancing methods is solved. The Weighted Euclidean distance is defined to measure the overall imbalance and a sufficient small value of the distance suggests that the covariates are approximately balanced from the overall perspective. Moreover, we propose an algorithm to deal with high-dimensional constraints, so that the proposed method is not restrictive to the low-dimensional setting.
-	The main contributions of the paper are summarized as follows. First, an overall balancing method (Weighted Euclidean balancing method) is proposed, which extends the binary univariate entropy approximate balancing method to the matrix treatment scenario. Unlike univariate approximate balancing method, the Weighted Euclidean balancing method controls the imbalance  from the overall perspective. Moreover, to the best of our knowledge, it is the first time that matrix treatment is studied by weighting method in causal inference literature. Second, both parametric and nonparametric causal effect estimation methods for matrix treatment are proposed. Under the parametric framework, a weighted optimization estimation is defined and its theoretical properties are provided. Under the nonparametric framework, B-splines are used to approximate the causal effect function and the convergence rate of the estimation is provided. Third, the proposed method is applied to explore the impact of children's participation in training courses on their IQ and meaningful results are obtained.
-	The remainder of this article is organized as follows: In Section 2, the preliminaries are introduced. In Section 3, the Weighted Euclidean balancing method (WEBM) is proposed. In Section 4, the theoretical properties of the WEBM method are shown. In section 5, a numerical simulation is performed to evaluate the performance of the WEBM method under finite samples. In Section 6, the WEBM method is applied to analyze a real problem. The conclusions and discussions are summarized in Section 7.
-	
-	
-	
-	
-	
-	
 
-§ PRELIMINARY
+The study of random multiplicative functions has attracted intensive attention. Historically, they were introduced to model arithmetic functions. A Steinhaus random multiplicative function f(n) is a completely multiplicative function defined on positive integers such that f(p) are independently and uniformly distributed on the complex unit circle for all primes p. One may view it as a random model for arithmetic functions like Dirichlet characters χ(n) or n^it. Another popular model is the Rademacher random multiplicative function f(n) which was first used by Wintner<cit.> as a random model for Möbius function μ(n). In this note, we focus on the Steinhaus case. The obvious dependence between random variables f(m) and f(n) whenever (m, n)≠ 1 makes the study of random multiplicative functions intriguing.
 
-	
 
- §.§ Notation and assumptions
+Arguably the most striking result so far in the study of random multiplicative functions is Harper's <cit.> remarkable resolution of Helson's conjecture<cit.>, that is, the partial sums of random multiplicative functions enjoy better than square-root cancellation
 
-	Suppose an independent and identically distributed sample (𝐙_1,…,𝐙_n) is observed, where the support of 𝐙 = (𝐓,𝐗,Y) is 𝒵=(𝒯×𝒳×𝒴). Here 𝐓∈ R^p× q denotes a matrix exposure, 𝐗∈ R^J denotes a vector of covariates, and Y ∈ R denotes the observed outcome. Since the causal effect is characterized by potential outcome notion, let Y(t) for all t∈𝒯 denotes the potential outcome that would be observed under treatment level 𝐭, i.e. Y = Y(t) if T= t.  
-	
-	In this paper, our goal is to estimate the causal effect function 𝔼(Y(𝐭)), which is defined in terms of potential outcomes that are not directly observed. Therefore, three assumptions that commonly employed for indentification are made (<cit.>; <cit.>).
+    [|∑_n≤ x f(n) |] ≍√(x)/(loglog x)^1/4,
 
-	
-	
-	Assumption 1 (Ignorability):
+where f(n) are random multiplicative functions. 
+In particular, with the natural normalization √(x), the partial sums ∑_n≤ x f(n) do not converge in distribution to the standard complex normal distribution (see also <cit.>). Before Harper's result <cit.>, there was progress on proving good lower bounds close to √(x), e.g. <cit.>, and it was not clear that such better than square-root cancellation in (<ref>) would  appear until Harper's proof. See also recent companion work on analogous results in the character sums and zeta sums cases established by Harper <cit.>.
+It is known that the better than square-root cancellation phenomenon in random multiplicative functions is connected to the “critical multiplicative chaos" in the probability literature. We point out references <cit.> for related discussions.  
 
-	
+A closely related important question in number theory is to understand the distribution of the Riemann zeta function over typical intervals of length 1 on the critical line 
+ℜ𝔢(s)=1/2. One may crudely see the connection by viewing ζ(s) as a sum of n^-1/2-it for a certain range of n and n^it behaves like a Steinhaus random multiplicative function for randomly chosen t. A conjecture of Fyodorov, Hiary, and Keating (see e.g. <cit.>) suggests that there is a subtle difference between the true order of local maximal of log|ζ(1/2+it)| and one's first guess based on Selberg's central limit theorem for log|ζ(1/2+it)|. The existence of this subtle difference and the appearance of the better than square-root cancellation for random multiplicative functions both show that the corresponding nontrivial dependence can not be ignored. We refer readers to <cit.> for related discussions about partial sums of random multiplicative functions and zeta values distribution.
 
-	T_i ⊥ Y_i(t) |X_i, which implies that the set of observed pre-treatment covariates 𝐗_i, is sufficiently rich such that it includes all confounders , i.e. there is no unmeasured confounding.
-	
+In this paper, we are interested in further exploring Harper's result (<ref>) and methods used there, by considering the problem in a more general context. 
+ Let a(n) be a sequence in . 
+When does the better than square-root cancellation phenomenon hold for ∑_n≤ N a(n)f(n), i.e.
 
-	
-	Assumption 2 (Positivity):
+    [|∑_n≤ Na(n) f(n)|] = o(√(∑_n≤ N|a(n)|^2))̊?
 
-	
 
-	f_T|X(T_i = t|X_i ) > 0 for all t∈𝒯, which means that treatment is not assigned deterministically.
 
-	
-	
-	Assumption 3 (SUTVA):
+We first make some simple observations in the situations where a(n) is “typical" or a(n) has a rich multiplicative structure. Then we focus on a particular case where the coefficient a(n) is an indicator function of a multiplicative set. 
 
-	
 
-	Assume that there is no interference among the units, which means that each individual's outcome depends only on their own level of treatment intensity.
-	
+ §.§ Typical coefficients
 
-	
-	Under the above assumptions, we first define the stabilized weight as
+If partial sums ∑_n≤ Na(n)f(n) with the square-root size normalization behave like the complex standard Gaussian variable, then there is just square-root cancellation. One may attempt to prove such a central limit theorem by computing the high moments, however, the moments usually blow up and such a strategy does not work here (see e.g. <cit.> for moments computation results). It turns out that for “typical" choices of a(n), such a central limit theorem does hold. It has been carried out in the concrete case where a(n)=e^2π i n θ for some fixed real θ without too good Diophantine approximation property (such θ has relative density 1 in , e.g. one can take θ=π) by Soundararajan and the author <cit.>, and also an average version of the result is proved by Benatar, Nishry and Rodgers <cit.>. The proof of the result in <cit.> is based on McLeish's martingale central limit theorem<cit.>, and the method was pioneered by Harper in <cit.>.  
+The proof reveals the connection between the existence of such a central limit theorem and a quantity called multiplicative energy of a:= {a(n): 1≤ n≤ N} 
 
-	
-    w_i = f(T_i)/f(T_i |X_i),
+    E_×(𝐚): = ∑_m_1, n_1, m_2, n_2 ≤ N
+     m_1m_2=n_1n_2a(m_1)a(m_2) a(n_1)a(n_2).
 
-	then one can estimate the causal effect function based on the stabilized weight with observational data.
-	
-	
+A special case of a(n) is an indicator function of a set , and the quantity E_×() is a popular object studied in additive combinatorics. It is now known <cit.> that a crucial condition for such a central limit theorem holds for ∑_n≤ Na(n)f(n) is that the set  has multiplicative energy ≤(2+ϵ)||^2. See <ref> for more discussions on a(n) being a “typical" choice.  We refer readers who are interested in seeing more examples of when a central limit theorem holds for partial (restricted) sums of random multiplicative functions to <cit.>.  
 
- §.§ Exact entropy balancing and approximate entropy balancing for matrix exposure
 
-	The entropy balancing method (<cit.>)
-	
-	is used to determine the optimal weight for inferring causal effects. It has been used for univariate treatment and here this method is extended to matrix exposure and to balance covariates approximately.	
-	Note that the stabilized weight 
 
-	
-    w_i = f(T_i)/f(T_i |X_i)
+ §.§ Large multiplicative energy and sparse sets
+ Let us focus on the case that a_n is an indicator function of a set . As we mentioned that if the set  has small multiplicative energy (among other conditions), then partial sums exhibit square-root cancellation. Suppose we purposely choose a set  with very large multiplicative energy, will it lead to better than square-root cancellation? One extreme example is = {p^n: 1≤ n ≤log_p N} being a geometric progression, where p is a fixed prime. A standard calculation gives that
 
-	satisfies the following conditions for any suitable functions u(𝐓) and v(𝐗):
-	
-    𝔼(w_iu(𝐓_i)v(𝐗_i)) =    ∬f(T_i)/f(T_i |X_i)u(𝐓_i)v(𝐗_i)f(𝐓_i, X_i)dT_idX_i 
-       =∫{f(T_i)/f(T_i |X_i)u(T_i)f(T_i |X_i)dT_i } v(X_i)f(X_i)dX_i 
-       =𝔼(u(𝐓_i))𝔼(v(𝐗_i))
+    [| ∑_n∈ f(n) |] =  ∫_0^1 |∑_n≤log_p Ne(θ n)| dθ≍loglog N,
 
-	Besides, it also satisfies that 
-	
-    𝔼(w_i) = ∬f(T_i)/f(T_i |X_i)f(T_i, X_i)dT_idX_i = 1.
+while [| ∑_n∈ f(n) |^2] 
+ = ||≍log N. 
+It shows that there is a great amount of cancellation in this particular example. One may also take  to be some generalized (multidimensional) geometric progression and get strong cancellation of this type. We note that the sets mentioned here with very rich multiplicative structures all have small sizes. 
 
-	However, Equation (2) implies an infinite number of moment conditions, which is impossible to solve with a finite sample of observations. Hence, the finite dimensional sieve space is considered to approximate the infinite dimensional function space. Specifically, let 
-	
-    u_K1(𝐓) = (u_K1,1(𝐓), u_K1,2(𝐓),…, u_K1,K1(𝐓))^', 
+Based on the initial thoughts above, we may lean toward believing that better than square-root cancellation only appears when a(n) has some particular structure that is perhaps related to multiplicativity.  
+To fully answer Question <ref> seems hard. The majority of the paper is devoted to a special case, where a(n) is an indicator function of a set with multiplicative features. We focus on fairly large subsets.
+
+
+ §.§ Main results: multiplicative support
+
+Suppose now that a(n) is a multiplicative function with |a(n)|≤ 1. 
+The particular example we study in this paper is that a(n) is the indicator function of R-rough numbers, although the proof here may be adapted to other cases when a(n) is multiplicative.  
+We write 
+
+    _R(x): = {n≤ x: p|n  p≥ R}.
+
+
+By a standard sieve argument, for all 2≤ R≤ x/2 (the restriction R≤ x/2 is only needed for the lower bound), we have asymptotically 
+
+    |_R(x)| ≍x/log R.
+
+We expect the following threshold behavior to happen. If R is very small, the set _R(x) is close to [1,x] and better than square-root cancellation appears as in <cit.>. If R is sufficiently large, then weak dependence  may even lead to a central limit theorem. Indeed, an extreme case is that R> √(x), in which _R(x) is a set of primes and {f(n): n∈} is a set of independent random variables. It is natural to ask to what extent the appearance of small primes is needed to guarantee better than square-root cancellation.
+Our Theorem <ref> and Theorem <ref> answer the question. We show that loglog R ≈ (loglog x)^1/2 is the threshold.
+
+
+
+  Let f(n) be a Steinhaus random multiplicative function and x be large. Let _R(x) be the set of 
+  R rough numbers up to x. For any loglog R≪ (loglog x)^1/2, we have   
+  
+    [|∑_n∈_R(x) f(n) |] ≪√(|_R(x)|)· ( loglog R +  logloglog x/√(loglog x))^1/2 .
+
+ In particular, if loglog R = o((loglog x)^1/2), then  
+   
+    [|∑_n∈_R(x) f(n) |] =o ( √(|_R(x)|)).
+
+
+The term logloglog x is likely removable. But for the convenience of the proof, we state the above version. See Remark <ref> for more discussions.
+
+
+  Let f(n) be a Steinhaus random multiplicative function and x be large. Let _R(x) be the set of 
+  R rough numbers up to x. For any loglog R≫  (loglog x)^1/2, we have   
+  
+    [|∑_n∈_R(x) f(n) |] ≫√(|_R(x)|) .
+
+
+One probably can prove a lower bound of the shape √(||)·(loglog R / √(loglog x))^-1/2
+ when loglog R =o(√(loglog x)). We do not pursue this as we focus on finding the threshold value of R instead of caring about the quantification of the exact cancellation. 
+
+
+We note that one way to derive a lower bound on L^1 norm is by proving an upper bound on L^4 norm. A simple application of Hölder's inequality gives that
+
+    |_R(x)| = [|∑_n∈_R(x) f(n) |^2] ≤([|∑_n∈_R(x) f(n) |^4])^1/3([|∑_n∈_R(x) f(n) |])^2/3.
+
+The fourth moment  ≪||^2 would imply that L^1 norm ≫√(||). However, to achieve such a bound on the fourth moment, one needs log R ≫ (log x)^c for some constant c, and thus this approach would not give the optimal range as in Theorem <ref>.
+
+Another reason for studying  the fourth moment (multiplicative energy) is to understand the distribution. As mentioned before, this is the key quantity that needs to be understood in order to determine if random sums have Gaussian limiting distribution, via the criteria in <cit.>. One may establish a central limit theorem in the range R≫exp((log x)^c) for some small positive constant c[One trick to get a smaller c than by directly computing the fourth moment over the full sum is to take the anatomy of integers into account. We refer interested readers to <cit.> to see how this idea is connected to the correct exponent in extremal sum product conjecture of Elekes and Ruzsa <cit.>.]. Interested readers are suggested to adapt the proof of <cit.>. We do not pursue results along this direction in this note. 
+
+Theorem <ref> and Theorem <ref> are both proved by adapting Harper's robust method in <cit.>, with some modifications, simplifications and new observations, and we sketch the strategy with a focus on how we find the threshold. We also refer readers to a model problem in the function field case by Soundararajan and Zaman <cit.>.  The first step is to reduce the L^1 norm estimate to a certain average of the square of random Euler products. Basically, we prove that 
+
+    [|∑_n∈ f(n)|] ≈(x/log x)^1/2·[(∫_-1/2^1/2 |F^(R)(1/2 + it)|^2 dt  )^1/2 ],
+
+where F^(R)(1/2+it) := ∏_R≤ p≤ x (1-f(p)/p^1/2+it)^-1 is the random Euler product over primes R≤ p ≤ x. The challenging part is to give a sharp bound on the above expectation involving |F^(R)(1/2+it)|^2 for |t|≤ 1/2. 
+
+We first discuss the upper bound proof. If we directly apply Hölder's inequality (i.e. moving the expectation inside the integral in (<ref>)), then 
+we would only get the trivial upper bound  ≪√(||) as [|F^(R)(1/2+it)|^2]≈log x/log R. Harper's method starts with putting some “barrier events" on the growth rate of all random partial Euler products for all t. Roughly speaking, it requires that for all k,
+
+    ∏_x^e^-(k+1)≤ p ≤ x^e^-k |1-f(p)/p^1/2+it|^-1 “grows as expected" for all |t|≤ 1.
+
+Denote such good events by 𝒢 and write s=1/2+it. By splitting the probability space based on the event 𝒢 holding or not, and applying Cauchy–Schwarz inequality, we have 
+
+    [(∫_-1/2^1/2 |F^(R)(s)|^2 dt  )^1/2 ]
+       ≈[(∫_-1/2^1/21_𝒢 |F^(R)(s)|^2 dt  )^1/2] +  [(∫_-1/2^1/21_𝒢 fail |F^(R)(s)|^2 dt  )^1/2]  
+       ≪[(∫_-1/2^1/21_𝒢 |F^(R)(s)|^2 dt  )^1/2] + (1_𝒢 fail)^1/2 ([|F^(R)(s)|^2])^1/2 .
+
+According to the two terms above, there are two tasks that remain to be done. 
+
     
-    		v_K2(𝐗) = (v_K2,1(𝐗), v_K2,2(𝐗), …, v_K2,K2(𝐗))^'
+  * Task 1: Show that the expectation is small, conditioning on 1_𝒢.
 
-	denote the known basis functions, then 
-	
-    𝔼(w_i u_K1(𝐓_i) v_K2(𝐗_i)^') = 𝔼(u_K1(𝐓_i))𝔼(v_K2(𝐗_i)^').
-
-	
-	In practice, the covariate balancing conditions given in Equation (4) cannot hold exactly with high dimensional covariates or treatments. It is even more difficult to hold exactly for matrix exposure. To overcome this difficulty, approximate balance is considered rather than exact balance, which has been demonstrated to work well in practice in both low- and high-dimensional settings (<cit.>; <cit.>; <cit.>). Specifically, the balancing weights that approximately satisfy the conditions in Equation (4) are the global minimum of the following optimization problem:
-	
-    min_𝐰∑_i=1^nw_ilog(w_i)
-
-	s.t.
-	
-    |1/n∑_i=1^nw_i u_K1,l(𝐓_i)v_K2,l̃(𝐗_i) - (1/n∑_i=1^n u_K1,l(𝐓_i)) (1/n∑_i=1^nv_K2,l̃(𝐗_i)) |≤δ_l,l̃,
-
-	where u_K1,l(𝐓_i) and v_K2,l̃(𝐗_i) denote the lth and l̃th components of u_K1(𝐓_i) and v_K2(𝐗_i), respectively.
-	Let m_K(𝐓_i, 𝐗_i) = vec(1/n u_K1(𝐓_i)v_K2(𝐗_i)^') and m̅_K = vec (1/nu̅_K1v̅_K2^')  denote two column vectors with dimension K, where K= K1 K2, the lth and l̃th components of u̅_K1 and v̅_K2 are defined as
-	
-    u̅_K1,l = 1/n∑_i=1^n u_K1,l(𝐓_i)  and v̅_K2,l̃ = 1/n∑_i=1^n v_K2,l̃(𝐗_i),
-
-	then condition (5) is equivalent to 
-	
-    min_w ∑_i=1^nw_ilog(w_i)
-
-	s.t.
-	
-    |∑_i=1^nw_i m_K,k(𝐓_i, 𝐗_i)  -  nm̅_K,k|≤δ_k,  k= 1,…,K.
-
-	However, there is a large number of tuning parameters (δ_1,…,δ_K) which is very time-consuming to determine and there is lack of guideline on tuning these parameters simultaneously in practice. 
-	
-	
-	
-
-§ METHODOLOGY
-
-	Due to the potential issues of univariate approximate balancing methods, the weighted Euclidean balancing method is proposed in this section, whose key idea is to control the overall imbalance in the optimization problem (7). 
-	
-
- §.§ Weighted Euclidean balancing method
-
-	
-	Define the following weighted Euclidean imbalance measure (WEIM) as a weighted version of the squared Euclidean distance:
-	
-    WEIM = ∑_k=1^K{λ_k^2 [∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)]^2 }.
-
-	The weighted Euclidean balancing obtains the balancing weights that approximately satisfy the condition (4) by solving the following convex optimization problem:
-	
-    min_w ∑_i=1^nw_ilog(w_i)
-
-	s.t.
-	
-    ∑_k=1^K{λ_k^2 [∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)]^2 }≤δ,
-
-	where (λ_1,…, λ_K) is a pre-sepecified weight vector and δ≥ 0 is a threshold parameter. Assume that condition (3) holds exactly, whose sample condition is 1/n∑_i=1^n w_i = 1.
-	
-	
-	Note that univariate exact balance is equivalent to the overall exact balance, in the sense that ∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)=0, k= 1,…,K  is equivalent to WEIM=0. However, the univariate approximate balance does not imply the overall approximate balance since it is possible that ∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k), k= 1,…,K is small while the WEIM is large.
-	The pre-specified vector  (λ_1,…, λ_K) reflects the importance of each univariate constraint. In this paper, we set λ_k= σ_k^-1, where σ_k^2 is the variance of m_K,k(𝐓,𝐗). Since problem (9) is difficult to solve numerically, its dual problem is considered here, which can be solved by numerically efficient algorithms. Theorem 1 provides the dual formulation of problem (9) as an unconstrained problem.
-	
-
-	
-	Theorem 1.  Assume that max_i (max_k |λ_km_K,k(𝐓_i,𝐗_i) |) < ∞, the dual of problem (9) is equivalent to the following unconstrained problem 
-	
-    min_θ∈ R^K∑_i=1^nexp( ∑_k=1^Kθ_j λ_j (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))  + √(δ)||θ||_2,
-
-	
-	and the primal solution ŵ_i is given by 
-	
-    ŵ_i = exp{∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) -1} ,  i=1,…,n,
-
-	where θ̂ is the solution to the dual optimization problem (10). 
-	The proof of Theorem 1 is in Appendix A.1. 
-	
-	
-
-  §.§.§ Selection of tuning parameter
-
-	Another practical issue that arises with weighted Euclidean weights is how to choose the degree of approximate balance δ. A tuning algorithm is proposed as follows. First, determine a range of positive values 𝒟 for δ, then the optimal value of δ is selected by the following algorithm.
-	
-
-	
-	 Algorithm 1. Selection of δ.
-
-	For each δ∈𝒟,
-	
-		
-  1.  Compute the dual parameters θ̂ by solving the dual problem (10);
-		
-  2.  Compute the estimated weights ŵ_i using equation (11);
-		
-  3.  Calculate WEIM in (8) using ŵ_i;
-	
-	Output δ^* that minimizes WEIM.
-	
-	
-
-  §.§.§ Weighted Euclidean balancing with high-dimensional covariates
-
-	In the high-dimensional or ultra high-dimensional covariate setting with K relatively large compared to n or K>>n, it becomes difficult to control the overall imbalance using the Weighted Euclidean balancing method. To meet this challenge, we propose an algorithm to select a small subset of the covariates in the sparse setting. Specifically, consider v_K2(𝐗) = (1, 𝐗) in the high-dimensional setting. Let Bcor_j be the ball correlation (<cit.>) between X_j and 𝐓, j=1,…,L. Rank X_1, …,X_L as X_(1),…,X_(L) such that X_(1) has the largest Bcor value, X_(2) has the second largest Bcor value, and so forth. The covariates are added successively according to the rank of ball correlation until there is a break point of WEIM's, and the set added before the break point appears is the target set. The key idea hings on WEIM, which represents the contribution of the j most imbalanced covariates to the overall imbalance after WEBM weighting.  If WEIM remains stable as j inceases, it indicates that the overall imbalance can be controlled. However, if there is a break point at Step j, it implies that adding the  jth covariates greatly inceases WEIM, which is harmful to the control of the overall imbalance. Therefore, the algorithm should be stopped and print the outputs at Step j-1. Specifically, procedures to select the subset of covariates are given by the following algorithm.
-
-	
-	
-	 Algorithm 2. Subset selection of covariates in the high dimensional case.
-
-	For each j ∈{ 1,…, L},
-	
-		
-    compute the estimated weights ŵ_i^(j) using v_K2(𝐗) = (1,X_(1),…, X_(j));
-		
-     calculate WEIM^(j) in (8) using ŵ_i^(j);
-		
-    add (j,WEIM^(j)) to the x-y plot and observe whether there is a break point at (j,WEIM^(j)):
-		
-			
-    If no, let j=j+1;
-			
-    If yes, stop and output L_0 = j-1.
-		
-	
-	The selected subset of the covariates is (X_(1),…, X_(L_0)).
-	
-	
-	
-	
-
- §.§ Causal effect estimation
-
-	
-	In this subsection, both parametric and nonparametric approaches are developed to estimate the causal effect function. A weighted optimization estimation is defined under the parametric framework and broadcasted nonparametric tensor regression method (<cit.>) is used to estimate the causal effect function under the nonparametric framework.
-	
-
-  §.§.§ Parametric approach
-
-	The causal effect function is parametrized as s(𝐭;β), assume that it has a unique solution  β^* defined as
-	
-    β^* = agrmin_β∫_𝒯𝔼[Y(t)- s(𝐭;β) ]^2f_T(t)dt.
-
-	
-	The difficulty of solving Equation (12) is that the potential outcome Y(t) is not observed for all t. Hence, Proposition 1 is proposed to connect the potential outcome with the observed outcome. 
-
-	
-	Proposition 1  Under Assumption 1, it can be shown that
-	
-    𝔼[w(Y- s(𝐭;β) )^2] = ∫_𝒯𝔼[Y(t)- s(𝐭;β) ]^2f_T(t)dt.
-
-	The proof of Proposition 1 can be found in Appendix A.2. Note that Y(t) on the right hand side of Equation (13) represents the potential outcome and Y on the left hand side represents the observed outcome. Proposition 1 indicates that by having w on the left hand side of Equation (13), one can represent the objective function with the potential outcome (right side) by that with the observed outcome (left side). Therefore, the true value β^* is also a solution of the weighted optimization problem:
-	
-    β^* = argmin_β𝔼[w(Y- s(𝐭;β))^2].
-
-	This result implies that the true value β^* can be identified from the observational data.
-	One can obtain the estimator based on the sample, which is
-	
-    β̂ = argmin_β∑_i=1^nŵ_̂î(Y_i- s(𝐓_i;β) )^2.
-
-	
-	
-
-  §.§.§ Nonparametric approach
-
-	Suppose 𝔼(Y(𝐭)) = s(𝐭). In a similar manner to the proof of Proposition 1, it can be shown that 
-	
-    𝔼(wY |𝐓=t) = 𝔼(Y(𝐭)).
-
-	Existing work of nonparametric tensor regression suffers from a slow rate of convergence due to the curse of dimensionality. Even if one flattens the tensor covariate into a vector and applies common nonparametric regression models such as additive models or single-index models to it, this issue still exists. Besides, when dealing with a vectorized tensor covariate, one would ignore the latent tensor structure and this might result in large bias. To meet these challenges, we adopt the broadcasted nonparametric tensor regression method (<cit.>) to estimate the causal effect function s(𝐭).
-	The main idea of the broadcasted nonparametric tensor regression is to use the (low-rank) tensor structure to discover important regions of the tensor so as to broadcast a nonparametric modeling on such regions. Specifically, assume that 
-	
-    s(𝐓) = c+1/pq∑_r=1^R<β_1^(r)∘β_2^(r), F_r(𝐓)>,
-
-	where c∈ R,  𝐓∈ R^p × q,  F_r(𝐓) = ℬ(f_r, 𝐗), ℬ is a broadcasting operator, which is defined as
-	
-    (ℬ(f,𝐓))_i_1,i_2 = f(T_i_1,i_2),  for all i_1,i_2.
-
-	The broadcasted functions f_r, r=1,…,R, will be approximated by B-spline functions, i.e.,
-	
-    f_r(x) ≈∑_d=1^Dα_r,db_d(x),
-
-	where 𝐛(x) = (b_1(x),…,b_D(x))^' is a vector of B-spline basis functions and α_r,d's are the corresponding spline coefficients. Define α_r = (α_r,1,…,α_r,D)^' and (Φ(𝐓))_i_1,i_2,d = b_d(T_i_1,i_2), the regression function (16) can be approximated by 
-	
-    s(𝐓) ≈ c+1/pq∑_i=1^R<β_1^(r)∘β_2^(r)∘α_r, Φ(𝐓)>.
-
-	To separate out the constant effect from f_r's, the condition ∫_0^1 f_r(x) dx=0 is imposed, which leads to 
-	
-    ∫_0^1∑_d=1^Dα_r,db_d(x)dx=0,  r=1,…, R.
-
-	Then the following optimization problem is considered:
-	
-    argmin_c,𝐆 ∑_i=1^n (ŵ_iY_i- c-1/pq<𝐆,Φ(𝐓_i)>)^2
-
-	s.t.
-	
-    𝐆 = ∑_r=1^Rβ_1^(r)∘β_2^(r)∘α_r  
-    ∑_d=1^Dα_r,d∫_0^1 b_d(x)dx =0,  r=1,…,R,
-
-	and the estimated regression function is 
-	
-    ŝ(𝐓) = ĉ+1/pq <𝐆̂,Φ(𝐓)>,
-
-	where (ĉ,𝐆̂) is a solution of (20). 
-	Since optimization problem (20) contains too many constraints, it is not computationally efficient to solve it directly. To further simplify the optimization problem, an equivalent truncated power basis (<cit.>) is used to reduce the constraints. Specifically, let b̃_d(x), d=1,…,D denote the truncated basis:
-	
-    b̃_1(x)=1,b̃_2(x)=x,…, b̃_ς(x) = x^ς-1,
-    b̃_ς+1(x) = (x-ξ_2)_+^ς-1,…, b̃_D(x)=(x-ξ_D-ς+1)_+^ς-1,
-
-	where ς and (ξ_2,…,ξ_D-ς+1) are the order and the interior knots of the aforementioned B-spline, respectively. Based on these basis functions, consider the following optimization
-	
-    argmin_c̃,𝐆̃ ∑_i=1^n (ŵ_iY_i- c̃-1/pq<𝐆̃,Φ̃(𝐓_i)>)^2
-
-	s.t.
-	
-    𝐆̃ = ∑_r=1^Rβ_1^(r)∘β_2^(r)∘α̃_r,
-
-	where Φ̃(𝐓)_i_1,i_2,d = b̃_d+1(𝐓_i_1,i_2), d=1,…,D and α̃_r ∈ R^D-1 is the vector of coefficients. Compared with (20), the mean zero constraints are removed by reducing one degree of freedom in the basis functions. According to <cit.>, Lemma B.1, one can show that
-	
-    ŝ(𝐓) = ĉ̃̂+1/pq <𝐆̂̃̂,Φ̃(𝐓)>,
-
-	where (ĉ̃̂,𝐆̂̃̂) is the solution of (22). 
-	The optimization problem (22) can be solved by the scaled-adjusted block-wise descent algorithm (<cit.>).
-	
-	
-
-§ THEORETICAL PROPERTIES
-
-	In this section, the large sample properties of the proposed estimators in section 3 are established. First the consistency of the estimated weight in section 3.1 is shown, then the consistency of the parametric estimator in section 3.2.1 and the convergence rate of the nonparametric estimator in section 3.2.2 are shown. The following assumptions are made. 
-	
-
-	Assumption 4
-	
-	
-	
-		
-		
-		
-		
-		
-  * There exists a constant c_0 such that 0 < c_0 < 1, and c_0 ≤exp (z-1) ≤ 1-c_0 for any z= M̃_K(𝐭,𝐱)^'θ with θ∈int(Θ). Besides, exp (z-1) = O(1) in some neighborhood of z^* = M̃_K(𝐭,𝐱)^'θ^*, where M̃_K(𝐭,𝐱)= Λ (m_K(𝐭,𝐱)-m̅_K) and Λ= diag(λ_1,…,λ_K).
-		
-  * There exists a constant C such that 
-		E {M̃_K(𝐓_i, 𝐗_i)M̃_K(𝐓_i, 𝐗_i)^'}≤ C. 
-		
-  * δ = o(n).
-		
-  * sup_(𝐓,𝐗) exp{∑_j=1^Kθ_j^* λ_j [m_K,j(𝐓,𝐗)-Em_K,j(𝐓,𝐗)] } = O(1).
-	 
-	
-	
-	Assumption 5
-	
-		
-  * The parameter space Θ_1 is a compact set and the true parameter β_0 is in the interior of Θ_1.
-		
-  * (Y-s(T;β))^2 is continuous in β, 𝔼[sup_β(Y-s(T;β))^2] < ∞ and sup_β𝔼[(Y-s(T;β))^4]  < ∞.
-	 
-	
-	
-	Assumption  6
-	
-		
-  * s(𝐭;β) is twice continuously differentiable in β∈Θ_1 and let h(𝐭;β) ≡▽_β s(𝐭;β).
-		
-  * 𝔼{ w(Y-s(𝐓;β))h(𝐓;β) } is differentiable with respect to β and 
-
-		U ≡ - ▽_β𝔼{ w(Y-s(𝐓;β))h(𝐓;β) }|_β=β^* is nonsingular.
-		
-  * 𝔼[sup_β| Y-s(T;β) |^2+δ] < ∞ for some δ >0 and there extists some finite positive constants a and b such that 𝔼[sup_β_1:  ||β_1-β||  < δ_1| s(T;β_1) - s(T;β) |^2]^1/2 < a·δ_1^b for any β∈Θ_1 and any small δ_1 >0.
-	
-	
-	
-	
-	Assumption 7
-	
-		
-  * The treatment 𝐓∈ [0,1]^p× q has a continuous probability density function f, which is bounded away from zero and infinity.
-		
-  * The vector of random errors, ϵ = (ϵ_1,…,ϵ_n)^', has independent and identically distributed entries. Each ϵ_i is sub-Gaussian with mean 0 and sub-Gaussian norm σ < ∞.
-		
-  * The true broadcasted functions f_0r∈ℋ, r= 1,…,R_0. Here ℋ is the space of functions from [0,1] to R satisfying the Hölder condition of order ω, i.e.,
-		
-    ℋ = { g: | g^(l) (x_1)-g^(l) (x_2) |≤ S_1| x_1-x_2 |^ω, ∀ x_1,x_2 ∈ [0,1] },
-
-		for some constant S_1>0, where g^(l) is the l-th derivative of g, such that ω∈ (0,1] and τ = l+ω >1/2.
-		
-  * The order of the B-spline used in (16) satisfies ς≥τ+1/2. Let 0= ξ_1 < ξ_2 <… < ξ_D-ς+2=1 denote the knots of B-spline basis and assume that
-		
-    h_n = max_d=1,…, D-ς+1|ξ_d+1
-    			-ξ_d |≍ D^-1 and h_n/min_d=1,…, D-ς+1|ξ_d+1
-    				-ξ_d |≤ S_2
-
-		for some constant S_2>0.
-	 
-	
-	Assumption 4(1) enables consistency of θ̂ to translate into consistency of the weights.  Assumption 4(2) is a standard technical condition that restricts the magnitude of the basis functions; see also Assumption 4.1.6 of <cit.> and Assumption 2(2) of <cit.>. Assumption 4(3) requires that the threshold parameter δ should be much smaller than the sample size. Assumption 4 (4) is needed for consistency of the estimated weight. Assumption 5(1) is a commonly used assumption in nonparametric regression. Assumption 5(2) is an envelope condition applicable to the uniform law of large numbers. Assumption 6(1) and (2)  impose sufficient regularity conditions on the causal effect function and its derivative function. Assumption 6(3) is a stochastic equicontinuity condition, which is needed for establishing weak convergence (<cit.>). Assumption 7(1), (3) and (4) are common in nonparametric regression models. In particular, Assumption 7(3) and (4) regularize the space where the true broadcasted functions lie in and guarantee that they can be approximated welll by B-spline functions. Similar assumptions can be found in <cit.> and <cit.>. Assumption 7(2) is a standard tail condition of the error. Based on these assumptions, the following theorems are established. 
-
-	
-
-	
-	Theorem 2. 	Let θ̂ denote the solution to Problem (10) and 
-	
-    ŵ_i = exp{∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) -1} ,  i=1,…,n,
-
-	then under Assumptions 1-4,
-
-	
-		
-		
-  * ∫|𝐰̂-𝐰^* |^2 dF(𝐭,𝐱) = O_p(n^-1).
-		
-  * 1/n∑_i=1^n|ŵ_i- w_i^* |^2 = O_p(n^-1).
-	
-	Based on Theorem 2, we can establish the consistency of the parametric estimator and the convergence rate of the nonparametric estimator.
-
-	
-	Theorem 3  
-	
-		
-  * Under Assumptions 1-5, ||β̂-β^* || →_p 0. 
-		
-  * Under Assumptions 1-6, √(n)(β̂-β^*) →_d N(0,V), where 
-		
-    V = 4U^-1·𝔼{ w^2(Y-s(𝐓;β^*))^2h(𝐓;β^*)h(𝐓;β^*)^'}· U^-1
-
-	
-	
-	Theorem 4  If Assumptions 1-4 and 7 hold, R≥ R_0, and 
-	
-    n > S_1 h_n^-2-2/log(h_n)(log^-2(h_n))(R^3+R(p+q)+RD)
-
-	for some large enough constant S_1>0, then 
-	
-	
-	
-	
-	
-	
-	
-	
-    ||ŝ(𝐓)-s_0(𝐓) ||^2 = O_p  ( R^3+R(p+q)+RD/n )+O_p  ( {∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ ),
-
-	where s_0(𝐓) = c_0+1/pq∑_r=1^R_0<β_1^(0r)∘β_2^(0r), F_0r(𝐓)> represents the true regression function.
-	The proofs of Theorem 2, 3 and 4 can be found in Appendix A.3, A.4 and A.5, respectively. 
-	
-	
-	
-
-§ SIMULATION
-
-	To evaluate the finite sample performance of the proposed method, simulation studies are carried out under different data settings. The main motivation of the simulation is to compare the proposed method with three other methods when the outcome model are linear and nonlinear in various ways.
-	
-
- §.§ The low-dimensional covariate setting
-
-	In this subsection, we compare the performance of the proposed method (WEBM) with the unweighted method (Unweighted), entropy balancing method (EB) and univariate approximate balancing method (MDABW) in the low-dimensional covariate setting, where EB refers to the method proposed by <cit.> that balances covariates exactly and MDABW refers to the method proposed by <cit.> that balances covariates approximately.
-	Since the covariates are shared across all scenarios, their data generating process is first described. Specifically, we independently draw 5 covariates from a multivariate normal distribution with mean 0, variance 1 and covariance 0.2, that is,
-	
-	
-    𝐗 = (X_1,....,X_5)^'∼  N_5(μ,Σ)  with μ= [ 0; ⋮; 0 ]and Σ=[     1   0.2     …   0.2;   0.2     1 0.2 …   0.2;     4;   0.2   0.2     …     1 ]_5×5.
-
-	
-
-	
-	Consider a linear treatment assignment model, which is defined as
-	
-    𝐓_i= X_i1𝐁_1+X_i2𝐁_2+X_i3𝐁_3+𝐄_i,
-
-	where 𝐁_j = [ 1 0; 0 1; 1 1 ]_3×2, j=1,2,3 denotes the jth coefficient matrix, and 𝐄_i ∈ R^3× 2 denotes the error matrix, whose element follows a standard normal distribution. For the outcome model, we consider four scenarios and conduct 100 Monte Carlo simulations for each scenario. The first two scenarios assume an outcome model that is linear in treatment and the others assume a nonlinear relationship.
-	In scenario 1, the linear outcome model is defined as
-	
-    Y_i = 1+ <𝐁, 𝐓_i>+X_i1+(X_i2+1)^2+X_i4^2+ϵ_i,
-
-	where 𝐁 = [ 1 0; 0 1; 1 1 ]_3×2 and ϵ_i ∼ N(0,2^2). In this scenario, v_k2(𝐗) = (1, 𝐗, 𝐗*𝐗)^', where * represents the Hadamard product of two matrices, and the corresponding element of 𝐗*𝐗 is (X*X)_ij = (x_ijx_ij).
-	
-	In scenario 2, the linear outcome model is defined as
-	
-    Y_i = 1+ <𝐁, 𝐓_i>+X_i2+X_i3+X_i1X_i2+…+X_i4X_i5+ϵ_i,
-
-	where 𝐁 and ϵ_i are the same as in Equation (21). In this scenario, the interaction terms are strong confounders, hence set v_k2(𝐗) = (1, 𝐗, X_jX_k)^', 1≤ j < k ≤ 5.  
-	
-	In scenarios 3 and 4, the nonlinear outcome models are considered and are defined as
-	
-    Y_i = 1+ <𝐁, F_1(𝐓_i)>+X_i1+(X_i2+1)^2+X_i4^2+ϵ_i,
-
-	and
-	
-    Y_i = 1+ <𝐁, F_1(𝐓_i)>+X_i2+X_i3+X_i1X_i2+…+X_i4X_i5+ϵ_i,
-
-	respectively.
-	Here 𝐁 and ϵ_i are the same as in Equation (24), (F_1(𝐓))_k_1,k_2= f_1(T_k_1,k_2)= T_k_1,k_2+0.6sin{2π(T_k_1,k_2-0.5)^2 }. For all four scenarios, consider u_K1(𝐓) =(1, vec(𝐓)^')^' for simplicity.
-	For each method, the mean RMSE and its standard deviation of the coefficient estimates for the linear outcome model, and those of the fitted values for the nonlinear outcome model are reported based on 100 data replications. 
-	
-	Table 1 shows the mean RMSE and its standard deviation of the coefficient matrix for the linear outcome model. Observe that the mean RMSE of WEBM is the smallest among the four methods, and the standard deviation of WEBM is the second smallest while that of Unweighted is the smallest in both scenario 1 and scenario 2. Besides, the results of scenario 2 indicate that MDABW and EB  have poor performance when the basis function of covariates includes interaction entries, and their mean RMSEs are even larger than those of Unweighted. The mean RMSE and standard deviation of all methods decreases as the sample size increases.
-	Table 2 shows the mean RMSE and its standard deviation of the fitted values of the nonlinear outcome model. As can be seen, the results for both scenario 3 and 4 are similar to those in Table 1, that is, WEBM performs the best with both the smallest mean RMSE in all cases. Similarly, MDABW and EB methods have poor performance when the basis function of covariates includes interaction entries and the mean RMSE and standard deviation of all methods decreases as the sample size increases.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
- §.§ The high-dimensional covariate setting
-
-	In this subsection, since the MDABW and EB methods can only deal with the low-dimensional covariate case, we compare the performance of the proposed method (WEBM) with the Unweighted method and the method (Mapping) proposed by <cit.>, which selects a small important subset of covariates by a joint screening procedure, 
-	in the high-dimensional covariate setting. Since the Mapping method can only deal with linear outcome model, these two methods are compared in the linear outcome model setting.
-	For both methods, set the sample size n=500 and the dimension of 𝐓 to be 3 × 2. Consider two scenarios (scenario 5-6) with the dimension of covariates  L=49 and L=99, respectively. The motivation for such settings is to consider the number of constraints K < n (scenario 5) and K>n (scenario 6), respectively. For the basis functions, u_K1(𝐓)= (1,vec(𝐓)^')^' and v_K2(𝐗) = (1,𝐗^')^' are considered.
-	Additionally, covariates are drawn from a multivariate normal distribution with mean 0, variance 1 and covariance 0.2. For each scenario, consider a linear treatment assignment model, which is defined as
-	
-    𝐓_i= X_i1𝐁_1+X_i2𝐁_2+…+X_i5𝐁_5+𝐄_i,
-
-	where 𝐁_j = [ 1 0; 0 1; 1 1 ]_3×2, j=1,2,3,4,5 denotes the jth coefficient matrix, and 𝐄_i ∈ R^3× 2 denotes the error matrix, whose element follows a standard normal distribution. 
-	Moreover, the linear outcome model is defined as
-	
-    Y_i = 1+ <𝐁, 𝐓_i>+X_i1+X_i2+…+X_i5+ϵ_i,
-
-	
-	
-	
-	
-	
-	where 𝐁=[ 1 0; 0 1; 1 1 ]_3×2, ϵ_i ∼ N(0,2^2).
-	For each method, the mean RMSE and its standard deviation of the tensor regression estimation for the linear outcome model are reported based on 100 data replications.  
-	Table 3 shows the mean RMSE and its standard deviation of coefficent matrix for the linear outcome model in the high-dimensional covariate setting. The results indicate that WEBM performs the best with the smallest mean RMSE in all cases.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-§ APPLICATION
-
-	Intelligence Quotient (IQ) is based on biological attributes, most of which are inherited from parents. It mainly refers to a person's cognitive abilities, such as logical reasoning, pattern recognition, and short-term memory. Of course, due to genetic mutations, parents with average IQ may have offspring with superior intelligence, and vice versa. But IQ also has social attributes. Studies have found that IQ has obvious plasticity, and environmental factors affect IQ levels. From 1947 to 2002, the IQ level of developed countries rose steadily at a rate of 3% every 10 years, which is called the "Flynn effect." This effect has been repeatedly observed in various countries, various age groups, and a large number of different environments, and has become a reliable evidence that "environment affects IQ" (<cit.>). In particular, literatures have shown that taking training lessons, such as music, sports, chess and so on, can significantly enhance children's IQ (<cit.>; <cit.>; <cit.>; <cit.>). 
-	Unfortunately, there are some limitations of existing studies. First, existing studies have only analyzed the relevant effects of attending single training course at a fixed age on children's IQ. In practice, however, a child may attend different training courses at the same age and participation may also vary by age. Second, existing studies mainly investigated the impact of whether or not to attend training classes, ignoring the effect of class duration. Third, existing studies only analyzed the correlation between children's participation in training courses on children's IQ, while their causal relationship is much more of a concern. To overcome the aforementioned limitations, the proposed method is applied to a matrix treatment, which contains the structural information of children's participation in training courses, to investigate their causal impact on children's IQ.
-	The data are obtained from the Brain Science Innovation Institute of East China Normal University's Child Brain Intelligence Enhancement Project, whose goal is to explore brain development and help improve brain power. The treatment we are interested in is a 2 × 5 matrix about children's participation in training courses, whose rows represent age groups, including 3-6 years old and 6-9 years old, columns represent the types of training courses, including knowledge education (Chinese, mathematics and English, etc.), art (music, art, calligraphy, etc.), sports (swimming, ball games, etc.), hands-on practice (STEM, Lego, etc.) and thinking training (logical thinking, EQ education, attention, etc.), and each element of the matrix represents the number of hours of class per week. The outcome is children's IQ and the pre-treatment covariates include children's gender as well as parental education, which have been shown to be associated with both the treatment and outcome variables (<cit.>; <cit.>; <cit.>; <cit.>). A complete-case analysis is conducted with a sample of 103 participants.  
-	Before estimating the causal effect, we first examine the covariate balancing of WEBM, MDABW and EB methods based on the WEIM statistics. The statistic WEIM defined in equation (8) is 0.1050 for the WEBM method, 0.3761 for the MDABW method and 0.9881 for the EB method, which implies that WEBM balances covariates well while EB does not. Assume a linear tensor outcome model and the bootstrap method with 200 replicates is used to obtain confidence intervals for the parameter estimates. The results are shown in Table 4.
-	
-		
-		
-		
-	
-	Table 4 shows the estimated causal effects of the duration of attending different classes at different ages on children's IQ. It can be seen that most methods (except EB) suggest that the duration of attending hands-on practice courses at 6-9 years old has a siginificantly positive impact on children's IQ. This finding is not only consistent with previous findings that participation in hands-on practice classes can improve children's IQ (<cit.>; <cit.>; <cit.>),  but further suggests that longer participation in hands-on practice classes is more beneficial to children's IQ.
-	
-	The results imply that future work of an intervention study about attending hands-on practice training courses, which in turn may improve children's IQ, is suggested. Besides, the width of confidence interval of the estimated causal effect based on WEBM is the smallest, which implies that the estimation accuracy of WEBM is the highest. 
-	
-	
-	
-	
-	
-
-§ CONCLUSION AND DISCUSSION
-	
-	In this study, the weighted Euclidean balancing method is proposed, which obtains stabilized weights by adopting a single measure that represents the overall imbalance. An algorithm for the high-dimensional covariate setting is also proposed. Furthermore, parametric and nonparametric methods are developed to estimate the causal effect and their theoretical properties are provided. The simulation results show that the proposed method balances covariates well and produces a smaller mean RMSE compared to other methods under variaous scenarios. In the real data analysis, the WEBM method is applied to investigate causal effect of children's participation in training courses on their IQ. The results show that the duration of attending hands-on practice at 6-9 years old has a siginificantly positive impact on children's IQ.
-	Since the causal effect function 𝔼(Y(t)) is more general, we mainly consider it as the estimand for matrix treatment in this paper. Actually, one can also consider the average treatment effect  (𝔼(Y(t+ t)-Y(t))) or average partial effect (𝔼Y(t+ t)-𝔼Y(t)/ t)  , which can be easily estimated based on the estimates of causal effect function  (<cit.>). Indeed, the causal effect function provides a complete description of the causal effect, rather than a summary measure. Moreover, parametric and nonparametric methods are developed to estimate the causal effect function. Parametric method is recommended when reasonable assumptions can be made about the true model since it is easier to implement and requires less sample size. Despite nonparametric method has higher requirements of the sample size, one can choose to use it according to the real situations due to its higher flexibility. Besides, this paper mainly focuses on the small-scale matrix treatment. Large-scale matrix treatment with low-rank structure can also be considered. In such case, one may control the overall imbalance by only balancing their non-zero elements based on some decomposition technology, and this will be investigated in future work.
-	
-	
-	
-	*
-	apalike
-	
-	
-	
-
-§ APPENDIX
-
-	
-
- §.§ A.1.Proof of Theorem 1
+  * Task 2: Show that (1_𝒢 fail) is sufficiently small. 
  
-	The primal problem is
-	
-    min_𝐰∑_i=1^nw_ilog(w_i)
+To accomplish task 1, Harper's method connects such an estimate to the “ballot problem" or say Gaussian random walks (see <ref>), which is used to estimate the probability of partial sums of independent Gaussian variables having a certain barrier in growth. Task 2 of estimating the probability of such good events 𝒢 happening can be done by using some concentration inequality, e.g. Chebyshev's inequality. 
+Our main innovation lies in setting up “barrier events" in (<ref>) properly which is not the same as in <cit.>. On one hand, it should give a strong enough restriction on the growth rate of the products so that [(∫_-1/2^1/21_𝒢 |F^(R)(s)|^2 dt  )^1/2] has a saving, compared to it without conditioning on 1_𝒢. On the other hand, one needs to show that such an event 𝒢 is indeed very likely to happen which requires that the designed “barrier" can not be too restrictive. To make the two goals simultaneously achieved, we need loglog R = o( √(loglog x)) and this is the limit that we can push to (see Remark <ref>).
 
-	s.t.
-	
-    ∑_j=1^K{λ_j^2 [∑_i=1^n w_i (m_K,j(𝐓_i,𝐗_i)-m̅_K,j)]^2 }≤δ.
-
-	
-	Let ||θ||_2 = √(θ_1^2+…+θ_K^2) be the l_2 norm for an arbitrary K-dimensional vector θ =(θ_1,…,θ_K)^' and Λ = diag(λ_1,…,λ_K), then the inequality constraint in the primal problem can be rewritten as ||∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K) ||_2 ≤√(δ). Let 𝒜⊆ R^K be a convex set such that 𝒜 = { a ∈ R^K: || a||_2 ≤√(δ)}. Define I_𝒜(a) = 0 if a ∈𝒜 and I_𝒜(a) = ∞ otherwise. Then, the primal problem (15) is equivalent to the following optimaization problem:
-	
-    min_𝐰 ∑_i=1^nw_ilog(w_i)+I_𝒜( ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K)).
+The lower bound proof in Theorem <ref> uses the same strategy as in <cit.> but is technically simpler. After the deduction step of reducing the problem to studying a certain average of the square of random Euler products (see (<ref>)), we only need to give a lower bound of the shape ≫ (log x / log R)^1/2 for the expectation on the right-hand side of (<ref>). Since the integrand |F^(R)(s)|^2 is positive, it suffices to prove such a lower bound when t is restricted to a random subset ℒ. We choose ℒ to be the set of t such that certain properly chosen “barrier events" hold.  The main difficulty is to give a strong upper bound on the restricted product [1_t_1, t_2∈ℒ|F^(R)(1/2+it_1)|^2|F^(R)(1/2+it_2)|^2] in the sense that the bound is as effective as in the ideal situation where the factors |F^(R)(1/2+it_1)|^2 and |F^(R)(1/2+it_2)|^2 are independent (see Proposition <ref>), and this is also the main reason that the condition loglog R ≫√(loglog x) is needed subject to our chosen “barrier events". Our proof of Theorem <ref> does not involve the “two-dimensional Girsanov calculation", which hopefully makes it easier for readers to follow.
  
-	Let h(w) = ∑_i=1^n w_i log(w_i), the conjugate function of h is 
-	
-    h^*(w)    = sup_t(∑_i=1^n w_i t_i-∑_i=1^n w_i log(w_i)) 
-       = sup_t ∑_i=1^n (w_i t_i-w_i log(w_i)) 
-       = ∑_i=1^n sup_t_i(w_i t_i-w_i log(w_i)) 
-       =  ∑_i=1^n f^*(w_i),
 
-	where f^*(w_i) = sup_t_i(w_i t_i-w_i log(w_i)) is the conjugate function of f(w_i) = w_i log(w_i). Let g(θ) = I_𝒜(θ) for any θ∈ R^K, then the conjugate function of g is 
-	
-    g^*(θ)    = sup_a (∑_k=1^Kθ_ka_k -T_𝒜(a) ) 
-       = sup_|| a ||_2 ≤√(δ) (∑_k=1^Kθ_ka_k) 
-       = sup_|| a ||_2 ≤√(δ)  (||θ||_2 || a ||_2) 
-       = √(δ)||θ||_2.
 
-	Define the mapping H: R^n → R^K such that Hw = ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K), then H is a bounded linear map. Let H^* be the adjoint operator of H, then for all θ = (θ_1,…,θ_K)^'∈ R^K,
-	
-    H^*θ = (∑_k=1^Kθ_k λ_k (m_K,k(𝐓_1,𝐗_1)-m̅_K,k), …, ∑_k=1^Kθ_k λ_k (m_K,k(𝐓_n,𝐗_n)-m̅_K,k) )^'.
 
-	Define θ̃ = Hw̃ = 1/n^r∑_i=1^nΛ (m_K(𝐓_i,𝐗_i)-m̅_K), where w̃ = (1/n^r,…,1/n^r)^'∈ dom(F). Here, we choose b to be sufficiently large such that ||θ̃||_2 ≤√(δ), then we obtain that g(θ̃) = 0 and g is continuous at θ̃. Therefore, θ̃∈ H(dom(F) ∩ cont(g)), which implies that H(dom(F) ∩ cont(g)) ≠∅. Here, dom(F) and cont(g) denotes the domain of F and the continuous set of g, respectively. Therefore, the strong duality condition of the Fenchel duality theorem is verified. Moreover,
-	
-    F(H^*θ)+g^*(-θ) = ∑_i=1^n f^*(∑_k=1^Kθ_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))+√(δ)||θ||_2.
 
-	According to the Fenchel duality theorem (Mohri et al. (2018), Theorem B.39), we have 
-	
-    min_w  ∑_i=1^nw_ilog(w_i)+I_𝒜( ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K)) 
-       = min_w  ∑_i=1^n f^*(∑_k=1^Kθ_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))+√(δ)||θ||_2.
+ §.§ Organization
+ We set up the proof outline of Theorem <ref> in Section <ref> and defer the proof of two propositions to Section <ref> and Section <ref> respectively. We put all probabilistic preparations in Section <ref> which will be used in the proof for both theorems. The proof of Theorem <ref> is done in Section <ref> and again we defer proofs of two key propositions to Section <ref> and Section <ref> respectively. Finally, we give more details about the “typical" choices of a(n) in Section <ref>, as well as mentioning some natural follow-up open problems. 
+
+
+
+ §.§ Acknowledgement
+
+We thank Adam Harper  for helpful discussions, corrections, and comments on earlier versions of the paper and for his encouragement. We also thank Kannan Soundararajan for the interesting discussions. The author is supported by the Cuthbert C. Hurd Graduate Fellowship in the Mathematical Sciences, Stanford. 
+
+
+
+§ PROOF OF THEOREM <REF>
+
+We follow the proof strategy of Harper in <cit.>.
+We establish Theorem <ref> in a stronger form that for 1/2≤ q ≤ 9/10 and R in the given range loglog R ≪ (loglog x)^1/2,  
+
+    [|∑_n∈_R(x) f(n) |^2q] ≪ |_R(x)|^q ( loglog R +  logloglog x/√(loglog x))^q.
+
+One should be able to push the range of q to 1 but for simplicity in notation, we omit it. Our interest is really about the case q=1/2.
+Note that in the given range of R, by (<ref>), it is the same as proving 
+
+    [|∑_n∈_R(x) f(n) |^2q] ≪(x/log R)^q ( loglog R +  logloglog x/√(loglog x))^q.
+
+
+The first step (Proposition <ref>) is to connect the L^1 norm of the random sums to a certain average of the square of random Euler products. We define for all s with ℜ𝔢(s)>0 and integers 0≤ k≤loglog x -loglog R, the random Euler products
+
+    F_ k^(R)(s) : = ∏_R≤ p≤ x^e^-(k+1) (1- f(p)/p^s)^-1 = ∑_n≥ 1 
+     p|n R≤  p≤ x^e^-(k+1)f(n)/n^s.
+
+We also write 
+
+    F^(R)(s): = ∏_R≤ p≤ x (1- f(p)/p^s)^-1 = ∑_n≥ 1 
+     p|n R≤  p≤ xf(n)/n^s.
+
+We use the notation X_2q: = ([|X|^2q])^1/2q for random variable X. 
+
+Let f(n) be a Steinhaus random multiplicative function and x be large. Let F_k^(R)(s) be defined as in (<ref>) and loglog R ≪ (loglog x)^1/2. Set 𝒦: =⌊logloglog x ⌋. Then uniformly for all 1/2 ≤ q≤ 9/10, we have 
+
+    ∑_n∈ f(n)_2q≤√(x/log x)∑_0≤ k ≤𝒦∫_-1/2^1/2 | F_ k^(R)(1/2 - k/log x+it)|^2dt_q^1/2 + √(x/log x).
+
+
+We remind the readers that the upper bound we aim for in Theorem <ref> is very close to √(x/log R). The second term in (<ref>) is harmless since log R is much smaller than log x. 
+
+
+
+The second step deals with the average of the square of random Euler products in (<ref>), which lies at the heart of the proof.  
+
+
+
+Let F_k^(R)(s) be defined as in (<ref>) and loglog R ≪ (loglog x)^1/2. Then for all 0≤ k ≤𝒦=⌊logloglog x ⌋, and uniformly for all 1/2≤ q≤ 9/10, we have 
+
+    [(∫_-1/2^1/2 |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊≪ e^-k/2·(log x/log R)̊^q ( loglog R + logloglog x/√(loglog x))^q .
+
+
+
+
+
+
+Apply Proposition <ref> and Proposition <ref> with q=1/2. Notice that when  loglog R ≪ (loglog x)^1/2, the term √(x/log x) in (<ref>) is negligible and we complete the proof. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ PROBABILISTIC PREPARATIONS
+
+In this section, we state some probabilistic results that we need to use later. The proof can be found in <cit.> (with at most very mild straightforward modification). 
+
+
+ §.§ Mean square calculation
+
+We first state results on mean square calculations.
+
+
+Let f be a Steinhaus random multiplicative function. Then for any 400<x≤ y and σ>-1/log y, we have
+
+    [∏_x<p≤ y |1-f(p)/p^1/2+σ|^-2] = exp( ∑_x<p≤ y1/p^1+2σ + O(1/√(x)log x) ).
+
+
+
+The proof is basically using the Taylor expansion and the orthogonality deduced from the definition of a Steinhaus random multiplicative function. See <cit.>. 
+
+
+We also quote the following result on two-dimensional mean square calculations. This will be used in proving the lower bound in Theorem <ref>. 
+
+   Let f be a Steinhaus random multiplicative function. Then for any 400<x≤ y and σ>-1/log y, we have
  
-	Furthermore, since the strong duality condition holds, we can conclude that H^*θ̂ is a subgradient of F at ŵ. That is, 
-	
-    ∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) = log(ŵ_i)+1.
+    [∏_x<p≤ y |1-f(p)/p^1/2+σ|^-2 |1-f(p)/p^1/2+σ+it|^-2 ] = exp( ∑_x<p≤ y2+2cos(tlog p)/p^1+2σ + O(1/√(x)log x) )̊.
+  
+Moreover, if x>e^1/|t|, then we further have 
 
-	Therefore, ŵ_i = exp(∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)-1). The proof of theorem 1 is completed.
-	
-	
-	
+    = exp( ∑_x<p≤ y2/p^1+2σ + O(1) ) .
 
- §.§ A.2.Proof of Proposition 1
 
-	Using the law of total expectation and Assumption 1, we can deduce that
-	
-    𝔼[w(Y- s(𝐓;β) )^2]
-       =E[f(T)/f(T|X)(Y-s(𝐓;β)  )^2]
-       = 𝔼(𝔼[f(T)/f(T|X)(Y- s(𝐓;β)  )^2] |T=t,X=x )
-       = 𝔼(f(t)/f(t|x)𝔼([(Y- s(𝐓;β)  )^2] |T=t,X=x) )
-       = ∫_𝒯×𝒳f(t)/f(t|x)𝔼[(Y(T)- s(𝐓;β)  )^2 |T = t, X= x]f(t|x)dtdx
-       =∫_𝒯×𝒳𝔼[(Y(T)- s(𝐓;β)  )^2 |T = t, X= x]f(t)f(x)dtdx
-       = ∫_𝒯×𝒳𝔼[(Y(t)- s(𝐓;β) )^2 |X= x]f(t)f(x)dtdx   (using Assumption 1)
-       = ∫_𝒯𝔼[(Y(t)- s(𝐓;β)  )^2] f(t)dt  .
 
-	Hence, we complete the proof of Proposition 1.
-	
-	
+The proof of (<ref>) is in <cit.>. To deduce (<ref>), we only need to show the contribution involves cos(tlog p) terms are ≪ 1, which follows from a strong form of prime number theorem. See how it is done in <cit.> and <cit.>. 
 
- §.§ A.3.Proof of Theorem 2
 
-	The first order optimality condition for the dual probblem (10) is 
-	
-    ∑_i=1^nexp{∑_j=1^Kθ̂_jλ_jM_K,j(𝐓_i,𝐗_i) }·λ_jM_K,j(𝐓_i,𝐗_i) +√(δ)θ̂_j/||θ̂||_2 =0,   j=1,…,K,
 
-	where M_K,j(𝐓_i,𝐗_i) = m_K,j(𝐓_i,𝐗_i)- m̅_K,j, M_K(𝐓_i,𝐗_i)= (M_K,1(𝐓_i,𝐗_i), …, M_K,K(𝐓_i,𝐗_i))^'.
-	Let Λ = diag(λ_1,…,λ_K) and 
-	
-    1/n∑_i=1^nΦ(𝐓_i,𝐗_i;θ) = 1/n∑_i=1^nexp{∑_j=1^Kθ_jλ_j[m_K,j(𝐓_i,𝐗_i)-𝔼(m_K,j)] }Λ [m_K(𝐓_i,𝐗_i) -𝔼(m_K)],
 
-	which is a set of K estimating functions. Note that
-	
-    |𝔼( Φ(𝐓_i,𝐗_i;θ^*)) |
-       = |𝔼{exp{∑_j=1^Kθ_j^*λ_j[m_K,j(𝐓_i,𝐗_i)-Em_K,j] }Λ [m_K(𝐓_i,𝐗_i) -Em_K] }|
-       ≤sup_(𝐓_i,𝐗_i) exp{∑_j=1^Kθ_j^*λ_j[m_K,j(𝐓_i,𝐗_i)-Em_K,j] }·|𝔼Λ [m_K(𝐓_i,𝐗_i) -Em_K] |
-       ≤ O(1) ·0 = 0,
+ §.§ Gaussian random walks and the ballot problem
 
-	hence we have 𝔼( Φ(𝐓_i,𝐗_i;θ^*))=0, which implies that θ^* is the unique solution of 𝔼( Φ(𝐓_i,𝐗_i;θ))=0. Therefore, by the estimating equation theory (Van der Vaart (2000)), the solution of the estimating equations 
-	
-    1/n∑_i=1^nΦ(𝐓_i,𝐗_i;θ) = 0,
- 
-	denoted by θ̃, is asymptotically consistent for θ^*. Furthermore, by the Taylor expansion, we have
-	
-    √(n)(θ̃ - θ^*) →_d N(0, Σ),
+A key probabilistic result used in Harper's method is the following (modification of) a classical result about Gaussian random walks, which is connected to the “ballot problem". 
 
-	where Σ = { E(∂Φ/∂θ^') }^-1 E(ΦΦ^'){ E(∂Φ/∂θ) }^-1.
-	Moreover, by the assumption that δ = o(n), we have 1/n√(δ)θ_j/||θ||_2 = o_p(n^-1/2) for any θ∈ int(Θ). Therefore, by the Slutsky's theorem, we obtain that 
-	
-    √(n)(θ̂ - θ^*) →_d N(0, Σ).
 
-	Let M̃_K,j(𝐓_i,𝐗_i) = λ_j(m_K,j(𝐓_i,𝐗_i)- m̅_K,j),
-	then 
-	
-    ŵ_i    = exp{∑_j=1^Kθ̂_j λ_j (m_K,j(𝐓_i,𝐗_i)-m̅_K,j) -1}
-       = exp{M̃_K(𝐓_i,𝐗_i)^'θ̂ -1}
+    Let a ≥ 1. For any integer n > 1, let G_1, … , G_n be independent real
+Gaussian random variables, each having mean zero and variance between 1/
+20 and 20, say. Let
+h be a function such that |h(j)| ≤ 10 log j. Then
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	By Mean Value Theorem, we can deduce that
-	
-    ∫|ŵ-w^*|^2dF(𝐭,𝐱) 
-       ≤sup_(𝐭,𝐱) |exp{M̃_K(𝐭,𝐱)^'θ_1 -1}|^2 ×∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) 
-       ≤ O_p(1) ·∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱),
+    (∑_m=1^j G_m ≤ a + h(j),   ∀ 1≤ j≤ n) ≍min{1, a/√(n)}.
 
-	where θ_1 lies between θ̂ and θ^*.
-	Since 
-	
-    ∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) 
-        	= ∫M̃_K(𝐭,𝐱)^'(θ̂-θ^*)(θ̂-θ^*)^'M̃_K(𝐭,𝐱) dF(𝐭,𝐱)
-       = tr{ (θ̂-θ^*)(θ̂-θ^*)^'∫M̃_K(𝐭,𝐱)M̃_K(𝐭,𝐱)^'dF(𝐭,𝐱) }
-       ≤ C tr{ (θ̂-θ^*)(θ̂-θ^*)^'}
-       = C||θ̂-θ^*||^2 
-       = O_p(n^-1).
 
-	Then we have 	
-	
-    ∫|ŵ-w^*|^2dF(𝐭,𝐱) = O_p(n^-1).
+Without the term h(j), it is a classical result and actually that is all we need in this paper. However, we state this stronger form as the h(j) term can be crucial if one wants to remove the logloglog x factor in Theorem <ref>. We expect the random sum is fluctuating on the order of √(j) (up to step j) and so the above result is expected to be true. The quantity h(j) is much smaller compared to √(j) so it is negligible in computing the probability. 
 
-	Furthermore, one can show that 
-	
-    1/n∑_i=1^n|M̃_K(𝐭,𝐱)^'(δ̂-δ^*) |^2 - ∫|M̃_K(𝐭,𝐱)^'(δ̂-δ^*) |^2 dF(𝐭,𝐱)=o_p(1).
+We do not directly use the above lemma. We shall use an analogous version for random Euler products (Proposition <ref>). We do the 
+Girsanov-type calculation in our study. As in <cit.>, we introduce the probability measure (here x is large and |σ|≤ 1/100, say)
 
-	Hence,
-	
-    1/n∑_i=1^n|ŵ_i- w_i^*|^2 
-       ≤sup_(𝐭,𝐱) |exp{M̃_K(𝐭,𝐱)^'θ_1 -1}|^2 ·1/n∑_i=1^n|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 
-       ≤ O_p(1) ∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) +o_p(1) 
-       = O_p(n^-1)
+    (A) : = [1_A ∏_p≤ x^1/e |1-f(p)/p^1/2+σ|^-2  ]/[∏_p≤ x^1/e |1-f(p)/p^1/2+σ|^-2] .
 
-	Therefore, the proof of Theorem 2 is completed.
-	
-	
+For each ℓ∈ℕ∪{0}, we denote the ℓ-th increment of the Euler product 
 
-  §.§.§ A.4.Proof of Theorem 3
+    I_ℓ(s):= ∏_x^e^-(ℓ+2)<p≤ x^e^-(ℓ+1) (1-f(p)/p^s)^-1.
 
-	
-	
-	We first show that the conclusion of Theorem 3(1). 
+Since we are restricted to R-rough numbers n,  the parameter ℓ lies in the range 0≤ℓ≤loglog x - loglog R. All the rest setup is exactly the same as in <cit.>. 
 
-	
-	Since β̂ (as a estimator of β^*) is a unique minimizer of 1/n∑_i=1^nŵ_i(Y_i-s(T_i;β))^2(regarding 𝔼[w(Y-s(T;β))^2], according to the theory of M-estimation (van der Vaart, 2000, Theorem 5.7), if
-	
-    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |→_p 0,
 
-	then β̂→_p β^*.
-	Note that
-	
-    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |
-    ≤sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |
+There is a large natural number B such that the following is true.
+Let n≤loglog x - loglog R - (B+1), and define the decreasing sequence (ℓ_j)_j=1^n of non-negative integers by ℓ_j = ⌊loglog x -loglog R ⌋ -(B+1) - j. Suppose that |σ|≤1/e^B+n+1, and
+that (t_j)_j=1^n is a sequence of real numbers satisfying |t_j|≤1/j^2/3 e^B+j+1 for all j.
+
+Then uniformly for any large a and any function h(n) satisfying |h(n)| ≤ 10 log n, and with I_ℓ(s) defined as in (<ref>), we have  
+
+    (-a -Bj ≤∑_m=1^jlog |I_ℓ_m (1/2+σ + it_m)| ≤ a + j + h(j),   ∀ j≤ n ) ≍min{1, a/√(n)} .
+
+
+One may view the above sum approximately as a sum of j independent random variables and each with mean ≈∑_x^e^-(ℓ+2)<p≤ x^e^-(ℓ+1)1/p≈ 1 and with constant variance between 1/20 and 20. This shows the connection to Lemma <ref>. The deduction of Proposition <ref> from Lemma <ref> can be found in the proof of <cit.>. The only modification is changing the upper bound restriction from n ≤loglog x -(B+1) to n ≤loglog x - loglog R -(B+1) and all conditions remaining satisfied. 
+
+
+
+
+§ PROOF OF PROPOSITION <REF>
+
+The proof follows closely to the proof of <cit.>. 
+For any integer 0≤ k ≤𝒦= ⌊logloglog x ⌋, let 
+
+    I_k: =(x_k+1, x_k] :=  (x^e^-(k+1) , x^e^-k].
+
+Let P(n) be the largest prime factor of n. For simplicity, we use _n to denote the sum where the variable n is R-rough.
+By using Minkowski's inequality (as 2q≥ 1), 
+
+    ∑_n∈ f(n)_2q≤∑_0≤ k ≤𝒦_n≤ x 
+     P(n)∈ I_k f(n)_2q + _n≤ x
+    P(n)≤ x^e^-(𝒦+1) f(n)_2q
+    .
+
+We first bound the last term by only using the smoothness condition and it is bounded by 
+≤Ψ (x, x^1/loglog x  )^1/2≪√(x) (log x)^-clogloglog  x, which is acceptable. 
+The main contribution to the upper bound in (<ref>) can be written as
+
+    = ∑_0≤ k ≤𝒦∑_m≤ x 
+     p|m  p ∈ I_kf(m) _n≤ x/m 
+     n is x_k+1-smooth f(n) _2q.
+
+We now condition on f(p) for p small but at least R. Write ^(k) to denote the expectation conditional on (f(p))_p≤ x_k+1. Then the above is
+
+    = ∑_0≤ k ≤𝒦 (^(k) [|∑_m≤ x
+     p|m  p ∈ I_k f(m) _n≤ x/m
+     n is x_k+1-smooth f(n)|^2q])^1/2q
+       ≤∑_0≤ k ≤𝒦 ([(^(k) [|∑_m≤ x
+     p|m  p ∈ I_kf(m) _n≤ x/m
+     n is x_k+1-smooth f(n)|^2])^q])^1/2q
+        = ∑_0≤ k ≤𝒦 ( [( ∑_m≤ x 
+     p|m  p∈ I_k  |_n≤ x/m
+     n is x_k+1-smooth f(n)|^2)^q] )^1/2q.
+
+Then we only need to show that for each expectation in the sum, it is bounded as in (<ref>). Replace the discrete mean value with a smooth version. Set X=e^√(log x), and we have the expectation involving primes in I_k is 
+
+    ≪[(∑_m≤ x 
+     p|m  p∈ I_kX/m∫_m^m(1+1/X) |_n≤ x/t
+     n is x_k+1-smooth f(n)|^2 dt )̊^q]̊
+        + [( ∑_m≤ x 
+     p|m  p∈ I_kX/m∫_m^m(1+1/X) |_x/t ≤ n≤ x/m
+    n is x_k+1-smooth f(n)|^2 dt )̊^q]̊.
+
+By using Hölder's inequality, we upper bound the second term in (<ref>) by the q-th power of
+
+    ∑_m≤ x 
+     p|m  p∈ I_kX/m∫_m^m(1+1/X) [|_x/t ≤ n≤ x/m
+    n is x_k+1-smooth f(n)|^2] dt .
+
+Do the mean square calculation (<ref>) and throw away the restriction on the R-rough numbers. Then (<ref>) is at most ≪  2^-e^k x/log x and thus the second term in (<ref>) is ≪(2^-e^k x/log x)^q. Summing over k≤𝒦, this is acceptable and thus we only need to focus on the first term in (<ref>). By swapping the summation, it is at most
+
+    [ ( ∫_x_k+1^x |_n≤ x/t 
+     n is x_k+1-smoothf(n) |^2∑_t/(1+1/X)≤ m ≤ t
+     p|m  p∈ I_k  X/m dt)̊^q]̊.
+
+We upper bound the sum over m by dropping the prime divisibility condition and using a simple sieve argument to derive that the above is at most 
+
+    [  ( ∫_x_k^x |_n≤ x/t 
+     n is x_k+1-smoothf(n) |^2dt/log t)̊^q]̊ = x^q[  ( ∫_1^x/x_k+1 |_n≤ z 
+     n is x_k+1-smoothf(n)|^2dz/z^2log(x/z))̊^q]̊,
+
+where in the equality above we used the substitution z: =x/t. 
+A simple calculation shows that we can replace log(x/z) by log x without much loss. Indeed, if z≤√(x) then log(x/z)≫log x; if √(x)≤ z ≤ x/x_k+1 then log (x/z) ≥ z^-2k/log xlog x.  Thus, we further have the bound
+
+    ≪(x/log x)̊^q[ ( ∫_1^x/x_k+1 |_n≤ z 
+     n is x_k+1-smoothf(n)|^2dz/z^2-2k/log x)̊^q]̊ .
+
+To this end, we apply the following version of Parseval's identity, and its proof can be found in <cit.>.
+
+
+    Let (a_n)_n=1^∞ be any sequence of complex numbers, and let A(s): = ∑_n=1^∞a_n/n^s denote the corresponding Dirichlet series, and σ_c denote its abscissa of convergence. Then for any σ> max{0, σ_c}, we have 
     
-    		+sup_β∈Θ_1|1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |.
+    ∫_0^∞|∑_n≤ xa_n|^2/x^1+2σdx = 1/2π∫_-∞^+∞|A(σ + it)/σ + it|^2 dt.
 
-	We first show that sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 | is o_p(1). Using the Causchy-Schwarz inequality and the fact that ŵ→^L^2 w, we have
-	
-    sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |   ≤{1/n∑_i=1^n(ŵ_̂î-w_i)^2 }^1/2sup_β∈Θ_1{1/n∑_i=1^n(Y_i-s(T_i;β))^2 }^1/2
-       ≤ o_p(1){sup_β∈Θ_1𝔼[w(Y-s(T;β))^2]+o_p(1) }^1/2
-       =o_p(1).
 
-	Thereafter, under Assumption 5, we can conclude that sup_β∈Θ_1|1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) | is also o_p(1) (Newey and McFadden (1994), Lemma 2.4). Hence, we complete the proof for Theorem 3(1). Next, we give the proof of Theorem 3(2). Define
-	
-    β̂^* = argmin_β∑_i=1^n w_i(Y_i-s(𝐓_i;β))^2.
+Apply Lemma <ref> and the expectation in (<ref>) is
 
-	Assume that 1/n∑_i=1^n w_i(Y_i - s(𝐓_i;β̂^*))h(𝐓_i;β̂^*)) = o_p(n^-1/2) holds with probablility to one as n →∞
-	
-	By Assumption 5 and the uniform law of large number, one can get that
-	
-    1/n∑_i=1^n w_i(Y_i-s(T_i;β))^2 →𝔼{ w(Y-s(T;β))^2 } in probability uniformly over  β,
+    =
+    [  (∫_-∞^+∞|(1/2-k/log x +it)|^2/|1/2-k/log x +it|^2 dt)̊^q]̊≤∑_n∈[( ∫_n-1/2^n+1/2|(1/2-k/log x +it)|^2/|1/2-k/log x +it|^2 dt )̊^q]̊.
 
-	which implies ||β̂^* -β^* ||→_p 0. Let
-	
-    r(β) = 2𝔼{ w(Y-s(T;β))h(T;β) },
+Since f(m)m^it has the same law as f(m) for all m, for any fixed n we have
 
-	which is a differentiable function in β and r(β^*) = 0. By mean value theorem, we have
-	
-    √(n)r(β̂^*)- ▽_β r(ζ) ·√(()n)(β̂^* - β^*) =√(n)r(β^*) =0
+    [(∫_n-1/2^n+1/2 |(1/2-k/log x +it)|^2 dt )̊^q]̊ = [ (∫_-1/2^1/2 |(1/2-k/log x +it)|^2 dt )̊^q]̊.
 
-	where ζ lies on the line joining β̂^* and β^*. Since ▽_β r(β) is continuous at β^* and ||β̂^* -β^* ||→_p 0, then
-	
-    √(n)(β̂^* - β^*)  = ▽_β r(β^*)^-1·√(n) r(β̂^*) +o_p(1)
+For n-1/2≤ t≤ n+1/2, we have 
+1/|1/2-k/log x +it|^2≍ 1/n^2 which is summable over n. 
+We complete the proof by inserting the above estimates into (<ref>). 
 
-	Define the empirical process
-	
-    G_n(β)= 2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β))h(T_i;β) - 𝔼{ w(Y-s(T;β))h(T;β)  }}.
 
-	Then we have
-	
-    √(n)(β̂^* - β^*)
-       =  ▽_β r(β^*)^-1·{√(n) r(β̂^*) -  2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β̂^*))h(T_i;β̂^*)  + 2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β̂^*))h(T_i;β̂^*)  }
-       =  -▽_β r(β^*)^-1· G_n(β̂^*)+o_p(1)
-       = U^-1·{ G_n(β̂^*)-G_n(β^*) +G_n(β^*) } +o_p(1).
 
-	By Assumption 5, 6, Theorem 4 and 5 of Andrews(1994), we have G_n(β̂^*)-G_n(β^*) →_p 0. Thus,
-	
-    √(n)(β̂^* - β^*) = U^-12/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β^*))h(T_i;β^*) } +o_p(1),
 
-	then we can get that the asymptotic variance of √(n)(β̂^* - β^*) is V.
-	Therefore, √(n)(β̂^* - β^*) →_d N(0,V). Next, we will prove β̂→_p β̂^*.
-	Since
-	
-	
-    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2) |
-    ≤sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |
-    ≤{1/n∑_i=1^n(ŵ_̂î-w_i)^2 }^1/2sup_β∈Θ_1{1/n∑_i=1^n(Y_i-s(T_i;β))^2 }^1/2
-    ≤ o_p(1){sup_β∈Θ_1𝔼[w(Y-s(T;β))^2]+o_p(1) }^1/2
-    
-    		=o_p(1),
 
-	which implies β̂^* →_p β̂. Then by Slutskey's Theorem, we can draw the conclusion that √(n)(β̂ - β^*) →_d N(0,V). Therefore, we have completed the proof of Theorem 3. 
-	
-	
 
-  §.§.§ A.5.Proof of Theorem 4
 
-	For convenience, we use a mapping Ω: R^p× q × D× R → R^p× q × D to represent the operator of absorbing the constant into the coefficients of B-spline basis for the first predictor. More precisely, Ω is defined by 
-	
-    𝐆^b= Ω(𝐆,c),
 
-	where 𝐆_i_1,i_2,d= 𝐆_i_1,i_2,d for (i_1,i_2) ≠ (1,1) and 𝐆_1,1,d=𝐆_1,1,d+pqc, d=1,…,D. It then follows from the property of B-spline functions that
-	
-    c+1/pq<𝐆,Φ(𝐓)> = 1/pq <𝐆^b,Φ(𝐓)>.
+§ PROOF OF PROPOSITION <REF>
 
-	We also write 𝐆_0= ∑_r=1^R_0𝐁_0r∘α_0r, r= 1,…, R_0. Suppose 𝐆̂,ĉ) is a solution to (19) and 
-	
-    𝐆̂ = ∑_r=1^Rβ̂_1^(r)∘β̂_2^(r)∘α̂_r,
 
-	then by <cit.>, Lemma B.1, there exists č∈ R and 
-	
-    𝐆̌ = ∑_r=1^Rβ̂_1^(r)∘β̂_2^(r)∘α̌_r,
+This is the key part of the proof that reveals how loglog R ≈√(loglog x) could become the transition range. 
+We begin with a discretization process which is the same as in <cit.>.  For each |t|≤1/2, set t(-1)=t, and then iteratively for each 0≤ j ≤log(log x /log R) -2 define 
 
-	such that
-	
-    č+1/pq<𝐆̌ ,Φ(𝐓)> = ĉ+1/pq<𝐆̂ ,Φ̃(𝐓)>,
+    t(j): = max{u≤ t(j-1): u = n/((log x) /e^j+1)log ((log x) /e^j+1) for some n∈}.
 
-	where α̌_r= (α̌_r,1,…,α̌_r,D )^' satisfying
-	
-    ∑_d=1^Dα̌_r,du_d=0
+By the definition, we have <cit.>
 
-	with u_d= ∫_0^1 b_d(x)dx.
-	Using (27), 
-	we have
-	
-    ∑_i=1^n (ŵ_iy_i-č-1/pq<𝐆̌,Φ(𝐓_i)>)^2 ≤∑_i=1^n (ŵ_iy_i-c_0-1/pq<𝐆_0,Φ(𝐓_i)>)^2.
+    |t-t(j)|≤2/((log x /e^j+1)log ((log x)/e^j+1).
+
+Given this notation, let B be the large fixed natural number from Proposition <ref>. Let 𝒢(k) denote the event that for all |t|≤1/2 and for all k≤ j ≤loglog x - loglog R -B -2, we have
+
+    (log x/e^j+1log R e^C(x)  )^-1≤∏_ℓ = j ^⌊loglog x -loglog R ⌋-B-2
+    |I_ℓ(1/2-k/log x +it(ℓ)) | ≤log x/e^j+1log R e^C(x),
+
+where notably, our C(x) is chosen as the 
+
+
+
+
+
+    C(x):=loglog R + 100 logloglog x.
+
+We shall establish the following two key propositions. The first proposition says that when we are restricted to the good event 𝒢(k), the q-th moment is small. 
+
+Let x be large and loglog R ≪ (loglog x)^1/2. Let 
+C(x) be defined as in (<ref>). Let F_k^(R) be defined as in (<ref>) and 𝒢(k) be defined as in (<ref>). For all 0≤ k ≤𝒦 = ⌊logloglog x⌋ and 1/2≤ q ≤ 9/10, we have 
+
+    [(∫_-1/2^1/21_𝒢(k) |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊≪( log x /e^klog R)̊^q ( C(x)/√(loglog x))^q.
+
+
+The second proposition is to show that indeed 1_𝒢(k) happens with high probability. 
+
+
+Let 𝒢(k) be defined as in (<ref>). For all 0≤ k ≤𝒦= ⌊logloglog x⌋ and uniformly for all 1/2≤ q ≤ 9/10 and
+C(x) defined in (<ref>), we have
+
+    (𝒢(k) fails) ≪ e^-C(x).
  
-	Let 𝐆̌^b= Ω(α̌,č) and 𝐆_0^b = Ω(𝐆_0,c_0), then 
-	
-    ∑_i=1^n (ŵ_iy_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2 ≤∑_i=1^n (ŵ_iy_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2.
 
-	Therefore, we have
-	
-    ∑_i=1^n ((ŵ_i-w_i+w_i)y_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2 ≤∑_i=1^n ((ŵ_i-w_i+w_i)y_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2,
+The above two key propositions imply Proposition <ref>. 
 
-	which leads to 
-	
-    ∑_i=1^n (w_iy_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2    ≤∑_i=1^n (w_iy_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2 
-       +2 ∑_i=1^n (ŵ_i-w_i)y_i(1/pq<𝐆̌^b-𝐆_0,Φ(𝐓_i)).
+   According to the good event 𝒢(k) happening or not, we have 
+   
+    [(∫_-1/2^1/2  |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊
+       ≤[(∫_-1/2^1/21_𝒢(k) |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊ +   [(∫_-1/2^1/21_𝒢(k)fails |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊
+       ≤( log x /e^klog R)̊^q ( C(x)/√(loglog x))^q +   (∫_-1/2^1/2 [|F_ k^(R)(1/2 - k/log x + it)|^2]dt )̊^q(𝒢(k) fails)^1-q,
 
-	Let 𝐆^# =𝐆̌^b-𝐆_0^b,  𝐚^# =vec(𝐆^# ),  𝐚_0^b =vec(𝐆_0^b), 𝐚̌^b= vec(𝐆̌^b) and 𝐙
-	= (𝐳_1,…,𝐳_n)^'∈ R^n× pqD, where 𝐳_i = vec(Φ(𝐓_i)),i=1,…,n. 
-	Let y_ŵ= (ŵ_1y_1,…, ŵ_ny_n)^' and y_w = (w_1y_1,…, w_ny_n)^', then using (31) and working out the squares, we obtain
-	
-    1/p^2q^2||𝐙𝐚^#||^2   ≤  2<1/pq𝐙𝐚̌^b,y_w>-2<	1/pq𝐙𝐚_0^b,y_w>
-       -21/p^2q^2<𝐙𝐚^#,𝐙𝐚_0^b>+2<1/pq𝐙𝐚^#, y_ŵ-y_w>  
-       = 2<1/pq𝐙𝐚^#,y_ŵ-y_w>+2<1/pq𝐙𝐚^#,ϵ>+2<	1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b>
+  where in the first term we used Proposition <ref> and we applied Hölder's inequality with exponents 1/q, 1/1-q to get the second term. We next apply the mean square calculation (<ref>) to derive that the above is 
+    
+    ≪( log x /e^klog R)̊^q(  ( C(x)/√(loglog x))^q +  (𝒢(k) fails)^1-q)̊.
 
-	First, we show the upper bound of <1/pq𝐙𝐚^#,y_ŵ-y_w>. Using the Cauchy-Schwarz inequality, we have
-	
-    <1/pq𝐙𝐚^#,y_ŵ-y_w> 
-       ≤||ŵ-w ||_2 ·||1/pq𝐙𝐚^#||_2 
-       ≤C_1√(nh_n)/pq·||ŵ-w ||_2 ·||𝐚^#||_2
+  Plug in the definition of C(x) and use Proposition <ref> with 1-q ≥ 1/10 (and then the exceptional probability to the power 1/10 is negligible) to deduce that 
+  
+    ≪   e^-k/2( log x /log R)̊^q· ( C(x)/√(loglog x))^q,
 
-	
-	By the conclusion of Theorem 2(2), we have 
-	
-    ||ŵ-w ||_2 = O_p(1).
+  which completes the proof. 
 
-	Applying (37) to (36), we can obtain that
-	
-    <1/pq𝐙𝐚^#,y_ŵ-y_w> ≤C_2√(nh_n)/pq||𝐚^#||_2.
 
-	Second, by the conclusion of <cit.>, (A.18) and (A.20), we can obtain the upper bound of
-	<1/pq𝐙𝐚^#,ϵ> and <	1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b>, which are
-	
-    <1/pq𝐙𝐚^#,ϵ> ≤C_3/pq||𝐚^#||_2 { nh_n(R^3+R(p+q)+RD)}^1/2.
 
-	and
-	
-    <1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b> ≤C_4/pq||𝐚^#||_2 {∑_r=1^R_0||vec(𝐁_0r)||_1/pq}n√(h_n)/D^τ
+We remark that in (<ref>), the quantity C(x)= loglog R +100 logloglog x is different from just being a constant C in <cit.>. The reason for our choice of C(x) is the following. Firstly, to keep the q-th moment in Proposition <ref> has a saving (i.e. to make ( C(x)/√(loglog x))^q small), we require that C(x)= o(√(loglog x)).  Secondly, it turns out that in order to make the exceptional probability in Proposition <ref> small enough, one has the constraint loglog R ≪ C(x). The combination of the above two aspects together leads to loglog R =o(√(loglog x)). 
 
-	Therefore, applying (38), (39) and (40) to (35), we have
-	
-    C_5/pq||𝐚^#||_2^2 ≤ R_1 ||𝐚^#||_2,
 
-	where  R_1 = C_6√(D/n)+C_7  {D(R^3+R(p+q)+RD)/n}^1/2+C_8{∑_r=1^R_0||vec(𝐁_0r)||_1/pq}1/D^τ-1/2.
-	
-	By solving the second order inequality (41), we have
-	
-    C_5/pq||𝐚^#||_2 ≤ R_1
 
-	Further, by Assumption 6 and <cit.>, (A.38) of Lemma A.2, we have
-	
-    ||ŝ(𝐓) -s(𝐓) ||^2   ≤ C_9 h_n 1/p^2q^2||𝐚^#||^2 
-       = C_10R_1^2/D
-       = O_P(1/n)+O_p(R^3+R(p+q)+RD/n)+O_p({∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ) 
-       =O_p(R^3+R(p+q)+RD/n)+O_p({∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ).
 
-	Hence, the proof of Theorem 4 is completed. 
-	
-	
+   In the deduction of Proposition <ref>, we did not use an iterative process as used in <cit.>. Instead, we added an extra term 100logloglog x for the purpose of getting strong enough bounds on (𝒢(k) fails). We simplified the proof by getting a slightly weaker upper bound in Theorem <ref> as compensation.
 
-§ APPENDIX REFERENCE
 
-	Mohri, M., Rostamizadeh, A., and Talwalkar, A. (2018). Foundations of ma- chine learning. MIT press.
-	0.2cm
-	Newey, W. K. and McFadden, D. (1994). Large sample estimation and hypoth- esis testing. Handbook of econometrics, 4:2111–2245.
-	0.2cm
-	Van der Vaart, A. W. (2000). Asymptotic statistics, volume 3. Cambridge university press.
-	0.2cm
-	Zhou, Y., Wong, R., and He, K. (2020). Broadcasted nonparametric tensor regression.
+
+
+
+ §.§ Proof of Proposition <ref>
+
+
+
+The proof of Proposition <ref> is a simple modification of the proof of Key Proposition 1 in <cit.>. We emphasize again the main difference is instead of using a large constant C as in <cit.> but replacing it with C(x) defined in (<ref>), and we do not need the extra help from the quantity h(j) which hopefully makes the proof conceptually easier.  
+
+By using Hölder's inequality, it suffices to prove that 
+
+    [∫_-1/2^1/2 |F_k^(R)(1/2-k/log x + it)|^2dt ]≪ e^-k·log x/log R·C(x)/√(loglog x) ,
+
+uniformly for 0≤ k ≤𝒦 = ⌊logloglog x ⌋ and 1/2 ≤ q≤ 9/10. 
+We can upper bound the left-hand side of (<ref>) by 
+
+    ≤∫_-1/2^1/2[ |F_k^(R)(1/2-k/log x + it)|^2] dt
+
+where  is the event that 
+
+    (log x/e^j+1log R e^C(x)  )^-1≤∏_ℓ = j ^⌊loglog x -loglog R ⌋-B-2
+    |I_ℓ(1/2-k/log x +it(ℓ)) | ≤log x/e^j+1log R e^C(x)
+
+for all k≤ j ≤loglog x -loglog R -B -2. This is an upper bound as  is the event of  holds for all |t|≤1/2. By the fact that f(n) has the same law as f(n)n^it, we have
+
+    ∫_-1/2^1/2[ |F_k^(R)(1/2-k/log x + it)|^2] dt = ∫_-1/2^1/2[ |F_k^(R)(1/2-k/log x )|^2 ]dt,
+
+where  denotes the event that 
+
+    (log x/e^j+1log R e^C(x)  )^-1≤∏_ℓ = j ^⌊loglog x -loglog R ⌋-B-2
+    |I_ℓ(1/2-k/log x +i(t(ℓ)-t)) | ≤log x/e^j+1log R e^C(x),
+
+for all k≤ j ≤loglog x- loglog R - B -2. 
+ We next apply Proposition <ref>. 
+
+
+
+
+
+
+It is clear that ℋ(k,t) is the event treated in Proposition <ref> with n=⌊loglog x- loglog R ⌋ -(B+1)-k; σ= k/log x and t_m = t(⌊loglog x- loglog R ⌋ -(B+1) -m)-t for all m; and 
+
+    a = C(x) + B+1,    h(j)=0.
+
+The parameters indeed satisfy |σ|≤1/e^B+n+1 and |t_m|≤1/m^2/3e^B+m+1
+for all m. Apply Proposition <ref> to derive
+
+    [ |F_k^(R)(1/2-k/log x)|^2]/[|F_k^(R)(1/2-k/log x)|^2] = (ℋ(k,t)) ≪min{ 1, a/√(n)}.
+
+A simple mean square calculation (see (<ref>)) gives that 
+
+    [|F_k^(R)(1/2-k/log x)|^2] = exp(∑_R≤ p ≤ x^e^-(k+1)1/p^1-2k/log x +O(1))̊≪log x/e^klog R.
+
+Combining the above two inequalities and the relation in (<ref>), we get the desired upper bound for the quantity in (<ref>). Thus, we complete the proof of (<ref>) and Proposition <ref>.  
+
+
+
+
+
+
+ §.§ Proof of Proposition <ref>
+
+In the proof, we will see why it is necessary to make C(x) large enough compared to loglog R. The proof starts with the union bound. We have 
+
+    (𝒢(k) fails) ≤_1 +_2,
+
+where
+
+    _1 = ∑_k≤ j ≤log (log x/log R) -B-2( ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x + i t(ℓ)) | >log x/e^j+1log R e^C(x) for some t)̊
+
+and 
+
+    _2 = ∑_k≤ j ≤log (log x/log R) -B-2( ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x +i t(ℓ)) |^-1 >log x/e^j+1log R e^C(x) for some t)̊,
+
+where |t|≤ 1/2. 
+We focus on bounding _1, and _2 can be estimated similarly. Replace the set of all |t|≤ 1/2 by the discrete set 
+
+    𝒯(x, j): = {n/((log x)/e^j+1) log ((log x)/e^j+1) : |n|≤ ((log x)/e^j+1) log ((log x)/e^j+1)  }̊,
+
+and apply the union bound to get 
+
+    _1 = ∑_k≤ j ≤log (log x/log R) -B-2
+     t(j) ∈𝒯(x,j)( ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x +it(ℓ)) | >log x/e^j+1log R e^C(x))̊.
+
+By using Chebyshev's inequality this is at most 
+
+    ≤∑_k≤ j ≤log (log x/log R) -B-2
+     t(j) ∈𝒯(x,j)1/(log x/e^j+1log R e^C(x))^2[ ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x +it(ℓ)) |^2  ].
+
+Since f(n) and f(n)n^it have the same law, the above is 
+
+    ≪∑_k≤ j ≤log (log x/log R) -B-2| 𝒯(x,j)|/(log x/e^j+1log R e^C(x))^2[ ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x ) |^2  ].
+
+The expectation here is, again through a mean square calculation (<ref>), ≪log x/e^j+1log R. Note |𝒯(x, j)| ≤ ((log x)/e^j+1) log ((log x)/e^j+1). 
+We conclude that 
+
+    _1 ≪∑_k≤ j ≤log (log x/log R) -B-2e^loglog R-2C(x) + loglog ( log x / e^j+1)   ≪ e^-C(x),
+
+where in the last step we used that C(x)=   loglog R + 100 logloglog x. Thus we complete the proof of Proposition <ref>. 
+
+
+
+
+
+
+§ PROOF OF THEOREM <REF>
+
+ We first notice that if R>x^1/A for any fixed large constant A, then _R(x) is a set of elements with only O_A(1) number of prime factors. This would immediately imply that [|∑_n∈ f(n)|^4] ≪_A ||^2 and by (<ref>), the conclusion follows. From now on, we may assume that 
+
+    R≤ x^1/A.
+
+The proof strategy of Theorem <ref> again follows from <cit.>. The main differences lie in the design of the barrier events and taking advantage of R being large.  In particular, we do not need a “two-dimensional Girsanov-type" calculation which makes our proof less technical. 
+We first do the reduction step to reduce the problem to understanding certain averages of random Euler products, as in the upper bound proof. 
+
+There exists a large constant C such that the following is true. Let x be large and loglog R ≫√(loglog x). Let F^(R)(s) be defined as in (<ref>). Then,
+uniformly for all 1/2 ≤ q≤ 9/10 and any large V, we have ∑_n∈ f(n)  _2q
+
+    ≫√(x/log x)( ∫_-1/2^1/2 | F^(R)(1/2 +4V/log x + it)|^2 dt_q^1/2  - C/e^V∫_-1/2^1/2 | F^(R)(1/2 +2V/log x + it)|^2 dt_q^1/2 -C ).
+
+
+
+The remaining  tasks are to give a desired lower bound on F^(R)(1/2 +4V/log x + it)_q^1/2 and  an upper bound on F^(R)(1/2 +2V/log x + it)_q^1/2. 
+The upper bound part is simple. Indeed, simply apply Hölder's inequality and do a mean square calculation (<ref>) to get
+
+    [(∫_-1/2^1/2|F^(R)(1/2 +2V/log x + it)|^2  dt)^q] ≪(∫_-1/2^1/2[|F^(R)(1/2 +2V/log x + it)|^2]  dt )^q≪(log x/Vlog R)^q .
+
+
+We next focus on the main task, giving a good lower bound on F^(R)(1/2 +4V/log x + it)_q^1/2. For each t∈ℝ, 
+we use L(t) denote the event for all ⌊log V ⌋ +3 ≤ j ≤loglog x - loglog R -B -2, the following holds
+
+    (log x/e^j+1log R e^D(x)  )^-B≤∏_ℓ = j ^⌊loglog x -loglog R ⌋-B-2
+    |I_ℓ(1/2+4V/log x +it) | ≤log x/e^j+1log R e^D(x),
+
+where D(x):= c√(loglog x -loglog R) with 
+
+    c= 1/4min{loglog R/√(loglog x-loglog R) , 1 }≍ 1.
+
+We are now ready to define a random set 
+
+    ℒ: = {-1/2≤ t ≤ 1/2: L(t) defined by (<ref>) holds}.
+
+It is clear that
+
+    [(∫_-1/2^1/2|F^(R)(1/2 +4V/log x + it)|^2  dt)^q] ≥[(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^q].
+
+We use the following estimate and defer its proof to Section <ref>.
+
+Let x be large and loglog R ≫√(loglog x). Let F^(R)(s) be defined as in (<ref>) and V be a large constant. Let ℒ be the random set defined in (<ref>). Then uniformly for any 1/2≤ q≤ 9/10, we have
+
+    [(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^q] ≫(log x/Vlog R)^q .
+
+
+Plug (<ref>), (<ref>) and (<ref>) into Proposition <ref> with q=1/2
+(and choosing V to be a sufficiently large fixed constant so that C/e^V kills the implicit constant) to get that 
+ 
+    [|∑_n∈_R(x) f(n) |] ≫√(|_R(x)|) .
+
+This completes the proof of Theorem <ref>.
+
+
+
+
+§ PROOF OF PROPOSITION <REF>
+
+
+The proof proceeds the same as in <cit.> (see also <cit.>) and we provide a self-contained proof here and highlight some small modifications. 
+
+Let P(n) denote the largest prime factor of n as before. We have assumed that (<ref>) holds, e.g. R≤√(x) (This restriction is not crucial but makes the notation later easier). Let ϵ denote a Rademacher random variable independent of f(n), and recall that  indicates that the variable n under the summation is R rough. For 1/2≤ q≤ 9/10, we have 
+
+    [|_n≤ x
+     P(n)>√(x)f(n) |^2q]     = 1/2^2q[|_n≤ x
+     P(n)≤√(x)f(n) + _n≤ x
+     P(n)>√(x)f(n)+_n≤ x
+     P(n)>√(x)f(n)-_n≤ x
+     P(n)≤√(x)f(n)|^2q]
+       ≤[|_n≤ x
+     P(n)≤√(x)f(n) + _n≤ x
+     P(n)>√(x)f(n)|^2q] + [|_n≤ x
+     P(n)>√(x)f(n)-_n≤ x
+     P(n)≤√(x)f(n)|^2q]
+        = 2[|ϵ_n≤ x
+     P(n)>√(x)f(n) + _n≤ x
+     P(n)≤√(x)f(n)|^2q] = 2[|_n≤ x f(n)|^2q],
+
+where the last step we used the law of 
+    ϵ_n≤ x
+     P(n)>√(x)f(n)= ϵ∑_√(x)<p≤ x f(p) _m≤ x/p f(m)
+ conditional on (f(p))_R≤ p ≤√(x) is the same as the law of _n≤  x
+ P(n)>√(x)f(n). By the above deduction, it suffices to give a lower bound on _n≤ x
+ P(n)>√(x)f(n)_2q. 
+Do the decomposition
+
+    _n≤ x
+     P(n)>√(x)f(n) =∑_√(x)≤ p ≤ x f(p) _m≤ x/pf(m).
+
+The inner sum is determined by (f(p))_R≤ p≤√(x) and apply the Khintchine's inequality <cit.> to get
+
+    [|_n≤ x
+     P(n)>√(x)f(n)|^2q] ≫[(∑_√(x)< p ≤ x |_m≤ x/pf(m)|^2 )^q] ≥1/(log x)^q[(∑_√(x)< p ≤ xlog p·|_m≤ x/pf(m)|^2)^q].
+
+Next, do the smoothing step as we did in the upper bound case. Again set X = e^√(log x). 
+Write 
+
+    ∑_√(x)< p≤ xlog p · |_m≤ x/pf(m)|^2 = ∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_m≤ x/p f(m)|^2dt.
+
+One has |a+b|^2≥ a^2/4 - min{|b|^2, |a/2|^2}≥ 0 and thus the above is at least 
+
+    1/4∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_m≤ x/t f(m)|^2dt 
+        -∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X)min{|_x/t≤ m≤ x/p f(m)|^2, 1/4 |_m≤ x/t f(m)|^2}.
+
+It follows that the quantity we are interested in has the lower bound
+
+    [|_n≤ x
+     P(n)>√(x)f(n)|^2q] ≥   1/(log x)^q[(1/4∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_m≤ x/t f(m)|^2dt)^q] 
+        - 1/(log x)^q[(∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_ x/t<m≤ x/p f(m)|^2dt)^q].
+
+Use Hölder's inequality and throw away the R-rough condition to upper bound the subtracted term in (<ref>) by
+
+    ≤1/(log x)^q(∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X)[ |∑_ x/t<m≤ x/p f(m)|^2]dt)̊^q
+       ≪1/(log x)^q(∑_√(x)<p≤ x log p ·  (x/pX +1) )^q≪1/(log x)^q(xlog x/X +x)^q≪ (x/log x)^q.
+
+The first term in (<ref>) (without the factor 1/4(log x)^q) is 
+
+    [(∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_m≤ x/t f(m)|^2dt)^q] 
+        = [(∫_√(x)^x_t/1+1/X <p≤ t log p ·X/p|_m≤ x/tf(m)|^2 dt )^q]
+       ≫ [(∫_√(x)^x|_m≤ x/tf(m)|^2dt )^q] = x^q[(∫_1^√(x)  |_m≤ z f(m) |^2dz/z^2)^q].
+
+To this end, we impose the smooth condition to invert the sums to Euler products. We have for any large V, 
+
+    [(∫_1^√(x)  |_m≤ z f(m) |^2dz/z^2)^q] ≥[(∫_1^√(x)  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+8V/log x)^q]
+       ≥[(∫_1^+∞  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+8V/log x)^q]- [(∫_√(x)^+∞  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+8V/log x)^q]
+       ≥[(∫_1^+∞  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+8V/log x)^q]- 1/e^2Vq[(∫_1^+∞  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+4V/log x)^q].
+
+Apply Lemma <ref> to get that the first term is 
+
+    ≫[(∫_-1/2^1/2|F^(R)(1/2 + 4V/log x + it)|^2 dt )^q].
+
+For the second term, an application of Lemma <ref> gives
+
+    ≪ e^-2Vq[(∫_-∞^+∞|F^(R)(1/2 + 2V/log x + it)/|1/2 + 2V/log x + it|^2 dt )^q] ≪ e^-2Vq[(∫_-1/2^1/2 |F^(R)(1/2 + 2V/log x + it)|^2 )^q]
+
+where in the last step we used the fact that f(n)n^it has the same law as f(n) and ∑_n ≥ 1 n^-2 converges. Bounds in (<ref>) and (<ref>) together give the desired bound for the first term in (<ref>) and we complete the proof. 
+
+
+
+
+
+§ PROOF OF PROPOSITION <REF>
+
+In this section, 
+we prove Proposition <ref>. The proof significantly relies on the following proposition, which is a mean value estimate of the product of |F^(R)(σ + it_1)|^2
+and |F^(R)(σ + it_2)|^2. Our upper bound matches the guess if you pretend the two products are independent. 
+
+Let x be large and loglog R ≫√(loglog x). Let F^(R)(s) be defined as in (<ref>) and V be a large constant. Let ℒ be the random set defined in (<ref>). Then we have
+    
+    [(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^2]  ≪ (log x/Vlog R)^2.
+
+
+
+
+
+
+The proof starts with an application of Hölder's inequality. We have 
+
+    [(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^q] ≥([∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt])^2-q/([(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^2])^1-q.
+
+Proposition <ref> gives a desired upper bound for the denominator. We next give a lower bound on the numerator. By using that f(n)n^it has the same law as f(n), the numerator is
+
+    (∫_-1/2^1/2 [1_L(t)|F^(R)(1/2 +4V/log x + it)|^2]  dt)^2-q= ([ 1_L(0)|F^(R)(1/2 +4V/log x )|^2] )^2-q .
+
+We next use Proposition <ref> by taking n=⌊loglog x - loglog R ⌋ - (B+1) - ⌊log V ⌋, a =D(x)=c√(loglog x -loglog R ) and h(j)=0 to conclude that (1_L(0))≫ 1. Combining with the mean square calculation (<ref>), we have
+
+    [1_L(0)|F^(R)(1/2 +4V/log x + it)|^2] ≫(1_L(0))· [|F^(R)(1/2 +4V/log x + it)|^2] ≫log x/V log R.
+
+We complete the proof by plugging (<ref>) and (<ref>) into (<ref>). 
+
+
+The proof of Proposition <ref> is a bit involved and its proof is inspired by <cit.> and <cit.>. We are not using the “two-dimensional Girsanov-type" computation as used in <cit.> which significantly simplified the proof. We do not expect any further savings when R is as large as stated in Proposition <ref> while for a smaller R, one might expect there could be further cancellation as in <cit.> which may be verified by adapting the “two-dimensional Girsanov-type" calculation. 
+
+
+
+    Expand the square and it equals
+    
+    [ ∫_-1/2^1/21_L(t_1) |F^(R)(1/2 +4V/log x + it_1)|^2 dt_1 ∫_-1/2
+        ^1/21_L(t_2)|F^(R)(1/2 +4V/log x + it_2)|^2 dt_2   ].
+
+   By using that f(n)n^it has the same law as f(n), we write the above as (t:= t_1-t_2)
+   
+    ∫_-1^1 [1_L(0) |F^(R)(1/2 +4V/log x )|^21_L(t)|F^(R)(1/2 +4V/log x + it)|^2 ] dt.
+
+For |t| large enough, the two factors behave independently, which is the easier case. Indeed,  if |t|>1/log R, drop the indicator functions and bound the corresponding integration by
+
+    ≪max_ 1/log R < |t|≤ 1 [  |F^(R)(1/2 +4V/log x)|^2· |F^(R)(1/2 +4V/log x + it)|^2   ]  .
+ 
+ Apply the two dimensional mean square calculation (<ref>) with (x, y)=(R, x)  to conclude that the above is 
+ 
+    ≪(log x/V log R)^2.
+
+ 
+We next focus on the case |t|≤ 1/log R. Since f(p) are independent of each other, we can decompose the Euler products into pieces and analyze their contributions to (<ref>) separately.
+Define the following three sets of primes based on the sizes of primes
+
+    𝒫_1: = {p prime: R≤ p < x^e^-(⌊loglog x -loglog R ⌋-B-2)},
+
+
+    𝒫_2: = {p prime:  x^e^-(⌊loglog x -loglog R ⌋-B-2)≤ p ≤ x^e^-(⌊log V ⌋ +3)},
+
+and 
+
+    𝒫_3: = {p prime: x^e^-(⌊log V ⌋ +3) < p ≤ x }.
+
+We proceed as follows. Note that the events L(0) and L(t) are irrelevant to f(p) for p∈𝒫_1 ∪𝒫_3. For partial products over primes p∈𝒫_1 ∪𝒫_3, we directly do mean square calculations.
+For partial products over primes p∈𝒫_2, we will crucially use the indicator functions 1_L(0) and 1_L(t) defined in (<ref>) with j= ⌊log V ⌋ +3. This separation gives that the integration in (<ref>) over |t|≤ 1/log R is
+
+    ∫_|t|≤1/log R[∏_p∈𝒫_1 ∪𝒫_3  |1-f(p)/p^1/2 +4V/log x|^-2 |1-f(p)/p^1/2 +4V/log x+it|^-2] 
+    ×[1_L(0)1_L(t)∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2 |1-f(p)/p^1/2 +4V/log x+it|^-2]  dt.
+
+We first upper bound the expectation over primes in 𝒫_1 ∪𝒫_3 uniformly over all t. By using independence between f(p) and (<ref>), we can bound it as 
+
+    ≪exp( ∑_p∈𝒫_14/p^1+8V/log x + ∑_p∈𝒫_34/p^1+8V/log x).
+
+By simply using the prime number theorem and the definition of 𝒫_1 and 𝒫_3, one has that both sums in (<ref>)  are ≪ 1 so that (<ref>) is ≪ 1, where we remind readers that B is a fixed constant. Now our task is reduced to establishing the following
+
+    ∫_|t|≤1/log R[1_L(0)1_L(t)∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2 |1-f(p)/p^1/2 +4V/log x+it|^-2]  dt ≪(log x/V log R)^2.
+
+
+Our strategy would be, roughly speaking, using the barrier event 1_L(t) to bound certain partial products involved with t directly and then use the mean square calculation to deal with the rest of the products. The exact partial products that we will apply barrier events would depend on the size of t.  
+
+We first do a simple case, which helps us get rid of the very small t, say |t|<V/log x. We use the the condition 1_L(t) and pull out the factors related to L(t) to get that the contribution from |t|<V/log x is at most 
+
+    ≪∫_|t|≤V/log x e^2c√(loglog x- loglog R)· (log x/V log R)^2·[1_L(0)∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2]  dt 
+       ≪V/log x·  e^2c√(loglog x- loglog R)·(log x/V log R)^2·[∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2] 
+       ≪(log x/V log R)^2,
+
+where in the second last step we dropped the 1_L(0) condition, and in the last step we applied (<ref>) together with log R ≥exp(4c  √(loglog x)) where c is defined in (<ref>). Thus we only need to establish the following 
+
+    ∫_V/log x≤ |t|≤1/log R[1_L(0)1_L(t)∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2 |1-f(p)/p^1/2 +4V/log x+it|^-2]  dt ≪(log x/V log R)^2 .
+
+
+We now enter the crucial part where we will apply the barrier events according to the size of |t|.
+We decompose the set 𝒫_2 into two parts according to |t|.
+For each fixed V/log x≤ |t| ≤ 1/log R, we write 
+
+    𝒫_2 = 𝒮(t) ∪ℳ(t),
+
+where 
+
+    𝒮(t):={p prime:  x^e^-(⌊loglog x -loglog R ⌋-B-2)≤ p ≤ e^V/|t|},
+
+and 
+
+    ℳ(t):= {p prime:  e^V/|t|≤ p ≤ x^e^-(⌊log V ⌋ +3)}.
+
+The set of primes 𝒮(t) would be those we will apply barrier events and ℳ(t) would be estimated by a mean square calculation. Note that for p∈ℳ(t), there is a nice decorrelation as we needed in (<ref>) due to that p≥ e^V/|t|. 
+Let us now see how such a decomposition of 𝒫_2 would help us. We use a local notation
+
+    G(p, t): = |1-f(p)/p^1/2 + 4V/log x+it|^-2.
+
+Then the quantity in (<ref>) is the same as 
+
+    ∫_V/log x≤ |t|≤1/log R[1_L(0)1_L(t)∏_p∈𝒫_2 G(p, 0) ∏_p∈𝒮(t) G(p, t) ∏_p∈ℳ(t) G(p, t)  ]  dt.
+
+We apply the barrier events condition 1_L(t) to bound the product over p∈𝒮(t) so that the above is at most 
+
+    ≪(V/log R)^2· e^2c√(loglog x - loglog R)·∫_V/log x≤ |t|≤1/log R1/t^2[1_L(0)∏_p∈𝒫_2 G(p, 0) ∏_p∈ℳ(t) G(p, t)  ]  dt.
+
+We next upper bound the expectation in (<ref>) uniformly for all V/log x≤ |t| ≤ 1/log R. We first drop the indicator function and rewrite the product based on the independence between f(p) to derive that
+
+    [1_L(0)∏_p∈𝒫_2 G(p, 0) ∏_p∈ℳ(t) G(p, t)]≤[ ∏_p∈𝒮(t) G(p, 0)] · [∏_p∈ℳ(t) G(p, 0)G(p, t)].
+
+ Use the mean square calculation results in (<ref>) and (<ref>) to further get an upper bound on the expectation
+ 
+    ≪V/|t|/log R·(tlog x/V^2)^2≪|t|(log x)^2/V^3log R .
+
+Now we plug the above bound to (<ref>) to get that (<ref>) is crudely bounded by 
+
+    (log x/log R)^2·e^2c√(loglog x- loglog R)/Vlog R·∫_V/log x≤ |t|≤1/log R1/|t| dt ≪(log x/log R)^2.
+
+In the last step we used that log R ≥exp(4c  √(loglog x)) where c is defined in (<ref>).  This completes the proof of (<ref>) and thus the proof of the proposition. 
+
+
+
+
+§ CONCLUDING REMARKS
+
+
+
+
+ §.§ Typical behavior and small perturbations
+
+We give a sketch of the situation when a(n) itself is independently and randomly chosen. 
+We write 
+
+    a(n) = r(n) X(n)
+
+where r(n)>0 is deterministic and X(n) are independently distributed with [|X(n)|^2]=1. We may naturally assume that there is some r such that
+
+    r(n) ≍ r(m) ≍ r
+
+for all n, m, i.e. no particular random variable would dominate the whole sum in size. One may also just assume r=1 throughout the discussion here. 
+We claim that for typical X(n), the random sums satisfy the sufficient condition established in <cit.> on having a Gaussian limiting distribution.
+
+The key condition one needs to verify is that almost surely (in terms of over X(n)), we have 
+
+    R_N(a) : =∑_ m_i, n_j≤ N 
+    
+     m_i≠ n_j 
+     m_1m_2=n_1n_2   a(n_1)a(n_2) a(m_1) a(m_2) = o(r^4N^2).
+
+The proof of (<ref>) is straightforward. By using the divisor bound, we know there are ≪ N^2+ϵ number of quadruples (m_1, m_2, n_1, n_2) under the summation. If we expect some square-root cancellation among a(n_1)a(n_2) a(m_1) a(m_2), then R_N(a) above should be around r^4N^1+ typically. 
+Indeed, by using the fact that all a(n) are independent, we have the L^2 bound 
+
+    [|R_N|^2] = [R_N R_N] ≪ r^8 N^2+.
+
+This leads to, 
+almost surely (in terms of over X(n)), that we have 
+
+    R_N(a) = o(r^4N^2).
+
+To this end, by using <cit.>, almost surely, we have a central limit theorem for the random partial sums of a Steinhaus random multiplicative function.
+See <cit.> for a closely related result where they used the method of moments.  
+
+
+
+
+In Question <ref>, we asked if it is possible to characterize the choices of a(n) that give better than square-root cancellation. On one hand, as discussed above, we know for typical a(n), there is just square-root cancellation. On the other hand, if a(n) is a deterministic multiplicative function taking values on the unit circle, then by the fact that a(n)f(n) has the same distribution as f(n) and the result established by Harper (<ref>), the partial sums ∑_n≤ N a(n)f(n) have better than square-root cancellation. Our main theorems study one particular example of multiplicative nature.  Combining these observations, 
+we believe that any small perturbation coming from a(n) that destroys the multiplicative structure would make the better than square-root cancellation in (<ref>) disappear. We ask the following question in a vague way as a sub-question of Question <ref>.
+
+Is it true that the only “essential choice" of a(n) leading to better than square-root cancellation is of multiplicative nature? 
+
+
+
+
+ §.§ Threshold in other settings and the limiting distribution
+
+The main theorems of this paper prove that there is square-root cancellation for loglog R ≫ (loglog x)^1/2. What is the limiting distribution then? We have remarked earlier that one may establish a central limit theorem when R≫exp((log x)^c) for some  constant c<1 by understanding the corresponding multiplicative energy. It becomes less clear for smaller R. 
+
+
+ What is the limiting distribution of  ∑_n∈_R(x) f(n) with “proper" normalization, for all ranges of R?   
+
+
+We finally comment that there is another family of partial sums that naturally has the threshold behavior for better than square-root cancellation. Let = [x, y] with y≤ x. We would like to know for what range of y, typically, 
+
+    ∑_x≤ n ≤ x+y f(n) = o(√(y)).
+
+We believe one can adapt the argument here to find that the threshold behavior is around log (x/y) ≈√(loglog x). It is certainly interesting to understand the limiting distribution for the short interval case thoroughly, beyond the previous result in <cit.>.  
+
+
+
+
+
+
+plain
+

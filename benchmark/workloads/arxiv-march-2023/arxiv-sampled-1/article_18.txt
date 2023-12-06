@@ -2,2628 +2,1387 @@
 
 
 
-Quantum estimation of a charge distance from a hole-spin qubit in Si quantum dots
-    Filippo Troiani^2
+
+junfeng.qiao@epfl.ch
+Theory and Simulations of Materials (THEOS), and National Centre
+  for Computational Design and Discovery of Novel Materials (MARVEL), École
+  Polytechnique Fédérale de Lausanne, 1015 Lausanne, Switzerland
+
+Theory and Simulations of Materials
+  (THEOS), and National Centre for Computational Design and Discovery of Novel
+  Materials (MARVEL), École Polytechnique Fédérale de Lausanne, 1015 Lausanne,
+  Switzerland
+Laboratory for Materials Simulations (LMS), Paul
+  Scherrer Institut (PSI), CH-5232 Villigen PSI, Switzerland
+
+Theory and Simulations of Materials (THEOS), and National
+  Centre for Computational Design and Discovery of Novel Materials (MARVEL),
+  École Polytechnique Fédérale de Lausanne, 1015 Lausanne, Switzerland
+Laboratory for Materials Simulations (LMS), Paul Scherrer Institut
+  (PSI), CH-5232 Villigen PSI, Switzerland
+
+
+
+
+  Maximally-localized Wannier functions (MLWFs) are a powerful and broadly used
+    tool to characterize the electronic structure of materials, from chemical
+    bonding to dielectric response to topological properties.
+  Most generally, one can construct MLWFs that describe isolated band manifolds,
+    e.g. for the valence bands of insulators, or entangled band manifolds, e.g. in
+    metals or describing both the valence and the conduction manifolds in
+    insulators.
+  Obtaining MLWFs that describe a target manifold accurately and with the most
+    compact representation often requires chemical intuition and trial and error, a
+    challenging step even for experienced researchers and a roadblock for automated
+    high-throughput calculations.
+  Here, we present a very natural and powerful approach that provides
+    automatically MLWFs spanning the occupied bands and their natural complement
+    for the empty states, resulting in Wannier Hamiltonian models that provide a
+    tight-binding picture of optimized atomic orbitals in crystals.
+  Key to the success of the algorithm is the introduction of a projectability
+    measure for each Bloch state onto atomic orbitals (here, chosen from the
+    pseudopotential projectors) that determines if that state should be kept
+    identically, discarded, or mixed into a disentangling algorithm.
+  We showcase the accuracy of our method by comparing a reference test set of 200
+    materials against the selected-columns-of-the-density-matrix algorithm, and its
+    reliability by constructing Wannier Hamiltonians for 21737 materials from
+    the Materials Cloud.
+
+
+Projectability
+  disentanglement for accurate and automated electronic-structure Hamiltonians
+    Nicola Marzari
     March 30, 2023
-=================================================================================
-
-
-
-
-We study convergence lower bounds of without-replacement stochastic gradient descent (SGD) for solving smooth (strongly-)convex finite-sum minimization problems. Unlike most existing results focusing on final iterate lower bounds in terms of the number of components n and the number of epochs K, we seek bounds for arbitrary weighted average iterates that are tight in all factors including the condition number κ. For SGD with Random Reshuffling, we present lower bounds that have tighter κ dependencies than existing bounds. Our results are the first to perfectly close the gap between lower and upper bounds for weighted average iterates in both strongly-convex and convex cases. We also prove weighted average iterate lower bounds for arbitrary permutation-based SGD, which apply to all variants that carefully choose the best permutation. Our bounds improve the existing bounds in factors of n and κ and thereby match the upper bounds shown for a recently proposed algorithm called .
-
-
-
+=============================================================================================
 
 
 
 
 
 § INTRODUCTION
- 
 
-One of the most common frameworks used in machine learning is the following finite-sum minimization problem,
-
-    min_ F() = 1/n∑_i=1^n f_i().
-
-Stochastic gradient descent (SGD), an algorithm first proposed by <cit.>, is highly capable of numerically solving finite-sum optimization problems. In the t-th iteration, SGD randomly samples a component index i(t) and computes a gradient-based update equation of the form _t = _t-1 - η_t ∇ f_i(t)(_t-1), where η_t is a step size parameter, often set to a fixed constant.
-
-Many prior studies on SGD have shown convergence results assuming with-replacement sampling of the component index i(t) (<cit.> and many others), where we independently choose i(t) from a uniform random distribution over the index set every time. This uniform sampling makes each step of SGD an unbiased noisy estimate of vanilla gradient descent (GD).
-
-In real-world applications, however, it is much more common to use without-replacement SGD, where each epoch runs over the entire shuffled set of n components. Without-replacement SGD has gained popularity for both its simplicity and empirical observations of faster convergence rates <cit.>. However, theoretical analysis on without-replacement SGD remains quite elusive, especially because of the lack of independence between iterates. Nevertheless, recent works have managed to successfully deal with without-replacement SGD in theoretical aspects <cit.>.
-
-A simple and popular method of without-replacement sampling is to randomly shuffle the n components independently on each epoch, often referred to as Random Reshuffling or . Some studies show upper bounds of convergence rates for a certain class of functions <cit.>, while some others present lower bounds by analyzing a function contained in a certain class with a slow convergence rate <cit.>. These preliminary results highlight that without-replacement SGD is in fact capable of converging provably faster than its with-replacement counterpart.
-
-A recent line of work <cit.> opens a new field of studies on permutation-based SGD, which covers all cases where the permutation of the n component functions is chosen according to a certain policy, instead of simple random reshuffling. 
-The aim of this line of research is to design a policy that yields faster convergence compared to random permutations.
-Indeed, a recent result by <cit.> proposes , a permutation-based SGD algorithm that uses the gradient information from previous epochs to manipulate the permutation of the current epoch, and shows that  provably converges faster than Random Reshuffling. This raises the following question:
-
-    Is GraB optimal, or can we find an even faster permutation-based SGD algorithm?
-
-
-
-
-
-
- §.§ Related Work
-
-
-Before summarizing our contributions, we list up related prior results so as to better contextualize our results relative to them. In all convergence rates, we write (·) for upper bounds and Ω (·) for lower bounds. The tilde notation (·) hides polylogarithmic factors. For simplicity, here we write convergence rates only with respect to the number of component functions n and the number of epochs K (i.e., number of passes through the entire components).
-
-SGD with replacement is known to have a tight convergence rate of ( 1/T) after T iterations, which translates to ( 1/nK) in our notation.
-One of the first studies on  by <cit.> shows an upper bound of ( 1/K^2) for strongly convex objectives with smooth components, along with the assumption that n is a constant. Under the same settings, <cit.> show a convergence rate of ( 1/n^2 K^2 + 1/K^3), which explicitly depends on both n and K. <cit.> further show that the upper bound for strongly convex quadratics is ( 1/n^2 K^2 + 1/nK^3). Follow-up studies prove upper bounds in broader settings, such as ( 1/n K^2) for strongly convex (but not necessarily quadratic) functions <cit.>, or ( 1/n^1/3 K^2/3) under convex assumptions <cit.>. Some further generalize to other variants of , including Minibatch and Local SGD in federated learning <cit.>, Nesterov's acceleration <cit.>, or Stochastic Gradient Descent-Ascent used in minimax problems <cit.>. Meanwhile, investigations on lower bounds have started from simple quadratic assumptions, where <cit.> prove a lower bound of rate Ω( 1/n^2 K^2 + 1/n K^3). Lower bounds were then extended to smooth and strongly convex settings, as in <cit.> and <cit.> which both derive a lower bound of Ω( 1/n K^2).
-
-Recent works provide evidence of designing algorithms that converge faster than .
-Concretely, <cit.> introduce a permutation-based SGD algorithm called  and prove that it can outperform  for quadratic objectives. 
-The authors also propose a lower bound applicable to arbitrary permutation-based SGD, by proving that no algorithm can converge faster than Ω1/n^3K^2 for some strongly convex objectives.
-
-
-<cit.> and <cit.> propose methods to find “good” permutations via a greedy strategy. Extending their previous work, <cit.> propose  and gain a convergence rate 1/n^2K^2 for PŁ functions which is faster than 1/nK^2 for  <cit.>.
-
-Most prior results <cit.> mainly concern achieving tight convergence rates with respect to n and K, while recent studies delve deeper to unveil how other parameters can also affect the convergence properties.
-The condition number κ (defined in <ref>) is an example of such parameters, which is closely related to the problem's geometry. 
-If we take κ into account[For this section, we treat κ = Θ( 1 / μ) for simplicity, following the convention of other existing results in the literature <cit.>.] in the strongly convex case, the best known upper and lower bounds for  are κ^3/n K^2 <cit.> and Ωκ/n K^2 <cit.>, which differ by a factor of κ^2, and those for permutation-based SGD are  κ^3/n^2 K^2 <cit.> and Ω1/n^3 K^2 <cit.>, which differ by both n and some factors of κ—that is, the bounds are not completely tight for all factors yet.
-
-While it is tempting to neglect the looseness in κ by treating factors in κ as “leading constants,” characterizing the right dependence on κ becomes imperative for understanding the regimes in which without-replacement SGD is faster than the with-replacement version. 
-
-For example, the aforementioned rate κ^3/n K^2 of  improves upon the known tight rate κ/nK of with-replacement SGD only if K≳κ^2. It turns out that this requirement of large enough K is in fact unavoidable in the strongly convex case <cit.>;
-by developing a lower bound, <cit.> show that  cannot converge faster than with-replacement SGD when K ≲κ. 
-Characterizing the exact threshold (κ vs. κ^2) for faster convergence of  requires a tighter analysis of the κ dependence of its convergence rate.
-
-
-
-
-
-
- §.§ Summary of Our Contributions
-
-Towards a complete understanding of  and permutation-based SGD in general, we seek to close the existing gaps outlined above by developing tighter lower bounds with matching upper bounds.
-We present results under two different kinds of algorithm settings: <ref> contains lower bounds obtained from , and <ref> presents lower bounds that are applicable to arbitrary permutation-based SGD algorithms.
-
-
-Our lower bounds are obtained for without-replacement SGD with constant step size, which is also the case in other existing results in the literature <cit.>. While all lower bounds proved in the aforementioned papers are only applicable to the final iterate of the algorithm, many of our results in this paper apply to arbitrary weighted average of end-of-epoch iterates, which can be used to show tightness of matching upper bounds that employ iterate averaging.
-
-Our main contributions are as follows. Here we include κ = Θ( 1 / μ) in the convergence rates to better describe the results.
-For a complete summary of our results, please refer to <ref>.
-
-
-
-    
-  * <ref> derives a lower bound of rate Ω( κ^2/n K^2) on the strongly convex case for the final iterate, which matches the best-known corresponding upper bound κ^3/n K^2 up to a factor of κ.
-    
-    
-  * <ref> extends the lower bound Ω( κ^2/n K^2) under strongly convex settings to arbitrary weighted average (end-of-epoch) iterates. <ref> shows a matching upper bound ( κ^2/n K^2) for the tail average iterate, achieving tightness up to logarithmic factors.
-    
-    
-  * <ref> shows a lower bound Ω( 1/n^1/3 K^2/3) for the average iterate in the convex case, which matches the corresponding upper bound in <cit.>. 
-    
-    
-  * <ref> provides a lower bound Ωκ^2/n^2 K^2 on arbitrary permutation-based SGD, which, to the best of our knowledge, is the first result that matches the best-known upper bound of  <cit.> in terms of n and K.
-
-    
-  * <ref> relaxes the assumption of individual convexity and obtains a stronger lower bound Ωκ^3/n^2 K^2 in the scenario of arbitrary permutation-based SGD. This lower bound exactly matches the upper bound in all factors, including κ. Our results therefore answer the question in (<ref>): Yes,  is an optimal permutation-based SGD algorithm.
-
-
-
-
-
-
-
-
-
-
-§ PRELIMINARIES
- 
-First we summarize some basic notations used throughout the paper. For a positive integer N, we use the notation [N] := { 1, 2, …, N }. For a vector ∈^d, we denote its L_2 norm as . We denote the number of component functions as n and the number of epochs as K, where n and K are both positive integers.
-
-Some of our results require large K and we will use K ≳ x to express such an assumption. We use K ≳ x to denote the condition K ≥ Cx logpoly(n, K, μ, L, ...) when C is a numerical constant.
-
-
-
- §.§ Function Classes
-
-
-We state the following definitions to formally define the problem class which our objective function and its components belong to.
-
-    
-    A differentiable function f is L-smooth if
-    
-    ∇ f () - ∇ f () ≤ L  - ,  ∀, ∈^d.
-
-
-
-    
-    A differentiable function f is μ-strongly convex if
-    
-    f() ≥ f() + ∇ f(),  -  + μ/2 - ^2
-
-    for all , ∈^d. If the inequality holds for μ = 0, then we say that f is convex.
-
-
-    
-    
-    A differentiable function f satisfies the μ-Polyak-Łojasiewicz (PŁ) condition if
-    
-    1/2∇ f () ^2    ≥μ (f() - f^*),  ∀∈^d,
-
-    where f^* := inf_ f() > -∞ is the global minimum value of f.
-
-Additionally, we define the condition number as κ := L / μ, where L is the smoothness constant and μ is either the strong convexity constant or the PŁ constant.
-
-We also make a common assumption regarding the finite-sum setup in (<ref>), which is that the gradients of the objective function and its components are not too far from each other.
-[Bounded gradient errors]
-    
-    There exists τ≥ 0 and ν≥ 0 such that for all i = 1, …, n,
-    
-    ∇ f_i () - ∇ F()    ≤τ∇ F()  + ν,  ∀∈^d.
-
-
-Now we define the function class  as follows.
-
-    
-    We define the function class (L, μ, τ, ν) of objective functions F as:
-    
-    (L, μ, τ, ν)    := { F: f_i  are L-smooth and convex, 
-        := { F:  F  is μ-strongly convex, 
-        := { F:  F  and f_i  satisfy Assumption <ref>}.
-
-
- Note that <ref> takes into account not only the properties of F but that of the components f_i as well. Also, as seen in <ref>, (L, 0, τ, ν) corresponds to the case where F is convex.
-
-
-
- §.§ Algorithms
-
-
-
-
-We denote the i-th iterate of the k-th epoch of permutation-based SGD by _i^k, where i = 0, …, n and k = 1, …, K. We denote the distance between the initial point _0^1 and the optimal point ^* as D := _0^1 - ^*. We also follow the conventional notation _0^k+1 = _n^k, which indicates that the final result of an epoch becomes the initial point of its subsequent epoch. At the beginning of the k-th epoch, we choose a permutation σ_k : [n] → [n]. The algorithm then accesses the component functions in the order of f_σ_k(1), …, f_σ_k(n). That is, we use the following update equation:
-
-    _i^k   = _i-1^k - η∇ f_σ_k(i) (_i-1^k)
-
-for i = 1, …, n, where η > 0 is a constant step size.
-
-We particularly focus on two different types of permutation-based SGD. <ref> states theoretical results based on , which assumes that the components are randomly shuffled independently in each epoch.
-
-In <ref>, we study the case when permutations can be carefully chosen to gain faster convergence.
-We provide lower bounds that are applicable to any kind of permutation-based SGD.
-To show our lower bound is tight, it suffices to show that a specific permutation-based SGD algorithm provides a matching upper bound. 
-To this end, we use offline herding SGD <cit.>, where the components are manually ordered to “balance” the gradients.
-
-Specifically, <cit.> prove that as the gap between the partial sums of consecutive stochastic gradients and the full gradient diminishes faster, the optimizer converges faster as well.
-In their subsequent work <cit.>, they first propose offline herding SGD, a permutation-based SGD algorithm that manages this gap via the herding algorithm but requires intensive memory consumption, and devise online herding SGD (or ) that successfully overcomes the memory challenges. 
-They prove that both algorithms guarantee the same convergence rate 1/n^2 K^2. 
-In our setting, since we are not interested in the usability of algorithms, we will focus on offline herding SGD (or ) just for simplicity. 
-<ref> provides a pseudocode of .
-For the description of Herding subroutine in <ref>, see Assumption <ref> and <ref>.
-
-
-
-§ RANDOM RESHUFFLING
- 
-
-
-
-Here we show lower bounds of  on the last iterate and arbitrary weighted averaged iterates for strongly convex objectives, and then extend results to convex functions. We stress that the lower bounds on weighted average iterates tightly match the upper bounds both for the strongly convex and convex case. 
-
-Throughout <ref>, we assume that n is a positive integer with n ≥ 2. 
-
-
-
-
- §.§ Lower Bound for the Final Iterate
- 
-
-<ref> provides a lower bound for the final iterate of  for arbitrary step sizes η > 0 in the μ-strongly convex case.
-
-theoremxhat
-    
-    For any n ≥ 2 and κ≥ c_1, there exists a 3-dimensional function F ∈ (L, μ, 0, ν) such that for any constant step size η the last iterate _n^K of  satisfies
-    
-    [ F (_n^K) - F^* ]    = Ω( L ν^2/μ^2 n K^2),    if K ≥ c_2 κ, 
-    Ω( ν^2/μ n K),    if K < c_2 κ,
-
-    for some universal constants c_1, c_2.
-
-We take an approach similar to <cit.>, which is to construct F by aggregating three functions, each showing a lower bound for a different step size regime. The proof of <ref> is deferred to <ref>.
-
-We can compare <ref> with results of <cit.> for M = B = 1, which establishes a lower bound Ω( ν/μ n K^2) for the large epoch regime K ≳κ. We can observe that the lower bound for the large epoch regime is tightened by a factor of κ. In fact, the lower bound in <ref> can be compactly written as:
-
-    [ F (_n^K) - F^* ]    = Ω( ν^2/μ n K·min{ 1, κ/K}),
-
-which can be interpreted as a continuous change from Ω( ν^2/μ n K) to Ω( κν^2/μ n K^2) as K gradually increases past the threshold K ≥ c_2 κ.
-
-We can also compare our results with <cit.>, which provide a lower bound of rate Ω( ν^2/μ n K·min{ 1, κ/K( 1/n + κ/K) }) under a stronger assumption that the objective and components are all quadratic. The lower bound for the small K ≲κ regime is identical to ours, since for this case our lower bound also relies on quadratic functions. However, if K grows past Ω (κ), then we can observe that the lower bound in <ref> derived from non-quadratic functions is tighter by a factor of ( 1/n + κ/K).
-
-An upper bound for  in the μ-strongly convex case under the step-size condition η = O(1/Ln) is introduced in Theorem 2 of <cit.>.
-[Corollary of <cit.>, Theorem 2]
-    
-    Suppose that F and f_1, …, f_n are all L-smooth, f_1, …, f_n are convex, and F is μ-strongly convex. Then, for  with constant step size
-    
-    η = min{1/√(2) L n, 1/μ n Klog( μ^3 n D^2 K^2/L ν^2) },
-
-    the final iterate _n^K satisfies
-    
-    [ F (_n^K) - F^* ] = ( L D^2 e^- K/κ +  L^2 ν^2/μ^3 n K^2).
-
-    
-
-
-Note that the statements in <cit.> use σ_*^2 := 1/n∑_i=1^n∇ f_i (^*) ^2 instead of ν^2 in the upper bound. We can easily observe that Assumption <ref> with τ = 0 and = ^* implies that ∇ f_i (^*) ^2 ≤ν^2 for all i, and hence σ_*^2 ≤ν^2.
-
-The same applies to Proposition <ref>.
-    
-Assuming K ≳κ so that the learning rate becomes
-
-    η = 1/μ n Klog( μ^3 n D^2 K^2/L ν^2) ≤1/√(2) L n,
-
-then we have [ F (_n^K) - F^* ] = ( L^2 ν^2/μ^3 n K^2), and for this case we can observe that lower bound shown in <ref> matches the upper bound in Proposition <ref> up to a factor of κ = L/μ and some polylogarithmic factors.
-
-
-
-
-
- §.§ Lower Bound for Weighted Average Iterates
- 
-
-For small step sizes η = ( 1/Ln), we can extend <ref> to arbitrary weighted average (end-of-epoch) iterates. That is, <ref> provides a lower bound which is applicable to all linear combinations of the following form,
-
-    = ∑_k=1^K+1α_k _0^k/∑_k=1^K+1α_k,
-
-for nonnegative weights α_k ≥ 0 for all k = 1, …, K+1. 
-
-theoremxavg
-    
-    For any n ≥ 2 and κ≥ c_1, there exists a 2-dimensional function F ∈ (L, μ, 0, ν) such that for any constant step size η≤1/c_2 Ln, any weighted average iterate  of  of the form as in (<ref>) satisfies
-    
-    [ F () - F^* ]    = Ω( L ν^2/μ^2 n K^2),    if K ≥ c_2 κ, 
-    Ω( ν^2/μ),    if K < c_2 κ,
-
-    for the same universal constants c_1, c_2 as in <ref>.
-
-The full proof of <ref> can be found in <ref>. 
-Note that, for weighted average iterates, we restrict ourselves to small step sizes η =  (1/Ln); while this could look restrictive, such a choice of step size is commonly used in existing upper bounds, and we will see shortly that our lower bound exactly matches an upper bound when K ≳κ (<ref>). The tightness also extends to general convex cases, as seen in <ref>.
-
-One might wonder why the lower bound becomes a constant for small K ≲κ. This is because in the η =  (1/Ln) regime, K < c_2 κ implies η < 1/c_2 L n≤1/μ n K, i.e., the step size is too small for SGD to reach the optimum in K steps. For instance, K epochs of SGD on F(x) = f_i(x) = μ/2 x^2 initialized at x = x_0 reaches the point (1 - ημ)^nK x_0 > (1 - 1/nK)^nK x_0 ≥x_0/4. Hence the iterate cannot get past x_0/4, rendering it impossible to reach the optimal point x^* = 0. 
-
-The difficulty of extending the η = Ω (1/Ln) regime in <ref> to arbitrary weighted average iterates originates from our proof strategy: for small enough η, we can show for our worst-case examples that all _0^k's (in expectation) stay on the positive side bounded away from zero, thereby proving that any weighted average also stays suffciently far from zero. However, for larger η, the iterates may oscillate between positive and negative regions, making it possible for an average iterate to converge faster than individual _0^k's.
-
-Note that our definition in (<ref>) includes the final iterate, as the choice α_k = 0 for 1 ≤ k ≤ K and α_K+1 = 1 yields = _0^K+1 = _n^K. Different forms of algorithm outputs other than the final iterate also frequently appear in prior works, especially regarding upper bounds for . For instance, we may choose α_k = 1 for all 2 ≤ k ≤ K+1 and α_1 = 0 to represent the average iterate _avg := 1/K∑_k=1^K_n^k <cit.>. We may also set α_k = 1 for ⌈K/2⌉ + 1 ≤ k ≤ K+1 and α_k = 0 otherwise to recover the tail average iterate <cit.>, defined as _tail := 1/K - ⌈K/2⌉ + 1∑_k=⌈K/2⌉^K_n^k.
-
-We further show that the lower bound  in <ref> tightly matches the upper bound suggested in <ref>.
-newpropositiontailub
-    
-    Suppose that F ∈ (L, μ, 0, ν), and that we choose η as
-    
-    η   = min{1/√(2)Ln, 9/μ n Kmax{ 1, log( μ^3 n D^2 K^2/L ν^2) }}.
-
-    Then, for  with constant step size η and K ≥ 5, the tail average iterate _tail satisfies:
-    
-    𝔼[ F (_tail) - F^* ]    = ( L D^2/K e^- 1/9 √(2)K/κ + L ν^2/μ^2 n K^2).
-
-
-See <ref> for a full proof of <ref>.
-
-Assuming K ≳κ so that the learning rate becomes
-
-    η   = 9/μ n Kmax{ 1, log( μ^3 n D^2 K^2/L ν^2) }≤1/√(2)Ln,
-
-then we have [ F (_tail) - F^* ] = ( L ν^2/μ^2 n K^2) (see Cases (c), (d) in the proof). Then we can observe that the lower bound shown in <ref> exactly matches the upper bound, ignoring polylogarithmic terms.
-
-Note that the upper bound of rate Ω( L ν^2/μ^2 n K^2) for the tail average iterate _tail is tighter than Proposition <ref> by a factor of κ. Whether the same rate can also be achieved for the final iterate _n^K or not is still an open problem.
-
-
-
-
-
-
- §.§ Extension to Convex Objectives
- 
-
-One important implication of <Ref> is that we can carefully choose a small value of μ to derive a lower bound that exactly matches the upper bound for convex objectives. <ref> extends <ref> to the convex case. 
-newcorollarycorcvxcase
-    
-    For any n ≥ 2, there exists a 2-dimensional function F ∈ (L, 0, 0, ν) such that if
-    
-    K    ≥ c_3 max{L^2 D^2 n/ν^2, ν/L D n^1/2},
-
-    then for any constant step size η≤1/c_2 L n, any weighted average iterate  of  of the form as in (<ref>) satisfies
-    
-    [ F() - F^* ] = Ω( L^1/3ν^2/3 D^4/3/n^1/3 K^2/3),
-
-    for some universal constants c_2 and c_3.
-
-We defer the proof of <ref> to <ref>.
-
-A matching upper bound for  for the convex case under the step-size condition η =  (1/Ln) is introduced in Theorem 3 of <cit.>.
-[<cit.>, Theorem 3]
-    
-    Suppose that F and f_1, …, f_n are all L-smooth and f_1, …, f_n are convex. Then, for  with constant step size
-    
-    η = min{1/√(2) L n, ( D^2/L ν^2 n^2 K)^1/3},
-
-    the average iterate _avg := 1/K∑_k=1^K_n^k satisfies
-    
-    𝔼[ F(_avg) - F^* ]    = ( L D^2/√(2) K + L^1/3ν^2/3 D^4/3/n^1/3 K^2/3).
-
-
-In Proposition <ref>, if we have a large number of epochs with K ≥2 √(2) L^2 D^2 n/ν^2, then η = ( D^2/L ν^2 n^2 K)^1/3≤1/√(2) L n yields
-
-    𝔼[ F(_avg) - F^* ]    = ( L^1/3ν^2/3 D^4/3/n^1/3 K^2/3).
-
- For a large K regime of K = Ω( L^2 D^2 n/ν^2 + ν/L D n^1/2), we may choose α_k = 1 for all k = 2, …, K+1 and α_1 = 0 so that = _avg, and then observe that the lower bound in <ref> exactly matches the upper bound in Proposition <ref>. Note that the lower bound of K in (<ref>) reduces to Ω( L^2 D^2 n/ν^2) when n = Ω( ν^2/L^2 D^2), again matching the epoch requirement that arise in the upper bound.
-
-
-
-§ ARBITRARY PERMUTATION-BASED SGD
- 
-So far, we have considered the case where permutations are randomly shuffled for each epoch.
-In this section, we study the scenario when permutations can be chosen manually rather than randomly.
-We provide lower bounds that are applicable to any arbitrary permutation-based SGD.
-Our lower bounds match the previously established upper bound in terms of n and K, and can further match with respect to κ when the objective is ill-conditioned.
-
-
-
- §.§ Lower Bound with Component Convexity
- 
-<ref> establishes a lower bound on arbitrary weighted average (end-of-epoch) iterates applicable to any permutation-based SGD.
-theoremgrabLBa
-    
-    For any n ≥ 2 and κ≥ 4, there exists a 4-dimensional function F ∈(L,μ,0,ν) and an initialization point _0 such that for any permutation-based SGD with any constant step size η, any weighted average iterate  of the form as in <ref> satisfies
-    
-    F() - F^* = Ω( L ν^2/μ^2 n^2 K^2).
-
-
-The main technical difficulty in proving <ref> is that we must construct an objective that demonstrates a “slow” convergence rate for every permutation over K epochs.
-To achieve this, we construct an objective that pushes _n^k toward a constant direction, regardless of the permutation. 
-The constructed objective belongs to the class (L,μ,0,ν) and satisfies component convexity.
-Here we note that our proof technique does not require any assumptions about large epochs.
-The full proof of <ref> is written in <ref>.
-
-As mentioned in <ref>, applying α_k = 0 for 1 ≤ k ≤ K and α_K+1 = 1 yields the lower bound for the last iterate. 
-Our result significantly improves the previous lower bound and also matches the known upper bound of permutation-based SGD which will be discussed later in this section.
-
-
-
+In periodic crystals, the electronic structure is usually described using
+  one-particle Bloch wavefunctions.
+While choosing a basis set that is also periodic to describe these
+  wavefunctions can often be beneficial, an alternative approach is to adopt
+  localized orbitals in real space.
+One such choice of orbitals are Wannier functions (WFs), that can be obtained
+  by Fourier transforming the periodic wavefunctions from reciprocal to real
+  space.
+WFs are not unique, as they depend on the choice of the gauge (i.e., the choice
+  of the phases of the wavefunctions) at each point in the Brillouin zone (BZ).
+Maximally-localized Wannier functions (MLWFs) <cit.> are obtained by a gauge choice that is optimized to
+  provide the most localized set of WFs, i.e., those that minimize the sum of
+  their quadratic spread in real space <cit.>.
+Having a very localized representation of the electronic structure not only
+  provides an insightful analysis of chemical bonding in solids, but also brings
+  a formal connection between the MLWF centers and the modern theory of electric
+  polarization <cit.>.
+Moreover, the real-space locality of MLWF allows for accurate and fast
+  interpolation of physical operators <cit.>, enabling calculations of
+  material properties that require dense samplings of the BZ, such as Fermi
+  surface, orbital magnetization <cit.>, anomalous Hall conductivity
+  <cit.>, and spin Hall conductivity <cit.>, to name
+  a few.
+Practically, one obtains MLWFs starting from a set of Bloch wavefunctions,
+  calculated e.g., from density-functional theory (DFT).
+Often, these Bloch states are projected onto some localized orbitals (usually
+  chosen by the user) to generate initial guesses for MLWFs.
+In an insulator, by minimizing the spread functional <cit.> which
+  measures localization, one can obtain a set of MLWFs, i.e., “Wannierize” a
+  material.
+The Wannierization contains an additional disentanglement step <cit.>
+  if the target Bloch states are not isolated from other band manifolds.
+For such entangled bands—metals or the conduction bands of insulators—one
+  needs to first identify the relevant Bloch states that will be used to
+  construct MLWFs, and then mix or “disentangle” these from all the Bloch
+  states <cit.>.
+Practically, the choices for the initial projections and states to be
+  disentangled substantially influence the shape and the quality of the final
+  MLWFs.
+
+In recent years, a lot of effort has been devoted to obtaining high-quality
+  MLWFs and automate the Wannierization procedure.
+Focus of the research can be categorized into the following classes:
+  [label=(*)] 
+  * Novel minimization
+  algorithms, such as: the symmetry-adapted WF method that adds constraints to
+  impose the symmetries of the resulting WFs <cit.>; the simultaneous
+  diagonalization algorithm that directly minimizes the spread functional for an
+  isolated (or “Γ-only”) system <cit.>; the partly-occupied WF
+  method, where the total spread is directly minimized in one step
+  <cit.>, rather than performing a two-step
+  minimization for its gauge-invariant and gauge-dependent parts as in the
+  standard procedure <cit.>; or the variational formulation, that
+  combines single-step optimization with manifold optimization to make the
+  minimization algorithm more robust <cit.>; 
+  * new forms for the
+  spread functional, such as the selectively localized WFs (SLWFs) for which only
+  a subset of WFs of interest are localized and a penalty term is added to
+  constrain the position of the WF centers <cit.>, or the
+  spread-balanced WF method, that adds a penalty term to distribute the spread as
+  uniformly as possible among all WFs <cit.>; 
+  * targeting a
+  subset of orbitals, e.g. SLWF for a subset of MLWFs <cit.> or the
+  optimized projection functions method where starting projections for the
+  Wannierization are generated from a larger group of initial ones
+  <cit.>; 
+  * matrix manifold algorithms instead of projection
+  methods to construct a smooth gauge in a non-iterative way
+  <cit.>; 
+  * basis-vector decomposition of the density
+  matrix, e.g. the selected columns of the density matrix (SCDM) algorithm
+  <cit.>, that starts from the density matrix of the system
+  and uses QR decomposition with column pivoting (QRCP) to automatically generate
+  an optimal set of basis vectors from the columns of the density matrix.
+
+
+At the same time, high-throughput (HT) calculations have become increasingly
+  popular for materials discovery and design.
+Calculations and results managed by workflow engines are collected into
+  databases of original calculations, such as the Materials Project
+  <cit.>, AFLOW <cit.>, OQMD <cit.>, CMR
+  <cit.>, and the Materials Cloud <cit.>, or aggregated, as in
+  NOMAD <cit.>.
+Thanks to recent research advances on Wannierization algorithms, it starts now
+  to be possible to run HT Wannierizations for many materials and generate
+  tight-binding (TB) models that reliably describe their physics.
+So far, several attempts have been made in this direction.
+<cit.> gathered 195
+Wannier TB Hamiltonians and applied post-processing symmetrization to study
+  strained III-V semiconductor materials.
+<cit.> implemented the SCDM algorithm and designed a
+protocol to determine automatically the remaining free parameters of the
+algorithm; this protocol, implemented into automated workflows, was verified to
+work well for band interpolations on a set of 200 structures (metals, or
+valence and conduction bands of insulators) and 81 insulators (valence bands
+only). <cit.> accumulated a Wannier TB Hamiltonian database of
+1771 materials using the standard hydrogenic orbital projections.
+However, there are still several challenges for an accurate and automated HT
+  Wannierization, some of which might be more relevant depending on the research
+  goal and the specific property to compute: MLWFs should be able to faithfully
+  represent the original band structure, often (e.g., for transport properties)
+  at least for those bands close to the Fermi energy; MLWFs should resemble the
+  physically intuitive atomic orbitals for solids that would enter into Bloch
+  sums; the algorithm should be fully and reliably automated and the
+  implementation should be efficient for HT calculations.
+
+To overcome the challenges mentioned above, in this paper we present a new
+  methodology for automated Wannierization.
+First, we choose physically-inspired orbitals as initial projectors for MLWFs,
+  that is, the pseudo-atomic orbitals (PAOs) from pseudopotentials
+  <cit.>.
+Then, for each state |n 𝐤⟩ (n is the band index, 𝐤
+  is the Bloch quasi-momentum) we decide if it should be dropped, kept
+  identically, or thrown into the disentanglement algorithm depending on the
+  value of its projectability onto the chosen set of PAOs, replacing the standard
+  disentanglement and frozen manifolds based only on energy windows.
+This approach naturally and powerfully targets the TB picture of atomic
+  orbitals in crystals, as it will also become apparent from our results.
+Moreover, we fully automate this approach and implement it in the form of
+  open-source <cit.> workflows.
+To assess its effectiveness and precision, we compare the quality of the band
+  interpolation and the locality of the Wannier Hamiltonians generated with the
+  present approach, which we name as projectability-disentangled Wannier
+  functions (PDWFs), with the results from the SCDM algorithm <cit.>.
+Statistics from 200 materials demonstrate that PDWFs are more localized and
+  more atomic-like, and the band interpolation is accurate at the meV scale.
+Furthermore, to demonstrate the reliability and automation of our method and
+  workflows, we carry out a large-scale high-throughput Wannierization of
+  21737 materials from the Materials Cloud<cit.>.
+
+To set the context for the following paragraphs, here we briefly summarize the
+  notations for WFs; a detailed description can be found in
+  Refs. <cit.>.
+WFs | w_n 𝐑⟩ are unitary transformations of Bloch
+  wavefunctions |ψ_m𝐤⟩, given by
   
-Comparison with the Previous Work. 
-To the best of our knowledge, the best-known lower bound that holds for any arbitrary permutation-based SGD is proved by <cit.> prior to our work. 
-Specifically, the authors show that there exists a (2n+1)-dimension function F ∈2L, n-1/nL, 1, 1 that for any permutation-based SGD with any constant step size,
+    |w_n
+              𝐑⟩ = V/(2 π)^3∫_BZd𝐤e^-i𝐤·𝐑∑_m=1^J
+        or J_𝐤|ψ_m 𝐤⟩ U_m n
+            𝐤,
 
-    F(_n^K) - F^* = Ω1/L n^3 K^2.
-
-Thus, <ref> improves the lower bound rate by a factor of n and sharpens the dependency on κ.
-
-
-Before we state the matching upper bound, we define an additional assumption and a function class.
-[Herding bound]
-    
-    There exists an algorithm that has the following property: Given _1, …, _n∈^d satisfying _i≤ 1 for ∀ i ∈ [n] and ∑_i=1^n_i = 0, the algorithm outputs a permutation σ : [n] → [n] such that max_k ∈{1, …, n}∑_i=1^k _σ(i)≤ H.
-
-We call an algorithm considered in Assumption <ref> as the Herding algorithm, used as a subroutine in Algorithm <ref>.
-
-    
-    We define the function class _PŁ as follows.
-    
-    _PŁ (L, μ, τ, ν)    := { F: f_i  are L-smooth, 
-        := { F:  F  satisfies μ-PŁ condition, 
-        := { F:  F  and f_i  satisfy Assumption <ref>}.
-
-
-Note that _PŁ is a relaxation of  in Definition <ref>. Compared to , we relax μ-strong convexity to μ-PŁ, and we also do not assume convexity of component functions f_i.
-
-We now state the following proposition, provided in Theorem 1 of <cit.>, which gives the convergence rate of <ref> for objectives belonging to _PŁ (L, μ, 0, ν).
-[<cit.>, Theorem 1]newpropositiongrabUBa
-    
-    Suppose that F ∈_PŁ (L, μ, 0, ν). Under Assumption <ref>, with constant step size η as
-    
-    η = 2/μ n K W_0 F(_0^1)-F^*+ν^2/Lμ^3n^2K^2/192H^2L^2ν^2,
-
-    where W_0 denotes the Lambert W function,
-    <ref> converges at the rate
-    
-    F(_n^K) - F^* = H^2 L^2 ν^2/μ^3 n^2 K^2
-
-    for K ≳κ.
-
-Proposition <ref> is a slightly different version compared to the original paper <cit.>; the differences are discussed in <ref>.
-We emphasize that <ref> provides a lower bound ΩL ν^2/μ^2 n^2 K^2 for arbitrary permutation-based SGD and Proposition <ref> shows that there exists an algorithm that converges at the rate of H^2 L^2 ν^2/μ^3 n^2 K^2.
-Note that the function class considered in the lower bound is a subset of the function class handled in the upper bound.
-Thus, <ref> matches the upper bound up to a factor of κ, if we ignore the term H and some polylogarithmic terms.
-Therefore, we can conclude that <ref> is optimal in terms of the convergence rate with respect to n and K.
-We defer the discussion of herding constant H to <ref>.
-
-
-
-
- §.§ Lower Bound without Component Convexity
- 
-<ref> leads us to wonder if it is possible to tighten this κ gap. 
-Our next theorem drops the assumption of component convexity in the lower bound and shows that we can close the gap and perfectly match the upper bound, if the problem is sufficiently ill-conditioned and the number of epochs is large enough.
-theoremgrabLBb
-    
-    For any n ≥ 104, L and μ satisfying κ≥ 8n, and K ≥max{κ^2/n, κ^3/2n^1/2}, 
-    there exists a 4-dimensional function F ∈_PŁL, μ, L/μ, ν and an initialization point _0 such that for any permutation-based SGD with any constant step size η, any weighted average iterate  of the form as in <ref> satisfies
-    
-    F() - F^* = Ω( L^2 ν^2/μ^3 n^2 K^2).
-
-
-The proof is in <ref>.
-<ref> provides a sharper lower bound than the previous result with respect to κ.
-In our construction, some of the components f_i are nonconvex but the constructed objective F is actually strongly convex; however, for simplicity of exposition, we stated F as a member of a larger class _PŁ.
-Here we discuss the effect of nonconvex components on the convergence rate.
-
-
-
+  where 𝐤 and 𝐑 are the Bloch
+  quasi-momentum in the BZ and a real-space lattice vector, respectively; m is
+  the band index, and n is the Wannier-function index (running from 1 to the
+  number of WFs J).
+For an isolated group of bands, J is equal to the number of bands, and the
+  U_m n 𝐤 are unitary matrices; for entangled bands, the number of
+  bands considered at each k-point is J_𝐤≥ J, and the U_m n
+        𝐤 are semi-unitary rectangular matrices.
+MLWFs are the minimizers of the quadratic spread functional <cit.>
   
-Nonconvex components.
-Some of our component functions constructed in <ref> are concave in particular directions, and this is the key to obtaining an additional κ factor.
-<cit.> also observe that the presence of nonconvex components can slow down convergence.
-They prove that for a 1-dimensional objective F(x) = 1/n∑_i=1^n a_i/2x^2 - b_ix, where all a_i's are nonnegative, there exists a permutation that leads to exponential convergence, but also that this no longer holds if a_i's are allowed to be negative.
-It is an open problem whether the convergence rate of <ref> could be improved to match the lower bound in <ref> with respect to κ if we additionally assume component convexity.
+    Ω=∑_n=1^J[⟨ w_n
+            0|𝐫^2| w_n 0|-⟩|⟨ w_n
+            0|𝐫| w_n 0|⟩|^2].
 
-<ref> provides a sharper lower bound compared to <ref> with respect to κ.
-One should be aware, however, that the function classes considered in the upper bound (Proposition <ref>) and the construction in <ref> mismatch.
-Therefore, Proposition <ref> does not guarantee the H^2 L^2 ν^2/μ^3 n^2 K^2 convergence rate for the function constructed in <ref>.
-However, we argue that this issue can be addressed by extending Proposition <ref> to a wider function class, which is done in prop:grabUBb.
+Since <ref> is a minimization problem with multiple local
+  minima, initial guesses for U_m n 𝐤 substantially influence the
+  optimization path and the final minimum obtained.
+In order to target the most localized and chemically appealing solution,
+  <cit.> used hydrogenic wavefunctions |g_n⟩ (i.e., analytic
+  solutions of the isolated hydrogenic Schrödinger equation) to provide a set
+  of sensible initial guesses |ϕ_n 𝐤⟩, after projection on
+  the space defined by the relevant Bloch states: 
+    |ϕ_n 𝐤⟩ = ∑_m=1^J
+      or J_𝐤|ψ_m 𝐤⟩⟨ψ_m
+          𝐤 | g_n|.⟩
 
-[Extended version of <cit.>, Theorem 1]newpropositiongrabUBb
-    
-    Suppose that F ∈_PŁ (L, μ, τ, ν) and n ≥ H. Under Assumption <ref>, with constant step size η as
-    
-    η = 2/μ n K W_0 F(_0^1)-F^*+ν^2/Lμ^3n^2K^2/192H^2L^2ν^2,
-
-    where W_0 denotes the Lambert W function, <ref> converges at the rate
-    
-    F(_n^K) - F^* = H^2 L^2 ν^2/μ^3 n^2 K^2
-
-    for K ≳κ (τ + 1).
-
-The proof of Proposition <ref> is in <ref>.
-We show that the function class considered in Proposition <ref> can be extended to  _PŁ (L, μ, τ, ν) by following the proof step in Theorem 1 in <cit.> with slight modifications.
-The function class of the upper bound (Proposition <ref>) now includes the construction of the lower bound (<ref>).
-Therefore, when the objective is sufficiently ill-conditioned and a sufficiently many epochs are performed, our lower bound perfectly aligns with the upper bound in all factors, assuring that  is indeed the optimal permutation-based SGD algorithm.
-
-
-
-
-
- §.§ Discussion of Existing Results
- 
-In this section, we take a deeper look at previous researches that address permutation-based SGD.
-We mainly discuss the dimension dependency hidden in the upper bounds.
+The projection matrices A_mn𝐤 = ⟨ψ_m 𝐤 |
+      g_n|$⟩, after Löwdin orthonormalization <cit.>, form the
+  initial guesses forU_m n 𝐤.
+We underline that while the gauge of Bloch wavefunctions|ψ_m
+        𝐤⟩is arbitrary (i.e.,|ψ_m 𝐤 ⟩ U_m n
+        𝐤are also solutions of the electronic structure problem),
+  <ref> is invariant to such gauge freedom since|ψ_m
+        𝐤⟩ ⟨ψ_m 𝐤 | g_n |=⟩ ∑_i |ψ_m
+        𝐤⟩ U_mi𝐤 U_im𝐤^†⟨ψ_m
+        𝐤 | g_n |$⟩ where U_𝐤 are arbitrary unitary matrices.
+For entangled bands, the “standard” disentanglement approach <cit.>
+  uses energy windows to choose the disentanglement and frozen manifolds: an
+  (outer) disentanglement window that specifies a larger space of Bloch states
+  that one could mix to obtain a smaller disentangled manifold to localize,
+  together with a manifold defined by an (inner) frozen window that is taken as
+  is.
 
 
 
+§ RESULTS AND DISCUSSIONS
+
+
+
+ §.§ Pseudo-atomic-orbital projections
+
+In addition to the hydrogenic orbitals discussed above, alternative starting
+  guesses for the Wannierization can be used.
+For instance, in pseudopotential plane-wave methods, PAOs are localized
+  orbitals originating from the pseudopotential generation procedure
+  <cit.>.
+In this procedure, for each element, atomic wavefunctions of an isolated atom
+  are pseudized to remove the radial nodes and are localized functions around the
+  atom; spherical harmonics with well-defined angular-momentum character (s,
+  p, d, or f) are chosen for their angular dependency.
+PAOs are commonly used for analyzing the orbital contributions to band
+  structures, as the basis set for non-iterative construction of TB Hamiltonians
+  <cit.>, or as projectors in DFT+Hubbard calculations
+  <cit.>.
+
+In order to understand the contribution of each orbital | g_n⟩ to a
+  Bloch state |ψ_m 𝐤⟩, we define a measure of
+  projectability as the square of the inner product between |ψ_m
+        𝐤⟩ and | g_n⟩:
   
-Herding Bound.
-<cit.> prove that there exists an efficient Herding algorithm that achieves Assumption <ref> with H = √(d log n).
-Also, it is well known that H = Ω (√(d)) <cit.>. 
-Thus, both Proposition <ref> and Proposition <ref> contain a dimension term in their convergence rates.
-Meanwhile, our lower bound results are based on fixed dimensional functions, so we can ignore the term H when we compare our lower bound results to the upper bound results.
-We also note that the assumption n ≥ H made in Proposition <ref> is quite mild if the dimension of F is independent of n.
+    p_nm𝐤 = | ⟨ g_n | ψ_m 𝐤|⟩|^2;
+
+  the projectability of |ψ_m 𝐤⟩ onto all
+  PAOs is then defined as 
+    p_m𝐤 = ∑_n p_nm𝐤.
+
+If the projectors | g_n⟩ are complete for |ψ_m 𝐤⟩, then p_m𝐤 = 1.
+The band projectability is a very useful criterion to identify the orbital
+  character of the bands; this is exemplified in <ref>,
+  where we show the projectability of the bands of graphene onto 2s and 2p
+  PAOs for carbon.
+It is immediately apparent how one can easily identify states in the conduction
+  manifold that have a strong 2p and 2s component.
 
 
 
+Compared with the hydrogenic projections, which is the method used by default
+  in <cit.> and its interface code to <cit.>
+  (called ), PAOs are better adapted to each element since they come exactly
+  from the pseudopotential used in the actual solid-state calculation.
+Moreover, in pseudopotentials with semicore states, the PAOs for semicores are
+  nodeless and those for valence wavefunctions have at least one radial node (so
+  as to be orthogonal to the semicore states with same angular momentum); thus
+  band projectability can clearly differentiate semicore from valence, making
+  PAOs more convenient than the hydrogenic orbitals, for which the user would
+  need to manually set the correct radial functions for both semicore and valence
+  projectors.
+For these reasons, we use in this work the PAOs as initial and more accurate
+  projections.
+If needed, higher energy orbitals not included in the pseudopotential file can
+  be constructed, for example, using solutions of Schrödinger equation under
+  confinement potential <cit.> (see also discussion in
+  <ref>).
+
+
+
+ §.§ Projectability disentanglement
+
+As mentioned, the standard disentanglement approach selects the disentanglement
+  and frozen manifolds via two energy windows <cit.>.
+We refer to this as energy disentanglement (ED).
+However, since bands have dispersions across the BZ, a fixed window for all
+  k-points might not be an optimal choice.
+Taking the graphene band structure (<ref>) as an
+  example, the bands which have large projectability are mixed with many
+  free-electron bands (grey in the figure), which have zero projectability.
+In this case, one is faced with several options for the outer and inner energy
+  windows, each with different shortcomings:
+  [label=(*)] 
+  * If the inner window
+  includes free-electron bands, the final MLWFs are mixtures of 2s, 2p atomic
+  orbitals and free-electron bands, delocalizing the resulting MLWFs; 
+  * if
+  the outer window excludes both the free-electron bands and the atomic-orbital
+  states inside free-electron bands, the WFs lack the anti-bonding part of the
+  bonding/anti-bonding closure <cit.>, again degrading the
+  localization of WF; 
+  * if the upper bound of the inner window is set to its
+  maximal allowed value, i.e. the blue dashed line positioned at the minimum of
+  free-electron bands in <ref>, and all the DFT eigenstates
+  are included in the outer window, the disentanglement algorithm
+  <cit.> will extract an optimally smooth manifold, at the expense of
+  decreasing the chemical representability of the atomic-orbital bands in the
+  free-electron region; in other words, the MLWFs obtained lose the information
+  of the TB atomic orbitals in this chemical environment (see
+  <ref>).
+
+
+The graphene case highlights the limitations of the standard ED.
+Instead, we propose here to select the disentanglement and frozen manifolds
+  based on the projectability p_m𝐤 of each state on the chosen PAOs
+  (i.e., states are selected irrespective of their energy, but rather based on
+  their chemical representativeness).
+Specifically, we select states based on two thresholds and :
+  [label=(*)] 
+  * If p_m𝐤 <
+  , the state ψ_m𝐤 is discarded.
+
+  * If p_m𝐤≥ , the state ψ_m𝐤 is kept
+  identically.
+
+Crucially, all states for which ≤ p_m𝐤 < are thrown
+  in the disentanglement algorithm.
+Optimal numerical values for and are discussed later.
+In the case of graphene, identifies the fully atomic-orbital states
+  inside the free-electron bands, while removes the fully free-electron
+  bands from the disentanglement process, preventing the mixing of atomic and
+  free-electron states.
+The two thresholds and constitute the parameters of the
+  disentanglement process, replacing the four defining energy windows (the lower
+  and upper bounds of the outer and inner energy windows).
+
+Ideally, if PAOs were always a complete set to describe valence and
+  near-Fermi-energy conduction bands, the PD would select the most relevant Bloch
+  states and accurately interpolate these DFT bands.
+However, since the PAOs are fixed orbitals from isolated single-atom
+  calculations for each element, if the chemical environment in the crystal
+  structure is significantly different from that of pseudopotential generation,
+  then the total projectability p_m𝐤 might be smaller than 1 for
+  bands around the conduction band minimum (CBM) or even for valence bands.
+In such cases, one solution is to increase the number of PAOs, i.e., adding
+  more projectors with higher angular momentum, as we will discuss in
+  <ref>.
+However, since one almost always wants to correctly reproduce valence bands
+  (plus possibly the bottom of the conduction) but at the same time keep the
+  Wannier Hamiltonian small for computational reasons, we suggest to additionally
+  freeze all the states that sit below the Fermi energy in metals (or below the
+  CBM for insulators) and also those a few eV above (typically, 2eV
+  or so).
+Such a combination of PD+ED gives accurate interpolation of bands below and
+  around the Fermi energy (or band edges for insulators), as well as maximally
+  restoring the atomic-orbital picture.
+
+We stress here that, even if we call the resulting Wannier functions PDWFs for
+  clarity, our optimal suggestion is to always also freeze the states in the
+  energy window mentioned above, as we discuss in the next sections.
+
+
+
+ §.§ Comparison
+
+We choose four prototypical materials to discuss the present method: graphene,
+  silicon, copper, and strontium vanadate ().
+Graphene is a difficult case where atomic-orbital states highly mix with
+  free-electron bands; silicon tests the Wannierization of both valence and
+  conduction bands of an insulator; copper is a test on a metal; and represents the class of (metallic) perovskites.
+We compare the shapes, centers, and spreads of the resulting MLWFs using the
+  five methods mentioned earlier: hydrogenic projection with ED (i.e., the
+  standard approach), SCDM, PAO projection with ED, PAO projection with PD, and
+  PAO projection with PD+ED.
+
+
+
+  §.§.§ Graphene
+
+The original and interpolated band structures for the five methods discussed
+  are shown in
+  <ref>.
+The blue dashed lines in
+  <ref> indicate
+  the top of the inner energy window, which is set optimally (and manually) to
+  just below the free-electron bands, to freeze as much as possible the
+  atomic-orbital states but exclude any free-electron state.
+For PD and PD+ED, we choose = 0.85 and = 0.02 (we will discuss
+  later on the choice of these thresholds).
+Comparing <ref> and <ref>, one sees
+  that ED produces similar bands irrespective of using hydrogenic or PAO
+  projection.
+However, as shown in <ref> (first and third row), the
+  MLWFs for the two cases fall into slightly different minima: MLWFs from
+  hydrogenic projection with ED are p_z and hybridized s ± p orbitals
+  pointing towards the center of the hexagon, while MLWFs from PAO with ED are
+  p_z, p_x, and s ± p_y.
+Both the PAO with PD and PAO with PD+ED cases reach the same set of MLWFs,
+  p_z, p_x, and s ± p_y, but with larger spreads than the PAO with ED,
+  since the PD and PD+ED freeze more states, giving thus less freedom for maximal
+  localization.
+Nevertheless, the interpolated bands of the PAO with PD and PAO with PD+ED
+  cases can much better reproduce the atomic-orbital states inside the
+  free-electron bands.
+Finally, compared to other cases, SCDM includes some free-electron bands, some
+  of which can be even reproduced by the Wannier interpolation.
+However, in order to follow those free-electron bands, abrupt changes of
+  character and band derivative are needed in the conduction band.
+As required by Nyquist–Shannon sampling theorem<cit.>, this
+  results in a denser 𝐤-space sampling needed to obtain a good
+  interpolation quality.
+Moreover, the MLWFs are much more delocalized and do not resemble atomic
+  orbitals: as shown in <ref>, the last two MLWFs for SCDM
+  are floating away from the graphene 2D lattice, blurring the TB picture of
+  atomic orbitals in solids.
+
+
+
+
+
+  §.§.§ Silicon
+
+The SCDM method obtains four front-bonding and four back-bonding MLWFs, while
+  all other cases lead to atom-centered s and p MLWFs, as shown in
+  <ref>.
+While overall the SCDM bands (<ref>) seem to reproduce
+  relatively better the higher conduction bands, they fail to correctly reproduce
+  the bottom of the conduction band near the X point, induce more wiggles around
+  X and W, and have much larger spreads.
+Due to the low projectability of Bloch states around X (p_m𝐤
+  around 0.83), the CBM is not correctly reproduced in the PAO with PD, as these
+  are not frozen in PD with the current choice of = 0.95 and = 0.01.
+To explicitly freeze the CBM, would need to be lowered below 0.83.
+However, such kind of decrease will also result in freezing some high-energy
+  conduction bands, degrading the localization.
+PD+ED overcomes this by explicitly freezing the near-Fermi-energy and
+  low-projectability states at the CBM, but still only freezing those
+  atomic-orbital states in the high-energy conduction bands that possess high
+  projectability (see <ref>), thus improving band
+  interpolation.
+We note that adding d PAOs increases the CBM projectability (from 0.83 to
+  0.99) and restores a high-quality band-structure interpolation within the PD
+  method: as shown in <ref>, the low-energy conduction
+  bands are correctly reproduced once we regenerate a silicon pseudopotential
+  including 3d PAOs.
+Therefore, PD is sufficient to obtain an accurate band interpolation if enough
+  PAOs are included (we will also discuss this later in <ref>).
+For completeness, we show the SCDM interpolation using the regenerated
+  pseudopotential in <ref>: the added d PAOs help select a
+  larger manifold thanks to the increased projectability, enabling SCDM to
+  reproduce higher conduction bands, as well as fixing the wrong interpolation at
+  the W point.
+In general, adding more PAOs improves interpolation quality in cases where the
+  target bands have low projectability, at the price of increased computational
+  cost.
+PD+ED is a better option for reaching a good interpolation accuracy while
+  keeping the size of the corresponding TB model small.
+
+
+
+
+  §.§.§ Copper and 
+
+Results for copper and are only shown in the SI
+  (<ref>),
+  since the conclusions are the same: PD+ED consistently provides the best
+  interpolation quality among all methods we consider, while not requiring to
+  increase the size of the Hamiltonian model, and results in WFs that resemble
+  atomic orbitals or their hybridization.
+
+
+
+ §.§ High-throughput verification
+
+In this section we discuss the applicability of the present PDWF method to
+  obtain, in a fully automated way and without user input, WFs for any material.
+In order to assess quantitatively its performance, we compare it to SCDM, that
+  can also be fully automated (see Ref. <cit.>).
+
+In all results that follow, we exclude semicore orbitals in both methods, since
+  these low-energy states correspond to almost flat bands and do not play any
+  role in the chemistry of the materials.
+We compare quantitatively the band interpolation quality between the two
+  methods and the corresponding WF centers and spreads on the 200-structure set
+  used in Ref. <cit.> for both occupied and unoccupied bands,
+  totalling 6818 MLWFs for each method.
+In accordance with Refs. <cit.>, the band interpolation
+  quality is measured by the average band distance,
   
-Comparison between Proposition <ref> and <cit.>, Theorem 1.
-In the original statement of Theorem 1 in <cit.>, the authors use slightly different assumptions. 
-Instead of smoothness with respect to the L_2 norm, they assume L_2, ∞-smoothness as follows:
+    η_ν = √(∑_n𝐤f̃_n𝐤 (ϵ_n𝐤^DFT -
+        ϵ_n𝐤^Wan)^2 /∑_n𝐤f̃_n𝐤),
 
-    ∇ f_i () - ∇ f_i ()_2 ≤ L_2, ∞ - _∞,  ∀, ∈^d.
-
-<cit.> also define the herding bound H with respect to different choices of norms. Specifically, the authors consider max_k ∈{1, …, n}∑_i=1^k _σ(i)_∞≤ H_∞ with max_i_i_2 ≤ 1, and explain that combining the results from <cit.> and <cit.> gives H_∞ = 1. With these assumptions, the authors obtain the convergence rate of <ref> as the following:
-
-    F(_n^K) - F^* = H_∞^2 L^2_2, ∞ν^2/μ^3 n^2 K^2.
-
-However, we believe that <ref> is not also free from dimension dependency, since the term L_2, ∞ is likely to contain the dimension dependency in general (e.g., L_2, ∞ = √(d)L holds when F() = L/2^2 for ∀∈^d).
-It is an open problem whether there exists a permutation-based SGD algorithm that gives a dimension-free upper bound while maintaining the same dependency on other factors.
-
-
-
-
-
+  and the max band distance,
   
-Revisiting <cit.>. We have discussed that the best-known upper bound of permutation-based SGD has dimension dependency.
-Earlier, we mentioned that our lower bound in <ref> improves upon previous results from Theorem 2 of <cit.> by a factor of n.
-
-In fact, the construction of <cit.> is based on a (2n+1)-dimensional function, and applying the upper bounds for <ref> to this function results in a convergence rate of 1/n K^2, due to the dimension dependency.
-More precisely, for the function constructed in <cit.>, H is proportional to √(n) and L is constant according to our L_2-norm-based notations, while we also have that H_∞ is constant and L_2, ∞ is proportional to √(n) following the notations in <cit.>.
-Thus, in terms of n dependency, we conclude that the actual gap between existing upper and lower bounds is n^2 rather than n, and that our results succeed in closing the gap completely.
-
-
-
-§ CONCLUSION
- 
-
-We have shown convergence lower bounds for without-replacement SGD methods, focusing on matching the upper and lower bound in terms of the condition number κ. Our lower bounds for  on weighted average iterates tightly match the corresponding upper bounds under both strong convexity and convexity assumptions. We also constructed lower bounds for permutation-based SGD with and without individual convexity assumptions, which tightly match the upper bounds for  in fixed-dimension settings, therefore implying that  achieves the optimal rate of convergence.
-
-An immediate direction for future work is to investigate whether one can find lower bounds for arbitrary weighted average iterates of  when η = Ω( 1/Ln). In the discussion following <ref> (<ref>), we outlined difficulties that arise in proving such a result for larger learning rates η = Ω( 1/Ln).
-
-
-We finally note that the power of general permutation-based SGD is not yet well-understood for the regime when the number of epochs is less than the condition number.
-<cit.> show that  does not enjoy faster convergence than with-replacement SGD in this regime, and it is still unclear whether the same restriction holds for permutation-based SGD as well.
-
-
-
-  §.§.§ Acknowledgments
-
-This work was supported by Institute of Information & communications Technology Planning & evaluation (IITP) grant (No. 2019-0-00075, Artificial Intelligence Graduate School Program (KAIST)) funded by the Korea government (MSIT).
-The work was also supported by the National Research Foundation of Korea (NRF) grant (No. NRF-2019R1A5A1028324) funded by the Korea government (MSIT). CY acknowledges support from a grant funded by Samsung Electronics Co., Ltd.
-
-
-abbrvnat
-
-
-
-
-
-
-
-
-§ TEMP
- 
-
-Here we prove <ref>, restated below for the sake of readability.
-
-* 
-
-
-    We prove the theorem statement for constants c_1 = 2415 and c_2 = 161.
-
-    As the convergence behavior of SGD heavily depends on the step size η, we consider three step-size regimes and use different objective functions with slow convergence rates in each case. Then we aggregate the three functions to obtain the final lower bound, which will be the minimum among the lower bounds from each regime. Throughout the proof, we will assume n is even. If n is odd, then we can use a similar technique with Theorem 1 of <cit.>, which is to set n-1 nontrivial components satisfying the statement, add a single zero component function, and scale by n-1/n.
-
-    To elaborate, we prove the following lower bounds for each regime. Here F_j^* is the minimizer of F_j for each j = 1, 2, 3. Note that the union of the three ranges completely covers the set of all positive learning rates, η > 0.
-    
-        
-  * If η∈( 0, 1/μ n K), there exists a 1-dimensional objective function F_1 (x) ∈ (L, μ, 0, ν) such that  with initialization x_0^1 = D satisfies
-        
-    𝔼[ F_1 (x_n^K) - F_1^* ]    = Ω( μ D^2 ).
-
-        
-  * If η∈[ 1/μ n K, 1/161 L n], there exists a 1-dimensional objective function F_2 (x) ∈ (L, μ, 0, ν) such that  with initialization x_0^1 = ην n^1/2/27000 satisfies
-        
-    𝔼[ F_2 (x_n^K) - F_2^* ] = Ω( L ν^2/μ^2 n K^2).
-
-        
-  * If η≥max{1/μ n K, 1/161 L n}, there exists a 1-dimensional objective function F_3 (x) ∈ (L, μ, 0, ν) such that  with initialization x_0^1 = 0 satisfies
-        
-    𝔼[ F_3 (x_n^K) - F_3^* ]    = Ω( ν^2/μ n K).
-
-    
-
-    Now we define the 3-dimensional function F(x, y, z) = F_1(x) + F_2(y) + F_3(z), where F_1, F_2, and F_3 are chosen to satisfy the above lower bounds for ν replaced by ν/√(3). Note that scaling ν does not change the convergence rates above. Similarly, we denote the components by f_i(x, y, z) = f_1, i (x) + f_2, i (y) + f_3, i (z) for i = 1, …, n.
-    
-    If H_1, H_2, and H_3 are L-smooth and/or μ-strongly convex, then H(x, y, z) = H_1(x) + H_2(y) + H_3(z) satisfies
-    
-    μ≼min{∇^2 H_1(x), ∇^2 H_2(y), ∇^2 H_3(z) }≼∇^2 H(x, y, z) ≼max{∇^2 H_1(x), ∇^2 H_2(y), ∇^2 H_3(z) }≼ L ,
-
-    i.e., H() must be L-smooth and/or μ-strongly convex.
-    
-    Also, if H_1, H_2, and H_3 (each with n components h_1, i, h_2, i, and h_3, i) have bounded gradients (Assumption <ref>) for τ = 0 and ν = ν_0/√(3), then H(x, y, z) = H_1(x) + H_2(y) + H_3(z) satisfies
-    
-    ∇ h_i (x, y, z) - ∇ H(x, y, z) ^2 
-    
-            =     ∇ h_1, i (x) - ∇ H_1(x) ^2 + ∇ h_2, i (y) - ∇ H_2(y) ^2 + ∇ h_3, i (z) - ∇ H_3(z) ^2 
-    
-            =     ≤ν_0^2
-
-    for all i = 1, …, n, i.e., H(x, y, z) satisfies Assumption <ref> for τ = 0 and ν = ν_0.
-    
-    Since F_1, F_2, F_3 ∈ (L, μ, 0, ν/√(3)) by construction, we have F ∈ (L, μ, 0, ν) from the above arguments.
-
-    Now suppose that we set D = ν/μ and initialize at the point ( ν/μ, ην n^1/2/27000, 0 ).
-
-    If K ≥ 161 κ, then since 1/μ n K≤1/161 L n we can use the lower bound for F_2(y). The lower bound for this case becomes
-    
-    [ F (x_n^K, y_n^K, z_n^K) ]    = Ω( min{ν^2/μ, L ν^2/μ^2 n K^2, ν^2/μ n K}) = Ω( L ν^2/μ^2 n K^2).
-
-    If K < 161 κ, then we cannot use the lower bound for F_2(y). Hence the lower bound for this case becomes
-    
-    [ F (x_n^K, y_n^K, z_n^K) ]    = Ω( min{ν^2/μ, ν^2/μ n K}) = Ω( ν^2/μ n K),
-
-    which completes the proof.
-
-
-For the following subsections, we prove the lower bounds for F_1, F_2, and F_3 at the corresponding step size regimes. The proofs are similar to those of <cit.>, corresponding to the case M = B = 1 with slight modifications.
-
-
-
- §.§ temp
- 
-
-Here we show that there exists F_1 (x) ∈ (L, μ, 0, ν) such that  with x_0 = D satisfies
-
-    𝔼[ F_1 (x_n^K) - F_1^* ]    = Ω( μ D^2 ).
-
-
-
-    We define F_1 (x) ∈ (μ, μ, 0, 0) by the following components.
-    
-    f_i (x)    = F_1(x) = μ x^2/2
-
-    Note that (μ, μ, 0, 0) ⊆ (L, μ, 0, ν) and F_1^* = 0 at x^* = 0 by definition. Also note that the components have no stochasticity, and hence we can drop the expectation notation, [·]. We can easily compute per-epoch updates as:
-    
-    x_0^k+1   = (1 - ημ)^n x_0^k,   ∀ k = 1, …, K.
-
-    Since x_0^1= x_0 = D and η≤1/μ n K, for any k = 1, …, K we have
-    
-    x_0^k+1 = (1 - ημ)^nk· D
-            ≥( 1 - 1/nK)^nK· D ≥D/4,
-
-    where the last inequality used ( 1 - 1/m)^m ≥1/4 for all m ≥ 2.
-    Hence, for the final iterate we have x_n^K ≥D/4 and therefore
-    
-    F_1 (x_n^K)    ≥μ/2( D/4)^2 = μ D^2/32,
-
-    which concludes that 𝔼[ F_1 (x_n^K) ] = F_1 (x_n^K) = Ω( μ D^2 ).
-
-
-
-
- §.§ temp
- 
-
-Here we show that there exists F_2 (x) ∈ (L, μ, 0, ν) such that  with x_0^1 = ην n^1/2/27000 satisfies
-
-    𝔼[ F_2 (x_n^K) - F_2^* ] = Ω( L ν^2/μ^2 n K^2).
-
-    
-
-    For notational simplicity, we define _n as the set of all possible permutations of n/2 +1's and n/2 -1's, where n is a positive, even integer. We denote the set of randomly shuffled signs used in the k-th epoch by s^k = {s_i^k}_i=1^n∈_n.
-
-    Let us define the function g_+1, g_-1 as follows.
-    
-    g_+1 (x)    = ( L 1_x < 0 + μ_0 1_x ≥ 0) x^2/2 + ν x, 
-    
-            g_-1 (x)    = ( L 1_x < 0 + μ_0 1_x ≥ 0) x^2/2 - ν x
-
-    We define F_2 (x) ∈ (L, μ, 0, ν) by the following components:
-    
-    f_+1 (x)    = g_s_i^k (x) = ( L 1_x < 0 + μ_0 1_x ≥ 0) x^2/2 + ν s_i^k x
-
-    for some μ_0 > 0, such that the finite-sum objective becomes
-    
-    F_2 (x)    = 1/n∑_i=1^n f_i(x) = ( L 1_x < 0 + μ_0 1_x ≥ 0) x^2/2.
-
-    Note that F_2^* = 0 at x^* = 0 by definition, and μ_0 is different from μ. (In fact, we set μ_0 = L/2415≥μ later in the proof, and ensure that the above definition indeed satisfies F_2 ∈(L, μ, 0, ν) because of the condition κ≥ 2415.)
-
-    First we focus on a single epoch, and hence we write x_i instead of x_i^k, omitting the superscripts k for a while.
-    
-    We use the following three lemmas.
-    newlemmalemone
-        
-        For (fixed) x_0 ≥ 0, 0 ≤ i ≤⌊n/2⌋, η≤1/161 L n, and L/μ_0≥ 2415,
-        
-    [ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ]    ≤2/3 Lx_0 - η L ν/480√(i).
-
-    
-    newlemmalemtwo
-        
-        For (fixed) x_0 ≥ 0, 0 ≤ i ≤ n-1, and η≤1/161 L n,
-        
-    [ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ]    ≤( 1 + 161/160 i η L ) μ_0 x_0 + 161/160ημ_0 ν√(i).
-
-    
-    newlemmalemthree
-        
-        If η≤1/161 L n, we have the followings.
-        
-            
-  * For (fixed) x_0 < 0, we have
-            
-    𝔼[ x_n ]    ≥( 1 - 160/161η L n ) x_0.
-
-            
-  * If we initialize at x_0^1≥ 0, then we always have ℙ (x_n^k≥ 0) ≥1/2 for future start-of-epoch iterates.
-        
-    
-    See Subsections <ref>, <ref>, and <ref> for the proofs of Lemmas <ref>, <ref>, and <ref>, respectively.
-    
-    If an epoch starts at (a fixed value) x_0 ≥ 0, then from Lemmas <ref> and <ref> we have
-    
-    [ x_n - x_0 ]    = - η∑_i=0^n-1𝔼[ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ] 
-       = - η∑_i = 0^⌊n/2⌋𝔼[ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ] - η∑_i = ⌊n/2⌋ + 1^n-1𝔼[ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ] 
-       ≥ - η∑_i = 0^⌊n/2⌋( 2/3 Lx_0 - η L ν/480√(i)) - η∑_i = ⌊n/2⌋ + 1^n-1( ( 1 + 161/160 i η L ) μ_0 x_0 + 161/160ημ_0 ν√(i)) 
-       = - η( ∑_i = 0^⌊n/2⌋2/3 L + ∑_i = ⌊n/2⌋ + 1^n-1( 1 + 161/160 i η L ) μ_0 ) x_0 - η( - ∑_i = 0^⌊n/2⌋η L ν/480√(i) + ∑_i = ⌊n/2⌋ + 1^n-1161/160ημ_0 ν√(i)).
-
-    Now we can bound the coefficient of the x_0 term by the following inequality:
-    
-    ∑_i = 0^⌊n/2⌋2/3 L + ∑_i = ⌊n/2⌋ + 1^n-1( 1 + 161/160 i η L ) μ_0    ≤( ⌊n/2⌋ + 1 ) 2/3 L + ( n - ⌊n/2⌋ - 1 ) L/2415( 1 + 1/160) 
-       ≤2/3 Ln + Ln/2400≤3/4 L n,
-
-    where we use i η L ≤η L n ≤1/161. Also, the constant term can be bounded as:
-    
-    - ∑_i = 0^⌊n/2⌋η L ν/480√(i) + ∑_i = ⌊n/2⌋ + 1^n-1161/160ημ_0 ν√(i)   ≤ - η L ν/480∫_0^⌊n/2⌋√(t) dt + 161/160ημ_0 ν∫_⌊n/2⌋ + 1^n√(t) dt 
-       ≤ - η L ν/480·2/3 ( ⌊n/2⌋ )^3/2 + 161/160ημ_0 ν·2/3( n^3/2 -  ( n/2 )^3/2) 
-       ≤ - η L ν/480·2/3 ( n/3 )^3/2 + 161/160ημ_0 ν·2/3·2√(2)-1/2√(2) n^3/2
-       ≤ - η L ν/480·2/9 √(3) n^3/2 + 161/160ημ_0 ν·1/2 n^3/2
-       ≤ - η L ν n^3/2( 2/480 · 9 √(3) - 161/160 · 2 · 2415) ≤ - η L ν n^3/2/18000,
-
-    where ⌊n/2⌋≥n/3 (for n ≥ 2) and 2/480 · 9 √(3) - 161/160 · 2 · 2415 > 1/18000. Hence we can conclude that
-    
-    [ x_n - x_0 ]    ≥ - η( 3/4 L n x_0 - η L ν n^3/2/18000)
-
-    and therefore
-    
-    [ x_n ]    ≥( 1 - 3/4η L n ) x_0 + η^2 L ν n^3/2/18000.
-
-    If an epoch starts at (a fixed value) x_0 < 0, then from Lemma <ref> we have
-    
-    [ x_n ]    ≥( 1 - 160/161η L n ) x_0 ≥( 1 - 3/4η L n ) x_0.
-
-    From the second statement of Lemma <ref>, we can observe that for all epochs we have ℙ (x^k_0) ≥1/2 because we initialize at a positive point x_0^1 ≥ην n^1/2/27000. Therefore, taking expectations over x_0, we can conclude that each epoch must satisfy
-    
-    [ x_n ] 
-               = ℙ(x_0 ≥ 0) [x_n | x_0 ≥ 0] + ℙ(x_0 < 0) [x_n | x_0 < 0]
-       ≥ℙ(x_0 ≥ 0)  (( 1 - 3/4η L n ) [x_0 | x_0 ≥ 0] + η^2 L ν n^3/2/18000 ) + ℙ(x_0 < 0)  ( ( 1 - 3/4η L n ) [x_0 | x_0 < 0] )
-       ≥( 1 - 3/4η L n ) [x_0] + η^2 L ν n^3/2/36000.
-
-    Since the above holds for all μ_0 ≤L/2415, we may choose μ_0 = L/2415, i.e., our function F_2 can be chosen as
-    
-    F_2 (x)    = ( L 1_x < 0 + L/24151_x ≥ 0) x^2/2.
-
-    Note that since κ≥ 2415 is equivalent to L/2415≥μ, we have F_2(x) ∈(L, L/2415, 0, ν) ⊆(L, μ, 0, ν).
-
-    From here we focus on unrolling the per-epoch inequalities over all k, and hence we put the superscripts k back in our notation.
-
-    If the starting point of an epoch satisfies 𝔼 [x_0^k] ≥ην n^1/2/27000, then we can easily observe that
-    
-    𝔼[ x_0^k+1] = 𝔼[ x_n^k]    ≥( 1 - 3/4η L n ) 𝔼 [x_0^k] + η^2 L ν n^3/2/36000
-       ≥( 1 - 3/4η L n ) ·ην n^1/2/27000 + η^2 L ν n^3/2/36000 = ην n^1/2/27000.
-
-    Therefore, if we set x_0^1 ≥ην n^1/2/27000 then the final iterate must also maintain 𝔼 [x_n^K] ≥ην n^1/2/27000. Using η≥1/μ n K and Jensen's inequality, we can finally conclude that
-    
-    𝔼[ F_2 ( x_n^K) ] ≥L/2 · 2415𝔼[ (x_n^K)^2 ] ≥L/4830𝔼[ x_n^K]^2    ≥L/4830·( ην n^1/2/27000)^2 
-       ≥L/4830·( 1/27000·ν/μ n^1/2 K)^2 = Ω( L ν^2/μ^2 n K^2).
-
-
-
-
-
- §.§ temp
- 
-
-Here we show that there exists F_3 (x) ∈ (L, μ, 0, ν) such that  with x_0 = 0 satisfies
-
-    𝔼[ F_3 (x_n^K) - F_3^* ]    = Ω( ν^2/μ n K).
-
-
-
-    Let us define the function h_+1, h_-1 as follows.
-    
-    h_+1 (x)    = Lx^2/2 + ν x, 
-    
-            h_-1 (x)    = Lx^2/2 - ν x
-
-    We define F_3 (x) ∈ (L, L, 0, ν) by the following components:
-    
-    f_i (x)    = h_s_i^k (x) = Lx^2/2 + ν s_i^k x
-
-    such that the finite-sum objective can be written for some s ∈_n as:
-    
-    F_3 (x)    = 1/n∑_i=1^n f_s_i(x) = L x^2/2.
-
-    Note that (L, L, 0, ν) ⊆ (L, μ, 0, ν) and F_3^* = 0 at x^* = 0 by definition.
-    
-    First we focus on a single epoch, and hence we write x_i instead of x_i^k, omitting the superscripts k for a while.
-    
-    Since for i = 1, …, n we have
-    
-    x_i+1   = x_i - η∇ f_i (x_i) = x_i - η (L x_i-1 + s_i ν) = (1 - η L) x_i - ην s_i,
-
-    we can sum up the iterates to obtain
-    
-    x_n    = (1 - η L) x_n-1 - ην s_n
-       = (1 - η L) ( (1 - η L) x_n-2 - ην s_n-1) - ην s_n
-         ⋮
-       = (1 - η L)^n x_0 - ην∑_i=1^n (1 - η L)^n-i s_i.
-
-    Now we can square both terms and take expectations over s ∈_n to obtain
-    
-    [x_n^2]    = [ ( (1 - η L)^n x_0 - ην∑_i=1^n (1 - η L)^n-i s_i)^2 ] 
-       = (1 - η L)^2n x_0^2 - 2 (1 - η L)^n x_0ν[ ∑_i=1^n (1 - η L)^n-i s_i] + η^2 ν^2 [ ( ∑_i=1^n (1 - η L)^n-i s_i)^2 ] 
-       = (1 - η L)^2n x_0^2 + η^2 ν^2 [ ( ∑_i=1^n (1 - η L)^n-i s_i)^2 ],
-
-    where the middle term is eliminated since [s_i] = 0 for all i. By Lemma 1 of <cit.>, we can bound
-    
-    [ ( ∑_i=1^n (1 - η L)^n-i s_i)^2 ] ≥ c ·min{ 1 + 1/η L, η^2 L^2 n^3 }
-
-    for some universal constant c > 0. Since η≥1/161 L n, we can further lower bound the RHS by c'/η L for some univseral constant c' > 0. Then we have
-    
-    [x_n^2]    = (1 - η L)^2n x_0^2 + η^2 ν^2 [ ( ∑_i=1^n (1 - η L)^n-i s_i )^2 ] ≥ (1 - η L)^2n x_0^2 + c' ην^2/L.
-
-
-    From here we focus on unrolling the per-epoch inequalities over all k, and hence we put the k's back in our notations.
-    
-    Unrolling the inequalities, we obtain
-    
-    [(x_n^K)^2]    ≥ (1 - η L)^2n [(x_n^K-1)^2] + c' ην^2/L
-         ⋮
-       ≥ (1 - η L)^2nK (x_0^1)^2 + c' ην^2/L∑_k=0^K-1 (1 - η L)^2nk≥ c' ην^2/L,
-
-    where we used x^1_0 = 0. Finally, from η≥1/μ n K we can conclude that
-    
-    [F_3 (x_n^K)] = L/2 [(x_n^K)^2] ≥c'/2ην^2 ≥c'/2ν^2/μ n K.
-
-
-
-
-
- §.§ temp
-
-
-In this subsection, we will prove the lemmas used in <ref>.
-
-
-
-  §.§.§ temp
- 
-* 
-
-
-    From here, we use the following definition throughout the proof for notational simplicity.
-    
-        Given a permutation of signs s = { s_i }_i=1^n∈_n, let us denote the partial sums as _i ≜∑_j=1^i s_j.
-    
-
-    For i=0, the statement is trivial since x_0 ≥ 0 and L/μ_0≥ 2415 implies
-    
-    [ (L 1_x_0 < 0 + μ_0 1_x_0 ≥ 0) x_0 ]    = μ_0 x_0 ≤1/2415 Lx_0 ≤2/3 Lx_0.
-
-    Hence we may assume that 1 ≤ i ≤⌊n/2⌋. First observe that
-    
-    [ . (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i | _i > 0 ]    ≤ L [ . x_i | _i > 0 ], 
-    [ . (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i | _i ≤ 0 ]    ≤μ_0 [ . x_i | _i ≤ 0 ],
-
-    since (L 1_x <0 + μ_0 1_x ≥ 0) ≤ Lx and (L 1_x <0 + μ_0 1_x ≥ 0) ≤μ_0 x for all x ∈. By law of total expectations, we have
-    
-    [ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ]    ≤ L  (_i > 0) [ . x_i | _i > 0 ] + μ_0  (_i ≤ 0) [ . x_i | _i ≤ 0 ].
-
-    First we bound [ . x_i | _i > 0 ] for the former term. We can show that
-    
-    [ . x_i | _i > 0 ]    = [ . x_0 - η·∑_j=0^i-1( ( L 1_x_j < 0 + μ_0 1_x_j ≥ 0) x_j + ν s_i+1) | _i > 0 ] 
-       = [ . x_0 - η·∑_j=0^i-1( L 1_x_j < 0 + μ_0 1_x_j ≥ 0) (x_0 + (x_j - x_0)) - ην_i | _i > 0 ] 
-       = x_0 [ . 1 - η·∑_j=0^i-1( L 1_x_j < 0 + μ_0 1_x_j ≥ 0) | _i > 0 ] 
-       = - η[ . ∑_j=0^i-1( L 1_x_j < 0 + μ_0 1_x_j ≥ 0) (x_j - x_0) | _i > 0 ] - ην[ . _i | _i > 0 ] 
-       ≤ x_0 [ . 1 - η·∑_j=0^i-1( L 1_x_j < 0 + μ_0 1_x_j ≥ 0) | _i > 0 ] 
-       = + η L ∑_j=0^i-1[ . | x_j - x_0 | | _i > 0 ] - ην[ . _i | _i > 0 ].
-
-    
-    Now we use the following lemmas.
-    newlemmalemfour
-        
-        If n ≥ 2 is an even number and 0 ≤ i ≤n/2, then √(i)/10≤[ | _i | ] ≤√(i).
-    
-    [<cit.>, Lemma 14]
-        
-        For all 0 ≤ i ≤ n, we have (_i > 0) = (_i < 0) ≥1/6.
-    
-    We defer the proof of <ref> to <ref>.
-    
-    Observe that the probability distribution of each _i is symmetric by our definition of _n. Therefore we have
-    
-    [ | _i | ]    = P(_i > 0) [ | _i | | _i > 0 ] + P(_i = 0) [ | _i | | _i = 0 ] + P(_i < 0) [ | _i | | _i < 0 ] 
-       = P(_i > 0) [ _i | _i > 0 ] + P(_i < 0) [ - _i | _i < 0 ] 
-       = 2 P(_i > 0) [ _i | _i > 0 ].
-
-    Using Lemmas <ref> and <ref>, we can obtain
-    
-    √(i)/20≤[ | _i | ]/2≤[ _i | _i > 0 ] = [ | _i | ]/2 P(_i > 0)≤ 3 [ | _i | ] ≤ 3 √(i).
-
-    
-    We also use the following lemma, which is a simple application of Lemmas <ref> and <ref>.
-    newlemmalemfive
-        
-        Suppose that x_0 ≥ 0, 0 ≤ i ≤ n, and η≤1/161 L n. Then we have
-        
-    [ | x_i - x_0 | ]    ≤161/160( η L i x_0 + ην√(i)).
-
-    
-    We defer the proof of <ref> to <ref>.
-    
-    Now we bound the three terms of <ref> one by one. The first term can be bounded simply as
-    
-    x_0 [ . 1 - η·∑_j=0^i-1( L 1_x_j < 0 + μ_0 1_x_j ≥ 0) | _i > 0 ]    ≤ (1 - ημ_0 i) x_0.
-
-    For the second term of <ref>, we use <ref> to obtain
-    
-    [ . | x_i - x_0 | | _i > 0 ] ≤[ | x_i - x_0 | ]/(_i > 0)≤ 6 [ | x_i - x_0 | ],
-
-    and then use <ref> to obtain
-    
-    η L ∑_j=0^i-1[ . | x_j - x_0 | | _i > 0 ]    ≤ 6 η L ∑_j=0^i-1[ | x_j - x_0 | ] 
-       ≤ 6 η L ·161/160∑_j=0^i-1( η L j x_0 + ην√(j)) 
-       = 483/80( η^2 L^2 x_0 ∑_j=0^i-1 j + η^2 L ν∑_j=0^i-1√(j)) 
-       ≤483/80( η^2 L^2 x_0 ·1/2 i^2 + η^2 L ν·2/3 i^3/2) 
-       ≤483/160η^2 L^2 i^2 x_0 + 161/40η^2 L ν i^3/2.
-
-    The last term of <ref> can be bounded using <ref> as
-    
-    - ην[ . _i | _i > 0 ] ≤ - ην√(i)/20.
-
-    From Equations (<ref>)-(<ref>), we have
-    
-    [ . x_i | _i > 0 ]    ≤ (1 - ημ_0 i) x_0 + 483/160η^2 L^2 i^2 x_0 + 161/40η^2 L ν i^3/2 - ην√(i)/20
-       = ( 1 - ημ_0 i + 483/160η^2 L^2 i^2 ) x_0 - ( 1/20 - 161/40η L i ) ην√(i)
-       ≤( 1 + 3/160 · 161) x_0 - ην√(i)/40 ,
-
-    where the last inequality comes from η L i ≤η L n ≤1/161.
-
-    Next we bound [ . x_i | _i ≤ 0 ] for the former term. We can show that
-    
-    [ . x_i | _i ≤ 0 ]    ≤ x_0 + [ . | x_i - x_0 | | _i ≤ 0 ] 
-       ≤ x_0 + [ | x_i - x_0 | ]/(_i ≤ 0)
-       ≤ x_0 + 6 [ | x_i - x_0 | ]    (∵<ref>) 
-       ≤ x_0 + 6 ·161/160( η L i x_0 + ην√(i))    (∵<ref>) 
-       = ( 1 + 483/80η L i ) x_0 + 483/80ην√(i)
-       = ( 1 + 3/80) x_0 + 483/80ην√(i),
-
-    where the last inequality comes from η L i ≤η L n ≤1/161.
-    
-    Plugging in Equations (<ref>) and (<ref>) in (<ref>), we have
-    
-    [ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ]    ≤ L  (_i > 0) [ . x_i | _i > 0 ] + μ_0  (_i ≤ 0) [ . x_i | _i ≤ 0 ] 
-       ≤ L  (_i > 0) ( ( 1 + 3/160 · 161) x_0 - ην√(i)/40) 
-       ≤ + μ_0  (_i ≤ 0) ( ( 1 + 3/80) x_0 + 483/80ην√(i)) 
-       = ( L  (_i > 0) ( 1 + 3/160 · 161) + μ_0  (_i ≤ 0) ( 1 + 3/80) ) x_0 
-       ≤ - ( L  (_i > 0) ·1/40 - μ_0  (_i ≤ 0) ·483/80) ην√(i).
-
-    Since (_i > 0) = 1 - (_i = 0)/2≤1/2 by symmetry and (_i ≤ 0) = 1 - (_i > 0) ≤5/6 by <ref>, we have
-    
-    L  (_i > 0) ( 1 + 3/160 · 161) + μ_0  (_i ≤ 0) ( 1 + 3/80)    ≤( 1/2( 1 + 3/160 · 161) + 5/6·1/2415·83/80) L ≤2/3L,
-
-    where we use η L i ≤1/161, L/μ≥ 2415, and 1/2( 1 + 3/160 · 161) + 5/6·1/2415·83/80≤2/3. Also, by <ref> we have
-    
-    L  (_i > 0) ·1/40 - μ_0  (_i ≤ 0) ·483/80   ≥( 1/61/40 - 5/6·1/2415·483/80) L = 1/480L,
-
-    where we use η L i ≤1/161 and L/μ≥ 2415. Therefore we have
-    
-    [ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ]    ≤2/3 Lx_0 - η L ν/480√(i).
-
-
-
-
-
-  §.§.§ temp
- 
-* 
-
-
-    Since η≤1/161 L n, we can easily prove using <ref> as follows.
-    
-    [ (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i ]    ≤μ[ μ_0 x_i ] 
-       ≤μ_0 x_0 + μ_0 [ | x_i - x_0 | ] 
-       ≤μ_0 x_0 + μ_0 161/160( η L i x_0 + ην√(i)) 
-       ≤( 1 + 161/160 i η L ) μ_0 x_0 + 161/160ημ_0 ν√(i).
-
-
-
-
-
-  §.§.§ temp
- 
-* 
-
-
-    We divide the proof into three parts. In the first part we compare iterates to the case of using a quadratic function instead, sharing the same permutation. In the second part we assume x_0 < 0 and use Part 1 to prove the first result of the statement. In the third part we assume x_0 ≥ 0 and use Part 1 to prove the second result of the statement
-
-    Part 1. For comparison, we define and use the same function used in <ref>:
-    
-    h_+1 (x)    = Lx^2/2 + ν x,   h_-1 (x) = Lx^2/2 - ν x, 
-    
-            h_i (x)    = h_s_i (x) = Lx^2/2 + ν s_i x
-
-    such that the finite-sum objective can be written for some s ∈_n as:
-    
-    H (x)    = 1/n∑_i=1^n h_s_i(x) = L x^2/2.
-
-    Now let us think of  run on the two functions F_2(x) and H(x), where both of the algorithms start from the same point x_0 and both share the same random permutation for all epochs. Let x_i, F and x_i, H be the output of the i-th iterate for  on F_2(x) and H(x), respectively. Now we use mathematical induction on i to prove that x_i, F≥ x_i, H. Note that this statement holds for all cases, either x_0 ≥ 0 or x_0 < 0.
-
-    Base case. For i = 0, we have x_0, F = x_0, H = x_0. 
-
-    Inductive Case. We assume x_i, F≥ x_i, H and divide into the following cases. Note that η≤1/161 L n implies 1 - ημ≥ 1 - η L ≥ 1 - 1/161 n≥ 0.
-    
-        
-  * If x_i, F≥ x_i, H≥ 0, then we have
-        
-    x_i+1, F - x_i+1, H   = x_i, F - x_i, H - η( ∇ F_2 (x_i, F) - ∇ H (x_i, H) ) 
-       = x_i, F - x_i, H - η( μ x_i, F + ν s_i - L x_i, H - ν s_i ) 
-       = (1 - ημ) x_i, F - (1 - η L) x_i, H≥ 0,
-
-        since x_i, F≥ x_i, H≥ 0 and 1 - ημ≥ 1 - η L ≥ 0.
-        
-  * If x_i, F≥ 0 ≥ x_i, H, then we have
-        
-    x_i+1, F - x_i+1, H   = x_i, F - x_i, H - η( ∇ F_2 (x_i, F) - ∇ H (x_i, H) ) 
-       = x_i, F - x_i, H - η( μ x_i, F + ν s_i - L x_i, H - ν s_i ) 
-       = (1 - ημ) x_i, F - (1 - η L) x_i, H≥ 0,
-
-        since (1 - ημ) x_i, F≥ 0 and (1 - η L) x_i, H≤ 0.
-        
-  * If 0 ≥ x_i, F≥ x_i, H, then we have
-        
-    x_i+1, F - x_i+1, H   = x_i, F - x_i, H - η( ∇ F_2 (x_i, F) - ∇ H (x_i, H) ) 
-       = x_i, F - x_i, H - η( L x_i, F + ν s_i - L x_i, H - ν s_i ) 
-       = (1 - η L) x_i, F - (1 - η L) x_i, H≥ 0.
-
-    
-    
-    Hence by induction we have x_i, F≥ x_i, H for all i.
-
-    From the above, we can observe that [x_n, F] ≥ [x_n, H] = (1 - η L)^n x_0.
-    
-    Part 2. For the next step, let us assume x_0 < 0. Suppose that we define
-    
-    φ(z) = 1 - 160/161 nz - (1 - z)^n.
-
-    Then for z ∈ [0, 1 - (160/161)^1/n-1], we have φ'(z) = n ((1 - z)^n-1 - 160/161) ≥ 0 and hence φ(z) ≥φ(0) = 0.
-
-    Also, we can observe that for n ≥ 2:
-    
-    ( 1 - 1/161(n-1))^n-1≥ 1 - 1/161 ⇒ 1 - ( 160/161)^1/n-1≥1/161 (n-1)≥1/161 n,
-
-    which implies that η L ≤1/161 n≤ 1 - ( 160/161)^1/n-1. Hence we have φ(η L) ≥ 0, or
-    
-    (1 - η L)^n ≤ 1 - 160/161η L n,
-
-    and for x_0 < 0 we have
-    
-    [x_n, H] = (1 - η L)^n x_0 ≥( 1 - 160/161η L n ) x_0.
-
-    Applying Part 1, we can conclude that [x_n, F] ≥ [x_n, H] ≥( 1 - 160/161η L n ) x_0.
-
-    Part 3. Now suppose that we initialize x_0 ≥ 0. For H(x) and some given permutation s ∈_n, we have
-    
-    x_n, H   = (1 - η L)^n x_0 - ην∑_i=1^n (1 - η L)^n-i s_i.
-
-    Now let us think of pairing two permutations s, s' ∈_n which satisfy s_i = -s_i' for all i. By definition, the set _n can be exactly partitioned into 1/2nn/2 disjoint pairs. Let us temporarily denote the final iterates obtained by choosing the permutations s and s' by x_n, H^s and x_n, H^s', respectively. Then we can observe that
-    
-    1/2 (x_n, H^s + x_n, H^s')    = (1 - η L)^n x_0 - ην∑_i=1^n (1 - η L)^n-i·( s_i + s_i'/2) = (1 - η L)^n x_0,
-
-    which means that each pair of outcomes will be symmetric with respect to (1 - η L)^n x_0. Hence the whole probability distribution of (1 - η L)^-n x_n, H will stay symmetric with respect to the initial point x_0.
-
-    Considering outputs after multiple epochs, we can sequentially apply the same logic to prove that the distribution of (1 - η L)^-nk x_n, H^k will always stay symmetric with respect to x_0^1 for all k. In other words, for each k, the distribution of outputs x_n, H^k conditioned only on the first epoch x_0^1 will be symmetric with respect to (1 - η L)^nk x_0 ≥ 0. This automatically implies that we must have (x_n, H^k ≥ 0) ≥(x_n, H^k ≥ (1 - η L)^nk x_0) ≥1/2 for any starting point x_0^1 ≥ 0. Finally, since Part 1 ensures x_n, F^k ≥ x_n, H^k, we can conclude that (x_n, F^k ≥ 0) ≥(x_n, H^k ≥ 0) ≥1/2.
-
-
-
-
-  §.§.§ temp
- 
-* 
-
-
-    From x_i+1 = x_i - η( (L 1_x_i < 0 + μ_0 1_x_i ≥ 0) x_i + νσ_i), we have for all i = 1, …, n:
-    
-    [ | x_i - x_0 | ]    = [ | - η·∑_j=0^i-1( ( L 1_x_j < 0 + μ_0 1_x_j ≥ 0) x_j + ν s_i+1) | ] 
-       ≤η∑_j=0^i-1[ | ( L 1_x_j < 0 + μ_0 1_x_j ≥ 0) x_j | ] + ην[ | ∑_j=1^iσ_j | ] 
-       ≤η L ∑_j=0^i-1[ | x_j | ] + ην[ | _i | ] 
-       ≤η L i x_0 + η L ∑_j=0^i-1[ | x_j - x_0| ] + ην√(i).    (∵<ref>)
- 
-    Now let us think of a sequence h(i) defined by h(0) = 0 and recursively as
-    
-    h(i) = η L i x_0 + η L ∑_j=0^i-1 h(j) + ην√(i),   for i = 1, …, n.
-
-    Then obviously h(i) monotonically increases since h(i) - h(i-1) = η L x_0 + η L h(i-1) + ην (√(i) - √(i-1)) > 0. 
-
-    We can plug in h(j) ≤ h(i) for all j = 0, …, i-1 to obtain h(i) ≤η L i x_0 + η L i h(i) + ην√(i), and hence
-    
-    h(i)    ≤η L i x_0 + ην√(i)/1 - η L i.
-
-    Also, by induction we have [ | x_i - x_0 | ] ≤ h(i), since the sequence [ | x_i - x_0 | ] satisfies a recurrence of the same form but with an inequality. Hence, from η L i ≤η L n ≤1/161 we get
-    
-    [ | x_i - x_0 | ]    ≤η L i x_0 + ην√(i)/1 - η L i≤1/1 - η L n( η L i x_0 + ην√(i)) ≤161/160( η L i x_0 + ην√(i)).
-
-
-
-
-
-  §.§.§ temp
- 
-
-*
-
-    We assume i ≥ 1, since the statement is vacuously true for i = 0.
-    
-    For the upper bound, we use [ | _i | ] ≤√(i) as in Lemma 12 of <cit.>.
-
-    For the lower bound, we start from the following equation in Lemma 12 of <cit.>.
-    
-    [ | _i+1| ]    = ( 1 - 1/n - i) [ | _i | ] + (s_i = 0),
-
-    where we can explicitly compute for i = 1, …, n/2:
-    
-    (s_i = 0)    = 1_i  is evenii/2n-in-i/2/nn/2,
-
-    i.e., s_i = 0 is possible if and only if i is even. We also use the following lemma.
-    newlemmalemmortici
-        
-        For even, positive integers n, i with n ≥ 4 and 2 ≤ i ≤⌊n/2⌋, we have
-        
-    ii/2n-in-i/2/nn/2≥2/5√(i).
-
-    
-    See <ref> for a detailed proof of <ref>.
-    
-    First suppose that i ≥ 2 is an even integer. Then since i ≤n/2, we have
-    
-    [ | _i| ]    = ( 1 - 1/n - i + 1) [ | _i-1| ] + (s_i-1 = 0) 
-       ≥( 1 - 2/n) [ | _i-1| ] + 1_i-1  is even2/5√(i-1)
-       = ( 1 - 2/n) [ | _i-1| ] 
-       ≥( 1 - 2/n) ( ( 1 - 2/n) [ | _i-2| ] + 1_i-2  is even2/5√(i-2)) 
-       = ( 1 - 2/n)^2 [ | _i-2| ] + ( 1 - 2/n) 2/5√(i-2)
-       ≥( 1 - 2/n)^2 [ | _i-2| ] + ( 1 - 2/n) 2/5√(i).
-
-    We can also explicitly compute
-    
-    [ | _2| ]    = 2 ·2 ·n-2n/2/nn/2 = 4 · (n-2)! (n/2)! (n/2)!/(n/2)! (n/2 - 2)! n! = 4 (n/2) (n/2 - 1)/n (n-1) = n-1/n-2 = 1 - 1/n-1≥ 1 - 2/n ,
-
-    from the fact that _2 = ± 2 occurs for n-2n/2 cases among a total of nn/2, and _2 = 0 otherwise.
-    
-    Unrolling the inequalities in (<ref>) (while maintaining the 1/√(i) term), we have
-    
-    [ | _i| ]    ≥( 1 - 2/n)^2 [ | _i-2| ] + ( 1 - 2/n) 2/5√(i)
-         ⋮
-       ≥( 1 - 2/n)^i-2[ | _2| ] + ( 1 - 2/n) ( ∑_p=0^i/2 - 2 ( 1 - 2/n)^2p) 2/5√(i)
-       ≥( 1 - 2/n)^i-1 + ( 1 - 2/n) ( ∑_p=0^i/2 - 2 ( 1 - 2/n)^2p) 2/5√(i)   (∵<ref>) 
-       ≥( 1 - 2/n) ( ∑_p=0^i/2 - 1 ( 1 - 2/n)^2p) 2/5√(i)
-       = ( 1 - 2/n) ·1 - ( 1 - 2/n)^i/1 - ( 1 - 2/n)^2·2/5√(i)
-       = ( 1 - 2/n) ·1/4/n - 4/n^2·( 1 - ( 1 - 2/n)^i) ·2/5√(i)
-       ≥ 1 ·n/4·( 1 - 1/1 + 2i/n) ·2/5√(i)
-       = n/4·2i/n + 2i·2/5√(i) = n/n + 2i·√(i)/5≥√(i)/10.
-
-    In (<ref>) we use (1 - x)^r ≤1/1 + r x for all 0 ≤ x ≤ 1 and r ≥ 0. Note that we have to deal with the last iterate separately since <ref> applies only for i ≥ 2. 
-
-    Now suppose that i ≥ 1 is an odd integer. Then we have
-    
-    [ | _i+1| ]    = ( 1 - 1/n - i) [ | _i| ] + 1_i  is evenii/2n-in-i/2/nn/2 = ( 1 - 1/n - i) [ | _i| ]    (∵ i  is odd)
-
-    and since i+1 is even, we can use the previous result as
-    
-    [ | _i| ]    = n-i/n-i-1[ | _i+1| ] ≥n-i/n-i-1√(i+1)/10.
-
-    Finally, since we have 2i + 1 ≤ n and
-    
-    (n-i)^2 (i+1) - (n-i-1)^2 i    = (n-i)^2 + (2n - 2i - 1)i ≥ 0
-
-    implies n-i/n-i-1≥√(i)/√(i+1), we can conclude that
-    
-    [ | _i| ]    ≥n-i/n-i-1√(i+1)/10≥√(i)/10.
-
-
-
-
-
-  §.§.§ temp
- 
-
-*
-    
-
-    From Theorem 1 of <cit.>, for all n ≥ 1 we have the expression
-    
-    n!    = √(π(2n + α_n))·n^n/e^n,   for some value 0.333  ≤α_n ≤ 0.354.
-
-    Since i/2≥ 1, we have
-    
-    ii/2   = i!/((i/2)!)^2 = i^i/e^i·e^i/(i/2)^i√(π(2i + α_i))/π(i + α_i/2) = 2^i ·√((2i + α_i))/√(π)(i + α_i/2).
-
-    Then we can compute
-    
-    ii/2n-in-i/2/nn/2   = √((2i + α_i))/√(π)(i + α_i/2)√((2(n-i) + α_n-i))/√(π)(n-i + α_(n-i)/2)√(π)(n + α_n/2)/√((2n + α_n))
-       = 1/√(π)√((2i + α_i))/(i + α_i/2)√((2(n-i) + α_n-i))/(n-i + α_(n-i)/2)(n + α_n/2)/√((2n + α_n))
-       ≥1/√(π)√((2i + 0.33))/(i + 0.354)√((2(n-i) + 0.33))/(n-i + 0.354)(n + 0.33)/√((2n + 0.354))
-       ≥1/√(π)√(2i)/1.354 i√((2(n-i)))/1.354(n-i)n/√(2.354n) = 2/1.354^2 √(2.354 π)√(n)/√(i(n-i))
-       ≥2/1.354^2 √(2.354 π)1/√(i)≥2/5 √(i),
-
-    where 2/1.354^2 √(2.354 π) = 0.401157 …≥ 0.4 = 2/5.
-
-
-
-
-§ TEMP
- 
-
-Here we prove <ref>, restated below for the sake of readability.
-
-* 
-
-
-    We prove the theorem statement for constants c_1 = 2415 and c_2 = 161.
-    
-    Similarly as in <ref>, we use different objective functions for two step-size regimes and aggregate the functions to obtain the final lower bound. Here we also assume n is even, where we can easily extend to odd n's by the same reasoning as in <ref>.
-
-    Here we prove the following lower bounds for each regime. Here F_j^* is the minimizer of F_j for j = 1, 2. 
-    
-        
-  * If η∈( 0, 1/μ n K), there exists a 1-dimensional objective function F_1 (x) ∈ (L, μ, 0, ν) such that  with initialization x_0 = D satisfies
-        
-    𝔼[ F_1 (x̂) - F_1^* ]    = Ω( μ D^2 ).
-
-        
-  * If η∈[ 1/μ n K, 1/161 L n], there exists a 1-dimensional objective function F_2 (x) ∈ (L, μ, 0, ν) such that  with initialization x_0 = Θ (ην n^1/2) satisfies
-        
-    𝔼[ F_2 (x̂) - F_2^* ] = Ω( L ν^2/μ^2 n K^2).
-
-    
-
-    Now we define the 2-dimensional function F(x, y) = F_1(x) + F_2(y), where F_1 and F_2 are chosen to satisfy the above lower bounds for ν replaced by ν/√(2). Following the analyses in <ref>, from F_1, F_2, ∈ (L, μ, 0, ν/√(2)) (by construction) we have F ∈ (L, μ, 0, ν).
-
-    Now suppose that we set D = ν/μ and initialize at the point ( ν/μ, ην n^1/2/27000).
-
-    If K ≥ 161 κ, then since 1/μ n K≤1/161 L n we can use the lower bound for F_2(y). The lower bound for this case becomes
-    
-    [ F (x̂, ŷ) ]    = Ω( min{ν^2/μ, L ν^2/μ^2 n K^2}) = Ω( L ν^2/μ^2 n K^2).
-
-    If K < 161 κ, then we cannot use the lower bound for F_2(y), and the lower bound for this case just becomes
-    
-    [ F (x̂, ŷ) ]    = Ω( ν^2/μ),
-
-    which completes the proof.
-
-
-
-
-
-
- §.§ temp
-
-Here we show that there exists F_1 (x) ∈ (L, μ, 0, ν) such that  with x_0 = D satisfies
-
-    𝔼[ F_1 (x_n^K) - F_1^* ]    = Ω( μ D^2 ).
-
-
-
-    We define the same F_1 (x) ∈ (μ, μ, 0, 0) as in <ref> by the following components.
-    
-    f_i (x)    = F_1(x) = μ x^2/2
-
-    Note that (μ, μ, 0, 0) ⊆ (L, μ, 0, ν) and F_1^* = 0 at x^* = 0 by definition.
-    
-    We start from <ref> in <ref>, which gives
-    
-    x_0^k+1 = (1 - ημ)^nk· D
-            ≥( 1 - 1/nK)^nK· D ≥D/4
-
-    for all k. Then for any weighted average x̂ we have
-    
-    x̂   = ∑_k=1^K+1α_k x_0^k/∑_k=1^K+1α_k≥∑_k=1^K+1α_k D/4/∑_k=1^K+1α_k = D/4
-
-    and therefore
-    
-    F_1 (x̂)    ≥μ/2( D/4)^2 = μ D^2/32,
-
-    which concludes that 𝔼[ F_1 (x̂) ] = F_1 (x̂) = Ω( μ D^2 ).
-
-
-
-
- §.§ temp
-
-
-Here we show that there exists F_2 (x) ∈ (L, μ, 0, ν) such that  with x_0 = Θ (ην n^1/2) satisfies
-
-    𝔼[ F_2 (x_n^K) - F_2^* ] = Ω( L ν^2/μ^2 n K^2).
-
-
-
-    We define the F_2 (x) ∈ (L, μ, 0, ν) as in <ref> by the following components:
-    
-    f_+1 (x)    = g_s_i^k (x) = ( L 1_x < 0 + μ_0 1_x ≥ 0) x^2/2 + ν s_i^k x
-
-    for some μ_0 > 0, such that
-    
-    F_2 (x)    = 1/n∑_i=1^n f_i(x) = ( L 1_x < 0 + μ_0 1_x ≥ 0) x^2/2.
-
-    Note that F_2^* = 0 at x^* = 0 by definition.
-
-    We start from equation <ref> in <ref>, which gives
-    
-    𝔼[ x_0^k+1] = 𝔼[ x_n^k]    ≥( 1 - 3/4η L n ) ·ην n^1/2/27000 + η^2 L ν n^3/2/36000 = ην n^1/2/27000
-
-    for all k. If we set x_0≥ην n^1/2/27000 then all end-of-epoch iterates must maintain 𝔼 [x_n^k] ≥ην n^1/2/27000. This implies that for any weighted average x̂ we have
-    
-    𝔼 [x̂]    = [ ∑_k=1^K+1α_k x_0^k/∑_k=1^K+1α_k] = ∑_k=1^K+1α_k [ x_0^k ]/∑_k=1^K+1α_k≥∑_k=1^K+1α_k ην n^1/2/27000/∑_k=1^K+1α_k = ην n^1/2/27000.
-
-    Finally, using η≥1/μ n K and Jensen's inequality we have
-    
-    𝔼[ F_2 ( x̂) ] ≥L/2 · 2415𝔼[ x̂^2 ] ≥L/4830𝔼[ x̂]^2    ≥L/4830·( ην n^1/2/27000)^2 
-       ≥L/4830·( 1/27000·ν/μ n^1/2 K)^2 = Ω( L ν^2/μ^2 n K^2).
-
-
-
-
-
- §.§ temp
-
-
-Here we prove <ref>, restated below for the sake of readability.
-*
-
-    Suppose that c_1, c_2 are the same constants as in <ref>, and let c_3 = max{ c_1^3/2, c_2^3 }. We start from the proof of <ref> in <ref>, except that we view _0^1 - ^*  = D as a separate constant instead of setting D = ν/μ. Then, if μ > 0 satisfies κ≥ c_1 and K ≥ c_2 κ, there exists some F_μ∈(L, μ, 0, ν) satisfying
-    
-    [ F_μ () - F_μ^* ] = Ω( min{μ D^2, L ν^2/μ^2 n K^2}).
-
-    Here we can let μ = L^1/3ν^2/3/D^2/3 n^1/3 K^2/3 and F = F_μ to obtain
-    
-    [ F() ] = Ω( L^1/3ν^2/3 D^4/3/n^1/3 K^2/3).
-
-    Also, we can check that K ≥ c_3 ν/L D n^1/2 implies 
-    
-    κ = L^2/3 D^2/3 n^1/3 K^2/3/ν^2/3≥ c_3^2/3≥ c_1
-
-    and K ≥ c_3 L^2 D^2 n/ν^2 implies 
-    
-    K ≥ c_3^1/3L^2/3 D^2/3 n^1/3 K^2/3/ν^2/3 = c_3^1/3κ≥ c_2 κ.
-
-    Finally we have F ∈(L, μ, 0, ν) ⊆(L, 0, 0, ν) for all μ > 0, which completes the proof.
-
-
-
-
-§ TEMP
- 
-
-Here we prove <ref>, restated below for the sake of readability.
-*
-
-
-    We start from the following lemma from <cit.>.
-    [<cit.>, Lemma 3]
-        Assume that functions f_1, …, f_n are convex and F, f_1, …, f_n are L-smooth. Then  with step size η≤1/√(2) L n satisfies
-        
-    [ _0^k+1 - ^* ^2 ]    ≤[ _0^k - ^* ^2 ] - 2 η n [ F (_0^k+1) - F(^*)  ] + 1/2η^3 L ν^2 n^2.
-
-    
-    Note that the assumptions in <ref> of (L, μ, 0, ν) includes all the required conditions above, plus an additional condition that F is μ-strongly convex. From this additional condition, for all k we have
-    
-    [ F (_0^k+1) - F (^*)  ]    ≥μ/2[ _0^k+1 - ^* ^2 ].
-
-    Now we apply (<ref>) to only exactly half of the term involving [ F (_0^k+1) - F (^*)  ] to obtain
-    
-    ( 1 + ημ n/2) [ _0^k+1 - ^* ^2 ]    ≤[ _0^k - ^* ^2 ] - η n [ F (_0^k+1) -F (^*)  ] + 1/2η^3 L ν^2 n^2.
-
-    Since 0 ≤ημ n ≤η L n ≤1/√(2)≤ 1 implies 1/1 + ημ n/2≤ 1 - ημ n/3 and 2/3≤1/1 + ημ n/2≤ 1, we obtain
-    
-    [ _0^k+1 - ^* ^2 ]    ≤1/1 + ημ n/2( [ _0^k - ^* ^2 ] - η n [ F (_0^k+1) -F (^*)  ] + 1/2η^3 L ν^2 n^2 ) 
-       ≤( 1 - ημ n/3) [ _0^k - ^* ^2 ] - 2/3η n [ F (_0^k+1) -F (^*)  ] + 1/2η^3 L ν^2 n^2.
-
-    
-    We derive two different types of weaker inequalities from (<ref>), as:
-    
-    [ _0^k+1 - ^* ^2 ]    ≤( 1 - ημ n/3) [ _0^k - ^* ^2 ] + 1/2η^3 L ν^2 n^2, 
-    [ _0^k+1 - ^* ^2 ]    ≤[ _0^k - ^* ^2 ] - 2/3η n [ F (_0^k+1) - F (^*)  ] + 1/2η^3 L ν^2 n^2.
-
-    From (<ref>), we can unroll the inequality to obtain
-    
-    [ _0^k+1 - ^* ^2 ]    ≤( 1 - ημ n/3)^k [ _0^1 - ^* ^2 ] + 1/2η^3 L ν^2 n^2 ∑_j=0^K-1( 1 - ημ n/3)^j 
-       ≤( 1 - ημ n/3)^k [ _0^1 - ^* ^2 ] + 1/2η^3 L ν^2  n^2∑_j=0^∞( 1 - ημ n/3)^j 
-       = ( 1 - ημ n/3)^k [ _0^1 - ^* ^2 ] + 1/2η^3 L ν^2 n^2 1/1 - ( 1 - ημ n/3)
-       = ( 1 - ημ n/3)^k D^2 + 3/2·η^2 L ν^2 n/μ   (D := _0^1 - ^* ) 
-       ≤ e^- 1/3ημ n k D^2 + 3/2·η^2 L ν^2 n/μ
-
-    which holds for all k.
-    
-    From (<ref>), we can rearrange terms as
-    
-    η n [ F (_0^k+1) - F (^*)  ]    ≤3/2[ _0^k - ^* ^2 ] - 3/2[ _0^k+1 - ^* ^2 ] + 3/4η^3 L ν^2 n^2
-
-    and average the inequality from k = ⌈K/2⌉ to K to obtain
-    
-    ≤η n/K - ⌈K/2⌉ + 1∑_k = ⌈K/2⌉^K[ F (_0^k+1) - F (^*)  ] 
-       ≤1/K - ⌈K/2⌉ + 1( 3/2[ _0^⌈K/2⌉ - ^* ^2 ] - 3/2[ _0^K+1 - ^* ^2 ] ) + 3/4η^3 L ν^2 n^2 
-       ≤3/2/K - ⌈K/2⌉ + 1[ _0^⌈K/2⌉ - ^* ^2 ] + 3/4η^3 L ν^2 n^2.
-
-    Therefore we have
-    
-    𝔼[ F (_tail) - F^* ]    = 𝔼[ F ( 1/K - ⌈K/2⌉ + 1∑_k=⌈K/2⌉^K_n^k) - F^* ] 
-       = 𝔼[ F ( 1/K - ⌈K/2⌉ + 1∑_k=⌈K/2⌉^K_0^k+1) - F^* ] 
-       ≤1/K - ⌈K/2⌉ + 1∑_k=⌈K/2⌉^K[ F (_0^k+1) - F (^*)  ]    (∵Jensen's inequality) 
-       ≤3/2/K - ⌈K/2⌉ + 1·1/η n[ _0^⌈K/2⌉ - ^* ^2 ] + 3/4η^2 L n ν^2    (∵By (<ref>)) 
-       ≤3/η n K[ _0^⌈K/2⌉ - ^* ^2 ] + 3/4η^2 L ν^2 n    ( ∵⌈K2⌉≤K2 + 1 ) 
-       ≤3/η n K( e^- 1/3ημ n ( ⌈K/2⌉ - 1 ) D^2 + 3/2·η^2 L ν^2 n/μ) + 1/2η^2 L ν^2 n    ( ∵By (<ref>), for k = ⌈K2⌉) 
-       = 3 D^2/η n K e^- 1/3ημ n ( ⌈K/2⌉ - 1 ) + 9/2·η L ν^2/μ K + 1/2η^2 L ν^2 n 
-       ≤3D^2/η n K e^- 1/9ημ n K + 9/2·η L ν^2/μ K + 1/2η^2 L ν^2 n.
-
-    
-    Note that in the last inequality, K ≥ 5 implies ⌈K/2⌉ - 1 ≥K/3.
-
-    Now we will divide into four possible cases according to how we choose η, and then derive that desired upper bound holds in each case from <ref>. Note that we have max{ 1, log( μ^3 n D^2 K^2/L ν^2) } = 1 if and only if K ≤e^1/2 L^1/2ν/μ^3/2 n^1/2 D, which is again equivalent to μ D^2 ≤e L ν^2/μ^2 n K^2.
-
-    Case (a) Suppose that η = 1/√(2)Ln≤9/μ n Klog( μ^3 n D^2 K^2/L ν^2), where max{ 1, log( μ^3 n D^2 K^2/L ν^2) } = log( μ^3 n D^2 K^2/L ν^2).
-
-    From <ref> we have
-    
-    𝔼[ F (_tail) - F^* ]    ≤3D^2/η n K e^- 1/9ημ n K + 9/2·η L ν^2/μ K + 1/2η^2 L ν^2 n 
-       ≤3 √(2) L D^2/K e^- 1/9 √(2)K/L / μ + 81/2L ν^2/μ^2 n K^2log( μ^3 n D^2 K^2/L ν^2) + 81/2L ν^2/μ^2 n K^2log^2 ( μ^3 n D^2 K^2/L ν^2) 
-       = ( L D^2/K e^- 1/9 √(2)K/L / μ + L ν^2/μ^2 n K^2).
-
-
-    Case (b) Suppose that η = 1/√(2)Ln≤9/μ n K, where max{ 1, log( μ^3 n D^2 K^2/L ν^2) } = 1.
-
-    From <ref> we have
-    
-    𝔼[ F (_tail) - F^* ]    ≤3D^2/η n K e^- 1/9ημ n K + 9/2·η L ν^2/μ K + 1/2η^2 L ν^2 n 
-       ≤3 √(2) L D^2/K e^- 1/9 √(2)K/L / μ + 81/2L ν^2/μ^2 n K^2 + 81/2L ν^2/μ^2 n K^2
-       = ( L D^2/K e^- 1/9 √(2)K/L / μ + L ν^2/μ^2 n K^2).
-
-
-    Case (c) Suppose that η = 9/μ n Klog( μ^3 n D^2 K^2/L ν^2) ≤1/√(2)Ln, where max{ 1, log( μ^3 n D^2 K^2/L ν^2) } = log( μ^3 n D^2 K^2/L ν^2).
-
-    From <ref> we have
-    
-    𝔼[ F (_tail) - F^* ]    ≤3D^2/η n K e^- 1/9ημ n K + 9/2·η L ν^2/μ K + 1/2η^2 L ν^2 n 
-       = μ D^2/3 log( μ^3 n D^2 K^2/L ν^2)·L ν^2/μ^3 n D^2 K^2 + 81/2L ν^2/μ^2 n K^2log( μ^3 n D^2 K^2/L ν^2) + 81/2L ν^2/μ^2 n K^2log^2 ( μ^3 n D^2 K^2/L ν^2) 
-       = L ν^2/μ^2 n K^2( 1/3 log( μ^3 n D^2 K^2/L ν^2) + 81/2log( μ^3 n D^2 K^2/L ν^2) + 81/2log^2 ( μ^3 n D^2 K^2/L ν^2) ) 
-       = ( L ν^2/μ^2 n K^2).
-
-
-    Case (d) Suppose that η = 9/μ n K≤1/√(2)Ln, where max{ 1, log( μ^3 n D^2 K^2/L ν^2) } = 1.
-
-    From <ref> we have
-    
-    𝔼[ F (_tail) - F^* ]    ≤3D^2/η n K e^- 1/9ημ n K + 9/2·η L ν^2/μ K + 1/2η^2 L ν^2 n 
-       = μ D^2/3 + 81/2L ν^2/μ^2 n K^2 + 81/2L ν^2/μ^2 n K^2
-       ≤L ν^2/μ^2 n K^2·( e/3 + 81 ) 
-       = ( L ν^2/μ^2 n K^2).
-
-    Therefore <ref> holds for all cases, which completes the proof.
-
-
-
-
-§ TEMP
- 
-Here we prove <ref>, restated below for the sake of readability.
-*
-
-Similarly as in <ref>, we define objective functions for three step-size regimes and aggregate the functions to obtain the final lower bound.
-Here we also assume n is even, where we can easily extend to odd n's by the same reasoning as in <ref>.
-
-We will prove the following lower bounds for each regime. Here F_j^* is the minimizer of F_j for j = 1, 2, 3. 
-
-
-    
-  * If η∈( 0, 1/μ n K), there exists a 1-dimensional objective function F_1(x) ∈(L,μ,0,ν) such that any permutation-based SGD with initialization x_0^1 = L^1/2ν/μ^3/2 n K satisfies
-    
-    F_1(x̂) - F_1^* = Ω( L ν^2/μ^2 n^2 K^2).
-
-    
-  * If η∈[ 1/μ n K, 1/L], there exists a 2-dimensional objective function F_2(y, z) ∈L,μ,0,√(2)ν such that any permutation-based SGD with initialization (y_0^1, z_0^1) = ν/2L, 0 satisfies
-    
-    F_2(ŷ, ẑ) - F_2^* = Ω( L ν^2/μ^2 n^2 K^2),
-
-    where ŷ and ẑ share same weights α_k_k=1^K+1.
-    
-  * If η > 1/L, there exists a 1-dimensional objective function F_3(w) ∈(2L,μ,0,ν) such that any permutation-based SGD with initialization w_0^1 = ν/μ n K satisfies
-    
-    F_3(ŵ) - F_3^* = Ω( L ν^2/μ^2 n^2 K^2).
-
-
-
-Now we define the 4-dimensional function F() = F(x, y, z, w) = F_1(x) + F_2(y,z) + F_3(w), where F_1, F_2, and F_3 are chosen to satisfy the above lower bounds. 
-
-
-Following the analyses in <ref>, we have F ∈ (2L, μ, 0, 2ν), which allows us to directly apply the convergence rates in the lower bounds of F_1, F_2 and F_3 to the aggregated function F. 
-
-If K ≤κ/n, the second step-size regime becomes invalid. In this case, we define F(x, y, z, w) = F_1(x) + F_1(y) + F_1(z) + F_3(w) ∈ (2L, μ, 0, 2 ν). The final lower bound then becomes the minimum among the lower bounds obtained for the remaining two regimes.
-
-Note that we assumed κ≥ 4 and our constructed function is 2L-smooth and μ-strongly convex. Thus, κ≥ 4 is equivalent to μ≤L/2 throughout the proof.
-
-Finally, rescaling L and ν will give us the function F ∈ (L, μ, 0, ν) satisfying F() - F^* = ΩL ν^2/μ^2 n^2 K^2.
-
-
-For the following subsections, we prove the lower bounds for F_1, F_2, and F_3 at the corresponding step size regime.
-
-
-
-
- §.§ temp
- 
-Here we show that there exists F_1 (x) ∈ (L, μ, 0, ν) such that any permutation-based SGD with x_0^1 = L^1/2ν/μ^3/2 n K satisfies
-
-    F_1(x̂) - F_1^* = Ω( L ν^2/μ^2 n^2 K^2).
-
-
-
-We define F_1 (x) ∈ (μ, μ, 0, 0) by the following components:
-
-    f_i(x) = μ/2x^2.
-
-Note that (μ, μ, 0, 0) ⊆ (L, μ, 0, ν) and F_1^* = 0 at x^* = 0 by definition.
-
-In this regime, we will see that the step size is too small so that x_n^k_k=1^K cannot even reach near the optimal point.
-We start from x_0^1 = L^1/2ν/μ^3/2 n K. Since the gradient of all component functions at point x are identical to μ x, regardless of the permutation-based SGD algorithm we use, we have
-
-    x_n^k = x_0^1 (1 - ημ)^nk   ≥L^1/2ν/μ^3/2 n K(1 - 1/nK)^nk≥L^1/2ν/μ^3/2 n K(1 - 1/nK)^nK
-       (a) > L^1/2ν/μ^3/2 n K1/e(1 - 1/nK) (b)≥L^1/2ν/μ^3/2 n K1/2e.
-
-where (a) comes from lmm:thm1_2 and (b) comes from the assumption that n ≥ 2. Therefore, we have x̂ = ΩL^1/2ν/μ^3/2 n K for any nonnegative weights α_k_k=1^K+1. With this x̂, we have
-
-    F_1(x̂) - F_1^* = μ/2x̂^2 = ΩL ν^2/μ^2 n^2 K^2.
-
-
-
-
-
-
- §.§ temp
- 
-Here we show that there exists F_2 (y, z) ∈ (L, μ, 0, √(2)ν) such that any permutation-based SGD with (y_0^1, z_0^1) = ν/2L, 0 satisfies
-
-    F_2(ŷ, ẑ) - F_2^* = Ω( L ν^2/μ^2 n^2K^2).
-
-
-
-Let us define the function g_+1, g_-1 as follows.
-
-    g_+1 (x)    = ( L 1_x < 0 + L/21_x ≥ 0) x^2/2 + ν x, 
-    
-        g_-1 (x)    = ( L 1_x < 0 + L/21_x ≥ 0) x^2/2 - ν x.
-
-Note that g_+1 and g_-1 are μ-strongly convex since μ≤L/2.
-We define F_2 (x) ∈ (L, μ, 0, √(2)ν) by the following components:
-
-    f_i(y, z) =
-        
-            g_+1 (y) + g_-1 (z)     if    i ≤n/2,
-    
-            g_-1 (y) + g_+1 (z)     otherwise.
-
-With this construction, the finite-sum objective becomes
-
-    F_2 (y, z)    = 1/n∑_i=1^n f_i(y, z) = ( L 1_y < 0 + L/21_y ≥ 0) y^2/2 + ( L 1_z < 0 + L/21_z ≥ 0) z^2/2.
-
-Note that F_2^* = 0 at (y^*, z^*) = (0, 0) by definition.
-
-We start at (y_0^1, z_0^1) = ν/2L, 0.
-We now use the following lemma to find the lower bound of y_n^k + z_n^k_k=1^K that holds for every permutation.
-
-newlemmagrabUBalmma 
-    Consider the optimization process whose setting is given as <ref>.
-    For any t ≤n/2 - 1 and any k ∈{ 1, ⋯, K}, if y_2t^k + z_2t^k ≥ 0 holds, then
-    
-    y_2t+2^k + z_2t+2^k ≥1 - η L/21 - η Ly_2t^k + z_2t^k + η^2 L ν/2
-
-    holds regardless of which functions are used at the (2t+1)-th and the (2t+2)-th iterations of the k-th epoch.
-    Consequently, if y_0^k + z_0^k ≥ην/3 - η L, y_n^k + z_n^k≥ην/3 - η L holds regardless of the permutation σ_k.
-
-The proof of the lemma is in <ref>. In our setting, y_0^1 + z_0^1 = ν/2L≥ην/3 - η L since η≤1/L. Thus, we have y_n^k + z_n^k ≥ην/3 - η L for every k ∈ [K].
-
-For ŷ + ẑ, we get
-
-    ŷ + ẑ   = ∑_k=1^K+1α_k _0^k + _0^k/∑_k=1^K+1α_k
-       ≥ην/3 - η L·∑_k=1^K+1α_k/∑_k=1^K+1α_k = ην/3 - η L
-       > ην/3 = Ων/μ n K,
-
-and using the inequality 2(a^2 + b^2) ≥ (a + b)^2, 
-
-    F_2(ŷ, ẑ) - F_2(y^*, z^*)
-           = ( L 1_y<0 + L/21_y≥0) ŷ^2/2 + ( L 1_z<0 + L/21_z≥0) ẑ^2/2
-       ≥L/4ŷ^2 + ẑ^2 
-       ≥L/8(ŷ + ẑ)^2
-       = Ω(L ν^2/μ^2 n^2K^2).
-
-
-
-
-
-
- §.§ temp
- 
-Here we show that there exists F_3 (w) ∈ (2L, μ, 0, ν) such that any permutation-based SGD with w_0^1 = ν/μ n K satisfies
-
-    F_3(ŵ) - F_3^* = Ω( L ν^2/μ^2 n^2 K^2).
-
-
-
-We define F_3 (w) ∈ (2L, 2L, 0, 0) by the following components:
-
-    f_i(w) = Lw^2.
-
-Note that (2L, 2L, 0, 0) ⊆ (2L, μ, 0, ν) and F_3^* = 0 at w^* = 0 by definition.
-
-In this regime, we will see that the step size is too large so that w_n^k_k=1^K diverges.
-We start from w_0^1 = ν/μ n K. Since the gradient of all component functions at point w are identical to 2 L w, we have for every k ∈ [K],
-
-    w_n^k = 1 - 2 η L^nk w_0^1 ≥ 1^nkν/μ n K   = Ων/μ n K,
-
-where we used the fact that n is even in the second step.
-Thus, regardless of the permutation-based SGD we use, we have ŵ = Ων/μ n K and F_3(ŵ) - F_3^* = L ŵ^2 = ΩL ν^2/μ^2 n^2 K^2.
-
-
-
-
- §.§ temp
- 
-In this subsection, we will prove the lemmas used in <ref>.
-*
-
-Without loss of generality, assume y_2t^k ≥ z_2t^k. 
-Since we assumed y_2t^k + z_2t^k is nonnegative, y_2t^k ≥ 0 holds. 
-Depending on which function is used at (2t+1)-th iteration of k-th epoch, we consider following two cases:
-
-
-  * y_2t+1^k = y_2t^k - η∇ h(y_2t^k) - ν and z_2t+1^k = z_2t^k - η∇ h(z_2t^k) + ν, 
-
-  * y_2t+1^k = y_2t^k - η∇ h(y_2t^k) + ν and z_2t+1^k = z_2t^k - η∇ h(z_2t^k) - ν.
-
-Note that y_2t+2^k + z_2t+2^k is independent of which function is used at (2t+2)-iteration of k-th epoch.
-This is because y_2t+2^k = 1 - ηL 1_y_2t+1^k < 0 + L/21_y_2t+1^k ≥ 0y_2t+1^k ±ην and z_2t+2^k = 1 - ηL 1_z_2t+1^k < 0 + L/21_z_2t+1^k ≥ 0z_2t+1^k ∓ην so that summation of y and z results in the canceling of ην terms.
-
-
+    η_ν^max =
+        max_n𝐤( f̃_n𝐤|
+        ϵ_n𝐤^DFT - ϵ_n𝐤^Wan| ),
+
+  where f̃_n𝐤 =
+    √(f^DFT_n𝐤(E_F+ν, σ)
+      f^Wan_n𝐤(E_F+ν, σ)) and f(E_F+ν, σ) is
+  the Fermi-Dirac distribution.
+Here E_F+ν and σ are fictitious Fermi levels and smearing widths
+  which we choose for comparing a specific range of bands.
+Since the Wannier TB model describes the low-energy valence electrons, it is
+  expected that the band interpolation deviates from the original in the higher
+  conduction band region.
+Therefore, the higher ν is, the larger η_ν is expected to be.
+In the following paragraphs, we will use η_0 and η_2 to compare
+  bands below and + 2eV, respectively; σ is always fixed at
+  0.1eV.
+
+In the supplementary information <ref>, we provide
+  comparisons between the Wannier-interpolated bands and the DFT bands for both
+  PDWF and SCDM, their respective band distances, and the Hamiltonian decay plots
+  for each of the 200 materials.
+We discuss these properties in the following.
+
+
+
+  §.§.§ Projectability thresholds and automation
+
+For PDWF, we set the maximum of the inner window to the Fermi energy +
+  2eV for metals, or to the CBM + 2eV for insulators, to fully
+  reproduce states around Fermi energy or the band edges.
+We also specify the two additional parameters and .
+From our tests, in most cases = 0.95 and = 0.01 already produce
+  very good results.
+However, since chemical environments vary across different crystal structures,
+  the two parameters are not universal and influence the quality of band
+  interpolation.
+<Ref> shows the variation of band
+distances w.r.t. and for several materials.
+For (<ref>), η_0
+  and η_2 reach a minimum at two different sets of parameters, i.e. =
+  0.99, = 0.01 and = 0.97, = 0.01, respectively.
+In some cases, the variation of η w.r.t.
+and can be non-monotonic and display
+multiple local minima: For instance, in (<ref>) at = 0.01, η_2 decreases
+from = 0.90 to 0.95 but increases from = 0.95 to 0.98 and finally
+reaches a local minimum at = 0.99.
+In other cases, η can be quite stable and largely independent of the
+  parameters: E.g., for (<ref>),
+  η_2 reaches the same minimum for = 0.99 to 0.88.
+
+
+Therefore, we implement an iterative optimization workflow to automatically
+  find the optimal values for and , in order to fully automate the
+  Wannierization procedure.
+The workflow is released as part of the 
+  package <cit.>.
+First, we run a QE band structure workflow to get the reference DFT bands for
+  calculating η_2; in addition, the DFT bands are also used to calculate the
+  band gap of the material.
+Second, we run an optimization workflow with the following settings: The
+  maximum of the inner window is set to Fermi energy + 2eV for metals and
+  CBM + 2eV for insulators, respectively; and are set to the
+  defaults of 0.95 and 0.01, respectively.
+Third, if the average band distance η_2 is less than a threshold (set to
+  10meV here), the workflow stops; otherwise, the workflow iterates on a
+  mesh of and , i.e. decreasing from 0.99 to 0.80 with step size
+  -0.01, and = 0.01 or 0.02, until η_2 ≤ threshold.
+If η_2 is still larger than the threshold after exhausting all the
+  parameter combinations, the workflow will output the minimum-η_2
+  calculation.
+
+
+
+  §.§.§ Band distance
+
+To compare quantitatively the band interpolation quality of SCDM and PDWF, we
+  Wannierize the 200 structures mentioned earlier and calculate their band
+  distances with respect to the corresponding DFT bands.
+We choose η_2 and η_2^max to compare near-Fermi-energy bands.
+The histograms of the band distances for the 200 structures are shown in
+  <ref>.
+To directly compare SCDM and PDWF, the mean and median value of η of the
+  200 calculations are shown as vertical lines in each panel.
+For PDWF, the mean η_2 is 4.231meV, to be compared with
+  11.201meV for SCDM.
+For η_2^max (that is a more stringent test of the quality of
+  interpolation) the PDWF method also performs better, with a η_2^max =
+  36.743meV vs.
+84.011meV for SCDM.
+We can also observe this trend in <ref>: For η_2
+  and η_2^max, the PDWF histogram bins are much more clustered towards
+  η = 0.
+Note that in the cumulative histograms of η_2, at η = 20meV,
+  the PDWF cumulative count is closer to the total number of calculations (200).
+This indicates that the PDWF has a higher success rate in reducing the
+  interpolation error below 20meV.
+Similarly, for η_2^max, PDWF has a higher success rate in reducing the
+  interpolation error under 100meV (to get a better overview of η and
+  η^max, we further show the same histograms of η in a wider range
+  0100meV, and η^max in range 0500meV, in
+  <ref>).
+To reduce the effect of major outliers, we can also compare the interpolation
+  accuracy of successful calculations, i.e., excluding the outlier calculations
+  which have significantly large band distances.
+As shown in <ref>, the η_2^≤ 20, i.e.,
+  the average of all the calculations for which η_2 ≤ 20meV,
+  indicates that PDWF (2.922meV) is twice as good as SCDM
+  (5.280meV), and also has a higher success rate: for η_2^≤ 20,
+  193 / 200 = 96.5% of the structures have η_2 ≤ 20meV, while
+  for SCDM it is 183 / 200 = 91.5%.
+More details are listed in <ref>.
+
+
+In summary, PDWF provides more accurate and robust interpolations, especially
+  for bands around the Fermi energy or the band gap edges, which are the most
+  relevant bands for many applications.
+Last but not least, a higher energy range can be accurately interpolated by
+  increasing the number of PAOs (see <ref>).
+
+
+
+  §.§.§ MLWF centers
+
+Since we are aiming at restoring a tight-binding atomic-orbital picture with
+  PDWF, we compare the distance of the WF centers from the nearest-neighboring
+  (NN) and next-nearest-neighboring (NNN) atoms, again both for SCDM and PDWF.
+For each method, we compute d_NN and d_NNN, i.e., the
+  average distance of all the 6818 MLWFs from the respective NN and NNN
+  atoms.
+If d_NN is 0, then the atomic-orbital picture is strictly preserved.
+However, this is unlikely to happen since there is no constraint on the WF
+  centers during both the disentanglement and the localization, and the final
+  PDWFs, resembling atomic orbitals, are optimized according to the chemical
+  environment.
+Still, if a WF center is much closer to the NN atom than to the NNN atom, then
+  one can still assign it to the NN atom, preserving the atomic-orbital picture.
+<Ref> shows the histograms for d_NN and
+d_NNN for the two methods.
+The PDWF average d_NN = 0.43 is smaller than the
+  SCDM d_NN = 0.53, and correspondingly the PDWF
+  d_NNN = 2.19 is instead larger than the SCDM
+  d_NNN = 2.11.
+This can also be observed in <ref>: The overlap of
+  the d_NN and d_NNN histograms is smaller for PDWF than
+  for SCDM.
+To further understand the overlaps, we plot the histogram of the ratio
+  d_NN / d_NNN of each MLWF in the insets of
+  <ref>.
+For a MLWF, if d_NN / d_NNN = 1, then the MLWF is a bonding
+  orbital centered between two atoms; while if d_NN / d_NNN≪ 1, then it can be regarded as an (almost) atomic orbital.
+The histogram of the ratio of SCDM has a long tail extending towards 1.0, i.e.,
+  there are a large number of SCDM MLWFs sitting close to bond centers; on the
+  contrary, the vast majority of the PDWF MLWFs are closer to the NN atom.
+
+
+We can further compare the effect of maximal localization on the WF centers.
+The WFs from the projection matrices A_mn𝐤 are strictly
+  atom-centered, i.e. d_NN = 0.
+The inset of <ref> shows the histogram of the
+  initial WFs, i.e., after disentanglement and before maximal localization, and
+  the final MLWFs, i.e., after maximal localization, for PDWF.
+If one chooses d_NN≤ 0.1 as the criterion for
+  atom-centered MLWFs, then 5594/6818 = 82.0% of the initial WFs and
+  2045/6818 = 30.0% of the final MLWFs are atom-centered.
+The disentanglement and maximal localization improve the band interpolation,
+  but since there is no constraint on the WF center in the spread functional
+  <ref>, many of the final MLWF centers are not atom-centered.
+As a comparison, for SCDM, 955/6818 = 14.0% of the initial WFs and
+  1823/6818 = 26.7% of the final MLWFs are atom-centered.
+For completeness, the statistics and histograms of initial and final
+  d_NN, d_NNN, and d_NN / d_NNN are
+  shown in <ref> and <ref>.
+
+In summary, for PDWF, most of the initial WFs (after disentanglement and before
+  maximal localization) are atom-centered; many drift a bit away from atom
+  centers during the localization, but the MLWFs are still much closer to the NN
+  than to NNN atoms.
+For SCDM, most of the initial WFs are away from atom centers, and maximal
+  localization pushes some of the WFs back to atoms, but there is still a large
+  number of MLWFs for which an atom representing the WF center cannot be clearly
+  identified.
+To exactly fix the MLWFs to atomic positions, one needs to add constraints to
+  the spread functional <cit.>, at the cost of potentially having worse
+  interpolators.
+However, this is beyond the scope of the current work, and here we rely on the
+  atom-centered PAO projectors to guide the MLWFs towards the atomic positions,
+  so that the final MLWFs are optimally localized and atom-centered.
+
+
+
+  §.§.§ MLWF spreads
+
+Next, we investigate the spread distributions of SCDM and PDWF.
+Usually, we want localized MLWFs to restore the TB atomic orbitals.
+<Ref>
+shows the histograms of the spread distributions for the two methods.
+The SCDM spreads have a long tail extending over 10 ^2 in
+  <ref>, due to its inclusion of free-electron states in
+  the density matrix, thus resulting in more delocalized MLWFs as discussed
+  earlier (see e.g. <ref>).
+On the contrary, the PDWF selects and freezes atomic-orbital states from the
+  remaining bands, leading to much more localized MLWFs, thus much more clustered
+  in a narrow range of 04^2, and already at
+  5^2 the cumulative histogram almost reaches the total number of
+  MLWFs (see <ref>).
+This can be interpreted as follows: The PAO initial projections guide the
+  spread minimization toward the (local) minimum resembling spherical harmonics,
+  whereas the SCDM-decomposed basis vectors are designed to be mathematical
+  objects spanning as much as possible the density matrix, but result in WFs for
+  which it is harder to assign definite orbital characters.
+
+
+
+We can further compare the average initial (after disentanglement but before
+  maximal localization) and final (after disentanglement and maximal
+  localization) spreads between the two methods, as shown in
+  <ref> and corresponding histograms in
+  <ref>.
+Maximal localization is needed to bring SCDM spreads, from the initial
+  Ω^i = 30.82^2 to the final Ω^f =
+  3.54^2; For PDWF, the initial Ω^i =
+  2.72^2 is already excellent, and much better than the final
+  Ω^f for SCDM; localization then brings it to an optimal Ω^f =
+  1.41^2.
+
+
+
+  §.§.§ Hamiltonian decay
+
+
+Finally, we compare the decay length of the Wannier gauge Hamiltonian between
+  the two methods in <ref>.
+Thanks to the localization of MLWFs, the expectation values of quantum
+  mechanical operators in the MLWF basis, such as the Hamiltonian
+  H(𝐑), decay rapidly with respect to the lattice vector 𝐑
+  (exponentially in insulators<cit.> and properly
+  disentangled metals).
+To compare this decay for the Hamiltonian matrix elements, we approximate the
+  norm of the Hamiltonian as
   
-Case (a)
-For Case (a), y_2t+1^k = (1 - η L/2) y_2t^k + ην > 0 holds since y_2t^k ≥ 0, but the sign of z_2t^k and z_2t+1^k is undetermined.
-Thereby, we split the cases by the signs of z_2t^k and z_2t+1^k.
-
-First, assume z_2t^k < 0 and z_2t+1^k < 0. In this setting, y_2t^k ≥ 0, y_2t+1^k ≥ 0, z_2t^k < 0, z_2t+1^k < 0. Then,
-
-    y_2t+2^k + z_2t+2^k
-       =(1 - η L/2) y_2t+1^k + (1 - η L) z_2t+1^k
-       =(1 - η L/2) ( (1 - η L/2) y_2t^k + ην) + (1 - η L) ( (1 - η L) z_2t^k - ην)
-       =(1 - η L/2)^2 y_2t^k + (1 - η L)^2 z_2t^k + η^2 L ν/2
-       =(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2
-    + η L/2( (1 - η L/2)y_2t^k - (1 - η L)z_2t^k )
-       ≥(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2,
-
-where the last inequality holds because y_2t^k ≥ 0 and z_2t^k < 0.
-
-Next, assume z_2t^k ≥ 0 and z_2t+1^k < 0. In this setting, y_2t^k ≥ 0, y_2t+1^k ≥ 0, z_2t^k ≥ 0, z_2t+1^k < 0. Similarly,
-
-    y_2t+2^k + z_2t+2^k
-       =(1 - η L/2) y_2t+1^k + (1 - η L) z_2t+1^k
-       =(1 - η L/2) ( (1 - η L/2) y_2t^k + ην) + (1 - η L) ( (1 - η L/2)z_2t^k - ην)
-       =(1 - η L/2)^2 y_2t^k + (1 - η L)(1 - η L/2) z_2t^k + η^2 L ν/2
-       =(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2 + η L/2(1 - η L/2) y_2t^k
-       ≥(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2.
-
-
-Finally, assume both z_2t^k ≥ 0 and z_2t+1^k ≥ 0. In this setting, y_2t^k ≥ 0, y_2t+1^k ≥ 0, z_2t^k ≥ 0, z_2t+1^k ≥ 0. Since 0 ≤ z_2t+1^k = (1 - η L/2)z_2t^k - ην, z_2t^k ≥ην/1 - η L / 2 holds. Then,
-
-    y_2t+2^k + z_2t+2^k
-       =(1 - η L/2) y_2t+1^k + (1 - η L/2) z_2t+1^k
-       =(1 - η L/2) ( (1 - η L/2) y_2t^k + ην) + (1 - η L/2) ( (1 - η L/2) z_2t^k - ην)
-       =(1 - η L/2)^2 y_2t^k + (1 - η L/2)^2 z_2t^k
-       =(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2 
-    + η L/2(1 - η L/2) (y_2t^k + z_2t^k) - η^2 L ν/2
-       ≥(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2.
-
-In the last inequality, we used the fact that y_2t^k ≥ 0 and z_2t^k ≥η L/1 - η L /2.
-
-We don't have to consider the case when z_2t^k < 0 and z_2t+1^k ≥ 0 hold, because z_2t+1^k = (1 - η L)z_2t^k - ην < 0 if z_2t^k < 0. 
-Thus, we have proven the first inequality of the lemma for Case (a).
-
-
-
-  
-Case (b)
-For Case (b), we consider three cases depending on the signs of y_2t+1^k and z_2t+1^k.
-
-First, assume y_2t+1^k ≥ 0 and z_2t+1^k < 0 hold. 
-In this case, if z_2t^k ≥ 0, then z_2t+1^k = (1 - η L/2)z_2t^k + ην > 0; therefore, z_2t^k < 0 should hold. So in this setting, we have y_2t^k ≥ 0, y_2t+1^k ≥ 0, z_2t^k < 0, and z_2t+1^k < 0. Using this fact,
-
-    y_2t+2^k + z_2t+2^k
-       =(1 - η L/2) y_2t+1^k + (1 - η L) z_2t+1^k
-       =(1 - η L/2) ( (1 - η L/2) y_2t^k - ην) + (1 - η L) ( (1 - η L) z_2t^k + ην)
-       =(1 - η L/2)^2 y_2t^k + (1 - η L)^2 z_2t^k - η^2 L ν/2
-       =(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2 + η L/2( (1 - η L/2)y_2t^k - (1 - η L)z_2t^k - 2ην)
-       =(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2 + η L/2( y_2t+1^k - z_2t+1^k )
-       ≥(1 - η L/2)(1 - η L)(y_2t^k + z_2t^k) + η^2 L ν/2.
-
-
-Second, assume y_2t+1^k < 0 and z_2t+1^k ≥ 0. If z_2t^k < 0, the setting becomes y_2t^k ≥ 0, y_2t+1^k < 0, z_2t^k < 0, z_2t+1^k ≥ 0 so that
-
-    y_2t+2^k + z_2t+2^k
-       =(1 - η L) y_2t+1^k + (1 - η L/2) z_2t+1^k
-       =(1 - η L) ( (1 - η L/2) y_2t^k - ην) + (1 - η L/2) ( (1 - η L) z_2t^k + ην)
-       = (1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2.
-
-If z_2t^k ≥ 0, the setting becomes y_2t^k ≥ 0, y_2t+1^k < 0, z_2t^k ≥ 0, z_2t+1^k ≥ 0 so that
-
-    y_2t+2^k + z_2t+2^k
-       =(1 - η L) y_2t+1^k + (1 - η L/2) z_2t+1^k
-       =(1 - η L) ( (1 - η L/2) y_2t^k - ην) + (1 - η L/2) ( (1 - η L/2) z_2t^k + ην)
-       =(1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2 + η L/2(1 - η L/2)z_2t^k
-       ≥ (1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2.
-
-
-Lastly, assume y_2t+1^k ≥ 0 and z_2t+1^k ≥ 0. If z_2t^k < 0, the setting becomes y_2t^k ≥ 0, y_2t+1^k ≥ 0, z_2t^k < 0, z_2t+1^k ≥ 0 so that
-
-    y_2t+2^k + z_2t+2^k
-       =(1 - η L/2) y_2t+1^k + (1 - η L/2) z_2t+1^k
-       =(1 - η L/2) ( (1 - η L/2) y_2t^k - ην) + (1 - η L/2) ( (1 - η L) z_2t^k + ην)
-       = (1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2 + η L/2((1 - η L/2)y_2t^k - ην)
-       = (1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2 + η L/2y_2t+1^k
-       ≥ (1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2.
-
-If z_2t^k ≥ 0, the setting becomes y_2t^k ≥ 0, y_2t+1^k ≥ 0, z_2t^k ≥ 0, z_2t+1^k ≥ 0 so that
-
-    y_2t+2^k + z_2t+2^k
-       =(1 - η L/2) y_2t+1^k + (1 - η L/2) z_2t+1^k
-       =(1 - η L/2) ( (1 - η L/2) y_2t^k - ην) + (1 - η L/2) ( (1 - η L/2) z_2t^k + ην)
-       = (1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2+ η L/2((1 - η L/2)(y_2t^k + z_2t^k) - ην)
-       = (1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2+ η L/2(y_2t+1^k + (1 - η L/2)z_2t^k )
-       ≥ (1 - η L)(1 - η L/2)(y_2t^k + z_2t^k) + η^2 L ν/2.
-
-
-We do not have to consider the case when y_2t+1^k and z_2t+1^k are both less than 0, because y_2t+1^k + z_2t+1^k ≥ 0 always holds. This can be shown by case analysis on the sign of z_2t^k: if z_2t^k ≥ 0, then
-
-    y_2t+1^k + z_2t+1^k
-       = (1 - η L/2)y_2t^k - ην + (1 - η L/2)z_2t^k + ην
-       = (1 - η L/2)(y_2t^k + z_2t^k) ≥ 0,
-
-and if z_2t^k < 0, then
-
-    y_2t+1^k + z_2t+1^k
-       = (1 - η L/2)y_2t^k - ην + (1 - η L)z_2t^k + ην
-       = (1 - η L)(y_2t^k + z_2t^k) + η L/2 y_2t^k ≥ 0.
-
-Therefore, we have proven the first inequality of the lemma for Case (b).
-
-Putting the results of Case (a) and (b) together, we have
-
-    y_2t+2^k + z_2t+2^k ≥1 - η L/21 - η Ly_2t^k + z_2t^k + η^2 L ν/2
-
-for any t ≤n/2 - 1 and any k ∈{1, ⋯, K}, proving the first part of the lemma.
-
-It now remains to prove the second part, namely that 
-
-    y_n^k + z_n^k ≥ην/3 - η L
-
-holds if y_0^k + z_0^k ≥ην/3 - η L. From the first part of the lemma, we can see that the updates over a single epoch can be bounded as
-
-    y_n^k + z_n^k
-           ≥1 - η L/21 - η Ly_n-2^k + z_n-2^k + η^2 L ν/2
-       ≥⋯
-       ≥1 - η L/2^n/21 - η L^n/2y_0^k + z_0^k + η^2 L ν/2·∑_i=0^n/2-11 - η L/2^i1 - η L^i
-       = 1 - η L/2^n/21 - η L^n/2y_0^k + z_0^k + η^2 L ν/2·1 - (1 - η L/2)^n/2(1 - η L)^n/2/1 - (1 - η L/2)(1 - η L)
-       = 1 - η L/2^n/21 - η L^n/2y_0^k + z_0^k + ην/3 - η L1 - (1 - η L/2)^n/2(1 - η L)^n/2
-       = ην/3 - η L + 1 - η L/2^n/21 - η L^n/2y_0^k + z_0^k - ην/3 - η L.
-
-This ends the proof of the lemma.
-
-
-
- 
-    For any t ≥ 2, the following inequality holds:
-    
-    1 - 1/t^t > 1/e1 - 1/t.
-
-
-
-    
-    1 + 1/t-1^t-1 < e    t/t-1^t-1 < e
-       t-1/t^t-1 > 1/e1 - 1/t^t > 1/e1 - 1/t.
-
-
-
-
-
-§ TEMP
- 
-Here we prove <ref>, restated below for the sake of readability.
-*
-
-Similarly as in <ref>, we define objective functions for four step-size regimes and aggregate the functions to obtain the final lower bound. Here we also assume n is even, where we can easily extend to odd n's by the same reasoning as in <ref>.
-
-We will prove the following lower bounds for each regime. Here F_j^* is the minimizer of F_j for j = 1, 2, 3, 4. 
-
-
-    
-  * If η∈( 0, 1/2 μ n K), there exists a 1-dimensional objective function F_1(x) ∈_PŁ(L,μ,0,ν) such that any permutation-based SGD with initialization x_0^1 = L ν/μ^2 n K satisfies
-    
-    F_1(x̂) - F_1^* = Ω( L^2 ν^2/μ^3 n^2 K^2).
-
-    
-  * If η∈[1/2 μ n K, 2/nL], there exists a 1-dimensional objective function F_2(y) ∈_PŁL,μ,L/μ,ν such that any permutation-based SGD with initialization y_0^1 = ν/60L satisfies
-    
-    F_2(ŷ) - F_2^* = Ω( L^2 ν^2/μ^3 n^2 K^2).
-
-    
-  * If η∈[2/n L, 1/L], there exists a 1-dimensional objective function F_3(z) ∈_PŁL,μ,L/μ,ν such that any permutation-based SGD with initialization z_0^1 = 3ν/8nL satisfies
-    
-    F_3(ẑ) - F_3^* = Ω( L^2 ν^2/μ^3 n^2 K^2).
-
-    
-  * If η > 1/L, there exists a 1-dimensional objective function F_4(w) ∈_PŁ(2L,μ,0,ν) such that any permutation-based SGD with initialization w_0^1 = L^1/2ν/μ^3/2 n K satisfies
-    
-    F_4(ŵ) - F_4^* = Ω( L^2 ν^2/μ^3 n^2 K^2).
-
-
-
-Now we define the 4-dimensional function F() = F(x, y, z, w) = F_1(x) + F_2(y) + F_3(z) + F_4(w), where F_1, F_2, F_3, and F_4 are chosen to satisfy the above lower bounds.
-
-
-Following the analyses in <ref>, F is 2L-smooth and μ-strongly convex. Also, if four functions H_1, H_2, H_3, and H_4 (each with n components h_1, i, h_2, i, h_3, i, and h_4, i) satisfies Assumption <ref> for τ = τ_0 and ν = ν_0, then H() = H_1(x) + H_2(y) + H_3(z) + H_4(w) satisfies
-
-    ∇ h_i () - ∇ H()^2
-           = ∇ h_1, i (x) - ∇ H_1(x)^2 + ∇ h_2, i (y) - ∇ H_2(y)^2
-             + ∇ h_3, i (z) - ∇ H_3(z)^2 + ∇ h_4, i (w) - ∇ H_4(w)^2
-       ≤τ_0 H_1(x) + ν_0^2 + τ_0 H_2(y) + ν_0^2 + τ_0 H_3(z) + ν_0^2 + τ_0 H_4(w) + ν_0^2
-       ≤ (2τ_0^2 H_1(x)^2 + 2ν_0^2) + (2τ_0^2 H_2(y)^2 + 2ν_0^2)
-             + (2τ_0^2 H_3(z)^2 + 2ν_0^2) + (2τ_0^2 H_4(w)^2 + 2ν_0^2)
-       ≤ 2τ_0^2 H_1(x)^2 +H_2(y)^2 + H_3(z)^2 + H_4(w)^2 + 8ν_0^2
-       = 2τ_0^2 H()^2 + 8ν_0^2 < 2τ_0 H() + 3ν_0^2.
-
-for all i = 1, …, n, i.e., H() satisfies Assumption <ref> for τ = 2τ_0 and ν = 3ν_0. Combining these results, we obtain F ∈_PŁ2L,μ,2L/μ,3ν, which allows us to directly apply the convergence rates in the lower bounds of F_1, F_2, F_3, and F_4 to the aggregated function F.
-
-Note that we assumed κ≥ 8n and our constructed function is 2L-smooth and μ-strongly convex.
-Thus, κ≥ 8n is equivalent to L/μ≥ 4n throughout the proof.
-Also, since we assumed K ≥κ^2/n, K ≥κ^2/n≥κ holds thus 1/2μ n K≤2/nL holds so all step size regimes are valid.
-
-Finally, rescaling L and ν will give us the function F ∈_PŁL, μ, L/μ, ν satisfying F() - F^* = ΩL^2 ν^2/μ^3 n^2 K^2.
-
-
-For the following subsections, we prove the lower bounds for F_1, F_2, F_3, and F_4 at the corresponding step size regime.
-
-
-
-
- §.§ temp
- 
-Here we show that there exists F_1 (x) ∈_PŁ (L, μ, 0, ν) such that any permutation-based SGD with x_0^1 = L ν/μ^2 n K satisfies
-
-    F_1(x̂) - F_1^* = Ω( L^2 ν^2/μ^3 n^2 K^2).
-
-
-
-We define F_1 (x) ∈_PŁ (μ, μ, 0, 0) by the following components:
-
-    f_i(x) = μ/2x^2.
-
-Note that _PŁ (μ, μ, 0, 0) ⊆_PŁ (L, μ, 0, ν) and F_1^* = 0 at x^* = 0 by definition.
-
-In this regime, we will see that the step size is too small so that x_n^k_k=1^K cannot even reach near the optimal point.
-We start from x_0^1 = L ν/μ^2 n K. Since the gradient of all component functions at point x are identical to μ x, regardless of the permutation-based SGD algorithm we use, we have
-
-    x_n^k = x_0^1 (1 - ημ)^nk   ≥L ν/μ^2 n K(1 - 1/2nK)^nk≥L ν/μ^2 n K(1 - 1/2nK)^nK
-       > L ν/μ^2 n K(1 - 1/nK)^nK(a) > L ν/μ^2 n K1/e(1 - 1/nK) (b)≥L ν/μ^2 n K1/2e.
-
-where (a) comes from lmm:thm1_2 and (b) comes from assumption that n ≥ 2. Therefore, we have x̂ = ΩL ν/μ^2 n K for any nonnegative weights α_k_k=1^K+1. With this x̂, we have
-
-    F_1(x̂) - F_1^* = μ/2x̂^2 = ΩL^2 ν^2/μ^3 n^2 K^2.
-
-
-
-
-
-
- §.§ temp
- 
-Here we show that there exists F_2 (y) ∈_PŁL, μ, L/μ, ν such that any permutation-based SGD with y_0^1 = ν/60L satisfies
-
-    F_2(ŷ) - F_2^* = Ω( L^2 ν^2/μ^3 n^2K^2).
-
-
-
-We define F_2(y) by the following components:
-
-    f_i(y) =
-        
-            g_1(y)     if    i ≤n/2,
-    
-            g_2(y)     otherwise,
-
-where
-
-    g_1(y) = L/2y^2 - ν y,
-       g_2(y) = -L/21 - 2μ/Ly^2 + ν y.
-
-With this construction, the finite-sum objective becomes
-
-    F_2(y) = 1/n∑_i=1^n f_i(y) = μ/2 y^2.
-
-Note that all the components are L-smooth and F is μ-strongly convex. Moreover,
-
-    ∇ f_1(y) - ∇ F_2(y)   = (Ly - ν) - μ y≤(L-μ)y + ν
-       ≤ L y + ν = L/μ∇ F_2(y) + ν,
-    ∇ f_n/2+1(y) - ∇ F_2(y)   = -L1 - 2μ/Ly + ν - μ y≤(L - μ)y + ν
-       ≤ L y + ν = L/μ∇ F_2(y) + ν,
-
-and thereby F_2 ∈_PŁL, μ, L/μ, ν. Also, we can easily verify F_2^* = 0 at y^* = 0.
-
-To simplify notation, we will write ∇ f_i(y) = a_i y - b_i temporarily. Then, a_i ∈L, -L1 - 2μ/L, b_i ∈ν, -ν holds and we can write y_n^k as
-
-    y_1^k = y_0^k - η∇ f_σ_k(1)y_0^k   = 1 - η a_σ_k(1)y_0^k + η b_σ_k(1), 
-    
-        y_2^k = y_1^k - η∇ f_σ_k(2)y_1^k   = 1 - η a_σ_k(2)y_1^k + η b_σ_k(2)
-       = 1 - η a_σ_k(2)1 - η a_σ_k(1)y_0^k + η b_σ_k(2) + η b_σ_k(1)1 - η a_σ_k(2), 
-    ⋮
-    
-        y_n^k = y_n-1^k - η∇ f_σ_k(n)y_n-1^k   = ∏_i=1^n 1 - η a_σ_k(i) y_0^k + η∑_i=1^n b_σ_k(i)∏_j=i+1^n1 - η a_σ_k(j).
-
-Note that S := ∏_i=1^n 1 - η a_σ_k(i) = ∏_i=1^n 1 - η a_i is independent of the choice of σ_k, and thus A_σ := η∑_i=1^n b_σ(i)∏_j=i+1^n1 - η a_σ(j) is the term that we can control using permutation-based SGD.
-
-We now consider which permutation σ minimizes A_σ. Choose an arbitrary σ and assume there exists t ∈{1, ⋯, n-1 } such that f_σ(t) = g_2 and f_σ(t+1) = g_1. Then, define another permutation σ^' by σ^' (t) = σ (t+1), σ^' (t+1) = σ (t) and σ^' (i)= σ (i) for i ∈{1, ⋯, n }∖{t, t+1}.
-
-Let y_σ and y_σ^' as the value of y_n^k generated by σ and σ_1^' starting from the same y_0^k, respectively. Since b_σ(i)∏_j=i+1^n1 - η a_σ(j) = b_σ^'(i)∏_j=i+1^n1 - η a_σ^'(j) for i ∈{1, ⋯, n }∖{t, t+1}, we have
-
-    y_σ - y_σ'   = ∏_i=1^n 1 - η a_σ(i) y_0^k + η∑_i=1^n b_σ(i)∏_j=i+1^n1 - η a_σ(j)
-              - ∏_i=1^n 1 - η a_σ^'(i) y_0^k + η∑_i=1^n b_σ^'(i)∏_j=i+1^n1 - η a_σ^'(j)
-       = η( b_σ(t)∏_j=t+1^n1 - η a_σ(j) + b_σ(t+1)∏_j=t+2^n1 - η a_σ(j)
-                     - b_σ^'(t)∏_j=t+1^n1 - η a_σ^'(j) - b_σ^'(t+1)∏_j=t+2^n1 - η a_σ^'(j)) 
-       = η∏_j=t+2^n1 - η a_σ(j)· -ν1 - η L + ν - ν1 + η L 1 - 2μ/L - (-ν)
-       = η∏_j=t+2^n1 - η a_σ(j)· 2 ημν > 0.
-
-Thereby, we can conclude that the permutation σ that minimizes A_σ should satisfy σ(i) ≤ n/2 for i ≤ n/2 and σ(i) > n/2 for i > n/2, i.e., f_σ(i) = g_1 for i ≤ n/2 and f_σ(i) = g_2 for i > n/2. Let σ^* denote such σ.
-
-With this permutation σ^*, A_σ^* becomes
-
-    A_σ^*   =ην·( 1 + η L (1 - 2 μ/L) )^n/2 ∑_i=0^n/2-1 (1 - η L)^i - ην·∑_i=0^n/2-1( 1 + η L (1 - 2 μ/L) )^i.
-
-Here, we introduce β := 1 - 2μ/L and m := n/2 to simplify notation a bit. Note that β≥ 1 - 1/m holds since we assumed L/μ > n.
-Then A_σ^* can be rearranged as 
-
-    A_σ^*   =ην·( 1 + η L β)^m 1-(1-η L)^m/η L - ην·(1+η L β)^m - 1/η L β
-       = ν/L β·( (1 + η L β)^m (β - 1) - β(1 + η L β)^m (1 - η L)^m + 1 ).
-
-Using lmm:thm2_1 (substituting η L to x), we have ν/L β·( (1 + η L β)^m (β - 1) - β(1 + η L β)^m (1 - η L)^m + 1 ) ≥η^2 m L ν/30. 
-
-We now show a lower bound for S. 
-
-    S
-           = ∏_i=1^n 1 - η a_i
-       = 1 - η L^m 1 + η L β^m 
-       = (1 - η L (1 - β) - η^2 L^2 β)^m
-       = (1 - η L ·2μ/L - η^2 L^2 (1 - 2μ/L) )^m
-       >(1 - 2 ημ - η^2 L^2)^m
-       ≥
-        (1 - 4 ημ)^m > 1 - 4 η m μ,    (if 1/2 μ n K≤η < 2μ/L^2)
-    
-        (1 - 2 η^2 L^2)^m > 1 - 2 η^2 m L^2.    (if 2μ/L^2≤η≤2/nL)
-
-We start at y_0^1 = ν/60L.
-Being aware of κ = 2L/μ in the construction, We first verify that
-
-    ν/60L
-        = ν/60LK/K≥ν/60Lκ^2/nK
-        = 4Lν/60 μ^21/nK > L ν/240 μ^2 n K.
-
-
-For the case when 1/2 μ n K≤η < 2μ/L^2,
-
-    y_n^1
-           = S y_0^1 + A_σ_1
-       ≥ (1 - 4 η m μ) L ν/240 μ^2 n K + η^2 m L ν/30
-       = L ν/240 μ^2 n K - η L ν/120 μ K + η^2 n L ν/60             (∵ n=2m)
-       = L ν/240 μ^2 n K - η n L ν/601/2 μ n K - η
-       ≥L ν/240 μ^2 n K.
-
-Applying this process in a chain, we then gain y_n^k ≥L ν/240 μ^2 n K for all k ∈{1, ⋯, K}.
-Therefore, regardless of the choice of {α_k}_k=1^K+1, ŷ = ΩL ν/μ^2 n K holds and F_2(ŷ) - F_2^* = μ/2ŷ^2 = ΩL^2 ν^2/μ^3 n^2 K^2.
-
-For the case when 2μ/L^2≤η≤2/nL, we have
-
-    y_n^1
-           = S y_0^1 + A_σ_1
-       ≥ (1 - 2 η^2 m L^2) ν/60L + η^2 m L ν/30
-       = ν/60L.
-
-Applying this process in a chain, we then gain y_n^k ≥ν/60L for all k ∈{1, ⋯, K}.
-Therefore, regardless of the choice of {α_k}_k=1^K+1, ŷ = Ων/60L holds and F_2(ŷ) - F_2^* = μ/2ŷ^2 = Ω(μν^2/L^2) = Ω(L^2 ν^2/μ^3 n^2 K^2), 
-where we used K ≥κ^2/n in the last step.
-
-
-
-
-
- §.§ temp
- 
-Here we show that there exists F_3 (z) ∈_PŁL, μ, L/μ, ν such that any permutation-based SGD with z_0^1 = 3ν/8nL satisfies
-
-    F_3(ẑ) - F_3^* = Ω( L^2 ν^2/μ^3 n^2K^2).
-
-
-
-We define F_3 (z) by the following components:
-
-    f_i(z) = L/2z^2 - ν z    if  i = 1,
-    
-        -L/4(n-1)z^2 + ν/n-1z    otherwise.
-
-With this construction, the finite-sum objective becomes
-
-    F_3(z) = 1/n∑_i=1^n f_i(z) = L/4n z^2.
-
-Note that all the components are L-smooth and F is μ-strongly convex since we assumed L/4n≥μ. Moreover,
-
-    ∇ f_1(z) - ∇ F_3(z)   = Lz - ν - Lz/2n≤1 - 1/2nLz + ν
-       ≤Lz + ν = 2n ∇ F_3(z) + ν≤L/μ∇ F_3(z) + ν,
-    ∇ f_2(z) - ∇ F_3(z)   = -Lz/2(n-1) + ν/n-1 - Lz/2n
-       < Lz + ν = 2n ∇ F_3(z) + ν≤L/μ∇ F_3(z) + ν,
-
-and thereby F_3 ∈_PŁL, μ, L/μ, ν.
-Also, we can easily verify F_3^* = 0 at z^* = 0.
-
-Similarly as in (<ref>), we temporarily write ∇ f_i(y) = a_i y - b_i where a_i ∈L, -L/2(n-1), b_i ∈ν, -ν/n-1 holds.
-We then write y_n^k as S y_0^k + A_σ_k, where S := ∏_i=1^n 1 - η a_σ_k(i) = ∏_i=1^n 1 - η a_i is independent of the choice of σ_k, and A_σ := η∑_i=1^n b_σ(i)∏_j=i+1^n1 - η a_σ(j) is the term that we can control using permutation-based SGD.
-
- We will first find what permutation σ leads to the smallest A_σ.
- Choose arbitrary σ and assume that σ (1) ≠ 1. Define t := σ^-1 (1). 
- We then define another permutation σ^' by σ^' (t-1) = 1, σ^' (t) = σ (t-1) and σ^' (i) = σ (i) for i ∈{1, ⋯, n}∖{t-1, t}.
-
-Let z_σ and z_σ^' as the value of z_n^k generated by σ and σ_1^' starting from the same z_0^k, respectively.
-We will show that z_σ_1 > z_σ_1^'.
-In a similar manner as (<ref>),
-
-    z_σ - z_σ^'   = S z_0^k + A_σ - S z_0^k - A_σ^'
-       = η∏_j=t+2^n 1 + η L/2(n-1)·-ν/n-11 - η L + ν - ν1 + η L/2(n-1) - ν/n-1
-       = η∏_j=t+1^n 1 + η L/2(n-1)·η L ν/2(n-1) > 0
-
-holds.
-Thus, we can conclude that the permutation σ satisfying σ(1) = 1 is the permutation that minimizes A_σ. 
-Let σ^* denote such σ_1. 
-
-With this permutation σ^*, A_σ^* becomes
-
-    A_σ^*   = ην( 1 + η L/2(n-1))^n-1 - ην/n-1∑_i=0^n-2( 1 + η L/2(n-1))^i 
-       = ην( 1 + η L/2(n-1))^n-1 - ην/n-1·(1 + η L/(2(n-1)))^n-1 - 1/η L /(2(n-1))
-       = 2ν/L - ( 1 + η L/2(n-1))^n-1( 2ν/L - ην).
-
-Note that η L ≤ 1, so 2ν/L - ην is nonnegative. Using lmm:thm2_5, we have
-
-    1 + η L/2(n-1)^n-1 < e^η L/2 < 1 + η L/2 + 5 η^2 L^2/32.
-
-Substituting (<ref>) to (<ref>) results
-
-    A_σ^*   > 2ν/L - (1 + η L/2 + 5η^2 L^2/32) ( 2ν/L - ην)
-       = 3η^2 L ν/16 + 5 η^3 L^2 ν/32
-       > 3η^2 L ν/16.
-
-
-
-
-
-
-
-
-
-
-
-We start at z_0^1 = 3ν/8nL. Using S=(1 - η L)(1 + η L/2(n-1))^n-1 > 1 - η L, we have
-
-    z_n^1
-           = S z_0^1 + A_σ^*
-       ≥ (1 - η L) z_0^1 + 3η^2 L ν/16
-       = (1 - η L)3ν/8nL + 3η^2 L ν/16
-       = 3ν/8nL - 3ην/8n + 3η^2 L ν/16
-       = 3ν/8nL - 3 η L ν/162/nL - η
-       ≥3ν/8nL.
-
-Applying this process in a chain, we then gain z_n^k ≥3ν/8nL for all k ∈{1, ⋯, K}.
-Therefore, regardless of the choice of {α_k}_k=1^K+1, ẑ = Ω3ν/8nL holds and F_3(ẑ) - F_3^* = L/4nẑ^2 = Ω(ν^2/n^3L) = Ω(L^2 ν^2/μ^3 n^2 K^2), 
-where we used K ≥κ^3/2n^1/2 in the last step.
-
-
-
-
-
- §.§ temp
- 
-Here we show that there exists F_4 (w) ∈_PŁ (2L, μ, 0, ν) such that any permutation-based SGD with w_0^1 = L^1/2ν/μ^3/2 n K satisfies
-
-    F_4(ŵ) - F_4^* = Ω( L^2 ν^2/μ^3 n^2 K^2).
-
-
-
-We define F_4 (w) ∈_PŁ (2L, 2L, 0, 0) by the following components:
-
-    f_i(w) = Lw^2.
-
-Note that _PŁ(2L, 2L, 0, 0) ⊆_PŁ (2L, μ, 0, ν) and F_4^* = 0 at w^* = 0 by definition.
-
-In this regime, we will see that the step size is too large so that w_n^k_k=1^K diverges.
-We start from w_0^1 = L^1/2ν/μ^3/2 n K. Since the gradient of all component functions at point w are identical to 2 L w, we have for every k ∈ [K],
-
-    w_n^k = 1 - 2 η L^nk w_0^1 ≥ 1^nkL^1/2ν/μ^3/2 n K   = ΩL^1/2ν/μ^3/2 n K,
-
-where we used the fact that n is even in the second step.
-Thus, regardless of the permutation-based SGD algorithm we use, we have ŵ = ΩL^1/2ν/μ^3/2 n K and F_4(ŵ) - F_4^* = L ŵ^2 = ΩL^2 ν^2/μ^3 n^2 K^2.
-
-
-
-
-
- §.§ temp
- 
-In this subsection, we will prove the lemmas used in <ref>.
- 
-    For any even n ≥ 104, any 0 < x ≤2/n and any 1 - 2/n≤β < 1, let m=n/2. Then, the following inequality holds:
-    
-    (1 + β x)^m (β - 1) - β(1 + β x)^m (1 - x)^m + 1≥m x^2/30.
-
-
-
-
-To prove the lemma, we focus on the coefficients of x^k for 0 ≤ k ≤ 2m.
-
-Define a_k as the absolute value of x^k's coefficient in (1 + β x)^m (β - 1).
-Using the fact that 1-1/m≤β < 1 , a_k = |mkβ^k (β - 1) |≤m^k/k!·1/m = m^k-1/k!. Note that for k ≥ m+1, a_k is 0.
-
-Let b_k be x^k's coefficient in β(1 + β x)^m (1 - x)^m.
-While the sequence of coefficients {b_k} have alternating signs, we can define a positive sequence c_k which upper bounds the sequence |b_k|.
-Since (1 + β x)^m (1 - x)^m = (1 - (1 - β)x - β x^2)^m,
-
-    |b_k|    = β·∑_t=max0, k-m^⌊k/2⌋ (-β)^t (-(1-β))^k-2tm!/t!(k-2t)!(m-k+t)!
-       ≤ 1 ·∑_t=max0, k-m^⌊k/2⌋β^t (1-β)^k-2tm!/t!(k-2t)!(m-k+t)!
-       ≜ c_k
-
-Then x^k's coefficient in LHS of <ref> is lower bounded by -(a_k + c_k).
-For even k < m, we have
-
-    c_k+1/c_k   ≤ (1 - β) max_t ≤⌊k/2⌋m!/(t!(k+1-2t)!(m-k-1+t)!)/m!/(t!(k-2t)!(m-k+t)!)
-       ≤1/mmax_t ≤⌊k/2⌋m-k+t/k+1-2t
-       ≤1/mmax_t ≤⌊k/2⌋ (m-k+t) 
-       ≤1/m· m 
-       = 1.
-
-For odd k < m, we have
-
-    c_k+1   = β^k+1/2m!/(k+1/2)!(m-k+1/2)! + ∑_t=0^k-1/2β^t (1-β)^k+1-2tm!/t!(k+1-2t)!(m-k-1+t)!
-       < 1^k+1/2·m^k+1/2/(k+1/2)! + c_k · (1 - β) max_t ≤⌊k/2⌋m!/(t!(k+1-2t)!(m-k-1+t)!)/m!/(t!(k-2t)!(m-k+t)!)
-       ≤m^k+1/2/(k+1/2)! + c_k.
-
-For k ≥ m, we have
-
-    c_k+1/c_k   ≤ (1 - β) max_t ≤⌊k/2⌋m!/(t!(k+1-2t)!(m-k-1+t)!)/m!/(t!(k-2t)!(m-k+t)!)
-       ≤1/mmax_t ≤⌊k/2⌋m-k+t/k+1-2t
-       ≤1/mmax_t ≤⌊k/2⌋ (m-k+t) 
-       ≤1/m·(m-k/2) 
-       ≤1/m·m/2
-       = 1/2.
-
-Using (<ref>), (<ref>) and (<ref>), we will show a_k + c_k ≤2· m^k-1/k! for 4 ≤ k ≤ 2m.
-
-Note that c_1 = (1-β)·m!/(m-1)!≤ 1. Also, we can easily prove ∑_i=0^pm^i/i!≤m^p/(p-1)! for ∀ m ≥ 3, ∀ 2 ≤ p ≤ m-1 using mathematical induction. Therefore, for k ≤ m,
-
-    c_k ≤∑_i=0^k-1/2m^i/i!≤m^k-1/2/(k-1/2 - 1)!   if k is odd,
-    
-        c_k ≤∑_i=0^k/2m^i/i!≤m^k/2/(k/2 - 1)!   if k is even,
-
-and applying lmm:thm2_2 and lmm:thm2_3, we finally get c_k ≤m^k-1/k!.
-
-For k > m,
-
-    c_k
-           ≤ c_m ·(1/2)^k-m
-       < m^m-1/m!·m/m+1·m/m+2·⋯·m/k
-       = m^k-1/k!.
-
-Thus, we have proven a_k + c_k ≤2 · m^k-1/k! for 4 ≤ k ≤ 2m. This means that the absolute value of the x^k's coefficient of LHS of our statement is upper bounded by 2 · m^k-1/k! when 4 ≤ k ≤ 2m.
-
-We now consider the coefficient of x^k when k < 4.
-For k = 0, the coefficient is
-
-    (β - 1) - β· 1 + 1 = 0.
-
-For k = 1, the coefficient is
-
-    β m (β - 1) - β (β m - m) = 0.
-
-For k = 2, the coefficient is
-
-    β^2 ·m2· (β - 1) - β·( (1- β)^2 ·m2 - β· m ) = β^2 ·m(m+1)/2 - β·m(m-1)/2.
-
-For fixed m, RHS is a qudratic with respect to β, and it is minimized when β is 1 - 1/m. Hence the above equation can be lower bounded by
-
-    1 - 1/m^2 ·m(m+1)/2 - 1 - 1/m·m(m-1)/2
-       =m/2 - 1 + 1/2m
-       ≥2m/5.    (m ≥ 10).
-
-For k=3, the coefficient is
-
-    β^3 ·m3· (β - 1) - β·( -m3 + m ·β·m2 - m2·β^2 · m + m3·β^3 ) 
-       =β/6· m(m-1)(m-2) - β^2/2· m^2(m-1) + β^3/3· (m+1)m(m-1) .
-
-For fixed m, (<ref>) is a cubic function with respect to β. Differentiating this function, we get
-
-    β^2 (m+1)m(m-1) - β m^2(m-1) + m(m-1)(m-2)/6
-       =m(m-1) ·β^2 (m+1) - β m + m-2/6
-       =m(m-1) ·β m (β - 1) + β^2 + m-2/6
-       ≥ m(m-1) · -β + β^2 + m-2/6   (∵β - 1 ≥ -1/m)
-       = m(m-1) ·β (β - 1) + m-2/6
-       ≥ m(m-1) ·-1/m + m-2/6   (∵β≤ 1   &  β - 1 ≥ -1/m)
-       > 0.    (∵ m ≥ 4)
-
-Thereby, (<ref>) is minimized when β is 1 - 1/m, and substituting such β to (<ref>) results
-
-    1 - 1/m/6· m(m-1)(m-2) - 1 - 1/m^2/2· m^2(m-1) + 1 - 1/m^3/3· (m+1)m(m-1) 
-       = -m^2/6 - 1/m + 1/3m^2 + 5/6
-       ≥ -m^2/6.
-
-Remind that x^k's coefficient in LHS of <ref> is lower bounded by -(a_k + c_k).
-Summing up (<ref>), (<ref>), and the fact that a_k + c_k ≤2 · m^k-1/k! for k ≥ 4, we obtain
-
-    (1 + β x)^m (β - 1) - β(1 + β x)^m (1 - x)^m + 1
-       ≥2m/5 x^2 - m^2/6 x^3 - ∑_k=4^2m x^k ·2 · m^k-1/k!
-       > 2/5 mx^2 - mx/6 mx^2 - ∑_k=4^∞ x^k ·2 · m^k-1/k!
-       ≥2/5 mx^2 - 1/6 mx^2 - mx^2 ·2/m^2x^2·∑_k=4^∞(mx)^k/k!   (∵ mx ≤ 1).
-
-For the last term, 1/m^2x^2·∑_k=4^∞(mx)^k/k! is an increasing function of mx so it is maximized when mx is 1. 
-Thereby we can further extend the above inequality as:
-
-    2/5 mx^2 - 1/6 mx^2 - mx^2 · 2(e - 1 - 1/1! - 1/2! - 1/3!) 
-       ≥2/5 mx^2 - 1/6 mx^2 - 1/5mx^2
-       = 1/30 mx^2.
-
-
-
-
- 
-    For m ≥ 52 and even 4 ≤ k ≤ m, m^k-1/k! > m^k/2/(k/2 - 1 )! holds.
-
-
-
-We first consider the case when k ≥ 14. 
-Since m ≥ k, it is sufficient to show m^k/2 - 2 > (k-1)!/(k/2 - 1 )!.
-Taking log on both sides, this inequality becomes
-
-    k/2 - 2log m > ∑_i=k/2^k-1log i.
-
-Using ∑_i=k/2^k-1log i < ∫_k/2^klog x   dx, we will instead prove following inequality when k ≥ 16:
-
-    log m > ∫_k/2^klog x   dx/k/2 - 2 = k log k - k/2logk/2 - k/2/k/2 - 2.
-
-Define f(X) := 2X log(2X) - X log X - X/X-2 = X log X + 2X log 2 - X/X-2. Then,
-
-    /
-        f'(X)
-           = ( X log X + 2X log 2 - X/X-2)'
-       = X - 2 log X - 4 log 2/(X-2)^2.
-
-We can numerically check that f'(k/2) > 0 holds for k ≥ 14.
-Therefore, for fixed m, _k ≥ 14 f( k/2) = 2⌊m/2⌋.
-
-We now have to prove log m > f( ⌊m/2⌋).
-Let s = ⌊m/2⌋. Then f( ⌊m/2⌋) becomes
-
-    f( s ) = s log s + 2s log2 - s/s-2.
-
-Combining log m ≥log (2s) and
-
-    log (2s) ≥s log s + 2s log 2 - s/s-2
-       ⟺ (s-2) log (2s) ≥ s log s + 2s log 2 - s
-       ⟺ s ≥ (s+2) log 2 + 2 log s
-       ⟸ s ≥ 26 ⟺ m ≥ 52,
-
-we have proven the statement.
-
-Now, we are left to prove the lemma for k < 14. Exchanging m^k/2 and k! in the statement of the lemma, we have
-
-    m^k/2-1 > k!/k/2-1!.
-
-We can numerically check that
-
-    
-  * for k = 4, m ≥ 25 is sufficient,
-    
-  * for k = 6, m ≥ 19 is sufficient,
-    
-  * for k = 8, m ≥ 19 is sufficient,
-    
-  * for k = 10, m ≥ 20 is sufficient,
-    
-  * for k = 12, m ≥ 21 is sufficient,
-    
-    
-
-for (<ref>) to hold. This ends the proof of the lemma.
-
-
-
- 
-    For m ≥ 52 and odd 4 ≤ k ≤ m,  m^k-1/k! > m^k-1/2/(k-1/2 - 1)!
-
- 
-
-    m^k-1/k! = m/k·m^k-2/(k-1)! > m/k·m^k-1/2/( k-1/2 - 1 )!≥m^k-1/2/( k-1/2 - 1 )!,
-
-where we used lmm:thm2_2 in the first inequality. This ends the proof.
-
-
-
- 
-    For x ≤ 1, the following inequality holds:
-    
-    e^x/2 < 1 + x/2 + 5x^2/32.
-
-
-
-Using Taylor expansion,
-
-    e^x/2   = 1 + x/2 + x^2/8 + ∑_i=3^∞1/i!·x^i/2^i
-       = 1 + x/2 + x^2/8 + x^2 ∑_i=3^∞1/i!·x^i-2/2^i
-       ≤ 1 + x/2 + x^2/8 + x^2 ∑_i=3^∞1/i!·1/2^i
-       = 1 + x/2 + x^2/8 + x^2 e^1/2 - 1 - 1/1! · 2 - 1/2! · 2^2
-       ≤ 1 + x/2 + x^2/8 + x^2/32
-       = 1 + x/2 + 5x^2/32.
-
-
-
-
-
-§ TEMP
- 
-*
-
-While <cit.> gained convergence rate for F ∈ℱ_PŁ (L,μ,0,ν), 
-we found out that their result can easily be extended to F ∈ℱ_PŁ (L,μ,τ,ν) with a slight adjustment.
-We basically follow up the proof step in Theorem 1 of <cit.>. We first state 2 lemmas that will help us prove the proposition.
-[<cit.>, Lemma 2] newlemmagrabUBlmma
-    
-    Applying offline GraB to a function F ∈ℱ_PŁ (L,μ,τ,ν) with η n L < 1 results
-    
-    F(_n^K) - F^* ≤ρ^K (F(_0^1) - F^*) + η n L^2/2∑_k=1^K ρ^K-kΔ_k^2 - η n/4∑_k=1^Kρ^K-k∇ F(_0^k)^2,
-
-    where ρ = 1 - η n μ/2 and Δ_k = max_m=1, ⋯ , n_m^k - _0^k for all k ∈ [K].
-
-[Extended version of <cit.>, Lemma 3]newlemmagrabUBlmmb
-    
-    Applying offline GraB to a function F ∈ℱ_PŁ (L,μ,τ,ν) with η n L ≤1/2 results
-    
-    Δ_1 ≤ 2 η n ν + 2 η n (τ+1) ·∇ F(_0^1),    and
-       Δ_k ≤ 2η H ν + (2η H τ + 2η n) ·‖∇ F ( _0^k ) ‖ + ( 4η HL(τ+1) + 8η nL ) ·Δ_k-1
-
-for k ∈ [K]∖{1}.
-
-We defer the proofs of the lemmas to <ref>.
-We start by finding the upper bound of ∑_k=1^K ρ^K-kΔ_k^2. From lmm:grabUBlmm2, we have
-
-    Δ_k ≤ 2η H ν + (2η H τ + 2η n) ·∇ F ( _0^k ) +  4η HL(τ+1) + 8η nL ·Δ_k-1
-
-for k ∈ [K] ∖{1}. Taking square on both sides and applying the inequality 3 a^2 + b^2 + c^2≥a + b + c^2, we get
-
-    Δ_k^2 ≤ 3 η^2 (4 HL(τ+1) + 8nL )^2 Δ_k-1^2 + 12 η^2 H^2 ν^2 + 12 η^2 (Hτ+n)^2 ‖∇ F ( _0^k ) ‖^2.
-
-Similarly, for k=1, we have
-
-    Δ_1^2 ≤ 8 η^2 n^2 (τ+1)^2 ‖∇ F(_0^1) ‖^2 + 8 η^2 n^2 ν^2.
-
-Hence,
-
-    ∑_k=1^K ρ^K-kΔ_k^2
-       = ∑_k=2^Kρ^K-kΔ_k^2 + ρ^K-1Δ_1^2
-       ≤∑_k=2^Kρ^K-k( 3 η^2 (4 HL(τ+1) + 8nL )^2 Δ_k-1^2 + 12 η^2 H^2 ν^2 + 12 η^2 (Hτ+n)^2 ∇ F(_0^k)^2 )
-              + ρ^K-1( 8 η^2 n^2 (τ+1)^2 ∇ F(_0^1)^2 + 8 η^2 n^2 ν^2 )
-       ≤ 3 ρ^-1η^2 (4 HL(τ+1) + 8nL )^2 ∑_k=2^Kρ^K-(k-1)Δ_k-1^2 + 12η^2 H^2 ν^2/1 - ρ + 8 ρ^K-1η^2 n^2 ν^2
-              + 12 η^2 (Hτ+n)^2 ∑_k=2^K ρ^K-k∇ F(_0^k)^2 + 8 η^2 n^2 (τ+1)^2 ρ^K-1∇ F(_0^1)^2
-
-From the assumption that H ≤ n, Hτ + n ≤ n(τ + 1) holds. Then, we get
-
-    ∑_k=1^K ρ^K-kΔ_k^2
-           ≤ 3 ρ^-1η^2 (4 nL(τ+1) + 8nL )^2 ∑_k=1^Kρ^K-kΔ_k^2 + 12η^2 H^2 ν^2/1 - ρ
-              + 8 ρ^K-1η^2 n^2 ν^2 + 12 η^2 n^2 (τ + 1)^2 ∑_k=1^K ρ^K-k∇ F(_0^k)^2.
-
-We now define our step size as:
-
-    η = min1/64nL(τ + 1), 2/μ n K W_0 F(_0^1) - F^* + ν^2/Lμ^3 n^2 K^2/192H^2L^2ν^2.
-
-We focus on η≤1/64nL(τ + 1).
-With this step size range, ρ = 1 - η n μ/2≥ 1 - η n L/2 > 1/2 and 
-
-    η (4HL(τ + 1) + 8nL)
-           ≤4HL(τ + 1)/64nL(τ+1) + 8nL/64nL(τ+1)
-       ≤H/16n + 1/8(τ + 1) < 1/4
-
-holds. Thereby,
-
-    3 ρ^-1η^2 (4 HL(τ+1) + 8nL )^2 ≤ 3 · 2 ·1/16 < 1/2.
-
-holds and (<ref>) becomes
-
-    ∑_k=1^K ρ^K-kΔ_k^2 ≤24η^2 H^2 ν^2/1 - ρ + 32 ρ^Kη^2 n^2 ν^2 + 24 η^2 n^2 (τ + 1)^2 ∑_k=1^K ρ^K-k∇ F(_0^k)^2.
-
-Substituting this inequality to lmm:grabUBlmm1, we obtain
-
-    F(_n^K) - F^*
-           ≤ρ^K (F(_0^1) - F^*) + η n L^2/2∑_k=1^K ρ^K-kΔ_k^2 - η n/4∑_k=1^Kρ^K-k∇ F(_0^k)^2 
-       ≤ρ^K (F(_0^1) - F^*) + 12 η^3 n L^2 H^2 ν^2/1 - ρ + 16 ρ^K η^3 n^3 L^2 ν^2 
-              + 12η^3 n^3 L^2 (τ + 1)^2 ∑_k=1^K ρ^K-k∇ F(_0^k)^2 - η n/4∑_k=1^Kρ^K-k∇ F(_0^k)^2 
-       ≤ρ^K (F(_0^1) - F^*) + 24 η^2 L^2 H^2 ν^2/μ + 16 ρ^K η^3 n^3 L^2 ν^2,
-
-where the last inequality holds because
-
-    12η^3 n^3 L^2 (τ + 1)^2
-           = η n/4· 48 η^2 n^2 L^2 (τ + 1)^2 
-       ≤η n/4·48/64^2              ∵η≤1/64nL(τ + 1)
-       < η n/4.
-
-The RHS of (<ref>) can further be extended as
-
-    1 - η n μ/2^K (F(_0^1) - F^*) + 16 η^3 n^3 L^2 ν^2 + 24 η^2 L^2 H^2 ν^2/μ
-       ≤ e^-η n μ K/2F(_0^1) - F^* + ν^2/L + 24 η^2 L^2 H^2 ν^2/μ.
-
-Taking derivative of (<ref>) with respect to η, we can obtain η that minimizes (<ref>) is
-
-    η = 2/μ n K W_0 F(_0^1) - F^* + ν^2/Lμ^3 n^2 K^2/192H^2L^2ν^2,
-
-where W_0 denotes the Lambert W function. By substituting this η to (<ref>), we finally obtain
-
-    F(_n^K) - F^* = 𝒪̃H^2 L^2 ν^2/μ^3 n^2 K^2.
-
-In addition, to make use of such η to obtain (<ref>), the following condition
-
-    2/μ n K W_0 F(_0^1) - F^* + ν^2/Lμ^3 n^2 K^2/192H^2L^2ν^2≤1/64nL(τ + 1)
-
-must hold. Thus, we require
-
-    K ≳κ (τ + 1)
-
-to guarantee the convergence rate.
-
-
-
-
- §.§ temp
- 
-
-
-  §.§.§ Proof for lmm:grabUBlmm1
-
-*
-
-The update process within a k-th epoch can be written as:
-
-    x_0^k+1 = x_0^k - η n ·1/n∑_t=1^n∇ f_σ_k(t)_t-1^k.
-
-Using smoothness and ,  = -1/2^2 - 1/2^2 + 1/2 - ^2, we get
-
-    F(_0^k+1)
-           ≤ F(_0^k) - η n ∇ F(_0^k),1/n∑_t=1^n∇ f_σ_k(t)_t-1^k + η^2 n^2 L/21/n∑_t=1^n∇ f_σ_k(t)_t-1^k^2
-       =F(_0^k) - η n/2∇ F(_0^k)^2 - η n/21/n∑_t=1^n∇ f_σ_k(t)_t-1^k^2
-       = + η n/2∇ F(_0^k)- 1/n∑_t=1^n∇ f_σ_k(t)_t-1^k^2 + η^2 n^2 L/21/n∑_t=1^n∇ f_σ_k(t)_t-1^k^2
-       ≤ F(_0^k) - η n/2∇ F(_0^k)^2 + η n/2∇ F(_0^k) - 1/n∑_t=1^n∇ f_σ_k(t)_t-1^k^2,
-
-where we used η n L < 1 in the last inequality. In addition, we can expand the last term as
-
-    ∇ F(_0^k) - 1/n∑_t=1^n∇ f_σ_k(t)_t-1^k^2
-           = 1/n∑_t=1^n∇ f_σ_k(t)(_0^k) - 1/n∑_t=1^n∇ f_σ_k(t)_t-1^k^2       
-       ≤1/n∑_t=1^n∇ f_σ_k(t)(_0^k) - ∇ f_σ_k(t)_t-1^k^2       (∵Jensen's Inequality)
-       ≤L^2/n∑_t=1^n_0^k - _t-1^k^2       (∵smoothness)
-       ≤ L^2 Δ_k^2.       (∵Δ_k = max_m=1, ⋯ , n_m^k - _0^k )
-
-Combining these two results, we get
-
-    F(_0^k+1) ≤ F(_0^k) + η n L^2 Δ_k^2/2 - η n/2∇ F(_0^k)^2.
-
-Using the PŁ inequality, this inequality becomes
-
-    F(_0^k+1)
-           ≤ F(_0^k) + η n L^2 Δ_k^2/2 - η n/4∇ F(_0^k)^2 - η n/4∇ F(_0^k)^2
-       ≤ F(_0^k) + η n L^2 Δ_k^2/2 - η n μ/2 (F(_0^k) - F^*) - η n/4∇ F(_0^k)^2.
-
-Define ρ := 1 - η n μ/2. Subtracting F^* on both sides, we get
-
-    F(_0^k+1) - F^* ≤ρ (F(_0^k) - F^*) + η n L^2 Δ_k^2/2 - η n/4∇ F(_0^k)^2.
-
-This inequality holds for all k ∈{ 1, ⋯, K}. Unrolling for entire epochs gives
-
-    F(_0^K+1) - F^* ≤ρ^K (F(_0^1) - F^*) + η n L^2/2∑_k=1^K ρ^K-kΔ_k^2 - η n/4∑_k=1^Kρ^K-k∇ F(_0^k)^2.
-
-This ends the proof of the lemma.
-
-
-
-
-  §.§.§ Proof for lmm:grabUBlmm2
-
-*
-
-We first consider the situation after the first epoch. For m ∈ [n] and k ∈ [K]∖{1}, proper additions and subtractions give us
-
-    _m^k
-       = _0^k        - η∑_t=1^m ∇f_σ_k(t) (_t-1^k )
-
-       = _0^k        - η∑_t=1^m ∇f_σ_k(t) (_σ_k-1^-1 (σ_k (t))-1^k-1 )
-
-               - η∑_t=1^m ( ∇f_σ_k(t) (_t-1^k ) - ∇f_σ_k(t) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) )
-
-       = _0^k        - η∑_t=1^m ( ∇f_σ_k(t) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) - 1/n ∑_s=1^n ∇f_σ_k-1(s) ( _s-1^k-1 ) )
-
-               - ηm/n ∑_s=1^n ∇f_σ_k-1(s) ( _s-1^k-1 ) 
-
-               - η∑_t=1^m ( ∇f_σ_k(t) (_t-1^k ) - ∇f_σ_k(t) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) )
-
-       = _0^k        - η∑_t=1^m ( ∇f_σ_k(t) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) - 1/n ∑_s=1^n ∇f_σ_k-1(s) ( _s-1^k-1 ) )
-
-               - ηm ∇F ( _n^k-1 )
-
-               - ηm/n ∑_s=1^n ( ∇f_σ_k-1(s) ( _s-1^k-1 ) - ∇f_σ_k-1(s) ( _n^k-1 ) )
-
-               - η∑_t=1^m ( ∇f_σ_k(t) (_t-1^k ) - ∇f_σ_k(t) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) ).
-
-Here, σ_k-1^-1 (t) indicates in which iteration is the t-th sample used at the (k-1)-th epoch and ∇ f_σ_k(t)_σ_k-1^-1 (σ_k (t))-1^k-1 indicates the gradient with respect to the same sample used in the t-th iteration of the k-th epoch, but which was computed previously in the (k-1)-th epoch. Using the triangle inequality, we gain
-
-    _m^k - _0^k    ≤η∑_t=1^m( ∇ f_σ_k(t)(_σ_k-1^-1 (σ_k (t))-1^k-1) - 1/n∑_s=1^n∇ f_σ_k-1(s)( _s-1^k-1) ) 
-             + η m ∇ F ( _n^k-1) 
-             + η m/n∑_s=1^n( ∇ f_σ_k-1(s)( _s-1^k-1) - ∇ f_σ_k-1(s)( _n^k-1) ) 
-             + η∑_t=1^m∇ f_σ_k(t)(_t-1^k ) - ∇ f_σ_k(t)(_σ_k-1^-1 (σ_k (t))-1^k-1) .
-
-Here, the first term in (<ref>) is the term in which Herding intervenes and it enables us to gain the upper bound. To do so, we first upper bound the norm of each component as
-
-
-                ∇f_σ_k(t) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) - 1/n ∑_s=1^n ∇f_σ_k-1(s) ( _s-1^k-1 ) 
-
-       ≤        ∇f_σ_k(t) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) - 1/n ∑_s=1^n ∇f_σ_k-1(s) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) 
-
-               + 1/n ∑_s=1^n ∇f_σ_k-1(s) (_σ_k-1^-1 (σ_k (t))-1^k-1 ) - 1/n ∑_s=1^n ∇f_σ_k-1(s) ( _s-1^k-1 ) 
-
-       ≤        ν+ τ ∇F (_σ_k-1^-1 (σ_k (t))-1^k-1 )  + L/n ∑_s=1^n  _σ_k-1^-1 (σ_k (t))-1^k-1 - _s-1^k-1 
-
-       ≤          ν+ τ( ∇F ( _0^k )  +  ∇F ( _0^k-1 ) - ∇F ( _0^k )  +  ∇F (_σ_k-1^-1 (σ_k (t))-1^k-1 ) - ∇F ( _0^k-1 )  )
-
-               + L/n ∑_s=1^n (  _σ_k-1^-1 (σ_k (t))-1^k-1 - _0^k-1  +  _0^k-1 - _s-1^k-1  )
-
-       ≤          ν+ τ( ∇F ( _0^k )  + 2LΔ_k-1 ) + 2LΔ_k-1
-
-       =           ν+ τ· ∇F ( _0^k )  + 2L( τ+ 1 ) ·Δ_k-1.
-
-Now, define z_t^k as
-
-    z_t^k := ∇ f_σ_k(t)(_σ_k-1^-1 (σ_k (t))-1^k-1) - 1/n∑_s=1^n∇ f_σ_k-1(s)( _s-1^k-1)/ν + τ·∇ F ( _0^k )  + 2L( τ + 1 ) ·Δ_k-1
-
-for t ∈ [n]. Then, z_t^k≤ 1 holds.
-
-We now apply Herding algorithm to upper bound the first term of (<ref>).
-Since z_t^k≤ 1, we then get following inequality for all m ∈ [n]:
-
-    ∑_t=1^m( ∇ f_σ_k(t)(_σ_k-1^-1 (σ_k (t))-1^k-1) - 1/n∑_s=1^n∇ f_σ_k-1(s)( _s-1^k-1) ) 
-    ≤ H ( ν + τ·∇ F ( _0^k )  + 2L( τ + 1 ) ·Δ_k-1).
-
-For the remaining terms in (<ref>), we can upper bound each of them by
-
-    ∑_s=1^n( ∇ f_σ_k-1(s)( _s-1^k-1) - ∇ f_σ_k-1(s)( _n^k-1) )    ≤∑_s=1^n∇ f_σ_k-1(s)( _s-1^k-1) - ∇ f_σ_k-1(s)( _n^k-1) 
-       ≤ L∑_s=1^n_s-1^k-1 - _n^k-1
-       ≤ L∑_s=1^n( _s-1^k-1 - _0^k-1 + _0^k-1 - _n^k-1) 
-       ≤ 2nL Δ_k-1
-
+    ‖
+        H(𝐑) ‖ = ‖ H(0) ‖exp(-
+        ‖𝐑‖/τ),
+
+  where
+  τ measures the decay length.
+Then τ is fitted by least squares to the calculated ‖
+    H(𝐑) ‖; as shown in <ref>, the
+  Hamiltonian of PDWF decays faster than SCDM for , which is selected
+  here to represent the general trend between PDWF and SCDM Hamiltonians.
+<ref> shows the histogram of τ for the 200 materials; the mean τ are
+2.266 for PDWF and 2.659 for SCDM,
+respectively, indicating that the PDWF Hamiltonian decays faster than SCDM, consistent with the better band interpolation
+of PDWF discussed in <ref>.
+
+
+
+
+
+ §.§ High-throughput Wannierization
+
+Based on the above verification, we run a HT Wannierization using PDWF for
+  21737 materials, selected from the non-magnetic materials of the MC3D
+  database <cit.>.
+<Ref> shows the band distance
+histograms for η_2 and η_2^max.
+Overall, the statistics follow the same trend as the 200 materials set in
+  <ref>: the average η_2 and average η_2^max
+  are  3.685 meV and  42.768 meV, respectively.
+Note in <ref> the η_2 is not truncated at
+  10meV, but rather due to the automated optimization workflow: results
+  that have η_2 larger than a threshold (10meV) are further optimized
+  with respect to and , thus improving the average band distance
+  η_2.
+In <ref> we show several other statistics for the band
+  distances.
+The excellent interpolation quality of PDWF can be assessed, for instance, from
+  the number of systems with η_2 ≤ 20meV, that are ≈ 97.8%
+  of all the calculations (21259 / 21737); the corresponding bands distance
+  calculated on these 21259 calculations is η_2^≤ 20 =
+  2.118meV.
+This remarkable result show how automated and reliable Wannierizations can now
+  be deployed automatically both for individual calculation and for HT
+  application.
+
+
+
+
+ §.§ Additional PAOs for high-energy high-accuracy interpolation
+
+Based on the HT Wannierization results, one can identify cases where the
+  interpolation quality can be further improved by increasing the number of PAOs.
+Typically, the number of PAOs is determined during pseudopotential generation,
+  and they are usually the orbitals describing low-energy valence electrons.
+In some cases, the bonding/anti-bonding combinations of these PAOs are not
+  sufficient to span the space of target conduction bands, leading to a loss of
+  interpolation quality.
+We use silicon as an example to illustrate the difficulties of accurately
+  describing its CBM <cit.>, which is not located at any high-symmetry
+  k-point, but along the Γ-X line.
+The common choice of one s and three p hydrogenic or PAOs projectors per
+  atom results in oscillations in the Wannier-interpolated bands at the meV
+  level.
+To remedy this, one can use a larger set of PAOs, e.g., by regenerating a
+  silicon pseudopotential including d PAOs as discussed in <ref>.
+However, generating a new pseudopotential requires extensive testing and
+  validation, therefore another solution could be using a set of PAOs different
+  from the pseudopotential ones.
+To compare this second approach, we test here also PAOs obtained from the code <cit.>, and Wannierize silicon using one s, three p, and
+  five d PAOs per atom using ED.
+This provides a much better description of the CBM, as shown in
+  <ref> Moreover, the additional d orbitals allow to
+  raise the inner energy window and better reproduce a larger number of
+  conduction bands, as shown in <ref>, which might be
+  beneficial for some applications. 
+For completeness, we also show the WF spreads and shapes of d orbitals in
+  <ref>.
+However, there are some caveats to this approach.
+When using external PAOs, ideally one should generate them using the same
+  pseudization scheme as the pseudopotentials used in the DFT calculations.
+The PAOs from are instead generated using a different scheme, resulting in
+  lower projectabilities (smaller than one even for the valence bands, as shown
+  in <ref>).
+In such case, PD cannot reproduce the original bands (see
+  <ref>), thus ED (with a higher
+  inner energy window) is needed to obtain accurate interpolation (see
+  <ref>).
+In comparison, the pseudopotential PAOs which we regenerated with 3d orbitals
+  (as discussed in <ref>) are better projectors for the
+  wavefunctions.
+Indeed, the first 12 bands have projectabilities almost equal to 1, and as a
+  consequence PD itself already provides accurate band interpolation (all the
+  low-energy conduction states are frozen since their projectabilities are high,
+  see <ref>).
+Moreover, we mention that when adding additional projectors one needs to make
+  sure that they have the correct number of radial nodes: e.g., the gold
+  pseudopotential from SSSP <cit.> contains 5s+5p semicore states,
+  and 6s+5d orbitals for valence electrons.
+If one wants to add an additional 6p orbital, it is important to ensure that
+  the 6p orbital has one radial node, such that it is orthogonal to the
+  nodeless 5p semicore state; Otherwise, the Bloch wavefunctions would project
+  onto the 5p semicore state, and PD would only disentangle the 5p semicore
+  states instead of the 6p orbitals contributing to bands above the Fermi
+  energy.
+In summary, including more projectors can further improve the interpolation
+  quality, but at the expense of increasing the number of orbitals in the model.
+The combination of PD and ED enables to improve the interpolation quality of
+  low-projectability states while keeping the TB model size small.
+Automatic checks could be implemented in the future in the workflows to
+  detect whether the projectability drops below a certain threshold, and in that
+  case either raise a warning or automatically add more projectors.
+
+
+
+§ CONCLUSIONS
+
+We present an automated method for the automated, robust, and reliable
+  construction of tight-binding models based on MLWFs.
+The approach applies equally well to metals, insulators and semiconductors,
+  providing in all cases atomic-like orbitals that span both the occupied states,
+  and the empty ones whose character remains orbital-like and and not
+  free-electron-like.
+The method is based on the band projectability onto pseudo-atomic orbitals to
+  select which states are kept identically, dropped, or passed on to the
+  established disentanglement procedure.
+We augment such projectability-based selection with an additional energy window
+  to guarantee that all states around the Fermi level or the conduction band edge
+  are well reproduced, showing that such a combination enables accurate
+  interpolation even when minimal sets of initial atomic orbitals are chosen.
+This results in compact Wannier tight-binding models that provide accurate band
+  interpolations while preserving the picture of atomic orbitals in crystals.
+We refer to the method collectively as projectability-disentangled Wannier
+  functions (PDWF).
+
+The Wannierization process is implemented as fully automated workflows.
+We compare PDWFs with the other method that is also fully automated, namely
+  SCDM.
+We show with a detailed study of 200 structures that PDWFs lead to more
+  accurate band interpolations (with errors with respect to the original bands at
+  the meV scale), and are more atom-centered and more localized than those
+  originating from SCDM.
+The high accuracy in band interpolations, the target atomic orbitals obtained,
+  and the low computational cost make PDWFs an ideal choice for automated or
+  high-throughput Wannierization, which we demonstrate by performing the
+  Wannierization of 21737 non-magnetic structures from the Materials Cloud
+  MC3D database.
+
+
+
+§ METHODS
+
+
+We implement the PAO projection in the  executable
+  inside (QE) <cit.>; the PD and PD+ED methods
+  are implemented on top of the code <cit.>.
+In terms of the practical implementation, computing PAO projections is more
+  efficient in both computational time and memory than the SCDM QR decomposition
+  with column pivoting (QRCP) algorithm, since the A_mn𝐤 matrices
+  (i.e., the inner products of Bloch wavefunctions with PAOs) can be evaluated in
+  the plane-wave G vector space, rather than requiring a Fourier transform and
+  decomposition of very large real-space wavefunction matrices.
+Furthermore, since the HT Wannierization can be computationally intensive, we
+  implement a “k-pool parallelization strategy” inside , similarly to
+  the main  code of QE, to efficiently utilize many-core
+  architectures by parallelizing over “pools” of processors for the almost
+  trivially-parallel computations at each k-point.
+Test results show that k-pool parallelization significantly improves the
+  efficiency of (benchmarks are shown in <ref>).
+
+The DFT calculations are carried out using QE, with the SSSP efficiency
+  (version 1.1, PBE functional) library <cit.> for pseudopotentials
+  and its recommended energy cutoffs.
+The HT calculations are managed with the infrastructure
+  <cit.> which submits QE and calculations to
+  remote clusters, parses, and stores the results into a database, while also
+  orchestrating all sequences of simulations and workflows.
+The automated workflows are open-source and hosted on 
+  <cit.>.
+The workflows accept a crystal structure as input and provide the
+  Wannier-interpolated band structure, the real-space MLWFs, and a number of
+  additional quantities as output.
+Semicore states from pseudopotentials are automatically detected and excluded
+  from the Wannierizations, except for a few cases where some semicore states
+  overlap with valence states; in such cases, all the semicore states are
+  Wannierized, otherwise the band interpolation quality would be degraded,
+  especially for SCDM.
+A regular k-point mesh is used for the Wannier calculations, with a k-point
+  spacing of 0.2, as selected by the protocol in
+  <cit.>.
+MLWFs are rendered with VESTA <cit.>.
+Figures are generated by  <cit.>.
+
+
+
+§ DATA AVAILABILITY
+
+All data generated for this work can be obtained from the Materials Cloud
+  Archive (<https://doi.org/10.24435/materialscloud:v4-e9>).
+
+
+
+§ CODE AVAILABILITY
+
+
+All codes used for this work are open-source; the latest stable versions can be
+  downloaded at <http://www.wannier.org/>,
+  <https://www.quantum-espresso.org/>, <https://www.aiida.net/>, and
+  <https://github.com/aiidateam/aiida-wannier90-workflows>.
+
+The modifications to the codes mentioned above implemented for this work will
+  become available in the next releases of () and .
+
+
+
+§ ACKNOWLEDGEMENTS
+
+We acknowledge financial support from the NCCR MARVEL (a National Centre of
+  Competence in Research, funded by the Swiss National Science Foundation, grant
+  No.
+205602), the Swiss National Science Foundation (SNSF) Project Funding
+(grant 200021E206190 “FISH4DIET”).
+The work is also supported by a pilot access grant from the Swiss National
+  Supercomputing Centre (CSCS) on the Swiss share of the LUMI system under
+  project ID “PILOT MC EPFL-NM 01”, a CHRONOS grant from the CSCS on the Swiss
+  share of the LUMI system under project ID “REGULAR MC EPFL-NM 02”, and a
+  grant from the CSCS under project ID s0178.
+
+
+
+§ AUTHOR CONTRIBUTIONS
+
+J.
+Q.
+implemented and tested the PDWF method on selected materials.
+G.
+P.
 and
+N.
+M.
+supervised the project.
+All authors analyzed the results and contributed to writing the manuscript.
 
-    ∑_t=1^m( ∇ f_σ_k(t)(_t-1^k ) - ∇ f_σ_k(t)(_σ_k-1^-1 (σ_k (t))-1^k-1) ) 
-       ≤∑_t=1^m∇ f_σ_k(t)(_t-1^k ) - ∇ f_σ_k(t)(_σ_k-1^-1 (σ_k (t))-1^k-1) 
-       ≤ L ∑_t=1^m_t-1^k - _σ_k-1^-1 (σ_k (t))-1^k-1
-       ≤ L ∑_t=1^m( _t-1^k - _0^k  + _0^k - _0^k-1 + _0^k-1 - _σ_k-1^-1 (σ_k (t))-1^k-1) 
-       ≤ mL ( Δ_k + 2Δ_k-1).
 
-By summing up (<ref>)-(<ref>) and taking a max over m ∈{1, ⋯, n } on both side of (<ref>),
 
-    Δ_k
-           ≤η H ( ν + τ·‖∇ F ( _0^k ) ‖ + 2L( τ + 1 ) ·Δ_k-1)
-           + η n ‖∇ F ( _0^k ) ‖ + η n/n· 2nL Δ_k-1 + η nL ( Δ_k + 2Δ_k-1)
-       ≤η H ν + (η H τ + η n) ·‖∇ F ( _0^k ) ‖ + ( 2η HL(τ+1) + 4η nL ) ·Δ_k-1 + η nL Δ_k.
 
-Using η nL ≤1/2, we finally get
 
-    Δ_k ≤ 2η H ν + (2η H τ + 2η n) ·‖∇ F ( _0^k ) ‖ + ( 4η HL(τ+1) + 8η nL ) ·Δ_k-1.
 
-We now move on to the first epoch case. By properly decomposing the term, we gain
 
-    _m^1
-       = _0^1        - η∑_t=1^m ∇f_σ_1(t) ( _t-1^1 )
 
-       = _0^1        - η∑_t=1^m 1/n ∑_s=1^n ∇f_σ_1(s) ( _0^1 )
 
-               - η∑_t=1^m ( ∇f_σ_1(t) ( _0^1 ) - 1/n ∑_s=1^n ∇f_σ_1(s) ( _0^1 ) )
 
-               - η∑_t=1^m ( ∇f_σ_1(t) ( _t-1^1 ) - ∇f_σ_1 (t) ( _0^1 ) ).
 
-In a similar way to the technique we used above, we have
+50
+fxundefined [1]
+ ifx#1
 
-    _m^1 - _0^1   ≤η∑_t=1^m1/n∑_s=1^n∇ f_σ_1(s)( _0^1)
-             +η∑_t=1^m( ∇ f_σ_1(t)( _0^1 ) - 1/n∑_s=1^n∇ f_σ_1(s)( _0^1) )
-             +η∑_t=1^m( ∇ f_σ_1(t)( _t-1^1) - ∇ f_σ_1 (t)( _0^1 ) )
-       ≤η∑_t=1^m∇ F _0^1
-             +η∑_t=1^m∇ f_σ_1(t)( _0^1 ) - 1/n∑_s=1^n∇ f_σ_1(s)( _0^1)
-             +η∑_t=1^m L _t-1^1 - _0^1.
+fnum [1]
+ #1firstoftwo
+ secondoftwo
+ 
+fx [1]
+ #1firstoftwo
+ secondoftwo
+ 
 
-Taking a max over m ∈{1, ⋯, n} in both sides, we gain
 
-    Δ_1 ≤η n ‖∇ F ( _0^1 ) ‖ + η n ( ν + τ·‖∇ F ( _0^1 ) ‖) + η n L Δ_1
 
-and using the fact that η n L ≤1/2, we finally obtain
 
-    Δ_1 ≤ 2 η n ν + 2 η n (τ+1) ·∇ F(_0^1).
+
+noop [0]secondoftwo
+
+ref[1]@startlink#1@href
+href[1]#1@endlink
+anitize@url [0]`
+12`$12`&12`#12`1̂2`_12`%12
+startlink[1]
+endlink[0]
+
+rl [1]href #1
+
+
+
+
+
+
+
+
+
+
+
+
+@bib@innerbibempty
+
+[Marzari and Vanderbilt(1997)]Marzari1997
+  author author N. Marzari and author D. Vanderbilt, title title Maximally localized
+  generalized Wannier functions for composite energy bands, https://doi.org/10.1103/physrevb.56.12847 journal journal Phys. Rev. B volume 56, pages 12847 (year 1997)NoStop
+[Souza et al.(2001)Souza,
+  Marzari, and Vanderbilt]Souza2001
+  author author I. Souza, author N. Marzari,  and author D. Vanderbilt,  title title Maximally localized Wannier functions
+  for entangled energy bands, https://doi.org/10.1103/physrevb.65.035109 journal journal Phys. Rev. B volume 65, pages 035109 (year 2001)NoStop
+[Marzari et al.(2012)Marzari, Mostofi, Yates, Souza, and Vanderbilt]Marzari2012
+  author author N. Marzari, author A. A. Mostofi, author J. R. Yates,
+  author I. Souza, and author D. Vanderbilt, title
+  title Maximally localized Wannier functions: Theory and
+  applications, https://doi.org/10.1103/revmodphys.84.1419
+  journal journal Rev. Mod. Phys. volume 84, pages 1419 (year
+  2012)NoStop
+[Pizzi et al.(2020)Pizzi,
+  Vitale, Arita, Blügel,
+  Freimuth, Géranton, Gibertini, Gresch, Johnson, Koretsune, Ibañez-Azpiroz, Lee,
+  Lihm, Marchand, Marrazzo,
+  Mokrousov, Mustafa, Nohara,
+  Nomura, Paulatto, Poncé, Ponweiser, Qiao, Thöle, Tsirkin, Wierzbowska, Marzari, Vanderbilt, Souza, Mostofi, and Yates]Pizzi2020
+  author author G. Pizzi, author V. Vitale,
+  author R. Arita, author S. Blügel, author
+  F. Freimuth, author
+  G. Géranton, author
+  M. Gibertini, author
+  D. Gresch, author C. Johnson, author T. Koretsune, author J. Ibañez-Azpiroz, author H. Lee, author J.-M.  Lihm, author D. Marchand, author A. Marrazzo,
+  author Y. Mokrousov, author J. I. Mustafa, author
+  Y. Nohara, author Y. Nomura, author L. Paulatto, author S. Poncé, author T. Ponweiser, author J. Qiao, author F. Thöle, author S. S. Tsirkin,
+  author M. Wierzbowska, author N. Marzari, author
+  D. Vanderbilt, author
+  I. Souza, author A. A. Mostofi, and author J. R. Yates, title title
+  Wannier90 as a community code: new features and applications, https://doi.org/10.1088/1361-648x/ab51ff journal journal J. Phys.: Condens. Matter volume 32,  pages 165902 (year 2020)NoStop
+[Resta and Vanderbilt(2007)]Resta2007
+  author author R. Resta and author D. Vanderbilt, title title Theory of
+  Polarization: A Modern Approach (publisher
+  Springer, year 2007) pp. pages
+  31–68NoStop
+[Lee et al.(2005)Lee,
+  Nardelli, and Marzari]Lee2005
+  author author Y.-S. Lee, author M. B. Nardelli,  and author N. Marzari,  title title Band structure and quantum conductance
+  of nanostructures from maximally localized wannier functions: The case of
+  functionalized carbon nanotubes, https://doi.org/10.1103/PhysRevLett.95.076804 journal
+  journal Phys. Rev. Lett. volume 95,  pages 076804 (year 2005)NoStop
+[Lopez et al.(2012)Lopez,
+  Vanderbilt, Thonhauser, and Souza]Lopez2012
+  author author M. G. Lopez, author D. Vanderbilt,
+  author T. Thonhauser, and  author I. Souza, title title Wannier-based calculation of the orbital
+  magnetization in crystals, https://doi.org/10.1103/physrevb.85.014435 journal journal Phys. Rev. B volume 85, pages 014435 (year 2012)NoStop
+[Wang et al.(2006)Wang,
+  Yates, Souza, and Vanderbilt]Wang2006
+  author author X. Wang, author J. R. Yates,
+  author I. Souza, and author D. Vanderbilt, title
+  title Ab initio calculation of the anomalous Hall conductivity
+  by Wannier interpolation, https://doi.org/10.1103/physrevb.74.195118 journal journal Phys. Rev. B volume 74, pages 195118 (year 2006)NoStop
+[Yates et al.(2007)Yates,
+  Wang, Vanderbilt, and Souza]Yates2007
+  author author J. R. Yates, author X. Wang,
+  author D. Vanderbilt, and  author I. Souza, title title Spectral and Fermi surface properties from
+  Wannier interpolation, https://doi.org/10.1103/physrevb.75.195121
+  journal journal Phys. Rev. B volume 75, pages 195121 (year
+  2007)NoStop
+[Qiao et al.(2018)Qiao,
+  Zhou, Yuan, and Zhao]Qiao2018
+  author author J. Qiao, author J. Zhou, author Z. Yuan, and author
+  W. Zhao, title title Calculation of intrinsic spin Hall conductivity by Wannier
+  interpolation, https://doi.org/10.1103/physrevb.98.214402
+  journal journal Phys. Rev. B volume 98, pages 214402 (year
+  2018)NoStop
+[Sakuma(2013)]Sakuma2013
+  author author R. Sakuma, title title Symmetry-adapted
+  Wannier functions in the maximal localization procedure, https://doi.org/10.1103/PhysRevB.87.235109 journal journal Phys. Rev. B volume 87, pages 235109 (year 2013)NoStop
+[Gygi et al.(2003)Gygi,
+  Fattebert, and Schwegler]Gygi2003
+  author author F. Gygi, author J.-L. Fattebert, and author E. Schwegler, title title Computation of
+  Maximally Localized Wannier Functions using a simultaneous diagonalization
+  algorithm, https://doi.org/10.1016/s0010-4655(03)00315-1
+  journal journal Comput. Phys. Commun. volume 155, pages 1 (year
+  2003)NoStop
+[Thygesen et al.(2005a)Thygesen, Hansen, and Jacobsen]Thygesen2005
+  author author K. S. Thygesen, author L. B. Hansen, and author K. W. Jacobsen, title title Partly Occupied Wannier
+  Functions, https://doi.org/10.1103/physrevlett.94.026405
+  journal journal Phys. Rev. Lett. volume 94, pages 026405 (year
+  2005a)NoStop
+[Thygesen et al.(2005b)Thygesen, Hansen, and Jacobsen]Thygesen2005a
+  author author K. S. Thygesen, author L. B. Hansen, and author K. W. Jacobsen, title title Partly occupied Wannier
+  functions: Construction and applications, https://doi.org/10.1103/physrevb.72.125119 journal journal Phys. Rev. B volume 72, pages 125119 (year 2005b)NoStop
+[Damle et al.(2019)Damle,
+  Levitt, and Lin]Damle2019
+  author author A. Damle, author A. Levitt, and  author L. Lin, title title Variational Formulation for Wannier Functions
+  with Entangled Band Structure, https://doi.org/10.1137/18m1167164
+  journal journal Multiscale Model. Simul.  volume 17, pages 167 (year
+  2019)NoStop
+[Wang et al.(2014)Wang,
+  Lazar, Park, Millis, and  Marianetti]Wang2014
+  author author R. Wang, author E. A. Lazar,
+  author H. Park, author
+  A. J. Millis, and author
+  C. A. Marianetti, title
+  title Selectively localized Wannier functions, https://doi.org/10.1103/physrevb.90.165125 journal journal Phys. Rev. B volume 90, pages 165125 (year 2014)NoStop
+[Fontana et al.(2021)Fontana, Larsen, Olsen, and Thygesen]Fontana2021
+  author author P. F. Fontana, author A. H. Larsen,
+  author T. Olsen, and author K. S. Thygesen, title title Spread-balanced Wannier functions: Robust and
+  automatable orbital localization, https://doi.org/10.1103/physrevb.104.125140 journal journal Phys. Rev. B volume 104, pages 125140 (year 2021)NoStop
+[Mustafa et al.(2015)Mustafa, Coh, Cohen, and Louie]Mustafa2015
+  author author J. I. Mustafa, author S. Coh,
+  author M. L. Cohen, and  author S. G. Louie, title title Automated construction of maximally localized
+  Wannier functions: Optimized projection functions method, https://doi.org/10.1103/physrevb.92.165134 journal journal Phys. Rev. B volume 92, pages 165134 (year 2015)NoStop
+[Cancès et al.(2017)Cancès, Levitt, Panati, and  Stoltz]Cances2017
+  author author É. Cancès, author A. Levitt, author G. Panati,  and author G. Stoltz,  title title Robust determination of maximally
+  localized Wannier functions, https://doi.org/10.1103/physrevb.95.075114 journal journal Phys. Rev. B volume 95, pages 075114 (year 2017)NoStop
+[Gontier et al.(2019)Gontier, Levitt, and Siraj-dine]Gontier2019
+  author author D. Gontier, author A. Levitt,  and author S. Siraj-dine,  title title Numerical construction of Wannier
+  functions through homotopy, https://doi.org/10.1063/1.5085753
+  journal journal J. Math. Phys. volume 60, pages 031901 (year
+  2019)NoStop
+[Damle et al.(2015)Damle,
+  Lin, and Ying]Damle2015
+  author author A. Damle, author L. Lin, and  author L. Ying, title title Compressed Representation of
+  Kohn–Sham Orbitals via Selected Columns of the Density Matrix,  https://doi.org/10.1021/ct500985f journal journal J. Chem. Theory Comput. volume 11,  pages 1463 (year 2015)NoStop
+[Damle and Lin(2018)]Damle2018
+  author author A. Damle and author L. Lin,  title title Disentanglement via Entanglement: A
+  Unified Method for Wannier Localization, https://doi.org/10.1137/17m1129696 journal journal Multiscale Model. Simul. volume 16,  pages 1392 (year 2018)NoStop
+[Jain et al.(2013)Jain,
+  Ong, Hautier, Chen,
+  Richards, Dacek, Cholia,
+  Gunter, Skinner, Ceder, and  Persson]Jain2013
+  author author A. Jain, author S. P. Ong,
+  author G. Hautier, author W. Chen, author
+  W. D. Richards, author
+  S. Dacek, author S. Cholia, author D. Gunter, author D. Skinner, author G. Ceder, and author K. A.  Persson, title title Commentary:
+  The Materials Project: A materials genome approach to accelerating
+  materials innovation, https://doi.org/10.1063/1.4812323
+  journal journal APL Mater. volume 1, pages 011002 (year
+  2013)NoStop
+[Curtarolo et al.(2012)Curtarolo, Setyawan, Hart, Jahnatek, Chepulskii, Taylor, Wang, Xue, Yang, Levy,
+  Mehl, Stokes, Demchenko,  and Morgan]Curtarolo2012
+  author author S. Curtarolo, author W. Setyawan,
+  author G. L. W. Hart, author M. Jahnatek, author
+  R. V. Chepulskii, author
+  R. H. Taylor, author
+  S. Wang, author J. Xue, author K. Yang, author O. Levy, author M. J. Mehl, author
+  H. T. Stokes, author
+  D. O. Demchenko, and author
+  D. Morgan, title title AFLOW: An automatic framework for high-throughput materials
+  discovery, https://doi.org/10.1016/j.commatsci.2012.02.005
+  journal journal Comput. Mater. Sci. volume 58, pages 218 (year
+  2012)NoStop
+[Saal et al.(2013)Saal,
+  Kirklin, Aykol, Meredig,  and Wolverton]Saal2013
+  author author J. E. Saal, author S. Kirklin,
+  author M. Aykol, author B. Meredig, and author
+  C. Wolverton, title title Materials Design and Discovery with High-Throughput
+  Density Functional Theory: The Open Quantum Materials
+  Database (OQMD), https://doi.org/10.1007/s11837-013-0755-4
+  journal journal JOM volume
+  65, pages 1501 (year 2013)NoStop
+[CMR()]CMR
+  @noop  title Computational Materials Repository,  howpublished <https://cmr.fysik.dtu.dk/>, note
+  [Online; accessed 2023-02-28]NoStop
+[Talirz et al.(2020)Talirz,
+  Kumbhar, Passaro, Yakutovich,
+  Granata, Gargiulo, Borelli,
+  Uhrin, Huber, Zoupanos,
+  Adorf, Andersen, Schütt,
+  Pignedoli, Passerone, VandeVondele, Schulthess, Smit,
+  Pizzi, and Marzari]Talirz2020
+  author author L. Talirz, author S. Kumbhar,
+  author E. Passaro, author A. V. Yakutovich, author V. Granata, author
+  F. Gargiulo, author
+  M. Borelli, author M. Uhrin, author S. P.  Huber, author S. Zoupanos, author C. S. Adorf,
+  author C. W. Andersen, author O. Schütt, author
+  C. A. Pignedoli, author
+  D. Passerone, author
+  J. VandeVondele, author
+  T. C. Schulthess, author
+  B. Smit, author G. Pizzi, and author N. Marzari, title title
+  Materials Cloud, a platform for open computational science, https://doi.org/10.1038/s41597-020-00637-5 journal journal Sci. Data volume 7, pages
+  299 (year 2020)NoStop
+[Draxl and Scheffler(2018)]Draxl2018
+  author author C. Draxl and author M. Scheffler, title title NOMAD: The FAIR
+  concept for big data-driven materials science, https://doi.org/10.1557/mrs.2018.208 journal journal MRS Bulletin volume 43, pages 676 (year 2018)NoStop
+[Gresch et al.(2018)Gresch,
+  Wu, Winkler, Häuselmann,
+  Troyer, and Soluyanov]Gresch2018
+  author author D. Gresch, author Q. Wu, author G. W. Winkler, author
+  R. Häuselmann, author
+  M. Troyer, and author
+  A. A. Soluyanov, title
+  title Automated construction of symmetrized Wannier-like
+  tight-binding models from ab initio calculations, https://doi.org/10.1103/physrevmaterials.2.103805 journal
+  journal Phys. Rev. Mater. volume 2,  pages 103805 (year 2018)NoStop
+[Vitale et al.(2020)Vitale,
+  Pizzi, Marrazzo, Yates,
+  Marzari, and Mostofi]Vitale2020
+  author author V. Vitale, author G. Pizzi,
+  author A. Marrazzo, author J. R. Yates, author
+  N. Marzari, and author
+  A. A. Mostofi, title
+  title Automated high-throughput Wannierisation, https://doi.org/10.1038/s41524-020-0312-y journal journal npj Comput. Mater. volume 6, pages 66 (year 2020)NoStop
+[Garrity and Choudhary(2021)]Garrity2021
+  author author K. F. Garrity and author K. Choudhary, title title Database of Wannier
+  tight-binding Hamiltonians using high-throughput density functional
+  theory, https://doi.org/10.1038/s41597-021-00885-z journal journal Sci. Data volume
+  8, pages 106 (year 2021)NoStop
+[Agapito et al.(2016)Agapito, Ismail-Beigi, Curtarolo,
+  Fornari, and Nardelli]Agapito2016
+  author author L. A. Agapito, author S. Ismail-Beigi, author S. Curtarolo, author M. Fornari,  and author M. B. Nardelli,  title title Accurate tight-binding Hamiltonian
+  matrices from ab initio calculations: Minimal basis sets, https://doi.org/10.1103/physrevb.93.035104 journal journal Phys. Rev. B volume 93, pages 035104 (year 2016)NoStop
+[Pizzi et al.(2016)Pizzi,
+  Cepellotti, Sabatini, Marzari, and Kozinsky]Pizzi2016
+  author author G. Pizzi, author A. Cepellotti,
+  author R. Sabatini, author N. Marzari, and author
+  B. Kozinsky, title title AiiDA: automated interactive infrastructure and database for
+  computational science, https://doi.org/10.1016/j.commatsci.2015.09.013 journal
+  journal Comput. Mater. Sci. volume
+  111, pages 218 (year 2016)NoStop
+[Huber et al.(2020)Huber,
+  Zoupanos, Uhrin, Talirz,
+  Kahle, Häuselmann, Gresch,
+  Müller, Yakutovich, Andersen, Ramirez, Adorf, Gargiulo, Kumbhar, Passaro, Johnston, Merkys, Cepellotti, Mounet, Marzari, Kozinsky, and  Pizzi]Huber2020
+  author author S. P. Huber, author S. Zoupanos,
+  author M. Uhrin, author L. Talirz, author
+  L. Kahle, author R. Häuselmann, author D. Gresch, author T. Müller, author A. V.  Yakutovich, author C. W.  Andersen, author F. F.  Ramirez, author C. S.  Adorf, author F. Gargiulo, author S. Kumbhar,
+  author E. Passaro, author C. Johnston, author
+  A. Merkys, author A. Cepellotti, author N. Mounet, author N. Marzari, author B. Kozinsky, and author G. Pizzi, title title AiiDA
+  1.0, a scalable computational infrastructure for automated reproducible
+  workflows and data provenance, https://doi.org/10.1038/s41597-020-00638-4 journal journal Sci. Data volume 7, pages
+  300 (year 2020)NoStop
+[Uhrin et al.(2021)Uhrin,
+  Huber, Yu, Marzari, and  Pizzi]Uhrin2021
+  author author M. Uhrin, author S. P. Huber,
+  author J. Yu, author
+  N. Marzari, and author
+  G. Pizzi, title title Workflows in AiiDA: Engineering a high-throughput, event-based
+  engine for robust and modular computational workflows, https://doi.org/10.1016/j.commatsci.2020.110086 journal
+  journal Comput. Mater. Sci. volume
+  187, pages 110086 (year 2021)NoStop
+[MC3()]MC3D
+  @noop  title Materials Cloud three-dimensional crystals
+  database (MC3D), howpublished
+  <https://www.materialscloud.org/discover/mc3d/dashboard/ptable>,  note [Online; accessed 2023-02-28]NoStop
+[Löwdin()]Loewdin1950
+  author author P.-O. Löwdin, title title On the non-orthogonality
+  problem connected with the use of atomic wave functions in the theory of
+  molecules and crystals, https://doi.org/10.1063/1.1747632
+  journal journal J. Chem. Phys. volume 18, pages 365NoStop
+[Mahajan et al.(2021)Mahajan, Timrov, Marzari, and  Kashyap]PhysRevMaterials.5.104402
+  author author R. Mahajan, author I. Timrov,
+  author N. Marzari, and author A. Kashyap, title
+  title Importance of intersite hubbard interactions in
+  MnO_2: A first-principles
+  DFT+U+V study, https://doi.org/10.1103/PhysRevMaterials.5.104402
+  journal journal Phys. Rev. Materials volume 5, pages 104402 (year
+  2021)NoStop
+[Giannozzi et al.(2020)Giannozzi, Baseggio, Bonfà,
+  Brunato, Car, Carnimeo,
+  Cavazzoni, de Gironcoli, Delugas, Ruffino, Ferretti, Marzari, Timrov, Urru, and Baroni]Giannozzi2020a
+  author author P. Giannozzi, author O. Baseggio,
+  author P. Bonfà, author D. Brunato, author
+  R. Car, author I. Carnimeo, author C. Cavazzoni, author S. de Gironcoli, author P. Delugas, author F. F.  Ruffino, author A. Ferretti, author N. Marzari,
+  author I. Timrov, author A. Urru, and author
+  S. Baroni, title title Quantum ESPRESSO toward the exascale, https://doi.org/10.1063/5.0005082 journal journal J. Chem. Phys. volume 152, pages 154105 (year 2020)NoStop
+[Ozaki(2003)]Ozaki2003
+  author author T. Ozaki, title title Variationally optimized
+  atomic orbitals for large-scale electronic structures, https://doi.org/10.1103/PhysRevB.67.155108 journal journal Phys. Rev. B volume 67, pages 155108 (year 2003)NoStop
+[Ozaki and Kino(2004)]Ozaki2004
+  author author T. Ozaki and author H. Kino,  title title Numerical atomic basis orbitals from
+  H to Kr, https://doi.org/10.1103/physrevb.69.195113 journal journal Phys. Rev. B volume
+  69, pages 195113 (year 2004)NoStop
+[Alan Oppenheim(1997)]Oppenheim1997
+  author author S. N. Alan Oppenheim, Alan Willsky, @noop  title Signals and Systems (publisher Prentice
+  Hall, year 1997) p. pages 957NoStop
+[Prandini et al.(2018)Prandini, Marrazzo, Castelli, Mounet, and Marzari]Prandini2018
+  author author G. Prandini, author A. Marrazzo,
+  author I. E. Castelli, author N. Mounet, and author
+  N. Marzari, title title Precision and efficiency in solid-state pseudopotential
+  calculations, https://doi.org/10.1038/s41524-018-0127-2
+  journal journal npj Comput. Mater. volume 4, pages 72 (year
+  2018)NoStop
+[aii()]aiidaW90
+  @noop  title aiida-wannier90-workflows: A collection of
+  advanced automated workflows to compute Wannier functions using AiiDA and the
+  Wannier90 code, howpublished
+  <https://github.com/aiidateam/aiida-wannier90-workflows>, note [Online; accessed 2023-02-28]NoStop
+[Brouder et al.(2007)Brouder, Panati, Calandra, Mourougane, and Marzari]Brouder2007
+  author author C. Brouder, author G. Panati,
+  author M. Calandra, author C. Mourougane, and author N. Marzari, title
+  title Exponential localization of wannier functions in
+  insulators, https://doi.org/10.1103/physrevlett.98.046402
+  journal journal Phys. Rev. Lett. volume 98, pages 046402 (year
+  2007)NoStop
+[Panati and Pisante(2013)]Panati2013
+  author author G. Panati and author A. Pisante, title title Bloch bundles,
+  marzari-vanderbilt functional and maximally localized wannier functions,  https://doi.org/10.1007/s00220-013-1741-y journal
+  journal Commun. Math. Phys. volume
+  322, pages 835 (year 2013)NoStop
+[Poncé et al.(2021)Poncé, Macheda, Margine,
+  Marzari, Bonini, and Giustino]Ponce2021
+  author author S. Poncé, author F. Macheda, author E. R. Margine, author N. Marzari,
+  author N. Bonini, and author F. Giustino, title
+  title First-principles predictions of Hall and drift mobilities
+  in semiconductors, https://doi.org/10.1103/physrevresearch.3.043022 journal
+  journal Phys. Rev. Res. volume 3,  pages 043022 (year 2021)NoStop
+[Giannozzi et al.(2009)Giannozzi, Baroni, Bonini, Calandra, Car, Cavazzoni, Ceresoli, Chiarotti, Cococcioni,
+  Dabo, Corso, de Gironcoli,
+  Fabris, Fratesi, Gebauer,
+  Gerstmann, Gougoussis, Kokalj, Lazzeri, Martin-Samos,
+  Marzari, Mauri, Mazzarello,
+  Paolini, Pasquarello, Paulatto, Sbraccia, Scandolo, Sclauzero, Seitsonen, Smogunov,
+  Umari, and Wentzcovitch]Giannozzi2009
+  author author P. Giannozzi, author S. Baroni,
+  author N. Bonini, author M. Calandra, author
+  R. Car, author C. Cavazzoni, author D. Ceresoli, author G. L.  Chiarotti, author M. Cococcioni, author I. Dabo,
+  author A. D. Corso, author S. de Gironcoli, author
+  S. Fabris, author G. Fratesi, author R. Gebauer, author U. Gerstmann, author C. Gougoussis, author A. Kokalj, author M. Lazzeri, author L. Martin-Samos, author N. Marzari, author F. Mauri, author R. Mazzarello, author S. Paolini, author A. Pasquarello, author L. Paulatto, author C. Sbraccia, author S. Scandolo, author G. Sclauzero, author A. P.  Seitsonen, author A. Smogunov, author P. Umari,  and author R. M. Wentzcovitch,  title title QUANTUM ESPRESSO: a modular and
+  open-source software project for quantum simulations of materials, https://doi.org/10.1088/0953-8984/21/39/395502 journal
+  journal J. Phys.: Condens. Matter volume
+  21, pages 395502 (year 2009)NoStop
+[Momma and Izumi(2011)]Momma2011
+  author author K. Momma and author F. Izumi,  title title VESTA 3 for three-dimensional
+  visualization of crystal, volumetric and morphology data, https://doi.org/10.1107/S0021889811038970 journal journal J. Appl. Crystallogr. volume 44,  pages 1272 (year 2011)NoStop
+[Hunter(2007)]Hunter2007
+  author author J. D. Hunter, title title Matplotlib: A 2D
+  Graphics Environment, https://doi.org/10.1109/MCSE.2007.55
+  journal journal Comput. Sci. Eng. volume 9, pages 90 (year
+  2007)NoStop
+
 
 
 

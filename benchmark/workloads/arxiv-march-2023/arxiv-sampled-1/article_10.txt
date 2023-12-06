@@ -1,8 +1,4 @@
 
-Focus on Change: Mood Prediction by Learning Emotion Changes via Spatio-Temporal Attention
-    Soujanya Narayana, Student Member, IEEE, Ramanathan Subramanian, Senior Member, IEEE, Ibrahim Radwan, Member, IEEE, and Roland Goecke, Senior Member, IEEESoujanya Narayana, Ramanathan Subramanian, Ibrahim Radwan, and Roland Goecke are with the Human-Centred Technology Research Centre, Faculty of Science and Technology, Uni. Canberra, Bruce, ACT, Australia.
-    
-==========================================================================================================================================================================================================================================================================================================================================================================
 
 
 
@@ -14,13 +10,39 @@ Focus on Change: Mood Prediction by Learning Emotion Changes via Spatio-Temporal
 
 
 
-	
-	The Hall-Vinen-Bekharevich-Khalatnikov (HVBK) model is widely used to numerically study quantum turbulence in superfluid helium. Based on the two-fluid model of Tisza and Landau, the HVBK model describes the normal (viscous) and superfluid (inviscid) components of the flow using two Navier-Stokes type equations, coupled through a mutual friction force term. This feature makes the HVBK model very appealing in applying statistical tools used in classical turbulence to study properties of quantum turbulence. A large body of literature used  low-order statistics (spectra, or second-order structure functions in real space) to unravel exchanges between the two fluids at several levels. The novelty in this study is to use a theoretical approach based on first principles to derive transport equations for the third-order moments for each component of velocity. New equations involve the fourth-order moments, which are classical probes for internal intermittency at any scale, revealing the probability of rare and strong fluctuations.
-    Budget equations are assessed through Direct Numerical Simulations (DNS) of the HVBK flow based on accurate pseudo-spectral methods. We simulate a forced homogeneous isotropic turbulent flow with Reynolds number of the  normal fluid (based on Taylor's microscale) close to 100.  Values from 0.1 to 10 are considered for the ratio between the normal and superfluid densities. For these flows, an inertial range is not discernible and the Restricted Scaling Range (RSR) approach is used to take into account the Finite Reynolds Number (FRN) effect.   We analyse the importance of each term in budget equations and emphasize their role in energy exchange between normal and superfluid components. Some interesting features are observed: i) transport and pressure-related terms are dominant, similarly to single-fluid turbulence; ii) the mathematical signature of the FRN effect is weak  in the transport of the third-order moment, despite the low value of the Reynolds number;   iii)  for the normal fluid at very low temperatures, the mutual friction  annihilates the effects of viscosity within the RSR. 
-   The flatness of the velocity derivatives is finally studied through the transport equations and their limit for very small scales, and it is shown to  gradually increase  for lower and lower temperatures, for both the normal fluid and the superfluid. This similarity highlights the strong locking of the two fluids. The flatness factors are also found in reasonable agreement with classical turbulence. 
 
 
 
+
+1]Ehsan Haghighat
+
+2]David Santillándavid.santillan@upm.es
+
+
+
+
+
+
+[1]Department of Civil and Environmental Engineering, Massachusetts Institute of Technology, 77 Massachusetts Ave, Cambridge, 02139, Massachusetts, USA
+
+[2]Departamento de Ingenería Civil: Hidráulica, Energía y Medio Ambiente , Universidad Politécnica de Madrid, C/Profesor Aranguren 3,  Madrid, 28040, Spain
+
+
+
+
+
+
+
+We propose a phase-field model of shear fractures using the deviatoric stress decomposition (DSD). This choice allows us to use general three-dimensional Mohr-Coulomb's (MC) failure function for formulating the relations and evaluating peak and residual stresses. We apply the model to a few benchmark problems of shear fracture and strain localization and report remarkable performance. Our model is able to capture conjugate failure modes under biaxial compression test and for the slope stability problem, a challenging task for most models of geomechanics.
+
+
+
+
+
+An efficient phase-field model of shear fractures using deviatoric stress split
+    [
+    March 30, 2023
+===============================================================================
 
 
 
@@ -30,63 +52,42 @@ Focus on Change: Mood Prediction by Learning Emotion Changes via Spatio-Temporal
 § INTRODUCTION
 
 
-Liquid helium below the critical (lambda) temperature T_λ =2.17K is a quantum fluid, also called He II. Following the two-fluid concept suggested by  <cit.> and reformulated and enriched by   <cit.>, He II is represented as a  mixture of two fluids with independent velocity fields: a normal viscous fluid and an inviscid superfluid. A detailed recount of the historical events leading to the two-fluid model is offered by <cit.>.  A striking feature of the superfluid component is the nucleation of quantized vortices, with fixed (quantized) circulation  and fixed core diameter (of the atomic size). Stretching or viscous diffusion of vortices, which are essential vortex phenomena in classical fluids, are absent in the superfluid component. Complex interactions between quantized vortices lead to Quantum turbulence (QT), a relatively young investigation field opened by Vinen's 1957 experiments on thermally induced counterflow in He II  (see the review by <cit.>). Since then, considerable experimental and theoretical efforts (see dedicated reviews or volumes by <cit.>) were devoted to unravel properties of QT and underline similarities or differences with Classical turbulence (CT). 
 
-Several investigation paths were explored for the study of QT. Since it is admitted that in He II below 0.3K, the normal fluid fraction is negligible, important focus was given to  characterize QT in the superfluid flow.  This state is also referred as superfluid turbulence, or vortex tangle turbulence, since it is generated in an inviscid flow from the interaction of a large number of quantized vortices tangled in space. Quantized vortices being topological line defects, with infinite velocity and singular vorticity at the centreline, they can be modelled by  'Vortex filament' methods. In such methods, the vorticity is represented by Dirac distributions localised at vortex line locations, which are moved following the Biot-Savart-Laplace law  for the velocity induced by neighbouring lines. Phenomenological models for vortex reconnection are applied. Since the pioneering work by Schwarz  in 1980s, numerous numerical studies of superfluid turbulence using the 'Vortex filament'  method were published (see the recent review by <cit.> and citations therein). Another model used for inviscid superfluid turbulence was  the Gross-Pitaevskii equation, which is a  nonlinear Schrödinger  equation describing at macroscopic level a quantum system of weakly interacting bosons, as in Bose-Einstein condensates. 
-Even though the GP model offers only a partial description of the complexity of superfluid helium, it was extensively used  to explore properties of superfluid turbulence in an ideal setting containing only the superfluid <cit.>.
- 
- Considering simultaneously the viscous and inviscid components of He II in a global model is a difficult problem, since characteristic scales range from Angstrom (size of the quantized vortex) to meter (size of the container). The Hall–Vinen–Bekharevich–Khalatnikov (HVBK)  model <cit.> follows the original idea of the two-fluid model. The  Navier-Stokes (NS) model describes the normal fluid motion and the superfluid motion is defined by an Euler-like equation <cit.>.  The two fluids do not slip one over other, as they are coupled through a friction force. The improvement over the original two-fluid model is that the expression of the friction force takes into account the influence of quantized vortices through a coarse-grained averaged superfluid vorticity. The average is considered  over an ensemble of parallel (polarized) vortex filaments and uses Feynman's rule to find an equivalent solid-body vorticity for a dense vortex bundle of line density ℒ. Derived initially for two-dimensional or rotating QT, the HVBK was widely used to study QT for general settings. 
- 
-  Recent modelling efforts were focused on more realistic estimations of the vortex line density
-  using approaches considering ℒ as an independent variable, described by an additional evolution equation (based essentially on Vinen's equation) <cit.>.   
-  
-  In <cit.>, the averaged vortex line density per unit volume  was introduced and its evolution equations were considered, for homogeneous, inhomogeneous, isotropic and anisotropic situations. 
-  <cit.> studied   the effects of anisotropy and polarization in the hydrodynamics of inhomogeneous vortex tangles, thus generalizing the  HVBK equations. These effects contribute to the mutual friction force between normal and superfluid components and to the vortex tension force. An additional equation for the vortex line density was proposed. Applications pertained to  rotating counterflows, flow behind a cylinder, and other types of superfluid turbulence. 
-  
-  Other recent contributions <cit.>  use ideas from the HVBK expression of the friction force to derive models for coupling NS equations with vortex filaments dynamics for superfluid vortices. These NS-VF models, which also include phenomenological approximations, are not discussed in this contribution.  
-  
-  These models are still flow dependent and a general theory of coupling Navier-Stokes equations with quantized vortex effects is not yet available <cit.>. 
-   
- The focus of this paper is the detailed investigation of turbulent dynamics of the HVBK model, considered in its original form. The HVBK model has the merit to 
- provide a physically consistent closed set of equations for the coarse-grained (two-fluid) dynamics of He II, and to yield results in  agreement with 
- experimental studies of He II  <cit.>. The analysis presented here is based on Direct Numerical Simulations (DNS) of the model and thus could be easily adapted to further evolutions of the HVBK or other equivalent QT models based on Navier-Stokes type equations.  
- We adapt statistic analysis tools originally developed for CT governed by classical Navier-Stokes equations. 
- Exploring similarities between CT and QT has been a permanent guideline for studying QT, <cit.>. 
- 
- The novelty of this study  is to push the analysis to high-order moments of each component of velocity, with the aim to probe internal intermittency, i.e. assess the 4th-order structure function, and the corresponding flatness of the velocity derivative. Previous contributions used low-order statistics (spectra, or second-order structure functions in real space) to describe exchanges between the two fluids. We derive transport equations for the 3rd-order moments based on first principles. New equations involve the 4th-order moments, which are classical probes for internal intermittency at any scale.  The general purpose of this contribution is therefore to build new bridges between CT and QT, as explained in detail below.
- 
-
-Previous studies have noted that QT in He II has a lot in common with CT. 
-Experimental studies focused on the total velocity of the fluid, are unable, as yet, to distinguish between the normal and the superfluid components.  Several authors <cit.> have reported that, in the inertial range, the isotropic and homogeneous quantum turbulence velocity spectrum has a (-5/3) scaling law. The effective spectrum of superfluid vorticity (superfluid vortices averaged on a volume much larger than the inter-vortex length scale) scales as 1/3. Scaling laws such as 5/3, or 1/3 for the vorticity, are predicted by Kolmogorov theory and are well established for classical turbulence, when the Reynolds number of the flow is large enough <cit.>. 
-	Numerical studies of QT have proved the same large-scale behavior using the HVBK, 'Vortex filament' or GP models (see recent review by  <cit.>). 
-	
-	
-	Turbulence statistics received a  huge attention since 1941, when <cit.> argued that  small scales have the best prospect to exhibit universal properties.   This theory did not account for the internal intermittency, defined as strong fluctuations in space and time of the  local, instantaneous kinetic energy dissipation rate ε  <cit.>.  
-	
-	While the famous Kolmogorov turbulence theory in 1941 accounted for neither the internal intermittency phenomenon nor the finite Reynolds number effect (FRN), e.g.  <cit.>,   Kolmogorov theory 1962  <cit.> was underpinned by  modified similarity hypotheses, aimed at accounting for intermittency.   
-	One important merit of K41 and K62 is that they confer a phenomenological <cit.> and a theoretical <cit.> framework allowing to link statistics at large scales (presumably, within in an inertial range) and the smallest scales at which ε is properly defined.    Numerous  later studies  <cit.>  discussed the inappropriateness of these hypotheses, and proposed adequate amendments. One of them is the accounting of the FRN effect, which implies to consider in theoretical developments all specific physical phenomenon of the flow, such as decay, diffusion, production, etc.  The approach developed in this work follows this philosophy, and considers all terms in the transport equations, none of them being a priori neglected. 
-	
-	Turbulence statistics which pertain to internal intermittency  usually encompass  two kinds of methods: i) one-point statistics of small scales (reflected by gradients of the velocity field); and ii)  two-point statistics, particularly by the scaling exponents of higher-order structure functions. Note that the small-scale limit of ii) fully recovers i).  Scaling laws of longitudinal structure functions of order p, defined as the difference of the velocity component u between two space points separated by the scale r, are sought as:
-	
-    ⟨ (u(x+r) - u(x))^p ⟩∼ r^ζ_p,
-
-	where u is the x-component velocity in the (x,y,z)  reference system, r  the separation distance between the two points and ⟨⟩ denotes averaging.  Assessing the scaling exponents demands particular care. 
-	Strictly speaking, they can only be correctly assessed in a range of scales called  'inertial sub-range', which, in turn, requires a large Reynolds number. The exact value of the threshold depends on the flow: for instance,   <cit.> showed that Re_λ (based on Taylor's microscale λ) must exceed   500, which implies a minimum resolution of 1024 in a periodic box simulating homogeneous and isotropic turbulence. This requirement is very impelling for the computational resources of DNS. 
-	For lower Reynolds numbers, it is common to designate as Restricted Scaling Range (RSR) those scales for which a scaling of different statistics can be discerned. In the RSR, the value of the scaling  exponent is smaller than the asymptotic prediction of Kolmogorov.  K41  predicts that, under the assumption of sufficiently high Reynolds numbers,   the structure function of order p should scale as ζ_p^K=p/3 within the inertial range (the superscript  K denotes 'Kolmogorov'). The prediction is exact for p=3 since the Kármán-Howarth-Kolmogorov equation is deduced from the Navier-Stokes equations and grants the 4/5 law for longitudinal 3rd-order structure function, for sufficiently high Reynolds numbers.  However,  for p>3, the deviation of the scaling exponent ζ_p from p/3 is often attributed to the  effect of internal intermittency, although the FRN effect is also mixed up with intermittency <cit.>. For classical turbulence, a solid theory for predicting higher-order moments scaling laws is still missing. One of the intricacies stands in the correct account of the FRN, and associated closures for the numerous terms highlighted in  transport equations <cit.>. 
-	 Intermittency has also been addressed through GP models <cit.>. It is outlined that 
-the incompressible velocity are found to be skewed for turbulent states. Comparisons with  homogeneous and isotropic Taylor-Green flow, revealed  the universality of
-the statistics, including a Kolmogorov constant
-close to the one of classical fluid. 
-
-	The  HVBK model of QT at finite temperature  it is the perfect framework to develop such statistical analysis, since the two components of the flow are governed by  Navier-Stokes type equations (over which the coupling, mutual friction term, is to be accounted for) and thus can be easily separated. The two components are denoted by subscripts 'n' and 's' standing for the normal fluid and superfluid, respectively. 	The total density of the fluid is  the sum of each component densities, ρ=ρ_n+ρ_s. The density ratio is temperature-dependent. 	For T ≈ T_λ,  ρ_n/ρ = 1 and for T = 0, ρ_n/ρ = 0. Both experimental <cit.> and numerical (based on the HVBK shell model) <cit.> studies were devoted to inspecting intermittency by analyzing the scaling exponents for  higher-order structure functions.  A consensus emerged that the intermittency of quantum turbulence is very similar to classical turbulence for temperatures close to T_λ,  or  close to absolute zero (see Table I in <cit.>). There is no clear conclusion for  intermediate temperatures (between T_λ and 0). Experimental studies covered a wide range of temperatures (0<T<T_λ) and concluded that for quantum turbulence, the higher-order scaling exponents are smaller than p/3 as in classical turbulence, and they are almost unaffected by the temperature <cit.>. However, HVBK shell model studies lead to different conclusions at intermediate temperatures, where ρ_n ≈ρ_s.  <cit.> claim that for the quantum turbulence in intermediate temperatures ρ_n ≈ρ_s, the scaling exponents are more significant than the Kolmogorov prediction,  ζ_p^c<ζ_p^K<ζ_p^q  (superscripts 'c' and 'q' stand for 'classical' and 'quantum',  respectively), while <cit.> found that scaling exponents are smaller than the Kolmogorov prediction and even smaller than the scaling exponents of classical turbulence,  ζ_p^q<ζ_p^c<ζ_p^K. <cit.>  performed DNS for a gradually damped HVBK model and provided support for the latter conclusion. This discrepancy is due to the additional effect of the mutual friction force  in both normal fluid and superfluid, in the case of ρ_n ≈ρ_s. 
+The shear failure of brittle materials in compression, also known as shear bands or localized strains, are one of the dominant modes of failure in geo-structures. It has recently emerged as an active research topic due to its interest in structural geology and engineering. The growing interest stems from its engineering applications in subsurface energy technologies, including enhanced geothermal energy systems where the hydro-shearing technique is aimed to reactivate and slide the preexisting fracture network to increase the rock mass permeability <cit.>, large-scale CO_2 sequestration in deep saline aquifers <cit.>, impoundment and level changes of artificial water reservoirs of hydropower plants <cit.> and underground natural gas storage facilities <cit.>, where their mechanics are crucial to understanding the stability of faults and hence earthquake mechanisms <cit.>. Other engineering applications include fault and slope stability assessment <cit.>, or the stability of faults during the groundwater injection and production operations <cit.>.
 
 
-In the present work, we use DNS results based on the HVBK model for forced homogeneous isotropic turbulent flow with Reynolds number of the  normal fluid (based on Taylor's microscale) close to 100. We consider density ratios ρ_n/ρ_s between 0.1 and 10, corresponding to temperature spanning [0, T_λ].  Because of the moderate Reynolds numbers of the normal fluid, the range of scales over which statistics will be revealed are: the dissipative range, the RSR (intermediate scales), and large scales (comparable with the size of the simulation box, at which forcing is applied).   
-The first question we address is  the role of the mutual friction in the transport equation of the  3rd-order structure function.   We deduce this  equation from the first principles (here, two-fluids HVBK) by accounting for the FRN  effect at each scale and different temperatures, as a function of the density ratio ρ_n/ρ. Each term of the balance equation is assessed from DNS data. We corroborate this analysis with 
-one-point statistics of velocity derivatives, which is another tool to probe turbulent intermittency.  We quantitatively study the tails of Probability distribution functions (PDFs)  of velocity derivatives  by computing the flatness, defined as the 4th-order moment normalised by the square of the 2nd-order moment. We then compare with CT, for which DNS at very high Reynolds numbers <cit.> revealed that the flatness of the velocity gradients is much larger than 3 (typical for a Gaussian distribution).
-Despite the easy accessibility of small scales in  numerical simulations of QT,  we are not aware of any report of  similar analysis for probing internal intermittency.
 
-The paper is organized as follows. Section <ref> describes the two-fluids HVBK model and the main parameters of  direct numerical simulations.  Section <ref> is devoted to inspecting each term in the transport equation of the 3rd-order structure-function,  with particular attention paid to the influence of the mutual friction term over the whole range of scales and for different density ratios. Section <ref> reports one-point statistics of the longitudinal velocity gradients of each fluid component and the total velocity of the turbulent flow. Section <ref> deals with the flatness of the velocity derivative. Conclusions are drawn in Sect. <ref>. 
+The simulation of shear fracturing processes is a challenging task. The finite element method (FEM) has been the dominant numerical method for modeling solids and continua. Classically, two fundamentally different perspectives are proposed to study compressive fractures using FEM:
+
+
+  - Discrete fracture models (DFM) that are based on the classical theory of Linear Elastic Fracture Mechanics (LEFM) founded by <cit.>. 
+
+  - Smeared fracture models (SFM) that are based on the classical theory of Continuum Damage Mechanics (CDM) proposed initially by <cit.>.
+
+Each class includes extensive literature dating back to the 1960s that is out of the scope of this text to cover comprehensively. Therefore we only point the interested reader to a few primary studies of each class. 
+
+Within the DFM realm, common approaches include node duplication on fracture interface <cit.>, strong discontinuity approaches <cit.>, and Extended Finite Element Methods (XFEM) <cit.>. 
+These methods require using geometrical algorithms to trace the fracture propagation, which has been found very challenging for generic three-dimensional setups. Such methods are efficient for modeling single fractures. However, they become quickly impractical when dealing with complex fracture nucleation and propagation patterns. 
+
+As per the SFMs, we can point to continuum damage models (CDM) <cit.>, peridynamic models <cit.>, and phase-field models (PFM) <cit.>, which we discuss next in more details. 
+While early models showed significant mesh dependencies, these models have been used to simulate very complex fracture patterns under realistic conditions. Among this class, phase-field models have been most attractive in recent years due to their thermodynamically sound foundations and their ability to model complex fracture patterns. 
+
+
+Phase-field models have been extensively used for modeling brittle, cohesive, and ductile Mode-I fracture patterns, in elastic or poroelastic materials and homogeneous or heterogeneous domains <cit.> <cit.>. 
+Although  proposed a simple extension for shear fractures, the applicability of phase-field for modeling shear failure remained virtually untouched until very recently <cit.>. In a detailed study,  presented a phase-field formulation of frictional fracture based on  theory and using a similar stress decomposition approach to the one proposed by  for tensile cracks. The authors validated their model on a set of classical problems as well as various experimental setups <cit.>.
+
+
+In the present study, we propose a phase field model of shear failure that adapts the cohesive model of shear fractures proposed by  for deviatoric stress decomposition (DSD) instead of the proposed contact stress decomposition (CSD). Hence, we arrive at an alternative descriptor for the shear fracture orientation (i.e., the α tensor) which is solely based on the deviatoric strain. We adapt the crack driving force to be consistent with the DSD decomposition. The resulting formulation simplifies the damage criterion since it results in damaging the shear modulus. Lastly, the proposed model allows us to use the general forms of the failure functions from the classical plasticity theory and therefore is not limited to Mohr-Coulomb failure model.
+
+In what follows, we first briefly describe the original framework based on CSD. We then discuss our generalization proposal. Lastly, we use both frameworks to model a set of benchmark problems. 
+
+
+
+
+
+§ PHASE-FIELD METHOD
+
+In this section, we first describe the general phase-field framework for modeling crack propagation in materials. We then summarize the most recent CSD shear model <cit.>. Finally, we discuss our proposed adjustment for better stability. 
 
 
 
@@ -94,1051 +95,1294 @@ The paper is organized as follows. Section <ref> describes the two-fluids HVBK m
 
 
 
-§ THE HVBK MODEL AND DIRECT NUMERICAL SIMULATIONS
- 
+ §.§ Phase-field governing equations
 
-We use the so-called incompressible  Hall–Vinen–Bekharevich–Khalatnikov (HVBK)  model <cit.>.  Navier-Stokes equations describe the normal fluid (variables with subscript 'n') and the superfluid motion (variables with subscript 's') is governed by an Euler-like equation:
 
-    ∇·v_n =0 ,  ∇·v_s =0,
+Consider the continua Ω∈ℝ^D in D-dimensional space, depicted in <Ref>, with its boundary represented as Γ. The boundary Γ is subjected to Neumann boundary conditions on Γ_t and Dirichlet boundary conditions on Γ_u, where Γ_u ∪Γ_t = Γ and Γ_u ∩Γ_t = ∅. The set of discontinuities in the domain is represented by a discrete surface Γ_d. 
+
+According to the phase-field formulation, the fracture's discrete surface Γ_d is approximated implicitly as a continuous function over a width l using the Allen-Cahn fracture surface density function γ(d) as
+
+    γ(d) = 1/c_0 l( w(d) + l^2 ∇ d ^2 ),   with   c_0 = 4∫_0^1 √(w(l)) dl
+
+where d is the phase-field variable, with d=0 presenting the intact part of the domain while d=1 expressing a point on Γ_d. 
+w(d) is the transition function, also known as the dissipation function, defined for cohesive cracks as w(d)=d <cit.>, hence c_0=8/3. Accordingly, a surface integral ∫ ds is approximated using a volume integral as ∫ ds ≈∫γ(d) dv.
+
+Given the displacement field u, the small-deformation strain measure =(∇u + ∇u^T)/2, and the crack surface density function γ(d), the total energy of a fractured continua, occupying the domain Ω and bounded by the boundary Γ, shown in <Ref>, is expressed as 
+
+    Ψ = -Ψ^external + Ψ^internal + Ψ^fracture,
+
+where, Ψ^external is the work done by the external traction stress τ and body force b, and expressed as 
+
+    Ψ^external   = ∫_Γ_tu·τ ds + ∫_Ωu·b dv.
+
+The fracture energy, i.e., Ψ^fracture, is the energy dissipated from the system to create a fracture surface Γ_d. Given the energy release rate G_c (per unit fracture length), Ψ^fracture is expressed as  
+
+    Ψ^fracture   = ∫_Γ_dG_c  ds ≈∫_ΩG_c γ(d) dv.
+
+
+The stored internal energy of the system Ψ^internal consists of the elastic stored energy in the intact part of the domain and stored energy in the damaged part of the domain, expressed as 
+
+    Ψ^internal   = ∫_Ωψ(, d) dv.
+
+The internal energy density function ψ(, d) is defined as ψ(,d) = 12 :, which consists of both inactive and damaged counterparts. For the intact part of continuum, i.e., where d=0, the Cauchy stress tensor (, d=0) is expressed using Hook's law as
+
+    (, d=0) = (κ-2/3μ) ε_v 1 + 2μ,
+
+where, κ and μ are bulk and shear moduli of the intact material, respectively, and ε_v is the volumetric strain, expressed as ε_v = (). For the parts of the domain where d > 0, the Cauchy stress tensor is  decomposed into inactive part ^I and active part ^A as 
+
+    (, d)    = ^I() + ^A(,d) 
+       = ^I() + g(d) () + (1-g(d))().
+
+The active part of the stress tensor undergoes the damage process, and g(d) is a degradation function that expresses the stress transition from bulk () to fracture (). We will discuss these in more details in the next sections. 
+
+Therefore, there are two solution variables associated with the phase-field formulation, the standard displacement field u and the additional phase-field variable d. Taking the variation of Ψ with respect to u and d, and following the standard weak to strong form steps of the FEM <cit.> and phase-field <cit.>, we can arrive at the following governing relations: 
+
+
+    ∇·(,d) + b = 0, 
+       3G_c/8l(2l^2∇^2 d - 1) - g'(d) H() = 0.
+
+The irreversibility of the fracture process is guaranteed with the local history field of maximum stored shear energy H^+() that allows us to solve the constrained minimization of <ref> in a straightforward way <cit.> and avoids unphysical self-healing. H^+() is defined as follows:
+
+    H^+() = max_s∈[0,t]( H() ),
+
+where t is time. <Ref> is then rewritten as follows:
+
+    3G_c/8l(2l^2∇^2 d - 1) - g'(d) H^+() = 0.
+
+Since Ḣ≥0, non-negative ḋ is guaranteed and, consequently, the irreversibility of the fracture growth. We define H() after describing the stress decomposition approach. 
+
+In this work, we use the Lorenz degradation function g(d) defined as  <cit.>:
+
+    g(d, p) = (1-d)^2/(1-d)^2 + M/ψ_cd(1+p d)
+
+where, M=G_c/(c_0 l) and ψ_c is the critical crack driving force at the material's peak strength, evaluated as ψ_c = -M w'(0)/g'(0). The damage begins to accumulate as soon as elastic stored energy exceeds this critical threshold. Here, we take p=1.
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Stress decomposition. Introduction
+
+
+The split of the strain energy density into crack driving and intact components defines the damage mode and fracture pattern. Up to date, two fundamental approaches are available. 
+The approaches of the first class do not take into account the local fracture orientation, whereas the second approaches take into consideration the local crack orientation.
+
+The first group of models includes the isotropic model, the volumetric and deviatoric decomposition model, the spectral decomposition model, or the anisotropic models. The isotropic model proposed by  where the entire strain energy density is degraded. The volumetric and deviatoric decomposition model proposed by  splits the strain tensor into its volumetric and deviatoric components. This approach avoids crack inter-penetration in composites and masonry structures. The fracture is then assumed to be driven by volumetric expansion and deviatoric strains. The spectral decomposition model proposed by  splits the strain tensor into its principal components and only tensile components drive the fracture propagation. The anisotropic models are based on the spectral decomposition of the strain tensor using other projections, such as the eigenvalue and eigenvector of the effective stress tensor <cit.>. 
+
+
+The second group of approaches take into consideration the local crack orientation. The directional model proposed by  splits the stress tensor into the crack driving and persistent components using the fracture orientation. For each point, a fracture coordinate system is defined and the fracture orientation is obtained from the maximum principal stress direction.   and  computed the fracture orientation from the phase-field gradients. Following this way to compute the fracture direction,  developed a phase field model based on micromechanical modeling, i.e., the macroscopic fracture is modeled as a collection of microscopic fractures.
+
+In the following subsections, we describe the contact stress decomposition (CSD), used satisfactorily to simulate shear fractures under confining pressures, and lastly we present our proposal based on the deviatoric stress decomposition (DSD). 
+Both models do not take into account the local fracture orientation.
+
+
+
+  §.§.§ Contact stress decomposition (CSD)
+
+
+Since a compressive fracture behaves like a contact problem,  proposed a stress decomposition approach that is closely related to the contact formulation, which we refer here as CSD. It starts by considering a corotational coordinate system on the fracture surface with m and n as tangential and normal vectors to the crack surface, and m along the direction of sliding. Additionally, let us define α = (mn + nm)/2. 
+
+According to this approach and under the assumption that the fracture remains closed, i.e., no tensile fracture, the only stress component that should undergo damage is the shear stress, and other stress components remain inactive. The bulk shear stress can be expressed as  
+
+    τ̂   = :α = με_γ,
+
+where, ε_γ = 2 :α = 2 m··n. Consider the contact shear stress as τ̃. Then, the inactive stress tensor is expressed as 
+
+    ^I = (, d=0) - με_γ α,
+
+and the active stress tensor as 
+
+    ^A = τ^A α,   where  τ^A = με_γ g(d)+ τ̃ (1-g(d)).
+
+Here, τ̃ is the residual contact stress while the fracture is fully developed, i.e., d=1. 
+
+
+
+
+Given the Mohr-Coulomb's failure function as, 
+
+    F = |τ| - σ_ntanϕ - c = 0
+
+with σ_n=n··n as to normal stress on the fracture surface, and c and ϕ as cohesion and friction angle of the intact material, the peak and residual shear stresses are expressed as 
+
+    τ̃_p = c + σ_n tan(ϕ),   τ̃_r = c_r + σ_n tan(ϕ_r),
+
+where c_r and ϕ_r are residual friction and cohesion at the fully developed failure state.
+
+
+
+Based on the Mohr-Coulomb failure criterion, the critical plane for the failure is evaluated at two conjugate angles θ = ±(45^∘ - ϕ_r/2) <cit.> with respect to the direction of the maximum principal stress. However, the authors only consider θ = +(45^∘ - ϕ_r/2) <cit.>. This restriction is required otherwise m,n is not uniquely defined. 
+
+
+
+
+
+
+
+
+
+
+
+
+  §.§.§ Our proposal: deviatoric stress decomposition (DSD)
+
+
+The total strain tensor can be decomposed into volumetric and deviatoric parts, as = ε_v1 + e. We can also express the Cauchy tensor in terms of the mean confining stress p and the deviatoric stress tensor s as = -p1 + s. Therefore, we can  re-write Hook's law for the intact part as <cit.> 
+
+    (, d=0) 
+    = -p1 + s = κ ε_v 1 + 2μe.
+
+Given the equivalent deviatoric (Mises) stress q = (3/2s:s)^1/2 and the equivalent deviatoric strain ε_q = (2/3e:e)^1/2 and with some algebra, we can write that 
+
+    q = 3με_q.
+
+Let us now define the Unit Deviator Tensor α_q as
+
+    α_q = √(2/3)e/ε_q,  where  α_q = √(α_q:α_q) = 1,
+
+Hook's law can therefore be expressed as 
+
+    σ = -p1 + √(2/3)qα_q,   where  p = κε_v,   q = 3με_q.
+
+
+Equivalent to the CSD, we can describe the compressive failure in a material as damage in the deviatoric stress component. Therefore, the compressive pressure becomes the inactive part of the stress tensor, i.e.,
+
+    ^I = -p1 = κε_v1,
+
+and active stress is described as 
+
+    ^A = q(, d) α_q,   where   q(, d) = g(d) q̂ + (1-g(d)) q̃_r,
+
+where the bulk deviatoric stress is q̂ = 3με_q. 
+
+
+
+This deviatoric stress decomposition allows us to leverage the general form of virtually any failure surface that are described in the classical plasticity theory, including the Mohr-Coulomb failure function. Given the friction angle ϕ and cohesion coefficient c, the general form of the Mohr-Coulomb's failure criterion is expressed as
+
+    F = R_MCq - ptanϕ - c = 0.
+
+Here, R_MC defines the shape of the Mohr-Coulomb's failure surface and is expressed as 
+
+    R_MC = 1/√(3)cosϕsin(Θ + π/3) + 1/3cos(Θ + π/3)tanϕ,
+
+where Θ is the Lodè angle, evaluated as cos(3Θ) = (r/q)^3. The invariant r is the third invariant of the deviatoric stress tensor, and is defined as r = (9/2tr(s^3))^1/3. 
+Based on this criterion, we can find the peak and residual Mises stresses as 
+
+    q̃_p = ptanϕ + c/R_MC,   q̃_r = ptanϕ_r + c_r/R_MC,
+
+with ϕ_r and c_r as the residual values for friction angle and cohesion at the fully damaged state. 
+
+
+
+We can easily replace the non-smooth Mohr-Coulomb surface R_MC with some alternatives <cit.>. In fact, we can potentially pick any alternative failure function available for different materials. 
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Crack driving force
+
+
+Given τ = με_γ and τ_p = p tanϕ + c = με_γ^p, the crack driving force relations for CSD is derived as <cit.>
+
+    H = H_t + H_slip
+
+where
+
+    H_t = τ̃_p - τ̃_r/2μ, 
+       H_slip = 1/2μ[ (τ̂ - τ̃_r)^2 - (τ̃_p - τ̃_r)^2 ]
+
+and they showed that this model is consistent with  model. 
+Now, for the deviatoric stress decomposition discussed above, we can revise the crack driving force, given q̂ = 3με_q and q̃_p = (p tanϕ + c)/R_MC = 3με_q^p, as
+
+    H_t = (q̃_p - q̃_r)^2/6μ, 
+       H_slip = 1/6μ[ (q̂ - q̃_r)^2 - (q̃_p - q̃_r)^2 ] .
+
+More details on the derivation of H_t and H_slip for CSD approach are provided in <Ref>.
+
+
+
+ §.§ Boundary conditions
+
+To have a complete mathematical description of the problem, we lastly need to describe the boundary conditions. Considering <Ref>, the boundary conditions are described as 
+
+    u = u̅,      on  Γ_u, 
+    τ = ·n = τ̅,      on  Γ_t, 
+    ∇ d·n = 0,      on  Γ,
+
+where u̅ and τ̅ are prescribed displacement and traction forces, respectively. 
+
+The steps used to solve the problem are detailed in Algorithm 1.
+
+
+
+
+
+
+
+§ APPLICATIONS TO COMPRESSIVE STRAIN LOCALIZATION
+
+
+Here, we consider three reference problems of shear fractures, including direct shear test, biaxial compression test, and slope failure analysis. We show that our model can effectively capture multiple modes of failure concurrently. 
+
+
+
+
+ §.§ Direct shear test
+
+
+
+Our first example is the direct shear test. We simulate the propagation of a fracture in a long shear apparatus and we compare our results with analytical solutions and Fei and Choo's numerical simulations <cit.>. 
+The setup of the experiment is plotted in <Ref>. The domain is 500 mm long, 100 mm tall, and an initial 10-mm horizontal fracture is carved in the middle of the left boundary. The boundary conditions are: the bottom boundary is fixed, the top boundary is displaced horizontally, and the two lateral boundaries are fixed vertically. We neglect gravity. 
+
+The material properties are: shear modulus G=10 MPa, Poisson's ratio ν=0.3, cohesion strength c=40 kPa, peak and residual friction angle ϕ=ϕ_r=15^∘, shear fracture energy 𝒢_c=30 J/m^2, and fracture's length-scale l=2 mm. As in the previous works of  and , we impose the fracture propagation to be horizontal. Following Fei and Choo's simulations <cit.>, we initialize vertical compressive normal stress to 149 kPa, which results in τ_p=80 kPa and τ_r=40 kPa. We mesh the domain near the fracture path with a mapped squared mesh of size l/4=0.5 mm and the remaining domain with a 1-mm free triangular mesh.
+
+The horizontal force-displacement curve is shown in <Ref>. The agreement of the peak and residual forces provided by our numerical simulation is very satisfactory.
+Theoretically, the peak load, i.e., the peak shear stress times the width of the specimen, is 40 kN, and the output of our simulation is 40.387 kN. In the same way, the theoretical residual load is 20 kN and the output of our simulation is 19.978 kN. We estimate the fracture energy from the force-displacement curve, the shaded area in <Ref>. The output of our model provides a fracture energy equal to 14.6914 J, while the theoretical value is 15 J. Therefore, we report a remarkable agreement between our simulations and expected theoretical values.
+
+
+
+
+
+
+
+
+
+We analyze the sensitivity of our model to the phase-field length parameter, l. We run several simulations of the direct shear test problem for several values of l, ranging from 1 mm to 10 mm. Results are depicted in <Ref>(a). The force-displacement curves for the four values of l confirm that the model is virtually insensitive to the phase-field length parameter. We check the mesh dependency of our model by running three problems of the long-shear apparatus problem. We fix the ratio length scale parameter to mesh size, l/h, to 20 and we run three simulations for three l- and h-values. Results are plot in <Ref>(b). The curves confirm that the model is insensible to the mesh size.
+
+
+
+
+We plot the phase-field distribution at three time steps in <Ref>. The peak load is given for U_x=0.8083 mm, after this value is reached the phase-field has already emerged and propagate along the whole fracture, <Ref> (a). Afterward, the phase-field value intensifies during the softening stage, <Ref> (b), up to the time the fracture is completely developed, <Ref> (c). At this time, the domain is split into two parts. The upper part slips over the bottom one, and the shear stress between both parts is constant and equal to the residual shear stress, τ_r=40 kPa, resulting in a theoretical horizontal force of 20 kN.   
+
+
+
+
+
+
+ §.§ Biaxial compression test
+
+Our next example is a biaxial compression test. We simulate a laboratory-size specimen under plane strain, different confining pressures and with different residual friction angles. This example allows us to show the ability of the model to simulate the pressure dependence of the peak and residual strengths. We compare our numerical results with peak and residual strengths computed with a mechanical equilibrium model before and after the rupture.
+
+The model setup is shown in <Ref>(a). The domain is 80-mm wide and 170-mm tall rectangular. The bottom boundary is supported by rollers, whereas a prescribed vertical displacement is imposed in the top boundary and zero horizontal displacement in the top middle point. The two lateral boundaries are subjected to the confining pressure, p_c, which is constant during the experiment. 
+
+The material properties are: shear modulus G=10 MPa, Poisson's ratio ν=0.3, cohesion strength c=40 kPa, peak friction angle ϕ=15^∘, shear fracture energy 𝒢_c=30 J/m^2, and fracture's length-scale l=2 mm. We neglect gravity. We simulate three cases of p_c, 50 kPa, 100 kPa, and 200 kPa, and repeat each case with three values of the residual friction angles, ϕ_r=20^∘, 15^∘, and 0^∘. These simulations let us check whether our model captures the pressure dependence of the peak and residual strengths. We discretize the domain with a free triangular mesh with size h=0.2 mm that satisfy l/h=10.
+
+
+
+We include two typical vertical force-displacement curves in <Ref>(b). The confining pressure is p_c=200 kPa, the peak friction angle is ϕ=20^∘, and we consider two residual friction angles, ϕ_r=20^∘ and 0^∘. Initially, both vertical forces change linearly with the imposed vertical displacement until the peak strength is reached. The peak strength is the same in both models since they have the same p_c, c, and ϕ. 
+Afterward the fracture propagates suddenly across the domain, reaching both lateral boundaries, and the vertical force suddenly sinks. Our numerical model is able to capture the fracture propagation during the transition from the peak to the residual strengths due to the adaptive time step. Moreover, the curves evidence that the phase-field model is able to simulate the residual strength, which depends on the confining pressure, the residual friction angle, and the fracture path. 
+
+
+
+We run several simulations of the biaxial compression problem for several values of l, ranging from 1 mm to 10 mm. The force-displacement curves for the four values of l are included in Figure <ref>. As in the previous problem, the curves for the values of l confirm that the model is virtually insensitive to the phase-field length parameter.
+
+
+The evolution of the phase-field variable for p_c=200 kPa, ϕ=20^∘, and ϕ_r=20^∘, at three time steps is shown in <Ref>. The phase-field is almost zero when the peak strength is reached, <Ref>(a). In fact, due to the isotropic material model and homogeneous stress conditions of the biaxial test, two equally like fracture paths nucleate. This is consistent with the Mohr-Coulomb model. Nevertheless, only of the trajectories evolves and result in the final fracture pattern during the sudden decrease in the peak strength, <Ref>(b). Later, the phase-field variable increases its value along the fracture path up to the residual peak strength is reached, <Ref>(c).
+
+
+
+
+
+We simulate nine cases with several combinations of p_c, ϕ, and ϕ_r values. 
+We also compute the peak and residual strengths applying mechanical equilibrium prior and after the fracture propagation. Given the fracture path, the mechanical equilibrium is illustrated in <Ref>. The total vertical force applied on the top boundary is F_V, the total horizontal force on the left lateral boundary is F_H, and the tangential and normal forces on the fracture path are T and N respectively. We suppose the nucleation and fracture propagation is instantaneous and the fracture path is a straight line. the angle between the fracture path and the vertical axis is θ. Then, at the onset of the fracture propagation, the tangential force on the fracture is:
+
+    T=L/sinθc+Ntanϕ,
+
+and once the fracture is fully developed, the tangential force on the fracture is:
+
+    T=Ntanϕ_r.
+
+
+
+The mechanical equilibrium in the vertical direction is given by:
+
+    V-T cosθ -N sinθ=0,
+
+and in the horizontal direction:
+
+    H+T sinθ -N cosθ=0,
+
+where H is:
+
+    H=p_c L/tanθ.
+
+
+
+Solving V from Eq. (<ref>), substituting V in Eq. (<ref>) and operating, the vertical force at the onset of the fracture propagation V_p –peak strength– is:
+
+    V_p=1/cosθ -sinθtanϕ(  L · c/sinθ +p_c  L/tanθ( cosθ tan ϕ + sinθ) ),
+
+and the vertical force once the fracture is fully propagated V_r –residual strength– is:
+
+    V_r=1/cosθ -sinθtanϕ_r( p_c  L/tanθ( cosθ tan ϕ_r + sinθ) ).
+
+
+We compute V_p and V_r for the nine simulated cases. The results are listed in Table <ref>. The agreement between both models is remarkable.
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Slope failure analysis
+
+
+
+
+As the last example, we consider the problem of slope failure analysis reported in <cit.>. Consider the soil slope shown in <Ref>. The domain is 20 m wide and 10 m tall, with a slope 1:1 on the left side. A 4 m wide rigid footing is placed on the crest of the slope. 
+The slope is first subjected to a body force b=20 kN/m^3, and then these body-force stresses are used as the initial state for the footing loading step. 
+Displacement at the bottom edge is fixed in both directions, while for the right edge, only horizontal displacement is fixed. 
+As the main loading step, a displacement U_y=0.3 m is prescribed in the middle of a rigid foundation, which simulates the effect of a building imposing a stress on the slope. 
+
+The elastic parameters of the soil include E=10 MPa and ν = 0.4. The initial friction angle and cohesion are ϕ = 16.7^∘ and c=40 kPa, with ϕ_r=10^∘ and c_r = 0 kPa as their respective residual values. The phase-field length scale parameter is set to l = 200 mm, and the domain is discretized using a free triangular mesh with mesh-size 20 mm. The resulting mesh roughly has 1M triangles and 500K vertices. The computational time takes about 12 hours in our desktop machine with i9-10900 processor with 10 cores and 20 threads.
+
+
+Due to the relatively high cohesion and low friction angle, the shear-band formation for this problem is particularly interesting. If we plot the evolution of the Mohr-Coulomb’s failure envelope right before the onset of fractures, as shown in <Ref>-(a), we observe that the failure should onset from both ends of the footing. This fact has also been reported by <cit.>, however, due to the pre-specification of only one orientation angle (θ), the crack formation from the left side was not captured by <cit.>. 
+Therefore, to perform a comparison, we consider two cases:
+
     
-    ∂v_n/∂ t+(v_n ·∇)v_n=-1/ρ_n∇ p_n  + 1/ρ_nF_ns + ν_n ∇^2v_n,
+  I. Shear band formation only from the right corner of the footing by suppressing the phase field variable to zero (d=0) in the gray region (see <Ref>).
     
-    
-    ∂v_s/∂ t+(v_s ·∇)v_s=-1/ρ_s∇ p_s  - 1/ρ_sF_ns+ ν_s ∇^2v_s,
+  II. Free shear-band formation, which results in two patterns from each side followed by coalesces. 
+Additionally, we consider two critical fracture energies of G_c = 10 kJ/m^2 and G_c = 5 kJ/m^2. The final fracture patterns of these two cases are shown in <Ref>. 
 
-where ∇ stands for the nabla operator, v is  the velocity vector, ρ the density and p the pressure.   Note that the superfluid viscosity ν_s is theoretically zero, and it is added for the purpose of stability of numerical simulations at very low temperatures.  It may also be viewed as a crude surrogate for the superfluid dissipation processes at inter-vortex scales and below.
 
-The two fluid components are coupled through a mutual friction force F_ns. The form of the friction force is  <cit.>,  <cit.>:
 
-    F_ns =  -B/2ρ_sρ_n/ρω_s  (ω_s   (v_s -v_n))/|ω_s |   -B'/2ρ_sρ_n/ρω_s   (v_s -v_n),
 
-where ω_s = ∇v_s is the coarse-grained superfluid vorticity (see below). 
-We assume that for the superfluid the predominant energy loss is due to macroscopic friction with the normal fluid. We implicitly neglect dissipation process by vortex reconnection. This certainly excludes the validity of such a model for temperatures very close to 0K, and does not allow to investigate scales smaller than the intervortex distance.    The perpendicular component of the force in Eq.  (<ref>) is neglected, since it does not contribute to the energy exchange.  A discussion on the impact of these simplifications is provided in Appendix <ref>.
- The simplified form of the friction force is then <cit.>:
+The evolution of phase-field variable for case I, with G_c = 5 kJ/m^2, are plotted for different loading steps in <Ref>. The force-displacement response is plotted in <Ref>-(b). 
+As the reader can find, the proposed formulation captures the peak and residual loads as well as the crack patterns accurately, and the results are consistent with those reported by . The failure surface evaluated using phase-field method and the peak-load is well-aligned with potential failure surfaces and critical load F=0.8MN/m resulting from  limit-equilibrium analysis of the slope using the GeoStudio software (see <Ref>-b-d).
 
-    F_ns = -B/2ρ_sρ_n/ρ|∇v_s|  (v_n -v_s),
+Lastly, we run a new set of simulations for case II. The results are plotted in <Ref>. As we find, here the model captures first a shear band formation from the left corner of the footing. This is in fact expected because of the stress-free surface of the slope creates a more critical failure condition on the left corner. The propagation of the mode, however, stops because it is directing to Mohr-Coulomb stable regions of the domain. Later, the main failure mode initiates and propagates from the right corner, and collides with the first mode somewhere underneath the footing, which is also consistent with the results of the limit state theories. A final branch is then generated and causes the ultimate failure of the slope. The pick stress, however, does not seem to be very different from those of Case I, as plotted in <Ref>-(b).
 
-where B is a temperature related parameter, measured in various experiments (see for instance  <cit.>). We set the value B=1.5 corresponding to the averaged value extracted from experimental data. 
 
-  This calculation of the mutual friction was based on Feynman's rule. Assuming that a large number of superfluid  vortices of quantized circulation κ are parallel (polarized) in a bucket, the equivalent  solid-body rotation vorticity is 2 Ω=|∇v_s| = |ω_s |=κℒ, where ℒ is the vortex line density per unit volume and Ω the equivalent angular velocity.  The equivalent averaged  coarse-grained velocity of the superfluid is then v_s = Ω×r. 
-  The validity of  the expression of the mutual friction force (<ref>)  in general quantum turbulent flows, where vortex lines are randomly oriented rather than highly polarized, is still matter of debate. The existence in QT of dense vortex clusters (bundles) with quasi-parallel vortex lines <cit.> supports the idea of an averaged vorticity. Obtaining a model equation for the evolution of  L that accounts for non-polarized vortices is still an open question <cit.>.
 
 
-The kinematic viscosity ν_n =μ/ρ_n in Eq. (<ref>) is a simulation parameter. Based on the concept of the two-fluid model, ρ_n decreases with temperature, while  the dynamic viscosity μ is also temperature-dependent. Naturally, the parameter μ in the two-fluid model should be taken as the dynamic viscosity μ_*, which was measured in superfluid helium for a range of temperatures 1K<T<T_λ (see <cit.>). It is common practice in HVBK simulations to fix μ as a constant, independent of temperature. We adopt this simplification, since the dynamic viscosity of the normal fluid could be different from μ_* at low temperatures because of other dissipative effects in the superfluid. We choose here to fix ν_n  as a constant, independent of the temperature.
 
 
-We solved numerically the system of equations (<ref>)-(<ref>) using Fourier pseudo-spectral methods classically used for Navier-Stokes equations. Direct numerical simulations were performed by adapting a Navier-Stokes code that proved  efficient and accurate in computing high-order statistics of turbulent flows <cit.>.  Periodic boundary conditions were applied to a computational box of  length 2π. Grid resolution was 512^3, which was sufficient to reach a moderate Re_λ∼ 100, based on Taylor's microscale.  We have also performed numerical simulations with a better resolution of 1024^3 (see Appendix <ref>).  The results reported are not affected by the resolution, except the value of the flatness of the velocity derivative of the superfluid, as discussed later.  To achieve a quasi-stationary homogeneous isotropic turbulence, an additional forcing term was added in the momentum equations (<ref>) and (<ref>) at large scales. 
 
 
 
-The energy injection rate ε_* 
 
- is constant in time,  for different temperatures, and for  both fluid components.   We set  ε_*=7e-4  for all simulations. The energy injected in superfluid is transferred by mutual friction and eventually dissipated by the normal fluid component. But, the energy transfer becomes less efficient for low temperatures because of ρ_n/ρ tending to zero. 
- Accounting for an additional forcing term would result in unstable simulations. To maintain the stability of the simulations for very low temperatures, a common technique in the HVBK model is to impose an artificial viscosity ν_s to the superfluid.  To respect the two-fluid concept, one should make sure that the artificial viscosity of the superfluid is much smaller than the viscosity of the normal fluid,  ν_s≪ν_n. 
 
+§ CONCLUDING REMARKS
 
 
+We presented a phase-field model of shear fractures using deviatoric stress decomposition (DSD). We validated the model by solving reference problems of shear fractures in geotechnical engineering. Our model has excellent performance. 
 
+The main advantages of our phase-field approach are: (1) the model does not require re-meshing, (2) nucleation, propagation, and fracture path are automatically computed without the need to track fractures or pre-specify orientations, and (3) fracture joining and branching do not need additional algorithms. 
 
 
-To summarize, in the present work we fix ν_n as a constant independent of the  temperature, and ν_s=0.1ν_n for all numerical simulations. Other techniques exist, like the gradually damped HVBK model <cit.> and the shell model  <cit.>, for which a temperature-dependent normal fluid viscosity ν_n and temperature-dependent superfluid viscosity ν_s are imposed. The statistics of the DNS HVBK model were computed over 30 integration time scales. Table <ref> contains simulation parameters for all 7 considered cases.  The first part refers to the normal fluid, while the second one pertains to the superfluid.
+For an isotropic Mohr-Coulomb material under homogeneous loading, it has been shown that there are two conjugate surfaces having the same likelihood for shear band formation. In fact, our model captures this for the biaxial compression problem without any intervention.
 
+This is the same for the slope stability problem, where our model was able to capture crack initiation from both corners of the foundation.
+While accurate in peak and residual force calculations, 
 
+we found that the CSD model of shear fractures is more accurate in capturing such a transition. 
 
+The study was limited to modeling two-dimensional problems of compressive fracture. However, the proposed formulation is not limited to any dimensions. Therefore, we plan to explore three-dimensional models as a follow-up study. Additionally, pore-fluid consideration is critically important for modeling failure in geomaterials. This is also an area that will be considered next. Additional paths include incorporating rate-and-state friction models that are best suited for modeling geologic systems, and thermal coupling that is important for modeling geothermal systems. 
 
 
 
 
+§ CRACK DRIVING FORCE FOR DEVIATORIC STRESS DECOMPOSITION
 
 
-§ SCALE-BY-SCALE EVOLUTION OF THE THIRD AND FOURTH-ORDER STRUCTURE FUNCTIONS OF THE NORMAL AND SUPERFLUID
- 
+Reminding that q̂, q̃_p, q̃_r denote the bulk and fractured deviatoric stresses at peak and residual stages, respectively, and q̂ = 3με_q, with ε_q and the deviatoric strain, the crack driving force during a plastic dissipation process as a result of frictional sliding can be expressed as 
 
+    H_slip    = ∫_ε_γ^p^ε_γ (q̂ - q̃_r) dε_γ
+        = ∫_ε_γ^p^ε_γ (3με_q - q̃_r) dε_γ
+        = 1/6μ(q̂^2 - q̃_p^2) - q̃_r/3μ(q̂- q̃_p ) 
+        = 1/6μ{(q̂ - q̃_r)^2 - (q̃_p - q̃_r)^2 }.
 
+Since q = g(d)q̂ + (1-g(d))q̃_r, we will have,
 
+    H_slip    = 1/6μ{(q - q̃_r/g(d))^2 - (q̃_p - q̃_r)^2 }.
 
+We observe that the relations are quite similar to those reported by  using shear stress split, except that shear stresses and strains are replaced now with deviatoric ones and therefore division by 3μ instead of μ. 
 
-We present in this section the scale-by-scale budget equation for the 4th-order structure functions  of velocity increments in a HVBK turbulent flow. We start from the transport equation of the 3rd-order structure function for a single-fluid Navier-Stokes turbulent flow. This  equation was derived by  <cit.>  and <cit.> and assessed through experimental and numerical data by <cit.>, and <cit.>.  Denoting by  r the space increment, δ u=u(x+r)-u(x) the longitudinal velocity increment and δ v=v(x+r)-v(x) the transverse velocity increment, the following transport equation was established under the assumption of homogeneity and isotropy:
+Noting that total driving energy is expressed as H = H_t + H_slip, re-arranging <ref>, we can write
 
-    ∂_t D_111_Term1 + (∂_r+ 2/r) D_1111_Term2 - 6/r D_1122_Term2'= -T_111_Term3+ 2ν C_Term4- 2 ν Z_111_Term5,
+    H = {H_t - 1/6μ(q̃_p - q̃_r)^2} + 1/6μ(q - q̃_r/g(d))^2.
 
-where ∂_r ≡∂/ ∂ r, ν is the kinematic viscosity and
+Now, one can substitute this relation into the phase field PDE <ref>, and with 1D simplifications, integrate the phase field relation, as detailed in <cit.>, to arrive at approximate relations for the evolution of deviatoric stress q as a function damage. Again, since the phase field PDE <ref> and driving force <ref> are very similar to those in <cit.>, all the derivations hold identical and true for the deviatoric stress decomposition. Finally, by imposing length-scale independency to the deviatoric stress evolution, one obtains that 
 
-    D_111   =⟨(δ u)^3⟩, 
-    
-    D_1111   =⟨(δ u)^4⟩, 
-    
-    D_1122   =⟨(δ u)^2(δ v)^2⟩, 
-      
-    C(r,t)   =-4/r^2 D_111 (r,t) + 4/r∂_r D_111 + ∂_r ∂_r D_111, 
-    
-    Z_111   =3 ⟨δ u [(∂ u/∂ x_l)^2+(∂ u'/∂ x_l')^2]⟩.
+    H_t = 1/6μ(q̃_p - q̃_r)^2.
 
-In expressions (<ref>) double indices indicate summation (over l=1,2,3) and a prime refers to variables at point x+r. Term Z_111, also  called dissipation-source term, couples components of the dissipation with δ u, and thus acts at all scales (this will be discussed in detail later). Term T_111 is related to the pressure gradient and has the form:
+This completes the derivation of crack driving force relations introduced in <ref>.
 
-    T_111=3⟨( δ u)^2 δ( ∂ p/∂ x)⟩.
 
 
-We apply the same approach to obtain a similar transport equation for  HVBK equations (<ref>)-(<ref>), which have Navier-Stokes  structure.
-We denote by D_111^n and  D_111^s the  3rd-order longitudinal structure functions for normal and superfluid components, respectively.  The two transport equations are:
 
-    ∂_t D_111^n_Term1 + (∂_r+ 2/r) D_1111^n_Term2 + (-6/r D_1122^n )_Term2'=   -T_111^n_Term3+ 2ν_n C^n_Term4 +(-2 ν_n Z_111^n)_Term5
-       + ⟨(δ u_n)^2 (3 ρ_s/ρδ F_∥^ns)⟩_Term 6+3 ⟨(δ u_n)^2 δ f_∥^n⟩_Term 7 ,
 
+§ DATA AVAILABILITY STATEMENT
 
-    ∂_t D_111^s_Term1 + (∂_r+ 2/r) D_1111^s_Term2 + (-6/r D_1122^s)_Term2'=   -T_111^s_Term3+ 2ν_s C^n_Term4 + (-2 ν_s Z_111^s)_Term5
-       + ⟨(δ u_s)^2 (-3 ρ_n/ρδ F_∥^ns)⟩_Term 6+3 ⟨(δ u_s)^2 δ f_∥^s⟩_Term 7.
 
-For the sake of simplicity, we used the same notations for different terms as in Eq. (<ref>), while referring to either normal or  superfluid components.  New Term6 and Term7 appear. The former  comes from the mutual friction force F_ns (appearing with opposite signs in the two equations) and the latter from  forcing terms f^n and f^s added in both equations to force turbulence.
-
-
-
-Equations (<ref>) and  (<ref>) allow us to obtain exact expressions of the 4th-order structure function (and, further on, of the flatness factor). Recalling that  (∂_r+ 2/r)=(∂_r(r^2 ))/r^2, we obtain after integration with respect to the scale r: 
-
-    D_1111^n=1/r^2∫_0^r s^2 (-Term1-Term2'+Term3+Term4+Term5+Term6+Term7)^n  ds,
-
-
-    D_1111^s=1/r^2∫_0^r s^2 (-Term1-Term2'+Term3+Term4+Term5+Term6+Term7)^s  ds.
-
-
-To assess the importance of each term in transport equations (<ref>)-(<ref>) for the 3rd-order structure functions, we naturally start with the simulation case ρ_n/ρ=0.91 (see Tab. <ref>). For this case, where the normal fluid is predominant,  the results are expected to be similar to those known for a classical single-fluid turbulent flow <cit.>.  Figure  <ref> shows the scale-dependence of each term in  Eq. (<ref>), after normalization by ε_*^5/4ν_n^1/4, with ε_* the  constant energy rate injected to force turbulence.  
-Note that for this case the smallest resolved scale is smaller than the Kolmogorov scale η_n (see Tab. <ref>). 
-
-
-
-
-  Term1  reflects the temporal decay of the 3rd-order structure function. This term is zero for steady-state flows and thus negligible here. Term2  (blue ∙ -) is the prevalent term over the scales within the RSR. The sum of the two transport terms Term2+Term2'  (red ∘) balances the pressure-related  Term3 (black - · ) fairly well, over the whole range of scales. 
- 
-  Term4 (red ×-, plotted with changed sign) is negative at small scales and positive at large scales. It represents the viscous destruction of the 3rd–order structure functions. As expected, this contribution is negligible over the RSR, but becomes important in the viscous range. At the smallest resolved scale, this is the most prevalent term and  is balanced by 
- Term5 (black —), the dissipation source term. This term exhibits a plateau over the RSR, and it is 15 % of the other terms. Albeit smaller, this term cannot be ruled out. 
- 
-   Term6 (magenta -), representing the friction force coupling,  is the less important term. This seems reasonable behaviour for a fluid essentially composed of normal fluid.   Note also that Term6 is negative for the normal fluid, so  the figure illustrates (-Term6).  Finally,  the forcing term (Term7) (green - ·)  affects the very large scales only and its effect gradually diminishes towards small scales. 
-
-The analysis of this case suggests that, as in classical single-fluid turbulence <cit.>,  the two transport terms (Term2+ Term2') are only balanced by the pressure-related term Term3. This occurs over the whole range of scales, albeit the effect of the viscosity is obviously felt within the viscous range. The same conclusion was reached by
- <cit.> on the basis of experimental and DNS data. However, these authors did not calculate exactly the dissipation source term, neither the forcing term (which was neglected within the derivation, on the basis of the assumption of  very large Reynolds numbers). They also noted departures from homogeneity and isotropy, which are clearly observed in our simulations. 
-
-Another important remark is that, despite the low Reynolds number of the flow (R_λ≤ 100), all terms that might have represented the FRN effect (friction force coupling through Term6, forcing term Term7 and dissipation source term Term5) are negligible. Therefore, there is no direct imprint of the FRN effect on the 4th-order moments of velocity increments. There is the possibility that this effect might be indirect, through the pressure field.   The conclusion that FRN effect is negligible is further comforted by other simulations for different temperatures (see below). The consequences are that 4th-order structure functions are only shaped by the pressure field. This observation was revealed by e.g. <cit.>. The latter authors suggested a valuable model for the role of the pressure in turbulence. 
-
-
-We now extend our analysis to other cases (see Tab. <ref>). We consider the case ρ_n/ρ=0.5 (temperature around 2K) with balanced normal and superfluid fractions and the case ρ_n/ρ=0.09 (temperature close to 0.3K), with the superfluid dominating the flow. Terms in Eqs. 
-(<ref>)-(<ref>) are depicted in Fig. <ref>. For the coherence of the message, we replot in  upper panels of Fig. <ref> the results obtained for ρ_n/ρ=0.91. 
-
-
-Term1  reflects the temporal decay of the 3rd-order structure function. As stated above,  this term is absent in our simulations. We have kept it in the transport equations, as it provides a way to assess the degree at which other terms influence its behaviour. For a direct cascade, D_111 is negative. An enhance of the cascade is consistent with positive values of the  temporal derivative of  (-D_111). For the normal fluid, this enhancement can be the result of the friction force coupling, via  Term6, which is negative (so -Term6 is positive).  Therefore, the cascade of the normal fluid may be enhanced by Term6. The opposite effect stands for the superfluid, for which Term6 is positive. The origin of this different sign is at the level of the HVBK model, for which the coupling term is accounted for with different signs, reflecting an enhancement of the momentum for the normal fluid, and a reduction of the momentum for the superfluid.  
- 
-Forcing terms (Term7)  are not shown in Fig. <ref>, because they only affect very large scales.
-
-Generally speaking, as already emphasized, they exhibit similar behaviour to  classical turbulence, if  high temperatures are considered, corresponding to ρ_n/ρ=1. However, the additional mutual friction term Term6 plays a requisite role particularly for low temperatures, thus distinguishing the HVBK flow from classical fluids.
-In the following section, we analyse  the results for each specific range of scales. 
-
-
-
-
-
-
-
-
-
-
-
- §.§ Dissipative scales
-
-For the normal fluid, similar to classical turbulence at small scales, the pressure source  Term3 and   transport terms (Term2 + Term2') scale as  r^3.  In contrast, the viscous Term4 and dissipation source  Term5 vary proportionally to r. The viscous Term4 balances the dissipation source  Term5 for the very small scales. Although small differences  between these two terms are noticeable  for the lowest density ratio  (ρ_n/ρ=0.09, see Figs. <ref> and <ref>), they are most likely due to the limited grid resolution. If we decrease r to very small values, the two terms  eventually cancel each other. 
-
-Moreover, transport terms (Term2 + Term2') are nearly balanced by the pressure source  Term3 for the normal fluid (as already discussed and illustrated in the left column of Fig. <ref>).
-
-For the superfluid (right column of Fig. <ref>), unlike classical turbulence at smallest scales,  transport terms are slightly larger than the pressure source term. This difference is most likely attributable to  the equipartition of energy <cit.>, which  finally results in the accumulation of energy at highest wavenumbers due to the very small value of the supefluid viscosity. 
-Moreover, when the superfluid is dominant in the flow, the kinetic energy cannot be completely dissipated. This energy accumulates at the scales of the same order as the inter-vortex scale, which leads to an upward trend for the superfluid velocity spectrum. In quantum physics, this is associated with a partial thermalisation of superfluid excitations <cit.>. Note that the upward trend of the superfluid velocity spectrum depends on  simulation parameters of the HVBK model. The truncated HVBK model resolves two coupled viscous fluids with different, albeit constant,  viscosities. The ability to settle the smallest scales of both fluids requires, nonetheless, a sufficiently high resolution. 
-
-For small scales, the mutual friction term Term6 scales as  r^3 in both normal and superfluid components. Term6 decreases much faster than both  dissipation source and viscous terms. This underlines that  at small scales, the viscous and the dissipation source terms (both directly depending on the viscosity) are dominant.
-
-
-
-
-
-
-
- §.§ Intermediate scales
-
-
-Considering the moderate values of the Reynolds number in these simulations, a clear inertial range is not established. We  prefer to refer to a restricted  scaling  range (RSR), defined as the range of scales over which different statistics exhibit a discernible scaling, albeit with exponents smaller than those predicted by asymptotic (for infinitely large Reynolds numbers) theories.     
-
-
-
-
-
-
-An analytical form of the 4th-order longitudinal structure function can be obtained from Eq. (<ref>) by integrating the sum of  terms 1 to 5:
-
-    D_1111=1/r^2∫_0^r s^2 (-Term1-Term2'+Term3+Term4+Term5) ds.
-
-In a statistically steady flow, Term1 is zero. In the RSR, Term4 is negligible. One  condition that D_1111 follows a pure power law is consistent with the requirement  that all terms on the right-hand side of Eq.  (<ref>) also exhibit pure power laws, or cancel each other. Term2' and Term3 are shown to follow similar power laws,  while the dissipation source  Term5 exhibits  a different exponent <cit.>.  It is important to shed some light on the difference between classical turbulence and HVBK quantum turbulence entailed by the mutual friction coupling effect quantified by  Term6.
-
-Similar to classical turbulence,  the RSR is not clearly discernible due to the low value of the Reynolds number. Nonetheless, the pressure source Term3  perfectly balances transport terms (Term2 + Term2'), while the viscous  Term4 is negligible.  Unlike the classical turbulence in the RSR, the mutual friction Term6 acts as  a source term.  Since D_111 is negative, ∂_t D_111 < 0 reflects vortex stretching enhancement, whilst  ∂_t D_111 > 0 corroborates with reduced vortex stretching. The sign of Term6 (negative in Eq. (<ref>) and positive in Eq. (<ref>)), directly reflects enhanced vortex stretching in the normal fluid (thus, an accelerated cascade) and reduced  vortex stretching and cascade in the superfluid. 
-
-For the normal fluid, Term6 and the  dissipation source  Term5 have opposed signs. For decreasing values of the  density ratio ρ_n/ρ, the mutual friction Term6 gradually increases,  which in turn leads to an enhancement  of the dissipation source Term5. The physical picture behind this statistical equilibrium between terms  is  that the increase of the vortex stretching rate reflected by  Term5 requires damping  through the dissipation source term. For the flow to be statistically stationary at the highest normal fluid density ratio (ρ_n/ρ=0.91),  only a  small vortex stretching rate has to be introduced by the mutual friction. The normal fluid remains indeed unaffected by the superfluid, thus  behaving  as in classical turbulence. When the superfluid is  dominant (ρ_n/ρ=0.09), the mutual friction becomes important in the normal fluid, thus resulting in  a large dissipation source term. At the level of Eqs. (<ref>) and (<ref>), the dissipation source term is non-negligible. This term can effectively modify the scaling exponent of the 4th-order structure functions of velocity increment in the RSR. Interestingly, one can expect that for 0.09<ρ_n/ρ<0.5, the mutual friction term cancels  the dissipation source term completely. This could trigger an exact 4/3 scaling exponent for the 4th-order structure functions in the RSR,  for the normal fluid. Therefore, one of our important conclusions is that the normal fluid behaves at very low temperatures as a perfect fluid, since  viscous effects are annihilated by the mutual friction coupling.  
-
-For the superfluid, the mutual friction  Term6 and the dissipation source Term5 are  positive and thus  reduce the vortex stretching. When one of them grows, the other one diminishes. In the inviscid limit ν_s = 0, only Term6 prevails. When the temperature goes to absolute zero, Term6 diminishes and  there is no source in the superfluid. In classical turbulence, the scaling exponent of the 4th-order structure functions of the velocity increment in RSR (or in the inertial range) should be ζ_4=4/3 as predicated by the Kolmogorov theory K41. 
-In the HVBK model, the viscosity of the superfluid ν_s is not exactly zero. For large superfluid density ratios (ρ_s/ρ =0.91) the mutual friction term is small and the dissipation source term prevails,  being comparable to Term6.  For low superfluid density ratios (ρ_s/ρ =0.09), the dissipation source term is negligible compared to the mutual friction term in the RSR. Both Term6 and Term5 are scale-dependent and they may impact  the scaling exponent of the 4th-order structure functions. 
-
-
-
-Finally, the mutual friction terms make the behavior of the 4th-order structure function in the RSR to be more complicated than in classical turbulence. The normal fluid is associated with an enhanced dissipation source term in the RSR for lower and lower temperatures (decreasing ρ_n/ρ). In the superfluid, the mutual friction term acts as an addition to the dissipation source term. 
-
-
-
-
-
-
-
-
-
-
-
-		
-
-
-
-
-
-
-
-
-
-
-		
-
-
-
-
-
-
-In the following, we complete our overview of the flow by focusing on the smallest scales, represented by velocity gradients. 
-
-
-
-
-
-
-§ ONE-POINT STATISTICS OF  VELOCITY GRADIENTS
- 
-
-We focus on one-point statistics of the small-scale motion. Particular emphasis is put on the flatness of the velocity gradient, which reflects the effect of turbulence intermittency on small scales dynamics. The probability density function (PDF) of the longitudinal velocity gradient ξ = ∂_x u, for the same  density ratios as previously (ρ_n/ρ=0.91, 0.5, 0.09), are shown in Figs. <ref> and <ref>  for the normal and superfluid components, respectively. Similar to classical turbulence, PDFs exhibit non-Gaussian skewed shapes, with stretched tails skewed towards negative values of the velocity gradients. Note that negative values of velocity gradients are much larger than its variance.  For decreasing values of  the normal fluid density ratios, PDFs tails become more and more stretched. However, PDFs of the velocity gradients in the superfluid show non-monotonic trends. 
-
-The integration over the whole domain leads  to the pth-order moment of ξ:
-
-    ⟨ξ^p ⟩ = ∫_-∞^∞ξ^p PDF(ξ) dξ.
-
-The normalized 4th-order moment is the flatness factor:
-
-    F = ⟨ξ^4⟩/⟨ξ^2⟩ ^2.
-
-
-
-Figure <ref> shows PDFs of gradients of longitudinal velocity (panels a and b) and normalized PDFs (panels c and d) as 
- (ξ/σ)^4PDF, where σ = √(⟨ξ^2 ⟩ - ⟨ξ⟩^2) is the standard deviation of the velocity gradient.
- PDFs are well converged for large events, with errors smaller than 1%. This signifies  that flatness factors computed from the PDFs are accurate. Flatness factors  are plotted in Fig.  <ref> for all considered cases. For the normal fluid, the flatness factor increases monotonically when ρ_n/ρ diminishes, which indicates that the intermittency in normal fluid is enhanced for lower and lower temperatures.  The superfluid follows the same trend as the normal fluid. 
- 
-
-
-This observation can be explained by the energy exchange between the two fluid components. On average, mutual friction acts as a  source term that enhances energy at all scales in the normal fluid. Since energy input is expected to occur mainly at locations with strong vorticity, we suggest the following scenario.
-First, vorticity distributions in the two fluids are coherent (aligned) and the mutual friction depends directly on the magnitude of the vorticity.
-As the relative velocity seems to be uniformly distributed in space,  with a Gaussian PDF, we infer  that the mutual friction enhances locally the vorticity and thus the intermittency. When the density ratio ρ_n/ρ decreases, the mutual friction term in the normal fluid momentum equation is more important. As a consequence, the intermittency grows when  the temperature diminishes.    The superfluid is strongly locked with the normal fluid, thus following a similar trend.  
-
-
-
-
-
-We further compute the flatness of the total longitudinal velocity gradient  ∂_x u = ρ_n/ρ∂_x u_n +ρ_s/ρ∂_x u_s, with u_n and u_s the longitudinal velocity components in the normal fluid and superfluid, respectively.
-Flatness factors of  the total longitudinal velocity gradient are plotted against ρ_n/ρ in Fig. <ref>. The flatness factor is controlled by the normal fluid for high ρ_n/ρ, and by the superfluid for low ρ_n/ρ.  The intermittency of the total fluid  continuously increases when the temperature diminishes. 
-
-In Fig. 
-<ref>, horizontal short lines indicate DNS results of classical turbulence flatness factor for different values of R_λ <cit.>.  For Reynolds numbers close to that considered in our simulations (R_λ≈ 94),  the flatness F in classical turbulence ranges between 5.42 and 5.55. These values are very close to the flatness  we obtained  for ρ_n/ρ = 0.91, corresponding to R_λ≈ 90 in the normal fluid. When ρ_n/ρ decreases,   R_λ also decreases in normal fluid (due to the mutual friction), and the flatness factor increases for the total fluid. We obtained the value  F=5.786 for ρ_n/ρ=0.5. While a resolution of N=512 leads to a flatness that drops back to F=5.268 for ρ_n/ρ=0.09, an enhanced resolution of N=1024 leads to values comparable for both normal and superfluid, thus emphasizing their locking.
-
-
-HVBK quantum turbulence simulated here exhibits  the same degree of intermittency  as observed in classical turbulence.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-§ THE FLATNESS OF THE VELOCITY DERIVATIVE IN SUPERFLUID TURBULENCE
- 
-
-At this stage, it is important to go back to the theoretical framework provided by  first principles (here the HVBK equations) and to consider the limiting behavior of Eqs. (<ref>) and (<ref>).
-
-
-
-
-
-
-
-
-
-
-To obtain the expression of the flatness derivative, we consider that r → 0 and apply a Taylor series expansion up to the fifth-order in r <cit.>.  Using the homogeneity hypothesis, we obtain:   
-
-    ∂/∂ x( ∂ u/∂ x)^2( ∂ ^2u/∂x^2)   = 0⟹ 2  (∂ u/∂ x) ( ∂^2 u/∂ x^2) =  -(∂ u/∂ x)^2 ( ∂^3 u/∂ x^3),
-
-and hence
-
-    (δ u)^3≃(∂ u/∂ x)^3 r^3 - 1/4(∂ u/∂ x)  ( ∂^2 u/∂ x^2)^2  r^5+....
-
-The 4th-order structure function can be written as  
-
-    D_1111= (δ u)^4≃( ∂ u/∂ x)^4 r^4+ ...
-
-and similarly
-
-    D_1122= ⟨(δ u )^2(δ v )^2⟩≃( ∂ u/∂ x)^2 ( ∂ v/∂ x)^2 r^4+....
-
-
-
-An equation for F, the velocity derivative flatness factor (<ref>), can be obtained <cit.>  by applying the following operator O  to terms in Eqs.  (<ref>) and  (<ref>):
-
-    O(Term) ≡lim_r→ 0Term/r^3/(δ u)^2^2/r^4=lim_r→ 0 
-    	r ·Term/(δ u)^2^2.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-We obtain that 
-
-    O (Term 2')= -6 ( ∂ u/∂ x)^2 ( ∂ v/∂ x)^2  /  ( ∂ u/∂ x)^2^2 = -6 S_uv,2,
-
-where the notation S_uv,2 was introduced for the sake of simplicity. 
-The pressure term becomes, once O  is applied:  
-
-
-
-
-
-    O (Term 3) = - 3   (∂ u/∂ x)^2 ∂^2 p /∂ x^2/(∂ u/∂ x)^2^2.
-
-After applying the operator O to the coefficient  r^3, the dissipation term leads to 
-
-    O (Term 4)|_r^3 =  9ν( ∂^3 u/∂ x^3)( ∂ u /∂ x)^2 /(∂ u/∂ x)^2^2.
-
-
-Term5  leads to a linear combination
-
-    O (Term 5)|_r^3 = - 2ν( ∂^3 u/∂ x^3)(∂ u /∂ y)^2  +4ν(∂^3 u/∂ x^3)(∂ u /∂ x)^2/(∂ u/∂ x)^2^2.
-
-
-Term6, specific to HVBK equations, leads after Taylor series expansion and application of the operator O, for the normal fluid:
-
-    O (Term 6)^n ∼ 3 ρ_s/ρ(∂ u/∂ x)^2(∂ F_∥/∂ x)^ns/(∂ u/∂ x)^2^2,
-
-and for the superfluid
-
-    O (Term 6)^s ∼ - 3 ρ_n/ρ(∂ u/∂ x)^2(∂ F_∥/∂ x)^ns/(∂ u/∂ x)^2^2.
-
-Similarly, Term7 leads for the normal fluid
-
-    O (Term 7)^n ∼ 3  (∂ u/∂ x)^2(∂ f_∥/∂ x)^n/(∂ u/∂ x)^2^2,
-
-and for the superfluid
-
-    O (Term 7)^s ∼ 3  (∂ u/∂ x)^2(∂ f_∥/∂ x)^s/(∂ u/∂ x)^2^2.
-
-
-The limiting form of Eqs. (<ref>) and (<ref>) as r → 0 can be finally presented as
-
-    6(F^n-S_uv,2^n)   =   O (Term 3)^n + O (Term 4)^n|_r^3 + O (Term 5)^n|_r^3+  O (Term 6)^n+ O (Term 7)^n,
-    6(1-S_uv,2^s/S_4^s) F^s   =   O (Term 3)^s + O (Term 4)^s|_r^3 + O (Term 5)^s|_r^3+  O (Term 6)^s+ O (Term 7)^s,
-
-
-
-<cit.> showed that S_uv,2 / F ≈ 0.85 if Re_λ >200 and this constant is independent of the Reynolds number. For the present study, values of  S_uv,2 / S_4 are shown for different density ratios in Tab. <ref>. These values remain almost unchanged for the ρ_n/ρ = 0.91,  0.5, but for ρ_n/ρ = 0.09, S_uv,2 / S_4 slightly diminishes and drops to 0.75 for the normal fluid, and 0.705 for the superfluid. 
-
-
-
-Table <ref> shows that all terms in Eq. (<ref>) are very well balanced. This proves that all terms are correctly accounted for.  
- In the normal fluid, the balance between different terms is reached within an error of   0.05 % for the flatness F.  O(Term3) increases as the temperature diminishes (the normal fluid is less and less present). Viscous terms are not negligible in the case of present Re_λ. The combined contribution  of O(Term4)+O (Term5) increases, but this enhancement is counter-balanced  by the mutual friction force contribution O (Term 6).  The external force was neglected, as usually done for larger scales in classical turbulence. 
-
-
-
-For the superfluid, only the pressure-related  term O(Term 3) matters. This result corroborates with a scenario valid for large Reynolds numbers in classical turbulence.   O(Term 3) increases monotonically when  the temperature decreases. For the lowest temperature, the ratio S_uv,2 /F is the smallest and  both S_uv,2 and F are smaller than for higher temperatures.   This behaviour is corroborated with    the spectral cut-off inherently introduced in DNS at the inter-vortex scale, which  leads to an under estimation of high-order moments of small scales (here, represented by velocity  gradients). However, this behaviour can have a physical explanation in the superfluid helium by the energy accumulation at scales close to the inter-vortex scale. 
-We finally note that for ρ_n/ρ=0.09 the terms are not well balanced as in other cases and errors are up to  15%. This is due to the limited resolution for the superfluid at low temperatures.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-§ CONCLUSION
- 
-
-
-We used direct numerical simulations of the HVBK model to inspect, for different density ratios,  the behaviour of the 4th-order structure function, as resulting from the transport equation of the 3rd–order structure function. Starting from the HVBK equations  for two fluids, we derived the 3rd-order structure function transport equations in both normal and superfluid. 
-Within the Restricted Scaling Range, we found that the mutual friction does not modify significantly the dynamics  of viscous scales. Similar to the classical turbulence, viscous terms and  dissipative source terms are less important than the other terms. The mutual friction term acts differently for the two fluid components. For the normal fluid, the mutual friction term has an opposite sign with respect to the dissipation source terms.  Depending on the density ratios,   it can diminish, and even completely cancel the action of  the dissipation source term.  
-For the lowest temperature, we show that the normal fluid behaves, in the RSR,  as a fluid with zero viscosity.  
-In superfluid, the mutual friction term is mostly irrelevant. It can be neglected when compared to the transport terms and the pressure source term. The dissipation source term, introduced by the (artificial) superfluid viscosity, has the same sign as the mutual friction term, finally resulting in a diminished cascade and reduced small-scales intermittency,  as reflected by the flatness of the velocity derivative. 
-Note that RSR intermittency effects are not addressed here, as the conventional assessment of the scaling exponents is limited by the relatively low values of the Reynolds numbers. 
-
-We also used one-point statistics, PDFs of longitudinal velocity gradient to analyse the temperature dependency of small-scale  intermittency of quantum turbulence. We conclude that both the normal fluid and superfluid intermittency is enhanced when ρ_n/ρ  is decreasing.   This is consistent with the strong locking of the two fluids. The flatness factors are also found in reasonable agreement with classical turbulence. 
- Further perspectives of this work include the account of a more general expression of the friction force, based upon at least one additional equation for e.g. the vortex  line density <cit.>. Another open question is the  coupling between Navier-Stokes like equations with Gross-Pitaevskii equation for very small scales and very low temperatures.
- 
-
-
-
-
-
-
-
-
-The authors declare no conflict of interest. 
+All data, models, or code generated or used during the study will be made available online at https://github.com/ehsanhaghighat/PhaseField-DSDhttps://github.com/ehsanhaghighat/PhaseField-DSD upon publication.
 
 
 
 § ACKNOWLEDGEMENTS
 
+This research Project has been funded by the Comunidad de Madrid through the call Research Grants for Young Investigators from Universidad Politécnica de Madrid under grant APOYO-JOVENES-21-6YB2DD-127-N6ZTY3, RSIEIH project, research program V PRICIT. Authors acknowledge the help of Mrs. Aida Rezapour (M.Sc., P.Eng.) in preparing slope stability results using the limit equilibrium method.
+
+
+
+
+natexlab#1#1
+
+
+
+
+
+
+
+
+
+[#1],#1
+
+[Rinaldi et al.(2015)Rinaldi, Rutqvist, Sonnenthal, and
+  Cladouhos]rinaldi2015coupled
+authorA. P. Rinaldi, authorJ. Rutqvist,
+  authorE. L. Sonnenthal, authorT. T. Cladouhos,
+titleCoupled THM modeling of hydroshearing stimulation
+  in tight fractured volcanic rock,
+journalTransport in Porous Media volume108
+  (year2015) pages131–150.
+
+[Rinaldi and Rutqvist(2019)]rinaldi2019joint
+authorA. P. Rinaldi, authorJ. Rutqvist,
+titleJoint opening or hydroshearing? Analyzing a
+  fracture zone stimulation at Fenton Hill,
+journalGeothermics volume77
+  (year2019) pages83–98.
+
+[Andrés et al.(2019)Andrés, Santillán, Mosquera, and
+  Cueto-Felgueroso]andres2019thermo
+authorS. Andrés, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleThermo-poroelastic analysis of induced seismicity at
+  the Basel enhanced geothermal system,
+journalSustainability volume11
+  (year2019) pages6904.
+
+[Andrés et al.(2022)Andrés, Santillán, Mosquera, and
+  Cueto-Felgueroso]andres2022hydraulic
+authorS. Andrés, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleHydraulic stimulation of geothermal reservoirs:
+  Numerical simulation of induced seismicity and thermal decline,
+journalWater volume14 (year2022)
+  pages3697.
+
+[Vilarrasa and Carrera(2015)]vilarrasa2015geologic
+authorV. Vilarrasa, authorJ. Carrera,
+titleGeologic carbon storage is unlikely to trigger large
+  earthquakes and reactivate faults through which CO2 could leak,
+journalProceedings of the National Academy of Sciences
+  volume112 (year2015) pages5938–5943.
+
+[Juanes et al.(2012)Juanes, Hager, and Herzog]juanes2012no
+authorR. Juanes, authorB. H. Hager,
+  authorH. J. Herzog,
+titleNo geologic evidence that seismicity causes fault
+  leakage that would render large-scale carbon capture and storage
+  unsuccessful,
+journalProceedings of the National Academy of Sciences
+  volume109 (year2012) pagesE3623–E3623.
+
+[White and Foxall(2016)]white2016assessing
+authorJ. A. White, authorW. Foxall,
+titleAssessing induced seismicity risk at co2 storage
+  projects: Recent progress and remaining challenges,
+journalInternational Journal of Greenhouse Gas Control
+  volume49 (year2016) pages413–424.
+
+[Gupta(2002)]gupta2002review
+authorH. K. Gupta,
+titleA review of recent studies of triggered earthquakes
+  by artificial water reservoirs with special emphasis on earthquakes in
+  Koyna, India,
+journalEarth-Science Reviews volume58
+  (year2002) pages279–310.
+
+[McGarr et al.(2002)McGarr, Simpson, Seeber, and Lee]mcgarr2002case
+authorA. McGarr, authorD. Simpson,
+  authorL. Seeber, authorW. Lee,
+titleCase histories of induced and triggered seismicity,
+in: booktitleInternational Handbook of Earthquake and
+  Engineering Seismology, volume volume81A,
+  publisherAcademic Press LTD, year2002, pp.
+  pages647–664.
+
+[Rinaldi et al.(2020)Rinaldi, Improta, Hainzl, Catalli, Urpi, and
+  Wiemer]rinaldi2020combined
+authorA. P. Rinaldi, authorL. Improta,
+  authorS. Hainzl, authorF. Catalli,
+  authorL. Urpi, authorS. Wiemer,
+titleCombined approach of poroelastic and earthquake
+  nucleation applied to the reservoir-induced seismic activity in the Val
+  d'Agri area, Italy,
+journalJournal of Rock Mechanics and Geotechnical
+  Engineering volume12 (year2020)
+  pages802–810.
+
+[Pampillón et al.(2020)Pampillón, Santillán, Mosquera, and
+  Cueto-Felgueroso]pampillon2020geomechanical
+authorP. Pampillón, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleGeomechanical constraints on hydro-seismicity:
+  Tidal forcing and reservoir operation,
+journalWater volume12 (year2020)
+  pages2724.
+	
+[Pampillón et al.(2023)Pampillón, Santillán, Mosquera, and
+  Cueto-Felgueroso]pampillon2023
+authorP. Pampillón, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleThe role of pore fluids in supershear earthquake ruptures,
+journalScientific Reports volume13 (year2023)
+  pages398.
+	
+	
+	
+
+[Vilarrasa et al.(2021)Vilarrasa, De Simone, Carrera, and
+  Villaseñor]vilarrasa2021unraveling
+authorV. Vilarrasa, authorS. De Simone,
+  authorJ. Carrera, authorA. Villaseñor,
+titleUnraveling the causes of the seismicity induced by
+  underground gas storage at Castor, Spain,
+journalGeophysical Research Letters volume48
+  (year2021) pagese2020GL092038.
+
+[Cueto-Felgueroso et al.(2017)Cueto-Felgueroso, Santillán, and
+  Mosquera]cueto2017stick
+authorL. Cueto-Felgueroso, authorD. Santillán,
+  authorJ. C. Mosquera,
+titleStick-slip dynamics of flow-induced seismicity on
+  rate and state faults,
+journalGeophysical Research Letters volume44
+  (year2017) pages4098–4106.
+
+[Cueto-Felgueroso et al.(2018)Cueto-Felgueroso, Vila, Santillán,
+  and Mosquera]cueto2018numerical
+authorL. Cueto-Felgueroso, authorC. Vila,
+  authorD. Santillán, authorJ. C. Mosquera,
+titleNumerical modeling of injection-induced earthquakes
+  using laboratory-derived friction laws,
+journalWater Resources Research volume54
+  (year2018) pages9833–9859.
+
+[Andrés et al.(2019)Andrés, Santillán, Mosquera, and
+  Cueto-Felgueroso]andres2019delayed
+authorS. Andrés, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleDelayed weakening and reactivation of rate-and-state
+  faults driven by pressure changes due to fluid injection,
+journalJournal of Geophysical Research: Solid Earth
+  volume124 (year2019) pages11917–11937.
+
+[Veveakis et al.(2007)Veveakis, Vardoulakis, and
+  Di Toro]veveakis2007thermoporomechanics
+authorE. Veveakis, authorI. Vardoulakis,
+  authorG. Di Toro,
+titleThermoporomechanics of creeping landslides: The
+  1963 Vaiont slide, northern Italy,
+journalJournal of Geophysical Research: Earth Surface
+  volume112 (year2007).
+
+[Borja et al.(2016)Borja, Choo, and White]borja2016rock
+authorR. I. Borja, authorJ. Choo,
+  authorJ. A. White,
+titleRock moisture dynamics, preferential flow, and the
+  stability of hillside slopes,
+in: booktitleMulti-Hazard Approaches to Civil
+  Infrastructure Engineering, publisherSpringer,
+  year2016, pp. pages443–464.
+
+[González et al.(2012)González, Tiampo, Palano, Cannavó,
+  and Fernández]gonzalez20122011
+authorP. J. González, authorK. F. Tiampo,
+  authorM. Palano, authorF. Cannavó,
+  authorJ. Fernández,
+titleThe 2011 Lorca earthquake slip distribution
+  controlled by groundwater crustal unloading,
+journalNature Geoscience volume5
+  (year2012) pages821–825.
+
+[Tiwari et al.(2021)Tiwari, Jha, Kundu, Gahalaut, and
+  Vissa]tiwari2021groundwater
+authorD. K. Tiwari, authorB. Jha,
+  authorB. Kundu, authorV. K. Gahalaut,
+  authorN. K. Vissa,
+titleGroundwater extraction-induced seismicity around
+  Delhi region, India,
+journalScientific Reports volume11
+  (year2021) pages1–14.
+
+[Griffith(1921)]griffith1921vi
+authorA. A. Griffith,
+titleVi. the phenomena of rupture and flow in solids,
+journalPhilosophical Transactions of the Royal Society of
+  London. Series A volume221 (year1921)
+  pages163–198.
+
+[Irwin(1956)]irwin1956onset
+authorG. R. Irwin, titleOnset of fast crack propagation
+  in high strength steel and aluminum alloys, typeTechnical
+  Report, Naval Research Lab Washington DC, year1956.
+
+[Kachanov(1958)]kachanov1958rupture
+authorL. Kachanov,
+titleRupture time under creep conditions,
+journalIzv. Akad. Nauk SSSR volume8
+  (year1958) pages26–31.
+
+[Chan et al.(1970)Chan, Tuba, and Wilson]chan1970finite
+authorS. Chan, authorI. Tuba,
+  authorW. Wilson,
+titleOn the finite element method in linear fracture
+  mechanics,
+journalEngineering Fracture Mechanics volume2
+  (year1970) pages1–17.
+
+[Rybicki and Kanninen(1977)]rybicki1977finite
+authorE. F. Rybicki, authorM. F. Kanninen,
+titleA finite element calculation of stress intensity
+  factors by a modified crack closure integral,
+journalEngineering Fracture Mechanics volume9
+  (year1977) pages931–938.
+
+[Bažant and Cedolin(1979)]bavzant1979blunt
+authorZ. P. Bažant, authorL. Cedolin,
+titleBlunt crack band propagation in finite element
+  analysis,
+journalJournal of the Engineering Mechanics Division
+  volume105 (year1979) pages297–315.
+
+[Pietruszczak and Mroz(1981)]pietruszczak1981finite
+authorS. Pietruszczak, authorZ. Mroz,
+titleFinite element analysis of deformation of
+  strain-softening materials,
+journalInternational Journal for Numerical Methods in
+  Engineering volume17 (year1981)
+  pages327–334.
+
+[Simo and Ju(1987)]simo1987strain
+authorJ. C. Simo, authorJ. Ju,
+titleStrain-and stress-based continuum damage
+  models—I. Formulation,
+journalInternational Journal of Solids and Structures
+  volume23 (year1987) pages821–840.
+
+[Belytschko et al.(1988)Belytschko, Fish, and
+  Engelmann]belytschko1988finite
+authorT. Belytschko, authorJ. Fish,
+  authorB. E. Engelmann,
+titleA finite element with embedded localization zones,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume70 (year1988)
+  pages59–89.
+
+[Simo et al.(1993)Simo, Oliver, and Armero]simo1993analysis
+authorJ. C. Simo, authorJ. Oliver,
+  authorF. Armero,
+titleAn analysis of strong discontinuities induced by
+  strain-softening in rate-independent inelastic solids,
+journalComputational Mechanics volume12
+  (year1993) pages277–296.
+
+[Simo and Oliver(1994)]simo1994new
+authorJ. Simo, authorJ. Oliver,
+titleA new approach to the analysis and simulation of
+  strain softening in solids,
+journalFracture and Damage in Quasibrittle Structures
+  (year1994) pages25–39.
+
+[Oliver(2000)]oliver2000discrete
+authorJ. Oliver,
+titleOn the discrete constitutive models induced by strong
+  discontinuity kinematics and continuum constitutive equations,
+journalInternational Journal of Solids and Structures
+  volume37 (year2000) pages7207–7229.
+
+[Regueiro and Borja(2001)]regueiro2001plane
+authorR. A. Regueiro, authorR. I. Borja,
+titlePlane strain finite element analysis of pressure
+  sensitive plasticity with strong discontinuity,
+journalInternational Journal of Solids and Structures
+  volume38 (year2001) pages3647–3672.
+
+[Wells and Sluys(2001)]wells2001three
+authorG. Wells, authorL. Sluys,
+titleThree-dimensional embedded discontinuity model for
+  brittle fracture,
+journalInternational Journal of Solids and Structures
+  volume38 (year2001) pages897–913.
+
+[Foster et al.(2007)Foster, Borja, and Regueiro]foster2007embedded
+authorC. Foster, authorR. Borja,
+  authorR. Regueiro,
+titleEmbedded strong discontinuity finite elements for
+  fractured geomaterials with variable friction,
+journalInternational Journal for Numerical Methods in
+  Engineering volume72 (year2007)
+  pages549–581.
+
+[Liu and Borja(2008)]liu2008contact
+authorF. Liu, authorR. I. Borja,
+titleA contact algorithm for frictional crack propagation
+  with the extended finite element method,
+journalInternational Journal for Numerical Methods in
+  Engineering volume76 (year2008)
+  pages1489–1512.
+
+[Dias-da Costa et al.(2009)Dias-da Costa, Alfaiate, Sluys, and
+  Júlio]dias2009discrete
+authorD. Dias-da Costa, authorJ. Alfaiate,
+  authorL. Sluys, authorE. Júlio,
+titleA discrete strong discontinuity approach,
+journalEngineering Fracture Mechanics
+  volume76 (year2009) pages1176–1201.
+
+[Haghighat and Pietruszczak(2015)]haghighat2015modeling
+authorE. Haghighat, authorS. Pietruszczak,
+titleOn modeling of discrete propagation of localized
+  damage in cohesive-frictional materials,
+journalInternational Journal for Numerical and Analytical
+  Methods in Geomechanics volume39 (year2015)
+  pages1774–1790.
+
+[Moës et al.(1999)Moës, Dolbow, and
+  Belytschko]moes1999finite
+authorN. Moës, authorJ. Dolbow,
+  authorT. Belytschko,
+titleA finite element method for crack growth without
+  remeshing,
+journalInternational Journal for Numerical Methods in
+  Engineering volume46 (year1999)
+  pages131–150.
+
+[Dolbow et al.(2001)Dolbow, Moës, and
+  Belytschko]dolbow2001extended
+authorJ. Dolbow, authorN. Moës,
+  authorT. Belytschko,
+titleAn extended finite element method for modeling crack
+  growth with frictional contact,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume190 (year2001)
+  pages6825–6846.
+
+[Moës and Belytschko(2002)]moes2002extended
+authorN. Moës, authorT. Belytschko,
+titleExtended finite element method for cohesive crack
+  growth,
+journalEngineering Fracture Mechanics
+  volume69 (year2002) pages813–833.
+
+[Areias and Belytschko(2005)]areias2005analysis
+authorP. M. Areias, authorT. Belytschko,
+titleAnalysis of three-dimensional crack initiation and
+  propagation using the extended finite element method,
+journalInternational Journal for Numerical Methods in
+  Engineering volume63 (year2005)
+  pages760–788.
+
+[Song et al.(2006)Song, Areias, and Belytschko]song2006method
+authorJ.-H. Song, authorP. M. Areias,
+  authorT. Belytschko,
+titleA method for dynamic crack and shear band propagation
+  with phantom nodes,
+journalInternational Journal for Numerical Methods in
+  Engineering volume67 (year2006)
+  pages868–893.
+
+[Borja(2008)]borja2008assumed
+authorR. I. Borja,
+titleAssumed enhanced strain and the extended finite
+  element methods: A unification of concepts,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume197 (year2008)
+  pages2789–2803.
+
+[Sanborn and Prévost(2011)]sanborn2011frictional
+authorS. E. Sanborn, authorJ. H. Prévost,
+titleFrictional slip plane growth by localization
+  detection and the extended finite element method (XFEM),
+journalInternational Journal for Numerical and Analytical
+  Methods in Geomechanics volume35 (year2011)
+  pages1278–1298.
+
+[Mikaeili and Schrefler(2018)]mikaeili2018xfem
+authorE. Mikaeili, authorB. Schrefler,
+titleXFEM, strong discontinuities and second-order work
+  in shear band modeling of saturated porous media,
+journalActa Geotechnica volume13
+  (year2018) pages1249–1264.
+
+[Hirmand et al.(2015)Hirmand, Vahab, and Khoei]hirmand2015augmented
+authorM. Hirmand, authorM. Vahab,
+  authorA. Khoei,
+titleAn augmented Lagrangian contact formulation for
+  frictional discontinuities with the extended finite element method,
+journalFinite Elements in Analysis and Design
+  volume107 (year2015) pages28–43.
+
+[Kachanov(1986)]kachanov1986introduction
+authorL. Kachanov, titleIntroduction to continuum damage
+  mechanics, volume volume10, publisherSpringer Science
+  & Business Media, year1986.
+
+[Bažant and Lin(1988)]bavzant1988nonlocal
+authorZ. P. Bažant, authorF.-B. Lin,
+titleNonlocal smeared cracking model for concrete
+  fracture,
+journalJournal of Structural Engineering
+  volume114 (year1988) pages2493–2510.
+
+[Leroy and Ortiz(1989)]leroy1989finite
+authorY. Leroy, authorM. Ortiz,
+titleFinite element analysis of strain localization in
+  frictional materials,
+journalInternational Journal for Numerical and Analytical
+  Methods in Geomechanics volume13 (year1989)
+  pages53–74.
+
+[Ožbolt and BAŽANT(1996)]ovzbolt1996numerical
+authorJ. Ožbolt, authorZ. P. BAŽANT,
+titleNumerical smeared fracture analysis: Nonlocal
+  microcrack interaction approach,
+journalInternational Journal for Numerical Methods in
+  Engineering volume39 (year1996)
+  pages635–661.
+
+[Bažant and Jirásek(2002)]bavzant2002nonlocal
+authorZ. P. Bažant, authorM. Jirásek,
+titleNonlocal integral formulations of plasticity and
+  damage: survey of progress,
+journalJournal of Engineering Mechanics
+  volume128 (year2002) pages1119–1149.
+
+[Silling(2000)]silling2000reformulation
+authorS. A. Silling,
+titleReformulation of elasticity theory for
+  discontinuities and long-range forces,
+journalJournal of the Mechanics and Physics of Solids
+  volume48 (year2000) pages175–209.
+
+[Kilic and Madenci(2009)]kilic2009structural
+authorB. Kilic, authorE. Madenci,
+titleStructural stability and failure analysis using
+  peridynamic theory,
+journalInternational Journal of Non-Linear Mechanics
+  volume44 (year2009) pages845–854.
+
+[Silling and Lehoucq(2010)]silling2010peridynamic
+authorS. A. Silling, authorR. B. Lehoucq,
+titlePeridynamic theory of solid mechanics,
+journalAdvances in Applied Mechanics volume44
+  (year2010) pages73–168.
+
+[Agwai et al.(2011)Agwai, Guven, and Madenci]agwai2011predicting
+authorA. Agwai, authorI. Guven,
+  authorE. Madenci,
+titlePredicting crack propagation with peridynamics: a
+  comparative study,
+journalInternational Journal of Fracture
+  volume171 (year2011) pages65–78.
+
+[Madenci and Oterkus(2014)]madenci2014peridynamic
+authorE. Madenci, authorE. Oterkus,
+titlePeridynamic theory,
+in: booktitlePeridynamic theory and its applications,
+  publisherSpringer, year2014, pp.
+  pages19–43.
+
+[Ren et al.(2016)Ren, Zhuang, and Rabczuk]ren2016new
+authorH. Ren, authorX. Zhuang,
+  authorT. Rabczuk,
+titleA new peridynamic formulation with shear deformation
+  for elastic solid,
+journalJournal of Micromechanics and Molecular Physics
+  volume1 (year2016) pages1650009.
+
+[Madenci et al.(2016)Madenci, Barut, and
+  Futch]madenci2016peridynamic
+authorE. Madenci, authorA. Barut,
+  authorM. Futch,
+titlePeridynamic differential operator and its
+  applications,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume304 (year2016)
+  pages408–451.
+
+[Kamensky et al.(2019)Kamensky, Behzadinasab, Foster, and
+  Bazilevs]kamensky2019peridynamic
+authorD. Kamensky, authorM. Behzadinasab,
+  authorJ. T. Foster, authorY. Bazilevs,
+titlePeridynamic modeling of frictional contact,
+journalJournal of Peridynamics and Nonlocal Modeling
+  volume1 (year2019) pages107–121.
+
+[Song and Khalili(2019)]song2019peridynamics
+authorX. Song, authorN. Khalili,
+titleA peridynamics model for strain localization analysis
+  of geomaterials,
+journalInternational Journal for Numerical and Analytical
+  Methods in Geomechanics volume43 (year2019)
+  pages77–96.
+
+[Zhang et al.(2022)Zhang, Zhang, and Liu]zhang2022peridynamic
+authorH. Zhang, authorX. Zhang,
+  authorY. Liu,
+titleA peridynamic model for contact problems involving
+  fracture,
+journalEngineering Fracture Mechanics
+  volume267 (year2022) pages108436.
+
+[Francfort and Marigo(1998)]francfort1998revisiting
+authorG. A. Francfort, authorJ.-J. Marigo,
+titleRevisiting brittle fracture as an energy minimization
+  problem,
+journalJournal of the Mechanics and Physics of Solids
+  volume46 (year1998) pages1319–1342.
+
+[Bourdin et al.(2000)Bourdin, Francfort, and
+  Marigo]bourdin2000numerical
+authorB. Bourdin, authorG. A. Francfort,
+  authorJ.-J. Marigo,
+titleNumerical experiments in revisited brittle fracture,
+journalJournal of the Mechanics and Physics of Solids
+  volume48 (year2000) pages797–826.
+
+[Bourdin et al.(2008)Bourdin, Francfort, and
+  Marigo]bourdin2008variational
+authorB. Bourdin, authorG. A. Francfort,
+  authorJ.-J. Marigo,
+titleThe variational approach to fracture,
+journalJournal of Elasticity volume91
+  (year2008) pages5–148.
+
+[Miehe et al.(2010a)Miehe, Welschinger, and
+  Hofacker]miehe2010thermodynamically
+authorC. Miehe, authorF. Welschinger,
+  authorM. Hofacker,
+titleThermodynamically consistent phase-field models of
+  fracture: Variational principles and multi-field fe implementations,
+journalInternational Journal for Numerical Methods in
+  Engineering volume83 (year2010a)
+  pages1273–1311.
+
+[Miehe et al.(2010b)Miehe, Hofacker, and
+  Welschinger]miehe2010phase
+authorC. Miehe, authorM. Hofacker,
+  authorF. Welschinger,
+titleA phase field model for rate-independent crack
+  propagation: Robust algorithmic implementation based on operator splits,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume199 (year2010b)
+  pages2765–2778.
+
+[Kuhn and Müller(2010)]kuhn2010continuum
+authorC. Kuhn, authorR. Müller,
+titleA continuum phase field model for fracture,
+journalEngineering Fracture Mechanics
+  volume77 (year2010) pages3625–3634.
+
+[Borden et al.(2012)Borden, Verhoosel, Scott, Hughes, and
+  Landis]borden2012phase
+authorM. J. Borden, authorC. V. Verhoosel,
+  authorM. A. Scott, authorT. J. Hughes,
+  authorC. M. Landis,
+titleA phase-field description of dynamic brittle
+  fracture,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume217 (year2012)
+  pages77–95.
+
+[Verhoosel and de Borst(2013)]verhoosel2013phase
+authorC. V. Verhoosel, authorR. de Borst,
+titleA phase-field model for cohesive fracture,
+journalInternational Journal for Numerical Methods in
+  Engineering volume96 (year2013)
+  pages43–62.
+
+[Borden et al.(2014)Borden, Hughes, Landis, and
+  Verhoosel]borden2014higher
+authorM. J. Borden, authorT. J. Hughes,
+  authorC. M. Landis, authorC. V. Verhoosel,
+titleA higher-order phase-field model for brittle
+  fracture: Formulation and analysis within the isogeometric analysis
+  framework,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume273 (year2014)
+  pages100–118.
+
+[Ambati et al.(2015)Ambati, Gerasimov, and
+  De Lorenzis]ambati2015phase
+authorM. Ambati, authorT. Gerasimov,
+  authorL. De Lorenzis,
+titlePhase-field modeling of ductile fracture,
+journalComputational Mechanics volume55
+  (year2015) pages1017–1040.
+
+[Santillán et al.(2017a)Santillán, Mosquera, and
+  Cueto-Felgueroso]santillan2017phase
+authorD. Santillán, authorJ. C. Mosquera,
+  authorL. Cueto-Felgueroso,
+titlePhase-field model for brittle fracture. Validation
+  with experimental results and extension to dam engineering problems,
+journalEngineering Fracture Mechanics
+  volume178 (year2017a)
+  pages109–125.
+
+[Santillán et al.(2017b)Santillán, Juanes, and
+  Cueto-Felgueroso]santillan2017b
+authorD. Santillán, authorR. Juanes,
+  authorL. Cueto-Felgueroso,
+titlePhase field model of fluid-driven fracture in elastic
+  media: Immersed-fracture formulation and validation with analytical
+  solutions,
+journalJournal of Geophysical Research: Solid Earth
+  volume122 (year2017b)
+  pages2565–2589.
+
+[Santillán et al.(2018)Santillán, Juanes, and
+  Cueto-Felgueroso]santillan2018phase
+authorD. Santillán, authorR. Juanes,
+  authorL. Cueto-Felgueroso,
+titlePhase field model of hydraulic fracturing in
+  poroelastic media: Fracture propagation, arrest, and branching under fluid
+  injection and extraction,
+journalJournal of Geophysical Research: Solid Earth
+  volume123 (year2018) pages2127–2155.
+
+[Santillán et al.(2017)Santillán, Mosquera, and
+  Cueto-Felgueroso]santillan2017fluid
+authorD. Santillán, authorJ.-C. Mosquera,
+  authorL. Cueto-Felgueroso,
+titleFluid-driven fracture propagation in heterogeneous
+  media: Probability distributions of fracture trajectories,
+journalPhysical Review E volume96
+  (year2017) pages053002.
+	
+[Aldakheel et al.(2021)Aldakheel, Noii, Wick, and Wriggers]Aldakheel2021
+authorF. Aldakheel, authorN. Noii, authorT. Wick, authorP. Wriggers,
+titleA global–local approach for hydraulic phase-field fracture in poroelastic media,
+journalComputers & Mathematics with Applications volume91
+  (year2021) pages99–121.
+	
+
+[Seles et al.(2021)Seles, Aldakheel, Tonkovic, Soric, and Wriggers]Seles2021
+authorA.K. Seles, authorF. Aldakheel, authorZ. 
+Tonkovic, authorJ. Soric, authorP. Wriggers
+titleA general phase-field model for fatigue failure in brittle and ductile solids,
+journalComputational Mechanics volume67
+  (year2021) pages1431–1452.
+	
+
+[Wu et al.(2020)Wu, Nguyen, Nguyen, Sutula, Sinaie, and
+  Bordas]wu2020phase
+authorJ.-Y. Wu, authorV. P. Nguyen,
+  authorC. T. Nguyen, authorD. Sutula,
+  authorS. Sinaie, authorS. P. Bordas,
+titlePhase-field modeling of fracture,
+journalAdvances in Applied Mechanics volume53
+  (year2020) pages1–183.
+
+[Lancioni and Royer-Carfagni(2009)]lancioni2009variational
+authorG. Lancioni, authorG. Royer-Carfagni,
+titleThe variational approach to fracture mechanics. A
+  practical application to the French Panthéon in Paris,
+journalJournal of Elasticity volume95
+  (year2009) pages1–30.
+
+[Bryant and Sun(2018)]bryant2018mixed
+authorE. C. Bryant, authorW. Sun,
+titleA mixed-mode phase field fracture model in
+  anisotropic rocks with consistent kinematics,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume342 (year2018)
+  pages561–584.
+
+[Zhou et al.(2019)Zhou, Zhuang, and Rabczuk]zhou2019phase
+authorS. Zhou, authorX. Zhuang,
+  authorT. Rabczuk,
+titlePhase field modeling of brittle compressive-shear
+  fractures in rock-like materials: A new driving force and a hybrid
+  formulation,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume355 (year2019)
+  pages729–752.
+
+[Fei and Choo(2020)]fei2020phase
+authorF. Fei, authorJ. Choo,
+titleA phase-field model of frictional shear fracture in
+  geologic materials,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume369 (year2020)
+  pages113265.
+
+[Palmer and Rice(1973)]palmer1973growth
+authorA. C. Palmer, authorJ. R. Rice,
+titleThe growth of slip surfaces in the progressive
+  failure of over-consolidated clay,
+journalProc. R. Soc. Lond. A volume332
+  (year1973) pages527–548.
+
+[Hu et al.(2020)Hu, Guilleminot, and Dolbow]hu2020phase
+authorT. Hu, authorJ. Guilleminot,
+  authorJ. E. Dolbow,
+titleA phase-field model of fracture with frictionless
+  contact and random fracture properties: Application to thin-film fracture
+  and soil desiccation,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume368 (year2020)
+  pages113106.
+
+[Fei and Choo(2021)]fei2021double
+authorF. Fei, authorJ. Choo,
+titleDouble-phase-field formulation for mixed-mode
+  fracture in rocks,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume376 (year2021)
+  pages113655.
+
+[Kuhn et al.(2015)Kuhn, Schlüter, and
+  Müller]kuhn2015degradation
+authorC. Kuhn, authorA. Schlüter,
+  authorR. Müller,
+titleOn degradation functions in phase field fracture
+  models,
+journalComputational Materials Science
+  volume108 (year2015) pages374–384.
+
+[Geelen et al.(2019)Geelen, Liu, Hu, Tupek, and
+  Dolbow]geelen2019phase
+authorR. J. Geelen, authorY. Liu,
+  authorT. Hu, authorM. R. Tupek,
+  authorJ. E. Dolbow,
+titleA phase-field formulation for dynamic cohesive
+  fracture,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume348 (year2019)
+  pages680–711.
+
+[Hughes(2012)]hughes_fem_book_2012
+authorT. J. Hughes, titleThe finite element method:
+  linear static and dynamic finite element analysis,
+  publisherCourier Corporation, year2012.
+
+[Belytschko et al.(2014)Belytschko, Liu, Moran, and
+  Elkhodary]belytschko_fem_book_2014
+authorT. Belytschko, authorW. K. Liu,
+  authorB. Moran, authorK. Elkhodary,
+  titleNonlinear finite elements for continua and structures,
+  publisherJohn Wiley & sons, year2014.
+
+[Lorentz et al.(2011)Lorentz, Cuvilliez, and
+  Kazymyrenko]lorentz2011convergence
+authorE. Lorentz, authorS. Cuvilliez,
+  authorK. Kazymyrenko,
+titleConvergence of a gradient damage model toward a
+  cohesive zone model,
+journalComptes Rendus Mécanique volume339
+  (year2011) pages20–26.
+
+[Lorentz(2017)]lorentz2017nonlocal
+authorE. Lorentz,
+titleA nonlocal damage model for plain concrete consistent
+  with cohesive fracture,
+journalInternational Journal of Fracture
+  volume207 (year2017) pages123–159.
+
+[Amor et al.(2009)Amor, Marigo, and Maurini]amor2009regularized
+authorH. Amor, authorJ.-J. Marigo,
+  authorC. Maurini,
+titleRegularized formulation of the variational brittle
+  fracture with unilateral contact: Numerical experiments,
+journalJournal of the Mechanics and Physics of Solids
+  volume57 (year2009) pages1209–1229.
+
+[Wu et al.(2020)Wu, Nguyen, Zhou, and Huang]wu2020variationally
+authorJ.-Y. Wu, authorV. P. Nguyen,
+  authorH. Zhou, authorY. Huang,
+titleA variationally consistent phase-field anisotropic
+  damage model for fracture,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume358 (year2020)
+  pages112629.
+
+[Steinke and Kaliske(2019)]steinke2019phase
+authorC. Steinke, authorM. Kaliske,
+titleA phase-field crack model based on directional stress
+  decomposition,
+journalComputational Mechanics volume63
+  (year2019) pages1019–1046.
+
+[Strobl and Seelig(2016)]strobl2016constitutive
+authorM. Strobl, authorT. Seelig,
+titleOn constitutive assumptions in phase field approaches
+  to brittle fracture,
+journalProcedia Structural Integrity volume2
+  (year2016) pages3705–3712.
+
+[Strobl and Seelig(2015)]strobl2015novel
+authorM. Strobl, authorT. Seelig,
+titleA novel treatment of crack boundary conditions in
+  phase field models of fracture,
+journalPamm volume15 (year2015)
+  pages155–156.
+
+[Liu et al.(2021)Liu, Cheng, Ziaei-Rad, and
+  Shen]liu2021micromechanics
+authorY. Liu, authorC. Cheng,
+  authorV. Ziaei-Rad, authorY. Shen,
+titleA micromechanics-informed phase field model for
+  brittle fracture accounting for unilateral constraint,
+journalEngineering Fracture Mechanics
+  volume241 (year2021) pages107358.
+
+[Zhang et al.(2022)Zhang, Jiang, and Tonks]zhang2022assessment
+authorS. Zhang, authorW. Jiang, authorM. R.
+  Tonks,
+titleAssessment of four strain energy decomposition
+  methods for phase field fracture models using quasi-static and dynamic
+  benchmark cases,
+journalMaterials Theory volume6
+  (year2022) pages1–24.
+
+[Pietruszczak(2010)]pietruszczak_plasticity_book_2010
+authorS. Pietruszczak, titleFundamentals of plasticity
+  in geomechanics, publisherCrc Press Boca Raton, FL,
+  year2010.
+
+[Borja(2013)]borja_plasticity_book_2013
+authorR. I. Borja, titlePlasticity,
+  volume volume2, publisherSpringer,
+  year2013.
 
-The authors acknowledge financial support from the French ANR grant ANR-18-CE46-0013 QUTE-HPC. This work used computational resources provided by  CRIANN (Centre Régional Informatique et d'Applications Numériques de Normandie).
-Drs. M. Gauding and G. Sadaka are warmly thanked for technical support and useful discussions. 
 
 
-
-
-
-
-
-§ APPENDIX 1. ROBUSTNESS OF THE RESULTS FOR A SMALLER VISCOSITY RATIO
- 
-
-	We have performed numerical simulations for a different viscosity ratio, i.e. 0.025, a quarter of that initially studied and reported in the corpus of the paper.  
-Figure <ref> shows the energy spectrum for different viscosity ratios, and  for the density ratio of ρ_s/ρ_n = 1. For smaller viscosity ratio ν_s/ν_n=0.025, the energy content at the level of the cut-off scales is slightly larger than for the  viscosity ratio ν_s/ν_n=0.1. While this  result is obvious, as the superfluid dissipates less, the difference is negligible. The dissipation scale η_s = (ν_s^3/ε_s)^1/4 (the Kolmogorov scale) for the smaller viscosity ratio ν_s/ν_n=0.025 is significantly reduced, and equal to   η_s = 0.0017, whereas it was of  η_s = 0.0034 for ν_s/ν_n=0.1. 
-For ν_s/ν_n=0.025, the viscosity of the superfluid decreases, while  the mean energy dissipation rate of the superfluid increases. The dissipation rate for ν_s/ν_n=0.1 was of ε_s = 1.8e-4, while  for ν_s/ν_n=0.025 we compute  ε_s = 5.5463e-4. The reason of this increase is the accumulation of the energy at small scales, resulting in an increase of velocity gradients. 
-
-
-
-
-Figure <ref> shows terms in the equations for different viscosity ratios. Noticeable  is the fact that variations of the density ratio affect only the dissipation source term of the superfluid, viz.  (- x) and (- -) on the right column. The inertial terms are the same. We can therefore  conclude that the choice of the viscosity ratio has limited influence on the results,  as long as the ratio of viscosities is small (<0.1) and respects the concept of the HVBK two-fluid model.  The same result is supported by our simulations for other values of density ratios. 
-
-For lowest temperatures, the resolution currently used is not sufficient to capture the smallest scales motion. We recall that the mesh size should be smaller than both the normal fluid Kolmogorov scale η_n, and the inter-vortex length of the superfluid. The superfluid also has its Kolmogorov scale η_s but it should be irrelevant in the framework of  the HVBK two-fluid model.
-
-
-
-
-
-
-
-
-
-
-
-§ APPENDIX 2. THE EFFECT OF THE RESOLUTION ON THE RESULTS
- 
-
-We have performed additional numerical simulations, with a better resolution. Different statistics, such as  spectra  for  a number of grid points N=512 and N=1024 are depicted  in figure <ref> for ρ_n/ρ_s = 1 and ρ_n/ρ_s = 0.1 respectively. For  N=1024, the spectrum  is cut-off at higher wave numbers. The additional kinetic energy is, however, negligible. 
-
-The normalised 4th-order structure function (Fig. <ref>) tends towards a slightly  larger value at the smallest scales,  but still  within the error bars.  Figure <ref> depicts values for the flatness of the velocity derivative for two resolutions. While for the normal fluid the results are the same, we notice a slight increase of the flatness of the superfluid at the lowest temperature, from a value of 5.25 obtained for N=512 to a value of 6 for N=1024. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-§ APPENDIX 3.  EFFECT OF CONSIDERING THE FULL EXPRESSION OF THE MUTUAL FRICTION FORCE
-  
-
-We test our claims by considering a generalized expression of the mutual friction force <cit.>, viz. 
-
-
-    F_ns = B/2ρ_sρ_n/ρω_s×[ ω_s×  (v_n -v_s -L)]+Bp/2ρ_sρ_n/ρω_s×  (v_n -v_s - L),
-
-where L is the vortex line velocity due to the oscillation of the vortex wave and writes
-
-    L = κ/4πlog(l/a_0) ∇×ω_s
-
-l=√(κ/ω_s) is the inter-vortex length, a_0 is the vortex core size, and κ is the unit circulation. 
- 
-In this work, we have made two simplifications. 
-First, we neglected the velocity due to the vortex line oscillation L. Because in the limit of  high Reynolds numbers, l →𝒪(a_0) implies L→𝒪(κ). The latter  is too small compared to the characteristic velocity of the superfluid to be taken into account. 
-
-On the other hand, in the original idea of the mutual friction force proposed by Hall and Vinen, the vortex lines are considered as filaments with no mass, which implies that the inertial effects of the vortex lines are irrelevant. As a matter of fact, based on the concept of two-fluid model, the superfluid velocity resolved by the NS equations is a space-smoothed value ṽ_s, which is the velocity induced by the vortex line smoothed (or averaged) over a large volume of fluid. In this context, ṽ_s is equivalent to v_s + L. The velocity due to the vortex tangle oscillation is not actually neglected, but merged into  ṽ_s. 
-
-Although we have ignored L into a simplified scenario, we do not suggest L should always be neglected. The contribution of L is interesting to be considered in some situations. For instance, when  v_n -v_s = 0, due to the contribution of L the mutual friction force is not zero.   However,  for the present work, we neglect L.
-The mutual friction force then consists of two components: one is parallel to the relative velocity v_n -v_s, noted F_ns∥ = B/2ρ_sρ_n/ρω_s×[ ω_s×  (v_n -v_s)]. The other one is perpendicular to the relative velocity v_n -v_s, noted F_ns⊥ = Bp/2ρ_sρ_n/ρω_s×  (v_n -v_s). The mutual friction force is 
-
-    F_ns = B/2ρ_sρ_n/ρω_s×[ ω_s×  (v_n -v_s)]+Bp/2ρ_sρ_n/ρω_s×  (v_n -v_s),
-
-and with the supposition that  ω_s ⊥ (v_n -v_s), it becomes 
-
-    F_ns∥ = B/2ρ_sρ_n/ρω_s×[ ω_s×  (v_n -v_s)] = - B/2ρ_sρ_n/ρ|ω_s|(v_n -v_s),
-
-and 
-
-    F_ns⊥ = Bp/2ρ_sρ_n/ρω_s×  (v_n -v_s).
-
-The second simplification of the present work is to consider only the component  F_ns∥,  basically because  F_ns⊥ is considered as being non-dissipative and represents a Magnus effect associated with quantized vortices  <cit.>. It signifies that  F_ns∥ is responsible for  the energy exchange between the two components,  while F_ns⊥ does not contribute much to the energy exchange between the two fluids. 
-
-A first validation  of our considerations is backed by the statistics of the angle made by  u_n and F_ns. Figure <ref> depicts the PDF of the angle made by the velocity vector   and different components  of the force F_ns⊥ and F_ns∥, for the normal fluid (left) and the superfluid (right). The PDF ∡ (u_n, F_ns∥) is skewed towards values of the angle between (0,π/2). This signifies that u_n is preferably aligned with F_ns∥. Therefore,  F_ns∥ injects energy to the normal fluid. The PDF of the angle ∡ (u_n, F_ns⊥) is  almost symmetric about the value of  π/2. This signifies that the F_ns⊥ does not inject energy to the normal fluid. 
-The same qualitative observation holds for  the PDF of ∡ (u_s, F_ns). The parallel component F_ns∥ extracts energy from the superfluid and F_ns⊥ does not affect, on average, the superfluid. These are arguments that serve as a basis in neglecting  F_ns⊥. 
-
-Furthermore, the temperature-related coefficient B is generally larger than Bp. For example, for T=1.95K, B=0.98 and Bp=0.05. The spectrum of u_n,sF_ns⊥ is negligible compared to that of u_n,sF_ns∥, see figure <ref>. This is an additional reason for considering  the simplified form of the mutual friction force,  as provided by Eq. (<ref>), and considered  in the present work. 
- 
-
-The scale-by-scale transport equation for the third–order structure function is not affected by the  consideration of the complete expression of the friction force,  (<ref>). 
-Additional numerical studies considering  the full expression of vortex oscillations will be performed in the future.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-64
-	natexlab#1#1#1#1 #1#1 #1#1#1#1#1#1
-	#1#1#1#1 #1#1 #1#1
-	#1#1#1#1#1#1#1#1
-	
-	[Abid et al.(2003)Abid, Huepe, Metens, Nore, Pham, Tuckerman &
-	Brachet]Abid2003509
-	Abid, M., Huepe, C., Metens, S., Nore, C., Pham,
-			C., Tuckerman, L. & Brachet, M. E. 2003
-	Gross-Pitaevskii dynamics of Bose-Einstein condensates and
-		superfluid turbulence.  Fluid Dynamics Research  33 (5-6),
-	509–544.
-	
-	[Baggaley et al.(2012)Baggaley, Barenghi, Shukurov &
-	Sergeev]Baggaley_2012
-	Baggaley, A. W., Barenghi, C. F., Shukurov, A. &
-		Sergeev, Y. A. 2012  Coherent vortex structures in quantum
-		turbulence.  Europhysics Lett.  98 (2),  26002.
-	
-	[Balibar(2017)]QT-Balibar-Tisza
-	Balibar, S. 2017  Laszlo Tisza and the two-fluid model of
-		superfluidity.  Comptes Rendus Physique  18 (9),  586–591.
-	
-	[Barenghi et al.(1983)Barenghi, Donnelly &
-	Vinen]Barenghi_1983
-	Barenghi, C. F., Donnelly, R. J. & Vinen, W. F. 1983
-	Friction on quantized vortices in Helium II. A review.  J.
-		Low Temp. Phys.  52,  189–247.
-	
-	[Barenghi et al.(2014a)Barenghi,
-	L’vov & Roche]Barenghi_2013
-	Barenghi, C. F., L’vov, V. S. & Roche,
-			P.-E. 2014a  Experimental, numerical, and
-		analytical velocity spectra in turbulent quantum fluid.  Proceedings of
-		the National Academy of Sciences  111 (Supplement 1),
-	4683–4690.
-	
-	[Barenghi et al.(2014b)Barenghi, Skrbek &
-	Sreenivasan]Barenghi_etal_2014
-	Barenghi, C. F., Skrbek, L. & Sreenivasan, K. R.
-	2014b  Introduction to quantum turbulence.
-	Proc. Natl. Acad. Sci.  111,  4647.
-	
-	[Batchelor & Townsend(1949)]Batchelor_Townsend_nature_1949
-	Batchelor, G. K. & Townsend, A. A. 1949  The nature
-		of turbulent motion at large wave-numbers.  Proceedings of the Royal
-		Society of London. Series A. Mathematical and Physical Sciences  199,
-	238–255.
-	
-	[Biferale et al.(2018)Biferale, Khomenko, L'vov, Pomyalov,
-	Procaccia & Sahoo]Biferale_2018
-	Biferale, L., Khomenko, D., L'vov, V. S., Pomyalov,
-			A., Procaccia, I. & Sahoo, G. 2018  Turbulent
-		statistics and intermittency enhancement in coflowing superfluid
-		^4He.  Phys. Rev. Fluids  3,  024605.
-	
-	[Boschung et al.(2017)Boschung, Hennig, Denker, Pitsch &
-	Hill]Boschung2017
-	Boschung, J., Hennig, F., Denker, D., Pitsch, H. &
-		Hill, R. J. 2017  Analysis of structure function equations up
-		to the seventh order.  J. of Turbulence  18 (11),
-	1001–1032.
-	
-	[Boué et al.(2015)Boué, L'vov, Nagar, Nazarenko, Pomyalov
-	& Procaccia]Boue_2015
-	Boué, L., L'vov, V. S., Nagar, Y., Nazarenko, S. V.,
-		Pomyalov, A. & Procaccia, I. 2015  Energy and vorticity
-		spectra in turbulent superfluid ^4He from T=0 to
-		T_.  Phys. Rev. B  91,  144501.
-	
-	[Boué et al.(2013)Boué, L'vov, Pomyalov &
-	Procaccia]Boue_2013
-	Boué, L., L'vov, V. S., Pomyalov, A. & Procaccia,
-			I. 2013  Enhancement of intermittency in superfluid turbulence.
-	Phys. Rev. Lett.  110,  014502.
-	
-	[Bradley et al.(2008)Bradley, Fisher, Guénault, Haley,
-	O'Sullivan, Pickett & Tsepelin]Bradley_2008
-	Bradley, D. I., Fisher, S. N., Guénault, A. M.,
-		Haley, R. P., O'Sullivan, S., Pickett, G. R. & Tsepelin,
-			V. 2008  Fluctuations and correlations of pure quantum turbulence
-		in superfluid ^3HeB.
-	Phys. Rev. Lett.  101 (4),  065302.
-	
-	[Djenidi et al.(2017a)Djenidi, Antonia &
-	Danaila]Djenidi2017PRF
-	Djenidi, L., Antonia, R. A. & Danaila, L.
-	2017a  Self-preservation relation to the
-		Kolmogorov similarity hypotheses.  Phys. Rev. Fluids
-	2,  054606.
-	
-	[Djenidi et al.(2017b)Djenidi, Antonia,
-	Danaila & Tang]Lyazid2017
-	Djenidi, L., Antonia, R. A., Danaila, L. & Tang,
-			S. L. 2017b  A note on the velocity
-		derivative flatness factor in decaying HIT.  Phys. of
-		Fluids  29,  051702.
-	
-	[Donnelly(1991)]QT-book-1991-donnelly
-	Donnelly, R. J., ed. 1991 Quantized Vortices in Helium
-		II.  CUP.
-	
-	[Donnelly(2009)]2009_Donnelly_yearophysic
-	Donnelly, R. J. 2009  The two-fluid theory and second sound
-		in liquid Helium.  Physics Today  62 (10),
-	34–39.
-	
-	[Galantucci et al.(2020)Galantucci, Baggaley, Barenghi &
-	Krstulovic]QT-coupling-2020-gal
-	Galantucci, L., Baggaley, A. W., Barenghi, C. F. &
-		Krstulovic, G. 2020  A new self-consistent approach of quantum
-		turbulence in superfluid helium.  The European Physical Journal Plus
-	135 (7),  547.
-	
-	[Galantucci et al.(2021)Galantucci, Krstulovic &
-	Barenghi]galantucci2021-bundle
-	Galantucci, L., Krstulovic, G. & Barenghi, C. F.
-	2021  Friction-enhanced lifetime of bundled quantum vortices.
-	arXiv  2107.07768.
-	
-	[Gauding et al.(2017)Gauding, Danaila &
-	Varea]gauding2017high
-	Gauding, M., Danaila, L. & Varea, E. 2017
-	High-order structure functions for passive scalar fed by a mean
-		gradient.  International Journal of Heat and Fluid Flow  67,
-	86–93.
-	
-	[Gotoh & Nakano(2003)]Gotoh_Nakano_2003
-	Gotoh, T. & Nakano, T. 2003  Role of pressure in
-		turbulence.  J. Stat. Phys.  113,  855–875.
-	
-	[Hall & Vinen(1956)]Hall_Vinen_1956
-	Hall, H. E. & Vinen, W. F. 1956  The rotation of
-		liquid Helium II: Experiments on the propagation of second
-		sound in uniformly rotating Helium II.  Proc. Roy.
-		Soc. London  Ser A, 238,  204.
-	
-	[Halperin & Tsubota(2009)]QT-book-2009-tsubota
-	Halperin, B. & Tsubota, M., ed. 2009 Quantum
-		Turbulence. Progress in Low Temperature Physics 16.
-	Springer.
-	
-	[Henderson & Barenghi(2004)]henderson2004superfluid
-	Henderson, K. L. & Barenghi, C. F. 2004  Superfluid
-		couette flow in an enclosed annulus.  Theoretical and Computational
-		Fluid Dynamics  18 (2),  183–196.
-	
-	[Hill(2001)]Hill2001
-	Hill, R. 2001  Equations relating structure functions of
-		all orders.  J. Fluid Mech.  434,  379–388.
-	
-	[Hill & Boratav(2001)]Hill_Boratav2001
-	Hill, R. & Boratav, O. 2001  Next-order structure
-		function equations.  Phys. of Fluids  13,  276.
-	
-	[Ishihara & Gotoh(2009)]Ishihara_2009review
-	Ishihara, T. & Gotoh, T.and Kaneda, Y. 2009  Study of
-		high-Reynolds number isotropic turbulence by direct numerical simulation.
-	Annual Review of Fluid Mechanics  41 (1),  165–180.
-	
-	[Ishihara et al.(2007)Ishihara, Kaneda, Yokokawa, Itakura &
-	Uno]Ishihara_2007
-	Ishihara, T., Kaneda, Y., Yokokawa, M., Itakura, K. &
-		Uno, A. 2007  Small-scale statistics in high-resolution direct
-		numerical simulation of turbulence: Reynolds number dependence of one-point
-		velocity gradient statistics.  J. Fluid Mech.  592,
-	335–366.
-	
-	[Jou et al.(2011)Jou, Mongiovì &
-	Sciacca]jou2011hydrodynamic
-	Jou, D., Mongiovì, M. S. & Sciacca, M. 2011
-	Hydrodynamic equations of anisotropic, polarized and inhomogeneous
-		superfluid vortex tangles.  Physica D: Nonlinear Phenomena
-	240 (3),  249–258.
-	
-	[Khalatnikov(1965)]QT-book-1965-khal
-	Khalatnikov, I. M. 1965 An Introduction to the Theory of
-		Superfluidity.  Benjamin.
-	
-	[Kobayashi et al.(2021)Kobayashi, Parnaudeau, Luddens,
-	Lothodé, Danaila, Brachet & Danaila]dan-2021-CPC-QUTE
-	Kobayashi, M., Parnaudeau, P., Luddens, F.,
-		Lothodé, C., Danaila, L., Brachet, M. & Danaila, I.
-	2021  Quantum turbulence simulations using the Gross-Pitaevskii
-		equation: High-performance computing and new numerical benchmarks.
-	Computer Physics Communications  258,  107579.
-	
-	[Kolmogorov(1941a)]Kolmogorov1941
-	Kolmogorov, A. N. 1941a  Dissipation
-		of energy in the locally isotropic turbulence.  Dokl. Akad. Nauk SSSR
-	32(1),  16–18.
-	
-	[Kolmogorov(1941b)]Kolmogorov1941a
-	Kolmogorov, A. N. 1941b  The local
-		structure of turbulence in incompressible viscous fluids for very large
-		Reynolds numbers.  Dokl. Akad. Nauk SSSR  30(4),
-	301–305.
-	
-	[Kolmogorov(1962)]Kolmogorov1962
-	Kolmogorov, A. N. 1962  A refinement of previous hypotheses
-		concerning the local structure of turbulence in a viscous incompressible
-		fluid at high Reynolds number.  J. Fluid Mech.  13(1),
-	82–85.
-	
-	[Krstulovic(2016)]krstulovic2016
-	Krstulovic, G. 2016  Grid superfluid turbulence and
-		intermittency at very low temperature.  Phys. Rev. E  93,
-	063104.
-	
-	[Landau(1941)]Landau1941
-	Landau, L. 1941  Theory of the superfluidity of
-		Helium II.  Physical Review  60 (4),
-	356–358.
-	
-	[Lipniacki(2006)]QT-Lipniacki-2006
-	Lipniacki, T. 2006  Dynamics of superfluid 4He: Two-scale
-		approach.  European Journal of Mechanics - B/Fluids  25 (4),
-	435–458.
-	
-	[Lvov et al.(2006)Lvov, Nazarenko & Skrbek]Lvov_2006
-	Lvov, V., Nazarenko, S. & Skrbek, L. 2006
-	Energy spectra of developed turbulence in Helium superfluids.
-	J. of Low Temperature Physics  145,  125–142.
-	
-	[Maurer & Tabeling(1998)]Maurer_1998
-	Maurer, J. & Tabeling, P. 1998  Local investigation
-		of superfluid turbulence.  Europhysics Lett.  43 (1),
-	29–34.
-	
-	[Mongiovi et al.(2018)Mongiovi, Jou & Sciacca]MONGIOVI2018
-	Mongiovi, M. S., Jou, D. & Sciacca, M. 2018
-	Non-equilibrium thermodynamics, heat transport and thermal waves in
-		laminar and turbulent superfluid helium.  Physics Reports  726,
-	1–71, non-equilibrium thermodynamics, heat transport and thermal waves
-	in laminar and turbulent superfluid helium.
-	
-	[Nemirovskii(2013)]QT-review-2013-nemirovskii
-	Nemirovskii, S. K. 2013  Quantum turbulence: Theoretical
-		and numerical problems.  Physics Reports  524,  85–202.
-	
-	[Nemirovskii(2020)]nemirovskii2020
-	Nemirovskii, S. K. 2020  On the closure problem of the
-		coarse-grained hydrodynamics of turbulent superfluids.  Journal of Low
-		Temperature Physics  201,  254–268.
-	
-	[Nore et al.(1997)Nore, Abid & Brachet]Nore97a
-	Nore, C., Abid, M. & Brachet, M. E. 1997
-	Decaying Kolmogorov turbulence in a model of superflow.  Physics
-		of Fluids  9 (9),  2644–2669.
-	
-	[Roberts & Donnelly(1974)]Roberts_1974
-	Roberts, P. H. & Donnelly, R. J. 1974  Superfluid
-		mechanics.  Annual Review of Fluid Mechanics  6 (1),
-	179–225.
-	
-	[Roche et al.(2009)Roche, Barenghi &
-	Lévêque]Roche_etal_2009
-	Roche, P.-E., Barenghi, C. F. & Lévêque, E. 2009
-	Quantum turbulence at finite temperature: the two-fluids cascade.
-	European Phys. Lett.  87,  54006.
-	
-	[Roche et al.(2007)Roche, Diribarne, Didelot, Français,
-	Rousseau & Willaime]Roche_2007
-	Roche, P.-E., Diribarne, P., Didelot, T.,
-		Français, O., Rousseau, L. & Willaime, H. 2007
-	Vortex density spectrum of quantum turbulence.  Europhysics Lett.
-	77 (6),  66002.
-	
-	[Rusaouen et al.(2017)Rusaouen, Chabaud, Salort &
-	Roche]Rusaouen_etal_2017
-	Rusaouen, E., Chabaud, B., Salort, J. & Roche, P.-E.
-	2017  Intermittency of quantum turbulence with superfluid fractions
-		from 0% to 96%.  Phys. of Fluids  29,  105108.
-	
-	[Salort et al.(2010a)Salort, Baudet,
-	Castaing, Chabaud & Daviaud]Salort_etal_2010
-	Salort, J., Baudet, C., Castaing, B., Chabaud, B. &
-		Daviaud, F. 2010a  The rotation of liquid
-		Helium II: Experiments on the propagation of second sound in uniformly
-		rotating Helium II.  Phys. of Fluids  22,  125102.
-	
-	[Salort et al.(2010b)Salort, Baudet,
-	Castaing, Chabaud, Daviaud, Didelot, Diribarne, Dubrulle, Gagne, Gauthier,
-	Girard, Hébral, Rousset, Thibault & Roche]Salort2010Specmeasure
-	Salort, J., Baudet, C., Castaing, B., Chabaud, B.,
-		Daviaud, F., Didelot, T., Diribarne, P., Dubrulle, B.,
-		Gagne, Y., Gauthier, F., Girard, A., Hébral, B.,
-		Rousset, B., Thibault, P. & Roche, P.-E.
-	2010b  Turbulent velocity spectra in superfluid
-		flows.  Phys. of Fluids  22 (12),  125102.
-	
-	[Salort et al.(2012)Salort, Chabaud, Lévêque &
-	Roche]Salort_etal_2012
-	Salort, J., Chabaud, B., Lévêque, E. & Roche,
-			P.-E. 2012  Energy cascade and the four-fifths law in superfluid
-		turbulence.  European Phys. Lett.  97,  34006.
-	
-	[Sasa et al.(2011)Sasa, Kano, Machida, Lvov, Rudenko &
-	Tsubota]Narimsa_2011
-	Sasa, N., Kano, T., Machida, M., Lvov, V.,
-		Rudenko, O. & Tsubota, M. 2011  Energy spectra of
-		quantum turbulence: Large-scale simulation and modeling.  Phys. Rev. B
-	84,  054525.
-	
-	[She & Lévêque(1994)]She_1994universal
-	She, Z.-S. & Lévêque, E. 1994  Universal scaling
-		laws in fully developed turbulence.  Phys. Rev. Lett.  72 (3),
-	336.
-	
-	[Shi(2021)]Shi_qian_2021
-	Shi, J. 2021  Qian Jian (1939–2018) and his contribution
-		to small-scale turbulence studies.  Phys. of Fluids  33 (4),
-	041301.
-	
-	[Shukla & Pandit(2016)]Shukla2016
-	Shukla, V. & Pandit, R. 2016  Multiscaling in
-		superfluid turbulence: A shell-model study.  Phys. Rev. E  94,
-	043101.
-	
-	[Skrbek & Sreenivasan(2012a)]QT-review-sreeni-2012
-	Skrbek, L. & Sreenivasan, K. R. 2012a  Developed quantum turbulence.  Phys. Fluids  24,
-	011301(1–48).
-	
-	[Skrbek & Sreenivasan(2012b)]QT-book-sreeni-2012
-	Skrbek, L. & Sreenivasan, K. R. 2012b  How similar is quantum turbulence to classical turbulence?
-	In Ten Chapters in Turbulence (ed. P. A. Davidson, Y. Kaneda
-			& K. R. Sreenivasan),  p. 405.  Cambridge University Press.
-	
-	[Tang et al.(2017)Tang, Antonia, Djenidi, Danaila &
-	Zhou]Shunlin2017
-	Tang, S. L., Antonia, R. A., Djenidi, L., Danaila, L.
-		& Zhou, Y. 2017  Finite Reynolds number effect on
-		the scaling range behavior of turbulent longitudinal velocity structure
-		functions.  J. Fluid Mech.  820,  341–369.
-	
-	[Tang et al.(2018)Tang, Antonia, Djenidi, Danaila &
-	Zhou]Shunlin2018
-	Tang, S. L., Antonia, R. A., Djenidi, L., Danaila, L.
-		& Zhou, Y. 2018  Reappraisal of the velocity derivative
-		flatness factor in various turbulent flows.  J. Fluid Mech.
-	847,  244–265.
-	
-	[Tisza(1938)]Tisza_1938
-	Tisza, L. 1938  Transport phenomena in Helium
-		II.  Nature  141,  913.
-	
-	[Townsend(1951)]Townsend1951fine
-	Townsend, A. A. 1951  On the fine-scale structure of
-		turbulence.  Proc. R. Soc. Lond. A  208 (1095),  534–542.
-	
-	[Tsubota et al.(2017)Tsubota, Fujimoto &
-	Yui]QT-review-2017-tsubota-num
-	Tsubota, M., Fujimoto, K. & Yui, S. 2017
-	Numerical studies of quantum turbulence.  J. of Low Temperature
-		Physics  188,  119–189.
-	
-	[Vinen & Niemela(2002)]QT-review-2002-vinen
-	Vinen, W. F. & Niemela, J. J. 2002  Quantum
-		turbulence.  J. Low Temp. Phys.  128,  167–231.
-	
-	[Yakhot(2003)]Yakhot2003
-	Yakhot, V. 2003  Pressure–velocity correlations and
-		scaling exponents in turbulence.  J. Fluid Mech.  495,
-	135–143.
-	
-	[Yui et al.(2018)Yui, Tsubota &
-	Kobayashi]QT-coupling-2018-tsu
-	Yui, S., Tsubota, M. & Kobayashi, H. 2018
-	Three-dimensional coupled dynamics of the two-fluid model in superfluid
-		He 4: deformed velocity profile of normal fluid in thermal counterflow.
-	Phys. Rev. Lett.  120,  155301.
-	
-	[Zhou(2021)]zhou_turbulence_2021
-	Zhou, Y. 2021  Turbulence theories and statistical closure
-		approaches.  Physics Reports  935,  1–117.
-	
 
 

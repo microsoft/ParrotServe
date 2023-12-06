@@ -1,23 +1,141 @@
 
 
-Nearest-Neighbor Inter-Intra Contrastive Learning from Unlabeled Videos
-    David Fan Deyu Yang Xinyu Li Vimal Bhat Rohith MV Amazon Prime Video 
-
-{fandavi, deyu, xxnl, vimalb, kurohith}@amazon.com
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Design, Control, and Motion Strategy of TRADY: Tilted-Rotor-Equipped Aerial Robot With Autonomous In-flight Assembly and Disassembly Ability
+    Junichiro Sugihara,
+        Takuzumi Nishio,
+        Keisuke Nagato,
+        Masayuki Nakao,
+        and Moju Zhao
+Junichiro Sugihara, Keisuke Nagato, Masayuki Nakao, and
+        Moju Zhao (corresponding author) are with the Department of Mechanical-Engineering, The University of Tokyo, Bunkyo-ku, Tokyo 113-8656, Japan (e-mail:j-sugihara@jsk.imi.i.u-tokyo.ac.jp; chou@jsk.imi.i.u-tokyo.ac.jp; nagato@hnl.t.u-tokyo.ac.jp; nakao@hnl.t.u-tokyo.ac.jp).
+        
+Takuzumi Nishio is with the Department of Mechano-Infomatics, The University of Tokyo, Bunkyo-ku, Tokyo 113-8656, Japan (e-mail:nishio@jsk.imi.i.u-tokyo.ac.jp).
 
 
     March 30, 2023
-===================================================================================================================================
+==================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
 
 
 
 
 
-    We develop the steady-state regularized 13-moment equations in the linear regime for rarefied gas dynamics with general collision models. For small Knudsen numbers, the model is accurate up to the super-Burnett order, and the  resulting system of moment equations is shown to have a symmetric structure. We also propose Onsager boundary conditions for the moment equations that guarantees the stability of the equations. The validity of our model is verified by benchmark examples for the one-dimensional channel flows.
+
+Various types of aerial robots have been demonstrated in prior works
+ with the intention of enhancing their maneuverability or manipulation
+ capabilities. However, the problem remains in earlier researches that
+ it is difficult to achieve both mobility and manipulation capability. This
+ issue arises due to the fact that aerial robots with high mobility
+ possess insufficient rotors to execute manipulation tasks, while
+ aerial robots with manipulation ability are too large to achieve
+ high mobility. To tackle this problem, we introduce in this article a
+ novel aerial robot unit named TRADY. TRADY is a tilted-rotor-equipped
+ aerial robot with autonomous in-flight assembly and disassembly
+ capability. It can be autonomously combined and separated from another
+ TRADY unit in the air, which alters the degree of control freedom of
+ the aircraft by switching the control model between the under-actuated
+ and fully-actuated models. To implement this system, we begin by
+ introducing a novel design of the docking mechanism and an optimized
+ rotor configuration. Additionally, we present the configuration of the
+ control system, which enables the switching of controllers between
+ under-actuated and fully-actuated modes in the air. We also include the
+ state transition method, which compensates for discrete changes during
+ the system switchover process. Furthermore, we introduce a new motion
+ strategy for assembly/disassembly motion that incorporates recovery
+ behavior from hazardous conditions. Finally, we evaluate the
+ performance of our proposed platform through experiments, which
+ demonstrated that TRADY is
+ capable of successfully executing aerial assembly/disassembly motions
+ with a rate of approximately 90%. Furthermore, we confirmed that in the assembly state,
+ TRADY can utilize full-pose tracking, and it can generate more than
+ nine times the torque of a single unit. To the best of our knowledge,
+ this work represents the first time that a robot system has been
+ developed that can perform both assembly and disassembly while
+ seamlessly transitioning between fully-actuated and under-actuated
+ models.
+
+
+
+
+
+Aerial systems, mechanics and control, aerial assembly and disassembly,
+ distributed control system.
+
+
+
+
+
+
+
+
 
 
 
@@ -26,1140 +144,1323 @@ Nearest-Neighbor Inter-Intra Contrastive Learning from Unlabeled Videos
 
 § INTRODUCTION
  
-The modeling and computation of rarefied gas dynamics has been a classical research topic in the history of fluid mechanics. On one hand, significant progress has been made in the development of efficient solvers for the Boltzmann equation <cit.>; On the other hand, many researchers still try to avoid the high computational cost and find extensions of classical fluid models such as Euler equations and Navier-Stokes equations and hope that the new models are capable of describing the motion of moderately rarefied gases. The moment method introduced by Grad <cit.> is one of the important approaches in this direction. While Grad's original method suffers from a number of deficiencies such as loss of hyperbolicity and convergence <cit.>, many new ideas have been proposed in the recent years to improve its robustness and make moment methods more widely applicable <cit.>. In this work, we will study the regularized version of Grad's 13-moment equations, which are originally proposed in <cit.> for Maxwell molecules and extended to general gases in <cit.>. In the literature, this model is called R13 equations for short. The R13 equations for Maxwell molecules have been verified for a variety of problems <cit.>. Recently, attentions have been drawn to the study of Onsager boundary conditions, which guarantees the stability of simulations of boundary value problems <cit.>. Here we will consider the formulation of Onsager boundary conditions for general R13 equations with arbitrary elastic collision models. The linearized Boltzmann equation will be taken as the base model, so that rigorous theory of stabilization can be established for the moment equations.
+In recent years, aerial robots have undergone
+significant development <cit.>, <cit.> and have proven to be useful for various
+practical applications. Compact aerial robots such as quadrotors with
+terrain-independent mobility have enabled
 
-In the linearized setting, one typical form of the moment equations is as follows:
-
-    𝐀_0 ∂/∂ t + ∑_j=1^3 𝐀_j ∂/∂ x_j = 𝐋,
-
-where 𝐀_0 is symmetric positive semidefinite, and 𝐋 is symmetric negative semidefinite. The matrices 𝐀_j, j=1,2,3 are symmetric. Here we allow 𝐀_0 to have zero eigenvalues so that the form (<ref>) can also cover parabolic equations such as the R13 equations. For problems with unbounded domains or periodic boundary conditions, one can show that
-
-d/dt ∫^T 𝐀_0  d= ∫^T 𝐋  d⩽0,
-
-indicating the L^2 stability. For problems on bounded domains, additional conditions on the boundary conditions are suggested in <cit.> to preserve the L^2 stability. Assume that n = (n_1, n_2, n_3)^T is the outer unit normal vector on the boundary point. The conditions are based on the following structures of the matrices 𝐀_j:
-
-    𝐏 (n_1 𝐀_1 + n_2 𝐀_2 + n_3 𝐀_3) 𝐏^T = [    0 𝐀_oe; 𝐀_eo    0 ],
-
-where 𝐏 is an orthogonal matrix converting the moments  to another set of moments, each of which is either odd or even in the normal direction, and we choose the permutation such that
-
-𝐏 = [  _odd; _even ].
-
-The moments in _odd include quantities that changes sign when the frame of reference changes by flipping the normal vector n, and the moments in _even remain unchanged under this transformation. By the symmetry of 𝐀_j, we have 𝐀_oe = 𝐀_eo^T. The structure (<ref>) comes from the fact that the normal flux of an odd moment is an even moment, and the normal flux of an even moment is an odd moment. With this structure, if 𝐀_oe has full row rank, the L^2 stable boundary conditions have the form
-
-    _odd = 𝐐𝐀_oe (_even - g_ext),
-
-where 𝐐 is a positive semidefinite matrix, g_ext refers to the external source coming from the boundary of the domain.
-Such boundary conditions are known as Onsager boundary conditions.
-The particular form of boundary conditions that has odd moments on the left-hand side originates from Grad's work <cit.>, which ensures the continuity of boundary conditions with respect to the accommodation coefficient. However, for a specific moment system, choosing _odd to be all the odd moments may result in a rank-deficient 𝐀_oe, so that (<ref>) will provide too many boundary conditions. In this work, we will encounter such a situation during our derivation, requiring us to adjust the selections of _odd and _even to restore the surjective property of 𝐀_oe.
-The structure of Onsager boundary conditions is useful not only for time-dependent problems.
-For steady-state problems (time derivative removed in (<ref>)), Onsager boundary conditions can provide a symmetric weak form, which helps develop the theory of well-posedness and the finite element methods <cit.>.
-
-For the regularized 13-moment equations for Maxwell molecules, the boundary conditions with this particular structure have been devised in <cit.>. However, the technique to derive the Onsager boundary conditions cannot be directly generalized to the R13 equations for more general molecules. In this work, we will reconsider the derivation of the linearized steady-state R13 equations for general collision models, from which we will show clearly how the structure (<ref>) is built into the derivation of moment equations, and thus the boundary conditions in the form (<ref>) can be naturally obtained. 
-
-In the following section, we will review the moment method for the linear Boltzmann equation and the asymptotic expansions of the moments when the Knudsen number is small. Our main results are presented in Section <ref>, where the explicit forms of the linear R13 equations and the Onsager boundary conditions are provided. The derivation of the R13 equations and boundary conditions are respectively given in Section <ref> and <ref>. In Section <ref>, we verify the accuracy of our model by one-dimensional channel problems. A brief conclusion is given in Section <ref>.
-
-
-
-
-
-§ REVIEW OF THE MOMENT EQUATIONS AND ASYMPTOTIC PROPERTIES OF MOMENTS
-
-We consider the steady-state linear Boltzmann equation
-
-    ξ_j ∂ f/∂ x_j = 1/ℒ [f]
-
-where f(,) is the distribution function, = (x_1,x_2,x_3) denotes the position and = (ξ_1,ξ_2,ξ_3) stands for the velocity of the gas molecules. We apply Einstein's summation convention throughout this work, meaning that when an index appears twice in the same term, the expression represents the sum of this term with this index running from 1 to 3. For example, in (<ref>), 
-    ξ_j  ∂ f/∂ x_j =ξ_1  ∂ f/∂ x_1 + ξ_2  ∂ f/∂ x_2 + ξ_3  ∂ f/∂ x_3.
- For indices whose ranges are not from 1 to 3, the summation symbol will be written explicitly. On the right-hand side of (<ref>), the constant  is the Knudsen number characterizing how rarefied the gas is, and ℒ [f] is the linearized Boltzmann collision operator. Below we will introduce the general moment equations for the linearized Boltzmann equation and the asymptotic expansion of the moments in the case of a small Knudsen number.
+ 
+ various autonomous applications such as cinematography <cit.>,
+inspection <cit.>, disaster response <cit.>, and
+surveillance <cit.>. Furthermore, to enhance mobility, numerous designs that
+enable robots to navigate through narrow spaces have been proposed, such
+as quadrotors with morphing capabilities that allow their airframe to
+shrink <cit.>. On the other hand, there has been a growing demand for aerial
+robots to possess manipulation capabilities, which require larger
+controllable degrees of freedom (DoF) and available force and torque (wrench). As a
+solution, more intricate and sizable aerial robots have been developed,
+including multirotors equipped with over six tiltable rotors enabling
+omni-directional control <cit.>, and arm-manipulator-installed multirotors
+capable of interacting with the environment <cit.>.However, a significant issue in the conventional works is the inherent trade-off between
+mobility and manipulation capability. To clarify, High-mobility
+under-actuated aerial robots often lack the necessary controllable DoF
+and available wrench to achieve manipulation tasks, whereas
+fully-actuated robots with manipulation capability often lack
+compactness. To address this problem, some researchers have
+proposed a transformable multilink design <cit.> that enables robots to
+navigate narrow spaces and perform manipulation tasks using their entire
+body <cit.>. Nonetheless, these transformable aerial robots
+require a significant number of additional
+actuators, making them heavy, and even with transforming capability, it remains challenging
+to achieve the same maneuverability as a small quadrotor in a narrow
+space with three-dimensional complexity.In this article, we present a solution to the aforementioned trade-off problem by introducing TRADY, a novel aerial robot platform that can perform aerial assembly
+and disassembly motion, as depicted in figure:trady_main (A), while changing
+its controllable DoF and available wrench. In its unitary state, TRADY
+is a compact under-actuated quadrotor, however, in its assembly state,
+it becomes a fully-actuated octorotor, enabling it to execute aerial
+manipulation tasks as depicted in figure:trady_main (B).
 
 
 
- §.§ Series expansion and moment equations
+ §.§ Related works
 
-Following <cit.>, we expand the distribution function into an infinite series:
+TRADY is a type of modular aerial robot, and previous studies have
+ developed several other modular aerial robots. In <cit.>, Naldi
+ et al. introduce a single ducted-fan module, and in <cit.>, a
+ tetrahedron-shaped quadrotor module consisting of four fractal
+ single-rotor submodules is presented. Furthermore, in <cit.>, a
+ modular quadrotor equipped with tilted rotors is proposed. These
+ modular aerial robots can combine with one another and expand their
+ degrees of freedom and wrench, however, <cit.> are currently not focused
+ on self-assembly/disassembly. On the other hand, several aerial robots
+ capable of self-assembly or self-disassembly have previously been developed. For
+ instance, in <cit.>, <cit.>, a robot unit composed of wheels
+ and rotors capable of docking on the ground and taking off afterwards
+ is presented. Additionally, in <cit.>, a modular quadrotor with
+ the capability of aerial self-assembly is proposed, followed by one
+ with the ability of aerial self-disassembly proposed in
+ <cit.>. However, the issue that remains is that the robot
+ presented in <cit.>, <cit.> is restricted to
+ assembly/disassembly on the ground, and mid-air assembly/disassembly are unfeasible,
+ whereas <cit.>, <cit.> virtually specialize in
+ either aerial assembly or aerial disassembly but not both. Futhermore, assembly or disassembly motion
+ demonstrated in
+ <cit.> are
+ unaccompanied by the alternation of controllable DoF, implying that the
+ robots are under the control of an under-actuated model in both the
+ assembly and unitary states. The utilization instance
+ of TRADY envisioned in this research comprises tasks illustrated in
+ figure:trady_concept. To accomplish this, movement in a narrow
+ space must be carried out in the unitary state, and during manipulation
+ tasks, the
+ units must assemble to extend the controllable DoF and wrench, then
+ return to the unitary state afterwards. Therefore, the compatibility of
+ aerial self-assembly and self-disassembly, and the consequent alteration of the
+ controllable DoF, remain crucial unachieved issues that are
+ necessary for realizing TRADY. In this study, we tackle this issue
+ from the perspectives of design, control, and motion strategy.
 
-    f(,)= ∑_l=0^+∞∑_m=0^+∞(2l+1)!!/l!w_i_1⋯ i_l^m() ψ^m_i_1 ⋯ i_l().
+Concerning the design of the self-docking mechanism, various designs
+have been previously presented. For example, in <cit.>,
+autonomous boats equipped with hook-string docking mechanisms are
+introduced. In this system, the hooks of the male mechanism attach to
+the loop of string on the female mechanism, and the female side winches
+the loop of thread and the male mechanism together, thereby merging the
+modules. While this mechanism works effectively on the water, the
+coupling force is not sufficiently strong to be applicable to aerial
+systems. On the other hand, in <cit.>, to achieve aerial docking, a
+quadrotor is enclosed in a rectangular frame equipped with permanent
+magnets. While this mechanism can construct a highly rigid structure, it
+has the disadvantage of being unable to release the coupling once it has
+been established. On the contrary, a quadrotor unit that can undock
+through the torque generated by the unit itself is developed in
+<cit.>. However, to achieve undocking capability, the docking mechanism is
+significantly downsized in comparison to the one used in <cit.>, and the
+design is not suitable for aerial docking. Furthermore, as the docking
+can be released through the torque output of a unit, the strength of the
+mechanism becomes a bottleneck for available torque, making it arduous to execute
+tasks that necessitate high torque. As an alternative method for
+releasing the magnetic coupling, the utilization of elastic energy is
+proposed in <cit.>. The mechanism proposed in <cit.> shortens the internal
+spring of the mechanism using an actuator, and releases it to generate
+restoring force, thereby releasing the magnetic coupling. In the case of
+this mechanism, it is possible to release high rigidity coupling by
+using a spring with a high spring constant and a powerful
+actuator. However, pulling and detaching magnets in the translational
+direction is an inefficient, resulting in the mechanism becoming
+extremely large. Furthermore, with the docking mechanism that uses
+magnets, in addition to the method of detachment, attention should be
+paid to the magnetic interference from the external environment. When
+the structure exposes the magnet to the outside as in [1], [2], although
+normal flight is not a problem, magnetic interference from the
+surroundings becomes a significant obstacle in manipulation tasks and
+interaction with the external environment. Therefore, in this work, we introduce a novel
+high-rigidity docking mechanism, which consists of a powerful magnetic mechanism that can be switched
+on and off by a low-torque motor and a movable peg, thus enabling both
+aerial docking and undocking to be achieved. Furthermore, we ensure that
+the magnets are not exposed to the outside during flight through
+appropriate structural design.
 
-Here, the basis functions ψ_i_1⋯ i_l^m are defined by
+Regarding rotor configuration, in order to expand the controllable DoF
+and available wrench through assembly and change the control model from
+an under-actuated model to a fully-actuated model, it is necessary to
+use tilted rotors. As mentioned earlier, <cit.> has made it possible to
+achieve fully-actuated model control by combining four quadrotor units
+of different types with tilted rotors. In this case, the concept of the
+actuation ellipsoid is used to determine the appropriate rotor
+configuration. In this work, we propose a new rotor configuration
+optimization method that focuses not only on maximizing the performance
+in the assembly state, but also on achieving high-precision aerial
+self-assembly/disassembly motion. Additionally, in order to achieve
+simplicity in the system, TRADY acheive fully-actuated model by docking
+two unit quadrotors with the same rotor configuration.
 
-    ψ^m_i_1,⋯,i_l()=1/(2π)^3/2L̅_m^(l+1/2)( ||^2/2)ξ_⟨ i_1⋯ξ_i_l ⟩exp( -||^2/2),
+Subsequently, regarding the controller, TRADY utilizes distinct controllers for
+the assembly and unitary states. The aircraft in the assembly state is a
+typical fully-actuated multirotor, which can employ a conventional hexarotor control
+method based on thrust allocation matrices, as presented in
+<cit.>, <cit.>. By means of this method, TRADY in
+the assembly state is capable of controlling six DoF, which consist of
+forces and torques in all axes. On the other hand, TRADY in its unitary state
+is a tilted quadrotor that is controlled as a under-actuated model. In this
+case, the controllable DoF are four: the z-direction
+force and torque on all axes, but it is not possible to control the x
+and y-directional forces generated by the tilted rotors. Therefore, it is
+necessary to suppress the generation of these horizontal forces through some
+means. While in <cit.>,
+which also uses a tilted quadrotor as a unit machine, the horizontal
+forces are suppressed solely through design method, in this work, we focuses on suppressing the
+horizontal forces through both design and control method. Therefore, LQI
+control is adopted for unit control, explicitly minimizing the
+horizontal forces generated during flight. Another important point to
+consider in the control of TRADY is the switching between under-actuated
+and fully-actuated models during aerial assembly/disassembly motion. When the control
+model is discretely changed during flight, the control of the vehicle
+becomes unstable (e.g., the vehicle suddenly rising or falling) due to
+the influence of model errors. The elimination of this instability is
+crucial for achieving stable assembly/disassembly. Therefore, in this
+study, we introduce a novel method to eliminate this instability by applying
+our own transition processing during the control model switching. Finally, regarding motion strategy, several previous studies have
+presented strategies for self-assembly of robots. For instance, in
+<cit.>, a path planning method based on global optimization is employed to
+enable self-assembly of boats on water surfaces, while <cit.> utilizes vehicle
+guidance via gradient method for quadrotor self-assembly in
+mid-air. These strategy are efficacious in circumstances
+where the high positional accuracy of unit vehicles can be
+maintained during the assembly motion. Nonetheless, when it comes to the
+aerial assembly motion of unit vehicles that are furnished with tilted rotors,
+as employed in this study, the thrust of each unit interferes with one
+another, resulting in unstable position control as the two units
+approach. Consequently, in this study, we assume the existence of
+positional errors and suggests a motion strategy that iteratively
+approaches until the assembly is successfully achieved,  while avoiding
+dangerous situations. This facilitates an autonomous and reliable
+assembly motion. Additionally, we extend the strategy to encompass
+self-disassembly, providing a comprehensive approach.
 
-where ξ_⟨ i_1⋯ξ_i_l ⟩ is the trace-free part of the tensor ξ_ i_1⋯ξ_i_l (see <cit.>), and L̅_n^(l+1/2) is the normalized Laguerre polynomial
+To sum up, the main contribution of this work can be summarized as
+follows;
 
-    L̅_n^(l+1/2)(x) = √(√(π)/2^l+1 n! Γ(n+l+3/2)) x^-(l+1/2)( d/dx - 1 )^n x^n+l+1/2.
 
-In literature, people usually define the Maxwellian
+ 
+ 
+  * We propose the design of docking mechanisms that combines strong
+       coupling and easy separation.
+ 
+  * We present the optimized rotor configuration to achieve controllability
+       with under-actuated model in the unitary state and with
+       fully-actuated model in the assembly state. Moreover, this rotor
+       configuration also takes into account the stability improvement
+       of aerial assembly/disassembly motion.
+ 
+  * We develop a control system that allows for switching between
+       control models and includes transition processing to compensate
+       for control instability during model switching.
+ 
+  * We introduce the motion strategy that enables autonomous and
+       stable aerial assembly/disassembly motion even in
+       situations where position control is unstable.
+ 
+ 
+
+Although we focus on the evaluation with two units, our methodology can be easily applied to more
+units by installing both male and female docking mechanisms in a single
+unit. Furthermore, to the best of our knowledge, this is the first time
+to achieve the both self-assembly and self-dessembly with the same robot
+platform in an autonomous manner, and also achieved the manipulation
+task by switching between under-actuated and fully-actuated models.
+
+
+ §.§ Notation
+
+From this section, nonbold lowercase symbols (e.g., m) represent
+scalars, nonbold uppercase symbols (e.g., R) represent sets or linear spaces, and
+bold symbols (e.g., u, Q) represent vectors or
+matrices. Superscripts (e.g, ^{CoG}p)
+represent the frame in which the vector or matrics is expressed, and
+subscripts represent the target frame or an axis, e.g.,
+^{ W}r_{ CoG } represents a
+vector point from { W} to { CoG}
+w.r.t. { W}, whereas u_x denotes the x component
+of the vector u.
+
+
+ §.§ Organization
+
+The remainder of this paper is organized as follows. The mechanical
+design including the design of docking mechanisms is presented in
+sec:mech_design, and the modeling of our
+robot and optimized rotor configuration is introduced in
+sec:rotor_config. Next, the flight control and model switching method are
+presented in sec:control, followed by motion strategy in
+sec:motion_strategy. We then show the experimental result of
+trajectory following flights, aerial assembly and disassembly, and
+object manipulation tasks in sec:experiment before concluding
+in sec:conclusion.
+
+
+
+§ MECHANICAL DESIGN
+
+In this section, we present the mechanical design of the proposed robot,
+TRADY. Initially, we provide an overview of the entire robot design and
+subsequently expound upon the design of the docking mechanisms.
+
+
+ §.§ Entire Robot Design
+
+In this study, the minimum unit comprising TRADY is designed as a
+quadrotor unit. Each unit is equipped with a common rotor configuration,
+as well as either a male-side or female-side the mechanism at the
+same position. Therefore, the overall structure of the device is
+depicted in figure:whole_design.
+
+
+
+ §.§ Docking Mechanism
+
+The prerequisites for the design of a docking mechanism are twofold:
+firstly, it should be capable of accomplishing both docking and
+undocking operations in the air, and secondly, it should possess
+sufficient rigidity to execute high-load tasks. Therefore, we propose a
+methodology of coupling with a permanent magnet and movable pegs.
+
+
+  §.§.§ Female side
+
+As shown in figure:female_mech, the main components of the female mechanism are a
+permanent magnet equipped with a magnetic switching mechanism and a
+mechanism called a drogue, which compensates for positioning
+errors. The on-off switching of the magnetic force is realized by the principle
+illustrated in the cut model in figure:female_mech. In this mechanism, it is
+possible to interrupt the magnetic force by rotating one of the two
+permanent magnets 180deg using a servo motor. Since the two magnets do not directly touch each other, the force that
+hinders the rotation of the magnet is only friction with the housing,
+and rotation is easily possible with a low-torque servo motor. Through
+the use of this magnet, restraint in the translational direction of the
+docking mechanism is achieved.Furthermore, the drogue attached to the tip of the female mechanism is a
+mechanism adopted in autonomous aerial refueling systems for fighter
+aircraft such as <cit.>, <cit.>,
+which compensates for control errors of the size corresponding to the
+diameter of the mechanism. In this study, the radius of the drogue was
+set to 5cm in order to absorb errors within
+±2.5cm. Additionally, the gradient inside the drogue was
+empirically determined to be approximately 35deg. The drogue not
+only compensates for position errors, but also has two additional
+functions. One is to improve rigidity by increasing the contact area,
+and the other is to prevent the influence of external magnetic forces by
+covering the magnets.
+
+
+
+  §.§.§ Male side
+
+As shown in figure:male_mech, the male mechanism is composed of an steel plate
+for magnetic attraction and movable pegs. The movement of the peg is
+achieved using a slider-crank mechanism powered by a servo motor, and
+during docking, the peg is inserted into the receptor of the female
+mechanism to provide confinement in the bending direction. The tip of
+the mechanism is designed to closely adhere to the drogue of the female
+mechanism. The overall size of the docking mechanism is determined
+based on the clearance that should be maintained between the rotors in
+the assembly state.
+
+
+
+
+§ MODELING AND ROTOR CONFIGURATION
+
+In this section, we introduce the kinematics and dynamics model of our
+robot in the first place, followed by the thrust allocation. Then, we present the method of optimization of
+rotor configuration.
+
+
+ §.§ Modeling
+
+
+
+
+
+
+
+The kinematics model of TRADY is depicted in
+figure:multirotor_model(A) and each quantities are difined as
+shown in table:multirotorparam. Since this model can be applied
+to multirotors with any number of rotors, the model of TRADY is
+represented by figure:multirotor_model with n = 4 in the unitary state, and with n = 8
+in the assembly state.Based on this kinematics model, the wrench-force
+^{CoG}f and torque
+^{CoG}τ )  can be written as
+
+
+    ^{CoG}f = ∑_i=1^nλ_i^{CoG}u_i,
+
+
+    ^{CoG}τ = ∑_i=1^nλ_i^{CoG}p_i×^{CoG}u_i+σ^{CoG}f,
+
+where {CoG} is the frame that have the origin at
+the center-of-mass of the body.
+From (<ref>) and (<ref>), the
+translational and rotational dynamics of a multirotor unit are given by the Newton-Euler
+equation as followings:
+
+    M^{ W}r̈_{ CoG } =
+     ^{ W}R_{ CoG }^{CoG}f+
+     ([   0;   0; -Mg ]),
+
+
+    ^{CoG}I^{CoG}ω̇   =
+     ^{CoG}τ+σ^{CoG}f
+          -
+     ^{CoG}ω×^{CoG}I^{CoG}ω,
+
+where { W} frame represent the world coordinate system.
+Then, using (<ref>) and
+(<ref>), allocation from the thrust force λ
+to the resultant wrench can be given by following:
+
+    ([ ^{CoG}f; ^{CoG}τ ])
+     =
+     ([ Q_tran;  Q_rot ])
+     λ
+     =
+     Qλ,
+
+where
+
+    Q_tran = ( ^{CoG}u_1,^{CoG}u_2,⋯,^{CoG}u_n),
+
+
+    Q_rot = (^{CoG}v_1,^{CoG}v_2,⋯,^{CoG}v_n),
+
+
+    ^{CoG}v_i = ^{CoG}p_i×^{CoG}u_i.
+
+Note that the second term in (<ref>) is omitted for the
+remainder of the analysis because it is one order of magnitude smaller
+than the first term in general.
+
+
+ §.§ Thrust Allocation
+
+
+
+  §.§.§ In the Assembly State
+
+In the assembly state, TRADY is fully-actuated, and the allocation matrics Q
+is full-rank. Therefore, we can gain MP pseudo-inverse
+matrics ^#Q.
+Given a desired wrench, the target thrust can be computed by following:
+
+    λ = ^#Q([ ^{CoG}f; ^{CoG}τ ]).
+
+
+
+  §.§.§ In the Unitary State
+
+In the unitary
+state, Q∈ R^6× 4 is rank deficient, and we need to adopt under-actuated model. As the conventional method, the control targets for
+under-actuated model are f_z, τ_x, τ_y, and
+τ_z. Applying the control method illustrated in sec:control, we can
+achieve the hovering of a quadrotor unit with these four inputs.
+In the case of a quadrotor with non-tilted rotors, because it does not produce
+f_x and f_y, desired thrusts are easily calcurated as following:
+
+    λ = ^#(^quadQ) ^t[ f_z τ_x τ_y τ_z ],
+
+where
+
+    ^quadQ = (
+         [ Q_tran,z;    Q_rot ]) ∈ R^4× 4 ,
+
+and Q_tran, z∈ R^1 × 4 is the third row vector
+of Q_tran.However, TRADY unit is a tilted quadrotor that produces translation forces
+f_x, f_y  and these are uncontrollable with
+(<ref>). Therefore,  assuming the existence of
+the static thrust λ_s that enables hovering while suppressing the
+generation of f_x and f_y, we introduce a method to apply
+(<ref>) to the thrust
+allocation of tilted quadrotor by utilizing λ_s. In <cit.>, Zhao et al. use a tilted
+coodinate system in order to obtain λ_s and we apply this
+idea to our work. Now, we introduce a new coodinate system {C} that has
+the origin at the center-of-mass of body as shown in figure:multirotor_model(B). Furthermore, we define {C} to fulfill the following conditions:
+
+    Q_tran'λ_s = -mg,
+
+
+    Q_rot'λ_s = 0,
+
+where Q_tran', Q_rot' are allocation matrices defined
+in {C}.
+
+(<ref>), (<ref>)
+indicate that the direction of the resultant force due to
+λ_s coincides with the z-axis of
+{C}. In other word, by controlling the robot's attitude
+so that {C} is horizontal, it becomes possible to
+hover the robot without generating excess forces in the horizontal
+direction. In this case, by using Q_tran' and Q_rot',
+thrust allocation can be achieved through (<ref>), similar to that
+of a non-tilt quadrotor. Therefore, we focus on deriving
+Q_tran', Q_rot', and {C}.Since both {C} and {CoG} have
+origins at the center-of-mass, from (<ref>),
+following is also satisfied:
+
+    Q_rotλ_s = 0.
+
+Additionally, regarding translation, following is valid from
+(<ref>):
+
+    F_z = mg,
+
+where F_z =  Q_transλ_s.
+Then, we difine the rotation matrics R_C that satisfies:
+
+    R_CF_z =^t[  0  0 mg ].
+
+Integrating (<ref>),
+(<ref>), and (<ref>) we can gain follows:
+
+    R_C(
+      [ Q_tran;  Q_rot ])
+     λ_s
+     =
+     ^t[  0  0 mg  0  0  0 ] .
+
+Comparing
+(<ref>) and (<ref>) with
+(<ref>), our discussion results in followings:
+
+    R_CQ_tran=Q_tran' ,
+
+
+    R_CQ_rot=Q_rot' .
+
+Because (<ref>), (<ref>) mean that R_C
+is the rotation matrics that maps {CoG} to
+{C}, the conversion from {CoG} to
+{C} is easily calcurated with
+R_C. Furthermore, (<ref>) to (<ref>) suggest that if there exists
+a Q that satisfies (<ref>) and
+(<ref>) for a given λ_s, it is
+possible to hover tilted quadrotor using that λ_s.
+
+
+ §.§ Optimized Rotor Configuration
+
+The TRADY rotor configuration must meet three prerequisites. Firstly, it
+must enable fully-actuated model control in the assembly
+state. Secondly, it should allow for under-actuated model control in the
+unitary state. Finally, it must attain the necessary flight properties
+required for aerial assembly/disassembly motion. Therefore, we propose a methodology to
+optimize the rotor configuration that satidsfies these conditions.
+
+  §.§.§ Fully-actuated Model Controllability
+
+Initially, we propose a technique for achieving fully-actuated model
+control when TRADY is in the assembly state. As described in Equation 1,
+the full rank of matrix Q is equivalent to fully-actuated
+model control, as Q can map L to an arbitrary wrench in real
+space if it is full rank. However, each rotor has a limit of thrust
+force, which can lead to instability of control due to weak resultant
+force or torque in certain directions. Thus, rather than directly
+employing algebraic methods to make Q full rank, we seek to
+maximize the available force and torque region to ensure translational
+and rotational controllability in all axes. To accomplish this, a
+concept of feasible control force convex polyhedron
+𝒱_ℱ, and torque convex polyhedron
+𝒱_𝒯 were introduced by <cit.>. These are
+defined as follows:
+
+    𝒱_ℱ(U):={^{CoG}f∈ R^3| 0 ≤λ_i≤λ_max},
+
+
+    𝒱_𝒯(U):=
+      {^{CoG}τ∈R^3| 0≤λ_i≤λ_max} ,
+
+where the set of rotor direction vectors U is defined as
+U = [ u_1   ⋯ u_8;     ]. In addition, ^{CoG}f,
+^{CoG}τ are defined in
+(<ref>), (<ref>) and maximum thrust for
+each rotor in TRADY is denoted by λ_max, while the minimum
+thrust is established at 0, as we utilize unidirectional rotors.Then,  we define the values for the guaranteed minimum control force,
+denoted as f_min, and the corresponding torque, represented by
+τ_min, in accordance with the subsequent equations are being
+satisfied:
+
+    ^{CoG}f - m g≤ f_min ⇒ ^{CoG}f∈𝒱_ℱ,
+
+
+    ^{CoG}τ≤τ_min ⇒ ^{CoG}τ∈𝒱_𝒯.
+Note that our robot is controled under the premise that the roll and
+pitch angles are proximate to zero. As such, we posit that the gravity
+force is horizontal to the CoG frame, and we account for this force as
+an offset when defining the guaranteed control force.Therefore, by maximizing these f_min and τ_min, the guaranteed force and torque regions
+can be maximized. Thus, we initially explicate the methodology for
+computing f_min.
+As an example of feasible control force convex polyhedron which is depicted in
+figure:convex, f_min is equal to the radius of the
+inscribed sphere of this polyhedron, and the same is true for
+torque. Thereby, f_min is calculated by exploiting the distance d^f_ij(U), which is the length from
+the origin to a plane of polyhedron  along its normal vector h^f_ij.
+
+The calculation of d^f_ij(U) can be performed as following.
+
+    d_i j^f(U) =|∑_k=1^Nmax(0, λ_max ^th^f_ij^{CoG}u_k)
+      -
+       ^th^f_ijm
+      g|,
+
+where
+
+    h^f_ij =
+     ^{CoG}u_i×^{CoG}u_j/|^{CoG}u_i×^{CoG}u_j|
+                    .
+
+Moreover, as f_min corresponds to the radius of the inscribed sphere,
+we may ascertain f_min in the following manner:
+
+    f_min=min _i, j d_i j^f .
+
+Note that, if f_min > 0, the robot can fly.Similarly, τ_min can be acquired by calculating d_i j^τ
+in the following manner.
+
+    d_i j^τ(U)=|∑_k=1^Nmax(0, λ_max ^th^τ_ij^{CoG}v_k)|,
+
+
+
+    τ_min=min _i, j d_i j^τ,
+
+where
+
+    h^τ_ij =
+     ^{CoG}v_i×^{CoG}v_j/|^{CoG}v_i×^{CoG}v_j|
+                    .
+
+To sum up, the objective function to be maximized in this optimization of TRADY's rotor
+configuration is formulated as follows.
+
+
+
+
+  
+
+    S(U) =  w_1f_min + w_2τ_min,
+
+where w_1 and w_2 are the positive weights to balance between
+force and torque.
+Additionally, the constraints can be expressed as follows:
+
+    ∗ 1:       
+      f_min > 0,
+
+
+    ∗ 2:       τ_min > 0.
+
+Although our primary focus is on the assembled aircraft consisting of
+two quadrotor units, the maximization of S(U) within the constraints
+described in (<ref>) and (<ref>) ensures the attainment of fully-actuated
+model control in aircraft composed of an arbitrary number of units.
+
+
+  §.§.§ Under-actuated Model Controllability
+
+Subsequently, we present the constraints for (<ref>) to enable TRADY
+to achieve stable flight in the unitary state. Firstly, as previously
+noted in sec:introduction, the TRADY is composed of two quadrotor units, each
+possessing an identical rotor configuration. Consequently, the whole
+structure can be illustrated as figure:unit_config(A), with a
+constraint expressed as follows:
+
+    u_1 = u_5,  u_2 = u_6,  u_3 =
+      u_7,  u_4 = u_8 .
+
+
+Additionally, as noted above, the prerequisite for stable flight of the units is that
+both (<ref>) and (<ref>) are satisfied. Despite the presence of an
+infinite number of combinations for {C} and
+λ_s, we assume that λ_s =
+λ_s ^t[ 1 1 1 1;   ], to
+ensure even distribution of workload across each rotor. Consequently, an
+additional constraint can be formulated as follows.
+
+    ∗ 3:       λ_sQ_trans ^t[ 1 1 1 1;   ] 
+                                                 = mg,
+
+
+
+    ∗ 4:       λ_sQ_rot ^t[ 1 1 1 1;   ]
+                                                 = 0 .
+
+
+
+  §.§.§ Flight Characteristics for Aerial Assembly/Disassembly
+
+Next, we consider the flight characteristics required for aerial
+assembly/disassembly. Generally, quadrotors obtain translational
+propulsion by inclining their airframe. However, this inclination impedes
+parallel contact between two units during assembly motion. The coupling
+mechanism proposed in this study has a small contact area, which renders
+this non-parallel relationship a hindrance to the assembly
+process.However, in the instance of the TRADY unit, its target
+coordinate system is {C}, which is inclined with respect to
+{CoG}. Consequently, the airframe inclines during hovering, and
+conversely, it assumes a horizontal orientation during movement in a
+specified direction. Hence, we establish a novel constraint for the optimization to regulate the tilted angle of {C} in such a way
+that the airframe assumes a horizontal orientation when it accelerates along
+the positive x-axis direction in figure:unit_config(B).Assuming
+that the inclination angle during hovering is -γ as
+shown in figure:unit_config(C), the force exerted by the
+unit in the x-direction when it is in a horizontal state can be written as
+mgtanγ. Then the desired value of γ is
+calculated as follows:
+
+    γ = -tan^-1(^desa/g),
+
+where ^desa is the target acceleration in the x-direction.
+Consequently, we introduce the following constraint condition for the
+rotation matrix R_C, to ensure that {C} tilts by -γ around the
+y-axis:
+
+    ∗ 5:       R_c = [
+    [  cos(-γ)        0  sin(-γ);        0        1        0; -sin(-γ)        0  cos(-γ);          ]] .
+To sum up, the optimization problem for the rotor configuration can be
+summarized as follows:
+
+    Umaximize       S(U)
+       subject to      ∗ 1∼∗ 5
+
+
+
+  §.§.§ Solver for Optimization Problem
+
+Finally, in order to solve the designed optimization problem, it is
+necessary to choose an algorithm, but it is not always guaranteed that a
+solution that satisfies all the set constraints exists. Therefore, we
+use the  global optimization algorithm ISRES <cit.> that can find
+the closest possible solution even if a perfect solution is not found. The optimized U obtained as a result of solving the
+optimization problem using the parameters shown in table:op_param and the
+guaranteed minimum force and torque in the unitary and assembly states
+are presented in table:op_result. Here, each u is represented by spherical
+coordinate parameters α and β as shown in
+figure:unit_config(B). Furthermore, the outcomes are rounded off to two significant digits. The obtained outcome reveals that the
+optimized rotor angles exhibit a symmetrical pattern. This occurrence
+can be attributed to the constraints established in
+(<ref>) and (<ref>), as
+these equations embody force and torque offsets.
+In addition to this, it can be seen that both the minimum guaranteed force and torque become more than twice as
+high in the assembly state when using fully-actuated model compared to the
+unitary state.
+
+
+
+
+
+
+
+
+§ CONTROL
+
+Firstly, we outline the methodology for flight control, which
+incorporates fully-actuated model control for the unitary state and
+fully-actuated model control for the assembly state. Next, we propose a system switching
+strategy to be executed during the docking or undocking process.
+
+
+ §.§ Fully-actuated Flight Control
+
+
+
+
+  §.§.§ Position Control
+
+For position control, a general PID controller is adopted. Thus, from (<ref>),
+(<ref>), the desired force and torque can be derived as
+following:
+
+    f^des = m ^{ W}R_{ CoG }^-1(K_pe_r +K_i∫e_rdt
+                           +K_dė_̇ṙ),
+
+
+where e_r is a position error defined as e_r =
+^{ W }r^des_{ CoG } - ^{ W }r_{ CoG }, and
+K_p, K_i, K_d are gains for
+controller. Additionally, { C } is used instead of
+{ CoG } in the unitary state.In the assembly state, as shown in figure:a_fc, the obtained f^des from
+(<ref>) is allocated to the desired thrust by Q_trans.
+
+
+  §.§.§ Attitude Control
+
+Next, we explain attitude control. In the case of a fully-actuated
+model, it is possible to apply traditional PID control for attitude
+control. Here, by using (<ref>), the desired torque can
+be obtained as follows:
+
+    τ^des = ^{CoG}I(K_pe_α +K_i∫e_αdt
+      + K_dė_̇α̇) 
     
-     f_M() = 1/(2π)^3/2 exp( -||^2/2 ),
-    
-so that ψ^m_i_1,⋯,i_l()=L̅_m^(l+1/2)(||^2/2) ξ_⟨ i_1⋯ξ_i_l ⟩ f_M(). Compared with the classical series expansion by Grad <cit.>, the Maxwellian f_M is a global equilibrium state due to our linearized setting. This expansion requires us to assume that the distribution function is defined in the following Hilbert space:
+       +
+      ^{CoG}ω× ^{CoG}I ^{CoG}ω,
 
-L^2(ℝ^3, [f_M()]^-1  d) := { f |∫_ℝ^3 [f()]^2/f_M()  d< +∞},
+where e_α is an attitude error defined as e_α = ^{ W
+}α^des_{CoG} - ^{ W }α_{CoG} and
+K_p, K_i, K_d are gains for controller.
+Then, the desired torque τ^des obtained from attitude control is allocated into the
+desired thrust for each rotor using the allocation matrix Q_rot
+as shown in figure:a_fc.
 
-so that all the moments of the distribution function can be properly defined. The inner product of this Hilbert space is
 
-   ⟨g_1,g_2⟩:= ∫_ℝ^3 g_1()g_2()/f_M() ,
+ §.§ Under-actuated Flight Control
 
-so that we can express the coefficients w_i_1⋯ i_l^m as the moments of the distribution function:
 
-    w_i_1⋯ i_l^n() = ⟨ f, ψ^m_i_1⋯ i_l⟩.
 
-In particular, we would like to highlight the relationship between these coefficients and the quantities in Grad's 13-moment equations:
 
-    ρ = w^0,    v_i = √(3) w_i^0,   θ = -√(2/3) w^1,   σ_ij = √(15) w_ij^0,    q_i = -√(15/2) w_i^1,
 
-where ρ, v_i, θ, σ_ij and q_i denote the density, velocity, temperature, stress tensor and heat flux, respectively.
+  §.§.§ Position Control
 
-Due to the rotational invariance of the collision, the linear operator ℒ satisfies 
+The position control for the underactuated model is developed using the
+methodology presented in <cit.>, which involves determining the
+target force via conventional PID feedback loop and subsequently converting
+it to target roll and pitch angles. The target forces f^des_x and f^des_y can be
+obtained using (<ref>), followed by determining the
+target roll θ and
+pitch ϕ as outlined below:
 
-    ℒ[ ψ^n_i_1,⋯,i_l] = ∑_m=0^+∞ a_lmnψ^m_i_1,⋯,i_l,
+    ^{ W}θ^des_{ C } =
+     atan^-1(-f_y, √(f^2_x+f^2_z)),
 
-where the coefficient a_lmn satisfies a_lmn = a_lnm for all nonnegative integers l,m and n, and
 
-    a_lmn = ⟨ψ_i_1⋯ i_l^m, ℒψ_i_1⋯ i_l^n ⟩/⟨ψ_i_1⋯ i_l^m, ψ_i_1⋯ i_l^m ⟩.
+    ^{ W}ϕ^des_{ C } =
+     atan^-1(f^2_x, f^2_z).
 
-Note that we have chosen the basis functions such that ⟨ψ_i_1⋯ i_l^n, ψ_i_1⋯ i_l^n ⟩ depends only on i_1, ⋯, i_l, leading to the symmetry of a_lmn.
-Due to the conservation of mass, momentum and energy, it holds that
+These target angles are achieved by attitude controller.Additionally, regarding the position control in z-direction, collctive thrust force f^des_z is calculated in
+the following manner:
 
-    a_00n = a_0n0 = a_01n = a_0n1 = a_10n = a_1n0 = 0.
+    f^des_z = ^t(^{ W}R_{ C }b)f^des,
 
-For inverse-power-law models, these coefficients have been calculated in <cit.>, where it has also been pointed out that the collision operator ℒ is usually an unbounded operator acting on a subset of L^2(ℝ^3, [f_M()]^-1 d).
+where b is a unit vector ^t[[ 0 0 1;   ]].Then, using λ_s defined in
+(<ref>) and (<ref>),
+the target thrust for z-directional control is calculated as follows:
 
-The equations of the moments w_i_1⋯ i_l^n can be obtained by taking the inner product of ψ_i_1⋯ i_l^n and both sides of the Boltzmann equation (<ref>). The resulting moment equations are
+    λ^des_z = f^des_z/mgλ_s.
 
-    T_i_1 ⋯ i_l^n =
-       1/∑_n'=0^+∞ a_lnn' w_i_1⋯ i_l^n'
 
-where 
 
-    T_i_1⋯ i_l^n:=    ( √(2(n+l)+3)∂ w_i_1⋯ i_l j^n/∂ x_j - √(2n)∂ w_i_1⋯ i_l j^n-1/∂ x_j)
-          +   l/2l+1( √(2(n+l)+1)∂ w_⟨ i_1⋯ i_l-1^n/∂ x_i_l ⟩ - √(2(n+1))∂ w_⟨ i_1⋯ i_l-1^n+1/∂ x_i_l⟩).
+  §.§.§ Attitude Control
 
-The derivation of these equations will be briefly introduced in Section <ref> of the supplementary material.
+In attitude control, to suppresse the uncontrollable horizontal forces
+due to the tilted rotors, we adopt LQI control<cit.> which is a type of optimal control that derives control inputs that minimize the cost function. Therefore, by designing the cost function appropriately, various requirements can be met in addition to convergence speed. The state equation of posture control is described as follows:
 
+    ẋ = Ax+
+      Bλ+D( ^{ C }I^-1 ^{ C}ω× ^{ C }I ^{ C}ω), 
+       y = Cx,
 
+where
 
- §.§ Asymptotic expansion of moments
+    x  =  ^t[[  e_x ė_̇ẋ  e_y ė_̇ẏ  e_z ė_̇ż ∫e_x ∫e_y ∫e_z ]], 
+       e = α^des - α, 
+       ė = α̇^des - α̇, 
+       B =  ^t[[ 0_4×1   B_1 0_4×1   B_2 0_4×1   B_3 0_4×3;       ]], 
+       [
+     [ B_1 B_2 B_3;     ]]
+      =  ^t(^{ C }I^-1Q_rot').
 
+Note that the target roll and pitch angle is ^{
+W}θ_{ C }, ^{
+W}ϕ_{ C } obtained from (<ref>) and (<ref>).
+In regards to the cost function, this study designs a function with the
+objective of improving convergence, suppressing the control input, and suppressing translational forces. In this case, the cost function is given as follows:
 
-Assuming that  is a small parameter, we consider the asymptotic expansions of w_i_1⋯ i_l^n:
+    J = ∫_0^∞( ^txMx +  ^tλNλ)dt,
 
-    w_i_1⋯ i_l^n =  w_i_1⋯ i_l^n|0 +  w_i_1⋯ i_l^n|1 + ^2 w_i_1⋯ i_l^n|2 + ^3 w_i_1⋯ i_l^n|3 + ⋯.
+where M and N are diagonal weight matrices. The first term
+in (<ref>) corresponds to the control output's norm,
+and minimizing this norm can enhance the convergence. Moreover,
+concerning the second term in (<ref>), the method of defining N as follows has been proposed in <cit.>:
 
-The classical Chapman-Enskog expansion can be applied to express each term using the density, momentum, energy and their derivatives. Here, instead of performing the Chapman-Enskog expansion, we would like to find the orders of magnitude of each moment and the relationship between the terms in each order.
-To this aim, we introduce the coefficients b_lnn'^(n_0) to denote the inverses of a_lmn, which satisfy
+    N = W_1 + Q_trans^T 'W_2Q_trans',
 
-    ∑_n'=n_0^+∞ a_lnn' b_ln_1 n'^(n_0) = δ_nn_1.
+where W_1 and W_2 are also diagonal weight
+matrices. Then, the first term of (<ref>) creates a
+quadratic form ^tλNλ when substituted into (<ref>), corresponding to
+the norm of control input. Therefore, by minimizing this term, the
+control input can be suppressed. Furthermore, when the second term is
+substituted into (<ref>), the following equation is derived.
 
-Note that the coefficients b_0nn'^(0), b_0nn'^(1) and b_1nn'^(0) do not exist due to (<ref>).
-By asymptotic analysis, we are able to identify the magnitude of each moment w_i_1⋯ i_l^n and find the linear dependency between w_i_1⋯ i_l^n|k for different n's. This method is known as the order of magnitude approach <cit.>.
 
-Below we list the moments by order up to O(^3) and some results of the linear relationship to be used later in this work. The derivation can be found in Section <ref> in the supplementary material.
+    ^tλ ^tQ_trans'Q_trans'λ
+      =  ^tff = f^2.
 
-    
-  (O0) O(1) moments:  w^0, w^1, w^0_i.
-    
-  (O1) O() moments: {w^n_i}_n=1^∞, {w^n_ij}_n=0^∞. The leading order terms of these moments satisfy 
+As seen from (<ref>), the norm of translational
+force is represented by the second term of (<ref>). Therefore, by employing the control input λ that minimizes the cost function
+defined in (<ref>), stable attitude control of a unit
+equipped with tilted rotors can be achieved.
+By solving the algebraic Riccati equations derived from
+(<ref>) and (<ref>), we obtain
+the feedback gain K. Therefore, the desired
+λ is calculated as follows:
 
-    w_i^n|1    = b_11n^(1)/b_111^(1) w_i^1|1 for  n ⩾ 1, 
-    
-        w_ij^n|1    = b_20n^(0)/b_200^(0) w_ij^0|1 for  n ⩾ 0,
-    
-and the second order terms satisfy  
-
-    w_i^n|2    = γ^(1),n_1/γ^(1),2_1 w_i^2|2 for  n ⩾ 2    with γ^(1),n_1 = ∑_n'=2^∞b_1nn'^(2) (√(2n'+5) b_20n'^(0) - √(2n') b_20,n'-1^(0))/b_200^(0),
-     
-    
-     w_ij^n|2    = γ^(1),n_2/γ^(1),1_2 w_ij^1|2 for  n ⩾ 1    with γ^(1),n_2 = 2/5∑_n'=1^∞b_2nn'^(1) (√(2n'+5) b_11n'^(1) - √(2(n'+1)) b_11,n'+1^(1))/b_111^(1).
-
-
-
-
-  (O2) O(^2) moments: {w^n}_n=2^∞, {w^n_ijk}_n=0^∞. Their leading order terms satisfy 
-
-    w^n|2 =    γ^(2),n_0/γ^(2),2_0w^2|2 with γ^(2),n_0 =  ∑_n'=2^+∞b_0nn'^(2) (√(2n'+3) b_11n'^(1) - √(2n') b_11,n'-1^(1))/b_111^(1),  
-        w_ijk^n|2 = γ^(2),n_3/γ^(2),0_3 w_ijk^0|2 with γ^(2),n_3 =  3/7∑_n'=0^+∞b_3nn'^(0)/b_200^(0)(√(2n'+7) b_20n'^(0) - √(2(n'+1)) b_20,n'+1^(0)) .
-
-
-  (O3) O(^3) moments: {w^n_ijkl}_n=0^∞.
-
-
-
-
-
-  (O4) o(^3) moments: all other w_i_1⋯ i_l^n which are not listed above.
-
-These results show that only the conserved moments are zeroth-order moments, which agrees with the results from the Chapman-Enskog expansion. Although there are infinite first-order moments, the leading-order terms depend only on the stress tensor (w_ij^0) and the heat flux (w_i^1). The purpose of R13 equations is to formulate equations using only these representative moments up to the first order, and “regularization terms” are added to increase its order of accuracy to cover super-Burnett equations. This requires us to express all second-order terms w_i_1⋯ i_l^n|2 using the thirteen moments appearing in the equations, and such a procedure has been done in the literature <cit.>. However, the approach therein does not clearly show how the stable boundary conditions should be derived. Although attempts have been made to study boundary value problems in <cit.>, the boundary conditions do not have the structure (<ref>) as required in <cit.>. In this paper, we will re-derive the regularized 13-moment equations from another point of view, and equip the model with reasonable boundary conditions with the desired structure. Before that, we will first present our final models in the next section for the readers who are not interested in the derivation.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-§ LINEAR R13 EQUATIONS AND ONSAGER BOUNDARY CONDITIONS
-
-In this section, we present the steady-state linear regularized 13-moment equations for general gas molecules, and provide the Onsager boundary conditions satisfying the conditions in <cit.>. The equations and boundary conditions will be presented using the physical variables ρ, v_i, θ, σ_ij, q_i, which are equivalent to the coefficients w^0, w^1, w^0_i, w^1_i, w^0_ij according to (<ref>).
-
-
-
- §.§ Linearized R13 moment equations
-
-
-In Section <ref>, We have derived the following equation system of the 13 moments including ρ, v_i, θ, σ_ij, q_i:
-
-   
-  * Equations of mass conservation, energy conservation and momentum conservation: 
+    λ^des_rot = Kx+
+      ^#Q_rot' ^{
+      C}ω× ^{ C}I ^{
+      C}ω .
+Finally, in combination with the z axis position control, the final
+output in the unitary state is ultimately calculated as follows:
+
+    λ^des = λ^des_z + λ^des_rot .
+
+
+
+
+ §.§ System Switching
+
+
+We present a methodology for system switching that is executed
+during assembling and disassembling actions.
+
+
+  §.§.§ Overall Control System
+
+To begin with, the overall
+control system is designed, as depicted in figure:whole_system. The “Motion
+Planner”, “Estimator”, and “Robot” sections adopt common processes in
+both the assembly state and the unitary state. Conversely, the
+“Switching Section” serves as a partition that alternates between the
+assembly and unitary states. During the assembly state, the entire
+system is controlled by a distributed control system, while each unit
+controls its respective rotors based on a common robot model without
+communicating with one another.
+Therefore, the overall structure of the system remains unchanged between
+the assembly state and the unitary state, with only the contents of the
+“Switching Section” being switched.
+
+
+  §.§.§ Transition Process
+
+Next, we explain the transition process that should be performed when
+switching systems. The problem when switching the system is the model
+error related to the inertia values and rotor performance of the
+robot. In normal flight control of TRADY, model errors are compensated
+for by the integral term of PID and LQI. In addition, there is no offset
+thrust based on default values in the gravity direction, and it is all
+compensated for by the integral term. Model error compensation by
+integral value is gradually performed while gradually increasing the
+rotor thrusts during takeoff, so it is generally completed until
+hovering.As an example, we consider the system switching during the assembly
+action. When switching the system, most control values are reset because
+the controller is switched. However, as mentioned earlier, gravity
+compensation is performed by the integral term, so only the integral
+terms are carried over in order to continue the flight. However, since
+this integral term compensates for the model error of the robot in the
+unitary state, the model error in the assembly state is not compensated
+for. Model errors that suddenly occur during flight, unlike during
+takeoff, cause discrete increases or decreases in rotor thrusts, which
+have a significant negative effect on control stability.
+
+To address this issue, a method of gradually transitioning rotor thrusts
+while compensating for the model error of the assembly state model was
+developed. Although it is impossible to predict each rotor thrust after
+model error compensation, the total weight of the system does not change
+before and after system switching, thereby the total thrust force acting in
+the gravity direction after model error compensation can be said to be
+the same as in the unitary state. Furthermore, since among each rotor thrust,
+the proportion that works in the direction of gravity does not change,
+consequently, the total thrust of all rotors can be said to be equal before and
+after switching. Therefore, the influence of sudden model errors can be
+suppressed by scaling the rotor thrusts output from the controller based
+on the total thrust in the unitary state. However, it is necessary to
+reflect the influence of the control output in the assembly state,
+thereby the control output is scaled using the value obtained by
+superimposing the total thrust in these two states.Here, the total thrust in the unitary state is obtained using the total thrust
+immediately before the system switch, and the total thrust in the
+assembly state is obtained using the real-time control output. Then, rotor thrusts during the transition is scaled as follows:
+
+    λ^des_trans =
       
-    ∂ v_j/∂ x_j    =   0, 
-    ∂ v_j/∂ x_j +  ∂ q_j/∂ x_j    = 0,
-    ∂ρ/∂ x_i +∂θ/∂ x_i +∂σ_ij/∂ x_j    = 0 .
+      S_trans/
+      S_assemλ^des_assem,
+
+
+    S_trans =
+      W(t)S_assem+
+      (1- W(t)) S_unit,
+
+where S_assem is the total thrust in the assembly state defined as S_assem =
+∑_i=1^nλ^des_assem, i and S_unit is that in
+the unitary state. Note that S_assem is a variable but S_unit is a constant because S_unit competed
+by the thrust at the moment of switching. Additionally, W(t) is the weight
+function used in the superimposing and it is desirable for it to
+smoothly converge to 1. Therefore, W(t) is defined as follows:
+
+    W(t) = 1-1/at+1,
+
+where a is a constant and t is a variable representing time. Then, W(t) satisfies follows:
+
+    W(0) = 0, 
+       lim_t →∞W(t) → 1 .
+
+Therefore, in (<ref>), initially the influence of S_unit is
+dominant, but gradually S_assem becomes dominant and ultimately λ_trans becomes
+indistinguishable from the normal output of the assembly state controller. Thus, as a result, even after the system switch, the rotor thrust
+transitions smoothly. The variable a in (<ref>) determines the
+convergence rate of the function, and in this work, it was empirically
+set to a = 0.9.
+In this case, W(t) attains a value of 0.99 when t = 120. During actual
+implementation, W(t) is refreshed at each control cycle with a frequency of
+0.025s. Consequently, W(t) achieves 0.99 after approximately 3s
+of real time have elapsed.To sum up, by utilizing the aforementioned methodology, it is possible to
+address the discrete thrust changes caused by model errors during system
+switching. This transition process occurs outside the controller, as
+illustrated in figure:a_fc and figure:u_fc, and can be regarded as a kind of
+disturbance to the feedback loop. However, if this disturbance itself
+converges sufficiently quickly, the overall system stability is
+ultimately dependent on the stability of controllers. In the case of our
+method, the tuning of a in (<ref>) ensures the
+convergence rate of the transition process, while the stability of the
+PID controller is achieved through the tuning of its gains, and the
+stability of the LQI controller is guaranteed by
+(<ref>). Therefore, the proposed transition process
+has no impact on the stability of the feedback loop.
 
-    
-  * Equations of heat flux and stress tensor:
-    
-    ∂θ/∂ x_i+ β_4 ∂σ_ij/∂ x_j + 2/15c^(1),1_1∂/∂ x_j(β_0 ∂ q_j/∂ x_i + β_2 ∂ q_⟨ i/∂ x_  j⟩)     =2/15(c^(1),1_1)^21/ℒ^(11)_1 q_i,
-    ∂ v_⟨ i/∂ x_j ⟩ + β_4 ∂ q_⟨ i/∂ x_j ⟩ +1/15c^(1),0_2∂/∂ x_k( β_1  ∂σ_k⟨ i/∂ x_j⟩ + β_3 ∂σ_⟨ ij/∂ x_k ⟩)     = 1/15(c^(1),0_2)^21/ℒ^(11)_2 σ_ij
 
 
-where 
+§ MOTION STRATEGY
 
-    β_0 =  (A_46)^2/c^(1),1_1 ℒ^(22)_0,     β_1  =  (c^(1),1_1 A_57 - c^(2),1_1A_45)^2/c^(1),1_1 c^(1),0_2(c^(1),1_1ℒ^(22)_1 - c^(2),1_1ℒ^(12)_1) ,
-    β_2 =  (c^(1),0_2A_48 - c^(2),0_2A_45)^2/c^(1),1_1 c^(1),0_2(c^(1),0_2ℒ^(22)_2 - c^(2),0_2 ℒ^(12)_2) ,   β_3 =  (A_59)^2/c^(1),0_2 ℒ^(22)_3,   β_4 = - √(2) A_45/15c^(1),1_1c^(1),0_2.
+In this section, we introduce the motion strategy for executing
+assembly/disassembly motion in mid-air. Initially, we propose the
+overarching strategy, followed by an specific explication of each constituent.
 
 
+ §.§ Overall Strategy
 
+As explained in Section. <ref>, in aerial assembly/disassembly motions,
+the two units come into extreme proximity, causing unstable flight. This
+makes high-precision position control difficult. Therefore, a motion strategy is required that ensures the certainty of the motion under
+multiple conditions, and executes it only if these conditions are
+met. Then, in this study, we divide the target action into several
+stages and represent them as an Finite State Machine (FSM) as shown in figure:state_machine.
+In this FSM, conditions are set to transition between states, and when two units fulfill them, the motion transitions to the next state.  By repeating this process, it becomes
+possible to autonomously perform aerial assembly/disassembly motion while avoiding
+hazardous conditions.
 
 
 
+ §.§ Assembly Motion
 
+Now, we explain each state in the FSM, focusing on the assembly motion.
 
 
+  §.§.§ Standby State
 
+This state is the initial
+state of the FSM, where both units are guided towards their respective standby
+positions and yaw angles.
+The female unit maintains its position and yaw angle at the start of
+assembly, while the male unit is guided to a position and yaw angle
+ψ that
+satisfies the following relationship:
 
+    ^{ F }r_{ M } =
+       ^t[
+       [ d^st    0    0 ]] , 
+       ^{ F }ψ_{ M } = -π
 
+where{ F } represents the { C } frame
+of the female unit, while { M } represent that of the
+male unit. Additionally, d^st is the desired distance between two
+units' CoG. Note that the direction of each axis is the same as that shown in
+figure:unit_config.Here, we define the following condition #1 with respect to the
+errors in r_y, r_z, and ψ:
 
+    # 1:       (
+       [      ^{ F }r_y{ M }; ^{ F
+         }r_z{ M };       ^{ F }ψ_{ M };                     ])
+      ≤(
+       [ e^# 1_y; e^# 1_z; e^# 1_ψ;         ])
 
+where e^# 1_y,e^# 1_z,e^# 1_ψ are tolerable
+errors. Condition # 1 is used as a criterion to determine if the
+positional relationship between the two units is safe. If the
+relationship between the female unit and the male unit satisfies #
+1, the state transitions to the “Approach” state.
 
 
+  §.§.§ Approach State
 
+At this state, the male unit moves towards the female unit, while the
+female unit maintains its position and angle. During the approach phase,
+if condition #
+1 is no longer met, the approach motion is interrupted and
+the system transitions to the “Standby” state. By virtue of this process, it becomes possible to instantaneously recover from a hazardous positional state between the two units and continue with the assembly motion unimpeded.Here, we define the following condition # 2 with respect to the
+errors in r_x, r_y, r_z, and ψ:
 
+    # 2:       (
+       [      ^{ F }r_x{ M };      ^{ F }r_y{ M }; ^{ F
+         }r_z{ M };       ^{ F }ψ_{ M };                     ])
+      ≤(
+       [ e^# 2_x; e^# 2_y; e^# 2_z; e^# 2_ψ;         ])
 
+where e^# 2_x,e^# 2_y,e^# 2_z,e^# 1_ψ are
+tolerable errors. Condition # 2 is used as a criterion to determine if
+the two units are in a position where they can docking. If the condition # 2 is satisfied, the state transitions
+to the “Assembly” state.
 
 
+  §.§.§ Assembly State
 
+In this state, initially, the docking mechanism is activated by
+turning on the magnet and inserting the pegs, and subsequently, the
+system is transitioned into the assembly mode. During the aforementioned movements, if condition # 2 is no longer met, the movement is halted and the state transitions to the “Approach” state.
 
 
+  §.§.§ Transition State
 
+In this state, the process of transition presented in
+Section. <ref> is executed.
 
 
+ §.§ Disassembly Motion
 
+In the case of aerial disassembly, the system transitions from “Hovering” to
+“Transition,” and then proceeds to “Disassembly.” During “Disassembly,”
+the coupling mechanism is released, allowing the two units to
+separate. Unlike in assembly, positional control of the bodies is not
+critical during disassembly, and therefore, there are no conditions that
+must be satisfied for the state transitions.
 
- The expression of the coefficients  c^(p),n_l and A_ij are given in Section <ref> of the supplementary material and ℒ^(mn)_l is formulated as (<ref>). We remark that for Maxwell molecules, β_1 above takes the form 0/0 and is thus not well-defined. In this case, β_1 is set to be 0. One can easily observe the symmetric structure of the system above, where the complicated second-order derivatives in the last two equations are on the diagonal. We have shown that such moment system has the super-Burnett order. 
 
 
+§ EXPERIMENT
 
- §.§ Onsager boundary conditions
- 
-The R13 equations are equipped with an Onsager-type boundary conditions which read 
+In this section, we first describe the robot platform utilized in each
+experiment. Next, we present the experimental results, which include the
+evaluation of flight stability in each state, aearil assembly and disassembly motion based on proposed control method and motion strategy, and object manipulation in the assembly state.
 
 
+ §.§ Robot Platform
 
 
 
+  §.§.§ Hardware
 
 
+Based on the design proposed in sec:mech_design and sec:rotor_config, we introduce the
+hardware configuration illustrated in figure:hardware_config. The frame of the body is made of a 5mm
+CFRP plate, while the other parts are mainly made of PLA material. In
+determining the size of the entire body, we first determined the size of
+the docking mechanism based on the rigidity required for the coupling
+portion and then selected the minimum body size that can accommodate the
+docking mechanism.
 
+The rotors are composed of 5 inch propellers (GEMFAN Hulkie 5055S-3) and
+brushless motors (ARRIS S2205), driven by ESC (T-Motor F45A). Each rotor
+is tilted based on the optimized U in sec:rotor_config. With this
+configuration, each rotor exerts a thrust of approximately 1N-8N at a
+voltage of 15V.
 
 
+Furthermore, an on-board PC (Khadas VIM4) and a flight controller called
+Spinal, which uses an STM32 microcontroller, are installed on the
+body. The housing of the docking mechanism is made of PLA, and a servo
+motor (KONDO KRS-3302) is installed on both the male and female
+sides. In addition, Arduino nano is used to control the servo motor.
 
-    v_n =  0, 
-       q_n =  2χ/2-χ[λ_11(θ - θ^W) + λ_12σ_nn + λ_13∂ q_j/∂ x_j + λ_14∂ q_⟨ n/∂ x_n ⟩],
-       σ_t_i n =   2χ/2-χ[ λ_21 (v_t_i - v_t_i^W) + λ_22q_t_i + λ_23∂σ_t_i j/∂ x_j + λ_24∂σ_⟨ nn/∂ x_t_i  ⟩],    i =1,2,
-       ∂ q_⟨ t_i/∂ x_n ⟩ =  2χ/2-χ[ λ_31 (v_t_i - v_t_i^W) + λ_32q_t_i + λ_33∂σ_t_i j/∂ x_j + λ_34∂σ_⟨ nn/∂ x_t_i ⟩],    i =1,2,
-       ( ∂σ_⟨ nn/∂ x_n ⟩ + λ_45∂σ_ n t_j/∂ x_t_j)  
-        =   2χ/2-χ[ λ_41(θ - θ^W) + λ_42σ_nn + λ_43∂ q_j/∂ x_j + λ_44∂ q_⟨ n/∂ x_n ⟩], 
-       (∂σ_⟨ t_it_i/∂ x_n ⟩ + 1/2∂σ_⟨ nn/∂ x_n ⟩) =   2χ/2-χ(λ_51σ_t_it_i + λ_52σ_nn),   i =1,2,
-       ∂σ_⟨ t_1t_2/∂ x_n ⟩ =  2χ/2-χλ_61σ_t_1t_2.
 
-The expressions of coefficient λ_ij can be found in Section <ref> of the supplementary material. 
+In addition, a 2200mAh four-cell LiPo battery is used as the power
+source. However, in some experiments, power is supplied from a
+bground-based stabilizing power source instead of a battery to enable
+emergency stop.
 
 
+Finally, table:hard_prop shows the characteristics of the robot.
 
 
 
 
+  §.§.§ Software
 
-§ DERIVATION OF R13 EQUATIONS
 
+Next, we introduce the communication system for proposed robot TRADY as
+shwon in figure:software_config. Firstly, the external PC executes
+motion planning including the strategy for the assembly/disassembly
+motion presented in sec:motion_strategy, and it outputs
+position attitude commands.
+Subsequently, these commands are transmitted to the onboard PC through a
+Wi-Fi network. Furthermore, the external motion capture system transmits
+the positional state of the robot to the onboard PC. The onboard PC
+consists of a robot model calculation, position estimator by Kalman
+filter, and position controller. Afterward, the onboard PC transmits
+commands to Arduino and Spinal with UART communication. Spinal also
+receives self-attitude information from the IMU sensor and estimates the
+attitude of the robot with a Kalman filter. Target PWM is output from
+the attitude controller based on the estimated attitude values and
+commands from the onboard PC. Moreover, Arduino receives commands from the onboard PC and sends angle commands to the servo motors of the coupling mechanism.
 
-We will now present the derivation of the R13 equations given in Section <ref>. Our derivation will use a method different from previous papers <cit.>, so that it is clear why the structure (<ref>) exist in the final system.
-Since the derivation of moment equations often involves complicated notations and calculations, in order to better explain the main idea of our derivation, we will first write the equations using operators on function spaces instead of the moments (Section <ref>), and then explain how to convert the abstract form to the explicit moment equations (Section <ref>).
 
+ §.§ Flight stability
 
+We first conduct a circular trajectory tracking flight experiment in
+order to verify the flight stability of both the unitary state and
+the assembly state. In this experiment, a circular trajectory with a radius of
+0.5m at an altitude of 1m was adopted, and a robot circles
+this obit twice in one minute. The result is shown
+in figure:circle_track and table:circle_track. Figure
+1 visualizes the tracking error, while table:circle_track shows
+the Root Mean Squared Error (RMSE) from the trajectory for each state.
+From these results, it is found that both the under-actuated model
+control in the unitary state and the fully-actuated model control in the
+assembly state are possible. The control accuracy is inferior in the
+unitary state compared to the assembly state, which is due
+to not only the under-actuated model control but also the large moment of
+inertia of the body despite its weight. However, the positional error
+within this range can be
+dealt with by the drogue on the female-side docking mechanism and the
+proposed motion strategy, thus not posing significant issues.
 
 
 
- §.§ Reformulation of the distribution function
 
 
-In Section <ref>, we have seen that when using ψ_i_1 ⋯ i_l^m f_M as basis functions, there are infinite O(^d) coefficients for any d ≥ 1, which is inconvenient for the derivation of moment equations. In this section, we will look for new basis functions such that in the expansions, only finite coefficients have the order O(^k) for any k. In other words, we seek the following orthogonal decomposition of the function space:
+ §.§ In-flight assembly and disassembly
 
-L^2(ℝ^3, [f_M()]^-1  d) = 𝕍^(0) ⊕𝕍^(1) ⊕𝕍^(2) ⊕⋯
-such that each 𝕍^(k) is a finite dimensional space, and it holds that
 
-    𝒫^(k) f ∼ O(^k),     ∀ k ∈ℕ,
 
-where 𝒫^(k) is the projection operator from L^2(ℝ^3, [f_M()]^-1 d) onto 𝕍^(k). Such a decomposition allows us to consider the projection of f onto a finite dimensional space when we want to achieve a reduced model up to a given order of accuracy.
+  §.§.§ Reliability of Aerial Assembly/Disassembly
 
-For the purpose of deriving R13 equations, we just need to use the function spaces from 𝕍^(0) to 𝕍^(3). They will be discussed in the following subsections.
+ To conduct an airborne coalescence experiment, the parameters in
+ (<ref>) and (<ref>) must first be determined.
+ The parameters e^#1_y, e^#1_z, e^#1_ψ in (<ref>) are the criteria for determining the
+ dangerous state, and therefore, smaller values of these parameters will
+ result in more reliable merging, but will also increase the time
+ required to complete the merging. Since the parameters e^#2_x, e^#2_y, e^#2_z, e^#2_ψ in (<ref>)
+ are the criteria for docking certainty, there is also a tradeoff
+ between certainty and time required to adjust these parameters. In this
+ study, these values were adjusted through experiments on actual
+ equipment, and the final values were determined as shown in
+ table:hash_cond.After determining the parameters, we conducted 15 experiments for
+ both aerial assembly and disassembly. The results indicated a success
+ rate of 86.7% (13 successful attempts) for assembly behavior and a
+ 100% success rate (15 successful attempts) for disassembly
+ behavior. In addition to this, the time required for the merging
+ behavior ranged from 3s to 15s, and there was a large
+ variation. In two failed assembly experiments, the docking mechanism
+ became stuck in a part of the airframe, making it impossible to
+ transit from the “Approach” state to the “Standby” state,
+ necessitating an emergency stop of the robot. As a solution to this
+ issue, covering the entire unit body with a spherical guard would allow
+ avoidance of contact between the docking mechanism and the airframe.
 
 
 
-  §.§.§ The zeroth-order function space
 
-The function space 𝕍^(0) can be easily observed from the Chapman-Enskog expansion. It should be spanned by the basis functions corresponding to the conserved moments, which means
+  §.§.§ Stability of System Switching
 
-    𝕍^(0) = span{ψ^0, ψ^1, ψ_i^0 | i = 1,2,3}.
+Next, to evaluate the flight stability during the system switchover, we
+conducted in-flight assembly and disassembly experiments with and without
+the thrust transition method proposed in
+Section. subsec:transition. First, for the aerial assembly, the
+results with the transition process are shown in figure:assembly_trans, and the
+results without the proposed thurst transition process are shown in
+figure:assembly_notrans. In the event of an increase in rotor
+thrust during the system switch, the forces in the x and y directions
+are offset; however, significant effects are apparent in the control of
+the z direction. Therefore, both figure:assembly_trans and figure:assembly_notrans include plots of
+rotor thrust displacement and z-directional position error.
 
-It is clear that
 
-𝕍^(0) = 5.
+Concerning the case of transition processing, it can be
+observed from figure:assembly_trans that stable aerial assembly and thrust
+transitions are achieved. As shown in figure:assembly_trans(B) and (C), the total
+rotor thrust remains constant before and after the system switch, and
+the subsequent ascent of robot is limited to approximately
+0.065m. Additionally, the control is rapidly stabilized following
+the switchover. Note that, despite the transition process, there are still discrete changes in the
+thrust of each rotor. However, these changes are due to alterations in
+the allocation of thrust to each rotor and not to model errors, and they
+have a negligible adverse effect on control performance.
 
+On the contrary, regarding the experiment without
+transition processing, figure:assembly_notrans(B) shows that
+the target rotor thrust changed abruptly due to model errors that occur
+during the system switchover. The total rotor thrust increases by about 5N before and after the switchover, and for some rotors the
+target thrust greatly exceeds the upper thrust limit. As a result, the
+robot rose about 0.39m at a stretch immediately after assembly as
+show in figure:assembly_notrans(C), and
+unstable control continued after that.  These results indicate the efficacy of our proposed method for switching systems in
+aerial assembly motion.Next, regarding aerial disassembly, figure:disassembly_trans
+illustrates the experimental result of aerial disassembly with proposed
+transition process. Moreover, figure:disassembly_notrans illustrates the variation in
+rotor thrust before and after mid-air disassembly when the transition
+process was not applied. From these results, it was found that in aerial disassembly, it is
+possible to safely switch the system with or without transition
+processing. This is likely due to the fact that in the assembly state,
+decentralized control is performed by two controllers, resulting in
+model errors equivalent to those of two aircraft. In contrast, in the
+unitary state, only model errors equivalent to those of one aircraft are
+generated. As a result, in the unitary state, the effect of system switching on thrust is
+presumed to be small.
 
 
 
-  §.§.§ The first-order function space
 
-Our idea to find the first-order function space is to first construct the orthogonal complement of 𝕍^(0)⊕𝕍^(1), and then find 𝕍^(1) by orthogonality. This orthogonal complement will include the part of f that has order higher than or equal to O(^2). According to (O2)-(O4) in Section <ref>, we know that all the following functions should be members of (𝕍^(0)⊕𝕍^(1))^⊥:
+ §.§ Peg Insertion
 
-    ψ^n  for  n ≥ 2,     ψ_i_1 ⋯ i_l^n  for all  l ≥ 3  and  n ≥ 0.
+Next, we conducted an experiment to verify the aerial object
+manipulation ability in the assembly state. First, we conducted an
+experiment to insert a diameter of 6mm peg into a diameter of 25mm pipe as an analogy to drilling and Pic-and-Place
+tasks.
+ Due to the requirement of high position accuracy and independent
+ control of translation and rotation for this task, the fully-actuated model
+ control is necessary. Note that in this study, we focus on the control
+ performance of the robot, and therefore, the task is performed by manual
+ operation, not by automatic control based on motion planning. The
+ experimental results are shown in figure:peg.From these results, it was demonstrated that the robot can be
+ maneuvered with an error of approximately ±1cm. Furthermore, as shown in figure:peg(B),(C), the pitch angle of
+ the robot was kept within approximately ± 1.5 degrees
+ during movement and hovering, demonstrating translational control can
+ be achieved while suppressing the impact on the attitude.
 
-In addition, the relation (<ref>) yields
 
-    w_i^n - b_11n^(1)/b_111^(1) w_i^1 = ⟨ f,  ψ_i^n - b_11n^(1)/b_111^(1)ψ_i^1⟩∼ O(^2)  for  n ≥ 2,
 
-meaning that
+ §.§ Valve Opening
 
-    ψ_i^n - b_11n^(1)/b_111^(1)ψ_i^1∈ (𝕍^(0)⊕𝕍^(1))^⊥,     ∀ i = 1,2,3,    n ≥ 2.
-
-Similarly, we can use (<ref>) to obtain
-
-    ψ_ij^n - b_20n^(0)/b_200^(0)ψ_ij^0∈ (𝕍^(0)⊕𝕍^(1))^⊥,     ∀ i = 1,2,3,    n ≥ 1.
-
-We can now conclude that (𝕍^(0)⊕𝕍^(1))^⊥ is the subspace of L^2(ℝ^3, [f_M()]^-1 d) spanned by all the functions in (<ref>)(<ref>)(<ref>). Consequently, we can find 𝕍^(1) in the form of
-
-    𝕍^(1) = span{ϕ_i^(1), ϕ_ij^(1) |  i,j = 1,2,3 },
-
-where
-
-ϕ_i^(1) = ∑_n=1^+∞ c_1^(1),n ψ_i^n,     ϕ_ij^(1) = ∑_n=0^+∞ c_2^(1),n ψ_ij^n.
-
-The coefficients c_1^(1),n and c_2^(1),n are determined by solving 
-
-    ⟨ψ_i^n - b_11n^(1)/b_111^(1)ψ_i^1,ϕ_i^(1)⟩  =0    and   ⟨ψ_ij^n - b_20n^(0)/b_200^(0)ψ_ij^0 ,ϕ_ij^(1)⟩   =0
-
-respectively, and are then scaled such that
-
-    ∑_n=1^+∞|c_1^(1),n|^2 = ∑_n=0^+∞|c_2^(1),n|^2 = 1.
-
-Since ψ_ij^n is a trace-free tensor, we have
-
-𝕍^(1) = 8.
-
-
-
-
-  §.§.§ The second-order function space
-
-The second-order function spaces can be found in a similar way. Using (O2)–(O4), we notice that the following functions are members of (𝕍^(0)⊕𝕍^(1)⊕𝕍^(2))^⊥:
-
-    ψ^n - γ_n/γ_2ψ^2  for  n ≥ 3,     ( ψ_i^n - b^(1)_11n/b^(1)_111ψ^1_i ) - γ^(1),n_1/γ^(1),2_1( ψ_i^2 - b^(1)_112/b^(1)_111ψ^1_i )  for  n ≥ 3, 
-    ( ψ_ij^n - b^(0)_20n/b^(0)_200ψ^0_ij) - γ^(1),n_2/γ^(1),1_2( ψ_ij^1 - b^(0)_201/b^(0)_200ψ^0_ij)  for  n ≥ 2,     ψ_ijk^n - γ^(2),n_3/γ^(2),0_3ψ_ijk^0  for  n ≥ 1, 
-    ψ_i_1⋯ i_l^n  for all  l ≥ 4  and  n ≥ 0.
-
-Let (𝕍^(0)⊕𝕍^(1)⊕𝕍^(2))^⊥ be the linear span of all these functions. We can find 𝕍^(2) in the following form:
-
-    𝕍^(2) = span{ϕ^(2), ϕ_i^(2), ϕ_ij^(2), ϕ_ijk^(2) |  i,j,k = 1,2,3
-    },
-
-where
-
-    ϕ^(2) = ∑_n=2^+∞ c_0^(2),nψ^n,     ϕ_i^(2) = ∑_n=2^+∞ c_1^(2),n(ψ_i^n - b^(1)_11n/b^(1)_111ψ^1_i), 
-    ϕ_ij^(2) = ∑_n=1^+∞ c_2^(2),n(ψ_ij^n - b^(0)_20n/b^(0)_200ψ^0_ij),     ϕ_ijk^(2) = ∑_n=0^+∞ c_3^(2),nψ_ijk^n.
-
-For simplicity, we let
-
-c_1^(2),1 = -∑_n=2^+∞ c_1^(2),n b_11n^(1)/b_111^(1),     c_2^(2),0 = -∑_n=1^+∞ c_2^(2),n b_20n^(0)/b_200^(0),
-
-so that
-
-    ϕ_i^(2) = ∑_n=1^+∞ c_1^(2),nψ_i^n,     ϕ_ij^(2) = ∑_n=0^+∞ c_2^(2),nψ_ij^n.
-
-These coefficients are again determined by the orthogonality similar to (<ref>) and then scaled similarly as (<ref>). The expressions of c^(1),n_l and c^(2),n_l can be found in Section <ref> of the supplementary material. Also, it is not difficult to find that
-
-𝕍^(2) = 16.
-
-
-
-
-  §.§.§ The third-order function space
-
-The space 𝕍^(3) can again be derived using the same strategy. The result will have the form
-
-𝕍^(3) = span {
-  ϕ^(3), ϕ_i^(3), ϕ_ij^(3), ϕ_ijk^(3), ϕ_ijkl^(3)  |  i,j,k,l = 1,2,3
-},
-
-and
-
-𝕍^(3) = 25.
-
-For our purpose, the precise forms of these functions will not be used.
-
-For Maxwell molecules, due to the special structure b_lnn'^n_0 = 0 for all n ≠ n', the function space 𝕍^(2) will be slightly different. Instead of (<ref>), we will have
-
-𝕍^(2) = span {
-  ϕ^(2), ϕ_ij^(2), ϕ_ijk^(2)  |  i,j,k = 1,2,3
-},
-
-and thus 𝕍^(2) = 13. In fact, we also have ϕ^(2) = ψ^2, ϕ_ij^(2) = ψ_ij^1 and ϕ_ijk^(2) = ψ_ijk, which can significantly simplify the derivation. In this paper, we will mainly focus on the R13 equations for general molecules. One can find the equations for Maxwell molecules in many references such as <cit.>.
-
-
-
-
- §.§ The abstract form of regularized 13-moment equations
- 
-In order to derive R13 moment equations that are accurate up to the super-Burnett order, it suffices to work only in the function space
-
-𝕍 := 𝕍^(0) ⊕𝕍^(1) ⊕𝕍^(2) ⊕𝕍^(3).
-
-In other words, we consider the following approximation of the Boltzmann equation (<ref>):
-
-∂/∂x_j (𝒫_𝕍 ξ_j 𝒫_𝕍 f) = 1/ 𝒫_𝕍 ℒ𝒫_𝕍 f.
-
-Here 𝒫_𝕍 denotes the projection operator from L^2(ℝ^3, [f_M()]^-1 d) onto 𝕍. One can easily verify that both 𝒫_𝕍ξ_j 𝒫_𝕍 and 𝒫_𝕍ℒ𝒫_𝕍 are self-adjoint operators.
-
-To separate different orders in the distribution function f, we further write 𝒫_𝕍 f as
-
-𝒫_𝕍 f = f^(0) + f^(1) + f^(2) + f^(3),
-
-where f^(k) = 𝒫^(k) f (see (<ref>)). Thus, the projected Boltzmann equation can be written in the following form:
-
-    ∑_j=1^3 ∂/∂ x_j(
-    [ 𝒜_j^(00) 𝒜_j^(01) 𝒜_j^(02) 𝒜_j^(03); 𝒜_j^(10) 𝒜_j^(11) 𝒜_j^(12) 𝒜_j^(13); 𝒜_j^(20) 𝒜_j^(21) 𝒜_j^(22) 𝒜_j^(23); 𝒜_j^(30) 𝒜_j^(31) 𝒜_j^(32) 𝒜_j^(33) ][ f^(0); f^(1); f^(2); f^(3) ]) = 1/[      0      0      0      0;      0 ℒ^(11) ℒ^(12) ℒ^(13);      0 ℒ^(21) ℒ^(22) ℒ^(23);      0 ℒ^(31) ℒ^(32) ℒ^(33) ][ f^(0); f^(1); f^(2); f^(3) ],
-
-where
-
-𝒜_j^(kl) = 𝒫^(k) ξ_j 𝒫^(l),     ℒ^(kl) = 𝒫^(k) ℒ 𝒫^(l).
-
-Note that the zero operators on the right-hand side of (<ref>) comes from the conservation laws, and on the left-hand side, we have written the sum over j explicitly for clearness. The self-adjointness of 𝒫_𝕍ξ_j 𝒫_𝕍 and 𝒫_𝕍ℒ𝒫_𝕍 implies that 𝒜_j^(kl) = [𝒜_j^(lk)]^† and ℒ_j^(kl) = [ℒ_j^(lk)]^†. For simplicity, below we will use the definition
-
-𝒜^(kl) = ∑_j=1^3 ∂/∂x_j 𝒜_j^(kl),
-
-so that the equations (<ref>) become 
-
-    𝒜f = 1/ℒf,
-
-where
-
-    𝒜 =
-    [ 𝒜^(00) 𝒜^(01) 𝒜^(02) 𝒜^(03); 𝒜^(10) 𝒜^(11) 𝒜^(12) 𝒜^(13); 𝒜^(20) 𝒜^(21) 𝒜^(22) 𝒜^(23); 𝒜^(30) 𝒜^(31) 𝒜^(32) 𝒜^(33) ],   ℒ = 
-    [      0      0      0      0;      0 ℒ^(11) ℒ^(12) ℒ^(13);      0 ℒ^(21) ℒ^(22) ℒ^(23);      0 ℒ^(31) ℒ^(32) ℒ^(33) ],   f = [ f^(0); f^(1); f^(2); f^(3) ].
-
-
-In the rest part of this section, we will derive a simplified version of the equations (<ref>) in the following form:
-
-    [  𝒜^(00)  𝒜^(01)  𝒜^(02);  𝒜^(10)  𝒜^(11)  𝒜^(12);  𝒜^(20)  𝒜^(21) 𝒜̅^(22) ][ f^(0); f^(1); f^(2) ]
-    = 1/[      0      0      0;      0 ℒ^(11) ℒ^(12);      0 ℒ^(21) ℒ^(22);        ][ f^(0); f^(1); f^(2) ].
-
-We require that the super-Burnett equations can also be derived from these equations. The abstract system (<ref>) will be further formulated as R13 equations in Section <ref>. To specify the operator 𝒜̅^(22) and clarify why the final equations hold the form (<ref>), we need three steps given in the three subsections below.
-
-
-
-  §.§.§ Step 1: Diagonalization of the right-hand side
-
-The first step of our derivation is to reformulate (<ref>) into an equivalent form where the right-hand side contains only a diagonal matrix of operators. Such a form will make it easier for us to spot high-order terms that can be dropped in the final form of R13 equations. To this end, we define
-
-    𝒬 = 
-    [       ℐ       0       0       0;       0       ℐ       0       0;       0       0       ℐ       0;       0       0 -ℬ^(32)       ℐ ][       ℐ       0       0       0;       0       ℐ       0       0;       0 -ℬ^(21)       ℐ       0;       0 -ℬ^(31)       0       ℐ ],
-
-where
-
-    ℬ^(21) = ℒ^(21) [ℒ^(11)]^-1,     ℬ^(31) = ℒ^(31) [ℒ^(11)]^-1, 
-    ℬ^(32) =[ℒ^(32) - ℬ^(31)ℒ^(12)][ℒ^(22) - ℬ^(21)ℒ^(12)]^-1.
-
-This procedure is similar to Gaussian elimination of ℒ, and the invertibility of the operators in the definitions of ℬ^(kl) can be guaranteed by the fact that the linearized Boltzmann collision operator ℒ is negative semidefinite with its nullspace being 𝕍^(0). Let 𝒬^† be the adjoint transpose of the operator matrix 𝒬. It can be seen that the matrix 𝒬ℒ𝒬^† is diagonal.
-
-We now apply this transformation to the projected Boltzmann equation (<ref>). By introducing f̃ = 𝒬^-†f, we can multiply both sides of (<ref>) by 𝒬 and write the result as
-
-    𝒬𝒜𝒬^†f̃ = 1/𝒬ℒ𝒬^†f̃.
-
-We claim that the operator matrices 𝒬𝒜𝒬^† and 𝒬ℒ𝒬^† have the following structures:
-
-    𝒬𝒜𝒬^† =[  𝒜^(00)  𝒜^(01)       0       0;  𝒜^(10)  𝒜^(11) 𝒜̃^(12)       0;       0 𝒜̃^(21) 𝒜̃^(22) 𝒜̃^(23);       0       0 𝒜̃^(32) 𝒜̃^(33) ],     𝒬ℒ𝒬^† =[       0       0       0       0;       0  ℒ^(11)       0       0;       0       0 ℒ̃^(22)       0;       0       0       0 ℒ̃^(33) ].
-
-The diagonal structure of 𝒬ℒ𝒬^† has been clarified in the construction of the matrix 𝒬. To explain why 𝒬𝒜𝒬^† is tridiagonal, we need the following facts:
-
-
-  * By straightforward calculation, we have
-
-f̃ := [ f̃^(0); f̃^(1); f̃^(2); f̃^(3) ]
-= [                                                       f^(0); f^(1) + [ℬ^(21)]^† f^(2) + [ℬ^(31) + ℬ^(32) ℬ^(21)]^† f^(3);                                    f^(2) + [ℬ^(32)]^† f^(3);                                                       f^(3) ],
-
-which shows that the last two components of 𝒬ℒ𝒬^†f̃ have magnitudes O(^2) and O(^3), respectively.
-
-  * By (<ref>), the last two components of 𝒬𝒜𝒬^†f̃ should have magnitudes O() and O(^2), respectively. Therefore, the three operators below the subdiagonal of 𝒬𝒜𝒬^† can only be zero operators.
-
-  * Due to the symmetric structure of 𝒬𝒜𝒬^†, the three operators above its superdiagonal must also be zero operators.
-
-
-
-
-  §.§.§ Step 2: Dropping high-order terms
-
-In this step, our purpose is to drop as many terms in (<ref>) as possible while retaining the super-Burnett order of these equations. One possible approach to obtain super-Burnett equations is to perform the following Maxwell iteration based on (<ref>):
-
-    f̃_k+1^(1)   =  [ℒ^(11)]^-1( 𝒜^(10) f^(0) + 𝒜^(11)f̃_k^(1) + 𝒜̃^(12)f̃_k^(2)),    f̃^(1)_0    = 0, 
-    f̃_k+1^(2)   =  [ℒ̃^(22)]^-1( 𝒜̃^(21) f_k^(1) + 𝒜̃^(22)f̃_k^(2) + 𝒜̃^(23)f̃_k^(3)),    f̃^(2)_0    = 0, 
-    f̃_k+1^(3)   =  [ℒ̃^(33)]^-1( 𝒜̃^(32)f̃_k^(2) + 𝒜̃^(33)f̃_k^(3)),    f̃^(3)_0    = 0.
-
-Note that the local equilibrium f^(0) does not attend the iteration. The super-Burnett equations can be written as
-
-𝒜^(00) f^(0) + 𝒜^(01) f̃^(1)_3 = 0,
-
-where f̃^(1)_3 is from the result of three Maxwell iterations. Straightforward calculation yields 
-
-
-f̃^(1)_3
-   =[ℒ^(11)]^-1 𝒜^(10) f^(0) + ^2 [ℒ^(11)]^-1 𝒜^(11) [ℒ^(11)]^-1 𝒜^(10) f^(0) 
-
-       + ^3  ([ℒ^(11)]^-1  𝒜^(11))^2 [ℒ^(11)]^-1 𝒜^(10) f^(0) 
-
-       + ^3 [ℒ^(11)]^-1 𝒜̃^(12) [ℒ^(22)]^-1 𝒜̃^(21) 
- [ℒ^(11)]^-1 𝒜^(10) f^(0).
-
-
-which has nothing to do with the operators 𝒜̃^(22), 𝒜̃^(23), 𝒜̃^(32) and 𝒜̃^(33). Therefore, we can set these four operators in (<ref>) to be zero and claim that the resulting equations
-
-    [  𝒜^(00)  𝒜^(01)       0       0;  𝒜^(10)  𝒜^(11) 𝒜̃^(12)       0;       0 𝒜̃^(21)       0       0;       0       0       0       0 ][  f^(0); f̃^(1); f̃^(2);  f^(3) ] = 1/[       0       0       0       0;       0  ℒ^(11)       0       0;       0       0 ℒ̃^(22)       0;       0       0       0 ℒ̃^(33) ][  f^(0); f̃^(1); f̃^(2);  f^(3) ]
-
-still have the super-Burnett order.
-
-
-
-
-
-
-  §.§.§ Step 3: Applying the inverse transformation
- The equations (<ref>) already give us the abstract form of the R13 equations. However, due to the transformation introduced by 𝒬, the left-hand sides of these equations no longer represent the approximation of ξ_j ∂_x_jf, and the right-hand sides no longer represent the approximation of ℒf. Recovering such straightforward correspondence requires applying the inverse transformation 𝒬^-1. By multiplying both sides of (<ref>) by 𝒬^-1 and using f̃ = 𝒬^-†f, we obtain
-
-[  𝒜^(00)  𝒜^(01)  𝒜^(02)  𝒜^(03);  𝒜^(10)  𝒜^(11)  𝒜^(12)  𝒜^(13);  𝒜^(20)  𝒜^(21) 𝒜̅^(22) 𝒜̅^(23);  𝒜^(30)  𝒜^(31) 𝒜̅^(32) 𝒜̅^(33) ]
-[ f^(0); f^(1); f^(2); f^(3) ]
-= 1/ [      0      0      0      0;      0 ℒ^(11) ℒ^(12) ℒ^(13);      0 ℒ^(21) ℒ^(22) ℒ^(23);      0 ℒ^(31) ℒ^(32) ℒ^(33) ]
-[ f^(0); f^(1); f^(2); f^(3) ],
-
-where 
-
-    𝒜̅^(22) = ℬ^(21)𝒜^(12) + 𝒜^(21) [ℬ^(21)]^† - ℬ^(21)𝒜^(11)[ℬ^(21)]^†,
-
-and the operators 𝒜̅^(23), 𝒜̅^(32) and 𝒜̅^(33) are unimportant since (<ref>) already shows f^(3) = 0. We can actually remove f^(3) completely from the system to get the final form (<ref>).
-
-Since f^(3) is no longer present in the final equations, they can be reformulated using a smaller function space
-
-    𝕍 := 𝕍^(0)⊕𝕍^(1)⊕𝕍^(2).
-
-Let 𝒫_𝕍 be the projection operator onto 𝕍. The equations can then be written as
-
-∂/∂x_j (𝒜̅_j f̅) = 1/ 𝒫_𝕍 ℒ f̅,
-
-where f̅ is the unknown function in 𝕍, and
-
-    𝒜̅_j = 𝒫_𝕍ξ_j - (𝒜_j^(22) - ℬ^(21)𝒜_j^(12) - 𝒜_j^(21) [ℬ^(21)]^† + ℬ^(21)𝒜_j^(11)[ℬ^(21)]^†) 𝒫^(2),
-
-which is an operator on 𝕍 approximating the multiplication of a function by the velocity component ξ_j.
-It is straightforward to verify that 𝒜̅_j is a self-adjoint operator on 𝕍.
-
-So far, we have obtained a linear system with desired symmetric structure, allowing us to further derive stable boundary conditions. This will be discussed in Section <ref>. In what follows, we will first provide the explicit forms of these equations.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- §.§ Derivation of R13 moment equations
-
-
-We will now derive the R13 equations presented in Section <ref>.
-According to definitions of the function spaces 𝕍^(0), 𝕍^(1) and 𝕍^(2) (see (<ref>)(<ref>)(<ref>)), we can express the projection f̅ := 𝒫_𝕍 f explicitly as
-
-    f̅ = w^0 ψ^0 + w^1 ψ^1 + 3w_i^0 ψ_i^0_zeroth order + 3u_i^(1)ϕ_i^(1) + 15/2 u_ij^(1)ϕ_ij^(1)_first order + u^(2)ϕ^(2) + 3u_i^(2)ϕ_i^(2) + 15/2u_ij^(2)ϕ_ij^(2) + 35/2u_ijk^(2)ϕ_ijk^(2)_second order.
-
-For any f̅∈𝕍 with the above expression, we have
-
-    w^0 = ⟨f̅ , ψ^(0)⟩,      w^1 = ⟨f̅,ψ^(1)⟩,      w_i^0 = ⟨f̅ , ψ_i^(0)⟩, 
-    
-    u_i^(1) =  ⟨f̅ , ϕ^(1)_i⟩   ,      u_ij^(1) =  ⟨f̅ , ϕ^(1)_ij⟩  , 
-    
-    u^(2) =   ⟨f̅ , ϕ^(2)⟩  ,      u^(2)_i =  ⟨f̅ , ϕ^(2)_i⟩,      u^(2)_ij =  ⟨f̅ , ϕ^(2)_ij⟩ ,       u^(2)_ijk = ⟨f̅ , ϕ^(2)_ijk⟩.
-
-Our purpose is to find the expressions of ∂_x_j (𝒜̅_j f̅) and 𝒫_𝕍ℒf̅ under such representation.
-
-We begin with the collision term 𝒫_𝕍ℒf̅. Due to the conservation laws, the zeroth-order part of f̅ vanishes after applying ℒ. Using the rotational invariance of ℒ, we get
-
-    𝒫_𝕍ℒf̅ = ℒ_0^(22) u^(2)ϕ^(2) + ∑_m=1^2 ∑_n=1^2 ℒ_1^(mn) u_i^(n)ϕ_i^(m) + ∑_m=1^2 ∑_n=1^2 ℒ_2^(mn) u_ij^(n)ϕ_ij^(m) + ℒ_3^(22) u_ijk^(2)ϕ_ijk^(2),
-
-where 
-
-    ℒ_l^(mn) = (2l+1)!!/l!⟨ϕ_i_1⋯ i_l^(m), ℒϕ_i_1⋯ i_l^(n)⟩/⟨ϕ_i_1⋯ i_l^(m), ϕ_i_1⋯ i_l^(m)⟩
-    
-    
-     =(2l+1)!!/l!∑_m',n' c^(m),m'_l c^(n),n'_l a_ln'm'
-
-This value is independent of the choice of i_1, ⋯, i_l due to the rotational invariance, and is symmetric with respect to the superscript (mn). The expansion (<ref>) can be formally expressed by 
-
-    ϕ^T 
-    [ [         0         0         0         0         0         0         0         0         0;         0         0         0         0         0         0         0         0         0;         0         0         0         0         0         0         0         0         0; 0pt15pt
-    0         0         0  ℒ_1^(11)         0         0  ℒ_1^(12)         0         0;         0         0         0         0  ℒ_2^(11)         0         0  ℒ_2^(12)         0; 0pt15pt
-    0         0         0         0         0  ℒ_0^(22)         0         0         0;         0         0         0  ℒ_1^(21)         0         0  ℒ_1^(22)         0         0;         0         0         0         0  ℒ_2^(21)         0         0  ℒ_2^(22)         0;         0         0         0         0         0         0         0         0  ℒ_3^(22) ]]
-    u
-
-where 
-
-    
-ϕ^T =       
-( ψ^0 ψ^1 ψ^0_i    ϕ^(1)_i ϕ^(1)_ij     ϕ^(2)  ϕ^(2)_i ϕ^(2)_ij ϕ^(2)_ijk ), 
- 
-u^T =       
-( w^0 w^1 w^0_i    u^(1)_i u^(1)_ij     u^(2)  u^(2)_i u^(2)_ij  u^(2)_ijk ),
- 
-
-
-
-The left-hand side ∂_x_j (𝒜̅_j f̅) should be calculated according to (<ref>). We can first find ∂_x_j(𝒫_𝕍ξ_j f̅) by straightforward calculation using (<ref>). We will again denote the result formally using the form (<ref>)
-
-    ϕ^T.8![ [                         0                         0               √(3)∂/∂ x_i                         0                         0                         0                         0                         0                         0;                         0                         0              -√(2)∂/∂ x_i      √(5)c_1^(1),1∂/∂ x_i                         0                         0      √(5)c^(2),1_1∂/∂ x_i                         0                         0;               √(3)∂/∂ x_i              -√(2)∂/∂ x_i                         0                         0     3√(5)c_2^(1),0∂/∂ x_j                         0                         0    3√(5)c^(2),0_2 ∂/∂ x_j                         0;              0pt15pt
-       0     √(5) c_1^(1),1∂/∂ x_i                         0                         0               A_45∂/∂ x_j               A_46∂/∂ x_i                         0               A_48∂/∂ x_j                         0;                         0                         0 3√(5) c_2^(1),0∂_⟨/∂ x_j⟩            A_45∂_⟨/∂ x_j⟩                         0                         0            A_57∂_⟨/∂ x_j⟩                         0               A_59∂/∂ x_k;            0pt15pt
-         0                         0                         0               A_46∂/∂ x_i                         0                         0               A_67∂/∂ x_i                         0                         0;                         0      √(5)c^(2),1_1∂/∂ x_i                         0                         0               A_57∂/∂ x_j               A_67∂/∂ x_i                         0               A_78∂/∂ x_j                         0;                         0                         0 3√(5)c^(2),0_2 ∂_⟨/∂ x_j⟩            A_48∂_⟨/∂ x_j⟩                         0                         0            A_78∂_⟨/∂ x_j⟩                         0               A_89∂/∂ x_k;                         0                         0                         0                         0            A_59∂_⟨/∂ x_k⟩                         0                         0            A_89∂_⟨/∂ x_k⟩                         0;                           ]]u
-
-for conciseness, where the expressions of A_ij can be found in Section <ref>. The derivative operator ∂_⟨/∂ x_j ⟩ in the above matrix is defined such that ∂_⟨/∂ x_j ⟩ u^(d)_i_1⋯ i_l = ∂ u^(d)_⟨ i_1⋯ i_l/∂ x_j⟩ where Einstein's summation should be applied when any of i_1,⋯,i_l is j. 
-
-To get the final form of the R13 equations, we replace the lower-right block of the matrix on the left-hand side by an operator corresponding to 𝒜̅^(22) defined in (<ref>). According to (<ref>), the operator ℬ^(21) = ℒ^(21) [ℒ^(11)]^-1 can be represented by the matrix 
-
-ℬ^(21) := [        0        0; ℒ_1^(21)        0;        0 ℒ_2^(21);        0        0 ]
-[ ℒ_1^(11)        0;        0 ℒ_2^(11) ]^-1 =
-[                   0                   0; ℒ_1^(21) / ℒ_1^(11)                   0;                   0 ℒ_2^(21) / ℒ_2^(11);                   0                   0 ].
-
-Note that we actually have
-
-    ℒ_1^(21) / ℒ_1^(11) = c_1^(2),1 / c_1^(1),1,   and  ℒ_2^(21) / ℒ_2^(11) = c_2^(2),0 / c_2^(1),0
-
-since 𝒜^(20) - ℬ^(21)𝒜^(10) = 0 (see (<ref>)).
-Thus, following (<ref>), the operator 𝒜̅^(22) can be represented by
-
-
-    ℬ^(21) 
-[[    A_46∂/∂x_i             0    A_48∂/∂x_j             0;             0 A_57∂_⟨/∂x_j⟩             0    A_59∂/∂x_k ] ] +
-[ [    A_46∂/∂x_i             0;             0    A_57∂/∂x_j; A_48∂_⟨/∂x_j⟩             0;             0 A_59∂_⟨/∂x_k⟩ ] ]  [ℬ^(21)]^T
-- ℬ^(21) 
-[[              0    A_45 ∂/∂x_j; A_45 ∂_⟨/∂x_j⟩              0 ] ] 
-[ℬ^(21)]^T 
-
-=     [                                     0      c^(2),1_1/c^(1),1_1 A_46  ∂/∂x_i                                     0                                     0;      c^(2),1_1/c^(1),1_1 A_46  ∂/∂x_i                                     0                           A̅_78∂/∂x_j                                     0;                                     0                      A̅_78∂_⟨ /∂x_j ⟩                                     0      c^(2),0_2/c^(1),0_2 A_59  ∂/∂x_k;                                     0                                     0 c^(2),0_2/c^(1),0_2 A_59  ∂_⟨ /∂x_k ⟩                                     0 ]
-
-
-where 
-
-    A̅_78 =  c^(2),1_1/c^(1),1_1 A_48+ c^(2),0_2/c^(1),0_2 A_57- c^(2),1_1 c^(2),0_2/c^(1),1_1 c^(1),0_2 A_45.
-
-The final form of ∂_x_j(𝒜̅_j f̅) can be obtained by using the matrix above to replace the lower-right block of the matrix in (<ref>). The result will then be equated to (<ref>) to get the explicit expressions of the R13 equations, which are given as follows: 
- 
-    √(3)∂ w^0_j/∂ x_j    = 0,  
-    
-         -√(2)∂ w^0_j/∂ x_j  + √(5)c_1^(1),1∂ u^(1)_j/∂ x_j +   √(5)c^(2),1_1 ∂ u^(2)_j/∂ x_j    = 0 ,
-    √(3)∂ w^0/∂ x_i - √(2)∂ w^1/∂ x_i + 3√(5) c_2^(1),0∂ u^(1)_ij/∂ x_j  + 3√(5)  c^(2),0_2 ∂ u^(2)_ij/∂ x_j    = 0, 
-    √(5)c_1^(1),1∂ w^1/∂ x_i + A_45∂ u^(1)_ij/∂ x_j + A_46∂ u^(2)/∂ x_i + A_48∂ u^(2)_ij/∂ x_j    = 1/(ℒ^(11)_1 u^(1)_i+ℒ^(12)_1 u^(2)_i),
-    
-          3√(5) c_2^(1),0∂ w^0_⟨ i/∂ x_j ⟩ + A_45∂ u^(1)_⟨ i/∂ x_j ⟩ + A_57∂ u^(2)_⟨ i/∂ x_j ⟩ + A_59∂ u^(2)_ijk/∂ x_k    = 1/(ℒ^(11)_2 u^(1)_ij+ℒ^(12)_2 u^(2)_ij),
-    
-          A_46∂ u^(1)_j/∂ x_j  + c^(2),1_1/c^(1),1_1 A_46∂ u^(2)_j/∂ x_j    =  1/ℒ^(22)_0 u^(2),
-    √(5) c^(2),1_1 ∂ w^1/∂ x_i + A_57∂ u^(1)_ij/∂ x_j + c^(2),1_1/c^(1),1_1 A_46∂ u^(2)/∂ x_i + A̅_78∂ u^(2)_ij/∂ x_j    = 1/(ℒ^(21)_1 u^(1)_i+ℒ^(22)_1 u^(2)_i),
-    
-            3√(5) c^(2),0_2 ∂ w^0_⟨ i/∂ x_j ⟩ + A_48∂ u^(1)_⟨ i/∂ x_j ⟩ + A̅_78∂ u^(2)_⟨ i/∂ x_j ⟩ + c^(2),0_2/c^(1),0_2 A_59∂ u^(2)_ijk/∂ x_k    = 1/(ℒ^(21)_2 u^(1)_ij+ℒ^(22)_2 u^(2)_ij),
-    
-           A_59∂ u^(1)_⟨ ij/∂ x_k ⟩ +  c^(2),0_2/c^(1),0_2 A_59∂ u^(2)_⟨ ij/∂ x_k ⟩    = 1/ℒ^(22)_3 u^(2)_ijk.
-
-
-It may be more interesting to write down these equations using the variables w_ij^0 and w_i^1. For the distribution function (<ref>), the moments w_ij^0 can be related to the coefficients by
-
-    w_ij^0 = ⟨ψ_ij^0, f̅⟩ = u_i'j'^(1)⟨ψ_ij^0, ϕ_i'j'^(1)⟩ + u_i'j'^(2)⟨ψ_ij^0, ϕ_i'j'^(2)⟩ = c_2^(1),0 u_ij^(1) + c_2^(2),0 u_ij^(2) .
-
-Similarly, we have
-
-    w_i^1 = c_1^(1),1 u_i^(1) + c_1^(2),1 u_i^(2).
-
-Using these variables, equations (<ref>) and (<ref>) become much neater: 
-
-    u^(2) = β'_0 ∂ w^1_j/∂ x_j,      u^(2)_ijk = β'_3 ∂ w^0_⟨ ij/∂ x_k ⟩
-
-where 
-
-   β_0' = A_46/c^(1),1_1ℒ_0^(22),     β_3' =   A_59/c^(1),0_2ℒ_3^(22).
-
-The other two second-order variables u_i^(2) and u_ij^(2) can also be represented using derivatives of w_ij^0 or w_i^1. To get u_i^(2), we need to multiply (<ref>) by c_1^(2),1/c_1^(1),1 and subtract the result by (<ref>). During the calculation, we need to use (<ref>) and (<ref>) to get
-
-    u^(2)_i = β'_1 ∂ w^0_ij/∂ x_j,     β_1'  = c^(1),1_1 A_57 - c^(2),1_1A_45/c^(1),0_2(c^(1),1_1ℒ_1^(22) - c^(2),1_1ℒ_1^(12)).
-
-Similarly, we can use (<ref>) and (<ref>) to find
-
-    u^(2)_ij = β'_2 ∂ w^1_⟨ i/∂ x_j ⟩,     β_2' = c^(1),0_2 A_48 - c^(2),0_2A_45/c^(1),1_1(c^(1),0_2ℒ_2^(22) - c^(2),0_2 ℒ_2^(12)).
-
-Finally, we can plug (<ref>)–(<ref>) into (<ref>)–(<ref>) to get a linear system written completely in the variables w^0, w^1, w_i^0, w_i^1, w_ij^0. The linear system in Section <ref> can then be obtained by applying the relationship (<ref>).
-
-For Maxwell molecules, due to the lack of three dimensions in 𝕍^(2), the variables  u^(2)_i do not exist. As a result, one needs to remove (<ref>) from the system. Also, the expression of β'_1 in (<ref>) becomes 0/0 for Maxwell molecules, and we need to set β'_1 to be zero to obtain correct equations.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-§ DERIVATION OF ONSAGER BOUNDARY CONDITIONS FOR R13 EQUATIONS
-
-
-We are now ready to derive wall boundary conditions for the R13 equations. In this work, we will focus on Maxwell's accommodation model <cit.>, which considers the interaction between gas molecules and the solid wall as a combination of specular reflection and diffusive reflection. In the derivation of boundary conditions for R13 equations, we will again write an abstract form using operators on function spaces to avoid lengthy formulas, and then convert it to its concrete form. Before starting our derivation, we will first briefly review Maxwell's boundary conditions for the linearized Boltzmann equation.
-
-
-
- §.§ Maxwell's boundary condition
-
-Consider the boundary point at which the outer normal unit vector is n = (n_1, n_2, n_3)^T. For simplicity, we adopt the coordinate system with basis vectors n, t_1 and t_2 with t_1 and t_2 being two orthogonal tangent vectors. Thus, the distribution function can now be presented by f(ξ_n, ξ_t_1, ξ_t_2), where ξ_n = ·n and ξ_t_1 and ξ_t_2 are similarly defined. For all other vectors and tensors, the indices will also be changed from 1,2,3 to n,t_1,t_2 in this section. Thus, the Boltzmann equation can be written as 
-
-ξ_n ∂f/∂x_n +
-ξ_t_1 ∂f/∂x_t_1 +
-ξ_t_2 ∂f/∂x_t_2 = 1/ℒf.
-
-
-For hyperbolic equations, boundary conditions are needed only for incoming characteristics. Maxwell <cit.> proposed the following wall boundary condition for the distribution function:
-
-    f(ξ_n, ξ_t_1, ξ_t_2) = χ f_W(ξ_n, ξ_t_1, ξ_t_2) + (1-χ) f(-ξ_n, ξ_t_1, ξ_t_2),     ξ_n < 0,
-
-and χ∈ [0,1] is the accommodation coefficient denoting the proportion of the diffusive reflection. Assume that the solid wall has temperature θ^W and only moves in the tangential direction with velocity (0, v_t_1^W, v_t_2^W). Then the “wall Maxwellian” f_W() has the expression 
-
-   f_W(ξ_n, ξ_t_1, ξ_t_2) = w^0,W ψ^0 + w^1,W ψ^1 + 3w_t_1^0,W ψ^0_t_1 + 3w_t_2^0,W ψ^0_t_2.
-
-Here w^1,W = -√(3/2)θ^W, w^0,W_t_i = √(3)/3 v^W_t_i, and w^0,W are chosen such that
-
-    ∫_ℝ^3ξ_n f(ξ_n, ξ_t_1, ξ_t_2)  dξ_n  dξ_t_1 dξ_t_2 = 0,
-
-meaning that the normal mass flow is zero on the solid wall.
-
-To derive boundary conditions for moment equations, it is more convenient to rewrite the (<ref>) in the following equivalent form:
-
-    f_odd(ξ_n, ξ_t_1, ξ_t_2) = χ/2-χ [f_W(ξ_n, ξ_t_1, ξ_t_2) - f_even(ξ_n, ξ_t_1, ξ_t_2)],     ξ_n < 0,
-
-where f_odd and f_even refer to the odd and even parts of f:
-
-    f_odd(ξ_n, ξ_t_1, ξ_t_2)    = f(ξ_n, ξ_t_1, ξ_t_2) - f(-ξ_n, ξ_t_1, ξ_t_2)/2, 
-    
-    f_even(ξ_n, ξ_t_1, ξ_t_2)    = f(ξ_n, ξ_t_1, ξ_t_2) + f(-ξ_n, ξ_t_1, ξ_t_2)/2.
-
-Alternatively, we can define f_odd and f_even by introducing the odd and even function spaces:
-
-    L_odd^2(ℝ^3, [f_M()]^-1 d)    = {f ∈ L^2(ℝ^3, [f_M()]^-1 d) | f(-ξ_n, ξ_t_1, ξ_t_2) = -f(ξ_n, ξ_t_1, ξ_t_2) }, 
-    
-    L_even^2(ℝ^3, [f_M()]^-1 d)    = {f ∈ L^2(ℝ^3, [f_M()]^-1 d) | f(-ξ_n, ξ_t_1, ξ_t_2) = f(ξ_n, ξ_t_1, ξ_t_2) },
-
-and let
-
-f_odd = 𝒫_odd f,     f_even = 𝒫_even f.
-
-Here 𝒫_odd and 𝒫_even are projection operators onto the function spaces L_odd^2(ℝ^3, [f_M()]^-1 d) and L_even^2(ℝ^3, [f_M()]^-1 d), respectively. Thus, a more compact way to write down Maxwell's boundary condition (<ref>) is 
-
-𝒞 𝒫_odd f = χ/2-χ 𝒞(f_W - 𝒫_even f),
-
-where 𝒞 is half-space operator defined by
-
-    𝒞g(ξ_n, ξ_t_1, ξ_t_2) = 
-      g(ξ_n, ξ_t_1, ξ_t_2),    if ξ_n < 0, 
-    
-      0,    if ξ_n > 0.
-
-Noting that 𝒫_odd = 2𝒫_odd𝒞𝒫_odd, we can apply 𝒫_odd to both sides of (<ref>) to get
-
-    𝒫_odd f = 2χ/2-χ𝒫_odd𝒞(f_W - 𝒫_even f).
-
-To determine w^0,W in f_W, we need to use (<ref>), which can also be formulated as
-
-    ⟨ψ_n^0, f ⟩ = 0.
-
-The complete Maxwell's boundary condition includes both (<ref>) and (<ref>).
-
-
-
- §.§ A first attempt to formulate boundary conditions for R13 equations
-
-Following the formulation of Maxwell's boundary conditions (<ref>), we will also split the function space for R13 equations into an odd part and an even part:
-
-𝕍 = 𝕍_odd⊕𝕍_even,
-
-where
-
-𝕍_odd = 𝕍 ∩L_odd^2(ℝ^3, [f_M()]^-1  d),     𝕍_even = 𝕍 ∩L_even^2(ℝ^3, [f_M()]^-1  d).
-
-Grad's work <cit.> states that the boundary conditions of moment equations should be formulated by taking only odd moments of the kinetic boundary conditions. Therefore, we expect that the boundary conditions for R13 equations are written as a map from 𝕍_even to 𝕍_odd, which is analogous to (<ref>).
-
-Furthermore, to get Onsager boundary conditions satisfying the L^2 stability, we write the operator 𝒜̅_n = n_j 𝒜̅_j in the following form:
-
-    𝒜̅_n = 𝒜̅_eo𝒫_odd|_𝕍 + 𝒜̅_oe𝒫_even|_𝕍.
-
-Here 𝒫_odd|_𝕍 and 𝒫_even|_𝕍 are the restrictions of 𝒫_odd and 𝒫_even on 𝕍, respectively.
-Such a form of 𝒜̅_n can be observed from the equations (<ref>)–(<ref>), and it corresponds to the equation (<ref>) when written in the matrix form. The Onsager boundary conditions should hold the form
-
-    𝒫_odd|_𝕍 f̅ = 𝒮𝒜̅_oe(f_W - 𝒫_even|_𝕍 f̅),
-
-where 𝒮 is a self-adjoint and negative semidefinite operator on 𝕍_odd. Note that (<ref>) is the operator form of the boundary conditions (<ref>). The operator 𝒮 can be figured out by comparing (<ref>) with (<ref>): since 𝒜̅_oe approximates the operation that multiplies an even function by ξ_n, the operator 𝒮 should approximate the operator
-
-2χ/2-χ 𝒫_odd 𝒞 ξ_n^-1,
-
-so that (<ref>) can be regarded as a discretization of (<ref>). Thus, a natural choice is
-
-    𝒮 = 2χ/2-χ𝒫_𝕍𝒫_odd𝒞ξ_n^-1.
-
-Note that 𝒫_𝕍𝒫_odd is the projection operator onto 𝕍_odd, and therefore 𝒮 is an operator on 𝕍_odd. The proposition below shows some desired properties of 𝒮:
-
-
-The operator 𝒮 is self-adjoint and negative semidefinite.
-
-
-For any f̅_o,g̅_o∈𝕍_odd, we have
-
-
-⟨f̅_o, 𝒮g̅_̅o̅ ⟩   = 2χ/2-χ ⟨f̅_o, 𝒫_𝕍𝒫_odd 𝒞 ξ_n^-1 g̅_o⟩= ⟨𝒫_𝕍𝒫_oddf̅_o, 𝒞 ξ_n^-1 g̅_o⟩= ⟨f̅_o, 𝒞 ξ_n^-1 g̅_o⟩
-
-   = ∫_-∞^0 ∫_-∞^+∞ ∫_-∞^+∞ f̅_o(ξ_n, ξ_t_1, ξ_t_2) ξ_n^-1 g̅_o(ξ_n, ξ_t_1, ξ_t_2)  d ξ_t_2  d ξ_t_1  d ξ_n 
-
-   = ⟨𝒞 ξ_n^-1 f̅_o, g̅_o⟩= ⟨𝒞 ξ_n^-1 f̅_o, 𝒫_𝕍𝒫_oddg̅_o⟩= ⟨𝒫_𝕍𝒫_odd 𝒞 ξ_n^-1 f̅_o, g̅_o⟩= ⟨𝒮 f̅_o, g̅_o ⟩, 
-
-⟨f̅_o, 𝒮f̅_o ⟩   = ∫_-∞^0 ∫_-∞^+∞ ∫_-∞^+∞ ξ_n^-1 [f̅_o(ξ_n, ξ_t_1, ξ_t_2)]^2  d ξ_t_2  d ξ_t_1  d ξ_n ≤0,
-
-
-which shows both properties of 𝒮.
-
-
-The equation (<ref>) with 𝒮 defined by (<ref>) is still incomplete since the condition for mass conservation (<ref>) has not been considered to determine w^0,W in the definition of f_W. Therefore, we further require that ⟨ψ_n^0, f̅⟩ = 0, or equivalently,
-
-    𝒫_u f̅ = 0,
-
-where 𝒫_u is the projection operator from 𝕍 onto the following subspace:
-
-𝕍_u = span { ψ_n^0 }.
-
-The proposition below shows how we can combine (<ref>) and (<ref>) into one equation:
-
-Let 𝒮_uu be a map from 𝕍_u to 𝕍_u defined by 𝒮_uu = 𝒫_u 𝒮|_𝕍_u. Then for any f̅ satisfying
-
-    𝒫_odd|_𝕍 f̅ = 𝒮̅𝒜̅_oe(f_W - 𝒫_even|_𝕍 f̅)
-
-with
-
-𝒮̅ = (ℐ - 𝒫_u) (ℐ - 𝒮 𝒮_uu^-1 𝒫_u) 𝒮,
-
-both (<ref>) and (<ref>) hold for an appropriately chosen ρ_W. Meanwhile, the operator 𝒮̅ is a self-adjoint and positive semidefinite operator on 𝕍_odd, and it satisfies
-
-    𝒮̅𝒜̅_oe = 𝒮̅𝒜̅_oe (ℐ - 𝒫_ρ),
-
-where 𝒫_ρ: 𝕍_even→𝕍_even is a projection operator defined by 𝒫_ρf̅_e = ⟨f̅_e, ψ^0⟩ψ^0.
-
-
-
-The rigorous proof of this proposition can be found in Section <ref> of supplementary material. This proposition shows that we can use (<ref>) as the Onsager boundary conditions for the R13 equations, and the property (<ref>) implies that ρ_W actually does not appear in (<ref>) since
-
-(ℐ - 𝒫_ρ) f_W = w^1,W ψ^1 + 3 w_t_1^0,W ψ_t_1^0 + 3 w_t_2^0,W ψ_t_2^0,
-
-which does not involve ρ_W. Following the abstract form (<ref>), we can write down the boundary conditions explicitly using the series expansion of the distribution functions. Since
-
-{ ψ_n^0, ϕ_n^(1), ϕ_nt_1^(1), ϕ_nt_2^(1), ϕ_n^(2), ϕ_nt_1^(2), ϕ_nt_2^(2), ϕ_nnn^(2), ϕ_nt_1 t_2^(2),  ϕ_nt_1 t_1^(2) + 1/2 ϕ_nnn^(2) }
-
-forms an orthogonal basis of 𝕍_odd (note that ϕ_nt_2 t_2^(2) = -ϕ_nnn^(2) - ϕ_nt_1 t_1^(2)),
-ten boundary conditions are to be prescribed for each boundary point. The calculation of the boundary conditions is tedious but straightforward. The results are 
-
-    w_n^0    = 0, 
-     u^(1)_n    = 2χ/2-χ[ λ'_11 (w^1 -w^1,W) + λ'_12 u^(1)_nn +  λ'_13 u^(2) +  λ'_14 u^(2)_nn], 
-     u^(2)_n    = 2χ/2-χ[ λ'_21 (w^1 -w^1,W) + λ'_22u^(1)_nn +  λ'_23 u^(2) +  λ'_24 u^(2)_nn], 
-       u^(1)_t_i n    = 2χ/2-χ[λ'_31 (w^0_t_i -w^0,W_t_i) + λ'_32u^(1)_t_i + λ'_33 u^(2)_t_i  +  λ'_34  u^(2)_t_i nn], 
-      u^(2)_t_in    = 2χ/2-χ[ λ'_41 (w^0_t_i -w^0,W_t_i) + λ'_42u^(1)_t_i + λ'_43 u^(2)_t_i + λ'_44  u^(2)_t_i nn], 
-      u^(2)_nnn    = 2χ/2-χ[λ'_51 (w^1 -w^1,W) + λ'_52u^(1)_nn +  λ'_53 u^(2) +  λ'_54 u^(2)_nn], 
-     u^(2)_t_i t_i n + 1/2 u^(2)_nnn    =  2χ/2-χ[ λ'_61(u^(1)_t_i t_i + c^(2),0_2/c^(1),0_2u^(2)_t_it_i) + λ'_62(u^(1)_nn + c^(2),0_2/c^(1),0_2u^(2)_nn) ], 
-      u^(2)_t_1 t_2 n    = 2χ/2-χλ'_71(u^(1)_t_1 t_2 + c^(2),0_2/c^(1),0_2u^(2)_t_1t_2).
-
-The detailed derivation and the expressions of the coefficient λ'_ij are given in Section <ref>.
-
-
-However, these equations give too many boundary conditions for the R13 equations. The general theory of hyperbolic conditions requires that the number of boundary conditions equal the number of negative eigenvalues of 𝒜̅_n. In our case, 𝒜̅_n has only 9 negative eigenvalues. In other words, the operator 𝒜̅_oe is not surjective.
-As mentioned in Section <ref>, this is because our selection of function spaces 𝕍_odd and 𝕍_even are purely based on the symmetry of functions, regardless of the structure of equations. Detailed explanations and the fix of these boundary conditions will be shown in the next subsection.
-
-
-
-
-
-
- §.§ Fixing the boundary conditions
-
-To show why 𝒜̅_oe is not surjective, we multiply the equation (<ref>) by c_1^(2),1/c_1^(1),1, subtract the result from (<ref>), and set the index i to be the normal direction n, yielding the equation
-
-
-(A_57 - c_1^(2),1/c_1^(1),1 A_45) [     ∂/∂x_n (u_nn^(1) + c_2^(2),0/c_2^(1),0 u_nn^(2) ) + ∂/∂x_t_1 (u_nt_1^(1) + c_2^(2),0/c_2^(1),0 u_nt_1^(2) ) 
-
-    + ∂/∂x_t_2 (u_nt_2^(1) + c_2^(2),0/c_2^(1),0 u_nt_2^(2) ) ] 
-= 1/ (ℒ_1^(22) - c_1^(2),1/c_1^(1),1 ℒ_1^(12)) u_n^(2).
-
-
-Then we set i,j,k to be n in (<ref>): 
-
-
-3/5 A_59 ∂/∂x_n (u_nn^(1) + c_2^(2),0/c_2^(1),0 u_nn^(2) ) - 2/5 A_59 ∂/∂x_t_1 (u_nt_1^(1) + c_2^(2),0/c_2^(1),0 u_nt_1^(2) ) - 2/5 A_59 ∂/∂x_t_2 (u_nt_2^(1) + c_2^(2),0/c_2^(1),0 u_nt_2^(2) ) 
-
-= 1/ ℒ_3^(22) u_nnn^(2).
-
-
-The two equations above show that if we perform the linear combination
-
-3/5 A_59 ×[(<ref>)|_i=n - c_1^(2),1/c_1^(1),1 ×(<ref>)|_i=n ] - (A_57 - c_1^(2),1/c_1^(1),1 A_45 ) ×(<ref>)|_i,j,k=n,
-
-the derivatives with respect to x_n will all cancel out on the left-hand side. An equivalent statement is
-
-⟨ϕ_0, 𝒜̅_oe f̅
-⟩= 0,     ∀f̅ ∈𝕍,
-
-where
-
-    ϕ_0 = 9/5 A_59(ϕ_n^(2) - c_1^(2),1/c_1^(1),1ϕ_n^(1)) - 35/2(A_57 - c_1^(2),1/c_1^(1),1 A_45) ϕ_nnn^(2).
-
-Let 𝕍_0 = span{ϕ_0} and 𝒫_0 be the associated projection operator. We then have
-
-    𝒫_0 𝒜̅_oe = 0.
-
-
-Therefore, to fix the boundary conditions, the subspace 𝕍_0 should be removed form 𝕍_odd. This requires replacing the operator 𝒮 with (ℐ - 𝒫_0) 𝒮 (ℐ - 𝒫_0). Thus, the operator 𝒮̅ should be replaced with
-
-
-    (ℐ - 𝒫_u) [ℐ - (ℐ - 𝒫_0)𝒮(ℐ - 𝒫_0) 𝒮_uu^-1 𝒫_u] (ℐ - 𝒫_0)𝒮(ℐ - 𝒫_0) 
-
-=     (ℐ - 𝒫_u)(ℐ - 𝒫_0) [ℐ - 𝒮(ℐ - 𝒫_0) 𝒮_uu^-1 𝒫_u(ℐ - 𝒫_0)] 𝒮(ℐ - 𝒫_0) 
-
-=     (ℐ - 𝒫_0)(ℐ - 𝒫_u) (ℐ - 𝒮 𝒮_uu^-1 𝒫_u) 𝒮(ℐ - 𝒫_0)  [Since  𝒫_0 𝒫_u = 𝒫_u 𝒫_0 = 0]
-
-=     (ℐ - 𝒫_0) 𝒮̅(ℐ - 𝒫_0).
-
-
-According to (<ref>), the final boundary conditions should be
-
-(𝒫_odd|_𝕍 - 𝒫_0) f̅ = (ℐ - 𝒫_0) 𝒮̅ (ℐ - 𝒫_0) 𝒜̅_oe(f_W - 𝒫_even|_𝕍  f̅),
-
-which can be further simplified to
-
-    (𝒫_odd|_𝕍 - 𝒫_0)  f̅ = (ℐ - 𝒫_0) 𝒮̅𝒜̅_oe(f_W - 𝒫_even|_𝕍 f̅)
-
-due to (<ref>).
-
-The equation above indicates that the explicit form of the new boundary conditions (<ref>) can be derived by linear combinations of the boundary conditions (<ref>)–(<ref>). Using the expression of ϕ_0 (<ref>), we can find the following orthogonal basis of the orthogonal complement of 𝕍_0 in 𝕍:
-
-    {ψ_n^0, ϕ_nt_1^(1), ϕ_nt_2^(1), ϕ_nt_1^(2), ϕ_nt_2^(2), ϕ_nt_1 t_2^(2),  ϕ_nt_1 t_1^(2) + 1/2ϕ_nnn^(2),  ϕ_n^(1) + c^(2),1_1/c^(1),1_1ϕ_n^(2),μ_1 ϕ_nnn^(2) + μ_2 ( ϕ_n^(2) - c^(2),1_1/c^(1),1_1ϕ_n^(1))},
-
-where 
-
-
-
-
-
-
-
-
-
-
-
-
-    μ_1 = 3 A_59[ 1 + ( c_1^(2),1/c_1^(1),1)^2 ],     μ_2 = 2( A_57 - c_1^(2),1/c_1^(1),1 A_45).
-
-Therefore, in the new boundary conditions, the equations (<ref>)(<ref>)(<ref>)(<ref>)(<ref>) are preserved, and the two boundary conditions associated with the last two basis functions in (<ref>) are
-
-    u^(1)_n + c_1^(2),1/c_1^(1),1 u^(2)_n      = 2χ/2-χ[ κ_11 (w^1 -w^1,W) + κ_12 u^(1)_nn +  κ_13 u^(2) +  κ_14 u^(2)_nn], 
-    μ_1 u_nnn^(2) + μ_2 u^(2)_n - c_1^(2),1/c_1^(1),1μ_2 u^(1)_n     = 2χ/2-χ[κ_21 (w^1 -w^1,W) + κ_22 u^(1)_nn +  κ_23 u^(2) +  κ_24 u^(2)_nn],
-
-where
-
-    κ_1j = λ'_1j + c_1^(2),1/c_1^(1),1λ'_2j,   κ_2j = μ_1 λ'_5j + μ_2 ( λ'_2j - c_1^(2),1/c_1^(1),1λ'_1j),      j = 1,2,3,4.
-
-Our final boundary conditions presented in Section <ref> are obtained by rewriting these boundary conditions using the physical quantities ρ, θ, v_i, q_i and σ_ij, whose derivation needs (<ref>)–(<ref>) and (<ref>) for conversion.
-
-
-For Maxwell molecules, due to the nonexistence of the variable u_n^(2), the boundary condition (<ref>) does not exist. Therefore, such a fix is unnecessary.
-
-
-
-
-
-§ RESULTS OF ONE-DIMENSIONAL CHANNEL FLOWS
-
- 
-Compared with the boundary conditions of R13 equations proposed in <cit.>, our boundary conditions have a nicer structure that agrees with the form (<ref>). However, it is unclear whether the acquirement of this structure will harm the accuracy of the model. In this section, we will reuse the examples for one-dimensional channel flows in <cit.> to test our models.
-
-
-
- §.§ Problem settings and reduced moment equations
-
-We consider the gas flow between two infinitely large parallel plates in steady state (see Figure <ref>). The distance between the two plates is L, and both plates are perpendicular to the x_2-axis. The temperatures of the left and right plates are respectively given by θ_W^l and θ_W^r. Both plates can move inside their own plane, and we choose the reference frame and the coordinates such that both velocities are parallel to the x_1-axis. Under such settings, all the moments are functions of x_2 only. Due to mass conservation, v_2=0. In addition, we have the symmetry f(ξ_1,ξ_2,ξ_3) = f(ξ_1,ξ_2,-ξ_3) since the plates only move along x_1, and thus all the moments that are odd in ξ_3 vanish. In specific, we have 
-
-    v_3 = q_3 = σ_13 = σ_23 = 0.
-
-Furthermore, since σ_ij is trace-free, σ_33 is automatically obtained once σ_11 and σ_22 are known. Therefore, the 13 moments in our problem can be reduced to eight variables including
-
-
-  * Equilibrium variables including density ρ, temperature θ, and the velocity component parallel to the plates v_1;
-
-  * Components of the stress tensor including the parallel stress σ_11, normal stress σ_22 and the shear stress σ_12;
-
-  * Heat fluxes including the parallel heat flux q_1 and the normal heat flux q_2.
-
-
-
- 
-The 13-moment equations (<ref>)–(<ref>) for the one-dimensional channel flows can be immediately obtained by dropping all partial derivatives with respective to x_1 and x_3. As a result, the conservation laws become
-
-    σ_12/ x_2 = 0,     ρ/ x_2 +  θ/ x_2 +  σ_22/ x_2 = 0,      q_2/ x_2 = 0.
-
-The equation of stress tensor σ_11, σ_22 and σ_12 are 
-
-    1/ℒ^(11)_2σ_11 + 5 (c^(1),0_2)^2 β_4   q_2/ x_2 - c^(1),0_2/3β_3 ^2 σ_11/ x^2_2 + c^(1),0_2/3(β_1 + 2/5β_3)  ^2 σ_22/ x^2_2 = 0,
-    1/ℒ_2^(11)σ_22 - 10 (c^(1),0_2)^2 β_4  q_2/ x_2-  c^(1),0_2 (2/3β_1 + 3/5β_3)  ^2 σ_22/ x^2_2 = 0,
-    1/ℒ^(11)_2 σ_12 - 15/2(c^(1),0_2)^2 v_1/ x_2 - 15/2 (c^(1),0_2)^2 β_4  q_1/ x_2-  c^(1),0_2 (1/2β_1 + 8/15β_3)  ^2 σ_12/ x^2_2 = 0.
-
-The equations of heat flux q_1 and q_2 are
-
-    1/ℒ^(11)_1 q_1 - 15/2 (c^(1),1_1)^2 β_4  σ_12/ x_2 - c^(1),1_1/2β_2 ^2 q_1/ x^2_2 = 0,
-    1/ℒ^(11)_1 q_2 - 15/2 (c^(1),1_1)^2 β_4 σ_22/ x_2 -  c^(1),1_1 (β_0  + 2/3β_2) ^2 q_2/ x^2_2 - 15/2(c^(1),1_1)^2 θ/ x_2 = 0.
-
-
-The general solution of this linear system can be found analytically. By the conservation laws, we see that σ_12, ρ + θ + σ_22 and q_2 are all constants. Then we can solve q_1 and v_1 from (<ref>)(<ref>) and solve q_2 and θ from (<ref>)(<ref>).
-Afterwards, ρ and σ_11 can be immediately obtained by solving (<ref>) once other quantities are known. The general solution will include 11 constants to be determined. One of the constants depends on the average density between the plates: upon setting the range of x_2 to be [-1/2, 1/2] (so that L = 1), we assign the average density as  
-
-    ∫_-1/2^1/2ρ(x_2)  dx_2 = 0.
-
-The other 10 constants will be determined by 10 boundary conditions, of which each boundary has five given by (<ref>)–(<ref>) in the one-dimensional setting. Below we provide the boundary conditions on the right wall:
-
-    q_2 =     χ_r/2 - χ_r[ 2λ_11 (θ - θ^W_r) + 2λ_12σ_22 + (2λ_13 + 4/3λ_14)  q_2/ x_2], 
-    σ_12 =     χ_r/2 - χ_r[  2λ_21(v_1 - v^W_r) + 2λ_22 q_1 + (2λ_23 + 16/15λ_24 )σ_12/ x_2],  
-     q_1/ x_2 =     χ_r/2 - χ_r[ 4λ_31 (v_1 - v^W_r) + 4λ_32q_1 + (4λ_33 + 32/15λ_34 )σ_1 2 / x_2],  
-    
-         (λ_45+ 3/5)σ_22/ x_2 =     χ_r/2 - χ_r[ 2λ_41 (θ - θ^W_r) + 2λ_42σ_22 + (2λ_43 + 4/3λ_44)  q_2/ x_2], 
-    (2 σ_ 11/ x_2  +  σ_ 22/ x_2 ) =     χ_r/2-χ_r(12λ_51σ_11 + 12λ_52σ_22).
-
-For the boundary conditions on the left solid wall, one only needs to make the following replacement of parameters:
-
-q_2 →-q_2,   σ_12 →-σ_12,   x_2 →-x_2,   χ_r →χ_l,   θ^W_r →θ^W_l,   v^W_r →v^W_l.
-
-In the next two subsections, two special cases will be considered to verify our model.
-
-
-
- §.§ Results
-
-In this section, we illustrate the analytic solutions of R13 equations (<ref>)–(<ref>) with the Onsager boundary conditions (<ref>)–(<ref>) using the examples of one-dimensional Couette and Fourier flows in <cit.>. The results will be compared with reference solutions by DSMC simulations which are obtained by Bird's code <cit.>.  
-
-Following the examples in <cit.>, we consider the inverse-power-law model which assumes that the force F between two molecules is proportional to an inverse power of the distance r between them as F = κ r^-η, where η and κ are positive parameters. After nondimensionalization as done in <cit.>, the parameter κ will be integrated into the Knudsen number , and we choose =0.05 and 0.1 in our tests. For the parameter η, we take three values η =5,10 and ∞. In particular, when η =5, the inverse-power-law model becomes Maxwell molecules and the corresponding moment equations are identical to those derived in <cit.>; the choice η = 10 is often used in the simulation of the argon gas; when η→∞, the model reduces to the hard-sphere model <cit.>. Different choices of η will result in different values of a_lmn in the collision operator (<ref>). Thus, the coefficients appearing in the moment equations such as ℒ^(mn)_l and β_i as well as λ_ij in the boundary conditions all rely on the choice of η. We list the numerical values of these coefficients in the supplementary material for reference. In addition, both plates are assumed to be completely diffusive, that is, the accommodation coefficients are χ_l = χ_r =1. 
-
-The results are plotted in Figure <ref> and <ref> for the Couette flow and the Fourier flow. The horizontal axis in each subfigure is x_2, and the vertical axis is the value of the variables we are interested in for the one-dimensional channel problems with Knudsen numbers =0.05 and 0.1. The R13 results are plotted as the blue, yellow and green solid lines for η =5,10 and ∞, and the corresponding reference solutions by DSMC are given by the dotted lines with the same colors. Detailed descriptions of these figures are given in the following subsections.
-
-
-
-  §.§.§ Results of the Couette flow
-
-In the planar Couette flow, the two plates have the same temperature and move in opposite directions (see Figure <ref>). In our test, we select θ_l^W = θ_r^W = 0 and v_l^W = -v_r^W = 0.2. In Figure <ref>, we plot the results of v_1, σ_12 and q_1 for Couette flow. As can be seen, the solid curves by R13 solutions generally agree with the dotted curves by the DSMC reference solutions, and they match better for smaller , which implies the validity of our models. Note that due to the lack of nonlinearity, the other five variables (ρ, θ, σ_11, σ_22 and q_2) are all zero in the analytical solutions.
-
-
-
-
-
-
-  §.§.§ Results of the Fourier flow
-
-For the Fourier flow, the two plates are stationary, i.e, v^W_r = v^W_l = 0, and the flow is driven solely by the difference of plate temperatures. In our simulations, we set θ^W_l = 0 and θ^W_r =0.2. Due to the simplicity of the structure, the Fourier flow relies less on the nonlinear contributions and we may look at some other variables that we have not shown in Figure <ref> for Couette flow. In Figure <ref>, we plot the results for θ , σ_22 and q_2. Again, the R13 solutions (solid lines) provide qualitatively correct results as expected, showing that our linear R13 model works for the Fourier flow as well. In general, despite the enforcement of a symmetric structure, our models provide almost equal qualities as the equations in <cit.>.
-
-
-
+Finally, to demonstrate the expansion of achievable torque through
+assembly of units, we conducted a valve opening experiment. An
+industrial gate valve was used for the experiment, and end effectors
+for valve operation was attached to the robot. These end effectors are
+capable of passive expansion and contraction, and do not hinder
+takeoff and landing. The results of the experiment are presented in
+figure:peg. From these results, it was demonstrated that
+proposed robot TRADY
+is capable of stable valve opening operations in the air. figure:peg(B)
+shows that a maximum torque of 2.4Nm is required during task execution
+(actually, about 2.2Nm of torque is required to open this valve). Here,
+it can be seen that by assembling units, the torque performance is
+improved by approximately nine times with respect to the yaw direction
+torque that can be exerted in unit state, which is a maximum of
+0.28Nm. This is due to the fact that the size of the body has increased by
+assembling units and that torque realization using the horizontal
+component of rotor thrusts is possible due to the fully-actuated model
+control.
 
 
 
 
 § CONCLUSION
 
+In this study, we have developed the configuration of the quadrotor unit
+named TRADY that
+possesses the ability to engage in aerial self-assembly and
+self-disassembly. A noteworthy achievement of this work is that the
+robot can perform both assembly and disassembly while seamlessly
+transitioning between fully-actuated and under-actuated models. Building
+upon the proposed design, control methodology, and motion strategy, we
+conducted empirical experiments that demonstrated the robot's ability to
+perform stable assembly/disassembly movements, as well as execute
+various aerial manipulation tasks. During the assembly/disassembly
+experiment, we established that the proposed robot can successfully
+complete assembly/disassembly movements at a rate of 90%, while also
+observing that the proposed thrust transition method can suppress
+instability during switching. Additionally, in the task
+execution experiment, we determined that the robot in the assembly state
+can exercise independent control over translation and rotation, while
+also generating nine times the torque compared to the unitary state.The pivotal concern that remains in this study is that TRADY, while in
+the assembly state, is fully-actuated but not omni-directional, which
+restricts its ability to hover at a significantly tilted posture. As a
+future prospect, we intend to design a new docking mechanism equipped
+with joints that will enable the robot to alter rotor directions after
+assembly. This will expand the robot's controllability in a more
+significant manner. Furthermore, expanding the system by utilizing three
+or more units remains a future challenge. In cases involving three or
+more units, multiple combinations are possible, allowing for the
+selection of appropriate units based on the task at hand.
 
-This paper performs a re-derivation of the linear steady-state regularized 13-moment equations of general gas molecules from a novel point of view. Our derivation is based on a decomposition of the function space according to the order of accuracy, which provides a clearer picture of the entire procedure and gains a symmetric structure in the final system. This also allows a straightforward approach to obtaining Onsager boundary conditions. As an ongoing work, we are trying to apply this approach to time-dependent equations. Extensions to other kinetic equations such as the radiative transfer equation will also be considered in our future work.
 
 
 
 
 
-plain
 
 
 
@@ -1167,7 +1468,6 @@ plain
 
 
 
-Supplementary materials: Linear regularized 13-moment equations with Onsager boundary conditions for general gas molecules
 
 
 
@@ -1182,134 +1482,257 @@ Supplementary materials: Linear regularized 13-moment equations with Onsager bou
 
 
 
-§ DERIVATION OF MOMENT EQUATIONS (<REF>)
 
 
-Given any tensors A^m_i_1⋯ i_l for all l,m = 0,1,⋯, the basis functions ψ^m_i_1,⋯,i_l satisfy the following relation <cit.>:
 
-    ∑_m,l=0^+∞ A^m_i_1⋯ i_l⟨  f_M ψ^m_i_1⋯ i_l,ψ^n_j_1⋯ j_l'⟩ =  l'!/(2l'+1)!! A^n_⟨ j_1⋯ j_l'⟩.
 
-Using this property, we can derive (<ref>) by multiplying the Boltzmann equation (<ref>) by ψ_i_1⋯ i_l^n and then integrating with respect to . The calculation of the right-hand side is the as follows:
 
-    1/⟨ℒ[f], ψ_i_1,⋯,i_l^n ⟩   =
-    1/∑_m,k=0^+∞(2k+1)!!/k!w_j_1,⋯,j_k^m  ⟨ℒ[ψ^m_j_1,⋯,j_k f_M], ψ^n_i_1,⋯,i_l⟩
-        = 1/∑_m,k=0^+∞∑_n'=0^+∞ a_kmn'(2k+1)!!/k!w_j_1,⋯,j_k^m ⟨ f_M  ψ^n'_j_1,⋯,j_k, ψ^n_i_1,⋯,i_l⟩
-        = 1/∑_n'=0^+∞ a_lnn' w_i_1,⋯, i_l^n',
 
-where we have used (<ref>) to expand ℒ[ψ^m_j_1,⋯,j_k].
-For the left-hand side, we need another property from <cit.>:
 
-    ψ^n_i_1⋯ i_lξ_j = ( √(2(n+l)+3)ψ^n_i_1 ⋯ i_l j - √(2n)ψ^n-1_i_1 ⋯ i_l j)+
-                 + l/2l+1( √(2(n+l)+1)ψ^n_⟨ i_1 ⋯ i_l-1δ_i_l⟩ j   -√(2(n+1))ψ^n+1_⟨  i_1 ⋯ i_l-1δ_i_l⟩ j),
 
-using which we have
 
-    ⟨ξ_j ∂ f/∂ x_j, ψ_i_1,⋯,i_l^n ⟩   =
-      ⟨∂ f/∂ x_j, ψ_i_1,⋯,i_l^n ξ_j ⟩
-      = ∑_m,k=0^+∞(2k+1)!!/k!∂ w_j_1,⋯,j_k^m /∂ x_j⟨ f_M ψ^m_j_1,⋯,j_k,  ψ^n_i_1,⋯,i_lξ_j ⟩
-       = ( √(2(n+l)+3)∂ w_i_1⋯ i_l j^n/∂ x_j - √(2n)∂ w_i_1⋯ i_l j^n-1/∂ x_j) 
-            + l/2l+1( √(2(n+l)+1)∂ w_⟨ i_1⋯ i_l-1^n/∂ x_i_l ⟩ - √(2(n+1))∂ w_⟨ i_1⋯ i_l-1^n+1/∂ x_i_l⟩).
- 
-Equating (<ref>) and (<ref>) gives the moment equations (<ref>).
 
 
 
 
-§ PROOF OF (O0)-(O4)
 
-Similar as (<ref>), T_i_1⋯ i_l^n can also be expanded as 
 
-    T_i_1⋯ i_l^n =  T_i_1⋯ i_l^n|0 +  T_i_1⋯ i_l^n|1 + ^2 T_i_1⋯ i_l^n|2 + ^3 T_i_1 ⋯ i_l^n|3 + ⋯.
 
+IEEEtran
 
 
 
- §.§ Zeroth order
 
-To find the zeroth-order terms in the asymptotic expansion (<ref>), we insert (<ref>)(<ref>) into (<ref>) and balance the O(^-1) terms on both sides. The result is
 
-    ∑_n'=0^+∞ a_lnn' w_i_1⋯ i_l^n'|0 = 0
 
-For l ≥ 2, we can multiply both sides by b_ln_1n^(0) and take the sum over n, which gives us
 
-w_i_1⋯i_l^n_1|0 = 0,     ∀n_1 ⩾0.
 
-When l = 0 and l = 1, due to the relations (<ref>), we can multiply both sides of (<ref>) by b_0n_1n^(2) or b_1n_1n^(1) and then take the sum over n, to obtain
 
-w^n|0 = 0,   ∀n ⩾2,     and     w_i^n|0 = 0,   ∀n ⩾1.
-   
-The values of w^0|0, w_i^0|0 and w^1|0 are allowed to be nonzero, and thus we reach to the conclusion (O0). Following the idea of the Chapman-Enskog expansion, we assume that
+10
 
-    w^0|k = w^1|k = w_i^0|k = 0,     ∀ k ⩾ 1.
+url@samestyle
 
-Using these results, we can find the following zeroth-order terms for T_i_1 ⋯ i_l^n:
 
-    T^n|0 = 0,      n ⩾ 2, 
-    
-    T_i^1|0 = √(5)/3∂ w^1/∂ x_i,   
-    T_i^n|0 = 0,      n ⩾ 2, 
-    
-    T_ij^0|0 =  2/√(5)∂ w_⟨ i^0/∂ x_j⟩,   
-    T_ij^n|0 = 0,      n ⩾ 1,
-    
-    T_i_1 ⋯ i_l^n|0 = 0,      l ⩾ 3,    n ⩾ 0.
 
-These results are to be used in the derivation of first-order terms.
 
 
 
- §.§ First order
 
-By inserting (<ref>)(<ref>) into (<ref>) and balancing the O(1) terms on both sides, we get
 
-    T_i_1⋯ i_l^n|0 = ∑_n'=0^+∞ a_lnn' w^n'|1_i_1⋯ i_l.
+Floreano2015
+D. Floreano and R. J. Wood, “Science, technology and the future of small
+  autonomous drones,” Nature, vol. 521, pp. 460–466, 2015.
 
+kumar2012
+V. Kumar and N. Michael, “Opportunities and challenges with autonomous micro
+  aerial vehicles,” The International Journal of Robotics Research,
+  vol. 31, no. 11, pp. 1279–1291, 2012.
 
+Bonatti2020
+R. Bonatti, Y. Zhang, S. Choudhury, W. Wang, and S. Scherer, “Autonomous drone
+  cinematographer: Using artistic principles to create smooth, safe,
+  occlusion-free trajectories for aerial filming,” in Proceedings of the
+  2018 international symposium on experimental robotics.1em plus 0.5em
+  minus 0.4emSpringer, 2020, pp. 119–129.
+
+Sewer
+F. Chataigner, “Arsi: an aerial robot for sewer inspection.” Advances
+  in Robotics Research: From Lab to Market. Springer, Cham, 2020, pp.
+  249–274, 2020.
+
+Michael2012
+N. Michael, S. Shen, K. Mohta, Y. Mulgaonkar, V. Kumar, K. Nagatani, Y. Okada,
+  S. Kiribayashi, K. Otake, K. Yoshida, K. Ohno, E. Takeuchi, and S. Tadokoro,
+  “Collaborative mapping of an earthquake-damaged building via ground and
+  aerial robots,” Journal of Field Robotics, vol. 29, no. 5, pp.
+  832–841, 2012.
+
+Doitsidis2012
+L. Doitsidis, S. Weiss, A. Renzaglia, M. W. Achtelik, E. Kosmatopoulos,
+  R. Siegwart, and D. Scaramuzza, “Optimal surveillance coverage for teams of
+  micro aerial vehicles in gps-denied environments using onboard vision,”
+  Autonomous Robots, vol. 33, pp. 173–188, 2012.
+
+figure_8
+Y. Bai and S. Gururajan, “Evaluation of a baseline controller for autonomous
+  “figure-8” flights of a morphing geometry quadcopter: Flight performance,”
+  Drones, 2019.
+
+morphing_quad
+D. Falanga, K. Kleber, S. Mintchev, D. Floreano, and D. Scaramuzza, “The
+  foldable drone: A morphing quadrotor that can squeeze and fly,” IEEE
+  Robotics and Automation Letters, vol. 4, no. 2, pp. 209–216, 2019.
+
+origami
+D. Yang, S. Mishra, D. M. Aukes, and W. Zhang, “Design, planning, and control
+  of an origami-inspired foldable quadrotor,” in 2019 American Control
+  Conference (ACC), 2019, pp. 2551–2556.
+
+n_zhao
+N. Zhao, Y. Luo, H. Deng, and Y. Shen, “The deformable quad-rotor: Design,
+  kinematics and dynamics characterization, and flight performance
+  validation,” in 2017 IEEE/RSJ International Conference on Intelligent
+  Robots and Systems (IROS), 2017, pp. 2391–2396.
+
+Bucki
+N. Bucki, J. Tang, and M. W. Mueller, “Design and control of a
+  midair-reconfigurable quadcopter using unactuated hinges,” IEEE
+  Transactions on Robotics, vol. 39, no. 1, pp. 539–557, 2023.
+
+Voliro
+“The voliro omniorientational hexacopter: An agile and maneuverable
+  tiltable-rotor aerial vehicle,” IEEE Robotics and Automation
+  Magazine, vol. 25, pp. 34–44, 12 2018.
+
+khamseh2018
+H. B. Khamseh, F. Janabi-Sharifi, and A. Abdessameud, “Aerial manipulation―a
+  literature survey,” Robotics and Autonomous Systems, vol. 107, pp.
+  221–235, 2018.
+
+Mellinger2011
+D. Mellinger, Q. Lindsey, M. Shomin, and V. Kumar, “Design, modeling,
+  estimation and control for aerial grasping and manipulation,” in 2011
+  IEEE/RSJ International Conference on Intelligent Robots and Systems, 2011,
+  pp. 2668–2673.
+
+Heredia2014
+G. Heredia, A. Jimenez-Cano, I. Sanchez, D. Llorente, V. Vega, J. Braga,
+  J. Acosta, and A. Ollero, “Control of a multirotor outdoor aerial
+  manipulator,” in 2014 IEEE/RSJ International Conference on Intelligent
+  Robots and Systems, 2014, pp. 3417–3422.
+
+hydrus
+M. Zhao, K. Kawasaki, K. Okada, and M. Inaba, “Transformable multirotor with
+  two-dimensional multilinks: modeling, control, and motion planning for aerial
+  transformation,” Advanced Robotics, vol. 30, no. 13, pp. 825–845,
+  2016.
+
+dragon
+M. Zhao, F. Shi, T. Anzai, K. Okada, and M. Inaba, “Online motion planning for
+  deforming maneuvering and manipulation by multilinked aerial robot based on
+  differential kinematics,” IEEE Robotics and Automation Letters,
+  vol. 5, no. 2, pp. 1602–1609, 2020.
+
+Lasdra
+H. Yang, S. Park, J. Lee, J. Ahn, D. Son, and D. Lee, “Lasdra: Large-size
+  aerial skeleton system with distributed rotor actuation,” in 2018 IEEE
+  International Conference on Robotics and Automation (ICRA), 2018, pp.
+  7017–7023.
+
+Zhao2022
+M. Zhao, K. Okada, and M. Inaba, “Versatile articulated aerial robot dragon:
+  Aerial manipulation and grasping by vectorable thrust control,”
+  International Journal of Robotics Research, 2022.
+
+Naldi2015
+R. Naldi, F. Forte, A. Serrani, and L. Marconi, “Modeling and control of a
+  class of modular aerial robots combining under actuated and fully actuated
+  behavior,” IEEE Transactions on Control Systems Technology, vol. 23,
+  no. 5, pp. 1869–1885, 2015.
+
+Granger
+K. Garanger, J. Epps, and E. Feron, “Modeling and experimental validation of a
+  fractal tetrahedron uas assembly,” in 2020 IEEE Aerospace Conference,
+  2020, pp. 1–11.
+
+Xu2021
+J. Xu, D. S. D'Antonio, and D. Saldana, “H-modquad: Modular multi-rotors with
+  4, 5, and 6 controllable dof,” vol. 2021-May.1em plus 0.5em minus
+  0.4emInstitute of Electrical and Electronics Engineers Inc., 2021, pp.
+  190–196.
+
+Flightarray1
+R. Oung, A. Ramezani, and R. D'Andrea, “Feasibility of a distributed flight
+  array,” in Proceedings of the 48h IEEE Conference on Decision and
+  Control (CDC) held jointly with 2009 28th Chinese Control Conference, 2009,
+  pp. 3038–3044.
 
+Flightarray2
+R. Oung, F. Bourgault, M. Donovan, and R. D'Andrea, “The distributed flight
+  array,” in 2010 IEEE International Conference on Robotics and
+  Automation, 2010, pp. 601–607.
 
-  
-Expressions of w_i_1⋯ i_l^n|1 for l = 0 and l ⩾ 3
-When l = 0 and n ⩾ 2, the left-hand side of the above equation is zero, and therefore
+Saldana2018
+D. Saldana, B. Gabrich, G. Li, M. Yim, and V. Kumar, “Modquad: The flying
+  modular structure that self-assembles in midair.”1em plus 0.5em minus
+  0.4emInstitute of Electrical and Electronics Engineers Inc., 9 2018,
+  pp. 691–698.
 
-    w^n|1 = 0,      n ⩾ 2.
+moddessemble
+D. Saldana, P. M. Gupta, and V. Kumar, “Design and control of aerial modules
+  for inflight self-disassembly,” IEEE Robotics and Automation Letters,
+  vol. 4, pp. 3402–3409, 10 2019.
 
-Similarly,
+Hara2014
+I. O'Hara, J. Paulos, J. Davey, N. Eckenstein, N. Doshi, T. Tosun, J. Greco,
+  J. Seo, M. Turpin, V. Kumar, and M. Yim, “Self-assembly of a swarm of
+  autonomous boats into floating structures,” in 2014 IEEE International
+  Conference on Robotics and Automation (ICRA), 2014, pp. 1234–1240.
 
-    w_i_1⋯ i_l^n|1 = 0,     if  l ⩾ 3  and  n ⩾ 0.
+Yanagimura
+K. Yanagimura, K. Ohno, Y. Okada, E. Takeuchi, and S. Tadokoro, “Hovering of
+  mav by using magnetic adhesion and winch mechanisms,” in 2014 IEEE
+  International Conference on Robotics and Automation (ICRA), 2014, pp.
+  6250–6257.
 
+Ryll2016
+M. Ryll, D. Bicego, and A. Franchi, “Modeling and control of fast-hex: A
+  fully-actuated by synchronized-tilting hexarotor,” in 2016 IEEE/RSJ
+  International Conference on Intelligent Robots and Systems (IROS).1em
+  plus 0.5em minus 0.4emIEEE, 2016, pp. 1689–1694.
 
+Park2016
+S. Park, J. Her, J. Kim, and D. Lee, “Design, modeling and control of
+  omni-directional aerial robot,” vol. 2016-November.1em plus 0.5em
+  minus 0.4emInstitute of Electrical and Electronics Engineers Inc., 11
+  2016, pp. 1570–1575.
 
+Tandale
+M. D. Tandale, R. Bowers, and J. Valasek, “Trajectory tracking controller for
+  vision-based probe and drogue autonomous aerial refueling,” Journal of
+  Guidance, Control, and Dynamics, vol. 29, no. 4, pp. 846–857, 2006.
 
-  
-Expressions of w_i^n|1
-Using (<ref>), we have
+FRAVOLINI2004611
+M. L. Fravolini, A. Ficola, G. Campa, M. R. Napolitano, and B. Seanor,
+  “Modeling and control issues for autonomous aerial refueling for uavs using
+  a probe^^e2^^80^^93drogue refueling system,” Aerospace Science and
+  Technology, vol. 8, no. 7, pp. 611–618, 2004. [Online]. Available:
+  <https://www.sciencedirect.com/science/article/pii/S1270963804000744>
 
-   √(5)/3 ∂w^1/∂x_i  = ∑_n'=1^+∞ a_11n' w_i^n'|1  and 
- ∑_n'=1^+∞ a_1nn' w_i^n'|1 = 0,  for  n ⩾2.
 
-Hence,
+singularity
+M. Zhao, T. Anzai, K. Okada, K. Kawasaki, and M. Inaba, “Singularity-free
+  aerial deformation by two-dimensional multilinked aerial robot with 1-dof
+p  vectorable propeller,” IEEE Robotics and Automation Letters, vol. 6,
+  pp. 1367–1374, 4 2021.
 
-    w_i^n|1 = √(5)/3 b_11n^(1)∂ w^1/∂ x_i
+Convex
+P. Bosscher, A. Riechel, and I. Ebert-Uphoff, “Wrench-feasible workspace
+  generation for cable-driven robots,” IEEE Transactions on Robotics,
+  vol. 22, no. 5, pp. 890–902, 2006.
 
-which produces the expression (<ref>). Similar to the Chapman-Enskog expansion, here we would like to assume that
+Isres
+N. Documentation, “Nlopt algorithms,”
+  <https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#isres-improved-stochastic-ranking-evolution-strategy>.
 
-    w_i^1|k = 0,     for all  k ⩾ 2.
+Lee2010
+T. Lee, M. Leok, and N. H. McClamroch, “Geometric tracking control of a
+  quadrotor uav on se(3),” in 49th IEEE Conference on Decision and
+  Control (CDC), 2010, pp. 5420–5425.
 
+LQI
+P. Young and J. Willems, “An approach to the linear multivariable
+  servomechanism problem,” International Journal of Control, vol. 15,
+  06 1972.
 
 
 
 
 
 
-  
-Expressions of w_ij^n|1
-Following the similar argument for the case l = 1 upon using (<ref>), we have
 
-    w_ij^n|1 = 2/√(5) b_20n^(0)∂ w_⟨ i^0/∂ x_j⟩,
 
-which yields the relation (<ref>). Again, since w_ij^0 appears in the final equations, instead of (<ref>), we are going to assume
 
-    w_ij^0|k = 0,     for all  k ⩾ 2.
 
 
 
@@ -1319,465 +1742,11 @@ which yields the relation (<ref>). Again, since w_ij^0 appears in the final equa
 
 
 
-By (<ref>) and (<ref>), we conclude that {w^n_i}_n=1^∞, {w^n_ij}_n=0^∞ are only first order moments in the expansion of distribution function and thus we arrive at the statement (O1). By inserting the above results (<ref>)(<ref>)(<ref>)(<ref>) into (<ref>), we can obtain the expressions of T_i_1⋯ i_l^n|1. When l ⩾ 4, it is easy to see from (<ref>) that T_i_1⋯ i_l^n|1 = 0. For l = 0,1,2,3, these quantities are given as follows:
 
 
 
-  
-Expressions of T^n|1
-By the relation (<ref>), it holds that
 
-    T^n|1 = √(2n+3)∂ w_j^n|1/∂ x_j - √(2n)∂ w_j^n-1|1/∂ x_j 
-    = √(2n+3) b_11n^(1) - √(2n) b_11,n-1^(1)/b_111^(1)∂ w_j^1|1/∂ x_j
 
-for n ⩾ 1. Note that when n = 1, the coefficient b_110^(1) should be regarded as zero since w_j^0|1 = 0 by the assumption (<ref>).
-
-
-
-  
-Expressions of T_i^n|1
-By the relation (<ref>), we have
-
-    T_i^n|1 = √(2n+5)∂ w_ij^n|1/∂ x_j - √(2n)∂ w_ij^n-1|1/∂ x_j 
-    = √(2n+5) b_20n^(0) - √(2n) b_20,n-1^(0)/b_200^(0)∂ w_ij^0|1/∂ x_j
-
-for n⩾ 1.
-
-
-
-
-
-
-  
-Expressions of T_ij^n|1
-By the relation (<ref>), we have 
-
-    T_ij^n|1 = 2/5( √(2n+5)∂ w_⟨ i^n|1/∂ x_j⟩ - √(2(n+1))∂ w_⟨ i^n+1|1/∂ x_j⟩) 
-    = 2/5√(2n+5) b_11n^(1) - √(2(n+1)) b_11,n+1^(1)/b_111^(1)∂ w_⟨ i^1|1/∂ x_j ⟩
-
-for n ⩾ 0, where the coefficient b_110^(1) should be regarded as zero when n=0 again by the assumption (<ref>).
-
-
-
-
-
-  
-Expressions of T_ijk^n|1
-Since w_ijkl^n|1 = 0, by the relation (<ref>) we have
-
-    T_ijk^n|1 = 3/7( √(2n+7)∂ w_⟨ ij^n|1/∂ x_k⟩ - √(2(n+1))∂ w_⟨ ij^n+1|1/∂ x_k⟩) 
-    = 3/7√(2n+7) b_20n^(0) - √(2(n+1)) b_20,n+1^(0)/b_200^(0)∂ w_⟨ ij^0|1/∂ x_k ⟩
-
-
-
-
- §.§ Second order
-
-We now find the second-order moments in the expansion of distribution function based on 
-
-    T_i_1⋯ i_l^n|1 = ∑_n'=0^+∞ a_lnn' w^n'|2_i_1⋯ i_l.
-
-
-
-  
-Expressions of w^n|2
-By (<ref>), we have
-
-    w^n|2 = ∑_n'=2^+∞ b_0nn'^(2) T^n'|1 
-    = γ^(2),n_0 ∂ w_j^1|1/∂ x_j
-
-for n⩾ 2, where γ^(2),n_0 is defined in (<ref>). Note that the summation begins from n'=2 due to the assumption (<ref>).
-
-
-
-
-
-
-
-  
-Expressions of w_i^n|2
-By (<ref>), we have
-
-    w_i^n|2 = ∑_n'=2^+∞ b_1nn'^(2) T_i^n'|1 
-    =γ^(1),n_1∂ w_ij^0|1/∂ x_j
-
-for n⩾ 2, where γ^(1),n_1 is defined in (<ref>). Note that the summation begins from n'=2 due to the assumption (<ref>).
-
-
-
-
-
-  
-Expressions of w_ij^n|2
-By (<ref>), we have 
-
-    w_ij^n|2 = ∑_n'=1^+∞ b_2nn'^(1) T_ij^n'|1 
-    =  γ^(1),n_2 ∂ w_⟨ i^1|1/∂ x_j⟩,
-
-for n ⩾ 1, where γ^(1),n_2 is defined in (<ref>). Note that the summation begins from n'=1 due to the assumption (<ref>).
-
-
-
-
-  
-Expressions of w_ijk^n|2
-By (<ref>), we have
-
-    w_ijk^n|2 = ∑_n'=0^+∞ b_3nn'^(0) T_ijk^n'|1 =
-    γ^(2),n_3 ∂ w_⟨ ij^0|1/∂ x_k⟩
-
-for any non-negative n, where γ^(2),n_3 is defined in (<ref>).
-
-
-
-
-
-
-
-
-
-  
-Expressions of w_i_1⋯ i_l^n|2 for l ⩾ 4
-When l ⩾ 4, since T_i_1⋯ i_l^n|1 = 0, we have
-
-w_i_1⋯i_l^n|2 = 0.
-
-
-At this point, we may conclude that {w^n}_n=2^∞ and {w^n_ijk}_n=0^∞ are the all second-order moments in the expansion of distribution function, and thus we arrive at (O2). Finally, the statement (O3) is the direct conclusion from 
-
-    w_ijkl^n|3 = ∑_n'=0^+∞ b_4nn'^(0) T_ijkl^n'|2 ∼O(^3),
-
-while (O4) comes from 
-
-   w_i_1⋯i_l^n|3 = ∑_n'=0^+∞ b_lnn'^(0) T_i_1⋯i_l^n'|2 = 0 
-
-as T_i_1⋯ i_l^n|2 = 0 when l ⩾ 5.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-§ PROOF OF PROPOSITION <REF>
-
-We first claim that 𝒮̅ = 𝒮̅ (ℐ - 𝒫_u), or equivalently, 𝒮̅𝒫_u = 0. This can be shown by direct calculation:
-
-    𝒮̅𝒫_u    = (ℐ - 𝒫_u) (ℐ - 𝒮𝒮_uu^-1𝒫_u) 𝒮𝒫_u = (ℐ - 𝒫_u) 𝒮𝒫_u - (ℐ - 𝒫_u) 𝒮𝒮_uu^-1𝒫_u 𝒮𝒫_u 
-       = (ℐ - 𝒫_u) 𝒮𝒫_u - (ℐ - 𝒫_u) 𝒮𝒫_u = 0.
-
-Since 𝕍_ρ⊂𝕍^(0) and 𝕍_ρ⊂𝕍_even, we can see from (<ref>) and (<ref>) that
-
-𝒜̅_oe 𝒫_ρ = 𝒜̅_n 𝒫_ρ = 𝒫_𝕍 ξ_n 𝒫_ρ.
-
-Thus, by ξ_n ψ^0 = ψ_n^0 ∈𝕍_u, we get 𝒜̅_oe𝒫_ρ = 𝒫_u ξ_n 𝒫_ρ. Therefore, one can derive from (<ref>) that
-
-𝒮̅ 𝒜̅_oe 𝒫_ρ = 𝒮̅ 𝒫_u ξ_n 𝒫_ρ = 0,
-
-which proves (<ref>).
-
-The proof of (<ref>) is straightforward. Using 𝒫_u 𝒮̅ = 𝒫_u (ℐ - 𝒫_u) ⋯ = 0, we can find that
-
-𝒫_u f̅ = 𝒫_u 𝒫_odd |_𝕍 f̅ = 𝒫_u 𝒮̅ 𝒜̅_oe(f_W - 𝒫_even|_𝕍  f̅) = 0.
-
-To show (<ref>), we need to choose ρ_W such that
-
-𝒫_u 𝒮 𝒜̅_oe (f_W - 𝒫_even|_𝕍 f̅) = 0.
-
-When (<ref>) holds, one can use the two equalities above to obtain
-
-
-𝒫_odd|_𝕍   f̅    = 𝒫_u f̅ + (ℐ - 𝒫_u) 𝒫_odd|_𝕍   f̅ = 0 + (ℐ - 𝒫_u) 𝒮̅ 𝒜̅_oe(f_W - 𝒫_even|_𝕍  f̅) 
-
-   = (ℐ - 𝒫_u) (ℐ - 𝒮 𝒮_uu^-1 𝒫_u)𝒮 𝒜̅_oe(f_W - 𝒫_even|_𝕍  f̅) 
-
-   = (ℐ - 𝒫_u) 𝒮 𝒜̅_oe(f_W - 𝒫_even|_𝕍  f̅) - (ℐ - 𝒫_u)𝒮 𝒮_uu^-1 𝒫_u 𝒮 𝒜̅_oe(f_W - 𝒫_even|_𝕍  f̅) 
-
-   = (ℐ - 𝒫_u) 𝒮 𝒜̅_oe(f_W - 𝒫_even|_𝕍  f̅) = 𝒮 𝒜̅_oe(f_W - 𝒫_even|_𝕍  f̅).
-
-
-This proves (<ref>).
-
-It remains to show that 𝒮̅ is self-adjoint and positive semidefinite. Its self-adjointness can be seen by rewriting the expression of 𝒮̅ as
-
-𝒮̅ = 𝒮̅ (ℐ - 𝒫_u) = (ℐ - 𝒫_u)(𝒮 - 𝒮 𝒫_u 𝒮_uu^-1 𝒫_u 𝒮) (ℐ - 𝒫_u).
-
-For any g̅∈𝕍_odd, we can define g = (ℐ - 𝒮_uu^-1𝒫_u 𝒮)(ℐ - 𝒫_u) g̅ and verify that
-
-⟨g̅, 𝒮̅ g̅ ⟩= ⟨g, 𝒮 g ⟩.
-
-Therefore, the positive semidefiniteness of 𝒮̅ follows the positive semidefiniteness of 𝒮.
-
-
-
-
-
-
-
-§ EXPRESSIONS OF COEFFICIENTS
-
-
-
- §.§ Expressions of c^(d),n_l
-
-
-
-    
-  * Coefficients in the first-order moments: The expressions of c^(1),n_1 and c^(1),n_2 are given by 
-    
-    c^(1),n_1 =     b_11n^(1)/√(∑^+∞_n=1(b^(1)_11n)^2 ),  for  n⩾ 1
-    
-            c^(1),n_2 =     b_20n^(0)/ √(∑^+∞_n=0(b^(0)_20n)^2 ),  for  n⩾ 0,
-
-    where b^n_0_lnn' can be obtained from (<ref>).
-    
-  * Coefficients in the first-order moments: The expressions of c^(2),n_0 and c^(2),n_3 are given by 
-        
-    c^(2),n_0 =     γ^(2),n_0 / √(∑^+∞_n=2( γ^(2),n_0)^2 ),  for  n⩾ 2,
-    
-            c^(2),n_3 =     γ^(2),n_3 /√(∑^+∞_n=0(γ^(2),n_3)^2 ),  for  n⩾ 0
-
-  where γ^(2),n_0 and γ^(2),n_3 are respectively given by (<ref>) and (<ref>). (<ref>) and (<ref>). 
-
-For non-Maxwell molecules, the expressions of c^(2),n_1 and c^(2),n_2 are given by 
-
- 
- c^(2),n_1 =       1/C^(2)_1 ×
-  - ∑_n'=2^+∞ c̅^n'_1 b^(1)_11n'/b^(1)_111,      if    n=1
-
-    c̅^n_1 ,      if    n⩾2
-
-  , 
- 
-  c^(2),n_2 =      1/C^(2)_2 ×
-  - ∑_n'=1^+∞ c̅^n'_2 b^(0)_20n'/b^(0)_200,      if    n=0
-
-    c̅^n_2 ,      if    n ⩾1
-
- 
-  
-
-where C^(2)_1, C^(2)_1 are constants chosen such that the scaling 
-
-    ∑_n=1^+∞|c_1^(2),n|^2 = ∑_n=0^+∞|c_2^(2),n|^2 = 1
-
-holds, and c̅^n_1, c̅^n_2 are respectively the solutions of the linear system 
-
-    [                      τ^2_3                      τ^3_3    α_3 b^(1)_114/b^(1)_111    α_3 b^(1)_115/b^(1)_111                          ⋯    α_3 b^(1)_11D/b^(1)_111                          ⋯;                      τ^2_4    α_4 b^(1)_113/b^(1)_111                      τ^4_4    α_4 b^(1)_115/b^(1)_111                          ⋯    α_4 b^(1)_11D/b^(1)_111                          ⋯;                          ⋮                          ⋮                          ⋮                          ⋮                          ⋱                          ⋮                          ⋱;                      τ^2_D    α_D b^(1)_113/b^(1)_111    α_D b^(1)_114/b^(1)_111                          ⋯ α_D b^(1)_11,D-1/b^(1)_111                      τ^D_D                          ⋯;                          ⋮                          ⋮                          ⋮                          ⋮                          ⋱                          ⋮                          ⋱ ][   c̅^2_1;   c̅^3_1;        ⋮; c̅^D-1_1;   c̅^D_1;        ⋮ ] = 0
-
-where 
-
-  τ^2_D = b^(1)_112/b^(1)_111α_D - γ^(1),D_1/γ^(1),2_1, τ^D_D = b^(1)_11D/b^(1)_111α_D + 1,    α_D =  b^(1)_11D/b^(1)_111 - γ^(1),D_1/γ^(1),2_1 b^(1)_112/b^(1)_111   with  c̅^2_1 = 1
-
-and 
-
-    [                      τ̃^1_2                      τ̃^2_2    α̃_2 b^(0)_203/b^(0)_200    α̃_2 b^(0)_204/b^(0)_200                           ⋯    α̃_2 b^(0)_20D/b^(0)_200                           ⋯;                      τ̃^1_3    α̃_3 b^(0)_202/b^(0)_200                      τ̃^3_3    α̃_3 b^(0)_204/b^(0)_200                           ⋯    α̃_3 b^(0)_20D/b^(0)_200                           ⋯;                           ⋮                           ⋮                           ⋮                           ⋮                           ⋱                           ⋮                           ⋱;                      τ̃^1_D    α̃_D b^(0)_202/b^(0)_200    α̃_D b^(0)_203/b^(0)_200                           ⋯ α̃_D b^(0)_20,D-1/b^(0)_200                      τ̃^D_D                           ⋯;                           ⋮                           ⋮                           ⋮                           ⋮                           ⋱                           ⋮                           ⋱ ][   c̅^1_2;   c̅^2_2;        ⋮; c̅^D-1_2;   c̅^D_2;        ⋮ ] = 0
-
-where 
-
-  τ̃^1_D = b^(0)_201/b^(0)_200α̃_D - γ^(1),D_2/γ^(1),1_2,  τ̃^D_D = b^(0)_20D/b^(0)_200α̃_D + 1,   α̃_D =  b^(0)_20D/b^(0)_200 - γ^(1),D_2/γ^(1),1_2 b^(0)_201/b^(0)_200  with  c̅^2_1 = 1.
-
-For Maxwell molecules, we have 
-
-  c^(2),n_1 = 0   for  n⩾1  and  c^(2),n_2 = 
-        1,      if  n = 1
-
-          0 ,      if  n=0  or  n ⩾2
-    .
-
-
-
-
-
-
-
-
-
- §.§ Expressions of A_ij
-
-
-
-    A_ij = 
-             3  ∑_n=1^+∞c^(1),n_1 (√(2n+5)c^(1),n_2 - √(2n)c^(1),n-1_2 ),     if   (i,j)=(4,5)
-    ∑_n=1^+∞  c^(1),n_1 ( √(2n+3)c^(2),n_0 - √(2(n+1))c^(2),n+1_0 ),    if   (i,j)=(4,6)
-    
-              3  ∑_n=1^+∞c^(1),n_1 (√(2n+5)c^(2),n_2 - √(2n)c^(2),n-1_2 ),    if   (i,j)=(4,8)
-    
-              3   ∑_n=0^+∞ c^(1),n_2 ( √(2n+5)c^(2),n_1 - √(2(n+1)) c^(2),n+1_1 ) ,    if   (i,j)=(5,7)
-    15/2∑_n=0^+∞ c^(1),n_2 ( √(2n+7) c^(2),n_3 - √(2n)c^(2),n-1_3 ) ,    if   (i,j)=(5,9)
-    ∑_n=2^+∞ c^(2),n_0 ( √(2n+3) c^(2),n_1 - √(2n)c^(2),n-1_1 ),    if   (i,j)=(6,7) 
-    
-              3  ∑_n=1^+∞c^(2),n_1 (√(2n+5)c^(2),n_2 - √(2n)c^(2),n-1_2 ),     if   (i,j)=(7,8)
-    15/2∑_n=0^+∞ c^(2),n_2 ( √(2n+7) c^(2),n_3 - √(2n)c^(2),n-1_3 )  ,     if   (i,j)=(8,9)
-
-
-
-
-
-
-
-
-
-
-
- §.§ Expressions of λ'_ij
-
-The boundary conditions (<ref>) can be written uniformly as 
-
-    w_n^0 = 0, 
-        u_i_1⋯ i_l^(p) = 2χ/2-χ∑_m c^(p),m_l [
-         3∑_p'=1,2∑^+∞_m'=1  c^(p'),m'_1  ( A^m'_m;i_1⋯ i_l - A^m'_0;nI^0_m;i_1 ⋯ i_l/I^0_0;n) z^(p')_n
-         + 15 ∑_t=t_1,t_2∑_p'=1,2∑^+∞_m'=0   c^(p'),m'_2  B^m';t_m;i_1 ⋯ i_l z^(p')_tn + 35/2∑^+∞_m'=0  c^(2),m'_3( D^m'_m;i_1⋯ i_l - D^m'_0;nI^0_m;i_1 ⋯ i_l/I^0_0;n) z^(2)_nnn
-        + 105/2∑_t',t”=t_1,t_2∑^+∞_m'=0  c^(2),m'_3 (  C^m';t't”_m;i_1⋯ i_l -C^m';t't”_0;nI^0_m;i_1 ⋯ i_l/I^0_0;n) z^(2)_t't”n],
-
-where u_i_1⋯ i_l^(p) is taken in the set {u^(1)_n, u^(2)_n, u^(1)_t_1 n, u^(1)_t_2 n, u^(2)_t_1 n, u^(2)_t_2 n, u^(2)_nnn, u^(2)_t_1 t_1 n, u^(2)_t_2 t_2 n, u^(2)_t_1 t_2 n}, and the coefficients are given by
-
-    I_m;i_1 ⋯ i_l^m';j_1 ⋯ j_k    =   ∫_· < 0 f_M() L̅_m'^(k+1/2)( ||^2/2)L̅_m^(l+1/2)( ||^2/2) ξ_⟨ i_ 1⋯ξ_i_l⟩ξ_⟨ j_ 1⋯ξ_j_k⟩ ,
-    A^m'_m;i_1 ⋯ i_l    =  ∫_· < 0 f_M() L̅_m'^(3/2)( ||^2/2)L̅_m^(l+1/2)( ||^2/2) ξ_⟨ i_ 1⋯ξ_i_l⟩ ,
-    B^m';t_j_m;i_1 ⋯ i_l    = ∫_· < 0 f_M() L̅_m'^(5/2)( ||^2/2)L̅_m^(l+1/2)( ||^2/2) ξ_⟨ i_ 1⋯ξ_i_l⟩ξ_t_j , 
-    C^m';t' t”_m;i_1 ⋯ i_l    = ∫_· < 0 f_M() L̅_m'^(7/2)( ||^2/2)L̅_m^(l+1/2)( ||^2/2) ξ_⟨ i_ 1⋯ξ_i_l⟩·ξ_⟨ t'ξ_t”ξ_n⟩/ξ_n , 
-    D^m'_m;i_1 ⋯ i_l    = ∫_· < 0 f_M() L̅_m'^(7/2)( ||^2/2)L̅_m^(l+1/2)( ||^2/2) ξ_⟨ i_ 1⋯ξ_i_l⟩·ξ_⟨ nξ_nξ_n⟩/ξ_n
-
-where z_i_1⋯ i_l^(k) are the coefficients in the expansion of 𝒜̅_oe (f_W - 𝒫_even|_𝕍f̅):
-
-    z^(1)_n =     1/3(√(5)c^(1),1_1(w^1,W-w^1) -A_45u^(1)_nn-A_46u^(2)-A_48u^(2)_nn),
-    
-        z^(2)_n =     1/3(√(5)c^(2),1_1 (w^1,W-w^1) - A_57u^(1)_nn-c^(2),1_1/c^(1),1_1 A_46u^(2)-A̅_78u^(2)_nn),
-    
-        z^(1)_t_in =     2/15( 3√(5)/2c^(1),0_2 (w^0,W_t_i-w^0_t_i) -1/2A_45 u^(1)_t_i - 1/2 A_57u^(2)_t_i -A_59 u^(2)_t_inn),    i=1,2, 
-    
-        z^(2)_t_in =     2/15(  3√(5)/2c^(2),0_2 (w^0,W_t_i-w^0_t_i)  - 1/2A_48u^(1)_t_i-1/2A̅_78u^(2)_t_i- c^(2),0_2/c^(1),0_2A_59 u^(2)_t_inn),   i=1,2,
-    
-        z^(2)_t_it_jn =     2/35 A_59[ 2/15δ_ij(u^(1)_nn+c^(2),0_2/c^(1),0_2u^(2)_nn) - 1/3(u^(1)_t_it_j+c^(2),0_2/c^(1),0_2u^(2)_t_it_j)],    i,j=1,2, 
-    
-        z^(2)_nnn =     2/175A_59[(u^(1)_t_1t_1+c^(2),0_2/c^(1),0_2u^(2)_t_1t_1) + (u^(1)_t_2t_2+c^(2),0_2/c^(1),0_2u^(2)_t_2t_2) -2(u^(1)_nn+c^(2),0_2/c^(1),0_2u^(2)_nn)].
-
-Combining (<ref>) with (<ref>), we obtain the expressions of the coefficients λ'_ij as 
-
-λ'_ij = 
-        -√(5)(c^(1),1_1γ'_i1  +c^(2),1_1 γ'_i2),     if  j = 1
-
-        -A_45γ'_i1 - A_57γ'_i2 + 3/5A_59(3 γ'_i3 - γ'_i4) ,    if  j = 2
-
-        -A_46(γ'_i1 + c^(2),1_1/c^(1),1_1γ'_i2) ,    if  j = 3
-
-        -A_48γ'_i1 - A̅_78 γ'_i2 + c^(2),0_2 A_59/5c^(1),0_2(4 γ'_i3 - 3 γ'_i4),    if  j = 4
-    ,  for  i = 1,2,5;
-
-
-λ'_ij = 
-        -3√(5)(c^(1),0_2γ'_i1  +c^(2),0_2 γ'_i2),     if  j = 1
-
-        -(A_45γ'_i1 + A_48γ'_i2) ,    if  j = 2
-
-         -(A_57γ'_i1 + A̅_78γ'_i2)  ,    if  j = 3
-
-        -2A_59(γ'_i1  +c^(2),0_2/c^(1),0_2 γ'_i2),    if  j = 4
-    ,  for  i = 3,4;
-
-
-λ'_ij = 
-        -A_59(γ'_63+γ'_64),     if  (i,j) = (6,1)
-
-      1/5A_59(9/2γ'_53+2γ'_63+7γ'_64),     if  (i,j) = (6,2)
-
-          -2A_59γ'_71,     if  (i,j) = (7,1)
-    .
-
-In the expressions above, γ'_ij are given as 
-
-γ'_ij = 
-       ∑_m=1^∞∑_m'=1^∞c^(i),m_1 c^(1),m'_1 (𝒜^m'_m;n - 𝒜^m'_0;nI^0_m;n/I^0_0;n) ,     if  j = 1
-
-        ∑_m=1^∞∑_m'=1^∞c^(i),m_1 c^(2),m'_1 (𝒜^m'_m;n - 𝒜^m'_0;nI^0_m;n/I^0_0;n) ,    if  j = 2
-
-        3∑_m=1^∞∑_m'=0^∞c^(i),m_1 c^(2),m'_3 (𝒞^m';t_1t_1_m;n - 𝒞^m';t_1t_1_0;nI^0_m;n/I^0_0;n) ,    if  j = 3
-
-        ∑_m=1^∞∑_m'=0^∞c^(i),m_1 c^(2),m'_3 (𝒟^m'_m;n - 𝒟^m'_0;nI^0_m;n/I^0_0;n),    if  j = 4
-    ,  for  i = 1,2;
-
-
-γ'_ij = 
-       2∑_m=0^∞∑_m'=0^∞c^(i-2),m_2 c^(1),m'_2 ℬ^m';t_1_m;t_1n  ,     if  j = 1
-
-        2∑_m=0^∞∑_m'=0^∞c^(i-2),m_2 c^(2),m'_2 ℬ^m';t_1_m;t_1n ,    if  j = 2
-    ,  for  i = 3,4;
-
-
-γ'_ij = 
-       ∑_m=0^∞∑_m'=1^∞c^(2),m_3 c^(1),m'_1 (𝒜^m'_m;nnn - 𝒜^m'_0;nI^0_m;nnn/I^0_0;n) ,     if  j = 1
-
-        ∑_m=0^∞∑_m'=1^∞c^(2),m_3 c^(2),m'_1 (𝒜^m'_m;nnn - 𝒜^m'_0;nI^0_m;nnn/I^0_0;n) ,    if  j = 2
-
-        3∑_m=0^∞∑_m'=0^∞c^(2),m_3 c^(2),m'_3 (𝒞^m';t_1t_1_m;nnn - 𝒞^m';t_1t_1_0;nI^0_m;nnn/I^0_0;n) ,    if  j = 3
-
-        ∑_m=0^∞∑_m'=0^∞c^(2),m_3 c^(2),m'_3 (𝒟^m'_m;nnn - 𝒟^m'_0;nI^0_m;nnn/I^0_0;n),    if  j = 4
-    ,  for  i = 5;
-
-
-γ'_ij = 
-      -1/2γ'_51 ,     if  j = 1
-
-        -1/2γ'_52  ,    if  j = 2
-
-        3∑_m=0^∞∑_m'=0^∞c^(2),m_3 c^(2),m'_3 (𝒞^m';t_1t_1_m;t_1 t_1 n - 𝒞^m';t_1t_1_0;nI^0_m;t_1 t_1 n/I^0_0;n) ,    if  j = 3
-
-         3∑_m=0^∞∑_m'=0^∞c^(2),m_3 c^(2),m'_3 (𝒞^m';t_2t_2_m;t_1 t_1 n - 𝒞^m';t_2t_2_0;nI^0_m;t_1 t_1 n/I^0_0;n) ,    if  j = 4
-
-       -1/2γ'_54,    if  j = 5
-    ,  for  i = 6.
-
-
-
-
-
-
- §.§ Expressions of λ_ij
-
-
-
-
-
-
-
-
-
-
-    λ_11 = 3√(5)/2c^(1),1_1 κ_11,  λ_12 = -√(2)/2c^(1),1_1/c^(1),0_2κ_12,  λ_13 = c^(1),1_1 β'_0 κ_13,  λ_14 = c^(1),1_1β'_2 ( κ_14 - c^(2),0_2/c^(1),0_2κ_12),
-    λ_21 = √(5)c^(1),0_2 λ'_31 + √(5) c^(2),0_2 λ'_41 ,  λ_22 = -√(2)c^(1),0_2/c^(1),1_1λ'_32 - √(2)c^(2),0_2/c^(1),1_1λ'_42, 
-    λ_23 = c^(1),0_2 β'_1 ( λ'_33 - c^(2),1_1/c^(1),1_1λ'_32) + c^(2),0_2 β'_1 ( λ'_43 - c^(2),1_1/c^(1),1_1λ'_42),  λ_24 = c^(1),0_2 β'_3λ'_34 + c^(2),0_2 β'_3λ'_44,
-    λ_31 = -√(5/2)λ'_41/β'_2,  λ_32 = λ'_42/c^(1),1_1 β'_2,  λ_33 = -√(2)/2β'_1/β'_2( λ'_43 - c^(2),1_1/c^(1),1_1λ'_42),  λ_34 = -√(2)/2β'_3/β'_2λ'_44,
-    λ_41 = -3√(10)/2β'_3 μ_1( κ_21 + c^(2),1_1 μ_2/c^(1),1_1κ_11),  λ_42 = 1/ c^(1),0_2 β'_3 μ_1 ( κ_22 + c^(2),1_1 μ_2/c^(1),1_1κ_12), 
-    λ_43 = -√(2)β'_0 /β'_3 μ_1( κ_23 + c^(2),1_1 μ_2/c^(1),1_1κ_13),
-        λ_44 =  -√(2)β'_2/β'_3 μ_1[κ_24 - c^(2),0_2 /c^(1),0_2κ_22 + c^(2),1_1 μ_2/c^(1),1_1(κ_14 - c^(2),0_2/c^(1),0_2κ_12) ],  
-    λ_45 =  [ 1 + (c^(2),1_1/c^(1),1_1)^2 ]β'_1 μ_2/β'_3 μ_1,  λ_51 = 1/c^(1),0_2λ'_61/β'_3,  λ_52 = 1/c^(1),0_2λ'_62/β'_3, λ_61 = 1/c^(1),0_2λ'_71/β'_3.
-
-Here μ_i and κ_ij are respectively given in (<ref>) and (<ref>). We remark that for Maxwell molecules λ_23 = λ_33=0.
-
-
-
-§ TABLES OF COEFFICIENTS IN THE INVERSE-POWER-LAW MODEL
-
-In this section, we list the value of β_i, ℒ^(mn)_l and c^(1),*_* appearing in the moment equations (<ref>)(<ref>) as Table <ref>, and λ_ij in the boundary conditions (<ref>)–(<ref>) as Table <ref> for various choices of parameter η in the inverse-power-law model that we considered in Section <ref>.    
 
 
 

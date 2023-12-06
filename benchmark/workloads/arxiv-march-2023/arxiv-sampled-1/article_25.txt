@@ -1,0 +1,1228 @@
+
+
+ 
+ 
+
+
+
+
+0pt
+-
+
+
+acmnumeric
+
+
+
+]Strategy-proof Budgeting via a VCG-like Mechanism
+
+
+
+
+
+
+We present a strategy-proof public goods budgeting mechanism where agents determine both the total volume of expanses and the specific allocation. It is constructed as a modification of VCG to a non-typical environment, namely where we do not assume quasi-linear utilities nor direct revelation. We further show that under plausible assumptions it satisfies strategyproofness in strictly dominant strategies, and consequently implements the social optimum as a Coalition-Proof Nash Equilibrium. A primary (albeit not an exclusive) motivation of our model is Participatory Budgeting, where members of a community collectively decide the spending policy of public tax dollars. While incentives alignment in our mechanism, as in classic VCG, is achieved via individual payments we charge from agents, in a PB context that seems unreasonable. Our second main result thus provides that, under further specifications relevant in that context, these payments will vanish in large populations. In the last section we expand the mechanism’s definition to a class of mechanisms in which the designer can prioritize certain outcomes she sees as desirable. In particular we give the example of favoring equitable/egalitarian allocations.                      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[style=definition]assumption
+[style=definition]observation
+
+
+⌊⌋
+
+
+
+
+
+
+
+
+
+𝐱
+ℝ
+ℕ
+ℳ
+ℐ
+V
+𝒟
+X̂
+x̂
+ℳ̂
+β̂
+α̂
+α̅
+Θ̂
+𝒞
+ℱ
+v̂
+ĝ
+P̂
+ê
+p̂
+þt̂
+Δ^m ×[-B_0/n,∞)
+[-B_0/n,∞)
+Δ^m ×_++
+
+
+
+
+rtheorem[1]Theorem <ref>. 
+atheorem[2]#1 #2 .
+rproposition[1]Proposition <ref>. 
+rlemma[1]Lemma <ref>. 
+rcorollary[1]Corollary <ref>. 
+rdefinition[1]Definition <ref>. 
+
+
+
+ 
+ 
+rexamplecont[1]#1Continued
+
+
+ℐ
+q21/2
+S.P.E. 
+
+
+
+
+
+
+
+[
+    Jonathan Wagner, Reshef Meir
+    March 30, 2023
+================================
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+We study a model where a population of n agents face the decision of funding several pubic goods or investments that serve their collective objectives. Formally, we start with an available budget of B_0 ≥ 0 that should be allocated among m≥ 1 different alternatives. The budget decision we seek is a pair (x,t) where  t ∈ is a monetary sum ("tax") that each agent adds to (or subtracts from) the budget, and  x ∈Δ^m:={x ∈ R^n | x_j ≥ 0 ∀ j, ∑_j x_j =1} represents the allocation of the resulting budget B_t = B_0 +nt among the m alternatives. Note that we allow t<0, meaning that some of the initial budget B_0 will be distributed equally among agents rather than fund public investments. We are interested in constructing a collective decision mechanism to which every agent submits her preferred budget decision, and one that is incentive compatible (IC) particularly. Table <ref> demonstrates how agents might report  to such mechanism their preferences for budget allocation among three municipal services.
+Note e.g. that agent a suggests an individual payment of t=20 each, and so
+to allocate a total of B_0+3t=100+3·20=160. Also note that agents b
+and c propose the same normalized allocation x_b=x_c ∈Δ^3 but
+differ in their preferred tax.
+
+
+
+
+
+
+ §.§ Motivation and Main Results
+
+Incentives alignment has long been a major interest in Social Choice and Mechanism Design research. While Gibbard & Satterthwaite's Theorem <cit.> provides a negative result for the most general setup, positive results do exist when the preference space is contracted somehow (mainly to singled-peaked <cit.>), or when monetary transfers that the mechanism charges from agents are introduced. In the latter case, the VCG mechanism <cit.> is the canonical model and moreover, Roberts' Theorem <cit.>  shows that for a general preferences domain, any strategy-proof mechanism is in a sense a generalized version of the VCG principle. However, VCG is built upon an assumed model that cannot apply to every scenario. Most importantly, it depends crucially on underlying quasi-linear utilities, meaning that the overall satisfaction of agent i when the mechanism outputs the decision Ω and charges her with a payment p_i is expressed as 
+u_i(Ω,p_i)=v_i(Ω)-p_i where v_i(Ω) is the value she attributes to Ω. While plausible in many economic situations, quasi-linearity is in particular violated if agents do not  asses their benefits from different outcomes in monetary terms (making the subtraction of p_i from v_i(Ω) a meaningless expression), whether because these are purely non-financial or just difficult to quantify. When we consider investments in public goods, that is likely to be the case. 
+Furthermore, VCG is a 'Direct Revelation' mechanism in which agents explicitly report the full description of their preferences <cit.>. That is reasonable when, for example, we ask agents to specify a value (that is, the maximum price they are willing to pay) for each of the items offered in an auction. In our case the space of optional outcomes is a multidimensional continuum and the 'value' is quite an abstract concept, non-linear in particular. As should be obvious when we later introduce our model to its full details, a direct revelation mechanism becomes unlikely in that context and we thus only collect optimal allocations,[Possibly proceeded by a few follow-up questions presented to agents, See <ref>.] as demonstrated in Table <ref>.  
+
+ Contribution and paper structure We  show that for the budgeting problem described above we can construct a 'VCG-like' mechanism all the same. The key idea we will use is that while we can no longer justify the simple quasi-linear relation between the utility in the outcome and that of the charged payment, the fact that the decision space itself involves monetary transfers enables revealing of the true relation between these two in each agents' perspective. At the begining of Section <ref> show how full information can in fact be extracted from the preferences that agents report. Section <ref> introdoces our proposed mechanism, and in <ref> we show that under certain conditions it is IC in strictly dominant strategies and consequently Coalition-proof <cit.>. Finally, in some applications of the model collecting money from agents (that is, money paid "to the mechanism", on top of the tax t that is a part of the chosen outcome and finances shared expenditures) serves well the purpose of aligning incentives, however may not be reasonable on its own merits. Thus, our second and most technically challenging main result, presented in Section <ref>, provides that, for a relevant subclass of utility functions, these payments become negligible in large populations . 
+ 
+A few examples of environments where our mechanism may be useful are listed below, starting with the one standing at the center of our focus.
+
+Participatory Budgeting Our model falls naturally within a Participatory Budgeting (PB) framework, where members of a community determine the allocation of their shared budget via some voting mechanism.[’The Participatory Budget Project’: https://www.participatorybudgeting.org/] While most PB implementations worldwide, and accordingly much of the PB literature, involve the allocation of a given budget among several public indivisible goods, several previous works were dedicated to divisible PB models  <cit.>, where `projects' may correspond to  city departments, e.g. education, transportation, parks and recreation and so on. Our model moreover involves taxation in the collective decision, in which we find several advantages. Technically, our adjustment of VCG payments to non quasi-linear utilities is enabled solely due to that feature. Conceptually, it expands the scope of control delegated to society through direct democracy, and also brings a more valuable feedback to the designer on the true value that public expenditures create, rather than just a comparison between them.  Being our primary motivation, the terminology we use and our approach to modelling is mainly driven by the PB application, however intended to represent a wider range of real life economic situations. While we are aware that some of the assumptions we make may not be generically adequate in every possible instance of different environments too, the basic ideas extend to at least some of them. 
+We thoroughly discuss our works' relations with previous models and results in that area in the next section of the introduction.
+
+Shared financing among nearby businesses A group of nearby businesses (for example in the same shopping center) might cofinance some facilities and services that are more public or regional by nature, e.g. security, costumers' parking, shared dining areas, public activities that increase exposure, etc.  
+
+Environmental or other non-financial investments That could apply to governments imposing an 'environmental (or other) tax' on firms or different countries deciding on their coordinated actions <cit.>. Other pursued goals might include border controls of neighbouring countries, for example. 
+
+Joint R&D and Human Capital ventures R & D and Human Capital investments are typically long term and require considerable resources. Thus, firms in the same or related industries might benefit from joining forces in funding e.g. the training of required professions or the development of new technologies and methods. Such collaborations might scale from a small number of businesses deciding to cooperate, through a unionized industry and up to being run by the government state-wide. 
+    
+
+Non-monetary 'Currencies'
+As the concept of 'value' of different outcomes is more abstract in our model, it may also apply to situations where the investments themselves, and thereby the collected tax payments, are not necessarily monetary. Examples may include members in a community willing to dedicate an agreed amount of working hours within their community, or firms that allocate resources such as land (e.g. agricultural land dedicated to cooperative experimental planting), or technological resources such as storage space or computation force.
+
+
+
+A variation of our model where we employ a heterogeneous taxation may also be relevant, especially to applications other than PB. For example, imposing higher contributions on wealthier countries in joint environmental investments. We discuss that in appendix <ref> and show that our IC results extend to such setup. 
+
+
+ §.§ Modeling Approaches in Divisible Participatory Budgeting
+
+Before presenting our own model, we discuss here the limitations of existing incentive compatibility concepts from the divisible PB literature. 
+
+Spatial models
+Several past works have studied incentive alignment in PB and divisible PB particularly <cit.>. Notably, two different works <cit.> presented incentive compatible (or 'strategyproof') mechanisms for a divisible PB scenario similar to ours. These works assume ℓ_1-norm preferences in which each agent i reports her optimal allocation x^(i)∈Δ^m to the mechanism, and her utility in any allocation x is given by u_i(x)=-x^(i)-x_1. Other ℓ_p norms <cit.>, or more generally single-peaked preferences <cit.>, are well studied in social choice literature and known to allow for mechanisms with strong strategyproofness guarantees. This IC definition relies on the underlying assumption that the utility of an agent depends solely on the `distance' between the accepted outcome and her favoured alternative. Indeed, in the absence of a concrete way to measure the monetary value of decisions, minimizing the distance to a voter's ideal allocation is a reasonable solution.
+
+However, we argue that when agents have concrete measurable utility from decisions, as in PB, the spatial approach may not adequately capture the preference of a voter, as the very reason that voters' optimal allocations are not typically uniform is that they value money spent on each alternative differently. In particular, minimizing the ℓ_1 distance is not just suboptimal, but may in fact incentivize agents to manipulate .
+To see why, consider  Voter a from Table <ref>, with her ideal allocation x_a = (0.6,0.3,0.1). Now, let us further assume that  a is the parent to children under 18 years of age and the  three public goods considered are education systems, public parks and public transportation— that she very rarely uses and thus does not value highly. Reasonably, that voter might strictly prefer the allocation x'=(0.7,0.2,0.1) over x”=(0.6,0.2,0.2) because while both are suboptimal to her, investing another 0.1 of the budget in the education of her children may serve her interests better than investing it in a facility she rarely enjoys. 
+However, under the ℓ_1-distance model she is indifferent between the two, meaning that her incentive to manipulate the outcome from x” to x', when and if facing the opportunity, is not accounted for.[Indeed, concrete examples that show how the incentive compatibility in <cit.> and <cit.> might “fail", in the above sense, are not difficult to construct. ]
+   
+Social choice vs. microeconomic models
+As explained in <cit.>, the solution concept that minimizes the ℓ_1 distances from agents' ideal points  generalizes the one-dimensional median rule <cit.>. Similarly, most of the literature on divisible PB adopt or generalizes the same assumptions used for PB with indivisible projects, which in turn stem from standard modelling assumptions in voting and computational social choice. 
+
+However, we argue that divisible budget allocation is much closer in nature to problems typically treated within microeconomic framework <cit.>. This is true especially when assigning budgets to departments etc. rather than to specific projects with variable costs.[See e.g. <https://pbstanford.org/boston16internal/knapsack>]  Hence, it makes more sense to adopt conventional economic assumptions regarding demand and utility, as in <cit.> and as we do here. In particular:
+
+
+  * Additive concave utilities. We adopt the additive concave utilities model <cit.> that offers a more concrete description of the utility gained from different public investments. Its most closely related version to ours is found in a former work by Fain et al. <cit.>. There, the utility of agent i in allocation X=(X_1,X_2…) is expressed as 
+
+    U_i(X)=∑_j α_i,jθ_j(X_j)
+    where X_j is the amount spent on public good j, the {θ_j}_j functions are monotonically increasing in X_j for all j and strictly concave, (smoothly) expressing the plausible assumption of decreasing marginal gains, and α_i,j are scalars that vary between agents. As we assume that part of the budget is collected via a tax-per-agent t, our model adds on the above the disutility  of a voter from the tax payment.
+
+  * Optimal points characterized by the MRS conditions, that follows form the concavity and some additional conventions on utilities <cit.>.
+
+  * Utility depends on public investment per capita. (that we add to the model in Section <ref>) . On a large scale, it is reasonable that the quality of public goods depends more on spending per capita rather than on the nominal amount.[See for example <https://data.oecd.org/gga/general-government-spending.htm>, and <cit.>.]
+
+In contrast, elicitation is an issue that has received much more attention in the literature of mechanism design and computational social choice than in microeconomics. For example there is a live discussion in the context of indivisible PB on the tradeoff between expressiveness of the ballot and effort required for elicitation <cit.>.  Similarly, we argue that it does not make sense to assume that we have direct access to voters' preferences, and here we adopt from computational social choice the assumptions that voters simply report their most preferred allocation, as in <cit.>. 
+
+
+
+
+
+In terms of applicability, however, the obvious shortcoming of our model is that it requires us to explicitly specify the functions {θ_j}_j and f, which are fairly abstract. Importantly, we do not assume that agents are 'aware' of their assumed utility function, but, conventionally, only know their preferences regarding the decision space, that presumably can be interpreted as derived from an underlying utility model <cit.>. Of course, any such model would be an approximation at best.  Nevertheless, it is fair to assume that any choice of monotonically increasing concave functions probably better approximates individuals' preferences—and thereby incentives—than the spatial model or a linear additive model <cit.>. (Note that the linear additive model is arguably much less reasonable than concave, not merely due to  excluding diminishing returns, but because it implies boundry optimal allocations where only alternatives j that maximize α_i,j are implemented). 
+
+
+
+
+
+ §.§ Further related literature
+
+The Economic literature on public goods markets, equilibria and optimal taxation is abundant. (<cit.>, just to name a few). While our work adopts a similar approach to modelling and also optimizes social welfare, this brunch of the literature rarely discusses mechanisms. One exception that we know of is found in <cit.>, in which the socially optimal outcome is implemented in strictly dominant strategies using a method very similar to ours, however for quite a different utility model.     
+To the best of our knowledge, the only existing PB mechanism that included tax in the collective decision previously to ours was studied by  Garg et al. <cit.> in the context of experimenting 'iterative voting' mechanisms. Interestingly, it may suggest some supporting evidence in favour of the additive concave utility model over spatial models in that context. Two other previous works <cit.> incorporated private funding into a PB model, albeit in the form of voluntary donations that every agent can choose freely and not as a collectively decided sum that is collected from (or paid to) everyone, as we consider here. 
+
+
+
+The literature on divisible PB is relatively narrow. In terms of incentive compatibility,  <cit.> presented the soundest results, under a spatial utility model. 
+Alternatively, Fain et al. <cit.> offer a randomized mechanism that is `approximately-truthful' for the special case of 1-degree homogeneous additive utilities. The Knapsack Voting mechanism introduced in <cit.> also satisfies some weaker notion of strategyproofness under a similar model. Aziz et al. <cit.> presented IC mechanisms for additive linear utilities, although their model is primarily motivated by randomized approval mechanisms. A similar utility model is also found in <cit.>.
+Overall, in relation to the divisible PB field, this work offers an SDSIC mechanism under concave additive utilities, to the best of our knowledge for the first time. 
+
+Our desire for diminishing the (modified) VCG payments resembles the idea of redistribution in mechanism design <cit.>. Such methods are especially relevant in a discrete decision space and can eliminate surplus only partially, while in our model the complete (asymptotic) vanishing is much thanks to the continuity of the decision space.      
+
+
+Much of the PB literature deals with the concept of fair allocations <cit.>. While not a primary goal of our model, we show that the designer can bias the allocation closer to a favorable allocation—including one they see as fair.
+
+
+
+
+
+§ MODEL AND PRELIMINARIES
+ We denote by Δ^m the set of distributions over m elements, and use [m] as a shortcut for {1,…,m}. 
+A set of n agents (voters) need to collectively reach a budget decision (x,t) described as follows. t∈ is a lump-sum tax collected from every agent. x ∈Δ^m is an allocation of the total available budget B_t:=B_0+nt among some m pre-given public goods, where B_0 is an external, non tax-funded source of public funds. t is restricted only by t>-B_0/n, meaning that voters can decide either to finance a budget larger than B_0 through positive taxation, or allocate some of it to themselves directly as cash (negative taxation). The collective decision is taken through some voting mechanism to which every agent submits her most preferred budget decision (x^(i),t^(i)) . 
+
+
+
+
+ §.§ Preferences
+
+We now introduce the utility function step by step. We start with agents' valuation for public expenditures alone that follows from <cit.>:
+
+
+    Θ_i(X) :=  ∑_j=1^m α_i,jθ_j(X_j)
+
+where X=(X_1,…,X_m) ∈_+^m and X_j is the amount spent on project j. For all j ∈ [m], an agent i gains α_i,jθ_j(X_j) from an X_j spending on public good j. {θ_j}_j=1^m are identical across agents while agents differ one from another in their coefficients (α_i,1…,α_i,m) ∈Δ^m.
+
+For all 1 ≤ j ≤ m, θ_j:→, ∈{_+,_++}  is increasing and strictly concave, and lim_X_j → 0θ(X_j) ≤ 0, where _+ := {x ∈ | x ≥ 0}, _++ := {x ∈ | x > 0}.
+
+
+As explained earlier in the Introduction, our model includes monetary transfers of two types. One is the collectively decided tax that will be collected from every agent, and beyond that, a mechanism may charge payments in order to align incentives, where these payments are not affecting public expenditure. Thus we include in our model the value agents attribute to reduction (or increment) in their overall wealth,
+
+    π_i(δ_w) := -α_i,f· f(δ_w)
+
+where δ_w is monetary loss (gain when negative) and the coefficient α_i,f>0 varies between agents. 
+Our formulation of the disutility function f will follow Kahneman and Tversky's Prospect Theory <cit.>. Their and others' empirical findings  <cit.> demonstrate that people tend to exhibit loss aversion in relation to monetary gains or losses, meaning: (a) valuating monetary transfers with reference to their current status presumably located at the origin; and (b) exhibit risk-aversion with respect to monetary losses, and risk-seeking with respect to gains. Meaning, we shall assume that f(0)=0 and that it is strictly convex in (-∞,0] and strictly concave in [0,∞). In principle, our analysis requires differentiable utility functions. However, the most natural examples of elementary increasing concave functions, the logarithmic and power functions, are not differentiable at zero, which still allows for our results. Thus, for the sake of giving more intuitive and simple examples, we will allow a diverging derivative at zero.[Moreover, Kahneman and Tversky themselves suggested the following explicit functional form  (the"value function" in their terminology) built on power functions, that has been adopted widely ever since <cit.>:
+
+    f^KT_q,r,λ(δ_w)=-1_{δ_w ≤ 0}|δ_w|^q+λ·1_{δ_w >0}(δ_w)^r
+
+for some 0 <q,r<1, λ>0 (See <cit.>, p. 309). Assumption <ref> thus includes the above form and extends beyond it.]
+
+
+
+f:→ is increasing, strictly convex in (-∞,0] and strictly concave in [0,∞). f(0)=0. We assume that f is either continuously differentiable in all  or anywhere but the origin, in which case lim_z → 0^+_-f'(z)=∞.
+
+Now, by adding Θ_i and π_i together we get the full description of an agent's
+utility function: 
+
+    u_i(X,δ_w) :=  Θ_i(X)+π_i(δ_w)= ∑_j=1^m α_i,jθ_j(X_j)-α_i,ff(δ_w).
+
+In particular, the problem at hand is reaching a collective budget decision (x,t) via some voting mechanism that aggregates the collective preferences on the whole decision space . We therefore specifically define an agent's valuation for a budget decision (i.e. with no regard to payments on top of the collected tax):
+
+    ∀ x ∈Δ^m, t ∈,   
+       v_i(x,t):   = u_i(x · B_t,t) = ∑_j=1^m α_i,jθ_j(x_j · B_t)-α_i,ff(t)
+
+Thus the type of i is defined by the coefficients:
+
+
+    α_i:=(α_i,1…,α_i,m,α_i,f) ∈Δ^m ×_++
+
+
+In a more general sense, we also write u_α, Θ_α and v_α for functions of a hypothetical "type α" agent.
+
+Finally, we reasonably want to assume that every agent would like to fund some level of public expenditures, whereas no agent favors an infinite budget funded by infinite tax.
+ 
+gg
+
+    
+  * ∀ i ∃  j s.t. lim_t → 0nα_i,jθ'(nt) > α_i,flim_t → -B_0/nf'(t).
+    
+  * For any m ∈, lim_z →∞θ'_j(z/m)/f'(z)=0 ∀ j ∈ [m].
+
+ 
+Hence, a  budgeting instance ={m,n,B_0, α⃗,{θ_j}_j∈[m],f} is defined by the number of public goods n, number of agents m, initial budget B_0, the type profile α⃗=(α_i,…,α_n) and functions {θ_j}_j∈[m],f that respect Assumptions <ref>,<ref>,<ref>. For example,
+[Running example] 
+ Consider an instance with B_0=0,m=2,n=3, where for every agent i ∈ [3], the valuation is:
+ 
+
+
+    v_i(x,t):=10·∑_j=1^2α_i,jln(x_j· 3t)-α_i,f√(t)
+
+That is,  θ_j(X_j):=10ln(X_j) for both j∈{1,2}, and f(t):=√(t).
+ 
+
+
+
+
+
+
+§ MECHANISMS
+
+
+
+Preference Elicitation
+The mechanism we introduce in the next section is designed to maximize the social welfare ∑_iv_i(x,t). However, agents do not report their full valuations v_i(·,·) explicitly but rather their optimal budget decisions (x^(i),t^(i)) ∀ i ∈ [n]. Eliciting the underlying the types proceeds in two steps, where in the first we extract all the information we can out of {x^(i),t^(i)}_i ∈ [n]. 
+ 
+
+  In every budgeting instance , for every type α∈Δ^m ×:
+  
+      
+  * There exists a solution (x^(α),t^(α)) to the optimization problem 
+      
+    max_(x, t)     v_α(x,t)=∑_jα_jθ_j(x_jB_t)-α_ff(t)
+               s.t.     x ∈Δ^m, t ∈ [-B_0/n,∞);
+
+     
+  * t^(α) > B_0/n  and nθ'_j(x^(α)_jB_t^(α))/f'(t^(α))=α_f/α_j for all j s.t. x^(α)_j>0 
+  ;
+  
+  * If lim_z → 0θ'_j(z)=∞ and  x^(α)_j=0 then α_j=0.
+  
+
+The proof is deferred to the tract_alpha_proofappendix. (2) and (3) provide us with k ≤ m linear conditions for every agent i. If k<m,  for each j such that  x^(i)_j · B_t^(i)=0 we present i with the follow-up question: "How much are you willing to pay for adding an χ_j spending on public good j?" where χ_j is any fixed amount. For any number τ she responds, we extract α_i,j/α_i,f from
+
+    α_i,jθ_j(χ_j)=α_i,f(f(t)-f(t+τ))
+ 
+(If τ=0 then α_i,j=0). Note that here we do not ask the agent for her preferred consistent budget decision, i.e. her response must not admit χ_j=nτ. Rather, we ask her for the price she is willing to pay for a specific good, that is public good j at a level of χ_j spending. After presenting her with at most m such follow-up questions, we have enough information to fully describe her type.[While presenting up to m such follow-up questions to every agent may seem a bit tedious and  adding a significant cognitive load on them, it is plausible that not much will actually be needed, if any. We address that in section <ref>.]  
+
+ The type profile α⃗ can be fully extracted via the following steps.  
+ 
+     
+  * We ask all agents for their preferred budget decisions (x^(i),t^(i)) ∈Δ^m × ∀ i ∈ [n]. 
+     
+  * For every i,j such that x^(i)_j · B_t^(i)>0,
+     
+    α_i,f/α_i,j=θ'_j(x^(i)_j(B_0+nt^(i)))/f'(t^(i))
+
+     and, if lim_z → 0θ'_j(z)=∞ and  x^(i)_j=0 then α_i,j=0.
+     
+  * If x^(i)_j· B_t^(i)=0 for some i and j and lim_z → 0θ'_j(z)<∞ , we ask agent i for τ_i,j, the maximum increase in t^(i) she willing to add for financing 
+        a χ_j spending on public good j, where χ_j could be any positive number. For every such i and j,
+        
+    α_i,j/α_i,f=(f(t)-f(t+τ_i,j))/θ_j(χ_j)
+ 
+    
+  * Each agent's type is given (decisively) by the m linear equations above and the additional ∑_jα_i,j=1.
+ 
+
+
+ [Running example, cont.]
+ Every agent submits the optimal budget decision w.r.t. her valuation function, i.e. some (x^(i),t^(i)) ∈ that maximizes (<ref>). Using the above Corollary, we infer every agent's underlying type α_i from 
+10(x^(i)_j· 3t^(i))^-1/(2√(t^(i)))^-1=α_i,f/α_i,j
+if x^(i)_j>0, and α_i,j=0 otherwise. For example, the voting profile on the left can only be induced by the preference profile α^RE on the right  (RE for Running Example):
+
+
+     
+(votes)    t     X^(i)_1 (x^(i)_1)     X^(i)_2 (x^(i)_2)   
+
+voter 1     69.4     145.8 (0.7)     62.5 (0.3) 
+
+voter 2     26.3     0 (0)    78.9 (1)
+
+voter 3     44.4     66.6 (0.5)     66.6 (0.5) 
+
+
+
+
+
+
+
+
+      
+(types)     α_i,1     α_i,2     α_i,f   
+
+i=1     0.7     0.3     0.8 
+
+i=2     0     1     1.3
+
+i=3     0.5     0.5     1 
+
+
+
+
+
+
+
+
+ 
+
+
+
+Mechanisms We now want to define a class of mechanisms for our budgeting problem. The first step in every such mechanism must be eliciting the types based on Corollary <ref>. However, for the sake of a more convenient exposition, we formally define a class of Direct Revelation <cit.> mechanisms that take the explicit type profile as input, which by Corollary <ref> will bring to no loss of generality.    
+
+ A mechanism for budgeting instance   is a pair M=(ϕ,P) where:
+ 
+     
+  * ϕ: (Δ^m × )^n ↦ is a social choice function that inputs the type profile α⃗=(α_1,…,α_n)
+     and outputs a budget decision (x,t) ∈; 
+     
+  * P : ()^n ↦^n is a function of the type profile that assigns a payment P_i for every agent i ∈ [n].
+ 
+  
+Note again that in our model, the outcome itself includes a tax payment t that every agent pays to fund the public budget, and the individual payments (P_i,…,P_n) are charged on top of that. Hereinafter we abuse notation a little when writing  u_i((x,t),P_i) or u_i(M), u_i(ϕ,P) for the overall utility of agent i from budget decision (x,t) and payment P_i (that are determined by M=(ϕ,P)). While we defined u_i earlier as a function of an allocation X ∈^m_+ and a general monetary transfer δω, the interpretation should be clear as every pair of budget decision (x,t) and  payment P_i implicitly define an allocation X=xB_t and an overall monetary transfer of δω = t+P_i.
+
+
+Incentive Compatible mechanisms Incentive Compatibility requires that no agent could benefit from reporting some false preferences α'_i ≠α_i to the mechanism.
+
+A  mechanism M is dominant strategy incentive compatible (DSIC)  if for all i ∈ [n], α_i ∈, α⃗_-i∈ ()^n-1 and every  α' ∈ s.t. α' ≠α_i,
+
+    u_i(M(α_i,α⃗_-i))≥ u_i(M(α',α⃗_-i))
+
+If that inequality is strict for all i, α_i, α⃗_-i and α' we say that M is strictly dominant strategy incentive compatible (SDSIC).
+
+
+
+
+§ UTILITY-SENSITIVE VCG
+
+In this section section we present our proposed mechanism (Def. <ref>) and discuss its properties. We start with the payment function P.
+
+
+ §.§ Payments
+
+Essentially, the payments we define are VCG payments adjusted to our non quasi-linear setup.<cit.> 
+In general, the social choice function in a VCG mechanism ϕ^VCG outputs the socially optimal outcome Ω^*=argmax_Ω∑_iv_i(Ω) and  payments are  defined as follows.
+
+
+    p^VCG_i=-∑_k≠ iv_k(Ω^*)+h(α⃗_-i)  ∀ i ∈ [n]
+
+
+where  h(α⃗_-i) could be any function of α⃗_-i, the partial preferences profile submitted by all agents excluding i. The VCG model assumes Quasi-linear utility functions, meaning that 
+
+
+    (*)     u_i(VCG(α⃗))
+       =v_i(Ω^*)-p^VCG_i=∑_kv_k(Ω^*)-h(α⃗_-i)
+
+
+The above expression is the key property on which the DSIC of a VCG mechanism relies. Since Ω^* maximizes ∑_kv_k(·) and h(α⃗_-i) is independent of i's vote, an agent can never (strictly) increase her utility by manipulating the outcome Ω^*. In our model, however, the quasi-linearity assumption is  violated. If we write Ω^*:=(x^*,t^*) then our model assumes
+
+    u_i(M(α⃗))=∑_jα_i,jθ_j(x^*_jB_t^*)-α_i,ff(t^*+P_i),
+
+for any mechanism M. Clearly, naïvely setting P_i=p^VCG_i will not result in anything as useful as (*). However, our utility model does entail some significant information we can exploit. While individuals in our model no more exhibit the simple, linear relation between utility gains (or losses) that stem from monetary transfers and those that come from the chosen outcome itself, their true relation is in fact described in the utility function, thanks to the introducing of f in it. Relying on that, we can adjust the payments appropriately so that the key property (*) is maintained. We do that in the next definition and lemma. 
+
+
+
+Let Ω^*=(x^*,t^*) ∈_(x,t)∑_i ∈ [n]v_i(x,t) be the socially optimal budget decision. For every agent i, we define the utility-sensitive VCG payment  as 
+
+    P_i=-t^* +f^-1(f(t^*)+1/α_i,fp^VCG_i).
+
+
+
+ Let Ω^*=(x^*,t^*) be the social optimum and P_i the utility sensitive VCG payment given in <ref> above. Then 
+ u_i(Ω^*,P_i)=∑_kv_k(Ω^*)-h(α⃗_-i).
+
+
+ 
+    u_i(Ω^*,P_i)   =∑_j=1^m α_i,jθ_j(x^*_jB_t^*)-α_i,ff(t^*+P_i)
+     =∑_j=1^m α_i,jθ_j(x^*_jB_t^*)-α_i,ff(t^*)-p^VCG_i
+       =v_i(x^*,t^*)-p^VCG_i= ∑_kv_k(x^*,t^*)-h(α⃗_-i)
+
+
+
+
+
+ §.§ Definition of the mechanism
+
+
+The Utility-Sensitive VCG (US-VCG) mechanism  is a tax-involved PB mechanism defined by:
+
+    ∀α⃗∈ (Δ^m × )^n,  (α⃗):=(Ω^*,P)
+
+where Ω^*=(x^*,t^*) ∈_Ω∑_iv_i(Ω) is the social optimum and P is the utility-sensitive VCG payment assignment given in  Def.  <ref>.
+
+
+
+
+
+ §.§ Incentive Compatibility
+
+
+
+    The US-VCG is DSIC.
+
+We omit a formal proof of that result since given Lemma <ref>, it would proceed exactly as the DSIC proof for general VCG <cit.>, and very similarly to our SDSIC proof we later present. Some preparations are needed before that.  
+
+Mean-dependency 
+ We here point out some very useful characteristic of our model that plays a major role in both of our main results
+ . Namely, that the outcome Ω^* depends solely on the average of types reported by all agents. Let α̅:=1/n∑_i ∈ [n]α_i denote the types mean. Now, simply changing the order of summation in the social welfare
+
+    ∑_iv_i(x,t)   =∑_i[∑_jα_i,jθ_j(x_jB_t)-α_i,ff(t)]
+      =∑_j[∑_iα_i,jθ_j(x_jB_t)-α_i,ff(t)]
+       =∑_j nα̅_jθ_j(x_jB_t)- nα̅_ff(t)=n· v_α̅(x,t)
+
+ shows that:
+
+ In any budget decision (x,t), the social welfare is given by ∑_iv_i(x,t)=n· v_α̅(x,t). Consequently, Ω^*=(x^*,t^*) maximizes the social welfare if and only if it maximizes v_α̅(x,t), the valuation function defined by the average type α̅. 
+
+ 
+
+Note that in addition, the above observation means that the social optimum Ω^* is computed in O(1) time w.r.t. n. As for  payments, the typical choice for h(α_-i) is the "Clarke Pivot Rule" h(α_-i)=∑_k ≠ iv_k(g(_-i)) <cit.>, meaning, charging every agent with the social welfare of others in her absence. With that choice, computing every agent's payment is as hard as computing the outcome Ω^*.  
+
+[Running example, cont.]
+For the utility functions from Eq. (<ref>) 
+
+we have _(x,t)v_α=((α_1,α_2),( 2· 10/α_f)^2).
+The average type in the type profile α^RE from Example <ref>   
+
+
+
+
+
+
+
+
+
+
+
+is =(0.4,0.6,1.03), and thus the budget decision chosen by  is Ω^*=((0.4,0.6),377). 
+
+
+
+Following Observation <ref>, we can use the definition below for a more convenient presentation. 
+
+For all α∈, define g(α):Δ^m×→Δ^m× such that
+
+    g(α)=(x^(α),t^(α)) ∈_(x,t) v_α(x,t)
+
+
+Meaning, g maps every preferences vector α=(α_1,…,α_m,α_f) to an optimal budget decision w.r.t. the corresponding valuation function v_α. If that optimum is not unique, g chooses one arbitrarily. In some places we use this notation somewhat abusively, ignoring that indecisiveness in the specific choice of g(α). In particular, by Observation <ref> Ω^*=g(). 
+
+
+We are now almost ready to state our main result. That is, that the US-VCG mechanism satisfies the stronger SDSIC if we further assume that optimal points are  characterized by MRS conditions.
+
+   
+   
+
+
+
+ For any α∈, an optimum g(α)=(x^(α),t^(α)) ∈_(x,t)v_α(x,t) satisfies the MRS conditions if 
+ 
+    nθ'_j(x^(α)_j · B_t^(α))/f'(t^(α))=α_f/α_j  ∀α_j >0,  and α_j=0  x^(α)_j=0.
+
+
+That characterization of optimal points is a standard convention in economic literature <cit.>, and we elaborate on its justification after proving the Theorem. The proof will take advantage of the fact that the MRS conditions define a unique α∈ for any given g(α) ∈, as the m linear equations in <ref> above, along with ∑_jα_j=1, have a unique solution. We also add the assumption that _j >0 ∀ j, in other words that ∀ j ∃  i  s.t. α_i,j >0 which is fair to assume.
+
+    Assume that _j >0 ∀ j and that all social optima g() satisfy the MRS conditions. Then the US-VCG mechanism is SDSIC.
+
+
+
+
+Fix i, α_i and α̅_-i. Note that by Observation <ref> the US-VCG mechanism outputs g(), and, by Lemma <ref>,
+
+    u_i((α⃗))=∑_k v_k(g(α̅))-h(α⃗_-i)=n· v_α̅(g(α̅))-h(α⃗_-i)
+
+Now, assume that i falsely reports α'_i ≠α_i. Inevitably, that shifts the mean preferences  to some α̅' ≠α̅, and the social optimum that  outputs to g(α̅'). We want to show now that g(α̅') is certainly not an optimum of v_. If g(α̅') admits the MRS equations w.r.t. ' then it does not w.r.t. , as these equations define a unique type that solves them. Thus, by assumption, g(α̅') is not an optimum of v_. Otherwise, since by Lemma <ref> interior optimal points satisfy the MRS conditions, we have that g(α̅') is on the boundary. However, points on the boundaries (i.e. with x_j=0 for some j) cannot satisfy the MRS conditions w.r.t.  because _j >0 ∀ j, and thus g(') is not an optimum of v_ in that case too. Therefore,   
+
+    u_i((α'_i,α⃗_-i))   =n· v_α̅(g(α̅'))-h(α⃗_-i)
+       <n· v_α̅(g(α̅))-h(α⃗_-i)=u_i((α_i,α⃗_-i))
+
+
+
+MRS characterization First note that by Lemma <ref>, internal optimal points always satisfy the MRS conditions. Even without further justifications, the conjecture that social optima implement every public good in some level, even minor, seems reasonable in many contexts. Especially, if we consider a high-level allocation of the budget between city departments or sectors that are unlikely to be completely dismissed in any society (e.g. education systems, infrastructure, culture activities and such). Technically, however, our model does not imply that. In this short discussion we give some further (and reasonable) assumptions that will suffice.
+Basically, g(α) satisfies the MRS conditions unless nα_jθ'_j(0) < α_ff'(t^(α)) for some α_j >0, meaning that a type α agent would rather not to fund public good j by a further tax increase. Since f' has a maximum at zero, demanding that nα_i,jθ'_j(0)>α_i,ff'(0) ∀ i,j—meaning that all agents wish to spend some amount on each  and every public good—is sufficient to rule that out, and implies the same inequality for  too. In particular, assuming  lim_X_j → 0θ'_j(X_j)=∞ ∀ j promises, along with Assumption <ref>, that g(α) satisfies the MRS conditions for all types α. That assumption, that can also be put as lim_X_j → 0ΘX_j=0 ∀ j holds in some very natural examples - e.g. for logarithmic or power functions, and also in the canonical Cobb-Douglas and Leontief utility models. Moreover, we should note that the  θ_j utilities input monetary investment, and not the public good itself. Meaning, we should properly interpret them as the composition of an underlying production function Φ_j(X_j) and a direct utility function ζ_j(Φ_j). Now if Φ_j is a production function, the conventional Inada conditions <cit.> include, inter alia, that lim_X_j → 0Φ'_j(X_j)=∞ and thus any increasing direct utility ζ_j with ζ'_j(0)>0 would imply lim_X_j → 0θ'_j(X_j)=lim_X_j → 0Φ'(X_j)ζ'(Φ(X_j))=∞. Under that assumption, agents allocate any given budget among all public goods such that α_i,j >0, and thus optimal points satisfy MRS. Whether assuming the Inada conditions explicitly or not, the characterization of optimal points by MRS conditions is a widely accepted convention in public goods Economic literature <cit.>.
+Summing the above more formally, for an SDSIC mechanism we need the following.
+ 
+     We assume that either one of the following holds:
+     
+         
+  * nα_i,jθ'_j(0)>α_i,ff'(0) ∀ i,j.
+         
+  * lim_X_j → 0θ'_j(X_j)=∞ ∀ j. 
+     
+ 
+ 
+     The US-VCG mechanism is SDSIC in any budgeting instance that respects Assumption  <ref>.     
+ 
+ Note, moreover, that if Assumption <ref> holds then elicitation is completed with no follow-up questions needed.
+
+
+ §.§ Manipulations By Coalitions
+
+
+In general, VCG mechanisms are known to be highly prone to group manipulations <cit.>. While individuals cannot benefit from reporting false preferences when the reports of all others are fixed, a group of agents can sometimes coordinate their misreports in such way that each of them (or some at least) benefits due to the untruthful reports of others. The US-VCG is no different in that. However, the SDSIC property ensures that any such coalition would not be sustainable in the sense that the colluding agents cannot trust each other to follow the agreed scheme. Thus, it may suggest that such coalitions are not likely to form in the first place. That softer robustness demand where we allow for manipulating coalitions as long as they are unsustainable in the above sense is captured in the Coalition Proof Nash Equilibrium (CPNE) solution concept <cit.>. While the original term is quite involved, 
+ the application to our context is intuitive: in an SDSIC mechanism, no sustainable coalition could exist since the individual unique best response, under any circumstances, is for every agent to report her true preference. We thus formulate here a simpler term that the US-VCG satisfies, and that implies CPNE.[We refer the reader to <cit.> for the original CPNE definition.] 
+ First, we define a manipulation by a coalition as a coordinated misreport by all its members, that benefits them. 
+ 
+ A manipulation by a coalition S ⊂ [n] is a partial type profile α'_S={α'_i}_i ∈ S such 
+ that α'_i ≠α_i ∀ i ∈ S and 
+ 
+    u_i(M(α'_S,α_-S) ≥ u_i(M(α_S,α_-S) ∀ i ∈ S.
+
+ and there exists i ∈ S for which the inequality is strict.
+ 
+ Now, we demand that if such a manipulation exists then α'_i is not a best response for at least one agent in the coalition. 
+ 
+ We say that a mechanism is One Step Coalition-Proof (OSCP) if for any manipulation α'_S by a coalition S, there exists i ∈ S s.t.
+ α'_i ∉ BR_i(α'_S ∖{i},α_[n]∖ S).
+     
+ 
+ 
+      The US-VCG mechanism is OSCP in any budgeting instance that admits Assumptions <ref>, <ref> and <ref>.
+    (and consequently implements the social optimum as a CPNE).
+ 
+The claim follows trivially from SDSIC, which means that BR_i(α_-i)={α_i} for all i and α_-i.
+
+
+
+§ VANISHING PAYMENTS UNDER PER-CAPITA UTILITIES
+
+In this section we show that payments become negligible in large populations. While these payments are essential for aligning incentives, charging additional money from voters would be undesired in a PB context. For the technical proofs, we will have to further specify the utility model so that it captures some important feature of divisible PB, which has been (justifiably) overlooked in past PB literature as well as in this work up to this point. That is, that the utility achieved from a given spending X_j on some public good j must also depend on the number of people that enjoy it, n.[In applications other than PB this may not be plausible. However, in such applications charging payments from agents could be acceptable.] The reason we only have to address that now is that in this section we analyse the asymptotic behavior of payments w.r.t. n, and in our model the overall budget B_t = B_0+nt depends on it directly. The following example illustrates the problem. 
+
+ Consider a budgeting instance where m=1, B_0=0, θ(nt)=(nt)^p and f(t)=t^q for some 0<p<q<1. A type α_f agent thus maximizes her utility 
+u_α_f=(nt)^p-α_ft^q at 
+    t=[α_f q/p]^1-q/1-p· n^1-q∞
+
+
+
+That is a very unlikely result, whatever that sole public good may be. There is no reason to expect that larger populations would wish to pay infinitely larger taxes, nor is it the situation found in reality. The model allows that because every tax unit payed by an individual is presumably "matched" n-1 times by others, thus making the substitution rate grow proportionally with n. However, while larger societies probably do have larger available resources, they are also likely to have greater needs. Just as a country's economic state  is conventionally measured by its GDP index, on the large scale the quality of public goods should be associated with spending per capita rather than with nominal spending.[See for example <https://data.oecd.org/gga/general-government-spending.htm>, and <cit.>.]
+Hence, we now narrow down the definition of Θ_i(X) to 
+
+   
+    Θ_i(X,n)=∑_j=1^mα_i,jθ_j(X_j/n)=∑_j=1^mα_i,jθ_j(x_j(b_0+t))   where  b_0:=B_0/n.
+
+
+Note that all of our previous results follow through since for any fixed n, θ_j(X_j/n) is a particular case of θ_j(X_j).
+Realistically, the dependency on n might not be necessarily that we assumed, and we take θ_j(X_j/n) as a benchmark and relatively simple case of a more general class of functions of the form θ_j(X_j,n). While for some public goods X_j/n may capture the relation adequately—for example, the quality of an education system surely depends on its resources per child—for others it may serve more as a large scale approximation—e.g., if the city offers free cloud services that allocates space equally among users, the total number of users affects each of them only to the point where the provided space exceeds their needs. Still, the benefit for users must be somehow connected the to the available space per user (which is determined by spending).
+
+
+
+Some comments on the notations before we proceed. First, in this section we define h(α⃗_-i) in the VCG payments as the conventional Clarke pivot-rule <cit.> function that charges a voter with the (normalized) social welfare of all others in her absence
+h(α⃗_-i)=∑_k ≠ iv_k(g(α̅_-i)),
+ making the VCG payments  
+
+    p^VCG_i=-∑_k≠ iv_k(g(α̅))+∑_k ≠ iv_k(g(α̅_-i))=(n-1)(v_α̅_-i(g(α̅_-i))-v_α̅_-i(g(α̅)))
+
+where the second equality is by Observation <ref>. Next, we give an alternative representation for valuation functions that would ease the technical analysis significantly.
+
+Define the vector valued function : Δ^m×→^m+1
+
+    (x,t)=(θ_1(x_1(b_0+t)),…,θ_m(x_m(b_0+t)),-f(t))
+
+For every α∈Δ^m×, we write the valuation function v_α as the dot product of α and :
+
+    v_α(x,t)=∑_jα_jθ_j(x_j(b_0+t))-α_ff(t)=α·(x,t)
+
+
+In these notations, the VCG payments are written as
+
+    p^VCG_i=(n-1)α̅_-i·((g(α̅_-i))-(g(α̅)))
+
+Our main results in this section (Theorems <ref> and <ref>) are  basically the convergence of that expression to zero, at different rates. Essentially, the conditions for convergence are that as α̅_-i→α̅ with n,  g(α̅_-i) → g(α̅) as well, and fast enough. In other words, they rely on the guarantees we can provide for g's smoothness around the solution g(). In our running example, for instance, easy to check that g is as smooth as you can wish for.
+
+
+[Running example, cont.]
+Consider again Example <ref>, where the utility model is 
+
+    v_α(x,t)=∑_j=1^2α_jln(x_j· t)-α_f√(t)
+
+We have shown that for any α∈, g(α)=((α_1,…,α_m),(2/α_f)^2).  Thus g(α) is  continuously differentiable for all α∈ (and in particular at ).
+
+
+Coming up next are two preliminary lemmas that establish the continuity of g at the solution g() when that is uniquely defined, which is sufficient for Theorem <ref> that follows. The proof of  <ref> is deferred to the appendix.  
+
+
+Let S ⊂Δ^m × such that inf{α_f:α∈ S}>0. Then sup{|g(α)| : α∈ S}<∞.
+
+
+
+
+
+
+ For any given α∈Δ^m×, if v_α has a unique global maximum then
+ 
+    lim_β→αg(β)=g(α).
+
+
+
+Before presenting the proof, note that (a) this statement is not obvious because we did not assume that g is continuous, and (b) it holds for any function g that follows Definition <ref>, i.e. the specific arbitrary choice of g(β) in case v_β has multiple optima is irrelevant.
+
+By assumption, 0 < α·((g(α))-(g(β))). On the other hand, putting ϵ:=(α-β),
+
+    0 < α·((g(α))-(g(β)))   =β·((g(α))-(g(β)))+ϵ·((g(α))-(g(β))
+       ≤ϵ·((g(α))-(g(β)))≤ |ϵ|·|(g(α))-(g(β))| .
+
+where the second inequality is by definition of g(β). By Lemma <ref> g(β) is bounded, and therefore |ϵ|· |(g(α))-(g(β))| 0. Ergo, 
+
+    lim_β→αα· ((g(α))-(g(β)))=lim_β→αv_α(g(α))-v_α(g(β))=0
+
+Since v_α is continuous, g(α) is unique and g(β) is bounded, it must be that g(β) → g(α). 
+
+
+
+
+
+
+ §.§ Bounding individual payments
+ 
+We need one more definition before stating our main result in this section.
+
+   A characteristic triplet in a budgeting instance  is σ =(b_0,μ,α̅) where 
+   
+     
+  * b_0:=B_0/n≥ 0 is the non tax funded  budget source per capita.   
+     
+  * α̅:=1/n∑_kα_k ∈Δ^m × is the mean preferences vector of all agents.
+     
+  * 1/μ<α_i,f<μ ∀ i ∈ [n]. 
+ 
+
+
+ Let σ =(b_0,μ,α̅) such that v_α̅ has a unique global maximum at g(α̅). Then for every ϵ >0 there exists n_ϵ(σ) such that in every budgeting instance with characteristic triplet σ and n > n_ϵ(σ),
+
+    |P_i|<ϵ  ∀ i ∈ [n].
+ 
+
+As stated, Theorem <ref> means that prices vanish if the population is sufficiently large while not taking into account the likely possibility that in reality, new members that join a community might change it's characteristic parameters b_0,μ and α̅. That is, we are saying that in any given community with known parameters (b_0,μ,α̅), prices will be arbitrarily small if the population is large enough. Thus, as there is no reason to assume some correlation between these parameters and the population's size, the theorem essentially implies that prices are likely to be small, even negligible, in larger societies.
+
+The p^VCG payments are defined as the loss an agent imposes on all others by participating, and are therefore always non-negative. Now,  
+
+    0≤ p^VCG_i   =(n-1)α̅_-i((g(α̅_-i))-(g(α̅)))
+       =(n-1)α̅((g(α̅_-i))-(g(α̅)))+(n-1)(α̅_-i-α̅)((g(α̅_-i))-(g(α̅)))
+       ≤ (n-1)(α̅_-i-α̅)((g(α̅_-i))-(g(α̅)))
+       ≤n-1/n|α̅_-i-α_i||(g(α̅_-i))-(g(α̅))| 0
+
+Where the first inequality is by definition of g(α̅),  and in the second we used α̅=n-1/nα̅_-i+1/nα_i and Cauchy–Schwarz. Since |α̅_-i-α_i| is bounded, and by Lemma <ref> ∘ g is continuous, we get the convergence at the end. Now, as _-i→ with n →∞, 
+
+    P_i=-t(α̅) +f^-1(f(t(α̅))+1/α_i,fp^VCG_i)   -t(α̅)+t(α̅) =0
+
+(note that f^-1 is continuous). Thus for any arbitrary small ϵ we can find n_ϵ(σ) that yields the result.
+
+Note that the mean-dependency is crucial for that result too. It yields that _-i approaches  at a 1/n rate, precisely canceling the increase in the number of agents n.
+
+
+ §.§ Non-Positive Payments
+
+The theorem above shows that individual payments vanish with n. Our next goal is to formulate them as non positive for all agents. Meaning, we want no agent to add any payment on top of the tax t, even negligible. Instead, they might be paid a "negative payment" that we can view as a bonus or a "tax discount" for their participation. We defer the complete discussion and formalities to the app_sec:np_paymentsappendix, and only outline here the main ideas.
+
+First, we formulate the condition needed for a stronger convergence result.
+
+  Define  F:(Δ^m×)^2 →^m+1 as:
+
+    F_j(α,(x,t))   =α_jθ'_j(x_j(b_0+t))-α_ff'(t)  ∀ 1≤ j ≤ m 
+     
+        F_m+1(α,(x,t))   =∑_jx_j-1
+ 
+ We say that g(α)=(x^(α),t^(α)) is a "regular maximum" of v_α if F(α,(x^(α),t^(α)))=0 and
+
+    [F(x,t)(α,g(α))]≠ 0
+
+where F(x,t) is the (m+1)×(m+1) Jacobi matrix of F with respect to the variables (x,t).
+
+Next, in Appendix <ref> 
+we show that a unique regular solution g() implies that g is differentiable in its surrounding. That will enable us, by linear approximation, to evaluate the convergence rate of the difference ((g(α̅_-i))-(g(α̅))), which essentially determines the payment of agent i. Theorem <ref> then shows that this rate is O(1/n). 
+
+
+ Let σ =(b_0,μ,α̅) such that v_α̅ has a regular unique global maximum g(α̅). Then there exist some ℬ∈ and n(σ) such that 
+ in every population with characteristic triplet σ and size n > n(σ),
+|P_i| ≤ℬ/n  for all i ∈ [n]. 
+
+
+Now we construct non-positive payments the following way. We add to the VCG payments an amount that we pay back to every agent and  equals (or is greater than) the maximum payment she could have been charged with, given the partial type profile of her peers α_-i. Theorem <ref> will not only provide that bound, but also implies that the total amount paid to agents will not diverge as n →∞. Corollary <ref>  states the final result. 
+
+    In any budgeting instance with characteristic triplet σ of size n>n(σ) such that v_α̅ has a regular unique global maximum, there exist a payment assignment P that satisfies: 
+ 
+     
+  * P_i ≤ 0 ∀ i ∈ [n]
+     
+  * ∑_i ∈ [n]P_i ≥ -ℬ̃ for some ℬ̃∈_+.
+ 
+
+ 
+
+
+§ BIASED MECHANISMS
+
+In this section, we expand the US-VCG definition to a class of mechanisms that insert a bias towards an arbitrary desired outcome or a set of outcomes. Indeed, the designer may have some goal in mind that she may want to balance with welfare, for example a particular project she wants to promote, a legacy allocation from previous years, or an allocation she sees as fair. 
+
+
+
+
+The general form of mechanisms in that class follows the familiar affine-maximizer generalization of a VCG mechanism. (See <cit.>, p. 228). We start with choosing a bias function (x,t): Δ^m×↦, that in one way or another favours—that is, assigns higher values to—outcomes we see as desirable. Note that (x,t) must be independent of the realization of preferences α⃗=(α_1,…,α_n). Then, we generalize the US-VCG definition as follows.
+
+
+
+For any bias function (x,t): Δ^m×↦, we define the Biased Utility-Sensitive VCG (BUS-VCG)
+mechanism:
+
+    (α⃗):= ((),)
+
+where
+
+    
+  * ∀α∈, (α):= (x,t) ∈_(x,t) v_α(x,t)+(x,t) [For the time being, let us just assume that indeed such a maximum exists. Note that  Obviously depends on our choice for , but we do not refer to that explicitly as it should be clear in the context.]
+    
+  *  is the payment assignment 
+
+    _i:=-þ+f^-1(f(þ)+1/α_i,f(p^VCG_i+n((_-i))-n(()))
+
+
+
+
+
+
+
+
+ §.§ Equitable/Egalitarian Allocations
+
+We now give an example for a specific choice of allocations that promotes two well-known notions of distributive justice and that a social planner might favor. We focus here only on the choice of the allocation x ∈Δ^m and not on the tax decision t, assuming the designer only cares for the division of the budget B_t once it is determined. Conceptually, we desire a "fair" use of public resources, whereas t is a private resource. There are also technical reasons for refering to the allocation alone, that will be clarified shortly.
+
+
+For every t ∈ (-B_0/n,∞), let
+^t := _x ∈Δ^mmax_j,k ∈ [m] |θ_j(x_jB_t)-θ_k(x_kB_t)|
+
+Thanks to the fact that Θ_i(xB_t) is a convex combination of θ_j(x_jB_t), j ∈ [m] for every agent i, ^t minimizes the possible difference in satisfaction between any two agents, up to a point of a complete equitable allocation where θ_j(^t_jB_t)=θ_k(^t_kB_t) ∀ j,k and consequently Θ_i(^tB_t)=Θ_h(^tB_t) for every two agents i,h, whenever that is feasible under B_t. (Such cases are not too scarce, for example if θ_j(0) is the same value for all j ∈ [m] then an equitable allocation exists for all t.) We state that formally in the following proposition, given without a formal proof.  
+
+For all t ∈ (B_0/n,∞), ^t= _x Δ^mmax_α,β∈Δ^m|Θ_α(xB_t)-Θ_β(xB_t)|
+
+
+
+Note that ^t optimizes with respect to all hypothetical types, as our bias function  cannot depend on realized votes. Thus, diverting the outcome towards ^t brings an improvement in terms of the "worst case" result only. For that reason, searching for an equitable or egalitarian budget decisions, i.e. w.r.t. the tax decision as well, also does not make too much sense on the technical level, as in every budget decision (x,t), the worst-case maximum gap in -α_i,ff(t) is between two hypothetical agents that have the two extreme values of α_i,f. Next, our choice of ^t implements (in the worst case) another celebrated principle in Social Choice literature, namely the Egalitarian Rule.
+
+
+For all t ∈ (-B_0/n,∞), ^t= _x ∈Δ^mmin_α∈Δ^mΘ_α(xB_t).
+
+
+ The minimum level of satisfaction in (x,t) is attained by a unit-vector type  such that 
+ Θ_(xB_t)=θ_j(x_jB_t)=min_j'θ_j'(x_j'B_t). Now, it is clear that 
+ 
+    ^t :   = _x ∈Δ^mmax_j,k ∈ [m] |θ_j(x_jB_t)-θ_k(x_kB_t)| 
+               = _x ∈Δ^mmin_j ∈ [m]θ_j(x_jB_t)
+
+ as one cannot increase both the minimum and maximum of θ_j'(x_j'B_t), j' ∈ [m] while keeping the budget B_t fixed, and thereby cannot increase the minimum without reducing the difference. 
+
+
+
+
+ §.§ Properties inherited by 
+
+We would obviously like to preserve useful properties of the US-VCG mechanism when generalizing to BUS-VCG. Some of them carry over quite easily. First, note that mean-dependency (Observation <ref>) holds for  too. (We in fact rely on that in the definition of ). It is not difficult to see now that DSIC extends under any choice for , as the definition of  imitates the situation where v_i(x,t) → v_i(x,t)+(x,t)  and h(α_-i) → h(α_-i)+n((_-i)) for every agent i.[See <cit.> for a rigorous proof.] One also easily checks that payments vanish if () satisfies the same demands we needed earlier for g(), that is, continuity for Theorem <ref> and differentiability for <ref> (Albeit, for  we will have to explicitly demand that while for g we had other terms that implied its smoothness).
+
+The BUS-VCG mechanism is DSIC. Moreover, Theorem <ref> (<ref>) hold if  is continuous (differentiable) near the solution ().  
+
+SDSIC, however, will not carry over that easily. The condition we need for that is α≠α' (α) ≠(α'), which is not satisfied by any arbitrary choice of (x,t). For example,
+
+
+    (x,t)=
+    
+    K     (x,t)∈ W
+    
+    0     (x,t)∉ W
+
+where K ∈ R is some large number and W ⊂ is the set of favoured outcomes, does not satisfy that. In 
+Appendix <ref> we describe a class of bias functions that do preserve SDSIC. 
+
+
+
+
+
+
+
+
+
+
+§ CONCLUDING REMARKS
+
+We presented a collective decision budgeting mechanism, the US-VCG mechanism, that concerns both the allocation and total volume of expenses. It is  essentially a VCG mechanism adjusted to our setting, in which we had to tackle a few issues. Mainly, we had to reformulate the payments to suit our preference model of non quasi-linear utilities. The US-VCG mechanism is welfare-maximizing and DSIC in the most general setup, and we specified the conditions in which it further satisfies  strict DSIC and consequently also resistance against coalition manipulations. In Section <ref>, we showed that the modified VCG payments the mechanism charges become negligible in large populations, which is especially relevant in the Participatory Budgeting application that stood in the center of our focus. Finally, we showed a generalization of the US-VCG mechanism that inserts a bias towards any set of outcomes of one's choice.   
+
+Future Directions In the introduction, we discussed the theoretic advantages of an additive concave utility model over other examples from the literature. The obvious downside is, when considering a mechanism that aggregates preferences, is the difficulty in assessing the concrete functions we should assume. While we can nevertheless argue that any such functions are probably a better approximation for the true underlying preferences than previous suggestions, future experimental research attempting to evaluate, similarly to those performed in relation to the disutility monetary function f <cit.>, could make a valuable contribution to the field.
+
+
+ACM-Reference-Format.bst
+
+
+
+
+
+
+
+
+§ MISSING PROOFS
+
+tract_alpha
+   tract_alpha_proofIn every budgeting instance , for every type α∈:
+  
+      
+  * There exists a solution (x^(α),t^(α)) to the optimization problem 
+      
+    max_(x, t)     v_α(x,t)=∑_jα_jθ_j(x_jB_t)-α_ff(t)
+    
+          s.t.      x ∈Δ^m, t ∈ [-B_0/n,∞)
+
+     
+  * t^(α) > B_0/n and for all j s.t. x^(α)_j>0,  
+  
+    nθ'_j(x^(α)_jB_t^(α))/f'(t^(α))=α_f/α_j
+  
+   
+  * If lim_z → 0θ'_j(z)=∞ and  x^(α)_j=0 then α_i,j=0.
+  
+
+
+For any preferences vector α, consider first the (convex) optimization w.r.t. some fixed t ∈, that is
+ 
+    max_x ∈Δ^m∑_jα_jθ_j(x_jB_t)-α_ff(t)
+
+and let x^(α)(t) be the solution (that surely exists because Δ^m is a compact set) for any given t ∈. Then x^(α)(t) must satisfy the first order conditions: 
+ 
+    α_jθ'_j(x^(α)_j(t)B_t)   = α_kθ'_k(x^(α)_k(t)B_t)
+
+for every x^(α)_j(t),x^(α)_k(t) >0 and if x_j>x_k=0 then 
+    α_jθ'_j(x^(α)_j(t)B_t) ≥α_kθ'_k(0)
+
+because otherwise we can increase utility by some infinitesimal change of x^(α)(t). Note that (3) follows immediately from the above inequality if lim_z → 0θ'_k(z)=∞. We assume w.l.o.g. that x^(α)(t): →Δ^m is differential, because if not there exists a differentiable mapping arbitrarily close to x^(α)(t). 
+ Now, consider
+ 
+    tv_α(x^(α)(t),t)   =t[∑_jα_jθ_j(x^(α)_j(t)B_t)-α_ff(t)]
+       =∑_jα_jθ'_j(x^(α)_j(t)B_t)[x^(α)_j(t)tB_t+nx^(α)_j(t)]-α_ff(t)
+
+ Now, there exists some l ∈ [m] s.t. x^(α)_l(t) ≥ 1/m, and  by the first order conditions we derived above, 
+ 
+    tv_α(x^(α)(t),t)   =α_lθ'_l(x^(α)_l(t)B_t)∑_j[x^(α)_j(t)tB_t+nx^(α)_j(t)]-α_ff(t)
+       ≤ nθ'_l(t/m)-α_ff(t)
+
+ where we used ∑_jx^(α)_j(t)t=0, ∑_jx^(α)_j(t)=1 and θ”_l<0.
+ Now by Assumption <ref>, there exists some t_0 ∈ s.t. ∀ j ∈ [m] 
+ 
+    θ'_j(B_t/m)≤θ'_j(t/m) < α_f/nf'(t)  ∀ t >t_0
+
+ and therefore tv_α(x^(α)(t),t)<0 for t >t_0. Thus v_α(x^(α)(t),t) has a global maximum at some t^(α)≤ t_0. By Assumption <ref>, there exists some j such that lim_t → 0nα_jθ'(nt) > α_flim_t → -B_0/nf'(t). nθ'_j(0), and thus t=-B_0/n must be suboptimal. In other words t^(α)>-B_0/n.
+ We abbreviate the notation now to x^(α):= x^(α)(t^(α)). We proceed while first assuming that f is differentiable at t^(α). 
+ 
+    α_jθ'_j(x^(α)_j· B_t^(α))=α_ff'(t^(α))  ∀ x^(α)_j>0
+
+because otherwise v_α(x^(α),t^(α)+ϵ)>v_α(x^(α),t^(α)) for some infinitesimal (smaller or greater than zero) ϵ.
+To complete the proof, we now show that in case lim_t → 0^+_-f'(t)=∞, t^(α)≠ 0 and thus f has a derivative at t^(α) in any case. Let v_α(x^(α),t):=∑_jα_jθ_j(x^(α)_j· B_t)-α_ff(t), meaning, we fix x^(α) and define v_α(x^(α),t) ∀ t> B_0/n. Then if lim_t → 0_-f'(t)=∞, there exists some ϵ>0 such that tv_α(x^(α),t)<0 for all t∈ [-ϵ,0) and because v_α(x^(α),t) is continuous, v_α(x^(α),0)<v_α(x^(α),-ϵ). Thus (x^(α),0) cannot be a maximum. (Note that if B_0=0 then t^(α)=0 is not possible by Assumption <ref>).
+ 
+
+
+
+
+lemma_bound_solutions
+Let S ⊂Δ^m × such that inf{α_f:α∈ S}>0. Then sup{|g(α)| : α∈ S}<∞.
+
+
+
+ Note that x^(α)∈Δ^m so we really only have to prove that t^(α) is bounded. By Lemma <ref>, 
+    θ'_j(x^(α)_j(b_0+t^(α)))/f'(t^(α))=α_f/α_j  ∀ j
+
+For all α∈ S, there exists j ∈ [m] such that x^(α)_j ≥ 1/m and thus, since θ'_j is decreasing, 
+
+    θ'_j(t^(α)/m)/f'(t^(α))≥θ'_j(x^(α)_j · t^(α))/f'(t^(α))≥θ'_j(x^(α)_j(b_0+t^(α)))/f'(t^(α))=α_f/α_j
+
+Therefore , by Assumption <ref>, the LHS of that equality vanishes as t^(α)→∞ and since the ratio on the RHS is bounded away from zero, t^(α) is bounded for all α∈ S.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ NON-POSITIVE PAYMENTS
+
+We give here the full analysis that leads to Corollary <ref>. We start at formulating the condition needed for Theorem <ref>.
+
+
+  Define  F:(Δ^m×)^2 →^m+1 as:
+
+    F_j(α,(x,t))   =α_jθ'_j(x_j(b_0+t))-α_ff'(t)  ∀ 1≤ j ≤ m 
+     
+        F_m+1(α,(x,t))   =∑_jx_j-1
+ 
+By Lemma <ref>, F(α,(x^(α),t^(α)))=0 for all α∈Δ^m× R. We say that g(α)=(x^(α),t^(α)) is a "regular maximum" of v_α if, moreover,
+
+    [F(x,t)(α,g(α))]≠ 0
+
+where F(x,t) is the (m+1)×(m+1) Jacobi matrix of F with respect to the variables (x,t).
+
+
+The next Lemma is a direct application of the Implicit Function Theorem <cit.>.
+
+ Let g(α) be a regular maximum of v_α. Then there exist an open  neighborhood of α S ⊂Δ^m× R  and a unique mapping s:S → such that :
+
+    
+  * s(α)=g(α). 
+    
+  * s is continuously differentiable in S.
+    
+  * ∀β∈ S, F(β,s(β))=0  
+
+
+The Lemma does not yet provide the smoothness we want for g, because it only promises that {s(β)}_β∈ S are critical points of v_β that satisfy F(β,s(β))=0, not necessarily maxima. In other words s and g are not the same function by definition. However, an immediate corollary is that if g(α) is also unique they indeed must coincide.
+
+
+Assume that g(α) is a regular unique global maximum of v_α. Then there exist a neighborhood of α, S ⊂Δ^m× R, such that g is uniquely defined and continuously differentiable in S.
+
+
+Denote by S the neighborhood of α from the statement of Lemma <ref> and let g(S) be the image of S under g. By Lemma <ref>, g(β) approaches g(α)=s(α) as β→α, therefore there exists a neighborhood S ⊆S of α in which g(β) ∈ g(S) ∀β∈ S. Now, every solution g(β) must satisfy F(β,g(β))=0, but, by Lemma <ref> s is the unique function that maps β∈S to s(β) such that F(β,s(β))=0, therefore g|_S=s. Thus by Lemma <ref>, g is uniquely defined and continuously differentiable in S. 
+
+
+We now have the necessary for the stronger version of payments convergence stated in Theorem <ref>. Basically, this further result is due to the differentiabilty of g that allows for a linear approximation of the difference ((g(α̅_-i))-(g(α̅))), which essentially determines the VCG payment of an agent i. Thus, we can not only say that this difference vanishes as we did in Theorem  <ref>, but also specify the convergence rate of O(1/n). 
+
+price_conv_2
+ Let σ =(b_0,μ,α̅) such that v_α̅ has a regular unique global maximum g(α̅). Then there exist some ℬ∈ and n(σ) such that 
+ in every population with characteristic triplet σ and size n > n(σ),
+
+    |P_i| ≤ℬ/n  ∀ i ∈ [n]
+ 
+
+
+
+ In the proof of Theorem <ref> we showed that:
+ 
+    0 ≤ p^VCG_i≤n-1/n|α̅_-i-α_i||(g(α̅_-i))-(g(α̅))|
+
+ By Corollary <ref>, g is differentiable in some neighborhood of α̅ S, and so ∘ g is too. Thus, if we take n_0  sufficiently large so that α̅_-i∈ S, we have for all n>n_0 that
+
+    p^VCG_i   ≤n-1/n|α̅_-i-α_i||𝒟_∘ g(α̅)(α̅_-i-α̅))+o|α̅_-i-α̅|| 
+       ≤n-1/n|α̅_-i-α_i| (𝒟_∘ g(α̅)|α̅_-i-α̅|+o|α̅_-i-α̅|)
+       =n-1/n|α̅_-i-α_i| (𝒟_∘ g(α̅)|α̅_-i-α_i|1/n+o(|α̅_-i-α_i|1/n))
+
+Where 𝒟_∘ g is the Jacobian matrix of ∘ g and 𝒟_∘ g is its matrix-norm, and in the equality at the end we put α̅=n-1/nα̅_-i+1/nα_i. Since the {α_i,f} are bounded there exists some γ∈ such that |α̅_-i-α_i|<γ for all i, thus
+
+    p^VCG_i≤n-1/n^2γ^2(𝒟_∘ g(α̅)+o(1))
+
+Now taking n_1 ≥ n_0 such that the o(1) term above is less than 1 and ℬ_0=γ^2(𝒟_∘ g(α̅)+1) gives 
+
+    P_i=-t(α̅) +f^-1(f(t(α̅))+1/α_i,fp^VCG_i)<(f^-1)'(t(α̅))μℬ_0/n+o(μℬ_0/n)
+
+(Note that by Lemma <ref>, in case f is not differentiable at zero then t(α̅) ≠ 0 thus (f^-1)' alwyas exists.) And now taking ℬ=μ(f^-1)'(t(α̅))𝒞_0+1 with sufficiently large n(σ) ≥ n_1 completes the proof.
+
+
+
+In any budgeting instance with characteristic triplet σ and n>n(σ), and such that v_α̅ has a regular unique global maximum,
+
+    ∑_i ∈ [n]P_i ≤𝒞
+
+
+
+Besides telling us how fast payments converge, Theorem <ref> and the corollary that follows allow for the definition of payments that not only vanish asymptotically, but are also non-positive for all agents. That is, instead of charging a "fee" for participating in the vote (and moreover, one that is not identical for everyone), agents will be paid by the mechanism, which you might see as a reward for their participation. The idea is quite simple—after charging an agent with her VCG payment,  we “pay her back" no less than the maximum possible payment she could have been charged with given the preferences of her peers α⃗_-i. This way no one is charged with a strictly positive payment. Thanks to Corollary <ref>, we know that the overall sum needed to implement that will not diverge with the number of agents.  
+
+
+  Define the non-positive VCG payment assignment p̂^VCG as
+  
+    p̂^VCG_i:=p^VCG_i-γ^2/n(𝒟_∘ g(α̅_-i)+1)-r/n
+
+  where γ is the bound defined in the proof of Theorem <ref> and r ≥ 0 is any constant factor.
+
+  Note that this payment assignment does not violate SDSIC as it does not involve α_i. 
+
+  γ^2/n(𝒟_∘ g(α̅_-i)+1) is a bound we take for p^VCG_i (See clarification below) and the purpose of the r/n factor is to allow for even higher payments to the agents, as much as the social planner wishes and can afford. We thus conclude that:
+
+cor_npp
+ In any budgeting instance with characteristic triplet σ and n>n(σ) such that v_α̅ has a regular unique global maximum, the payment assignment P̂_i:=-t(α̅) +f^-1(f(t(α̅))+1/α_i,fp̂^VCG_i) satisfies: 
+ 
+     
+  * P̂_i ≤ 0 ∀ i ∈ [n]
+     
+  * ∑_i ∈ [n]P̂_i ≥ -ℬ̃ for some ℬ̃∈_+.
+ 
+
+
+Let us clear out these statements. First, P_i ≤ 0 because p̂^VCG_i ≤ 0 and f^-1 is increasing. Theoretically, we could have just put
+    [max_α_i ∈Δ^m ×p_i^VCG(α_-i,α_i)] instead of γ^2/n(𝒟_∘ g(α̅_-i)+1) in the above definition, however we cannot guarantee that this maximum can be found efficiently. Note that γ^2/n(𝒟_∘ g(α̅_-i)+1) is almost exactly the upper bound we put on p^VCG_i in the proof of Theorem <ref>, the only difference is that we now use the derivative at α̅_-i to evaluate the difference V(g(α̅_-i))-V(g(α̅)), instead of the derivative at α̅. Obviously, that is just as valid and we could have similarly reached that bound. The reason for this substitution is that the payments formula must be independent of α_i to maintain Incentive Compatibility. Now, While 𝒟_∘ g(α̅_-i) is different for every agent i, we know that these are bounded globally because α̅_-i→α̅ and the Jacobian matrix is a continuous function. Thus p̂_i^VCG=O(p_i^VCG)=O(1/n).
+     
+
+
+
+
+§ BIAS FUNCTIONS THAT PRESERVE SDSIC
+ 
+
+
+
+
+ §.§ Phantom-Agents
+
+
+We shall define our special bias function in the form of utility functions of fictitious agents that favour our targeted outcomes. In the simplest case where we have a sole budget decision in mind we can take (x,t)=λ· v_α̃(x,t) where α̃ is chosen so that g(α̃) is the desired outcome and λ >0 indicates the extent of bias we want. The SDSIC then extends trivially, as the our new biased mechanism is essentially the US-VCG mechanism for the n real agents plus λ n fictitious ones with mean preference α̃. 
+However, diverting the mechanism towards a set of outcomes while maintaining SDSIC will not be as simple (Note that if we add fictitious agents of multiple types, their impact on the outcome is ultimately determined only by the mean of fictitious preferences). 
+
+
+The bias function we introduce below (Def. <ref>) is composed as the sum of two functions, one that favours certain tax decisions and another that targets specific allocations ^t for any given t ∈. That separation corresponds to the nature of our optimization problem, that can be solved in two steps accordingly (See details in the proof of Lemma <ref>). Nonetheless, as we do not demand that ^t necessarily exists for all t, i.e., it is possible that under some tax decisions no allocation is favourable,  it should not harm its generality. Meaning, any arbitrary set of outcomes W ⊂ can be targeted this way. We first define the follwing once {x^t}_t are chosen.  
+
+
+For any choice of {^t}_t and for every t ∈ (-b_0,∞) such that ^t exists, we define the corresponding type ^t=(^t_1,…,^t_m) and  valuation function ^t such that
+
+    _x ∈Δ^m^t(xB_t)=_x ∈Δ^m∑_j^t_jθ_j(x_jB_t)=^t
+
+and if ^t does not exist put ^t=0⃗.
+
+
+For all t, ^t is derived uniquely  from ^t using the first order conditions that we show in the proof of Lemma <ref>:[We assume that ^t is an internal point of Δ^m for all t.]
+
+
+    θ'_j(_jB_t)/θ'_k(_kB_t)=^t_k/^t_j ∀ j ∈ [m]
+
+(and note that these are linear equations as ^t is given). Now, we define our bias function as follows.
+ 
+For any choice of {^t}_t and for every λ>0, define   
+
+    _λ(x,t):=λ(^t(xB_t)-^t(^tB_t))+ ψ(t)
+
+where ψ:(-B_0/n,∞) ↦ is continuous and lim_t →∞ψ(t)=0.
+ 
+That is, for any given t we add the (non-positive) utility loss of λ fictitious agents that favour ^t over x (but have no preferences regarding the tax t), plus ψ(t) that expresses the designer's preference on tax decisions. Note that by a similar argument to that used in the proof of Lemma <ref>, that choice of  assures that  is well defined, i.e. that  v_α(x,t)+_λ(x,t) has a global maximum for all α∈.
+
+
+[Running example with bias to equitable allocation]
+We show an example for executing the BUS-VCG mechanism with ^t taken as the equitable allocation ^t defined in <ref>. In case that θ_j are identical for all j then ^t and ^t are trivial,  ^t_j =^t=1/m ∀ j. Thus,
+
+    C_λ(x,t)=λ(10∑_j1/mln(x_j· 3t)-10∑_j1/mln(1/m· 3t))
+
+To compute ()=(,þ), let us first find  w.r.t. any fixed t. When t is fixed, solving
+
+    max v_(x,t)+3_λ(x,t)
+     x ∈Δ^m
+  
+is just as solving the original problem, only for a modified preferences mean β_j=_j+λ/m/1+λ/m∀ j ∈ [m], and with logarithmic functions we know that _j=β_j ∀ j, independently of t. Now we need to solve  
+
+    max v_(,t)+3_λ(,t)
+     t ∈
+ 
+but, note that (,t) is a constant function of t, thus not affecting þ. To conclude, the introduction of _λ shifts the allocation from x^*_j=_j ∀ j to _j=_j+λ/m/1+λ/m∀ j while not affecting the tax decision  t^*=þ=( 2· 10/3_f)^2.
+
+
+
+As mentioned above, to maintain SDSIC we also have to see that (α) defines α uniquely. That requires further assumption  on the smoothness of _λ.  
+
+
+ Assume that _λ(x,t) is differentiable in t. Then for any two distinct preferences vectors α≠β∈Δ^m×, (α) ≠(β).
+
+
+
+  Fix any α∈, and let 
+  
+    (α)=(x^*,t^*) ∈_(x,t) ∈ v_α(x,t)+_λ(x,t).
+ 
+  Then in particular, x^* solves
+  max_x ∈Δ^m v_α(x,t^*)+_λ(x,t^*).
+  Since 
+  
+    v_α(x,t^*)   +_λ(x,t^*)=
+       ∑_jα_jθ_j(x_jB_t^*)-α_ff(t^*)
+        +λ∑_j^t^*_jθ_j(x_jB_t^*)
+       -λ∑_j^t^*_jθ_j(^t^*_jB_t^*)+ψ(t^*),
+
+  x^* also solves 
+  max_x ∈Δ^m∑_j(α_j+λ^t^*_j)θ_j(x_jB_t^*)  because once we fix t^* all the remaining terms are just constants.
+  By the proof of Lemma <ref>, that problem has a unique solution 
+   for every (α_1,…,α_m) ∈Δ^m and moreover, two distinct vectors cannot share the same solution. We thus conclude that (α)=(β) α_j=β_j ∀ j ∈ [m].
+
+   Now, let α,β∈ where α_j=β_j ∀ j ∈ [m] and assume that (α)=(β)=(x^*,t^*). Then  
+  
+    t^* ∈_t v_α(x^*,t)+_λ(x^*,t)
+    and     t^* ∈_t v_β(x^*,t)+_λ(x^*,t)
+
+  Since α_j=β_j ∀ j ∈ [m], we can write 
+  
+    v_α(x^*,t)+_λ(x^*,t)=Γ(t)-α_ff(t) ;
+        v_β(x^*,t)+_λ(x^*,t)=Γ(t)-β_ff(t)
+
+  for some Γ: (-b_0,∞) ↦ that is differentiable by our  assumption on  and the initial assumptions on θ_j, j ∈ [m].
+ Thus,
+  
+    Γ'(t^*)-α_ff(t^*)=Γ'(t^*)-β_ff(t^*)=0 α_f=β_f
+  
+
+
+
+For all λ≥ 0 and for every bias function _λ(x,t)  that is differentiable in t, the BUS-VCG mechanism is SDSIC in every budgeting instance that the US-VCG is. 
+
+
+
+
+
+§ HETEROGENEOUS TAX
+
+In some situations we may prefer a heterogeneous tax distribution, especially in applications outside PB. For example, imposing higher contributions on wealthier countries in joint environmental investments.[Heterogeneous taxation is obviously appropriate as an income tax policy too, however it is less likely that private income levels are common knowledge in that scenario] We can implement a non-uniform distribution of tax revenues via assigning a parameter ω_i to each agent i, such that each pays ω_it and ∑_iω_i =n. The valuation function v_i(x,t) is then reformulated to 
+
+    v_i(x,t) = ∑_j=1^m α_i,jθ_j(x_j · (B_0+nt))-α_i,ff(ω_it)
+
+
+We show here how the US-VCG mechanism can still be implemented and with similar IC guarantees. (In particular, note that if f is a power function then f(ω_it)=f(ω_i)f(t) and thus we can absorb ω_i into α_i,f, effectively changing nothing in the model and thus all results will follow through). As for preferences elicitation, the introduction of ω_i imposes no limitations on Corollary <ref>. We only need to alter the individual equations from which we derive each agent's type accordingly.
+In constructing the US-VCG mechanism, we shall define the payments assignment accordingly as
+
+    P_i=-t^* +f^-1(f(ω_it^*)+1/α_i,fp^VCG_i)
+
+and then Lemma <ref> proceeds through, which is sufficient for DSIC. As for SDSIC, the social welfare is now expressed as
+
+    ∑_j=1^m _jθ_j(x_j · B_t )-∑_iα_i,ff(ω_it)
+
+Meaning that mean dependency (Observation <ref> is lost. Nevertheless, Lemma <ref> is built on the fact that a misreport of any agent necessarily shifts the outcome g() to a sub-optimal point, thus bringing to a loss in her overall utility. Here we still have that, if the social optimum is characterized by MRS conditions, then
+
+    n_jθ'_j(x^*_jB_t^*)=∑_iα_i,ff'(ω_it^*)·ω_i ∀ j
+
+and thus if agent i falsely report some α'_i, then social optimum inevitably changes, and in particular to a sub-optimal point w.r.t the true social welfare. To see that, assume that w.l.o.g. i reports α'_i,f>α_i,f. Then new (manipulated) type profile can still admit the above equations only if _j increases for all j, which is impossible.   
+
+
+

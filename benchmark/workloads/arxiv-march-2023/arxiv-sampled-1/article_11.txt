@@ -1,1197 +1,985 @@
 
+	
+	
+	1]Juan Chen
+	1]Yingchun Zhou Corresponding author:  yczhou@stat.ecnu.edu.cn
+	[1]Key Laboratory of Advanced Theory and Application in Statistics
+		and Data Science-MOE, School of Statistics, East China Normal University.
+	
+	
+	Weighted Euclidean balancing for a matrix exposure in estimating causal effect
+    [
+    
+==============================================================================
 
-[
-    Wenzheng Kuang
-    March 30, 2023
-==================
 
-
-
-
-We analyze the touring regions problem: find a (1+ϵ)-approximate Euclidean shortest path in d-dimensional space that starts at a given starting point, ends at a given ending point, and visits given regions R_1, R_2, R_3, …, R_n in that order. 
-
-Our main result is an 𝒪(n/√(ϵ)log1/ϵ + 1/ϵ)-time algorithm for touring disjoint disks. We also give an 𝒪 (min(n/ϵ, n^2/√(ϵ)) )-time algorithm for touring disjoint two-dimensional convex fat bodies. Both of these results naturally generalize to larger dimensions; we obtain 𝒪(n/ϵ^d-1log^21/ϵ+1/ϵ^2d-2) and 𝒪(n/ϵ^2d-2)-time algorithms for touring disjoint d-dimensional balls and convex fat bodies, respectively.
-
-
-
+		In many scientific fields such as biology, psychology and sociology, there is an increasing interest in estimating the causal effect of a matrix exposure on an outcome.  Covariate balancing is crucial in causal inference and both exact balancing and approximate balancing methods have been proposed in the past decades. However, due to the large number of constraints, it is difficult to achieve exact balance or to select the threshold parameters for approximate balancing methods when the treatment is a matrix. To meet these challenges, we propose the weighted Euclidean balancing method, which approximately balance covariates from an overall perspective. This method is also applicable to high-dimensional covariates scenario. Both parametric and nonparametric methods are proposed to estimate the causal effect of matrix treatment and theoretical properties of the two estimations are provided. Furthermore, the simulation results show that the proposed method outperforms other methods in various cases. Finally, the method is applied to investigating the causal relationship between children's participation in various training courses and their IQ. The results show that the duration of attending hands-on practice courses for children at 6-9 years old has a siginificantly positive impact on children's IQ.
+	
+	Keywords: causal inference, matrix treatment, weighting methods, overall imbalance, observational study. 
+	
+	
 
 § INTRODUCTION
 
+	For decades, causal inference has been widely used in many fields, such as biology, psychology and economics, etc. Most of the current research is based on univariate treatment (binary, multivalued or continuous treatment)  (<cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>; <cit.>). However, one may be interested in the causal effect of a matrix treatment. For example, in studying the impact of children's participation in training courses on children's intelligence (measured by IQ), the exposure is a matrix, whose rows represent different age groups, columns represent the types of trainging courses and each element represents the number of hours of class per week. The existing methods are not suitable for matrix exposure and there have been few research on this. Therefore, the goal of this paper is to develop a new method to estimate the causal effect function for matrix exposure.
+	To estimate causal effects in observational studies, it is common to use propensity scores (<cit.>; <cit.>; <cit.>). There are several classes of propensity score-based methods, such as matching, weighting and subclassification, that have become part of applied researchers' standard toolkit across many scientific displines (<cit.>; <cit.>). In this article we focus on the weighting method. 
+	In the past decade, various weighting methods have been proposed to balance covariates in the estimation procedure (<cit.>; <cit.>; <cit.>). The key idea of these methods is to estimate propensity score ( <cit.>; <cit.>; <cit.>; <cit.>).
+	
+	When using the parametric method to model the propensity score, the estimation bias of the causal effect will be large if the model is mis-specified. Therefore, some nonparametric methods for estimating the propensity score have been proposed, such as the kernel density estimation (<cit.>). In addition, in recent years, some studies have used optimized weighting methods to directly optimize the balance of covariates (<cit.>; <cit.>; <cit.>).
+	
+	These methods avoid the direct construction of the propensity scores, therefore the obtained estimate achieves higher robustness. One of the methods, the entropy balancing method, has been established as being doubly robust, in that a consistent estimate can still be obtained when one of the two models, either the treatment assignment model or the outcome model, is correctly specified (<cit.>).
+	
+	Furthermore, this method can be easily implemented by solving a convex optimization problem. Here we extend the entropy balancing method to the matrix treatment scenario to balance the covariates.
+	The methods mentioned above assume that all balancing conditions hold exactly, that is, they are exact balancing methods. However, the balancing conditions cannot hold exactly when the dimension of covariate or treatment is high as there will be too many equations to hold simultaneously. For matrix treatment, it is even more difficult for the balancing conditions to hold exactly. To meet this challenge, literatures have shown that approximate balance can trade bias for variance whereas exact balance cannot and the former works well in practice in both low- and high-dimensional settings (<cit.>; <cit.>). The potential limitations of the existing approximate balancing methods are that they directly control univariate imbalance, which cannot guarantee the overall balance especially in the high-dimensional scenario. Besides, there is no principled way to select the threshold parameters simultaneously in practice. Another potential issue of the univariate approximate balancing methods is that it is difficult to handle high-dimensional constraints since the theoretical results require that the number of the balancing constraints should be much smaller than the sample size(<cit.>).
+	To alleviate the limitations of univariate balancing methods, we propose an overall balancing approach, which is called Weighted Euclidean balancing method. The weight is obtained by optimizing the entropy function subject to a single inequality constraint, hence the issue of tuning multiple threshold parameters in univariate balancing methods is solved. The Weighted Euclidean distance is defined to measure the overall imbalance and a sufficient small value of the distance suggests that the covariates are approximately balanced from the overall perspective. Moreover, we propose an algorithm to deal with high-dimensional constraints, so that the proposed method is not restrictive to the low-dimensional setting.
+	The main contributions of the paper are summarized as follows. First, an overall balancing method (Weighted Euclidean balancing method) is proposed, which extends the binary univariate entropy approximate balancing method to the matrix treatment scenario. Unlike univariate approximate balancing method, the Weighted Euclidean balancing method controls the imbalance  from the overall perspective. Moreover, to the best of our knowledge, it is the first time that matrix treatment is studied by weighting method in causal inference literature. Second, both parametric and nonparametric causal effect estimation methods for matrix treatment are proposed. Under the parametric framework, a weighted optimization estimation is defined and its theoretical properties are provided. Under the nonparametric framework, B-splines are used to approximate the causal effect function and the convergence rate of the estimation is provided. Third, the proposed method is applied to explore the impact of children's participation in training courses on their IQ and meaningful results are obtained.
+	The remainder of this article is organized as follows: In Section 2, the preliminaries are introduced. In Section 3, the Weighted Euclidean balancing method (WEBM) is proposed. In Section 4, the theoretical properties of the WEBM method are shown. In section 5, a numerical simulation is performed to evaluate the performance of the WEBM method under finite samples. In Section 6, the WEBM method is applied to analyze a real problem. The conclusions and discussions are summarized in Section 7.
+	
+	
+	
+	
+	
+	
 
-We analyze the touring regions problem: find a (1+)-approximate Euclidean shortest path in d-dimensional space that starts at a given starting point, ends at a given ending point, and visits given regions R_1, R_2, R_3, …, R_n in that order. We present algorithms for the cases where the regions R_i are constrained to be unions of general convex bodies, convex fat bodies, or balls. To the best of our knowledge, we are the first to consider the cases where regions are disjoint convex fat bodies or balls in arbitrary dimensions. Consequently, our algorithms use techniques not previously considered in the touring regions literature (<ref>). Our algorithms work under the assumption that a closest point oracle is provided; closest point projection has been extensively used and studied in convex optimization and mathematics <cit.>.
+§ PRELIMINARY
 
-Most prior work focuses on d=2 or significantly restricts the convex bodies. The special case where d=2 and all regions are constrained to be polygons is known as the touring polygons problem. Dror et al. <cit.> solved the case where every region is a convex polygon exactly, presenting an |V|n log|V|/n-time algorithm when the regions are disjoint as well as an |V|n^2 log|V|-time algorithm when the regions are possibly non-disjoint and the subpath between every two consecutive polygons in the tour is constrained to lie within a simply connected region called a fence. Here, |V| is the total number of vertices over all polygons. Tan and Jiang <cit.> improved these bounds to |V|n and |V|n^2-time, respectively, without considering subpath constraints. 
+	
 
-For touring nonconvex polygons, Ahadi et al. <cit.> proved that finding an optimal path is NP-hard even when polygons are disjoint and constrained to be two line segments each. Dror et al. <cit.> showed that approximately touring nonconvex polygons with constraining fences is a special case of 3D shortest path with obstacle polyhedra, which can be solved in e^4/ϵ^2 time by applying results of Asano et al. <cit.>, where e is the total number of edges over all polyhedra. Mozafari and Zarei <cit.> improved the bound for the case of nonconvex polygons with constraining fences to |V|^2n^2/^2 time. Ahadi et al. <cit.> also solve the touring objects problem exactly in polynomial time, in which the R_i are disjoint, nonconvex polygons and the objective is to visit the border of every region without entering the interior of any region.
+ §.§ Notation and assumptions
 
-For touring disjoint disks, a heuristic algorithm with experimental results was demonstrated by Chou <cit.>. Touring disjoint unit disks was given in a programming contest and was a source of inspiration for this paper; an n/ϵ^2-time algorithm was given <cit.>. The main result that we show for disks is superior to both of these algorithms.
+	Suppose an independent and identically distributed sample (𝐙_1,…,𝐙_n) is observed, where the support of 𝐙 = (𝐓,𝐗,Y) is 𝒵=(𝒯×𝒳×𝒴). Here 𝐓∈ R^p× q denotes a matrix exposure, 𝐗∈ R^J denotes a vector of covariates, and Y ∈ R denotes the observed outcome. Since the causal effect is characterized by potential outcome notion, let Y(t) for all t∈𝒯 denotes the potential outcome that would be observed under treatment level 𝐭, i.e. Y = Y(t) if T= t.  
+	
+	In this paper, our goal is to estimate the causal effect function 𝔼(Y(𝐭)), which is defined in terms of potential outcomes that are not directly observed. Therefore, three assumptions that commonly employed for indentification are made (<cit.>; <cit.>).
 
-Polishchuk and Mitchell <cit.> showed the case where regions are constrained to be intersections of balls or halfspaces in d dimensions to be a special instance of a second-order cone program (SOCP), which runs in d^3c^1.5n^2log1/ϵ time using SOCP time bounds as a black box. Here, c is the number of halfspace or ball constraints.
+	
+	
+	Assumption 1 (Ignorability):
 
-The touring regions problem can be seen as the offline version of chasing convex bodies, in which convex bodies are given sequentially, and the algorithm must choose which point to go to on a convex body before the next convex body is revealed. Bubeck et al. <cit.> and Sellke <cit.> showed competitive ratios of 2^d and √(d logn), respectively. 
+	
 
+	T_i ⊥ Y_i(t) |X_i, which implies that the set of observed pre-treatment covariates 𝐗_i, is sufficiently rich such that it includes all confounders , i.e. there is no unmeasured confounding.
+	
 
+	
+	Assumption 2 (Positivity):
 
- §.§ Formal problem description
+	
 
+	f_T|X(T_i = t|X_i ) > 0 for all t∈𝒯, which means that treatment is not assigned deterministically.
 
+	
+	
+	Assumption 3 (SUTVA):
 
-Given n sets of points (regions) R_1, R_2, …, R_n each a subset of ^d, a starting point p_0, and an ending point p_n+1,[For convenience, some of our results define the degenerate regions R_0≜{p_0} and R_n+1≜{p_n+1}. ] define the function D (^d)^n → as D(p_1, p_2, …, p_n) ≜∑_i=0^np_i-p_i+1_2.
+	
 
+	Assume that there is no interference among the units, which means that each individual's outcome depends only on their own level of treatment intensity.
+	
 
-Let 𝒜≜{(p_1, p_2, …, p_n) |∀ i, p_i ∈ R_i}⊆ (^d)^n. Find a tuple of points (tour) (p_1',p_2',…,p_n')∈𝒜 such that D(p_1', p_2', …, p_n') ≤ (1+)min_x ∈𝒜 D(x).
+	
+	Under the above assumptions, we first define the stabilized weight as
 
+	
+    w_i = f(T_i)/f(T_i |X_i),
 
+	then one can estimate the causal effect function based on the stabilized weight with observational data.
+	
+	
 
+ §.§ Exact entropy balancing and approximate entropy balancing for matrix exposure
 
+	The entropy balancing method (<cit.>)
+	
+	is used to determine the optimal weight for inferring causal effects. It has been used for univariate treatment and here this method is extended to matrix exposure and to balance covariates approximately.	
+	Note that the stabilized weight 
 
-We consider three main types of regions: unions of convex bodies, convex fat bodies with constant bounded fatness, and balls.
+	
+    w_i = f(T_i)/f(T_i |X_i)
 
+	satisfies the following conditions for any suitable functions u(𝐓) and v(𝐗):
+	
+    𝔼(w_iu(𝐓_i)v(𝐗_i)) =    ∬f(T_i)/f(T_i |X_i)u(𝐓_i)v(𝐗_i)f(𝐓_i, X_i)dT_idX_i 
+       =∫{f(T_i)/f(T_i |X_i)u(T_i)f(T_i |X_i)dT_i } v(X_i)f(X_i)dX_i 
+       =𝔼(u(𝐓_i))𝔼(v(𝐗_i))
 
+	Besides, it also satisfies that 
+	
+    𝔼(w_i) = ∬f(T_i)/f(T_i |X_i)f(T_i, X_i)dT_idX_i = 1.
 
-We call a region R ⊂^d a union of k convex bodies if R = C_1 ∪ C_2 ∪…∪ C_k and each C_i is convex and compact. The C_i are allowed to intersect.
-
-
-We primarily restrict to the case where k ≤1. 
-
-
-
-We say that a convex region R ⊂^d is fat if there exist balls h, H with radii 0<r_h ≤ r_H, respectively, that satisfy h ⊆ R ⊆ H ⊂^d and r_H/r_h =1. 
-
-
-Fat objects have been previously considered in a variety of computational geometry settings <cit.>.
-
-One element of the problem that has not yet been determined is how we represent the sets of points R_1, R_2, …, R_n; this depends on what we restrict the regions to be:
-
+	However, Equation (2) implies an infinite number of moment conditions, which is impossible to solve with a finite sample of observations. Hence, the finite dimensional sieve space is considered to approximate the infinite dimensional function space. Specifically, let 
+	
+    u_K1(𝐓) = (u_K1,1(𝐓), u_K1,2(𝐓),…, u_K1,K1(𝐓))^', 
     
-  * Unions of convex bodies: We are given each region in the form R_i = C_i, 1∪ C_i, 2∪…∪ C_i, k_i. Each of the convex bodies C_i, j may be accessed via a closest point oracle. This oracle allows us to call the function _i,j(p) on some point p, which returns the point p' ∈ C_i, j such that p-p' is minimized in 1 time (note that p' is unique due to convexity).
-    
-    
-  * Convex fat bodies: We have access to each of the convex bodies R_i via a closest point oracle. Additionally, for each region, we are given the radius r_h of the inscribed ball (as described in <ref>), and a constant upper bound on the quantity r_H/r_h over all regions. 
-    
-    
-  * Balls: For each ball in the input we are given its center  c ∈^d and its radius r ∈_>0.
-
-
-We consider the 2-dimensional and general d-dimensional cases separately. In the d-dimensional case, we assume d is a constant (for example, we say 2^d = 1). We also consider the possibly non-disjoint versus disjoint cases separately, where the latter is defined by the restriction R_i ∩ R_j = ∅ for all 0≤ i<j≤ n+1. 
-
-
-
-  
-*Motivation for our model
-When considering general convex bodies,  it is natural to augment the model of computation with oracle access to the bodies, including membership, separation, and optimization oracles <cit.>. In fact, when solving the touring regions problem for general convex bodies, a closest point oracle is necessary even for the case of a single region, where the starting point is the same as the ending point and the optimal solution must visit the closest point in the region to the starting point. Closest point oracles can be constructed trivially when the bodies are constant sized polytopes or balls. Closest point oracles have been used in the field of convex optimization <cit.>.
-
-Our representations for unions of convex bodies, convex fat bodies, and balls, have the nice structure that each “contains” the next: we can trivially construct a closest point oracle for balls. Additionally, a ball is a specific type of convex fat body, which in turn is a specific type of convex body. We justify considering convex fat bodies as they are in some sense “between” balls and general convex bodies: they obey some of the packing constraints of balls. Considering unions of convex bodies allows us to represent a variety of non-convex and disconnected regions.
-
-
-
- §.§ Summary of results
-
-
-Our results and relevant previous results are summarized in <ref> and <ref>. We obtain a bound of n^2d-1(loglog n+1/^2d-2) time for the most general case of touring unions of convex bodies in d dimensions, where each region is a union of 1 convex bodies. This significantly improves to n/^2d-2 time if we restrict the regions to be disjoint convex fat bodies. Notice that this latter bound is linear in n; in fact, we show that any FPTAS for touring convex fat bodies can be transformed into one that is linear in n (<ref>). If the regions are further restricted to be balls, we can apply our new technique of placing points nonuniformly, and the time complexity improves to n/^d-1log^21/+1/^2d-2, which roughly halves the exponent of 1/ϵ compared to the convex fat bodies algorithm while retaining an additive 1/ϵ^2d-2 term. 
-
-Our 2D-specific optimizations allow us to obtain superior time bounds compared to if we substituted d=2 into our general dimension algorithms. In most cases, we save a factor of 1/ϵ. Notably, for convex fat bodies, we obtain an algorithm with linear time dependence on both n and 1/ϵ. For our main result of touring disjoint disks, we combine our optimizations for convex fat bodies and balls with 2D-specific optimizations.
-
-theoremnonIsectDisksTwoD
-
-There is an n/√()log1/+ 1/-time algorithm for touring disjoint disks.
-
-
-
-With a new polygonal approximation technique, we use the result of <cit.> for touring polygons as a black box to obtain algorithms with a square root dependence on 1/ϵ, most notably an n^3.5/√(ϵ)-time algorithm for touring 2D convex bodies and an n^2/√(ϵ)-time algorithm for touring 2D disjoint convex fat bodies.
-
-Approximation algorithms for touring polygons in 2D have been well-studied. As mentioned in the introduction, Tan and Jiang <cit.> improved on Dror et al.'s <cit.> exact solution for convex polygons, while Mozafari and Zarei <cit.> approximated unions of nonconvex polygons, which we include in <ref> for reference. One of our 2D-specific techniques can be used to improve the result of  <cit.> from |V|^2n^2/^2 to |V|nlog |V|loglog n+|V|n/log|V|/+|V|^2α(|V|) time, where α is the inverse Ackermann function, obtaining a strictly better running time for the problem of touring possibly non-disjoint unions of polygons in 2 dimensions.
-
-The c^1.5n^2log1/ϵ-time result for touring d dimensional convex bodies given by <cit.>, where each body is an intersection of balls and half spaces (with a total of c constraints) can be applied specifically to balls to yield an n^3.5log1/ϵ-time algorithm. Our algorithms for touring disjoint disks and balls all take time linear in n and are thus superior when ϵ is not too small.
-
-
-
-
-
-
-
-
-
- §.§ Organization of the paper
-
-
-We start in <ref> by considering unions of general convex bodies, using the closest point projection, pseudo-approximation, and 2D-specific optimizations. We then use the ideas of packing and grouping to obtain algorithms for convex fat bodies in <ref>. Finally, we optimize specifically for balls in <ref> by placing points non-uniformly.
-
-
-
- §.§ Summary of techniques
-
-
-Here, we introduce the techniques mentioned in the previous subsection.
-
-
-
-  
-*Placing points uniformly (<ref>)
-
-A general idea that we use in our approximation algorithms is to approximate a convex body well using a set of points on its boundary. For previous results involving polygons or polyhedra <cit.>, this step of the process was trivial, as points were equally spaced along edges. In order to generalize to convex bodies in arbitrary dimensions, we equally space points on boundaries using the closest point projection oracle with a bounding hypercube (<ref>). 
-
-After discretizing each body into a set of points, we can solve the problem in polynomial time using dynamic programming (DP): for each point, we find and store the optimal path ending at it by considering transitions from all points on the previous region.
-
-
-
-
-
-
-
-
-
-
-
-  
-*Pseudo-Approximation (<ref>)
-
-Let OPT be the optimal path length for touring regions. Consider some guess of the optimal path length for touring convex bodies L_APPROX≥ OPT, and then consider constructing a hypercube of side length 2L_APPROX centered at the starting point. We then equally space points on the boundary of the portions of the convex bodies which are inside the hypercube, and solve the problem assuming that the optimal path must travel through these points, which adds some additive error proportional to L_APPROX to the optimal path length. This is called a pseudo-approximation because the error bound only holds if L_APPROX≥ OPT, and if L_APPROX is much bigger than OPT, the additive error is very large.
-
-The idea for using this pseudo-approximation to compute an actual approximation is to start with some naive large approximation of the optimal path length, and then continuously guess smaller values of the optimal path length and run the pseudo-approximation as a subroutine to generate better approximations, eventually finding a constant approximation in loglogn iterations. Once a constant approximation is found, the pseudo-approximation algorithm becomes an actual approximation algorithm, and is then used to find a (1+ϵ)-approximation. This method was used previously by <cit.> and <cit.>. An exposition about pseudo-approximation can be found in <cit.>.
-
-
-
-  
-*2D-specific optimizations (<ref>)
-
-Previous approximation algorithms for related problems discretize the boundary of each convex region using 1/ϵ points. We present a new approach to approximate each boundary using a convex polygon with 1/√(ϵ) vertices (<ref>). This allows us to use previous exact algorithms for touring convex polygons as black boxes. 
-
-A separate approach is to use additively weighted Voronoi diagrams (<ref>) to optimize dynamic programming (DP) transitions from quadratic to near-linear time. When we additionally assume the input shapes are disjoint, we use properties of Monge matrices to optimize the transitions to expected linear time (<ref>).
-
-
-
-  
-*Packing and grouping (<ref>)
-While our general algorithm for unions of convex regions has runtime (n^2d-1/^2d-2 ), we are able to improve this to n/^2d-2 time for convex fat bodies. The key ideas behind this improvement are packing and grouping.
-
-We use a simple packing argument to show that the path length for visiting n disjoint convex fat bodies with radius r must have length at least Ω(r · n) for sufficiently large n (<ref>). This was used by <cit.> for the case of unit disks. However, it is not immediately clear how to use this observation to obtain improved time bounds when convex fat regions are not all restricted to be the same size.
-
-The idea of grouping is to split the sequence of regions into smaller contiguous subsequences of regions (groups). In each group, we find the minimum-sized region, called a representative region, which allows us to break up the global path into smaller subpaths between consecutive representatives. The earlier packing argument now becomes relevant here, as we can show a lower bound on the total length of the optimal path in terms of the sizes of the representatives.
-
-
-
-  
-*Placing points non-uniformly (<ref>)
-
-Previous approximation methods rely on discretizing the surfaces of bodies into evenly spaced points. For balls, we use the intuition that the portion of the optimal path from one ball to the next is “long” if the optimal path does not visit the parts of the surfaces that are closest together. This allows us to place points at a lower density on most of the surface area of each ball, leading to improved time bounds. We use this technique in conjunction with packing and grouping. For disks, we additionally apply the previously mentioned 2D-specific optimizations.
-
-
-
-
-§ CONVEX BODIES
-
-
-
-First, we consider the most general case of convex bodies (or unions of convex bodies), as variations of these techniques also apply to later results. We split the discussion into the general d-dimensional case and the 2-dimensional case. Omitted proofs for this section may be found in <ref>.
-
-
-
- §.§ General dimensions
-
-
-For the theorems in this section, we let |R_i| denote the number of convex bodies that together union to region R_i. Recall that the convex bodies which make up region R_i may overlap.
-
-The first main ingredient is the closest point projection, which allows us to equally space points on each convex body. The proof is deferred to the appendix.
-
-
-For a convex region C, define closest_C(p)≜argmin_c∈ Cc-p. For any two points p_1 and p_2, closest_C(p_1)-closest_C(p_2)≤p_1-p_2.
-
-
-For any closed set X, let ∂ X denote the boundary of X.
-
-
-
-Given a convex body C for which we have a closest point oracle and a hypercube ℋ with side length r, we can construct a set S⊂ C of 1/^d-1 points such that for all p ∈ (∂ C) ∩ℋ, there exists p' ∈ S such that p-p'≤ r.
-
-
-
-First, we prove the statement for C = ℋ. For this case, it suffices to equally space points on each face of an axis-aligned hypercube defined by [0, r]^d. For example, for the face defined by x_d = 0, we place points in a lattice at all coordinates (x_1, x_2, …, x_d-1, x_d) that satisfy x_d = 0 and x_i = k_i · r for all integers k_i∈[0, 1/]. For C ≠ℋ, equally space points on ℋ as we stated to create a set S_ℋ. Then define S≜{_C(s) | s ∈ S_ℋ}. The proof that S satisfies the conditions of the lemma is deferred to the appendix.
-
-
-Now, we introduce the concept of the pseudo-approximation, which takes in an accuracy parameter γ and an estimate of the optimal path length L_APPROX≥ OPT and reduces each region R_i to a finite set of points S_i ⊂ R_i such that the optimal tour for touring S_i is also a tour for R_i, and has length at most OPT + γ L_APPROX. 
-
-Note that when the regions are possibly non-disjoint, it is not true that the optimal path must visit each ∂ R_i, so more care must be taken. In particular, we use the fact that the only time an optimal path does not visit the boundary of R_i is when it visited the boundary of some region ∂ R_l for some l < i and then remained on the interior of regions R_l+1, R_l+2, …, R_i, in which case the optimal path has moved 0 distance when visiting these regions. This requires more effort to bound the error from the optimal length and makes the dynamic programming transitions more complex, but both algorithms achieve the same time bound when all |R_i| ≤𝒪(1) (that is, when all regions are unions of a constant number of convex bodies). 
-
-
-Given an estimate of the optimal path length L_APPROX and 0 < γ≤ 1, if OPT ≤ L_APPROX, we can construct a valid solution with length at most OPT + γ L_APPROX. If all R_i are disjoint, this construction takes n/γ^2d-2∑_i=1^n-1 |R_i||R_i+1| time. When the R_i are possibly non-disjoint, the runtime increases to n/γ^2d-2max_j|R_j|∑_i=1^n |R_i|.
-
-
-
-
-We construct finite sets of points S_i ⊂ R_i such that there exists a path of the desired length that tours regions S_i. 
-
-Assume OPT≤ L_APPROX and consider a hypercube ℋ centered at p_0 with side length 4 · L_APPROX. We define the construction as follows: For each of the convex bodies 
-C_i, 1, C_i, 2, C_i, 3, …, C_i, |R_i| that make up R_i, apply the construction given in <ref> with ϵ≜γ/16n, r ≜ 4L_APPROX, and set S_i to be the union of all |R_i| constructed sets of points. This uses 1/ϵ^d-1 = n/γ^d-1 points per convex body. 
-
-Given the sets S_i, the path of length OPT + γ L_APPROX can be computed directly using dynamic programming. When the R_i are disjoint, transitions occur from points on S_i to S_i+1. Transitions are slightly different for the possibly non-disjoint case since points in the set S_i can transition to points on S_j for j > i+1. The details of the dynamic programming and the proof that the length of the returned path is bounded above by OPT+γ L_APPROX are deferred to the appendix.
-
-
-
-
-
-
-
-
-
-
-
-
-To convert our pseudo-approximation algorithm into an actual approximation, we start with an n-approximation of the optimal path length; the construction is deferred to the appendix.
-
-
-
-There is a trivial (2n+1)-approximation for touring general regions that can be computed in n time given a closest point oracle.
-
-
-Now, our goal is to construct a constant approximation starting from our trivial approximation. The idea, first presented in <cit.> for the problem of 3D shortest path with obstacles, is to run the pseudo-approximation loglog n times with γ=1. The resulting runtime is much faster than if one were to naively apply <ref> with γ = ϵ/n. The proof is deferred to the appendix.
-
-
-There is an 
-
-n^2d-2loglogn· (∑_i=1^n-1 |R_i| |R_i+1|)-time algorithm that obtains a 4-approximation for touring disjoint unions of convex bodies in d dimensions. If the unions can intersect, the runtime increases to n^2d-2loglogn· (∑_i=1^n |R_i| max_j |R_j|).
-
-
-Finally, we combine all of the lemmas of the section to give the main results.
-
-
-There is an n^2d-2(loglogn+1/^2d-2) · (∑_i=1^n-1 |R_i| |R_i+1|)-time algorithm for touring disjoint unions of convex bodies in d dimensions. When the bodies are allowed to intersect, the runtime becomes (n^2d-2(loglogn+1/^2d-2) · (∑_i=1^n |R_i| max_j |R_j|)).
-
-
-
-
-For the disjoint case, apply <ref> to get a constant approximation in (n^2d-2loglogn· (∑_i=1^n-1 |R_i| |R_i+1|)) time, then use <ref> with L_APPROX as our constant approximation and γ = ϵ/4 to obtain a (1+)-approximation in n^2d-2(1/^2d-2) · (∑_i=1^n-1 |R_i| |R_i+1|) additional time. The possibly non-disjoint case is similar.
-
-
-
-
- §.§ Two dimensions
-
-
-When the unions of convex bodies are constrained to lie in 2D, there are two main avenues for further improvements: first, by speeding up the dynamic programming (DP) transitions when all regions have been discretized into point sets, and second, by approximating convex bodies by convex polygons instead of sets of points. In this section, “union of convex bodies” refers to a union of 1 convex bodies per region.
-
-
-
-  §.§.§ Dynamic programming speedup
-
-
-The first speedup comes as a result of observing that the DP in <ref> is similar to closest point queries, which can be computed efficiently.
-
-
-
-Given two lists of points B=[b_1,…,b_m] and A=[a_1,a_2,…,a_n] and a real weight [w_1,…,w_n] for each point in A, we can compute min_1≤ j≤ nw_j+a_j-b_i for each i∈ [1,m] in (m+n)log n time.
-
-
-
-
-This problem is equivalent to constructing and querying a Voronoi diagram for additively weighted point sets. Constructing the diagram can be done in nlog n time by a variant of Fortune's algorithm <cit.>. For each b_i we can search the Voronoi diagram for the a_j corresponding to the minimum in log n time.
-
-
-
-The Touring Regions Problem in 2D, where all R_i are sets of finitely many points S_i, can be solved exactly in ∑_i=1^n|S_i|log|S_i| time. 
-
-
-
-
-
-Recall the dynamic programming method from <ref>, which computes the DP value for each point in S_i+1 in |S_i| time, meaning that each pair of adjacent regions contributes |S_i||S_i+1| to the runtime. Substituting <ref> in place of this step, the runtime improves to
-∑_i=1^n-1(|S_i|+|S_i+1|)log |S_i|≤∑_i=1^n|S_i|log |S_i|. 
-
-
-
-For disjoint convex regions, we use a stronger guarantee than <ref>:
-
-
-Given are the vertices of two disjoint convex polygons B=[b_1,…,b_m] and A=[a_1,a_2,…,a_n] in counterclockwise order and real weights [w_1,…,w_n], one for each vertex of A. Define d(i,j)≜ w_j+a_j-b_i. Then  min_1≤ j≤ nd(i,j) may be computed for all i∈ [1,m] in m+n expected time.
-
-
-
-We first discuss the case where all w_i=0. Aggarwal and Klawe <cit.> showed how to reduce the computation of min_1≤ j≤ n, a_j visible from b_id(i,j) and 
-min_1≤ j≤ n, a_j not visible from b_id(i,j) for all i∈ [1,m] to computing the row minima of several Monge partial matrices with dimensions m_1× n_1, m_2× n_2,…, m_k× n_k such that ∑ (m_i+n_i)≤(m+n) in (m+n) time. Here, a_j is said to be visible from b_i if the segment a_jb_i intersects neither the interiors of polygons A nor B. The definition of Monge partial matrix can be found in <cit.>. 
-
-Chan <cit.> recently introduced an m+n expected time randomized algorithm for computing the row minima of an m× n Monge partial matrix.[The Monge partial matrix does not have to be given explicitly; it suffices to provide an oracle that returns the value of any entry of the matrix in 𝒪(1) time.] Thus, the case of w_i=0 can be solved in m+n expected time. 
-
-The key claim that Aggarwal and Klawe <cit.> use to show that all the matrices they construct are Monge partial is as follows:
-
-[Lemma 2.1 of <cit.>, adapted]
-Assume all w_j=0. Suppose j≠ j' and i≠ i'. If a_ja_j'b_i'b_i form a convex quadrilateral in that order then d(i,j)+d(i',j')≤ d(i,j')+d(i',j).
-
-
-The claim above holds by the triangle inequality, and it is easy to check that it still holds without the assumption w_j=0. Thus the algorithm from <cit.> generalizes to the case of nonzero w_j with minor modifications.
-
-
-
-The Touring Regions Problem in 2D, where all R_i are sets of finitely many points S_i that each form a convex polygon in counterclockwise order and the convex hulls of all S_i are disjoint, can be solved exactly in ∑_i=1^n|S_i| expected time.
-
-
-Using these techniques, we obtain the following speedups. <ref> follows due to similar reasoning as <ref>, as a polygon with |V| vertices can be triangulated in |V| time due to Chazelle <cit.>.
-
-
-There is an n^2loglog n+1/-time algorithm for touring disjoint unions of convex bodies in 2D where each union consists of 1 convex bodies. When the bodies are possibly non-disjoint, the bound is n^3loglog n+1/+log 1//n time.
-
-
-
-For the first bound, use <ref> with <ref> to speed up DP transitions. For the second bound, use <ref> but with an extension of <ref> to speed up DP transitions. 
-
-
-
-There is an |V|nlog |V|loglog n+|V|n/log|V|/-time algorithm for touring disjoint unions of polygons. When the polygons are allowed to intersect each other, the time complexity increases by |V|^2α(|V|).
-
-
-
-
-  §.§.§ Polygonal approximation algorithms
-
-
-Up until now, we have approximated the perimeter of a convex region using points. We can alternatively approximate the perimeter using a convex polygon with fewer vertices, which can be computed using our closest point projection oracle. The proof is deferred to the appendix.
-
-
-Given a closest point oracle for a convex region C and a unit square U, we may select ^-1/2 points in C such that every point within C∩ U is within distance  of the convex hull of the selected points.
-
-
-The polygonal approximation allows us to immediately obtain the following result. The proof is deferred to the appendix.
-
-
-
-There is a n^2.5/√()-time algorithm for touring disjoint convex bodies in 2D. When the convex bodies are possibly non-disjoint, the bound is n^3.5/√() time.
-
-
-
-Let's start with the disjoint case.
-We first use <ref> with 1+ϵ = 2 to obtain a path of length L_APPROX that satisfies L_APPROX≤ 2· OPT in o(n^2.5) time.
-
-Consider constructing a square ℋ of side length 2L_APPROX centered at p_0. Let ϵ' = ϵ/8n. 
-Now, we apply <ref> to select a set S_i of size |S_i| ≤ϵ'^-1/2 points on each region R_i, such that every point within R_i ∩ℋ is within distance  ϵ' · L_APPROX of some point in the convex hull of S_i.  
-
-Define C_i to be the convex hull of S_i in counterclockwise order, which we can compute in linear time because the construction given in <ref> returns points that are all on the convex hull. Now, run <cit.> to solve the touring disjoint convex polygons problem for C_i exactly in |V|n = n^2 ϵ'^-1/2≤n^2.5/√(ϵ) time. Recall that |V| is the total number of vertices over all polygons.
-
-It remains to show that the solution we find from the convex polygons problem is a 1+ϵ approximation of the answer. Consider an optimal solution p_0 ∈ R_0, p_1 ∈ R_1, …, p_n ∈ R_n, p_n+1∈ R_n+1. Now, for every i, define p_i' to be the closest point on C_i to p_i, where <ref> guarantees p_i-p_i'≤ϵ' · L_APPROX≤ 2ϵ' · OPT. Thus, 
-
-    ∑_i=0^np_i'-p_i+1'   ≤∑_i=0^np_i-p_i+1 + p_i-p_i' + p_i+1-p_i+1'
-       ≤ OPT + (n+1) · 4ϵ' · OPT ≤ (1+ϵ)OPT,
-
-as desired.
-
-For the intersecting case, we first use <ref> with 1+ϵ = 2 to obtain a constant approximation of the optimal length in o(n^3.5) time. The rest of the proof is identical, except now the C_i can intersect, which changes the runtime of the application of <cit.> to |V|n^2 = n^3 ϵ'^-1/2≤n^3.5/√(ϵ).
-
-
-
-
-§ DISJOINT CONVEX FAT BODIES
-
-
-In this section, we present packing and grouping techniques for touring disjoint convex fat bodies and show how they can be applied to obtain minn/,n^2/√()-time algorithms for touring disjoint convex fat bodies in 2 dimensions. Omitted proofs for this section may be found in <ref>.
-
-
-
- §.§ Techniques
-
-
-
-
-  §.§.§ Packing
-
-
-A packing argument shows that the length of the optimal path length is at least linear in the number of bodies and the minimum r_h (that is, the minimum radius of any inscribed ball). Intuitively, if we place n disjoint objects of radius at least 1 that are close to being disks on the plane, the length of the optimal tour that visits all of them should be at least linear in n for sufficiently large n. The details are in the appendix.
-
-
-Assume a fixed upper bound on r_H/r_h. Then there exists n_0= 1 such that the optimal path length OPT for touring any n ≥ n_0 disjoint convex fat objects is Ω(n ·min r_h). For balls, n_0=3.
-
-
-The packing lemma allows us to obtain a strong lower bound on the length of the optimal tour in terms of the size of the regions, which will be crucial in proving that our algorithms have low relative error. 
-
-
-
-Let r_i denote the ith largest r_h. For all i≥ n_0, r_i≤OPT/i.
-
-
-
-
-Consider dropping all regions except those with the i largest inner radii and let OPT_i be the optimal length of a tour that visits the remaining disks in the original order. By <ref>, for i≥ n_0, OPT≥ OPT_i≥Ω(i· r_i) r_i≤OPT/i.
-
-
-
-
-The optimal path length for touring n disjoint convex fat bodies is Ω( ∑_i≥ n_0 r_i/logn), and there exists a construction for which this bound is tight.
-
-
-
-
-Using <ref>,
-
-    ∑_i≥ n_0r_i/log n≤∑_i≥ n_0OPT/i/log n≤OPT/log n∑_i=n_0^n1/i≤OPT.
-
-We display the construction in <ref>; we defer the full description to the appendix. The idea is to place disjoint disks of radii 1/1, 1/2, 1/3, … such that they are all tangent to a segment of the x-axis of length 1.
-
-
-
-
-
-
-  §.§.§ Grouping
-
-
-We now show that we can split up the optimal path into smaller subpaths by splitting the sequence of bodies into groups of consecutive bodies, finding the minimum-sized body in each group, and considering the subpaths between these small bodies. By the packing lemma, the sum of the radii of the representatives is small compared to the total path length.
-
-In particular, using groups of size 1/ϵ, we can compress the smallest sized region into a single point, meaning that we can consider touring regions between these points independently from each other. This allows us to turn any polynomial time approximation scheme for touring disjoint convex fat bodies into one that is linear in n. 
-
-
-
-Given an algorithm for touring disjoint convex fat bodies in d dimensions that runs in f(n, ) time, where f is a polynomial, we can construct an algorithm that runs in (n+1) · f(1/, ) time (for ≤(1)).
-
-
-
-We describe an algorithm achieving a (1+())-approximation. To achieve a (1+)-approximation, scale down  by the appropriate factor.
- 
-Define s ≜⌈1/ϵ⌉ and let n_0 be the constant defined in the statement of <ref>. We will prove the statement for all ϵ satisfying 1/ϵ≥ n_0. First, we divide the n+2 regions (including R_0 and R_n+1) into k=maxn+2/s,2≤n+1 consecutive subsequences, each with exactly s regions (except the starting and ending subsequences, which are allowed to have fewer).
-
-Let M_i be the region with minimum inscribed radius r_h in the ith subsequence; note that M_1=R_0 and M_k=R_n+1. For each i ∈[1,k], pick an arbitrary point p_i∈ M_i. Let OPT' be the length of the shortest tour of R_0,…,R_n+1 that passes through all of the p_i. The p_1,…,p_k form k-1 subproblems, each with at most 2s regions. Therefore, we can (1+)-approximate OPT' by (1+)-approximating each subproblem in
-(k-1) · f(2s,ϵ)≤ (n+1) · f(1/, ) time.
-
-It remains to show that OPT' is a (1+O(ϵ))-approximation for OPT. Let r_i be shorthand for the radius r_h of M_i (r_1=r_k=0). By the definition of fatness, the distance between any two points in M_i is at most r_i. By following through OPT and detouring to each point p_i, we get a path through points p_i with length at most OPT+∑ r_i, and OPT' is at most this amount. 
-
-The last remaining step is to show ∑ r_i≤ϵ· OPT. We apply <ref> to each subsequence, and obtain that r_is≤OPT_i, where OPT_i is the optimal distance to tour regions in subsequence i. Note that although the starting and ending subsequences can have sizes less than s, they satisfy r_i=0, so this bound holds for all subsequences. Therefore, ∑ r_i≤ϵ·∑ OPT_i≤ϵ· OPT.
-
-
-
-
- §.§ Algorithms for convex fat bodies
-
-
-Using a similar grouping argument, but using constant sized instead of 1/ϵ sized groups, along with earlier methods of using estimates of the path length to place points on the boundaries of the convex fat bodies yields the following results.
-
-
-There is an n/^2d-2-time algorithm for touring disjoint convex fat bodies in d dimensions.
-
-
-
-We proceed in a similar fashion as <ref>, except we define s ≜ n_0, i.e., using constant sized groups instead of ⌈1/ϵ⌉ sized groups. Let the M_i be defined as in the proof of <ref>, and define m_i to be the outer radius of M_i.
-
-For each pair of regions M_i,M_i+1, pick arbitrary points a∈ M_i,b∈ M_i+1, and use <ref> to
-obtain a 4-approximation D_approx of the length of the shortest path from a to b in 1 time.
-Suppose that the optimal path uses p∈ M_i, q∈ M_i+1 and the shortest path from a to b has distance OPT_a,b;
-by the triangle inequality, we must have
-
-    1/4 D_approx≤ OPT_a,b≤ OPT_i + 2m_i + 2m_i+1.
-
-
-Now, consider the path where we start at p and then travel along the line segment from p to a, the approximate path of length D_approx from a to b (visiting the regions in between M_i and M_i+1), and the line segment from b to q. This path has length at most D_approx+2m_i+2m_i+1, and upper bounds the length of the optimal path between p and q. So, the entire path between p and q lies within a ball of radius D_approx+4m_i+2m_i+1 centered at a; call this ball L. Note that L has radius l = D_approx+4m_i+2m_i+1≤OPT_i+m_i+m_i+1.
-
-For each region R_j between M_i and M_i+1 inclusive, we apply <ref> with the region and a hypercube containing
-L, which has side length 2l. Note that points are placed twice on each M_i; this is fine. <ref> guarantees
-the existence of a point in R_j that is 2lϵ close to the point OPT uses by placing 1/ϵ^d-1 points on each region.
-
-We now bound the difference between the optimal and the shortest paths using only the points we placed.
-The difference is at most
-
-    ∑_i=1^k(2 l_iϵ· n_0)
-        =ϵ·∑_i=1^k l_i
-        =ϵ·OPT + ∑_i=1^k m_i=ϵ· OPT,
-
-where the last step is due to <ref> applied on each subsequence: in particular, the optimal path length visiting all the regions in subsequence i has length at least Ω(m_i), so summing this inequality over all subsequences, we have ∑_i=1^k m_i ≤OPT.
-
-We have now reduced the problem to the case where each region has only finitely many points.
-We finish with dynamic programming. Since we have 1/ϵ^d-1 points on each of the n regions, the runtime is
-n/ϵ^2d-2, as desired.
-
-
-
-There is an n/-time algorithm for touring disjoint convex fat bodies in 2 dimensions.
-
-
-
-This is almost the same as <ref>, where 1/ϵ^d-1 = 1/ϵ points are placed on each body,
-except that we use <ref> to more efficiently solve the case where each region is a finite point set.
-
-
-
-
-
-
-
-
-There is an n^2/√()-time algorithm for touring disjoint convex fat bodies in 2 dimensions.
-
-
-
-<ref> through the construction of <ref> places 1/ϵ points on an arc of length R on each convex fat body to guarantee additive error ≤ϵ R. We can achieve the same additive error using a convex polygon with ϵ^-1/2 vertices using <ref>. Then, recall that <cit.> gives an |V|n-time exact algorithm for touring convex polygons, so we can recover a solution in |V|n = (n ·ϵ^-1/2) · n time.
-
-
-
-
-
-§ BALLS
-
-
-
-We can improve the results in previous sections by discretizing the surfaces non-uniformly, placing fewer points on areas of each hypersphere that are farther away from the previous and next ball in the sequence. This reduces the dependence on  by a square root compared to <ref> and <ref>. Omitted proofs for this section may be found in <ref>. We first state the results:
-
-
-
-
-There is an n/^d-1log^21/+1/^2d-2-time algorithm for touring disjoint balls in d dimensions.
-
-
-
-The crucial lemma we use for these results follows. We defer its proof to the appendix.
-
-
-A tour of disjoint balls is globally optimal if and only if for each intermediate ball, the tour either passes straight through the ball or perfectly reflects off its border (see <Ref> for an example).
-
-
-
-
-We start with the special case of unit disks and then generalize to non-unit disks (<ref>). First, we provide intuition through a simple example where n=1 and R_1 is a line.
-
-
-Given start and endpoints p_0=(-1,1) and p_2=(1,1), select p_1 from the x-axis such that OPT=p_0-p_1+p_1-p_2 is minimized.
-
-
-
-To solve this exactly, choose p_1=(0,0) such that the path perfectly reflects off the x-axis. This gives OPT=2√(2). 
-
-Now suppose that we are only interested in an approximate solution. Tile the x-axis with points at regular intervals such that every two consecutive points are separated by distance d, and round p_1 to the closest such point p_1'. Since p_1-p_1'≤ d,
-
-    OPT'   ≜p_0-p_1'+p_1'-p_2
-       ≤√(1+(1-d)^2)+√(1+(1+d)^2)≤√(2-2d+d^2)+√(2+2d+d^2)
-       ≤√(2)(1-d/2+1+d/2+d^2)≤ 2√(2)(1+d^2).
-
-
-So, to attain OPT'≤ (1+)OPT, it suffices to take d=Θ(√()) rather than d=Θ() because p_1'-p_1 is parallel to the x-axis. We can apply a similar idea to replace the middle region with a point set when R_1 is a circle rather than a line since circles are locally linear. However, this doesn't quite work when either p_0-p_1 or p_1-p_2 is small. For example, if p_0 was very close to the x-axis (say, p_0=(-d,d)) then rounding p_1 to the nearest p_1' could cause OPT' to increase by Θ(d)≫ d^2. So when we replace each circle with a point set, we need to be careful about how we handle two circles that are close to touching; the solution is to space points more densely near where they touch.
-
-
-
-There is an n/√()log1/-time algorithm for touring disjoint unit disks.
-
-
-
-We describe how to place a set of 1/√()log1/ points S_i on each unit circle c_i so that the length of an optimal path increases by at most n after rounding each p_i to the nearest p_i'∈ S_i.
-
-Define (x)=x/x. Let o_i≜ p'_i-p_i for all i∈ [0,n+1] (note that o_0=o_n+1=0), where o stands for offset. Also, define vectors 
-
-    d_i≜ p'_i+1-p'_i=p_i+1+o_i+1-p_i-o_i
-
-and scalars
-
-    a_i≜ d_i·(p_i+1-p_i)=p_i+1-p_i+(o_i+1-o_i)·(p_i+1-p_i),
-
-where a_i is the component of d_i along the direction of p_i+1-p_i. Then the total path length after rounding each p_i to p_i' is:
-
-    ∑_i=0^nd_i   =∑_i=0^n√([d_i·(p_i+1-p_i)]^2+[d_i·(p_i+1-p_i)^⊥]^2)
-       =∑_i=0^n√(a_i^2+[(o_i+1-o_i)·(p_i+1-p_i)^⊥]^2)
-       =∑_i=0^n[a_i+(√(a_i^2+[(o_i+1-o_i)·(p_i+1-p_i)^⊥]^2)-a_i)] 
-       =OPT+∑_i=1^n o_i· ((p_i-p_i-1)-(p_i+1-p_i))^extra_1(i)
-          +∑_i=0^n(√(a_i^2+[(o_i+1-o_i)·(p_i+1-p_i)^⊥]^2)-a_i)^extra_2(i)
-       =OPT+∑_i=1^nextra_1(i)+∑_i=0^nextra_2(i).
-
-We defer the construction of the sets S_i so that both extra terms are small to <ref>. Then we can finish with dynamic programming (<ref>).
-
-
-
-It is possible to choose S_i in the proof of <Ref> such that |S_i|≤1/√()log1/, extra_1(i)≤, and extra_2(i)≤ for all i.
-
-
-
-First, we present the construction. For every pair of adjacent disks i and i+1 we describe a procedure to generate points on their borders. Then we set S_i to be the union of the generated points on the border of disk i when running the procedure on disks (i,i+1), and the generated points on the border of disk i when running the procedure on disks (i-1,i). Finally, we show that extra_1(i) and extra_2(i) are sufficiently small for all i for our choice of S_i.
-
-
-
-    Procedure
- Reorient the plane that c_i=(0,y) and c_i+1=(0,-y) for some y>1. 
- Let ℝ_≥ 0→ℝ_>0 be a function that is nonincreasing with respect to |ϕ| that we will define later. Given , we use the following process to add points to S_i (and symmetrically for S_i+1):
-
-
-    
-  * Set ϕ=0.
-    
-  * While ϕ≤π:
-    
-        
-  * Add (sinϕ, y-cosϕ) to S_i.
-        
-  * ϕ+=(ϕ).
-    
-    
-  * Repeat steps 1-2 but for ϕ from 0 to -π.
-
-This procedure has the property that for any ϕ∈ [-π,π], the point (sinϕ, y-cosϕ) is within distance (|ϕ|) of some point in S_i. In particular, if the optimal path has p_i=(sinϕ_i,y-cosϕ_i) then it is guaranteed that o_i≤(ϕ_i). To compute |S_i|, note that as long as (ϕ) is sufficiently smooth that (ϕ)/ϕ+(ϕ)=Θ(1) for all ϕ, the number of points added to S_i will be at most a constant factor larger than the value of the definite integral ∫_-π^π1/(ϕ)  dϕ. 
-
-Next, we construct  so that |S_i|=1/√()log1/. Intuitively, by <ref>, we should have (ϕ)=Θ() closer to circle i+1 (when ϕ≈ 0) and (ϕ)=Θ(√()) farther from circle i+1 (when ϕ=Θ(1)). Thus, we set (ϕ)=max(,√()ϕ). The total number of added points is on the order of:
-
-    ∫_0^π1/(ϕ)  dϕ   =1/√()(∫_0^√()1/√()  dϕ+∫_√()^π1/ϕ  dϕ)
-       =1/√()(1+log(π/√()))≤1/√()log1/.
-
-
-Finally, we show that both extra terms are small for our choice of S_i.
-
-*Part 1: extra_1(i). 
-
-We note that (p_i-p_i-1)-(p_i+1-p_i) must be parallel to p_i-c_i for an optimal solution p. To verify this, it suffices to check the two possible cases from <Ref>:
-
-    
-  * The points p_i-1,p_i,p_i+1 are collinear, in which case (p_i-p_i-1)-(p_i+1-p_i)=0.
-    
-  * The path reflects perfectly off circle i, in which case (p_i-p_i-1)-(p_i+1-p_i) is parallel to p_i-c_i.
-
-
-If we ensure that spacing(ϕ)≤√() for all ϕ, then |o_i·(p_i-c_i)|≤ because o_i is always nearly tangent to the circle centered at c_i at point p_i. The conclusion follows because extra_1(i)≤ 2|o_i·(p_i-c_i)|≤ 2.
-
-*Part 2: extra_2(i).
-
-We upper bound extra_2(i) by the sum of two summands, the first associated only with o_i and the second associated only with o_i+1.
-
-
-Letting ycoord(·) denote the y-coordinate of a point,
-
-    extra_2(i)≤ 2·( min(o_i,4o_i^2/ycoord(p_i))+min(o_i+1,4o_i+1^2/-ycoord(p_i+1))).
-
-
-
-
-We do casework based on which term is smaller on each of the mins.
-
-    
-  * o_i≥ycoord(p_i)/4, o_i+1≥-ycoord(p_i+1)/4
-    
-    The result, extra_2(i)≤ 2(o_i+o_i+1), follows by summing the following two inequalities:
-    
-    
-    √(a_i^2+[(o_i+1-o_i)·(p_i+1-p_i)^⊥]^2)-p_i+1-p_i
-       =p_i+1-p_i+o_i+1-o_i-p_i+1-p_i
-       ≤o_i+o_i+1
-
-    and p_i+1-p_i-a_i≤o_i+o_i+1.
-    
-    
-  * o_i≤ycoord(p_i)/4, o_i+1≤-ycoord(p_i+1)/4
-    
-    Then o_i, o_i+1≤p_i+1-p_i/4 so a_i≥p_i+1-p_i/2, and
-    
-    extra_2(i)   ≤o_i+1-o_i^2/2a_i≤2(o_i+1^2+o_i^2)/2a_i
-       ≤ 2·o_i+1^2+o_i^2/p_i-p_i+1≤ 2·(o_i^2/ycoord(p_i)+o_i+1^2/-ycoord(p_i+1)).
-
-    
-    
-  * o_i≤ycoord(p_i)/4, o_i+1≥-ycoord(p_i+1)/4
-    
-    Define extra'(i) to be the same as extra_2(i) with o_i+1 set to 0. Then
-    
-    extra'(i)   ≜p_i+1-p_i-o_i-(p_i+1-p_i-o_i·(p_i+1-p_i))
-       =√((p_i+1-p_i-o_i·(p_i+1-p_i))^2+[o_i·(p_i+1-p_i)^⊥]^2)
-          -(p_i+1-p_i-o_i·(p_i+1-p_i))
-       ≤o_i^2/2·3/4p_i-p_i+1≤o_i^2/2·3/4·ycoord(p_i)
-
-    and by similar reasoning as case 1, extra_2(i)-extra'(i)≤ 2o_i+1.
-    
-    
-  * o_i≥ycoord(p_i)/4, o_i+1≤-ycoord(p_i+1)/4
-    
-    Similar to case 3. 
-
-
-Now that we have a claim showing an upper bound on extra_2(i), it remains to show that min(o_i,o_i^2/ycoord(p_i))≤ for our choice of . Indeed, when ϕ≤√() we have o_i≤(ϕ)≤, while for ϕ>√() we have o_i^2/ycoord(p_i)≤(ϕ)/ϕ^2≤.
-
-
-With small modifications to the proof of <Ref>, we have the following corollary:
-
-
-Consider the case of non-unit disks. If the ith disk has radius r_i, then we can place 1/√()_ilog1/_i points on its border such that the additive error associated with c_i —specifically, extra_1(i) plus the components of extra_2(i-1) and extra_2(i) associated with o_i —is r_i_i. Consequently,
-OPT+∑_i=1^nextra_1(i)+∑_i=0^nextra_2(i)≤ OPT+∑_i=1^nr_i_i.
-
-
-Now, we finally prove <ref>.
-
-
-We first present a slightly weaker result, and then show how to improve it. Recall that by <ref>, the ith largest disk has radius OPT/i for i≥ 3. So if we set _i='=/log n for each of the ith largest disks for i≥ 3, the total additive error contributed by these disks becomes
-
-    ∑_i=3^nOPT/i·_i≤OPT·'·∑_i=3^n1/i≤ OPT
-
-by <ref>. For the two largest disks, we use the previous naive discretization (placing 1/ points uniformly on the intersection of the circles with a square of side length OPT centered about the starting point). We may assume we have already computed a constant approximation to OPT in n time by applying <ref> with =1. After selecting the point sets, we can finish with <ref>. The overall time complexity is
-n/√(')log1/'+1/≤n√(log n)/√()loglog n/+1/.
-
-We can remove the factors of log n by selecting the _i to be an increasing sequence. Set _i=Θ i^2/3/n^2/3 for each i∈ [3,n] such that more points are placed on larger disks. Then the total added error remains
-
-    OPT·+∑_i=3^n_i/i   =
-    OPT·+∑_i=3^n1/i· i^2/3/n^2/3
-       =OPT·1+n^-2/3·∑_i=3^ni^-1/3≤OPT,
-
-and the factors involving log n drop out from the time complexity:
-
-    ∑_i=3^n1/√()_ilog1/_i+1/   ≤∫_i=3^n1/√()n^1/3i^-1/3logn^2/3/i^2/3di +1/
-       ≤3n^1/3/2√(ϵ)i^2/3logn^2/3/i^2/3ϵ+1|_3^n+1/ϵ
-       ≤n/√()log1/+1/.
-
-
-
-We note that under certain additional assumptions, the time complexity of <Ref> can be slightly improved. We summarize these in the following corollary, which we state without proof.
-
-
-If any of the following conditions hold:
-
-    
-  * the two largest disks are not adjacent in the order
-    
-  * the two largest disks are separated by distance Ω(OPT)
-    
-  * the second-largest disk has radius OPT
-
-then a generalization of <Ref> may be applied to remove the 1/ term from the time complexity of <Ref>.
-
-
-To extend to multiple dimensions, we generalize the construction from <Ref>.
-
-
- As in <Ref>, set (ϕ)=max(,√()ϕ) for a point p_i satisfying m∠ p_ic_ic_i+1=ϕ, meaning that there must exist p_i'∈ S_i satisfying p_i-p_i'≤ r_i·(ϕ). The total number of points |S_i| placed on the surface of a d-dimensional sphere is proportional to
-
-    ∫_0^πsin^d-2(ϕ)/(ϕ)^d-1  dϕ   ≤1/(√())^d-1∫_0^πϕ^d-2/max(√(),ϕ)^d-1  dϕ
-       =1/^(d-1)/2∫_0^√()ϕ^d-2/(√())^d-1  dϕ + ∫_0^√()1/ϕ  dϕ
-       ≤1/^(d-1)/2log1/.
-
-where the derivation of the integration factor sin^d-2(ϕ) can be found in <cit.>. 
-
-It remains to describe how to space points so that they satisfy the given spacing function. For each spacing s=, 2, 4, …, √(), we can find a d-dimensional hypercube of side length O(s/√()) that encloses all points on the hypersphere with required spacing at most 2s. Evenly space points with spacing s across the surface of this hypercube according to <Ref>, and project each of these points onto the hypersphere. There are a total of log1/ values of s, and each s results in 1/^(d-1)/2 points being projected onto the hypersphere, for a total of 1/^(d-1)/2log1/ points.
-
-
-
-
-
-
-
-
-
-
-
+    		v_K2(𝐗) = (v_K2,1(𝐗), v_K2,2(𝐗), …, v_K2,K2(𝐗))^'
+
+	denote the known basis functions, then 
+	
+    𝔼(w_i u_K1(𝐓_i) v_K2(𝐗_i)^') = 𝔼(u_K1(𝐓_i))𝔼(v_K2(𝐗_i)^').
+
+	
+	In practice, the covariate balancing conditions given in Equation (4) cannot hold exactly with high dimensional covariates or treatments. It is even more difficult to hold exactly for matrix exposure. To overcome this difficulty, approximate balance is considered rather than exact balance, which has been demonstrated to work well in practice in both low- and high-dimensional settings (<cit.>; <cit.>; <cit.>). Specifically, the balancing weights that approximately satisfy the conditions in Equation (4) are the global minimum of the following optimization problem:
+	
+    min_𝐰∑_i=1^nw_ilog(w_i)
+
+	s.t.
+	
+    |1/n∑_i=1^nw_i u_K1,l(𝐓_i)v_K2,l̃(𝐗_i) - (1/n∑_i=1^n u_K1,l(𝐓_i)) (1/n∑_i=1^nv_K2,l̃(𝐗_i)) |≤δ_l,l̃,
+
+	where u_K1,l(𝐓_i) and v_K2,l̃(𝐗_i) denote the lth and l̃th components of u_K1(𝐓_i) and v_K2(𝐗_i), respectively.
+	Let m_K(𝐓_i, 𝐗_i) = vec(1/n u_K1(𝐓_i)v_K2(𝐗_i)^') and m̅_K = vec (1/nu̅_K1v̅_K2^')  denote two column vectors with dimension K, where K= K1 K2, the lth and l̃th components of u̅_K1 and v̅_K2 are defined as
+	
+    u̅_K1,l = 1/n∑_i=1^n u_K1,l(𝐓_i)  and v̅_K2,l̃ = 1/n∑_i=1^n v_K2,l̃(𝐗_i),
+
+	then condition (5) is equivalent to 
+	
+    min_w ∑_i=1^nw_ilog(w_i)
+
+	s.t.
+	
+    |∑_i=1^nw_i m_K,k(𝐓_i, 𝐗_i)  -  nm̅_K,k|≤δ_k,  k= 1,…,K.
+
+	However, there is a large number of tuning parameters (δ_1,…,δ_K) which is very time-consuming to determine and there is lack of guideline on tuning these parameters simultaneously in practice. 
+	
+	
+	
+
+§ METHODOLOGY
+
+	Due to the potential issues of univariate approximate balancing methods, the weighted Euclidean balancing method is proposed in this section, whose key idea is to control the overall imbalance in the optimization problem (7). 
+	
+
+ §.§ Weighted Euclidean balancing method
+
+	
+	Define the following weighted Euclidean imbalance measure (WEIM) as a weighted version of the squared Euclidean distance:
+	
+    WEIM = ∑_k=1^K{λ_k^2 [∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)]^2 }.
+
+	The weighted Euclidean balancing obtains the balancing weights that approximately satisfy the condition (4) by solving the following convex optimization problem:
+	
+    min_w ∑_i=1^nw_ilog(w_i)
+
+	s.t.
+	
+    ∑_k=1^K{λ_k^2 [∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)]^2 }≤δ,
+
+	where (λ_1,…, λ_K) is a pre-sepecified weight vector and δ≥ 0 is a threshold parameter. Assume that condition (3) holds exactly, whose sample condition is 1/n∑_i=1^n w_i = 1.
+	
+	
+	Note that univariate exact balance is equivalent to the overall exact balance, in the sense that ∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)=0, k= 1,…,K  is equivalent to WEIM=0. However, the univariate approximate balance does not imply the overall approximate balance since it is possible that ∑_i=1^n w_i (m_K,k(𝐓_i,𝐗_i)-m̅_K,k), k= 1,…,K is small while the WEIM is large.
+	The pre-specified vector  (λ_1,…, λ_K) reflects the importance of each univariate constraint. In this paper, we set λ_k= σ_k^-1, where σ_k^2 is the variance of m_K,k(𝐓,𝐗). Since problem (9) is difficult to solve numerically, its dual problem is considered here, which can be solved by numerically efficient algorithms. Theorem 1 provides the dual formulation of problem (9) as an unconstrained problem.
+	
+
+	
+	Theorem 1.  Assume that max_i (max_k |λ_km_K,k(𝐓_i,𝐗_i) |) < ∞, the dual of problem (9) is equivalent to the following unconstrained problem 
+	
+    min_θ∈ R^K∑_i=1^nexp( ∑_k=1^Kθ_j λ_j (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))  + √(δ)||θ||_2,
+
+	
+	and the primal solution ŵ_i is given by 
+	
+    ŵ_i = exp{∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) -1} ,  i=1,…,n,
+
+	where θ̂ is the solution to the dual optimization problem (10). 
+	The proof of Theorem 1 is in Appendix A.1. 
+	
+	
+
+  §.§.§ Selection of tuning parameter
+
+	Another practical issue that arises with weighted Euclidean weights is how to choose the degree of approximate balance δ. A tuning algorithm is proposed as follows. First, determine a range of positive values 𝒟 for δ, then the optimal value of δ is selected by the following algorithm.
+	
+
+	
+	 Algorithm 1. Selection of δ.
+
+	For each δ∈𝒟,
+	
+		
+  1.  Compute the dual parameters θ̂ by solving the dual problem (10);
+		
+  2.  Compute the estimated weights ŵ_i using equation (11);
+		
+  3.  Calculate WEIM in (8) using ŵ_i;
+	
+	Output δ^* that minimizes WEIM.
+	
+	
+
+  §.§.§ Weighted Euclidean balancing with high-dimensional covariates
+
+	In the high-dimensional or ultra high-dimensional covariate setting with K relatively large compared to n or K>>n, it becomes difficult to control the overall imbalance using the Weighted Euclidean balancing method. To meet this challenge, we propose an algorithm to select a small subset of the covariates in the sparse setting. Specifically, consider v_K2(𝐗) = (1, 𝐗) in the high-dimensional setting. Let Bcor_j be the ball correlation (<cit.>) between X_j and 𝐓, j=1,…,L. Rank X_1, …,X_L as X_(1),…,X_(L) such that X_(1) has the largest Bcor value, X_(2) has the second largest Bcor value, and so forth. The covariates are added successively according to the rank of ball correlation until there is a break point of WEIM's, and the set added before the break point appears is the target set. The key idea hings on WEIM, which represents the contribution of the j most imbalanced covariates to the overall imbalance after WEBM weighting.  If WEIM remains stable as j inceases, it indicates that the overall imbalance can be controlled. However, if there is a break point at Step j, it implies that adding the  jth covariates greatly inceases WEIM, which is harmful to the control of the overall imbalance. Therefore, the algorithm should be stopped and print the outputs at Step j-1. Specifically, procedures to select the subset of covariates are given by the following algorithm.
+
+	
+	
+	 Algorithm 2. Subset selection of covariates in the high dimensional case.
+
+	For each j ∈{ 1,…, L},
+	
+		
+    compute the estimated weights ŵ_i^(j) using v_K2(𝐗) = (1,X_(1),…, X_(j));
+		
+     calculate WEIM^(j) in (8) using ŵ_i^(j);
+		
+    add (j,WEIM^(j)) to the x-y plot and observe whether there is a break point at (j,WEIM^(j)):
+		
+			
+    If no, let j=j+1;
+			
+    If yes, stop and output L_0 = j-1.
+		
+	
+	The selected subset of the covariates is (X_(1),…, X_(L_0)).
+	
+	
+	
+	
+
+ §.§ Causal effect estimation
+
+	
+	In this subsection, both parametric and nonparametric approaches are developed to estimate the causal effect function. A weighted optimization estimation is defined under the parametric framework and broadcasted nonparametric tensor regression method (<cit.>) is used to estimate the causal effect function under the nonparametric framework.
+	
+
+  §.§.§ Parametric approach
+
+	The causal effect function is parametrized as s(𝐭;β), assume that it has a unique solution  β^* defined as
+	
+    β^* = agrmin_β∫_𝒯𝔼[Y(t)- s(𝐭;β) ]^2f_T(t)dt.
+
+	
+	The difficulty of solving Equation (12) is that the potential outcome Y(t) is not observed for all t. Hence, Proposition 1 is proposed to connect the potential outcome with the observed outcome. 
+
+	
+	Proposition 1  Under Assumption 1, it can be shown that
+	
+    𝔼[w(Y- s(𝐭;β) )^2] = ∫_𝒯𝔼[Y(t)- s(𝐭;β) ]^2f_T(t)dt.
+
+	The proof of Proposition 1 can be found in Appendix A.2. Note that Y(t) on the right hand side of Equation (13) represents the potential outcome and Y on the left hand side represents the observed outcome. Proposition 1 indicates that by having w on the left hand side of Equation (13), one can represent the objective function with the potential outcome (right side) by that with the observed outcome (left side). Therefore, the true value β^* is also a solution of the weighted optimization problem:
+	
+    β^* = argmin_β𝔼[w(Y- s(𝐭;β))^2].
+
+	This result implies that the true value β^* can be identified from the observational data.
+	One can obtain the estimator based on the sample, which is
+	
+    β̂ = argmin_β∑_i=1^nŵ_̂î(Y_i- s(𝐓_i;β) )^2.
+
+	
+	
+
+  §.§.§ Nonparametric approach
+
+	Suppose 𝔼(Y(𝐭)) = s(𝐭). In a similar manner to the proof of Proposition 1, it can be shown that 
+	
+    𝔼(wY |𝐓=t) = 𝔼(Y(𝐭)).
+
+	Existing work of nonparametric tensor regression suffers from a slow rate of convergence due to the curse of dimensionality. Even if one flattens the tensor covariate into a vector and applies common nonparametric regression models such as additive models or single-index models to it, this issue still exists. Besides, when dealing with a vectorized tensor covariate, one would ignore the latent tensor structure and this might result in large bias. To meet these challenges, we adopt the broadcasted nonparametric tensor regression method (<cit.>) to estimate the causal effect function s(𝐭).
+	The main idea of the broadcasted nonparametric tensor regression is to use the (low-rank) tensor structure to discover important regions of the tensor so as to broadcast a nonparametric modeling on such regions. Specifically, assume that 
+	
+    s(𝐓) = c+1/pq∑_r=1^R<β_1^(r)∘β_2^(r), F_r(𝐓)>,
+
+	where c∈ R,  𝐓∈ R^p × q,  F_r(𝐓) = ℬ(f_r, 𝐗), ℬ is a broadcasting operator, which is defined as
+	
+    (ℬ(f,𝐓))_i_1,i_2 = f(T_i_1,i_2),  for all i_1,i_2.
+
+	The broadcasted functions f_r, r=1,…,R, will be approximated by B-spline functions, i.e.,
+	
+    f_r(x) ≈∑_d=1^Dα_r,db_d(x),
+
+	where 𝐛(x) = (b_1(x),…,b_D(x))^' is a vector of B-spline basis functions and α_r,d's are the corresponding spline coefficients. Define α_r = (α_r,1,…,α_r,D)^' and (Φ(𝐓))_i_1,i_2,d = b_d(T_i_1,i_2), the regression function (16) can be approximated by 
+	
+    s(𝐓) ≈ c+1/pq∑_i=1^R<β_1^(r)∘β_2^(r)∘α_r, Φ(𝐓)>.
+
+	To separate out the constant effect from f_r's, the condition ∫_0^1 f_r(x) dx=0 is imposed, which leads to 
+	
+    ∫_0^1∑_d=1^Dα_r,db_d(x)dx=0,  r=1,…, R.
+
+	Then the following optimization problem is considered:
+	
+    argmin_c,𝐆 ∑_i=1^n (ŵ_iY_i- c-1/pq<𝐆,Φ(𝐓_i)>)^2
+
+	s.t.
+	
+    𝐆 = ∑_r=1^Rβ_1^(r)∘β_2^(r)∘α_r  
+    ∑_d=1^Dα_r,d∫_0^1 b_d(x)dx =0,  r=1,…,R,
+
+	and the estimated regression function is 
+	
+    ŝ(𝐓) = ĉ+1/pq <𝐆̂,Φ(𝐓)>,
+
+	where (ĉ,𝐆̂) is a solution of (20). 
+	Since optimization problem (20) contains too many constraints, it is not computationally efficient to solve it directly. To further simplify the optimization problem, an equivalent truncated power basis (<cit.>) is used to reduce the constraints. Specifically, let b̃_d(x), d=1,…,D denote the truncated basis:
+	
+    b̃_1(x)=1,b̃_2(x)=x,…, b̃_ς(x) = x^ς-1,
+    b̃_ς+1(x) = (x-ξ_2)_+^ς-1,…, b̃_D(x)=(x-ξ_D-ς+1)_+^ς-1,
+
+	where ς and (ξ_2,…,ξ_D-ς+1) are the order and the interior knots of the aforementioned B-spline, respectively. Based on these basis functions, consider the following optimization
+	
+    argmin_c̃,𝐆̃ ∑_i=1^n (ŵ_iY_i- c̃-1/pq<𝐆̃,Φ̃(𝐓_i)>)^2
+
+	s.t.
+	
+    𝐆̃ = ∑_r=1^Rβ_1^(r)∘β_2^(r)∘α̃_r,
+
+	where Φ̃(𝐓)_i_1,i_2,d = b̃_d+1(𝐓_i_1,i_2), d=1,…,D and α̃_r ∈ R^D-1 is the vector of coefficients. Compared with (20), the mean zero constraints are removed by reducing one degree of freedom in the basis functions. According to <cit.>, Lemma B.1, one can show that
+	
+    ŝ(𝐓) = ĉ̃̂+1/pq <𝐆̂̃̂,Φ̃(𝐓)>,
+
+	where (ĉ̃̂,𝐆̂̃̂) is the solution of (22). 
+	The optimization problem (22) can be solved by the scaled-adjusted block-wise descent algorithm (<cit.>).
+	
+	
+
+§ THEORETICAL PROPERTIES
+
+	In this section, the large sample properties of the proposed estimators in section 3 are established. First the consistency of the estimated weight in section 3.1 is shown, then the consistency of the parametric estimator in section 3.2.1 and the convergence rate of the nonparametric estimator in section 3.2.2 are shown. The following assumptions are made. 
+	
+
+	Assumption 4
+	
+	
+	
+		
+		
+		
+		
+		
+  * There exists a constant c_0 such that 0 < c_0 < 1, and c_0 ≤exp (z-1) ≤ 1-c_0 for any z= M̃_K(𝐭,𝐱)^'θ with θ∈int(Θ). Besides, exp (z-1) = O(1) in some neighborhood of z^* = M̃_K(𝐭,𝐱)^'θ^*, where M̃_K(𝐭,𝐱)= Λ (m_K(𝐭,𝐱)-m̅_K) and Λ= diag(λ_1,…,λ_K).
+		
+  * There exists a constant C such that 
+		E {M̃_K(𝐓_i, 𝐗_i)M̃_K(𝐓_i, 𝐗_i)^'}≤ C. 
+		
+  * δ = o(n).
+		
+  * sup_(𝐓,𝐗) exp{∑_j=1^Kθ_j^* λ_j [m_K,j(𝐓,𝐗)-Em_K,j(𝐓,𝐗)] } = O(1).
+	 
+	
+	
+	Assumption 5
+	
+		
+  * The parameter space Θ_1 is a compact set and the true parameter β_0 is in the interior of Θ_1.
+		
+  * (Y-s(T;β))^2 is continuous in β, 𝔼[sup_β(Y-s(T;β))^2] < ∞ and sup_β𝔼[(Y-s(T;β))^4]  < ∞.
+	 
+	
+	
+	Assumption  6
+	
+		
+  * s(𝐭;β) is twice continuously differentiable in β∈Θ_1 and let h(𝐭;β) ≡▽_β s(𝐭;β).
+		
+  * 𝔼{ w(Y-s(𝐓;β))h(𝐓;β) } is differentiable with respect to β and 
+
+		U ≡ - ▽_β𝔼{ w(Y-s(𝐓;β))h(𝐓;β) }|_β=β^* is nonsingular.
+		
+  * 𝔼[sup_β| Y-s(T;β) |^2+δ] < ∞ for some δ >0 and there extists some finite positive constants a and b such that 𝔼[sup_β_1:  ||β_1-β||  < δ_1| s(T;β_1) - s(T;β) |^2]^1/2 < a·δ_1^b for any β∈Θ_1 and any small δ_1 >0.
+	
+	
+	
+	
+	Assumption 7
+	
+		
+  * The treatment 𝐓∈ [0,1]^p× q has a continuous probability density function f, which is bounded away from zero and infinity.
+		
+  * The vector of random errors, ϵ = (ϵ_1,…,ϵ_n)^', has independent and identically distributed entries. Each ϵ_i is sub-Gaussian with mean 0 and sub-Gaussian norm σ < ∞.
+		
+  * The true broadcasted functions f_0r∈ℋ, r= 1,…,R_0. Here ℋ is the space of functions from [0,1] to R satisfying the Hölder condition of order ω, i.e.,
+		
+    ℋ = { g: | g^(l) (x_1)-g^(l) (x_2) |≤ S_1| x_1-x_2 |^ω, ∀ x_1,x_2 ∈ [0,1] },
+
+		for some constant S_1>0, where g^(l) is the l-th derivative of g, such that ω∈ (0,1] and τ = l+ω >1/2.
+		
+  * The order of the B-spline used in (16) satisfies ς≥τ+1/2. Let 0= ξ_1 < ξ_2 <… < ξ_D-ς+2=1 denote the knots of B-spline basis and assume that
+		
+    h_n = max_d=1,…, D-ς+1|ξ_d+1
+    			-ξ_d |≍ D^-1 and h_n/min_d=1,…, D-ς+1|ξ_d+1
+    				-ξ_d |≤ S_2
+
+		for some constant S_2>0.
+	 
+	
+	Assumption 4(1) enables consistency of θ̂ to translate into consistency of the weights.  Assumption 4(2) is a standard technical condition that restricts the magnitude of the basis functions; see also Assumption 4.1.6 of <cit.> and Assumption 2(2) of <cit.>. Assumption 4(3) requires that the threshold parameter δ should be much smaller than the sample size. Assumption 4 (4) is needed for consistency of the estimated weight. Assumption 5(1) is a commonly used assumption in nonparametric regression. Assumption 5(2) is an envelope condition applicable to the uniform law of large numbers. Assumption 6(1) and (2)  impose sufficient regularity conditions on the causal effect function and its derivative function. Assumption 6(3) is a stochastic equicontinuity condition, which is needed for establishing weak convergence (<cit.>). Assumption 7(1), (3) and (4) are common in nonparametric regression models. In particular, Assumption 7(3) and (4) regularize the space where the true broadcasted functions lie in and guarantee that they can be approximated welll by B-spline functions. Similar assumptions can be found in <cit.> and <cit.>. Assumption 7(2) is a standard tail condition of the error. Based on these assumptions, the following theorems are established. 
+
+	
+
+	
+	Theorem 2. 	Let θ̂ denote the solution to Problem (10) and 
+	
+    ŵ_i = exp{∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) -1} ,  i=1,…,n,
+
+	then under Assumptions 1-4,
+
+	
+		
+		
+  * ∫|𝐰̂-𝐰^* |^2 dF(𝐭,𝐱) = O_p(n^-1).
+		
+  * 1/n∑_i=1^n|ŵ_i- w_i^* |^2 = O_p(n^-1).
+	
+	Based on Theorem 2, we can establish the consistency of the parametric estimator and the convergence rate of the nonparametric estimator.
+
+	
+	Theorem 3  
+	
+		
+  * Under Assumptions 1-5, ||β̂-β^* || →_p 0. 
+		
+  * Under Assumptions 1-6, √(n)(β̂-β^*) →_d N(0,V), where 
+		
+    V = 4U^-1·𝔼{ w^2(Y-s(𝐓;β^*))^2h(𝐓;β^*)h(𝐓;β^*)^'}· U^-1
+
+	
+	
+	Theorem 4  If Assumptions 1-4 and 7 hold, R≥ R_0, and 
+	
+    n > S_1 h_n^-2-2/log(h_n)(log^-2(h_n))(R^3+R(p+q)+RD)
+
+	for some large enough constant S_1>0, then 
+	
+	
+	
+	
+	
+	
+	
+	
+    ||ŝ(𝐓)-s_0(𝐓) ||^2 = O_p  ( R^3+R(p+q)+RD/n )+O_p  ( {∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ ),
+
+	where s_0(𝐓) = c_0+1/pq∑_r=1^R_0<β_1^(0r)∘β_2^(0r), F_0r(𝐓)> represents the true regression function.
+	The proofs of Theorem 2, 3 and 4 can be found in Appendix A.3, A.4 and A.5, respectively. 
+	
+	
+	
+
+§ SIMULATION
+
+	To evaluate the finite sample performance of the proposed method, simulation studies are carried out under different data settings. The main motivation of the simulation is to compare the proposed method with three other methods when the outcome model are linear and nonlinear in various ways.
+	
+
+ §.§ The low-dimensional covariate setting
+
+	In this subsection, we compare the performance of the proposed method (WEBM) with the unweighted method (Unweighted), entropy balancing method (EB) and univariate approximate balancing method (MDABW) in the low-dimensional covariate setting, where EB refers to the method proposed by <cit.> that balances covariates exactly and MDABW refers to the method proposed by <cit.> that balances covariates approximately.
+	Since the covariates are shared across all scenarios, their data generating process is first described. Specifically, we independently draw 5 covariates from a multivariate normal distribution with mean 0, variance 1 and covariance 0.2, that is,
+	
+	
+    𝐗 = (X_1,....,X_5)^'∼  N_5(μ,Σ)  with μ= [ 0; ⋮; 0 ]and Σ=[     1   0.2     …   0.2;   0.2     1 0.2 …   0.2;     4;   0.2   0.2     …     1 ]_5×5.
+
+	
+
+	
+	Consider a linear treatment assignment model, which is defined as
+	
+    𝐓_i= X_i1𝐁_1+X_i2𝐁_2+X_i3𝐁_3+𝐄_i,
+
+	where 𝐁_j = [ 1 0; 0 1; 1 1 ]_3×2, j=1,2,3 denotes the jth coefficient matrix, and 𝐄_i ∈ R^3× 2 denotes the error matrix, whose element follows a standard normal distribution. For the outcome model, we consider four scenarios and conduct 100 Monte Carlo simulations for each scenario. The first two scenarios assume an outcome model that is linear in treatment and the others assume a nonlinear relationship.
+	In scenario 1, the linear outcome model is defined as
+	
+    Y_i = 1+ <𝐁, 𝐓_i>+X_i1+(X_i2+1)^2+X_i4^2+ϵ_i,
+
+	where 𝐁 = [ 1 0; 0 1; 1 1 ]_3×2 and ϵ_i ∼ N(0,2^2). In this scenario, v_k2(𝐗) = (1, 𝐗, 𝐗*𝐗)^', where * represents the Hadamard product of two matrices, and the corresponding element of 𝐗*𝐗 is (X*X)_ij = (x_ijx_ij).
+	
+	In scenario 2, the linear outcome model is defined as
+	
+    Y_i = 1+ <𝐁, 𝐓_i>+X_i2+X_i3+X_i1X_i2+…+X_i4X_i5+ϵ_i,
+
+	where 𝐁 and ϵ_i are the same as in Equation (21). In this scenario, the interaction terms are strong confounders, hence set v_k2(𝐗) = (1, 𝐗, X_jX_k)^', 1≤ j < k ≤ 5.  
+	
+	In scenarios 3 and 4, the nonlinear outcome models are considered and are defined as
+	
+    Y_i = 1+ <𝐁, F_1(𝐓_i)>+X_i1+(X_i2+1)^2+X_i4^2+ϵ_i,
+
+	and
+	
+    Y_i = 1+ <𝐁, F_1(𝐓_i)>+X_i2+X_i3+X_i1X_i2+…+X_i4X_i5+ϵ_i,
+
+	respectively.
+	Here 𝐁 and ϵ_i are the same as in Equation (24), (F_1(𝐓))_k_1,k_2= f_1(T_k_1,k_2)= T_k_1,k_2+0.6sin{2π(T_k_1,k_2-0.5)^2 }. For all four scenarios, consider u_K1(𝐓) =(1, vec(𝐓)^')^' for simplicity.
+	For each method, the mean RMSE and its standard deviation of the coefficient estimates for the linear outcome model, and those of the fitted values for the nonlinear outcome model are reported based on 100 data replications. 
+	
+	Table 1 shows the mean RMSE and its standard deviation of the coefficient matrix for the linear outcome model. Observe that the mean RMSE of WEBM is the smallest among the four methods, and the standard deviation of WEBM is the second smallest while that of Unweighted is the smallest in both scenario 1 and scenario 2. Besides, the results of scenario 2 indicate that MDABW and EB  have poor performance when the basis function of covariates includes interaction entries, and their mean RMSEs are even larger than those of Unweighted. The mean RMSE and standard deviation of all methods decreases as the sample size increases.
+	Table 2 shows the mean RMSE and its standard deviation of the fitted values of the nonlinear outcome model. As can be seen, the results for both scenario 3 and 4 are similar to those in Table 1, that is, WEBM performs the best with both the smallest mean RMSE in all cases. Similarly, MDABW and EB methods have poor performance when the basis function of covariates includes interaction entries and the mean RMSE and standard deviation of all methods decreases as the sample size increases.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+ §.§ The high-dimensional covariate setting
+
+	In this subsection, since the MDABW and EB methods can only deal with the low-dimensional covariate case, we compare the performance of the proposed method (WEBM) with the Unweighted method and the method (Mapping) proposed by <cit.>, which selects a small important subset of covariates by a joint screening procedure, 
+	in the high-dimensional covariate setting. Since the Mapping method can only deal with linear outcome model, these two methods are compared in the linear outcome model setting.
+	For both methods, set the sample size n=500 and the dimension of 𝐓 to be 3 × 2. Consider two scenarios (scenario 5-6) with the dimension of covariates  L=49 and L=99, respectively. The motivation for such settings is to consider the number of constraints K < n (scenario 5) and K>n (scenario 6), respectively. For the basis functions, u_K1(𝐓)= (1,vec(𝐓)^')^' and v_K2(𝐗) = (1,𝐗^')^' are considered.
+	Additionally, covariates are drawn from a multivariate normal distribution with mean 0, variance 1 and covariance 0.2. For each scenario, consider a linear treatment assignment model, which is defined as
+	
+    𝐓_i= X_i1𝐁_1+X_i2𝐁_2+…+X_i5𝐁_5+𝐄_i,
+
+	where 𝐁_j = [ 1 0; 0 1; 1 1 ]_3×2, j=1,2,3,4,5 denotes the jth coefficient matrix, and 𝐄_i ∈ R^3× 2 denotes the error matrix, whose element follows a standard normal distribution. 
+	Moreover, the linear outcome model is defined as
+	
+    Y_i = 1+ <𝐁, 𝐓_i>+X_i1+X_i2+…+X_i5+ϵ_i,
+
+	
+	
+	
+	
+	
+	where 𝐁=[ 1 0; 0 1; 1 1 ]_3×2, ϵ_i ∼ N(0,2^2).
+	For each method, the mean RMSE and its standard deviation of the tensor regression estimation for the linear outcome model are reported based on 100 data replications.  
+	Table 3 shows the mean RMSE and its standard deviation of coefficent matrix for the linear outcome model in the high-dimensional covariate setting. The results indicate that WEBM performs the best with the smallest mean RMSE in all cases.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+§ APPLICATION
+
+	Intelligence Quotient (IQ) is based on biological attributes, most of which are inherited from parents. It mainly refers to a person's cognitive abilities, such as logical reasoning, pattern recognition, and short-term memory. Of course, due to genetic mutations, parents with average IQ may have offspring with superior intelligence, and vice versa. But IQ also has social attributes. Studies have found that IQ has obvious plasticity, and environmental factors affect IQ levels. From 1947 to 2002, the IQ level of developed countries rose steadily at a rate of 3% every 10 years, which is called the "Flynn effect." This effect has been repeatedly observed in various countries, various age groups, and a large number of different environments, and has become a reliable evidence that "environment affects IQ" (<cit.>). In particular, literatures have shown that taking training lessons, such as music, sports, chess and so on, can significantly enhance children's IQ (<cit.>; <cit.>; <cit.>; <cit.>). 
+	Unfortunately, there are some limitations of existing studies. First, existing studies have only analyzed the relevant effects of attending single training course at a fixed age on children's IQ. In practice, however, a child may attend different training courses at the same age and participation may also vary by age. Second, existing studies mainly investigated the impact of whether or not to attend training classes, ignoring the effect of class duration. Third, existing studies only analyzed the correlation between children's participation in training courses on children's IQ, while their causal relationship is much more of a concern. To overcome the aforementioned limitations, the proposed method is applied to a matrix treatment, which contains the structural information of children's participation in training courses, to investigate their causal impact on children's IQ.
+	The data are obtained from the Brain Science Innovation Institute of East China Normal University's Child Brain Intelligence Enhancement Project, whose goal is to explore brain development and help improve brain power. The treatment we are interested in is a 2 × 5 matrix about children's participation in training courses, whose rows represent age groups, including 3-6 years old and 6-9 years old, columns represent the types of training courses, including knowledge education (Chinese, mathematics and English, etc.), art (music, art, calligraphy, etc.), sports (swimming, ball games, etc.), hands-on practice (STEM, Lego, etc.) and thinking training (logical thinking, EQ education, attention, etc.), and each element of the matrix represents the number of hours of class per week. The outcome is children's IQ and the pre-treatment covariates include children's gender as well as parental education, which have been shown to be associated with both the treatment and outcome variables (<cit.>; <cit.>; <cit.>; <cit.>). A complete-case analysis is conducted with a sample of 103 participants.  
+	Before estimating the causal effect, we first examine the covariate balancing of WEBM, MDABW and EB methods based on the WEIM statistics. The statistic WEIM defined in equation (8) is 0.1050 for the WEBM method, 0.3761 for the MDABW method and 0.9881 for the EB method, which implies that WEBM balances covariates well while EB does not. Assume a linear tensor outcome model and the bootstrap method with 200 replicates is used to obtain confidence intervals for the parameter estimates. The results are shown in Table 4.
+	
+		
+		
+		
+	
+	Table 4 shows the estimated causal effects of the duration of attending different classes at different ages on children's IQ. It can be seen that most methods (except EB) suggest that the duration of attending hands-on practice courses at 6-9 years old has a siginificantly positive impact on children's IQ. This finding is not only consistent with previous findings that participation in hands-on practice classes can improve children's IQ (<cit.>; <cit.>; <cit.>),  but further suggests that longer participation in hands-on practice classes is more beneficial to children's IQ.
+	
+	The results imply that future work of an intervention study about attending hands-on practice training courses, which in turn may improve children's IQ, is suggested. Besides, the width of confidence interval of the estimated causal effect based on WEBM is the smallest, which implies that the estimation accuracy of WEBM is the highest. 
+	
+	
+	
+	
+	
+
+§ CONCLUSION AND DISCUSSION
+	
+	In this study, the weighted Euclidean balancing method is proposed, which obtains stabilized weights by adopting a single measure that represents the overall imbalance. An algorithm for the high-dimensional covariate setting is also proposed. Furthermore, parametric and nonparametric methods are developed to estimate the causal effect and their theoretical properties are provided. The simulation results show that the proposed method balances covariates well and produces a smaller mean RMSE compared to other methods under variaous scenarios. In the real data analysis, the WEBM method is applied to investigate causal effect of children's participation in training courses on their IQ. The results show that the duration of attending hands-on practice at 6-9 years old has a siginificantly positive impact on children's IQ.
+	Since the causal effect function 𝔼(Y(t)) is more general, we mainly consider it as the estimand for matrix treatment in this paper. Actually, one can also consider the average treatment effect  (𝔼(Y(t+ t)-Y(t))) or average partial effect (𝔼Y(t+ t)-𝔼Y(t)/ t)  , which can be easily estimated based on the estimates of causal effect function  (<cit.>). Indeed, the causal effect function provides a complete description of the causal effect, rather than a summary measure. Moreover, parametric and nonparametric methods are developed to estimate the causal effect function. Parametric method is recommended when reasonable assumptions can be made about the true model since it is easier to implement and requires less sample size. Despite nonparametric method has higher requirements of the sample size, one can choose to use it according to the real situations due to its higher flexibility. Besides, this paper mainly focuses on the small-scale matrix treatment. Large-scale matrix treatment with low-rank structure can also be considered. In such case, one may control the overall imbalance by only balancing their non-zero elements based on some decomposition technology, and this will be investigated in future work.
+	
+	
+	
+	*
+	apalike
+	
+	
+	
 
 § APPENDIX
 
-
-Organization: The three subsections contain omitted proofs from sections 2, 3, and 4, respectively.
-
-
-
- §.§ Convex bodies: omitted proofs
-
-
-
-Define c_1≜closest_C(p_1) and c_2≜closest_C(p_2). Since C is convex, C must contain all points on the segment connecting c_1 and c_2. Thus, it must be the case that (p_1-c_1)· (c_2-c_1)≤ 0, or some point on the segment connecting c_1 and c_2 would be closer to p_1 than c_1. Similarly, it must be the case that (p_2-c_2)· (c_2-c_1)≥ 0. To finish,
-
-    (p_2-p_1)· (c_2-c_1)   ≥ (p_2-c_2+c_2-c_1+c_1-p_1)· (c_2-c_1)
-       ≥ (c_2-c_1)· (c_2-c_1)≥c_2-c_1^2,
-
-implying p_2-p_1≥c_2-c_1.
-
-
-
-Consider some point p ∈ (∂ C) ∩ℋ. By the convexity of C and because p lies on its boundary, there exists some unit vector v⃗ such that p ·v⃗≥ x ·v⃗ for any x ∈ C. Let the intersection of ℋ with the ray starting at p and going in the direction of v⃗  be the point s. Notice that _C(s) = p. 
-
-Now, define s' ∈ S_ℋ to be the closest such point to s. From our construction of S_ℋ, s-s'≤ r. From our construction of S, _C(s') ∈ S, and since _C(s) = p, after applying <ref>, we have p-_C(s')≤ r.
-
-
-
-First, we show that there exists a path p' touring the S_i that is nearly as short as the shortest path touring the R_i.
-
-
-If OPT≤ L_APPROX, there exists an increasing sequence 0 = z_0 < z_1 < … < z_l = n+1 and points p_z_i' such that p_z_i' ∈ S_z_i for all i and p_z_i' ∈ R_j for all i, j satisfying 0 ≤ i ≤ l-1, z_i ≤ j < z_i+1, and ∑_i=0^l-1p_z_i'-p_z_i+1'≤ OPT+γ L_APPROX. Additionally, if the regions are disjoint, there exists a sequence that satisfies the above conditions that also satisfies z_i = i for all i.
-
-
-
-Define D(z_t, p_z_t') to be the minimum distance for touring regions R_z_t, R_z_t+1, …, R_n starting at p_z_t' and ending at p_n+1. We show by induction that for all t≤ l, there exists a sequence p_z_0,…,p_z_t satisfying the invariant
-
-    ∑_i=0^t-1p_z_i'-p_z_i+1' + D(z_t, p_z_t) ≤ OPT+t/2n·γ L_APPROX.
-
-Note that for t=l, (<ref>) implies
-
-    ∑_i=0^l-1p_z_i'-p_z_i+1'≤ OPT + l/2n·γ L_APPROX≤ OPT + γ L_APPROX,
-
-as desired.
-
-Base Case: First, define z_0 = 0, p_z_0' = p_0. The invariant holds for t=0. 
-
-Inductive Step: Suppose we have already constructed z_0, z_1, …, z_t and p_z_0', p_z_1', …, p_z_t'. It remains to show how to construct z_t+1, p_z_t+1' from z_t, p_z_t' such that the invariant is maintained.
-
-Let z_t+1≤ n be the smallest integer greater than z_t such that p_z_t' ∉ R_z_t+1. If all R_i are disjoint, then clearly z_t+1 = z_t+1. If no such z_t+1 exists, then we set z_t+1 = n+1. Consider an optimal path q_z_t, q_z_t+1, q_z_t+2, …, q_n+1 for touring regions R_z_t, R_z_t+1, …, R_n starting at q_z_t = p_z_t' and ending at q_n+1 = p_n+1, with total length D(z_t, p_z_t'). Because q_z_t = p_z_t' ∈ R_j for all z_t ≤ j < z_t+1, we can consider an optimal path that satisfies q_z_t = q_z_t+1 = q_z_t+2 = … = q_z_t+1-1, and q_z_t+1 lies on the boundary of R_z_t+1. In other words, the optimal path does not need to move from its starting point if it is contained within some prefix of the regions, and it can always choose q_z_t+1 to be its first point of contact with R_z_t+1. Therefore q_z_t+1∈∂ C_z_t+1, w for some 1≤ w≤ |R_z_t+1|. 
-
-Furthermore, a path exists from p_0 to p_z_t' = q_z_t to p_n+1 with length 
-
-    ∑_i=0^t-1p_z_i'-p_z_i+1' + D(z_t, p_z_t') ≤ OPT+t/2n·γ L_APPROX≤ OPT + L_APPROX≤ 2L_APPROX,
-
-indicating that q_z_t+1-p_0≤ 2L_APPROX, which in turn implies q_z_t+1∈ℋ.
-
-Thus, q_z_t+1∈ (∂ C_z_t+1, w)∩ℋ, so by <ref> there exists some point p_z_t+1' ∈ S_z_t+1 such that p_z_t+1'-q_z_t+1≤ϵ· r = γ/16n· 4 L_APPROX. Now, we can show that the invariant holds for t+1:
-
-    ∑_i=0^tp_z_i'-p_z_i+1' + D(z_t+1, p_z_t+1') 
-       ≤∑_i=0^tp_z_i'-p_z_i+1' + p_z_t+1'-q_z_t+1+∑_i=z_t+1^nq_i-q_i+1
-       ≤∑_i=0^t-1p_z_i'-p_z_i+1' +
-        p'_z_t-q_z_t+1 + 2p_z_t+1'-q_z_t+1+∑_i=z_t+1^nq_i-q_i+1
-       ≤∑_i=0^t-1p_z_i'-p_z_i+1' + p'_z_t-q_z_t+1 + 2 r +∑_i=z_t+1^nq_i-q_i+1
-       = 2 r + ∑_i=0^t-1p_z_i'-p_z_i+1'  + D(z_t, p_z_t') 
-       ≤ 2  r + OPT + t/2n·γ L_APPROX
-       = OPT + γ L_APPROX/2n + t/2n·γ L_APPROX = OPT + t+1/2n·γ L_APPROX.
-
-(<ref>) follows from p_z_t+1', q_z_t+1+1, …, q_n+1 being a valid tour of regions R_z_t+1, R_z_t+1+1, …, R_n, while (<ref>) follows from the triangle inequality.
-
-Recall that if all R_i are disjoint, then z_t+1 = z_t+1  z_i = i for all i.
-
-
-It remains to show that we can recover a path touring the S_i that is at least as good as p'. For each point p ∈ S_i for some i, define successor(p) to be the minimum j > i such that p ∉ R_j. Notice that successor(p_z_i') = z_i+1. Now, define pred(S_j) for each S_j to be the set of all points p such that successor(p) = j.
-
-We use dynamic programming: first, set dp(p_0) = 0. Then, iterate over the sets S_i in increasing i. For each point x ∈ S_i, we will set dp(x)≜min_y ∈ pred(S_j)dp(y)+x-y. By storing the optimal transition for each point, we can recover a path q_0, q_1, …, q_l_q that tours the R_i regions. Because successor(p_z_i') = z_i+1 for the path (p_i'), we must have that the path recovered from dynamic programming has length at most ∑_i=0^l-1p_z_i'-p_z_i+1'.
-
-If the R_i are disjoint, then pred(S_j) = S_j-1 and the total number of transitions in the DP is given by
-
-    ∑_i=0^n |S_i||S_i+1| = ∑_i=0^n |R_i|n/γ^d-1· |R_i+1| n/γ^d-1,
-
-as desired. If the R_i are possibly non-disjoint, notice that the total number of transitions in the DP is given by 
-
-    ∑_i=0^n∑_p ∈ S_i|S_successor(p)|n/γ^d-1   ≤∑_i=0^n∑_p ∈ S_imax_j |R_j| n/γ^d-1
-       ≤∑_i=0^n |R_i|n/γ^d-1max_j |R_j| n/γ^d-1
-       ≤n/γ^2d-2∑_i=0^n |R_i|max_j|R_j|.
-
-
-
-
-Using the oracle to project p_0 onto each of the regions R_1, R_2, …, R_n to obtain points p_1, p_2, …, p_n. Now, let OPT be the total length of the optimal solution for the problem. Clearly, we must have p_i-p_0≤ OPT. Thus,
-
-    ∑_i=0^np_i+1-p_i   ≤p_1-p_0 + ∑_i=1^np_i+1-p_0+p_i-p_0
-       ≤ OPT + 2n · OPT = (2n+1)OPT.
-
-
-
-
-First, apply <ref> to get a 1+2n approximation. Label the path length of this approximation L_0. Define B_0 = 1+2n, where we know L_0/B_0≤ OPT≤ L_0. Our goal is to show that given some L_t, B_t, we can generate L_t+1, B_t+1 so that L_t+1/B_t+1≤ OPT≤ L_t+1, and B_t+1≤ 2√(B_t). 
-
-We apply <ref> with γ = 1, L_APPROX = L_t/√(B_t). Let L_APPROX' be the length of the optimal tour that visits S_0, S_1, …, S_n+1. There are two possible cases.
-
-
-    
-  * L'_APPROX≤ 2L_APPROX. In this case, we know that 
-    L_t/B_t≤ OPT≤ L'_APPROX≤ 2L_APPROX=2L_t/√(B)_t, so we can set L_t+1=2L_t/√(B)_t and B_t+1=2√(B_t).
-    
-    
-  * L'_APPROX > 2L_APPROX. In this case we know that OPT>L_APPROX, because <ref> guarantees that if OPT ≤ L_APPROX, then L'_APPROX≤ OPT + γ L_APPROX≤ 2L_APPROX. Thus,
-    L_t/√(B)_t=L_APPROX< OPT≤ L_t,
-    so we can set L_t+1=L_t and B_t+1=√(B)_t.
-
-
-Thus, we can generate the sequences (L_i) and (B_i) until we reach some B_l ≤ 4 for some l ≤loglogn in loglogn· n^2d-2∑_i=1^n-1|R_i||R_i+1| time. This gives us some L_l such that OPT ≤ L_l ≤ 4 · OPT, a constant approximation of OPT.
-
-
-
-
-The bulk of the time for the second bound is spent computing successor(p) for every one of the n^2/ points in the discretization, which could take Θ(n) calls to the oracle, contributing the factor of n^3/. On the other hand, the actual dynamic programming updates contribute only n^2/logn^2/.
-
-
-
-Here we describe how to modify the method of <cit.> to achieve the desired time complexity. The approach we describe in this paper is a more general method (which can be modified similarly).
-
-As in our approach, the method of <cit.> involves a pseudo-approximation: the idea is to intersect every one of the |V| edges with a disk of radius L_APPROX centered at p_0, discretize every one of the |V| edges into n/ evenly spaced points, and then apply dynamic programming as described in the previous subsection. Naively, these DP transitions run in |V|n/^2 time, but <ref> speeds these transitions up to |V|n/log|V|/ time. The first term in the time complexity corresponds to the time required to obtain a constant approximation by setting =1, as described in <ref>.
-
-When the regions can possibly intersect, we additionally need a data structure that will compute successor(p) for any p∈∂ R_i in log |V| time. The construction of such a data structure contributes the additional term to the time complexity.
-
-Now, we describe how to generate a separate data structure for each edge e∈δ R_i such that each data structure can answer successor(p) for any p∈∂ e in log |V| time. This construction runs in |V|^2α(|V|) time.
-
-First, for each edge  e∈δ R_i we need to compute which parts of it belong to each other region R_j where j>i. To do so, we need to know
-
-    
-  * For each such region, whether the endpoints of e are contained within that region.
-    
-  * The intersection points of e with all such regions in sorted order along the edge (at most |V|, assuming non-degeneracy).
-
-These quantities can be computed in |V|^2 time due to Balaban <cit.>. 
-
-The intersection points partition e into ranges such that the first j>i such that a point belongs to R_j is the same for all points within the range (see <ref>). If we have computed the first j>i for every such range, we can answer queries in log v time via binary search.
-
-
-
-To do so, we start by iterating over all intervals of e contained within R_i+1 and setting all ranges that they cover to have successor=i+1. This determines the answer for three of the ranges in <ref>. Then do the same for R_i+2,R_i+3,… and so on. Note that there are |V| intervals in total.
-
-Naively, such an implementation would run in |V|^2 time; however, using Tarjan's disjoint set union data structure <cit.>, we can speed up this process to |V|α(|V|) time, where α is the inverse Ackermann function.  We assume an implementation of DSU that initially assumes that every range is its own representative, and supports both of the following operations in amortized α(|V|) time:
-
-    
-  * (x): Return the representative of range x.
-    
-  * (x,y): Given a range x such that (x)=x, for each range that x is a representative of, set its representative to be (y).
-
-
-For an interval covering ranges [l,r] belonging to R_j, we use the following process to set the answers for every range it covers whose successor has not been set yet:
-
-    
-  * Set l=(l).
-    
-  * If l>r, break.
-    
-  * Set successor(l)=j
-    
-  * Call (l,l+1).
-    
-  * Return to step 1.
-
-The correctness of this procedure follows from the DSU maintaining the invariant that the representative for a range is the first range that succeeds it whose successor has not been set yet.
-
-
-
-
-First, see <ref> for the case where C lies strictly within U. Next, we describe what needs to be changed when this is not the case:
-
-If we have exact access to ∂(U)∩ C, then we can convert a closest point oracle for C into a closest point oracle for C∩ U and apply the previous lemma to select points on ∂ (C∩ U). Note that due to the convexity of C, the intersection of each side of U with C is a line segment if it is nonempty, and the endpoints of this line segment can be approximated to arbitrary precision using the oracle to binary search. 
-
-Specifically, if C intersects a side s⊆∂(U), we can approximate this intersection by binary searching on s. Say we take some p∈ s such that p∉C; then the direction of the vector from p to _C(p) tells us which side of s∩ C p lies on). After log1/ queries, we either end up with:
-
-    
-  * A point within C∩ s, and approximations of both endpoints of C∩ s to within distance o(ϵ) each.
-    
-  * A segment of length o(ϵ) containing C∩ s.
-
-In either case, given an estimate of an endpoint of C∩ s that is within o(ϵ) of an endpoint of C∩ s, by projecting the estimate onto C we get an estimate of the endpoint that is within o(ϵ) to the true endpoint (and now is part of C).
-
-When querying the closest point in C∩ U to a point p, 
-
-    
-  * Compute the closest point in U to p. If the point is within C, return it.
-    
-  * Otherwise, query the oracle for the closest point in C to p. If the point is within U, return it.
-    
-  * Otherwise, return the closest estimated endpoint (which is guaranteed to be within o(ϵ) of the true answer). 
-    
-    
-
-
-
-
-
-
-
-
-
-
-Given a closest point oracle for a convex region C that is strictly contained within a unit square U, we may select ^-1/2 points on ∂ C such that every point within C is within distance  of the convex hull of the selected points.
-
-
-
-Let S denote the set of all selected points. First, we state a sufficient pair of conditions for S to satisfy the desired property: For every pair of consecutive points s_1 and s_2 in S, 
-
-    
-  * The distance between s_1 and s_2 along the border of C is at most √().
-    
-    
-  * The difference in angle θ between the normals to C at s_1 and s_2 is at most √().
-
-
-To see that this is true, consider any point p on ∂ C lying between s_1 and s_2, and define d≜dist(p,s_1s_2). See <Ref> for an illustration. Then 
-
-    d/sin∠ ps_1s_2+d/sin∠ ps_2s_1=|s_1-s_2|   d/sin∠ s_1ps_2< |s_1-s_2| 
-       d/sinθ < |s_1-s_2| 
-       d/√()<√() d<
-
-
-Inequality (<ref>) follows from m∠ s_1ps_2>π-θ.
-
-It remains to construct S satisfying both of the desired conditions. Note that we can actually construct two separate sets of points S_1 and S_2, one for each of the two conditions, and then set S=S_1∪ S_2. Let S' denote a set of 41/√() points spaced equally about the border of U.
-
-
-    
-  * Form S_1 by projecting each point in S' onto C.
-    
-    
-  * Form S_2 by dilating each point in S' by a sufficiently large constant about the center of U and then projecting each of these points onto C. Essentially, we use the closest point oracle to implement a tangent line oracle.  There is an alternate proof of <ref> that only involves querying the closest point oracle at points on the border of U.
-
-
-Since the distance between any two consecutive points in S' is at most 1/√(), S_1 satisfies condition 1 by a stronger version of <Ref>. Furthermore, condition 1 continues to be satisfied as points from S_2 are added to S. Similarly, it's easy to verify that S_2 satisfies condition 2, and that condition 2 continues to be satisfied as points from S_1 are added to S.
-
-
-
-
-There is no need to query the closest point oracle for points that can be infinitely far away from C (which is done in the original proof). Let's start with a set S' containing a single point on the border of U. While there are two consecutive points s_1' and s_2' in S' such that the clockwise distance between s_1' and s_2' along the border of U times the difference in angle between the normals to C at (s_1') and (s_2') is greater than , insert an additional point m into S such that m is the midpoint of the portion of ∂(U) that goes clockwise about U from s_1' and s_2'. Once no such pair of points exists in S', set S={(s')| s'∈ S'}.
-
-Here is a different way to interpret this process. Start with a list of pairs initially containing only (4,2π), corresponding to the length of the border of U and the measure of a full angle, respectively. While there exists a pair (x,y) satisfying xy>, remove it from the list and add the pairs (x/2,r) and (x/2,y-r) to the list, where r∈ [0,y]. Here,
-
-
-    
-  * x represents an upper bound on the distance from (s_1') to (s_2') along ∂(C), and x/2 is an upper bound on both the distances from (s_1') to (m) and the distances from (m) to (s_2') along ∂(C).
-    
-  * y is the difference in angle between the normals to C at (s_1') and (s_2'). Adding m in between s_1' and s_2' splits this angle into two parts.
-
-
-The correctness of the stopping condition can be proved similarly to the original proof of <Ref>.  It remains to prove that the size of the list upon the termination of this process is 1/√(). Define 𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(x,y)=max(1,4√(xy/)). We claim that 𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(4,2π)≤1/√() is an upper bound on the size of the list upon termination. It suffices to show that whenever xy>, the following inequality holds for any choice of r:
-
-    𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(x,y)≥𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(x/2,r)+𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙(x/2,y-r).
-
-
-This may be rewritten as:
-
-    4√(xy/)≥max2,4√(x/2· y/)+1,4√(x/2· r/)+4√(x/2· (y-r)/)
-
-
-which can easily be verified. Equality holds when r=y/2.
-
-
-
-
- §.§ Disjoint convex fat bodies: omitted proofs
-
-
-
-	We first see that it suffices to find an n such that the optimal path must be Ω(min r_h).
-	Once we find such an n, we can use the bound on subsequences of size n to obtain the desired result.
-
-	Let m≜min r_h. Suppose that OPT<m; it suffices to show that n= 1.
-
-	Let C(P, r) be the sphere centered at P with radius r.
-	Pick an arbitrary point p on OPT. Observe that all of OPT lies inside C(p, m), and for each region R, there is a point q∈ R∩ C(p,m). 
-	
-	
-		
-		For all convex fat regions R with r_h≥ m, we must have
-		(C(q,m)∩ R)≥Ω((C(q,m))).
-		
-	
-	
-	If the claim holds, since the regions C(q,m)∩ R are disjoint subsets of C(p,2m),
-	we would have n·Ω((C(q,m)))≤(C(p,2m)),
-	implying the desired result n= 1.
-
-	
-		Let R_c be the center of a ball contained in R with radius r_h.
-		Consider the case that R_c-q> 1/2 m.
-		By convexity, since q∈ R and (C(R_c,r_h))⊆ R,
-		the image of a dilation of (C(R_c,r_h)) with center q and ratio m/2R_c-q≤ 1
-		is also a subset of R.
-		Let image of the dilation be (C(R_c',r_h')).
-		We have that q-R_c'=1/2 m and
-		r_h'=r_h·m/R_c-q≥ r_h·m/r_H≥Ω(m).
-		Therefore, it suffices to prove that
-		(C(q,m)∩ C(R_c, Ω(m)))≥Ω((C(q,m)))
-		for all points q-R_c≤1/2 m.
-
-		WLOG Ω(m)≤1/2 m. Then C(R_c, Ω(m)) lies entirely inside (C(q,m)), so
-		(C(q,m)∩ C(R_c, Ω(m)))= ( C(R_c, Ω(m))) ≥Ω((C(q,m))),
-		as desired.
 	
 
-	
-	
-		The bound for balls is n_0=3.
-	
-
-	
-		First, we reduce this claim to the 2D case.  More specifically, we want to show that in the case of three balls,
-		the optimal path must lie on the plane P containing the centers of the balls. 
-		
-		For any path p, the projection p' of p onto P is also a valid path
-		and has length at most the length of p. We note that projection never increases
-		the length of a segment; therefore, the distances of the points on the path to
-		the centers of their respective balls must have decreased. Therefore, p' still passes through all three balls, and the length of p' is at most that of p.
-
-		It remains to show the claim in the 2D case. We claim that we must have OPT≥1/100( min r_h). We proceed similarly to the general case:
-		Assume the contradiction, and let m≜1/10( min r_h).
-		Then the optimal path lies in a disk C(p, 1/10m).
-		For each region R, let q be any point in p∩ R. Then Cq, m is contained inside Cp, 1+1/10m.
-		Note that this differs from the general case as we assumed OPT<1/10m instead of
-		OPT<m.
-
-		Therefore, to create a contradiction, it remains to show that
-		
-    (C(q, m)∩ R)> 1/3Cp, 1+1/10m=
-    		1/31+1/10^2(C(p, m)),
-
-		where R is any disk with radius at least 10m and q∈ R.
-
-		Let r be the center of R, and a be any point inside C(q,m).
-		Also let x≜r-q, y≜q-a, and z≜r-a.
-		By the Law of Cosines,
-		z^2=x^2 + y^2 -2xy cos∠rqa.
-
-		Suppose that we have cos∠rqa≥1/20;
-		we claim that this implies z≤ 10m.
-		Note that from our constraints we have x≤ 10m and y≤ m≤ 10m,
-		so we have
-		
-    (x-10m)(y-10m)=xy-10mx-10my+100m^2≥ 0.
-
-		Next, we have
-		
-    z^2
-    				   ≤ x^2 + y^2
-    				  -1/10xy 
-       ≤ x^2 + y^2
-    				  -1/1010mx+10my-100m^2
-       = x-1/2m^2 + y-1/2 m^2
-    				  +19/2m^2 
-       ≤10m-1/2m^2 + m-1/2 m^2
-    				  +19/2m^2 
-       =100m^2.
-
-		To conclude,
-		
-    (C(q, m)∩ R)≥2arccos1/20/2π(C(q, m))>
-    		1/3Cq, 1+1/10m,
-
-		as desired.
-	
-
-
-
-
-
-
-For the construction, we'll address the case where all the bodies are disks on the 2D plane; the result can trivially be extended to higher dimensions. Let x_i be the x-coordinate of the center of the ith largest disk. We will show that it is possible to have r_i=1/i for all i such that every disk is tangent to the segment connecting (0,0) and (8,0), every disk has center above the x-axis, and no two disks intersect. As ∑ r_i=Θ(log n) and OPT≤ 8, this would give the desired bound.
-
-We claim that regardless of how x_1,x_2,…,x_i-1 have been selected, there is always a valid choice for x_i such that the ith disk does not intersect with any of the first i-1. Observe that x_i is valid if |x_i-x_j|≥√((r_i+r_j)^2-(r_i-r_j)^2)= 2√(r_ir_j) for all j∈ [1,i-1], where r_j denotes the radius of the jth disk. The total length of the x-axis rendered invalid by any of the first i-1 disks is at most
-
-    ∑_j=1^i-14√(r_ir_j)=4/√(i)∑_j=1^i-11/√(j)< 8√(i)/√(i)< 8.
-
-
-Therefore, some x∈ [0,8] must exist that was not rendered invalid and is thus a valid candidate for x_i.
-
-
-
-
- §.§ Balls: omitted proofs
+ §.§ A.1.Proof of Theorem 1
  
+	The primal problem is
+	
+    min_𝐰∑_i=1^nw_ilog(w_i)
 
+	s.t.
+	
+    ∑_j=1^K{λ_j^2 [∑_i=1^n w_i (m_K,j(𝐓_i,𝐗_i)-m̅_K,j)]^2 }≤δ.
 
-As the problem of touring disks be formulated as a convex optimization problem by <ref> and the optimal value is lower bounded, a global optimum is guaranteed. This global optimum must be locally optimal, in the sense that it should not be able to decrease the objective by moving any single p_i. This means that
+	
+	Let ||θ||_2 = √(θ_1^2+…+θ_K^2) be the l_2 norm for an arbitrary K-dimensional vector θ =(θ_1,…,θ_K)^' and Λ = diag(λ_1,…,λ_K), then the inequality constraint in the primal problem can be rewritten as ||∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K) ||_2 ≤√(δ). Let 𝒜⊆ R^K be a convex set such that 𝒜 = { a ∈ R^K: || a||_2 ≤√(δ)}. Define I_𝒜(a) = 0 if a ∈𝒜 and I_𝒜(a) = ∞ otherwise. Then, the primal problem (15) is equivalent to the following optimaization problem:
+	
+    min_𝐰 ∑_i=1^nw_ilog(w_i)+I_𝒜( ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K)).
+ 
+	Let h(w) = ∑_i=1^n w_i log(w_i), the conjugate function of h is 
+	
+    h^*(w)    = sup_t(∑_i=1^n w_i t_i-∑_i=1^n w_i log(w_i)) 
+       = sup_t ∑_i=1^n (w_i t_i-w_i log(w_i)) 
+       = ∑_i=1^n sup_t_i(w_i t_i-w_i log(w_i)) 
+       =  ∑_i=1^n f^*(w_i),
 
+	where f^*(w_i) = sup_t_i(w_i t_i-w_i log(w_i)) is the conjugate function of f(w_i) = w_i log(w_i). Let g(θ) = I_𝒜(θ) for any θ∈ R^K, then the conjugate function of g is 
+	
+    g^*(θ)    = sup_a (∑_k=1^Kθ_ka_k -T_𝒜(a) ) 
+       = sup_|| a ||_2 ≤√(δ) (∑_k=1^Kθ_ka_k) 
+       = sup_|| a ||_2 ≤√(δ)  (||θ||_2 || a ||_2) 
+       = √(δ)||θ||_2.
+
+	Define the mapping H: R^n → R^K such that Hw = ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K), then H is a bounded linear map. Let H^* be the adjoint operator of H, then for all θ = (θ_1,…,θ_K)^'∈ R^K,
+	
+    H^*θ = (∑_k=1^Kθ_k λ_k (m_K,k(𝐓_1,𝐗_1)-m̅_K,k), …, ∑_k=1^Kθ_k λ_k (m_K,k(𝐓_n,𝐗_n)-m̅_K,k) )^'.
+
+	Define θ̃ = Hw̃ = 1/n^r∑_i=1^nΛ (m_K(𝐓_i,𝐗_i)-m̅_K), where w̃ = (1/n^r,…,1/n^r)^'∈ dom(F). Here, we choose b to be sufficiently large such that ||θ̃||_2 ≤√(δ), then we obtain that g(θ̃) = 0 and g is continuous at θ̃. Therefore, θ̃∈ H(dom(F) ∩ cont(g)), which implies that H(dom(F) ∩ cont(g)) ≠∅. Here, dom(F) and cont(g) denotes the domain of F and the continuous set of g, respectively. Therefore, the strong duality condition of the Fenchel duality theorem is verified. Moreover,
+	
+    F(H^*θ)+g^*(-θ) = ∑_i=1^n f^*(∑_k=1^Kθ_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))+√(δ)||θ||_2.
+
+	According to the Fenchel duality theorem (Mohri et al. (2018), Theorem B.39), we have 
+	
+    min_w  ∑_i=1^nw_ilog(w_i)+I_𝒜( ∑_i=1^n w_i Λ (m_K(𝐓_i,𝐗_i)-m̅_K)) 
+       = min_w  ∑_i=1^n f^*(∑_k=1^Kθ_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k))+√(δ)||θ||_2.
+ 
+	Furthermore, since the strong duality condition holds, we can conclude that H^*θ̂ is a subgradient of F at ŵ. That is, 
+	
+    ∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k) = log(ŵ_i)+1.
+
+	Therefore, ŵ_i = exp(∑_k=1^Kθ̂_k λ_k (m_K,k(𝐓_i,𝐗_i)-m̅_K,k)-1). The proof of theorem 1 is completed.
+	
+	
+	
+
+ §.§ A.2.Proof of Proposition 1
+
+	Using the law of total expectation and Assumption 1, we can deduce that
+	
+    𝔼[w(Y- s(𝐓;β) )^2]
+       =E[f(T)/f(T|X)(Y-s(𝐓;β)  )^2]
+       = 𝔼(𝔼[f(T)/f(T|X)(Y- s(𝐓;β)  )^2] |T=t,X=x )
+       = 𝔼(f(t)/f(t|x)𝔼([(Y- s(𝐓;β)  )^2] |T=t,X=x) )
+       = ∫_𝒯×𝒳f(t)/f(t|x)𝔼[(Y(T)- s(𝐓;β)  )^2 |T = t, X= x]f(t|x)dtdx
+       =∫_𝒯×𝒳𝔼[(Y(T)- s(𝐓;β)  )^2 |T = t, X= x]f(t)f(x)dtdx
+       = ∫_𝒯×𝒳𝔼[(Y(t)- s(𝐓;β) )^2 |X= x]f(t)f(x)dtdx   (using Assumption 1)
+       = ∫_𝒯𝔼[(Y(t)- s(𝐓;β)  )^2] f(t)dt  .
+
+	Hence, we complete the proof of Proposition 1.
+	
+	
+
+ §.§ A.3.Proof of Theorem 2
+
+	The first order optimality condition for the dual probblem (10) is 
+	
+    ∑_i=1^nexp{∑_j=1^Kθ̂_jλ_jM_K,j(𝐓_i,𝐗_i) }·λ_jM_K,j(𝐓_i,𝐗_i) +√(δ)θ̂_j/||θ̂||_2 =0,   j=1,…,K,
+
+	where M_K,j(𝐓_i,𝐗_i) = m_K,j(𝐓_i,𝐗_i)- m̅_K,j, M_K(𝐓_i,𝐗_i)= (M_K,1(𝐓_i,𝐗_i), …, M_K,K(𝐓_i,𝐗_i))^'.
+	Let Λ = diag(λ_1,…,λ_K) and 
+	
+    1/n∑_i=1^nΦ(𝐓_i,𝐗_i;θ) = 1/n∑_i=1^nexp{∑_j=1^Kθ_jλ_j[m_K,j(𝐓_i,𝐗_i)-𝔼(m_K,j)] }Λ [m_K(𝐓_i,𝐗_i) -𝔼(m_K)],
+
+	which is a set of K estimating functions. Note that
+	
+    |𝔼( Φ(𝐓_i,𝐗_i;θ^*)) |
+       = |𝔼{exp{∑_j=1^Kθ_j^*λ_j[m_K,j(𝐓_i,𝐗_i)-Em_K,j] }Λ [m_K(𝐓_i,𝐗_i) -Em_K] }|
+       ≤sup_(𝐓_i,𝐗_i) exp{∑_j=1^Kθ_j^*λ_j[m_K,j(𝐓_i,𝐗_i)-Em_K,j] }·|𝔼Λ [m_K(𝐓_i,𝐗_i) -Em_K] |
+       ≤ O(1) ·0 = 0,
+
+	hence we have 𝔼( Φ(𝐓_i,𝐗_i;θ^*))=0, which implies that θ^* is the unique solution of 𝔼( Φ(𝐓_i,𝐗_i;θ))=0. Therefore, by the estimating equation theory (Van der Vaart (2000)), the solution of the estimating equations 
+	
+    1/n∑_i=1^nΦ(𝐓_i,𝐗_i;θ) = 0,
+ 
+	denoted by θ̃, is asymptotically consistent for θ^*. Furthermore, by the Taylor expansion, we have
+	
+    √(n)(θ̃ - θ^*) →_d N(0, Σ),
+
+	where Σ = { E(∂Φ/∂θ^') }^-1 E(ΦΦ^'){ E(∂Φ/∂θ) }^-1.
+	Moreover, by the assumption that δ = o(n), we have 1/n√(δ)θ_j/||θ||_2 = o_p(n^-1/2) for any θ∈ int(Θ). Therefore, by the Slutsky's theorem, we obtain that 
+	
+    √(n)(θ̂ - θ^*) →_d N(0, Σ).
+
+	Let M̃_K,j(𝐓_i,𝐗_i) = λ_j(m_K,j(𝐓_i,𝐗_i)- m̅_K,j),
+	then 
+	
+    ŵ_i    = exp{∑_j=1^Kθ̂_j λ_j (m_K,j(𝐓_i,𝐗_i)-m̅_K,j) -1}
+       = exp{M̃_K(𝐓_i,𝐗_i)^'θ̂ -1}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	By Mean Value Theorem, we can deduce that
+	
+    ∫|ŵ-w^*|^2dF(𝐭,𝐱) 
+       ≤sup_(𝐭,𝐱) |exp{M̃_K(𝐭,𝐱)^'θ_1 -1}|^2 ×∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) 
+       ≤ O_p(1) ·∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱),
+
+	where θ_1 lies between θ̂ and θ^*.
+	Since 
+	
+    ∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) 
+        	= ∫M̃_K(𝐭,𝐱)^'(θ̂-θ^*)(θ̂-θ^*)^'M̃_K(𝐭,𝐱) dF(𝐭,𝐱)
+       = tr{ (θ̂-θ^*)(θ̂-θ^*)^'∫M̃_K(𝐭,𝐱)M̃_K(𝐭,𝐱)^'dF(𝐭,𝐱) }
+       ≤ C tr{ (θ̂-θ^*)(θ̂-θ^*)^'}
+       = C||θ̂-θ^*||^2 
+       = O_p(n^-1).
+
+	Then we have 	
+	
+    ∫|ŵ-w^*|^2dF(𝐭,𝐱) = O_p(n^-1).
+
+	Furthermore, one can show that 
+	
+    1/n∑_i=1^n|M̃_K(𝐭,𝐱)^'(δ̂-δ^*) |^2 - ∫|M̃_K(𝐭,𝐱)^'(δ̂-δ^*) |^2 dF(𝐭,𝐱)=o_p(1).
+
+	Hence,
+	
+    1/n∑_i=1^n|ŵ_i- w_i^*|^2 
+       ≤sup_(𝐭,𝐱) |exp{M̃_K(𝐭,𝐱)^'θ_1 -1}|^2 ·1/n∑_i=1^n|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 
+       ≤ O_p(1) ∫|M̃_K(𝐭,𝐱)^'(θ̂-θ^*) |^2 dF(𝐭,𝐱) +o_p(1) 
+       = O_p(n^-1)
+
+	Therefore, the proof of Theorem 2 is completed.
+	
+	
+
+  §.§.§ A.4.Proof of Theorem 3
+
+	
+	
+	We first show that the conclusion of Theorem 3(1). 
+
+	
+	Since β̂ (as a estimator of β^*) is a unique minimizer of 1/n∑_i=1^nŵ_i(Y_i-s(T_i;β))^2(regarding 𝔼[w(Y-s(T;β))^2], according to the theory of M-estimation (van der Vaart, 2000, Theorem 5.7), if
+	
+    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |→_p 0,
+
+	then β̂→_p β^*.
+	Note that
+	
+    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |
+    ≤sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |
     
-  * For all p_i satisfying |p_i-c_i|<r_i, the gradient of the objective with respect to p_i must be 0.
+    		+sup_β∈Θ_1|1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) |.
+
+	We first show that sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 | is o_p(1). Using the Causchy-Schwarz inequality and the fact that ŵ→^L^2 w, we have
+	
+    sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |   ≤{1/n∑_i=1^n(ŵ_̂î-w_i)^2 }^1/2sup_β∈Θ_1{1/n∑_i=1^n(Y_i-s(T_i;β))^2 }^1/2
+       ≤ o_p(1){sup_β∈Θ_1𝔼[w(Y-s(T;β))^2]+o_p(1) }^1/2
+       =o_p(1).
+
+	Thereafter, under Assumption 5, we can conclude that sup_β∈Θ_1|1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2-𝔼[w(Y-s(T;β))^2]) | is also o_p(1) (Newey and McFadden (1994), Lemma 2.4). Hence, we complete the proof for Theorem 3(1). Next, we give the proof of Theorem 3(2). Define
+	
+    β̂^* = argmin_β∑_i=1^n w_i(Y_i-s(𝐓_i;β))^2.
+
+	Assume that 1/n∑_i=1^n w_i(Y_i - s(𝐓_i;β̂^*))h(𝐓_i;β̂^*)) = o_p(n^-1/2) holds with probablility to one as n →∞
+	
+	By Assumption 5 and the uniform law of large number, one can get that
+	
+    1/n∑_i=1^n w_i(Y_i-s(T_i;β))^2 →𝔼{ w(Y-s(T;β))^2 } in probability uniformly over  β,
+
+	which implies ||β̂^* -β^* ||→_p 0. Let
+	
+    r(β) = 2𝔼{ w(Y-s(T;β))h(T;β) },
+
+	which is a differentiable function in β and r(β^*) = 0. By mean value theorem, we have
+	
+    √(n)r(β̂^*)- ▽_β r(ζ) ·√(()n)(β̂^* - β^*) =√(n)r(β^*) =0
+
+	where ζ lies on the line joining β̂^* and β^*. Since ▽_β r(β) is continuous at β^* and ||β̂^* -β^* ||→_p 0, then
+	
+    √(n)(β̂^* - β^*)  = ▽_β r(β^*)^-1·√(n) r(β̂^*) +o_p(1)
+
+	Define the empirical process
+	
+    G_n(β)= 2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β))h(T_i;β) - 𝔼{ w(Y-s(T;β))h(T;β)  }}.
+
+	Then we have
+	
+    √(n)(β̂^* - β^*)
+       =  ▽_β r(β^*)^-1·{√(n) r(β̂^*) -  2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β̂^*))h(T_i;β̂^*)  + 2/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β̂^*))h(T_i;β̂^*)  }
+       =  -▽_β r(β^*)^-1· G_n(β̂^*)+o_p(1)
+       = U^-1·{ G_n(β̂^*)-G_n(β^*) +G_n(β^*) } +o_p(1).
+
+	By Assumption 5, 6, Theorem 4 and 5 of Andrews(1994), we have G_n(β̂^*)-G_n(β^*) →_p 0. Thus,
+	
+    √(n)(β̂^* - β^*) = U^-12/√(n)∑_i=1^n{ w_i(Y_i-s(T_i;β^*))h(T_i;β^*) } +o_p(1),
+
+	then we can get that the asymptotic variance of √(n)(β̂^* - β^*) is V.
+	Therefore, √(n)(β̂^* - β^*) →_d N(0,V). Next, we will prove β̂→_p β̂^*.
+	Since
+	
+	
+    sup_β∈Θ_1|1/n∑_i=1^nŵ_̂î(Y_i-s(T_i;β))^2-1/n∑_i=1^nw_i(Y_i-s(T_i;β))^2) |
+    ≤sup_β∈Θ_1|1/n∑_i=1^n(ŵ_̂î-w_i)(Y_i-s(T_i;β))^2 |
+    ≤{1/n∑_i=1^n(ŵ_̂î-w_i)^2 }^1/2sup_β∈Θ_1{1/n∑_i=1^n(Y_i-s(T_i;β))^2 }^1/2
+    ≤ o_p(1){sup_β∈Θ_1𝔼[w(Y-s(T;β))^2]+o_p(1) }^1/2
     
-  * For all p_i satisfying |p_i-c_i|=r_i, the gradient of the objective with respect to p_i must be perpendicular to the ith circle.
+    		=o_p(1),
 
-The gradient of the objective with respect to p_i is precisely (p_i-p_i-1)+(p_i-p_i+1), where (x)≜x/x. Case 1 corresponds to the tour passing straight through the ith disk while case 2 corresponds to reflecting off the ith circle.
+	which implies β̂^* →_p β̂. Then by Slutskey's Theorem, we can draw the conclusion that √(n)(β̂ - β^*) →_d N(0,V). Therefore, we have completed the proof of Theorem 3. 
+	
+	
 
-Conversely, given a locally optimal solution, we can certify its optimality by choosing z_i=(p_i+1-p_i), where z_i is defined in the proof of <ref>.
+  §.§.§ A.5.Proof of Theorem 4
 
+	For convenience, we use a mapping Ω: R^p× q × D× R → R^p× q × D to represent the operator of absorbing the constant into the coefficients of B-spline basis for the first predictor. More precisely, Ω is defined by 
+	
+    𝐆^b= Ω(𝐆,c),
 
+	where 𝐆_i_1,i_2,d= 𝐆_i_1,i_2,d for (i_1,i_2) ≠ (1,1) and 𝐆_1,1,d=𝐆_1,1,d+pqc, d=1,…,D. It then follows from the property of B-spline functions that
+	
+    c+1/pq<𝐆,Φ(𝐓)> = 1/pq <𝐆^b,Φ(𝐓)>.
 
-The touring balls problem can be formulated as a convex optimization problem (specifically, a second-order cone problem).
+	We also write 𝐆_0= ∑_r=1^R_0𝐁_0r∘α_0r, r= 1,…, R_0. Suppose 𝐆̂,ĉ) is a solution to (19) and 
+	
+    𝐆̂ = ∑_r=1^Rβ̂_1^(r)∘β̂_2^(r)∘α̂_r,
 
+	then by <cit.>, Lemma B.1, there exists č∈ R and 
+	
+    𝐆̌ = ∑_r=1^Rβ̂_1^(r)∘β̂_2^(r)∘α̌_r,
 
+	such that
+	
+    č+1/pq<𝐆̌ ,Φ(𝐓)> = ĉ+1/pq<𝐆̂ ,Φ̃(𝐓)>,
 
-Stated in <cit.>. We restate a possible formulation here:
+	where α̌_r= (α̌_r,1,…,α̌_r,D )^' satisfying
+	
+    ∑_d=1^Dα̌_r,du_d=0
 
-*Primal.
+	with u_d= ∫_0^1 b_d(x)dx.
+	Using (27), 
+	we have
+	
+    ∑_i=1^n (ŵ_iy_i-č-1/pq<𝐆̌,Φ(𝐓_i)>)^2 ≤∑_i=1^n (ŵ_iy_i-c_0-1/pq<𝐆_0,Φ(𝐓_i)>)^2.
+ 
+	Let 𝐆̌^b= Ω(α̌,č) and 𝐆_0^b = Ω(𝐆_0,c_0), then 
+	
+    ∑_i=1^n (ŵ_iy_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2 ≤∑_i=1^n (ŵ_iy_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2.
 
-Constants: c_i ∈^d, ∀ i∈ [0,n+1]. r_i ∈^+, ∀ i∈ [0,n+1].
+	Therefore, we have
+	
+    ∑_i=1^n ((ŵ_i-w_i+w_i)y_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2 ≤∑_i=1^n ((ŵ_i-w_i+w_i)y_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2,
 
-Decision Variables: p_i ∈^d, ∀ i∈ [0,n+1]. d_i ∈^+, ∀ i∈ [0,n].
+	which leads to 
+	
+    ∑_i=1^n (w_iy_i-1/pq<𝐆̌^b,Φ(𝐓_i)>)^2    ≤∑_i=1^n (w_iy_i-1/pq<𝐆_0^b,Φ(𝐓_i)>)^2 
+       +2 ∑_i=1^n (ŵ_i-w_i)y_i(1/pq<𝐆̌^b-𝐆_0,Φ(𝐓_i)).
 
-Constraints: p_i-c_i≤ r_i, ∀ i ∈ [0, n+1]. p_i+1-p_i≤ d_i, ∀ i ∈ [0, n].
+	Let 𝐆^# =𝐆̌^b-𝐆_0^b,  𝐚^# =vec(𝐆^# ),  𝐚_0^b =vec(𝐆_0^b), 𝐚̌^b= vec(𝐆̌^b) and 𝐙
+	= (𝐳_1,…,𝐳_n)^'∈ R^n× pqD, where 𝐳_i = vec(Φ(𝐓_i)),i=1,…,n. 
+	Let y_ŵ= (ŵ_1y_1,…, ŵ_ny_n)^' and y_w = (w_1y_1,…, w_ny_n)^', then using (31) and working out the squares, we obtain
+	
+    1/p^2q^2||𝐙𝐚^#||^2   ≤  2<1/pq𝐙𝐚̌^b,y_w>-2<	1/pq𝐙𝐚_0^b,y_w>
+       -21/p^2q^2<𝐙𝐚^#,𝐙𝐚_0^b>+2<1/pq𝐙𝐚^#, y_ŵ-y_w>  
+       = 2<1/pq𝐙𝐚^#,y_ŵ-y_w>+2<1/pq𝐙𝐚^#,ϵ>+2<	1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b>
 
-Objective: min∑_i=0^nd_i
+	First, we show the upper bound of <1/pq𝐙𝐚^#,y_ŵ-y_w>. Using the Cauchy-Schwarz inequality, we have
+	
+    <1/pq𝐙𝐚^#,y_ŵ-y_w> 
+       ≤||ŵ-w ||_2 ·||1/pq𝐙𝐚^#||_2 
+       ≤C_1√(nh_n)/pq·||ŵ-w ||_2 ·||𝐚^#||_2
 
-*Dual.
+	
+	By the conclusion of Theorem 2(2), we have 
+	
+    ||ŵ-w ||_2 = O_p(1).
 
-Constants: Same as primal.
+	Applying (37) to (36), we can obtain that
+	
+    <1/pq𝐙𝐚^#,y_ŵ-y_w> ≤C_2√(nh_n)/pq||𝐚^#||_2.
 
-Decision Variables: 
+	Second, by the conclusion of <cit.>, (A.18) and (A.20), we can obtain the upper bound of
+	<1/pq𝐙𝐚^#,ϵ> and <	1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b>, which are
+	
+    <1/pq𝐙𝐚^#,ϵ> ≤C_3/pq||𝐚^#||_2 { nh_n(R^3+R(p+q)+RD)}^1/2.
 
-    
-  * Associate a variable y_i∈^d, ∀ i∈ [0,n+1] and a real w_i∈^+, ∀ i∈ [0,n+1] for each constraint of the first type (y_i· (p_i-c_i)≤ w_i· r_i).
-    
-  * Associate a variable z_i∈^d, ∀ i∈ [0,n] for each constraint of the second type (z_i· (p_i+1-p_i)≤ d_i).
+	and
+	
+    <1/pq𝐙𝐚^#,y_w-ϵ-1/pq𝐙𝐚_0^b> ≤C_4/pq||𝐚^#||_2 {∑_r=1^R_0||vec(𝐁_0r)||_1/pq}n√(h_n)/D^τ
 
+	Therefore, applying (38), (39) and (40) to (35), we have
+	
+    C_5/pq||𝐚^#||_2^2 ≤ R_1 ||𝐚^#||_2,
 
-Constraints: z_i≤ 1, ∀ i∈ [0,n]. y_i=z_i-z_i-1, ∀ i∈ [0,n+1]. y_i≤ w_i, ∀ i∈ [0,n+1]. 
+	where  R_1 = C_6√(D/n)+C_7  {D(R^3+R(p+q)+RD)/n}^1/2+C_8{∑_r=1^R_0||vec(𝐁_0r)||_1/pq}1/D^τ-1/2.
+	
+	By solving the second order inequality (41), we have
+	
+    C_5/pq||𝐚^#||_2 ≤ R_1
 
-Objective: max-∑_i=0^n+1w_ir_i-∑_i=0^n+1y_i· c_i.
+	Further, by Assumption 6 and <cit.>, (A.38) of Lemma A.2, we have
+	
+    ||ŝ(𝐓) -s(𝐓) ||^2   ≤ C_9 h_n 1/p^2q^2||𝐚^#||^2 
+       = C_10R_1^2/D
+       = O_P(1/n)+O_p(R^3+R(p+q)+RD/n)+O_p({∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ) 
+       =O_p(R^3+R(p+q)+RD/n)+O_p({∑_r=1^R_0||vec(𝐁_0r)||_1/pq}^2 1/D^2τ).
 
+	Hence, the proof of Theorem 4 is completed. 
+	
+	
+
+§ APPENDIX REFERENCE
+
+	Mohri, M., Rostamizadeh, A., and Talwalkar, A. (2018). Foundations of ma- chine learning. MIT press.
+	0.2cm
+	Newey, W. K. and McFadden, D. (1994). Large sample estimation and hypoth- esis testing. Handbook of econometrics, 4:2111–2245.
+	0.2cm
+	Van der Vaart, A. W. (2000). Asymptotic statistics, volume 3. Cambridge university press.
+	0.2cm
+	Zhou, Y., Wong, R., and He, K. (2020). Broadcasted nonparametric tensor regression.

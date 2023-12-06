@@ -1,27 +1,17 @@
 
-
-firstpage–lastpage
-Effects of Nb Doping on the Charge-Density Wave and Electronic Correlations in the Kagome Metal Cs(V_1-xNb_x)_3Sb_5
-    Hai-Hu Wen
-    March 30, 2023
-===================================================================================================================
-
+firstpagehf
+Classification of blazar candidates of unknown type in Fermi 4LAC by unanimous voting from multiple Machine Learning Algorithms
+    [
+    Accepted xxxx xxxxxx xx. Received xxxx xxxxxx xx; in original form xxxx xxx xx
+===============================================================================================================================
 
 
 
 
-GRB 210704A is a burst of intermediate duration (T_90∼ 1-4 s) followed by a fading afterglow and an optical excess that peaked about 7 days after the explosion.  
-Its properties, and in particular those of the excess, do not easily fit into the well established classification scheme of GRBs as being long or short,
-leaving the nature of its progenitor uncertain. 
-We present multi-wavelength observations of the GRB and its counterpart, observed up to 160 days after the burst. 
-In order to decipher the nature of the progenitor system, we present a detailed analysis of the GRB high-energy properties (duration, spectral lag, and Amati correlation), its environment, and late-time optical excess. 
-We discuss three possible scenarios: a neutron star merger, a collapsing massive star, and an atypical explosion possibly hosted in a cluster of galaxies. We find that traditional kilonova and supernova models do not match well the properties of the optical excess, leaving us with the intriguing suggestion that this event was an exotic high-energy merger. 
+In the past decade, Artificial Intelligence (AI) algorithms have made promising impacts to transform healthcare in all aspects. One application is to triage patients’ radiological medical images based on the algorithm's binary outputs. Such AI-based prioritization software is known as computer-aided triage and notification (CADt). Their main benefit is to speed up radiological review of images with time-sensitive findings. However, as CADt devices become more common in clinical workflows, there is still a lack of quantitative methods to evaluate a device’s effectiveness in saving patients' waiting times. In this paper, we present a mathematical framework based on queueing theory to calculate the average waiting time per patient image before and after a CADt device is used. We study four workflow models with multiple radiologists (servers) and priority classes for a range of AI diagnostic performance, radiologist's reading rates, and patient image (customer) arrival rates. Due to model complexity, an approximation method known as the Recursive Dimensionality Reduction technique is applied. We define a performance metric to measure the device’s time-saving effectiveness. A software tool is developed to simulate clinical workflow of image review/interpretation, to verify theoretical results, and to provide confidence intervals  of the performance metric we defined. It is shown quantitatively that a triage device is more effective in a busy, short-staffed setting, which is consistent with our clinical intuition and simulation results. Although this work is motivated by the need for evaluating CADt devices, the framework we present in this paper can be applied to any algorithm that prioritizes customers based on its binary outputs.    
 
 
 
-
-
-(stars:) gamma-ray burst: individual: GRB 210704A – (transients:) gamma-ray bursts
 
 
 
@@ -30,916 +20,1034 @@ We discuss three possible scenarios: a neutron star merger, a collapsing massive
 
 
 
-Gamma-ray bursts (GRBs) are the brightest explosive events in the universe <cit.>. They are classified according to their duration T_90 and spectral hardness <cit.>. The population of short GRBs (SGRBs) typically has T_90≲ 2 s and harder spectra, whereas the population of long GRBs (LGRBs) typically has T_90≳ 2 s and softer spectra <cit.>. However, there is overlap between the two populations, and so in some cases it is not clear whether a burst with intermediate properties belongs to the one population or the other <cit.>.
+The fast-growing development of artificial intelligence (AI) and machine learning (ML) technologies bring a potential to transform healthcare in many ways.
+One emerging area is the use of AI/ML as Software as a Medical Device (SaMD) in radiological imaging to triage patient images with time-sensitive findings for image interpretation <cit.>.
+These devices are known as computer-aided triage and notification (CADt) devices, by which medical images labeled as positive by an AI algorithm are prioritized in the radiologist's reading queue.
+The major benefit of a CADt device is to increase the likelihood of timely diagnosis and treatment of severe and time-critical diseases such as large vessel occlusion (LVO), intracranial hemorrhage (ICH), pneumothorax, etc.
+In 2018, the U.S. Food and Drug Administration (FDA) granted marketing authorization to the first CADt device for potential LVO stroke patients via the de novo pathway <cit.>. 
+Since then, multiple studies have shown improvements in patient treatment and clinical outcomes due to the use of CADt devices <cit.>.
+Most of these analyses focus on the diagnostic performance when evaluating these CADt devices, but a quantitative estimate of time savings for truly diseased (signal-present) patient images in a clinical environment remain unclear.
+Therefore, the goal of this work is to fill this gap by developing a queueing-theory based tool to characterize the time-saving effectiveness of a CADt device in a given clinical setting.
 
-Nowadays, it is known that at least some SGRBs are the consequence of mergers between compact objects, driven by angular momentum and energy losses to gravitational radiation <cit.> and as such are sources of gravitational wave emission <cit.>. These mergers are followed by a luminous and short-lived kilonova emission, visible at optical and near-infrared wavelengths <cit.>.
+Figure <ref> illustrates the radiologist workflows without and with a CADt device being used.
+In the standard of care without a CADt device, patient images are reviewed by a radiologist on a first-in, first-out (FIFO) basis.
+In the context of queuing theory, our servers are radiologists, and our customers are patient images.
+Occasionally, the radiologist may be interrupted by an emergent case, for example, when a physician requests an immediate review of a specific patient image.
+To distinguish these emergent cases from those in the reading queue, we call the images in the reading list “non-emergent."
+If a CADt device is included in the workflow, the device only analyzes non-emergent patient images.
 
-In contrast, LGRBs are thought to be the result of the core-collapse of a star <cit.> whose mass exceeds about 10 M_⊙ <cit.>.  
-In this scenario, the optical emission from the SN appears a few days after the GRB, when the afterglow has faded sufficiently and the component powered by radioactive heating can be seen. This leads to two ways to identify the presence of a SN associated with a LGRB. First, through a “rebrightening” or “excess” in the optical /nIR light curve of the LGRB, visible for several days/weeks after the burst as a consequence of the SN emission <cit.>. 
-Second, by the appearance of the broad spectral lines characteristic of rapidly expanding ejecta.
-The identification of a SN associated with GRB 980425  <cit.> and of several more in the following years (see, e.g., ) confirmed that this scenario applies to most LGRBs. 
+Cases labeled as AI-positive are either flagged or moved up in a radiologist's reading list, giving them higher priority, and the radiologist will review those cases before all AI-negative patient images.
+Just like the without-CADt scenario, the radiologist may be interrupted by emergent cases, which always have the highest priority over other images.
+Overall, without a CADt, we have a queue with two priority classes, and we have a queue with three priority classes in a with-CADt scenario.
 
-In this work, we investigate the nature of GRB 210704A, a burst first classified as a SGRB, but later considered to be of intermediate duration. We study the high-energy properties of the GRB prompt phase, and present  X-ray, optical, and infrared observations of its afterglow to 15 days after the burst. These observations show that the afterglow initially fades but then becomes brighter again in the optical and, to a less extent, in the near-infrared.  We also present late HST observations of a possible host galaxy. We derive constraints on the redshift of the bursts and consider three possible host environments: a nearby galaxy, a nearby cluster of galaxies, and a distant galaxy. We explore different scenarios to explain our data, and eliminate all of the those involving standard SGRBs or LGRBs. We are left with the intriguing possibility that GRB 210704A was an exotic transient in a cluster at z≈ 0.2.
 
-Our paper is organised as follows. In section <ref>, we present the observations with Fermi, Swift, Chandra, GTC, LDT, Gemini, Subaru, HST, and other telescopes. In section <ref> we present our analysis. We discuss the nature of the GRB in section <ref>. Finally, in section <ref> we summarise our results. 
 
+It is noted that, though applied to radiology clinics, the mathematical frameworks presented here could be used to evaluate discrimination algorithms in other queueing contexts.
+For example, algorithms may attempt to identify customers or jobs who may require less service time and place them into a higher priority class, thereby reducing overall wait time for customers on average.
 
 
-§ OBSERVATIONS
 
 
 
 
+§ PARAMETERS
 
- §.§ Gamma-rays
 
 
-The prompt gamma-ray emission of GRB 210704A was detected by six instruments: Fermi/GBM <cit.>, AGILE/MCAL <cit.>, Fermi/LAT <cit.>,  AstroSat/CZTI <cit.>, Konus-Wind <cit.>, INTEGRAL/SPI-ACS, and INTEGRAL/ISGRI <cit.>.
-Hereafter, we use the Fermi/GBM trigger time as reference time  T = 2021 July 4 19:33:24.59 UTC. 
+Before applying queueing theory, a few parameters are defined to describe the clinical setting.
 
-<cit.> estimated a duration of about T_90 = 1.06 s based on the  AGILE/MCAL data (0.4-100 MeV), and classified it as a SGRB. 
-A similar short duration, T_90 = 1.0± 0.4 s (20-200 keV), was derived by the analysis of the AstroSat/CZTI dataset <cit.>. 
+  
+  * f_em is the fraction of emergent patient images with respect to all patient images.
+  
+  * λ is the Poisson arrival rate of all patient images.
+  Patient images can be divided into subgroups, and each subgroup i has a Poisson arrival rate λ_i = p_iλ, where p_i is the fraction of image subgroup i with respect to all patient images.
+  
+  * The disease prevalence π is defined within the non-emergent patient population, i.e.
+  
+    π = Number of diseased, non-emergent cases/Number of non-emergent cases.
 
+  
+  * CADt diagnostic performance is defined by its sensitivity (Se) and specificity (Sp), which are also defined within the non-emergent patient images i.e.
+  
+    Se = 0.85Number of AI-positive, diseased, non-emergent cases/Number of diseased, non-emergent cases,
 
-<cit.> reported instead that the Fermi/GBM light curve consisted of a main bright peak with a duration T_90 of about 4.7 s (50-300 keV), with possible faint emission extending to T+20 s <cit.>. 
-In the time interval between T and T+10 s, high-energy (>100 MeV) emission was detected by the Fermi/LAT <cit.> with a photon flux of (1.6±0.3)×10^-3 ph cm^-2 s^-1 and a photon index of -1.74±0.13. 
-The LAT localization was RA, Dec (J2000) = 159.08, +57.31 with a 90% error radius of 6.7 arcmin, critical to enable follow-up observations with narrow-field instruments.
+  and
+  
+    0.85Sp = Number of AI-negative, non-diseased, non-emergent cases/Number of non-diseased, non-emergent cases.
 
-<cit.> reported Konus-Wind observations of a bright peak
-in the interval from T to T+2 s followed by a weaker pulse peaked at T+4.5 s (20 keV - 4 MeV). Finally, <cit.> estimated a duration of T_90 = 3.5± 0.7 s (>80 keV) based on the INTEGRAL/SPI-ACS data.
-All the durations T_90 cited above are summarised in Table <ref>. 
+  
+  * N_rad is the number of radiologists on-site.
+  Typically, a clinic has at least one radiologist at all times. 
+  For a larger hospital, multiple radiologists may be available during the day.
+  
+  * The radiologist's reading rates are denoted by μ's.
+  For emergent (highest-priority) cases, the reading time T_em is assumed to be exponentially distributed with an average reading rate μ_em=1/T_em.
+  For a non-emergent image, the average reading rate depends on the radiologist's diagnosis i.e. μ_D if diseased image or μ_ND if non-diseased image.
+  Therefore, in the without-CADt scenario, the reading time of the non-emergent (lower-priority) cases follows a hyperexponential distribution where the mean (1/μ_nonEm) is determined by the mean reading rates of the two subgroups and the probability of disease prevalence π.
+  
+    1/μ_nonEm = π/μ_D + 1-π/μ_ND.
 
+  In the with-CADt scenario, the average reading rates for AI-positive (middle-priority) and AI-negative (lowest-priority) classes are denoted by μ_+ and μ_- respectively.
+  The AI-positive group consists of true-positive (TP) and false-positive (FP) patients, and the probability that an AI-positive case is a TP is defined by the positive predictive value (PPV).
+  Hence, 
+  
+    1/μ_+ = PPV/μ_D + 1-PPV/μ_ND.
+  
+  Similarly, the average AI-negative reading rate is given by
+  
+    1/μ_- = 1-NPV/μ_D + NPV/μ_ND,
+  
+  where NPV is the probability that an AI-negative case is a true-negative (TN).
+  
+  * ρ is the traffic intensity defined as ρ = λ/μ_eff, where  μ_eff is effective reading rate considering all priority classes and N_rad in the queueing system.
+  ρ ranges from 0 with no patient images arriving to 1 implying a very congested hospital.
+  
+  * With regard to the queueing discipline, when no CADt device is used, patient images are read in the order of their arrival time i.e. first-in first-out (FIFO).
+  In the with-CADt scenario, we consider a preemptive-resume priority scheduling:
+  whether or not a CADt device is used, whenever a higher-priority patient image enters the system, the reading of a lower-priority patient image will be interrupted and later resumed.
+  Although in reality some radiologists may prefer finishing up the current lower-priority image when a CADt device flags a higher-priority case (which would be a non-preemptive-resume priority), many CADt devices are designed assuming a radiologist reads the flagged cases immediately.
+  Therefore, a preemptive-resume priority is assumed in this work.
 
 
+To assess the time-saving effectiveness of a given CADt device in a clinical setting defined by the above parameters, we first define four radiologist workflow models in Section <ref>. 
+For each of the models, we provide the Markov chain matrices to compute the mean waiting time for each priority class in both with- and without-CADt scenarios.
+Section <ref> discusses an in-house simulation software developed to verify theoretical results and to provide confidence intervals around the theoretical mean time savings.
+Section <ref> defines a metric that quantifies the time-saving effectiveness of a CADt device, and Section <ref> discusses the results obtained from theory and simulation.
 
 
 
-The values of T_90 reported in GCNs range from 1.0 to 4.7 seconds (see Table <ref>) and do not unambiguously aid in the classification of GRB 210704A. 
-This discrepancy can largely be understood by considering Figure <ref>, which shows the Fermi/GBM light curves in three energy bands.
 
 
-It shows that the observed emission in the soft energy range (8-50 keV; top panel) consists of a weak precursor, followed by strong initial peak with a duration of less than 2 seconds and then an extended tail out to about 6 seconds with two weaker peaks at about 3.5 and 4.8 seconds. 
-However, the precursor and tail are not seen in the harder 300-1000 keV band. 
-Therefore, we suggest that gamma-ray instruments that are not sensitive to soft (≲50 keV) energies would not detect the extended emission and would measure shorter values of T_90.  
-This sort of instrumental selection effect is well known <cit.> and can explain the short T_90 measured by AGILE/MCAL, but does not completely explain the short value measured by AstroSat/CZTI. 
 
-We conclude that from the prompt gamma-ray light curve alone it is not clear whether the GRB is a LGRB or a SGRB with temporally extended spectrally soft emission.
+§ RADIOLOGIST WORKFLOW MODELS
 
 
 
+We consider four radiologist workflow models:
 
+    
+  * Model A: The baseline model (N_rad = 1, f_em = 0, and μ_D = μ_ND)
+    
+  * Model B: Model A but with emergent patient images (N_rad = 1, f_em > 0, and μ_D = μ_ND)
+    
+  * Model C: Model B but with two radiologists  (N_rad = 2, f_em > 0, and μ_D = μ_ND)
+    
+  * Model D: Model B but with different reading rates for diseased and non-diseased images (N_rad = 1, f_em > 0, and μ_D ≠μ_ND)
 
 
+For each model, two calculations are performed: one assumes a without-CADt scenario, and the other assumes the use of a CADt device.
+Each scenario has a set of states that keeps track of the numbers of patient images in different priority classes.
+The transition rates among states form a stochastic Markov chain matrix, from which the matrix geometric method is applied to calculate the set of state probabilities <cit.> .
+For models involving multiple radiologists and priority classes, we apply the Recursive Dimensionality Reduction (RDR) method proposed by <cit.> to facilitate the calculation.
+Little's Law <cit.> is then applied to calculate the mean waiting time per patient image for each priority class involved.
 
 
 
 
 
 
+ §.§ Model A: Baseline model
 
 
+We start with a simple model with the absence of emergent patient images (f_em = 0), one radiologist on-site (N_rad = 1), and identical reading rates for diseased and non-diseased subgroups (μ_D = μ_ND).
 
 
 
+  §.§.§ Model A in without-CADt scenario
 
 
- §.§ X-rays
 
 
 
-Following the localisation by the Fermi/LAT,
-the X-Ray Telescope (XRT) aboard Swift initiated automated Target of Opportunity (ToO) observations of the field <cit.>. 
-A first visit was carried out between T+53.5 ks and  T+61.6 ks for a total exposure of 2.6 ks. This led to the identification of the X-ray afterglow at an enhanced position of RA, Dec (J2000) = 10:36:05.21 +57:12:59.1 with a 90% uncertainty radius of 2.7.
-Monitoring of the source continued until T + 5.3 d, when the X-ray afterglow fell below the XRT detection threshold. 
+First, we consider the without-CADt scenario.
+Given that f_em = 0, only one priority class (the non-emergent subgroup) exists, and the arrival rate λ is the arrival rate of non-emergent patient images λ_nonEm.
+When μ_D = μ_ND and with only 1 radiologist on-site, the effective reading rate for the non-emergent subgroup is μ_nonEm = μ_D = μ_ND.
+Hence, Model A turns into a classic M/M/1/FIFO queueing model <cit.>.
+Its transition diagram is shown in Figure <ref>, from which the state probability p_n is given by
 
-In our analysis, we use light curves and spectra from the UK Swift Science Data Centre (UKSSDC) on-line repository <cit.>. 
-The XRT light curve displays a simple power-law decline, t^-α with α=1.3±0.2.
-The time-averaged XRT spectrum, from T+53 ks to T+455 ks, is best described by an absorbed power-law with a photon index Γ=1.7±0.2 and hydrogen column density N_ H = 5.6× 10^19 cm^-2 fixed at the Galactic value. 
-Based on this model, the unabsorbed X-ray flux (0.3–10 keV) at 11 hrs is approximately 8×10^-13 erg cm^-2 s^-1, in agreement with the distribution of X-ray fluxes of bright SGRBs <cit.>.
+    p_n_nonEm = ρ_nonEm^n (1-ρ_nonEm),
 
-In order to characterise the afterglow temporal evolution at late times, we requested Director's Discretionary Time (DDT) observations with the Chandra X-ray Telescope. The target was observed with the ACIS-S3 camera, starting at 01:32:42 UTC on 2021 July 22 (T+14.25 d) for a total exposure of 19.8 ks (ObsID: 25093; PI: Troja). The Chandra data were processed using  4.12 with  Version 4.9.0. 
-At the afterglow position we detect 12 photons within a 1 extraction radius. 
-After correcting for PSF-losses, we derive a count rate of (6.6^+2.1_-1.7) × 10^-4 cts s^-1 in the 0.5-7.0 keV energy range.
-This translates to an unabsorbed X-ray flux of (1.3^+0.4_-0.3) × 10^-14 erg cm^-2 s^-1 in the 0.3-10 keV energy band using the best fit parameters derived from the Swift/XRT spectrum. 
-The combined Swift/Chandra light curve is best described by a power-law decay with α=1.26±0.04. 
+where n_nonEm denotes the number of non-emergent patient image in the system.
+From the state probability p_n_nonEm, the average waiting time per non-emergent patient image can be calculated by the following steps.
 
+  
+  * Calculate the average number of non-emergent patient images in the system, L, from the state probability p_n_nonEm. That is, L =⟨ p_n_nonEm⟩, where ⟨⟩ is the expectation operator.
+  
+  * Calculate the average response time per non-emergent patient image, W, via Little's Law i.e. W = L/λ_nonEm.
+  
+  * Calculate the average waiting time in the queue per non-emergent patient, W_q_nonEm.
+  Because W is the sum of W_q_nonEm and the mean radiologist's reading time T=1/μ_nonEm, we have W_q_nonEm  = W - 1/μ_nonEm.
 
+In summary, the average waiting time per non-emergent patient image W_q_nonEm in a without-CADt scenario is given by
 
+    W_q_nonEm = ⟨ p_n_nonEm⟩/λ_nonEm - 1/μ_nonEm.
 
- §.§ Optical and Infrared Photometry
 
 
 
+  §.§.§ Model A in with-CADt scenario
 
-We carried out an extensive campaign of follow-up observations using 
-the Deca-Degree Optical Transient Imager (DDOTI; ),
-the Large Monolithic Imager (LMI) on the 4.3-m Lowell Discovery Telescope (LDT; ), the Near Infra-red Imager (NIRI) and the Gemini Multi-Object Spectrographs (GMOS) instruments on the 8.1-m Gemini-North Telescope  <cit.>,  the Hyper Suprime-Cam (HSC) on the Subaru 8.2 m telescope <cit.>, and the Optical System for Imaging and low-Intermediate-Resolution Integrated Spectroscopy (OSIRIS) instrument on the 10.4-m Gran Telescopio de Canarias (GTC; ). 
-Table <ref> gives a log of the observations. 
 
-This dataset was supplemented by archival observations from the
-Hubble Space Telescope (HST) obtained with the Wide Field Camera 3 (WFC3), and 
-from the Canada-France-Hawaii Telescope (CFHT) obtained with MegaPrime/MegaCam during December 2004 (PI: Tanvir and Cowie) (observationID: G013.158.521+57.697) 
-and retrieved from the MegaPipe image stacking pipeline[https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/megapipe/access/graph.html]. 
 
+When a CADt-device is used with no emergent patient images (f_em = 0), two priority classes exist: an AI-positive, higher-priority class and an AI-negative, lower-priority class.
+The arrival rates of AI-positive and AI-negative classes depend on the CADt diagnostic performance.
 
-Data were processed following standard techniques for CCD data reduction (e.g., bias subtraction, flat-fielding, cosmic-ray rejection).  
-The Gemini images were reduced using the Gemini  package v1.14[https://www.gemini.edu/observing/phase-iii/understanding-and-processing-data/data-processing-software/gemini-iraf-general], whereas the GTC, LDT and Subaru images were reduced using custom Python-based software. The HST data were processed using standard procedures within the  package <cit.>. The final pixel scale was 0.09/pix for WFC3/IR (F105W and F160W filters) and 0.03/pix for the WFC3/UVIS data.
+    λ_+ = [πSe + (1-π)(1-Sp) ]λ,
 
 
+    λ_- = [π(1-Se) + (1-π)Sp]λ.
 
-We performed PSF photometry on the optical images using  <cit.>. To minimize systematic errors in the calibration, we calibrated all of the r and z photometry using the same six nearby Sloan Digital Sky Survey (SDSS) Data Release 12 (DR12) stars <cit.>. 
-In the nIR images from Gemini, only a weak signal is visible at the GRB position. We estimated its brightness by performing forced aperture photometry, calibrated against nearby Two Micron All-Sky Survey (2MASS; ) sources. Due to the low number of 
-2MASS sources within the NIRI field of view and their likely extended nature, a systematic error of 0.1 mag was added to the absolute calibration of the nIR photometry.  
+The state of a two-priority class system is defined by the number of AI-positive cases n_+ and that of AI-negative n_-.
+As shown in Figure <ref>, the exact transition diagram is infinite in both horizontal (n_-) and vertical (n_+) directions.
+With an assumed preemptive-resume priority scheduling, this 2D-infinity problem can be resolved using the Recursive Dimensionality Reduction (RDR) method <cit.>, in which the tangled two-priority-class system is broken down into two independent calculations, one for each priority class.
 
-We performed photometry of the two galaxies S1 and S2 (see Figure <ref>) in the late-epoch HST images using using  aperture photometry and the photometric zeropoints in the image headers. We will discuss the possibility of these galaxies being the host of the GRB in <ref>, but for the time being we will simply note that S1 is almost coincident with the GRB position and therefore our ground-based observations combine the flux of both the GRB counterpart and S1.
 
-Our photometry is shown in Table <ref> (with upper limits being 3σ) and Table <ref> and is plotted in Figure <ref>. All our magnitudes were converted to an AB scale and not corrected for Milky Way extinction, E(B-V) = 0.007 <cit.>. We also include additional measurements from the literature <cit.>. 
 
+First, we focus on the AI-positive, higher-priority system.
+Because of the preemptive-resume queueing discipline, the AI-positive subgroup is not affected by the AI-negative images at all and is, by itself, a classic M/M/1/FIFO queueing model.
+Therefore, to solve for the average waiting time per AI-positive patient image, one can reuse Figure <ref> and replace n_nonEm by n_+.
+The state probability for AI-positive patient images is modified based on Equation <ref>; 
 
+    p_n_+ = ρ_+^n_+ (1-ρ_+),
 
+where ρ_+ ≡λ_+/μ_+ is the traffic intensity for the AI-positive subgroup only.
+Following the steps in Equation <ref>, the average waiting time per AI-positive patient image W_q_+ is given by
 
+    W_q_+ = ⟨ p_n_+⟩/λ_+ - 1/μ_+.
 
 
+For the calculation of the AI-negative, lower-priority class, we cannot ignore the presence of AI-positive cases.
+However, with only one radiologist, no AI-negative patient image can exit the system when n_+ ≥ 1.
+As noted by <cit.>, there is no need to keep track of every state beyond n_+ ≥ 1.
+Hence, every column in Figure <ref> can be truncated such that all states beyond n_+ ≥ 1 are represented by (1^+, n_-).
+The RDR-truncated transition diagram is shown in Figure <ref>.
 
 
 
+Because of the truncation, the transition rate B from (1_+, n_-) to (0, n_-) no longer represents a simple exponential transition time distribution.
+In fact, the shape of this transition time distribution is often unknown but can be approximated to an Erlang-Coxian (EC) distribution.
+As shown in Figure <ref>, a general EC distribution consists of exactly two Coxian phases and N__EC-2 Erlang phases.
+For a given distribution of unknown shape, <cit.> provided closed-form solutions to calculate the first three moments of the unknown distribution and the six parameters in the EC distribution that best matches the first three moments. 
 
- §.§ Optical Spectroscopy
 
 
-Optical spectroscopy of the afterglow at T + 1.1 d was obtained by <cit.> 
+When applying the EC-approximation method to the RDR-truncated transition diagram in Figure <ref>, only the two-phase Coxian distribution is sufficient.
+No Erlang phases are needed; hence, p__EC, N__EC, and λ_Y_EC in Figure <ref> are 1, 2, and 0 respectively.
+The non-exponential transition B can then be explicitly expressed in terms of the approximated exponential transition rates t's as shown in Figure <ref>, where
+
+    t_1     = (1-p_X_EC)λ_X1_EC; 
+    t_12 = p_X_ECλ_X1_EC; 
+    t_2 = λ_X2_EC.
+
+
+
+
+Figure <ref> is a typical Markov chain transition diagram, and its transition rate matrix M_A can be formed (see Section <ref> in Electronic Companions).
+Using the matrix geometric method, an analysis method for quasi-birth–death processes where the Markov chain matrix has a repetitive block structure <cit.>, the state probability p_n_- is computed.
+Hence, the average waiting time per AI-negative, low-priority patient image, W_q_-, can be calculated;
+
+    W_q_- = ⟨ p_n_-⟩/λ_- - 1/μ_-.
+
+
+
+
+
+
+
+ §.§ Model B: Model A with emergent patient images
+
+
+
+Model B is similar to Model A but with the presence of emergent patient images (f_em > 0).
+These emergent images are prioritized to the highest priority regardless of the presence of CADt devices.
+Although the waiting time of the emergent subgroup can be studied, this work only focuses on the non-emergent, AI-positive, and AI-negative subgroups which are impacted by the CADt device.
+
+
+
+  §.§.§ Model B in without-CADt scenario
+
+
+
+In the standard of care without a CADt device, the presence of emergent class results in a two-priority-class queueing system: emergent and non-emergent classes.
+For the emergent subgroup, μ_em denotes its radiologist's reading rate, and its arrival rate is given by
+
+    λ_em = f_emλ.
+
+The arrival rate for the non-emergent class is 
+
+    λ_nonEm = (1-f_em)λ.
+
+Similar to Model A, because μ_D = μ_ND and N_rad = 1, the effective reading rate for the non-emergent subgroup is μ_nonEm =μ_D = μ_ND.
+
+With only one radiologist on-site, the analysis of non-emergent, lower-priority class is exactly the same as that of the AI-negative class in Model A in the with-CADt scenario.
+Figure <ref> (and Equation <ref> in Electronic Companions) can be reused by replacing λ_+ with λ_em, λ_- with λ_nonEm, μ_+ with μ_em, and μ_- with μ_nonEm.
+After solving for the state probability p_n_nonEm, the average waiting time per non-emergent patient image is given by Equation <ref>.
+
+
+
+  §.§.§ Model B in with-CADt scenario
+
+
+
+When a CADt is included in the workflow, three priority classes exist: emergent (highest priority), AI-positive (middle priority), and AI-negative (lowest priority) classes.
+With the presence of emergent patients, the arrival rates of AI-positive and AI-negative classes are now
+
+    λ_+ = [πSe + (1-π)(1-Sp) ](1-f_em)λ, and
+
+
+    λ_- = [π(1-Se) + (1-π)Sp](1-f_em)λ.
+
+Their reading rates are given by Equations <ref> and <ref>.
+However, because μ_D = μ_ND, the reading rates for the AI-positive and AI-negative subgroups are the same; μ_+ = μ_- = μ_D = μ_ND.
+Similar to Model A in with-CADt scenario, we apply the RDR method and solve for the AI-positive and AI-negative systems separately.
+
+For the AI-positive subgroup, it is noted that an AI-positive patient image can only be interrupted by emergent patient images and will not be impacted by any AI-negative patient images.
+Therefore, the emergent and AI-positive subgroups form a two-priority-class queueing system which can be solved using the framework developed for the non-emergent subgroup in the without-CADt scenario.
+Figure <ref> (and Equation <ref> in Electronic Companions) can be reused by replacing λ_+ with λ_em, λ_- with λ_+, μ_+ with μ_em, and μ_- with μ_+.
+The state probability p_n_+ for the AI-positive subgroup is calculated, from which the average waiting time per AI-positive patient image is given by Equation <ref>.
+
+The calculation for the AI-negative, lowest-priority subgroup involves states (n_em, n_+, n_-) defined by the number of emergent, AI-positive, and AI-negative patient images in the system.
+An AI-negative patient image can be interrupted by either an emergent or an AI-positive patient image.
+The arrival time of the interrupting case denotes the start of a busy period, which is defined as the time period during which a radiologist is too busy for AI-negative cases.
+While the radiologist is reading the interrupting case, new emergent and/or AI positive images may enter the system, which further delays the review of the interrupted AI-negative case.
+Once all the higher-priority images are reviewed, the radiologist then resumes the reading of the interrupted AI-negative patient image, and the busy period ends.
+
+
+
+Due to the different arrival and reading rates between the emergent and AI-positive patient images, the dependence of AI-negative busy period on the two subgroups are different.
+As <cit.> discussed, one must keep track of the state at which the busy period starts and the state at which the busy period ends.
+With only one radiologist, Model B has only two distinct busy periods:
+
+    
+  * B_1: (0, 1^+, n_-) → (0, 0, n_-)
+    
+  * B_2: (1^+, 0, n_-) → (0, 0, n_-)
+
+Here, B_1 and B_2 are the rates of the two busy periods and are explicitly shown as two non-exponential transitions in Figure <ref>.
+
+Just like the AI-negative system in Model A, one must first calculate the first three moments for each busy period and approximate each distribution using a two-phase Coxian distribution.
+With three priority classes and two busy periods, the approximation involves the inter-level passage times from the AI-positive transition diagram, from which a transition probability matrix as well as the transition rate matrix are determined (see M_B in Section <ref>).
+From transition rate matrix, the state probability p_n_- can be solved via conventional matrix geometric method.
+Once p_n_- is determined, the average waiting time per AI-negative patient image W_q_- can be calculated via Equation <ref>.
+
+
+
+
+
+
+ §.§ Model C: Model B with two radiologists
+
+
+
+Model C extends Model B by adding one extra radiologist on-site N_rad = 2.
+The arrival rates for the emergent, non-emergent, AI-positive, and AI-negative classes remain the same (Equations <ref> - <ref>).
+Because μ_D = μ_ND, the reading rates for the non-emergent, AI-positive, and AI-negative subgroups are the same; μ_+ = μ_- = μ_nonEm.
+Because of the extra radiologist, the traffic intensity ρ has a factor of two; ρ=λ/2μ.
+It should be noted that Model C has the same settings as the example in <cit.>.
+
+
+
+  §.§.§ Model C in without-CADt scenario
+
+
+
+
+
+With no CADt devices, the RDR-truncated transition diagram for the non-emergent, lower-priority class is given by Figure <ref>.
+Given two radiologists on-site, a non-emergent image can depart the system only when n_em < 2, and hence the truncation of states starts when n_em = 2.
+Moreover, when n_em = 0, both radiologists are available for non-emergent patient images.
+Thus, the first row has a leaving rate 2μ_nonEm, except the transition from (0, 1) to (0, 0) when only one radiologist has work to do.
+When n_em = 1 (the second row), only one of the two radiologists is available to review a non-emergent case, resulting in a leaving rate of 1μ_nonEm.
+When n_em≥ 2, both radiologists are busy handling emergent cases.
+Since no radiologist is available for non-emergent images, their leaving rate is 0, and no non-emergent images can leave the system.
+To approximate the transition rate B in Figure <ref>, the same two-phase Coxian approximation described in Models A and B is applied.
+
+The transition rate matrix M_C_noCADt for Figure <ref> can be found in Section <ref>.
+From M_C_noCADt, the state probability p_n_nonEm is determined, and the average waiting time per non-emergent patient image is given by Equation <ref>.
+
+
+
+  §.§.§ Model C in with-CADt scenario
+
+
+
+In the with-CADt scenario, the calculations for AI-positive (middle-priority) and AI-negative (lowest-priority) subgroups are separated.
+
+The queueing system for the AI-positive subgroup consists of two priority classes: the emergent and AI-positive classes, and the framework developed for the non-emergent subgroup in the without-CADt scenario can be reused.
+By replacing λ_nonEm with λ_+ and μ_nonEm with μ_+ in Figure <ref> and Equation <ref>, the state probability for the AI-positive subgroup p_n_+ can be computed.
+And the average waiting time per AI-positive patient image W_q_+ is given by Equation <ref>.
+
+
+
+The approach to analyze the AI-negative, lowest-priority subgroup is similar to the analysis of the AI-negative cases in Model B.
+Recall that a state is defined as (n_em, n_+, n_-) and that a busy period is defined by the time duration in which all the radiologists on-site are too busy for AI-negative patient images.
+With two radiologists, a busy period may start from one of the three situations: when there are two emergent cases, when there are one emergent and one AI-positive case, or when there are two AI-positive cases.
+On the other hand, the busy period ends when one radiologist is handling either an emergent case or an AI-positive case such that the other radiologist is available for the AI-negative case.
+Therefore, instead of two busy periods in Model B, adding one extra radiologist increases the total number of busy periods to six:
+
+    
+  * B_1: (0, 2^+, n_-) → (0, 1^+, n_-)
+    
+  * B_2: (0, 2^+, n_-) → (1^+, 0, n_-)
+    
+  * B_3: (1^+, 1^+, n_-) → (0, 1^+, n_-)
+    
+  * B_4: (1^+, 1^+, n_-) → (1^+, 0, n_-)
+    
+  * B_5: (2^+, 0, n_-) → (0, 1^+, n_-)
+    
+  * B_6: (2^+, 0, n_-) → (1^+, 0, n_-)
+
+
+Figure <ref> shows the RDR-truncated transition diagram for AI-negative subgroup.
+Note that states (0, 2^+, n_-), (1^+, 1^+, n_-), and (2^+, 0, n_-) are duplicated because their corresponding arrival rates also depends on the probabilities that the busy period ends at a particular state i.e. either (0, 1^+, n_-) or (1^+, 0, n_-). 
+For example, p_1 denotes the conditional probability that the busy period ends at (0, 1^+, n_-) given that it starts at (0, 2^+, n_-).
+
+Before solving for Figure <ref>, one must compute the conditional probability and the first three moments of each busy period, from which the transition rates can be approximated.
+The calculation is discussed in Section <ref>, where the AI-positive transition diagram for inter-level passage times is presented, and the transition probability matrix is constructed.
+
+Each busy period is approximated using the EC distribution (Figure <ref>).
+However, unlike Model B in which two-phase Coxian is sufficient for all busy periods, B_2 and B_5 in Model C require an extra Erlang phase, as shown in Figure <ref>.
+With an extra phase, two extra parameters t_0 and t_01 are needed to approximate B_2 and B_5.
+
+    t_0     = (1-p__EC)λ_Y_EC; 
+    t_01 = p__ECλ_Y_EC; 
+    
+    t_1     = (1-p_X_EC)λ_X1_EC;  
+    t_12 = p_X_ECλ_X1_EC; 
+    t_2 = λ_X2.
+
+
+
+
+Once all six busy periods are approximated, the transition rate matrix for the AI-negative, lowest-priority class can be constructed from Figure <ref>. (See Section <ref>.)
+Like before, the corresponding state probability p_n_- can be solved by the matrix geometric method.
+And, the average waiting time per AI-negative patient image W_q_- can be calculated via Equation <ref>.
+
+For N_rad≥ 3, the same approach can be applied.
+However, as the number of busy periods increases, the transition rate matrix will grow in size drastically, especially when more Erlang phases are required for the busy period approximation.
+
+
+
+
+
+
+ §.§ Model D: Model B with different reading rates
+
+
+Model D extends Model B by differentiating the radiologist's reading rate between the diseased and non-diseased subgroups (N_rad = 1, f_em > 0, and μ_D ≠μ_ND).
+The arrival rates for the emergent, non-emergent, AI-positive, and AI-negative classes remain the same (Equations <ref> - <ref>).
+However, because μ_D ≠μ_ND, the reading rates for non-emergent, AI-positive, and AI-negative subgroups depend on disease prevalence π, positive predictive value PPV, and negative predictive value NPV (Equations <ref>-<ref>).
+
+
+
+  §.§.§ Model D in without-CADt scenario
+
+
+
+  
+
+The without-CADt scenario has two priority classes: emergent and non-emergent patient images.
+Within the non-emergent class, two groups of patient images (diseased and non-diseased) are reviewed in a first-in-first-out (FIFO) basis.
+The corresponding transition diagram is shown in Figure <ref>.
+As usual, the state keeps track of n_em and n_nonEm.
+In addition, because of the different reading rates between the diseased and non-diseased subgroups, the state must also keep track of the disease status of the image that the radiologist is reviewing.
+Therefore, the state is defined as (n_em, n_nonEm, i), where i is either D (i.e. the radiologist is working on a diseased image) or ND (i.e. the radiologist is working on a non-diseased image).
+Furthermore, one must pay attention to how the busy period starts and ends.
+For example, if the radiologist reading a diseased image is interrupted by the arrival of an emergent image i.e. (0, n, D) → (1^+, n, D), the state must go back to (0, n, D) and not to (0, n, ND) when the busy period is over.
+This property is guaranteed by having two sets of truncated states: (1^+, n)_→ D that can only interact with (0, n, D) and (1^+, n)_→ ND that can only interact with (0, n, ND).
+
+The corresponding transition rate matrix of Figure <ref> is given in Section <ref>. 
+Note that, although Figure <ref> has two busy periods per column (one for “→ D” and the other for “→ ND”), they both describe the same transition time when at least one emergent image is in the system.
+Therefore, only one unique set of t-parameters is calculated to approximate both busy periods.
+
+
+
+  §.§.§ Model D in with-CADt scenario
+
+
+
+The calculation for AI-positive (middle-priority) and AI-negative (lowest-priority) subgroups are separated. 
+
+Because AI-positive patient images are not impacted by AI-negative cases, the emergent and AI-positive subgroups form a two-priority-class queueing system.
+The transition rate matrix M_D_noCADt from Figure <ref> can be reused to analyze the queueing of AI-positive patient images.
+By replacing λ_nonEm by λ_+ (Equation <ref>), μ_nonEm by μ_+ (Equation <ref>), and π by PPV, the state probability for the AI-positive subgroup p_n_+ is calculated via standard matrix geometric method.
+The average waiting time per AI-positive patient image W_q_+ is then given by Equation <ref>.
+
+  
+
+For the AI-negative, lowest-priority class, the full definition of state (n_em, n_+, i, n_-, j).
+i is either D or ND, indicating whether the radiologist is working on a diseased, AI-positive case or a non-diseased, AI-positive case respectively.
+The disease status of an AI-negative case that the radiologist is reading is represented by the j which is either D or ND.
+Because we only have one radiologist, i and j cannot appear simultaneously; the one radiologist can only handle an AI-positive or AI-negative case but not both at the same time.
+
+Figure <ref> shows the RDR-truncated transition diagram for the AI-negative subgroup.
+There are three unique busy periods with the corresponding transition rates B_i:
+
+    
+  * B_1: (1^+, 0, n_-) → (0, 0, n_-, j)
+    
+  * B_2: (0, 1^+, D, n_-) → (0, 0, n_-, j)
+    
+  * B_3: (0, 1^+, ND, n_-) → (0, 0, n_-, j)
+
+For each busy period, the truncated state is duplicated with either “→ D" or “→ ND" such that the system can return to the state with the correct disease status j when the busy period is over.
+
+Like before, for each unique busy period, its conditional probability and first three moments are determined from the transition probability matrix (see Section <ref>).
+And, each unique busy period has a set of t-parameters (Equation <ref>) approximated from a two-phase Coxian distribution.
+With the approximated busy period transitions, a transition rate matrix can be constructed for the AI-negative subgroup from Figure <ref> (see Section <ref>).
+The state probability p_n_- is then solved, and the average waiting time per AI-negative patient image W_q_- can be calculated via Equation <ref>.
+
+
+
+
+
+
+§ SIMULATION
+
+
+
+To verify the analytical results from our theoretical queueing approach, a Monte Carlo software was developed using Python to simulate the flow of patient images in a clinic with and without a CADt device.
+A workflow model is defined by a set of input parameters {f_em, π, ρ, μ, N_rad, Se, and Sp}.
+
+During the simulation, a new patient image entry is randomly generated with a timestamp that follows a Poisson distribution at an overall arrival rate of λ, which is computed from the user-inputs (traffic ρ and radiologist's reading rates μ).
+Each patient image is randomly assigned with an emergency status (emergent or non-emergent) based on the input emergency fraction f_em.
+If the patient image is emergent, a reading time is randomly generated from an exponential distribution with a reading rate of μ_em.
+If the patient image is non-emergent, a disease status (diseased or non-diseased) is randomly assigned based on the input disease prevalence π.
+The reading time for this non-emergent patient image is also randomly drawn from an exponential distribution with a reading rate of either μ_D if it is diseased or μ_ND if it is non-diseased.
+Each non-emergent patient image is also assigned with an AI-call status (positive or negative) based on its disease status and the input AI accuracy (Se and Sp).
+The patient image is then simultaneously placed into two worlds: one with a CADt device and one without.
+
+In a without-CADt world, the incoming patient image is either a higher-priority case (if it is emergent) or a lower-priority case (if non-emergent).
+If the patient image is emergent, the case is prioritized over all non-emergent patient images in the system and is placed at the end of the emergent-only queue.
+Otherwise, the patient image is non-emergent and is placed at the end of the current reading queue.
+In time, when its turn comes, this patient image is read by one of the radiologists and is then removed from the queue.
+Two pieces of information are recorded for this simulated patient image.
+One is its waiting time defined as the difference between the time when the image enters the queue and when it leaves the queue.
+In addition, the number of emergent and non-emergent patient images in the queue right before the arrival of the new patient image are also recorded to study the state probability distribution.
+
+Alternatively, this very same patient image is placed in the with-CADt world.
+This image has either a high priority (if emergent), a middle priority (if AI-positive), or a low priority (if AI-negative).
+If the patient image is emergent, the case is prioritized over all AI-positive and AI-negative patient images in the system and is placed at the end of the emergent-only queue.
+If the patient image is AI-positive, the case is prioritized over all AI-negative images and is placed at the end of the queue consisting of only emergent and AI-positive patient images.
+Otherwise, the patient image is AI-negative and is placed at the end of the current reading queue.
+The reading time for this patient image in the with-CADt world is identical to its reading time in the without-CADt world.
+However, due to the re-ordering by the CADt device, its waiting time in the with-CADt world may be different from that in the without-CADt world.
+For every patient image, the difference between the two waiting times in the two worlds can be calculated to determine whether the use of the CADt device results in a time-saving or time delay for this image.
+In addition to its waiting time, the number of emergent, AI-positive, and AI-negative patient images right before the arrival of the new patient image are also recorded.
+
+To simulate a big enough sample size, a full simulation includes 200 simulations, each of which contains roughly 2,000 patients.
+From all simulations, the waiting times from all diseased patient images are histogrammed from which the mean value and the 95% confidence intervals are determined.
+
+
+
+
+
+
+
+§ TIME-SAVING EFFECTIVENESS EVALUATION METRIC
+
+
+
+We define a metric to quantitatively assess the time-saving effectiveness of a given CADt device.
+Both theoretical and simulation approaches output the mean waiting time per diseased patient image W_D in both with- and without-CADt scenarios.
+
+Without a CADt device, since the arrival process is random, the average waiting time per non-emergent patient image W^no-CADt_nonEm is the same as W^no-CADt_D i.e. 
+
+    W^no-CADt_D = W^no-CADt_nonEm = W_q_nonEm.
+
+When a CADt device is included in the workflow, the average waiting time per diseased and non-diseased patient images are no longer the same because the diseased images are more likely to be prioritized by the CADt. 
+To calculate W^CADt_D, we first compute the average waiting time per AI-positive (W^CADt_+ = W_q_+) and per AI-negative (W^CADt_- = W_q_-) patient image based on the mathematical frameworks discussed in Section <ref>.
+By definition, the average waiting time for the diseased subgroup W^CADt_D is 
+
+    W^CADt_D≡Total waiting time from all diseased patient images/Number of diseased patient images.
+
+Note that the total waiting time from all diseased patients is the sum of the total waiting time from the true-positive (TP) subgroup and that from the false-negative (FN) subgroup.
+Let N_TP, N_FN, and N_D be the number of TP patient images, that of FN patient images, and that of diseased images.
+W^CADt_D can be rewritten as
+
+    W^CADt_D = W^CADt_+× N_TP + W^CADt_-× N_FN/N_D.
+
+Because N_TP/N_D and N_FN/N_D are, by definition, Se and 1-Se, we have
+
+    W^CADt_D = W^CADt_+×Se + W^CADt_-× (1-Se).
+    
+
+To quantify the time-saving effectiveness of a CADt device for diseased patient images, we define a time performance metric δ W_D as the difference in mean waiting time per diseased image in the with-CADt and that in the without-CADt scenario:
+
+    δ W_D≡ W^CADt_D - W^no-CADt_D.
+
+It should be noted that, besides the explicit dependence on AI sensitivity in Equation <ref>, δ W_D also depends on AI specificity and all the clinical factors in the calculation of W^CADt_+, W^CADt_-, and W^no-CADt_nonEm.
+
+Based on its definition, a negative δ W_D implies that, on average, a diseased patient image is reviewed earlier when the CADt device is included in the workflow than when it is not.
+The more negative δ W_D is, the more time is saved, and the more effective the CADt device is.
+If δ W_D = 0, the presence of CADt device does not bring any benefit for the diseased patient images.
+If δ W_D is positive, the review of a diseased patient image is delayed on average, and the CADt device brings more risks than benefits to the diseased subgroup.
+
+It should also be noted that the amount of time savings for other subgroups can be defined similarly.
+For example, for the non-diseased subgroup, the average waiting time per non-diseased patient image in the without-CADt scenario, W^no-CADt_ND, is 
+
+    W^no-CADt_ND = W^no-CADt_nonEm.
+
+When the CADt device is included in the workflow, the average waiting time per non-diseased patient image, W^CADt_ND, becomes 
+
+    W^CADt_ND = W^CADt_+× (1-Sp) + W^CADt_-×Sp,
+
+where the first and second terms correspond to the false-positive and true-negative subgroups respectively.
+δ W_ND can then be defined to describe the average wait-time difference between the with-CADt and without-CADt scenarios for the non-diseased subgroup.
+
+
+
+
+
+
+§ RESULTS AND DISCUSSION
+
+
+
+Top plot in Figure <ref> shows the time saved per diseased patient images as a function of traffic intensity ρ for one and two radiologists on-site without any emergent patient images.
+Assuming a disease prevalence π of 10%, an AI sensitivity of 95%, a specificity of 89%, an average image reading time of 10 minutes for both diseased and non-diseased subgroups, and one radiologist on-site, the time saving is significantly improved from about 2 minutes in a quiet, low-volume clinic (radiology traffic intensity of 0.3) to about an hour in a relatively busy clinic (radiology traffic intensity of 0.8).
+At a traffic intensity ρ of 0.8, the impact due to disease prevalence is found to be small (see middle plot in Figure <ref>).
+Overall, the time-saving effectiveness of the device is also found to be more evident with only one radiologist on-site compared to two.
+Bottom plot in Figure <ref> shows the impact on the time-saving effectiveness due to the presence of emergent patient images with the highest priority that overrides any AI prioritization.
+The amount of time saved per diseased image without any emergent patients (f_em = 0) is more-or-less the same as that with f_em = 50%.
+This is likely because the amount of delay caused by emergent patient images in a without-CADt scenario is similar to that in the with-CADt scenario.
+
+  
+
+  
+
+The effect of having different radiologist's reading rates for diseased and non-diseased subgroups are shown in Figure <ref>.
+The overall dependence on traffic intensity, disease prevalence, and emergency fraction is similar to that in Figure <ref>.
+However, more time is saved for diseased patient images when μ_D < μ_ND i.e. when a radiologist takes more time on average to read a non-diseased image than a diseased image.
+
+For the purpose of evaluating a CADt device, we propose a summary plot as shown in Figure <ref> based on Model B, describing both the diagnostic and time-saving effectiveness of a CADt device.
+This plot is built upon a traditional receiver operating characteristic (ROC) analysis <cit.>, in which the ROC curve characterizes the diagnostic performance of the CADt device.
+For a given radiologist workflow defined by a set of parameters, every point of False-Positive Rate (FPR) and True-Positive Rate (TPR) in the ROC space has an expected mean time savings per diseased patient image, δ W_D, which is presented by the color map.
+The device diagnostic performance is near ideal in the top left corner of the ROC space, where δ W_D is the most negative.
+
+  
+
+To show the time-saving effectiveness of a CADt device, δ W_D along the ROC curve is plotted as a function of FPR (top) and TPR (left).
+At (FPR, TPR) = (0, 0), δ W_D is 0 minute because all images are classified as AI-negative i.e. no images are prioritized.
+As both FPR and TPR increase along the ROC curve, the amount of time savings |δ W_D| increases since most AI-positive cases are truly diseased patient images.
+As FPR and TPR continue to increase, the number of false-positive cases becomes dominant, reducing the device’s time-saving effectiveness.
+When (FPR, TPR) = (1, 1), δ W_D goes back to 0 because all images are classified as AI-positive, and the system essentially has no priority classes. 
+
+The mean time-savings for diseased patient images δ W_D can be directly linked to potential patient outcome.
+For example, if our disease of interest is large vessel occlusion (LVO) stroke, δ W_D color axis on the right side of Figure <ref> can be translated to three stroke patient outcome metrics.
+According to Table 12 in Supplementary Content (Supplementary 2) of <cit.>, for every 15 minutes sooner that a patient is treated, 3.9% of stroke patients resulted in less disability.
+This can be translated to the two other common LVO stroke patient outcome metrics - the number of patients needed to treat for benefit (NNTB) and the number of minutes faster needed to treat (MNT).
+The relationships between δ W_D and LVO stroke patient outcome metrics are extrapolated linearly and shown in the three axes on the right side of Figure <ref>.
+As a result, the optimal δ W_D along the ROC curve is roughly -40 minutes, which corresponds to approximately 11% increase in LVO stroke patients with less disability, more than 9 NNTB, and more than 1.4 MNT.  Remember that these results depend on our assumed reading rates and traffic intensity.  In the future we expect to gather clinical data to make more accurate estimates of reading rates, traffic intensity, and wait-time savings.
+
+Based on our queueing approach, the time-saving effectiveness of a CADt device depends largely on the clinical settings.
+Our model suggests that CADt devices with a typical AI diagnostic performance (95% sensitivity and 89% specificity) are most effective in a busy, short-staffed clinic.
+All theoretical predictions agree with simulation results well within the 95% confidence intervals.
+All software used in making the theoretical calculations and the simulations in this paper will be made available on the Github site for the FDA's Division of Imaging, Diagnostics, and Software Reliability, https://github.com/DIDSR/QuCAD.
+
+In this work where only one disease is considered, the CADt device is trained to identify the disease, and a patient image can either be diseased or non-diseased.
+Under this consideration, when evaluating the time-saving effectiveness of the CADt, δ W_D is used as the performance metric because the CADt device is intended to benefit diseased patients with time critical conditions.
+In the future, when we expand our work to a reading queue that consists of patient images with two or more diseases, a new performance matric will be defined to take into account other time-critical diseases that the CADt does not look for.
+
+
+
+
+
+
+§ CONCLUSION
+
+
+
+We present a mathematical framework based on queueing theory and the Recursive Dimensionality Reduction method to quantify the time-saving effectiveness of an AI-based medical device that prioritizes patient images based on its binary classification outputs.
+Several models are developed to theoretically predict the wait-time-saving effectiveness of such a device as a function of various parameters, including disease prevalence, patient arrival rate, radiologist reading rate, number of radiologists on-site, AI sensitivity and specificity, as well as the presence of emergent patient images with the highest priority that overrides any AI prioritization.
+The methodology proposed in this paper helps evaluate the time-saving performance of a CADt or any prioritization device.
+The models presented here could also be used to evaluate discrimination algorithms in many other queueing contexts, such as serving customers or computer job queueing.
+In the near future, we plan on expanding our model to clinical scenarios of multiple disease conditions, modalities, and anatomies with several CADt devices being used simultaneously.
+
+
+
+
+
+
+§ ACKNOWLEDGMENTS
+
+
+The authors would like to thank Dr. Mor Harchol-Balter (harchol@cs.cmu.edu) and Dr. Takayuki Osogami (OSOGAMI@jp.ibm.com) for helping us understand their Recursive Dimensionality Reduction (RDR) method for complex queueing systems. In addition, the authors acknowledge funding from the Critical Path Program of the Center for Devices and Radiological Health. The authors also acknowledge funding by appointments to the Research Participation Program at the Center for Devices and Radiological Health administered by the Oak Ridge Institute for Science and Education through an interagency agreement between the U.S. Department of Energy and the U.S. Food and Drug Administration (FDA).
+
+
+
+
+
+
+
+§ MARKOV CHAIN MATRICES
+
+This appendix section provides the matrices involved for each of the four radiologist workflow models discussed in Section <ref>. 
+
+
+
+ §.§ Model A in with-CADt scenario
+
+
+
+Markov chain transition rate matrix M_A is built upon Figure <ref>. 
+
+
+    M_A = 
+     [
+        [ B_00 B_01               ; B_10  A_1  A_2     ;       A_0  A_1  A_2;            A_0  A_1    ⋱;                   ⋱    ⋱;      ]],
+
+where 
+
+    A_0    = [ μ_-   0   0;   0   0   0;   0   0   0 ], 
+     A_1 = [    *  λ_+    0;  t_1    * t_12;  t_2    0    * ], 
+    
+    
+     A_2    =  [ λ_-   0   0;   0 λ_-   0;   0   0 λ_- ], 
+    
+    
+     B_01   = [ λ_-   0   0;   0 λ_-   0;   0   0 λ_- ], 
+     B_00 = [    *  λ_+    0;  t_1    * t_12;  t_2    0    * ], 
+    
+    
+     B_10   =  [ μ_-   0   0;   0   0   0;   0   0   0 ].
+
+
+M_A had a tri-diagonal block structure defined by sub-matrices As and Bs, in which *'s are the negative of the sum of all elements in the corresponding row.
+B_00, B_01, and B_10 are block matrices representing the boundary condition at the state of n_- = 0; states with n_- < 0 are forbidden because the reading queue cannot have a negative number for AI-negative patient images.
+A_0, A_1, and A_2 are repetitive block structures that iterate along the diagonal axis of the matrix.
+
+
+
+ §.§ Model B in with-CADt scenario
+
+
+
+This scenario has two busy periods (B_1 and B_2).
+For each busy period, we first calculate its first three moments of the inter-level passage times using Figure <ref>.
+The states at which the two AI-negative busy periods start and end are highlighted.
+For instance, B_1 is the time period starting from (0, 1) in red and ending at (0, 0) in blue, regardless of any intermediate states that the system may go through.
+The steps involved to calculate the first three moments are documented in Appendix A of <cit.>.
+
+
+
+Based on Figure <ref>, the transition probability matrix P_B is given below.
+
+    P_B = 
+     [
+        [ ℒ_1 ℱ_1        ; ℬ_2 ℒ_2 ℱ_2    ;     ℬ_3 ℒ_3 ℱ_3    ;         ℬ_4 ℒ_4   ⋱;               ⋱   ⋱;     ]],
+
+where 
+
+    ℬ_ℓ=2   = [ μ_+/λ_em+λ_++μ_+; t_1/λ_++t_1+t_12;      t_2/λ_++t_2;                  ], 
+    
+    ℬ_ℓ≥ 3   = [ μ_+/λ_em+λ_++μ_+                0                0; t_1/λ_++t_1+t_12                0                0;      t_2/λ_++t_2                0                0;                  ], 
+    
+    ℒ_ℓ=1   = [ 0 ], ℒ_ℓ≥ 2 = [                 0                 0                 0;                 0                 0 t_12/λ_++t_1+t_12;                 0                 0                 0;                   ], 
+     
+    
+    ℱ_ℓ=1   = [  λ_+/λ_+ + λ_em λ_em/λ_+ + λ_em               0 ], 
+     
+    
+    ℱ_ℓ≥ 2   = [  λ_+/λ_+ + λ_em+μ_+ λ_em/λ_+ + λ_em+μ_+                   0;                   0   λ_+/λ_+ +t_1+t_12                   0;                   0                   0        λ_+/λ_+ +t_2;                     ].
+
+Here, the t-parameters are the approximated exponential rates from the transition B in Figure <ref>.
+With ℱ, ℒ, and ℬ, <cit.> provide the framework to obtain the G matrix, which contains the probabilities of the busy periods involved, and the Z_r matrices, which have the r-th moments of the busy periods.
+For the AI-negative priority class in Model B, the Z_r matrix has a dimension of 3×1, where the first and second elements are the r-th moments of B_1 and B_2 respectively.
+For each of the two busy periods, a two-phase Coxian distribution can be used to approximate the distribution shape using Equation <ref>.
+
+Let t^(1)_1, t^(1)_12, and t^(1)_2 be the approximated rates for B_1, and t^(2)_1, t^(2)_12, and t^(2)_2 be the approximated rates for B_2.
+The transition rate matrix M_B for Figure <ref> is given below.
+
+    M_B = 
+     [
+        [ B_00 B_01     ; B_10  A_1  A_2     ;       A_0  A_1    ⋱;            A_0    ⋱;                   ⋱;      ]],
+
+where 
+
+    A_0    = [ μ_-   0   0   0   0;   0   0   0   0   0;   0   0   0   0   0;   0   0   0   0   0 ], 
+     
+    
+    
+     A_1    = [        *      λ_+        0     λ_em        0;  t^(1)_1        * t^(1)_12        0        0;  t^(1)_2        0        *        0        0;  t^(2)_1        0        0        * t^(2)_12;  t^(2)_2        0        0        0        *;          ],
+    
+    
+    
+     A_2    = [ λ_-   0   0   0   0;   0 λ_-   0   0   0;   0   0 λ_-   0   0;   0   0   0 λ_-   0;   0   0   0   0 λ_-;     ], 
+    
+    
+     B_00   = [        *      λ_+        0     λ_em        0;  t^(1)_1        * t^(1)_12        0        0;  t^(1)_2        0        *        0        0;  t^(2)_1        0        0        * t^(2)_12;  t^(2)_2        0        0        0        *;          ], 
+    
+    
+     B_01   = [ λ_-   0   0   0   0;   0 λ_-   0   0   0;   0   0 λ_-   0   0;   0   0   0 λ_-   0;   0   0   0   0 λ_-;     ], 
+    
+    
+     B_10   = [ μ_-   0   0   0   0;   0   0   0   0   0;   0   0   0   0   0;   0   0   0   0   0 ].
+
+
+The sub-matrices in M_B are very similar to that in M_A (Equations <ref> and <ref>).
+The one difference is that these sub-matrices are now 5×5 instead of 3×3 due to the extra row of truncated states in Figure <ref> compared to Figure <ref>.
+
+
+
+ §.§ Model C in without-CADt scenario
+
+
+
+The transition rate matrix M_C_noCADt is built upon Figure <ref>.
+
+    M_C_noCADt = 
+     [
+        [ B_00 B_01               ; B_10  A_1  A_2     ;       A_0  A_1  A_2     ;            A_0  A_1    ⋱;                   ⋱    ⋱;      ]],
+
+where 
+
+    A_0    = [ 2μ_nonEm        0        0        0;        0  μ_nonEm        0        0;        0        0        0        0;        0        0        0        0 ], 
+    
+    
+     A_1    = [    * λ_em    0    0; μ_em    * λ_em    0;    0  t_1    * t_12;    0  t_2    0    * ], 
+    
+    
+     A_2    = [ λ_nonEm       0       0       0;       0 λ_nonEm       0       0;       0       0 λ_nonEm       0;       0       0       0 λ_nonEm ],
+
+
+
+    B_00   = 0.7[     [cccc:cccc]
+          *                    λ_em                       0                       0                 λ_nonEm                       0                       0                       0;                     μ_+                       *                    λ_em                       0                       0                 λ_nonEm                       0                       0;                       0                     t_1                       *                    t_12                       0                       0                 λ_nonEm                       0;                       0                     t_2                       0                       *                       0                       0                       0                 λ_nonEm; [2pt/2pt]
+          μ_nonEm                       0                       0                       0                       *                    λ_em                       0                       0;                       0                 μ_nonEm                       0                       0                       μ                       *                    λ_em                       0;                       0                       0                       0                       0                       0                     t_1                       *                    t_12;                       0                       0                       0                       0                       0                     t_2                       0                       *;                         ], 
+    
+    
+     B_01   =  0.8[                       0                       0                       0                       0;                       0                       0                       0                       0;                       0                       0                       0                       0;                       0                       0                       0                       0; [2pt/2pt]
+          λ_nonEm                       0                       0                       0;                       0                 λ_nonEm                       0                       0;                       0                       0                 λ_nonEm                       0;                       0                       0                       0                 λ_nonEm;                         ], 
+    
+    
+     B_10   =   1[ [cccc:cccc]
+         0                  0                  0                  0           2μ_nonEm                  0                  0                  0;                  0                  0                  0                  0                  0            μ_nonEm                  0                  0;                  0                  0                  0                  0                  0                  0                  0                  0;                  0                  0                  0                  0                  0                  0                  0                  0 ].
+
+
+
+
+ §.§ Model C in with-CADt scenario
+
+
+
+
+
+This scenario has six busy periods (B_1 to B_6).
+For each busy period, we first calculate its conditional probability and the first three moments of the inter-level passage times using Figure <ref>.
+And the corresponding transition probability matrix P_C is given below.
+
+
+    P_C = 
+     [
+        [ ℒ_1 ℱ_1        ; ℬ_2 ℒ_2 ℱ_2    ;     ℬ_3 ℒ_3 ℱ_3    ;         ℬ_4 ℒ_4   ⋱;               ⋱   ⋱;     ]],
+
+where 
+
+    ℬ_ℓ=2   = 1[   μ_+/λ_em+λ_++μ_+; μ_em/λ_em+λ_++μ_em ] , 
+    
+    ℬ_ℓ=3   = 1[     2μ_+/λ_em+λ_++2μ_+                      0; μ_em/λ_em+λ_++μ_++μ_em  μ_+/λ_em+λ_++μ_++μ_em;                      0       t_1/λ_++t_1+t_12;                      0            t_2/λ_++t_2;                        ]
+    
+    ℬ_ℓ≥4   = 1[     2μ_+/λ_em+λ_++2μ_+                      0                      0                      0; μ_em/λ_em+λ_++μ_++μ_em  μ_+/λ_em+λ_++μ_++μ_em                      0                      0;                      0       t_1/λ_++t_1+t_12                      0                      0;                      0            t_2/λ_++t_2                      0                      0;                        ],
+        
+    
+    ℒ_ℓ=1   = [ 0 ], ℒ_ℓ=2 = [ 0 0; 0 0 ], 
+    
+    ℒ_ℓ≥3   = [                 0                 0                 0                 0;                 0                 0                 0                 0;                 0                 0                 0 t_12/λ_++t_1+t_12;                 0                 0                 0                 0 ],
+        
+    
+    ℱ_ℓ=1   = 1[  λ_+/λ_em+λ_+ λ_em/λ_em+λ_+ ], 
+    
+    ℱ_ℓ=2   = 1[   λ_+/λ_em+λ_++μ_+  λ_em/λ_em+λ_++μ_+                  0                  0;                  0  λ_+/λ_em+λ_++μ_em λ_em/λ_em+λ_++μ_em                  0 ],
+        
+    
+    ℱ_ℓ≥3    = 0.8[      λ_+/λ_em+λ_++2μ_+     λ_em/λ_em+λ_++2μ_+                      0                      0;                      0  λ_+/λ_em+λ_++μ_++μ_em λ_em/λ_em+λ_++μ_++μ_em                      0;                      0                      0       λ_+/λ_++t_1+t_12                      0;                      0                      0                      0            λ_+/λ_++t_2 ].
+
+
+With P_C, the conditional probabilities and first three moments of inter-level passage times for all six busy periods are computed according to Appendix A of <cit.>.
+For most busy periods, three t-parameters are sufficient for the approximation.
+However, for B_2 and B_5, due to the two extra Erlang phases, two additional parameters t_0 and t_01 are required.
+
+Let t^(i)_j denote the t_j-parameter for a busy period B_i.
+The transition rate matrix M_C_CADt for the AI-negative, lowest-priority class from Figure <ref> is given by
+
+    M_C_CADt = 
+     [
+        [ B_00 B_01          ; B_10  A_1  A_2     ;       A_0  A_1    ⋱;            A_0    ⋱;                   ⋱;      ]].
+
+All A sub-matrices are 17×17. 
+Here, 0_14 denotes a 14×14 zero matrix, and 𝕀_17 is a 17×17 identity matrix.
+
+
+    A_0    = [ 2μ_-          ;       μ_-     ;            μ_-     ;                0_14 ], 
+    
+    
+     A_2    = λ_- 𝕀_17, 
+    
+    
+     A_1   = 0.75[ [ccc:c:c:c:c:c:c]
+            *                         λ_+                        λ_em                                                                                                                                                                        ;                         μ_+                           *                                                  𝐩_1λ_+                      𝐩_2λ_+                     𝐩_3λ_em                     𝐩_4λ_em                                                        ;                        μ_em                                                       *                                                                              𝐩_3λ_+                      𝐩_4λ_+                     𝐩_5λ_em                     𝐩_6λ_em;                   [2pt/2pt]                       𝐭^(1)                                                 𝕋^(1)_4                                                                                                                                            ;                   [2pt/2pt]                                                   𝐭^(2)                                                 𝕋^(2)_5                                                                                                                ;                   [2pt/2pt]                       𝐭^(3)                                                                                                         𝕋^(3)_6                                                        ;                   [2pt/2pt]                                                   𝐭^(4)                                                                                                         𝕋^(4)_7                                                        ;                   [2pt/2pt]                       𝐭^(5)                                                                                                                                                                 𝕋^(5)_8;                   [2pt/2pt]                                                   𝐭^(6)                                                                                                                                                                 𝕋^(6)_9 ],
  
-using the OSIRIS instrument on GTC. We downloaded their calibrated spectrum from the GRBSpec database <cit.>, and show it in Figure <ref>. 
+where, for i = 1, 3, 4, 6,
 
+    𝐩_𝐢 = [ p_i   0 ], 𝐭^(i) = [ t_1^(i); t_2^(i) ],  𝕋^(i)_k = [        * t_12^(i);                 * ].
 
+For i = 2, 5, because of the extra Erlang phase, the sub-matrices have an extra row and/or column.
 
+    𝐩_𝐢 = [ p_i   0   0 ], 𝐭^(i) = [ t_0^(i); t_1^(i); t_2^(i) ],  𝕋^(i)_k = [        * t_01^(i)         ;                 * t_12^(i);                          * ].
 
-<cit.> noted the clear presence of a continuum down to at least 4200 Å, which implies z < 3.6. 
-They also noted a tentative detection of a broad absorption dip at about 4050 Å, which they interpreted as Ly-α at z = 2.34. We note that this feature occurs in a part of the spectrum that is quite noisy, which calls its reality into doubt.
-They also commented on possible low-significance detections of absorption from OI (1302/1304 Å), SiII (1260 Å), and CII (1334 Å),
-but the absence of corresponding absorption from CIV and SiIV.
+Similarly, the boundary B sub-matrices are given below.
 
+    B_01   = [                    0_17; [2pt/2pt]
+         λ_- 𝕀_17 ], 
+     B_10 = [                                           [c:c]
+        0_17 2μ_+          
+       μ_+       
+          μ_+    
+             0_14 ], 
+    
+    
+     B_00   = [                                                          [c:c]
+        A_1                                                               λ_- 𝕀_17; [2pt/2pt]
+         μ_+          
+       μ_+       
+          μ_+    
+             0_14                                                                    A_1 ].
 
-Another clue to the GRB redshift comes
-from the lack of MgII absorption features.
-The MgII doublet was observed with a mean rest-frame equivalent width of about 3.8 Å in 27 of the sample of 31 LGRBs observed by <cit.> and <cit.>. 
-The optical spectrum of GRB210704A has a signal-to-noise ratio (SNR) of at least 5 from 5000 to 7200 Å and shows no strong absorption lines. For this reason, we suggest that if the GRB is similar to typical LGRBs, then the absence of MgII disfavours the redshift range 
-0.8<z<1.6. However, if the GRB is similar to typical SGRBs, whose spectra do not show strong host absorption lines, then we have the weaker constraint that the redshift is less than 3.6.
 
 
 
+ §.§ Model D in without-CADt scenario
 
 
-§ ANALYSIS
 
+The transition rate matrix M_D_noCADt for Figure <ref> is given below. 
 
+    M_D_noCADt = 
+     [
+        [ B_00 B_01               ; B_10  A_1  A_2     ;       A_0  A_1  A_2;            A_0  A_1    ⋱;                   ⋱    ⋱;      ]],
 
+where 
 
+    A_0    = [      πμ_D  (1-π)μ_D         0         0         0         0;     πμ_ND (1-π)μ_ND         0         0         0         0;         0         0         0         0         0         0;         0         0         0         0         0         0;         0         0         0         0         0         0;         0         0         0         0         0         0 ], 
+    
+    
+     A_1    = [    *    0 λ_em    0    0    0;    0    *    0    0 λ_em    0;  t_1    0    * t_12    0    0;  t_2    0    0    *    0    0;    0  t_1    0    0    * t_12;    0  t_2    0    0    0    *;      ], 
+    
+    
+     A_2    = λ_nonEm𝕀_6, 
+    
+    
+     B_00   = [    * λ_em    0;  t_1    * t_12;  t_2    0    * ], 
+     B_10 = [  μ_D    0    0; μ_ND    0    0;    0    0    0;    0    0    0;    0    0    0;    0    0    0 ], 
+    
+    
+     B_01   = 0.75[     πλ_nE (1-π)λ_nE         0         0         0         0;         0         0     πλ_nE         0 (1-π)λ_nE         0;         0         0         0     πλ_nE         0 (1-π)λ_nE ],
 
- §.§ Amati correlation
+where λ_nE refers to the arrival rate of non-emergent subgroup. Note that both M_D_noCADt and M_A (Equation <ref>) describe a queueing system with two priority classes and one radiologist.
+However, because μ_D ≠μ_ND, the size of A sub-matrices grow from 3×3 to 6×6 due to the extra i in the state definition and the extra set of truncated states to keep track of disease status of the interrupted case.
 
 
 
-Given the ambiguity of the GRB duration, we will consider its properties in the context of the Amati correlation <cit.>. For this, we analysed the Fermi/GBM data from T-0.2 to T+6.1 s and found the best fitting function was a Band function with α=-0.59±0.02, β=-2.95± 0.20, and E_ peak= 283± 8 keV. 
-The fluence in the 10-1000 keV interval (observer's frame) is F=(2.3±0.3)× 10^-5 erg cm^-2.  In the top panel of Figure <ref>, we show the position of the GRB at z = 0.1, 0.4, 0.8, and 2.34. We also show the populations of SGRBs and LGRBs from <cit.>. We see that GRB 210704A is consistent with being a SGRB at low redshift (z<0.4) or with being a LGRB at higher redshift (z ≳ 0.4).
+ §.§ Model D in with-CADt scenario
 
 
 
+This scenario has three busy periods (B_1 to B_3).
+For each busy period, we calculate its conditional probability and the first three moments of the inter-level passage times using Figure <ref> and the corresponding transition probability matrix P_D.
 
+  
 
- §.§ Spectral lag
 
+    P_E = 
+     [
+        [ ℒ_1 ℱ_1        ; ℬ_2 ℒ_2 ℱ_2    ;     ℬ_3 ℒ_3 ℱ_3    ;         ℬ_4 ℒ_4   ⋱;               ⋱   ⋱;     ]],
 
+where 
 
-We also consider the spectral lag GRB 210704A in the context of other GRBs, following <cit.> and <cit.>. 
+    ℬ_ℓ=2   = 1[   μ_D/λ_em+λ_++μ_D; μ_ND/λ_em+λ_++μ_ND;   t_1/λ_++t_1+t_12;        t_2/λ_++t_2 ] , 
+    
+    ℬ_ℓ=3   = 1[       PPVμ_D/λ_em+λ_++μ_D   (1-PPV)μ_D/λ_em+λ_++μ_D                         0                         0;     PPVμ_ND/λ_em+λ_++μ_ND (1-PPV)μ_ND/λ_em+λ_++μ_ND                         0                         0;          t_1/λ_++t_1+t_12                         0                         0                         0;               t_2/λ_++t_2                         0                         0                         0;                         0          t_1/λ_++t_1+t_12                         0                         0;                         0               t_2/λ_++t_2                         0                         0 ]
+    
+    ℬ_ℓ≥4   = 1[       PPVμ_D/λ_em+λ_++μ_D   (1-PPV)μ_D/λ_em+λ_++μ_D                         0                         0                         0                         0;     PPVμ_ND/λ_em+λ_++μ_ND (1-PPV)μ_ND/λ_em+λ_++μ_ND                         0                         0                         0                         0;          t_1/λ_++t_1+t_12                         0                         0                         0                         0                         0;               t_2/λ_++t_2                         0                         0                         0                         0                         0;                         0          t_1/λ_++t_1+t_12                         0                         0                         0                         0;                         0               t_2/λ_++t_2                         0                         0                         0                         0;                           ],
+        
+    
+    ℒ_ℓ=1   = 1[ 0 ], ℒ_ℓ=2 = 1[ 0 0 0 0; 0 0 0 0; 0 0 0 0; 0 0 0 0 ], 
+    
+    ℒ_ℓ≥3   = 1[                 0                 0                 0                 0                 0                 0;                 0                 0                 0                 0                 0                 0;                 0                 0                 0 t_12/λ_++t_1+t_12                 0                 0;                 0                 0                 0                 0                 0                 0;                 0                 0                 0                 0                 0 t_12/λ_++t_1+t_12;                 0                 0                 0                 0                 0                 0;                   ],
+        
+    
+    ℱ_ℓ=1   = 1[     PPVλ_+/λ_em+λ_+ (1-PPV)λ_+/λ_em+λ_+       λ_em/λ_em+λ_+                   0 ],
 
-We derive the GRB peak flux by fitting the spectrum of the brightest 1.024 s interval <cit.>  with a Band function.
-The best fit model yields α=-0.36± 0.02, β=-2.82± 0.12, E_ peak= 302± 8 keV), and a peak flux of F=(1.53± 0.02)× 10^-5 erg cm^-2 s^-1. 
-From this value, we derive the isotropic-equivalent peak luminosity,
- L_ peak, by assuming different redshifts.
- For example, at z=0.5 the measured peak flux corresponds to L_ peak  = (5.46 ± 0.07)× 10^51 erg s^-1 in the comoving 50–300 keV energy range.
 
-We calculated the lag between the energy bands 25–50 keV and 100–300 keV using the 10 ms resolution light curve and the sum of the signals from the three brightest Fermi NaI detectors (1, 3 and 5). 
-The lag was determined by the maximum of the cross-correlation function between the two light curves. We fit a 4th-degree polynomial around the peak in order to accurately determine the lag. We find that the lag is:
-τ = 80± 9  ms,
-in which the uncertainties are 1σ.
-We estimated the uncertainty by adding Poisson noise to the data <cit.> and repeating the cross-correlation analysis. 
 
 
-In the bottom panel of Figure <ref>, we show the spectral lag (corrected for redshift as (1+z)^0.67, following ) and peak luminosity L_ peak of the GRB at z=0.1, 0.4, 0.8, and 2.34. We also show the populations of LGRBs and SGRBs from <cit.> and <cit.>. 
-We see that, for any redshift, the GRB lag is longer than typical SGRBs.
-Its luminosity fits within the distribution
-of cosmological LGRBs for z ≳ 0.8, whereas for lower redshifts its location in the lag-luminosity diagram would be unusual. 
-Other outliers in a similar position are 
-GRB 031203 and GRB 060729A, peculiar LGRBs associated with bright supernovae. 
+    ℱ_ℓ=2   = 1[        λ_+/λ_em+λ_++μ_D                       0       λ_em/λ_em+λ_++μ_D                       0                       0                       0;                       0       λ_+/λ_em+λ_++μ_ND                       0                       0      λ_em/λ_em+λ_++μ_ND                       0;                       0                       0     PPVλ_+/λ_++t_1+t_12                       0 (1-PPV)λ_+/λ_++t_1+t_12                       0;                       0                       0                       0          PPVλ_+/λ_++t_2                       0      (1-PPV)λ_+/λ_++t_2 ],
+        
+    
+    ℱ_ℓ≥3    = 1[   λ_+/λ_em+λ_++μ_D                  0  λ_em/λ_em+λ_++μ_D                  0                  0                  0;                  0  λ_+/λ_em+λ_++μ_ND                  0                  0 λ_em/λ_em+λ_++μ_ND                  0;                  0                  0   λ_+/λ_++t_1+t_12                  0                  0                  0;                  0                  0                  0        λ_+/λ_++t_2                  0                  0;                  0                  0                  0                  0   λ_+/λ_++t_1+t_12                  0;                  0                  0                  0                  0                  0        λ_+/λ_++t_2 ].
 
 
+Each of the three busy periods has a set of t-parameters (Equation <ref>) approximated from a two-phase Coxian distribution.
 
+Let t^(i)_j denote the t_j parameter for the busy period B_i.
+The transition rate matrix M_D_CADt for the AI-negative subgroup (Figure <ref>) is given by
 
+    M_D_CADt = 
+     [
+        [ B_00 B_01          ; B_10  A_1  A_2     ;       A_0  A_1    ⋱;            A_0    ⋱;                   ⋱;      ]]
 
+The 14×14 A sub-matrices are defined below, where 0_12 denotes a 12×12 zero matrix, and 𝕀_14 is a 14×14 identity matrix.
 
 
+    A_0    = 1[  (1-NPV)μ_D      NPVμ_D            ; (1-NPV)μ_ND     NPVμ_ND            ;                                0_12 ], 
+    
+    
+     A_2    = λ_- 𝕀_14,
 
 
 
- §.§ Afterglow
+    A_1   = 0.85[ [cc:c:c:c:c:c:c]
+            *                                                 𝐩λ_em                                               𝐩PPVλ_+                                           𝐩(1-PPV)λ_+                           ;                                                     *                                                 𝐩λ_em                                               𝐩PPVλ_+                                           𝐩(1-PPV)λ_+;    [2pt/2pt]
+            𝐭^(1)                                               𝕋^(1)_3                                                                                                                                       ;                  [2pt/2pt]                      𝐭^(1)                                               𝕋^(1)_4                                                                                                            ;    [2pt/2pt]
+            𝐭^(2)                                                                                                     𝕋^(2)_5                                                      ;                  [2pt/2pt]                      𝐭^(2)                                                                                                     𝕋^(2)_6                                                      ;    [2pt/2pt]
+            𝐭^(3)                                                                                                                                                           𝕋^(3)_7;                  [2pt/2pt]                      𝐭^(3)                                                                                                                                                           𝕋^(3)_8 ],
 
 
 
-In the standard fireball model for GRBs, the afterglow emission is produced by external shocks resulting from the interaction between the relativistic jet and the circumstellar medium <cit.>. 
-Typically, the afterglow phase can be explained as synchrotron radiation from a power-law energy distribution of shocked electrons, N(E)∝ E^-p, which lead to the observed flux density being a series of power-laws segments as a function of time t and frequency ν as F_ν∝ t^-αν^-β <cit.> in which F_ν is the observed flux density and α and β are the temporal and spectral indices, respectively. 
+where, for a busy period B_i,
 
-The early optical and X-ray data can be fit with a with a simple absorbed power-law of slope β=0.84±0.02 (see Figure <ref>), indicating that they belong to the same spectral segment and therefore they are expected to display the same temporal decay. 
-We identify this segment as ν_m≲ν_opt≲ν_X≲ν_c (and therefore a slow-cooling regime), where ν_m is the synchrotron characteristic frequency and ν_c is the cooling frequency <cit.>. 
-In this case, F_ν∝ν^(1-p)/2 and the electron index is p=2.68±0.04.
-For a fireball expanding into a uniform density medium, the relation of flux density and time is F_ν∝ t^3(1-p)/4. With the electron index previously estimated, we obtain F_ν∝ t^-1.26±0.03.
+    𝐩 = [ 1 0 ], 𝐭^(i) = [ t_1^(i); t_2^(i) ],  𝕋^(i)_k = [        * t_12^(i);        0        * ].
 
 
+ 
+ 
+ 
+ 
+ 
 
+The boundary B matrices, on the other hand, are
 
 
+    B_00   = 1[  [c:c:c:c]
+        -σ_1               𝐩λ_em             𝐩PPVλ_+         𝐩(1-PPV)λ_+; [2pt/2pt]
+        𝐭^(1)             𝕋^(1)_2                                        ; [2pt/2pt]
+        𝐭^(2)                                 𝕋^(2)_3                    ; [2pt/2pt]
+        𝐭^(3)                                                     𝕋^(3)_4;                     ], 
+    
+    
+     B_01   = 1[ [cc:c:c:c]
+        (1-NPV)λ_-                    NPVλ_-                                                                              ;                 [2pt/2pt]                                                   ℚ                                                    ;                 [2pt/2pt]                                                                             ℚ                          ;                 [2pt/2pt]                                                                                                       ℚ ], 
+    
+    
+     B_10   = 1[    μ_D       ;   μ_ND       ;        0_12×6 ],
 
 
-A simple power-law decay of slope -1.26 is consistent with X-ray observations at all epochs and with the early optical observations (see Figure <ref>). However, beginning at T+5.5 d, it underpredicts the observed optical and near-infrared emission. 
-We interpret this as evidence of an additional component powering the late-time optical/nIR light curve and will return to discuss it in detail in <ref>.
+where 
 
 
-
-
-From the condition that the X-ray afterglow is in slow-cooling regime, we derive an upper limit on the circumburst density n following <cit.>: 
-
-    n ≲  0.4    (1+z/ 2)^-6/11(t/ 1 d)^-4/11(E_ K,iso/10^52 erg)^-6/11
-       (ϵ_e/0.1)^-40/33(ϵ_B/10^-5)^-5/9 cm^-3,
-
-which is consistent with densities typical of the interstellar medium, and disfavors the high-density environment where some LGRBs are found.
-
-Finally, by assuming that the GeV flux is also produced by external forward shocks, 
-we can use the flux above 100 MeV <cit.> as proxy for the blastwave kinetic energy <cit.>. For p≈2.6, we obtain: 
-
-    E_ K,iso≈      10^53(1+z/3)^-1(d_L,28/5)^1.74(F_LAT/ 0.2 nJy)^0.87(t/ 5 s)^1.25
-       (ϵ_e/0.1)^-1.38(ϵ_B/10^-3)^0.13 erg,
-
-where d_L,28 is the luminosity distance in units of 10^28 cm.
-For z≳2, this value fits well within the distribution of LGRBs. 
-
-
-
-
-
- §.§ Late-time Excess
-
-
-
-The light curves in Figure <ref> are compared to the standard power-law afterglow.  A late-time flattening is expected due to the contribution of the source S1, underlying the GRB position. This model (solid lines) underpredicts the optical and, to a less extent, near-infrared photometry from T+5 d to T+15 d. We consider this to be indicative of an excess component in addition to the afterglow. We identify the peak of this excess at around T+6.5 d, when the observed light is 3-5 times brighter than the afterglow+S1 model. 
-
-Figure <ref> shows the spectral energy distribution (SED) of the GRB counterpart at 
-two epochs, T+1.1 d and  T+5.5 d, respectively. 
-The earlier SED is well described by a power-law function, as expected for a non-thermal afterglow spectrum.
-The later SED shows an excess in the optical (grz) and J band. 
-
-
-We consider a simple model for the excess, treating it as black-body emission arising from a spherical fireball in expansion and ignoring relativistic effects. The rest-frame parameters of this model are the temperature T' and radius R' of the photosphere. 
-
-In the observer's frame, the spectrum will have the shape of a black-body with T_ obs = T'/(1+z).
-
-If we fit this simple black-body model to the grzJK data in Figure <ref>, we obtain T_ obs≈ 3800 K (orange thin line) and a reduced χ^2 ≈ 2 as this model severely underpredicts the K-band measurement. 
-This discrepancy could be due the presence of broad line spectral features that either suppress the K-band emission or enhance the zJ-band measurements. 
-In the latter case, if we exclude the zJ-band points from the fit, the continuum is 
-well described by a hotter black-body with T_ obs≈ 9000 K (blue thick line). 
-We examine both these models in more detail when we discuss likely progenitors and redshifts in <ref>.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- §.§ Environment
-
-
-
-
-
-
-
-
-
-
-
-The field of GRB 210704A  is shown in Figure <ref>. 
-The GRB region shows an overdensity of low-redshift galaxies, notably
-the galaxy WISEA J103604.24+571327.7 (labelled G1 in Figure <ref>) at z = 0.0817 and the galaxies' cluster 400d J1036+5713 at z = 0.203 <cit.>. 
-Two faint (r≈25 AB mag) sources (labelled S1 and S2 in Figure <ref>) lie closer to the GRB position and are also plausible candidate host galaxies. 
-
-Unfortunately, optical spectroscopy does not allow us to conclusively determine the redshift of GRB 210704A and use this redshift to determine the host galaxy (see  <ref>). Therefore, we analyse the projected angular offsets between the galaxies and the GRB to quantify the probability of association.
-
-
-We determined the positions, statistical uncertainties, and half-light radii using the pre-explosion r-band image from MegaPrime/MegaCam for S1 and S2, and the Gemini/GMOS-N r-band image obtained at T+10.44 d for the GRB afterglow and the other host candidates. We likewise confirm the offsets with the HST imaging and derive the photometry for these galaxies in the HST filters (see Table <ref>). To determine the offset for each galaxy we followed the methods outlined by <cit.>. 
-We first aligned the afterglow image (Gemini) and pre-explosion image (MegaPrime) using  to identify point sources in each image and then  to determine the astrometric solution. Using 19 common point sources between the two images, we derive a relative astrometric uncertainty of σ_tie ∼ 0.09. This astrometric uncertainty is included in the offset determination. 
-
-
-Using the Equations 1 to 3 from <cit.> and the galaxy number counts from deep optical imaging <cit.>, the probability of finding an unrelated galaxy of magnitude m_r or brighter within the vicinity of a GRB can be approximated as:
-
-    P_ ch =1-exp(-π r^2_ i× 10^a (m_r - m_0) + b  ),
-
-with a=0.36, b = -2.42, and m_0=24 for galaxies fainter than m_r≳19 mag
-and a=0.56, b = -4.80 and m_0=18 for brighter galaxies. 
-The effective radius  r_ i depends on the projected angular separation R_0 between the GRB and the galaxy and on the half-light radius R_half of the galaxy. We take r_ i=2R_ half for S1 since GRB 210704A is localized inside the detectable light, whereas for other candidates we use r_ i=(R^2_ 0+4R^2_ half)^1/2 because the GRB position is well outside the light of these galaxies. In Table <ref>, we summarize the information on the galaxies that have P_ ch<0.15.
-
-
-Often a galaxy is more likely to be the host than all the other ones, however, in the crowded field of GRB 210704A, two galaxies have comparably low probabilities of chance alignment with the GRB. 
-The bright nearby galaxy G1, located  about 29from the afterglow, has a low chance coincidence probability of 0.5%.  However, the faint galaxy S1, detected close to the afterglow position, has 
-a similarly  probability of 2%. 
-
-
-
-
- §.§ The Properties of the Possible Host Galaxy G1
-
-
-According to the spectrum  from the Sloan Digital Sky Survey Data Release 7, the galaxy G1 shows the signature of Ca H and K (at 3934 Å and 3969 Å respectively), the G-band (4304 Å), Mg (5175 Å) and Na (5894 Å) absorption lines, all of which are consistent with an old population. Moreover, the decomposition of stellar populations and their analysis using pyPipe3D[<http://ifs.astroscu.unam.mx/pyPipe3D/>], suggest of an old dominant population. Nevertheless, the analysis confirms that a young population is also present, with about 15% of the light corresponding to stars of less than 2 Gyr of age. 
-Based on its spectral properties and observed morphology, we classify G1 as a Sa/Sb galaxy. 
-
-
-
-
- §.§ The Properties of the Possible Host Galaxy S1
-
-
-We do not have a spectroscopic redshift for S1. Therefore, we modelled its SED (Table <ref>) using  <cit.> using the methodology previously described in <cit.>. The model parameters are the redshift z, total mass M, galaxy age t_ age, e-folding timescale τ, extinction A_V, and metallicity Z. We use these parameters to derive the stellar mass M_* and the star formation rate (SFR) as outlined in <cit.>. Following <cit.>, we apply uniform priors in log t_ age, log τ, log Z, and A_V. We leave the redshift as a free parameter with a uniform prior between 0 and 5. We performed a fit to the data using the  package <cit.>. 
-
-
-
-
-We obtain a photometric redshift z_phot=2.15±0.10, driven by the flux increase in the 
-F160W filter interpreted as the 4000 Å break
-(see Figure <ref>). 
-The best fit yields a galaxy's stellar mass M_*=(1-3)× 10^9 M_⊙, a sub-solar metallicity Z/Z_⊙=0.3^+0.4_-0.2, a moderate star formation rate SFR=2.5^+1.7_-0.9 M_⊙ yr^-1, a relatively young stellar population with age t_m=0.8±0.5 Gyr, and an intrinsic extinction of A_V=0.30±0.15 mag. 
-These parameters are typical of GRB host galaxies in this redshift range for both long and short GRBs <cit.>, although the low metallicity tends to favor the former class. 
-Moreover, the galaxy's absolute magnitude of M_ r=-21.0 is similar to other host galaxies associated to LGRBs <cit.>. 
-
-
-
-
- §.§ A Possible Host Cluster
-
-
-The overdensity of galaxies
-in this vicinity of the burst is related to the X-ray cluster 400d J1036+5713 (see Figure <ref>). 
-The cluster has an estimated mass of approximately 9×10^13  and a virial radius of R_500≈3. As shown in Figure <ref>, the GRB afterglow lies about 1.5 from the peak of the X-ray diffuse emission, within the cluster's angular radius. 
-In this case, the probabilities reported in Table 2 might overestimate the chance of a random alignment between the GRB and the galaxies in the cluster. 
-To better estimate this value we consider the Swift XRT Cluster Survey <cit.> and search for the number of X-ray clusters serendipitously located within 2 arcmin of a GRB position. Among over 300 long GRB fields examined in the survey, only 4 closely intercept an X-ray cluster, from which we derive a chance probability of P_ ch≈0.012, comparable to the probabilities derived for S1 and G1. 
-If we factor in the cluster brightness and consider only sources with f_X ≳2 × 10^-13 erg cm^-2 s^-1, then the probability of a chance alignment drops to 10^-3. A spurious GRB/cluster association is therefore unlikely, although not impossible when considering the large sample of more than 1500 Swift bursts. Notably, the only other known case of an association with an X-ray cluster is the short GRB 050509B <cit.>. 
-
-
-
-
-
-
-
-
-§ DISCUSSION
-
-
-
-
-
-In this section, we interpret and discuss the physical implications of the results obtained in section <ref>. We consider the nature of the burst (SGRB or LGRB), its redshift, and its likely environment (G1, S1 or the galaxy cluster). For distances, we assume a ΛCDM model with a H_0=67.8 km s^-1 Mpc^-1 <cit.>.
-
-
-
-
- §.§ A nearby short GRB
-
-
-
-We first consider the possibility of a GRB hosted by the bright (M_r≈-21.5) galaxy G1 (WISEA J103604.24+571327.7) at z = 0.08168. This is supported by the low probability of coincidence of only 0.5% (see Table <ref>). 
-
-
-
-
-The relatively large projected offset of about 52 kpc from G1 is an important constraint. 
-The observed distribution for LGRBs does not extend beyond 10 kpc <cit.>, which allows us to disfavour this possibility. Furthermore, the high-energy properties of GRB 210704A do not resemble those of nearby LGRBs <cit.>. 
-
-The case for a SGRB is less clear. Between 5% and 25% of SGRBs are observed to lie beyond 20 kpc from their host galaxies <cit.>. Assuming an age of 1–0.1 Gyr for the GRB progenitor, the inferred offset would require an intrinsic kick velocity of v_ kick≈50–500 km s^-1, in the range observed for Galactic NS binaries.
-A SGRB at z ∼ 0.08 would be consistent with the properties of other cosmological SGRBs (section <ref>), and would not obey the spectral lag-luminosity relation of LGRBs (section <ref>) as observed in the case of other nearby events <cit.>. 
-Therefore, based on the GRB high-energy properties and its location, a nearby SGRB remains a plausible option. 
-
-
-On the other hand, the observed peak luminosity and peak time of the excess emission do not match well the properties of the kilonova AT2017gfo: 
-the peak brightness  would be about two magnitudes fainter (M_r=-14.6) than AT2017gfo (M_r=-16.4), and the peak time would be several days later.  It was no later than T+12 hours for AT2017gfo whereas for GRB 210704A we observe a maximum around T+7 days.
-
-Using the one-zone model of <cit.>, a radioactively powered transient peaks at a time t_peak given by 
-
-
-    t_peak≈ 1.5  d (M_ej/0.01 M_⊙)^0.5(κ/1 cm^2 g^-1)^0.5(v_ej/0.1 c)^-0.5
-
-where M_ ej is the ejecta mass,  
-v_ ej its velocity, and κ its opacity. 
-To explain a peak of about 7 days, one needs to either increase the mass to of order 0.1 and/or increase the opacity. As a result, the spectral peak would shift to redder wavelengths than the ones observed in this case. 
-Alternatively, a delayed peak can be explained by a low expansion velocity, v≈0.01 c. This latter solution
-is consistent with the simple blackbody model for the optical/nIR excess, which, at a redshift of 0.08, implies temperatures of 4000-10000 K and expansion velocities of 20000-2000 km s^-1, slower than typical merger ejecta.
-
-We also compared our case to the library of simulated kilonova light curves  by <cit.>, incorporating a broad range of ejecta compositions, morphologies and viewing angles. 
-We find that, although the luminosities of the kilonova models are in agreement with the observations for z ≲ 0.4,  the optical peak can only range from a few hours up to a couple of days after the explosion, whereas we observe a peak at T+7 d.
-We note that the mismatch between the observed peak and the kilonova timescale applies to any SGRB up to z≈1, and therefore we can rule out any typical kilonova in this range. 
-
-
-
- §.§ A distant long GRB
-
-
-
-We next consider the possibility that GRB 210704A is associated with the faint source S1. Intuitively, this may appear as the most likely association given the positional coincidence between S1 and the GRB. However,  the probability of chance coincidence is 2% (Table <ref>), the highest among the three possible host candidates.
-
-
-
-
-
-
-
-
-
-
-
-
-
-The high-redshift derived from the photometric fit in  <ref> is consistent with the weak absorption feature in the afterglow optical spectrum (section <ref>). This provides us with tantalizing evidence that GRB 210704A was indeed located at z≈2.3.
-At this distance, its rest-frame duration would be ≲1.5 s.
-However, its other high-energy properties such as spectral lag (section <ref>), peak energy, and energetics (section <ref>), would fit within the distribution of typical LGRBs (see Figure <ref>). 
-
-
-In this high-redshift scenario, the case of GRB 210704A is reminiscent of other bursts, such as GRB 090426A <cit.> and GRB 200826A <cit.>, characterized by a short duration of the gamma-ray emission despite likely having collapsing massive stars as progenitors. 
-Based on the observed BATSE distribution of GRB durations <cit.>, a small fraction of LGRBs (≲1%) is expected to last less than 2 s. It is therefore not surprising to find some of these examples within the sample of over 1,000 bursts discovered by Swift.
-
-However, in the case of GRB 210704A, the observed optical bump would be challenging to explain with standard SN models.
-At a redshift of 2.3, the simple blackbody model adopted for the optical/nIR excess implies a
-temperature of 30000 K and a sub-relativistic velocity of ∼ 0.2 c. The second solution of a colder black body peaking in the observed J-band requires a superluminal speed, and is thus considered unphysical.
-
-The observed magnitude of the excess of r≈23 AB at T+7 d implies an absolute magnitude of M_UV≈-23.2 at T+2.3 d (rest-frame) (after subtracting the afterglow contribution), brighter than most known SNe <cit.> and AT2018cow-like events <cit.> (see Figure <ref>). The only event whose brightness in UV is comparable with the excess of GRB 210704A is the Dougie tidal disruption event (TDE) candidate <cit.>. However, 
-known TDEs evolve on slower timescales than the excess of GRB210704A. 
-
-Mechanisms capable of producing such a high peak brightness and rapid rise time are rare.
-For instance, the interaction between the SN shock wave and a dense environment, or the continued energy injection from a long-lived central engine are also expected to act on longer timescales than the ones observed here <cit.> . 
-<cit.> suggested that, for the most energetic explosions (≳10^52 erg), a shock breakout propagating through a dense stellar wind could produce strong emission in excess of 10^44 erg s^-1, peaking 
-in the UV on timescales of a few days after the burst. This emission becomes dominant when the Ni^56 yield is low
-as expected if the star directly collapses to a black hole. 
-
-
-
-
-
-
-
-
-
- §.§ A nearby peculiar GRB
-
-
-
-A final possibility is that GRB 210704A is a peculiar GRB associated with a member of the galaxy cluster at z = 0.203. 
-
-
-
-<cit.> showed that progenitor systems formed within a cluster are likely to be retained within the potential well of its halo, regardless of the intrinsic kick velocity of the progenitor system. However, due to the high merger activity in such crowded environment, the GRB may happen far from its true birthplace. As a result, its host galaxy cannot be confidently identified based on its spatial proximity. 
-
-A cluster environment, although rarely associated with a GRB, has been discussed in the case of both SGRBs and LGRBs. 
-The connection with SGRBs naturally arises as NS binaries with long merger timescales are expected to track the stellar mass density and reside in evolved stellar environments. 
-However, as discussed in section <ref>, a SGRB produced by a typical NS merger would not produce a kilonova compatible with the luminosity and late-onset of the optical excess.
-
-In the case of LGRBs, their typical progenitors, young massive stars <cit.>, are not found in clusters, and a merger-driven explosion with unusual progenitors appears to be the most likely explanation. For example, black hole and neutron star systems (BH-NS), black hole and white dwarf (BH-WD), white dwarf and neutron star (WD-NS) or WD-WD  encounters have been considered <cit.>. 
-
-An exotic progenitor system could explain the unusual high-energy properties of this event and why they do not fit within the standard relations of typical LGRBs for z∼0.2. In addition, we note that the only other LGRB possibly associated with a galaxy cluster is GRB 050911 <cit.>, whose prompt emission was a short duration (∼1 s) peak followed by a weak 16 s long tail and as such resembles the light curve of GRB 210704A. A LGRB produced by an exotic merger system could also give rise to a peculiar optical transient, although in this case, predictions are less secure. 
-
-Assuming that the optical excess is radioactively-powered, we consider the case of ejecta with pure nickel abundance. This is justified by the rapid evolution of the optical emission, comparable to the ^56Ni half-life timescale  of about 6 d. 
-At a redshift of z ≈ 0.2, the optical bump would peak at an absolute magnitude of M_r≈-16.5, corresponding to a luminosity of about 10^42 erg s^-1. The peak bolometric luminosity can be related to the ejecta mass M_ej using Arnett's law, L_pk≈ϵ_ Ni(t_pk) M_ej, where ϵ_ Ni(t_pk) ≈ 5×10^43 erg s^-1 is the energy generation rate at 6 d (rest-frame). 
-The derived mass M_ej≈0.1  is much smaller than in a typical SN, and indicative of a weaker explosion. 
-
-Based on the black-body fit of the optical excess, we derived a temperature of 4500–10000  K and ejecta velocity v_ ej≈0.2-0.02 c. 
-Therefore, the basic properties of the  optical excess, such as its luminosity and fast timescales, could be reproduced by an explosion ejecting a low-mass shell of fast-moving material, composed mainly of ^56Ni. 
-At first order, this is consistent with the predictions of an  accretion-induced collapse (AIC) of a WD <cit.>, 
-driven for example from a WD-WD encounter <cit.>.
-
-
-
-
-
-
-
-
-§ SUMMARY
-
-
-
-
-We have presented broadband observations of GRB 210704A, its afterglow, and environment.
-
-
-After its discovery, the burst was initially classified as a SGRB.
-Our analysis of the high-energy prompt emission shows that the GRB duration is affected by instrumental selection effects, and that the GRB lies at the intersection between SGRBs and LGRBs.
-We place the GRB in the context of the Amati and spectral lag correlations, and show that these can provide information on the nature of the GRB at different possible redshifts.
-
-
-An additional peculiar feature of this GRB is an optical/nIR excess, observed to peak at about T+7 days (observer's frame)
-at a magnitude r≈23.2 AB. 
-We identified this excess by comparing our optical and nIR photometry with a simple afterglow model derived from the X-ray data. 
-
-
-
-
-
-We consider three possible host environments and distance scales: the galaxy G1 at z ≈ 0.08, the galaxy S1 at z ≈ 2.3, and a galaxy's cluster at z≈0.2. We also discuss three different progenitors: a standard SGRB with a kilonova, a standard LGRB with a SN, and an exotic LGRB, perhaps an accretion-induced collapse of a WD <cit.>.
-
-None of the standard explanations is entirely satisfactory. A SGRB followed by a kilonova, perhaps associated with G1, explains the short duration of the prompt gamma-ray emission, its other high-energy properties, and the large distance from the host galaxy. However, the color and timescales of the observed optical excess imply an expansion velocity not typical for the ejecta of a compact binary merger. 
-
-On the other hand, a LGRB associated with the galaxy S1 remains consistent with all the high-energy properties of the event but is challenged by the extreme luminosity of the optical excess. No known transient matches the high luminosity, blue color, and rapid timescales implied by the observations.  
-
-Finally, we considered an exotic progenitor, involving the merger of a WD with another compact objects (either a BH, a NS, or another WD), in the cluster at z ≈ 0.2. 
-Such stellar encounters can explain GRB durations longer than the canonical 2 seconds and could be followed by fast-evolving optical transients consistent with the observed excess. This is the only scenario that matches all the observed properties of GRB210704A although, admittedly, is also the least constrained one. 
-
-
-The difficulty we have had in identifying the progenitor of GRB 210704A highlights the limitations of the traditional GRB dichotomy in long/short, collapsars/mergers events. Although valid for the majority of bursts, it is not sufficient to describe the GRB population in its entirety. The large Swift sample of well-localized bursts has been instrumental to identify these oddball GRBs and start exploring their possible origins. In the next few years, the arrival of the Vera C. Rubin Observatory will undoubtedly enlarge the sample of exotic transient events and perhaps help us find analogues to GRB 210704A.
-
-
-
-
-
-
-
-§ RESEARCH DATA POLICY
-
-The data underlying this article will be shared on reasonable request to the corresponding author.
-
-
-
-
-§ ACKNOWLEDGEMENTS
-
-
-
-We thank the staff of GTC and Gemini for scheduling and executing the observations included in this work, especially Antonio Cabrera and  David Garcia.
-
-
-This project has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme, grant  101002761 (BHianca; PI: Troja).
-
-Some of the data used in this paper were acquired with the RATIR instrument, funded by the University of California and NASA Goddard Space Flight Center, and the 1.5-meter Harold L. Johnson telescope at the Observatorio Astronómico Nacional on the Sierra de San Pedro Mártir, operated and maintained by the Observatorio Astronómico Nacional and the Instituto de Astronomía of the Universidad Nacional Autónoma de México. Operations are partially funded by the Universidad Nacional Autónoma de México (DGAPA/PAPIIT IG100414, IT102715, AG100317, IN109418, IG100820, and IN105921). We acknowledge the contribution of Leonid Georgiev and Neil Gehrels to the development of RATIR.
-
-Some of the data used in this paper were acquired with the DDOTI instrument at the Observatorio Astronómico Nacional on the Sierra de San Pedro Mártir. DDOTI is partially funded by CONACyT (LN 232649, LN 260369, LN 271117, and 277901), the Universidad Nacional Autónoma de México (CIC and DGAPA/PAPIIT IG100414, IT102715, AG100317, IN109418, and IN105921), the NASA Goddard Space Flight Center and is partially funded by the University of Maryland (NNX17AK54G). DDOTI is operated and maintained by the Observatorio Astronómico Nacional and the Instituto de Astronomía of the Universidad Nacional Autónoma de México. We acknowledge the contribution of Neil Gehrels to the development of DDOTI.
-
-We thank the staff of the Observatorio Astronómico Nacional.
-
-We thank Ori Fox, Antonio Castellanos-Ramírez, Yuri Cavecchi and Sebastián F. Sánchez for their useful comments. We also thank Rubén Sánchez Ramírez and Aishwarya Thakur for their support in the reduction of GTC data.
-
-We acknowledge support from the DGAPA/UNAM IG100820 and IN105921. RLB acknowledges support from CONACyT and DGAPA postdoctoral fellowships.
-
-M.I. and G.S.H.P. acknowledge the support from the National Research Foundation grants No. 2020R1A2C3011091 and No. 2021M3F7A1084525, and the R&D program (Project No. 2022-1-860-03) of the Korea Astronomy and Space Science Institute.
-
-This research is based in part on data collected at the Subaru Telescope, which is operated by the National Astronomical Observatory of Japan. We are honored and grateful for the opportunity of observing the Universe from Maunakea, which has the cultural, historical, and natural significance in Hawaii. 
-
-This work is partly based on data obtained with the Gran Telescopio Canarias (GTC), installed in the Spanish Observatorio del Roque de los Muchachos of the Instituto de Astrofísica de Canarias, in the island of La Palma, and with the instrument OSIRIS, built by a Consortium led by the Instituto de Astrofísica de Canarias in collaboration with the Instituto de Astronomía of the Universidad Autónoma de México. OSIRIS was funded by GRANTECAN and the National Plan of Astronomy and Astrophysics of the Spanish Government.
-
-The scientific results reported in this article are based in part on observations made by the Chandra X-ray Observatory through Director's Discretionary Time (ObsID: 25093; PI: Troja). 
-
-This work made use of data supplied by the UK Swift Science Data Centre at the University of Leicester. 
-
-RLB dedicates this work to Cicerón. Thanks for sharing your life with me. I will always love you.
-
-
-
-
-
-
-
-
-
-
-
-
-99
-[Abbott et al.2017a]Abbott2017 Abbott B. P., et al., 2017a, PhRvL, 119, 161101
-
-
-
-[Ahumada et al.2020]SDSS16 Ahumada R., Prieto C. A., Almeida A., Anders F., Anderson S. F., Andrews B. H., Anguiano B., et al., 2020, ApJS, 249, 3. doi:10.3847/1538-4365/ab929e
-
-[Ahumada et al.(2021)]Ahumada2021 Ahumada, T., Singer, L. P., Anand, S., et al. 2021, Nature Astronomy, 5, 917. doi:10.1038/s41550-021-01428-7
-
-
-[Alam et al.2015]SDSS12 Alam S., Albareti F. D., Allende Prieto C., Anders F., Anderson S. F., Anderton T., Andrews B. H., et al., 2015, ApJS, 219, 12. doi:10.1088/0067-0049/219/1/12
-
-[Amati et al.2008]Amati2008 Amati L., Guidorzi C., Frontera F., Della Valle M., Finelli F., Landi R., Montanari E., 2008, MNRAS, 391, 577. doi:10.1111/j.1365-2966.2008.13943.x
-
-[Antonelli et al.(2009)]Antonelli09 Antonelli, L. A., D'Avanzo, P., Perna, R., et al. 2009, , 507, L45. doi:10.1051/0004-6361/200913062
-
-[Arnett1982]Arnett1982 Arnett W. D., 1982, ApJ, 253, 785. doi:10.1086/159681
-
-[Barbieri et al.2019]Barbieri2019 Barbieri C., Salafia O. S., Colpi M., Ghirlanda G., Perego A., Colombo A., 2019, ApJL, 887, L35. doi:10.3847/2041-8213/ab5c1e
-
-[Becerra et al.2017]Becerra2017 Becerra R. L., Watson A. M., Lee W. H., Fraija N., Butler N. R., Bloom J. S., Capone J. I., et al., 2017, ApJ, 837, 116. doi:10.3847/1538-4357/aa610f
-
-[Beckwith et al.2006]Beckwith2006 Beckwith S. V. W., Stiavelli M., Koekemoer A. M., Caldwell J. A. R., Ferguson H. C., Hook R., Lucas R. A., et al., 2006, AJ, 132, 1729. doi:10.1086/507302
-
-[Beniamini et al.2015]Beniamini2015 Beniamini P., Nava L., Duran R. B., Piran T., 2015, MNRAS, 454, 1073. doi:10.1093/mnras/stv2033
-
-[Berger2010]Berger2010 Berger E., 2010, ApJ, 722, 1946. doi:10.1088/0004-637X/722/2/1946
-
-[Berger et al.2011]Berger2011 Berger E., Chornock R., Holmes T. R., Foley R. J., Cucchiara A., Wolf C., Podsiadlowski P., et al., 2011, ApJ, 743, 204. doi:10.1088/0004-637X/743/2/204
-
-[Berretta et al.2021]30375 Berretta A., Longo F., Axelsson M., Bissaldi E., Piron F., Arimoto M., Fermi-LAT Collaboration, 2021, GCN, 30375
-
-[Bertin & Arnouts1996]Bertin1996 Bertin E., Arnouts S., 1996, A&AS, 117, 393
-
-[Bloom, Kulkarni, & Djorgovski2002]Bloom2002 Bloom J. S., Kulkarni S. R., Djorgovski S. G., 2002, AJ, 123, 1111. doi:10.1086/338893
-
-[Bloom et al.2006]Bloom2006 Bloom J. S., Prochaska J. X., Pooley D., Blake C. H., Foley R. J., Jha S., Ramirez-Ruiz E., et al., 2006, ApJ, 638, 354. doi:10.1086/498107
-
-
-
-
-[Breeveld, Lien, & Swift/UVOT Team2021]30389 Breeveld A. A., Lien A. Y., Swift/UVOT Team, 2021, GCN, 30389
-
-[Burenin et al.2007]ROSAT Burenin R. A., Vikhlinin A., Hornstrup A., Ebeling H., Quintana H., Mescheryakov A., 2007, ApJS, 172, 561. doi:10.1086/519457
-
-[Campana et al.2006]Campana2006 Campana S., Mangano V., Blustin A. J., Brown P., Burrows D. N., Chincarini G., Cummings J. R., et al., 2006, Natur, 442, 1008. doi:10.1038/nature04892
-
-[Cartier et al.2021]Cartier2021 Cartier R., Hamuy M., Contreras C., Anderson J. P., Phillips M. M., Morrell N., Stritzinger M. D., et al., 2021, arXiv, arXiv:2108.09828
-
-[Cucchiara et al.2013]Cucchiara2013 Cucchiara A., Prochaska J. X., Zhu G., Ménard B., Fynbo J. P. U., Fox D. B., Chen H.-W., et al., 2013, ApJ, 773, 82. doi:10.1088/0004-637X/773/2/82
-
-[Cutri et al.2003]Cutri2003 Cutri R. M., Skrutskie M. F., van Dyk S., Beichman C. A., Carpenter J. M., Chester T., Cambresy L., et al., 2003, tmc..book
-
-[D'Ai et al.2021]30379 D'Ai A., Kennea J. A., Tohuvavohu A., Sbarufatti B., Page K. L., Beardmore A. P., Melandri A., et al., 2021, GCN, 30379
-
-[D'Avanzo et al.2021]30385 D'Avanzo P., D'Elia V., Fiorenzano A., Padilla C., CIBO Collaboration, 2021, GCN, 30385
-
-[D'Avanzo et al.2021]30432 D'Avanzo P., D'Elia V., Campana S., De Pasquale M., Melandri A., Rossi A., Salvaterra R., et al., 2021, GCN, 30432
-
-[de Ugarte Postigo et al.2012]deUgarte2012 de Ugarte Postigo A., Fynbo J. P. U., Thöne C. C., Christensen L., Gorosabel J., Milvang-Jensen B., Schulze S., et al., 2012, A&A, 548, A11. doi:10.1051/0004-6361/201219894
-
-[de Ugarte Postigo et al.2014]deUgarte2014 de Ugarte Postigo A., Blazek M., Janout P., Sprimont P., Thöne C. C., Gorosabel J., Sánchez-Ramírez R., 2014, SPIE, 9152, 91520B. doi:10.1117/12.2055774
-
-[de Ugarte Postigo et al.2021]30392 de Ugarte Postigo A., Kann D. A., Thoene C., Blazek M., Agui Fernandez J. F., Fynbo J. P. U., Izzo L., et al., 2021, GCN, 30392
-
-[Dichiara et al.2021]30383 Dichiara S., Troja E., Butler N., Watson A. M., Becerra R. L., Kutyrev A., Lee W. H., et al., 2021, GCN, 30383
-
-[Dichiara et al.2021]Dichiara2021 Dichiara S., Troja E., Lipunov V., Ricci R., Oates S. R., Butler N. R., Liuzzo E., et al., 2021, arXiv, arXiv:2111.14861
-
-[Dimple et al.2022]Dimple2022 Dimple, Misra K., Ghosh A., Arun K. G., Gupta R., Kumar A., Resmi L., et al., 2022, arXiv, arXiv:2202.01191. doi:10.48550/arXiv.2202.01191
-
-[Drout et al.2017]Drout17 Drout M. R., Piro A. L., Shappee B. J., Kilpatrick C. D., Simon J. D., Contreras C., Coulter D. A., et al., 2017, Sci, 358, 1570. doi:10.1126/science.aaq0049
-
-[Eichler et al.1989]Eichler1989 Eichler D., Livio M., Piran T., Schramm D. N., 1989, Natur, 340, 126. doi:10.1038/340126a0
-
-[Evans et al.2009]Evans2009 Evans P. A., Beardmore A. P., Page K. L., Osborne J. P., O'Brien P. T., Willingale R., Starling R. L. C., et al., 2009, MNRAS, 397, 1177. doi:10.1111/j.1365-2966.2009.14913.x
-
-[Evans et al.2017]Evans17 Evans P. A., Cenko S. B., Kennea J. A., Emery S. W. K., Kuin N. P. M., Korobkin O., Wollaeger R. T., et al., 2017, Sci, 358, 1565. doi:10.1126/science.aap9580
-
-[Evans & Swift Team2021]30374 Evans P. A., Swift Team, 2021, GCN, 30374
-
-[Fong, Berger, & Fox2010]Fong2010 Fong W., Berger E., Fox D. B., 2010, ApJ, 708, 9. doi:10.1088/0004-637X/708/1/9
-
-[Fong & Rastinejad2021]30445 Fong W., Rastinejad J., 2021, GCN, 30445
-
-[Fraija2015]Fraija2015 Fraija N., 2015, ApJ, 804, 105. doi:10.1088/0004-637X/804/2/105
-
-[Fryer, Burrows, & Benz1998]Fryer1998 Fryer C., Burrows A., Benz W., 1998, ApJ, 496, 333. doi:10.1086/305348
-
-[Fryer, Hungerford, & Young2007]Fryer2007 Fryer C. L., Hungerford A. L., Young P. A., 2007, ApJL, 662, L55. doi:10.1086/519523
-
-
-[Fynbo et al.2009]Fynbo2009 Fynbo J. P. U., Jakobsson P., Prochaska J. X., Malesani D., Ledoux C., de Ugarte Postigo A., Nardini M., et al., 2009, ApJS, 185, 526. doi:10.1088/0067-0049/185/2/526
-
-
-[Galama et al.1998]Galama1998 Galama T. J., Vreeswijk P. M., van Paradijs J., Kouveliotou C., Augusteijn T., Böhnhardt H., Brewer J. P., et al., 1998, Nature, 395, 670. doi:10.1038/27150
-
-[Garcia-Cifuentes al.2023]Garcia-Cifuentes2023 Garcia-Cifuentes, K., Becerra R. L., De Colle F., Cabrera J. I., del Burgo, C. 2023, ApJ, submitted
-
-[Gehrels et al.2005]Gehrels2005 Gehrels N., Sarazin C. L., O'Brien P. T., Zhang B., Barbier L., Barthelmy S. D., Blustin A., et al., 2005, Natur, 437, 851. doi:10.1038/nature04142
-
-[Gehrels et al.2006]Gehrels2006 Gehrels N., Norris J. P., Barthelmy S. D., Granot J., Kaneko Y., Kouveliotou C., Markwardt C. B., et al., 2006, Natur, 444, 1044. doi:10.1038/nature05376
-
-[Gehrels & Razzaque2013]Gehrels2013 Gehrels N., Razzaque S., 2013, FrPhy, 8, 661. doi:10.1007/s11467-013-0282-3
-
-[Giacomazzo, Rezzolla, & Stergioulas2011]Giacomazzo2011 Giacomazzo B., Rezzolla L., Stergioulas N., 2011, PhRvD, 84, 024022. doi:10.1103/PhysRevD.84.024022
-
-[Gonzaga et al.2012]Gonzaga2012 Gonzaga S., Hack W., Fruchter A., Mack J., 2012, drzp.book
-
-[Granot & Sari2002]Granot2002 Granot J., Sari R., 2002, ApJ, 568, 820. doi:10.1086/338966
-
-[Grossman et al.2014]Grossman2014 Grossman D., Korobkin O., Rosswog S., Piran T., 2014, MNRAS, 439, 757. doi:10.1093/mnras/stt2503
-
-[Hakkila et al.2018]Hakkila+18smoke Hakkila J., Lesage S., McAfee S., Hofesmann E., Maly Taylor C., Cannon T., 2018, ApJ, 863, 77. doi:10.3847/1538-4357/aad335
-
-[Hjorth & Bloom2012]Hjorth2012 Hjorth J., Bloom J. S., 2012, grb..book, 169
-
-[Ho et al.(2020)]Ho2020 Ho, A. Y. Q., Perley, D. A., Kulkarni, S. R., et al. 2020, , 895, 49. doi:10.3847/1538-4357/ab8bcf
-
-[Hosseinzadeh et al.2017]Hosseinzadeh2017 Hosseinzadeh G., Arcavi I., Valenti S., McCully C., Howell D. A., Johansson J., Sollerman J., et al., 2017, ApJ, 836, 158. doi:10.3847/1538-4357/836/2/158
-
-
-[Johnson et al.2019]Johnson2019 Johnson B. D., Leja J. L., Conroy C., Speagle J. S., 2019, ascl.soft
-
-[Kashikawa et al.2004]Kashikawa2004 Kashikawa N., Shimasaku K., Yasuda N., Ajiki M., Akiyama M., Ando H., Aoki K., et al., 2004, PASJ, 56, 1011. doi:10.1093/pasj/56.6.1011
-
-[Kann et al.2021]30391 Kann D. A., de Ugarte Postigo A., Thoene C., Blazek M., Agui Fernandez J. F., Martin-Fernandez P., 2021, GCN, 30391
-
-[Kann et al.2021]30401 Kann D. A., de Ugarte Postigo A., Thoene C., Blazek M., Agui Fernandez J. F., Maicas N., Lamadrid (COAJ J. L., 2021, GCN, 30401
-
-[Kann et al.2021]30443 Kann D. A., Izzo L., Galindo Guil F. J., Kasikov A., 2021, GCN, 30443
-
-[Kim et al.2021]30384 Kim V., Pozanenko A., Krugov M., Belkin S., Pankov N., IKI FuN G., 2021, GCN, 30384
-
-[King, Olsson, & Davies2007]King2007 King A., Olsson E., Davies M. B., 2007, MNRAS, 374, L34. doi:10.1111/j.1745-3933.2006.00259.x
-
-[Kouveliotou, et al.1993]Kouveliotou93 Kouveliotou C., et al., 1993, ApJL, 413, L101
-
-[Kumar & Piran2000]Kumar2000 Kumar P., Piran T., 2000, ApJ, 532, 286. doi:10.1086/308537
-
-[Kunzweiler et al.2021]30369 Kunzweiler F., Biltzinger B., Berlato F., Burgess J., Greiner J., 2021, GCN, 30369
-
-[Le Fèvre et al.2004]LeFevre2004 Le Fèvre O., Vettolani G., Paltani S., Tresse L., Zamorani G., Le Brun V., Moreau C., et al., 2004, A&A, 428, 1043. doi:10.1051/0004-6361:20048072
-
-
-[Lee & Ramirez-Ruiz2007]Lee2007 Lee W. H., Ramirez-Ruiz E., 2007, NJPh, 9, 17. doi:10.1088/1367-2630/9/1/017
-
-[Levan et al.2006]Levan2006 Levan A. J., Wynn G. A., Chapman R., Davies M. B., King A. R., Priddey R. S., Tanvir N. R., 2006, MNRAS, 368, L1. doi:10.1111/j.1745-3933.2006.00144.x
-
-[Levan et al.2021]30381 Levan A. J., Campana S., Kann D. A., D'Avanzo P., 2021, GCN, 30381
-
-[Levesque2014]Levesque2014 Levesque E. M., 2014, PASP, 126, 1. doi:10.1086/674531
-
-[Lyutikov & Toonen2019]LyutikovToonen2019 Lyutikov M., Toonen S., 2019, MNRAS, 487, 5618. doi:10.1093/mnras/stz1640
-
-[MacFadyen & Woosley1999]MacFadyen1999ApJ MacFadyen A. I., Woosley S. E., 1999, ApJ, 524, 262. doi:10.1086/307790
-
-[Malacaria, Meegan, & Fermi GBM Team2021]30380 Malacaria C., Meegan C., Fermi GBM Team, 2021, GCN, 30380
-
-[Mazzali et al.2006]Mazzali2006 Mazzali P. A., Deng J., Nomoto K., Sauer D. N., Pian E., Tominaga N., Tanaka M., et al., 2006, Natur, 442, 1018. doi:10.1038/nature05081
-
-[McCracken et al.2003]McCracken2003 McCracken H. J., Radovich M., Bertin E., Mellier Y., Dantel-Fort M., Le Fèvre O., Cuillandre J. C., et al., 2003, A&A, 410, 17. doi:10.1051/0004-6361:20031081
-
-[Mendel et al.2014]Mendel2014 Mendel J. T., Simard L., Palmer M., Ellison S. L., Patton D. R., 2014, ApJS, 210, 3
-
-[Metcalfe et al.2001]Metcalfe2001 Metcalfe N., Shanks T., Campos A., McCracken H. J., Fong R., 2001, MNRAS, 323, 795. doi:10.1046/j.1365-8711.2001.04168.x
-
-[Minaev & Pozanenko2020]Minaev2020 Minaev P. Y., Pozanenko A. S., 2020, MNRAS, 492, 1919. doi:10.1093/mnras/stz3611
-
-[Minaev et al.2021a]30444 Minaev, Pozanenko, Chelovekov, Grebenev, GRB IKI FuN, 2021, GCN, 30444
-
-[Minaev et al.2021b]30452 Minaev P., Pozanenko A., Chelovekov I., Grebenev S., GRB IKI FuN, 2021, GCN, 30452
-
-[Mirabal et al.2006]Mirabal2006 Mirabal N., Halpern J. P., An D., Thorstensen J. R., Terndrup D. M., 2006, ApJL, 643, L99. doi:10.1086/505177
-
-[Miyazaki et al.2018]Miyazaki2018 Miyazaki S., Komiyama Y., Kawanomoto S., Doi Y., Furusawa H., Hamana T., Hayashi Y., et al., 2018, PASJ, 70, S1. doi:10.1093/pasj/psx063
-
-[Moss et al.2022]Moss2022 Moss M., Lien A., Guiriec S., Cenko S. B., Sakamoto T., 2022, ApJ, 927, 157. doi:10.3847/1538-4357/ac4d94
-
-[Nakar & Piran(2017)]nakar17 Nakar, E. & Piran, T. 2017, , 834, 28. doi:10.3847/1538-4357/834/1/28
-
-[Narayan, Paczynski, & Piran1992]Narayan1992 Narayan R., Paczynski B., Piran T., 1992, ApJL, 395, L83. doi:10.1086/186493
-
-[Norris, Marani, & Bonnell2000]Norris2000 Norris J. P., Marani G. F., Bonnell J. T., 2000, ApJ, 534, 248. doi:10.1086/308725
-
-[Norris2002]Norris2002 Norris J. P., 2002, ApJ, 579, 386. doi:10.1086/342747
-
-[O'Connor, Beniamini, & Kouveliotou2020]OConnor2020 O'Connor B., Beniamini P., Kouveliotou C., 2020, MNRAS, 495, 4782. doi:10.1093/mnras/staa1433
-
-[O'Connor et al.2021]OConnor2021 O'Connor B., Troja E., Dichiara S., Chase E. A., Ryan G., Cenko S. B., Fryer C. L., et al., 2021, MNRAS, 502, 1279. doi:10.1093/mnras/stab132
-
-[O'Connor et al.2021]30451
-O'Connor, B., Troja, E., Zack, E., Dichiara, S., Gatkine, P., Durbak J. M., Cenko, S. B., Kutyrev, A., & Veilleux, S. 2021, GCN, 30451
-
-[O'Connor et al.2022]OConnor2022 O'Connor B., Troja E., Dichiara S., Beniamini P., Cenko S. B., Kouveliotou C., González J. B., et al., 2022, MNRAS.tmp. doi:10.1093/mnras/stac1982
-
-[O'Connor et al.2023]OConnor2023 O'Connor B., Troja E., Ryan G., Beniamini P., van Eerten H., Granot J., Dichiara S., et al., 2023, arXiv, arXiv:2302.07906. doi:10.48550/arXiv.2302.07906
-
-[Page et al.2006]Page2006 Page K. L., King A. R., Levan A. J., O'Brien P. T., Osborne J. P., Barthelmy S. D., Beardmore A. P., et al., 2006, ApJL, 637, L13. doi:10.1086/500430
-
-[Palmerio, et al.2019]Palmerio2019 Palmerio J. T., et al., 2019, A&A, 623, A26
-
-[Pankov et al.2021]30440 Pankov N., Belkin S., Kim V., Pozanenko A., Krugov M., GRB IKI FuN, 2021, GCN, 30440
-
-[Pastorello et al.2010]Pastorello2010 Pastorello A., Smartt S. J., Botticella M. T., Maguire K., Fraser M., Smith K., Kotak R., et al., 2010, ApJL, 724, L16. doi:10.1088/2041-8205/724/1/L16
-
-
-[Perley et al.2019]Perley2019 Perley D. A., Mazzali P. A., Yan L., Cenko S. B., Gezari S., Taggart K., Blagorodnova N., et al., 2019, MNRAS, 484, 1031. doi:10.1093/mnras/sty3420
-
-[Perley et al.2021]Perley2021 Perley D. A., Ho A. Y. Q., Yao Y., Fremling C., Anderson J. P., Schulze S., Kumar H., et al., 2021, MNRAS, 508, 5138. doi:10.1093/mnras/stab2785
-
-[Planck Collaboration et al.2014]Planck2014 Planck Collaboration, Ade P. A. R., Aghanim N., Alves M. I. R., Armitage-Caplan C., Arnaud M., Ashdown M., et al., 2014, A&A, 571, A1. doi:10.1051/0004-6361/201321529
-
-[Poolakkil et al.2021]Poolakkil2021 Poolakkil S., Preece R., Fletcher C., Goldstein A., Bhat P. N., Bissaldi E., Briggs M. S., et al., 2021, ApJ, 913, 60. doi:10.3847/1538-4357/abf24d
-
-[Prasad et al.2021]30378 Prasad V., Sawant P., Waratkar G., Vibhute A., Bhalerao V., Bhattacharya D., Rao A. R., et al., 2021, GCN, 30378
-
-[Qin et al.2013]Qin2013 Qin Y., Liang E.-W., Liang Y.-F., Yi S.-X., Lin L., Zhang B.-B., Zhang J., et al., 2013, ApJ, 763, 15. doi:10.1088/0004-637X/763/1/15
-
-[Rastinejad et al.2021]Rastinejad2021 Rastinejad J. C., Fong W., Kilpatrick C. D., Paterson K., Tanvir N. R., Levan A. J., Metzger B. D., et al., 2021, ApJ, 916, 89. doi:10.3847/1538-4357/ac04b4
-
-[Rastinejad et al.2021]30433 Rastinejad J., Levan A., Fong W., Tanvir N. R., Rouco Escorial A., 2021, GCN, 30433
-
-[Richardson et al.2014]Richardson2014 Richardson D., Jenkins R. L., Wright J., Maddox L., 2014, AJ, 147, 118. doi:10.1088/0004-6256/147/5/118
-
-[Richmond et al.1996]Richmon1996 Richmond M. W., van Dyk S. D., Ho W., Peng C. Y., Paik Y., Treffers R. R., Filippenko A. V., et al., 1996, AJ, 111, 327. doi:10.1086/117785
-
-[Ridnaia et al.2021]30388 Ridnaia A., Frederiks D., Golenetskii S., Lysenko A., Svinkin D., Tsvetkova A., Ulanov M., et al., 2021, GCN, 30388
-
-[Rosswog & Ramirez-Ruiz2002]Rosswog2002 Rosswog S., Ramirez-Ruiz E., 2002, MNRAS, 336, L7. doi:10.1046/j.1365-8711.2002.05898.x
-
-[Rueda et al.2018]Rueda2018 Rueda J. A., Ruffini R., Wang Y., Aimuratov Y., Barres de Almeida U., Bianco C. L., Chen Y. C., et al., 2018, JCAP, 2018, 006. doi:10.1088/1475-7516/2018/10/006
-
-[Ruffert & Janka1998]Ruffert1998 Ruffert M., Janka H.-T., 1998, A&A, 338, 535
-
-[Salafia et al.2021]Salafia2021 Salafia O. S., Ravasio M. E., Yang J., An T., Orienti M., Ghirlanda G., Nava L., et al., 2021, arXiv, arXiv:2106.07169
-
-[Sari, Piran, & Narayan1998]Sari1998 Sari R., Piran T., Narayan R., 1998, ApJL, 497, L17. doi:10.1086/311269
-
-[Savaglio, Glazebrook, & Le Borgne2009]Savaglio09 Savaglio S., Glazebrook K., Le Borgne D., 2009, ApJ, 691, 182. doi:10.1088/0004-637X/691/1/182
-
-[Schlegel, Finkbeiner, & Davis1998]Schlegel1998 Schlegel D. J., Finkbeiner D. P., Davis M., 1998, ApJ, 500, 525. doi:10.1086/305772
-
-[Sharon & Kushnir2020]SharonKushnir2020 Sharon A., Kushnir D., 2020, ApJ, 894, 146. doi:10.3847/1538-4357/ab8a31
-
-[Speagle2020]dynesty Speagle J. S., 2020, MNRAS, 493, 3132.
-
-[Sun et al.2021]30411 Sun T.-R., Hu Y.-D., Fernandez-Garcia E., Caballero-Garcia A. J. C.-T. M. D., Castro Tirado M. A., Martin-Fernandez P., 2021, GCN, 30411
-
-[Tanvir et al.2013]Tanvir13 Tanvir N. R., Levan A. J., Fruchter A. S., Hjorth J., Hounsell R. A., Wiersema K., Tunnicliffe R. L., 2013, Natur, 500, 547. doi:10.1038/nature12505
-
-[Toba et al.2014]Toba2014 Toba Y., Oyabu S., Matsuhara H., Malkan M. A., Gandhi P., Nakagawa T., Isobe N., et al., 2014, ApJ, 788, 45. doi:10.1088/0004-637X/788/1/45
-
-[Troja et al.2008]Troja2008 Troja E., King A. R., O'Brien P. T., Lyons N., Cusumano G., 2008, MNRAS, 385, L10. doi:10.1111/j.1745-3933.2007.00421.x
-
-[Troja et al.2012]Troja2012 Troja E., Sakamoto T., Guidorzi C., Norris J. P., Panaitescu A., Kobayashi S., Omodei N., et al., 2012, ApJ, 761, 50. doi:10.1088/0004-637X/761/1/50
-
-[Troja et al.2019]Troja2019 Troja E., Castro-Tirado A. J., Becerra González J., Hu Y., Ryan G. S., Cenko S. B., Ricci R., et al., 2019, MNRAS, 489, 2104. doi:10.1093/mnras/stz2255
-
-[Troja et al.2021]30390 Troja E., Butler N., Watson A. M., Kutyrev A., Lee W. H., Richer M. G., Fox O., et al., 2021, GCN, 30390
-
-[Troja et al.2022]Troja2022 Troja E., Fryer C. L., O'Connor B., Ryan G., Dichiara S., Kumar A., Ito N., et al., 2022, Natur, 612, 228. doi:10.1038/s41586-022-05327-3
-
-[Troja, Watson, & O'Connor2021]30442 Troja E., Watson A., O'Connor B., 2021, GCN, 30442
-
-[Tundo et al.2012]Tundo2012 Tundo E., Moretti A., Tozzi P., Teng L., Rosati P., Tagliaferri G., Campana S., 2012, A&A, 547, A57. doi:10.1051/0004-6361/201219038
-
-[Tunnicliffe et al.2014]Tunnicliffe2014 Tunnicliffe R. L., Levan A. J., Tanvir N. R., Rowlinson A., Perley D. A., Bloom J. S., Cenko S. B., et al., 2014, MNRAS, 437, 1495. doi:10.1093/mnras/stt1975
-
-
-[Ukwatta et al.2010]Ukwatta+10lag Ukwatta T. N., Stamatikos M., Dhuga K. S., Sakamoto T., Barthelmy S. D., Eskandarian A., Gehrels N., et al., 2010, ApJ, 711, 1073. doi:10.1088/0004-637X/711/2/1073
-
-
-[Ursi et al.2021]30372 Ursi A., Pittori C., Verrecchia F., Tavani M., Argan A., Cardillo M., Casentini C., et al., 2021, GCN, 30372
-
-[Valenti et al.2008]Valenti2008 Valenti S., Benetti S., Cappellaro E., Patat F., Mazzali P., Turatto M., Hurley K., et al., 2008, MNRAS, 383, 1485. doi:10.1111/j.1365-2966.2007.12647.x
-
-
-[Villar et al.2017]Villar2017 Villar V. A., Guillochon J., Berger E., Metzger B. D., Cowperthwaite P. S., Nicholl M., Alexander K. D., et al., 2017, ApJL, 851, L21. doi:10.3847/2041-8213/aa9c84
-
-[Vinkó et al.2015]Vinko2015 Vinkó J., Yuan F., Quimby R. M., Wheeler J. C., Ramirez-Ruiz E., Guillochon J., Chatzopoulos E., et al., 2015, ApJ, 798, 12. doi:10.1088/0004-637X/798/1/12
-
-[Volnova et al.2021]30465 Volnova A., Moskvitin A., Pozanenko A., Pankov N., Belkin S., IKI FuN G., 2021, GCN, 30465
-
-[Watson et al.2021]30436 Watson A. M., Troja E., Becerra R. L., Sánchez R., Thakur A., Dichiara S., Butler N., et al., 2021, GCN, 30436
-
-[Williams et al.2023]Williams2023 Williams M. A., Kennea J. A., Dichiara S., Kobayashi K., Iwakiri W. B., Beardmore A. P., Evans P. A., et al., 2023, arXiv, arXiv:2302.03642. doi:10.48550/arXiv.2302.03642
-
-[Wollaeger et al.2021]Wollaeger2021 Wollaeger R. T., Fryer C. L., Chase E. A., Fontes C. J., Ristic M., Hungerford A. L., Korobkin O., et al., 2021, ApJ, 918, 10. doi:10.3847/1538-4357/ac0d03
-
-[Woosley1993]Woosley1993 Woosley S. E., 1993, ApJ, 405, 273. doi:10.1086/172359
-
-[Woosley & Bloom2006]Woosley2006 Woosley S. E., Bloom J. S., 2006, ARA&A, 44, 507. doi:10.1146/annurev.astro.43.072103.150558
-
-[Yang et al.2022]Yang2022 Yang J., Ai S., Zhang B.-B., Zhang B., Liu Z.-K., Wang X. I., Yang Y.-H., et al., 2022, Natur, 612, 232. doi:10.1038/s41586-022-05403-8
-
-[Zemp, Ramirez-Ruiz, & Diemand2009]Zemp2009 Zemp M., Ramirez-Ruiz E., Diemand J., 2009, ApJL, 705, L186. doi:10.1088/0004-637X/705/2/L186
-
-[Zhang et al.2021]Zhang2021 Zhang B.-B., Liu Z.-K., Peng Z.-K., Li Y., Lü H.-J., Yang J., Yang Y.-S., et al., 2021, NatAs, 5, 911. doi:10.1038/s41550-021-01395-z
-
-
-
-
-[Greiner et al.2015]Greiner2015 Greiner J., Mazzali P. A., Kann D. A., Krühler T., Pian E., Prentice S., Olivares E. F., et al., 2015, Natur, 523, 189. doi:10.1038/nature14579
-
-
-
-
-
-
-
-
-
-
-
-
+    ℚ = 0.9[ (1-NPV)λ_-          0     NPVλ_-          0;          0 (1-NPV)λ_-          0     NPVλ_- ].
 
 
 

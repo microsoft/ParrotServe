@@ -51,6 +51,18 @@ class ArxivLoader:
             f"No enough articles with length greater than {token_length} found."
         )
 
+    def generate_articles_length_greater_than(self, token_length: int, sample_num: int):
+        data_sorted = sorted(self.data, key=lambda x: len(x["tokenized_text"]))
+
+        num_sampled = 0
+        for _, data_dict in enumerate(data_sorted):
+            if len(data_dict["tokenized_text"]) < token_length:
+                continue
+            yield data_dict
+            num_sampled += 1
+            if num_sampled >= sample_num:
+                break
+
 
 if __name__ == "__main__":
     loader = ArxivLoader(tokenizer_name="hf-internal-testing/llama-tokenizer")
@@ -58,7 +70,16 @@ if __name__ == "__main__":
 
     indices = loader.sample_articles_length_greater_than(20000, 20)
 
-    for i, index in enumerate(indices):
-        with open(f"arxiv-sampled-1/article_{i}.txt", encoding="utf-8", mode="w") as f:
-            print(len(loader.data[index]["tokenized_text"]))
-            f.write(loader.data[index]["text"])
+    # for i, index in enumerate(indices):
+    #     with open(f"arxiv-sampled-1/article_{i}.txt", encoding="utf-8", mode="w") as f:
+    #         print(len(loader.data[index]["tokenized_text"]))
+    #         f.write(loader.data[index]["text"])
+
+    counter = 0
+    for data_dict in loader.generate_articles_length_greater_than(20000, 30):
+        with open(
+            f"arxiv-sampled-1/article_{counter}.txt", encoding="utf-8", mode="w"
+        ) as f:
+            print(len(data_dict["tokenized_text"]))
+            f.write(data_dict["text"])
+            counter += 1

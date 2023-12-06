@@ -156,12 +156,15 @@ class Scheduler:
 
         # For normal mode, we repeatly count prefix because it's repeated loaded.
 
-        self.running_jobs.sort(
-            key=lambda job: (
-                self._thread_arrival_time[f"{job.pid}_{job.tid}"],
-                self._job_arrival_time[job.context_id],
-            )
-        )
+        # self.running_jobs.sort(
+        #     key=lambda job: (
+        #         self._thread_arrival_time[f"{job.pid}_{job.tid}"],
+        #         self._job_arrival_time[job.context_id],
+        #     )
+        # )
+
+        # HACK(chaofan): App FIFO
+        self.running_jobs.sort(key=lambda job: job.pid)
 
         # print(f"Running jobs: {self.running_jobs}")
         # print(self._thread_arrival_time)

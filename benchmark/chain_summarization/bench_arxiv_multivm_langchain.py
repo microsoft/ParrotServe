@@ -9,7 +9,7 @@ from parrot.testing.multiproc_manager import MultiProcessManager
 
 
 def process(barrier: Barrier, file_name: str):
-    chunk_size = 1024
+    chunk_size = 2048
     output_len = 50
 
     ### Langchain part
@@ -36,9 +36,6 @@ def process(barrier: Barrier, file_name: str):
         separator=" ",
     )
     split_docs = text_splitter.split_documents(docs)
-
-    # for i, doc in enumerate(split_docs):
-    #     print(i, len(tokenizer.encode(doc.page_content)))
 
     prompt_template = """Write a concise summary of the following:
     {text}
@@ -80,13 +77,23 @@ def process(barrier: Barrier, file_name: str):
     return (ed - st) / 1e9
 
 
-clients_num = 8
-manager = MultiProcessManager()
-barrier = Barrier(clients_num)
+def main(clients_num: int):
+    print("clients_num:", clients_num, flush=True)
+    manager = MultiProcessManager()
+    barrier = Barrier(clients_num)
 
-for i in range(clients_num):
-    manager.add_proc(process, (barrier, f"article_{i}"))
+    for i in range(clients_num):
+        manager.add_proc(process, (barrier, f"article_{i}"))
 
-manager.run_all()
-print(manager.data)
-print(f"Avg. JCT {mean(list(manager.data.values())):.2f} (s)")
+    manager.run_all()
+    print(manager.data)
+    print(f"Avg. JCT {mean(list(manager.data.values())):.2f} (s)", flush=True)
+
+
+if __name__ == "__main__":
+    # main(16)
+    # main(20)
+    # main(8)
+    for num in [10, 15, 20, 25]:
+        main(num)
+        time.sleep(10)

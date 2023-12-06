@@ -40,13 +40,16 @@ class ThreadDispatcher:
     ):
         self.config = config
         self.engines = engines
+        self.live_engines: Dict[int, ExecutionEngine] = {}
         self.ping_engine_method = ping_engine_method
 
         self.threads: Dict[str, Thread] = {}  # uid -> thread
         self.thread_queue = Queue(maxsize=self.config.max_queue_size)
 
+        self._flushed = False
+
     def _get_engine_list(self, thread: Thread) -> List[ExecutionEngine]:
-        engines_list = list(self.engines.values())
+        engines_list = list(self.live_engines.values())
         models = thread.call.func.metadata.models
         request_upperbound = thread.requests_num_upperbound
 
@@ -125,21 +128,23 @@ class ThreadDispatcher:
         if self.thread_queue.qsize() == 0:
             return []
 
-        # with cprofile("dispatch"):
-        dispatched_threads: List[Thread] = []
-
         # Flush engines.
         # To make sure the engine is alive, we need to ping it first and sweep the dead engines.
         # And ping the engines can also update the engine status.
-        if self.ping_engine_method is not None:
+        if self.ping_engine_method is not None and not self._flushed:
             for _, engine in self.engines.items():
                 self.ping_engine_method(engine)
+            self._flushed = True
 
-        dead_keys = [key for key, engine in self.engines.items() if engine.dead]
-        for key in dead_keys:
-            self.engines.pop(key)
+        self.live_engines = {
+            engine_id: engine
+            for engine_id, engine in self.engines.items()
+            if not engine.dead
+        }
 
-        # Dispatch all possible threads.
+        # with cprofile("dispatch"):
+        dispatched_threads: List[Thread] = []
+
         new_thread_queue = []
 
         # Currently only two levels: 0 for normal, 1 for promoted.
@@ -152,7 +157,11 @@ class ThreadDispatcher:
                 f"Thread not in the thread queue. {self.threads}",
             )
 
-            if not thread.ready_to_dispatch() or not self._dispatch_one(thread):
+            if (
+                len(dispatched_threads) > 0
+                or not thread.ready_to_dispatch()
+                or not self._dispatch_one(thread)
+            ):
                 # If the process is not alive, discard the thread directly.
                 if thread.process.live:
                     new_thread_queue.append(thread)
@@ -167,11 +176,11 @@ class ThreadDispatcher:
                     next_threads = thread.get_next_threads()
                     for next_thread in next_threads:
                         if (
-                            next_thread.ready_to_dispatch()
-                            and next_thread.unique_id in self.threads
+                            next_thread.unique_id in self.threads
+                            and next_thread.ready_to_dispatch()
                         ):
                             logger.debug(
-                                f"Thread (tid={next_thread.tid}) promoted by thread {thread.tid}."
+                                f"Thread (tid={next_thread.tid}) promoted by thread {thread.tid}. (pid={thread.process.pid})"
                             )
                             priority[next_thread.unique_id] = 1
 
@@ -229,5 +238,7 @@ class ThreadDispatcher:
                     ]
                 )
             )
+
+        self._flushed = False
 
         return dispatched_threads

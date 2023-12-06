@@ -29,6 +29,11 @@ def get_chunks(file_name: str, chunk_size: int):
     )
     split_docs = text_splitter.split_documents(docs)
 
+    # for i, doc in enumerate(split_docs):
+    #     print(i, len(tokenizer.encode(doc.page_content)))
+
+    # 0 / 0
+
     return [doc.page_content for doc in split_docs]
 
 
@@ -87,7 +92,7 @@ CONCISE SUMMARY:{{summary}}""",
 
 
 def process(barrier: Barrier, article_no: int):
-    chunk_size = 1024
+    chunk_size = 2048
     output_len = 50
 
     vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
@@ -141,6 +146,10 @@ if __name__ == "__main__":
     # main(10)
     # main(4)
     # time.sleep(10)
-    # main(6)
+    # main(8)
     # time.sleep(10)
-    main(8)
+    # main(20)
+    for num in [10, 15, 20, 25]:
+        main(num)
+        time.sleep(10)
+    # main(30)

@@ -37,9 +37,8 @@ class LLMEngine(ABC):
             self.os_http_address = f"http://{os_config['host']}:{os_config['port']}"
         engine_config.pop("os")
 
-        new_event_loop = asyncio.new_event_loop()
         self._heartbeat_thread = threading.Thread(
-            target=self._heartbeat_daemon, args=(new_event_loop,), daemon=True
+            target=self._heartbeat_daemon, daemon=True
         )
 
     def _register_engine(self, engine_config: EngineConfig):
@@ -105,7 +104,7 @@ class LLMEngine(ABC):
         ...
 
     @abstractmethod
-    async def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
+    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         """Get runtime info of this engine.
 
         Return: EngineRuntimeInfo."""
@@ -118,7 +117,7 @@ class LLMEngine(ABC):
 
     # Implemented methods
 
-    async def heartbeat(self):
+    def heartbeat(self):
         """Heartbeat sent to OS.
 
         Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
@@ -130,7 +129,7 @@ class LLMEngine(ABC):
 
         engine_name = self.engine_config.engine_name
         engine_id = self.engine_id
-        engine_runtime_info = await self.get_runtime_info(profile=False)  # Performance
+        engine_runtime_info = self.get_runtime_info(profile=False)  # Performance
 
         logger.debug(
             f"Engine {engine_name} (id={engine_id}) heartbeat sent. "
@@ -144,17 +143,12 @@ class LLMEngine(ABC):
             runtime_info=engine_runtime_info,
         )
 
-    def _heartbeat_daemon(self, event_loop):
+    def _heartbeat_daemon(self):
         """Loop for heartbeat."""
 
-        asyncio.set_event_loop(event_loop)
-
-        async def _loop():
-            while True:
-                await self.heartbeat()  # Send heartbeat to OS
-                time.sleep(ENGINE_HEARTBEAT_INTERVAL)
-
-        event_loop.run_until_complete(_loop())
+        while True:
+            self.heartbeat()  # Send heartbeat to OS
+            time.sleep(ENGINE_HEARTBEAT_INTERVAL)
 
     async def engine_loop(self):
         """Engine loop, execute jobs token by token.

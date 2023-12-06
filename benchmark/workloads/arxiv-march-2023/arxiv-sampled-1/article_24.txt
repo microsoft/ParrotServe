@@ -1,0 +1,1641 @@
+
+
+
+
+
+
+
+
+
+Research Center for Computational Design of Advanced Functional Materials, National Institute of Advanced Industrial Science and Technology (AIST), 1-1-1 Umezono, Tsukuba, Ibaraki, 305-8568, Japan
+Quantum Computing Center, Keio University, Hiyoshi 3-14-1, Kohoku-ku, Yokohama 223-8522, Japan
+
+
+
+Toyota Central R & D Labs., Inc., Koraku Mori Building 10F, 1-4-14 Koraku, Bunkyo-ku, Tokyo 112-0004, Japan
+Quantum Computing Center, Keio University, Hiyoshi 3-14-1, Kohoku-ku, Yokohama 223-8522, Japan
+
+
+IBM Quantum, IBM Japan, 19-21 Nihonbashi Hakozaki-cho, Chuo-ku, Tokyo 103-8510, Japan
+Quantum Computing Center, Keio University, Hiyoshi 3-14-1, Kohoku-ku, Yokohama 223-8522, Japan
+Department of Computer Science, The University of Tokyo, 7-3-1, Hongo, Bunkyo-ku, Tokyo 113-0033, Japan
+
+
+Department of Applied Physics and Physico-Informatics, Keio University, Hiyoshi 3-14-1, Kohoku-ku, Yokohama 223-8522, Japan
+
+
+Quantum Computing Center, Keio University, Hiyoshi 3-14-1, Kohoku-ku, Yokohama 223-8522, Japan
+Department of Applied Physics and Physico-Informatics, Keio University, Hiyoshi 3-14-1, Kohoku-ku, Yokohama 223-8522, Japan
+
+
+
+
+
+
+Quantum Computing Center, Keio University, Hiyoshi 3-14-1, Kohoku-ku, Yokohama 223-8522, Japan
+
+
+
+Variational Quantum Eigensolver (VQE) is a hybrid algorithm for finding the minimum eigenvalue/vector of a given Hamiltonian by optimizing a parametrized quantum circuit (PQC) using a classical computer. 
+Sequential optimization methods, which are often used in quantum circuit tensor networks, are popular for optimizing the parametrized gates of PQCs.  
+This paper focuses on the case where the components to be optimized are single-qubit gates, in which the analytic optimization of a single-qubit gate is sequentially performed.
+The analytical solution is given by diagonalization of a matrix whose elements are computed from the expectation values of observables specified by a set of predetermined parameters which we call the parameter configurations. 
+In this study, we first show that the optimization accuracy significantly depends on the choice of parameter configurations due to the statistical errors in the expectation values. 
+We then identify a metric that quantifies the optimization accuracy of a parameter configuration for all possible statistical errors, named configuration overhead/cost or C-cost.
+We theoretically provide the lower bound of C-cost and show that, for the minimum size of parameter configurations, the lower bound is achieved if and only if the parameter configuration satisfies the so-called equiangular line condition.
+Finally, we provide numerical experiments demonstrating that the optimal parameter configuration exhibits the best result in several VQE problems.
+We hope that this general statistical methodology will enhance the efficacy of sequential optimization of PQCs for solving practical problems with near-term quantum devices.
+
+
+
+
+Optimal Parameter Configurations for Sequential Optimization of Variational Quantum Eigensolver
+
+    Hiroshi C. Watanabe
+    March 30, 2023
+=================================================================================================
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+
+Variational Quantum Eigensolver (VQE) <cit.> 
+is a classical-quantum hybrid algorithm implementable on near-term quantum devices, 
+for finding the minimum eigenvalue/vector of a given Hamiltonian; 
+the recipe is simply to prepare a parametrized quantum circuit (PQC) U(θ), also called ansatz, 
+and then find a parameter θ that minimizes 
+⟨ H ⟩ = 
+⟨ψ|U(θ)^† H U(θ)|ψ⟩ with some initial 
+state |ψ⟩. 
+Note that VQE is a class of the variational quantum algorithms (VQAs) 
+<cit.>, where in general the cost is a non-linear 
+function of the expectation values of some Hamiltonians. 
+VQA has a wide range of applications, such as quantum chemical calculations <cit.>, combinatorial optimization <cit.>, and linear equation solvers <cit.>. 
+
+
+
+
+
+
+
+The core question is how to model the PQC U(θ) and how to minimize 
+⟨ H ⟩ with some classical optimizer. 
+There have been extensive investigation on this problem <cit.>. 
+In particular, the sequential optimization method have been used in a variety 
+of settings such as quantum circuit tensor-networks 
+<cit.>, 
+where θ corresponds to a set of local unitaries and they are sequentually 
+optimized one by one. 
+In this paper, we focus on the special type of sequential optimization method developed 
+in Refs. <cit.>. 
+In this framework, θ are the parameters characterizing the set of single-qubit 
+rotation gates such as R_y(θ) = e^iθ Y (Y is the Pauli y 
+matrix) in the case of Rotosolve <cit.>. 
+Then the sequential optimization method takes the strategy to exactly optimize 
+the single rotation gates one by one. 
+For example, consider the step where we optimize the R_y(θ) gate contained 
+in the PQC shown in Fig. <ref> by minimizing the cost ⟨ H ⟩ 
+as a function of θ. 
+The point is that, in this case, ⟨ H ⟩ must be of the form of a sinusoidal 
+function with respect to θ, and thus the optimal θ_ opt can be exactly 
+determined once we identify the sinusoidal function shown by the black curve in the figure. 
+In particular, as a nature of sinusoidal function, specifying the mean values of three 
+observables corresponding to the three points of θ allows us to exactly identify 
+⟨ H ⟩; 
+we call the alignment of these three points of θ the parameter configuration. 
+Note that, in the case of Free axis selection (Fraxis) <cit.> where the freedom of a single-qubit 
+rotation gate is served by the rotation axis with fixed rotation angle in the Bloch sphere, 
+⟨ H ⟩ takes the form of a quadratic function of a real normalized vector 
+n=(x,y,z)^T, which can also be exactly minimized. 
+This setup was further generalized to Free Quaternion Selection (FQS) 
+<cit.> so that the rotation angle can also be tuned; 
+then ⟨ H ⟩ takes the form of a quadratic function of a real normalized 
+vector q=(w,x,y,z)^T. 
+In this case, as shown later, the mean values of 10 observables corresponding to 10 points 
+of q identify ⟨ H ⟩; we also call this {q_1, …, q_10} 
+the parameter configuration. 
+
+
+
+
+However, this optimization strategy relies on the critical assumption that the mean 
+values of observables and accordingly ⟨ H ⟩ are exactly identified. 
+In reality, those mean values can only be approximately obtained as the average of 
+a finite number of measurement results; that is, practically there is always a 
+statistical error in ⟨ H ⟩. 
+In the above one-dimensional case, as illustrated in Fig. <ref>, the energy 
+curve, θ_opt, and consequently the minimum value of ⟨ H ⟩ may 
+all largely fluctuate depending on the parameter configuration. 
+Hence the question is what is the best parameter configuration for achieving a small 
+fluctuation of min⟨ H ⟩. 
+In the above one-dimensional case, we have an intuition that the best configuration might 
+be such that the three parameters are equally spaced (i.e., equidistant), as shown in the 
+left bottom of Fig. <ref>, which is indeed true as proven later. 
+However, the general case is of course nontrivial; will we have such equidistant 
+configuration in some sense, or some biased configuration would be the best? 
+
+
+
+
+
+
+
+
+
+
+In this paper, we develop the theory for determining the optimal parameter configuration. 
+As a preliminary result, in Sec. <ref>, we prove that, if the exact 
+expectation values are available without any statistical error, then we have analytical 
+solution of the best parameters achieving min⟨ H ⟩ (almost) without 
+respect to the parameter configuration for every method of 
+<cit.>. 
+Then, in Sec. <ref>, we give the most essential result providing the basis 
+of the theory; that is, we derive the explicit form of the fluctuation of 
+min⟨ H ⟩ under statistical errors, with respect to the parameter 
+configuration. 
+This enables us to introduce the C-cost (configuration cost/overhead), a useful metric for 
+determining min⟨ H ⟩ and thereby providing us with the optimal 
+parameter configuration. 
+Actually, Sec. <ref> gives numerical experiments to demonstrate that 
+the optimal parameter configurations obtained using C-cost yield the best result in 
+the sense of the statistical error of estimating ⟨ H ⟩. 
+
+
+
+Notably, beyond such utilization for numerically determining the configuration, the 
+C-cost satisfies several interesting mathematical properties, suggesting the relevance 
+of this metric. 
+The first is that the lower bound of C-cost is 1; moreover, we prove that, for the 
+minimum size of the parameter set, this bound is achievable if and only if the parameter 
+configuration satisfies a geometric condition called the equiangular line condition, 
+an important and beautiful mathematical concept in algebraic graph theory. Here, each parameter q corresponds to a line that passes the origin and q.
+This condition rigorously supports our above-described intuition that it would be desirable 
+for the parameters to be equally spaced for the Rotosolve case shown in 
+Fig. <ref> or Fig. <ref>A; 
+this intuition holds for the case of Fraxis, showing that there is a unique parameter 
+configuration (up to the global rotation) satisfying the equiangular line condition, 
+as displayed in Fig. <ref>B. 
+But interestingly, this intuition does not apply to the most general FQS case due to the 
+non-existence of 10 equiangular lines in ℝ^4. 
+That is, the so-called Gerzon bounds <cit.>, Neumann theorem <cit.> 
+and Haantjes bound <cit.> prove that 
+there does not exist a set of 10 lines satisfying the equiangular line condition in ℝ^4; the maximum number of such lines is 6. 
+
+
+Nevertheless, the C-cost is still useful in this case, as it gives us a means to numerically obtain 
+the optimal parameter configuration, which is displayed in Fig. <ref>C. 
+
+Furthermore, if redundant measurements are allowed, there exists 
+parameter configurations that achieves the theoretical lower bound of the C-cost, 
+one of which is illustrated in Fig. <ref>D. 
+
+
+
+Finally, we note that equiangular lines in complex spaces are equivalent to symmetric, informationally complete (SIC) POVMs <cit.> whose properties have been much studied, e.g., it is conjectured that there is always a set of d^2 equiangular lines in ℂ^d <cit.> (it has been proven up to some large d theoretically and numerically). The SIC POVMs defined from such lines are informationally complete because the results of other measurements can be computed from those of the SIC POVMs. In this study, we obtain similar results connecting equiangular lines in real spaces with the variational quantum circuits using parametrized single-qubit gates.
+
+
+
+
+
+
+
+
+
+
+
+§ ENERGY MINIMIZATION WITH MATRIX FACTORIZATION
+ 
+
+
+
+
+
+ §.§ Brief review of Rotosolve, Fraxis, and FQS
+
+
+FQS method <cit.> describes the procedure to completely characterize the energy landscape with respect to a single-qubit gate in a PQC.
+
+The parametrized single-qubit gate, which we call FQS gate, is none other than the general single-qubit gate U^(4) expressed as <cit.>
+
+    U^(4)(q) = wI - xiX - yiY - ziZ =q·ς⃗,
+
+where the superscipt indicates the number of parameters: q=(w,x,y,z)^T∈ℝ^4 satisfying q^2=1.
+Here, i is the imaginary unit, I is the 2×2 identity matrix, and X, Y, Z are the Pauli matrices.
+
+ς⃗=(ς_I,ς_X,ς_Y,ς_Z)^T denotes an extension of the Pauli matrices defined as
+
+    ς⃗=(I,-iX,-iY,-iZ)^T.
+
+The dimension of the parameter q is four, but since the parameter q is constrained on the unit hyper-sphere, the degree of freedom of the parameter is three.
+
+
+
+
+
+
+
+
+In Fraxis, the rotation angle is constrained to π, which corresponds to the case 
+w=0 of Eq. (<ref>) as
+
+    U^(3)(n) = -xiX -yiY - ziZ,
+
+where the parameter of the gate is n=(x,y,z)^T such that n^2=1. 
+We term this U^(3) as Fraxis gate. 
+Thus, the Fraxis gate has two degrees of freedom.
+
+
+
+In Rotosolve, the rotation axis is fixed and the rotation angle serves as the parameter.
+In particular, Rx gate fixes the rotation axis to the x-axis; in the form 
+of Eq. (<ref>), this corresponds to y=z=0 and thus
+
+    U^(2)(r) = wI - xiX,
+
+where the parameter of the gate is r=(w,x)^T such that r^2=1.
+Thus, the degree of freedom of Rx gate is one. 
+Similarly, Ry and Rz gates are obtained by replacing X in Eq. (<ref>) 
+with Y and Z, respectively. 
+
+
+
+In what follows we use the most general FQS gate to describe the optimization 
+algorithm. 
+The sequential optimization method takes the strategy to update respective FQS gates 
+in a coordinate-wise manner, where all parameters are fixed except for the focused FQS 
+gate U^(4)( q). 
+The entire quantum circuit containing FQS gates is supposed to be the PQC 
+V=∏_i U^(4)_i( q_i) W_i on the n-qubit system, where U^(4)_i is the ith FQS  gate and W_i is a fixed multi-qubit gate.
+
+
+
+Now, let V_1 and V_2 be the gates placed before and after the focused FQS gate U^(4)( q).
+
+Then, a density matrix ρ prepared by the PQC is expressed as 
+
+    ρ = V_2 U^(4)(q) V_1ρ_ in V_1^†(U^(4)(q) )^† V_2^†,
+
+where ρ_ in is an input density matrix.
+
+Thus, the expectation value ⟨ H ⟩ of given Hamiltonian H with respect 
+to ρ is then 
+
+    ⟨ H ⟩   =   HV_2 U^(4)(q) V_1ρ_ in V_1^†(U^(4)(q))^† V_2^†
+       =   H' U^(4)(q) ρ'_ in(U^(4)(q))^†,
+
+where 
+
+H' = V_2^† H V_2 and ρ'_ in = V_1 ρ_ in V_1^†. 
+
+Substituting Eq. (<ref>) into Eq. (<ref>) yields
+
+    ⟨H|=⟩q^T G^(4)q,
+
+where G^(4) is a 4× 4 real-symmetric matrix:
+
+    G^(4) = [ G_II G_IX G_IY G_IZ; G_IX G_XX G_XY G_XZ; G_IY G_XY G_YY G_YZ; G_IZ G_XZ G_YZ G_ZZ ],
+
+and each element, G_μν (μ,ν=I,X,Y,Z), is defined by
+
+    G_μν=1/2ρ'_ in(ς_μ^† H'ς_ν+ς_ν^† H'ς_μ).
+
+Thus the energy landscape with respect to the FQS gate is completely characterized by the matrix G^(4).
+Because Eq. (<ref>) is a quadratic form with respect to the parameter q 
+with the constraint q^2=1, the eigenvector 
+p_1 associated with the lowest eigenvalue λ_1 of the matrix G^(4) minimizes the energy (<ref>); see Appendix <ref> for the details.
+
+In the following, we call the matrix G^(4) FQS matrix. 
+Note that the above result can be directly extended to the case of Fraxis and Rotosolve, in which case Eq. (<ref>) is replaced by 
+
+
+    G^(3) = [ G_XX G_XY G_XZ; G_XY G_YY G_YZ; G_XZ G_YZ G_ZZ ],
+
+and
+
+    G^(2) = [ G_II G_IX; G_IX G_XX ],
+
+respectively.
+
+
+
+
+
+ §.§ FQS with arbitrary parameter configurations
+
+
+
+
+
+
+Since G^(4) is a real-symmetric matrix, we can expand Eq. (<ref>) as the following form:
+
+    ⟨ H ⟩   = G_II w^2
+        + G_XX x^2
+        + G_YY y^2
+        + G_ZZ z^2 
+       + 2 G_IX wx
+        + 2 G_IY wy
+        + 2 G_IZ wz 
+       + 2 G_XY xy
+        + 2 G_XZ xz
+        + 2 G_YZ yz.
+
+
+Eq. (<ref>) indicates that, if we know all the 10 coefficients  
+(G_II,...,G_YZ), we can exactly estimate the expectation ⟨ H ⟩ 
+for any parameter q. 
+
+In other words, only algebraic calculations on classical computers are required to find the parameters achieving the minimum expectation value for the target gate. 
+
+
+Therefore, it is important to obtain the coefficients with as few measurements as 
+possible. 
+To consider this problem, we define the function h^(4)(q) that outputs the 
+normalized vector (h^(4)(q)=1): 
+
+    h^(4)(q) 
+        =
+        (w^2, x^2, y^2, z^2, √(2)wx, √(2)wy, √(2)wz, √(2)xy, √(2)xz, √(2)yz)^T,
+
+and the vector g^(4)
+
+    g^(4)   =(
+        G_II,G_XX,G_YY,G_ZZ, 
+       √(2)G_IX, 
+        √(2)G_IY,
+        √(2)G_IZ,
+        √(2)G_XY,
+        √(2)G_XZ,
+        √(2)G_YZ)^T.
+
+
+Then, the relation between the parameter q and the expectation 
+⟨ H ⟩ is expressed as 
+
+    ⟨ H ⟩ = h^(4)(q)^T  g^(4).
+
+
+
+
+Suppose measurements with different parameters {q_1, ..., q_N} and the N expectation values of the measurement results b=(b_1, ..., b_N)^T were obtained,
+we can also write the relations between the expectation values b and the coefficient vector g^(4) as 
+
+    b = A^(4)g^(4),
+
+where the matrix A^(4)∈ℝ^N × 10 is
+
+    A^(4) = ( h^(4)(q_1), ..., h^(4)(q_N) )^T,
+
+that encodes the information of the parameter configurations {q_1, ..., q_N}.
+
+
+It is obvious, if N<10, g^(4) is not uniquely determined.
+Hence, we suppose N≥ 10 throughout this paper.
+If rank(A)=10, A^TA is invertible and there exists the generalized inverse of  A^+:=(A^TA)^-1A^T  <cit.>. 
+Accordingly, we can obtain the vector g^(4) by exactly solving linear equations as
+
+    g^(4) = A^+b.
+
+In other words, a single execution of FQS requires at least ten sets of the parameters and the corresponding observables.
+However, it may not necessarily be the case when input states and/or Hamiltonian has symmetry, which reduces the number of required measurements to construct G^(4) in Eq. (<ref>).
+We also note that it is possible that rank(A)<10 if the rows of A are dependent on each other.
+However, it is plausible to exclude such situation, because the input parameters are controllable.
+Hereafter, we suppose that all columns of A are independent of each other, equivalently, rank(A)=10. 
+
+The same argument is applicable to the Fraxis gate as
+
+    ⟨ H ⟩   =    G_XX x^2
+        + G_YY y^2
+        + G_ZZ z^2 
+           + 2 G_XY xy
+        + 2 G_XZ xz
+        + 2 G_YZ yz,
+     
+    h^(3)(n)
+           =    (x^2, y^2, z^2, √(2)xy, √(2)xz, √(2)yz)^T, 
+    g^(3)   =    (G_XX,G_YY, G_ZZ,
+               √(2)G_XY, √(2)G_XZ, √(2)G_YZ)^T.
+
+
+Likewise, for Rx gates
+
+    ⟨ H ⟩   =    G_II w^2
+        + G_XX x^2
+        + 2 G_IX wx, 
+    h^(2)(r)
+           =    (w^2, x^2, √(2)wx)^T,
+    g^(2)   =    (G_II, G_XX, √(2)G_IX)^T.
+ 
+
+The minimum sizes of the parameter configuration required to construct G^(d) are d(d+1)/2, i.e., 6 in Fraxis (d=3) and 3 in Rotosolve (d=2).
+For simplicity, we omit superscript d from G^(d), h^(d), and g^(d) for d=2,3,4 in the following sections and formulate them based on the FQS framework unless otherwise noted.
+
+
+
+
+
+
+§ CONFIGURATION COST WITH FINITE RUNS OF QUANTUM CIRCUITS
+
+
+
+
+ §.§ Evaluation of the Parameter Configurations
+
+
+
+If infinite number of measurements were allowed, there would be no estimation errors in the expectation values b, and the resulting vector g is exactly obtained as long as the matrix A is invertible. This allows for the exact evaluation of the optimal solution of the FQS matrix.
+
+
+In this section, we quantitatively evaluate the error propagation from the shot noise in the expectation values b to the estimation of the minimum solution. 
+
+Although we focus on the FQS for generality, it can be easily applied to other sequential quantum optimizers, Rotosolve and Fraxis.  
+Suppose a FQS matrix is estimated from N expectation values of an observable, which are obtained by independent measurements with different parameters {q_1, ..., q_N} assigned to the gate of interest.
+
+Due to the finite number of shots, the expectation values are no longer deterministic, but randomly distribute around the true values b^* obtained with infinite shots as 
+
+    b = b^* + ϵ,
+
+where ϵ is the random variables reflecting the errors on the measurements.
+
+Note that the relation between b and  g is no longer valid under the finite measurement condition.
+Alternatively, we employed the least-square solution g
+
+    g = g̃minb-Ag̃^2 = (A^TA)^-1A^T b = A^+b,
+
+as a plausible estimate of g^*.
+Apparently, Eq. (<ref>) has the same form as Eq. (<ref>), but the resulting vector g is an estimate of the true vector g^* in the context of maximum likelihood <cit.> and deviates from the ideal vector g^* due to errors for finite measurement.
+
+
+
+
+Substituting Eq. (<ref>) into Eq. (<ref>), we get
+
+    g   = A^+ b
+       =A^+(b^*+ϵ) 
+       =g^* + A^+ϵ,
+
+where the third equality follows g^*=A^+b^*. 
+Eq. (<ref>) implies the errors of the estimated coefficient vector g-g^*=A^+ϵ is amplified by the linear transformation A^+ from the shot errors ϵ.
+
+Let G be a FQS matrix generated from the estimated vector g with finite number of measurements. 
+
+In the below, we focus on the FQS procedure to estimate the minimum eigenvalue of G.
+Here, for convenience, we define the half-vectorization function vech: ℝ^4×4→ℝ^10
+such that
+
+    vech(G) =
+         (
+        G_II,
+        G_XX,
+        G_YY,
+        G_ZZ,
+        G_IX, 
+        G_IY,
+        G_IZ,
+        G_XY,
+        G_XZ,
+        G_YZ)^T,
+
+where the order of elements corresponds to g.
+In addition, the scaling matrix D is defined as
+
+    D = diag(1,1,1,1,√(2),√(2),√(2),√(2),√(2),√(2)).
+
+Using these notations,
+
+we have the following relations,
+
+    g=D vech(G)
+    ⇔ 
+    G=vech^-1(D^-1g),
+
+where the function vech^-1 is a linear mapping as vech^-1(s+t)=vech^-1(s)+vech^-1(t) for s,t∈ℝ^10.
+Accordingly, G is expressed as 
+
+    G = vech^-1(D^-1g) 
+        = G^* +vech^-1(D^-1A^+ϵ),
+
+which implies that the  ideal FQS matrix G^*= vech^-1(D^-1A^+b^*) is perturbed by vech^-1(D^-1A^+ϵ).
+
+
+In the following part, we quantitatively evaluate the matrix perturbation effect on the optimization result.
+Let λ_i^* and p_i^* be the ith lowest eigenvalue and the corresponding eigenvector of G^*. 
+Likewise, λ_i(ϵ) and p_i(ϵ) are the ith lowest eigenvalue and its corresponding eigenvector of the estimated matrix G.
+For quantitative evaluation of the perturbation, we suppose two metrics: (1) Var[λ_1(ϵ)], the variance of the estimated minimum value, and (2) 𝔼[Δ E], the mean error of the minimum expectation value using the estimated optimal parameters with infinite shot.
+
+Here, Δ E is the deviation of the expectation value with the estimated parameter set p_1 from the true minimum expectation value, defined as
+
+    Δ E = p_1^T G^*  p_1^ - p_1^*T G^*  p_1^*≥ 0,
+
+where the positivity of Δ E comes from the fact that the true parameter set p^*_1 gives the minimum value of the quadratic form.
+We suppose that Var[λ_1(ϵ)] is a measure to verify the estimated energy λ_1 by one-time execution of FQS, while 𝔼[Δ E] is a measure to qualify the estimated parameter p_1.
+Throughout the following parts, for simplicity, we employed Var[λ_1] as the indicator of shot errors.
+(See Appendix <ref> for 𝔼[Δ E ])
+
+
+Since G is a 4× 4 symmetric matrix, it is represented by eigendecomposition as
+
+    G=P Λ P^T,
+
+where P=(p_1,...,p_4)^T and Λ = diag(λ_1,...,λ_4). 
+From the first-order perturbation theory <cit.>, the minimum eigenvalue λ_1 of G is approximated as
+
+    λ_1 = λ_1^* + p_1^*Tvech^-1(D^-1A^+ϵ) p^*_1.
+
+Then, Var[λ_1] is evaluated as 
+
+    Var[λ_1] = Var[p_1^*Tvech^-1(D^-1A^+ϵ) p^*_1].
+
+
+To deal with Eq. (<ref>), we apply a simple model to the measurement errors ϵ satisfying as
+
+    𝔼[ϵ]=0,
+
+
+
+    𝔼 [ϵ_i ϵ_j] =
+        {[        0 for i≠ j;    σ^2/s  for i=j ]. ,
+
+where s denotes the number of measurement shots to evaluate an expectation value of observables and σ^2 is a part to specific to observables. 
+
+
+In addition, we assume the first eigenvector p_1 follows a uniform distribution on the unit sphere.
+Based on the models, Eq. (<ref>) can be further calculated as
+
+    Var[λ_1] = σ^2/sd(d+2) Tr[ (A^TA)^-1(1_d1_d^T+2I)],
+
+
+
+
+
+
+where d=dim(q) (4 for FQS, 3 for Fraxis and 2 for Rx) and 1_d∈ℝ^d(d+1)/2 is the vector that the first d elements are unity and the others are zero (e.g. 1_d=(1,1,1,1,0,0,0,0,0,0)^T for FQS).
+Derivation of Eq. (<ref>) is detailed in Appendix <ref>. 
+
+
+Since we focus on the optimization performance,
+it is convenient to discuss the total number of shots required for an one-time optimization rather than the cost for evaluating an expectation value. 
+Suppose the total shots for an one-time optimization is constant.
+Let s_min be the number of measurement shots to estimate an expectation value of the observable when N=N_min, where N_min:=d(d+1)/2 is the minimum size of the parameter configuration.
+For a redundant parameter configuration N>N_min, the number of shots for evaluating an expectation value is s_minN_min/N.
+As a result,
+
+    Var[λ_1] 
+        = σ^2/s_min C(A),
+
+where we define the C-cost (Configuration cost), C(A), as
+
+
+
+
+
+    C(A):= N/N_mind(d+2) Tr[ (A^TA)^-1(1_d1_d^T+2I)].
+
+
+ Equation (<ref>) indicates that Var[λ_1] is separable into the number of shots (s_min) dependent part and the parameter configuration dependent part i.e. a 50% reduction of C(A) is equivalent to doubling the number of shots.
+The C-cost is a metric to estimate Var[λ_1] under the condition that the number of shots to optimize a single-qubit gate is constant.
+
+Now, the conditions for the minimum C(A) are of interest to minimize the estimation error. We rigorously give the lower bound of the C-cost as the following theorem (See Appendix <ref> for the proof of this theorem):
+
+For the C-cost C(A) in Eq. (<ref>), C(A) ≥ 1 holds with equality if and only if the parameter configurations {q_i }_i=1^N satisfy 
+    
+    A^TA = N/d(d+2) (1_d1_d^T + 2I).
+
+
+In other words, the parameter configurations that satisfies Eq. (<ref>) is optimal with respect to efficiency.
+Although it may not be straightforward to find the optimal parameter sets that satisfy Eq. (<ref>),  in the case of minimum parameter set (N=N_min) a useful formula is available as the following corollary of Theorem <ref>.
+(See Appendix <ref> for the proof.)
+
+     
+    For the minimum number of parameters (N=N_min), the C-cost C(A) in Eq. (<ref>) is always C(A) ≥ 1 with equality if and only if the parameter configurations {q_i}_i=1^N satisfy
+    
+    |q_i·q_j| = 1/√(d+2)  (for  all  i≠ j).
+
+    
+
+The equality condition in Corollary <ref> tells us that the parameters must be equiangular unit vectors.
+This equiangular property is known as equiangular lines in real spaces <cit.>, which is equivalent to the algebraic graph theory of two-graphs <cit.>.  The existence of N_min = d(d+1)/2 equiangular lines in ℝ^d is known as the Gerzon bounds, and so far only shown to hold for d = 2, 3, 7, 23. For our optimal parameter configurations, only the cases of Rx and Fraxis gates (d=2, 3), there exists a unique set of N_min equiangular unit vectors (up to rotation) and such parameter configuration uniquely achieves the minimum value of C-cost C(A). The non-existence of such optimal parameter configuration for FQS gate (d = 4) is due to the non-existence of equiangular lines satisfying the condition of Corollary <ref>, which is attributed to Haantjes <cit.> and  Neumann in <cit.> (see also <cit.>).
+
+
+
+
+
+ §.§ The Rotation Invariance of C-cost.
+ 
+The C-cost C(A) in Eq. (<ref>) is invariant to rotation of all the parameter configurations. 
+In other words, a parameter configuration ( q_1,...,  q_K) and its rotated configuration (R q_1,..., R q_K) have the same value of the C-cost, where R is a rotation matrix ∈ℝ^d× d (R^TR=I). 
+See Appendix <ref> for the proof of rotation invariance.
+This implies that, for any parameter q of a single-qubit gate of interest, there exists the optimal parameter configuration {q_i} such that q∈{q_i}.
+This property allows for one reduction of the total number of measurements required in the matrix construction, i.e. reduced to two for Rotosolve, five for Fraxis, and nine for FQS by diverting the previous results to the subsequent gate update. The reduction for Rotosolve has been known before <cit.> but not for Fraxis and FQS. In each step of the sequential optimizations, the resulting cost value after the parameter update can be estimated without additional measurement.
+Since all parameters are fixed except for that of the target gate, this estimated cost can be regarded as one of the observable expectation value b_1 in the subsequent application, where the parameter q_1 of the next gate of interest is diverted from the previous application.
+
+
+
+The detailed procedure is as follows; (1) Prepare an optimal parameter configuration {q^*}, the gate parameter set {q^(m)} for m = 1,⋯,M, and the temporal cost value ⟨H|(⟩{q^(m)}) where m and M denote the gate index and the total number of parametrized gates, respectively.
+(2) Finds a rotation matrix R such that q_1^*=R^Tq^(m) where the mth gate is of interest and sets b_1=⟨H|$⟩.
+(3) Measure the cost values with the parameter{R q_i^*}fori=2,⋯N_minsettingb_i=⟨H|(⟩Rq_i^*).
+(4) Construct the matrixGfromband{R q_i^*}(5) Diagonalise the matrix to estimate the new parameterq^(m)and the new cost⟨H|$⟩, which can be reused in the next iteration and go back to (2) until convergence.
+The pseudo-code of this procedure is given in Algorithm <ref>.
+
+
+
+
+ §.§ Optimal configurations
+ 
+The minimum size of parameter configuration (N_min) for Rx, Fraxis, and FQS are 3, 6, and 10, respectively. 
+According to Corollary <ref> 
+in the case of the Rx gate, 
+the three equiangular vectors on a unit circle are trivially represented by q = [cos2/3π nθ, sin2/3π nθ]^T for n=0,± 1, that is, the vector angle Δθ=2π/3 (equivalently π/3) 
+as shown in Figure <ref>A.
+In contrast, the original parameter configuration proposed in Rotosolve <cit.> was Δθ=π/2, which resulted in C(A)=3/2.
+(It is worth noting that in <cit.> it is argued that arbitrary parameter configurations can be used due to the sine property of the expectation value but did not discuss the estimation accuracy dependent on the parameter configurations under the finite measurements.)
+
+To achieve the same estimation accuracy, our optimal parameter configuration (Δθ= 2π/3) requires two-thirds as many shots as the original parameter configuration (Δθ=π/2). 
+
+Corollary <ref> is also instrumental for Fraxis with d=3. It is also possible to find the equiangular formation of six unit vectors in 3D space.
+Figure <ref>B shows the unique optimal parameter configuration except for the rotational degrees of freedom, where they form a regular icosahedron.
+The original parameter configuration of Fraxis has C(A) = 1.8 <cit.> (See Appendix <ref>). 
+Thus, the optimal configuration improves the estimation accuracy 1.8 times with the consistent number of shots.
+
+In contrast, it was proved that N_min (=10) equiangular unit vectors cannot be placed in d (=4) dimensional Euclidean space.
+Namely, Corollary <ref> tells that there is no parameter configuration that satisfies C(A)=1 for N=10.
+In addition, Corollary <ref> also implies that the minimum size of the parameter configuration (N=10) may not be the most efficient if the total number of shots are limited for a single FQS execution, although it is not straightforward to know the analytical minimum value and the corresponding parameter configurations.
+
+
+
+Instead, we searched the numerical solution by classical optimization, where C(A) is minimized based on the gradient descent method. 
+Since the algorithm may lead to a local minimum solution, we repeated the algorithm independently 10^5 times starting from random initial configurations. 
+
+For N=10, we have obtained the same optimized C-cost value (C(A)≈ 1.033172) from all the initial configurations as far as our experimental trials, which implies that all simulations presumably reached to the global minimum.
+Although the obtained configurations were not numerically identical,
+we found that they were attributed to a unique configuration just by reversal and rotational operations.
+Since the reversal of each parameter does not affect the expectation value (i.e., h(q)=h(-q)) and the uniform rotation of the parameter configuration gives the indentical value of the C-cost (See Sec. <ref>), 
+all the configurations were equivalent, which seem to be optimal. 
+
+
+Figure <ref>C shows the unique optimal parameter configurations for the FQS case.
+In this figure, the parameter configurations are projected into 3-dimensional space by a stereographic projection. It means that extra 1D components that cannot be displayed are projected in the radial direction. 
+See Appendix <ref> for the parameter values of the optimal and other parameter configurations. 
+From the parameter values of the (numerically obtained) optimal parameter configurations (Eq. (<ref>)), we can see the optimal parameter configurations has highly symmetrical structure; the first four parameters {q_1, ..., q_4} and its opposite {-q_1, ..., -q_4} constitute a regular cube in a hyperplane and the last six parameters {q_5, ..., q_10} constitute a regular octahedron in a hyperplane (its opposite also constitute another regular octahedron) as shown in Fig. <ref>.
+
+
+For FQS, the original parameter configuration  has C(A) = 3.0 and the optimal parameter configurations estimated with numerical experiments is approximately C(A)≈ 1.033172.
+And thus, to achieve a certain accuracy, the optimal parameter configuration reduces the number of required shots 3 times than that of the original.
+
+
+
+
+
+
+Likewise, we also conducted the numerical optimization to find the optimal parameter configuration for redundant measurements with N=11, 12.
+As a result, all the optimizations converged to a consistent value of C(A) within computational precision, which is consistent with the case of N=N_min. 
+However, the optimal configurations are not necessarily unique, which is in contrast to N=N_min.
+While the obtained C(A) was ≈ 1.005390 for N=11,  C(A) was exactly converged to unity for N=12.
+It is also notable that the optimal configurations of C(A)=1 for N=12 include the regular 24-cell polytope in 4-dimensional space as shown in Fig. <ref>D.
+
+Therefore, If the total number of shots for A matrix construction is constant, the optimal sizes of N are three for Rotosolve, six for Fraxis, and twelve for FQS.
+
+
+Next, we focus on the optimal N allowing the reduction of measurements exploiting the rotation invariance as mentioned in Sec. <ref>.
+Assuming a constant number of shots per gate, the measurement reduction modifies the relation between C(A) and s_min as 
+
+
+    Var[λ_1^*] = σ^2/s_minN-1/NC(A).
+
+where the C-cost is apparently scaled by (N-1)/N.
+Note that this factor does not change the optimal N for Rotosolve and Fraxis.
+Thus, 
+it is most efficient to revert the estimated value in previous optimization to construct A and additionally execute two and five measurements for Rotosolve and Fraxis, respectively. 
+It is worth noting that Table. <ref> shows that
+the optimal N for FQS is shifted from twelve to eleven by measurement reduction, although the difference is smaller than 1 %.  
+Altogether, under limitation of the total number of shots, it is most efficient to construct the matrix A by three-, six-, and twelve-type measurements for the expectation values
+in the beginning of Rotosolve, Fraxis, and FQS optimizations, respectively.
+In contrast, during the sequential optimization, matrix A should be made by one estimation value from the previous step and two, five, and ten values from subsequent measurements of Rotosolve, Fraxis, and FQS, respectively.  
+
+It should be also noted that this optimal condition may differ depending on the supposed condition of real devices.
+For instance, if parallel computation is allowed, where a constant number of shots are available for evaluating an expectation value even though when N varies, C(A) would not be an appropriate metric because the assumption about the number of shot is not valid, and thus one should trivially employ as large N as as possible.
+
+
+
+
+
+§ EXPERIMENTS
+
+In the following, we provide several experiments to numerically verify our proposed method on the condition of N=N_min.
+
+
+
+ §.§ Estimation Accuracy of One-time Optimization with Different Parameter Configurations
+
+
+We focused on the one-time optimization rather than an entire VQE processes.
+To this end, we examined the averaged error of FQS between the exact minimum and the estimated minimum energies with limited number of shots for several parameter configurations.
+We used the 2-qubit Hydrogen molecule-like Hamiltonian <cit.> defined as
+
+    H = I⊗ Z + Z⊗ I + X⊗ X
+
+in this experiment. 
+
+We use the 2-qubit ansatz in Fig. <ref>, where we applied the corresponding single-qubit gate representation of Rotosolve (=RzRy), Fraxis, and FQS methods to U_i.
+Here, the target gate to be optimized is U_2 for the FQS and Fraxis and the Ry gate in U_2 for the Rotosolve case. 
+The experiments were performed as the following procedure. 
+(1) prepare 100 independent parameter configurations, where the parameters of all the gates were randomly initialized with uniform probability distribution, which was followed by 50 iterations of the steepest decent optimization using C(A) as a cost function.
+(2) evaluate A^+ and C(A) of the 100 parameter configurations.
+(3) randomly initialize the PQC in the state-random manner for the respective single-qubit gates <cit.>.
+(4) obtain b (and b^*) by the observable measurements based on the 100 parameter configurations,
+and evaluate FQS matrices G (and G^*) using the respective sets of A^+, b (and b^*).
+(5) execute FQS (Fraxis/Rotosolve) for G (and G^*) to obtain p (and p^*).
+We repeat the procedure (3)–(5) 10^4 times and evaluate the averaged error ⟨Δ E ⟩ in Eq. (<ref>) for each parameter configuration.
+Note that we optimized the parameter configuration in process (1) above because the raw values of C(A) distributed beyond 10^4 otherwise.
+In Fig. <ref>, we plotted 100 independent parameter configurations in C(A) vs. ⟨Δ E|$⟩ graph.
+By definition,C(A)and⟨ΔE|$⟩  are metrics to qualify the estimated energy and the estimated parameter, respectively.  
+Although both the metrics are linked through the following equation, 
+
+    N_min d/NC(A) + sd(d-1) /kσ^2𝔼[Δ E]  = Tr[(A^TA)^-1],
+
+the concrete behaviors are not necessarily trivial because of dependency on A and the observable.
+Here, we confirmed that the energy errors ⟨Δ E|$⟩ are roughly proportional toC(A)for all the cases, and⟨ΔE|$⟩ is inversely proportional to the number of shots approximately.
+We also found that the optimal parameter configuration (red) achieves the lowest error⟨Δ E|$⟩, indicating that the optimal parameter configurations are actually effective to minimize the estimation error.
+Although the magnitude of⟨ΔE|$⟩ in FQS is seemingly larger than that of Rotosolve, we note that it does not necessarily indicate the advantage of Rotosolve with respect to error suppression because the single gate expressibility is not comparable among the respective methods.
+For instance, sequential Rotosolve applications of a series of three single-qubit gates are comparable to one-time FQS application.
+In this case, however, it is not straightforward to compare them because of error propagation, which is beyond the present framework.
+In the next section, instead, we examine the effect of the parameter configuration on the entire performance in comparison with the optimization methods.
+
+
+
+
+
+
+
+
+
+ §.§ The Influence of the C-cost on VQE Performances
+
+
+
+We investigate the effect of different parameter configurations on the results of VQE when we sequentially optimize single-qubit gates in quantum circuits by the framework of FQS <cit.>.
+We employed the 5-qubit quantum Heisenberg model <cit.> defined as
+
+    H = J∑_i=1^5∑_σ=X,Y,Zσ_i σ_i+1
+        + h∑_i=1^5 Z_i
+
+where σ_i=I^⊗ i-1⊗σ⊗ I^⊗ 5-i(1≤ i≤ 5), σ_6=σ_1.
+We herein set J=h=1.
+We used a Cascading-block ansatz shown in Fig. <ref>, where the gates within the dashed lines are repeated L times.
+We set L=1, 3, 5 in this experiment.
+According to the optimization method, we applied the respective single-qubit representations to U_i in the PQC.
+We begin VQE with randomly initialize PQC in the state-random manner for respective single-qubit gates in the PQC.
+In VQE, we sequentially applied Rotosolve/Fraxis/FQS to U_i in the order of subscripts in Fig. <ref>, i.e., from the top-left to the right bottom. 
+We term this procedure to update all gates in the PQC once as sweep. 
+In a single VQE run, we carried out 100 sweeps to obtained the estimated minimum eigenvalue E of the Hamiltonian.
+We performed independent 100 VQE runs and plotted the error distribution Δ E := E - E^* for respective 100 trials in Fig. <ref>, where E^* is the exact minimum eigenvalue of the Hamiltonian.
+We evaluated the resulting distributions using the number of shots to 100, 1000, 10000, and ∞ for two or three different parameter configurations (See Appendix <ref> for the specific parameter values). 
+Note that we used a statevector for VQE with an infinite number of shots.
+Figure <ref> suggests that parameter configurations strongly affect the entire VQE performance and shows that the optimized parameter configuration (C(A)≃1) achieves the smallest errors on all the conditions with the finite numbers of shots. 
+The optimal parameter configuration works more effectively 
+as the number of shots is smaller, which is in line with the analysis of the one-time application to a single-qubit gate in Fig. <ref>. 
+In addition, the impact of the parameter configuration on the VQE performance is not visible on shallow circuit and more distinct as the number of the layer increases.
+In general, more expressive ansatz can potentially approximate the state of interest with higher precision.
+Correspondingly, one has to increase the number of shots, because for accuracy ϵ, the number of required shots scales in 𝒪(1/ϵ^2). 
+Otherwise, the enhanced expressibility by the circuit extension may not be highlighted.
+Since the gain of C(A) is equivalent to the increase of measurements, the optimal parameter configuration will be more beneficial as desired accuracy in VQE becomes higher.
+
+In fact, FQS is superior to Rotosolve and Fraxis and the statevector simulation implies that FQS with ansatz of L=5 can potentially achieve the accuracy ϵ < 10^-2.
+However, it is less likely to reach this energy level with the 10000 shots which is a practical standard for the present quantum devices, i.e. IBM-Q device.
+There, the parameter optimization assists VQE lowering the reachable energy level distinctively, although it is not the case for Rotosolve and Fraxis because the number of shots available are sufficient relative to their expressibility.
+
+
+
+
+§ CONCLUSIONS
+
+In this work, we showed that the parameter configuration affects the performance of analytical optimization of a single-qubit gate. 
+This estimation error was quantified by the C-cost C(A), the variance of the estimated value of the cost function.
+We theoretically proved that the lower bound of C(A) is unity.
+We also showed that when the size of the parameter configuration is minimal, the C-cost becomes unity if and only if the parameter configuration satisfies the equiangular condition.
+Exploiting this property, we found the optimal parameter configuration for Rotosolve and Fraxis.
+Although we revealed no parameter configuration of minimum size for FQS achieves C(A)=1, it turned out the parameter configuration of N=12 corresponding to the regular 24-cell polytope in the 4-dimensional space satisfies C(A)=1.
+In addition, we also demonstrated how to reduce the number of measurements for matrix construction by making use of the rotation invariance of C(A). 
+Then, the optimal parameter configurations exhibited the best results improving efficiency 1.5 times for Rotosolve, 1.8 times for Fraxis, and 3.0 times for FQS, when compared to the original parameters.
+Additional numerical experiments showed that the parameter configuration affects the performance of not only the one-time optimization but also the entire VQE. 
+We also found that the parameter configuration is more instrumental to elicit the VQE performance as the ansatz becomes more expressive. 
+
+
+
+
+§ ACKNOWLEDGEMENTS
+
+R.R. would like to thank Prof. David Avis of Kyoto University for the discussion on equiangular lines. 
+H.C.W. was supported by JSPS Grant Numbers 20K03885. 
+N.Y. and H.C.W were supported by the MEXT Quantum Leap Flagship Program Grant Number JPMXS0118067285 and JPMXS0120319794.
+
+
+
+
+
+
+
+
+
+
+§ APPENDIX
+
+
+
+ §.§ Free Quaternion Selection
+
+
+
+We show the minimum value of Eq. (<ref>) is the minimum eigenvalue  λ_1 of G achieved when q = p_1 for the corresponding eigenvector p_1 of G. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+For the Lagrange multiplier method, we first define a function, l(q,λ), corresponding the above optimization problem as
+
+    l(q,λ) = q^T G q - λ ( q^2 -1 ),
+
+where λ is a Lagrange multiplier.
+Taking the partial derivatives for l(q,λ) and setting them to zero, we can obtain
+
+
+
+
+
+
+    Gq = λq.
+
+Thus, the candidates for the local minimum/maximum value of l(q,λ) and the solutions are the eigenvalues λ_i and its normalized eigenvectors p_i, respectively.
+
+Substituting the normalized eigenvectors p_i into Eq. (<ref>), we get
+
+    ⟨ H ⟩ 
+        
+        =p^T_i G p_i
+        =p^T_i (λ_i p_i)
+    
+        =λ_i,
+
+this means the global minimum value of Eq. (<ref>) and its solution are given by the minimum eigenvalue λ_1 and the corresponding normalized eigenvector p_1.
+
+
+
+
+ §.§ A proof on the sufficiency of independent unitary matrices for energy estimation
+
+In Section <ref> we showed that exactly three, six, and ten circuit evaluations of linearly independent single-qubit gates at a particular single-qubit gate of a PQC to be optimized by, respectively, NFT/Rotosolve, Fraxis, and FQS, are sufficient to determine the energy landscape of the PQC with respect to the given Hamiltonian H. 
+In the case of NFT/Rotosolve, such circuit evaluations at arbitrary configurations are known from the sine property of the energy function but how to select the best parameter configurations was not discussed. 
+On the other hand, Fraxis and FQS require the single-qubit gate to be replaced by a fixed set of gates. 
+For example, using the FQS framework to optimize the gates of NFT/Rotosolve optimizing the R_X gate, the gate set is {I, X, 1/√(2)(I+X)} and the resulting expectation values are the elements of the matrix in Eq. (<ref>), i.e., G_II, G_XX, G_IX. 
+Similarly, in the case of Fraxis, the gate set is {X, Y, Z, 1/√(2)(X+Y), 1/√(2)(X+Z), 1/√(2)(Y+Z)} and the expectation values are those in Eq. (<ref>). 
+In the case of FQS, the gate set is the union of that of Fraxis with {I, 1/√(2)(I+X), 1/√(2)(I+Y), 1/√(2)(I+Z)} and the expectation values are those in Eq. (<ref>). 
+
+Here, we provide a proof of the sufficiency by showing that we can uniquely identify the matrix in Eq. (<ref>) from running the PQC by replacing the single-qubit gate with ten arbitrary independent single-qubit gates parametrized by unit vectors q_1, …, q_10. The term independent will be explained later. 
+For simplicity, we only describe the proof for FQS but it should be clear that similar arguments can be used to prove the cases for NFT/Rotosolve and Fraxis. 
+
+From Eq. (<ref>) and (<ref>), we know that with respect to the single-qubit gate parametrized by q_i ∈ℝ^k it holds that 
+
+    <H>_i ≡ b_i    =   q_i^T G q_i
+       =   (q_i^T ⊗ q_i^T) (G),
+
+for i = 1, …, m, where the second equality holds due to the “vec-trick” while (G) is the vectorization of the matrix G. 
+
+Because G is a symmetric k × k matrix, we can conclude that the degree of freedom of (G) ∈ℝ^k^2 is at most k(k+1)/2, i.e., 10 for FQS(k=4), 6 for Fraxis (k=3), and 3 for NFT/Rotosolve (k=2). In fact, there is one-to-one correspondence (linear transformations) between (G) and g in Eq. (<ref>). 
+Similarly, we can also confirm that the degree of freedom of q_i^T⊗q_i^T is also k(k+1)/2.
+
+Let Q be the matrix whose i-th row is q_i^T⊗q_i^T. We then obtain the following linear equality. 
+
+    b = Q (G),
+
+where b∈ℝ^m for Q ∈ℝ^m× k^2. Due to its construction, the rank of Q is at most min(m, k(k+1)/2). For m ≤ k(k+1)/2, the rank of Q is exactly m if and only if q_i^T⊗q_i^T are linearly independent for i = 1,… m. Namely, the following equality holds if and only if α_i = 0 for all i. 
+
+    ∑_i = 1^m α_i q_i^T⊗q_i^T = 0.
+
+We call such q_i's as independent.     
+
+Now, we can argue that (G) is uniquely determined if (Q) is at least the degree of freedom of (G), which is at most k(k+1)/2. Such Q can be realized by selecting up to k(k+1)/2 independent q_i's. Suppose that (G) is of maximum degree of freedom but (Q) < k(k+1)/2. Then, there exists G' ≠0 such that Q (G') = 0. In such case, (G) is not uniquely determined because 
+
+    Q (G) = Q ((G) + (G')) = 𝐛.
+
+
+Thus, by selecting k(k+1)/2 independent unit vectors q_i ∈ℝ^k, we can uniquely determine (G) which then enables us to evaluate the expectation value of the given Hamiltonian when the corresponding single-qubit gate is replaced by arbitrary unitary gate. This implies that k(k+1)/2 arbitrary independent single-qubit gates are sufficient for FQS, Fraxis, and NFT/Rotosolve, each for k=4,3,2 respectively. When the dimension of (G) is exactly k(k+1)/2, as happened for some PQCs, the number k(k+1)/2 of arbitrary independent single-qubit gates is also a necessary condition.  
+
+
+
+
+ §.§ Derivation of Analytical form of the Measures
+
+
+
+  §.§.§ Expectation value over an orthogonal basis
+
+
+
+
+We show several equations that are useful for derivation of analytical form of the measures.
+
+Let Z ∈ℝ^d× d be a random symmetric matrix which 
+
+satisfies 𝔼[Z_ij] = 0 for all i,j. 
+Independently, let P=(p_1,...,p_d)^T ∈ℝ^d× d be a random orthogonal matrix (i.e., the matrix is uniformly sampled from the orthogonal group O(4)).
+Then, the following equations holds:
+
+    𝔼[p_i^*T Z p_j^*] 
+        =   ∑_k,l𝔼[ (p_i^*)_k (p^*_j)_l Z_kl ]
+    
+        =   ∑_k,l𝔼[ (p_i^*)_k (p^*_j)_l ] 𝔼[ Z_kl ] 
+    
+        =    0,
+
+and so,
+
+    Var[p_i^*T Z p_j^*]
+        =   𝔼[(p_i^*T Z p^*_j)^2]
+        - 𝔼[p_i^*T Z p^*_j]^2 
+    
+        =   𝔼[(p_i^*T Z p^*_j)^2].
+
+
+For i=j,
+
+
+    Var[p_i^*T Z p_i^*]
+        =   𝔼[(∑_k,l (p_i)_k Z_kl (p_j)_l)^2] 
+    
+        =   ∑_k,l,m,n𝔼[ (p_i)_k (p_i)_l (p_i)_m (p_i)_n ]𝔼[ Z_kl Z_mn ]
+    
+        =   ∑_k(=l)∑_m(=n≠ k)𝔼[ (p_i)_k^2 (p_i)_m^2] 
+        𝔼[ Z_kk Z_mm ] 
+       + ∑_k(=m)∑_l(=n≠ k)𝔼[ (p_i)_k^2 (p_i)_l^2] 
+        𝔼[ Z_kl^2 ] 
+       + ∑_k(=n)∑_l(=m≠ k)𝔼[ (p_i)_k^2 (p_i)_l^2] 
+        𝔼[ Z_kl Z_lk ] 
+       + ∑_k𝔼[ (p_i)_k^4] 
+        𝔼[ Z_kk^2] 
+    
+        =   ∑_k,l𝔼[ Z_kk Z_ll]+ 𝔼[ Z_kl^2] + 𝔼[ Z_kl Z_lk ]/d(d+2)
+    
+        =   ∑_k,l𝔼[ Z_kk Z_ll ]+ 2𝔼[ Z_kl^2]/d(d+2).
+
+For the fourth equality, we employed the following relation. 
+
+    𝔼[(x^T Z x)^2]
+        =    d(d+2) 𝔼 [ ( x^T/x Z x/x )^2 ],
+
+where x is a random vector in ℝ^d, which follows the d-dimensional multivariate standard normal distributions 𝒩(0,I), and x, Z are independent each other.
+
+To evaluate Eq. (<ref>) for i j, we suppose another random vector y as x, but independent of x and Z.
+
+    𝔼[(x^T Z y)^2]
+        =   𝔼[(∑_i,j(x)_i Z_ij (y)_j)^2] 
+    
+        =   𝔼[∑_i,j,s,t (x)_i (x)_s Z_ij Z_st (y)_j (y)_t]
+       
+        =   ∑_i,j,s,t𝔼[ (x)_i (x)_s ]𝔼[ (y)_j (y)_t ]𝔼[ Z_ij Z_st ] 
+    
+    
+        =   ∑_i,j,s,tδ_j,sδ_i,t𝔼[ Z_ij Z_st ]
+        
+        =   ∑_i,j𝔼[ Z_ij^2 ].
+
+Here, we introduce two vectors as
+
+    y_∥ =  (y·x) /x^2 x,   y_⊥ = y - y_∥.
+
+Using these vectors, we obtained the following relation,
+
+    𝔼[(x^T Z y)^2] 
+        =   𝔼[(x^T Z (y_∥+y_⊥))^2]
+    
+        =   𝔼[(x^T Z y_∥)^2] +
+        𝔼[(x^T Z y_⊥)^2]
+       +
+        2𝔼[(x^T Z y_∥)(x^T Z y_⊥)]
+    
+        =   𝔼[(x^T Z y_∥)^2] +
+        𝔼[(x^T Z y_⊥)^2].
+
+For the third equality, we use the probability distribution f satisfies
+f(x,y_∥,y_⊥)=f(x,y_∥,-y_⊥),
+and thus
+
+    𝔼[(x^T Z y_∥)(x^T Z y_⊥)] =
+           𝔼[(x^T Z y_∥)(x^T Z (-y_⊥))],
+
+equivalently,
+
+    𝔼[(x^T Z y_∥)(x^T Z y_⊥)] 
+        =    0.
+
+On the other hand, 
+
+    𝔼[(p^*T_i Z p^*_j(≠ i))^2]
+        =   𝔼[(
+        x^T/x Z y_⊥/y_⊥)^2] 
+    
+       =   1/𝔼[x^2]
+        𝔼[y_⊥^2]𝔼[(x^T Z y_⊥)^2]
+    
+       =   1/d(d-1)𝔼[(x^T Z y_⊥)^2]
+
+where we suppose that the probability distribution f satisfies f(x/x,y_⊥/y_⊥ )=f(p_i,p_j(≠ i)), a.e., 𝔼[x^2]=d and 𝔼[y_⊥^2]=d-1.
+
+In addition the first term in Eq. (<ref>) 
+
+    𝔼[(x^T Z y_∥)^2] 
+        =   𝔼[x^2 y_∥^2(
+        x^T/x Z y_∥/y_∥)^2] 
+        =   𝔼[x^2]𝔼[y_∥^2] 
+        𝔼[(
+        x^T/x Z y_∥/y_∥)^2] 
+    
+        =    d 𝔼[(p^*T_i Z p^*_i)^2 ] 
+    
+        =   ∑_k,l𝔼[ Z_kk Z_ll ]+ 2𝔼[ Z_kl^2]/d+2.
+
+where the second equality arises from the independence of the random variables, and the third equality is based on 
+x/x=y_∥/y_∥, f(x/x) 
+= f(p_i), a.e., 𝔼[x^2]=d and 𝔼[y_∥^2]=1.
+
+From Eq. (<ref>)(<ref>)(<ref>)(<ref>), we finally obtain 
+
+    Var[p_i^*T Z p^*_j(≠ i)]
+           =E[(p_i^*T Z p^*_j(≠ i))^2]
+       =∑_k,ld 𝔼[Z_kl^2]-𝔼[Z_kkZ_ll]/d(d-1)(d+2).
+
+
+
+
+  §.§.§ Derivation of analytical form of Var[λ(ε)]
+
+
+ Using the noise model ⟨ϵ_i ⟩ = 0, ⟨ϵ_i ϵ_j ⟩ = σ^2 δ_i,j/s and the uniformly distributed model of the first eigenvector p_1^*. We show the analytical form of Var[λ_1(ϵ)] in Eq. (<ref>): 
+
+    Var[λ_1(ϵ)] = Var[p_1^*Tvech^-1(D^-1A^+ϵ) p_1^*] .
+
+For simplicity, we write Z=vech^-1(D^-1A^+ϵ).
+Note that Z is a symmetric matrix and satisfies 𝔼[Z]=O because 𝔼[D^-1A^+ϵ]=D^-1A^+𝔼[ϵ]=0. 
+Thus, using Appendix <ref>, 
+
+    Var[p_1^*T Z p_1^*] = 
+    ∑_i,j𝔼[ Z_ii Z_jj ]
+        + 2 𝔼[ Z_ij^2]
+        /d(d+2).
+
+Then, we deal with the first term ∑_i,j𝔼[ Z_ii Z_jj ] and the second term ∑_i,j𝔼[ Z_ij^2 ], separately.
+To this end, we introduce some useful representations. 
+We note 
+Eq. (<ref>) can be rewritten as
+
+    <H> 
+    
+           =    h(q)^T  g
+       =   (q^T⊗q^T) (G).
+
+
+Here q is the parameter of the target single-qubit gate, G is the FQS matrix, and : ℝ^d× d→ℝ^d^2 is the vectorization operator for matrices.
+
+Next, we introduce a linear transformation L∈ℝ^d^2 × d(d+1)/2 between the vector g and (G) in the Rx, the Fraxis, and the FQS gates as
+
+
+
+
+    L =[ 1 0 0; 0 0 c; 0 0 c; 0 1 0 ] , [ 1 0 0 0 0 0; 0 0 0 c 0 0; 0 0 0 0 c 0; 0 0 0 c 0 0; 0 1 0 0 0 0; 0 0 0 0 0 c; 0 0 0 0 c 0; 0 0 0 0 0 c; 0 0 1 0 0 0 ] , [ 1 0 0 0 0 0 0 0 0 0; 0 0 0 0 c 0 0 0 0 0; 0 0 0 0 0 c 0 0 0 0; 0 0 0 0 0 0 c 0 0 0; 0 0 0 0 c 0 0 0 0 0; 0 1 0 0 0 0 0 0 0 0; 0 0 0 0 0 0 0 c 0 0; 0 0 0 0 0 0 0 0 c 0; 0 0 0 0 0 c 0 0 0 0; 0 0 0 0 0 0 0 c 0 0; 0 0 1 0 0 0 0 0 0 0; 0 0 0 0 0 0 0 0 0 c; 0 0 0 0 0 0 c 0 0 0; 0 0 0 0 0 0 0 0 c 0; 0 0 0 0 0 0 0 0 0 c; 0 0 0 1 0 0 0 0 0 0 ],
+ respectively, where c=1/√(2).
+Note that the transformation satisfies
+
+    L^T L 
+           =    I, 
+    (G) 
+           =    L g,
+
+And so,
+
+    (q^T⊗q^T) L 
+           =    h(q)^T.
+
+We may also consider the inverse transformation of vectorization vec^-1: ℝ^d^2→ℝ^d× d as 
+
+    ^-1(Lg) 
+        = G   ∀g∈ℝ^d(d+1)/2,
+
+and vech^-1: ℝ^d^2→ℝ^d× d,
+
+    vech^-1(D^-1g)=G   ∀g∈ℝ^d(d+1)/2.
+
+This leads to
+
+    Z = vech^-1(D^-1A^+ϵ) = vec^-1(LA^+ϵ).
+
+Then, the first term in Eq. (<ref>) is rewritten as
+
+    ∑_i,j𝔼[ Z_ii Z_jj ] 
+       =   𝔼[ ∑_i,jvec^-1(LA^+ϵ)_iivec^-1(LA^+ϵ)_jj ]
+       =   𝔼[ ((I)^T LA^+ϵ)((I)^T LA^+ϵ)]
+       =   σ^2/s ((I)^T LA^+ ·(I)^T LA^+) 
+       =   σ^2 /s(I)^T LA^+ (A^+)^T L^T (I)
+       =   σ^2/s1_d^T A^+ (A^+)^T1_d
+       =   σ^2/s1_d^T (A^TA)^-11_d
+
+where I is the identity matrix, and 1_d:=L^T (I) is the vector in ℝ^d(d+1)/2 whose first d elements is unity and the rest are zero.
+For the sixth equality, we used the folloing relation,
+
+    A^+(A^+)^T   =    ((A^TA)^-1A^T)((A^TA)^-1A^T)^T 
+       =    (A^TA)^-1 A^TA (A^TA)^-1
+       =    (A^TA)^-1.
+
+
+The second term in Eq. (<ref>) is also rewritten as
+
+    ∑_i,j𝔼[Z_ij^2 ] 
+       =   𝔼[ ∑_i,jvec^-1(LA^+ϵ)_ijvec^-1(LA^+ϵ)_ij ]
+       =   𝔼[ (LA^+ϵ)^T(LA^+ϵ)]
+       =   σ^2/sTr[(LA^+)^T(LA^+) ] 
+       =   σ^2/sTr [A^+(A^+)^TL^TL]
+       =   σ^2/sTr [(A^TA)^-1],
+
+
+Summarizing Eqs. (<ref>),(<ref>),and (<ref>),
+Var[λ_1(ϵ)] is expressed as
+
+
+    Var[λ_1]
+       =σ^2/s d(d+2)(
+        1_d^T (A^TA)^-11_d +
+        2Tr[ (A^TA)^-1 ]) 
+       = σ^2/sd(d+2)Tr[ (A^TA)^-1( 1_d 1_d^T + 2I)],
+
+where the following identity:
+
+    1_d^T (A^TA)^-11_d = Tr[(A^TA)^-11_d 1_d^T]
+
+is employed for the last equality.
+
+
+
+
+  §.§.§ Discussion of  for the perturbation effect
+
+
+
+
+
+Using the second-order perturbation theory of matrix <cit.>, the energy error Δ E is approximated as 
+
+    Δ E = ∑_i>1^d  (p_i^*Tvech^-1(D^-1A^+ϵ) p_1^* )^2 /λ_i^* - λ_1^* .
+
+Note that Eq. (<ref>) is not applicable when the lowest-energy eigenstate is degenerated. 
+However, the following argument has been found to hold well experimentally. 
+This equation leads to:
+
+    𝔼[Δ E ] = 𝔼[
+        ∑_i>1^d  (p_i^*Tvech^-1(D^-1A^+ϵ) p_1^* )^2 /λ_i^* - λ_1^* ].
+
+However, unlike Var[p_1(ϵ)],
+this measure also depends on the probability distribution f(λ_1^*,...,λ_d^*) of the eigenvalues of the matrix G.
+Assuming these eigenvalues are independent of each other, that is,
+
+    f(λ_1^*,...,λ_M^*) = ∏_i=1^d f(λ_i^*),
+
+and the matrix of the eigenvectors P=(p_1,...,p_d)^T is a random orthogonal,
+Eq. (<ref>) can be written as
+
+    𝔼[Δ E ]
+        =   ∑_i>1^d
+        𝔼[
+        1/λ_i^* - λ_1^* ]
+        𝔼[
+        (p_i^*Tvech^-1(D^-1A^+ϵ) p_1^* )^2
+        ] 
+    
+        =    k𝔼[
+        (p_2^*Tvech^-1(D^-1A^+ϵ) p_1^* )^2
+        ],
+
+where k := ∑_i>1^d 𝔼[ (λ_i^* - λ_1^*)^-1].
+This means the measure 𝔼[Δ E ] can be evaluated with some modeling of the true FQS matrix G and the measurement errors ϵ.
+
+For simplicity, we now write Z=vech^-1(D^-1A^+ϵ).
+From Eq.(<ref>) in Appendix <ref>
+, 
+
+    𝔼[Δ E ]
+           =k∑_i,jd 𝔼[Z_ij^2]-𝔼[Z_iiZ_jj]/d(d-1)(d+2)
+       = kσ^2/sd(d-1)(d+2)
+        ×(d Tr[(A^TA)^-1]  -1_d^T (A^TA)^-11_d)
+       = kσ^2/sd(d-1)(d+2)
+        ×Tr[(A^TA)^-1(dI -1_d1_d^T)]
+
+In addition, if C(A)=1, i.e. the case of theoretical lower bound, A^TA=N/d(d+2)(2I+1_d1_d^T) holds from Theorem <ref>. 
+As a result, we obtain
+
+    𝔼[Δ E ] =
+        kσ^2/s d(d+2) /4N,
+
+where we used the following relation,
+
+    Tr[(A^TA)^-1(dI -1_d1_d^T)] 
+       = d(d+2)/NTr[(2I+1_d1_d^T)^-1(dI -1_d1_d^T)] 
+       = d(d+2)/NTr[(1/2I-1/2(d+2)1_d1_d^T)(dI -1_d1_d^T)] 
+       = d(d+2)/NTr[d/2I-1/21_d1_d^T] 
+       = d(d+2)/Nd/2 (N_min-1) 
+       =  d^2(d+2)^2 (d-1) /4N.
+
+
+
+
+
+
+
+ §.§ Proof of Theorem <ref> and Corollary <ref>
+
+
+lemmaLemma
+
+In this section, we first present useful lemmas to prove Theorem <ref> and its Corollary <ref> that allow for analytical calculation of the optimal bound of the C-cost. 
+
+The first lemma is trivial from the singular-value decomposition of a matrix A = UΣ V^T, where U, V are orthogonal matrices, and Σ is the diagonal matrix that contains the singular values of A. 
+
+Let A be a real matrix. The multiset of non-zero eigenvalues of AA^T is the same as the multiset of non-zero eigenvalues of A^TA. 
+
+
+
+Let A be a real symmetric matrix such that one of its eigenvalues is a and the rest are b's. Then, it holds that A = (a-b) uu^T + b I where u is the (normalized) eigenvector corresponding to the eigenvalue a.
+
+
+
+Easy by seeing that Au = a u, and Av = b v hold for every v which is orthogonal to u, i.e., v^T u = 0. 
+
+
+
+Let A be an n× n positive definite matrix with the largest eigenvalue λ_max and the smallest eigenvalue λ_min such that κ = λ_max / λ_min. It is known that n^2/κ≤(A) (A^-1) ≤ n^2 κ holds with equality if and only if κ = 1, i.e., A = λ I for some λ > 0. We formalize this in the following lemma. 
+
+Any positive-definite real symmetric matrix A∈ℝ^n× n satisfies A^-1≥ n^2A^-1 with equality if and only if A= λ I for λ > 0.
+
+
+
+
+
+We now prove Theorem <ref> and its Corollary <ref> concerning lower bounds and its equality conditions for C-cost. 
+Here we revisit Theorem <ref> for convenience.
+
+
+
+Suppose a single-qubit gate expressed by a parameter q in ℝ^d where |q|=1.
+Let {q_1, ⋯, q_N } be a parameter configuration and let A be the corresponding matrix A=[h(q_1),⋯,h(q_N)]^T in ℝ^N× N_min where N≥ N_ min≡ d(d+1)/2.
+The C-cost C(A) defined as
+
+    C(A) 
+           =N/N_mind(d+2) Tr[ (A^TA)^-1(1_d1_d^T+2I)]
+
+satisfies C(A) ≥ 1 
+with equality if and only if the parameter configuration {q_i } and A satisfy
+
+    A^TA = N/d(d+2) (1_d1_d^T + 2I).
+
+
+
+
+
+Using the Woodbury matrix identity giving
+
+    ( 1_d 1_d^T + 2I )^-1 =  ( 1/2I - 1/2(d+2)1_d 1_d^T ),
+
+we obtain the lower bound of Eq. (<ref>) as
+
+    (A^T A)^-1(1_d1_d^T + 2I) 
+       =   ( (1_d1_d^T + 2I )^-1 (A^T A))^-1
+       =   ( 1/2A^T A - 1/2(d+2)1_d 1_d^T  A^T A)^-1
+       ≥    N_min^2 1/2A^T A - 1/2(d+2)1_d 1_d^T A^T A^-1
+       =   N_min d(d+2)/N
+
+where the inequality in the fourth line is derived by Lemma <ref>.
+To obtain the last line, we use A^T A = A A^T = N and 1_d 1_d^T A^T A  = N as well as
+ N_min = d(d+1)/2.
+Therefore, C(A)≥ 1.
+
+According to Lemma <ref>, the equality in the fourth line in Eq. (<ref>) is given as
+
+    1/2A^T A - 1/2(d+2)1_d 1_d^T A^T A
+        = λ I,
+
+where λ is a constant.
+Tracing over both sides of Eq. (<ref>), we have
+
+    λ 
+        = N/d(d+2).
+
+Therefore, C(A)=1 if and only if 
+
+    A^T A = N/d(d+2)(1_d 1_d^T + 2I ).
+
+
+
+
+
+    For the minimum number of parameters (N=N_min),  
+    it holds that C(A) ≥ 1 with equality if and only if the parameter configurations {q_i}_i=1^N satisfy
+
+    |q_i·q_j| = 1/√(d+2)  (for  all  i≠ j).
+    
+
+
+
+We show
+Eq. (<ref>) is equivalent to Eq.(<ref>) if N=N_min.
+We first show
+
+    A^T A    = N_min/d(d+2)(1_d 1_d^T + 2I ) 
+    ⟹   
+        |q_i·q_j|    = 1/√((d+2))  (for  all  i≠ j) .
+
+Recall that  
+A = [h(q_1), ⋯, h(q_N) ]^T.
+If N=N_min, both AA^T and A^TA lie in ℝ^N_min× N_min,
+A^TA=∑_i^N_minh(q_i) h(q_i)^T 
+and so
+
+    ∑_i=1^N_minh(q_i) h(q_i)^T =N_min/d(d+2)(1_d 1_d^T + 2I )
+
+Multiplying both sides by 1_d from the right, we obtain  
+
+    ∑_i=1^N_minh(q_i) = N_min/d1_d,
+
+According to Lemma <ref>, A^T A and AA^T have the identical set of non-zero eigenvalues, i.e. one of eigenvalues is d+2 and the rest are 2.
+Then, using Lemma <ref>,
+A A^T can be expressed as
+
+    A A^T = N_min/d(d+2)(d vv^T + 2I ),
+
+where v∈ℝ^N_min is a unit vector.
+On the other hand, 
+the (i,j)-component of AA^T has a relation 
+
+    (AA^T)_ij=h(q_i)^T h(q_j) 
+        = N_min/d(d+2)(d v_i v_j + 2 δ_ij).
+
+Summing Eq. (<ref>) over j from 1 to N_min and using h(q)^T 1_d=1 and Eq. (<ref>),  we obtain
+
+    v_j = 1/∑_i^N_min v_i.
+
+Since v is a unit vector, v = ±1_N_min / √(N_min), where 1_N_min∈ℝ^N_min is a vector whose all elements are 1.
+Therefore, 
+
+    h(q_i)^T h(q_j) = 1/d+2,  for  i ≠ j.
+
+Using the relation h(q_i)^T h(q_j) = (q_i ·q_j)^2, we obtain
+
+    | q_i ·q_j(≠ i) | = 1/√(d+2).
+
+
+Next, we prove that 
+
+    |q_i·q_j| 
+           = 1/√((d+2))  (for  all  i≠ j) 
+    ⟹   
+        A^T A    =     
+        N/d(d+2)(1_d 1_d^T + 2I ) .
+
+Using the relation h(q_i)^T h(q_j) = (q_i ·q_j)^2 and |q_i|^2=1 again, we obtain
+
+    h(q_i)^T h(q_j) = 1/d+2 + d+1/d+2δ_ij.
+
+Since h(q_i)^T h(q_j) is the (i, j)-component of A A^T, we can write
+
+    A A^T = N_min/d(d+2)( d/N_min1_N_min1_N_min^T + 2I ),
+
+because of N_min = d(d+1)/2.
+Using Eq. (<ref>), Lemmas <ref> and <ref>, we can write A^T A as
+
+    A^T A = N_min/d(d+2)(d v' v'^T + 2I ),
+
+where v'=[v'_1, …, v'_N_min]^T is a unit vector.
+Since A^T A = ∑_i h(q_i) h(q_i)^T and ∀ i, h(q_i)^T 1_d = 1, multiplying Eq. (<ref>) by 1_d from the right side yields
+
+    ∑_i h(q_i) = N_min/d(d+2)( d v' v'^T 1_d + 2 1_d ).
+
+Summing Eq. (<ref>) over i and j from 1 to N_min, we obtain
+
+    ∑_i, jh(q_i)^T h(q_j) = N_min^2/d,
+
+which further yields
+
+    (1_d^T v')^2 = d,
+
+by substituting Eq. (<ref>) into Eq. (<ref>) and rearranging the resultant equation.
+Since 1_d  = √(d), Eq. (<ref>) means v' = ±1_d / √(d).
+Therefore, Eq. (<ref>) becomes
+
+    A^T A = N_min/d(d+2)( 1_d 1_d^T + 2I ),
+
+which is just the equality conditon of C(A) = 1.
+
+
+
+
+
+
+ §.§ Proof of rotation invariance of C-cost
+
+Here, we prove the C-cost C(A) is invariant with respect to the parameter rotations as 
+
+    C(A) = C(A_R),
+
+where the subscript R stands for the rotated parameter set.
+Let {q_1, q_2, ..., q_N } be the original parameter configuration.
+Then, a rotation matrix R ∈ SO(d) gives another parameter configutation { Rq_1, Rq_2, ..., Rq_N }.
+For convenience, we define a matrix Q as
+    Q = ( q_1 ⊗q_1, q_2 ⊗q_2, ..., q_N ⊗q_N )^T.
+
+Likewise,
+
+    Q_R    =    ( (Rq_1) ⊗ (Rq_1), ..., (Rq_N) ⊗ (Rq_N) )^T 
+       =    Q (R^T ⊗ R^T).
+
+Using Eq. (<ref>) in Appendix <ref>, Q is linked to A as
+
+    AL^T = Q  and  A=QL.
+
+which implies Q encodes the parameter configurations as well as A.
+Thus, the matrix A for the rotated parameter set is given as
+
+    A_R L^T = Q(R^T ⊗ R^T)  and  A_R=Q(R^T ⊗ R^T)L.
+
+From Eq. (<ref>) and (<ref>), the C-cost contains the Gram matrix A^TA.
+For the rotated parameter set, the corresponding Gram matrix is given as
+
+    A_R^TA_R    =    L^T (R⊗ R) Q^T Q (R^T⊗ R^T) L 
+       =    L^T (R⊗ R) L A^T A L^T (R^T⊗ R^T) L 
+       =    R_L A^TA R_L^T,
+
+where we denote R_L:=L^T (R⊗ R) L.
+
+In fact, the first and second terms of Eq. (<ref>) are independently invariant for parameter rotations as follows.
+
+For the first term 1_d (A^TA)^-11_d^T (Eq. (<ref>)), the rotated version of the first term is expanded as
+
+    1_d^T (A^T_RA_R)^-11_d 
+           =   1_d^T (R_L A^TA R_L^T)^-11_d 
+       =    (R_L^-11_d)^T (A^TA)^-1 R_L^-11_d 
+       =   1_d^T (A^TA)^-11_d,
+
+where we use the fact R_L^-11_d = 1_d, which is easily derived as
+
+    R_L1_d
+           =    L^T(R⊗ R) LL^T (I) 
+       =    L^T LL^T (R⊗ R) (I) 
+       =    L^T (R⊗ R) (I) 
+       =    L^T (R I R^T) 
+       =    L^T (I) 
+       =   1_d,
+
+where we employed LL^T(R⊗ R)=(R⊗ R)LL^T and L^TL=I. 
+This equations implies the first term is rotation invariant.
+
+
+For the second term Tr[ (A^TA)^-1 ] (Eq. (<ref>)), the rotated version of the second term is expanded as
+
+    Tr[ (A^T_RA_R)^-1 ]
+           =    Tr[  (R_L A^TA R_L^T)^-1 ] 
+       =    Tr[ (A^TAR_L^TR_L)^-1 ] 
+       =    Tr[ (A^TA)^-1 ]
+
+where for the second equality I = R_L^TR_L is employed, which is derived as
+
+    R_L^TR_L 
+        =    L (R^T⊗ R^T) L L^T (R ⊗ R) L 
+    
+        =    L^T L L^T(R⊗ R)(R^T ⊗ R^T) L 
+    
+        =    L^T L L^T((RR^T)⊗ (RR^T)) L 
+    
+        =     L^T L L^T L 
+    
+        =    I,
+
+where we employed LL^T(R⊗ R)=(R⊗ R)LL^T and L^TL=I.
+This equations implies the second term is rotation invariant.
+Consequently, the C-cost is rotation invariant, because both the two terms in the C-cost are rotation invariant. (𝔼[Δ E]  is also rotation invariant, because it is the weighted sum of these two terms.) □
+
+
+
+
+
+
+ §.§ Comparison of our Parameters with the original methods.
+
+We show the parameter values used as a sequential optimization in the main text as follows. The parameters are in no particular order.
+
+
+
+  §.§.§ Rx gate
+
+The original parameter configuration for Rx gate 
+r_1, r_2, r_3 proposed in <cit.> is represented as
+
+    [ r^T_1; r^T_2; r^T_3 ]
+         =
+        [         1         0;  cos(π/4)  sin(π/4);  cos(π/4) -sin(π/4) ].
+
+
+The unique optimal parameter configuration for Rx gate with minimum number parameter set r_1, r_2, r_3 is analytically derived as 
+
+    [ r^T_1; r^T_2; r^T_3 ]
+         =
+        [         1         0;  cos(π/3)  sin(π/3);  cos(π/3) -sin(π/3) ]
+
+and its arbitrary rotation and (individual) reversal.
+
+
+
+  §.§.§ Fraxis gate
+
+The original parameter configuration for Fraxis gate 
+n_1, n_2, ..., n_6 proposed in <cit.> is represented as
+
+    [ n^T_1; n^T_2; n^T_3; n^T_4; n^T_5; n^T_6 ]
+         = 1/√(2)[ √(2)    0    0;    0 √(2)    0;    0    0 √(2);    1    1    0;    1    0    1;    0    1    1 ].
+
+
+The unique (up to arbitrary rotation and individual reversal) optimal parameter configuration for Fraxis gate with minimum number parameter set n_1, n_2, ..., n_6 is analytically derived as the vertices of icosahedron  
+
+    [ n^T_1; n^T_2; n^T_3; n^T_4; n^T_5; n^T_6 ]
+         =
+         1/√(1+φ^2)[  0  1  φ;  0  1 -φ;  1  φ  0;  1 -φ  0;  φ  0  1; -φ  0  1 ],
+
+where φ = 1+√(5)/2 is the golden ratio. 
+
+
+
+  §.§.§ FQS gate
+
+The original parameter configuration for FQS 
+q_1, q_2, ..., q_10 proposed in <cit.> is represented as
+
+    [  q^T_1;  q^T_2;  q^T_3;  q^T_4;  q^T_5;  q^T_6;  q^T_7;  q^T_8;  q^T_9; q^T_10 ]
+         =
+         1/√(2)[ √(2)    0    0    0;    1   -1    0    0;    1    0   -1    0;    1    0    0   -1;    1    1    0    0;    1    0    1    0;    1    0    0    1;    0    1    1    0;    0    1    0    1;    0    0    1    1;      ].
+
+
+The symmetric parameter configuration for FQS gate 
+q_1, q_2, ..., q_10 which is only used for the experimental results in main text is represented as
+
+    [  q^T_1;  q^T_2;  q^T_3;  q^T_4;  q^T_5;  q^T_6;  q^T_7;  q^T_8;  q^T_9; q^T_10 ]
+         =
+         1/√(2)[ √(2)    0    0    0;    0 √(2)    0    0;    0    0 √(2)    0;    0    0    0 √(2);    1    1    0    0;    1    0    1    0;    1    0    0    1;    0    1    1    0;    0    1    0    1;    0    0    1    1;      ].
+
+
+The unique optimal parameter configuration for FQS gate with minimum number parameter set q_1, q_2, ..., q_10 is numerically derived as 
+
+    [  q^T_1;  q^T_2;  q^T_3;  q^T_4;  q^T_5;  q^T_6;  q^T_7;  q^T_8;  q^T_9; q^T_10 ]
+         =
+        [ a b b b; b a b b; b b a b; b b b a; c c d d; c d c d; c d d c; d c c d; d c d c; d d c c ]
+
+and its arbitrary rotation and (individual) reversal, where a=√(3)/2, b=-1/(2√(3)), and c^2 + d^2 = 1/2, where c ≈ 0.7049, d ≈ -0.0561.
+
+
+
+
+
+
+
+
+
+
+ §.§ ΔE Distributions sampled with various parameter configurations
+
+In the experiment in Sec. <ref>, we performed optimization of only one gate to investigate the estimation error of the target gate. 
+In the main text we shows only the case of U_2 (Ry gate in U_2 for Rotosolve case) as the target gate. 
+In this section we show another case, that is the case of the target gate is U_0 for the FQS and Fraxis case and the Ry gate of U_0 for the Rotosolve case. 
+
+
+Note that the number of shot per circuit S is set to 10, 100, 1000 and the parameters of all the gates are initialized to random values and only the target gate is optimized. 
+Fig. <ref> shows the results of all the additional experiments. The title of each subplot tells the target gate and other settings. 
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -233,7 +233,7 @@ class MLCEngine(LLMEngine):
             "context_len": 0,
         }
 
-    async def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
+    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         num_cached_tokens = UNKNOWN_DATA_FIELD
         num_running_jobs = self.scheduler.num_running_jobs
         num_total_jobs = self.scheduler.num_total_jobs

@@ -144,7 +144,7 @@ class BuiltinEngine(LLMEngine):
         }
 
     # override
-    async def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
+    def get_runtime_info(self, profile: bool) -> EngineRuntimeInfo:
         # Scheduler
         num_running_jobs = self.scheduler.num_running_jobs
         num_total_jobs = self.scheduler.num_total_jobs

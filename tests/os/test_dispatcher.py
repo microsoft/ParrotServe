@@ -305,8 +305,8 @@ def test_token_capacity():
 
 
 if __name__ == "__main__":
-    test_default_policy()
-    test_dag_aware_policy()
-    test_dispatcher_order()
+    # test_default_policy()
+    # test_dag_aware_policy()
+    # test_dispatcher_order()
     test_app_fifo()
-    test_token_capacity()
+    # test_token_capacity()

@@ -2,177 +2,80 @@
 
 
 
+    Bennett-Tennenhaus]Raphael Bennett-Tennenhaus
+        
+		Department of Mathematics
 
+		Aarhus University
 
+		
+		8000 Aarhus C
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		Denmark
+        raphaelbennetttennenhaus@gmail.com
+        
+    Haugland]Johanne Haugland
+        Department of Mathematical Sciences
  
+        NTNU
+ 
+        NO-7491 Trondheim
+ 
+        Norway
+        johanne.haugland@ntnu.no
+
+    Sandøy]Mads Hustad Sandøy
+        Department of Mathematical Sciences
+ 
+        NTNU
+ 
+        NO-7491 Trondheim
+ 
+        Norway
+        mads.sandoy@ntnu.no
+        
+    Shah]Amit Shah
+        
+		Department of Mathematics
+
+		Aarhus University
+
+		
+		8000 Aarhus C
+
+		Denmark
+        amit.shah@math.au.dk
 
 
 
 
 
-plain
-propositionProposition
-lemmaLemma
-theoremTheorem
-assumptionAssumption
-*conjectureConjecture
-*subconjectureSubconjecture
-corollaryCorollary
-mainMain Result
-*definitionDefinition
-remarkRemark
+[2020]18E05, 18E10, 18G80, 18N10, 18G99
 
-           
-          
-            
-         
+1
+
+Building on previous work, we study the splitting of idempotents in the category of extensions 𝔼-Ext(𝒞) associated to an n-exangulated category (𝒞,𝔼,𝔰). In particular, we show that idempotents split in 𝔼-Ext(𝒞) whenever they do so in 𝒞, allowing us to prove that idempotent completions and extension categories are compatible constructions in a -theoretic sense. More precisely, we show that the exact category obtained by first taking the idempotent completion of (𝒞,𝔼,𝔰), in the sense of Klapproth–Msapato–Shah, and then considering its category of extensions is equivalent to the exact category obtained by first passing to the extension category and then taking the idempotent completion. These two different approaches yield a pair of 2-functors each taking small n-exangulated categories to small idempotent complete exact categories. The collection of equivalences that we provide constitutes a 2-natural transformation between these 2-functors. Similar results with no smallness assumptions and regarding weak idempotent completions are also proved.
 
 
 
 
-IndRemark
-  
-
-  0.95
-  
-
-
-
-
-
-
-IndAssumption
-  
-
-  0.95
-  
-
-
-
-
-
-
-IndProposition
-  
-
-  0.95
-  
-
-
-
-
-
-
-
-
-
-a
-b
-η
-g
-σ
-ℓ
-L
-e
-p
-f
-F
-T
-Q
-S
-Ψ
-H
-Σ
-
-∇
-g
-L
-…s
-Ξ
-d
-Φ
-T
-F
-
-
-
-
-
-
-
-
-
-
-
-
-
-,1]Justin Feng
-  [E-mail address:justin.feng@tecnico.ulisboa.pt]
-,2]Edgar Gasperín
-  [E-mail address:edgar.gasperin@tecnico.ulisboa.pt]
-
-  [1,2] CENTRA, Departamento de Física, Instituto Superior
-    Técnico IST, Universidade de Lisboa UL, Avenida Rovisco Pais 1,
-    1049 Lisboa, Portugal
-
-
-Linearised conformal Einstein field equations
+The category of extensions and idempotent completion
     [
     March 30, 2023
-=============================================
+====================================================
 
 
-  The linearisation of a second-order formulation of the conformal
-  Einstein field equations (CEFEs) in Generalised Harmonic Gauge (GHG),
-  with trace-free matter is derived.  The linearised equations are
-  obtained for a general background and then particularised for the
-  study linear perturbations around a flat background —the inversion
-  (conformal) representation of the Minkowski spacetime— and the
-  solutions discussed. We show that the generalised Lorenz gauge
-  (defined as the linear analogue of the GHG-gauge) propagates.
-  Moreover, the equation for the conformal factor can be trivialised
-  with an appropriate choice for the gauge source functions; this
-  permits a scri-fixing strategy using gauge source functions for the
-  linearised wave-like CEFE-GHG, which can in principle be generalised
-  to the nonlinear case. As a particular application of the linearised
-  equations, the far-field and compact source approximation is employed
-  to derive quadrupole-like formulae for various conformal fields such
-  as the perturbation of the rescaled Weyl tensor.
 
 
-Keywords: conformal boundary, conformal
-Einstein field equations, scri-fixing.
+
+
+
+
+1
+
+
+
+
 
 
 
@@ -181,3116 +84,1257 @@ Einstein field equations, scri-fixing.
 § INTRODUCTION
 
 
+An additive category is called idempotent complete given that every idempotent morphism splits (see <ref>), or equivalently if every idempotent admits a kernel (see e.g. <cit.>). The study of idempotent complete categories dates back to work by Karoubi <cit.>, in which it was shown that an additive category  can be naturally embedded into an idempotent complete category , often called its Karoubi envelope or its idempotent completion (see <ref> and <ref>).
 
+The splitting of idempotents plays an important role in contemporary algebraic geometry, homological algebra, representation theory and category theory. Indeed, it is intimately connected to the Krull–Remak–Schmidt property and Krull–Schmidt categories (see <cit.>, <cit.>).  Krull–Schmidt categories constitute a particularly nice class of examples of idempotent complete categories. In such a category, every object decomposes, essentially uniquely, into a finite direct sum of indecomposable objects with local endomorphism rings. Splitting of idempotents is often a crucial standing assumption when approaching representation theory of finite-dimensional algebras from a categorical or geometrical perspective (see e.g. <cit.>). Furthermore, a generalisation of the Krull–Remak–Schmidt property was given by Azumaya <cit.>, which has since been used in topological data analysis in the study of persistence homology (see e.g. <cit.>).
 
-Although nowadays gravitational wave effects can be studied using the
-full non-linear Einstein field equations, linear perturbation theory
-remains an active area of research, e.g. black hole perturbation
-theory, quasinormal modes, post-Newtonian and post-Minkowskian
-expansions.  As it is well-known, the concept of gravitational radiation
-can be traced back to 1918 to the study of the linearisation of the
-Einstein field equations around flat spacetime and the derivation of the
-celebrated quadrupole formula. However, a rigorous formulation of the
-notion of gravitational radiation had to wait for further development of
-mathematical aspects of the theory put forward by Bondi, Sachs, Newman
-and Penrose and others in the decade of 1960 —see <cit.> for a historical review.  The notion of null-infinity (and
-more generally the notion of a conformal boundary) developed in the
-aforementioned theory proved crucial for the modern understanding of
-gravitational radiation.
+Abelian, or more generally exact, and triangulated categories appear in various areas of mathematics, including functional analysis and mathematical physics, and are of fundamental interest in representation theory and related areas (see e.g. <cit.>). Recently, Nakaoka–Palu introduced  categories as a simultaneous generalisation of exact and triangulated  <cit.>, and showed that extension-closed subcategories of triangulated categories, which may fail to be triangulated subcategories, carry an extriangulated structure. Herschend–Liu–Nakaoka <cit.> then introduced  categories as a higher-dimensional analogue of extriangulated categories in the context of higher homological algebra. An n-exangulated category for an integer n ≥ 1 is a triplet (,,) consisting of an additive category , a biadditive functor ×→ (where  denotes the category of abelian groups), and a realisation  of . Note that a category is 1-exangulated if and only if it is extriangulated <cit.>. Important classes of examples of n-exangulated categories for higher n include n-exact categories <cit.> and (n+2)-angulated categories <cit.>. 
 
+Suppose that (,,) is an n-exangulated category. For each pair of objects A,C, elements of (C,A) are called -extensions. The category of extensions associated to (,,), denoted by , has all -extensions as its objects, and the morphisms are morphisms of -extensions; see Subsection <ref>. In a previous article, the authors showed that this category can be equipped with a natural exact structure , giving rise to an exact category (,); see <cit.>. Moreover, we demonstrated that  encodes important structural information. As an example, this perspective leads to a full characterisation of n-exangulated functors between n-exangulated categories; see <cit.>. In the present paper, we improve the understanding of the relationship between an n-exangulated category and its associated category of extensions by studying the splitting of idempotents. 
 
+Our first prominent result is <ref> below, which asserts that the splitting of idempotents in  is inherited from . This plays an important role in the paper as a key step towards <ref>.
 
-Null-infinity ℐ corresponds to an idealisation of the
-asymptotic region of the physical spacetime (ℳ̃,
-) and it is defined through a conformally related manifold
-(ℳ,) where =Ξ^2 so that
-ℐ can be identified with the region where Ξ=0 —but
-∇_a Ξ≠ 0.  Unfortunately, the Einstein field equations
-(EFEs) are not conformally invariant so evaluating quantities at
-ℐ is non-trivial. To circumvent this problem, there are
-different approaches aimed at specific goals. For instance, the
-hyperboloidal approach in their different renditions <cit.>
-represents a compromise between the preservation of standard
-formulations of the EFEs used in Numerical Relativity and the inclusion
-of  ℐ at the expense of dealing with formally singular (but
-numerically tractable) equations.  On the other hand, there exists
-another strand of research that stems from taking further the conformal
-approach while insisting on having formally regular equations.  This
-conformally regular approach was initiated in 1981 when H. Friedrich
-derived in <cit.> a reformulation of the Einstein field equations
-known as the conformal Einstein field equations (CEFEs) —see
-<cit.> for an exhaustive discussion. One of the distincive
-features of the CEFEs is that the conformal factor is a variable, hence
-the location of the conformal boundary is not fixed a priori. Strategies
-for fixing the conformal boundary, or scri-fixing, have been
-introduced for the CEFEs in <cit.> for vacuum and <cit.> for trace-free
-matter, but they require the existence of a congruence of conformal
-curves.
-
-
-
-Despite many advances in the mathematical analysis of spacetimes and
-numerical evolutions with the CEFEs  <cit.>, the application of the CEFEs
-to physical problems has been surprisingly limited. This is evident in
-(and possibly a result of) the fact that the application of linear
-perturbation theory to the CEFEs has not been studied in the existing
-literature. Such an analysis is needed to make contact with standard
-(linear) metric approaches to characterising gravitational radiation.
-This article aims to provide a first step in this direction by
-studying the linearisation of the CEFEs in a form that resembles
-standard formulations of the linearised Einstein field equations. 
-
-
-
-The core of the CEFEs are the Bianchi identities, which provide a set of
-evolution and constraint equations for the Weyl curvature (coupled with
-other fields in the non-linear case). One approach to the linearised
-problem concerns the study of the spin-2 equation in a fixed background
-spacetime, which can be thought as the linearisation of the Weyl sector
-of the CEFEs in spinorial form. The spin-2 equation on a particular
-background known as the Minkowski i^0-cylinder has been analysed in
-<cit.>.  The spin-2 equation
-∇_A'^Aϕ_ABCD=0, although elegant, looks very different
-to the standard linearisation of metric formulations of the Einstein
-field equations.  Hence, in this article, we study the linearisation not
-of the original set of CEFEs but rather we start from a metric and
-second-order formulation of the CEFEs which is closer in spirit to
-standard hyperbolic reductions of the EFEs in generalised harmonic gauge
-(GHG) employed in Numerical Relativity. This non-linear wave-like
-formulation of the CEFEs was originally derived in the vacuum case in
-<cit.> and has been extended for the case of trace-free matter in
-<cit.>. In this paper, we linearise these equations around a
-general background and then the solutions to the linearised equations
-around flat spacetime are studied. As a concrete application of the
-linearisation, we derive, in the far-field approximation,
-quadrupole-like formulae for the conformal fields, obtaining in
-particular a quadrupole-like formula for the perturbation of the
-rescaled Weyl tensor. As a byproduct, we show how the gauge source
-functions can be chosen so that the conformal factor remains
-unperturbed. This can be regarded as a “scri-fixing” strategy for the
-linearised CEFEs for trace-free matter. We then argue that the same
-strategy carries over to the non-linear wave-CEFEs in the context of the
-hyperboloidal initial value problem, providing a simpler alternative to
-the scri-fixing strategy in <cit.> based on conformal
-curves.
-
-
-
-
- §.§ Notations and conventions
-
-
-
-The signature convention for (Lorentzian) spacetime metrics will be (-,+,+,+). Latin indices from the first half of the alphabet
-a,b,c,,... will be used as abstract tensor indices while Greek indices
-will denote spacetime coordinate indices, taking values from the set
-{0,1,2,3}.  If an adapted coordinate system (with coordinates
-x^μ) is introduced, x^0=t represents the time coordinate, and
-Latin indices from the second half of the alphabet represent spatial
-indices, taking values from the set {1,2,3}. Symmetrisation and
-antisymmetrisation of tensors will be denoted with round and square
-brackets and taking the trace-free part of a tensor will be denoted by
-adding {} on the relevant indices. For instance T_(ab):=
-12(T_ab + T_ba), T_[ab]:=12(T_ab -
-T_ba) and T_{ab}:= T_ab - 14g_abT.  The curvature
-conventions are fixed by the relation
-
-    (∇_a ∇_b -∇_b ∇_a) v^c = R^c_dab v^d.
-
-Although we will occasionally refer to expressions in spinorial form (as
-much of the literature on the CEFEs employs spinor notation), all
-calculations in this article are performed in tensor notation.
-
-
-
-
- §.§ Organisation of the paper
-
-
-
-Section <ref> gives a brief summary of the CEFEs and the
-wave-like hyperbolic reduction of <cit.>. This is included to
-give a concise reference to the reader and to provide the non-linear
-context of the equations studied in this paper.  Section
-<ref> contains the linearisation of the wave-CEFEs
-in GHG around a general background.  Section <ref>
-particularises the equations for a flat background and discusses the
-perturbed solutions via Green's functions methods and, in the far-field
-approximation, quadrupole-like formulae for the conformal fields are
-derived.
-
-
-
-
-
-§ THE CONFORMAL EINSTEIN FIELD EQUATIONS
-
-
-
-
-
-The conformal Einstein field equations (CEFEs) are a reformulation of
-the Einstein field equations (EFEs) with the aim of dynamically
-implementing R. Penrose's conformal approach. The CEFEs were originally
-introduced in <cit.> and encode a set of differential conditions
-satisfied by the geometry of a conformal extension (ℳ,)
-of a spacetime (ℳ̃,) (with
-=Ξ^2) satisfying the EFEs. To differentiate between
-these two, the pair (ℳ,) is called the unphysical
-spacetime while the pair (ℳ̃,) is called
-the physical spacetime.  The feature that distinguishes the CEFEs
-from other reformulations of the EFEs is that (for trace-free matter)
-the CEFEs are formally regular at Ξ=0 —see
-<cit.>. To see this and concisely introduce the
-CEFEs, it is convenient to define the following zero-quantities
-—see <cit.> for an extensive discussion:
-
-
-    Z_ab := ∇_a∇_bΞ +Ξ L_ab - s g_ab -
-      1/2Ξ^3T_{ab}=0 ,
-      
-           Z_a := ∇_as +L_ac∇ ^cΞ -
-     1/2Ξ^2T_{ab}∇^bΞ -
-     1/6Ξ^3∇^bT_{ba}=0 , 
-          δ_bac := ∇_aL_bc-∇_bL_ac -
-     d^d_cab∇_dΞ -Ξ T_abc =0 ,
-     
-          λ_abc:=
-     ∇_ed^e_abc-T_bca=0 , 
-           P^c_dab :=  R^c_dab - Ξ d^c_dab - 
-     2( δ^c_[aL_b]d -
-       g_d[aL_b]^c).
-     
-           Z := λ - 6 Ξ s + 3 ∇_aΞ∇^aΞ
-     -1/4Ξ^4T=0
-           M_a:=∇^bT_ba - Ξ^-1T∇_aΞ=0.
-
-
-where Ξ is the conformal factor, s is the Friedrich scalar,
-L_ab is the Schouten tensor, R^a_bcd is the Riemann
-tensor, d^a_bcd is the rescaled Weyl tensor, T_ab is
-the rescaled energy-momentum tensor with trace T:=g^abT_ab
-and T_abc is the rescaled Cotton tensor. The zero-quantities
-Z_ab, Z_a, δ_abc,λ_abc , Z and M_a are defined
-simply as a bookkeeping device in the sense that the CEFEs are satisfied
-when a collection of fields
-
-    {g_ab,  Ξ,   s ,L_ab,  d_abcd,  T_ab,   T_abc}
-
-solve the equations
-
-    Z_ab=0,    Z_a=0,   δ_abc=0,   λ_abc=0,     P^d_abc=0,    Z=0,    M_a=0.
-
-
-
-   Observe that the only singular terms in the zero-quantities
-  (<ref>) appear with the trace of the unphysical
-  energy-momentum tensor, specifically in equation
-  (<ref>). However for trace-free
-  matter all the equations implied by the zero-quantities
-  (<ref>) are formally regular at Ξ=0. 
-
-
-
-The geometric variables are defined via
-
-    s   := 14∇_a∇^aΞ +
-      124RΞ,
-     L_ab   :=12R_ab-112Rg_ab,
-      
-     d^a_bcd   :=Ξ^-1C^a_bcd.
-
-where R_ab and R denote the Ricci tensor and Ricci scalar of
-(ℳ,) while C^a_bcd is the conformally invariant
-Weyl tensor. Given a solution to the CEFEs, it can be verified that the
-associated physical metric g̃_ab=Ξ^-2g_ab will satisfy
-the Einstein field equations:
-
-    R̃_ab-1/2R̃g̃_ab + λg̃_ab= T̃_ab ,
+[See <ref>]
  
-where T̃_ab is the physical energy-momentum tensor, λ
-is the cosmological constant, and R̃_ab and R̃ are
-the respective Ricci tensor and Ricci scalar. The matter variables in
-(<ref>) are related to their physical counterparts
-as:
+If  is idempotent complete, then  is also idempotent complete.
 
-    T_ab    :=Ξ^-2T̃_ab,      T:=Ξ^-4T̃,
-          T̃:=g̃^abT̃_ab ,
-      
+
+As a consequence of <ref>, we obtain that given certain assumptions on , the Krull–Remak–Schmidt property for  implies the same property for ; see <ref>, cf. <cit.>, <cit.>.
+
+It is shown in <cit.> that the idempotent completion  of  admits an n-exangulated structure, giving rise to an idempotent complete n-exangulated category (,,1mu); see <ref>. Our second main result, given as <ref> below, demonstrates that idempotent completions and extension categories are compatible constructions. More precisely, the category obtained by first taking the idempotent completion of an n-exangulated category and then considering its category of extensions is equivalent to first passing to the extension category and then taking the idempotent completion. 
+
+[See <ref>]
+ 
+The category  
+is equivalent to the idempotent completion of the category .
+
+
+<ref> and <ref> are both used in order to obtain the 2-category-theoretic result <ref>, which builds a bridge between the 2-categorical framework established in <cit.> and the results on the idempotent completion of an n-exangulated category from <cit.>. To discuss a 2-category of n-exangulated categories, we use notions of morphisms between n-exangulated categories and of morphisms between such morphisms. Structure-preserving functors between n-exangulated categories as introduced in <cit.> are known as n-exangulated functors. We viewed the theory of n-exangulated categories from a 2-categorical perspective in <cit.> by defining n-exangulated natural transformations between n-exangulated functors and establishing the 2-category n of small n-exangulated categories <cit.>. Furthermore, we constructed a 2-functor n→ to the category of small exact categories <cit.>, which sends a 0-cell (,,) in n to the 0-cell (,) in ; see <ref>. A consequence of <ref> is that  restricts to a 2-functor n→ from the 2-category of small idempotent complete n-exangulated categories to the 2-category of small idempotent complete exact categories. The last observation needed in order to state <ref> is that taking idempotent completions yields 2-functors → and n→n; see <ref> and <ref>, respectively. 
+
+[See <ref>]
+
+Consider the diagram  
+
+    nrd[swap]   d
+    nr
+
+of 2-categories and 2-functors.
+There is a 2-natural transformation 
+⇒ consisting of exact equivalences.
+
+
+Similar results as above hold also for weak idempotent completions; see <ref>. We remark that even though <ref> is an expected analogue of <ref> in this setup, the method of proof is different and relies on a previous result of the authors from <cit.>.
+
+
+
+We note that <ref> follows from a more general result, namely <ref>, in which no smallness assumption is required. In this article the term `category' does not require the collections of morphisms to form sets. In other words, the categories we consider need not be locally small. Just as explained in <cit.>, the reason for the restriction to small categories in <ref> (and indeed in this introduction entirely) is to be able to use the terminology of 2-categories and 2-functors in a way that is consistent with the existing literature. 
+
+
+
+
+
+
+
+ §.§ Structure of the paper
+
+In <ref> we recall the construction of the idempotent completion of an exact category and use this to establish the 2-functor  from <ref>. Analogously, the 2-functor  is defined in <ref> using the idempotent completion of an n-exangulated category in the sense of <cit.>. In <ref> we recall how to form the category of extensions associated to an n-exangulated category and prove <ref> and <ref>. In <ref> we present the definition of the 2-functor  from <cit.> and show how the main results of the previous sections culminate in <ref>. <ref> concerns the weak idempotent completion. 
+
+
+
+ §.§ Conventions and notation
+
+
+Throughout this paper, let n≥ 1 denote a positive integer. Given objects X and Y in a category , we write (X,Y) for the collection of morphisms from X to Y in . Functors are always assumed to be covariant. We let  denote the category of abelian groups. 
+
+
+
+
+
+
+§ IDEMPOTENT COMPLETION OF EXACT CATEGORIES YIELDS A 2-FUNCTOR
+
+
+
+The aim for this section is to explicitly relate the construction of the idempotent completion of an exact category to a 2-categorical framework, establishing the 2-functor  which is part of <ref> in <ref>. We start by following Bühler <cit.> in recalling the idempotent completion (or Karoubi envelope). We also refer to Borceux <cit.>. 
+
+Throughout the section, let  denote an additive category. An idempotent in  is a morphism e X→ X for some object X satisfying e^2 = e. Splitting of idempotents, as defined below, plays a central role in this article.
+
+ 
+ 
+(See <cit.>.) An idempotent e  X → X in  splits if there exist morphisms r  X → Y and s  Y → X such that sr=e and rs=𝕀Y. The category  is idempotent complete, or has split idempotents, if each idempotent in  splits. 
+
+
+Even though the additive category  need not have split idempotents, it can always be embedded into an idempotent complete category. This is due to Karoubi <cit.>. 
+
+
+
+(See <cit.>.) 
+Define a category  as follows. The objects of  are pairs (X,e) for each object X and each idempotent e(X). Given objects (X,X) and (Y,Y) in , the collection ((X,X),(Y,Y)) of morphisms from (X,X) to (Y,Y) consists of triplets (Y,f,X) such that f (X,Y) satisfies f X = f = Y f. The composition of (Y,f,X)((X,X), (Y,Y)) and (Z,g,Y)((Y,Y), (Z,Z)) is given by 
+
+    (Z,g,Y)∘(Y,f,X)  (Z, gf, X).
+
+It is clear that this composition is associative. The identity 𝕀(X,e) of (X,e) is the morphism (e,e,e). The category  is called the idempotent completion of . 
+
+
+The category  is additive with biproduct given by . It is also idempotent complete; see <cit.> for details. There is a canonical additive inclusion functor → defined by setting (X)  (X, 𝕀X) for X and  for f (X,Y). This functor is 2-universal among additive functors from  to idempotent complete categories; see <cit.>.
+
+Let →→ denote the category of composable morphisms in , and note that a functor → induces a functor →→→→→. Now suppose (,) is an exact category. In particular, the exact structure  is a collection of objects in →→. One can define an exact structure  on  by declaring an object in →→ to be in  if it is a direct summand of an object belonging to the image of  under the functor →→→→→ induced by →.
+
+
+
+(See <cit.>.) 
+The pair (,) forms an exact category, and (,) → (,) is a fully faithful exact functor that reflects exactness. 
+
+
+Let → be an additive functor. Following <cit.>, there is an induced additive functor → given by 
+
+    (X,e)  ( X,  e)
+    and(Y,f,X)  (Y,  f, X).
+
+We refer to  as the completion of . If (,) → (,) is an exact functor, then (,) → (,) is also exact; see the proof of <cit.>. 
+
+In order to view the constructions above in a 2-categorical framework, we recall some terminology. A 2-category is a collection of 0-cells, 1-cells and 2-cells satisfying certain axioms; see e.g. <cit.> or <cit.>. One should think of 0-cells, 1-cells and 2-cells as objects, morphisms between objects and morphisms between morphisms, respectively. A  has two notions of composition of 2-cells: vertical and horizontal. Using the setup below, we recall these notions in the case of natural transformations. We use the Hebrew letters  (beth) and  (daleth) for natural transformations of additive functors.
+
+
+ 
+For the rest of this section, we consider additive categories ,,, additive functors ,,→ and ,,→, and natural transformations ⇒, '⇒, ⇒ and '⇒ as indicated in the diagram
+
+    [Rightarrow,
+                shorten <= 6pt,
+                shorten >= 6pt,
+                yshift = -2pt
+                ]d
+                    [xshift=2pt, yshift=-1pt]      [Rightarrow,
+                shorten <= 10pt, 
+                shorten >= 12pt,
+                xshift=0pt,
+                yshift = -2pt
+                ]dd
+                    [xshift=1pt, yshift=-1pt]   
+    [bend left=50]rr
+                [description, xshift=0pt, yshift=0pt]rr
+                [description][bend right=50]rr
+                [description, xshift=0pt, yshift=0pt]   [Rightarrow,
+                shorten <= 3pt,
+                shorten >= 6pt,
+                yshift=4pt
+                ]d
+                    [xshift=2pt, yshift=3pt]'   [bend left=50]rr
+                [description, xshift=0pt, yshift=0pt]
     
-      T_abc    :=Ξ^-1∇̃_[aT̃_b]c
-      -1/3Ξ^-1g̃_c[b∇̃_a]T̃ .
-
-Here T̃_ab is the physical energy-momentum tensor and
-∇̃ is the Levi-Civita connection of g̃_ab. A
-comprehensive discussion and derivation of the CEFEs can be found in
-<cit.>.
-
-
-
-   Though the conceptually clean setup is the vaccum case, we
-  include matter primarily for the purpose of deriving quadrupole-like formulae in subsection <ref>.
+        [bend right=50]rr
+                [description, xshift=0pt, yshift=0pt]   
+    
+    
+    
+    
+    
+    
+       .
 
 
 
 
-
-  
-  From this point onward, it will be assumed that only trace-free
-  matter models are in consideration. Notice that the conditions T=0
-  and T_{ab}=T_ab simplify some of the matter terms in the
-  zero-quantities (<ref>).
-  
+ 
+(See <cit.>.) 
+The vertical composition of  and '  is the natural transformation '⇒ given by *[](')_X*[]_X^'X for each X. The horizontal composition of  and  is the natural transformation ⇒ defined by (X X∘(X) for each X. 
 
 
+As described in <cit.>, the natural transformation ⇒ induces a natural transformation ⇒ as follows. Given (X,e), there are the morphisms (𝕀X,e,e) (X,e) → (X,𝕀X) and (e,e,𝕀X) (X,𝕀X) → (X,e). Put 
 
-We now consider some properties of the rescaled Cotton tensor under the
-trace-free matter assumption. Under this assumption, the rescaled Cotton
-tensor can be written in terms of the unphysical energy-momentum tensor
-as
+    (X,e)(e,e,𝕀X)∘ (𝕀 X, X, 𝕀 X) ∘(𝕀X,e,e)
+    	= ( e,( e)X e, e)
 
-    T_abc    :=Ξ∇_[aT_b]c
-      + 3 T_c[b∇_a]Ξ -g_c[aT_b]e∇^eΞ .
+as indicated in the diagram
 
-Observe as well that the Cotton tensor has the symmetries
-T_abc=T_[ab]c and T_[abc]=0. Furthermore, the trace-free
-assumption and ∇̃^aT̃_ab=0 implies that
+    [column sep=3cm]
+    (X,e) 
+    	[dotted]r(X,e)d[swap](𝕀X,e,e)   (X,e) 
+    
+    ( X,𝕀 X)
+    	r[swap](𝕀 X, X, 𝕀 X)    ( X,𝕀 X).
+    	u[swap](e,e,𝕀X)
 
-    ∇^aT_ab=0,     ∇_cT_ab^c     = 0.
+It is straightforward to check that  is natural. We refer to  as the completion of .
 
-Additionally, using again equations (<ref>),
-(<ref>)
- and  exploiting Z_ab=0 gives
 
-    ∇ _aT_b^a_c =   
-      - 12Ξ∇ _a∇ ^aT_bc
-      - (4 s - 13Ξ  R)T_bc  +  Ξ ^3 T_b^a T_ca
-      - 12Ξ ^2 T^ad d_bacd  
-       - 14Ξ ^3 T_ad T^ad g_bc
+
+We write  for the collection of 0-cells, 1-cells and 2-cells consisting of exact categories, exact functors and natural transformations, respectively. For i{0,1,2}, we denote the collection of i-cells by i. Given 0-cells (,) and (,), there is a category ((,), (,)) with 1-cells of the form (,) → (,) as objects, and where morphisms and composition are given by 2-cells and vertical composition. Hence, there is a   determined by the 0-cells in  which are small categories. We furthermore write  and  when restricting to idempotent complete 0-cells in  and , respectively, and note that also  is a 2-category. 
+
+
+A 2-functor between two 2-categories is an assignment of i-cells in the domain category to i-cells in the codomain category for i{1,2,3}, satisfying some compatibility conditions; see e.g. <cit.> or <cit.>. We now begin to construct the 2-functor  used in <ref> in <ref>. 
+
+
+
+Let = (0,1,2) → be defined by the assignments ii→i, where:
+
+    0  (,)  
+         (,),
+    1  ()  
+        ,
+    2 (  ) 
+        .
+
+
+
+If one ignores the set-theoretic issue described in <ref>, then the theorem below should be interpreted as showing that → is a 2-functor.
+
+
+
+The following statements hold for the assignments
+0, 1 and 2.
+ 
+    
+  * 
+    The pair  
+    (0, 1) 
+    defines a functor 
+    →.
+    
+  *  
+    The pair 
+    (1, 2) 
+    defines a functor 
+	((,), (,)) →((,), (,))
+    whenever (,) and (,) are exact categories.
+    
+  *  
+    The assignment 2 preserves horizontal composition.
+
+In particular, restricting  to small categories yields a 2-functor →. 
+
+
+
+It follows from the discussions above that the assignments are well-defined. Checking functoriality in <ref> and <ref> is straightforward, while <ref> follows from <cit.>. 
+
+
+
+
+
+
+
+§ IDEMPOTENT COMPLETION OF N-EXANGULATED CATEGORIES YIELDS A 2-FUNCTOR
+
+
+
+In this section we describe how taking the idempotent completion of an n-exangulated category in the sense of <cit.> relates to a 2-categorical framework. This is done by constructing the 2-functor  from <ref> in <ref>. We start by giving an overview of relevant notions and constructions.
+
+Given an additive category  and a biadditive functor ×→, an element α(C,A) is called an -extension. A morphism of -extensions from α(C,A) to  is a pair (a,c) of morphisms a A→ B and c C→ D in  such that 
+
+    (C,a)(α)=(c,A)(β).
+
+ 
+Recall from <cit.> that an n-exangulated category (,,) consists of 
+
+	
+  * an additive category , 
+	
+  * a biadditive functor ×→, and 
+	
+  * an exact realisation  of  in the sense of <cit.>, 
+
+such that axioms (EA1), (EA2) and (EA*[]2^) stated in <cit.> are satisfied. 
+ 
+The realisation  associates to each -extension α(C,A) a certain homotopy class 
+
+    (α)
+        = []
+        = [0r   1r   ⋯r   n+1]
+
+of an (n+2)-term complex  in  with 0 = A and n+1 = C. The pair , α is then called a (distinguished) n-exangle. 
+
+A morphism , α→∙, β of n-exangles is given by a morphism (0,…, n+1)→∙ of complexes such that (0,n+1) α→β is a morphism of -extensions. In this case, the tuple (0,…, n+1) is said to be a lift of (0,n+1). 
+
+Suppose throughout this section that (,,) and (,,) are n-exangulated categories. An additive functor → induces a functor → between the associated categories of complexes. One can define a new biadditive functor , which we will denote by (-,-). 
+
+
+(See <cit.>.)
+Let → be an additive functor and suppose there is a natural transformation
+
+    Γ = 
+        {(C,A)(C,A)0.7×(-,-) ⟹(-,-).
+
+We call the pair (,Γ)  (,,) → (,,) an n-exangulated functor if, for all A,C and each α(C,A), we have that (α)=[] implies ((C,A)(α))=[].
+
+
+It was demonstrated in <cit.> that one can compose n-exangulated functors as follows. Suppose (, Γ) (,,) → (,,) and (, Φ) (,,) → (,,) are  functors between n-exangulated categories. The composite is the  functor (,Φ) ∘ (,Γ)(, ×Γ), where × is the natural transformation 
+
+    ×
+        = 
+        {( C, A)(C,A)0.7×(-,-) 
+            ⟹(-,-).
+ 
+
+For Γ as above and for α(C,A), we will usually write Γ(α) instead of (C,A)(α). Furthermore, we use the simplified notation α (resp. α) for the -extension (C,a)(α)(C,B) (resp. (d,A)(α)(D,A)) for morphisms a A→ B and d D→ C in .
+
+As proved in <cit.>, the idempotent completion  of an n-exangulated category (,,) admits a canonical n-exangulated structure. We use the notation (,,1mu) for the n-exangulated category obtained from this construction, and recall the definition of the biadditive functor ×→ and the realisation  of  below. In the case n=1, the construction was given by Msapato <cit.>. 
+
+
+ 
+(See <cit.>.) 
+For objects (A,A),(C,C), we let
+
+    ((C,C),(A,A))
+            (A, α, C) 
+            | 
+        α(C,A) 
+        and 
+        (Aα 
+            = α 
+            = (Cα.
+
+For morphisms (B, a, A) (A,A)→ (B,B) and (C,d,D) (D,D)→ (C,C) in  we put 
+
+    ((C,d,D) , (B, a, A)) 
+        ((C,C), (A,A)) 
+           ⟶((D, D), (B, B)) 
+     
+    (A, α, C) 
+           ⟼ (B, (d,a)(α), D).
+
+
+
+The set ((C,C),(A,A)) has an abelian group structure given by 
+
+    (A, α, C) + (A, α', C)
+         (A, α + α', C),
+
+and <ref> indeed gives a biadditive functor ×→; see <cit.>. 
+
+Given a complex  in  and an idempotent morphism ∙→ of complexes, we follow <cit.> and the discussion immediately thereafter in using the notation (, ∙) to denote the complex
+
+    [column sep=1.3cm, scale cd=0.9]
+    (X_0,0)
+        rr(1,10,0)       (1,1)
+        rr(2,21,1)      ⋯r    (n,n)
+        rr(n+1,n+1n,n)       (n+1,n+1)
+
+in , where the maps d_i X_i→ X_i+1 are the differentials of the complex . The realisation  of  is then defined as follows. 
+
+
+
+(See <cit.>.) 
+Let (A, α, C) ((C,C),(A,A)) be arbitrary. Since α(C,A), one may choose  so that 
+(α) 
+    = []
+    = [[column sep=0.6cm]
+        A r   1r   ⋯r   nr    C
+    ].
+One may also lift (A, C) α→α to an idempotent endomorphism ∙ of the n-exangle ⟨, α⟩ by <cit.>. Using this, we define  by setting (A, α, C)  [(, ∙)].
+
+
+To see that the assignment  from <ref> does not rely on the choices involved, see <cit.>. By <cit.>, the triplet (,,1mu) is an n-exangulated category and the inclusion (, ) (,,)→(,,1mu) is an n-exangulated functor, where the natural transformation (-,-)⇒(-,-) is given by α↦ (𝕀A, α, 𝕀C) for α(C,A). 
+
+Now suppose (,Γ) (,,)→ (,,) is an n-exangulated functor. Recall that there is an induced additive functor → as defined in (<ref>). Our next aim is to show that one obtains an n-exangulated functor 
+(,Γ)  
+(,,1mu)
+    → 
+(,,1mu) between the idempotent completions. We first need to define a natural transformation Γ(-,-)⇒(-,-).
+
+
+
+Set
+Γ((C,C),(A,A))((C,C),(A,A))×,
+where
+
+    ((C,C),(A,A))((C,C), (A,A)) 
+           ⟶((C, C), (A, A)) 
+     
+    (A, α, C) 
+           ⟼ (A, Γ(α), C).
+
+
+Note that (A,Γ(α),C) indeed lies in ((C,C),(A,A)), because naturality of Γ yields 
+(AΓ(α) 
+	= Γ((Aα)
+	= Γ(α)
+and
+(CΓ(α) 
+= Γ((Cα)
+	= Γ (α). 
+
+
+Since Γ(-,-)⇒(,-,-) is a natural transformation, one might wonder if the definition of Γ above agrees with the description of the completion of a natural transformation of additive functors from <ref>. However, the biadditive functors  and (-,-) are not necessarily additive functors ×→, so we cannot form the completions of them as in <ref>. Thus, when we use notation of the form Γ for a natural transformation of biadditive functors, it always refers to the construction from <ref>.
+
+
+
+
+The pair (,Γ) is an n-exangulated functor (,,1mu)→ (,,1mu).
+
+
+
+Given a pair of objects (A,A),(C,C), the map ((C,C),(A,A)) from <ref> is a homomorphism of abelian groups as (C,A) is one. It follows from the naturality of Γ that Γ is a natural transformation 
+(-,-)⇒(-,-).
+
+Consider now an -extension (A,α,C)((C,C),(A,A)). Following the definition of , we have  where (α) = [] and the idempotent ∙→ is a lift of (A, C) α→α. Notice that (Γ(α)) = [] as (,Γ) is n-exangulated. Moreover, the morphism ∙→ is an idempotent lifting (A, C)Γ(α)→Γ(α). We hence see that (Γ(A,α,C)) is given by the class
+
+    [[column sep=2.6cm, ampersand replacement=&]
+        ( A,A) 
+            r(1,10,A)& (1,1)
+            r(2,21,1)&⋯r(C,Cn,n)& ( C,C)
+            ],
+
+which is [(,∙)]. This finishes the proof. 
+
+
+To consider n-exangulated categories as 0-cells in a 2-category, we use the notion of a morphism between n-exangulated functors. This is captured by the following definition.
+
+
+
+(See <cit.>.) 
+Suppose that (,Γ), (,Λ)(,,)→(,,) are n-exangulated functors. An n-exangulated natural transformation (,Γ)⇒(,Λ) is a natural transformation ⇒ of additive functors such that, for all A,C and each α(C,A), the pair (A,C) satisfies 
+
+    (AΓ(α)
+        = (CΛ(α).
+
+
+
+Notice that equation (<ref>) means that (A,C) is a morphism Γ(α) →Λ(α) of -extensions.
+
+For a natural transformation ⇒ of additive functors ,→, recall that the completion ⇒ is given by (X,e) = ( e,( e)X e, e) for (X,e). The proposition below shows that the completion of an n-exangulated natural transformation is again n-exangulated. 
+
+
+
+Suppose (,Γ) ⇒ (,Λ) is n-exangulated. Then  is an n-exangulated natural transformation (,Γ) ⇒ (,Λ). 
+
+
+
+Consider an -extension (A,α,C)((C,C),(A,A)). Using that (Aα=α, we get (AΓ(α)=Γ(α) by the naturality of Γ. Similarly, we obtain Λ(α)=(CΛ(α). Since  is n-exangulated, we have (AΓ(α)=(CΛ(α), while naturality of  yields . Combining these observations gives
+
+    (A  (A  (AΓ(α)=
+    (A  (AΓ(α)=
+    (A  (CΛ(α)=
+    (C  (AΛ(α)
+    
+    
+    =
+    (CΛ(α)
+    =
+    (C  (CΛ(α)
+    =
+    (CCΛ(α)
+    =
+    (CC  (CΛ(α).
+
+Hence, we have that 
+
+    ((A,A)Γ(A,α,C)
        
-      + ∇ ^aΞ  (-2 ∇ _aT_bc +  ∇ _(bT_c)a).
+    = 
+    (A,(A)AA,A
+    	(A,Γ(α),C)       (definitions of , Γ)
+       = (A,(A  (A  (AΓ(α),C)       (<ref>)
+       = (A,((C) CCΛ(α),C)      (as above)
+       = ((C,C) Λ(A,α,C)      (definitions of , Λ),
+
+as required.
+
+
+We now introduce n-exangulated analogues of the collections described in Notation <ref>.
+
+
+
+Following <cit.>, we write n for the collection of 0-cells, 1-cells and 2-cells consisting of n-exangulated categories, n-exangulated functors and n-exangulated natural transformations between these functors, respectively. Restricting 0-cells in n to small n-exangulated categories yields the 2-category n; see <cit.>. We furthermore write n and n when only considering idempotent complete 0-cells in n and n, respectively, and note that also n is a 2-category. As before, we use a subscript i {0,1,2} to denote i-cells in the collections described above. 
+
+
+We conclude this section by constructing the 2-functor  used in <ref> in <ref>. 
+
+
+
+Let = (0,1,2) n→n be defined by the assignments ini→ni, where:
+
+    0  (,,)  
+         (,,1mu),
+    1  (,Γ)  
+         (,Γ),
+    2 (  ) 
+        .
+
+
+
+The result below is an n-exangulated analogue of <ref>. 
+
+
+
+The following statements hold for the assignments 0, 1 and 2.
+
+ 
+    
+  * 
+    The pair (0, 1) defines a functor n→n.
+    
+  *  
+    The pair (1, 2) defines a functor 
+    
+    n((,,), (,,)) →n((,,1mu), (,,1mu))
+
+    whenever (,,) and (,,) are n-exangulated categories.
+    
+  *  
+    The assignment 2 preserves horizontal composition. 
+
+In particular, restricting  to small  categories yields a 2-functor n→n. 
+
+
+
+It follows from the discussion and results above, in particular Lemmas <ref> and <ref>, that the assignments are well-defined. Functoriality in <ref> is straightforward to check. For <ref>, notice first that n((,,), (,,)), and hence also n((,,1mu), (,,1mu)), is indeed a category by <cit.>. Moreover, for <ref>, note that n-exangulated natural transformations are closed under horizontal composition by <cit.>. As 2 is a restriction of 2, parts <ref> and <ref> follow from <ref><ref> and <ref>, respectively. 
 
 
 
 
-  The Ricci scalar R is not determined by the CEFEs and in fact, it
-  encodes the conformal gauge freedom. Given two conformal extensions of
-  the same physical spacetime  =Ξ^2 and
-  =Ξ̌^2 one has that
-  =ϰ^2 with ϰ := Ξ̌/Ξ
-  and ϰ≃𝒪(1) at the conformal boundary.
-  Hence, their Ricci scalars are related via
-  
-    6 ∇_a ∇^a ϰ -R ϰ =- Řϰ^3.
-
-  Observe that if Ř is considered as a given scalar function in
-  (ℳ,) then, this equation can always be solved locally
-  for ϰ. Thus, the Ricci scalar in the CEFEs is a gauge
-  quantity that is called the conformal gauge source function
-  —see <cit.> for further discussion.
-  
 
 
 
-In this article, we will adhere to the metric formulation of the CEFEs
-which consists of using the definition of the Schouten tensor to obtain
- an equation for the metric. Namely, from
-
-    R_ab=2L_ab + 1/6Rg_ab,
-
-one substitutes the expression for the Ricci tensor as second
-derivatives of the metric respect to some coordinate basis x^μ and
-reads L_μν as a source term in the resulting equation. The
-source term L_μν is then coupled to the rest of the variables
-via equations (<ref>).
+§ THE CATEGORY OF EXTENSIONS AND IDEMPOTENT COMPLETION
 
 
 
-  
-   In view that the Ricci scalar is the conformal gauge source function,
-   to have a clean split between gauge quantities and non-gauge
-   quantities one could opt for using the trace-free Ricci tensor as
-   variable instead of L_ab,
-  
-    Φ_ab := 1/2(R_ab - 1/4Rg_ab).
-
-  The factor 1/2 in its definition is conventional and it is put so
-  that Φ_ab corresponds to the tensorial counterpart of the
-  trace-free Ricci spinor Φ_AA'BB' of the Newman-Penrose
-  formalism. In this case, the evolution equation for the metric is read
-  of from
-  
-    R_ab=2Φ_ab + 1/4Rg_ab.
-
-  For convenience, we employ such a splitting, and will use the
-  trace-free Ricci tensor rather than the Schouten tensor as a dynamical
-  variable.
-  
-
-
-
-There are different hyperbolic reduction strategies to turn the
-tensorial expressions (<ref>) into partial
-differential equations.  In the next section, we revisit a hyperbolic
-reduction that is most appropriate for the aims of this article. 
+For consistency with the rest of the paper, we assume throughout this section that (,,) is an n-exangulated category. We note, however, that the results of <ref> hold under more general assumptions; see <ref>. In Subsection <ref> we first recall the definition of the category of extensions associated to (,,), before proving <ref> from <ref>. Building on this result, our ultimate goal is to show that the category of extensions of the idempotent completion is equivalent to the idempotent completion of the category of extensions. These two categories are described explicitly in Subsection <ref> and Subsection <ref>, respectively, culminating in a proof of <ref> from <ref>. 
 
 
 
 
- §.§ Geometric wave equations
+
+
+ §.§ The category of extensions
 
 
 
+The category of extensions associated to (,,) is denoted by . The objects of  are -extensions, and the morphisms are morphisms of -extensions. Recall from <ref> that this means that an object is an element α(C,A) for some objects A,C, while a morphism from α(C,A) to β(D,B) is given by a pair (a,c) of morphisms a A→ B and c C→ D in  satisfying α = β. 
 
-A first derivation of the metric conformal Einstein field equations as a
-set of wave equations was given in <cit.> for the vacuum case and
-in <cit.> for the case of trace-free matter. Our discussion
-differs in the use of the trace-free Ricci tensor instead of the Schouten
-tensor; we do this to make transparent the split between gauge and
-non-gauge quantities. Since we only make a simple variable change, the
-derivation will not be repeated here. The geometric wave equations read
+As shown in <cit.>, one can define an exact structure  on   as follows. Let α(C,A), β(D,B) and γ(G,E) be objects in . A sequence 
 
+    αr(a,c)   βr(b,d)   γ
 
-    □Ξ  = 4 s - 16Ξ R ,
-       □ s = ΞΦ _abΦ ^ab
-      - 16∇ _aR ∇ ^aΞ
-      - 16 s R + (R12)^2 Ξ
-      + 14Ξ ^5 T_ab T^ab
-      - Ξ ^3 T^abΦ _ab
-      + Ξ  T_ab∇ ^aΞ∇ ^bΞ,
-      
-      
-       □Φ_ab = 4 Φ _a^cΦ _bc
-      - Φ _cdΦ ^cd g_ab
-      -2 ΞΦ ^cd d_acbd + 13Φ _ab R
-      + 16∇ _b∇ _aR
-      - 124 g_ab□ R 
-                                             
-      +   12Ξ ^3 T^dc d_adbc
-      - Ξ∇ _cT_b^c_a
-      - 2T_(a|c|b)∇ ^cΞ,
-      
-      
-       □ d_abcd =  12 d_abcd R
-      + 2 Ξ  d_a^e_d^p d_becp
-      -2 Ξ  d_a^e_c^p d_bedp
-      -2 Ξ  d_ab^ep d_cedp
-              - Ξ^2T_[c^ed_d]eab
-      - Ξ^2T_[a^ed_b]ecd
-      + Ξ^2T^ep( d_aep[cg_d]b - d_bep[cg_d]a )
-      + 2 ∇_[aT_|cd|b]
-                                           
-        +2 ∇_[cT_|ab|d]+ 2 g_d[b∇_|eT_c|^e_a]
-        + 2 g_c[a∇_|eT_d|^e_b],
+of composable morphisms in  lies in the class  if and only if the morphisms a and c in  are both sections with b= a and d= c.
+
+By definition, a category is idempotent complete provided any idempotent endomorphism splits. Note also that a morphism of -extensions (A,C)α→α for α(C,A) is an idempotent in  if and only if both A A → A and C C → C are idempotents in . Hence, <ref> follows from <ref>. The authors are grateful to Dixy Msapato for pointing out <cit.>, which motivated the proof of the result below. 
 
 
-where □=∇_a∇^a denotes the geometric wave
-operator. Observe that these are tensorial in the same way as
-expressions (<ref>) and they do not include an
-equation for the metric.  When recast in this form, the original set
-of equations (<ref>) form constraints on initial
-data; the propagation of the constraints was shown in
-<cit.>.  A further discussion of these wave equations as an
-explicit system of second order hyperbolic PDEs is given in Appendix
-<ref> —see also <cit.>.
+ 
+Let α(C,A) and  suppose (A,C)(α) is an idempotent. Then A and C split in  if and only if (A,C) splits in . 
 
+
+
+(⇒)  
+Assume that A and C split in . As A splits, there exist morphisms r  A → B and s  B → A such that sr=A and rs=𝕀B. Similarly, there exist u  C → D and v  D → C with vu=C and uv=𝕀D, because C splits. Consider the -extension α(D,B). We see that (s,v)α→α is a morphism in , as
+
+    (α) = (srα = (e_Aα = (e_Cα = (vuα = (vuvα = α.
+ 
+Analogously, one can show that (r,u)α→α is a morphism of -extensions. Notice that (s,v)∘(r,u) = (A,C) and (r,u)∘(s,v) = (𝕀B,𝕀D), which is the identity on α. This gives a  splitting of (A,C), as required.  
+
+(⇐)   
+If (A,C) splits, then there exist β(D,B) and  morphisms (r,u)α→β and (s,v)β→α in  such that (s,v)∘(r,u) = (A,C) and . These equations yield splittings of A and C in .
+
+
+We finish this subsection by deducing <ref>, showing that given certain assumptions on , the Krull–Remak–Schmidt property for  implies the same property for . In order to see this, we first recall some terminology.
+
+Let  be a commutative ring. The additive category  is said to be -linear if (X,Y) is an -module for all X,Y, and we have (λ g)f=λ (gf)=g(λ f) for all λ and all composable morphisms f and g in . When  is -linear, the bifunctor  is -bilinear provided that each abelian group (C,A) has the structure of an -module, and we have (λ c,a)=λ(c,a)=(c,λ a) for all λ and any morphisms a and c in . Recall that an -linear category  is called -finite (over ) if each -module (X,Y) has  finite length (see e.g. <cit.>).  
 
 
    
-  To obtain a set of equations for the matter fields encoded in T_ab
-  and T_abc, an explicit matter model is required. Namely, given a
-  matter model consisting on some fields τ={τ_1, ...
-  ,τ_n} so that T_ab=T_ab(τ) —and hence
-  T_abc=T_abc(τ, ∇τ) using equation
-  (<ref>)—one has to derive wave equations for
-  each of the fields encoded in τ and their derivatives. To give
-  a concise and general discussion, the wave equations for the matter
-  fields will not be presented as this is a case-dependent analysis and
-  can be revisited for a number of trace-free matter models in
-  <cit.>.
-  
+If  is -linear and  is -bilinear, then  is also -linear. If in addition  is -finite, then so is . 
+
+
+
+Fix objects α and β in , say where α(C,A) and β(D,B). Given a morphism (a,c)α→β in , we have 
+
+    (λ aα=
+    (𝕀C,λ a)(α)=
+    λ(𝕀C,a)(α)=
+    λ(c,𝕀A)(β)=
+    (λ c,𝕀A)(β)
+    =(λ cβ
+
+as  is -bilinear. This means that (λ a,λ c)α→β is a morphism in , and we take this to be the action of λ on (a,c). Using that  is -linear, it is straightforward to check that the -sets of  are -modules under this multiplication. Consider another morphism (b,d)β→γ in . Since  is -linear, we have
+
+    (b,d)(λ a,λ c)=(b(λ a),d(λ c))=(λ (ba),λ(dc))=((λ b)a,(λ d), c)=(λ b,λ d)(a,c),
+
+which is the action of λ on (b,d)∘ (a,c). This proves that  is -linear. 
+
+The arguments above show that the collection of morphisms α→β in  defines an -submodule of the direct sum (A,B)⊕(C,D). The length of this submodule is bounded above by the sum of the lengths of (A,B) and (C,D), proving the second assertion. 
+
+
+Recall that  is said to be a Krull–Schmidt category if every object decomposes into a finite direct sum of objects with local endomorphism rings. 
+
+
+
+Suppose that  is -linear, -finite and Krull–Schmidt, and that  is -bilinear. Then  is also -linear, -finite and Krull–Schmidt.
+
+
+
+Note that an R-linear -finite category  is Krull–Schmidt if and only if it is idempotent complete; see e.g. <cit.> or <cit.>. Using this, the result now follows by combining <ref> and <ref>.
 
 
 
 
 
 
- §.§ Wave equation for metric
+
+ §.§ The category of extensions of the idempotent completion
 
 
 
-The wave equation for the metric is derived from the expression of the
-trace-free Ricci tensor in some fiduciary coordinate system x^μ.
-Here and in what follows, Γ^μ_αβ will denote the
-Christoffel symbols of the Levi-Civita connection ∇ of  in
-the coordinate basis x^μ.  First, one defines the GHG-constraint as
+As recalled in <ref>, the idempotent completion  admits an n-exangulated structure by <cit.>. The corresponding n-exangulated category is denoted by (,,1mu). Therefore, as in Subsection <ref>, we can consider the category  of extensions associated to (,,1mu). We give an explicit description of  and the exact structure  below.
 
-    C^μ := Γ^μ + ℋ^μ,
+Objects: The objects of  are of the form (A,α,C)((C,C),(A,A)) for (C,C) and (A,A) in . In particular, the morphisms A A → A and C C → C in  are idempotents,  and α(C,A) is an -extension satisfying (Aα  = α = (Cα.
 
-where Γ^μ:=g^αβΓ^μ_αβ are
-the contracted Christoffel symbols and ℋ^μ are the
-coordinate gauge source functions.  Recall that Γ^μ =
-- ∇_α∇^αx^μ so that setting C^μ=0 is
-equivalent to imposing the generalised harmonic gauge condition
+Morphisms: A morphism (A,α, C) → (B,β, D) in  is a pair ((B,a,A),(D,c,C)), where (B,a,A) (A,A) → (B,B) and (D,c,C) (C,C) → (D,D) are morphisms in  and (B,a,Aα = (D,c,Bβ. In other words, this means that (a,c)α→β is a morphism of -extensions, aA = a = Ba and cC=c=Dc.
 
-    ∇_α∇^αx^μ= ℋ^μ.
+Composition: Composition in  is defined component-wise. 
+Explicitly, the composition of ((B,a,A),(D,c,C)) and ((E,b,B),(G,d,D)) is ((E,ba,A),(G,dc,C)).
 
-with the above definitions, the reduced Ricci tensor
-ℛ_μν is defined as
+Identity morphisms: The identity on (A,α,C) in  is ((A,A,A),(C,C,C)).
 
-    ℛ_μν:=R_μν - ∇_(μC_ν).
+Preadditivity: The addition of morphisms is component-wise. 
+Explicitly, the addition of ((B,a,A),(D,c,C)) and ((B,a',A),(D,c',C)) is ((B,a+a',A),(D,c+c',C)).
 
-A customary calculation —see for instance <cit.>— shows that the reduced Ricci tensor can be
-expressed in terms of derivatives of the metric as
+Exact structure:
+The collection  consists of kernel-cokernel pairs
 
-    ℛ _μν = - 12 g_μν -
-      ∇ _(μℋ_ν)  + g^σδg^αβ
-      (Γ_νδβΓ_σμα +
-      2Γ_δνβΓ_(μν) α )
+    [column sep=3.7cm]
+    (A, α, C)
+    	r((B,a,A),(D,c,C))   (B, β, D)
+    	r((E,b,B),(G,d,D))   (E, γ, G)
 
-where := g^αβ∂_α∂_β is
-the standard reduced wave operator.  Similarly, recalling that
-the Ricci scalar of  encodes the conformal gauge freedom, one
-introduces
+in  such that (B,a,A) and (D,c,C) are sections with (E,b,B) = (B,a,A) and (G,d,D) = (D,c,C). These conditions are equivalent to the sequences
 
-    C := R - F
+    [column sep=2cm,ampersand replacement=&]
+    		(A,A) 
+    			r(B,a,A)& (B,B) 
+    			r(E,b,B)& (E,E), 
+        
+    [column sep=2cm,ampersand replacement=&]
+    		(C,C) 
+    			r(D,c,C)& (D,D) 
+    			r(G,d,D)& (G,G),
 
-where F is the conformal gauge source function.  Imposing the
-constraint C=0 is equivalent to choosing a representative from the
-conformal class [] in the same way that imposing C^μ=0 is
-equivalent to choosing the coordinates to satisfy equation
-(<ref>) —see Remark <ref>.
-Therefore, using equation (<ref>) and imposing the
-GHG-coordinate and conformal gauge constraints
+being split exact in .
 
-    C^μ=0,      C=0,
+We have an immediate corollary of <ref>.
 
-we obtain the following reduced wave equation for the components of the
-unphysical metric in the x^μ coordinates:
 
-    g_μν = - 4Φ_μν - 1/2F g_μν - 2
-    ∇ _(μℋ_ν)  - g^σδg^αβ
-    (Γ_νδβΓ_σμα +
-    2Γ_δνβΓ_(μν) α ).
+ The exact category (, ) is idempotent complete.
 
-One can perform a similar procedure on the remaining wave equations
-(<ref>) to obtain them in their reduced form, but since it is
-not absolutely necessary for the discussion that follows, that
-discussion is provided in Appendix <ref>.
+	
 
 
 
 
 
-§  THE CONFORMAL EINSTEIN FIELD EQUATIONS IN THE LINEAR 
-  APPROXIMATION 
+ §.§ The idempotent completion of the category of extensions
 
 
 
+In contrast to what is done in Subsection <ref>, we may first consider the category of extensions associated to (,,), which forms part of an exact category (,). Then we may take the idempotent completion, resulting in an idempotent complete exact category that we denote by (,); see <ref>. We proceed with an explicit description of  and the exact structure .
+
+Objects: 
+The objects of  are of the form (α, (A,C)), where α(C,A) and (A,C)α→α is an idempotent morphism of -extensions. This means that e_A  A → A and C C → C are idempotents in  and that (Aα  = (Cα.
+
+Morphisms: A morphism (α, (A,C)) → (β, (B,D)) in  is given by a triple ((B,D),(a,c),(A,C)), where 
+(a,c) α→β is a morphism of -extensions and we have (a,c)(A,C) = (a,c) = (B,D)(a,c).
+
+Composition: 
+The composition of two composable morphisms ((B,D),(a,c),(A,C)) and ((E,G),(b,d),(B,D)) in  is ((E,G),(ba,dc),(A,C)).
 
 
-In this section the linearisation of the wave equations (<ref>)
-is obtained. To set up the notation regarding linearisation, first, we
-outline the general procedure. Consider a one-parameter family of fields
-ϕ(ε) which satisfy an equation
+Identity morphisms: 
+The identity on (α, (A,C)) in  is ((A,C),(A,C),(A,C)).
 
-    ℰϕ(ε)=0,
-
-where ℰ is some (non-linear) differential operator.  Then,
-the field ϕ:=ϕ(0) will be called the background
-solution as it satisfies the equation ℰϕ=0.
-Let D denote the linearisation operator:
-
-    D(ℰϕ):=d/dε(ℰϕ(ε))|_ε=0
-
-Then, using that  Dϕ=0, one obtains
-ℒδϕ=0 where ℒ is a linear operator
-acting on δϕ:=
-dϕ/dε|_ε=0. Issues of linearisation
-stability (the existence and correspondence between exact and linearised
-solutions) will not be addressed here.
+Preadditivity: 
+Let ((B,D),(a,c),(A,C)) and ((B,D),(a',c'),(A,C)) be morphisms from (α,(e_A,e_C)) to (β,(e_B,e_D)) in . The addition of these two morphisms is given by ((B,D),(a+a',c+c'),(A,C)).
 
 
+Exact structure:
+The elements in  are direct summands of images of elements in  under the functor →; see the discussion before <ref>. In other words, they are direct summands of kernel-cokernel pairs in  of the form 
 
-For the ongoing discussion ϕ = (φ, ), where
-φ encodes all the geometric variables while  and 
-respectively encode the gauge and matter variables. Namely, for the
-geometric sector φ, one is considering an approximate
-solution of the form
+    [column sep=2cm]
+    (α, (𝕀A,𝕀C))
+    	rp    (β, (𝕀B,𝕀D))
+    	rq    (γ, (𝕀E,𝕀G)),
 
-    g_μν=g_μν + δ g_μν,     Φ_μν= Φ_μν + δΦ_μν,
-          Ξ = Ξ + δΞ,      s= s +
-      δ s
+where 
 
-For the gauge sector  one has the split
+    [ p  ((𝕀B,𝕀D),(a,c),(𝕀A,𝕀C)),  q  ((𝕀E,𝕀G),(b,d),(𝕀B,𝕀D)) ]
 
-    F=F + δ F,     ℋ_μ = ℋ_μ 
-      + δℋ_μ.
-
-For the matter sector  one has the split
-
-    T_μν=T_μν + δ T_μν,      
-      T_μνα = T_μνα 
-        + δ T_μνα.
-
-From this point forward (unless otherwise stated), indices will be
-raised and lowered with the background metric g_μν.
+and
+αr(a,c)   βr(b,d)   γ
+is an element of . 
 
 
 
-
- §.§ Equation for the metric perturbation
-
+Even if (α,(A,C)) is an object in , the -extension α(C,A) does not necessarily satisfy (Aα = α or (Cα =α. For example, if α≠ 0, then (α,(0,0)) is an object in , but  α = α = 0  ≠α. In particular, this means that the objects of  are not canonically in one-to-one correspondence with those of .
 
 
+<ref> tells us that we cannot expect the categories  and  to be isomorphic in general. Despite this, we prove that they are always equivalent. In the following, we use the Hebrew letters  (mem),  (shin) and  (tsadi). Note that the functor (,,) that we define in the proof of <ref> below will be used to construct a natural transformation in <ref>, which is the reason for our choice of notation.
 
 
-One of the advantages of the wave formulation of the CEFEs is that the
-metric sector of the equations resembles conventional formulations of
-General Relativity. This can be seen clearly even in the non-linear
-equation (<ref>) where this equation is formally
-identical to the standard (non-conformal) Einstein field equations in
-generalised harmonic gauge with a source term in this case given by
--4Φ_ab-1/2Fg_ab which could be thought conceptually as
-some artificial “geometric matter term”. To exploit the latter
-viewpoint let us define
 
-    𝒲_ab:=2Φ_ab + 1/4Fg_ab,
+The exact categories (, ) and (, ) are equivalent. 
 
-so that equation (<ref>) agnostically reads:
 
-    R_ab=𝒲_ab.
 
-Expressing the equation for the metric in this way is advantageous since
-one can follow the classical discussion for linearising the Einstein
-field equations with respect to a general background g_ab
-—see for instance Sec. 7.5 of <cit.>.  Since a few gauge
-transformations are needed and we want to reserve the symbol δ
-g_μν for the last transformation, we first decompose the metric
-as g_μν=g_μν + h_μν. Then, a
-straightforward linearisation of equation (<ref>) gives
+We establish an exact functor
+(,,) 
+        (, )
+            → 
+	(, )
+and an exact quasi-inverse 
+(,,) 
+	(, )
+		→ 
+	(, ).
 
-    □ h_μν =
-      - 2 δ𝒲_μν 
-      + ^αβ _β _μh_να 
-      + ^αβ _β _νh_μα 
-      - ^αβ _μ _νh_αβ
+Define (,,) by
 
-where □ :=
-∇_μ∇^μ with ∇
-denoting the Levi-Civita connection of . Then, upon
-commuting covariant derivatives and defining the trace-reversed metric
-perturbation ĥ_μν:=h_μν-1/2
-h_α^α_μν, we obtain
+    (,,)(A,α,C) 
+         (α,(A,C))
+
+on objects and 
+
+    (,,)((B,a,A),(D,c,C)) 
+    	 ((B,D),(a,c),(A,C))
+
+on morphisms. By our explicit description of  and  in Subsection <ref> and Subsection <ref>, respectively, we see that (,,) is a well-defined additive functor.
+
+Define (,,) by 
+
+    (,,) (α,(A,C)) 
+         (A,(Aα,C)
+
+on objects and 
+
+    (,,) ((B,D),(a,c),(A,C)) 
+         ((B,a,A),(D,c,C))
  
-  □ĥ _μν     = -2 δ𝒲_μν + δ𝒲_α^α
-  g_μν -2 R_μανβ
-  ĥ^αβ + 2 R_(ν^α
-  ĥ_μ) α - g_μν _β_α ĥ^αβ + 2_(μ_|α| ĥ_ν) ^α
+on morphisms. Note that (,,) is well-defined on objects, since
 
-where δ𝒲_α^α:=^αβδ𝒲_αβ, and R_μναβ and
-R_μν are the Riemann and Ricci tensors of
-, which can be written in terms of the rescaled Weyl
-tensor and trace-free Ricci tensors via the decomposition:
+    (C  (Aα 
+        = (A  (Cα 
+        = (A  (Aα 
+        = (Aα.
 
-    R_μναβ = 
-      Ξd_μναβ
-       -2 Φ _β  [μg_ν] α
-       +2 Φ _α [μg_ν]  β
-       + 112R (g_μαg_νβ
-       - g_μβg_να).
+It is straightforward to check that (,,) is well-defined on morphisms, and that it is an additive functor.
 
-To avoid unnecessarily long expressions, background curvature terms will
-not be expanded out. Notice that equation (<ref>)
-contains only divergences of ĥ_μν and derivatives of the
-trace are absent. To obtain hyperbolic equations, the divergence terms
-_αĥ_ν^α are removed by
-employing a slight generalisation of the procedure outlined in
-<cit.>; one begins by recognising that the quantity q_μν :=
-h_μν + 2_(μξ_ν) is a gauge transformation of
-the metric perturbation h_μν. Introduce its trace-reversed
-version 
-δ g_μν=q̂_μν:=
-q_μν-12q_c^cg_μν.
-Since the vector field ξ_ν is arbitrary, one can choose a gauge
-in which ξ_ν satisfies an inhomogeneous wave equation. In
-particular, the divergence of δ g_μν:
+The composite (,,)∘(,,) is the identity functor 𝕀 of , as (Aα = α whenever (A,α,C). For each object (α,(A,C)) in , set
 
-    _νδ g_μ^ν =  F_μ,
-
-may be rewritten as the following wave equation:
-
-    □ξ_μ + R_μνξ^ν +
-      _νĥ_μ^ν =  F_μ ,
-
-where F_μ is a given set of functions of the coordinates
-x^α and the evolved fields (but not their derivatives), which
-we call the Lorenz gauge source functions.  These are related to
-the linearisation of the coordinate gauge source functions
-ℋ^μ as discussed in Remark <ref>.  If
-ξ_ν satisfies the above wave equation, then δ
-g_μν satisfies the gauge (<ref>). The
-gauge condition in (<ref>) is a linear analogue
-of the generalised harmonic gauge condition, and as such we called it
-the generalised Lorenz gauge —a similar definition is given
-also in <cit.> in the non-conformal context
-assuming a flat background.  Working in the generalised Lorenz gauge,
-we obtain the following equation for the metric perturbation:
-
-  □ δg_μν     = 
-  - 2 δ𝒲_μν 
-  + δ𝒲^α_α
-  g_μν
-  - 2 R_μανβ 
-      δg^αβ
-  + 2 R^α_(ν δg_μ)  α
-  - _μν _αF^α
-  + 2 _(μF_ν)   
-
-subject to the gauge condition (<ref>).
-
-
+    (α,(A,C)) ((A,C),(A,C),(A,C))
+    	 
+    	(α,(A,C))
+    		→ 
+    	((Aα,(A,C)).
  
-  The analogy between the Lorenz and Harmonic gauge is more subtle
-  when dealing with a non-flat background since the direct linearisation
-  of the generalised harmonic condition C^μ:=Γ^μ +
-  ℋ^μ=0 renders
-  
-    δ C^μ=
-      _βδ g^βμ 
-        - ℋ^αδ g^μ_α 
-        - Γ^μ_αβδ g^αβ + 
-         δℋ^μ =0.
+This is an isomorphism in . Checking that 
 
-  Comparing equations (<ref>) and
-  (<ref>) one concludes that :
-  
-    F^μ = ℋ^αδ g^μ_α 
-        + Γ^μ_αβδ g^αβ 
-        - δℋ^μ .
+    (α,(A,C))(α,(A,C))𝕀⟹(,,)∘(,,)
 
-  Observe that even for the harmonic case ℋ^μ =
-  δℋ^μ=0 equation (<ref>) reduces to
-  
-    _βδ g^βμ =
-        Γ^μ_αβδ g^αβ,
+is natural is straightforward. 
 
-  retrieving the Lorenz gauge condition only if the background
-  connection vanishes Γ^μ_αβ=0.
-  
+It remains to show that (,,) and (,,) are exact functors. Recall that the direct sum of two objects (X,X) and (Y,Y) in  is given by 
 
+    (X,X)⊕ (Y,Y) = (X⊕ Y,X⊕Y) = (X⊕ Y,[ X 0; 0 Y ]).
 
 
-To complete the discussion now we look at the expression for δ𝒲_μν.  It follows from the definition of
-𝒲_ab in equation (<ref>) that
+We first check that (,,) is exact. Let 
+    [column sep=4cm]
+    (A, α, C)
+    	r((B,a,A),(D,c,C))   (B, β, D)
+    	r((E,b,B),(G,d,D))   (E, γ, G)
 
-    δ𝒲_μν = 2 δΦ _μν 
-      + 14Fδ g_μν 
-      - 18Fδ g^α_α_μν 
-      +  14δ F _μν.
+be an arbitrary element of . The underlying sequences of (<ref>) are split exact in , so we may without loss of generality assume that B = A⊕ E, B = A⊕E, D = C⊕ G, D = C⊕G, (a,c) = ([ A; 0 ], [ C; 0 ]) and (b,d) = ([ 0E ], [ 0 G ]). Applying (,,) to (<ref>) then yields the sequence
 
-Recalling that the conformal gauge constraint has been imposed C:= R -
-F=0, observe that the linearisation of this condition leads to the
-following constraint:
+    [column sep=1.5cm]
+    (α, (A,C))
+    	rr    (β, (A⊕E,C⊕G))
+    	rs    (γ, (E,G)),
 
-    δ C = 
-      δ𝒲^μ_μ 
-      - R^μνδ g_μν 
-      + 12Rδ g^μ_μ 
-      - δ F =0.
+where 
 
-For consistency, the background conformal gauge source function and the
-background Ricci scalar should be identified:
-R=F.  Then, with this identification and using
-equations (<ref>) the linearisation of the conformal
-constraint reads
-
-    δ C = 2δΦ_μ^μ -2 Φ^μνδ g_μν=0.
-
-The latter equation states that although Φ_μν is trace-free,
-in general, its perturbation may not be. Nonetheless, the trace of the
-perturbation is fixed by equation (<ref>).  In
-particular, notice that if the background is flat, this condition
-reduces to δΦ_μ^μ=0.
-
-To obtain the final expression for the metric perturbation equation is
-then enough to substitute equation (<ref>) into equation
-(<ref>).  Although the resulting equation for δ
-g_μν looks more complicated than the usual expression for the
-metric perturbation this is mainly because the linearisation was
-performed with respect to a general background and due to the use of the
-generalised Lorenz gauge. Later on, when the background is fixed the
-expressions presented in this section will simplify considerably.
-
-
-
-
- §.§ Equations for the perturbation of other conformal fields
-
-
-
-The linearisation of the rest of the conformal fields can be obtained
-systematically.  The main calculation involves obtaining a suitable
-expression for the linearisation of the geometric wave operator acting
-on each of the conformal fields.  To do the calculation in the scalar
-sector, first notice that for a scalar field φ one has that
-
-    D□φ = □δφ
-      - h^νμ _ν_μφ
-      - ^μα _αh_νμ ^νφ
-      + 12^μα
-      _νh_μα ^νφ
-
-where φ denotes a background quantity and δφ the perturbation. Performing the same gauge transformations of
-subsection <ref> for the metric perturbation h_μν
-and imposing the generalised Lorenz gauge one obtains:
-
-    D □φ = □δφ +
-      12δ g^μ_μ□φ
-      - δ g^μν _ν _μφ
-      - F^μ _μφ.
-
-A direct calculation using the latter expression and exploiting that the
-background fields ϕ satisfy the CEFEs in the form of
-equations (<ref>) as well as equations
-(<ref>), give the following equation for the
-perturbation of the conformal factor
-
-    □δΞ  =  
-      - 16FδΞ
-      - 16δ F
-      + 4 δ s 
-      -  ^μνδ g_μν
-      +( 124F 
-      - s )δ g^μ_μ 
-      + F^μ _μ
-      + 12 ^3 ^μνδ g_μν
-
-A similar calculation gives the linearised wave equation for the
-Friedrich scalar. The explicit expression is lengthy and has been put in
-Appendix <ref>. For tensor fields the calculation is slightly
-more involved. To give an abridged discussion consider now the case of
-the linearisation of □ w_μ, where w_a is some covector
-field.  A direct calculation gives,
-
-    D □ w_μ    =  □δ w_μ
-      - 12w^ν□ h_μν  
-      + w^ν _α _[νh_μ] ^α
-        - h_να ^α ^νw_μ
-      + 2  ^αw^ν _[νh_μ] α
-      -  _αh_μν ^αw^ν
-       
-      -  ^νw_μ
-      ( _αh_ν^α 
-      - 12 _νh^α_α)
-
-where w_μ denotes a background quantity and δ
-w_μ the associated perturbation. Substituting the term
-□ h_μν using equation
-(<ref>) and rewriting the equation in
-terms of the trace-reversed metric perturbation ĥ_μν
-renders
-
-    D □ w_μ    = □δ w_μ
-      - w^ν _α _μĥ_ν^α +
-      δ𝒲_μ^νw_ν
-      -  ^αw^ν(  _αĥ_μν
-      - 12_μν _αĥ^β_β)
-      
-           -2  ^αw^ν ( _[μĥ_ν] α 
-      - 12 g_α [ν _μ] ĥ^β_β)
-      - ^α^νw_μ(ĥ_να
-      - 12ĥ^β_β_να)
-      -  _αĥ_ν^α ^νw_μ
-
-Commuting covariant derivatives on the second term in the right-hand
-side of equation (<ref>), performing the
-gauge transformation described in subsection <ref> and
-imposing the generalised Lorenz gauge one obtains
-
-    D    □ w_μ =□δ w_μ
-      + 12δ g^ν_ν□w_μ
-      - δ g_να ^α ^νw_μ
-      - δ  g_ν^αR_μαw^ν
-      + δ g^αβR_μανβw^ν
-      - ℒ_w_μ
-        
-      + δ𝒲_μ^νw_ν 
-      + 2  ^αw^ν
-        (  _[ν(δ g)_μ] α
-      -12 _αδ g_μν) 
-      + ^νδ g^α_α _[νw_μ] 
-      + 12_μδ g^α_α _νw^ν
-
-where ℒ_ denotes the Lie-derivative along F^μ.
-Extending the latter calculation on tensors of higher valence is a long
-but straighforward calculation. The latter leads to the following
-linearised equations for the conformal fields:
-
-    □δ g_μν   =
-        H^g_(μν)(δϕ,
-        δϕ  ;  ϕ, , 
-        ϕ,
-         )
-        
-    □δΞ    = H^Ξ_(δϕ, δϕ  ;  ϕ, , ϕ )  
-    □δ  s 
-            = 
-        H^s(δϕ, δϕ  ;  ϕ, , ϕ,
-         )   
-    □δΦ_μν   = 
-        H^Φ_(μν)(δϕ,
-        δϕ  ;  ϕ, , ϕ,
-          ,  F, 
-          δ F )
-        
-    □δ  d_μναβ    =
-        H^d_[μν][αβ](δϕ, 
-        δϕ  ;  ϕ, , ϕ,
-        ϕ,  ) .
-
-Here we recall that ϕ schematically represents the conformal
-fields, and the gauge sources are schematically denoted as ;
-containing the Lorenz gauge source functions F^μ as well as
-F and δ F. The semicolon separates the arguments
-which do not contain the evolved perturbation variables explicitly.
-Observe that only the equation for δΦ_μν contains
-second derivatives of δ F which restricts the allowed choices for
-δ F—see Remark <ref>. The expressions
-for H^g_μν, and H^Ξ are given in the respective
-equations (<ref>) and (<ref>).
-The expressions for H^s, H^Φ_μν and
-H^d_μναβ are lengthy and are given explicitly in
-Appendix <ref>.
-
-
-
-
-
-§ ANALYSIS OF WAVE SOLUTIONS AROUND FLAT SPACETIME
-
-
-
-
-
-
-
-
- §.§ Fixing the background solution
-
-
-
-The discussion given in the last section is general in the sense that
-neither the background solution ϕ nor the gauge
-source functions  have been fixed.  The first observation to be
-made is that, although the expression for H^d_μναβ is
-complicated, in fact, if one restricts the analysis to the vacuum
-case and a conformally flat background (so that
-d_μναβ=0 but Φ_μν≠
-0 and R≠ 0), then the equation for the perturbation of
-the rescaled Weyl tensor reduces to
-
-    □ δ d_μναβ
-      = 1/2Fδ d_μναβ,
-
-and this equation decouples from the rest.  This is to be expected since
-as one way to study linearised gravity is through the spin-2 equation
-for which the metric perturbation plays no role —see <cit.>. Since the aim of this article is to give a first analysis
-into the linearised version of the CEFEs, it is relevant to now examine
-the complete system even if some of the equations decouple as in the
-case described above.
-
-The simplest choice of background is one in which the background
-geometry is flat. Naively, one would think that this forces the
-background conformal factor to be constant, Ξ=1, and the
-equations trivialise to the standard non-conformal case; this would
-defeat the purpose of considering the CEFEs in the first place, as one
-would not be able to incorporate the conformal boundary
-in such an analysis. Fortunately, there
-exists a non-trivial conformal transformation that maps the Minkowski
-spacetime into itself such that spatial infinity and null infinity for
-the physical Minkowski spacetime are respectively mapped to the
-origin and the lightcone through the origin of the (conformally
-transformed) unphysical Minkowski spacetime. The evaluation of
-the field at the conformal boundary of the physical spacetime
-corresponds to evaluation at finite coordinate locations in the
-unphysical spacetime.  We point out that such a conformal transformation
-does not necessarily yield a full compactification, as some points (such
-as the physical origin) are mapped to infinity —see Figure
-<ref>.  This choice for a flat background, which we call the
-inversion representation of the Minkowski spacetime, is the
-simplest non-trivial case (in the sense that it can incorporate the
-conformal boundary) that one can analyse in the conformal set-up.
-Therefore, the following analysis can be regarded as the conformal
-counterpart of the standard discussion of linearised (physical) Einstein
-field equations around flat spacetime. The inversion representation of
-the Minkowski spacetime is a compelling choice not only for its
-simplicity, but also because it is related to the
-i^0-cylinder representation of the Minkowski spacetime
-(see for instance <cit.>) which has
-d_μναβ=0, R = 0 with a
-non-trivial trace-free Ricci tensor Φ_μν≠ 0.
-While an analysis on the i^0-cylinder background
-would be of great interest, the sources  in
-the equations for the fields other than δ d_μναβ
-(see Appendix <ref>) become cumbersome when
-Φ_μν≠ 0; this will be pursued in future work.
-
-
-
-
-
- §.§ The inversion conformal representation of the Minkowski spacetime
-
-
-
-
-The inversion representation of the Minkowski spacetime described in the
-preceding paragraph is a standard conformal representation detailed in
-<cit.>, which we now
-summarise. In what follows (ℝ^4, ) will denote
-the (physical) Minkowski spacetime.  Let x̃^μ̃=
-(t̃,x̃^ĩ), represent physical Cartesian
-coordinates.  The associated coordinate basis vectors and covectors are
-denoted by ∂_μ̃ and
-𝐝x̃^μ̃, respectively. The components of an
-arbitrary abstract tensor S_ab in the physical Cartesian coordinate
-basis are denoted by S_μ̃ν̃. The Minkowski metric
-reads 
-
-    =
-    η_μ̃ν̃𝐝x̃^μ̃⊗𝐝x̃^ν̃,
-
-where η̃_μ̃ν̃=diag(-1,1,1,1).
-Defining the physical radial coordinate via ρ̃^2=
-δ_ĩj̃x̃^ĩx̃^j̃
-where δ_ĩj̃=diag(1,1,1) and considering
-an arbitrary choice of coordinates on 𝕊^2 the physical
-Minkowski metric can be written as
-
-    =-𝐝t̃⊗𝐝t̃
-    +𝐝ρ̃⊗𝐝ρ̃+ρ̃^2
-    σ,
-
-with t̃∈(-∞, ∞), ρ̃∈ [0,∞)
-where σ denotes the standard metric on 𝕊^2. 
-
-We now introduce the unphysical Cartesian coordinates
-x^μ=(t,x^i), and denote the associated vector and covector basis
-with ∂_μ and 𝐝x^μ, respectively. As
-before, the components of an arbitrary tensor S_ab in the unphysical
-Cartesian coordinate basis will be denoted as S_μν. The
-relationship between the physical and unphysical Cartesian coordinates
-is given by:
-
-    x^μ
-    =
-    δ_μ̃^μ x̃^μ̃/X̃^2, 
-        X̃^2 
-    ≡η̃_μ̃ν̃x̃^μ̃x̃^ν̃,
+    r     (([ A 0; 0 E ],[ C 0; 0 G ]),([ A; 0 ],[ C; 0 ]),(A,C)),
     
-    x̃^μ̃=δ^μ̃_μ x^μ/X^2,
-        
-    X^2=η_μνx^μx^ν.
+    s     ((E,G),([ 0E ], [ 0 G ]),([ A 0; 0 E ],[ C 0; 0 G ])).
 
-where δ_μ̃^μ=diag(1,1,1,1),
-X^2=1/X̃^2 and η_μν=diag(-1,1,1,1). This
-coordinate transformation is valid in the complement of the lightcone at
-the origin in the physical Minkowski spacetime where X̃^2 > 0.
+We claim that (<ref>) is a direct summand of the sequence
 
+    [column sep=1.5cm]
+    (α, (𝕀A,𝕀C))
+    	rt    (β, (𝕀A⊕ E, 𝕀C⊕ G))
+    	ru    (γ, (𝕀E,𝕀G)),
 
+where 
 
-   The notational reason for having a tilde over the physical
-  coordinate indices is to distinguish the physical and unphysical
-  coordinate bases denoted by ∂_μ and
-  ∂_μ̃.  The latter requires the use of
-  δ_μ̃^μ in the expressions
-  (<ref>) to keep the tilded and
-  untilded indices balanced. This notation is inspired by that of the
-  dual foliation formalism of <cit.>.
-  
-
-
-
-
-
-
- 
-
-
-
-
-From the relation between the physical and the (unphysical) inversion
-coordinate bases one can construct the Jacobians
-
-    J_μ̃^μ:= 
-        ∂ x^μ/∂x̃^μ̃
-        =
-        X̃^-2(δ_μ̃^μ
-        - 2 x^μx̃_μ̃),      
-       J_μ^μ̃:=
-       ∂x̃^μ̃/∂ x^μ=
-        X^-2
-          (δ^μ̃_μ-2x̃^μ̃x_μ)
-
-To identify a suitable conformal metric, it is enough to compute
-η_μν𝐝x^μ⊗𝐝x^ν =
- η_μν
-  J_μ̃^μJ_ν̃^ν𝐝x̃^μ̃⊗𝐝x̃^ν̃.
-Introducing  η=η_μν𝐝x^μ⊗𝐝x^ν, we write this compactly as:
-
-    η=Ξ^2 ,
-
-with Ξ =X^2. This demonstrates that the inversion (unphysical)
-Minkowski spacetime can be recast as a conformal transformation of the
-physical Minkowski spacetime.  Although, in most of the upcoming
-discussion, all tensor components will be expressed in just one
-coordinate basis (the unphysical one), notice that, the relation
-between the components of a tensor S_ab in the physical and the
-unphysical bases is then
-given by
-
-    S_μ̃ν̃= Ξ^2(δ_μ̃^μ 
-      - 2x^μx̃_μ̃)
-      (δ_ν̃^ν -2x^νx̃_ν̃)S_μν.
-
-To complete the discussion, one can construct an unphysical spherical
-polar coordinate system. Upon introducing
-ρ^2=δ_ijx^ix^j, a calculation shows that the unphysical
- (conformal) metric η and conformal factor Ξ read
-
-    η=-𝐝t⊗𝐝t +𝐝ρ⊗𝐝ρ+ρ^2 σ,     Ξ=ρ^2 -t^2,
-
-with t∈(-∞,∞) and ρ∈ [0,∞).  Notice that
-spatial infinity i^0 of the physical Minkowski spacetime
-(ℝ^4, ) is mapped to the origin (t=0,ρ=0)
-in (ℝ^4,η). Also, future and past null infinity
-ℐ^± of the physical Minkowski spacetime are mapped to the
-lightcone passing through the origin. In other words, introducing the
-unphysical retarded and advanced times u:=t-ρ and v:=t+ρ,
-future/past null infinity ℐ^± is located at v=0 and
-u=0 respectively.  To round up the discussion between the relation the
-physical and unphysical coordinates, here we record that
-
-    t=t̃/ρ̃^2-t̃^2,     ρ =
-       ρ̃/ρ̃^2-t̃^2.
-
-
-
-
-
-
-
-
- §.§ Linearised equations around the Minkowski-inversion 
-            background
-
-
-
-
-
-
-  §.§.§ The background solution
-
-
-We now fix the background solution ϕ to be the
-Minkowski inversion background discussed in the previous subsection,
-<ref>. This yields the following expressions for
-the background fields
-
-    g_μν= η_μν,     Ξ=
-      ρ^2-t^2,     s= 2,     T_μν=0, 
-          T_μνα=0.
-
-the latter implies that the curvature
-R_μναβ=0 vanishes which, in terms of its
-irreducible decomposition implies that
-
-    Φ_μν=0,     R=0,
-        d_μναβ=0.
-
-Since one has that R=F, this fixes the
-background conformal gauge source function. Nonetheless, the remaining
-gauge source functions encoded in F^μ and δ F need not
-vanish and will (along with matter perturbation quantities) be left
-unspecified. This gives the following equations
-
-
-    □δ g _μν    = 
-      - 4 δΦ _μν
-      + 2 δΦ ^α_αg_μν
-      - g_μν _αF^α
-      + 2 _(μF_ν)  
-      + 12δ F _μν
-    □δΞ    = 4 δ s  
-      - sδ g ^μ_μ 
-      + F^μ_μΞ - 16δ F
-    □δ s      = 
-      δ T^μν_μ_ν
-      - 16sδ F 
-      - 16_μδ F ^μ
-    □δΦ_μν    = -2 δ T_(μ^α_ν)_α 
-      - _αδ T_μ^α_ν
-      + 16_{μ_ν}δ F 
-      
-    □δ d_μναβ =     
-      2 _[μδ T_|αβ|ν] 
-      +2  _[αδ T_|μν|β] + 2
-      _β[ν_|σδ T_α|^σ_μ] 
-      + 2
-      _α[μ_|σδ T_β|^σ_ν].
-
-
-
-
-  
-  The Lorenz gauge source functions F^μ are allowed to
-  depend on the variables δϕ as they appear only with first
-  derivatives in equations (<ref>). However, the
-  conformal gauge source function δ F is only allowed to depend
-  on the coordinates due to the second derivatives of δ F in
-  the equation (<ref>).
-
-
-
-
-
-  Although for simplicity we have fixed the notation in
-    subsection <ref> so that x^μ denotes
-    the unphysical Cartesian system of coordinates, in fact, equations
-    (<ref>) are not bound to these coordinates, the only
-    assumption used was that the background Riemann curvature
-    R^μ_αβν vanishes. In other
-    words, in deriving equation (<ref>), the vanishing
-    of the (background) Christoffel symbols
-    Γ^α_μν has not been assumed,
-    consequently, formally identical equations to
-    (<ref>) will hold in any coordinate
-    system. Nonetheless, the unphysical Cartesian system x^μ will
-    be assumed in the discussion of subsection <ref>
-    so that one may apply standard techniques such as expressing the
-    solutions in terms of Greens functions and multipolar expansion
-    approaches.
-
-
-
-
-
-
-  §.§.§ The matter relations
-
-
-The matter equations depend on the particular matter model in question,
-however, since the background matter terms are assumed to vanish, the
-direct linearisation of the general relations, combined with the
-symmetries of T_abc and T_ab described in section
-<ref>, yield a set of formally identical expressions that the
-perturbations must satisfy:
-
-
-    δ T_μ^μ=0,     _νδ T_μ^ν=0,
-          δ T_αβμ= δ T_[αβ]μ,
-          δ T_[αβμ]=0,     _αδ T_μν^α=0.
-
-Also, one has the relations:
-
-    δ T_αβγ    := _[αδ T_β]γ
-      + 3 δ T_γ[β_α]Ξ
-      -_γ[αδ T_β]λ^λ,
-      
-     _αδ T_μ^α_ν   =- 12Ξ□δ T_μν
-      -4 sδ T_μν  
-      -2  _αδ T_μν ^αΞ
-      +  ^αΞ _(μδ T_ν)  α.
-
-
-
-
-
-
-  §.§.§ Propagation of the generalised Lorentz gauge
-
-
-Tracing equation (<ref>) and using equations
-(<ref>) shows that
-
-    □δΦ_μ^μ=0.
-
-Recall that the linearisation of the conformal gauge constraint,
-translates in the present case, to the condition
-
-    δΦ_μ^μ=0.
-
-This, in particular, simplifies equation (<ref>):
-
-    □δ g _μν    = 
-      - 4 δΦ _μν
-      - g_μν _αF^α
-      +  _μF_ν +  _νF_μ
-      + 12δ F _μν .
-
-The condition (<ref>) is trivially propagated by equation
-(<ref>). Namely, if initial data is given such that
-
-    δΦ_μ^μ=0     and    _n δΦ_μ^μ=0     on    Σ ,
-
-where  _n:=n^μ_μ and n^μ denotes the normal
-to a spacelike hypersurface Σ. Then, by existence and uniqueness
-of solutions to the flat-wave equation (<ref>), one has
-
-    δΦ_μ^μ=0     on    𝒰⊂𝒟^+(Σ).
-
-where 𝒰 is an open set and 𝒟^+(Σ) denotes
-the future domain of dependence of Σ. This result can be
-understood as the propagation of the conformal constraint in the linear
-setting. To show that generalised Lorenz gauge condition
-(<ref>) propagates one needs to use the
-contracted Bianchi identity. In the CEFE language this is encoded in
-equation (<ref>). Hence, for completeness and
-future reference, we linearise the CEFEs as defined in equations
-(<ref>) and (<ref>)
-and record the result in Remark <ref>.
-
-
-  
-  
-  Using equation equation (<ref>) to express
-  (<ref>) using the trace-free Ricci tensor and
-  linearising around a flat background gives
-  
-  
-    _μδ s  = 
-        - δΦ _μν ^ν
-        + 12 ^2  δ T_μν ^ν
-        -124δ F _μ, 
-        _μδΦ _αν  
-        -  _νδΦ _αμ
-        = δ T_μνα
-        - δ d_αβμν ^β
-        +  112_α  [μ _ν]  δ F,
-        
-        ^μδ d_μναβ =  
-        δ T_αβν, 
-        _μ _νδΞ  =
-        Γ[q]^λ_μν_λ 
-        +sq_μν 
-        + (δ s - 124δ F)_μνδΦ_μν + 12δ T_μν,
-        
-       δ R_μναβ=
-        δ d_μναβ 
-        + 2δΦ _[ν | β_α| μ]     
-        + 2δΦ _[μ | α_β| ν]  
-        + 16δ F _[μ|  α_β |ν]   ,
-
-  where
-  
-    Γ[q]^α_μν  :=
-        12g^αβ(  _μ  q_νβ
-        +   _ν  q_μβ 
-        -   _β q_μν) ,
-            δ R_μναβ :=
-        2 _[α _|[ν q_μ  ]|β]  .
-
-  
-  where the expressions have been written using q_μν instead of
-  δ g_μν to avoid long expressions. Recall that  δ
-  g_μν is simply the trace-reversed version of q_μν.
-  
-
-
-
-Contracting equation (<ref>), gives _νδΦ_μ^ν= _μδΦ_ν^ν +
-18_μδ F and using equation
-(<ref>) one obtains
-
-    _νδΦ_μ^ν= 1/8_μδ F.
-
-The divergence-fixed condition (<ref>) is also
-propagated by the wave equations (<ref>). To see this,
-notice that applying ∇^μ to equation (<ref>),
-using (<ref>), and after trivially commuting the
-flat-covariant derivative  one obtains
-
-    □ (^μδΦ_μν
-      - 18_νδ F)=0.
-
-Hence, if initial data is given on Σ such that ^μδΦ_μν=18_νδ F and
-_n ( ^μδΦ_μν
--18_νδ F) =0 then condition
-(<ref>) is satisfied in 𝒰⊂𝒟^+(Σ). To show propagation of the generalised Lorenz
-gauge (<ref>), one proceeds analogously, taking a
-divergence of equation (<ref>) and using equations
-(<ref>) and (<ref>) gives the
-following equation
-
-    ^μ□δ g_μν = 
-    □ F_ν
-
-which can be rewritten as
-
-    □ (^μδ g_μν -F_ν) = 0.
-
-Hence, if one gives initial data on Σ such that ^μδ g_μν -F_ν=0 and _n(^μδ g_μν -F_ν)=0 then by virtue of equation
-(<ref>) one has that
-(<ref>), namely ^μδ g_μν
-=F_ν, is satisfied on 𝒟^+(Σ). In other words, the
-generalised Lorenz gauge propagates. This discussion is
-summarised in the following
-
-
-  The linearisation of the wave-CEFEs around
-  the inversion-Minkowski unphysical spacetime is given by
-  
-  
-    □δ g_μν    = 
-        -4 δΦ _μν
-        - g_μν _αF^α
-        + 2 _(μF_ν )   +
-        12δ F _μν
-    □δΞ    = 4 δ s  
-      - sδ g ^μ_μ 
-      + F^μ_μΞ - 16δ F
-      
-    □δ s      = 
-      δ T^μν_μ_ν
-      - 16sδ F 
-      - 16_μδ F ^μ
-    □δΦ_μν    = -2 δ T_(μ^α_ν)_α 
-      - _αδ T_μ^α_ν
-      + 16_{μ_ν}δ F
-      
-    □δ d_μναβ =   
-        2  _[μδ T_|αβ|ν] 
-        + 2  _[αδ T_|μν|β] 
-        + 2 _β[ν_|σδ T_α|^σ_μ] 
-        + 2 _α[μ_|σδ T_β|^σ_ν].
-
-  
-  where the matter sources satisfy the relations in equation
-  (<ref>). The conditions δΦ_μ^μ=0, and ^μδΦ_μν=1/8_μδ F, along with the
-  generalised Lorenz gauge condition ^μδ
-  g_μν=F_μ, propagate.
-  
-
-
-
-
-
-  
-  Observe that if δ F=0 is set then δΦ_μν is a
-  TT-tensor (transverse and tracefree).
-  Furthermore, if the Lorenz gauge condition is chosen, F_μ=0,
-  equation (<ref>) looks formally identical to the
-  textbook linearisation Einstein equations with an geometric-artificial
-  matter term δΦ_μν.
-  
-
-
-
-
-
-  The initial data for the wave equations (<ref>) is
-  not free as it needs to satisfy equations (<ref>) on
-  Σ. The propagation of the (first order) CEFEs by the wave-CEFEs
-  has been proven at the non-linear level in <cit.> and the
-  result at the linear level follows from linearisation of the
-  subsidiary system obtained in <cit.>.  Also, a procedure to
-  obtain initial data for the conformal wave CEFEs at the non-linear
-  level has been outlined in <cit.>: one starts by solving the
-  conformal Einstein constraint equations on Σ which constitute
-  the spatial parts of the zero-quantities
-  (<ref>). Then, the time derivatives of the
-  evolved fields on Σ can be read from the zero-quantities using
-  the solution to the conformal Einstein constraints.  An analogous
-  procedure can be performed for the linear case to obtain initial data
-  for the wave equations (<ref>). Observe that from
-  equations (<ref>) and (<ref>)
-  one only needs to consider their trace-free parts as the traces give
-  the wave equations (<ref>) and (<ref>),
-  respectively. 
-
-
-
-
-
-
-  §.§.§ Scri-fixing gauge
-
-
-A difficulty with the standard CEFEs concerns the fact that in general,
-the conformal boundary is not fixed with respect to the coordinates.
-Although there exist a generalisation of the CEFEs, the extended
-CEFEs (see for instance <cit.>) that allows to have an explicit
-expression the conformal factor, this approach is based on gauge adapted
-to a congruence of conformal geodesics, called the conformal Gaussian
-gauge. The latter requires the use of more general type of connections
-known as Weyl connections and it is in general difficult to write
-explicitly the line element of physically relevant solutions in the
-coordinates adapted to the conformal Gaussian gauge.  Here, we give an
-alternative simpler approach based on exploiting the gauge source
-functions in the wave formulation of the standard CEFEs. In the linear
-case, the key is to find a gauge choice such that equation (<ref>)
-is homogeneous. This amounts to choosing the Lorenz gauge source
-functions such that F^μ satisfies
-
-    F^μ_μ = - 4 δ s + sδ
-    g_μ^μ + 1/6δ F.
-
-Thus, if trivial initial data is given to equation (<ref>) on the
-initial hypersurface then the trivial solution δΞ=0 is
-obtained in the development. Hence, Ξ= and that the location
-of the conformal boundary of the perturbed linearised solution coincides
-with that of the background spacetime. Observe that to solve equation
-(<ref>) one needs _μ≠ 0 and
-although this condition does not hold at i^0, this is not a problem
-for foliations that end at a cut 𝒞 of ℐ (e.g.
-the hyperboloidal and null foliations) —see Figure <ref>.
-
-In the non-linear case one can proceed in a similar way.  The non-linear
-version of the wave equation for the conformal factor reads:
-  
-    Ξ = - 16Ξ F -
-        ℋ^μ∇_μΞ + 4 s
-
-where := g^μν∂_μ∂_ν and x^μ is
-a fiduciary coordinate system —see Appendix <ref>. One can
-follow the same approach as in the linear case and think of Ξ as a
-given function of the coordinates and solve for the gauge source
-functions. Although this approach is of limited use for the Cauchy
-problem as ∇_μΞ vanishes at i^0, this is not an issue for
-foliations which end at a cut 𝒞 of ℐ for which
-∇_μΞ≠ 0.  As a concrete example and to make contact with
-the hyperboloidal framework of <cit.> consider an unphysical coordinate system x^μ=(τ, r,
-ϑ^A) with A=1,2, related to physical coordinates
-x̃^μ̃ =(t̃, r̃, ϑ^A) according
-to the standard hyperboloidal prescription t̃= τ +
-H(r̃) and r̃= r/Ω (r) where H and
-Ω are known as the height and compression functions. If one sets
-Ξ= Ω(r) then equation (<ref>) fixes one of the
-components of the coordinate gauge source functions
-  ℋ^μ as:
-  
-    ℋ^r = - Ω”/Ω'g^rr +
-        4s/Ω' - Ω/6Ω' F.
-
-where Ω' := dΩ/dr. If the slice is hyperboloidal
-then Ω' ≠ 0 at ℐ.
-
- 
-   In <cit.> a similar gauge-fixing is
-  developed, however in the previous work the evolution equations are
-  formally singular while in the CEFE approach of this paper the
-  equations are formally regular.  Also, the general strategy put
-  forward here is not bound to the hyperboloidal and asymptotically flat
-  set-up as a similar scri-fixing procedure could be adapted to study
-  spacetimes with de-Sitter (and anti-de-Sitter) asymptotics using CEFEs
-  similar to the case of <cit.> and <cit.> where the
-  gauge was fixed using, instead, a congruence of conformal geodesics.
-
-
-
-
-
-   Recall that g_ab=Ξ^2g̃_ab, hence for the linear
-  perturbations one has:
-  
-    δ g_μν=Ξ^2δg̃_μν +
-        2Ξg̃_μνδΞ .
-
-  Using the above described gauge to set δΞ=0, then equation
-  (<ref>) reduces to δ
-  g_μν=Ξ^2 δg̃_μν.  However, it
-  should be stressed that δg̃_μν≠δg̃_μ̃ν̃. Namely, δg̃_μν denotes the components of the physical metric
-  perturbation δg̃_ab in the unphysical Cartesian
-  coordinate basis ∂_μ. Using equation
-  (<ref>) one sees that the expression for the physical
-  metric perturbation in the physical Cartesian coordinate basis
-  ∂_μ̃ is given by
-  
-    δg̃_μ̃ν̃ =
-        (δ_μ̃^μ -2x^μx̃_μ̃)
-        (δ_ν̃^ν -2x^νx̃_ν̃) δ
-        g_μν .
-
-  
-
-
-
-
-
-
- §.§ General solutions to the linearised equations
-
-
-
-
-
-
-
-  §.§.§ The vacuum equations
-
-In this subsection an analysis of the linearisation of the wave CEFEs in
-vacuum is given (later, we extend the discussion to the case where
-matter is included and with a more general gauge choice). To start the
-discussion in the simplest possible set up, consider the vacuum case
-with vanishing gauge source functions F_μ=δ F=0 so that the
-equations read
-
+    t     ((𝕀A⊕ E, 𝕀C⊕ G),([ 𝕀A;  0 ], [ 𝕀C;  0 ]),(𝕀A,𝕀C)), 
     
-    □δ  g_{μν}    = 
-          -4 δΦ _μν, 
-    □δΞ    = 4 δ s  -
-          sδ g^μ_μ,  
-    □δ g^μ_μ    = 0 ,
-          
-    □δ s     =0, 
-    □δΦ_μν    =0 ,
-          
-    □δ d_μναβ    =0  
-          ,
+    u     ( (𝕀E,𝕀G),([ 0 𝕀E ],[ 0 𝕀G ]),(𝕀A⊕ E, 𝕀C⊕ G) ) .
+
+Notice first that  ([ 𝕀A;  0 ], [ 𝕀C;  0 ]) is a morphism α→β of -extensions, since 
+
+    *[][ 𝕀A;  0 ]_α = *[][ 𝕀A;  0 ]_ (e_Aα = *[][ A; 0 ]_α = *[][ C; 0 ]^β = *[][ 𝕀C;  0 ]^*[][ C 0; 0 G ]^β = *[][ 𝕀C;  0 ]_β.
+
+Similarly, the pair  ([ 0 𝕀E ],[ 0 𝕀G ]) is a morphism β→γ in . In particular, this yields that (<ref>) is indeed a sequence in . To verify that (<ref>) is a direct summand of (<ref>), notice that there is a section induced by the morphisms ((𝕀A,𝕀C),(A,C),(A,C)),  and ((𝕀E, 𝕀G),(E,G),(E,G)).
+
+Thus, to finish the proof that (,,) is exact, it suffices to show that (<ref>) lies in . For this, it is in turn enough to verify that 
+
+    [column sep=3cm]
+    αr([ 𝕀A;  0 ], [ 𝕀C;  0 ])   βr([ 0 𝕀E ],[ 0 𝕀G ])   γ
+
+lies in . By the arguments above, we already know that (<ref>) is a sequence of morphisms in . As its underlying sequences are split exact in , we have that (<ref>) lies in .
+
+We now show that (,,) is exact. Let 
+
+    (α, (A,C))
+    	r    (β, (B,D))
+    	r    (γ, (E,G))
+
+be a conflation in . Consequently, we have that (<ref>) is a direct summand of a sequence 
+
+    (α', (𝕀A',𝕀C'))
+    	r    (β', (𝕀B',𝕀D'))
+    	r    (γ', (𝕀E',𝕀G')),
+
+which is the image under  of a kernel-cokernel pair 
+
+    [column sep=2cm]
+    α'
+    	r(a',c')   β'
+    	r(b',d')   γ'
+
+in . Apply (,,) to (<ref>) to obtain
+
+    (𝕀A',α',𝕀C')
+    	r    (𝕀B',β',𝕀D')
+    	r    (𝕀E',γ',𝕀G').
+
+We claim that (<ref>) lies in . Since (<ref>) belongs to , its underlying sequences are split exact in . As → is an additive functor, the sequences 
+
+    [column sep=3cm,ampersand replacement=&]
+    		(A', 𝕀A')
+    			r(𝕀B',a',𝕀A')&(B', 𝕀B')
+    			r(𝕀E',b',𝕀B')&(E', 𝕀E'),
+    		
+    [column sep=3cm,ampersand replacement=&]
+    		(C', 𝕀C')
+    			r(𝕀D',c',𝕀C')&(D', 𝕀D')
+    			r(𝕀G',d',𝕀D')&(G', 𝕀G'),
+
+are thus split exact in , and so (<ref>) lies in . 
+
+Since (<ref>) is a direct summand of (<ref>), we know that (,,)(<ref>) is a direct summand of (,,)(<ref>)=(<ref>). Thus, by <cit.>, we deduce that (,,)(<ref>) belongs to , and hence (,,) is an exact functor. 
 
 
-subject to the constraints imposed by equations (<ref>)
-with vanishing matter terms. Note that we have split the metric
-perturbation into its trace δ g_μ^μ and its trace-free part
-δ g_{μν}. In this manner, one can identify the variables
-that satisfy homogeneous equations.
+
+
+For consistency with the rest of the paper, in <ref> we have assumed that (,,) is an n-exangulated category. However, the results from this section work in a more general setting. We describe this setting in what follows, and leave it to the interested reader to reformulate the claims and their proofs.
+
+Let  and  be additive categories and consider a biadditive functor ×→. The category , is defined by letting objects be elements α(C,A) with C and A, while a morphism from α(C,A) to β(D,B) is a pair (a,c) with a(A,B), c(C,D) and (C,a)(α)=(c,B)(β). This definition generalises the construction of the category of extensions from Subsection <ref>.
+
+
+We finish this section by demonstrating the use of <ref> in a concrete example.
+
+
+
+Consider a commutative ring R. For integers m,n≥0, let m,n(R) denote the set of m× n matrices which, when m,n>0, have entries in R. Note that m,0(R) consists of a single empty column vector of length m. Likewise, the set 0,n(R) consists of an empty length n row. There is a unique way of extending matrix multiplication to define a function l,m(R)×m,n(R)→l,n(R) for any integers l,m,n≥ 0. 
+
+Let  be the category of rectangular matrices over R, defined as follows. Objects of  are rectangular matrices Xm,n(R) for m,n≥0, and a morphism from Xm,n(R) to Yp,q(R) is defined by a pair of matrices (A,B)q,n(R)×p,m(R) such that  BX=YA. Composition is defined by component-wise matrix multiplication. The identity of an object Xm,n(R) is the pair (*[]I_n,*[]I_m) of identity matrices. 
+
+The category  is preadditive, where the addition of morphisms is given by component-wise matrix addition. Furthermore,  is in fact additive, where the direct sum X⊕ Y of Xm,n(R) and Yp,q(R) is given by the block-diagonal matrix in m+p,n+q(R) formed by taking X and Y in the diagonal blocks and 0 elsewhere. The zero object of  is the unique element of 0,0(R).
+
+We now use <ref> to compute the idempotent completion . Consider first the category  of finitely generated free R-modules, and let ×→ be the biadditive functor given by the -bifunctor (-,-). Using that any finitely generated free R-module is isomorphic to *[]R^n for some n≥ 0, it is straightforward to check that  is equivalent to the category  of extensions. This uses the fact that commutative rings have an invariant basis number, meaning that the value of n is unique.
+
+Applying <ref> now gives ≃. Observing that = (-,-), it follows from <cit.> that  is equivalent to the arrow category ^→ of , i.e. the category whose objects and morphisms are given by morphisms and commutative squares in , respectively. It is well-known that the idempotent completion of  is the category  of finitely generated projective R-modules; see e.g. <cit.>. We can thus conclude that  is equivalent to the arrow category ^→.
 
 
 
 
-  §.§.§ Solutions to the homogeneous equations
 
 
-The solutions of homogeneous wave equations in flat spacetime are widely
-known and understood, but since the initial data are subject to the
-initial constraints (<ref>), it is perhaps appropriate to
-briefly discuss how one might write the solutions explicitly in terms of
-the initial data. For a field δ_H satisfying a homogeneous
-wave equation □δ_H=0, the solution may be
-written in the form <cit.>:
 
-    δ_H(x) 
-         = - ∫_Σ d Σ^'_λ[ δ_H(x^') 
-            ∂^λ D(x,x^')
-            - D(x,x^') 
-            ∂^λδ_H(x^')
-          ] ,
-
-where d Σ^'_λ = (1/3!)ϵ_λαβγ dx^'α∧ dx^'β∧
-dx^'γ is the surface element on Σ, the underline
-denotes evaluation of a quantity on Σ, and the quantity
-D(x,x^'):=G^+(x,x^')-G^-(x,x^') is the difference
-between the retarded (-) and advanced (+) Green's functions, defined
-as 
-
-    G^±(x,x^')
-      
-         := - δ(x^0-x^' 0±|x⃗-x⃗^'|)/4π |x⃗-x⃗^'|
-      ,
-
-and satisfying the inhomogeneous equation □
-G^±(x,x^') = -δ^4(x-x^'). That (<ref>)
-is a solution of (<ref>-<ref>) can be seen
-by noting that D(x,x^'), being the difference of two Green's
-functions, is a solution of the homogeneous wave equation. It is
-straightforward to show that D(x,x^')=0 if x^0=x^0',
-and one can also show <cit.> that D(x,x^')
-satisfies the properties:
+§ 2-CATEGORICAL COMPATIBILITY
 
 
-    -.
-      ∫_Σ d Σ^'_τ[ 
-              _H(x^') 
-              ∂^τ D(x,x^') 
-        ]
-      |_x ∈Σ   = _H(x ∈Σ) ,
-      
-    .
-                ∂^2 D(x,x^')/∂Δ t^2|_Δ t=0   = 0
-      
-      .
-  
+
+The aim of this section is to prove <ref> in <ref>, which asserts that the constructions and results we have exhibited so far are compatible in a 2-categorical framework. We start by recalling the definition of the 2-functor  from <cit.>.
+
+Given an n-exangulated functor (,Γ)(,,)→(,,), it follows from <cit.> that there is a corresponding exact functor
+
+    (,Γ) (,)→ (,).
  
-where Δ t:=x^0-x^' 0. Equation (<ref>)
-follows from the fact that for a given |x⃗-x⃗^'|,
-D(x,x^') is by construction an odd function in Δ t. Given
-(<ref>), one can verify that the coefficients in
-(<ref>) do in fact coincide with the initial data (though
-note that (<ref>) only depends on the time derivatives of
-the fields). Of course, as indicated earlier, the initial data for the
-fields must satisfy the vacuum version of (<ref>).
-
-Given the simplicity of the vacuum wave equations and their resemblance
-to wave equations in ordinary Minkowski space it is tempting to write
-the solutions in terms of plane waves. While one can certainly obtain
-solutions to the wave equations in this manner, a difficulty arises from
-the fact that even in the vacuum case, the constraints
-(<ref>) are nontrivial, since the background expression
-for Ξ in the inversion coordinates is explicitly
-coordinate dependent. As a result, solutions satisfying the constraints
-do not have a clean mode separation in a Cartesian Fourier expansion
-(though perhaps an alternative mode decomposition may be appropriate).
+This functor is defined by (,Γ)(α) = Γ(α) on objects and by (,Γ)(a,c) = ( a, c) on morphisms. In addition, given an n-exangulated natural transformation (,Γ) ⇒ (,Λ) of n-exangulated functors (,Γ), (,Λ) (,,)→(,,), one can define a natural transformation (,Γ)⇒(,Λ) given by *[]_α  = (A,C) for α(C,A); see <cit.>.
 
 
 
+(See <cit.>.)
+Let = (0,1,2) n→ be defined by the assignments ini→i, 
+where:
 
-  §.§.§ Solutions to the inhomogeneous equations and including 
-matter
-
-
-For completeness, we discuss the solutions of equations
-(<ref>) and (<ref>). One may begin by
-assuming that one has in hand initial data satisfying the constraints
-(<ref>). We note that the structure of the vacuum
-equations has a hierarchy: one can first solve for δ s, δΦ_μν, δ d_μναβ, and δ
-g^μ_μ, then use the result to solve for δ g_{μν} and δΞ. Schematically, one may then write the
-inhomogeneous wave equations for the latter two in the following form
-(where S is a source that depends on the background field
-expressions and δ s, δΦ_μν, and δ
-g^μ_μ):
-
-    □δ_I(x) =  S(x),
-
-which yields a particular solution (with x^0=t, 
-x^' 0=t^'):
-
-    δ_I_0(x) 
-             = δ_H_0(x) 
-            - ∫_t_0^t dt^'∫ d^3x⃗^'[ 
-              G^-(x,x^')  S(x^')
-            ] ,
-
-where δ_H_0(x) is a solution to the homogeneous equation
-with initial conditions chosen so that the particular solution δ_I_0(x) has trivial initial conditions δ_I_0(x)=0 and ∂_t δ_I_0(x)=0 on
-Σ; this can in principle be done by evaluating the integral term
-and its derivative on Σ to obtain -δ_H_0(x^') and -∂_t δ_H_0(x^'). Finally, to obtain the solution corresponding to
-the prescribed initial data, one can then add to δ_I_0(x) a homogeneous solution of the form in equation
-(<ref>). Since we are interested in the initial value
-problem, we have chosen the retarded Green's function
-G^-(x,x^') in (<ref>). This is (as the reader
-might be aware) because G^-(x,x^') is only nontrivial for x^0
-> x^' 0, so that for a given point x, the field contributions
-from the integral in (<ref>) depend on the values of the
-source in the past of x (specifically over the past light cone of
-x).
-
-We note that the procedure described for the inhomogeneous equation can
-be straightforwardly extended to the full set of non-vacuum equations
-(<ref>), subject to the constraints (<ref>) on
-the initial data. As in the vacuum case, one has a hierarchy in which
-one can first specify the matter sources, then solve for the variables
-δ s, δΦ_μν, δ d_μναβ,
-and δ g_μν, and finally solve for the conformal
-perturbation δΞ using the previously obtained results. Of
-course, the preceding discussion glosses over the problem of solving the
-matter equations, however such analysis is matter-model dependent. Hence
-in the present analysis they are simply regarded as given sources in the
-equations.
+    0  (,,)  
+         (,),
+    1  (,Γ)  
+        (,Γ),
+    2 (  ) 
+        .
 
 
 
+It was shown in <cit.> that  defines a functor n→ that satisfies the properties of a 2-functor, and thus restricts to a genuine 2-functor . <ref> allow us to restrict  to idempotent complete categories. By abuse of notation, we write  for this restriction, where it should be noted that  is not the completion of the functor  in the sense of <ref> (see (<ref>)). We have 
 
- §.§ The far-field approximation and quadrupole-like formulae
+    =  (0,1,2)
+    	n→,
 
+where the assignment _i is defined as a restriction of i for i {0,1,2} and satisfies the same properties. Again, we obtain a 2-functor n→ when restricting 0-cells to small categories. Recall that the functors  and  were defined in Definitions <ref> and <ref>, respectively, while the exact equivalence 
 
+    (,,) 
+            (, )
+                → 
+    	(, )
+ 
+for (,,)n0
+was defined in the proof of . 
 
-
-As emphasised before, an appealing property of the wave formulation of
-the CEFEs is that the metric sector of the equations looks as the
-standard non-conformal Einstein field equations with some
-artificial-geometric matter term. This suggests that some of the
-standard techniques and approximation methods can be applied to the
-linearised wave CEFEs such as solving them in the far-field regime and
-obtaining quadrupole-like formulae.
-
-
-
-
-  §.§.§ The far-field approximation
-
-
-To derive the far-field approximation, we focus our attention not to the
-homogeneous part of the solution to equation (<ref>) but
-to the part generated by the sources. For simplicity, we omit nontrivial
-homogeneous solutions and δ_H_0(x) in the particular
-solution (which corresponds to an appropriate choice of initial data),
-so that the solution consists only of the integral in equation
-(<ref>). Upon evaluating the time integral, one obtains:
-
-    δ= -1/4π∫_Σ(t-|x⃗-x⃗^'|,x⃗^')/|x⃗-x⃗^'|d^3x⃗^'.
-
-This is of course just the standard expression one can find in standard
-textbooks—see  <cit.>.  To obtain a far-field expression in the
-unphysical set-up we start by recalling that the origin in the inversion
-(unphysical) Minkowski spacetime corresponds to spatial infinity i^0
-for the physical Minkowski spacetime so the far-field region in physical
-Minkowski spacetime corresponds to a neighbourhood of the origin in the
-inversion Minkowski spacetime.  Let ' and  be a points in
-the physical Minkowski spacetime with physical Cartesian coordinates
-(0, x̃^' i) and (0, x̃^i) respectively.
-Expressed in unphysical Cartesian coordinates, these points correspond
-to (0, x^' i) and (0,x^i). Hence, the distance r between
-' and  can be expressed through the vector
 
  
-    r⃗:=x⃗-x⃗^'=x⃗̃⃗
-          -x⃗̃⃗^'.
+The collection  of exact equivalences (,,) for (,,)n0 defines a natural transformation ⇒ as indicated in the diagram 
 
-In terms of the physical coordinates, imposing the far-field
-approximation means |x⃗̃⃗|>>|x⃗̃⃗^'|.
-Consequently,
- 
-    r:=|r⃗| = |x⃗̃⃗-x⃗̃⃗^'| 
-       ≃ |x⃗̃⃗|
-       =1/|x⃗|= 1/ρ.
-
-Therefore, in the far-field approximation one can write
-  
-    δ≃ -ρ/4π∫_ℝ^3 
-        (t-r,x⃗^')d^3x⃗^'.
+    [column sep=1cm]
+    nd[swap]r   d
+    nr[swap][Rightarrow, 
+    			shorten <= 18pt,
+                shorten >= 20pt,yshift=-5pt, xshift=2pt]ur   .
 
 
-In particular, for the case where δ is either δΦ_μν, δ g_μν or δ d_αβμν
-one can derive quadrupole-like formulae. To do so, it is necessary to
-compute the divergence of the source terms appearing in equations
-(<ref>), (<ref>) and (<ref>).
-Let's define
 
-    𝒮_μν    :=-4 δΦ _μν
-        - g_μν _αF^α
-        +  _μF_ν +  _νF_μ +
-        12δ F _μν
+
+In order to demonstrate the naturality of , we must show that 
+
+    [column sep=2cm]
+    (,) 
+    	r(,,)d[swap](,Γ)    (,)  
+    	d(,Γ)
     
-       S_μν   :=-2 δ T_(μ^α_ν)_α 
-      - _αδ T_μ^α_ν
-      + 1/6_{μ_ν}δ F, 
+    (,) 
+    	r(,,)    (,)
+
+commutes in  for any n-exangulated functor (,Γ) (,,) → (,,). That is, we need to show that (,Γ)(,,) and (,,)(,Γ) are equal as functors →.
+
+To this end, let (A,α,C) be an object in . On the one hand, we have that
+
+    (,Γ)(,,)(A,α,C) 
+    	= (,Γ) (α,(A,C)) 
+    	= (Γ(α),(A,C)),
+
+while on the other hand
+
+    (,,)(,Γ) (A,α, C) 
+    	= (,,) (A,Γ(α), C) 
+    	= (Γ(α),(A,C)).
+
+Hence, the functors (,Γ)(,,) and (,,)(,Γ) agree on objects. Consider next a morphism ((B,a,A),(D,c,C)) (A,α, C) → (B,β, D) in . We have 
+
+    (,Γ)(,,)((B,a,A),(D,c,C))
+    	   = (,Γ) ((B,D),(a,c),(A,C))
+       = ((B,D),( a, c),(A,C)) 
+       = (,,) ((B, a,A),(D, c,C))
+       = (,,)(,Γ)  ((B,a,A),(D,c,C)),
+
+which completes the proof. 
+
+
+The next result says that  satisfies the defining property of a 2-natural transformation between 2-functors; see <cit.>. 
+
+
+
+Let (,Γ) ⇒ (,Λ) be an n-exangulated natural transformation between n-exangulated functors (,Γ), (,Λ) (,,)→(,,). Then the square 
+
+    ()(,Γ)∘(,,)[equal]r[Rightarrow]d[swap]()()𝕀(,,)   (,,)∘ ()(,Γ) 
+    	[Rightarrow]d[xshift=2pt, yshift=0pt]𝕀(,,)()()
     
-       S_μναβ   :=
-      2 _[μδ T _|αβ|ν] 
-      + 2 _[αδ T_|μν|β] 
-      + 2 _β[ν_|σδ T_α|^σ_μ] 
-      + 2 _α[μ_|σδ T_β|^σ_ν].
+    ()(,Λ)∘(,,)[equal]r   (,,)∘()(,Λ)
 
-Recall that the fields encoded in ϕ satisfy the
-CEFEs, hence the background conformal factor satisfies
-Z_ab=0 as defined in equation
-(<ref>), which for the flat background
-case reduces to _μ _ν =  s_μν. A direct calculation using the latter expression  and
-the matter relations (<ref>) shows that
+commutes in ( , ).
 
-    ^ν𝒮_μν=□F_μ,     ^ν  S_μν= 
-      18□_νδ F,     ^λ  S_λασβ =
-      □δ T_σβα.
 
-The first two equations simply encode equations
-(<ref>) and (<ref>)  in a
-divergence-like format. The third equation in (<ref>) shows
-that equation (<ref>) propagates.
 
+Note first that we have the horizontal equalities by <ref>. Consider an arbitrary object (A,α,C)((C,C),(A,A)) in = ()(,,). On the one hand,  
 
+    (()() 𝕀(,,)(A,α,C)   = ()((,,)(A,α,C) ∘ ()(,Γ)(𝕀(,,)(A,α,C)
+       = ()((α,(A,C))∘(,Γ)(𝕀(α,(A,C))) 
+       = ()((α,(A,C))
+       = ( ()(α,(A,C))
+       = *[]_(α,(A,C))
+       = ((,Λ) (A,C),(,Λ) (A,C)*[]_α(,Γ)(A,C),(,Γ) (A,C))
+       = ((A,C), 
+    		((A)AA, (C)CC),
+    		(A,C)).
 
-  
-  For the scalar variables δ s and δΞ, the leading
-  order source terms can be evaluated directly. In the case of rank-2
-  tensors, a reason for reducing the sources to quadrupole form is
-  to make the field dependent on a single (the time-time) component of 
-  the source tensor.
-  
+On the other hand, we have
 
+    (𝕀(,,)()()(A,α,C)   = (𝕀(,,)()(,Λ)(A,α,C)∘(,,)(()()(A,α,C)
+       = (,,)*[]_(A,α,C)
+       = (,,)
+    			( (A, (A)AA, A) , (C, (C)CC, C) )
+       = ((A,C), 
+    		((A)AA,(C)CC),
+    		(A,C)),
 
+which finishes the proof. 
 
 
+Restricting to small categories, <ref> and <ref> yield the following corollary, demonstrating that idempotent completions and extension categories are compatible constructions in a 2-category-theoretic sense.
 
 
-  §.§.§ A quadrupole-like formula for δΦ_μν and 
-δ g_μν
 
+There is a 2-natural transformation 
+⇒
+of 2-functors from n to  consisting of exact equivalences.  
 
 
-Here, we derive quadrupole-like formulae for δΦ_μν and
-δ g_μν, which we discuss in tandem. Since the source term
-𝒮_μν contains δΦ_μν [cf. equation
-(<ref>)] first one solves for δΦ_μν
-and then for δ g_μν.  Let δ Q_μν = δΦ_μν or δ g_μν and ℱ_μ =
-18_μδ F  or  F_μ, and
-σ_μν = S_μν or 𝒮_μν,
-respectively.  Exploiting that equations (<ref>)
-and (<ref>) can be collectively written as
-^νδ Q_μν= ℱ_μ one has that
 
-    _0 δ Q_00=^iδ Q_i0 -ℱ_0,
-          _0 δ Q_0i=^jδ Q_ij
-      -ℱ_i,
 
-Thus, once δ Q_ij is determined, δ Q_0i can be
-obtained by formally integrating the second equation in
-(<ref>). In turn, δ Q_00 is obtained by
-integrating the first equation in (<ref>).  For the
-particular case of δΦ_μν one could instead use that
-δΦ_μ^μ=0 to solve algebraically for δΦ_00.
-Thus, one can reduce the discussion to that of obtaining a
-quadrupole-like formula for δ Q_ij. Recall that the far-field
-approximation reads
 
-    δ Q_ij≃ -ρ/4π∫_Σσ_ij(t-r,x⃗^')d^3x⃗^'.
 
-If one were to restrict the calculations to gauge source functions
-satisfying □F^μ = □_μδ F= 0 (in particular, F^μ= δ F=0) then the integrand
-would satisfy ^νσ_μν=0 leading to an
-expression which is formally identical to the quadrupole formula in the
-non-conformal set-up for the physical metric perturbation —see for
-instance <cit.>.  However, it is instructive to keep the
-gauge source function terms since it will serve as model for the
-derivation of the quadrupole-like formula for the rescaled Weyl tensor
-where the divergence of the source term S_μναβ cannot
-be set to zero by gauge considerations —see the last equation in
- (<ref>). Here, we only assume that the gauge source
-functions are specified. The first two equations (<ref>) in the
-current notation read ^νσ_μν =
-□ℱ_μ, which in components read
 
-    _0σ^00 + _iσ^i0
-      =□ℱ^0,     _0σ^0i
-      + _jσ^ij = □ℱ^i.
+§ THE WEAK IDEMPOTENT COMPLETION
 
-Integrating _i(σ^ikx^' j) over a region
-Ω⊂Σ and using Gauss' law gives the following
-identity
 
-    ∫_∂Ωσ^ik x^' j ds_i =∫_Ωσ^jkd^3x⃗^' + ∫_Ω x^' j_i
-      σ^ikd^3x⃗^',
 
-where we have used _i x^' j = δ_i^j and
-ds_i is the surface element of ∂Ω.
+The aim of this section is to relate our main results to the setup of weak idempotent completions. Note that the definitions and results in <ref> rely on concepts and notation which should be recalled from previous sections. Many of the proofs in the weakly idempotent complete case are straightforward modifications of those for the idempotent completion. However, notice that our proof of the key result <ref> differs significantly from the proof of <ref> and relies on a result from <cit.>.
 
+Recall that an additive category  is said to be weakly idempotent complete if every retraction has a kernel or, equivalently, if every section has a cokernel; see <cit.>. Every idempotent complete category is weakly idempotent complete; see e.g.  and <cit.>. For more detail on weak idempotent completions, see e.g. <cit.>. 
 
-   It will be assumed that the matter fields encoded in
-  S_μν and S_μναβ, as defined in equation
-  (<ref>), have compact support in Ω⊂ℝ^3.  
 
 
+(See <cit.>.) 
+The weak idempotent completion  of  is the full subcategory of  that consists of all objects (X,e) for which 𝕀X-e splits in . 
 
 
+Note that  is an additive subcategory of  and that there is a canonical additive inclusion functor → defined by (X)  (X,𝕀X) for X and (f)  (𝕀Y,f,𝕀X) for f(X,Y). This functor is 2-universal among additive functors from  to weakly idempotent complete categories; see <cit.>. The functor → factors through  via the canonical inclusion functor →, which is the identity on objects and morphisms. In other words, there is a commutative diagram
 
-  
-Recall that  □Φ_μν=S_μν, then
-under assumption <ref> it follows that
-δΦ_μν has compact support in Ω.
-Furthermore, choosing
-the gauge source function F^μ appropriately,
-one can then assume that that 𝒮_μν [as given in equation
-(<ref>)] has compact support in Ω.
+    rrdr[swap]      
+       ur[swap]
 
+of additive categories and functors.
 
+Suppose that (,) is an exact category. One defines an exact structure  on  as follows. An object of →→ is in  if it is a direct summand of an object in the image of  under the functor →→→→→ induced by →. In particular, a kernel-cokernel pair lies in  if and only if it is a kernel-cokernel pair in  in which all three terms lie in . 
 
+<ref> below shows that (,) is a fully exact subcategory of (,). This means that  is extension-closed in (,) and that  coincides with the inherited exact structure; see <cit.>.
 
-Using assumption <ref> and Remark
-<ref>, equations (<ref>) and
-(<ref>) give
 
-    ∫_Ωσ^jkd^3x⃗^'=-∫_Ωx^'(j□ℱ^k)d^3x⃗^' +
-      d/dt^'∫_Ωx^'(jσ^k)0d^3x⃗^'.
 
-Similarly, integrating _k(σ^0kx^' ix^'
-  j) over a region Ω and proceeding as before, making use of
-Gauss' law one obtains
+The pair (,) is a fully exact subcategory of (,). The inclusion (,) → (,) is a fully faithful exact functor that reflects exactness.
 
-    ∫_∂Ωσ^0kx^' ix^' j ds_k
-      =∫_Ω x^' ix^' j_k
-      σ^0kd^3x⃗^' + 2 ∫_Ω x^' (iσ^j)0d^3x⃗^'.
 
-Then using Remark <ref> and equations
-(<ref>) and (<ref>) renders
 
-    ∫_Ω x^'(iσ^j)0d^3x⃗^'  =
-      -1/2∫_Ω x^' ix^' j□ℱ^0 d^3x⃗^'
-      + 1/2d/dt^'∫_Ω x^' ix^' jσ^00d^3x⃗^'
+Suppose that 
+[column sep=1.7cm]
+(A,A)
+    r(B, a, A)    (B,B)
+    r(C, b, B)    (C,C)
+is a conflation in (,) with (A,A),(C,C). By <cit.>, there is an object (D,D) and an isomorphism 
 
-Combining equations (<ref>)
-and (<ref>) one gets
+    [column sep=1.7cm]
+    (A,A)
+        r(B, a, A)[equals]d    (B,B)
+        r(C, b, B)d(D, r, B)    (C,C)
+        [equals]d
+    
+    (A,A)
+        r(D, c, A)    (D,D)
+        r(C, d, D)    (C,C)
 
-    ∫_Ωσ^jkd^3x⃗^' =
-         1/2d^2/dt^'^2∫_Ω x^' i x^' jσ^00d^3x⃗^'-1/2d/dt^'∫_Ω x^' ix^' j□ℱ^0 d^3x⃗^'
-       -∫_Ωx^'(j□ℱ^k)d^3x⃗^'
+in the category *[]𝐊^3_(;(A,A),(C,C)) defined in <cit.>. By <cit.>, the morphism (D, r, B) is an isomorphism in , so  is extension-closed. Since a sequence lies in  if and only if it lies in  and has all terms in , the inherited exact structure (see <cit.>) coincides with . This shows that (,) is a fully exact subcategory of (,).
 
-therefore, using the far-field approximation (<ref>)
-gives
+As a consequence, we observe that (,) → (,) from (<ref>) is an exact functor. One sees directly that (,) → (,) is fully faithful and exact. That it reflects exactness follows from (,) → (,) reflecting exactness (see <ref>) and the commutative diagram (<ref>).
 
-    δ Q_ij≃ -ρ/8πd^2ℐ_ij(t')/dt'^2|_t'=t-r +ρ/8πd𝒥_ij(t')/dt'|_t'=t-r -ρ/4π𝒦_ij(t')|_t'=t-r
 
-where
+Suppose that (,) is also an exact category. Let , (,)→ (,) be exact functors and consider a natural transformation ⇒. The completions  and  restrict to give exact functors , (,)→ (,). Moreover   restricts to a natural transformation 
 
-    ℐ^ij:= ∫_Ωσ^00x^' ix^'
-        jd^3x⃗^',     𝒥^ij := ∫_Ω
-      x^' ix^' j□ℱ^0d^3x⃗^',     𝒦^ij := ∫_Ω□ℱ^(ix^' j) d^3x⃗^'.
+    (X,e)(X,e)⇒.
 
+ 
+We write  and  for the restrictions to weakly idempotent complete 0-cells in  and , respectively, and note that  is a 2-category. 
 
-As discussed earlier, the gauge source functions could be set to zero, 
-but in certain applications, it can be useful to consider general gauge 
-source functions. Of course, one may wish to implement a scri-fixing 
-gauge for this situation, but such a gauge may be incompatible with the
-assumption that 𝒮_μν has compact support in Ω.
-However, the purpose of the present analysis is to provide a template
-for deriving the quadrupole formula for the Weyl tensor, in which such a
-scri-fixing gauge can be implemented.
 
 
+Let = (0,1,2) → be defined by the assignments
+ii→i, 
+where:
 
-  
-  The reader might wonder whether quadrupole-like formulae are
-  appropriate for trace-free energy-momentum tensors, which often
-  corresponds to that of radiation. The concern is that in order to
-  implement the far-field approximation, one implicitly assumes a
-  slow-motion approximation, which is inconsistent with radiation
-  propagating at the speed of light. However, geons
-  <cit.> and
-  photon stars
-  <cit.>
-  provide examples of stationary compact sources formed from
-  self-gravitating radiation, which may at the very least provide useful
-  toy models (the extension of our results to the case of nonvanishing
-  trace will be discussed elsewhere). Nevertheless, the primary reason
-  for the preceding analysis is to provide a template for deriving the
-  quadrupole formula for the rescaled Weyl tensor, which can be
-  straightforwardly generalised to the case with trace. This is discussed
-  further in Remark <ref>. 
-  
+    0  (,)  
+         (,),
+    1  ()  
+        ,
+    2 (  ) 
+        .
 
 
 
+These assignments are well-defined by the discussion above. As a consequence of <ref>, we see that  satisfies the properties of a 2-functor, because  and  are just restrictions of  and , respectively. Thus, one deduces an analogue of <ref>. 
 
-
-
-  §.§.§ A quadrupole-like formula for the rescaled Weyl tensor 
-perturbation
-
-
-We now turn to the case of the rescaled Weyl tensor δ
-Q_αβμν=δ d_αβμν. Here, the source
-term S_αβμν is given entirely in terms of matter fields
-—see equation (<ref>). Expanding in components the
-divergence equation (<ref>) one has
-
-    _0 S^0μσν + _k
-      S^kμσν = □δ
-      T^σνμ
-
-Considering the case σ=j in equation (<ref>) one has
-
-    _0 S^0μ j ν + _k S^kμ j ν =
-      □δ T^j νμ
-
-Integrating _k ( S^k μ j ν x^' i) over Ω
-and using Gauss' law gives
-
-    ∫_∂Ω S^k μ j νx^' i ds_k = 
-      ∫_Ω S^iμ jν d^3x⃗^' 
-      + ∫_Ω x^' i_k S^k μ j ν
-      d^3x⃗^'
-
-Using assumption <ref> the boundary term in the
-left-hand side of (<ref>) vanishes. Solving for the
-integral with S^iμ j ν and substituting _k S^k μ
-  j ν using equation (<ref>), gives the following
-expression (after symmetrising the spatial indices):
-
-    ∫_Ω S^(i |μ| j) νd^3x⃗^' =
-      - ∫_Ω x^' (i□δ T^j)νμ
-      d^3x⃗^'
-      +  d/dt^'∫_Ω  x^' (i|  S^0μ |j) ν
-      d^3x⃗^' .
-
-Now, considering the case σ =0 in equation (<ref>) one
-has
-
-    _0  S^0ν 0 μ  + _k  S^k ν 0 μ
-      =  □δ T^0 μν.
-
-Integrating  _k ( S^0 μ k ν x^' ix^' j)
-over Ω and using Gauss' law gives
-
-    ∫_∂Ω S^0 μ k νx^' ix^' j ds_k =
-      2 ∫_Ω  S^0 μ (j |ν| x^' i) d^3x⃗^'
-      + ∫_Ω x^' ix^' j_k  S^0 μ k ν d^3x⃗^'.
-
-Using assumption <ref> to remove the boundary terms and
-exploiting the pair-interchange-symmetry of S_μναβ to
-rewrite _k S^0 μ k ν in using equation
-(<ref>) renders
-
-    ∫_Ω S^0 μ (j |ν| x^' i)d^3x⃗^' =
-      -1/2∫_Ω x^' ix^' j□δ T^0 μν d^3x⃗^' +
-      1/2d/dt^'∫_Ω x^' ix^' j
-      S^0ν 0 μd^3x⃗^'.
-
-Together, equations (<ref>) and
-(<ref>) give
-
-    ∫_Ω S^(i |μ| j) ν d^3x⃗^' = 1/2d^2/dt^'^2∫_Ω x^' ix^' j
-      S^0ν 0 μd^3x⃗^' -1/2d/dt^'∫_Ω x^' ix^' j□δ T^0
-        μνd^3x⃗^' - ∫_Ω x^' (i□δ T^j)νμ d^3x⃗^'.
-
-To employ equation (<ref>) one needs to perform an
-electric-magnetic decomposition of the tensors involved in the current
-discussion.  Consider any tensor W_abcd with the symmetries of the
-Weyl tensor and let n^a be a normalised timelike vector such that
-n_an^a=-1. Define the associated projector as
-h_a^b:=g_a^b + n_an^b. Then, the electric part E_ab
-and magnetic part B_ab of W_abcd are given by
-
-    E_ab:=W_efgdn^fn^dh_a^eh_b^d,     
-    B_ab:=W^*_efgdn^fn^dh_a^eh_b^d,
-
-where B_ab=-12ϵ_cd^efW_abef with
-ϵ_abcd is the (4-dimensional) volume-form of g_ab.  In
-practice (particularly when working in an adapted frame), instead of
-working directly with B_ab it is simpler to use
-
-    B_abc:=W_efghn^fh_a^eh_b^gh_c^h,
-
-which is related to B_ab via B_ab= -
-1/2B_acdϵ_b^cd where
-ϵ_abc:=ϵ_fabcn^f is the (3-dimensional) volume-form
-of h_ab —see <cit.> for further discussion on the
-electric-magnetic decomposition. In the present case, since the
-background is flat, one can simply take the normal vector to be n^ν=
-δ_0^ν so that the electric-magnetic split of
-d_μναβ simply correspond to
-
-    δ d_ij:= δ d_i0j0,     δ d_ijk:=δ
-    d_i0jk.
-
-The wave equation for δ d_μναβ, which compactly
-written  reads □δ d_μναβ=
-S_μναβ, can then be split into the wave equations for
-d_ij and d_ijk:
-
-    □δ d_ij= S_ij,     □δ d_ijk= S_ijk,
-
-where S_ij:=  S_i0j0 and S_ijk:= S_i0jk. Using the
-far-field approximation expression (<ref>) and equation
-(<ref>) then gives
-
-    δ d_iμ j ν≃ -ρ/8πd^2I_ijμν(t')/dt'^2|_t'=t-r +ρ/8πdJ_ijμν(t')/dt'|_t'=t-r +ρ/4π
-     K_ijμν(t')|_t'=t-r,
-
-where
-
-    I^ij μν:=∫_Ω y^iy^j δ S^0ν 0 μd^3y⃗,
-           J^ij μν:=∫_Ω y^iy^j □δ
-      T^0 μνd^3y⃗,      K^ij μν:= ∫_Ω y^(i□δ T^j)νμ d^3y⃗.
-
-In particular, setting μ=0 and ν=0 one gets the quadrupole-like
-expression for δ d_ij and similarly taking μ=0 and ν =
-k for δ d_ijk.  Proceeding as described before and exploiting
-the symmetries of S^μναβ (those of the Weyl tensor) and
-those of δ T^αμν [cf. equation
-(<ref>)] renders
-
-    δ d_ij≃ρ/4π K_ij00(t')|_t'=t-r ,
-          δ d_ijk≃ρ/4π K_ijk0(t')|_t'=t-r,
-
-Recall that the rescaled Cotton tensor T_αμν can be
-expressed in terms of the derivatives of the unphysical energy momentum
-tensor. Therefore equation (<ref>) allows one to
-express the perturbation to the rescaled Weyl tensor in the far-field
-approximation in terms  derivatives of the perturbation to the
-unphysical energy momentum tensor δ T_μν and background
-quantities via equation (<ref>).
+Throughout the rest of this section, suppose that (,,) is an n-exangulated category. The next result is an analogue of <ref>, but interestingly the proof is very different. 
 
 
  
-   Although the focus of this article has been in the conformal
-  spacetime set-up —and hence restricted to trace-free matter models—
-  an analogous calculation can be performed directly in the physical
-  spacetime, lifting then the trace-free  matter restriction,
-  obtaining a quadrupole-like formula for perturbations of the Weyl
-  tensor.  Observe that, for the derivation of the wave equation
-  satisfied by the rescaled Weyl tensor, the specific form of the
-  rescaled Cotton tensor (in terms of the unphysical energy-momentum
-  tensor) is never used. It follows that for the physical set-up, one 
-  gets a
-  formally identical equation.  The wave equation for the Weyl tensor
-  has been derived for instance in <cit.> and <cit.>.
-  Therefore, the analysis of section <ref> would still
-  hold replacing the rescaled Weyl tensor d_abcd with the Weyl
-  tensor C_abcd and the rescaled Cotton tensor T_abc by its
-  physical counterpart T̃_abc which written in terms of the
-  physical energy-momentum reads:
-  
-    T̃_abc:= ∇̃_[aT̃_b]c +
-        1/3g̃_c[b∇̃_a](λ- T̃).
+If  is weakly idempotent complete, then  is also weakly idempotent complete.
 
 
+
+Let (a,c)α→β be a morphism in  for α(C,A) and β(D,B). Suppose that this morphism is a section. Thus, there is a retraction (r,s)β→α in  satisfying (ra,sc) = (r,s)∘ (a,c) = 𝕀α = (𝕀A,𝕀C). In particular, this implies that a and c are sections in . Since  is weakly idempotent complete, these morphisms each admit a cokernel, which we denote by b =  a and d =  c. We have that (b,d) is a cokernel of (a,c) in  by , so  is weakly idempotent complete.
+
+
+It was shown in <cit.> that the weak idempotent completion  of  admits an  structure because it is an extension-closed subcategory of (,,1mu) in the sense of <cit.>. We denote the corresponding n-exangulated category by (,,3mu). We now recall how  and  are defined.
+
+
+
+(See <cit.>.)
+The biadditive functor ×→ is the restriction of  to ×. The exact realisation  of  is defined as follows. Suppose that (A,α,C)((C,C),(A,A)) is an -extension. Then (A,α,C) = [ ∙ ] for some  complex ∙ in  by <cit.>. 
+Thus, it is declared that (A,α,C) = [ ∙ ].
+
+
+<ref> has the following immediate corollary. 
+
+
+
+(, ) is a weakly idempotent complete exact category. 
+
+ 
+Recall from the proof of <ref> that we have an exact equivalence 
+
+    (,,) 
+            (, )
+                → 
+    	(, )
+ 
+with quasi-inverse (,,) for each n-exangulated category (,,). It follows from <ref> that (,,) restricts to a functor 
+
+    (,,)
+        (, )
+        → (, ).
+
+To see this, let (A,α,C)((C,C),(A,A)) and consider (,,)(A,α,C) 
+     = (α,(A,C)).
+Note that 𝕀α - (A,C)α→α is a morphism of -extensions since (A,C)(α). We must show that 
+ 𝕀α - (A,C)
+     = (𝕀A-A,𝕀C-C) 
+splits in . This follows from <ref>, as (A,A),(C,C) means that 𝕀A-A and 𝕀C-C split in .
+
+A similar argument as above shows that (,,) restricts to a functor 
+
+    (,,)
+        (, )
+        → 
+        (, ).
+
+Note that (,,) and (,,) are mutually quasi-inverse as they are restrictions of (,,) and (,,). Since it is straightforward to check that (,,) and (,,) preserve the exact structures, we have the following.
+
+
+
+There is an exact equivalence 
+(,,) (, )
+→ (, ) 
+given by the restriction of (,,). 
+
+
+Suppose that (,Γ) (,,)→ (,,) is an n-exangulated functor. One can define a natural transformation Γ(-,-) ⇒(-,-) by setting 
+
+    ((C,C),(A,A))(A, α, C) 
+          (A, Γ(α), C).
+
+Notice that Γ is just a restriction of Γ. We claim that the pair (,Γ) is an n-exangulated functor (,,3mu)→(,,3mu). To verify this, assume that (A,α,C) = [∙], which implies . This yields 
+, as (,Γ) is n-exangulated by <ref>. Since (∙) is a complex in , we obtain 
+
+    (Γ(A,α,C)) 
+        = [(∙)] 
+        = [(∙)]
+ 
+as required.
+
+Let (,Γ) ⇒ (,Λ) be an n-exangulated natural transformation between n-exangulated functors (,Γ),(,Λ)  (,,)→ (,,). Using that the completion (,Γ) ⇒ (,Λ) is an n-exangulated natural transformation by <ref>, the same holds for the restriction (,Γ)⇒ (,Λ). 
+
+We write n for the collections obtained by only considering weakly idempotent complete 0-cells in n. Based on the discussion above, we may thus define  
+
+    = (0,1,2) n→n
+
+using assignments
+, 
+where:
+
+    0  (,,)  
+         (,,3mu),
+    1  (,Γ)  
+         (,Γ),
+    2 (  ) 
+        .
+
+It is straightforward to check that the analogue of <ref> holds for .
+
+As an application of <ref>, we can restrict  to weakly idempotent complete categories. This restriction is denoted by
+
+    =  (0,1,2) n→,
+
+where i is the restriction of i for i {0,1,2} and satisfies the same properties. The proof of <ref> yields the next theorem. Similarly, analogues of <ref> and <ref> follow.
 
 
  
-   We note that the expression for S_μναβ is
-  independent of the choices for the gauge source function. For this
-  reason, one can choose the scri-fixing gauge independently of the
-  assumption that S_μναβ has compact support in
-  Ω; the quadrupole-like formula we obtain for the rescaled Weyl
-  tensor is therefore compatible with any gauge choice, in particular
-  the scri-fixing gauge introduced earlier.
+The collection ' of exact equivalences (,,) for (,,)n0 defines a natural transformation ⇒. 
 
 
+By <cit.>, there is an n-exangulated functor (,) (,,) → (,,1mu), where (α) = (𝕀A,α,𝕀C) for α(C,A). Similarly, it is shown in <cit.> that (,) (,,) → (,,3mu) is n-exangulated, where (α) = (𝕀A,α,𝕀C). Diagram (<ref>) can be augmented to a commutative diagram 
 
+    (,,)
+        rr(,)dr[swap](,)       (,,1mu) 
+        (,,3mu)
+        ur[swap](,)
 
+in n, where (B,β,D)  (B,β,D) for (B,β,D)((D,D),(B,B)). Using the functor n→, the diagram (<ref>) induces the commutative diagram 
 
+    (,)
+        rr(,)dr[swap](,)       (,) 
+        (,)
+        ur[swap](,)
 
+in .
 
+Building on the work in <ref>, it is straightforward to check that we obtain <ref> below. We note that there is a similar commutative diagram involving the exact equivalence (,,) and its restriction (,,).
 
-§ SUMMARY AND DISCUSSION
 
+The diagram
 
-
-
-In this article, we have presented the linearisation of the wave-like
-hyperbolic reduction of the CEFEs in a GHG gauge for a general
-background. As a first step toward studying the linear perturbations of
-spacetimes using the conformal CEFE approach, the equations have been
-particularised to the case where the background is the inversion
-(unphysical) Minkowski spacetime. Conceptually, when studying
-perturbations of the physical Minkowski spacetime, one can in principle
-use any conformally flat metric so that
-d_μναβ=0. However having a non-vanishing
-Φ_μν makes the equations quite cumbersome. Hence,
-as a first analysis, we have opted to use as a background the inversion
-Minkowski spacetime for which Φ_μν=R=0.
-For this background, we discuss the propagation of the gauge (the
-generalised Lorenz gauge and the linear version of the conformal
-constraints). The fact that the chosen background is flat permits the
-use of techniques similar to those of the classical methods in physical
-spacetime to study gravitational waves. In this manner, we have obtained
-the conformal CEFE counterpart of the classical linearisation of the
-(physical) Einstein field equations.
-
-
-
-
-Nevertheless, one may wish to consider linearising around non-flat
-conformal representations of the Minkowski spacetime. A particularly
-interesting choice is the i^0-cylinder representation of Minkowski
-spacetime, as this is particularly useful for studying the gravitational
-field close to the critical sets ℐ^±—the region where
-null-infinity ℐ and spatial infinity i^0 meet.  Although
-this analysis has been done via the spin-2 equation
-∇_A'^Aϕ_ABCD=0 in <cit.> (see also
-<cit.> for a discussion of the solutions of
-wave equations in this background) where it has been shown that the
-(linearisation of rescaled Weyl spinor) spin-2 field develops
-logarithmic terms, it would be of interest to see how these logarithmic
-terms manifest in the metric, which is the variable employed in most
-perturbation schemes in physics (such as the post-Minkowskian
-expansions). Another interesting class of backgrounds are Petrov type D
-spacetimes such as Kerr, so that a conformal Teukolsky-like equation may
-be obtained; however, a different linearisation procedure (such as that
-of Chandrasekhar<cit.>), may be more appropriate in that case.
-These avenues will be pursued in future work.  More generally, the
-present work represents a first step into studying linear perturbations
-of spacetimes of physical interest within the CEFE
-framework.
-
-
-
-
-A particularly useful result of this paper is the development of a
-scri-fixing strategy using gauge source functions for CEFEs.  Our
-strategy provides an alternative to more abstract gauges based on
-conformal curves and conformal geodesics <cit.>, one that is
-particularly well-suited for numerical implementation. Though the
-strategy is initially developed for the linearised equations (which are
-expected to be good approximation in the weak field region of
-asymptotically flat spacetimes of physical interest), the generalisation
-to the nonlinear case, as discussed in the main text, is
-straightforward. A minor limitation of this scri-fixing strategy in the
-asymptotically flat setting is that the initial data must be prescribed
-on slices that intersect future null infinity (as opposed to spatial
-infinity), nonetheless our scri-fixing strategy fits well within the
-hyperboloidal approach to Numerical Relativity.
-
-
-
-
-Finally, we have constructed quadrupole-like formulae for the CEFEs
-linearised around a flat background. While the quadrupole-like formulae
-for δ g_μν and δΦ_μν require gauge
-source functions with compact support and a trace-free energy-momentum
-tensor, the quadrupole-like formula we obtain for the Weyl tensor is
-independent of gauge choice and is formally identical to the case where
-the energy-momentum tensor has nonvanishing trace. Since the Weyl tensor
-yields an unambigious notion of gravitational radiation at future null
-infinity, our result provides a familiar prescription for computing
-gravitational waveforms at null infinity generated by weakly gravitating
-sources in the linear approximation.
-
-
-
-
-
-
- §.§ Acknowledgements
-
-
-
-
-We have profited from conversations with Juan Valiente Kroon and David
-Hilditch and Alex Vañó Viñuales.  We also thank J. Valiente
-Kroon for sharing a Mathematica notebook where  the main
-calculations of <cit.> were done.  EG holds a FCT (Portugal)
-investigator grant 2020.03845.CEECIND.  JF acknowledges support from
-FCT (Portugal) program UIDB/00099/2020. JF is grateful to the Yukawa
-Institute for Theoretical Physics, Kyoto University, which hosted a
-visit during which a part of this work was performed.
-
-
-
-
-
-
-
-
-
-§ EXPLICIT EXPRESSIONS FOR LINEARISED CEFES
-
-
-
-
-
-Here, we provide expressions for the right-hand side of the linearised
-wave-CEFEs, which are given below (ϕ and  schematically
-representing the respective field variables and gauge sources):
-
-    □δ g_μν   =
-        H^g_(μν)(δϕ,
-        δϕ  ;  ϕ, , 
-        ϕ,
-         )
-        
-    □δΞ    = H^Ξ_(δϕ, δϕ  ;  ϕ, , ϕ )  
-    □δ  s 
-            = 
-        H^s(δϕ, δϕ  ;  ϕ, , ϕ,
-         )   
-    □δΦ_μν   = 
-        H^Φ_(μν)(δϕ,
-        δϕ  ;  ϕ, , ϕ,
-          ,  F, δ F )
-        
-    □δ  d_μναβ    =
-        H^d_[μν][αβ](δϕ, 
-        δϕ  ;  ϕ, , ϕ,
-        ϕ,  ) .
-
-
-To give more concise expressions, the quantities  on the
-right-hand side of the equations above are provided below without
-explicit (anti)symmetrisation; the appropriate (anti)symmetrisation of
-indices is indicated in equation (<ref>).  This
-calculation has been performed using the xPert package of the
-suite xAct  in Mathematica <cit.> for metric
-perturbation theory.
-
-
-    H^g_μν   := -4 δΦ _μν +8 
-      _(μ^αδ g_ν )α -2 δ
-      g^αβd_(μ |α |ν )β 
-      + 16δ
-      g_μν + δ g^α_α (-2  _μν
-      - 16_μν)
-      + 2  _(μ_ν )
-       
-      + _μν
-      (12δ F + 2 δΦ ^α_α -2
-      ^αβδ g_αβ - 
-      _α^α)
-
-
-
-  H^Ξ_     := - 16 δΞ- 16
-  δF + 4 δs + (12 ^3 ^μν - ^μν) δg_μν +
-  (124 - s) δg^μ_μ +
-  ^μ _μ
-
-
-    H^s    := (12)^2 (δΞ
-      - 14δ g^μ_μ)
-      +  ^μν (2 δΦ _μν
-      -  ^3 δ T_μν 
-      + _μν 
-      (δΞ + 12δ g^α_α)
-      + 112δ g_μν
-      -  sδ g_μν
-        
-      - _μ^αδ g_να)
-      
-      + ^μν (-  ^3 δΦ _μν 
-      + 12 ^5 δ T_μν
-      -  12 ^2  _μν 
-      (6 δΞ + δ g^α_α)
-      + 18 ^4 _μν 
-      (10 δΞ + δ g^α_α) 
-       
-      + 12 ^2  δ g_μν
-      ( s  -  112 )
-      + (  ^3  _μ^α
-        - 14 ^5  _μ^α
-        )
-      δ g_να) +
-      24 
-      (
-        sδ g^μ_μ + 13 
-        (δ F  - 12 δ s  
-        - 3  ^μ _μ )
-      )
-      
-       
-      + 16 ^μ (3 δ  g^να
-      ( ^2  _α_μν
-      -2   _α _μν) 
-      -  _μδ  F)  
-      - 16 ( sδ F  
-      + _μδΞ ^μ)
-      - ^μ _μν ^ν
-       
-      + (δ T_μν
-      - _μ^αδ g_να)
-       ^μ ^ν 
-      + 18δ g_μν ^μ ^ν +  _μν
-      (12 ^2 ^μ^ν  
-      + 2   ^μ ^νδΞ
-       
-      + (δΞ + 12δ g^α_α)
-       ^μ ^ν)
-
-
-
-    H^Φ_μν    := 13δΦ _μν
-      + 12 ^3 ^αδδ d_μανδ
-      - 2  _μ^δ _νδδ g^α_α
-      - 112 _μν 
-        (2 δ F  + δ g^α_α)
-      - 2  _μ^αδ g^δβ_νδαβ
-       
-      + _μανδ 
-      (-2  ^αδδΞ
-      + 12  (3 ^αδδΞ
-      - 4 δΦ ^αδ 
-      +  ^2 δ T^αδ))
-      + 124 (δ g^α_α_μν
-      - 12δ g_μν) □ _
-       
-      + (4  ^αδδ g_α^β
-        - ^δβδ g^α_α
-        + 14 ^3 (
-            -4 ^αδδ g_α^β
-            + ^δβδ g^α_α)
-        ) _μδνβ
-      - 2 δ T_μ^α_ν _α
-       
-      +  ^αδ (
-        - 2 δ d_μανδ
-        - 2  _μνδ g_αδ
-        -  _αδδ g_μν
-        - 2 δΦ _αδ_μν
-        + 2  _α^βδ g_δβ_μν)
-      - 2 _μ^α_ν _αδΞ
-       
-       + ^α (_μαν 
-       +  _α _μν)
-       + δ g^αδ _α_μδν
-       +  _αδ g_νδ (
-          - ^αδ_μ
-          + 12_μ^αδ
-          + 2  ^α _μ^δ)
-      
-       
-        -  ^αδ T_μαν
-      - δΞ ^α_μαν
-      + 2 δ g^αδ_μαν _δ
-      + (- 12_μ^αδ
-        -2  ^α _μ^δ) 
-         _δδ g_να
-       
-      + 112 _αδ g_μν ^α
-      + 124_μν(
-        -  _αδ g^δ_δ^α
-        + ^α _α
-        + δ g^αδ _δ _α)
-      + δ g^αδ _δ _α _μν
-       
-      +  _αδ g^δ_δ (
-        - 34_μ^α_ν
-        -  ^α _μν 
-        +  _μ _ν^α)
-      - 16 ^α _μδ g_να
-      - ( 14_μ^α_α
-      +  ^α _μα)  _νδ g^δ_δ
-       
-      +  _μ^α (4 δΦ _να
-      + 2  _ν^δδ g_αδ
-      + 16δ g_να 
-      + 2  _α^δδ g_νδ
-      + 2  _ν_α) 
-      + (12_μ^αδ
-      + 2  ^α _μ^δ) 
-         _νδ g_αδ
-       
-      + 112 _μ _νδ g^α_α
-      - 112δ g^α_α _ν _μ
-      + 16 _{ν _μ}δ F
-
-
-
-
-    H^d_μναβ    :=
-      12δ d_μναβ
-      - ^2 _α^δδ d_μνβδ
-      -  ^2 _μ^δδ d_νδαβ
-      - ( 12δ F  
-        + 4  ^δσδ g_δσ
-        + 112δ g^δ_δ) 
-        _μναβ
-       
-      + (-2 _α^δδΞ  
-        + 4 δΦ _α^δ
-        -  ^2 δ T_α^δ  
-        - 16δ g_α^δ
-        + 2  _α^δδ g^σ_σ) _μνβδ
-      - 2 δ d_α^δ_β^σ_μνδσ
-       
-      + (-2  ^δσδ g_αδ
-        +  ^2 _α^δδ g_δ^σ
-        - 6  _α^δδ g_δ^σ)
-        _μνβσ
-      - 2_αδβσ 
-        ( δ d_μν^δσ
-        +  δΞ_μν^δσ)
-      
-       
-      - (2 _μ^δδΞ
-        - 4 δΦ _μ^δ  
-        +  ^2 δ T_μ^δ
-        + 16δ g_μ^δ
-        - 2  _μ^δδ g^σ_σ) 
-        _νδαβ
-      + 4 δ g_μα _δ_β^δ_ν
-      + _μαβ _νδ g^δ_δ
-       
-      - 2(4 δ d_μ^δ_α^σ
-        +  ^2 ^δσδ g_μα
-        + 2 δΞ_μ^δ_α^σ) 
-        _νδβσ
-      + ( ^2 _μ^δδ g_δ^σ
-        - 6  _μ^δδ g_δ^σ
-        -2  ^δσδ g_μδ) 
-        _νσαβ
-       
-      + 2δ g^δσ (
-        _βδσγ_μνα^γ
-        + _μ^γ_αβ_νδσγ)
-      + 4 δ g^δσ (
-        _ασβγ_μνδ^γ
-        + _μ^γ_αδ_νγβσ 
-        + _μδα^γ_νσβγ) 
-      
-       
-      - δ g^δ_δ
-      ( _ασβγ_μν^σγ
-      + 2 _μ^σ_α^γ_νσβ  g)
-      - 2   (2 ^δσδΞ
-        + δ T^δσ) 
-        _μδασ_νβ
-      + F ^δ _δ_μναβ
-       
-      + ^δσδ g_δ^γ
-        (2^2_μγασ_νβ  
-        + 2  ^2 _μσαγ_νβ)
-      + 2  _αδ T_μνβ
-      + 2 _μναδ _β^δ
-      - _μαν _βδ g^δ_δ
-       
-      + _νβ 
-        (-2 ( ^2 ^δσδ d_μδασ
-            + 2 ^δ_αδμ)
-        + (4 _α^δ_μ 
-          + _μα^δ
-          + _μ^δ_α) 
-           _δδ g^σ_σ)
-      - _μβ_α^δ_δ _νδ g^σ_σ
-       
-      + 2  _μδ T_αβν
-      - δ g^δ_δ 
-        (  _α_μνβ
-        +  _μ_αβν)
-      + 2 _μδαβ _ν^δ
-      + 4 _(α^δ_μ ) 
-        (  _βδ g_δν 
-        +  _νδ g_βδ
-        -   _δδ g_βν)
-        
-       
-      + 4 ^δσ_μ_να _σδ g_βδ
-      + 2 _μβ_α^δσ
-        (  _δδ g_νσ
-        +  _νδ g_δσ
-        -  _σδ g_νδ)
-        + 4  _[δ_|μνβ|  σ] ^σδ g_α^δ
-       
-      + _μα 
-        (4  _δδ T_β^δ_ν
-        - 4 δ g^δσ _σ_βδν
-        - 2 δ g^δ_δ _σ_β^σ_ν)
-      - 2  _αδ g^δσ _σ_μνβδ
-      - 2  _μδ g^δσ _σ_νδαβ
-       
-      + 8  _[σ_δ] ναβ ^σδ g_μ^δ
-      - 2 (  _[α_|μνβ| σ]  
-          +  _[μ_|ν| σ]αβ ) 
-           ^σδ g^δ_δ
-      + δ g^δσ _σ _δ_μναβ
-
-
-
-
-
-
-
-
-§ REDUCED WAVE EQUATIONS
-
-
-
-
-
-In this appendix, we extend the analysis leading up to
-(<ref>) to the other wave equations listed in
-(<ref>) for the sake of completeness. In particular, we wish to
-recast (<ref>) explicitly as a system of second order
-hyperbolic equations.  This non-linear system of wave equations was
-originally derived in <cit.> using slightly different set of
-variables and a different reduced wave operator.
-
-
-
-First observe that in general, the geometric wave operator acting on a
-tensor will give rise to derivatives of the Christoffel symbols. Since
-the metric is a variable of the system, this is problematic for
-hyperbolicity. In particular, for a covector w_a one has
-
-    □ w_μ=   w_μ
-      - w^ν∇ _αΓ_νμ^α
-      -2 Γ_νμα∇ ^αw^ν
-      - Γ _ν∇ ^νw_μ
-      - Γ^α_μ^βΓ_ναβ w^ν
-      - Γ_νμ^αΓ _α w^ν.
-
-In this appendix, indices are raised and lowered with the metric g_μν. Observe that the second term in the right-hand side of equation
-(<ref>) represents second derivatives of the metric.
-However, one can replace these derivatives of the Christoffel symbols by
-noticing the identity
-
-    g^μα∇ _αΓ ^β_νμ = -
-      R_ν^β+Γ^βμαΓ _μνα - Γ^β_νμΓ ^μ + ∇
-      _νΓ^β.
-
-Exploiting the identity (<ref>) a direct calculation gives
-
-    □ w_μ =   w_μ +
-      1/4 R w_μ + 2 Φ _μν w^ν
-      - ℒ_Γ  w_μ
-      -2 Γ_νμα∇ ^αw^ν
-      -2 Γ^α_μ^βΓ_ναβ w^ν
-
-where ℒ_Γ is the Lie-derivative along Γ^a. Using
-the definition of the conformal and the GHG-constraints one can rewrite
-the last expression as
-
-    □  w_μ =   w_μ +
-      1/4 C w_μ - ℒ_C  w_μ + 
-      1/4 F w_μ
-      + ℒ_ℋ  w_μ + 𝒬(w)_μ
-
-where ℒ_C and ℒ_ℋ are the Lie
-derivative along C^a and ℋ^a respectively and
-
-    𝒬(w)_μ := 2 Φ _μν w^ν
-      -2 Γ_νμα∇ ^αw^ν
-      -2 Γ^α_μ^βΓ_ναβ w^ν
-
-One can generalise the latter calculation for tensor of type (0,n) as
-follows
-
-    □  w_μ_1 ...μ_n =  w_μ_1
-        ...μ_n + n/4 C w_μ - ℒ_C w_μ_1
-        ...μ_n + n/4 F w_μ_1 ...μ_n 
-        + ℒ_ℋ
-      w_μ_1 ...μ_n + 𝒬(w)_μ_1 ...μ_n
-
-where
-
-    𝒬(w)_μ_1 ...μ_n :=     2 Φ _μ_1ν
-      w^ν_μ_2...μ_n -2 Γ_νμ_1α∇
-      ^αw^ν_μ_2...μ_n -2 Γ^α_μ_1^βΓ_ναβ w^ν_μ_2...μ_n +
-      ...+ 
-        + 2 Φ _μ_nν w_μ_1...ν_n-1^ν -2
-      Γ_νμ_nα∇ ^αw_μ_1...μ_n-1^ν -2 Γ^α_μ_n^βΓ_ναβ w_μ_1...μ_n-1^ν.
-
-Then, by imposing the conformal and GHG-constraints are satisfied so
-that C=0 and C^a=0 one effectively has effectively removed the
-problematic terms for hyperbolicity:
-
-    □ w_μ_1 ...μ_n =  w_μ_1 ...μ_n
-      + n/4 F w_μ_1 ...μ_n + ℒ_ℋ
-      w_μ_1 ...μ_n + 𝒬(w)_μ_1 ...μ_n
-
-Applying the latter rule on each of the fields appearing on the
-geometric wave equations one obtains a set of hyperbolic non-linear
-wave equations which read as follows.
-
-
-
-For the components of the metric:
-
-
-
-
-    g_μν = - 4Φ_μν 
-    - 12F g_μν -
-    2 ∇ _(μℋ_ν)  - g^σδg^αβ
-    (Γ_νδβΓ_σμα +
-    2Γ_δνβΓ_(μν) α ).
-
-
-For the components of the trace-free Ricci tensor:
-
-
-
-    Φ_μν = - 16Φ _μν F
-      -ℒ_ℋΦ_μν - 𝒬(Φ)_μν 
-        + 16∇ _{μ∇ _ν}F + 
-      4 Φ _μ^αΦ _να
-      - Φ _αβΦ ^αβ g_μν
-      -2 ΞΦ ^αβ d_μανβ
-                                           
-      +   12Ξ ^3 T^βα d_μβνα
-      - Ξ∇ _αT_ν^α_μ
-      - 2T_(μ|α|ν)∇ ^αΞ.
-
-
-
-For the components of the rescaled Weyl tensor:
-
-    d_μναβ  
-      =    -12F d_μναβ
-      -ℒ_ℋd_μναβ 
-      -𝒬(d)_μναβ + 2
-      Ξ d_μ^σ_β^λ
-      d_νσαλ -2 Ξ
-      d_μ^σ_α^λ d_νσβλ
-      -2 Ξ d_μν^σλ d_ασβλ
-        - Ξ^2T_[α^σd_β]σμν -
-      Ξ^2T_[μ^σd_ν]σαβ +
-      Ξ^2T^σλ( d_μσλ[αg_β]ν -
-      d_νσλ[αg_β]μ ) + 2
-      ∇_[μT_|αβ|ν]
-                              
-      +2  ∇_[αT_|μν|β] + 2
-      g_β[ν∇_|σT_α|^σ_μ] + 2
-      g_α[μ∇_|σT_β|^σ_ν].
-
+    [column sep=2cm]
+        (, )
+            r(,)[equals]d    (, )
+            r(,)d(,,)[swap]≃    (, )
+            d(,,)[swap]≃
     
+        (, )
+            r    (, )
+            r    (, )
 
-For the Friedrich scalar:
+in  is commutative.
 
 
-    s =       - 16 F s 
-      - ℒ_ℋ s   
-      - 16 g_μν∇ ^μΞ∇ ^νF
-      + (F12)^2 Ξ 
-      + ΞΦ _μνΦ ^μν
-      + 14Ξ^5 T_μν T^μν
-      - Ξ ^3 T^μνΦ _μν
-                                                             
-      + Ξ  T_μν∇ ^μΞ∇ ^νΞ.
-
-
-For the conformal factor:
-
-
-    Ξ = - 16Ξ F
-      - ℒ_ℋΞ   + 4 s .
-
-
-
-
-   In vacuum, the hyperbolicity of the wave equations
-  (<ref>) is clear. However, for the case with matter
-  T_ab=T_ab(τ, ∇τ), one could at first instance
-  question their hyperbolicity due to the presence of first derivatives
-  of the rescaled Cotton tensor T_abc which encode second
-  derivatives of the energy-momentum tensor T_ab —hence the
-  equations contain two (or more) derivatives of the matter fields
-  τ. Nonetheless, one can still ensure hyperbolicity
-  constructing wave equations for τ and ∇τ so that
-  T_abc is expressed in terms of evolved fields only. For instance,
-  in the case of the conformally invariant scalar field
-  T_ab=T_ab(ϕ, ∇ϕ)  one needs to construct wave
-  equations for ϕ and a reduction variable φ=∇ϕ
-  —see <cit.>.  Since this is a case-dependent analysis and
-  this has been done in <cit.> for a number of matter models,
-  further discussion is omitted. 
-
-
-
-In <cit.> the reduced wave operator is defined so that the
-lower order contributions (along with terms involving the gauge source
-functions) are absorbed into the definition of the operator
-▪ in such a way that the reduced equations look formally
-identical to the geometric ones. Here the standard reduced wave operator
-:=g^αβ∂_α∂_β used in most
-discussions of generalised harmonic gauge in Numerical Relativity was
-employed instead. The initial data for the reduced wave equations
-(<ref>) have to satisfy
-
-    Z_μν|_Σ=0,    Z_μ|_Σ=0,   δ_μνσ|_Σ=0,   λ_μνσ|_Σ=0,    Z|_Σ=0.
-
-where Σ⊂ℳ is a spacelike hypersurface on which
-the initial data is prescribed. It should also be noticed that the
-GHG-constraint C^μ and the conformal constraint C are not
-independent, in fact a calculation shows C=∇_μ C^μ.
-Propagation of the gauge and a full discussion of the propagation of the
-constraints [i.e. propagation of the zero-quantities
-(<ref>)] has carefully been done in
-<cit.> and will not be reproduced here.  The aim of revisiting
-the derivation of the reduced wave equations (<ref>) is
-simply to provide context and the non-linear analogue of the
-linearised equations derived in Section <ref>.
-
-
-
-unsrt
-
-10
-
-HilNur16
-C Denson Hill and Pawel Nurowski.
-How the green light was given for gravitational wave search, 2016.
-
-BieGarYun17
-Lydia Bieri, David Garfinkle, and Nicolas Yunes.
-Gravitational waves and their mathematics.
-2017.
-
-Zen08
-Anil Zenginoglu.
-Hyperboloidal evolution with the Einstein equations.
-Class. Quant. Grav., 25:195025, 2008.
-
-VanHusHil14
-Alex Vañó-Viñuales, Sascha Husa, and David Hilditch.
-Spherical symmetry as a test case for unconstrained hyperboloidal
-  evolution.
-Class. Quant. Grav., 32(17):175010, 2015.
-
-Van15
-Alex Vañó-Viñuales.
-Free evolution of the hyperboloidal initial value problem in
-  spherical symmetry.
-PhD thesis, U. Iles Balears, Palma, 2015.
-
-VanHus17
-Alex Vañó-Viñuales and Sascha Husa.
-Spherical symmetry as a test case for unconstrained hyperboloidal
-  evolution II: gauge conditions.
-Class. Quant. Grav., 35(4):045014, 2018.
-
-HilHarBug16
-David Hilditch, Enno Harms, Marcus Bugner, Hannes Rüter, and Bernd
-  Brügmann.
-The evolution of hyperboloidal data with the dual foliation
-  formalism: Mathematical analysis and wave equation tests.
-Class. Quant. Grav., 35(5):055003, 2018.
-
-GasHil18
-Edgar Gasperín and David Hilditch.
-The Weak Null Condition in Free-evolution Schemes for Numerical
-  Relativity: Dual Foliation GHG with Constraint Damping.
-Class. Quant. Grav., 36(19):195016, 2019.
-
-DuaFenGasHil22
-Miguel Duarte, Justin C Feng, Edgar Gasperín, and David Hilditch.
-Regularizing dual-frame generalized harmonic gauge at null infinity.
-Classical and Quantum Gravity, 40(2):025011, dec 2022.
-
-Fri81
-H. Friedrich.
-On the Regular and the Asymptotic Characteristic Initial Value
-  Problem for Einstein's Vacuum Field Equations.
-Proc. R. Soc. Lond. A, 375(1761):169–184, March 1981.
-
-Val16
-Juan-Antonio Valiente-Kroon.
-Conformal Methods in General Relativity.
-Cambridge University Press, Cambridge, 2016.
-
-Fra04
-Jörg Frauendiener.
-Conformal infinity.
-Living Rev. Relativity, 7(1), 2004.
-
-Fri95
-H. Friedrich.
-Einstein equations and conformal structure - Existence of anti de
-  Sitter type space-times.
-J. Geom. Phys., 17:125–184, 1995.
-
-LueVal12
-Christian Lübbe and Juan Antonio Valiente Kroon.
-The extended conformal einstein field equations with matter: The
-  einstein–maxwell field.
-Journal of Geometry and Physics, 62(6):1548–1570, jun 2012.
-
-Fri02
-Helmut Friedrich.
-Spin-2 fields on minkowski space near spacelike and null infinity.
-Classical and Quantum Gravity, 20(1):101–117, dec 2002.
-
-LueVal09
-C. Lübbe and J. A. Valiente Kroon.
-On de Sitter-like and Minkowski-like spacetimes.
-26:145012, 2009.
-
-GasVal17
-Edgar Gasperin and Juan A. Valiente Kroon.
-Perturbations of the asymptotic region of the schwarzschild–de
-  sitter spacetime.
-Annales Henri Poincaré, pages 1–73, 2017.
-
-DouFra16
-Georgios Doulis and Jörg Frauendiener.
-Global simulations of minkowski spacetime including spacelike
-  infinity.
-Phys. Rev. D, 95:024035, Jan 2017.
-
-Hub99
-Peter Hübner.
-A scheme to numerically evolve data for the conformal Einstein
-  equation.
-Class. Quantum Grav., 16:2823–2843, 1999.
-
-Hub01
-Peter Hübner.
-From now to timelike infinity on a finite grid.
-Class. Quantum Grav., 18:1871–1884, 2001.
-
-Hus02b
-Sascha Husa.
-Problems and successes in the numerical approach to the conformal
-  field equations.
-volume 604 of Lecture Notes in Physics, pages 239–260.
-  Springer, 2002.
-
-Val03a
-J. A. Valiente Kroon.
-Polyhomogeneous expansions close to null and spatial infinity.
-In J. Frauendiener and H. Friedrich, editors, The Conformal
-  Structure of Spacetimes: Geometry, Numerics, Analysis, Lecture Notes in
-  Physics, page 135. Springer, 2002.
-
-BeyDouFra13
-Florian Beyer, George Doulis, Jörg Frauendiener, and Ben Whale.
-The spin-2 equation on minkowski background.
-In Springer Proceedings in Mathematics and Statistics, pages
-  465–468. Springer Berlin Heidelberg, sep 2013.
-
-Pae13
-T.-T. Paetz.
-Conformally covariant systems of wave equations and their equivalence
-  to Einstein's field equations.
-Ann. Henri Poincaré, 16:2059, 2013.
-
-CarHurVal
-Diego A. Carranza, Adem E. Hursit, and Juan A. Valiente Kroon.
-Conformal wave equations for the einstein-tracefree matter system.
-General Relativity and Gravitation, 51(7), jul 2019.
-
-Fri81a
-H. Friedrich.
-On the regular and the asymptotic characteristic initial value
-  problem for Einstein's vacuum field equations.
-Proc. R. Soc., 375:169, 1981.
-
-Fri81b
-H. Friedrich.
-The asymptotic characteristic initial value problem for Einstein's
-  vacuum field equations as an initial value problem for a first-order
-  quasilinear symmetric hyperbolic system.
-Proc. R. Soc., 378:401, 1981.
-
-Cho08
-Yvonne Choquet-Bruhat.
-General Relativity and the Einstein Equations.
-Oxford University Press, 12 2008.
-
-Fri96
-H. Friedrich.
-Hyperbolic reductions for Einstein's equations.
-Class. Quantum Gravit., 13:1451–1469, 1996.
-
-Fri85
-H. Friedrich.
-On the hyperbolicity of Einstein's and other gauge field equations.
-Comm. Math. Phys., 100:525–543, 1985.
-
-LinSchKid05
-Lee Lindblom, Mark A. Scheel, Lawrence E. Kidder, Robert Owen, and Oliver
-  Rinne.
-A new generalized harmonic evolution system.
-Class. Quant. Grav., 23:S447–S462, 2006.
-
-Wal84
-Robert M. Wald.
-General relativity.
-The University of Chicago Press, Chicago, 1984.
-
-Rainho_master_thesis
-Inês Rainho.
-Linearized general relativity on hyperboloidal slices.
-Master Thesis.
-  https://blackholes.tecnico.ulisboa.pt/gritting/theses.html#section-5, 2022.
-
-PenRin84
-R. Penrose and W. Rindler.
-Spinors and space-time. Volume 1. Two-spinor calculus and
-  relativistic fields.
-Cambridge University Press, 1984.
-
-PenRin86
-R. Penrose and W. Rindler.
-Spinors and space-time. Volume 2. Spinor and twistor methods
-  in space-time geometry.
-Cambridge University Press, 1986.
-
-GasVal20
-Edgar Gasperin and Juan Antonio Valiente Valiente Kroon.
-Zero rest-mass fields and the Newman-Penrose constants on flat
-  space.
-J. Math. Phys., 61(12):122503, 2020.
-
-GasVal21a
-E Gasperín and J A Valiente Kroon.
-Staticity and regularity for zero rest-mass fields near spatial
-  infinity on flat spacetime.
-Classical and Quantum Gravity, 39(1):015014, dec 2021.
-
-MinMacVal22
-Marica Minucci, Rodrigo Panosso Macedo, and Juan Antonio Valiente Kroon.
-The maxwell-scalar field system near spatial infinity, 2022.
-
-ValAli22
-Mariem Magdy Ali Mohamed and Juan A. Valiente Kroon.
-Asymptotic charges for spin-1 and spin-2 fields at the critical sets
-  of null infinity.
-Journal of Mathematical Physics, 63(5):052502, may 2022.
-
-DuaFenGasHil23
-Miguel Duarte, Justin Feng, Edgar Gasperín, and David Hilditch.
-The good-bad-ugly system near spatial infinity on flat spacetime.
-Classical and Quantum Gravity, 40(5):055002, feb 2023.
-
-Ste91
-J. Stewart.
-Advanced general relativity.
-Cambridge University Press, 1991.
-
-Hil15
-David Hilditch.
-Dual Foliation Formulations of General Relativity.
-arXiv:1509.02071, 2015.
-
-MinVal23
-Marica Minucci and Juan Antonio Valiente Kroon.
-On the non-linear stability of the cosmological region of the
-  schwarzschild-de sitter spacetime, 2023.
-
-BarutElectrodynamics
-A.O. Barut.
-Electrodynamics and Classical Theory of Fields & Particles.
-Dover Books on Physics Series. Dover Publications, 1980.
-
-Mag07a
-Michele Maggiore.
-Gravitational Waves. Vol. 1: Theory and Experiments.
-Oxford University Press, Oxford, 2007.
-
-Wheeler1955geons
-John Archibald Wheeler.
-Geons.
-Phys. Rev., 97:511–536, Jan 1955.
-
-BrillHartle1964geon
-Dieter R. Brill and James B. Hartle.
-Method of the self-consistent field in general relativity and its
-  application to the gravitational geon.
-Phys. Rev., 135:B271–B278, Jul 1964.
-
-AndersonBrill1997geon
-Paul R. Anderson and Dieter R. Brill.
-Gravitational geons revisited.
-Phys. Rev. D, 56:4824–4833, Oct 1997.
-
-Sorkin:1981wd
-Rafael D. Sorkin, Robert M. Wald, and Zhen Jiu Zhang.
-Entropy of self-gravitating radiation.
-Gen. Rel. Grav., 13:1127–1146, 1981.
-
-Schmidt:1999tr
-Heinz-Jurgen Schmidt and Felix Homann.
-Photon stars.
-Gen. Rel. Grav., 32:919–931, 2000.
-
-mitra2010likely
-Abhas Mitra and Norman K Glendenning.
-Likely formation of general relativistic radiation pressure supported
-  stars or ‘eternally collapsing objects’.
-Monthly Notices of the Royal Astronomical Society: Letters,
-  404(1):L50–L54, 2010.
-
-Kim:2016jfh
-Hyeong-Chan Kim.
-Classifying self-gravitating radiations.
-Phys. Rev. D, 95(4):044021, 2017.
-
-Hol22
-Jan W. van Holten.
-Curvature dynamics in general relativity, 2022.
-
-Bie14
-Lydia Bieri and David Garfinkle.
-Perturbative and gauge invariant treatment of gravitational wave
-  memory.
-Physical Review D, 89(8), apr 2014.
-
-Cha83a
-S. Chandrasekhar.
-The Mathematical Theory of Black Holes.
-Oxford University Press, Oxford, England, 1983.
-
-xAct_web
-José M. Martín-García.
-xAct: tensor computer algebra.
-<http://www.xact.es/>.
 
 
 
 
 
+1
+The authors are grateful to Dixy Msapato for directing them to a result in their paper <cit.>, which led to <ref>. 
 
+Parts of this work were carried out while the second author visited Aarhus University, and while the first and fourth author visited NTNU. The authors thank the project “Pure Mathematics in Norway” funded by the Trond Mohn Foundation for supporting these stays.
 
+The first author is grateful to have been supported during part of this work by the Alexander von Humboldt Foundation in the framework of an Alexander von Humboldt Professorship endowed by the German Federal Ministry of Education. 
 
+The third author is grateful to have been supported by Norwegian Research Council project 301375, “Applications of reduction techniques and computations in representation theory”.
 
+The fourth author is grateful to have been supported during part of this work by the Engineering and Physical Sciences Research Council (grant EP/P016014/1), and the London Mathematical Society with support from Heilbronn Institute for Mathematical Research (grant ECF-1920-57). 
 
+In addition, the first and fourth authors gratefully acknowledge support from: 
+the Danish National Research Foundation (grant DNRF156); 
+the Independent Research Fund Denmark (grant 1026-00050B); and 
+the Aarhus University Research Foundation (grant AUFF-F-2020-7-16). 
 
+
+
+
+1mybst
 

@@ -1,18 +1,22 @@
 
-Anyon condensation in the string-net models
-    Fiona J. Burnell
+
+
+These two authors contributed equally.
+
+These two authors contributed equally.
+
+wangxin73@baidu.com
+Institute for Quantum Computing, Baidu Research, Beijing 100193, China
+
+Entanglement distillation is crucial in quantum information processing. But it remains challenging to estimate the distillable entanglement and its closely related essential quantity, the quantum capacity of a noisy quantum channel. In this work, we propose methods for evaluating both quantities by squeezing out useless entanglement within a state or a quantum channel, whose contributions are expected to be ignored for the distillable entanglement or the quantum capacity, respectively. We first consider a general resource measure called the reverse divergence of resources to quantify the minimum divergence between a target state and the set of free states. We then introduce the reverse max-relative entropy of entanglement and apply it to establish efficiently computable upper bounds on the distillable entanglement. We also extend the reverse divergence of resources to quantum channels and derive upper bounds on the quantum capacity. We further apply our method to investigate purifying the maximally entangled states under practical noises, such as depolarizing and amplitude damping noises, and notably establish improvements in estimating the one-way distillable entanglement. Our bounds also offer useful benchmarks for evaluating the quantum capacities of qubit quantum channels of interest, including the Pauli channels and the random mixed unitary channels.
+
+
+
+Estimate distillable entanglement and quantum capacity by squeezing useless entanglement
+    Xin Wang
     March 30, 2023
-===========================================
+========================================================================================
 
-
-
-
-The main purpose of this paper is to further study the structure, parameters and constructions of the recently introduced minimal codes in the sum-rank metric. These objects form a bridge between the classical minimal codes in the Hamming metric, the subject of intense research over the past three decades partly because of their cryptographic properties, and the more recent rank-metric minimal codes. We prove some bounds on their parameters, existence results, and, via a tool that we name geometric dual, we manage to construct minimal codes with few weights. A generalization of the celebrated Ashikhmin-Barg condition is proved and used to ensure minimality of certain constructions.
-
-
-Keywords: Sum-rank metric codes; minimal codes; geometric dual; bounds.
-
-Mathematics Subject Classification. Primary: 94B05, 51E20.  Secondary: 94B65, 94B27
 
 
 
@@ -22,1328 +26,987 @@ Mathematics Subject Classification. Primary: 94B05, 51E20.  Secondary: 94B65, 94
 § INTRODUCTION
 
 
-Sum-rank metric constitutes a bridge between the more classical Hamming and rank metrics, which may be considered as its special cases. It has been used implicitely first in <cit.> and explicitely introduced in the context of network coding in <cit.>. One of the main reasons why this metric has been in the spotlight in recent years is the fact that sum-rank metric codes outperform the more classical ones in
-terms of the required field size to construct codes achieving the Singleton bound in the corresponding metric <cit.>. This is due to the existence of the so-called linearized Reed–Solomon codes, a family of maximum sum-rank distance (MSRD) codes with polynomial field sizes. 
-In the survey paper <cit.>, the interested reader may find a very
-detailed summary on properties and applications of sum-rank
-metric codes in distributed storage systems, network coding, and multi-antenna communication.
-
-The main purpose of this paper is to further study the structure, parameters and constructions of minimal codes in the sum-rank metric, recently introduced in <cit.>. Minimal codes are classical objects in the Hamming metric rich of connections with different areas of mathematics, such as cryptography <cit.>, finite geometry <cit.>, and combinatorics <cit.>. One of the main concerns about these objects is to find bounds on their parameters. In particular, one difficult problem is to know how short they can be and to construct short minimal codes. In <cit.> lower bounds on the length of minimal codes are proved, whereas in <cit.> the best known upper bounds on the length of the shortest minimal codes are presented. These last are implicit existence results. Some short constructions are illustrated in <cit.> and in the upcoming <cit.>. More recently, minimal codes in the rank metric have been introduced <cit.> together with some bounds and construction. In particular, their geometry is studied, in connection with linear sets. Such codes reveal to be useful in the construction of MRD codes <cit.> or for the covering problem in the rank metric
-<cit.>. Still a direct application to cryptography of these objects is missing from the party, even if rank-metric minimal codes may be used to construct minimal codes in the Hamming metric. We will show that the same holds for minimal sum-rank metric codes.
 
 
-After recalling some main definitions and results in the preliminary Section <ref>, we introduce the main object of the paper in Section <ref>: exploiting the geometry of sum-rank metric codes studied in <cit.>, we prove first that minimal sum-rank metric codes correspond to collections of linear sets whose union forms a strong blocking set, that is a set of points in the projective space whose intersection with every hyperplane spans the hyperplane. This allows to easily get a bound on the maximum weight of minimal sum-rank metric codes, together with a characterization of minimal MSRD codes. Standard equations allow us to prove some bounds on the parameters of minimal sum-rank metric codes (see Theorem <ref>) presented also in their asymptotic version. We then focus on some existence results of short minimal sum-rank metric codes, obtained by implicit counting arguments. Section <ref> is devoted to a tool that we call geometric dual: we make use of the dual of _q-subspaces of _q^m-vector spaces studied in <cit.> to build the dual of systems associated to sum-rank metric codes and we call geometric dual the code associated to these dual systems. We prove first that such object is well-defined and we show a sort of MacWilliams' relations between the generalized weight enumerators (see Theorem <ref>). Moreover, we prove that the geometric dual is involutory. In Section <ref>, we come back to the core of the paper, which are minimal codes in the sum-rank metric. By the correspondence between sum-rank metric codes and Hamming-metric ones, we first highlight a generalization of the celebrated Ashikhmin-Barg condition, which is a sufficient condition on the weight distribution for a code to be minimal (see Theoreom <ref>). All one-weight codes result to be minimal, but remarkably there are many more one-weight codes in the sum-rank metric than in the two more classical ones. After recalling three families of one-weight sum-rank metric codes introduced in <cit.>, we read the property of being one-weight in the geometric dual, which exchanges the role of hyperplanes and points. As a consequence, we get that partitions in scattered linear sets yield one-weight codes. Doubly extended linearized Reed-Solomon of dimension 2, which correspond partition of the projective line in scattered linear sets, are short minimal codes (that meet the bound in Theorem <ref>) whose geometric dual are one-weight which are short minimal codes for quadratic extensions. We use this partition of the projective line to construct a partition of higher dimension projective spaces, yielding other examples of one-weight codes. Another construction may be done with canonical subgeometries. Finally, we show that every sum-rank metric code can be extended to a one-weight code, showing that there are several examples of one-weight codes with different geometric structures. In the last part of the section, we study some two-weight codes: these can be easily obtained by considering proper subsets of mutually disjoint scattered linear sets and taking the geometric dual of the associated codes (see Theorem <ref>). Thanks to the Ashikhmin-Barg condition, we have that if the number of blocks is sufficiently large, then such codes are minimal  (see Theorem <ref>). We finally present some examples of minimal two-weight codes with two blocks and, quite remarkably, in dimension 3 we are able to prove the minimality  by direct geometric arguments for codes not satisfying the Ashikhmin-Barg condition (see Theorem <ref>). Let us point out that their associated Hamming metric codes have few weights and in some cases they are two-weights: this make them particularly interesting for several reasons including quantum codes and strongly regular graphs; see <cit.>.
+ §.§ Background
 
+Quantum entanglement is the most nonclassical manifestation of quantum mechanics and has become a key ingredient in many quantum information processing tasks, e.g., teleportation <cit.>, superdense coding <cit.>, and quantum cryptography <cit.>. More specifically, the entanglement resource is usually assumed to be copies of the maximally entangled states. In a practical scenario, noises inevitably occur in quantum states, resulting in some mixed entangled states, which leads to the need for distillation or purification. A natural question is how to obtain the maximally entangled states from a source of less entangled states using well-motivated operations, known as the entanglement distillation.
 
+One fundamental measure for characterizing the entanglement distillation is the one-way distillable entanglement <cit.>, denoted by E_D,→, which is also one of the most important entanglement measures motivated by operational tasks. It captures the highest rate at which one can obtain the maximally entangled states from less entangled states by one-way local operations and classical communication (LOCC):
 
+    E_D,→(ρ_AB)=sup{r:lim_n →∞ [inf_ΛΛ(ρ_AB^ n)- Φ(2^rn)_1]=0},
 
+where Λ ranges over one-way LOCC operations and Φ(d)=1/d∑_i,j=1^d |ii⟩⟨jj| is the standard d⊗ d maximally entangled state. Likewise, the two-way distillable entanglement E_D,↔(ρ_AB) is defined by the supremum over all achievable rates under two-way LOCC. We have for all bipartite states ρ_AB that E_D,→(ρ_AB) ≤ E_D,↔(ρ_AB). Notably, the distillable entanglement turns out to be closely related to the central idea of quantum capacity in quantum communication tasks, which is central to quantum Shannon theory. Consider modelling the noise in transmitting quantum information from Alice to Bob as a quantum channel _A→ B. The quantum capacity Q(_A→ B) is the maximal achievable rate at which Alice can reliably transmit quantum information to Bob by asymptotically many uses of the channel. By the state–channel duality, if the distillation protocol of the Choi state <cit.> J_AB^ of _A→ B yields the maximally entangled states at a positive rate, then Alice may apply the standard teleportation scheme to send arbitrary quantum states to Bob at the same rate. Thus, one has Q(_A→ B) ≥ E_D,→(J_AB^) since classical forward communication in teleportation does not affect the channel capacity. For the teleportation-simulable channels <cit.>, the equality here holds. Many recent works <cit.> have studied the properties of quantum communication over quantum channels, e.g., non-additivity and superactivation, which determines the complexity of calculating the quantum capacity.
 
+ 
+Despite many efforts that have been made in the past two decades, computing E_D,→(·) and Q(·) still generally remains a challenging task. Even for the qubit isotropic states and the depolarizing channels, it remains unsolved. Therefore, numerous studies try to estimate them by deriving lower and upper bounds (see, e.g., <cit.> for the distillable entanglement, e.g., <cit.> for the quantum capacity). For the distillable entanglement, a well-known lower bound dubbed Hashing bound is established by Devetak and Winter <cit.>, i.e., E_D,→(ρ_AB) ≥ I_(A⟩ B)_ρ, where I_(A⟩ B)_ρ is the coherent information of the bipartite quantum state ρ_AB. Considering upper bounds, the Rains bound <cit.> is arguably the best-known efficiently computable bound for the two-way distillable entanglement of general states, which can consequently be an upper bound of E_D,→(·). Recent works <cit.> utilize the techniques of finding upper bounds by constructing meaningful extended states. For quantum capacity, many useful upper bounds for general quantum channels are studied for benchmarking arbitrary quantum noise <cit.>. When considering some specific classes of quantum channels, useful upper bounds are also developed to help us better understand quantum communication via these channels <cit.>.
 
-§ PRELIMINARIES
-
-
-In this section we will briefly recall the main results of the theory of sum-rank metric codes and linear sets, which we will use in the rest of the paper.
+In specific, due to the regularization in the characterizations of E_D,→(·) and Q(·), one main strategy to establish efficiently computable upper bounds on them is to develop single-letter formulae. For example, one common approach is to decompose a state (resp. a quantum channel) into degradable parts and anti-degradable parts <cit.>, or use approximate degradability (anti-degradability) <cit.>. Another recent fruitful technique called flag extension optimization <cit.> relies on finding a degradable extension of the state or the quantum channel. However, the performance of these methods is limited by the absence of a good decomposition strategy. It is unknown how to partition a general state or quantum channel to add flags or how to construct a proper and meaningful convex decomposition on them. Thus, the flag extension optimization is only effective for the states and channels with symmetry or known structures.
 
 
 
+ §.§ Main contributions
 
+This work considers a family of resource measures called reverse divergence of resources. 
 
- §.§ Basic notions on sum-rank metric codes
+With a specific construction, we define the reverse max-relative entropy of entanglement for quantum states, which has applications for estimating the distillable entanglement. 
+In the meantime, we introduce reverse max-relative entropy of anti-degradability for quantum channels as a generalization of the concept of that for states, which can be applied to bound the quantum capacity. All these bounds can be efficiently computed via semidefinite programming <cit.>. Furthermore, drawing on the idea of <cit.>, we thoroughly analyze different continuity bounds on the one-way distillable entanglement of a state in terms of its anti-degradability. Finally, we investigate the distillation of the maximally entangled states under practical noises and focus on the quantum capacity of qubit channels. We show that the bound obtained by the reverse max-relative entropy of entanglement outperforms other known bounds in a high-noise region, including the Rains bound and the above continuity bounds. The upper bound offered by the reverse max-relative entropy of anti-degradability also provides an alternative interpretation of the no-cloning bound of the Pauli channel <cit.>, and notably outperforms the continuity bounds on random unital qubit channels.
 
-
-Throughout the paper,
-𝐧=(n_1,…,n_t) ∈ℕ^t denotes an ordered tuples with n_1 ≥ n_2 ≥…≥ n_t and N = n_1+…+n_t. We use the following compact notations for the direct sum of vector spaces 
-
-    _q^m^=⊕_i=1^t_q^m^n_i.
-
-
-Let start by recalling that the rank of a vector v=(v_1,…,v_n) ∈_q^m^n is defined as (v)=_ (⟨ v_1,…, v_n⟩_) and the sum-rank weight of an element x=(x_1 ,…, x_t) ∈_q^m^ is 
-
-    w(x)=∑_i=1^t (x_i).
+The rest of this paper is structured as follows. We start with some preliminaries used throughout the paper in section <ref>. In section <ref>, we introduce our conceptual contribution, a family of resource measures called the reverse divergence of resources. In section <ref>, we present the application of this concept on the distillable entanglement. Specifically, in subsection <ref>, we show how the reverse max-relative entropy of entanglement can be used to derive a useful upper bound on the one-way distillable entanglement. We derive different continuity bounds in subsection <ref>, with which we compare our bounds and the Rains bound by practical distillable states in subsection <ref>. We also extend our method to the two-way distillable entanglement in subsection <ref>. In section <ref>, we show the application of our method in deriving upper bounds on quantum capacity. We establish some analytical results for Pauli channels and compare our bounds with continuity bounds in subsection <ref> for random mixed unitary channels. In section <ref>, we conclude with a summary and some outlooks for future research.
 
 
 
-    If t=1, then the sum-rank weight is simply the rank, whereas if n_1=…=n_t=1, the sum-rank weight coincides with the Hamming weight. The sum-rank metric constitues then a bridge between the rank and the Hamming metrics. 
+
+§ REVERSE DIVERGENCE OF RESOURCES
+ 
 
 
-We also call rank-list of x=(x_1,…,x_t) ∈_q^m^ the vector
+ §.§ Preliminaries
 
-    ((x_1),…,(x_t)).
+Let  be a finite-dimensional Hilbert space, and () be the set of linear operators acting on it. We consider two parties Alice and Bob with Hilbert space ℋ_A, ℋ_B, whose dimensions are d_A, d_B, respectively. A linear operator ρ∈() is called a density operator if it is Hermitian and positive semidefinite with trace one. We denote the trace norm of ρ as ρ_1 = √(ρ^†ρ) and let () denote the set of density operators. We call a linear map CPTP if it is both completely positive and trace-preserving. A CPTP map that transforms linear operators in (_A) to linear operators in (_B) is also called a quantum channel, denoted as _A→ B. For a quantum channel _A→ B, its Choi-Jamiołkowski state is given by J_AB^≡∑_i, j=0^d_A-1|i⟩⟨j|𝒩_A → B(|i⟩⟨j|), where {|i⟩}_i=0^d_A-1 is an orthonormal basis in _A. The von Neumann entropy of a state ρ_A is S(A)_ρ := - (ρ_A logρ_A) and the coherent information of a bipartite state ρ_AB is defined by I_c(A⟩ B)_ρ := S(B)_ρ - S(AB)_ρ. The entanglement of formation of a state ρ_AB is given by
 
-Hence, the sum-rank weight of a vector corresponds to the sum of the entries of its rank-list.
+    E_F(ρ_AB) = min_{p_i, |ϕ_i⟩}∑_i p_i S(A)_ϕ_i,
 
+where ρ_AB=∑_i p_i |ϕ_i⟩⟨ϕ_i|_AB and the minimization ranges over all pure state decomposition of ρ_AB. We introduce the generalized divergence D(ρ_A σ_A) as a map D: (_A)×(_A) ↦ℝ∪{+∞} that obeys:
 
-A (linear) sum-rank metric code  is an _q^m-subspace of _q^m^ endowed with the sum-rank distance defined as
-
-    d(x,y)=w(x-y)=∑_i=1^t (x_i-y_i),
-
-where x=(x_1 , … , x_t), y=(y_1 , …, y_t) ∈_q^m^. 
-Let ⊆_q^m^ be a sum-rank metric code. We will write that  is an [,k,d]_q^m/q code (or [,k]_q^m/q code) if k is the _q^m-dimension of  and d is its minimum distance, that is 
-
-    d=d()=min{d(x,y)  x, y ∈, x ≠ y  }.
     
+  * Faithfulness: D(ρ_A σ_A)=0 iff ρ_A = σ_A.
+    
+  * Data processing inequality: D(ρ_A σ_A) ≥D[𝒩_A→ A'(ρ_A) 𝒩_A→ A'(σ_A)], where 𝒩_A→ A' is an arbitrary quantum channel.
 
+The generalized divergence is intuitively some measure of distinguishability of the two states, e.g., Bures metric, quantum relative entropy. Another example of interest is the sandwiched Rényi relative entropy <cit.> of ρ, σ that is defined by
 
-Let ⊆_q^m^𝐧 be a linear sum-rank metric code. Let G=(G_1|…| G_t) ∈_q^m^k × N be a generator matrix of , that is a matrix whose lines generate , with G_1,…,G_t ∈_q^m^k ×n_i. We define  to be nondegenerate if the columns of G_i are -linearly independent for i∈{1,…,t} (this is independent of the choice of G; see <cit.>).
+    D_α(ρσ):=1/α-1logTr[(σ^1-α/2 αρσ^1-α/2 α)^α],
 
-We will only consider nondegenerate codes in this paper and this is not a restriction since we can always embed a sum-rank metric code in a smaller space in which it results to be nondegenerate, preserving its metric properties.
-So, throughout this paper we will omit the term nondegenerate and all codes considered will be nondegenerate.
+if supp(ρ) ⊂supp(σ) and it is equal to +∞ otherwise, where α∈(0,1) ∪(1, ∞). In the case that α→∞, one can find the max-relative entropy <cit.> of ρ with respect to σ by
 
-
-
-For sum-rank metric codes the following Singleton-like bound holds; see also <cit.>.
-
-  
-     Let 𝒞 be an  code. Then 
-     
-    d ≤ N-k+1.
+    D_max(ρ || σ) = inf{λ∈ℝ: ρ≤ 2^λσ}.
 
 
 
 
-An  code is called a Maximum Sum-Rank Distance code (or shortly MSRD code) if d=N-k+1.
+ §.§ Reverse divergence of resources
+
+In the usual framework of quantum resource theories <cit.>, there are two main notions: i) subset  of free states, i.e., the states that do not possess the given resource; ii) subset  of free operations, i.e., the quantum channels that are unable to generate the resource. Meanwhile, two axioms for a quantity being a resource measure (·) are essential:
+
+    
+  1). Vanishing for free states: ρ∈⇒(ρ) = 0.
+    
+  2). Monotonicity: ((ρ)) ≤(ρ) for any free operation . (·) is called a resource monotone.
+
+Let us define a family of resource measures called reverse divergence of resources:
+
+    _ℱ(ρ_AB) := min_τ∈ℱD(τ_AB||ρ_AB),
+
+where ℱ is some set of free states. By the definition of the reverse divergence of resources in Eq. (<ref>), one can easily check it satisfies condition 1). Whenever the free state set  is closed, by the data-processing inequality of D(··), condition 2) will be satisfied. Thus _ℱ(·) is a resource measure. Specifically, in the resource theory of entanglement, some representative free state sets are the separable states (SEP) and the states having a positive partial transpose (PPT). Examples of free sets of operations are LOCC and PPT. We note that the "reverse" here means minimizing the divergence over a free state set in the first coordinate, rather than the second one which has helped one define the relative entropy of entanglement <cit.> and the max-relative entropy of entanglement <cit.>. For some divergence of particular interest, e.g., the quantum relative entropy D(·||·), relevant discussion of the coordinate choices can be traced back to work in <cit.>. In <cit.>, the authors further studied properties of the quantity min_τ∈D(τ||ρ). Here, we try to further investigate meaningful applications of some reverse divergence of resources.
 
 
 
-The next result classifies the -linear isometries of _q^m^ equipped with the sum-rank distance, cfr. <cit.> and <cit.>.
-Before stating it, we need the following notation. 
-Let ℓ:=|{n_1,…,n_t}| and let n_i_1,…,n_i_ℓ be the distinct elements of {n_1,…,n_t}.
-By λ(𝐧)∈^ℓ we will denote the vector whose entries are
-
-    λ_j:=|{k  n_k=n_i_j}|,     j∈{1,…,ℓ}.
-
-For a vector v=(v_1,…, v_ℓ)∈ℕ^ℓ, we define 
-    S_v=S_v_1×⋯× S_v_ℓ,
-
-where S_i is the symmetric group of order i and naturally acts on the blocks of length i. 
-Similarly, we denote by (v, _q) the direct product of the general linear groups of degree v_i over _q, i.e.
-
-    (𝐯, _q) = (v_1, _q)×…×(v_t, _q).
 
 
 
-The group of _q^m-linear isometries of the space (_q^m^,d)  is
-
-    ((_q^m^∗)^t×(, _q)) ⋊𝒮_λ(),
-
-which (right)-acts as 
-  
-    (x_1 , …, x_t)· (𝐚,A_1,…, A_t,π) ⟼ (a_1x_π(1)A_1 |…| a_tx_π(t) A_t).
 
 
 
-We use the -linear isometries of the whole ambient space to define the equivalence of sum-rank metric codes.
 
+
+
+
+
+
+
+
+
+In the following, we consider the generalized divergence as the max-relative entropy and study a measure called reverse max-relative entropy of resources,
+
+    _max,ℱ(ρ_AB) := min_τ∈ℱD_max(τ_AB||ρ_AB),
+
+where ℱ is some set of free states. If there is no such state τ_AB∈ that satisfies τ_AB≤ 2^λρ_AB for any λ∈ℝ, _max,ℱ(ρ_AB) is set to be 0. 
+
+This measure bears many nice properties. First, it can be efficiently computed via semidefinite programming (SDP) in many cases which will be discussed in the latter sections. Second, Eq. (<ref>) gives the closest free state τ_AB∈ to ρ_AB, w.r.t. the max-relative entropy. Third, _max,ℱ(·) is subadditive w.r.t the tensor product of states. In fact, _max,ℱ(ρ_AB) is closely related to the weight of resource W(ρ_AB) <cit.> and the free component Γ(ρ_AB) <cit.>, both of which have fruitful properties and applications <cit.>, as follows
+
+    2^-_max,ℱ(ρ_AB)  = 1-W(ρ_AB) = Γ(ρ_AB).
+
+We note that each part of Eq. (<ref>) quantifies the largest weight where a free state can take in a convex decomposition of ρ_AB. When moving on to operational tasks that the free state can be ignored, what is left in a convex decomposition becomes our main concern. Optimization of the weight in the decomposition can be visualized as squeezing out all free parts of the given state. Thus, we further introduce the -squeezed state of ρ_AB as follows.
+
+For a bipartite quantum state ρ_AB and a free state set , 
+
+
+
+
+
+If _max,ℱ(ρ_AB) is non-zero, the -squeezed state of ρ_AB is defined by
+
+    ω_AB = ρ_AB-2^-_max,ℱ(ρ_AB)·τ_AB/1-2^-_max,ℱ(ρ_AB),
+
+where τ_AB is the closest free state to ρ_AB in terms of the max-relative entropy, i.e., the optimal solution in Eq. (<ref>). If _max,ℱ(ρ_AB)=0, the -squeezed state of ρ_AB is itself.
+
+
+
+
+
+In the following sections, we will illustrate the applications of the reverse max-relative entropy of resources as well as the squeezing idea on example tasks. One is giving upper bounds on the distillable entanglement of arbitrary quantum states. The other is to derive upper bounds on the quantum capacity of channels. 
+
+
+
+
+§ APPLICATIONS ON DISTILLABLE ENTANGLEMENT
  
-Two  sum-rank metric codes _1, _2 are equivalent if there is an -linear isometry ϕ, such that ϕ(_1)=_2. The set of equivalence classes of  sum-rank metric codes is denoted by ℭ.
+In this section, we investigate the information-theoretic application of the reverse max-relative entropy of resources in deriving efficiently computable upper bounds on the distillable entanglement. To showcase the advantage of our bounds, we compare the results with different continuity bounds and the Rains bound on the maximally entangled states with practical noises.
 
 
 
+ §.§ Upper bound on the one-way distillable entanglement
 
+Recall that the one-way distillable entanglement has a regularized formula <cit.>:
 
-
- §.§ The geometry of sum-rank metric codes
-
-
-We will recall now some results from <cit.>, on the connections between sum-rank metric codes and some sets of subspaces.
-
-The following definition extends the notion of projective systems and q-systems; cfr. <cit.>.
-
- 
-An [𝐧,k,d]_q^m/q-system (or simply an [𝐧,k]_q^m/q-system) U is an ordered set (U_1,⋯,U_t), where, for any i∈{1,…, t}, U_i is an _q-subspace of _q^m^k of dimension n_i, such that
-⟨ U_1, …, U_t ⟩__q^m=_q^m^k and 
-
-    d=N-max{∑_i=1^t__q(U_i∩ H) | H  is an _q^m-hyperplane of _q^m^k}.
-
-Moreover, two [𝐧,k,d]_q^m/q-systems (U_1,…,U_t) and (V_1,…, V_t) are equivalent if there exists  φ∈(k,_q^m) and  σ∈𝒮_t, such that
-
-    φ(U_i) = a_iV_σ(i),
-
-for every i∈{1,…,t}.
-
-
-We denote the set of equivalence classes of [𝐧,k,d]_q^m/q-systems by 𝔘[𝐧,k,d]_q^m/q.
-
-The following result allows us to establish a connection between systems and codes.
-
- 
-Let  be an [,k,d]_q^m/q. Let G=(G_1|…| G_t) be a generator matrix of .
-Let U_i ⊆_q^m^k be the _q-span of the columns of G_i, for i∈{1,…,t}.
-The sum-rank weight of an element x G ∈, with x=(x_1,…,x_k) ∈_q^m^k is
-
-    w(x G) = N - ∑_i=1^t _(U_i ∩ x^⊥),
-
-where x^⊥={y=(y_1,…,y_k) ∈_q^m^k ∑_i=1^k x_iy_i=0}. In particular, the minimum distance of  reads as follows
-
-    d=N- max{∑_i=1^t _(U_i ∩ H)   H_q^m_q^m^k  }.
-
-So (U_1,…,U_t) in an [,k,d]_q^m/q-system. 
-
-
-
-Note that, as a consequence of (<ref>), the rank-list of a codeword x G of   is given by
-
-    (n_1-_(U_1 ∩ x^⊥),…,n_t-_(U_t ∩ x^⊥)).
-
-
-
-
-As in <cit.>, we can then observe that there is a one-to-one  correspondence  between  equivalence  classes  of  sum-rank nondegenerate [𝐧,k,d]_q^m/q code and equivalence classes of [𝐧,k,d]_q^m/q-systems via two maps
-
-    Ψ :  ℭ[𝐧,k,d]_q^m/q   →𝔘[𝐧,k,d]_q^m/q
-    Φ : 𝔘[𝐧,k,d]_q^m/q   →ℭ[𝐧,k,d]_q^m/q,
-
-that act as follows.
-For any []∈ℭ[𝐧,k,d]_q^m/q, let G=(G_1|…| G_t) be a generator matrix of . Then Ψ([]) is defined as the equivalence class of [𝐧,k,d]_q^m/q-systems [U], where U=(U_1,…,U_t) is defined as in Theorem <ref>. In this case U is also called a system associated with . Viceversa, given [(U_1,…,U_t)]∈𝔘[𝐧,k,d]_q^m/q, define G_i as the matrix whose columns are an _q-basis of U_i for any i. Then Φ([(U_1,…,U_t)]) is the equivalence class of the sum-rank metric code  generated by G=(G_1|…| G_t). In this case  is also called a code associated with U. See <cit.> for the proof that these maps are well-defined.
-
-
-
-
-
- §.§ Supports
-
-
-We start by observing that a sum-rank metric code in _q^m^𝐧 can also be seen as an -subspace in ⊕_i=1^t _q^m_i × n_i.
-
-For every r ∈{1,…,t}, let Γ_r=(γ_1^(r),…,γ_m^(r)) be an ordered -basis of _q^m, and let Γ=(Γ_1,…,Γ_t). Given   x=(x_1, … ,x_t) ∈_q^m^, with x_i ∈_q^m^n_i, define the element 
-    Γ(x)=(Γ_1(x_1), …, Γ_t(x_t)) ∈Π,
- where
-
-    x_r,i = ∑_j=1^m Γ_r (x_r)_ijγ_j^(r),      i ∈{1,…,n_r}.
-
-In other words, the r-th block of Γ(x) is the matrix expansion of the vector x_r with respect to the -basis Γ_r of _q^m and this also preserves its rank; cfr. <cit.>.
-
-
-Let x=(x_1,…, x_t)∈_q^m^𝐧 and  Γ=(Γ_1,…,Γ_t) as above.
-The sum-rank support of x is defined as the space
-
-    _𝐧(x)=(colsp(Γ_1(x_1)), …, colsp(Γ_t(x_t))) ⊆^,
-
-where colsp(A) is the -span of the columns of a matrix A.
-
-
-As proved in <cit.> for the rank-metric case, the support does not depend on the choice of Γ and we can talk about the support of a vector without mentioning Γ. For more details see <cit.>.
-
-
-
-
-
- §.§ Generalized weights
-
-
-Generalized rank weights have been introduced several times with different definitions, see e.g. <cit.>, whereas the theory of sum-rank generalized weights is more recent and first introduced in <cit.>.
-
-In this paper we will deal with the definition given in <cit.> and more precisely to the geometric equivalent, which can be derived as for the rank metric in <cit.>. For more details we refer to <cit.>.
-
-
-Let  be an [𝐧,k,d]_q^m/q sum-rank metric code and let U=(U_1,…,U_t) be an  associated system.
-For any r ∈{1,…,k}, the r-th generalized sum-rank weight is
-
-    d_r()=N- max{∑_i=1^t _(U_i ∩ H)   H_q^m_q^m^kr  }.
-
-
-
-In order to keep track of the metric properties of the code, as done in <cit.>, we can define the generalized sum-rank weight enumerator of a code, which extend the classical weight enumerator of a code (up to the addition of X^N).
-
-
-Let  be an [𝐧,k,d]_q^m/q sum-rank metric code and let U=(U_1,…,U_t) be an associated system.
-For any r ∈{1,…,k}, the r-th generalized sum-rank weight enumerator is
-
-    W_^r(X,Y)=∑_w=0^N A_w^r X^N-wY^w,
-
-where A_w^r is the number of _q^m-subspace of _q^m^k of codimension r such that
-
-    w=N- ∑_i=1^t _(U_i ∩ H).
-
-
-
-Clearly, the first generalized sum-rank weight enumerator corresponds with the classical weight enumerator.
-
-
-
-
-
- §.§ The associated Hamming-metric codes
-
-
-Every sum-rank metric code can also be regarded as an Hamming-metric code as shown in <cit.> (see also <cit.> for the rank-metric codes).
-
-For a collection of multisets (_1,m_1), …, (_t,m_t) of (k-1,q^m). We can define their disjoint union as
-
-    _i=1^t (_i,m_i)=(,m),
-
-where =_1∪…∪_t, and m(P)=m_1(P)+…+m_t(P) for every P∈(k-1,q^m).
-For every n-dimensional _q-subspace U of _q^m^k, it is possible to associate the multiset (L_U,m_U), where  L_U is the _q-linear set defined by U (see next subsection), that is
-
-    L_U={⟨ u⟩__q^m| u∈ U∖{ 0}}⊆(k-1,q^m),
-
-and 
-    m_U(⟨ v⟩__q^m)=q^w_L_U(⟨ v⟩__q^m)-1/q-1.
-
-This means that the multiset (L_U,m_U) of (k-1,q^m) has size (counted with multiplicity) q^n-1/q-1. 
-We can now apply this procedure to the elements of an [𝐧,k]_q^m/q system (U_1,…,U_t). In this way we can define the multiset 
-
-    (U_1,…,U_t)= _i=1^t (L_U_i,m_U_i).
-
-Then (U_1,…,U_t) is a multiset of points of size q^n_1+… +q^n_t-t/q-1 in (k-1,q^m).
-
-Hence, we can give the following definition.
-
-
-Let  be a linear sum-rank [𝐧,k]_q^m/q code. Let (U_1,…,U_t) be a system associated with . Any code ^H ∈Ψ((U_1,…,U_t)) is called an associated Hamming-metric code to .
-
-
-The weight distribution of the Hamming-metric code associated with a sum-rank-metric codes can be determined as follows.
-For x ∈𝔽_q^m^n denote by w_H(x) the Hamming weight of x, that is the number of its non-zero components. 
-
-
- Let G=(G_1  | … |  G_t)∈^k× N be a generator matrix of an  code, and let v ∈^k ∖{0}. 
- Denote by G_∈^k× M to be any generator matrix of a Hamming-metric code ^H in Ψ((U_1,…,U_t)), where M= q^n_1+…+q^n_t-t/q-1.
- Then
- 
-    w_(vG_)= ∑_i=1^tq^n_i-q^n_i-(vG_i)/q-1.
-
-In particular, the minimum distance of ^ is given by
- 
-    d(^)= min_𝐫∈S(){∑_i=1^tq^n_i-q^n_i-r_i/q-1},
-
- where S() is the set of rank-lists of . 
-
-
-
-
-
-
- §.§ Linear sets
-
-
-Let V be a k-dimensional vector space over _q^m and consider Λ=(V,_q^m)=(k-1,q^m).
-Let U be an -subspace of V of dimension n. Then the point-set
-
-    L_U={ u_𝔽_q^m :  u∈ U∖{ 0}}⊆Λ
-
-is called an -linear set of rank n.
-Another important notion is the weight of a point.
-Let P=⟨ v⟩__q^m be a point in Λ. The weight of P in L_U is defined as 
-
-    w_L_U(P)=_(U∩⟨ v⟩__q^m).
- 
-An upper bound on the number of points that a linear set contains is
-
-    |L_U| ≤q^n-1/q-1.
-
-Furthermore, L_U is called scattered (and U as well) if it has the maximum number q^n-1/q-1 of points, or equivalently, if all points of L_U have weight one. Blokhuis and Lavrauw provided the following bound on the rank of a scattered liner set.
-
-
-The rank of a scattered -linear set in (k-1,q^m) is at most mk/2.
-
-
-A scattered -linear set of rank km/2 in (k-1,q^m) is said to be maximum scattered and U is said to be a maximum scattered -subspace as well. 
-
-In the next result we summarize what is known on the existence of maximum scattered linear sets/subspaces.
-
-
-If mk is even, then there exist maximum scattered subspaces in _q^m^k.
- 
-
-We refer to <cit.> for further details on linear sets and their connections.
-
-
-
-
-
-§ MINIMAL SUM-RANK METRIC CODES AND CUTTING SYSTEMS
-
-
-In this section we introduce the notion of sum-rank metric minimal codes and we investigate their parameters. The geometry of minimal codes have been important in order to construct and give bounds in both Hamming and rank metric (see <cit.>), via the so called strong blocking sets. These, introduced first in <cit.> in relation to saturating sets, are sets of points in the projective space such that the intersection with every hyperplane spans the hyperplane. In <cit.> strong blocking sets are referred to
-as generator sets and they are constructed as union of disjoint lines. They have gained very recently a renovated interest in coding theory, since <cit.>, in which they are named cutting blocking sets and they are used to construct minimal codes. Quite surprisingly, they have been shown to be the geometric counterparts of minimal codes in <cit.>.
-
-
-
-
-
- §.§ Definition and first properties
-
-
-In this subsection we introduce minimal codes in the sum-rank metric and their geometry, together with some structure results.
-
-
-Let  be an [𝐧,k]_q^m/q sum-rank metric code. A codeword c ∈ is said minimal if for every c'∈ such that _𝐧(c')⊆_𝐧(c) then c'=λ c for some λ∈_q^m. We say that  is minimal if all of its codewords are minimal. 
-
-
-
-An [𝐧,k]_q^m/q system (U_1,…,U_t) is called cutting  if for any hyperplane H of 𝔽_q^m^k  
-
-    ⟨ U_1∩ H,…, U_t∩ H⟩_𝔽_q^m=H,
-
-that is, if L_U_1∪…∪ L_U_t is a strong blocking set in (k-1,q^m).
-
-
-The following is a generalization of the geometric characterization of minimal codes in the Hamming and in the rank metric <cit.>.
-
- 
-A sum-rank metric code is minimal if and only if an associated system is cutting.
-
-
-Thanks to this correspondence, we can easily prove, as in <cit.>, a bound on the maximum weight of a minimal sum-rank metric code.
-
-
-Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code and denote by w() the maximum weight of the codewords in  . Then
-
-    w()≤ N-k+1.
-
-
-
-Let (U_1,…,U_t) be a system associated with . Since  is minimal, by Theorem <ref>, for any hyperplane H of 𝔽_q^m^k we have 
-
-    ⟨ U_1∩ H,…, U_t∩ H⟩_𝔽_q^m=H,
-
-which implies 
-
-    ∑_i=1^t _𝔽_q(U_i∩ H)≥ k-1.
-
-By Theorem <ref> the maximum weight of  is
-
-    w()=N-min{∑_i=1^t _𝔽_q(U_i∩ H)  H  is an 𝔽_q^m-hyperplane of 𝔽_q^m^k},
-
-and by (<ref>) the assertion follows.
-
-
-We can provide a characterization of MSRD codes which are minimal.
-
-
-An MSRD code with parameters [𝐧,k]_q^m/q is minimal if and only if it is a one-weight code with minimum distance N-k+1.
-
-
-Let  be an MSRD, that is its minimum distance is d=N-k+1. 
-By Theorem <ref>, we also know that w()≤ N-k+1, therefore d=w()= N-k+1. 
-The converse trivially holds. 
-
-
-We consider now the Standard Equations, extending <cit.>. Let us recall here that
-
-    N  K_q^m=∏_i=0^K-1q^N-q^i/q^K-q^i
-
-denotes the number of K-dimensional subspaces of _q^m^N and it is called the Gauss binomial coefficient.
-
-
-Let U=(U_1,…,U_t) an [𝐧,k]_q^m/q-system and let
-
-    Λ_r={ W  W  is an r-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k }.
-
-Then 
-
-    ∑_W ∈Λ_r, i ∈{1,…,t} |W ∩ U_i∖{0}| =(q^n_1+…+q^n_t-t)k-1  r-1_q^m.
-
-
-
-The assertion follows from the fact that for any i ∈{1,…,t}, <cit.> implies
-
-    ∑_W ∈Λ_r |W ∩ U_i∖{0}| =(q^n_i-1)k-1  r-1_q^m,
-
-and
-
-    ∑_W ∈Λ_r, i ∈{1,…,t} |W ∩ U_i∖{0}| = ∑_i ∈{1,…,t}(∑_W ∈Λ_r |W ∩ U_i∖{0}| ).
-
-
-
-
-
-
-
- §.§ Bounds on the parameters of minimal sum-rank metric codes
-
-
-By extending a minimal sum-rank metric code by adding new columns and/or blocks we get a minimal code as well.
-
-
-Let  be a minimal sum-rank metric code with parameters [𝐧,k]_q^m/q. Let ' be the code generated by G', where G' is obtained by adding any columns or blocks to any generator matrix G of . Then ' is minimal.
-
-
-This is an immediate consequence of Theorem <ref>.
-
-
-In view of Proposition <ref>, it is natural to look for short minimal sum-rank metric codes, when the number of blocks is given. 
-
-The Standard Equations allow to prove the following bound on the parameters of minimal sum-rank metric codes.
-
-
-Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code.
-
-If t≥ k, then
-
-    (q^n_1+…+q^n_t-t)(q^m(k-1)-1)≥ (q-1)(k-1)(q^km-1)
-
-If t≤ k-1 then
-
-    (q^n_1+…+q^n_t-t)(q^m(k-1)-1)≥ t(q^⌊k-1/t⌋-1)(q^km-1).
-
-
-
-By Theorem <ref>, for any hyperplane
-
-    ∑_i ∈{1,…,t}_𝔽_q (H∩ U_i)≥ N-w()≥ k-1,
-
-therefore
-
-    ∑_i ∈{1,…,t} |H ∩ U_i∖{0}|≥  (q-1)(k-1).
-
-It follows that 
-
-    ∑_H ∈Λ_k-1,  i ∈{1,…,t} |H ∩ U_i∖{0}| ≥ (q-1)(k-1)k  1_q^m,
-
-so that, by Lemma <ref>,
-
-    (q^n_1+…+q^n_t-t)k-1  1_q^m≥ (q-1)(k-1)k  1_q^m,
-
-which is (<ref>).
-
-If t≤ k-1, then (<ref>) implies that 
-
-    _(U_i ∩ H)≥⌊k-1/t⌋,
-
-for any i ∈{1,…,t} and for any hyperplane H. Arguing as before we obtain (<ref>).
-
-
-
-Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code.
-
-If t≥ k, then, for large q,
-
-    N ≥ t+m+⌈log_q(k)⌉,
-
-If t≤ k-1 then, for large q,
-
-    N≥⌊k-1/t⌋+m+⌈log_q(t)⌉+t-1.
-
-
-
-
-Noting that q^N-t+1+(t-1)q≥ q^n_1+…+q^n_t the asymptotic bounds follow.
-
-
-
-For t=N (Hamming-metric case), the bound (<ref>) becomes 
-
-    N≥⌈(q^m)^k-1/(q^m)^k-1-1· (k-1)⌉.
-
-This last is in general slightly weaker than the known lower bound on the length of minimal codes (see <cit.>), recently improved in <cit.> and <cit.> for large k. Note that for k=2, the above bound is sharp.
-
-For t=1 (rank-metric case), the bound (<ref>) reduces to 
-
-    N≥ m+k-1,
- which is exactly the bound proved for rank-metric codes <cit.>, which is shown to be sharp for k=2 and for k=3, the last with some additional conditions on m (see <cit.> for the precise statement). 
-
-Bound (<ref>) is tight for every q, m, t=q+1 and k=2 as we will show in Remark <ref>.
-Moreover, for k=3 and q>2, consider a code  associated with the [𝐧,3]_q^m/q-system 
-
-    U=(U_1,…,U_t),
-
-where U_1 is a scattered -subspace of dimension m+2 (which exists under some conditions, see again <cit.>) and U_2,…,U_t any -subspaces of dimension one spanned by random nonzero vectors in _q^m^k.
-By <cit.> and Theorem <ref>,  is a minimal sum-rank metric code with N=m+2+t-1=m+t+1 which gives the equality in bounds (<ref>) (for t≥ 3) and (<ref>) (for t=2).
-
-
-
-
-
-
- §.§ Existence of minimal codes
-
-
-A first result immediately follows from <cit.> on the existence of minimal codes in the rank metric.
-
-
-For any m,k≥ 2, t and n_2,…,n_t, there exists a minimal code of parameters [(2k+m-2,n_2,…,n_t),k]_q^m/q.
-
-
-<cit.> ensures the existence of a minimal _q^m-linear rank-metric code of length 2k+m-2 of dimension k. Then we can extend such a code to a minimal sum-rank metric code via Proposition <ref>.
-
-
-However, the codes described in Proposition <ref> are quite unbalanced, since we look only to the first block and we do not care of the rest. The following result will give a more general existence condition. We  follow the proof of <cit.> to give a condition on the parameters which ensures the existence of a minimal sum-rank metric code. The main difference with the proof of <cit.> consists in computing the size of the analog of the set denoted by 𝒫 in <cit.>.
-
-
-If n_i≥ m for any i ∈{1,…,t} and
-
-    (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1)-1/2∑_i_1,…,i_t=2^m1/q^m-1∏_r=1^tm  i_r_q ∏_j_r=0^i_r-1 (q^n_r-q^j_r) ( q^mi_r-1/q^m-1-1 )
- 
-is positive, then there exists a linear sum-rank metric code with parameters [𝐧,k]_q^m/q which is minimal.
-
-
-Denote by 𝒬 a set of nonzero representatives of the one-dimensional _q^m-subspaces of _q^m^k. A non-minimal linear code in 𝔽_q^m^𝐧 is any sum-rank metric code containing an element of the following set
-
-    𝒫={ (x,y) ∈𝒬^2  x y, supp^srk(x)⊆supp^srk(y)  or supp^srk(y)⊆supp^srk(x) }.
-
-Therefore, the number of minimal sum-rank metric codes in 𝔽_q^m^𝐧 is at least
-
-    N  k_q^m- |𝒫| N-2  k-2_q^m=N-2  k-2_q^m( (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1) - |𝒫| ),
-
-and hence if we prove that (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1) - |𝒫|>0, then we ensure the existence of a minimal sum-rank metric code.
-Finally we compute the size of 𝒫 as follows:
-
-    2 |𝒫|    =∑_i=1^tm |{ (x,y) ∈𝒬^2  x y, w(y)=i,  supp^srk(x)⊆supp^srk(y)  }|
-       = ∑_i_1,…,i_t=1^m∑_y ∈𝒬,  w(y)=i_1+…+i_t  |{ x ∈𝒬 x y, supp^srk(x)⊆supp^srk(y)  }|
-       = ∑_i_1,…,i_t=1^m∑_y ∈𝒬,  w(y)=i_1+…+i_t  |{ x ∈𝒬 x y, supp^rk(x_ℓ)⊆supp^rk(y_ℓ)  ∀ℓ∈{1,…,t}}|
-       =∑_i_1,…,i_t=2^m1/q^m-1∏_r=1^tm  i_r_q ∏_j_r=0^i_r-1 (q^n_r-q^j_r) ( q^mi_r-1/q^m-1-1 ).
-
-
-
-
-If n_i≥ m for any i ∈{1,…,t} and
-for sufficiently large q, if 
-    N≥ 2k+tm-(t+1),
-
-then there exists a linear sum-rank metric code with parameters [𝐧,k]_q^m/q which is minimal.
-
-
-
-As in the proof of <cit.> we have the 
-(<ref>) is greater than
-
-    q^2m(N-k)-1/2(q^m-1)^t+1∑_i_1,…,i_t=2^m∏_r=1^tm  i_r_q q^i_r(m+n_r),
-
-which is greater than (with the same arguments as in the proof of <cit.>)
-
-    q^2m(N-k)-f(q)^t/2(q^m-1)^t+1·∑_i_1,…,i_t=2^m
-    q^∑_r=1^t 2mi_r-i_r^2+n_ri_r,
+    E_D,→(ρ_AB) = lim_n→∞1/nE^(1)_D,→(ρ_AB^⊗ n),
 
 where 
+E^(1)_D,→(ρ_AB) := max_T I_(A'⟩ M B)_T(ρ_AB),
+and the maximization ranges over all quantum instruments
+T:A→ A'M on Alice’s system. The regularization in Eq. (<ref>) for E_D,→(ρ_AB) is intractable to compute in most cases. However, there are some categories of states whose E_D,→ can be reduced to single-letter formulae. Two important classes are called degradable states and anti-degradable states.
 
-    f(q):=∏_i=1^∞q^i/q^i-1.
+Let ρ_AB be a bipartite state with purification |ϕ⟩_ABE. ρ_AB is called degradable if there exists a CPTP map ℳ_B→ E such that ℳ_B→ E(ρ_AB) = _B(ϕ_ABE), and is called anti-degradable if there exists a CPTP map ℳ_E→ B such that ℳ_E→ B(ρ_AE) = _E(ϕ_ABE). Equivalently, a state is anti-degradable if and only if it has a symmetric extension <cit.>, thus is also called a two-extendible state. For the degradable states, it is shown that <cit.>
 
-Now, by simple analytic arguments, the largest exponent in the sum on the right is
-tm^2+mN, so that, for q large enough, we get
+    E^(1)_D,→(ρ_AB^⊗ n) = n  E^(1)_D,→(ρ_AB) = n I_(A⟩ B)_ρ, ∀ n∈ℕ,
 
-    q^2m(N-k)-f(q)^t/2· q^tm^2+mN-mt-m.
+resulting in E_D,→(ρ_AB) =  I_(A⟩ B)_ρ. For the anti-degradable states, consisting of a compact and convex set, it always holds
 
-The thesis again follows by analytic arguments.
+    E^(1)_D,→(ρ_AB) = E_D,→(ρ_AB) = 0.
 
+Moreover, E_D,→(·) is convex on decomposing a state into degradable and anti-degradable parts <cit.>. To better exploit this convexity, we introduce the reverse max-relative entropy of unextendible entanglement to help identify the anti-degradable (two-extendible) part of a given bipartite state ρ_AB:
 
+    _max,(ρ_AB) := min_τ∈D_max(τ_AB||ρ_AB),
 
+where  is the set of all anti-degradable states. In this resource theory, the resource we consider is the extendible entanglement, and the free states are bipartite states that are possibly shareable between A and a third party E, where E is isomorphic to B. Notably, the extendibility of entanglement is a key property in entanglement theory with many existing applications <cit.>. Here, combined with the idea of entanglement of formation, _max,(ρ_AB) can be applied to derive an upper bound on the one-way distillable entanglement of an arbitrary state ρ_AB as shown in Theorem <ref>.
 
+For any bipartite state ρ_AB, it satisfies
 
+    E_D,→(ρ_AB) ≤ E_ rev^u(ρ_AB):=[1-2^-_max,(ρ_AB)]· E_F(ω_AB),
 
-
-§ THE GEOMETRIC DUAL OF SUM-RANK METRIC CODES
-
-
-In this section we define a new operation which take an element in ℭ[𝐧,k,d]_q^m/q and it associates to it an element in ℭ[𝐧',k,d]_q^m/q, where 𝐧=(n_1,…,n_t) and 𝐧'=(mk-n_1,…,mk-n_t). It involves systems and
-we call it geometric dual. We will show some of its properties and, in the next section, we will show how this object helps in constructing minimal sum-rank metric codes.
-
-
-
-
-
- §.§ Dual of -subspaces of _q^m-vector spaces
+where ω_AB is the -squeezed state of ρ_AB, _max,(·) is the reverse max-relative entropy of unextendible entanglement, and E_F(·) is the entanglement of formation.
 
 
-Let V be an _q^m-vector space of dimension k and let σ V × V →_q^m be any nondegenerate reflexive sesquilinear form of V and consider 
-    [                σ':              V × V                  ⟶                 _q;                                 (x,y)                  ⟼ Tr_q^m/q (σ(x,y)), ]
+Suppose the ADG-squeezed state of ρ_AB is ω_AB and the optimal solution in Eq. (<ref>) for ρ_AB is τ_AB. It follows 
+
+    ρ_AB = [1-2^-_max,(ρ_AB)]ω_AB + 2^-_max,(ρ_AB)τ_AB,
+
+where τ_AB is anti-degradable. Suppose ω_AB admit a pure state decomposition ω_AB= ∑_ip_i |ω_i⟩⟨ω_i|_AB. Since any pure state is degradable, we now can decompose ρ_AB into degradable parts and anti-degradable parts as
+
+    ρ_AB = [1-2^-_max,(ρ_AB)]∑_i p_i |ω_i⟩⟨ω_i|_AB + 2^-_max,(ρ_AB)τ_AB,
+
+According to the essential convexity of E_D,→(·) on decomposing a state into degradable and anti-degradable parts proved by Leditzky et al. <cit.>, we have
+
+    E_D,→(ρ_AB)    ≤ [1-2^-_max,(ρ_AB)]·∑_i p_i E_D,→(ω_i) + 2^-_max,(ρ_AB) E_D,→(τ_AB)
+       ≤ [1-2^-_max,(ρ_AB)]·∑_i p_i I_c(A⟩ B)_ω_i,
+
+where the second inequality is due to the fact in Eq. (<ref>) and Eq. (<ref>) of degradable states and anti-degradable states, respectively. After taking the minimization over all possible decomposition of ω_AB, we arrived at
+
+    E_D,→(ρ_AB)    ≤ [1-2^-_max,(ρ_AB)]·min∑_i p_i I_c(A⟩ B)_ω_i
+       =[1-2^-_max,(ρ_AB)]· E_F(ω_AB).
+
+
+
+The bound E_ rev^u(ρ_AB) has a cartoon illustration as shown in Fig. <ref>. The main insight of it is to squeeze out as much of the free or useless part, the anti-degradable state here, as possible. We point out that squeezing all useless parts out does not necessarily give the tightest upper bound in terms of the one-way distillable entanglement, e.g., isotropic state <cit.>. Instead of squeezing out all the useless parts, there may be room for exploring more appropriate partitions when we try to decompose a specific quantum state. However, the approach we present in Theorem <ref> is an invaluable method for general states as shown in subsection <ref> and can be seen as a variant of the continuity bound in terms of the anti-degradability of the state.
+
+
+For any bipartite state ρ_AB, it satisfies
+
+    E_D,→(ρ_AB) ≤E_ rev^u(ρ_AB) := [1-2^-_max,(ρ_AB)]·∑_iλ_i S(B)_ψ_i,
+
+where ω_AB=∑_iλ_i |ψ_i⟩⟨ψ_i| is the spectral decomposition of the ADG-squeezed state ω_AB of ρ_AB.
+
+Corollary <ref> is followed by the fact that E_F(ω_AB) has a trivial upper bound as E_F(ω_AB) ≤∑_iλ_i S(B)_ψ_i. We note that any other good upper bound on the entanglement of formation can also be applied to Theorem <ref>. In particular, the bound E_ rev^u(ρ_AB) is efficiently computable since _max,(ρ_AB) and 2^-_max,(ρ_AB) can be efficiently computed via an SDP. By Slater’s condition <cit.>, the following two optimization programs satisfy the strong duality, and both evaluate to 1-2^-_max,(ρ_AB). We denote P_BE as a permutation operator on the system B and E and remain the derivation of the dual program in Appendix <ref>.
+
+    Primal Program
+    min_ω_AB, τ_AB, τ_ABE    [ω_AB],
+     s.t.    ρ_AB =ω_AB+τ_AB, 
+        ω_AB≥ 0, τ_AB≥ 0, τ_ABE≥ 0,
+        _E[τ_ABE] = _B[τ_ABE] = τ_AB,
+       Dual Program
+    max_M_AB,N_AB,K_AE    [M_ABρ_AB],
+     s.t.     M_AB≤ I_AB, 
+         M_AB+N_AB+K_AB≤ 0,
+         N_AB⊗ I_E +P_BE(K_AB⊗ I_E)P_BE^†≥ 0.
+
+
+It is worth mentioning that this new bound is related to the bound E_ DA(·) proposed in <cit.> utilizing the convexity of E_D,→(·) on decomposing a state into degradable and anti-degradable parts. Remarkably, such decomposition is challenging to construct since the degradable state set is not necessarily convex. Thus it is difficult to compute E_ DA(·) in <cit.>  in practice due to the hardness of tracking all possible decompositions. Whereas, E_ rev^u(ρ_AB) overcomes this difficulty and is efficiently computable. It outperforms the known upper bounds for many maximally entangled states under practical noises in a high-noise region, as shown in subsection <ref>. Furthermore, our method is flexible in selecting other decomposition strategies, i.e., the object functions in the SDP, other than trivially calculating the ratio at the sub-state decomposition.
+
+
+
+ §.§ Continuity bounds of the one-way distillable entanglement
+
+Note that the insight of the bound above is considering the distance of a given state between the anti-degradable states set. With different distance measures, the authors in <cit.> derived continuity bounds on quantum capacity in terms of the (anti)degradability of the channel. Thus for self-contained, we introduce some distance measures between a state and the set  and prove the continuity bounds for the state version as a comparison with E_ rev^u(ρ_AB).
+
+
+Let ρ_AB be a bipartite quantum state, the anti-degradable set distance is defined by
+
+    d_ set(ρ_AB) := min_σ_AB∈ ADG1/2ρ_AB - σ_AB_1,
+
+where the minimization ranges over all anti-degradable states on system AB. 
+
+Analogous to the anti-degradable set distance, one also has the anti-degradable map distance as follows.
+
+Let ρ_AB be a bipartite quantum state with purification ϕ_ABE, the anti-degradable map distance is defined by
+
+    d_ map(ρ_AB):= min_𝒟:E→ B1/2ρ_AB - 𝒟(ρ_AE)_1
+    ,
+
+where ρ_AE = _B(ϕ_ABE) and the minimization ranges over all CPTP maps 𝒟.
+
+
+Both parameters can be computed via SDP, ranging from [0,1], and are equal to 0 iff ρ_AB is anti-degradable. Similar to the idea in <cit.> for channels and the proof techniques in <cit.>, we utilize the continuity bound of the conditional entropy in Lemma <ref> proved by Winter <cit.> to derive two continuity upper bounds on the one-way distillable entanglement, concerning the distance measures above. The proofs can be found in Appendix <ref>. We denote h(p)=-plog p - (1-p)log(1-p) as the binary entropy and g(p):= (1+p)h(p/1+p) as the bosonic entropy. 
+
+
+For any bipartite state ρ_AB with an anti-degradable set distance ε_ set, it satisfies
+
+    E_D,→(ρ_AB) ≤ E_ SCB(ρ_AB) := 2ε_ setlog(|A|) + g(ε_ set).
+
+
+
+For any bipartite state ρ_AB with an anti-degradable map distance ε_ map, it satisfies
+
+    E_D,→(ρ_AB) ≤ E_ MCB(ρ_AB) := 4ε_ maplog(|B|) + 2g(ε_ map).
+
+
+
+
+
+ §.§ Examples of less-entangled states
+
+We now compare the performance of different continuity bounds and the Rains bound with E_ rev^u(·) by some concrete examples. Due to noise and other device imperfections, one usually obtains some less entangled states in practice rather than the maximally entangled ones. Such a disturbance can be characterized by some CPTP maps appearing in each party. Thus for the task of the distillation of the maximally entangled states under practical noises, we consider Alice and Bob are sharing pairs of maximally entangled states affected by bi-local noisy channels, i.e.,
+
+    ρ_A'B' = _A→ A'⊗_B→ B'(Φ_AB).
+
+
+
+
+
+
+  
+Qubit system Suppose Alice's qubit is affected by the qubit amplitude damping channel with Kraus operators
+K_0 = |0⟩⟨0| + √(1-γ)|1⟩⟨1|, K_1 = √(γ)|0⟩⟨1|, and Bob's qubit is affected by the depolarizing channel (ρ) = (1-p)ρ + p I_2/2. Set γ = 0.1 and the noise parameter of depolarizing noise varies in the range p∈[0.15,0.3]. E_D,→(ρ_A'B') has upper bounds as functions of p shown in Fig. <ref> (a).
+
+
+
+  
+Qutrit system For the system with a dimension d>2, we consider the multilevel versions of the amplitude damping channel (MAD) <cit.> as a local noise for Alice. The Kraus operators of a MAD channel in a d-dimensional system are defined by
+
+    K̂_i j   ≡√(γ_j i)|i⟩⟨j|,   ∀ i, j  s.t.  0 ≤ i ≤ d-1, 
+    K̂_0    ≡|0⟩⟨0|+ ∑_1 ≤ j ≤ d-1√(1-ξ_j)|j⟩⟨j|,
+
+with γ_j i real quantities describing the decay rate from the j-th to the i-th level that fulfill the conditions
+
+    0 ≤γ_j i≤ 1,    ∀ i, j  s.t.  0 ≤ i<j ≤ d-1, 
+    ξ_j ≡∑_0 ≤ i<jγ_j i≤ 1,    ∀ j=1, ⋯, d-1.
+
+Suppose Alice qutrit is affected by a MAD channel with γ_10 = γ_20 = 0.1,  γ_21 = 0. Bob's qutrit is affected by a qutrit depolarizing channel with the noise parameter p. Then E_D,→(ρ_A'B') has upper bounds as functions of p shown in Fig. <ref> (b).
+
+
+
+  
+Qudit system For the qudit system, we consider Alice's qudit is affected by a MAD channel with d=4 defined in Eq. (<ref>) and Eq. (<ref>), where γ_10 = γ_20 = γ_30 = γ_21 = 0.1, γ_31 = γ_32 = 0.
+Let Bob's qudit be affected by a qudit depolarizing channel with noise parameter p, then E_D,→(ρ_A'B') has upper bounds as functions of p shown in Fig. <ref> (c).
+
+
+
+  
+Noisy Bell state Specifically for a Bell state destroyed by bi-local depolarizing noises, i.e., ρ_A'B'=_A→ A'⊗_B→ B' (Φ_AB), we give an analytical upper bound on E_D,→(ρ_A'B') as shown in Proposition <ref>. 
+
+Let Φ_AB be a Bell state and _A→ A', _B→ B' be depolarizing channels on system A and B, respectively. The state ρ_A'B'=_A→ A'⊗_B→ B' (Φ_AB) either is anti-degradable with E_D,→(ρ_A'B')=0 or satisfies
+
+    2^-_max,(ρ_A'B') =3(p_A + p_B - p_Ap_B)
+
+and 
+
+    E_D,→(ρ_A'B') ≤ 1 - 3(p_A + p_B - p_Ap_B),
+
+where p_A, p_B are noise parameters of _A→ A' and _B→ B', respectively.
+
+
+In the beginning, we note that if 1 - 3(p_A + p_B - p_Ap_B)≤ 0, the state ρ_A'B' is anti-degradable according to Lemma <ref>, which gives E_D,→(ρ_A'B')=0. Then if 1 - 3(p_A + p_B - p_Ap_B)>0,
+we will first prove 2^-_max,(ρ_A'B')≥ 3(p_A + p_B - p_Ap_B) use the primal SDP in (<ref>). We show that {ω̂_A'B',τ̂_A'B'E} is a feasible solution to the primal SDP, where
+
+    ω̂_A'B' = 1-3(p_A+p_B-p_Ap_B)/2(|00⟩⟨00| + |11⟩⟨11|+ |00⟩⟨11| + |11⟩⟨00|),
+
+
+    τ̂_A'B'E = (
+        [ 4ζ  0  0  0  0 2ζ 2ζ  0;  0  ζ  ζ  0  0  0  0 2ζ;  0  ζ  ζ  0  0  0  0 2ζ;  0  0  0  0  0  0  0  0;  0  0  0  0  0  0  0  0; 2ζ  0  0  0  0  ζ  ζ  0; 2ζ  0  0  0  0  ζ  ζ  0;  0 2ζ 2ζ  0  0  0  0 4ζ;    ]),
+
+with ζ = p_A + p_B - p_A p_B/4. When the Bell state shared by Alice and Bob is affected by bi-local depolarizing channels _A→ A' and _B→ B' with noise parameters p_A and p_B, respectively, the resulting state is
+
+    ρ_A'B' =   _A→ A'⊗_B→ B' (Φ_AB)
+    
+        =    2-(p_A+p_B)+p_Ap_B/4(|00⟩⟨00| + |11⟩⟨11|)+ p_A+p_B-p_Ap_B/4(|01⟩⟨01| + |10⟩⟨10|)
+        + 1-(p_A+p_B)+p_Ap_B/2(|00⟩⟨11|+|11⟩⟨00|).
+
+Then the unnormalized state τ̂_A'B' = ρ_A'B' - ω̂_A'B' is
+
+    τ̂_A'B' =   5(p_A+p_B-p_Ap_B)/4(|00⟩⟨00| + |11⟩⟨11|)+ p_A+p_B-p_Ap_B/4(|01⟩⟨01| + |10⟩⟨10|)
+       + (p_A+p_B-p_Ap_B)(|00⟩⟨11|+|11⟩⟨00|).
+
+It is straightforward to check that τ̂_A'B'E≥ 0 and _E[τ̂_A'B'E] = _B[τ̂_A'B'E] = τ̂_A'B'.  Thus, we have proven that {ω̂_A'B',τ̂_A'B'E} is a feasible solution to the primal SDP, implying that
+
+    1 - 2^-_max,(ρ_A'B')≤[ω̂_A'B'] = 1 - 3(p_A + p_B - p_Ap_B)
+
+and 2^-_max,(ρ_A'B')≥ 3(p_A + p_B - p_A p_B).
+
+Second, we will use the dual SDP in (<ref>) to prove 2^-_max,(ρ_A'B')≤ 3(p_A + p_B - p_Ap_B). We show that { M_AB, N_AB, K_AB} is a feasible solution to the dual problem, where
+
+    M_AB = (
+        [ -1  0  0  2;  0 -3  0  0;  0  0 -3  0;  2  0  0 -1;    ]),
+        N_AB = K_AB = -1/2M_AB.
+
+To check the constraints, we have M_AB≤ I_AB, M_AB + N_AB + K_AB = 0 and N_AB⊗ I_E + P_BE(K_AB⊗ I_E)P_BE^†≥ 0. By direct calculation, we have [M_ABρ_A'B'] = 1 - 3(p_A + p_B-p_A p_B). Thus, we have proven {M_AB, N_AB, K_AB} is a feasible solution, which implies that
+
+    1 - 2^-_max,(ρ_A'B')≥[M_ABρ_A'B'] = 1 - 3(p_A + p_B-p_A p_B),
+
+and 2^-_max,(ρ_A'B')≤ 3(p_A + p_B - p_A p_B). Combining the dual part with the primal part, we arrive at
+
+    2^-_max,(ρ_A'B') = 3(p_A + p_B - p_Ap_B)
+
+Since the normalized state ω_A'B' of ω̂_A'B' is a maximally entangled state with E_D,→(ω_A'B')=1, we have E_D,→(ρ_A'B') ≤ 1 - 3(p_A + p_B-p_A p_B).
+
+
+As shown in Fig <ref>, we plot 
+four different upper bounds and the Hashing bound in different dimensional systems in a high-noise region. We can see that E_ rev^u(ρ_AB) is lower than the other two continuity bounds and the Rains bound in the orange dotted line, acting the tightest among all upper bounds. We demonstrate the advantage of our analytic bound in Proposition <ref> by comparing it with the continuity bounds and the Rains bound in Fig. <ref> (d), where the depolarizing noise parameter p_B is set to 0.1 and the noise parameter p_A is varied.
+
+
+
+
+ §.§ Extending the method to the two-way distillable entanglement
+
+Similar to the reverse max-relative entropy of unextendible entanglement, for a given bipartite state ρ_AB, we introduce the reverse max-relative entropy of NPT entanglement as
+
+    _max,(ρ_AB) := min_τ∈D_max(τ_AB||ρ_AB),
+
+where the minimization ranges over all  states. Based on the convexity of E_D,↔(·) on decomposing a state into the maximally correlated (MC) states and the PPT states <cit.> (see Appendix <ref> for more details), the reverse max-relative entropy of NPT entanglement can be applied to derive an upper bound on the two-way distillable entanglement as Theorem <ref>.
+
+For any bipartite state ρ_AB, it satisfies
+
+    E_D,↔(ρ_AB) ≤ E_ rev^npt(ρ_AB):=[1-2^-_max,(ρ_AB)]· E_F(ω_AB),
+
+where ω_AB is the PPT-squeezed state of ρ_AB and _max,(·) is the reverse max-relative entropy of NPT entanglement.
+
+It also follows an efficiently computable relaxation as E_ rev^npt(ρ_AB)= [1-2^-_max,(ρ_AB)] ∑_iλ_i S(B)_ψ_i, where ω_AB=∑_iλ_i |ψ_i⟩⟨ψ_i| is the spectral decomposition of the PPT-squeezed state ω_AB of ρ_AB. 
+
+In fact, E_ rev^npt(·) can be interpreted as an easily computable version of the bound E_ MP(·) in <cit.>, utilizing the convexity of E_D,↔(ρ_AB) on the convex decomposition of ρ_AB into MC states and PPT states. Since the set of all MC states is not convex, tracking all possible decompositions to compute E_ MP(·) is generally hard. However, E_ rev^npt(·) is efficiently computable by SDP and tightens the upper bound of the example states illustrated in <cit.>, whose details can be found in Appendix <ref>. We note that R(ρ_AB) ≤ E_ MP(ρ_AB)≤E_ rev^npt(ρ_AB) where R(·) is the Rains bound for the two-way distillable entanglement. Nevertheless, E_ rev^npt(·) connects the reverse max-relative entropy of NPT entanglement with the entanglement of formation, and we believe such connection would shed light on the study of other quantum resource theories as well. 
+
+
+
+
+§ APPLICATIONS ON QUANTUM CHANNEL CAPACITY
+
+
+For a general quantum channel _A→ B, its quantum capacity has a regularized formula proved by Lloyd, Shor, and Devetak <cit.>:
+
+    Q() = lim_n→∞1/nQ^(1)(^ n),
+
+where Q^(1)():= max_|ϕ⟩_A'A I_c(A'⟩ B)_()(ϕ) is the channel coherent information. Similar to the one-way distillable entanglement of a state, the regularization in Eq. (<ref>) makes the quantum capacity of a channel intractable to compute generally. Substantial efforts have been made to establish upper bounds. One routine is inspired by the Rains bound in entanglement theory <cit.>. Tomamichel et al. introduced Rains information <cit.> for a quantum channel as an upper bound on the quantum capacity. Then some efficiently computable relaxations or estimations are given in <cit.>. Another routine is to consider the (anti)degradability of the quantum channels and to construct flag extensions, which gives the currently tightest upper bound for quantum channels with symmetry or known structures <cit.>. 
+
+A channel _A→ B is called degradable if there exits a CPTP map _B→ E such that ^c = ∘, and is called anti-degradable if there exits a CPTP map _E→ B such that = ∘^c. It is known that  is (anti)degradable if and only if its Choi state J_ is (anti)degradable. The quantum capacity of an anti-degradable channel is zero and the coherent information of a degradable channel is additive which leads to Q() = Q^(1)(). Also, the quantum capacity admits convexity on decomposing a channel into a convex combination of degradable channels and anti-degradable channels <cit.> which can give a simple upper bound on Q(). Concerning the (anti)degradability of a channel, the authors in <cit.> called a channel ε-degradable channel if there is a CPTP map _B→ E such that || ^c - ∘||_♢≤ 2ε. A channel is called ε-anti-degradable channel if there is a CPTP map _E→ B such that ||  - ∘^c||_♢≤ 2ε. Based on these, one has continuity bounds of the quantum capacity as follows.
+
+    Given a quantum channel _A → B, if it is -degradable, then it satisfies Q() ≤ Q^(1)() + log(d_E - 1) + h() + 2log d_E + g(). If _A→ B is -anti-degradable, it satisfies Q() ≤log(|B|-1) + 2log|B| + h() + g().
+
+
+With a similar spirit of the reverse max-relative entropy of unextendible entanglement in Eq. (<ref>), for a quantum channel _A→ B, we define the reverse max-relative entropy of anti-degradability of the channel as
+
+    _max,(_A→ B) := min_'_A→ B∈_D_max('_A→ B||_A→ B),
+
+where _ is the set of all anti-degradable channels and the max-relative entropy of '_A→ B with respect to _A→ B is defined by
+
+    D_max('_A→ B||_A→ B):=  inf{λ∈ℝ: J_AB^'≤ 2^λ J_AB^}.
+
+If there is no such a channel '_A→ B∈_ that satisfies J_AB^'≤ 2^λ J_AB^, _max,(_A→ B) is set to be 0. Similar to the state case, _max,(_A→ B) has a geometric implication analogous to the distance between _A→ B to the set of all anti-degradable channels. We can introduce the -squeezed channel of _A→ B as follows.
+
+For a quantum channel _A→ B and the anti-degradable channel set _, if _max,() is non-zero, the -squeezed channel of _A→ B is defined by
+
+    _A→ B = _A→ B - 2^-_max,()·^'_A→ B/1-2^-_max,()
+
+where ^'_A→ B is the closest anti-degradable channel to _A→ B in terms of the max-relative entropy, i.e., the optimal solution in Eq. (<ref>). If _max,() is zero, the -squeezed channel of _A→ B is itself.
  
-where V is seen as an -vector space of dimension mk.
-So, σ' is a nondegenerate reflexive sesquilinear form on V seen as an -vector space of dimension km. Then we may consider ⊥ and ⊥' as the orthogonal complement maps defined by σ and σ', respectively. For an _q-subspace U of  V of dimension n, the _q-subspace U^⊥' is the dual (with respect to σ') of U, which has dimension km-n; see <cit.>.
+Notably, _max,(), or 2^-_max,() equivalently, can be efficiently computed via SDP. The following two optimization programs satisfy the strong duality, and both evaluate to 1-2^-_max,(). We remain the derivation of the dual program in Appendix <ref>. 
 
-An important property that σ' satisfies is that the dual of an _q^m-subspace W of V is an _q^m-subspace as well and W^⊥'=W^⊥. Moreover, the following result will be widely used in the paper.
-
-
-Let U be an -subspace of V and W be an _q^m-subspace of V.
-Then 
-
-    _(U^⊥'∩ W^⊥)=_(U∩ W)+_(V)-_(U)-_(W).
-
-
-
-In <cit.>, it has been proved that if we replace σ by another form with the same properties, with this procedure we obtain an -subspace of V which turns out to be Γ L(k,q^m)-equivalent to U^⊥'.
-For this reason, from now on we will assume that σ is fixed and we will just write U^⊥', without mentioning the form σ used.
+    Primal Program
+    min_Γ_AB^, Γ_AB^', γ_ABE   [Γ_AB^],
+     s.t.     J_AB^ = Γ_AB^ + Γ_AB^', 
+        Γ_AB^≥ 0, Γ_AB^'≥ 0, γ_ABE≥ 0,
+        _B[Γ_AB^'] = [Γ_AB^']/d_A · I_A,
+        _E[γ_ABE] = _B[γ_ABE] = Γ_AB^', 
+       Dual Program
+    max_M_AB,N_AB,K_AB,R_A   [M_AB J_AB^],
+     s.t.     M_AB≤ (1- R_A/d_A)I_AB+R_A⊗ I_B, 
+         M_AB+N_AB+K_AB≤ 0,
+         N_AB⊗ I_E +P_BE(K_AB⊗ I_E)P_BE^†≥ 0.
 
 
+The conceptual idea we used here is similar to that for the state case in Eq. (<ref>) and Definition <ref>, which is to squeeze or isolate out as much part of anti-degradable channel as possible via a convex decomposition of the original channel. The insight here is that one can ignore the contribution from the anti-degradable part for the quantum capacity, and the quantum capacity admits convexity on the decomposition into degradable and anti-degradable parts. In this way, the following Theorem <ref> gives an upper bound Q_ sqz() for the quantum capacity of .
+
+Given a quantum channel _A → B, if it has an ADG-squeezed channel _A→ B, we denote
+_A→ BB' as an extended channel of _A→ B such that _B'[_A→ BB'(ρ_A)] = _A→ B(ρ_A), ∀ρ_A∈(_A). Then it satisfies
+
+    Q() ≤ Q_ sqz() := [1-2^-_max,()]·min{ Q^(1)() |  _A→ BB'},
+
+where the minimization is over all possible extended channels of S_A→ B. If there is no such a degradable _A→ BB' exists, the value of this bound is set to be infinity.
 
 
+By the definition of the -squeezed channel of _A→ B, we have
 
- §.§ Geometric dual
+    _A→ B = [1-2^-_max,()] ·_A→ B + 2^-_max,()·'_A→ B
 
+where '_A→ B is anti-degradable. We write an extended channel of '_A→ B as '_A→ BB'(ρ_A) = _A→ B(ρ_A) |0⟩⟨0|_B', which is obviously anti-degradable. Then we can construct a quantum channel _A→ BB' as
 
-We are now ready to give the definition of geometric dual of an _q^m-linear sum-rank metric code, taking into account the dual described in Section <ref>.
+    _A→ BB' = [1-2^-_max,()] ·_A→ BB' + 2^-_max,()·'_A→ BB',
 
+such that _B'[_A→ BB'(ρ_A)] = _A→ B(ρ_A) for any state ρ_A and _A→ BB' is degradable. This means after discarding the partial environment B', the receiver can obtain the original quantum information sent through _A→ B. In this case,  can certainly convey more quantum information than the , i.e., Q()≤ Q(). Note that the quantum capacity admits convexity on the decomposition into degradable parts and anti-degradable parts <cit.>. We conclude that
 
-Let  be an [,k,d]_q^m/q and let U=(U_1,…,U_t) be an associated system to  with the property that U_1∩…∩ U_t does not contain a 1-dimensional _q^m-subspace.
-Then a geometric dual ^⊥_𝒢 of  (with respect to ⊥') is defined as ', where ' is any code associated with the system (U_1^⊥,…,U_t^⊥).
+    Q()≤ Q()    ≤ [1-2^-_max,()] · Q() + 2^-_max,()· Q(')
+        = [1-2^-_max,()] · Q^(1)(),
 
+where the equality is followed by the quantum capacity is additive on degradable channels and is zero for anti-degradable channels. Considering the freedom of the choice of _A→ BB', we obtain
 
+    Q_ sqz() := [1-2^-_max,()] ·min{ Q^(1)() | _A→ BB'}
 
-In the above definition we need that U_1∩…∩ U_t does not contain a 1-dimensional _q^m-subspace, otherwise (U_1^⊥,…,U_t^⊥) would not be a system.
-Indeed, suppose that (U_1^⊥,…,U_t^⊥) is not a system, then 
-
-    ⟨ U_1^⊥',…, U_t^⊥'⟩__q^m⊆ H,
-
-where H is an _q^m-hyperplane of _q^m^k. This implies that 
-
-    U_1^⊥'+…+U_t^⊥'⊆ H,
-
-and by duality
-
-    U_1∩…∩ U_t⊇ H^⊥,
-
-a contradiction since __q^m(H^⊥)=1.
+as an upper bound on Q().
 
 
-We will now prove that the geometric dual of a linear sum-rank metric code is well-defined and we will give a relation on the weight distributions among the two codes.
+Theorem <ref> can be seen as a channel version of Theorem <ref>. However, in order to utilize the convexity of the quantum capacity after the squeezing process, it is challenging to decompose the ADG-squeezed channel into the sum of degradable ones. An alternative approach here is to use the idea of the extension channel. For the qubit channels specifically, this bound is efficiently computable and effective, as shown in subsection <ref>.
 
 
 
 
-Let  be an [,k,d]_q^m/q sum-rank metric code, with =(n_1,…,n_t), and let U=(U_1,…,U_t) be an associated system to .
-Assume that U_1∩…∩ U_t does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k. 
-Then, up to equivalence, a geometric dual ^⊥_𝒢 of  does not depend on the choice of the associated system and on the choice of code in [], hence ⊥_𝒢 is well-defined.
-The parameters of ^⊥_𝒢 are [(km-n_1,…,km-n_t),k]_q^m/q.
-The generalized weight enumerators of  and ^⊥_𝒢 are related as follows
+ §.§ Quantum capacity of qubit channels
 
-    w_^k-r(X,Y)= X^tmk-trm-NY^trm-Nw_^⊥_𝒢^r(X,Y).
+For a quantum channel with dimension two in both input and output systems, we prove that the ADG-squeezed channel is always degradable. Thus, we give an efficiently computable upper bound on the quantum capacity using the idea of the reverse max-relative entropy of anti-degradability.
 
-In particular,
+    For any qubit channel _A→ B, it is either anti-degradable or satisfies
+    
+    Q() ≤ [1-2^-_max,()] ·max_p ∈[0,1] I_c(p|0⟩⟨0|+(1-p)|1⟩⟨1|, _A→ B),
 
-    d_1()=d_k-1(^⊥_𝒢)+N-t(k-1)m.
+    where I_c(ρ, 𝒩) ≡ H(𝒩(ρ))-H(𝒩^c(ρ)) and _A→ B is the ADG-squeezed channel of _A→ B.
 
 
+By the definition of the -squeezed channel of _A→ B, we have
 
-We now prove that ⊥_𝒢 is well-defined on the equivalence classes of linear sum-rank metric codes, that is, the geometric dual of equivalent codes are equivalent (note that this also implies that the geometric dual does not depend on the choice of the system).
-Let ' be a code equivalent to  and let U'=(U_1',…,U_t') be an associated system to '. Then U and U' are equivalent systems and hence there exist ρ∈𝒮_t, a_1,…,a_t ∈_q^m^* such that for every i ∈{1,…,t}
+    _A→ B = [1-2^-_max,()] ·_A→ B + 2^-_max,()·'_A→ B
 
-    U_i'=a_i U_ρ(i).
+where '_A→ B is anti-degradable and _A→ B is not anti-degradable. If _A→ B is also not degradable, we can further decompose _A→ B into = c _0 +(1-c)S_1 such that _0 is degradable and _1 is anti-degradable since the extreme points of the set of all qubit channels have been shown to be degradable or anti-degradable channels <cit.>. This conflicts with the definition of 2^-_max,(), which implies _A→ B is degradable. Thus,
 
-Note that this also implies that U_1'∩…∩ U_t' does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k, since the U_i's satisfy this condition.
-Then for every i ∈{1,…,t}
+    Q()    ≤ [1-2^-_max,()] · Q() + 2^-_max,()· Q(')
+       = [1-2^-_max,()] · Q^(1)()
+       =[1-2^-_max,()] ·max_p ∈[0,1] I_c(p|0⟩⟨0|+(1-p)|1⟩⟨1|, _A→ B).
 
-    (U_i')^⊥'={v ∈𝔽_q^m^k σ'(v,a_i u)=0  ∀ u ∈ U_ρ(i)}=a_i^-1 U_ρ(i)^⊥',
-
-since σ'(v,a_i u)=Tr_q^m/q(a_iσ (v,u))=σ'(a_iv, u).
-
-This implies that the systems (U_1^⊥',…,U_t^⊥') and (U_1'^⊥',…,U_t'^⊥') are equivalent and hence ^⊥_𝒢 and '^⊥_𝒢 are equivalent as well.
-So, we proved that ⊥_𝒢 is well-defined.
-
-Now, observe that the code ^⊥_𝒢 has dimension k since ⊥' does not change the dimension of the ambient space of the U_i's. Since _(U_i^⊥')=mk-_(U_i) for any i, it follows that ^⊥_𝒢 has parameters [(km-n_1,…,km-n_t),k].
-To determine the r-th generalized sum-rank weight enumerator of  we need to compute
-
-    N-∑_i=1^t_(U_i∩ W),
-
-for any _q^m-subspace W of _q^m^k of dimension r, where N=n_1+…+n_t.
-By Proposition <ref>, we obtain that
-
-    N-∑_i=1^t_(U_i∩ W)=N-∑_i=1^t_(U_i^⊥'∩ W^⊥)+tmk-N-trm=
+Note that the last equality is because _A→ B is degradable, and diagonal input states outperform non-diagonal states during the optimization of the channel coherent information <cit.>.
 
 
-    tmk-N -∑_i=1^t_(U_i^⊥'∩ W^⊥)+N-trm,
 
-which correspond to a weight appearing in the (k-r)-th generalized sum-rank weight enumerator of ^⊥_𝒢 plus N-trm.
-Therefore, if 
 
-    W_^k-r(X,Y)=∑_w=0^N A_w X^N-wY^w       W_^⊥_𝒢^r(X,Y)=∑_w=0^N B_w X^tmk-N-wY^w,
 
-we have that 
+  
+Mixed unitary channels 
+To compare the performance of our method with some best-known computable bounds, e.g., the continuity bound in Theorem <ref> and the bound R̂_α <cit.> generalized from the max-Rain information <cit.>, we consider the mixed unitary channel _A→ B(·) as follows:
 
-    A_w=B_w-N+trm,
+    (ρ) = ∑_i=0^k p_i U_i ρ U_i^†,
 
-for any w.
-Therefore,
+where ∑_i=0^k p_i= 1 and U_i are unitary operators on a qubit system. In specific, we choose some fixed set of parameters and sample 1000 channels with randomly generated unitaries according to the Haar measure. We compute the distance between Q_ sqz and other bounds, then have statistics on the distribution of these channels according to the distance value. The distribution results are depicted in Fig. <ref> where the purple region corresponds to the cases Q_ sqz is tighter, and the pink region corresponds to the cases Q_ sqz is looser. We can see that in Fig. <ref>(a) and Fig. <ref>(c), Q_ sqz always outperforms the continuity bound of anti-degradability and in Fig. <ref>(b) and Fig. <ref>(d), our bound is tighter than R̂_α(10) for many cases.
 
-    W_^⊥_𝒢^r(X,Y)     =∑_w'=0^N B_w'X^tmk-N-w'Y^w'
-       =∑_w=0^N B_w-N+trm X^tmk-w-trmY^w-N+trm
-       = ∑_w=0^N A_w X^tmk-trm-wY^w-N+trm,
+
+
+
+
+  
+Pauli channels A representative qubit channel is the Pauli channel describing bit-flip errors and phase-flip errors with certain probabilities in qubits. A qubit Pauli channel Λ(·) is defined as:
+
+    Λ(ρ) = p_0 ρ + p_1 Xρ X + p_2 Yρ Y +p_3 Zρ Z,
+
+where X,Y,Z are the Pauli operators and ∑_i=0^3 p_i = 1 are probability parameters. Note that for the quantum capacity, we only need to consider the cases where p_0 dominates. Since if, for example, bit flip error X happens with probability larger than p_0, one can first apply a X flip, mapping that channel back into the case where p_0>p_1. After utilizing our method on Pauli channels, the ADG-squeezed parameter is characterized in Proposition <ref>,  whose proof can be found in Appendix <ref>. Thus, combined with Proposition <ref>, we can recover the no-cloning bound <cit.> on the quantum capacity of qubit Pauli channels.
+
+For a qubit Pauli channel Λ(·) with p_0≥ p_i>0 (i=1,2,3), it is either anti-degradable or satisfies
+
+    2^-_max,(Λ) = (√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2
+
+with an ADG-squeezed channel as the identity channel.
+
+
+
+For a qubit Pauli channel Λ(·), its quantum capacity is either vanishing or satisfies 
+
+    Q(Λ) ≤ 
+            1-(√(p_1)+√(p_2))^2 -(√(p_2)+√(p_3))^2-(√(p_1)+√(p_3))^2
+
+
+
+One recent work <cit.> studies the capacities of a subclass of Pauli channels called the covariant Pauli channel, where the parameters are set p_1 = p_2 with p_0+2p_1+p_3=1, i.e., Λ_ cov(ρ) = p_0 ρ + p_1 (Xρ X + Yρ Y)+ p_3 Zρ Z. Applying Theorem <ref> on the covariant Pauli channels, we can bound their quantum capacity as follows.
+
+For a covariant Pauli channel Λ_ cov(·), it is either anti-degradable with a zero quantum capacity or satisfies Q(Λ_ cov)≤ Q_ sqz(Λ_ cov), where 
+
+    Q_ sqz (Λ_ cov) = 
+             3p_0 + p_3 -√(8(p_3-p_0p_3-p_3^2))-2.
+
+
+In Fig. <ref>, we compare our bound with the upper bounds given in <cit.> and the continuity bound of anti-degradability in Theorem <ref>. It can be seen that our bound in the orange line, coinciding with the no-cloning bound, outperforms previous bounds, and thus can better characterize the quantum capacity of Λ_ cov(·) when it is close to being anti-degradable.
+
+
+
+
+§ CONCLUDING REMARKS
+
+
+
+
+
+We have introduced a resource measure called reverse divergence of resources for quantum states. Specifically, by choosing target free state sets and max-relative entropy, we have employed the reverse max-relative entropy of entanglement which is also related to the "weight of resource" in general resource theory. From a conceptual and technical side, these concepts help us to quantify how much useless entanglement we can squeeze out from a state or a channel, which is meaningful in the distillable entanglement and the quantum capacity, respectively. As these quantities can be efficiently determined by semidefinite programming, they are useful in deriving efficiently computable upper bounds on the distillable entanglement and the quantum capacity. 
+
+
+To better explore entanglement distillation, we have derived different continuity bounds on the one-way distillable entanglement in terms of the anti-degradability of the state. In particular, our bound derived from the reverse max-relative entropy of unextendible entanglement outperforms the continuity bounds and the Rains bound in estimating the one-way distillable entanglement for the maximally entangled states under certain noises of interest. We also introduced the reverse max-relative entropy of NPT entanglement and established connections to prior results on the two-way distillable entanglement. Furthermore, we have established an upper bound on the quantum capacity based on the reverse max-relative entropy of anti-degradability of quantum channels.  Our method delivers improved results for random mixed unitary qubit channels, making it an improved benchmark for the quantum capacities of these noisy channels. Also, the analytical bound obtained from our method also recovers the no-cloning bound on Pauli channels <cit.>.
+
+
+
+
+These results open a novel way to connect valuable quantum resource measures with quantum communication tasks. 
+Except for the existing applications of the reverse max-relative entropy of resources <cit.>, we expect the reverse divergence of resources will find more applications in quantum resource theories in both asymptotic and non-asymptotic regimes <cit.>. One may further consider choosing other divergences, e.g., the sandwiched Rényi relative entropy to solve problems in other tasks possibly. In addition, the reverse divergence of resources may potentially be helpful to the study of other quantum resource theories, including asymmetry <cit.>, thermodynamics <cit.>, coherence <cit.>, nonlocality <cit.>, non-stabilizerness <cit.>, and non-Gaussianity <cit.>. It is also an interesting problem to explore the idea of squeezing useless resources to estimate resource purification rates in quantum resource theories.
+
+
+
+§ ACKNOWLEDGEMENTS.
  
-that is the assertion.
-
-
-
-With the notation of Theorem <ref> and by denoting G a generator matrix of , by Remark <ref> we have that the rank list of the codeword xG is
-
-    (n_1-_(U_1∩ x^⊥),…,n_1-_(U_t∩ x^⊥)),
-
-which, by Proposition <ref>, is equal to
-
-    (m-_(U_1^⊥'∩⟨ x⟩__q^m),…,m-_(U_t^⊥'∩⟨ x⟩__q^m)).
-
-
-
-
-The geometric dual is involutory.
-
-
-This immediately follows by the definition of geometric dual and from the fact that ⊥' is involutory.
-
-
-
-The geometric dual operation can be applied to both Hamming and rank metric. In the first case, the geometric dual of a Hamming-metric code of length n and dimension k will give a sum-rank metric code with parameters [(mk-1,…,mk-1),k]_q^m/q, which is far from being an Hamming-metric code. For rank-metric codes with parameters [n,k]_q^m/q, the geometric dual gives a rank-metric code as well, with parameters [mk-n,k]_q^m/q.
+Part of this work was done when C. Z. and C. Z. were research interns at Baidu Research.
+We would like to thank Bartosz Regula and Ludovico Lami for helpful comments.
 
 
 
 
 
 
-§ MINIMAL CODES WITH FEW WEIGHTS
 
 
-In this section we will mainly deal with explicit construction of minimal codes in the sum-rank metric. We will make extensive use of the geometric dual introduced above.
 
-As in the Hamming and in the rank metrics (see e.g. <cit.>), all the one-weight sum-rank metric codes are minimal.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+equationsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ PROPERTIES OF THE REVERSE MAX-RELATIVE ENTROPY OF RESOURCES
+
+
+
+
+For bipartite states ρ_0 and ρ_1, it satisfies
+
+    _max,ℱ(ρ_0) + _max,ℱ(ρ_1)  ≥_max,ℱ(ρ_0⊗ρ_1).
+
+
+
+Since the max-relative entropy is additive, w.r.t, tensor products, we have
+
+    min_τ' ∈ℱD_max(τ' || ρ_0ρ_1)
+       ≤min_τ_0,τ_1 ∈ℱ D_max(τ_0τ_1 || ρ_0 ρ_1)
+       = min_τ_0 ∈ℱ D_max(τ_0 || ρ_0) + min_τ_1 ∈ℱ D_max(τ_1 || ρ_1),
+
+which completes the proof.
+
+
+
+
+Let Φ be a one-way LOCC, then for a bipartite state ρ, it satisfies
+
+    _max,ℱ[Φ(ρ)] ≤_max,ℱ(ρ).
+
+
+
+This can be directly obtained by the monotonicity of the max-relative entropy with respect to the action of channels.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ DUAL SDP FOR THE SQUEEZED PARAMETER OF STATES AND CHANNELS
+
+The primal SDP for calculating 2^-_max,(ρ_AB) of the state ρ_AB can be written as:
+
+
+    1-2^-_max,(ρ_AB) = min_ω_AB, τ_AB, τ_ABE   [ω_AB],
+     s.t.    ρ_AB =ω_AB+τ_AB, 
+        ω_AB≥ 0, τ_AB≥ 0, τ_ABE≥ 0,
+        _E[τ_ABE] = _B[τ_ABE] = τ_AB,
+
+
+where Eq. (<ref>) corresponds to the anti-degradable condition of τ_AB. The Lagrange function of the primal problem is
+
+    L(ω_AB,τ_AB,τ_ABE,M, N, K)
+       = [ω_AB] + ⟨ M, ρ_AB-ω_AB-τ_AB⟩
+          + ⟨ N, _E[τ_ABE]-τ_AB⟩ + ⟨ K, _B[τ_ABE]-τ_AB⟩
+       = ⟨ M, ρ_AB⟩ + ⟨ I-M, ω_AB⟩ + ⟨ -M-N-K, τ_AB⟩
+          + ⟨ N⊗ I_E + P_BE(K_AB⊗ I_E)P_BE^†, τ_ABE⟩,
+
+where M_AB, N_AB, K_AB are Lagrange multipliers and P_BE is the permutation operator between B and E. The corresponding Lagrange dual function is 
+
+    g(M,N,K) = inf_ω_AB,τ_AB, τ_ABE≥ 0 L(ω_AB,τ_AB,τ_ABE,M, N, K).
+
+Since ω_AB≥ 0, τ_AB≥ 0, τ_ABE≥ 0, it must hold that I-M_AB≥ 0, -M-N-K≥ 0, N⊗ I + P_BE(K ⊗ I)P_BE^†≥ 0. Thus the dual SDP is
+
+    max_M_AB,N_AB,K_AE   [M_ABρ_AB],
+     s.t.     M_AB≤ I_AB, 
+         M_AB+N_AB+K_AB≤ 0,
+         N_AB⊗ I_E +P_BE(K_AB⊗ I_E)P_BE^†≥ 0.
+
+
+The primal SDP for calculating 2^-_max,() of the channel _A→ B is:
+
+
+    1-2^-_max,() = min_Γ_AB^, Γ_AB^', γ_ABE   [Γ_AB^],
+     s.t.     J_AB^ = Γ_AB^ + Γ_AB^', 
+        Γ_AB^≥ 0, Γ_AB^'≥ 0, γ_ABE≥ 0,
+        _B[Γ_AB^'] = [Γ_AB^']/d_A · I_A,
+        _E[γ_ABE] = _B[γ_ABE] = Γ_AB^',
+
+
+where Eq. (<ref>) corresponds to the anti-degradable condition of the unnormalized Choi state Γ_AB^'. The Lagrange function of the primal problem is
+
+    L(Γ_AB^, Γ_AB^', γ_ABE,M, N, K, R)
+       = [Γ_AB^] + ⟨ M, J_AB^-Γ_AB^-Γ_AB^'⟩ + ⟨ N, _E[γ_ABE]-Γ_AB^'⟩ + ⟨ K, _B[γ_ABE]-Γ_AB^'⟩
+          + ⟨ R, _B[Γ_AB^]-[Γ_AB^]/d_A · I_A⟩
+       = ⟨ M, J_AB^⟩ + ⟨ (1- R/d_A)I-M+R⊗ I_B, Γ_AB^⟩ + ⟨ -M-N-K, Γ_AB^'⟩
+          + ⟨ N⊗ I_E + P_BE(K_AE⊗ I_B)P_BE^†, γ_ABE⟩,
+
+where M_AB, N_AB, K_AB are Lagrange multipliers and P_BE is the swap operator between the system B and E. The corresponding Lagrange dual function is 
+
+    g(M,N,K) = inf_Γ_AB^,Γ_AB^', γ_ABE≥ 0 L(Γ_AB^,Γ_AB^',γ_ABE,M, N, K).
+
+Since Γ_AB^≥ 0, Γ_AB^'≥ 0, γ_ABE≥ 0, it must hold that 
+
+    (1- R_A/d_A)I_AB-M_AB+R_A⊗ I_B    ≥ 0
+    
+        -M_AB-N_AB-K_AB   ≥ 0
+    
+        N_AB⊗ I_E + P_BE(K_AB⊗ I_E)P_BE^†   ≥ 0.
+
+Thus the dual SDP is
+
+    max_M_AB,N_AB,K_AB,R_A   [M_AB J_AB^],
+     s.t.     M_AB≤ (1- R_A/d_A)I_AB+R_A⊗ I_B, 
+         M_AB+N_AB+K_AB≤ 0,
+         N_AB⊗ I_E +P_BE(K_AB⊗ I_E)P_BE^†≥ 0.
+
+
+
+
+
+§ TWO-WAY DISTILLABLE ENTANGLEMENT
+
+We first start with the definition of the maximally correlated (MC) state. 
+
+A bipartite state ρ_A B on ℂ^d ×ℂ^d is said to be maximally correlated (MC), if there exist bases {|i⟩_A}_i=0^d-1 and {|i⟩_B}_i=0^d-1 such that
+
+    ρ_A B=∑_i, j=0^d-1α_i j|i⟩⟨j|_A ⊗|i⟩⟨j|_B,
+
+where (α_i j) is a positive semidefinite matrix with trace 1 .
+
+We note that every pure state is an MC state. Then, by the following lemma, one can easily arrive at the upper bound in Theorem <ref>.
+
+    The two-way distillable entanglement is convex on convex combinations of MC and PPT states.
+
+
+We recall the example state given in <cit.>. Consider a d dimensional Hilbert space, the generalized Pauli operators X and Z are defined by their action on a computational basis {|k⟩}_k=0^d-1 as:
+
+    X|k⟩:=|k+1( d)⟩   Z|k⟩:=ω^k|k⟩,
+
+where ω:=exp (2 π i / d) is a d-th root of unity. The generalized Pauli operators satisfy X Z=ω Z X. Then the generalized Bell basis {|Φ_n, m⟩}_n, m=0, …, d-1 are defined as
+
+    |Φ_n, m⟩:=(I_d ⊗ X^m Z^n)|Φ⟩,
+
+where |Φ⟩:=1/√(d)∑_i=0^d-1|i i⟩. Now set d=3 and denote B={1,6,8}. After numbering |Φ_n,m⟩ = |Φ_3n+m+1⟩, we define the state
+
+    ω_AB = ∑_i,j=1^dα_i,j|Φ_B[i]⟩⟨Φ_B[j]|,
+
+where α = |ψ⟩⟨ψ|, |ψ⟩ = 1/3(|0⟩ + |1⟩ + |2⟩).
+Then consider the states of the form
+
+    ρ_AB = (1-p) ω_AB + pτ_AB,
+
+where p∈[0,1], the state τ_AB is the following PPT entangled state with a=1/2:
+
+    τ_A B=1/8 a+1(
+        [          a          0          0          0          a          0          0          0          a;          0          a          0          0          0          0          0          0          0;          0          0          a          0          0          0          0          0          0;          0          0          0          a          0          0          0          0          0;          a          0          0          0          a          0          0          0          a;          0          0          0          0          0          a          0          0          0;          0          0          0          0          0          0      1+a/2          0 √(1-a^2)/2;          0          0          0          0          0          0          0          a          0;          a          0          0          0          a          0 √(1-a^2)/2          0      1+a/2 ]).
+
+We plot the different upper bounds on the two-way distillable entanglement E_D,↔(ρ_AB) in Fig. <ref>. It shows that our bound E_ rev^npt(ρ_AB) is tighter than E_ W and E_ MP as a function of p.
+
+
+
+
+
+
+§ PROOF OF PROPOSITION <REF> AND PROPOSITION <REF>
+
+
+
+For any states ρ_AB and σ_AB such that 1/2ρ_AB-σ_AB_1 ≤ε≤ 1, it satisfies
+
+    |S(A|B)_ρ - S(A|B)_σ| ≤ 2εlog(|A|) + (1+ε)h(ε/1+ε).
+
+
+
+
+
+
+
+For any bipartite state ρ_AB with an anti-degradable set distance ε_ set, it satisfies
+
+    E_D,→(ρ_AB) ≤ 2ε_ setlog(|A|) + (1+ε_ set)h(ε_ set/1+ε_ set).
+
+
+
+Since ρ_AB has a anti-degradable set distance ε_ set, we denote σ_AB the anti-degradable state with 1/2ρ_AB - σ_AB_1 ≤ε_ set. Let T:A^n → A'M be an instrument with isometry U_n:A^n → A'MN and denote Δ = 2ε_ setlog(|A|) + (1+ε_ set)h(ε_ set/1+ε_ set). Then we have
+
+
+    E^(1)_D,→(ρ_AB^⊗ n)    = max_U_n I_c(A'⟩ B^n M)_U_n ρ^⊗ n U_n^†
+       = max_U_n - S(A' | B^n M)_U_n ρ^⊗ n U_n^†
+       ≤max_U_n - S(A' | B^n M)_U_n (σρ^⊗ n-1) U_n^† + Δ
+       ≤max_U_n - S(A' | B^n M)_U_n σ^⊗ n U_n^† + nΔ
+        = nΔ,
+
+
+where Eq. (<ref>) follows by the fact that
+
+    ρ_0⊗ρ_1 - σ_0⊗σ_1_1 ≤ρ_0 - σ_0_1 + ρ_1 - σ_1_1,
+
+and Lemma <ref>. The inequality in Eq. (<ref>) follows by applying the same argument n times considering σ^ iρ^ n-i for i=1,...,n. After dividing Eq. (<ref>) by n and taking the limit n→∞, we arrive at
+
+    E_D,→(ρ_AB) = lim_n→∞1/nE^(1)_D,→(ρ_AB^⊗ n) ≤Δ.
+
+
+
+
+
+
+
+
+For any bipartite state ρ_AB with an anti-degradable map distance ε_ map, it satisfies
+
+    E_D,→(ρ_AB) ≤ 4ε_ maplog(|B|) + 2(1+ε_ map)h(ε_ map/1+ε_ map).
+
+
+
+
+Let ϕ_ABE be a purification of ρ_AB, :E→ B be the CPTP map such that 1/2ρ_AB - (ρ_AE)_1 ≤ε_ map with an isometry W:E→ B'G. Let T:A^n → A'M be an instrument with isometry U_n:A^n → A'MN and denote Δ = 2ε_ maplog(|B|) + (1+ε_ map)h(ε_ map/1+ε_ map). For t=1,2,...,n, we can define pure states
+
+    ψ_A^n B^n B'_1 G_1...B'_t G_t E_t+1...E_n^t    = (W_1⊗⋯⊗ W_t) ϕ_ABE^n
+    θ_A' M N B^n B'_1 G_1...B'_t G_t E_t+1...E_n^t    = U_n ψ^t,  ω_A' M N B^n E^n = U_n ϕ_ABE^n
+
+We further define ρ̂_AB' = (ρ_AE) which shares the same purification with ρ_AB listed above, thus an anti-degradable state. Then for t=n we have θ^n = U_n (W_1⊗⋯⊗ W_n) U_n^†ω, it yields 
+
+    I_c(A'⟩ B^n M)_ω   =  I_c(A'⟩ B^n M)_θ^n_A' M N B^n B'^n G^n
+       = S(B^n M)_θ - S(A'B^n M)_θ
+       = S(A' N B'^n G^n)_θ - S(A'B^n M)_θ
+       = S(A' N B'^n G^n)_θ - S(A'B'^n M)_θ
+          + S(A' B'^n M)_θ - S(A' B^n M)_θ
+       = S(G^n|A'B'^n M)_θ + S(A' B'^n M)_θ
+          - S(A' B^n M)_θ
+
+where we abbreviate θ = θ^n_A' M N B^n B'^n G^n. Applying the same technique in the proof of Theorem 2.12 in <cit.>, we can bound
+
+    S(A' B'^n M)_θ - S(A' B^n M)_θ≤ nΔ.
+
+Consequently, it follows that
+
+    I_c(A'⟩ B^n M)_ω   ≤ S(G^n|A'B'^n M)_θ  + nΔ
+       ≤ S(G^n|B'^n)_θ  + nΔ
+       = S(G^n B'^n)_θ - S(B'^n)_θ  + nΔ
+       ≤ S(G^n B'^n)_θ - S(B^n)_θ + 2nΔ
+       ≤ S(G^n B'^n)_θ - S(A'M N G^n B'^n)_θ  + 2nΔ
+       ≤ I(A'M N ⟩ G^n B'^n)_θ  + 2nΔ
+       = I(A^n ⟩ B'^n)_ρ̂_AB'^ n  + 2nΔ
+       = n [I(A ⟩ B)_ρ̂_AB'+ 2Δ]
+       = 2nΔ,
+
+where the last equality is due to the anti-degradability of ρ̂_AB'. After dividing Eq. (<ref>) by n and taking the limit n→∞, we arrive at
+
+    E_D,→(ρ_AB) = lim_n→∞1/nE^(1)_D,→(ρ_AB^⊗ n) ≤ 2Δ.
+
+
+
+
+
+
+
+
+
+
+
+
+§ PROOF OF PROPOSITION <REF>
+
+
+
+A two qubit state ρ_A B is anti-degradable if and only if,
+
+    Tr(ρ_B^2) ≥Tr(ρ_A B^2)-4 √(det(ρ_A B)).
+
+
+
+
+
+
+
+For a qubit Pauli channel Λ(·) with p_0≥ p_i>0 (i=1,2,3), it is either anti-degradable or satisfies
+
+    2^-_max,(Λ) = (√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2
+
+with an ADG-squeezed channel as the identity channel.
+
+
+
+We first will prove 
+    
+    2^-_max,(Λ)≥ (√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2,
+
+    by using the SDP in Eq. (<ref>). We show that 
+    Γ_AB^ = α/2(
+        [ 1 0 0 1; 0 0 0 0; 0 0 0 0; 1 0 0 1;   ]),
+ is a feasible solution where α = 1-[(√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2]. 
+Note that the Choi state of the Pauli channel is
+
+    J_AB^Λ = 1/2(
+        [ p_0 + p_3         0         0   p_0-p_3;         0   p_1+p_2   p_1-p_2         0;         0   p_1-p_2   p_1+p_2         0; p_0 - p_3         0         0   p_0+p_3;           ]),
+
+and the unnormalized state Γ_AB^' = J_AB^Λ - Γ_AB^ is
+
+    Γ_AB^' = 1/2(
+        [ p_0 + p_3 - α             0             0    p_0-p_3- α;             0       p_1+p_2       p_1-p_2             0;             0       p_1-p_2       p_1+p_2             0; p_0 - p_3 - α             0             0    p_0+p_3- α;               ]).
  
-Let  be an [𝐧,k]_q^m/q sum-rank metric. If all the codewords of  have the same sum-rank metric weight then  is a minimal sum-rank metric code.
+Recalling that p_0 + p_1 + p_2 + p_3 = 1, it is then straightforward to check that _B[Γ_AB^'] = [Γ_AB^']/d_A · I_A. The constraint in Eq. (<ref>) corresponds to the anti-degradable condition of Γ_AB^'. By direct calculation, we have 
 
+    [(Γ_B^')^2]    = 1/2(1-α)^2, (Γ_AB^') = p_1 p_2 p_3(p_0-α),
+    [(Γ_AB^')^2]    = α^2 - 2α p_0 + p_0^2 + p_1^2 + p_2^2 + p_3^2.
 
-The main difference is that in Hamming and rank metrics, simplex codes are essentially the only  one-weight codes; see <cit.>. In the sum-rank metric, we have more examples as we will see later on and as it has been proved in <cit.>.
+Then Eq. (<ref>) holds and Γ_AB^' is anti-degradable by Lemme <ref>, which satisfy the constraint in Eq. (<ref>).  Thus, we have proven that Γ_AB^ is a feasible solution to the primal SDP, implying that
 
-Another way to get examples, is to obtain information on minimal codes in sum-rank metric by looking at the associated Hamming-metric codes, cfr. Section <ref>.
+    1 - 2^-_max,(Λ)≤[Γ_AB^'] = 1-[(√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2].
 
+It yields 2^-_max,(Λ)≥ (√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2.
 
-Let  be an [𝐧,k]_q^m/q sum-rank metric code. Then  is minimal if and only if any associated Hamming-metric code ^H is minimal.
+Second, we will use the dual SDP in Eq. (<ref>) to prove 
 
+    2^-_max,(Λ)≤ (√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2.
 
-Thanks to the above proposition, we can use some conditions proved in the Hamming-metric to ensure that a Hamming-metric code is minimal. More precisely, we will now describe a generalization of the celebrated Ashikhmin-Barg condition (see <cit.>).
+We show that {M_AB, N_AB, K_AB, R_A} is a feasible solution to the dual problem, where
 
-
-Let  be an [𝐧,k]_q^m/q sum-rank metric code.
-Denote by
-
-    δ_max=max_r ∈ S(){q^n_i-q^n_i-r_i/q-1}
+    M_AB = (
+        [      η      0      0 -η + 1;      0      ξ      ζ      0;      0      ζ      ξ      0; -η + 1      0      0      η;        ]),
+        N_AB = K_AB = -1/2M_AB,
+        R_A = 0,
 
 and 
 
-    δ_min=min_r ∈ S(){q^n_i-q^n_i-r_i/q-1},
-
-where S() is the set of rank-lists of .
-If 
-
-    δ_max/δ_min< q^m/q^m-1,
-
-then the code  is minimal.
+    η = -√(p_1) + √(p_2)/2√(p_3), ξ= -√(p_1)+√(p_3)/2√(p_2)-√(p_2)+√(p_3)/2√(p_1)-1, ζ=√(p_1)+√(p_3)/2√(p_2)-√(p_2)+√(p_3)/2√(p_1).
 
 
-Let ^H be an associated Hamming-metric code to .
-The minimum distance of ^H is δ_min and its maximum weight is δ_max.
-By <cit.> and because of the assumptions on δ_min and δ_max, the code ^H is minimal.
-Since the sum-rank metric code  is minimal if and only if ^H is a minimal code in the Hamming-metric, the assertion is proved.
+It is easy to check that when p_0≥ p_i>0 (i=1,2,3), we have M_AB + N_AB + K_AB= 0, 
 
-
-If a sum-rank metric code satisfies the assumption of Theorem <ref>, we say that it satisfies the AB-condition.
-
-
-
-In the following subsections, we will first see old and new constructions of one-weight sum-rank metric codes (proving that this is a very large family) and then we will show examples of minimal codes with few weights, where some of them satisfy the AB-condition and some of them do not.
-
-
-
-
-
- §.§ Sum-rank one-weight codes
-
-
-Some constructions of one-weight codes have been given in <cit.>, which can be divided in three families:
-
-
+    M_AB≤ (1- R_A/d_A)I_AB + R_A ⊗ I_B ⇔ I_AB - M_AB   ≥ 0, and
     
-  * orbital construction (extending the simplex code);
-    
-  * doubly extended linearized Reed-Solomon;
-    
-  * linear sets construction.
+    N_AB⊗ I_E + P_BE(K_AB⊗ I_E)P_BE^† =1/2M_AB⊗ I_E + P_BE(1/2M_AB⊗ I_E)P_BE^†   ≥ 0.
 
+It also satisfies [M_ABJ_AB^Λ] = 1-[(√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2]. Thus we have proven that {M_AB,N_AB,K_AB,R_A} is a feasible solution to the dual SDP in Eq. (<ref>), which implies
 
-In particular, the last two constructions give 2-dimensional one-weight codes in the sum-rank metric, whereas the first one give constructions of any dimension.
-In <cit.>, the authors also showed that the last two families cannot be obtained from the orbital construction. It is natural to ask whether or not there are examples of one-weight codes which cannot be obtained from the orbital constructions also for larger dimensions.
+    1 - 2^-_max,(Λ)≥[M_AB J_AB^Λ] = 1-[(√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2].
 
-We start by recalling the orbital construction.
+Then it yields 2^-_max,(Λ)≤ (√(p_1)+√(p_2))^2 + (√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2.
 
-Let 𝒢 be a subgroup of (k,q^m) and consider the action ϕ_𝒢  of 𝒢 on _q^m^k∖{0}, that is
 
-    [           ϕ_𝒢 : 𝒢× (_q^m^k∖{0})               ⟶      _q^m^k∖{0};                           (A,v)               ⟼             vA. ]
 
-For any n and r such that r divides m, this action naturally induces an action also on the n-dimensional _q^r-subspaces of _q^m^k with kernel 𝒢∩𝔻_q^r, where 𝔻_q^r={α I_k α∈_q^r^*}. In order to get a shorter code, we can consider the action of the group 𝒢=𝒢/(𝒢∩𝔻_q^r) on the n-dimensional _q^r-subspaces of _q^m^k, that we denote by ϕ_𝒢^r,n. Finally, we say that 𝒢≤(k,q^m) is transitive if the action ϕ_𝒢^m,1 is transitive;
-see <cit.> for a more detailed discussion.
 
-[Orbital construction <cit.>]
-Let U be an _q-subspace of _q^m^k of dimension n over _q. Let 𝒢≤(k,q^m) be a transitive subgroup and let 𝒪=(ϕ_𝒢^1,n(A,U))_A ∈𝒢 be the orbit (counting possible repetition) of the action of ϕ_𝒢^1,n. When 𝒢 is the Singer subgroup of GL(k,q^m) we call the orbit 𝒪 an  n-simplex.
-A sum-rank metric code associated with the system 𝒪=(U_1,…,U_t) is an [(n,…,n),k]_q^m/q one-weight sum-rank metric code. 
 
 
 
-Let 𝒪 and 𝒪' two distinct orbits as in the above construction, the system obtained by plugging together 𝒪 and 𝒪' gives rise to a one-weight code and the considered system is union of orbits. So, in order to provide a construction of a sum-rank metric code  which is one-weight but does not arise from the orbital construction, we need to show that a system associated with  cannot be obtained as union of orbits.
 
 
-We now read the property of being one-weight in the geometric dual of the code.
 
 
-Let  be an [𝐧,k]_q^m/q sum-rank metric code and let (U_1,…,U_t) be an associated system. Assume that U_1∩…∩ U_t does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k. Then  is a one-weight code if and only if ^⊥_𝒢 is a one-weight code with respect to the generalized weights of order k-1, that is 
 
-    d_k-1(^⊥_𝒢)=N- ∑_i=1^t __q (U_i^⊥'∩⟨ w ⟩_𝔽_q^m),
 
-for any w ∈_q^m^k∖{0}.
-In particular, if d_1()  tm then
 
-    ⋃_i=1^t L_U_i^⊥'=(k-1,q^m).
 
 
 
 
-The code  is one-weight if and only if w_^1(X,Y) only presents one monomial, that is
+Thus, we arrive at
 
-    w_^1(X,Y)= (||-1) X^N-d_1()Y^d_1().
+    2^-_max,(Λ) = (√(p_1)+√(p_2))^2 +(√(p_2)+√(p_3))^2+(√(p_1)+√(p_3))^2.
 
-By Theorem <ref>, this happens if and only if w_^⊥_𝒢^k-1(X,Y) presents only one monomial, and hence the first part of the assertion. 
-For the last part, observe that if  is one-weight, by the first part of the assertion we have
+Since Γ_AB^ is the Bell state after normalization, we know the ADG-squeezed channel is the identity channel.
 
-    ∑_i=1^t_(U_i^⊥'∩⟨ w⟩__q^m)=∑_i=1^t w_L_U_i^⊥'(⟨ w⟩__q^m)=tmk-N-d_k-1(^⊥_𝒢),
 
-for any w ∈_q^m^k∖{0}.
-Suppose that ⋃_i=1^t L_U_i^⊥'(k-1,q^m). Then, because of (<ref>), we can only have that  tmk-N=d_k-1(^⊥_𝒢).
-Theorem <ref> implies also that
 
-    d_1()=d_k-1(^⊥_𝒢)+N-t(k-1)m,
 
-and hence d_1()=tm, a contradiction.
 
 
 
-By Proposition <ref>, and more precisely from (<ref>), a partition in scattered linear set gives a one-weight code. Indeed, the construction of doubly extended linearized Reed-Solomon code with parameters [(m,…,m,1,1),2]_q^m/q can be read via an associated system (U_1,…,U_q+1) with the following properties:
 
-    
-  * _(U_i)=m for every i∈{1,…,q-1};
-    
-  * _(U_q)=_(U_q+1)=1;
-    
-  * U_i's are scattered -subspaces of _q^m^2.
 
-Since in _q^m^2 the hyperplanes coincide with the 1-dimensional _q^m-subspaces of _q^m^2 and since the code is MSRD, we have
 
-    ∑_i=1^q+1_(U_i∩⟨ w ⟩__q^m)=1,
 
-for any w ∈𝔽_q^m^2∖{0}.
-Therefore, these codes are one-weight codes and by Proposition <ref> they are also minimal codes.
-Moreover, they meet the lower bound (<ref>).
-By Proposition <ref>, the geometric dual of a doubly extended linearized Reed-Solomon code is a one-weight code with parameters 
-    [(m,…,m_q-1 times,2m-1,2m-1),2]_q^m/q.
 
-Note that for m=2, such code meets the lower bound (<ref>). We give its generator matrix in the next remark.
 
-In particular, a partition in scattered subspaces/linear sets gives via Proposition <ref> a
-one-weight code with nonzero weight equals to N-t(k-1)m+1. 
 
 
 
-We can determine a generator matrix for the geometric dual of a 2-dimensional doubly extended linearized Reed-Solomon code.
-Let α_1,…,α_q-1∈𝔽_q^m having pairwise distinct norm over  and define
 
-    U_i={(x,a_i x^q)  x ∈_q^m},
 
-for any i ∈{1,…,q-1}.
-Consider the following sesquilinear form
 
-    σ'  ((x,y),(z,t)) ∈𝔽_q^m^2 ↦Tr_q^m/q(xt-yz) ∈.
 
-Then
 
-    U_i^⊥'={ (y^q,a_i^q^n-1y)  y ∈_q^m}={ (y,a_i^q^n-1y^q^n-1)  y ∈_q^m},
 
-for any i, since 
 
-    σ'((x,a_i x^q),(y^q,a_i^q^n-1y))=Tr_q^m/q(a_i^q^n-1xy-a_ix^q y^q)=0,
 
-for every x,y ∈𝔽_q^m.
-By definition of σ' we also have that
 
-    ⟨ (1,0)⟩_^⊥'={ (α,β) α,β∈_q^m  and  Tr_q^m/q(β)=0 }
 
-and 
 
-    ⟨ (0,1)⟩_^⊥'={ (α,β) α,β∈_q^m  and  Tr_q^m/q(α)=0 }.
 
-Therefore, if B={b_1,…,b_m} is an -basis of  and C={c_1,…,c_m-1} is an -basis of (Tr_q^m/q), then a generator matrix for the geometric dual of a 2-dimensional linearized Reed-Solomon code is as follows:
-
-    
-  * the i-th blocks has as j-th column (b_j^q,a_i b_j), for i ∈{1,…,q-1} and j ∈{1,…,m};
-    
-  * the q-th block has as j-th column (b_j,0) if j ∈{1,…,m} and (0,c_j-m) if j ∈{m+1,…,2m-1};
-    
-  * the last block has as j-th column (0,b_j) if j ∈{1,…,m} and (c_j-m,0) if j ∈{m+1,…,2m-1}.
-
-
-
-In the Remark <ref>, we have seen that we can find q-1 maximum scattered -linear set in (1,q^m) which are pairwise disjoint and cover (1,q^m) except for two points (which can be arbitrarily chosen). 
-
-
-We can use this fact to construct partition in scattered -linear sets for higher dimensions. 
-
-[partition in scattered linear sets]
-We start with the plane: consider P=⟨ v⟩__q^m a point in (2,q^m) and a line ℓ=(W,_q^m) not passing through P.
-Denote by 
-
-    ℓ_1=(W_1,_q^m),…,ℓ_q^m+1=(W_q^m+1,_q^m)
- the lines through P and denote by Q_i=ℓ∩ℓ_i=⟨ v_i⟩__q^m for any i ∈{1,…,q^m+1}.
-For any i ∈{1,…,q^m+1} consider
-
-    U_i,1,…,U_i,q-1
-
-maximum scattered -subspaces of W_i for which the associated linear sets form a partition of ℓ_i∖{P,Q_i}, which exists because of Remark <ref>.
-Consider 
-
-    U_q^m+2,1,…,U_q^m+2,q-1
-
-maximum scattered -subspaces of W for which the associated linear sets form a partition of ℓ∖{Q_1,Q_2}. 
-The -linear sets associated with U_i,j's together with ⟨ v ⟩_,  ⟨ v_1 ⟩_ and ⟨ v_2 ⟩_ give a partition in scattered -linear sets of (2,q^m).
-This gives a code of parameters
-
-    [(m,…,m_(q-1)(q^m+2) times,1,1,1),3]_q^m/q
-
-whose geometric dual has parameters
-
-    [(2m,…,2m_(q-1)(q^m+2) times,3m-1,3m-1,3m-1),3]_q^m/q.
-
-
-
-
-For larger dimension: suppose that we have U_1,…,U_r scattered -subspaces with the property that the associated linear sets cover a projective space of dimension k-1. 
-Consider a point P=⟨ v ⟩__q^m∈(k-1,q^m) and a hyperplane H not passing through P, then we can proceed to cover with scattered linear sets all of the lines through P, except for the point P and the intersection of the line with H. As we have done for the plane, adding the U_i's and ⟨ v ⟩__q to these subspaces, we obtain a family of scattered subspace covering the entire space.
-
-
-The above construction contains a large number of blocks. It is possible, under certain restrictions, to consider a smaller number of subspaces with the use of canonical subgeometries. 
-
-A canonical subgeometry of (k-1,q^m) is any (k-1,q) which is embedded in (k-1,q^m).
-The following result gives condition on k and m which allows us to construct a partition of (k-1,q^m) in canonical subgeometries.
-
-
-There exists a partition of (k-1,q^m) into canonical subgeometries if and only if (k,m)=1.
-
-
-
-Suppose that (k,m)=1 and let 
-
-    U_1,…,U_t
-
-be -subspaces of _q^m of dimension k such that L_U_1,…,L_U_t a partition of (k-1,q^m) into canonical subgeometries, with t=(q^mk-1)(q-1)/(q^m-1)(q^k-1). A code associated with (U_1,…,U_t) has parameters [(k,…,k),k,(t-1)k]_q^m/q and it is one-weight.
-Its geometric dual has parameters [(k(m-1),…,k(m-1)),k,t(k-1)]_q^m/q, via Theorem <ref>.
-
-
-
-
-
-
-  §.§.§ Lift construction
-
-
-In this section we describe a procedure to construct one-weight sum-rank metric codes starting from any sum-rank metric code, extending the construction described in <cit.>. 
-
-Let U_1,…,U_t be _q-subspaces in _q^m^k and define
-
-    M=max{∑_i=1^t w_L_U_i(P) |  P ∈(k-1,q^m)}.
-
-
-Define ℳ(U_1,…,U_t) the lift of U_1,…,U_t as a vector of -subspaces whose entries are
-
-    
-  * U_1,…,U_t;
-    
-  * c copies of ⟨ v ⟩__q^m and a d-dimensional subspace of ⟨ v ⟩__q^m, for any P=⟨ v ⟩__q^m∈(k-1,q^m), where M-∑_i=1^t w_L_U_i(P)=c · m+d with c,d ∈ℕ and d<m.
-
-
-Clearly, by construction
-
-    ∑_U ∈ℳ(U_1,…,U_t) w_L_U(P)=M,
-
-for every point P∈(k-1,q^m).
-
-So, consider ∈Φ ([ℳ(U_1,…,U_t)]) then by  applying Proposition <ref> we obtain that ^⊥_𝒢 is a linear one-weight sum-rank metric code of dimension k.
-Any code in Φ([ℳ(U_1,…,U_t)]) will be called the lifted code of U_1,…,U_t.
-
-In the next result we show that we can construct a one-weight sum-rank metric code starting from any sum-rank metric code.
-
-
-Every sum-rank metric code can be extended to a one-weight code.
-
-
-Let (U_1,…,U_t) an associated system to  and G=(G_1|…|G_t) a generator matrix of  such that the column span of G_i is U_i for any i. Consider the lift 
-    ℳ(U_1^⊥',…,U_t^⊥')=(U_1^⊥',…,U_t^⊥',W_t+1,…,W_s).
-
-Let 𝒟∈Φ([ℳ(U_1^⊥',…,U_t^⊥')]), then by duality U_1^⊥'∩…∩ U_t^⊥' does not contain any one-dimensional _q^m-subspace and hence by Theorem <ref> 𝒟^⊥_𝒢 is a one-weight code and a system associated with 𝒟^⊥_𝒢 is 
-
-    (U_1,…,U_t,W_t+1^⊥',…,W_s^⊥'),
-
-and hence it is an extension of , since a generator matrix of 𝒟^⊥_𝒢 has the following shape
-
-    (G_1|…|G_t|G_t+1|…|G_s),
-
-where the the column span of G_i is W_i^⊥' for any i ∈{t+1,…,s}.
-
-
-In the following result we prove that there are linear sum-rank metric codes which cannot be obtain from the orbital construction for any possible value of the dimension, already proved in <cit.> in the two-dimensional case.
-
-
-For every k, there are one-weight sum-rank metric codes which are not equivalent to a sum-rank metric code obtained from the orbital construction.
-
-
-Consider  a [n,k]_q^m/q sum-rank metric code (that is, a rank-metric code) with the property that n>m. 
-Let U be any system associated with  and consider ℳ(U) the lift of U and follow the proof of Theorem <ref> to construct a one-weight sum-rank metric code '.
-Since U is the only -subspace in ℳ(U) having dimension larger than m, then in ℳ(U) there cannot the an orbit of U and hence ' cannot be obtained as (union) of orbital constructions.
-
-
-
-In the proof of the above theorem, we started from a rank-metric code, but then we can start from any code whose associated systems do not form an orbit under a transitive group of an -subspace of dimension greater than m.
-
-
-
-In <cit.>, the author showed that in some cases extending an MSRD code by adding new blocks does not preserve the property of being MSRD.
-
-
-
-
-
-
- §.§ Constructions of two-weight minimal sum-rank metric codes
-
-
-In this section we will give examples of minimal sum-rank metric codes with two weights, in some cases by using the AB-condition and some other by exploiting the geometry behind them.
-Let us start with the first construction.
-
-
-Consider t mutually disjoint scattered 𝔽_q-linear sets L_U_1,…,L_U_t in (k-1,q^m) of rank n_1, … , n_t, respectively, with n_1≥…≥ n_t. 
-Suppose also that L_U_1∪…∪ L_U_t≠(k-1,q^m).
-Denote by (U_1^⊥',…,U_t^⊥') the geometric dual of a code associated with (U_1,…,U_t).
-
-
-The metric properties of the above construction are described in the following result.
-
-
-Let  be as in Construction <ref>. Its parameters are [(mk-n_1,…,mk-n_t),k]_q^m/q and it has two distinct nonzero weights:
-
-    tm  and  tm-1.
-
-Moreover, its set of rank-lists is 
-
-    S()={ (m,…,m),(m-1,m,…,m),(m,m-1,…,m),…,(m,…,m,m-1) }.
-
-
-
-Let start by observing that (U_1^⊥',…,U_t^⊥') is a system with parameters [(mk-n_1,…,mk-n_t),k]_q^m/q. 
-By Theorem <ref>, the weights of (U_1^⊥',…,U_t^⊥') correspond to the possible values that the following expression can assume
-
-    tm- ∑_i=1^t _(U_i^⊥'∩⟨ w ⟩_𝔽_q^m),
-
-where w ∈𝔽_q^m^k∖{0}.
-Since the L_U_i's are scattered and disjoint, we have that _(U_i^⊥'∩⟨ w ⟩_𝔽_q^m)∈{0,1} and can be one at most for one i ∈{1,…,t} for every w, hence the weight distribution is determined.
-The possible rank-lists of the codewords of (U_1^⊥',…,U_t^⊥') (see Remark <ref>) correspond to determine 
-
-    (m-_𝔽_q(U_1∩⟨ w ⟩_𝔽_q^m),…, m-_𝔽_q(U_t∩⟨ w ⟩_𝔽_q^m)),
-
-because of the assumptions on the L_U_i's, we have that either _𝔽_q(U_1∩⟨ w ⟩_𝔽_q^m)=0 for any i or there exist j ∈{1,…,t} such that _𝔽_q(U_j∩⟨ w ⟩_𝔽_q^m)=1 and _𝔽_q(U_i∩⟨ w ⟩_𝔽_q^m)=0 for any the remaining values of i.
-
-
-The codes with the parameters as those in Construction <ref> all arise from Construction <ref>.
-
-
-If  is a sum-rank metric code with the parameters as in Construction <ref> then  can be obtain as in Construction <ref>.
-
-
-Assume that  is an [𝐧,k]_q^m/q sum-rank metric code with n=(mk-n_1,…,mk-n_t) and with two distinct weights tm and tm-1. Denote by N=n_1+…+n_t and let (U_1,…,U_t) any system associated with .
-By Theorem <ref>, we have that for any hyperplane of _q^m^k
-
-    ∑_i=1^t _(U_i ∩ H) ∈{ tm(k-1),tm(k-1)+1 },
-
-and applying Proposition <ref> we obtain
-
-    ∑_i=1^t _(U_i^⊥'∩⟨ w ⟩__q^m) ∈{ 0,1 },
-
-for any 1-dimensional _q^m-subspace of _q^m^k.
-Therefore, for any point P ∈(k-1,q^m) we have that
-
-    ∑_i=1^t w_L_U_i^⊥'(P)  ∈{ 0,1 },
-
-and so L_U_i^⊥''s are pairwise disjoint scattered _q-linear sets.
-
-
-Thanks to Theorem <ref>, we can determine the weight distribution of the Hamming metric codes associated with those in Construction <ref>.
-
-
-An associated Hamming metric code to the codes of Construction <ref> has length N=tkm-n_1…-n_t, dimension k and exactly |{n_1,…,n_t}|+1 nonzero distinct weights, which are
-
-    δ_max=∑_i=1^tq^mk-n_i-q^mk-n_i-m/q-1,
-
-
-    w_j=q^mk-n_j-q^mk-n_j-m+1/q-1 + ∑_i∈{1,…,t}∖{j}q^mk-n_i-q^mk-n_i-m/q-1,  j ∈{1,…,t},
-
-and 
-
-    δ_min=q^mk-n_t-q^mk-n_t-m+1/q-1 + ∑_i=1^t-1q^mk-n_i-q^mk-n_i-m/q-1.
-
-
-
-By taking into account the set of rank-lists of a code as in Construction <ref> determined in Theorem <ref>, by Proposition <ref> the possible weights of an associated  code is given by the following formula
-
-    q^mk-n_j-q^mk-n_j-m+1/q-1 + ∑_i∈{1,…,t}∖{j}q^mk-n_i-q^mk-n_i-m/q-1,
-
-for any j ∈{1,…,t} and by
-
-    ∑_i=1^tq^mk-n_i-q^mk-n_i-m/q-1.
-
-Therefore, the number of distinct weights is given by the number of the different n_i's plus one.
-
-
-
-In the case in which n_1=…=n_t=n, such  codes are two-weight Hamming metric codes, with weights
-
-    δ_max=t·q^mk-n-q^mk-n-m/q-1,
-
-and 
-
-    δ_min=q^mk-n-q^mk-n-m+1/q-1 + (t-1)·q^mk-n-q^mk-n-m/q-1.
-
-Note also that if the n_i's are not all equal, then from a two-weight code in the sum-rank metric we obtain an Hamming metric code with more than two weights. This is a remarkable difference with the rank metric.
-
-
-
-Let  be a code as in Construction <ref> with n_1=…=n_t=n.
-If 
-
-    t>(q-1)·q^m/q^m-1,
-
-then  is minimal  and it satisfies the AB-condition.
-
-
-We will prove the minimality of  with the aid of the AB-condition.
-To this aim
-
-    δ_max/δ_min= t(q^m-1)/q^m-q+(t-1)(q^m-1)=1+q-1/tq^m-q-t+1,
-
-since t>(q-1)q^m/(q^m-1) we have 
-
-    δ_max/δ_min < q^m/q^m-1
-
-and hence Theorem <ref> implies the assertion.
-
-
-
-Consider Construction <ref> by using more than (q-1)·q^m/q^m-1 mutually disjoint subgeometries (which exists for instance when (m,k)=1, see Theorem <ref>). The above theorem implies that  Construction <ref> gives minimal codes.
-
-
-Note that in the above result if we consider t=2 and q>2, then the AB-condition is not satisfied (it is indeed satisfied for q=2). In the next result, we show that when t=2, even if the AB-condition is not satisfied, Construction <ref> still gives minimal codes and the two rank-metric codes defined by the two blocks are not minimal.
-
-
-Let U_1 and U_2 be two trivially intersecting scattered _q-subspaces of dimension m contained respectively in W_1 and W_2, where W_1 and W_2 are two distinct 2-dimensional 𝔽_q^m-subspaces of _q^m^3. The geometric dual (U_1^⊥',U_2^⊥') of a code associated with (U_1,U_2) is a minimal sum-rank metric code, which satisfies the AB-condition if and only if q=2.
-Moreover, the codes associated with U_1^⊥' and U_2^⊥', respectively, are not minimal.
-
-
-Let start by computing the possible dimension of intersection between the U_i^⊥''s and the _q^m-subspaces of _q^m^3 with dimension either one or two with the aid of Proposition <ref>:
-
-    _𝔽_q(U_i^⊥'∩ W^⊥)=_𝔽_q(U_i∩ W)∈{0,1,m},
-
-for any 2-dimensional 𝔽_q^m-subspace W and _𝔽_q(U_i^⊥'∩ W^⊥)=m if and only if W=W_i, for any i ∈{1,2}, also
-
-    _𝔽_q(U_i^⊥'∩⟨ w⟩_𝔽_q^m^⊥)=_𝔽_q(U_i∩⟨ w⟩_𝔽_q^m)+m∈{m,m+1},
-
-for any 1-dimensional 𝔽_q^m-subspace ⟨ w⟩_𝔽_q^m. 
-In terms of linear sets, this means that 
-
-    w_L_U_i^⊥'(P) ∈{0,1,m}  and   w_L_U_i^⊥'(ℓ) ∈{m,m+1},
-
-for any point P and any line ℓ of (2,q^m).
-We now show that (U_1^⊥',U_2^⊥') is a cutting system (which is equivalent to show that (U_1^⊥',U_2^⊥') is minimal by Theorem <ref>), which is equivalent to show that any line ℓ of (2,q^m) meets L_U_1^⊥'∪ L_U_2^⊥' in at least two points.
-Note that since L_U_1^⊥' and L_U_2^⊥' have rank 2m, which is greater than m+1, then every line meet L_U_1^⊥' and L_U_2^⊥' in at least one point.
-Denote by P_1 and P_2 the points defined by W_1^⊥' and W_2^⊥', respectively. 
-Let ℓ be any line through P_1, since P_1 P_2 and P_1 ∉ L_U_2^⊥', then ℓ meets L_U_2^⊥' in at least another point. Therefore, |ℓ∩ (L_U_1^⊥'∪ L_U_2^⊥')|≥ 2. Similar arguments can be performed when considering lines through P_2, so assume that ℓ is a line not passing through neither P_1 nor to P_2. Since all the points different from P_1 and P_2 have weight either one or zero and the weight of ℓ is either m or m+1, then |ℓ∩ L_U_1^⊥'|≥ 2 and hence (U_1^⊥',U_2^⊥') is a cutting system.
-Finally, we show that U_1^⊥' and U_2^⊥' are not cutting. Indeed, by contradiction assume that U_1^⊥' is a cutting system. Any line ℓ through P_1 has weight m+1, since w_L_U_1^⊥'(P_1)=m and L_U_1^⊥'∩ℓ has at least two points. This implies that all the lines through P_1 are contained in L_U_1^⊥' and hence
-
-    |L_U_1^⊥'| ≥ (q^m+1)q^m+1,
-
-which is a contradiction to the fact that |L_U_1^⊥'| ≤q^2m-1/q-1 by (<ref>). 
-Now, let 
-
-    δ_max=2(q^(k-1)m-q^(k-2)m)/q-1
-
-and
-
-    δ_min=2q^(k-1)m-q^(k-2)m+1-q^(k-2)m/q-1.
-
-Then δ_max/δ_min<q^m/(q^m-1) if and only if
-
-    --3q^m+2+q^m+1/(-q^m+q-q^m+1)(q^m-1) <0
-
-and hence if and only if
-
-    -3q^m+2+q^m+1<0,
-
-and, since it can be rewritten as q^m(q-3)<-2, this happens if and only if q=2. Therefore, the assumption of Theorem <ref> are satisfied if and only if q=2.
-
-
-
-Let 
-
-    U_1={(x,x^q,0)  x ∈𝔽_q^m}  and   U_2={(0,x,x^q)  x ∈𝔽_q^m}.
-
-It is easy to see that they satisfy the assumptions of Theorem <ref>.
-Consider σ' as the following sesquilinear form
-
-    σ'  ((x,y,t),(x',y',z')) ∈𝔽_q^m^3 ↦Tr_q^m/q(xx'+yy'+zz') ∈_q.
-
-Then
-
-    U_1^⊥'= { (x^q^m-1,-x,y)  x,y ∈_q^m}
-
-and 
-
-    U_2^⊥'= { (y,x^q^m-1,-x)  x,y ∈_q^m}.
-
-Therefore, a generator matrix of 𝒞(U_1^⊥',U_2^⊥') is
-
-    G=( 
-    [ a_1^q^m-1         … a_m^q^m-1         0         …         0       a_1         …       a_m         0         …         0;      -a_1         …      -a_m         0         …         0         0         …         0 a_1^q^m-1         … a_m^q^m-1;         0         …         0       a_1         …       a_m         0         …         0      -a_1         …      -a_m ])∈_q^m^3× 4m,
-
-where {a_1,…,a_m} is an -basis of _q^m.
-
-
-
-In the above example, we may replace x^q with any scattered polynomial; see <cit.> and the references therein.
-
-
-In the next result we show that when t=2 in Construction <ref> with n_1 and n_2 having a distinct value, then the code obtained satisfies the AB-condition if n_1 and n_2 are enough close distinct numbers.
-
-
-Let U_1 and U_2 be two trivially intersecting scattered _q-subspaces of dimension n_1 and n_2=n_1-r with 1≤ r ≤ m, respectively. The geometric dual (U_1^⊥',U_2^⊥') of a code associated with (U_1,U_2) is a minimal sum-rank metric code which satisfies the AB-condition.
-
-
-As in the previous proof, we start by computing the possible dimension of intersection between the U_i^⊥''s and the _q^m-subspaces of _q^m^k with dimension k-1:
-
-    _𝔽_q(U_i^⊥'∩⟨ w⟩__q^m^⊥)=_𝔽_q(U_i∩⟨ w⟩__q^m)+(k-1)m-n_i∈{(k-1)m-n_i, (k-1)m-n_i+1},
-
-for any one-dimensional _q^m-subspace ⟨ w⟩__q^m in _q^m^k.
-Therefore, by Remark <ref> we have that the rank lists of the code (U_1^⊥',U_2^⊥') are 
-
-    (m,m), (m-1,m)   and   (m,m-1).
-
-Considering (U_1^⊥',U_2^⊥')^H we have
-
-    δ_max=q^km-n_1-q^(k-1)m-n_1+q^km-n_2-q^(k-1)m-n_2/q-1
-
-and
-
-    δ_min=q^km-n_1-q^(k-1)m-n_1+1+q^km-n_2-q^(k-1)m-n_2/q-1.
-
-Replacing n_1=n_2+r, δ_max/δ_min<q^m/q^m-1 is equivalent to 
-
-    --2q^m+1-q^r+m+q^r+q^m+1/(-q^m+q-q^r+m+q^r)(q^m-1) <0
-
-and hence
-
-    -2q^m+1-q^r+m+q^r+q^m+1<0,
-
-which holds true as m≥ r and r≥ 1. Therefore, the assertion follows by applying Theorem <ref>.
-
-
-
-
-
-
-§ ACKNOWLEDGMENTS
-
-The first author was partially supported by the ANR-21-CE39-0009 - BARRACUDA (French Agence Nationale de la Recherche). The second author was supported by the project “VALERE: VAnviteLli pEr la RicErca" of the University of Campania “Luigi Vanvitelli” and by the Italian National Group for Algebraic and Geometric Structures and their Applications (GNSAGA - INdAM). He is very grateful for the hospitality of the Université Paris 8, France, where he was a visiting researcher for two weeks during the development of this research. 
-
-
-
-abbrv
 
 
