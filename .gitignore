@@ -55,6 +55,10 @@ benchmark/workloads/*/*.json
 benchmark/workloads/*/*.jsonl
 *.parquet
 
+# Safe to upload
+!benchmark/workloads/metagpt/*.json
+!benchmark/workloads/metagpt/*.jsonl
+
 # Evaluation data
 !benchmark/*/results/*/*.log
 !benchmark/*/results/*.log
