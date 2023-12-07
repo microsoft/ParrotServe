@@ -47,6 +47,7 @@ class EngineRuntimeInfo:
     """
 
     num_cached_tokens: int = 0
+    num_max_blocks: int = 0
     num_running_jobs: int = 0
     num_total_jobs: int = 0  # Include both running and pending jobs
 

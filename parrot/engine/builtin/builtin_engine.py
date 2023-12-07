@@ -151,6 +151,7 @@ class BuiltinEngine(LLMEngine):
 
         # Memory
         num_cached_tokens = self.runner.context_manager.get_num_cached_tokens()
+        num_max_blocks = self.runner.kv_cache_manager.get_history_max_allocated_num()
         cache_mem = (
             num_cached_tokens
             # TODO(chaofan): Currently this config must be OPTConfig.
@@ -177,6 +178,7 @@ class BuiltinEngine(LLMEngine):
 
         return EngineRuntimeInfo(
             num_cached_tokens=num_cached_tokens,
+            num_max_blocks=num_max_blocks,
             num_running_jobs=num_running_jobs,
             num_total_jobs=num_total_jobs,
             cache_mem=cache_mem,

@@ -83,6 +83,12 @@ def load_workloads(branches_num: int):
         for info in round_info:
             info["shared_prompt"] = shared_prompt
             info["diverged_prompt"] = prompt[len(shared_prompt) :]
+            info["shared_prompt_len"] = len(
+                tokenizer.encode(shared_prompt, add_special_tokens=False)
+            )
+            info["diverged_prompt_len"] = len(
+                tokenizer.encode(info["diverged_prompt"], add_special_tokens=False)
+            )
 
         ret.append(round_info)
 
