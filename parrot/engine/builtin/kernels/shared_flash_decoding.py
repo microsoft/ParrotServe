@@ -132,6 +132,71 @@ def _fwd_kernel_v2(
     tl.store(Out + offs_q, acc.to(tl.float16), mask=m_mask[:, None])
 
 
+@triton.jit
+def _reduce_kernel(
+    tmp_out,  #[split_kv_num, num_heads, head_size]
+    tmp_qk_max,  # [split_kv_num, num_heads]
+    tmp_exp_sum,  # [split_kv_num, num_heads]
+    out,  #[num_heads, head_size]
+    qk_max,  # [num_heads]
+    exp_sum,  # [num_heads]
+    split_kv_num,
+    num_heads,
+    HEAD_SIZE: tl.constexpr,
+    NUM_THREADS: tl.constexpr,
+    MAX_SPLIT_KV_NUM: tl.constexpr,
+    LOAD_MID_RESULTS: tl.constexpr,
+    SAVE_MID_RESULTS: tl.constexpr,
+):
+    thread_block_id = tl.program_id(0)
+    start_h = thread_block_id * NUM_THREADS
+
+    offs_h = tl.arange(0, NUM_THREADS)
+    offs_d = tl.arange(0, HEAD_SIZE)
+    offs_s = tl.arange(0, MAX_SPLIT_KV_NUM)
+
+    offs_par = start_h + offs_h  # [NUM_THREADS]
+    offs_out = offs_par[:, None] * HEAD_SIZE + offs_d[None, :]  # [NUM_THREADS, HEAD_SIZE]
+    offs_tmp = offs_s[None, :] * num_heads + offs_par[:, None]  # [NUM_THREADS, MAX_SPLIT_KV_NUM]
+
+    h_mask = offs_par < num_heads  # [NUM_THREADS]
+    s_mask = offs_s < split_kv_num  # [MAX_SPLIT_KV_NUM]
+    tmp_mask = s_mask[None, :] and h_mask[:, None]
+
+    if LOAD_MID_RESULTS:
+        tmp_max = tl.load(tmp_qk_max + offs_tmp, mask=tmp_mask, other=0.0)
+        pre_max = tl.load(qk_max + offs_par, mask=h_mask, other=0.0)
+        final_max = tl.maximum(tl.max(tmp_max, 1), pre_max)
+        factor = tl.math.exp2(tmp_max - final_max[:, None])
+        pre_factor = tl.math.exp2(pre_max - final_max)
+        tmp_sum = tl.load(tmp_exp_sum + offs_tmp, mask=tmp_mask, other=0.0)
+        pre_sum = tl.load(exp_sum + offs_par, mask=h_mask, other=0.0)
+        final_sum = tl.sum(factor * tmp_sum, 1) + pre_factor * pre_sum
+        factor *= tmp_sum / final_sum[:, None]
+        pre_factor *= pre_sum / final_sum
+        acc = tl.load(out + offs_out, mask=h_mask[:, None]).to(tl.float32) * pre_factor[:, None]
+    else:
+        tmp_max = tl.load(tmp_qk_max + offs_tmp, mask=tmp_mask, other=0.0)
+        final_max = tl.max(tmp_max, 1)
+        factor = tl.math.exp2(tmp_max - final_max[:, None])
+        tmp_sum = tl.load(tmp_exp_sum + offs_tmp, mask=tmp_mask, other=0.0)
+        final_sum = tl.sum(factor * tmp_sum, 1)
+        factor *= tmp_sum / final_sum[:, None]
+        acc = tl.zeros([NUM_THREADS, HEAD_SIZE], dtype=tl.float32)
+    tl.store(tmp_qk_max + offs_tmp, factor, mask=tmp_mask)
+
+    for split_id in range(split_kv_num):
+        tmp_acc = tl.load(tmp_out + split_id * num_heads * HEAD_SIZE + offs_out, mask=h_mask[:, None]).to(tl.float32)
+        tmp_factor = tl.load(tmp_qk_max + split_id * num_heads + offs_par, mask=h_mask)
+        acc += tmp_acc * tmp_factor[:, None]
+
+    if SAVE_MID_RESULTS:
+        tl.store(qk_max + offs_par, final_max, mask=h_mask)
+        tl.store(exp_sum + offs_par, final_sum, mask=h_mask)
+
+    tl.store(out + offs_out, acc.to(tl.float16), mask=h_mask[:, None])
+
+
 def triton_flash_attention(
     query: torch.Tensor,  # [num_seqs, num_heads, head_size]
     key_cache: torch.Tensor,  # [num_blocks, num_kv_heads, head_size / x, block_size, x]
@@ -196,15 +261,23 @@ def triton_flash_attention(
             LOAD_MID_RESULTS=False, SAVE_MID_RESULTS=True,
             num_warps=NUM_WARPS, num_stages=NUM_STAGES,
         )
-        if load_mid_results:
-            tmp_qk_max = torch.concat([tmp_qk_max, qk_max.unsqueeze(0)])
-            tmp_exp_sum = torch.concat([tmp_exp_sum, exp_sum.unsqueeze(0)])
-            tmp_out = torch.concat([tmp_out, output.unsqueeze(0)])
-        torch.amax(tmp_qk_max, dim=0, out=qk_max)
-        factor = torch.exp2(tmp_qk_max - qk_max[None, :, :])
-        torch.sum(factor * tmp_exp_sum, dim=0, out=exp_sum)
-        factor *= tmp_exp_sum / exp_sum[None, :, :]
-        torch.sum(factor[:, :, :, None] * tmp_out, dim=0, out=output)
+        num_heads *= num_seqs
+        NUM_WARPS = 4
+        NUM_STAGES = 8
+        NUM_THREADS = NUM_WARPS * 32
+        MAX_SPLIT_KV_NUM = 64
+        _reduce_kernel[(triton.cdiv(num_heads, NUM_THREADS), )](
+            tmp_out, tmp_qk_max, tmp_exp_sum, output, qk_max, exp_sum,
+            split_kv_num, num_heads,
+            HEAD_SIZE=head_size, NUM_THREADS=NUM_THREADS, MAX_SPLIT_KV_NUM=MAX_SPLIT_KV_NUM,
+            LOAD_MID_RESULTS=load_mid_results, SAVE_MID_RESULTS=save_mid_results,
+            num_warps=NUM_WARPS, num_stages=NUM_STAGES,
+        )
+        # try:
+        #     torch.cuda.synchronize()
+        # except RuntimeError as e:
+        #     print(e)
+        #     import ipdb; ipdb.set_trace()
 
 
 def flash_paged_attention(
