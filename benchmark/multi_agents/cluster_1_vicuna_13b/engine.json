@@ -11,7 +11,7 @@
     "instance": {
         "block_size": 16,
         "num_kv_cache_blocks": 4000,
-        "attn_func": "xformers_fill_vllm_paged_attention_generate",
+        "attn_func": "xformers_fill_shared_prompts_generate",
         "max_seq_len": 65536
     },
     "scheduler": {
