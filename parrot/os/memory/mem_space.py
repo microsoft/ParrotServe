@@ -191,16 +191,6 @@ class MemorySpace:
         )
         self.process_memory[pid].remove_context(thread.ctx)
 
-    def profile_process_memory(self, pid: int) -> float:
-        """Profile the memory usage of a process."""
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
-        return self.process_memory[pid].get_mem_usage()
-
-    def profile_process_tokens(self, pid: int) -> int:
-        """Profile the total number of tokens in a process."""
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
-        return self.process_memory[pid].get_total_tokens()
-
     def get_state_context_id(self, pid: int, func_name: StopIteration) -> int:
         """Get the context id of a stateful function."""
         parrot_assert(pid in self.process_memory, "Process should have memory space.")
@@ -245,7 +235,7 @@ class MemorySpace:
             else:
                 prefix_context = self.prefix_cache[prefix_key]
                 logger.debug(
-                    f"Prefix cache hit! Context: {prefix_context.context_id} use cached Prefix."
+                    f"Thread {thread.unique_id}: Prefix cache hit! Using prefix ontext: {prefix_context.context_id}"
                 )
                 thread.prefix_mode = PrefixMode.SKIP  # Skip the prefix fill
 
@@ -258,3 +248,25 @@ class MemorySpace:
 
         thread.ctx = new_context
         thread.context_id = new_context.context_id
+    
+    # ---------- Profiling & Info ----------
+
+    def profile_process_memory(self, pid: int) -> float:
+        """Profile the memory usage of a process."""
+        parrot_assert(pid in self.process_memory, "Process should have memory space.")
+        return self.process_memory[pid].get_mem_usage()
+
+    def profile_process_tokens(self, pid: int) -> int:
+        """Profile the total number of tokens in a process."""
+        parrot_assert(pid in self.process_memory, "Process should have memory space.")
+        return self.process_memory[pid].get_total_tokens()
+    
+    def get_engines_with_ctx(self, ctx: str) -> List[int]:
+        """Get the engines that have a context."""
+
+        ret = []
+        for key in self.prefix_cache:
+            if key[0] == ctx:
+                ret.append(key[1])
+        return ret
+        

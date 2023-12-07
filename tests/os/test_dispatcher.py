@@ -6,6 +6,7 @@ from parrot.os.memory.mem_space import MemorySpace
 from parrot.os.engine import ExecutionEngine
 from parrot.os.process.thread import Thread
 from parrot.engine.config import EngineConfig
+from parrot.os.memory.context import Context
 from parrot.os.thread_dispatcher import DispatcherConfig, ThreadDispatcher
 
 
@@ -304,9 +305,65 @@ def test_token_capacity():
     assert len(dispatched_threads) == 2
 
 
+@P.semantic_function()
+def test_prefix1(a: P.Input, b: P.Output):
+    """Prefix1 {{a}} function {{b}}"""
+
+@P.semantic_function()
+def test_prefix2(a: P.Input, b: P.Output):
+    """Prefix2 {{a}} function {{b}}"""
+
+
+def test_ctx_aware():
+    dispatcher_config = DispatcherConfig(
+        dag_aware=False,
+        app_fifo=False,
+        max_queue_size=1024,
+    )
+
+    # 4 identical engines
+    tokenizer = Tokenizer()
+    engine_config = EngineConfig(
+        tokenizer="hf-internal-testing/llama-tokenizer"
+    )
+
+    # 2 engine
+    engines = {
+        0: ExecutionEngine(engine_id=0, config=engine_config, tokenizer=tokenizer),
+        1: ExecutionEngine(engine_id=1, config=engine_config, tokenizer=tokenizer)
+    }
+
+    # init dispatcher
+    mem_space = MemorySpace()
+    dispatcher = ThreadDispatcher(config=dispatcher_config, engines=engines, memory_space=mem_space)
+    process = Process(
+        pid=0,
+        dispatcher=dispatcher,
+        tokenizer=tokenizer,
+        memory_space=mem_space,
+    )
+
+    # cache prefix & pseudo context
+    prefix1_ctx = Context(context_id=0, engine=engines[0])
+    prefix2_ctx = Context(context_id=1, engine=engines[1])
+    mem_space.prefix_cache[(test_prefix1.prefix.text, 0)] = prefix1_ctx
+    mem_space.prefix_cache[(test_prefix2.prefix.text, 0)] = prefix2_ctx
+
+    # 8 threads
+    for i in range(8):
+        call = test_prefix1("a") if i % 2 == 0 else test_prefix2("a")
+        process.rewrite_call(call)
+        thread = Thread(tid=i, process=process, call=call, context_id=0)
+        dispatcher.push_thread(thread)
+
+    dispatched_threads = dispatcher.dispatch()
+    assert len(dispatched_threads) == 8
+
+
 if __name__ == "__main__":
     # test_default_policy()
     # test_dag_aware_policy()
     # test_dispatcher_order()
-    test_app_fifo()
+    # test_app_fifo()
     # test_token_capacity()
+    test_ctx_aware()

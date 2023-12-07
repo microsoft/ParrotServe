@@ -54,6 +54,8 @@ sample_configs/engine/openai*
 benchmark/workloads/*/*.json
 benchmark/workloads/*/*.jsonl
 *.parquet
+# It's safe!
+!benchmark/workloads/gpts/*.json 
 
 # Safe to upload
 !benchmark/workloads/metagpt/*.json

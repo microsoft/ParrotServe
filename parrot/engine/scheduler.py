@@ -211,4 +211,5 @@ class Scheduler:
                     f"Job {job} finished. Latency: {(job.end_time - job.start_time) / 1e6} ms"
                 )
 
+
         self.running_jobs = new_running

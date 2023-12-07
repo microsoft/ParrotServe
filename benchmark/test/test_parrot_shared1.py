@@ -21,19 +21,16 @@ sampling_config = SamplingConfig(
 
 runner = BuiltinRunner("lmsys/vicuna-7b-v1.3", config=config)
 tokenizer = AutoTokenizer.from_pretrained("hf-internal-testing/llama-tokenizer")
-
-with open("../workloads/bingchat/bing_chat_dataset.jsonl", encoding="utf8") as f:
-    prompt_token_ids = [
-        tokenizer.encode(json.loads(line)["prompt"]) for line in f.readlines()
-    ]
-prompt_token_ids = prompt_token_ids[:8]
+prompt_token_ids = [
+    [100] * 1712 + [200, 300, 400],
+    [100] * 1712 + [300, 400, 500],
+]
 num_seqs = len(prompt_token_ids)
 
-
-prompts = torch.tensor(prompt_token_ids[0], dtype=torch.int32, device="cuda")
 shared_ids = 0
 while len(set([prompt[shared_ids] for prompt in prompt_token_ids])) == 1:
     shared_ids += 1
+print(shared_ids)
 
 shared_fill = Fill(
     pid=0,
@@ -65,6 +62,5 @@ gens = [
 
 runner.run_iter([shared_fill])
 runner.run_iter(diverged_fills)
-runner.run_iter(gens[:4])
 for _ in range(10):
     runner.run_iter(gens)

@@ -38,11 +38,10 @@ def _fwd_kernel_v2(
     context_len,
     qk_max,  # [num_seqs, num_heads]
     exp_sum,  # [num_seqs, num_heads]
-    block_tables,  # [num_seqs, max_num_blocks_per_seq]
+    block_tables,  # [num_seqs, num_splits * num_blocks_per_seq]
     Out,  # [num_seqs, num_heads, head_size]
     sm_scale,
-    max_num_blocks_per_seq,
-    block_size,
+    num_blocks_per_seq,
     num_seqs,
     num_heads,
     num_kv_heads,
@@ -51,14 +50,25 @@ def _fwd_kernel_v2(
     BLOCK_DMODEL: tl.constexpr,
     BLOCK_M: tl.constexpr,
     BLOCK_N: tl.constexpr,
+    BLOCK_SIZE: tl.constexpr,
+    BLOCK_NUM_PER_TILE: tl.constexpr,
     LOAD_MID_RESULTS: tl.constexpr,
+    SAVE_MID_RESULTS: tl.constexpr,
 ):
     seq_group_id = tl.program_id(0)
-    head_id = tl.program_id(1)
+    head_id = tl.program_id(2)
+
+    split_id = tl.program_id(1)
+    qk_max += split_id * num_seqs * num_heads
+    exp_sum += split_id * num_seqs * num_heads
+    Out += split_id * num_seqs * num_heads * head_size
+    seq_start = split_id * num_blocks_per_seq * BLOCK_SIZE
+    seq_end = tl.minimum(seq_start + num_blocks_per_seq * BLOCK_SIZE, context_len)
 
     offs_m = tl.arange(0, BLOCK_M)
     offs_n = tl.arange(0, BLOCK_N)
     offs_d = tl.arange(0, BLOCK_DMODEL)
+    offs_b = tl.arange(0, BLOCK_NUM_PER_TILE)
 
     start_m = seq_group_id * BLOCK_M
     m_mask = start_m + offs_m < num_seqs
@@ -67,10 +77,12 @@ def _fwd_kernel_v2(
 
     offs_q = (start_m + offs_m[:, None]) * num_heads * head_size + \
         head_id * head_size + offs_d[None, :]  # [BLOCK_M, BLOCK_DMODEL]
-    offs_k = kv_head_id * head_size * block_size + (offs_d[None, :] // x) * block_size * x + \
-        (offs_n[:, None] % block_size) * x + (offs_d[None, :] % x)  # [BLOCK_N, BLOCK_DMODEL]
-    offs_v = kv_head_id * head_size * block_size + offs_d[:, None] * block_size + \
-        (offs_n[None, :] % block_size)  # [BLOCK_DMODEL, BLOCK_N]
+    offs_k = kv_head_id * head_size * BLOCK_SIZE + (offs_d[:, None] // x) * BLOCK_SIZE * x + \
+        (offs_n[None, :] % BLOCK_SIZE) * x + (offs_d[:, None] % x)  # [BLOCK_DMODEL, BLOCK_N]
+    offs_k = tl.view(offs_k, [BLOCK_DMODEL, BLOCK_NUM_PER_TILE, BLOCK_SIZE])
+    offs_v = kv_head_id * head_size * BLOCK_SIZE + offs_d[None, :] * BLOCK_SIZE + \
+        (offs_n[:, None] % BLOCK_SIZE)  # [BLOCK_N, BLOCK_DMODEL]
+    offs_v = tl.view(offs_v, [BLOCK_NUM_PER_TILE, BLOCK_SIZE, BLOCK_DMODEL])
 
     if LOAD_MID_RESULTS:
         m_i = tl.load(qk_max + (start_m + offs_m) * num_heads + head_id, mask=m_mask)
@@ -85,17 +97,21 @@ def _fwd_kernel_v2(
     q = tl.load(Q + offs_q, mask=m_mask[:, None])  # [BLOCK_M, BLOCK_DMODEL]
     q = (q * qk_scale).to(tl.float16)
 
-    for start_n in range(0, context_len, BLOCK_N):
+    for start_n in range(seq_start, seq_end, BLOCK_N):
         # -- load block table --
-        physical_block_idx = tl.load(block_tables + (start_n + offs_n) // block_size)  # [BLOCK_N]
-        offs_page = physical_block_idx * num_kv_heads * head_size * block_size  # [BLOCK_N]
+        physical_block_idx = tl.load(
+            block_tables + start_n // BLOCK_SIZE + offs_b,
+            mask=start_n + offs_b * BLOCK_SIZE < seq_end,
+            other=0
+        )
+        offs_page = physical_block_idx * num_kv_heads * head_size * BLOCK_SIZE  # [block_num_per_tile]
         # -- load k, v --
-        k = tl.load(K + offs_k + offs_page[:, None])  # [BLOCK_N, BLOCK_DMODEL]
-        v = tl.load(V + offs_v + offs_page[None, :])  # [BLOCK_DMODEL, BLOCK_N]
+        k = tl.load(K + tl.view(offs_k + offs_page[None, :, None], [BLOCK_DMODEL, BLOCK_N]))  # [BLOCK_DMODEL, BLOCK_N]
+        v = tl.load(V + tl.view(offs_v + offs_page[:, None, None], [BLOCK_N, BLOCK_DMODEL]))  # [BLOCK_N, BLOCK_DMODEL]
         # -- compute qk ---
         qk = tl.zeros([BLOCK_M, BLOCK_N], dtype=tl.float32)
-        qk = tl.where(start_n + offs_n[None, :] < context_len, qk, float("-inf"))
-        qk += tl.dot(q, k.T)
+        qk = tl.where(start_n + offs_n[None, :] < seq_end, qk, float("-inf"))
+        qk += tl.dot(q, k)
         # -- compute scaling constant ---
         m_i_new = tl.maximum(m_i, tl.max(qk, 1))
         alpha = tl.math.exp2(m_i - m_i_new)
@@ -103,12 +119,12 @@ def _fwd_kernel_v2(
         # -- scale and update acc --
         acc_scale = l_i * 0 + alpha  # workaround some compiler bug
         acc *= acc_scale[:, None]
-        acc += tl.dot(p.to(tl.float16), v.T)
+        acc += tl.dot(p.to(tl.float16), v)
         # -- update m_i and l_i --
         l_i = l_i * alpha + tl.sum(p, 1)
         m_i = m_i_new
 
-    if not LOAD_MID_RESULTS:
+    if SAVE_MID_RESULTS:
         tl.store(qk_max + (start_m + offs_m) * num_heads + head_id, m_i, mask=m_mask)
         tl.store(exp_sum + (start_m + offs_m) * num_heads + head_id, l_i, mask=m_mask)
 
@@ -127,32 +143,68 @@ def triton_flash_attention(
     block_table: torch.Tensor,  # [max_num_blocks_per_seq]
     output: torch.Tensor,  # [num_seqs, num_heads, head_size]
     load_mid_results: bool,
+    save_mid_results: bool,
 ):
     num_seqs, num_heads, head_size = query.shape
     assert head_size in {16, 32, 64, 128}
     _, num_kv_heads, _, block_size, x = key_cache.shape
     max_num_blocks_per_seq = block_table.shape[0]
     scale = head_size ** -0.5
-    if num_seqs <= 32:
+    if num_seqs <= 16:
+        BLOCK_M = 16
+        BLOCK_N = 32
+        NUM_WARPS = 4
+        NUM_STAGES = 6
+    elif num_seqs <= 32:
         BLOCK_M = 32
         BLOCK_N = 32
+        NUM_WARPS = 4
         NUM_STAGES = 6
     elif num_seqs <= 64:
         BLOCK_M = 64
         BLOCK_N = 64
+        NUM_WARPS = 4
         NUM_STAGES = 4
     else:
         BLOCK_M = 128
         BLOCK_N = 64
+        NUM_WARPS = 4
         NUM_STAGES = 4
-    NUM_WARPS = 4
-    grid = (triton.cdiv(num_seqs, BLOCK_M), num_heads)
-    _fwd_kernel_v2[grid](
-        query, key_cache, value_cache, head_mapping, context_len, qk_max, exp_sum, block_table, output,
-        scale, max_num_blocks_per_seq, block_size, num_seqs, num_heads, num_kv_heads, head_size, x,
-        BLOCK_M=BLOCK_M, BLOCK_N=BLOCK_N, BLOCK_DMODEL=head_size, LOAD_MID_RESULTS=load_mid_results,
-        num_warps=NUM_WARPS, num_stages=NUM_STAGES,
-    )
+    NUM_BLOCKS_PER_SPLIT = 16
+    BLOCK_NUM_PER_TILE = BLOCK_N // block_size
+    split_kv_num = triton.cdiv(max_num_blocks_per_seq, NUM_BLOCKS_PER_SPLIT)
+    grid = (triton.cdiv(num_seqs, BLOCK_M), split_kv_num, num_heads)
+    # import ipdb; ipdb.set_trace()
+    if split_kv_num == 1:
+        _fwd_kernel_v2[grid](
+            query, key_cache, value_cache, head_mapping, context_len, qk_max, exp_sum, block_table, output,
+            scale, max_num_blocks_per_seq, num_seqs, num_heads, num_kv_heads, head_size, x,
+            BLOCK_M=BLOCK_M, BLOCK_N=BLOCK_N, BLOCK_DMODEL=head_size,
+            BLOCK_SIZE=block_size, BLOCK_NUM_PER_TILE=BLOCK_NUM_PER_TILE,
+            LOAD_MID_RESULTS=load_mid_results, SAVE_MID_RESULTS=save_mid_results,
+            num_warps=NUM_WARPS, num_stages=NUM_STAGES,
+        )
+    else:
+        tmp_out = torch.empty([split_kv_num, num_seqs, num_heads, head_size], dtype=query.dtype, device=query.device)
+        tmp_qk_max = torch.empty([split_kv_num, num_seqs, num_heads], dtype=qk_max.dtype, device=qk_max.device)
+        tmp_exp_sum = torch.empty([split_kv_num, num_seqs, num_heads], dtype=exp_sum.dtype, device=exp_sum.device)
+        _fwd_kernel_v2[grid](
+            query, key_cache, value_cache, head_mapping, context_len, tmp_qk_max, tmp_exp_sum, block_table, tmp_out,
+            scale, NUM_BLOCKS_PER_SPLIT, num_seqs, num_heads, num_kv_heads, head_size, x,
+            BLOCK_M=BLOCK_M, BLOCK_N=BLOCK_N, BLOCK_DMODEL=head_size,
+            BLOCK_SIZE=block_size, BLOCK_NUM_PER_TILE=BLOCK_NUM_PER_TILE,
+            LOAD_MID_RESULTS=False, SAVE_MID_RESULTS=True,
+            num_warps=NUM_WARPS, num_stages=NUM_STAGES,
+        )
+        if load_mid_results:
+            tmp_qk_max = torch.concat([tmp_qk_max, qk_max.unsqueeze(0)])
+            tmp_exp_sum = torch.concat([tmp_exp_sum, exp_sum.unsqueeze(0)])
+            tmp_out = torch.concat([tmp_out, output.unsqueeze(0)])
+        torch.amax(tmp_qk_max, dim=0, out=qk_max)
+        factor = torch.exp2(tmp_qk_max - qk_max[None, :, :])
+        torch.sum(factor * tmp_exp_sum, dim=0, out=exp_sum)
+        factor *= tmp_exp_sum / exp_sum[None, :, :]
+        torch.sum(factor[:, :, :, None] * tmp_out, dim=0, out=output)
 
 
 def flash_paged_attention(
@@ -165,8 +217,9 @@ def flash_paged_attention(
     paged_context_lens: torch.Tensor,  # [num_seqs]
     paged_block_tables: torch.Tensor,  # [num_seqs, max_num_blocks_per_seq]
 ):
-    num_seqs, num_heads, head_size, block_size = value_cache.shape
-    max_context_len = paged_block_tables.shape[-1] * block_size
+    num_blocks, num_heads, head_size, block_size = value_cache.shape
+    num_seqs, max_num_blocks_per_seq = paged_block_tables.shape
+    max_context_len = max_num_blocks_per_seq * block_size
     qk_max = torch.zeros([num_seqs, num_heads], dtype=torch.float32, device=query.device)
     exp_sum = torch.zeros([num_seqs, num_heads], dtype=torch.float32, device=query.device)
     output = torch.empty_like(query)
@@ -181,6 +234,7 @@ def flash_paged_attention(
         flash_block_table,
         output,
         load_mid_results=False,
+        save_mid_results=True,
     )
     attention_ops.single_query_cached_kv_post_attention(
         output,
@@ -210,8 +264,9 @@ def paged_flash_attention(
     paged_context_lens: torch.Tensor,  # [num_seqs]
     paged_block_tables: torch.Tensor,  # [num_seqs, max_num_blocks_per_seq]
 ):
-    num_seqs, num_heads, head_size, block_size = value_cache.shape
-    max_context_len = paged_block_tables.shape[-1] * block_size
+    num_blocks, num_heads, head_size, block_size = value_cache.shape
+    num_seqs, max_num_blocks_per_seq = paged_block_tables.shape
+    max_context_len = max_num_blocks_per_seq * block_size
     qk_max = torch.zeros([num_seqs, num_heads], dtype=torch.float32, device=query.device)
     exp_sum = torch.zeros([num_seqs, num_heads], dtype=torch.float32, device=query.device)
     output = torch.empty_like(query)
@@ -241,6 +296,7 @@ def paged_flash_attention(
         flash_block_table,
         output,
         load_mid_results=True,
+        save_mid_results=False,
     )
     return output
 
