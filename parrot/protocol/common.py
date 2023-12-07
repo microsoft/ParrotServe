@@ -56,7 +56,7 @@ async def async_send_http_request(
 ) -> BaseResponse:
     url = http_addr + api_url
     async with client_session.post(url, json=kwargs, timeout=timeout) as resp:
-        assert resp.ok, f"Send http request error: {await resp.json()}"
+        assert resp.ok, f"Send http request error: {resp.reason}"
         return await async_make_response(response_cls, resp)
 
 

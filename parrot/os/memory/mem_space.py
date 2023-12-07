@@ -88,7 +88,7 @@ class MemorySpace:
 
     def __init__(self):
         self.contexts: Dict[int, Context] = {}
-        self.pool = RecyclePool(CONTEXT_POOL_SIZE)
+        self.pool = RecyclePool("Context pool", CONTEXT_POOL_SIZE)
 
         # (prefix_text, engine_id) -> prefix_context
         self.prefix_cache: Dict[List, Context] = {}

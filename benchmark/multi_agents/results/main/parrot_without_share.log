@@ -1,0 +1,78 @@
+Warning: MLC is not installed. Related functionalities will be disabled.
+branches_num:  4
+batch_sum:  4456
+batch_sum:  17339
+batch_sum:  21096
+batch_sum:  24388
+batch_sum:  21096
+batch_sum:  24388
+batch_sum:  21096
+batch_sum:  24388
+batch_sum:  21096
+batch_sum:  24388
+Time: 231.229609692 (s)
+branches_num:  8
+batch_sum:  8912
+batch_sum:  33654
+batch_sum:  42237
+batch_sum:  47938
+batch_sum:  42237
+batch_sum:  47938
+batch_sum:  42237
+batch_sum:  47938
+batch_sum:  42237
+batch_sum:  47938
+Time: 318.491444393 (s)
+branches_num:  12
+batch_sum:  13368
+batch_sum:  50993
+batch_sum:  63333
+batch_sum:  72326
+batch_sum:  63333
+batch_sum:  72326
+batch_sum:  63333
+batch_sum:  72326
+batch_sum:  63333
+batch_sum:  72326
+Error happens when executing Parrot program:  <class 'aiohttp.client_exceptions.ServerDisconnectedError'> ServerDisconnectedError('Server disconnected')
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/llm-playground/Parrot/parrot/program/vm.py", line 309, in running_scope
+    yield
+  File "/home/v-chaofanlin/llm-playground/Parrot/parrot/program/vm.py", line 355, in run
+    loop.run_until_complete(coroutine)
+  File "/anaconda/envs/llm/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/v-chaofanlin/llm-playground/Parrot/benchmark/multi_agents/bench_hack.py", line 126, in execute
+    await asyncio.gather(*[output.aget() for output in layer_outputs])
+  File "/home/v-chaofanlin/llm-playground/Parrot/parrot/program/semantic_variable.py", line 105, in aget
+    content = await self._virtual_machine_env.aplaceholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/llm-playground/Parrot/parrot/program/vm.py", line 147, in aplaceholder_fetch_handler
+    resp = await aplaceholder_fetch(
+  File "/home/v-chaofanlin/llm-playground/Parrot/parrot/protocol/layer_apis.py", line 150, in aplaceholder_fetch
+    raise e
+  File "/home/v-chaofanlin/llm-playground/Parrot/parrot/protocol/layer_apis.py", line 139, in aplaceholder_fetch
+    return await async_send_http_request(
+  File "/home/v-chaofanlin/llm-playground/Parrot/parrot/protocol/common.py", line 58, in async_send_http_request
+    async with client_session.post(url, json=kwargs, timeout=timeout) as resp:
+  File "/anaconda/envs/llm/lib/python3.10/site-packages/aiohttp/client.py", line 1187, in __aenter__
+    self._resp = await self._coro
+  File "/anaconda/envs/llm/lib/python3.10/site-packages/aiohttp/client.py", line 601, in _request
+    await resp.start(conn)
+  File "/anaconda/envs/llm/lib/python3.10/site-packages/aiohttp/client_reqrep.py", line 965, in start
+    message, payload = await protocol.read()  # type: ignore[union-attr]
+  File "/anaconda/envs/llm/lib/python3.10/site-packages/aiohttp/streams.py", line 622, in read
+    await self._waiter
+aiohttp.client_exceptions.ServerDisconnectedError: Server disconnected
+
+Time: -6.0 (s)
+branches_num:  16
+batch_sum:  17824
+batch_sum:  67308
+batch_sum:  84474
+batch_sum:  95876
+batch_sum:  84474
+batch_sum:  95876
+batch_sum:  84474
+batch_sum:  95876
+batch_sum:  84474
+batch_sum:  95876

@@ -50,7 +50,7 @@ class Process:
 
         # ---------- Threads ----------
         self.threads: List[Thread] = []
-        self.threads_pool = RecyclePool(THREAD_POOL_SIZE)
+        self.threads_pool = RecyclePool(f"Proc {pid}'s Threads pool", THREAD_POOL_SIZE)
 
         # ---------- Runtime ----------
         self.dead = False  # Mark if the process is dead

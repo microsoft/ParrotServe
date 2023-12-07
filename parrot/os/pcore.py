@@ -20,7 +20,7 @@ from parrot.protocol.layer_apis import ping_engine
 from parrot.protocol.runtime_info import VMRuntimeInfo, EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.utils import get_logger, cprofile
-from parrot.exceptions import ParrotOSUserError, ParrotOSInternalError
+from parrot.exceptions import ParrotOSUserError, ParrotOSInternalError, parrot_assert
 
 from .config import OSConfig
 from .process.process import Process
@@ -77,8 +77,8 @@ class PCore:
         )
 
         # ---------- Id Allocator ----------
-        self.pid_pool = RecyclePool(PROCESS_POOL_SIZE)
-        self.engine_pool = RecyclePool(ENGINE_POOL_SIZE)
+        self.pid_pool = RecyclePool("OS Process pool", PROCESS_POOL_SIZE)
+        self.engine_pool = RecyclePool("OS Engine pool", ENGINE_POOL_SIZE)
 
         # ---------- Last Seen Time ----------
         self.proc_last_seen_time: Dict[int, float] = {}  # pid -> last_seen_time
@@ -319,6 +319,7 @@ class PCore:
 
         # with cprofile("wait_placeholder_get"):
         content = await placeholder.get()
+        parrot_assert(content is not None, "Placeholder content is None.")
 
         logger.debug(f"Placeholder (id={placeholder_id}) fetched.")
 

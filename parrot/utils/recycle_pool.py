@@ -7,7 +7,12 @@ from collections import deque
 
 
 class RecyclePool:
-    def __init__(self, pool_size: int):
+    def __init__(
+        self,
+        pool_name: str = "pool",
+        pool_size: int = 1024,
+    ):
+        self.pool_name = pool_name
         self.pool_size = pool_size
         self.free_ids: deque[int] = deque(list(range(pool_size)))
 
@@ -15,7 +20,7 @@ class RecyclePool:
         """Fetch an id."""
 
         if len(self.free_ids) == 0:
-            raise ValueError("No free id in the pool.")
+            raise ValueError(f"No free id in the pool: {self.pool_name}.")
         allocated_id = self.free_ids.popleft()  # Pop from left
         return allocated_id
 
