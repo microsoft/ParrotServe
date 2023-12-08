@@ -10,8 +10,8 @@ export OPENAI_API_KEY=EMPTY
 sleep 1
 
 python3 benchmark_serving_vllm.py --workload-info "../workloads/gpts/top4.json" \
-    --num-prompts 100 \
-    --request-rate 1 \
+    --num-prompts 500 \
+    --request-rate 2 \
     > 2.log
 
 sleep 1

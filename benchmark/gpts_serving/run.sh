@@ -14,8 +14,8 @@ bash launch.sh $log_path os.log engine1.log engine2.log engine3.log engine4.log
 # Run benchmark
 cd ..
 python3 benchmark_serving.py --workload-info "../workloads/gpts/top4.json" \
-    --num-prompts 100 \
-    --request-rate 4 \
+    --num-prompts 500 \
+    --request-rate 6 \
     > 1.log
 sleep 1
 

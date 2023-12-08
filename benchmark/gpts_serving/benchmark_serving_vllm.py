@@ -132,7 +132,8 @@ async def benchmark(
 
 
 def main(args: argparse.Namespace):
-    print(args)
+    # print(args)
+    print("request_rate: ", args.request_rate)
     random.seed(args.seed)
     np.random.seed(args.seed)
 
@@ -154,22 +155,22 @@ def main(args: argparse.Namespace):
     global REQUEST_LATENCY
 
     benchmark_time = (benchmark_end_time - benchmark_start_time) / 1e6
-    print(f"Total time: {benchmark_time / 1e3:.2f} s")
-    print(f"Throughput: {args.num_prompts * 1e3 / benchmark_time:.2f} requests/s")
+    # print(f"Total time: {benchmark_time / 1e3:.2f} s")
+    # print(f"Throughput: {args.num_prompts * 1e3 / benchmark_time:.2f} requests/s")
 
     # Compute the latency statistics.
-    avg_latency = np.mean([latency for _, _, latency in REQUEST_LATENCY])
-    print(f"Average latency: {avg_latency:.2f} ms")
+    # avg_latency = np.mean([latency for _, _, latency in REQUEST_LATENCY])
+    # print(f"Average latency: {avg_latency:.2f} ms")
     avg_per_output_token_latency = np.mean(
         [latency / output_len for _, output_len, latency in REQUEST_LATENCY]
     )
-    print("Average latency per output token: " f"{avg_per_output_token_latency:.2f} ms")
+    print("Normalized latency: " f"{avg_per_output_token_latency:.2f} ms")
 
-    for key in funcs.keys():
-        print("App name: ", key)
-        print(f"Number of requests: {len([x for x in REQUEST_LATENCY if x[0] == key])}")
-        print(f"Average latency: {np.mean([x[2] for x in REQUEST_LATENCY if x[0] == key]):.2f} ms")
-        print(f"Average latency per output token: {np.mean([x[2] / x[1] for x in REQUEST_LATENCY if x[0] == key]):.2f} ms")
+    # for key in funcs.keys():
+    #     print("App name: ", key)
+    #     print(f"Number of requests: {len([x for x in REQUEST_LATENCY if x[0] == key])}")
+    #     print(f"Average latency: {np.mean([x[2] for x in REQUEST_LATENCY if x[0] == key]):.2f} ms")
+    #     print(f"Average latency per output token: {np.mean([x[2] / x[1] for x in REQUEST_LATENCY if x[0] == key]):.2f} ms")
 
 
 if __name__ == "__main__":
