@@ -1,0 +1,8 @@
+Warning: MLC is not installed. Related functionalities will be disabled.
+Namespace(dataset='../workloads/sharegpt/ShareGPT_V3_unfiltered_cleaned_split.json', tokenizer='hf-internal-testing/llama-tokenizer', num_prompts=100, request_rate=4.0, seed=0, trust_remote_code=False)
+INFO 12-07 01:24:43 tokenizer.py:27] For some LLaMA-based models, initializing the fast tokenizer may take a long time. To eliminate the initialization time, consider using 'hf-internal-testing/llama-tokenizer' instead of the original tokenizer.
+Total time: 25.17 s
+Throughput: 3.97 requests/s
+Average latency: 3266.37 ms
+Average latency per token: 5.81 ms
+Average latency per output token: 65.33 ms

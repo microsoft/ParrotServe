@@ -1,0 +1,5 @@
+Warning: MLC is not installed. Related functionalities will be disabled.
+Namespace(num_apps=10, app_rate=0.3, seed=0)
+Total time: 69.61 s
+Throughput: 0.14 requests/s
+Average latency: 32410.73 ms

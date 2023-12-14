@@ -83,6 +83,7 @@ class VirtualMachine:
         self._anonymous_funcname_counter = 0
 
         self._batch = []
+        self._batch_latency = 0.0
         self._batch_flag = False
 
         logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
@@ -107,7 +108,8 @@ class VirtualMachine:
         is_native = isinstance(call.func, NativeFunction)
 
         async def _submit_call(idx: int):
-            await asyncio.sleep(idx * 0.001)  # Order the batch, 1ms latency
+            if self._batch_latency > 0:
+                await asyncio.sleep(idx * self._batch_latency)  # Order the batch, 1ms latency
             await asubmit_call(
                 http_addr=self.os_http_addr,
                 pid=self.pid,
@@ -198,17 +200,19 @@ class VirtualMachine:
 
     # Submit batching calls with ordering!
 
-    def set_batch(self):
+    def set_batch(self, latency: float = 0.001):
         """Set the batch flag to True."""
 
         parrot_assert(not self._batch_flag, "Batching is already set.")
         self._batch_flag = True
+        self._batch_latency = latency
 
     async def submit_batch(self):
         """Submit the batch to OS."""
 
         parrot_assert(self._batch_flag, "Batching is not set.")
         self._batch_flag = False
+        self._batch_latency = 0.001
 
         await asyncio.gather(*self._batch)
         self._batch = []

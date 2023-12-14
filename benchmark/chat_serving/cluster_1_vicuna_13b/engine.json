@@ -10,13 +10,13 @@
     "threads_capacity": 256,
     "instance": {
         "block_size": 16,
-        "num_kv_cache_blocks": 3800,
+        "num_kv_cache_blocks": 2000,
         "attn_func": "xformers_fill_vllm_paged_attention_generate"
     },
     "scheduler": {
         "max_batch_size": 256,
         "max_num_batched_tokens": 2560,
-        "max_total_tokens": 12288,
+        "max_total_tokens": 4096,
         "policy": "fifo"
     },
     "os": {

@@ -55,6 +55,8 @@ class TokenIdInterpreter(BaseInterpreter):
 
         eos_token_id = self.tokenizer.get_tokenizer(self.tokenizer_name).eos_token_id
 
+        parrot_assert(len(tokenized) == len(thread.call.func.body), f"Length mismatch: {len(tokenized)} != {len(thread.call.func.body)}")
+
         # Translate function body to instructions
         for i, piece in enumerate(thread.call.func.body):
             if isinstance(piece, Constant):

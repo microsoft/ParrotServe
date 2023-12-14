@@ -1,6 +1,6 @@
 {
-    "engine_name": "vicuna-13b-v1.3_local",
-    "model": "lmsys/vicuna-13b-v1.3",
+    "engine_name": "vicuna-7b-v1.3_local",
+    "model": "lmsys/vicuna-7b-v1.3",
     "host": "localhost",
     "port": 9001,
     "engine_type": "builtin",
@@ -9,15 +9,15 @@
     "fill_chunk_size": -1,
     "threads_capacity": 128,
     "instance": {
+        "max_seq_len": 20480,
         "block_size": 16,
-        "num_kv_cache_blocks": 4000,
-        "attn_func": "xformers_fill_shared_prompts_generate",
-        "max_seq_len": 65536
+        "num_kv_cache_blocks": 3000,
+        "attn_func": "xformers_fill_vllm_paged_attention_generate"
     },
     "scheduler": {
         "max_batch_size": 256,
         "max_num_batched_tokens": 8000,
-        "max_total_tokens": 12800000
+        "max_total_tokens": 999999999999
     },
     "os": {
         "host": "localhost",

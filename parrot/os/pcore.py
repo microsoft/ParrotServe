@@ -74,6 +74,7 @@ class PCore:
             config=dispatcher_config,
             engines=self.engines,
             ping_engine_method=_ping_engine_method,
+            memory_space=self.mem_space,
         )
 
         # ---------- Id Allocator ----------
@@ -269,6 +270,16 @@ class PCore:
             f'Function call "{call.func.name}" submitted from VM (pid={pid}). '
             f"Created thread: tid={thread.tid}"
         )
+
+        # HACK(chaofan): Get req no.
+        if call.func.name == "chat":
+            prompt = call.bindings["input"]
+            assert "lcf%" in prompt
+            l_pos = prompt.find("lcf%")
+            r_pos = prompt.rfind("lcf%")
+            assert l_pos != r_pos
+            req_no = int(prompt[l_pos + 4: r_pos])
+            print(f"Req mapping: {req_no}, {thread.tid}", flush=True)
 
     async def placeholder_set(self, pid: int, placeholder_id: int, content: str):
         """Set a placeholder content from VM."""

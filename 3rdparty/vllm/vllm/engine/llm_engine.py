@@ -340,6 +340,15 @@ class LLMEngine:
             request_output = RequestOutput.from_seq_group(seq_group)
             request_outputs.append(request_output)
 
+            # HACK(chaofan): Get the exit time of the request.
+            if request_output.finished and "lcf%" in request_output.prompt:
+                cur_time = time.perf_counter_ns()
+                l_pos = request_output.prompt.find("lcf%")
+                r_pos = request_output.prompt.rfind("lcf%")
+                assert l_pos != r_pos
+                req_no = int(request_output.prompt[l_pos + 4: r_pos])
+                print(f"hack request exit: {req_no}, {cur_time}", flush=True)
+
         if self.log_stats:
             # Log the system stats.
             self._log_system_stats(

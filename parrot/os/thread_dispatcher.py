@@ -7,11 +7,13 @@ from enum import Enum
 from dataclasses import dataclass
 from queue import Queue
 
+from parrot.program.semantic_variable import Constant
 from parrot.utils import get_logger, cprofile
 from parrot.exceptions import ParrotOSUserError, parrot_assert
 
 from .process.thread import Thread
 from .engine import ExecutionEngine
+from .memory.mem_space import MemorySpace
 
 logger = get_logger("ThreadDispatcher")
 
@@ -20,6 +22,7 @@ logger = get_logger("ThreadDispatcher")
 class DispatcherConfig:
     dag_aware: bool = False
     app_fifo: bool = False
+    ctx_aware: bool = False
     max_queue_size: int = 1024
 
 
@@ -37,11 +40,13 @@ class ThreadDispatcher:
         config: DispatcherConfig,
         engines: Dict[int, ExecutionEngine],
         ping_engine_method: Optional[Callable] = None,
+        memory_space: Optional[MemorySpace] = None,
     ):
         self.config = config
         self.engines = engines
         self.live_engines: Dict[int, ExecutionEngine] = {}
         self.ping_engine_method = ping_engine_method
+        self.memory_space = memory_space
 
         self.threads: Dict[str, Thread] = {}  # uid -> thread
         self.thread_queue = Queue(maxsize=self.config.max_queue_size)
@@ -94,26 +99,41 @@ class ThreadDispatcher:
             return False
 
         # Get the best candidate engine.
-        if self.config.dag_aware:
-            # DAG Aware policy: select the engine with the least remain locs first,
-            # preventing threads with a relaxed threads_capacity requirement from
-            # occupying the engine with a smaller remain locs.
-            best_candidate = None
+
+        best_candidate = None
+
+        if self.config.ctx_aware:
+            parrot_assert(self.memory_space is not None, "Memory space is not set when Ctx Aware.")
+            prefix = thread.call.func.prefix
+            # TODO(chaofan): Prefix not always a constant. Fix it in the future.
+            parrot_assert(isinstance(prefix, Constant), "Prefix is not a constant.")
+            engine_ids_with_ctx = set(self.memory_space.get_engines_with_ctx(prefix.text))
             for engine in engines_list:
-                if (
-                    best_candidate == None
-                    or engine.remain_thread_locs < best_candidate.remain_thread_locs
-                ):
+                if engine.engine_id in engine_ids_with_ctx:
+                    # TODO(chaofan): In this policy, we select the first engine.
+                    # It's OK for now, but we may need to improve it in the future.
                     best_candidate = engine
-        else:
-            # Default policy: dispatch to the engine with the most remain locs.
-            best_candidate = None
-            for engine in engines_list:
-                if (
-                    best_candidate == None
-                    or engine.remain_thread_locs > best_candidate.remain_thread_locs
-                ):
-                    best_candidate = engine
+                    break
+        if best_candidate is None:
+            if self.config.dag_aware:
+                # DAG Aware policy: select the engine with the least remain locs first,
+                # preventing threads with a relaxed threads_capacity requirement from
+                # occupying the engine with a smaller remain locs.
+                for engine in engines_list:
+                    if (
+                        best_candidate == None
+                        or engine.remain_thread_locs < best_candidate.remain_thread_locs
+                    ):
+                        best_candidate = engine
+            else:
+                # Default policy: dispatch to the engine with the most remain locs.
+                best_candidate = None
+                for engine in engines_list:
+                    if (
+                        best_candidate == None
+                        or engine.remain_thread_locs > best_candidate.remain_thread_locs
+                    ):
+                        best_candidate = engine
 
         best_candidate.accept_thread(thread)
 
@@ -132,8 +152,9 @@ class ThreadDispatcher:
         # To make sure the engine is alive, we need to ping it first and sweep the dead engines.
         # And ping the engines can also update the engine status.
         if self.ping_engine_method is not None and not self._flushed:
-            for _, engine in self.engines.items():
-                self.ping_engine_method(engine)
+            # NOTE(chaofan): It's slow. Fix in the future.
+            # for _, engine in self.engines.items():
+            #     self.ping_engine_method(engine)
             self._flushed = True
 
         self.live_engines = {

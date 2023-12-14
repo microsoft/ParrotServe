@@ -404,7 +404,7 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
         return output.view(-1, self.num_heads * self.head_dim)
 
 
-class xFormersFill_SharedPromptsGenerate(AttnFunc):
+class xFormersFill_SharedPromptsGenerate(xFormersFill_vLLMPagedAttentionGenerate):
 
     @staticmethod
     def init_iteration_state(
@@ -414,6 +414,15 @@ class xFormersFill_SharedPromptsGenerate(AttnFunc):
         num_heads: int,
         head_size: int,
     ):
+        # if len(jobs) < 4:
+        #     return xFormersFill_vLLMPagedAttentionGenerate.init_iteration_state(
+        #         iteration_state,
+        #         builtin_config,
+        #         jobs,
+        #         num_heads,
+        #         head_size,
+        #     )
+
         block_size = builtin_config.block_size
         if jobs[0].context.parent_context is not None:
             flash_context_len = jobs[0].context.parent_context.get_this_context_len()
@@ -498,10 +507,6 @@ class xFormersFill_SharedPromptsGenerate(AttnFunc):
         paged_block_tables = [_pad_to_max(x, max_num_blocks_per_seq, 0) for x in paged_block_tables]
         slot_mapping = [_pad_to_max(x, max_num_slots_per_seq, 0) for x in slot_mapping]
 
-        # print(block_tables)
-        # print(slot_mapping)
-        # print(context_lens)
-
         iteration_state.flash_context_len = flash_context_len
 
         iteration_state.flash_block_table = torch.tensor(
@@ -541,6 +546,9 @@ class xFormersFill_SharedPromptsGenerate(AttnFunc):
         v: torch.Tensor,
         iteration_state: IterationState,
     ):
+        # if q.shape[0] < 4:
+        #     return super().forward(q, k, v, iteration_state)
+
         k_cache = get_k_cache(self.layer_idx)
         v_cache = get_v_cache(self.layer_idx)
 
@@ -614,7 +622,7 @@ class xFormersFill_SharedPromptsGenerate(AttnFunc):
                 self.num_heads, device=q_gen.device, dtype=torch.int32
             )
 
-            gen_output = paged_flash_attention(
+            gen_output = flash_paged_attention(
                 q_gen,
                 k_cache,
                 v_cache,
