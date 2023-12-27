@@ -7,11 +7,6 @@
 (Scalable and Efficient Runtime System for Semantic Programming.)
 """
 
-try:
-    import mlc_chat  # Avoid MLC error because "torch" is imported before "mlc_chat"
-except ImportError:
-    print("Warning: MLC is not installed. Related functionalities will be disabled.")
-
 # Program Interface and Transforms
 from .program import *
 

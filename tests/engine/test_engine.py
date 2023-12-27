@@ -55,21 +55,13 @@ def _test_single_engine_simple_serving(config):
         engine._add_job(job)
         await job.finish_event.wait()
 
-    if engine_type == "native":
+    if engine_type == "builtin":
 
         async def main():
             create_task_in_loop(engine.engine_loop())
             await execute_job(fill_job)
             await execute_job(gen_job)
             print(tokenizer.decode(gen_job.context.token_ids))
-
-    elif engine_type == "mlcllm":
-
-        async def main():
-            create_task_in_loop(engine.engine_loop())
-            await execute_job(fill_job)
-            await execute_job(gen_job)
-            print(engine.chat_module._get_message())
 
     elif engine_type == "openai":
 
@@ -84,16 +76,13 @@ def _test_single_engine_simple_serving(config):
     except BaseException as e:
         print("Internal error happends:", e)
 
-    # if engine_type != "mlcllm":
-    #     engine.free_context({"context_id": 0})
     del engine
     torch.cuda.empty_cache()
 
 
 TEST_CONFIGS_LIST = [
-    ("native", "opt-125m.json"),
-    ("native", "vicuna-7b-v1.3.json"),
-    ("mlcllm", "Llama-2-13b-chat-hf-q4f16_1-vulkan.json"),
+    ("builtin", "opt-125m.json"),
+    ("builtin", "vicuna-7b-v1.3.json"),
     ("openai", "azure-openai-gpt-3.5-turbo.json"),
 ]
 

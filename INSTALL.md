@@ -47,9 +47,9 @@ cd 3rdparty/langchain/libs/langchain
 pip install -e .
 ```
 
-(Optional) MLC-LLM is a special type of engine.
+<!-- (Optional) MLC-LLM is a special type of engine.
 
-If you used MLC-LLM engines, Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it, including the pre-compiled library and weights. The recommended commit refers to `3rdparty` folder.
+If you used MLC-LLM engines, Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it, including the pre-compiled library and weights. The recommended commit refers to `3rdparty` folder. -->
 
 - **! Important Notes**:
 

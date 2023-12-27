@@ -110,8 +110,8 @@ def os_server():
 def _launch_engine(engine_config_name: str, connect_to_os: bool, override_args: Dict):
     engine_config_path = get_sample_engine_config_path(engine_config_name)
     start_engine_server(
-        engine_config_path=engine_config_path, 
-        connect_to_os=connect_to_os, 
+        engine_config_path=engine_config_path,
+        connect_to_os=connect_to_os,
         override_args=override_args,
     )
 
@@ -170,17 +170,6 @@ def system_vicuna_vllm():
         with engine_server(
             engine_config_name="vicuna-7b-v1.3-vllm.json",
             wait_ready_time=5.0,
-            connect_to_os=True,
-        ):
-            yield
-
-
-@contextlib.contextmanager
-def system_mlcllm():
-    with os_server():
-        with engine_server(
-            engine_config_name="Llama-2-13b-chat-hf-q4f16_1-vulkan.json",
-            wait_ready_time=3.0,
             connect_to_os=True,
         ):
             yield

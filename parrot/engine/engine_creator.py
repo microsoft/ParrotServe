@@ -6,13 +6,12 @@ import json
 from typing import Dict
 
 from parrot.utils import get_logger
-from parrot.constants import ENGINE_TYPE_BUILTIN, ENGINE_TYPE_MLCLLM, ENGINE_TYPE_OPENAI
+from parrot.constants import ENGINE_TYPE_BUILTIN, ENGINE_TYPE_OPENAI
 from parrot.exceptions import ParrotEngineInternalError
 
 from .llm_engine import LLMEngine
 from .config import EngineConfig
 from .builtin.builtin_engine import BuiltinEngine
-from .mlc_llm.mlc_engine import MLCEngine
 from .openai.openai_engine import OpenAIEngine
 
 
@@ -50,8 +49,6 @@ def create_engine(
 
     if engine_type == ENGINE_TYPE_BUILTIN:
         return BuiltinEngine(engine_config, connect_to_os)
-    elif engine_type == ENGINE_TYPE_MLCLLM:
-        return MLCEngine(engine_config, connect_to_os)
     elif engine_type == ENGINE_TYPE_OPENAI:
         return OpenAIEngine(engine_config, connect_to_os)
     else:

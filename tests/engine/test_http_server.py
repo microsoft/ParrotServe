@@ -93,7 +93,6 @@ def _test_single_server_simple_serving(config):
 TEST_CONFIGS_LIST = [
     ("native", "opt-125m.json"),
     ("native", "vicuna-7b-v1.3.json"),
-    ("mlcllm", "Llama-2-13b-chat-hf-q4f16_1-vulkan.json"),
     ("openai", "azure-openai-gpt-3.5-turbo.json"),
 ]
 
