@@ -2,13 +2,14 @@
 # Licensed under the MIT license.
 
 
-from typing import List
+from typing import List, Optional
 import torch
 from torch import nn
 from xformers import ops as xops
 
 from parrot.utils import get_logger
 
+from ..context.low_level_context import LowLevelContext
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from .mem import get_k_cache, get_v_cache
 from .iter_state import IterationState
@@ -404,7 +405,58 @@ class xFormersFill_vLLMPagedAttentionGenerate(AttnFunc):
         return output.view(-1, self.num_heads * self.head_dim)
 
 
-class xFormersFill_SharedPromptsGenerate(xFormersFill_vLLMPagedAttentionGenerate):
+class xFormersFill_SharedPromptsGenerate(AttnFunc):
+    """Attention using xformers optimized operators and customized shared prompt kernel."""
+
+    @staticmethod
+    def _lca(
+        context1: Optional[LowLevelContext],
+        context2: Optional[LowLevelContext],
+    ) -> Optional[LowLevelContext]:
+        """Find the LCA of two contexts.
+
+        NOTE: This is a brute-force implementation.
+        """
+        if context1 == context2:
+            return context1
+
+        if context1 is None or context2 is None:
+            return None
+
+        while context1 is not None:
+            if context1 == context2:
+                return context1
+
+            if context1.depth > context2.depth:
+                context1 = context1.parent_context
+            elif context1.depth < context2.depth:
+                context2 = context2.parent_context
+            else:
+                context1 = context1.parent_context
+                context2 = context2.parent_context
+
+        return None
+
+    @staticmethod
+    def get_shared_context_len(jobs: List[PrimitiveJob]) -> int:
+        """Get the shared context length of the jobs.
+
+        Algorithm: the problem is equivalent to finding the LCA of a list of nodes in the tree
+        (NOTE: LCA may not exist).
+            1. Find the LCA for the first job and the second job. (Brute-force)
+            2. Find the LCA for the LCA and the third, fourth, ... jobs.
+        """
+
+        assert len(jobs) > 0
+        if len(jobs) == 1:
+            return jobs[0].context.get_context_len()
+
+        lca = xFormersFill_SharedPromptsGenerate._lca(jobs[0].context, jobs[1].context)
+        for job in jobs[2:]:
+            if lca is None:
+                break
+            lca = xFormersFill_SharedPromptsGenerate._lca(lca, job.context)
+        return lca.get_context_len() if lca is not None else 0
 
     @staticmethod
     def init_iteration_state(
@@ -424,17 +476,22 @@ class xFormersFill_SharedPromptsGenerate(xFormersFill_vLLMPagedAttentionGenerate
         #     )
 
         block_size = builtin_config.block_size
-        if jobs[0].context.parent_context is not None:
-            flash_context_len = jobs[0].context.parent_context.get_this_context_len()
-        else:
-            flash_context_len = 0
+
+        # Detect shared length
+        flash_context_len = xFormersFill_SharedPromptsGenerate.get_shared_context_len(
+            jobs
+        )
+        logger.debug(f"Shared context length: {flash_context_len}")
+
         flash_block_num = (flash_context_len + block_size - 1) // block_size
         flash_pad_len = flash_block_num * block_size
 
         # Address Tables
         paged_context_lens = []  # [num_generation_seqs]
         context_block_ids = jobs[0].context.get_context_block_ids()
-        flash_block_table = context_block_ids[:flash_pad_len:block_size]  # [max_num_blocks_per_seq]
+        flash_block_table = context_block_ids[
+            :flash_pad_len:block_size
+        ]  # [max_num_blocks_per_seq]
         paged_block_tables = []  # [num_generation_seqs, max_num_blocks_per_seq]
         slot_mapping = []  # [num_tokens]
 
@@ -504,7 +561,9 @@ class xFormersFill_SharedPromptsGenerate(xFormersFill_vLLMPagedAttentionGenerate
         # Tensors for vLLM
 
         # NOTE: We must pad block tables to the same length.
-        paged_block_tables = [_pad_to_max(x, max_num_blocks_per_seq, 0) for x in paged_block_tables]
+        paged_block_tables = [
+            _pad_to_max(x, max_num_blocks_per_seq, 0) for x in paged_block_tables
+        ]
         slot_mapping = [_pad_to_max(x, max_num_slots_per_seq, 0) for x in slot_mapping]
 
         iteration_state.flash_context_len = flash_context_len
@@ -662,8 +721,9 @@ def _get_attn_func(self, attn_func_name: str):
     elif attn_func_name == "xformers_fill_shared_prompts_generate":
         logger.warning(
             "Use attn func without Fill/Generate fusion, which means these "
-            "two stages are executed serially. [Using shared prompts]"
+            "two stages are executed serially."
         )
+        logger.warning("Use kernels with shared prompts.")
         return xFormersFill_SharedPromptsGenerate
     else:
         raise ValueError(
