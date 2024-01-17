@@ -24,17 +24,17 @@ from parrot.protocol.layer_apis import (
     placeholder_fetch,
     aplaceholder_fetch,
 )
-from parrot.program.semantic_variable import SemanticVariable
-from parrot.program.function import (
+from parrot.frontend.semantic_variable import SemanticVariable
+from parrot.frontend.function import (
     BasicFunction,
     NativeFunction,
     SemanticFunction,
     ParamType,
     Parameter,
 )
-from parrot.protocol.annotation import DispatchAnnotation
+from Parrot.parrot.os.graph.annotation import DispatchAnnotation
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.program.function_call import BasicCall
+from parrot.frontend.function_call import BasicCall
 from parrot.utils import get_logger
 from parrot.constants import VM_HEARTBEAT_INTERVAL, NONE_CONTEXT_ID
 
@@ -109,7 +109,9 @@ class VirtualMachine:
 
         async def _submit_call(idx: int):
             if self._batch_latency > 0:
-                await asyncio.sleep(idx * self._batch_latency)  # Order the batch, 1ms latency
+                await asyncio.sleep(
+                    idx * self._batch_latency
+                )  # Order the batch, 1ms latency
             await asubmit_call(
                 http_addr=self.os_http_addr,
                 pid=self.pid,

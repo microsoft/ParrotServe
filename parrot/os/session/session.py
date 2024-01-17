@@ -6,8 +6,8 @@ import asyncio
 from typing import List, Dict, Optional
 from queue import Queue
 
-from parrot.program.semantic_variable import ParameterLoc, SemanticVariable
-from parrot.program.function_call import BasicCall, SemanticCall, NativeCall
+from parrot.frontend.semantic_variable import ParameterLoc, SemanticVariable
+from parrot.frontend.function_call import BasicCall, SemanticCall, NativeCall
 from parrot.utils import get_logger, RecyclePool, create_task_in_loop
 from parrot.constants import THREAD_POOL_SIZE
 from parrot.exceptions import ParrotOSUserError, parrot_assert
@@ -16,7 +16,7 @@ from .placeholder import SVPlaceholder
 from .thread import Thread
 from .dag_edge import DAGEdge
 from ..thread_dispatcher import ThreadDispatcher
-from ..memory.mem_space import MemorySpace
+from ..context.context_manager import MemorySpace
 from ..tokenizer import Tokenizer
 from .executor import Executor
 

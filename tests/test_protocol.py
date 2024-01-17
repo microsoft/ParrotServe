@@ -6,9 +6,9 @@ import parrot as P
 
 from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
-from parrot.os.engine import ExecutionEngine
+from Parrot.parrot.os.engine.engine_node import ExecutionEngine
 from parrot.os.tokenizer import Tokenizer
-from parrot.os.memory.context import Context
+from parrot.os.context.context import Context
 from parrot.constants import NONE_THREAD_ID
 
 from parrot.protocol.layer_apis import (

@@ -7,8 +7,8 @@ from transformers import AutoTokenizer
 from parrot.engine.config import EngineConfig
 from parrot.protocol.layer_apis import free_context
 from parrot.protocol.primitive_request import Fill, Generate
-from parrot.os.memory.context import Context
-from parrot.os.engine import ExecutionEngine
+from parrot.os.context.context import Context
+from Parrot.parrot.os.engine.engine_node import ExecutionEngine
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.testing.get_configs import get_sample_engine_config_path
 from parrot.testing.localhost_server_daemon import engine_server

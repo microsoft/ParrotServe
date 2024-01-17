@@ -7,7 +7,7 @@ from asyncio import Event
 
 from parrot.constants import NONE_CONTEXT_ID
 
-from ..engine import ExecutionEngine
+from ..engine.engine_node import ExecutionEngine
 
 
 class Context:

@@ -5,8 +5,6 @@
 from typing import Dict, List, Union
 from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 
-from parrot.program.function import SemanticFunction, Constant
-
 
 HFTokenizer = Union[PreTrainedTokenizer, PreTrainedTokenizerFast]
 
@@ -17,39 +15,12 @@ class Tokenizer:
     def __init__(self):
         self.tokenizers: Dict[str, HFTokenizer] = {}
 
-        # (Function Name, tokenizer) -> Function Body -> Token ids
-        self.tokenized_cache: Dict[(str, str), List[List[int]]] = {}
-
     def get_tokenizer(self, tokenizer_name: str):
         if tokenizer_name not in self.tokenizers:
             self.tokenizers[tokenizer_name] = AutoTokenizer.from_pretrained(
                 tokenizer_name
             )
         return self.tokenizers[tokenizer_name]
-
-    def tokenize_func_body(
-        self,
-        function: SemanticFunction,
-        tokenizer_name: str,
-    ) -> List[int]:
-        key = (function.name, tokenizer_name)
-        if key not in self.tokenized_cache:
-            tokenizer = self.get_tokenizer(tokenizer_name)
-
-            tokenized: List[List[int]] = []
-            for piece in function.body:
-                if isinstance(piece, Constant):
-                    tokenized.append(
-                        tokenizer.encode(
-                            piece.text,
-                            add_special_tokens=False,
-                        )
-                    )
-                else:
-                    tokenized.append([])  # Empty for var loc
-            self.tokenized_cache[key] = tokenized
-
-        return self.tokenized_cache[key].copy()  # Avoid modification
 
     # NOTE(chaofan): Ignore special tokens because we chunk the inputs.
 

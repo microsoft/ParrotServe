@@ -21,7 +21,7 @@ import time
 import numpy as np
 
 from parrot.engine.config import EngineConfig
-from parrot.os.engine import EngineRuntimeInfo
+from Parrot.parrot.os.engine.engine_node import EngineRuntimeInfo
 from parrot.constants import (
     DEFAULT_SERVER_HOST,
     DEFAULT_ENGINE_SERVER_PORT,

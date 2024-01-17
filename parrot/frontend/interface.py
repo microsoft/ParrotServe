@@ -7,7 +7,7 @@ import collections
 from typing import Optional, List
 
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.protocol.annotation import DispatchAnnotation
+from Parrot.parrot.os.graph.annotation import DispatchAnnotation
 from parrot.utils import get_logger, change_signature
 
 from .semantic_variable import SemanticVariable

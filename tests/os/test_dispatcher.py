@@ -1,12 +1,12 @@
 import parrot as P
 
-from parrot.os.process.process import Process
+from Parrot.parrot.os.session.session import Process
 from parrot.os.tokenizer import Tokenizer
-from parrot.os.memory.mem_space import MemorySpace
-from parrot.os.engine import ExecutionEngine
-from parrot.os.process.thread import Thread
+from Parrot.parrot.os.context.context_manager import MemorySpace
+from Parrot.parrot.os.engine.engine_node import ExecutionEngine
+from parrot.os.session.thread import Thread
 from parrot.engine.config import EngineConfig
-from parrot.os.memory.context import Context
+from parrot.os.context.context import Context
 from parrot.os.thread_dispatcher import DispatcherConfig, ThreadDispatcher
 
 
@@ -309,6 +309,7 @@ def test_token_capacity():
 def test_prefix1(a: P.Input, b: P.Output):
     """Prefix1 {{a}} function {{b}}"""
 
+
 @P.semantic_function()
 def test_prefix2(a: P.Input, b: P.Output):
     """Prefix2 {{a}} function {{b}}"""
@@ -323,19 +324,19 @@ def test_ctx_aware():
 
     # 4 identical engines
     tokenizer = Tokenizer()
-    engine_config = EngineConfig(
-        tokenizer="hf-internal-testing/llama-tokenizer"
-    )
+    engine_config = EngineConfig(tokenizer="hf-internal-testing/llama-tokenizer")
 
     # 2 engine
     engines = {
         0: ExecutionEngine(engine_id=0, config=engine_config, tokenizer=tokenizer),
-        1: ExecutionEngine(engine_id=1, config=engine_config, tokenizer=tokenizer)
+        1: ExecutionEngine(engine_id=1, config=engine_config, tokenizer=tokenizer),
     }
 
     # init dispatcher
     mem_space = MemorySpace()
-    dispatcher = ThreadDispatcher(config=dispatcher_config, engines=engines, memory_space=mem_space)
+    dispatcher = ThreadDispatcher(
+        config=dispatcher_config, engines=engines, memory_space=mem_space
+    )
     process = Process(
         pid=0,
         dispatcher=dispatcher,

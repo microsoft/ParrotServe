@@ -14,6 +14,7 @@ def test_simple_batch_share():
     runner = BuiltinRunner(model_name, builtin_config)
 
     batch_size = 16
+    # Expect result: 32
     shared_len = 20
     diverged_lens = [i * 10 for i in range(1, batch_size + 1)]
 
@@ -63,6 +64,7 @@ def test_two_level_batch_share():
     runner = BuiltinRunner(model_name, builtin_config)
 
     batch_size = 16
+    # Expect result: 32+16=48
     shared_len1 = 20
     shared_len2 = 10
     diverged_lens = [i * 10 for i in range(1, batch_size + 1)]

@@ -11,10 +11,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from uvicorn import Config, Server
 
-from parrot.program.function import SemanticCall, NativeCall
+from parrot.frontend.function import SemanticCall, NativeCall
 from parrot.os.pcore import PCore
 from parrot.os.os_creator import create_os
-from parrot.os.engine import EngineRuntimeInfo
+from Parrot.parrot.os.engine.engine_node import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.utils import (
     get_logger,
@@ -57,77 +57,23 @@ async def parrot_os_internal_error_handler(
     raise exc
 
 
-@app.post("/vm_heartbeat")
-async def vm_heartbeat(request: Request):
-    pid = (await request.json())["pid"]
-    logger.debug(f"VM heartbeat received: pid={pid}")
-    return await pcore.vm_heartbeat(pid)
+"""
+Public APIs.
+"""
+
+API_VERSION = "v1"
 
 
-@app.post("/register_vm")
-async def register_vm(request: Request):
-    logger.debug(f"Register VM received.")
-    allocated_pid = await pcore.register_vm()
-    return {"pid": allocated_pid}
-
-
-@app.post("/submit_call")
-async def submit_call(request: Request):
-    # Sleep simulate network latency
-    latency_open = os.environ.get("SIMULATE_NETWORK_LATENCY_PRT", None)
-    assert (
-        latency_open is not None
-    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY_PRT"
-    try:
-        latency_open = int(latency_open)
-        assert latency_open == 0 or latency_open == 1
-    except:
-        return ValueError("SIMULATE_NETWORK_LATENCY must 0/1.")
-
-    # RTT
-    if latency_open == 1:
-        latency = get_latency()
-        await asyncio.sleep(latency / 2)
-
+@app.post(f"/{API_VERSION}/session")
+async def create_session(request: Request):
     payload = await request.json()
-    pid = payload["pid"]
-    is_native = payload["is_native"]
-    logger.debug(f"Submit call received: pid={pid}")
-    if is_native:
-        call = NativeCall.unpickle(payload["call"])
-        await pcore.submit_native_call(pid, call)
-    else:
-        call = SemanticCall.unpickle(payload["call"])
-        await pcore.submit_semantic_call(pid, call)
-
-    if latency_open == 1:
-        await asyncio.sleep(latency / 2)
-
-    return {}
+    session_id = await pcore.create_session()
+    return {"session_id": session_id}
 
 
-@app.post("/placeholder_set")
-async def placeholder_set(request: Request):
-    payload = await request.json()
-    pid = payload["pid"]
-    placeholder_id = payload["placeholder_id"]
-    content = payload["content"]
-    logger.debug(
-        f"Placeholder set received: pid={pid}, placeholder_id={placeholder_id}"
-    )
-    await pcore.placeholder_set(pid, placeholder_id, content)
-    return {}
-
-
-@app.post("/placeholder_fetch")
-async def placeholder_fetch(request: Request):
-    payload = await request.json()
-    pid = payload["pid"]
-    placeholder_id = payload["placeholder_id"]
-    logger.debug(
-        f"Placeholder fetch received: pid={pid}, placeholder_id={placeholder_id}"
-    )
-    return {"content": await pcore.placeholder_fetch(pid, placeholder_id)}
+"""
+Internal APIs.
+"""
 
 
 @app.post("/engine_heartbeat")

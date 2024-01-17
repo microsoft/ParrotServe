@@ -1,7 +1,7 @@
 import pytest
 import parrot as P
 
-from parrot.program.function import Constant, ParameterLoc, SemanticCall
+from parrot.frontend.function import Constant, ParameterLoc, SemanticCall
 
 
 def test_parse_semantic_function():

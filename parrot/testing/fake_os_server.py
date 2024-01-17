@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request
 import uvicorn
 import numpy as np
 
-from parrot.program.function import SemanticCall, NativeCall
+from parrot.frontend.function import SemanticCall, NativeCall
 from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_OS_SERVER_PORT
 from parrot.utils import get_logger
 

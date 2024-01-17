@@ -7,7 +7,7 @@ import asyncio
 import time
 from dataclasses import asdict
 
-from parrot.program.function import SemanticCall, NativeCall
+from parrot.frontend.function import SemanticCall, NativeCall
 from parrot.utils import RecyclePool
 from parrot.constants import (
     PROCESS_POOL_SIZE,
@@ -23,9 +23,9 @@ from parrot.utils import get_logger, cprofile
 from parrot.exceptions import ParrotOSUserError, ParrotOSInternalError, parrot_assert
 
 from .config import OSConfig
-from .process.process import Process
-from .memory.mem_space import MemorySpace
-from .engine import ExecutionEngine
+from .session.session import Process
+from .context.context_manager import MemorySpace
+from .engine.engine_node import ExecutionEngine
 from .thread_dispatcher import DispatcherConfig, ThreadDispatcher
 from .tokenizer import Tokenizer
 
@@ -278,7 +278,7 @@ class PCore:
             l_pos = prompt.find("lcf%")
             r_pos = prompt.rfind("lcf%")
             assert l_pos != r_pos
-            req_no = int(prompt[l_pos + 4: r_pos])
+            req_no = int(prompt[l_pos + 4 : r_pos])
             print(f"Req mapping: {req_no}, {thread.tid}", flush=True)
 
     async def placeholder_set(self, pid: int, placeholder_id: int, content: str):

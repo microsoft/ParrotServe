@@ -2,7 +2,7 @@ import pytest
 import inspect
 import parrot as P
 
-from parrot.program.function import NativeCall
+from parrot.frontend.function import NativeCall
 
 
 def test_parse_native_function():

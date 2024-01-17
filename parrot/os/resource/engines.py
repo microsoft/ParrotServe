@@ -5,7 +5,7 @@
 from typing import List, Dict
 
 from parrot.protocol.runtime_info import EngineRuntimeInfo
-from parrot.program.semantic_variable import ParameterLoc, Constant
+from parrot.frontend.semantic_variable import ParameterLoc, Constant
 
 # WARN(chaofan): Import from engine package
 from parrot.engine.config import EngineConfig
@@ -17,9 +17,9 @@ from parrot.constants import (
 from parrot.exceptions import parrot_assert
 
 
-from .process.placeholder import SVPlaceholder
-from .tokenizer import Tokenizer
-from .process.interpret_type import InterpretType
+from ..session import SVPlaceholder
+from ..tokenizer import Tokenizer
+from ..session import InterpretType
 
 
 INTERPRET_TYPE_MAP = {

@@ -1,7 +1,7 @@
 import time
 
 import parrot as P
-from parrot.program.vm import VirtualMachine
+from parrot.frontend.vm import VirtualMachine
 from parrot.constants import DEFAULT_OS_URL
 from parrot.testing.localhost_server_daemon import os_server, engine_server
 

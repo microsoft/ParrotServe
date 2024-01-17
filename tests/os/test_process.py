@@ -4,9 +4,9 @@ import parrot as P
 from parrot.testing.fake_engine_server import engine_config
 from parrot.testing.localhost_server_daemon import fake_engine_server
 
-from parrot.os.process.process import Process
-from parrot.os.memory.mem_space import MemorySpace
-from parrot.os.engine import ExecutionEngine
+from Parrot.parrot.os.session.session import Process
+from Parrot.parrot.os.context.context_manager import MemorySpace
+from Parrot.parrot.os.engine.engine_node import ExecutionEngine
 from parrot.os.thread_dispatcher import DispatcherConfig
 from parrot.os.thread_dispatcher import ThreadDispatcher
 from parrot.os.tokenizer import Tokenizer

@@ -9,9 +9,9 @@ from parrot.utils import get_logger, RecyclePool
 from parrot.constants import CONTEXT_POOL_SIZE, NONE_CONTEXT_ID
 from parrot.exceptions import parrot_assert, ParrotOSInternalError
 
-from ..engine import ExecutionEngine
+from ..engine.engine_node import ExecutionEngine
 from .context import Context
-from ..process.thread import Thread, PrefixMode
+from ..session.thread import Thread, PrefixMode
 
 logger = get_logger("Memory")
 
@@ -248,7 +248,7 @@ class MemorySpace:
 
         thread.ctx = new_context
         thread.context_id = new_context.context_id
-    
+
     # ---------- Profiling & Info ----------
 
     def profile_process_memory(self, pid: int) -> float:
@@ -260,7 +260,7 @@ class MemorySpace:
         """Profile the total number of tokens in a process."""
         parrot_assert(pid in self.process_memory, "Process should have memory space.")
         return self.process_memory[pid].get_total_tokens()
-    
+
     def get_engines_with_ctx(self, ctx: str) -> List[int]:
         """Get the engines that have a context."""
 
@@ -269,4 +269,3 @@ class MemorySpace:
             if key[0] == ctx:
                 ret.append(key[1])
         return ret
-        

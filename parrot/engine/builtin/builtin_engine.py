@@ -154,8 +154,6 @@ class BuiltinEngine(LLMEngine):
         num_max_blocks = self.runner.kv_cache_manager.get_history_max_allocated_num()
         cache_mem = (
             num_cached_tokens
-            # TODO(chaofan): Currently this config must be OPTConfig.
-            # Support other configs in the future./
             * self.runner.hf_model_config.hidden_size
             * self.runner.hf_model_config.num_hidden_layers
             * 2
