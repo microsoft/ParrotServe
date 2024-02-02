@@ -36,7 +36,9 @@ class BaseNode:
 
     @property
     def is_inserted(self) -> bool:
-        """Whether the node is inserted into the graph."""
+        """Whether the node is inserted into the graph.
+        If the node is inserted, it should have a SV attached.
+        """
 
         return self.sv is not None
 
@@ -57,34 +59,89 @@ class BaseNode:
         return self.sv.consumers
 
     @property
-    def name(self) -> str:
+    def sv_name(self) -> str:
+        if not self.is_inserted:
+            return "(not inserted)"
         return self.sv.name
+
+    @property
+    def sv_id(self) -> str:
+        if not self.is_inserted:
+            return "(not inserted)"
+        return self.sv.sv_id
 
     async def get(self) -> str:
         """Get the content of the node."""
 
         return await self.sv.get()
 
+    def _get_display_elements(self) -> Dict:
+        raise NotImplementedError
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            + ", ".join([f"{k}={v}" for k, v in self._get_display_elements().items()])
+            + ")"
+        )
+
+    def pretty_print(self) -> str:
+        """Pretty print the node."""
+
+        ret = self.__class__.__name__ + ":\n"
+        for k, v in self._get_display_elements().items():
+            ret += f"\t{k}: {v}\n"
+        return ret
+
 
 class ConstantFill(BaseNode):
     """Represent a fill node (constant) in the graph."""
 
     def __init__(self, constant_text: str):
+        super().__init__()
         self.constant_text = constant_text
+
+    def _get_display_elements(self) -> Dict:
+        return {
+            "sv_name": self.sv_name,
+            "sv_id": self.sv_id,
+            "constant_text": self.constant_text,
+        }
 
 
 class PlaceholderFill(BaseNode):
     """Represent a fill node (placeholder) in the graph."""
 
+    def __init__(self, placeholder: RequestPlaceholder):
+        super().__init__()
+        self.placeholder = placeholder
+
+    def _get_display_elements(self) -> Dict:
+        return {
+            "sv_name": self.sv_name,
+            "sv_id": self.sv_id,
+            "placeholder_name": self.placeholder.name,
+        }
+
 
 class PlaceholderGen(BaseNode):
     """Represent a gen node (placeholder, actually it must be) in the graph."""
 
-    def __init__(
-        self,
-        sampling_config: SamplingConfig,
-    ):
-        self.sampling_config = sampling_config
+    def __init__(self, placeholder: RequestPlaceholder):
+        super().__init__()
+        self.placeholder = placeholder
+
+    @property
+    def sampling_config(self) -> SamplingConfig:
+        return self.placeholder.sampling_config
+
+    def _get_display_elements(self) -> Dict:
+        return {
+            "sv_name": self.sv_name,
+            "sv_id": self.sv_id,
+            "placeholder_name": self.placeholder.name,
+            "sampling_config": self.sampling_config,
+        }
 
 
 class StaticGraph:
