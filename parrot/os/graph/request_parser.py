@@ -9,12 +9,7 @@ from parrot.exceptions import parrot_assert, ParrotOSUserError
 
 from .request import RequestPlaceholder
 from .gen_task import GenTask, TaskMetadata
-from .graph import (
-    BaseNode,
-    ConstantFill,
-    PlaceholderFill,
-    PlaceholderGen,
-)
+from .graph import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen, StaticGraph
 
 
 class ParsedRequest:
@@ -29,9 +24,38 @@ class ParsedRequest:
 
     def pretty_print(self) -> str:
         """Pretty print the parsed request."""
-        ret = "Nodes:"
+
+        ret = "Nodes: \n"
         for node in self.nodes:
             ret += node.pretty_print()
+
+        ret += "GenTasks Metadata: \n"
+        for task in self.gen_tasks:
+            ret += str(task.task_metadata) + "\n"
+
+        return ret
+
+    def insert_to_graph(self, graph: StaticGraph) -> List[Dict]:
+        """Insert the parsed request into a graph. Return a List of SVs info of placeholders."""
+
+        ret = []
+
+        for node in self.nodes:
+            graph.insert_node(node)
+
+            parrot_assert(node.sv is not None, "Insert failed: SV is not created.")
+            if node.has_placeholder():
+                placeholder: RequestPlaceholder = node.placeholder
+
+                ret.append(
+                    {
+                        "placeholder_name": placeholder.name,
+                        "is_output": placeholder.is_output,
+                        "var_name": node.sv_name,
+                        "var_id": node.sv_id,
+                    }
+                )
+
         return ret
 
 

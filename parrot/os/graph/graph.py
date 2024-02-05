@@ -23,6 +23,7 @@ class BaseNode:
         self.gen_task: Optional["GenTask"] = None
 
         # Graph
+        self.id_in_graph: Optional[int] = None
 
         # Edge type A: Fill -> Fill -> Fill -> Gen -> Fill -> Fill -> Gen -> ...
         self.edge_a_prev_node: Optional["BaseNode"] = None
@@ -40,7 +41,7 @@ class BaseNode:
         If the node is inserted, it should have a SV attached.
         """
 
-        return self.sv is not None
+        return self.id_in_graph is not None and self.sv is not None
 
     @property
     def edge_b_prev_node(self) -> Optional["BaseNode"]:
@@ -70,6 +71,9 @@ class BaseNode:
             return "(not inserted)"
         return self.sv.sv_id
 
+    def has_placeholder(self) -> bool:
+        return False
+
     async def get(self) -> str:
         """Get the content of the node."""
 
@@ -93,6 +97,16 @@ class BaseNode:
             ret += f"\t{k}: {v}\n"
         return ret
 
+    def _short_repr_add_graph_id(self, repr: str) -> str:
+        if self.is_inserted:
+            return f"{self.id_in_graph}: " + repr
+        return repr
+
+    def short_repr(self) -> str:
+        """Short representation of the node."""
+
+        return self._short_repr_add_graph_id("BaseNode")
+
 
 class ConstantFill(BaseNode):
     """Represent a fill node (constant) in the graph."""
@@ -108,6 +122,15 @@ class ConstantFill(BaseNode):
             "constant_text": self.constant_text,
         }
 
+    def short_repr(self) -> str:
+        length_threshold = 7
+        short_text = (
+            self.constant_text[:length_threshold] + "..."
+            if len(self.constant_text) > length_threshold
+            else self.constant_text
+        )
+        return self._short_repr_add_graph_id("ConstantFill(" + short_text + ")")
+
 
 class PlaceholderFill(BaseNode):
     """Represent a fill node (placeholder) in the graph."""
@@ -122,6 +145,14 @@ class PlaceholderFill(BaseNode):
             "sv_id": self.sv_id,
             "placeholder_name": self.placeholder.name,
         }
+
+    def has_placeholder(self) -> bool:
+        return True
+
+    def short_repr(self) -> str:
+        return self._short_repr_add_graph_id(
+            f"PlaceholderFill({self.placeholder.name})"
+        )
 
 
 class PlaceholderGen(BaseNode):
@@ -143,6 +174,12 @@ class PlaceholderGen(BaseNode):
             "sampling_config": self.sampling_config,
         }
 
+    def has_placeholder(self) -> bool:
+        return True
+
+    def short_repr(self) -> str:
+        return self._short_repr_add_graph_id(f"PlaceholderGen({self.placeholder.name})")
+
 
 class StaticGraph:
     """Computational graph of LLM requests linked by Semantic Variables."""
@@ -154,7 +191,9 @@ class StaticGraph:
         self.vars: Dict[str, SemanticVariable] = {}  # id -> sv
         self.sv_namespace = SemanticVariableNamespace()
 
-    def _get_new_var(self, sv_name: str, producer: Optional[BaseNode] = None):
+    def _get_new_var(
+        self, sv_name: str, producer: Optional[BaseNode] = None
+    ) -> SemanticVariable:
         """Get a new Semantic Variable."""
 
         sv_id = self.sv_namespace.get_new_id()
@@ -162,14 +201,13 @@ class StaticGraph:
         self.vars[sv_id] = sv
         return sv
 
-    def insert_node(
-        self, node: BaseNode, placeholder: Optional[RequestPlaceholder] = None
-    ):
+    def insert_node(self, node: BaseNode):
         """Insert a node into the graph. The node must be created
         without a SV and graph informaton.
         """
 
         self.nodes.append(node)
+        node.id_in_graph = len(self.nodes) - 1
 
         if isinstance(node, ConstantFill):
             # Constant node has no topology in the graph.
@@ -178,7 +216,7 @@ class StaticGraph:
             sv.consumers.append(node)
             node.sv = sv
         elif isinstance(node, PlaceholderFill):
-            parrot_assert(placeholder is not None, "Placeholder arg is None.")
+            placeholder = node.placeholder
 
             # For PlaceholderFill, the SV may be reused if it is already created.
             if placeholder.const_value is not None:
@@ -193,8 +231,9 @@ class StaticGraph:
 
             # Link with producer of this SV.
         elif isinstance(node, PlaceholderGen):
+            placeholder = node.placeholder
+
             # For PlaceholderGen, the SV must be created.
             # And we don't link with other SVs, because it will be linked by the subsequent Fill nodes.
-            parrot_assert(placeholder is not None, "Placeholder arg is None.")
             sv = self._get_new_var(sv_name=placeholder.name, producer=node)
             node.sv = sv

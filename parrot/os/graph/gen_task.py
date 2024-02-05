@@ -1,19 +1,23 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Licensed under the MIT license.
 
-from typing import List
+from typing import List, Union
 from dataclasses import dataclass
 
 from .graph import BaseNode
-from ..resource.model_type import get_model_type
+from ..resource.model_type import get_model_type, ModelType
 
 
+@dataclass
 class TaskMetadata:
-    TASK_METADATA_KEYS = ["model_type", "models"]
+    TASK_METADATA_KEYS = ["model_type", "models", "remove_pure_fill"]
 
-    def __init__(self, model_type: str, models: List[str]):
-        self.model_type = get_model_type(model_type)
-        self.models = models
+    model_type: Union[str, ModelType]
+    models: List[str]
+    remove_pure_fill: bool
+
+    def __post_init__(self):
+        self.model_type = get_model_type(self.model_type)
 
 
 class GenTask:
