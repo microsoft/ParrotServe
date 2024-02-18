@@ -36,6 +36,21 @@ class GenTask:
         self.fill_nodes = fill_nodes
         self.gen_node = gen_node
 
+    def is_ready(self) -> bool:
+        """Check whether the GenTask is ready to be scheduled. It's ready if all its inputs are ready."""
+
+        if len(self.fill_nodes) == 0:
+            return True
+
+        if self.fill_nodes[0].in_degree != 0:
+            return False
+
+        for fill_node in self.fill_nodes:
+            if fill_node.in_degree == 2:
+                return False
+
+        return True
+
 
 class TaskGroup:
     pass

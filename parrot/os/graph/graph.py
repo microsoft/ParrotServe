@@ -30,10 +30,11 @@ class BaseNode:
         self.edge_a_next_node: Optional["BaseNode"] = None
 
         # Flags
-        self.is_scheduled = (
-            False  # Whether the GenTask of this node is scheduled to an engine.
-        )
-        self.is_finished = False  # Whether the GenTask of this node is finished.
+        # TODO: Remove these flags.
+        # self.is_scheduled = (
+        #     False  # Whether the GenTask of this node is scheduled to an engine.
+        # )
+        # self.is_finished = False  # Whether the GenTask of this node is finished.
 
     @property
     def is_inserted(self) -> bool:
@@ -58,6 +59,17 @@ class BaseNode:
         if not isinstance(self, PlaceholderGen):
             return []
         return self.sv.consumers
+
+    @property
+    def in_degree(self) -> int:
+        """In-degree of the node in the graph. It's the number of nodes pointing to this node.
+
+        Possible values: 0, 1, 2.
+        """
+
+        return int(self.edge_a_prev_node is not None) + int(
+            self.edge_b_prev_node is not None
+        )
 
     @property
     def sv_name(self) -> str:
@@ -229,7 +241,8 @@ class StaticGraph:
             sv.consumers.append(node)
             node.sv = sv
 
-            # Link with producer of this SV.
+            # Link with producer of this SV: This is automatically done by the SV.
+            # ...
         elif isinstance(node, PlaceholderGen):
             placeholder = node.placeholder
 
@@ -237,3 +250,20 @@ class StaticGraph:
             # And we don't link with other SVs, because it will be linked by the subsequent Fill nodes.
             sv = self._get_new_var(sv_name=placeholder.name, producer=node)
             node.sv = sv
+
+    def get_ready_task(self) -> Optional["GenTask"]:
+        """Get a ready GenTask from the graph. Return None if no ready task is found."""
+
+        for node in self.nodes:
+            if isinstance(node, PlaceholderGen):
+                if node.gen_task.is_ready():
+                    return node.gen_task
+
+        parrot_assert(len(self.nodes) == 0, "Dead lock! No ready task found.")
+
+        return None
+
+    def remove_task(self, task: "GenTask"):
+        """Remove a task from the graph. This is called when the task is finished."""
+
+        pass

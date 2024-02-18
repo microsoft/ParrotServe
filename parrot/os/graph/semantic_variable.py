@@ -7,6 +7,8 @@ import uuid
 from typing import List, Optional
 from asyncio import Event
 
+from parrot.exceptions import parrot_assert
+
 
 # ---------- Placeholder ----------
 
@@ -108,6 +110,18 @@ class SemanticVariable:
         """Get the content of this SV."""
 
         return await self.text_placeholder.get()
+
+    @property
+    def ready(self) -> bool:
+        return self.text_placeholder.ready
+
+    def produce_finish(self):
+        """Remove the producer of this SV because the content is already generated.
+        This will remove some edges in the graph.
+        """
+
+        parrot_assert(self.ready, "This SV is not ready")
+        self.producer = None
 
 
 class SemanticVariableNamespace:
