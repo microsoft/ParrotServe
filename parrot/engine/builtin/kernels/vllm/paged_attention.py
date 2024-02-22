@@ -3,7 +3,9 @@
 
 
 import torch
-from vllm import attention_ops, cache_ops
+from vllm import cache_ops
+
+from parrot import attention_ops
 
 
 ### vLLM Paged Attention Begin ###
