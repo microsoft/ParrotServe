@@ -79,6 +79,8 @@ __global__ void single_query_cached_kv_attention_kernel(
   const int* __restrict__ head_mapping,   // [num_heads]
   const float scale,
   const int* __restrict__ block_tables,   // [num_seqs, max_num_blocks_per_seq]
+  const int* __restrict__ block_lens,     // [num_seqs, max_num_blocks_per_seq]
+  const int* __restrict__ block_nums,     // [num_seqs]
   const int* __restrict__ context_lens,   // [num_seqs]
   const int max_num_blocks_per_seq,
   const float* __restrict__ alibi_slopes, // [num_heads]
@@ -143,8 +145,12 @@ __global__ void single_query_cached_kv_attention_kernel(
   float qk_max = -FLT_MAX;
 
   const int* block_table = block_tables + seq_idx * max_num_blocks_per_seq;
-  const int context_len = context_lens[seq_idx];
-  const int num_blocks = (context_len + BLOCK_SIZE - 1) / BLOCK_SIZE;
+  const int* block_len = block_lens + seq_idx * max_num_blocks_per_seq;
+  // const int context_len = context_lens[seq_idx];
+  // std::printf("[%d] %d\n", seq_idx, context_len);
+  const int num_blocks = block_nums[seq_idx];
+  const int context_len = num_blocks * BLOCK_SIZE;
+  int valid_token_num;
 
   // Iterate over the key blocks.
   // Each warp fetches a block of keys for each iteration.
@@ -152,6 +158,7 @@ __global__ void single_query_cached_kv_attention_kernel(
   // dot product with the query.
   for (int block_idx = warp_idx; block_idx < num_blocks; block_idx += NUM_WARPS) {
     const int physical_block_number = block_table[block_idx];
+    valid_token_num = block_len[block_idx];
 
     // Load a key to registers.
     // Each thread in a thread group has a different part of the key.
@@ -178,13 +185,14 @@ __global__ void single_query_cached_kv_attention_kernel(
       // This includes a reduction across the threads in the same thread group.
       float qk = scale * Qk_dot<scalar_t, THREAD_GROUP_SIZE>::dot(q_vecs[thread_group_offset], k_vecs);
       // Add the ALiBi bias if slopes are given.
+      // TODO: support AliBi: token_idx -> token_cnt
       qk += (alibi_slope != 0) ? alibi_slope * (token_idx - context_len) : 0;
 
       if (thread_group_offset == 0) {
         // Store the partial reductions to shared memory.
         // NOTE(woosuk): It is required to zero out the masked logits.
-        const bool mask = token_idx >= context_len;
-        logits[token_idx] = mask ? 0.f : qk;
+        const bool mask = physical_block_offset >= valid_token_num;
+        logits[token_idx] = mask ? -INFINITY : qk;
         // Update the max value.
         qk_max = mask ? qk_max : fmaxf(qk_max, qk);
       }
@@ -246,13 +254,20 @@ __global__ void single_query_cached_kv_attention_kernel(
     accs[i] = 0.f;
   }
 
+  scalar_t zero_value;
+  zero(zero_value);
   for (int block_idx = warp_idx; block_idx < num_blocks; block_idx += NUM_WARPS) {
     const int physical_block_number = block_table[block_idx];
+    valid_token_num = block_len[block_idx];
     const int physical_block_offset = (lane % NUM_V_VECS_PER_ROW) * V_VEC_SIZE;
     const int token_idx = block_idx * BLOCK_SIZE + physical_block_offset;
     L_vec logits_vec;
     from_float(logits_vec, *reinterpret_cast<Float_L_vec*>(logits + token_idx));
-
+    scalar_t* logits_vec_ptr = reinterpret_cast<scalar_t*>(&logits_vec);
+#pragma unroll
+    for (int j = 0; j < V_VEC_SIZE; j++) {
+      logits_vec_ptr[j] = (physical_block_offset + j < valid_token_num) ? logits_vec_ptr[j] : zero_value;
+    }
     const scalar_t* v_ptr = v_cache + physical_block_number * kv_block_stride
                                     + kv_head_idx * kv_head_stride;
 #pragma unroll
@@ -338,6 +353,8 @@ __global__ void single_query_cached_kv_attention_kernel(
     head_mapping_ptr,                                                                         \
     scale,                                                                                    \
     block_tables_ptr,                                                                         \
+    block_lens_ptr,                                                                           \
+    block_nums_ptr,                                                                           \
     context_lens_ptr,                                                                         \
     max_num_blocks_per_seq,                                                                   \
     alibi_slopes_ptr,                                                                         \
@@ -358,6 +375,8 @@ void single_query_cached_kv_attention_launcher(
   torch::Tensor& head_mapping,
   float scale,
   torch::Tensor& block_tables,
+  torch::Tensor& block_lens,
+  torch::Tensor& block_nums,
   torch::Tensor& context_lens,
   int max_context_len,
   const c10::optional<torch::Tensor>& alibi_slopes) {
@@ -383,6 +402,8 @@ void single_query_cached_kv_attention_launcher(
   T* value_cache_ptr = reinterpret_cast<T*>(value_cache.data_ptr());
   int* head_mapping_ptr = reinterpret_cast<int*>(head_mapping.data_ptr());
   int* block_tables_ptr = block_tables.data_ptr<int>();
+  int* block_lens_ptr = block_lens.data_ptr<int>();
+  int* block_nums_ptr = block_nums.data_ptr<int>();
   int* context_lens_ptr = context_lens.data_ptr<int>();
 
   constexpr int NUM_WARPS = NUM_THREADS / WARP_SIZE;
@@ -439,6 +460,8 @@ void single_query_cached_kv_attention_launcher(
     head_mapping,                                                   \
     scale,                                                          \
     block_tables,                                                   \
+    block_lens,                                                     \
+    block_nums,                                                     \
     context_lens,                                                   \
     max_context_len,                                                \
     alibi_slopes);
@@ -487,6 +510,8 @@ void single_query_cached_kv_attention(
   torch::Tensor& head_mapping,    // [num_heads]
   float scale,
   torch::Tensor& block_tables,    // [num_seqs, max_num_blocks_per_seq]
+  torch::Tensor& block_lens,      // [num_seqs, max_num_blocks_per_seq]
+  torch::Tensor& block_nums,      // [num_seqs]
   torch::Tensor& context_lens,    // [num_seqs]
   int block_size,
   int max_context_len,
