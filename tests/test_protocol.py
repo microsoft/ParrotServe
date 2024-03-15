@@ -6,8 +6,8 @@ import parrot as P
 
 from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
-from Parrot.parrot.os.engine.engine_node import ExecutionEngine
-from parrot.os.tokenizer import Tokenizer
+from parrot.os.resource.engine import ExecutionEngine
+from parrot.os.session.tokenizer_manager import TokenizerManager
 from parrot.os.context.context import Context
 from parrot.constants import NONE_THREAD_ID
 
@@ -164,7 +164,7 @@ def test_register_engine():
 
 def test_fill():
     engine_config = _get_opt_125m_engine_config()
-    tokenizer = Tokenizer()
+    tokenizer = TokenizerManager()
     engine = ExecutionEngine(
         engine_id=0,
         config=engine_config,
@@ -196,7 +196,7 @@ def test_fill():
 
 def test_generate():
     engine_config = _get_opt_125m_engine_config()
-    tokenizer = Tokenizer()
+    tokenizer = TokenizerManager()
     engine = ExecutionEngine(
         engine_id=0,
         config=engine_config,

@@ -12,33 +12,30 @@ from parrot.utils import get_logger, RecyclePool, create_task_in_loop
 from parrot.constants import THREAD_POOL_SIZE
 from parrot.exceptions import ParrotOSUserError, parrot_assert
 
-from .placeholder import SVPlaceholder
-from .thread import Thread
-from .dag_edge import DAGEdge
-from ..thread_dispatcher import ThreadDispatcher
-from ..context.context_manager import MemorySpace
-from ..tokenizer import Tokenizer
+from ..context.context_manager import ContextManager
+from ..scheduler.task_dispatcher import TaskDispatcher
+from .tokenizer_manager import TokenizerManager
 from .executor import Executor
 
 
-logger = get_logger("Process")
+logger = get_logger("Session")
 
 
-class Process:
+class Session:
     """
-    The process is an abstraction for the VM to interact with the OS: When a VM connected to the OS,
-    a process will be created for it.
+    The session is an abstraction of a program interacting with the OS: When a program connected to the OS,
+    a session will be created for it.
 
-    A process has its own executor and tokenizer.
-    But the memory space (context) and thread dispatcher are shared between processes.
+    A session has its own executor and tokenizer. But the memory space (context) and thread dispatcher are 
+    shared between sessions (i.e. global).
     """
 
     def __init__(
         self,
         pid: int,
-        dispatcher: ThreadDispatcher,
-        memory_space: MemorySpace,
-        tokenizer: Tokenizer,
+        dispatcher: TaskDispatcher,
+        context_manager: ContextManager,
+        tokenizer: TokenizerManager,
     ):
         # ---------- Basic Info ----------
         self.pid = pid

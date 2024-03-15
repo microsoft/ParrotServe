@@ -7,9 +7,9 @@ from typing import List, Dict, Set
 
 from parrot.exceptions import parrot_assert, ParrotOSUserError
 
-from .request import RequestPlaceholder
-from .gen_task import GenTask, TaskMetadata
-from .graph import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen, StaticGraph
+from .request_body import RequestPlaceholder
+from ..scheduler.gen_task import GenTask, TaskMetadata
+from ..graph.graph import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen, ComputeGraph
 
 
 class ParsedRequest:
@@ -35,7 +35,7 @@ class ParsedRequest:
 
         return ret
 
-    def insert_to_graph(self, graph: StaticGraph) -> List[Dict]:
+    def insert_to_graph(self, graph: ComputeGraph) -> List[Dict]:
         """Insert the parsed request into a graph. Return a List of SVs info of placeholders."""
 
         ret = []

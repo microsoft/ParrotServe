@@ -1,4 +1,4 @@
-from parrot.os.graph.request_parser import ParsedRequest, RequestParser, StaticGraph
+from parrot.os.sv.request_parser import ParsedRequest, RequestParser, ComputeGraph
 from parrot.os.graph.graph_viz import view_graph
 
 
@@ -32,7 +32,7 @@ def test_request_parse():
 
 def test_graph():
     parser = RequestParser()
-    graph = StaticGraph()
+    graph = ComputeGraph()
 
     payload1 = {
         "template": "This is a test {{a}} function. {{b}}",

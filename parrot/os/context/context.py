@@ -7,7 +7,7 @@ from asyncio import Event
 
 from parrot.constants import NONE_CONTEXT_ID
 
-from ..engine.engine_node import ExecutionEngine
+from  ..resource.engine import ExecutionEngine
 
 
 class Context:
@@ -18,6 +18,8 @@ class Context:
     - B generates tokens in this context.
     - When B's job finish, we free the memory taken by B's context. This will not
       affect A's context.
+
+    Contexts are naturally organized in a tree structure by the forking relationship.
     """
 
     def __init__(

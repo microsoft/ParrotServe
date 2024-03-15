@@ -27,7 +27,7 @@ from .session.session import Process
 from .context.context_manager import MemorySpace
 from .engine.engine_node import ExecutionEngine
 from .thread_dispatcher import DispatcherConfig, ThreadDispatcher
-from .tokenizer import Tokenizer
+from .session.tokenizer_manager import TokenizerManager
 
 
 logger = get_logger("PCore")
@@ -69,7 +69,7 @@ class PCore:
         def _ping_engine_method(engine: ExecutionEngine):
             self._ping_engine(engine)
 
-        self.tokenizer = Tokenizer()
+        self.tokenizer = TokenizerManager()
         self.dispatcher = ThreadDispatcher(
             config=dispatcher_config,
             engines=self.engines,

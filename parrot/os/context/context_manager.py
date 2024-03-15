@@ -9,15 +9,15 @@ from parrot.utils import get_logger, RecyclePool
 from parrot.constants import CONTEXT_POOL_SIZE, NONE_CONTEXT_ID
 from parrot.exceptions import parrot_assert, ParrotOSInternalError
 
-from ..engine.engine_node import ExecutionEngine
+from ..resource.engine import ExecutionEngine
 from .context import Context
-from ..session.thread import Thread, PrefixMode
+from ..session.session import Session
 
-logger = get_logger("Memory")
+logger = get_logger("ContextManager")
 
 
-class ProcessMemorySpace:
-    """Memory space for a process."""
+class SessionContextManager:
+    """Context manager for a session."""
 
     def __init__(self, pid: int, add_callback: Callable, free_callback: Callable):
         self.pid = pid
@@ -32,12 +32,14 @@ class ProcessMemorySpace:
 
     def add_context(self, context: Context):
         """Add a context to the process memory space. The callback will add the ref counter."""
+        
         self._contexts.append(context)
         self._add_callback(context)
 
     def remove_context(self, context: Context):
         """Remove a context from the process memory space. The callback will remove
         the context in the global."""
+
         self._contexts.remove(context)
         self._free_callback(context)
 
@@ -83,10 +85,11 @@ class ProcessMemorySpace:
         self._stateful_context_table[func_name] = context_id
 
 
-class MemorySpace:
-    """A MemorySpace is a set of contexts."""
+class ContextManager:
+    """Manage all contexts."""
 
     def __init__(self):
+        # context_id -> Context
         self.contexts: Dict[int, Context] = {}
         self.pool = RecyclePool("Context pool", CONTEXT_POOL_SIZE)
 

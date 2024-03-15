@@ -1,4 +1,4 @@
-from parrot.os.tokenizer import Tokenizer
+from parrot.os.session.tokenizer_manager import TokenizerManager
 
 
 TESTING_PROMPT_TEXT = (
@@ -25,7 +25,7 @@ TESTING_TOKEN_IDS = [
 
 
 def test_encode():
-    tokenizer = Tokenizer()
+    tokenizer = TokenizerManager()
     tokenizer_name = "hf-internal-testing/llama-tokenizer"
 
     encoded = tokenizer.tokenize(TESTING_PROMPT_TEXT, tokenizer_name)
@@ -35,7 +35,7 @@ def test_encode():
 
 
 def test_decode():
-    tokenizer = Tokenizer()
+    tokenizer = TokenizerManager()
     tokenizer_name = "hf-internal-testing/llama-tokenizer"
 
     decoded = tokenizer.detokenize(TESTING_TOKEN_IDS, tokenizer_name)

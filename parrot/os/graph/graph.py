@@ -7,8 +7,9 @@ from typing import List, Optional, Dict
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.exceptions import parrot_assert
 
-from .request import RequestPlaceholder
-from .semantic_variable import SemanticVariable, SemanticVariableNamespace
+from ..sv.call_request import RequestPlaceholder
+from ..sv.semantic_variable import SemanticVariable
+from ..sv.namespace import SemanticVariableNamespace
 
 
 # ---------- Graph ----------
@@ -28,13 +29,6 @@ class BaseNode:
         # Edge type A: Fill -> Fill -> Fill -> Gen -> Fill -> Fill -> Gen -> ...
         self.edge_a_prev_node: Optional["BaseNode"] = None
         self.edge_a_next_node: Optional["BaseNode"] = None
-
-        # Flags
-        # TODO: Remove these flags.
-        # self.is_scheduled = (
-        #     False  # Whether the GenTask of this node is scheduled to an engine.
-        # )
-        # self.is_finished = False  # Whether the GenTask of this node is finished.
 
     @property
     def is_inserted(self) -> bool:
@@ -60,16 +54,21 @@ class BaseNode:
             return []
         return self.sv.consumers
 
-    @property
-    def in_degree(self) -> int:
-        """In-degree of the node in the graph. It's the number of nodes pointing to this node.
+    async def wait_ready(self):
+        """Wait until the node is ready. A node is ready if all its inputs are ready.
+        
+        To be specific, a node in our graph can only have at most 2 inputs:
+        - Predecessor in edge type A (previous Fill)
+        - Predcessor in edge type B (Gen in the same SV)
 
-        Possible values: 0, 1, 2.
+        The node is ready iff. all its predecessors' SVs are ready.
         """
 
-        return int(self.edge_a_prev_node is not None) + int(
-            self.edge_b_prev_node is not None
-        )
+        if self.edge_a_prev_node is not None:
+            await self.edge_a_prev_node.sv.wait_ready()
+        
+        if self.edge_b_prev_node is not None:
+            await self.edge_b_prev_node.sv.wait_ready()
 
     @property
     def sv_name(self) -> str:
@@ -86,10 +85,10 @@ class BaseNode:
     def has_placeholder(self) -> bool:
         return False
 
-    async def get(self) -> str:
+    def get(self) -> str:
         """Get the content of the node."""
 
-        return await self.sv.get()
+        return self.sv.get()
 
     def _get_display_elements(self) -> Dict:
         raise NotImplementedError
@@ -193,7 +192,7 @@ class PlaceholderGen(BaseNode):
         return self._short_repr_add_graph_id(f"PlaceholderGen({self.placeholder.name})")
 
 
-class StaticGraph:
+class ComputeGraph:
     """Computational graph of LLM requests linked by Semantic Variables."""
 
     def __init__(self):
@@ -250,18 +249,6 @@ class StaticGraph:
             # And we don't link with other SVs, because it will be linked by the subsequent Fill nodes.
             sv = self._get_new_var(sv_name=placeholder.name, producer=node)
             node.sv = sv
-
-    def get_ready_task(self) -> Optional["GenTask"]:
-        """Get a ready GenTask from the graph. Return None if no ready task is found."""
-
-        for node in self.nodes:
-            if isinstance(node, PlaceholderGen):
-                if node.gen_task.is_ready():
-                    return node.gen_task
-
-        parrot_assert(len(self.nodes) == 0, "Dead lock! No ready task found.")
-
-        return None
 
     def remove_task(self, task: "GenTask"):
         """Remove a task from the graph. This is called when the task is finished."""

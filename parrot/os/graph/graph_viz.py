@@ -8,8 +8,8 @@ from matplotlib import pyplot as plt
 
 # from parrot.utils import get_logger
 
-from .semantic_variable import SemanticVariable
-from .graph import StaticGraph, BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
+from ..sv.semantic_variable import SemanticVariable
+from .graph import ComputeGraph, BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
 
 # logger = get_logger("GraphViz")
 
@@ -29,7 +29,7 @@ _COLOR_MAP = {
 }
 
 
-def get_nx_graph(graph: StaticGraph) -> nx.DiGraph:
+def get_nx_graph(graph: ComputeGraph) -> nx.DiGraph:
     """Get the NetworkX graph from the StaticGraph."""
 
     _check_networkx()
@@ -52,7 +52,7 @@ def get_nx_graph(graph: StaticGraph) -> nx.DiGraph:
     return nx_graph
 
 
-def view_graph(graph: StaticGraph):
+def view_graph(graph: ComputeGraph):
     """View the graph using NetworkX."""
 
     _check_networkx()

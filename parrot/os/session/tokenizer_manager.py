@@ -5,21 +5,39 @@
 from typing import Dict, List, Union
 from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 
+from parrot.exceptions import parrot_assert
+
 
 HFTokenizer = Union[PreTrainedTokenizer, PreTrainedTokenizerFast]
 
 
-class Tokenizer:
-    """Store the tokenized part of some parts of functions."""
+class TokenizerManager:
+    """Tokenizer manager for a session.
+    
+    Different engines in OS may use different tokenizers, which are stored as a
+    dictionary in this manager. This class provides a unified interface to access
+    all tokenizers and to tokenize/detokenize text.
+    """
 
     def __init__(self):
         self.tokenizers: Dict[str, HFTokenizer] = {}
+    
+    def register_tokenizer(self, tokenizer_name: str):
+        parrot_assert(
+            tokenizer_name not in self.tokenizers,
+            f"Tokenizer {tokenizer_name} already exists.",
+        )
+
+        self.tokenizers[tokenizer_name] = AutoTokenizer.from_pretrained(
+            tokenizer_name
+        )
 
     def get_tokenizer(self, tokenizer_name: str):
-        if tokenizer_name not in self.tokenizers:
-            self.tokenizers[tokenizer_name] = AutoTokenizer.from_pretrained(
-                tokenizer_name
-            )
+        parrot_assert(
+            tokenizer_name in self.tokenizers,
+            f"Tokenizer {tokenizer_name} does not exist.",
+        )
+
         return self.tokenizers[tokenizer_name]
 
     # NOTE(chaofan): Ignore special tokens because we chunk the inputs.

@@ -17,14 +17,13 @@ from parrot.constants import (
 from parrot.exceptions import parrot_assert
 
 
-from ..session import SVPlaceholder
-from ..tokenizer import Tokenizer
-from ..session import InterpretType
+from ..session.tokenizer_manager import TokenizerManager
+from .model_type import ModelType
 
 
-INTERPRET_TYPE_MAP = {
-    ENGINE_TYPE_BUILTIN: InterpretType.TOKEN_ID,
-    ENGINE_TYPE_OPENAI: InterpretType.TEXT,
+MODEL_TYPE_MAP = {
+    ENGINE_TYPE_BUILTIN: ModelType.TOKEN_ID,
+    ENGINE_TYPE_OPENAI: ModelType.TEXT,
 }
 
 
@@ -35,7 +34,7 @@ class ExecutionEngine:
         self,
         engine_id: int,
         config: EngineConfig,
-        tokenizer: Tokenizer,
+        tokenizer: TokenizerManager,
     ):
         # ---------- Basic Config ----------
         self.engine_id = engine_id
@@ -62,8 +61,8 @@ class ExecutionEngine:
         return f"http://{self.config.host}:{self.config.port}"
 
     @property
-    def interpreter_type(self) -> InterpretType:
-        return INTERPRET_TYPE_MAP[self.config.engine_type]
+    def model_type(self) -> ModelType:
+        return MODEL_TYPE_MAP[self.config.engine_type]
 
     @property
     def remain_thread_locs(self) -> int:
