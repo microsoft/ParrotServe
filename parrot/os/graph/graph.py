@@ -7,7 +7,7 @@ from typing import List, Optional, Dict
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.exceptions import parrot_assert
 
-from ..sv.call_request import RequestPlaceholder
+from ..sv.chunked_request import RequestPlaceholder, RequestMetadata
 from ..sv.semantic_variable import SemanticVariable
 from ..sv.namespace import SemanticVariableNamespace
 
@@ -21,7 +21,7 @@ class BaseNode:
     def __init__(self):
         # Basic Info
         self.sv: Optional[SemanticVariable] = None
-        self.gen_task: Optional["GenTask"] = None
+        self.chain: Optional["CompletionChain"] = None
 
         # Graph
         self.id_in_graph: Optional[int] = None
@@ -56,7 +56,7 @@ class BaseNode:
 
     async def wait_ready(self):
         """Wait until the node is ready. A node is ready if all its inputs are ready.
-        
+
         To be specific, a node in our graph can only have at most 2 inputs:
         - Predecessor in edge type A (previous Fill)
         - Predcessor in edge type B (Gen in the same SV)
@@ -66,7 +66,7 @@ class BaseNode:
 
         if self.edge_a_prev_node is not None:
             await self.edge_a_prev_node.sv.wait_ready()
-        
+
         if self.edge_b_prev_node is not None:
             await self.edge_b_prev_node.sv.wait_ready()
 
@@ -192,30 +192,94 @@ class PlaceholderGen(BaseNode):
         return self._short_repr_add_graph_id(f"PlaceholderGen({self.placeholder.name})")
 
 
-class ComputeGraph:
-    """Computational graph of LLM requests linked by Semantic Variables."""
+class CompletionChain:
+    """A CompletionChain is the basic unit of scheduling (a.k.a Task).
 
-    def __init__(self):
+    It contains several Fill primitives and one Gen primitive.
+
+    Fill -> Fill -> Fill -> Gen
+    """
+
+    def __init__(self, request_metadata: RequestMetadata):
+        # Original data
+        self.request_metadata = request_metadata
+        self.fill_nodes: List[BaseNode] = []
+        self.gen_node: Optional[BaseNode] = None
+
+    @classmethod
+    def from_nodes(
+        cls, nodes: List[BaseNode], request_metadata: RequestMetadata
+    ) -> "CompletionChain":
+        """Create a CompletionChain from a list of nodes.
+
+        The last node must be a Gen node and the previous nodes must be Fill nodes.
+        """
+
+        chain = cls(request_metadata=request_metadata)
+
+        for i, node in enumerate(nodes):
+            if i == len(nodes) - 1:
+                parrot_assert(
+                    isinstance(node, PlaceholderGen),
+                    "The last node in the chain must be a Gen node.",
+                )
+                chain.gen_node = node
+            else:
+                parrot_assert(
+                    isinstance(node, (ConstantFill, PlaceholderFill)),
+                    "Invalid node type in CompletionChain.",
+                )
+                chain.fill_nodes.append(node)
+            # Note: link the chain with the node.
+            node.chain = chain
+
+    async def wait_ready(self):
+        """Wait the CompletionChain to be ready. It's ready if all its inputs are ready."""
+
+        if len(self.fill_nodes) == 0:
+            return
+
+        for fill_node in self.fill_nodes:
+            await fill_node.wait_ready()
+
+
+class ComputeGraph:
+    """Computational graph of LLM requests linked by Semantic Variables.
+
+    It's made up of a list of nodes (And edges are maintained by nodes and SVs).
+
+    It has several properties:
+    1. It's a DAG (Directed Acyclic Graph) i.e. topologically sorted (if all requests are created valid).
+       Thus, we can schedule it in a topological order.
+    2. When scheduling, only chains are enterring and leaving the graph.
+    3. Every node's in-degree is at most 2 (1 type A edge + 1 type B edge). Out-degree is not limited.
+    """
+
+    def __init__(
+        self,
+        global_var_namespace: SemanticVariableNamespace,
+        session_var_namespace: SemanticVariableNamespace,
+    ) -> None:
+        # ---------- Graph ----------
         self.nodes: List[BaseNode] = []
 
         # ---------- Semantic Vars ----------
-        self.vars: Dict[str, SemanticVariable] = {}  # id -> sv
-        self.sv_namespace = SemanticVariableNamespace()
+        self.vars: Dict[str, SemanticVariable] = {}  # sv_id -> sv
+        self.global_var_namespace = global_var_namespace
+        self.session_var_namespace = session_var_namespace
 
     def _get_new_var(
         self, sv_name: str, producer: Optional[BaseNode] = None
     ) -> SemanticVariable:
-        """Get a new Semantic Variable."""
+        """Get a new Semantic Variable in local/session namespace."""
 
-        sv_id = self.sv_namespace.get_new_id()
+        sv_id = self.session_var_namespace.get_new_id()
         sv = SemanticVariable(name=sv_name, sv_id=sv_id, producer=producer)
         self.vars[sv_id] = sv
         return sv
 
-    def insert_node(self, node: BaseNode):
-        """Insert a node into the graph. The node must be created
-        without a SV and graph informaton.
-        """
+    def insert_node(self, node: BaseNode) -> None:
+        """Insert a node into the graph."""
 
         self.nodes.append(node)
         node.id_in_graph = len(self.nodes) - 1
@@ -250,7 +314,7 @@ class ComputeGraph:
             sv = self._get_new_var(sv_name=placeholder.name, producer=node)
             node.sv = sv
 
-    def remove_task(self, task: "GenTask"):
-        """Remove a task from the graph. This is called when the task is finished."""
+    def remove_chain(self, chain: CompletionChain):
+        """Remove a CompletionChain from the graph. This is called when the task is finished."""
 
         pass

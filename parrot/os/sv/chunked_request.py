@@ -9,29 +9,25 @@ from parrot.exceptions import parrot_assert, ParrotOSUserError
 from parrot.protocol.sampling_config import SamplingConfig
 
 
-
 @dataclass
 class RequestBodyChunk:
     """Base class of all chunks in the request body."""
 
-    pos_id: int # The position id of the chunk in the request. (0, 1, 2, ...)
-
+    pos_id: int  # The position id of the chunk in the request. (0, 1, 2, ...)
 
 
 @dataclass
 class TextChunk(RequestBodyChunk):
     """A text chunk in the request body."""
 
-    text: str # The text of the chunk.
+    text: str  # The text of the chunk.
 
 
 @dataclass
 class PlaceholderNameChunk(RequestBodyChunk):
     """A placeholder in the request body."""
 
-    name: str # The name of the placeholder.
-
-
+    name: str  # The name of the placeholder.
 
 
 @dataclass
@@ -40,22 +36,16 @@ class RequestPlaceholder:
 
     name: str
     is_output: bool
-    value_type: Optional[str] = None
     var_id: Optional[str] = None
-    const_value: Optional[str] = None
     sampling_config: Optional[Union[Dict, SamplingConfig]] = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         # Cast sampling_config to SamplingConfig.
         if self.sampling_config is not None:
             self.sampling_config = SamplingConfig(**self.sampling_config)
 
         # Check input/output arguments.
         if self.is_output:
-            if self.value_type is not None:
-                raise ValueError("Output placeholder should not have value_type.")
-            if self.const_value is not None:
-                raise ValueError("Output placeholder should not have const_value.")
             if self.var_id is not None:
                 raise ValueError("Output placeholder should not have var_id.")
 
@@ -63,56 +53,43 @@ class RequestPlaceholder:
             if self.sampling_config is None:
                 self.sampling_config = SamplingConfig()
         else:
-            if self.value_type is None:
-                raise ValueError("Input placeholder should have value_type.")
-
             if self.sampling_config is not None:
                 raise ValueError("Input placeholder should not have sampling_config.")
 
-            if self.value_type == "constant":
-                if self.const_value is None:
-                    raise ValueError(
-                        "Input placeholder with value_type=constant should have const_value."
-                    )
-                if self.var_id is not None:
-                    raise ValueError(
-                        "Input placeholder with value_type=constant should not have var_id."
-                    )
-            elif self.value_type == "variable":
-                if self.var_id is None:
-                    raise ValueError(
-                        "Input placeholder with value_type=variable should have var_id."
-                    )
-                if self.const_value is not None:
-                    raise ValueError(
-                        "Input placeholder with value_type=variable should not have const_value."
-                    )
-            else:
-                raise ValueError(f"Unknown value_type: {self.value_type}")
+    @property
+    def has_var(self) -> bool:
+        """Return whether the placeholder has an existing semantic variable."""
+
+        return self.var_id is not None
 
     @property
-    def should_create(self):
-        """Return whether we should created a new SV for this placeholder."""
+    def should_create(self) -> bool:
+        """Return whether we should created a new SV for this placeholder.
 
-        return self.is_output or (self.var_id is None and self.const_value is None)
+        Case 1: The placeholder is an output placeholder.
+        Case 2: The placeholder is an input placeholder and has no value.
+        """
+
+        return self.is_output or not self.has_var
 
 
 @dataclass
 class RequestMetadata:
     """RequestMetadata contains metadata for a Request."""
 
-    REQUEST_METADATA_KEYS = ["models", "model_type", "remove_pure_fill"]
+    REQUEST_METADATA_KEYS = ["session_id", "models", "model_type", "remove_pure_fill"]
 
+    session_id: str
     models: List[str]
     model_type: str
     remove_pure_fill: bool
 
 
-class CallRequest:
+class ChunkedRequest:
     """Parsed semantic call request.
-    
-    We firstly parse the prompt part into a list of text chunks and placeholders, and 
-    pack metadata and parsed prompt into a CallRequest for further processing.
+
+    We firstly parse the prompt part into a list of text chunks and placeholders, and
+    pack metadata and parsed prompt into a ChunkedRequest for further processing.
     """
 
     def __init__(self, metadata: RequestMetadata) -> None:
@@ -124,23 +101,32 @@ class CallRequest:
 
         # Placeholder map: map from placeholder name to placeholder.
         self.placeholders_map: Dict[str, RequestPlaceholder] = {}
-    
+
     def push_chunk(self, chunk_type: Type[RequestBodyChunk], info: str) -> None:
         """Push a chunk into the body queue."""
 
-        # Tricky here: both TextChunk and PlaceholderNameChunk are initialized with a
-        # pos_id and a text/name. We use the same function to push them into the body queue.
+        # Tricky here: both TextChunk and PlaceholderNameChunk are initialized using the same
+        # function signature.
 
         pos_id = len(self.body)
-        chunk = chunk_type(pos_id, info)
+        chunk = chunk_type(pos_id, None, info)
         self.body.append(chunk)
-    
+
+    def split_chunk(self, chunk_pos: int, split_pos: int) -> None:
+        """Split a text chunk in specific position."""
+
+        pass
+
     def __repr__(self) -> str:
         return (
             f"metadata: {self.metadata}, "
             f"body: {self.body}, "
             f"placeholders_map: {self.placeholders_map}"
         )
+
+    @property
+    def session_id(self) -> str:
+        return self.metadata.session_id
 
     @staticmethod
     def _preprocess(payload: Dict) -> Dict:
@@ -162,12 +148,12 @@ class CallRequest:
         return processed_payload
 
     @classmethod
-    def parse_from_payload(cls, payload: Dict) -> "CallRequest":
-        """Parse the payload of semantic call request into structural CallRequest format for further processing.
-        
+    def parse_from_payload(cls, payload: Dict) -> "ChunkedRequest":
+        """Parse the payload of semantic call request into structural ChunkedRequest format for further processing.
+
         Args:
             payload: The payload of the HTTP packet.
-        
+
         Returns:
             The parsed request.
         """
@@ -186,7 +172,7 @@ class CallRequest:
         for key in RequestMetadata.REQUEST_METADATA_KEYS:
             metadata_dict[key] = payload[key]
         metadata = RequestMetadata(**metadata_dict)
-        parsed_result = cls(metadata)
+        chunked_request = cls(metadata)
 
         # Step 2. Extract the "placeholders" field and create placeholders dict.
         for placeholder in placeholders:
@@ -197,12 +183,13 @@ class CallRequest:
                 raise ParrotOSUserError(e)
 
             placeholder_name = parsed_placeholder.name
-            
+
             # No duplicate placeholder name in "placeholders" field.
             parrot_assert(
-                placeholder_name not in parsed_result.placeholders_map, "Duplicate placeholder name."
+                placeholder_name not in chunked_request.placeholders_map,
+                "Duplicate placeholder name.",
             )
-            parsed_result.placeholders_map[placeholder_name] = parsed_placeholder
+            chunked_request.placeholders_map[placeholder_name] = parsed_placeholder
 
         # Step 3. Parse prompt body.
 
@@ -212,25 +199,27 @@ class CallRequest:
         iterator = pattern.finditer(template)
         last_pos = 0
 
-        # For every matched placeholder: "abcd {YYY} efg", we first push "abcd" into body queue using 
-        # "last_pos: matched.start()", then push the placeholder into the body queue. 
+        # For every matched placeholder: "abcd {YYY} efg", we first push "abcd" into body queue using
+        # "last_pos: matched.start()", then push the placeholder into the body queue.
         # (Note that constant text "efg" will be pushed into body queue in the next iteration.)
         for matched in iterator:
             # Constant
             prev_text_chunk = template[last_pos : matched.start()]
-            if prev_text_chunk != "": # Special case: if there is no constant text before the placeholder.
-                parsed_result.push_chunk(TextChunk, prev_text_chunk)
+            if (
+                prev_text_chunk != ""
+            ):  # Special case: if there is no constant text before the placeholder.
+                chunked_request.push_chunk(TextChunk, prev_text_chunk)
 
             # Placeholder
             placeholder_name = template[matched.start() + 2 : matched.end() - 2]
-            parsed_result.push_chunk(PlaceholderNameChunk, placeholder_name)
-            
+            chunked_request.push_chunk(PlaceholderNameChunk, placeholder_name)
+
             # Update last_pos for the next iteration.
             last_pos = matched.end()
-        
+
         # Push the last constant text chunk (after the last placeholder) into the body queue.
         last_text_chunk = template[last_pos:]
         if last_text_chunk != "":
-            parsed_result.body.append(TextChunk(text=last_text_chunk))
+            chunked_request.body.append(TextChunk(text=last_text_chunk))
 
-        return parsed_result
+        return chunked_request

@@ -13,7 +13,7 @@ from parrot.constants import THREAD_POOL_SIZE
 from parrot.exceptions import ParrotOSUserError, parrot_assert
 
 from ..context.context_manager import ContextManager
-from ..scheduler.task_dispatcher import TaskDispatcher
+from ..scheduler.chain_dispatcher import ChainDispatcher
 from .tokenizer_manager import TokenizerManager
 from .executor import Executor
 
@@ -23,33 +23,33 @@ logger = get_logger("Session")
 
 class Session:
     """
-    The session is an abstraction of a program interacting with the OS: When a program connected to the OS,
-    a session will be created for it.
+    A session is an abstraction of a program interacting with the OS: When a program connected to the OS,
+    a session will be created for it. The session will be removed when the program is disconnected/timed out.
 
-    A session has its own executor and tokenizer. But the memory space (context) and thread dispatcher are 
+    A session has its own Executor. But the ContextManager, TokenizerManager and ChainDispatcher are
     shared between sessions (i.e. global).
+
     """
 
     def __init__(
         self,
-        pid: int,
-        dispatcher: TaskDispatcher,
-        context_manager: ContextManager,
-        tokenizer: TokenizerManager,
+        session_id: int,
+        dispatcher: ChainDispatcher,
+        context_mgr: ContextManager,
+        tokenizer_mgr: TokenizerManager,
     ):
         # ---------- Basic Info ----------
-        self.pid = pid
+        self.session_id = session_id
+
+        # ---------- Global Components ----------
         self.dispatcher = dispatcher
-        self.memory_space = memory_space
-        self.memory_space.new_memory_space(self.pid)
-        self.executor = Executor(tokenizer)
-        self.placeholders_map: Dict[int, SVPlaceholder] = {}  # id -> placeholder
+        self.context_mgr = context_mgr
+        self.tokenizer_mgr = tokenizer_mgr
 
-        # ---------- Threads ----------
-        self.threads: List[Thread] = []
-        self.threads_pool = RecyclePool(f"Proc {pid}'s Threads pool", THREAD_POOL_SIZE)
+        # ---------- Session-private Components ----------
+        self.executor = Executor(tokenizer_mgr)
 
-        # ---------- Runtime ----------
+        # ---------- Runtime Status ----------
         self.dead = False  # Mark if the process is dead
         self.bad = False
         self.bad_exception: Optional[BaseException] = None

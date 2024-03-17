@@ -5,7 +5,7 @@
 from typing import Optional, List
 
 from parrot.os.graph.graph import ConstantFill, PlaceholderFill, PlaceholderGen
-from parrot.os.scheduler.gen_task import GenTask
+from parrot.os.graph.completion_chain import GenTask
 from parrot.exceptions import parrot_assert
 from parrot.protocol.primitive_request import Primitive, Fill, Generate
 
@@ -14,7 +14,7 @@ from .tokenizer_manager import TokenizerManager
 
 class RequestBuilder:
     """
-    The request builder is responsible for transforming the graph nodes to real requests 
+    The request builder is responsible for transforming the graph nodes to real requests
     that can be executed by the backend, i.e. Fill/Generate primitives.
     """
 
@@ -34,7 +34,9 @@ class RequestBuilder:
         """
 
         if self.tokenizer is not None:
-            eos_token_id = self.tokenizer.get_tokenizer(self.tokenizer_name).eos_token_id
+            eos_token_id = self.tokenizer.get_tokenizer(
+                self.tokenizer_name
+            ).eos_token_id
 
         ret: List[Primitive] = []
 
@@ -61,6 +63,5 @@ class RequestBuilder:
                     sampling_config.stop_token_ids.append(eos_token_id)
 
                 ret.append(Generate(sampling_config=sampling_config))
-        
-        return ret
 
+        return ret

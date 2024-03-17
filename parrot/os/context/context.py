@@ -7,11 +7,18 @@ from asyncio import Event
 
 from parrot.constants import NONE_CONTEXT_ID
 
-from  ..resource.engine import ExecutionEngine
+from ..resource.engine import ExecutionEngine
+
+from ..sv.semantic_variable import SemanticVariable
 
 
 class Context:
-    """Context represents a part of sequences cached in one single engine.
+    """Context represents the KV cache of SemanticVariable in one single engine.
+
+    Note context is highly related to:
+    - The engine that it is associated with.
+    - The parent context. (Due to the property of the KV cache, a context can not be isolated from its
+      parent context.)
 
     If B wants to continue generating based on A's context, the lifecycle is:
     - B forks a context based on A's context.

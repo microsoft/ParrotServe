@@ -11,5 +11,5 @@
 from .frontend import *
 
 # Sampling config and annotations
-from .os.graph.annotation import DispatchAnnotation
+from .os.sv.annotation import DispatchAnnotation
 from .protocol.sampling_config import SamplingConfig

@@ -1,4 +1,4 @@
-from parrot.os.sv.call_request import CallRequest
+from parrot.os.sv.chunked_request import ChunkedRequest
 
 
 def test_request_parse():
@@ -8,8 +8,7 @@ def test_request_parse():
             {
                 "name": "a",
                 "is_output": False,
-                "value_type": "constant",
-                "const_value": "xxx",
+                "var_id": "xxx",
             },
             {
                 "name": "b",
@@ -20,14 +19,14 @@ def test_request_parse():
                 },
             },
         ],
+        "session_id": "1",
         "models": ["model1", "model2"],
         "model_type": "token_id",
         "remove_pure_fill": True,
     }
-    
-    parsed_request = CallRequest.parse_from_payload(payload)
-    print(parsed_request)
 
+    parsed_request = ChunkedRequest.parse_from_payload(payload)
+    print(parsed_request)
 
 
 if __name__ == "__main__":

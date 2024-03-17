@@ -32,7 +32,7 @@ class SessionContextManager:
 
     def add_context(self, context: Context):
         """Add a context to the process memory space. The callback will add the ref counter."""
-        
+
         self._contexts.append(context)
         self._add_callback(context)
 
@@ -92,16 +92,6 @@ class ContextManager:
         # context_id -> Context
         self.contexts: Dict[int, Context] = {}
         self.pool = RecyclePool("Context pool", CONTEXT_POOL_SIZE)
-
-        # (prefix_text, engine_id) -> prefix_context
-        self.prefix_cache: Dict[List, Context] = {}
-        self._prefix_cache_reversed: Dict[int, List] = {}  # for free context
-
-        # context_id -> ProcessMemorySpace
-        self.process_memory: Dict[int, ProcessMemorySpace] = {}
-
-        # context_id -> ref_counter
-        self.ref_counter: Dict[int, int] = {}
 
     # ---------- Basic Context Operation ----------
 

@@ -39,7 +39,7 @@ from enum import Enum
 from typing import Optional
 
 from parrot.protocol.sampling_config import SamplingConfig
-from parrot.os.graph.annotation import DispatchAnnotation
+from parrot.os.sv.annotation import DispatchAnnotation
 
 
 from typing import Optional
