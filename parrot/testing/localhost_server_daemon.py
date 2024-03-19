@@ -22,7 +22,7 @@ from parrot.constants import (
     DEFAULT_ENGINE_SERVER_PORT,
 )
 
-from parrot.os.http_server import start_server as start_os_server
+from parrot.serve.http_server import start_server as start_os_server
 from parrot.engine.http_server import start_server as start_engine_server
 
 from .get_configs import get_sample_engine_config_path, get_sample_os_config_path

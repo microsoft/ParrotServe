@@ -8,7 +8,7 @@ from transformers import AutoTokenizer
 from parrot.engine.builtin.builtin_runner import BuiltinRunner
 from parrot.engine.config import BuiltinConfig
 from parrot.engine.primitive_job import Fill, Generate
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 
 
 def template_test_single_fill(model_name: str, builtin_config: BuiltinConfig):

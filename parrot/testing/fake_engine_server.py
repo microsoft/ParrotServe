@@ -27,7 +27,7 @@ from parrot.constants import (
     DEFAULT_ENGINE_SERVER_PORT,
     ENGINE_HEARTBEAT_INTERVAL,
 )
-from parrot.protocol.layer_apis import register_engine, engine_heartbeat
+from parrot.protocol.internal.layer_apis import register_engine, engine_heartbeat
 from parrot.utils import get_logger, create_task_in_loop
 
 # ---------- Constants ----------

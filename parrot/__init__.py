@@ -8,8 +8,8 @@
 """
 
 # Program Interface and Transforms
-from .frontend import *
+from .frontend.pfunc import *
 
 # Sampling config and annotations
-from .os.scheduler.annotation import DispatchAnnotation
-from .protocol.sampling_config import SamplingConfig
+from .serve.scheduler.annotation import DispatchAnnotation
+from .sampling_config import SamplingConfig

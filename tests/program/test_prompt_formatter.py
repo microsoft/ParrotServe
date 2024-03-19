@@ -1,5 +1,5 @@
 import parrot as P
-from parrot.frontend.transforms.prompt_formatter import (
+from parrot.pfunc.transforms.prompt_formatter import (
     PyIndentRemover,
     SquashIntoOneLine,
     AlwaysOneSpace,

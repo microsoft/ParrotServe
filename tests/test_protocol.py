@@ -4,14 +4,14 @@ import asyncio
 
 import parrot as P
 
-from parrot.protocol.runtime_info import EngineRuntimeInfo
+from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
-from parrot.os.resource.engine import ExecutionEngine
-from parrot.os.session.tokenizer_manager import TokenizerManager
-from parrot.os.context.context import Context
+from parrot.serve.backend_repr.engine import ExecutionEngine
+from parrot.serve.tokenizer_wrapper import TokenizersWrapper
+from parrot.serve.backend_repr.context import Context
 from parrot.constants import NONE_THREAD_ID
 
-from parrot.protocol.layer_apis import (
+from parrot.protocol.internal.layer_apis import (
     vm_heartbeat,
     register_vm,
     submit_call,
@@ -22,8 +22,8 @@ from parrot.protocol.layer_apis import (
     engine_heartbeat,
     register_engine,
 )
-from parrot.protocol.primitive_request import Fill, Generate
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.protocol.internal.primitive_request import Fill, Generate
+from parrot.sampling_config import SamplingConfig
 
 from parrot.testing.fake_os_server import TESTING_SERVER_URL as OS_URL
 from parrot.testing.fake_engine_server import TESTING_SERVER_URL as ENGINE_URL
@@ -164,7 +164,7 @@ def test_register_engine():
 
 def test_fill():
     engine_config = _get_opt_125m_engine_config()
-    tokenizer = TokenizerManager()
+    tokenizer = TokenizersWrapper()
     engine = ExecutionEngine(
         engine_id=0,
         config=engine_config,
@@ -196,7 +196,7 @@ def test_fill():
 
 def test_generate():
     engine_config = _get_opt_125m_engine_config()
-    tokenizer = TokenizerManager()
+    tokenizer = TokenizersWrapper()
     engine = ExecutionEngine(
         engine_id=0,
         config=engine_config,

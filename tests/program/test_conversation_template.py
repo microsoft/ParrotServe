@@ -1,5 +1,5 @@
 import parrot as P
-from parrot.frontend.transforms.conversation_template import vicuna_template
+from parrot.pfunc.transforms.conversation_template import vicuna_template
 
 
 def test_vicuna_template():

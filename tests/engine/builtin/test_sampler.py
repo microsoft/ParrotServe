@@ -4,7 +4,7 @@ import torch
 
 from parrot.engine.builtin.models.opt import OPTForCausalLM
 from parrot.engine.config import BuiltinConfig
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 from parrot.utils import set_random_seed
 
 

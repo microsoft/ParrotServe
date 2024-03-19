@@ -11,6 +11,7 @@ from parrot.exceptions import ParrotEngineInternalError
 
 from .llm_engine import LLMEngine
 from .config import EngineConfig
+
 from .builtin.builtin_engine import BuiltinEngine
 from .openai.openai_engine import OpenAIEngine
 
@@ -24,6 +25,8 @@ def create_engine(
     override_args: Dict = {},
 ) -> LLMEngine:
     """Create an execution engine.
+
+    NOTE(chaofan): We put this in an independent file to avoid circular imports.
 
     Args:
         engine_config_path: str. The path to the engine config file.

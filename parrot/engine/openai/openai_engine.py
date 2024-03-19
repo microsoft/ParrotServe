@@ -8,16 +8,16 @@ import time
 import asyncio
 
 from parrot.utils import get_logger, create_task_in_loop
-from parrot.protocol.sampling_config import SamplingConfig
-from parrot.protocol.runtime_info import EngineRuntimeInfo
+from parrot.sampling_config import SamplingConfig
+from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.constants import UNKNOWN_DATA_FIELD
 
 from .api_endpoint import Endpoint
 from ..context.text_context import TextContext
-from ...protocol.runtime_info import EngineRuntimeInfo
+from ...protocol.internal.runtime_info import EngineRuntimeInfo
 from ..context.context_manager import ContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
-from ..scheduler import Scheduler
+from ..engine_scheduler import Scheduler
 from ..llm_engine import LLMEngine
 from ..config import OpenAIConfig, EngineConfig, SchedulerConfig
 from ..latency_analyzer import LatencyAnalyzer

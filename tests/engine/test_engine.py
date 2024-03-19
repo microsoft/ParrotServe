@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 
 from parrot.engine.engine_creator import create_engine
 from parrot.engine.primitive_job import Fill, Generate
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 from parrot.utils import create_task_in_loop
 from parrot.testing.get_configs import get_sample_engine_config_path
 

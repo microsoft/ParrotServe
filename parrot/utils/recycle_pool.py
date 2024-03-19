@@ -7,21 +7,19 @@ from collections import deque
 
 
 class RecyclePool:
-    def __init__(
-        self,
-        pool_name: str = "pool",
-        pool_size: int = 1024,
-    ):
+    def __init__(self, pool_name: str = "pool"):
         self.pool_name = pool_name
-        self.pool_size = pool_size
-        self.free_ids: deque[int] = deque(list(range(pool_size)))
+        self.cur_max_id = 0
+        self.free_ids: deque[int] = deque()
         self.history_max = 0
 
     def allocate(self) -> int:
         """Fetch an id."""
 
         if len(self.free_ids) == 0:
-            raise ValueError(f"No free id in the pool: {self.pool_name}.")
+            self.cur_max_id += 1
+            return self.cur_max_id - 1
+
         allocated_id = self.free_ids.popleft()  # Pop from left
         self.history_max = max(self.history_max, self.get_allocated_num())
         return allocated_id

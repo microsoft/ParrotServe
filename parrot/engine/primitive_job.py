@@ -5,7 +5,7 @@
 from typing import List, Optional
 from asyncio import Event, Queue as AsyncQueue
 
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 
 from .context.low_level_context import LowLevelContext
 

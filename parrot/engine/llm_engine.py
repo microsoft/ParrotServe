@@ -9,8 +9,8 @@ import time
 import threading
 
 from parrot.constants import ENGINE_LOOP_INTERVAL, ENGINE_HEARTBEAT_INTERVAL
-from parrot.protocol.layer_apis import register_engine, engine_heartbeat
-from parrot.protocol.runtime_info import EngineRuntimeInfo
+from parrot.protocol.internal.layer_apis import register_engine, engine_heartbeat
+from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.utils import get_logger, set_random_seed
 
 from .config import EngineConfig

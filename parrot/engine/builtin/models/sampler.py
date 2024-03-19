@@ -7,7 +7,7 @@ import torch
 from torch import nn
 from transformers import PretrainedConfig
 
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 
 
 class Sampler(nn.Module):

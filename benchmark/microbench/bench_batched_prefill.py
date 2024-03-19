@@ -1,7 +1,7 @@
 from parrot.engine.builtin.native_runner import NativeRunner
 from parrot.engine.config import BuiltinConfig
 from parrot.engine.primitive_job import Fill, Generate
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 from parrot.utils import torch_profile
 
 import torch

@@ -9,7 +9,7 @@ import time
 import psutil
 
 from parrot.utils import RecyclePool, get_logger
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
 from .mem import init_model_cache_storage

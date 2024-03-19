@@ -1,6 +1,6 @@
 import time
 
-from parrot.protocol.layer_apis import ping_engine
+from parrot.protocol.internal.layer_apis import ping_engine
 from parrot.testing.localhost_server_daemon import fake_engine_server
 from parrot.constants import DEFAULT_ENGINE_URL
 

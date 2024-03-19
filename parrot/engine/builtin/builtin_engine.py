@@ -5,15 +5,15 @@
 from typing import Dict, AsyncGenerator
 
 from parrot.utils import get_logger, MemTracker, get_cpu_memory_usage, cprofile
-from parrot.protocol.sampling_config import SamplingConfig
-from parrot.protocol.runtime_info import EngineRuntimeInfo
+from parrot.sampling_config import SamplingConfig
+from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.constants import UNKNOWN_DATA_FIELD
 
 from ..llm_engine import LLMEngine
 from .builtin_runner import BuiltinRunner
 from ..latency_analyzer import LatencyAnalyzer
 from ..context.block_context import BlockContext
-from ..scheduler import Scheduler
+from ..engine_scheduler import Scheduler
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import BuiltinConfig, SchedulerConfig, EngineConfig
 

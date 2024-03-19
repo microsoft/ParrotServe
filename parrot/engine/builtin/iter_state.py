@@ -6,7 +6,7 @@ from typing import List
 import torch
 from transformers import PretrainedConfig
 
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 
 from ..config import BuiltinConfig
 from ..primitive_job import PrimitiveJob, Fill, Generate
