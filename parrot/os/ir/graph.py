@@ -7,9 +7,9 @@ from typing import List, Optional, Dict
 from parrot.protocol.sampling_config import SamplingConfig
 from parrot.exceptions import parrot_assert
 
-from ..sv.chunked_request import RequestPlaceholder, RequestMetadata
-from ..sv.semantic_variable import SemanticVariable
-from ..sv.namespace import SemanticVariableNamespace
+from .chunked_request import RequestPlaceholder, RequestMetadata
+from .semantic_variable import SemanticVariable
+from .sv_namespace import SemanticVariableNamespace
 
 
 # ---------- Graph ----------

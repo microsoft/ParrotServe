@@ -7,7 +7,7 @@ from typing import List, Dict, Set, Optional
 
 from parrot.exceptions import parrot_assert, ParrotOSUserError
 
-from ..sv.chunked_request import (
+from .chunked_request import (
     TextChunk,
     PlaceholderNameChunk,
     RequestPlaceholder,

@@ -9,7 +9,7 @@ from parrot.constants import NONE_CONTEXT_ID
 
 from ..resource.engine import ExecutionEngine
 
-from ..sv.semantic_variable import SemanticVariable
+from ..ir.semantic_variable import SemanticVariable
 
 
 class Context:

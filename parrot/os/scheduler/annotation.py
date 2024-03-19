@@ -1,7 +1,7 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Licensed under the MIT license.
 
-"""Annotations for Semantic Variables."""
+"""Annotations in request."""
 
 from dataclasses import dataclass
 

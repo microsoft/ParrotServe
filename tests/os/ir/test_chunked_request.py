@@ -1,4 +1,4 @@
-from parrot.os.sv.chunked_request import ChunkedRequest
+from parrot.os.ir.prefix_matcher import GlobalPrefixMatcher
 
 
 def test_request_parse():

@@ -1,3 +1,9 @@
+# Copyright (c) 2023 by Microsoft Corporation.
+# Licensed under the MIT license.
+
+
+"""Visualize parrot ComputeGraph."""
+
 NETWORKX_INSTALLED = False
 try:
     import networkx as nx
@@ -8,7 +14,7 @@ from matplotlib import pyplot as plt
 
 # from parrot.utils import get_logger
 
-from ..sv.semantic_variable import SemanticVariable
+from .semantic_variable import SemanticVariable
 from .graph import ComputeGraph, BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
 
 # logger = get_logger("GraphViz")
