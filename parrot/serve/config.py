@@ -9,17 +9,26 @@ from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_OS_SERVER_PORT
 
 
 @dataclass
-class OSConfig:
-    """Config for OS."""
+class ServeCoreConfig:
+    """Config for launching ServeCore."""
 
     host: str = DEFAULT_SERVER_HOST
     port: int = DEFAULT_OS_SERVER_PORT
-    max_proc_num: int = 2048
+    max_sessions_num: int = 2048
     max_engines_num: int = 2048
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:
-        """Verify the OS config."""
+        """Verify the ServeOS config.
+
+        The ServeOS config should contain the following fields:
+        - host: str
+        - port: int
+        - max_sessions_num: int
+        - max_engines_num: int
+        - dispatcher: Dict (Dispatcher config)
+
+        """
 
         if "dispatcher" not in config:
             return False

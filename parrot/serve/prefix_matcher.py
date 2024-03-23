@@ -4,8 +4,8 @@
 from typing import Dict
 
 
-class GlobalPrefixMatcher:
-    """Global prefix cache will match the first constant text in the request to the prefix.
+class PrefixMatcher:
+    """Prefix matcher uses a heuristic algorithm to find the most common prefix among a set of strings.
 
     If there is a common prefix part between them, we will add the count of the common part.
     If the count reaches a certain threshold, we will consider it as a GlobalPrefix.
@@ -20,20 +20,24 @@ class GlobalPrefixMatcher:
         # The second level is a list of prefix strings.
         # TODO(chaofan): Advanced evict policy.
 
-        self._prefix_counter: Dict[str, Dict[str, int]] = {}
+        self.prefix_counter: Dict[str, Dict[str, int]] = {}
 
     def add_prefix(self, prefix: str) -> None:
-        """Add a prefix to the global prefix cache."""
+        """Add a prefix to the global prefix cache.
+
+        Args:
+            prefix (str): The prefix to be added.
+        """
 
         # Too short
         if len(prefix) <= self._START_LEN:
             return
 
         lookup = prefix[: self._START_LEN]
-        if lookup not in self._prefix_counter:
-            self._prefix_counter[lookup] = {}
+        if lookup not in self.prefix_counter:
+            self.prefix_counter[lookup] = {}
 
-        prefixes = list(self._prefix_counter[lookup].keys())
+        prefixes = list(self.prefix_counter[lookup].keys())
 
         for k in prefixes:
             # Matched
@@ -47,20 +51,23 @@ class GlobalPrefixMatcher:
 
                 if i == len(k):
                     # Common prefix is the same
-                    self._prefix_counter[lookup][k] += 1
+                    self.prefix_counter[lookup][k] += 1
                 else:
                     # Common prefix changes
-                    self._prefix_counter[lookup][new_k] = (
-                        self._prefix_counter[lookup][k] + 1
+                    self.prefix_counter[lookup][new_k] = (
+                        self.prefix_counter[lookup][k] + 1
                     )
-                    self._prefix_counter[lookup].pop(k)
+                    self.prefix_counter[lookup].pop(k)
                 return
 
         # Add to table
-        self._prefix_counter[lookup][prefix] = 1
+        self.prefix_counter[lookup][prefix] = 1
 
     def query_prefix(self, prefix: str) -> int:
         """Query whether the prefix is a global prefix.
+
+        Args:
+            prefix (str): The prefix to be queried.
 
         Returns:
             -1 if the prefix is not a global prefix.
@@ -72,10 +79,10 @@ class GlobalPrefixMatcher:
 
         lookup = prefix[: self._START_LEN]
 
-        if lookup not in self._prefix_counter:
+        if lookup not in self.prefix_counter:
             return -1
 
-        for k, v in self._prefix_counter[lookup].items():
+        for k, v in self.prefix_counter[lookup].items():
             if v > self._GP_THRESHOLD and prefix.startswith(k):
                 return len(k)
 

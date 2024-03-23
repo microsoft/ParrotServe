@@ -15,7 +15,7 @@ from parrot.constants import UNKNOWN_DATA_FIELD
 from .api_endpoint import Endpoint
 from ..context.text_context import TextContext
 from ...protocol.internal.runtime_info import EngineRuntimeInfo
-from ..context.context_manager import ContextManager
+from ..context.context_manager import EngineContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..engine_scheduler import Scheduler
 from ..llm_engine import LLMEngine
@@ -47,7 +47,7 @@ class OpenAIEngine(LLMEngine):
 
         # ---------- Components ----------
         self.scheduler = Scheduler(scheduler_config)
-        self.context_manager = ContextManager()
+        self.context_manager = EngineContextManager()
         # self.latency_analyzer = LatencyAnalyzer()
 
         # Create a OpenAI client

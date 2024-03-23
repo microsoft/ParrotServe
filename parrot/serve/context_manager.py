@@ -6,104 +6,87 @@ from typing import Dict, List, Callable
 
 from parrot.protocol.internal.layer_apis import free_context
 from parrot.utils import get_logger, RecyclePool
-from parrot.constants import CONTEXT_POOL_SIZE, NONE_CONTEXT_ID
+from parrot.constants import NONE_CONTEXT_ID
 from parrot.exceptions import parrot_assert, ParrotOSInternalError
 
-from ..backend_ir.engine import ExecutionEngine
-from ..backend_ir.context import Context
-from ..session.session import Session
+from parrot.serve.graph import CompletionChain
+from parrot.serve.backend_repr import Context, ExecutionEngine
+
 
 logger = get_logger("ContextManager")
 
 
-class SessionContextManager:
-    """Context manager for a session."""
+class PrefixCache:
+    """PrefixCache maps a prefix hash to a context id.
 
-    def __init__(self, pid: int, add_callback: Callable, free_callback: Callable):
-        self.pid = pid
+    A prefix hash is a List of SemanticVariable ids.
+    """
 
-        self._contexts: List[Context] = []
-        self._stateful_context_table: Dict[str, Context] = {}
+    def __init__(self):
+        # prefix hash -> context id.
+        self.prefix_cache: Dict[str, int] = {}
 
-        self._add_callback = add_callback
-        self._free_callback = free_callback
+        # reversed dict for freeing context.
+        self.prefix_cache_reversed: Dict[int, str] = {}
 
-        logger.info(f"Process (pid={pid}) memory space created.")
+    def _hash_prefix(self, chain: CompletionChain) -> str:
+        pass
 
-    def add_context(self, context: Context):
-        """Add a context to the process memory space. The callback will add the ref counter."""
+    def get_context_id(self, prefix: str) -> int:
+        """Get the context id of a prefix."""
+        return self.prefix_cache.get(prefix, NONE_CONTEXT_ID)
 
-        self._contexts.append(context)
-        self._add_callback(context)
+    def set_context_id(self, prefix: str, context_id: int):
+        """Set the context id of a prefix."""
+        self.prefix_cache[prefix] = context_id
+        self.prefix_cache_reversed[context_id] = prefix
 
-    def remove_context(self, context: Context):
-        """Remove a context from the process memory space. The callback will remove
-        the context in the global."""
-
-        self._contexts.remove(context)
-        self._free_callback(context)
-
-    def free_space(self):
-        """Free the memory space for a process."""
-
-        # Free context in topo logical order
-        while len(self._contexts) > 0:
-            to_remove = set(self._contexts)
-            for context in self._contexts:
-                if context.parent_context in to_remove:
-                    to_remove.remove(context.parent_context)
-
-            for context in to_remove:
-                self.remove_context(context)
-
-        logger.info(f"Process (pid={self.pid}) memory space freed.")
-
-    def get_mem_usage(self) -> float:
-        """Get the memory usage of the process."""
-        return sum([context.memory_usage for context in self._contexts])
-
-    def get_total_tokens(self) -> int:
-        """Get the total number of tokens in the process memory space."""
-        return sum([context.token_nums for context in self._contexts])
-
-    def get_state_context_id(self, func_name: str) -> int:
-        """Get the context id of a stateful function."""
-
-        context_id = self._stateful_context_table.pop(func_name, NONE_CONTEXT_ID)
+    def remove_context_id(self, prefix: str):
+        """Remove the context id of a prefix."""
+        context_id = self.prefix_cache.pop(prefix, NONE_CONTEXT_ID)
         if context_id != NONE_CONTEXT_ID:
-            logger.debug(
-                f"Get context (conext_id={context_id}) for stateful function {func_name}."
-            )
-        return context_id
-
-    def set_state_context_id(self, func_name: str, context_id: int):
-        """Update the context id of a stateful function."""
-
-        logger.debug(
-            f"Set context (conext_id={context_id}) for stateful function {func_name}."
-        )
-        self._stateful_context_table[func_name] = context_id
+            self.prefix_cache_reversed.pop(context_id)
 
 
-class ContextManager:
-    """Manage all contexts."""
+class ServeCoreContextManager:
+    """Manage all contexts in the ServeLayer.
+
+    Note that this class is global (id pool is global), so each context_id is unique in all engines.
+    """
 
     def __init__(self):
         # context_id -> Context
         self.contexts: Dict[int, Context] = {}
-        self.pool = RecyclePool("Context pool", CONTEXT_POOL_SIZE)
+
+        # session_id -> List of Context
+        self.session_contexts: Dict[int, List[Context]] = {}
+
+        # context_id -> ref_counter
+        # Ref counter increases when the context is used.
+        # And decreases when the context is freed.
+
+        # We track counter in ContextManager instead of Context, for putting the logic of
+        # new and free context in one place.
+        self.context_ref_counter: Dict[int, int] = {}
+
+        self.id_pool = RecyclePool("Context pool")
+
+        self.prefix_cache = PrefixCache()
 
     # ---------- Basic Context Operation ----------
 
     def _new_context(self, engine: ExecutionEngine) -> Context:
-        context_id = self.pool.allocate()
+        context_id = self.id_pool.allocate()
+        # NOTE(chaofan): Context created here is not forked from any parent context by default.
+        # For creating-and-forking a context, check _fork_context.
         context = Context(context_id=context_id, engine=engine)
         self.contexts[context_id] = context
         logger.debug(f"Context created: {context_id}")
         return context
 
     def _fork_context(self, parent_context: Context) -> Context:
-        context_id = self.pool.allocate()
+        context_id = self.id_pool.allocate()
+        # NOTE(chaofan): The engine of new context is the same as the parent context.
         engine = parent_context.engine
         context = Context(
             context_id=context_id,
@@ -117,16 +100,13 @@ class ContextManager:
         return context
 
     def _free_context(self, context: Context):
-        """Destruct the context. If we call this function, the context obj should not be used
-        anymore."""
-
         context_id = context.context_id
         parrot_assert(
-            context_id in self.ref_counter, "Context should have ref_counter."
+            context_id in self.context_ref_counter, "Context should have ref_counter."
         )
-        self.ref_counter[context_id] -= 1
+        self.context_ref_counter[context_id] -= 1
 
-        if self.ref_counter[context_id] > 0:
+        if self.context_ref_counter[context_id] > 0:
             return
 
         try:
@@ -157,32 +137,19 @@ class ContextManager:
             self.ref_counter[context_id] = 0
         self.ref_counter[context_id] += 1
 
-    # ---------- Memory Management ----------
+    # ---------- Memory Management Public Methods ----------
 
-    def new_memory_space(self, pid: int):
-        """Create a new memory space for a process."""
-        self.process_memory[pid] = ProcessMemorySpace(
-            pid=pid,
-            add_callback=self._add_ref_counter,
-            free_callback=self._free_context,
-        )
+    def free_context(self, context: Context) -> None:
+        """Free the context and return the number of freed tokens.
 
-    def free_memory_space(self, pid: int):
-        """Free the memory space for a process."""
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
+        If we call this function, the context obj should not be used anymore.
+        """
 
-        self.process_memory[pid].free_space()
-        self.process_memory.pop(pid)
-
-    def free_thread_memory(self, thread: Thread):
-        """Free the memory space for a thread."""
-        pid = thread.process.pid
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
         parrot_assert(
-            self.ref_counter[thread.ctx.context_id] == 1,
-            "Context should be monopolized by this thread.",
+            context.context_id in self.contexts,
+            "Context should be in the context pool.",
         )
-        self.process_memory[pid].remove_context(thread.ctx)
+        self._free_context(context)
 
     def get_state_context_id(self, pid: int, func_name: StopIteration) -> int:
         """Get the context id of a stateful function."""
@@ -244,9 +211,8 @@ class ContextManager:
 
     # ---------- Profiling & Info ----------
 
-    def profile_process_memory(self, pid: int) -> float:
-        """Profile the memory usage of a process."""
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
+    def profile_session_memory(self, pid: int) -> float:
+        """Profile the memory usage of a session."""
         return self.process_memory[pid].get_mem_usage()
 
     def profile_process_tokens(self, pid: int) -> int:

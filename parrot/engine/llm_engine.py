@@ -37,7 +37,7 @@ class LLMEngine(ABC):
             self.os_http_address = f"http://{os_config['host']}:{os_config['port']}"
         engine_config.pop("os")
 
-        self._heartbeat_thread = threading.Thread(
+        self.heartbeat_thread = threading.Thread(
             target=self._heartbeat_daemon, daemon=True
         )
 
@@ -157,7 +157,7 @@ class LLMEngine(ABC):
         """
 
         # Start heartbeat daemon
-        self._heartbeat_thread.start()
+        self.heartbeat_thread.start()
 
         while True:
             await asyncio.sleep(ENGINE_LOOP_INTERVAL)

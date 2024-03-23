@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 
+from enum import Enum
 from typing import List, Dict
 
 from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
@@ -17,13 +18,22 @@ from parrot.exceptions import parrot_assert
 
 
 from ..tokenizer_wrapper import TokenizersWrapper
-from .model_type import ModelType
+
+from .model import LanguageModel, ModelType
 
 
-MODEL_TYPE_MAP = {
-    ENGINE_TYPE_BUILTIN: ModelType.TOKEN_ID,
-    ENGINE_TYPE_OPENAI: ModelType.TEXT,
-}
+class EngineStatus(Enum):
+    RUNNING = 0  # The engine is running
+    DEAD = 1  # The engine is dead, i.e. the heartbeat is not received
+    BAD = 2  # The engine is bad, i.e. an exception is raised from the engine
+
+
+class ServeLayerRuntimeInfo:
+    """Serve-layer runtime info of an engine."""
+
+    def __init__(self):
+        self.num_tasks = 0
+        self.tokens_num = 0
 
 
 class ExecutionEngine:
@@ -33,23 +43,42 @@ class ExecutionEngine:
         self,
         engine_id: int,
         config: EngineConfig,
-        tokenizer: TokenizersWrapper,
+        model: LanguageModel,
     ):
         # ---------- Basic Config ----------
         self.engine_id = engine_id
         self.config = config
-        self.tokenizer = tokenizer
-        self.dead = False  # Mark if the engine is dead
+        self.model = model
+
+        # ---------- Status ----------
+        self.status: EngineStatus = EngineStatus.RUNNING
 
         # ---------- Runtime Info ----------
-        self.runtime_info = EngineRuntimeInfo()
 
-        # We maintain a instant list of threads in this self.
-        self.threads: List["Thread"] = []
-        self.threads_len: Dict[int, int] = {}  # thread uid -> thread length
+        # NOTE(chaofan): There are two info packages in the runtime info:
+        # - Real-time info: The info that changes frequently, like the number of running jobs.
+        #                   This info type is sent from engine to OS in heartbeat messages.
+        # - Serve-layer info: Info maintained by ServeCore.
+        #
+        # Synchronization between these two info packages is necessary: by updating the static info
+        # when the real-time info changes.
 
-        # We maintain a instant number of tokens in this self.
-        self.tokens_num = 0
+        self.real_time_runtime_info = EngineRuntimeInfo()
+        self.serve_layer_runtime_info = ServeLayerRuntimeInfo()
+
+    # ---------- Status Methods ----------
+
+    def mark_dead(self) -> None:
+        self.status = EngineStatus.DEAD
+
+    def mark_bad(self) -> None:
+        self.status = EngineStatus.BAD
+
+    @property
+    def not_running(self) -> bool:
+        return self.status != EngineStatus.RUNNING
+
+    # ---------- Basic Info ----------
 
     @property
     def name(self) -> str:
@@ -60,8 +89,18 @@ class ExecutionEngine:
         return f"http://{self.config.host}:{self.config.port}"
 
     @property
+    def model_name(self) -> str:
+        return self.model.model_name
+
+    @property
     def model_type(self) -> ModelType:
-        return MODEL_TYPE_MAP[self.config.engine_type]
+        return self.model.model_type
+
+    @property
+    def requires_token_ids(self) -> bool:
+        return self.model_type == ModelType.TOKEN_ID
+
+    # ---------- For Scheduling ----------
 
     @property
     def remain_thread_locs(self) -> int:

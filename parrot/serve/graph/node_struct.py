@@ -200,11 +200,11 @@ class ComputeGraph:
         self.nodes: Set[BaseNode] = set()
         self.chains: List[CompletionChain] = []
 
-        self._node_id_pool = RecyclePool("Node Pool")
+        self.node_id_pool = RecyclePool("Node Pool")
 
     def _insert_node(self, node: BaseNode) -> None:
         self.nodes.add(node)
-        node.id_in_graph = self._node_id_pool.allocate()
+        node.id_in_graph = self.node_id_pool.allocate()
 
         # Link edge type B
         if node.is_gen:

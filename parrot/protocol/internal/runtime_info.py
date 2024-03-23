@@ -6,26 +6,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class VMRuntimeInfo:
-    """Runtime information of a VM."""
-
-    mem_used: float = 0
-    num_total_tokens: int = 0
-    num_threads: int = 0
-
-    def display(self) -> str:
-        ret = ""
-        for key, value in self.__dict__.items():
-            if "latency" in key:
-                ret += f"\t{key}: {value / 1e6:.3f} ms\n"
-            elif "mem" in key:
-                ret += f"\t{key}: {value:.3f} MiB\n"
-            else:
-                ret += f"\t{key}: {value}\n"
-        return ret
-
-
-@dataclass
 class EngineRuntimeInfo:
     """Runtime information of an engine.
 

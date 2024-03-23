@@ -3,7 +3,7 @@
 
 
 from dataclasses import dataclass, asdict
-from typing import List, Optional
+from typing import List, Optional, AsyncGenerator
 import time
 import aiohttp
 
@@ -27,9 +27,10 @@ logger = get_logger("Primitive")
 class Primitive:
     """Base class for LLM primitives."""
 
-    pid: int
-    tid: int
-    context: "Context"
+    session_id: int
+    task_id: int
+    context_id: int
+    parent_context_id: int
     end_flag: bool
 
 
@@ -44,63 +45,56 @@ class Fill(Primitive):
     token_ids: Optional[List[int]] = None
     text: Optional[str] = None
 
-    def post(self) -> FillResponse:
-        # NOTE(chaofan): For simple fill, there is no thread id.
-        # assert self.tid == NONE_THREAD_ID
-
+    def post(self, engine_url: str) -> FillResponse:
         try:
             st = time.perf_counter_ns()
             resp: FillResponse = send_http_request(
                 response_cls=FillResponse,
-                http_addr=self.context.engine_url,
+                http_addr=engine_url,
                 api_url="/fill",
                 retry_times=1,
-                pid=self.pid,
-                tid=self.tid,
-                context_id=self.context.context_id,
+                session_id=self.session_id,
+                task_id=self.task_id,
+                context_id=self.context_id,
+                parent_context_id=self.parent_context_id,
                 end_flag=self.end_flag,
-                parent_context_id=self.context.parent_context_id,
                 token_ids=self.token_ids,
                 text=self.text,
             )
             ed = time.perf_counter_ns()
             logger.debug(
-                f"Fill request latency: {(ed - st) / 1e6} ms. pid={self.pid}, tid={self.tid}"
+                f"Fill request latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, task_id={self.task_id}"
             )
-            self.context.token_nums += resp.filled_len
             return resp
         except BaseException as e:
-            logger.error(f"Fill error in {self.context.engine_url} error: {e}")
+            logger.error(f"Fill error in {engine_url} error: {e}")
             raise e
 
-    async def apost(self) -> FillResponse:
-        # NOTE: For thread fill, there is a thread id.
-        assert self.tid != NONE_THREAD_ID
-
+    async def apost(self, engine_url: str) -> FillResponse:
         try:
             async with aiohttp.ClientSession() as client_session:
                 st = time.perf_counter_ns()
                 resp: FillResponse = await async_send_http_request(
                     client_session=client_session,
                     response_cls=FillResponse,
-                    http_addr=self.context.engine_url,
+                    http_addr=engine_url,
                     api_url="/fill",
-                    pid=self.pid,
-                    tid=self.tid,
-                    context_id=self.context.context_id,
+                    pid=self.session_id,
+                    tid=self.task_id,
+                    context_id=self.context_id,
                     end_flag=self.end_flag,
-                    parent_context_id=self.context.parent_context_id,
+                    parent_context_id=self.parent_context_id,
                     token_ids=self.token_ids,
                     text=self.text,
                 )
                 ed = time.perf_counter_ns()
                 logger.debug(
-                    f"Fill request latency: {(ed - st) / 1e6} ms. pid={self.pid}, tid={self.tid}"
+                    f"Fill request latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, task_id={self.task_id}"
                 )
-            self.context.token_nums += resp.filled_len
+            # self.context.token_nums += resp.filled_len
             return resp
         except BaseException as e:
-            logger.error(f"Fill error in {self.context.engine_url} error: {e}")
+            logger.error(f"Fill error in {engine_url} error: {e}")
             raise e
 
 
@@ -113,53 +107,53 @@ class Generate(Primitive):
 
     sampling_config: SamplingConfig
 
-    async def apost(self) -> GenerateResponse:
+    async def apost(self, engine_url: str) -> GenerateResponse:
         try:
             async with aiohttp.ClientSession() as client_session:
                 st = time.perf_counter_ns()
                 resp: GenerateResponse = await async_send_http_request(
                     client_session=client_session,
                     response_cls=GenerateResponse,
-                    http_addr=self.context.engine_url,
+                    http_addr=engine_url,
                     api_url="/generate",
-                    pid=self.pid,
-                    tid=self.tid,
-                    context_id=self.context.context_id,
+                    pid=self.session_id,
+                    tid=self.task_id,
+                    context_id=self.context_id,
+                    parent_context_id=self.parent_context_id,
                     end_flag=self.end_flag,
-                    parent_context_id=self.context.parent_context_id,
                     sampling_config=asdict(self.sampling_config),
                 )
                 ed = time.perf_counter_ns()
                 logger.debug(
-                    f"Generate request latency: {(ed - st) / 1e6} ms. pid={self.pid}, tid={self.tid}"
+                    f"Generate request latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, task_id={self.task_id}"
                 )
-                self.context.token_nums += len(resp.generated_ids)
+                # self.context.token_nums += len(resp.generated_ids)
                 return resp
         except BaseException as e:
-            logger.error(f"Generate error in {self.context.engine_url} error: {e}")
+            logger.error(f"Generate error in {engine_url} error: {e}")
             raise e
 
-    async def astream(self):
+    async def astream(self, engine_url: str) -> AsyncGenerator:
         try:
             async with aiohttp.ClientSession() as client_session:
                 st = time.perf_counter_ns()
                 async for resp in async_send_http_request_streaming(
                     client_session=client_session,
-                    http_addr=self.context.engine_url,
+                    http_addr=engine_url,
                     api_url="/generate_stream",
-                    pid=self.pid,
-                    tid=self.tid,
-                    context_id=self.context.context_id,
+                    session_id=self.session_id,
+                    task_id=self.task_id,
+                    context_id=self.context_id,
                     end_flag=self.end_flag,
-                    parent_context_id=self.context.parent_context_id,
+                    parent_context_id=self.parent_context_id,
                     sampling_config=asdict(self.sampling_config),
                 ):
-                    self.context.token_nums += 1
+                    # self.context.token_nums += 1
                     yield resp
                 ed = time.perf_counter_ns()
                 logger.debug(
-                    f"Generate stream latency: {(ed - st) / 1e6} ms. pid={self.pid}, tid={self.tid}"
+                    f"Generate stream latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, tid={self.task_id}"
                 )
         except BaseException as e:
-            logger.error(f"Generate error in {self.context.engine_url} error: {e}")
+            logger.error(f"Generate error in {engine_url} error: {e}")
             raise e

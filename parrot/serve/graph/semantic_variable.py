@@ -32,10 +32,19 @@ class SemanticVariable:
     different independent parts with different semantic purposes.
     """
 
-    def __init__(self, name: str, sv_id: str):
+    def __init__(
+        self,
+        name: str,
+        sv_id: str,
+        is_global: bool,
+        seed: int,
+    ) -> None:
         # Basic Info
         self.name = name
         self.sv_id = sv_id
+        self.seed = seed  # A seed for generating the sv_id. For id recycling.
+
+        # Text content.
         self.content: Optional[str] = None
 
         # Events
@@ -46,6 +55,10 @@ class SemanticVariable:
 
         # Consumers of this SV. It must be Fill nodes.
         self.consumers: List["PlaceholderFill"] = []
+
+        # Whether this SV is global.
+        # If it is global, it will be shared across different sessions.
+        self.is_global = is_global
 
     @property
     def ready(self) -> bool:

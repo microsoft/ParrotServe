@@ -36,8 +36,10 @@ class Context:
         self.context_id = context_id
         self.engine = engine
         self.parent_context = parent_context
-        self.token_nums = 0
         self.prefix_ready_event = Event()
+
+        # The number of tokens this context (don't include its parent) holds.
+        self.token_nums = 0
 
     @property
     def parent_context_id(self) -> int:

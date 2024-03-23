@@ -5,11 +5,11 @@
 class ParrotError(Exception):
     "Base class for all Parrot exceptions."
 
-    def __init__(self, exc: Exception) -> None:
-        self._exc = exc
+    def __init__(self, exception: Exception) -> None:
+        self.exception = exception
 
     def __repr__(self) -> str:
-        return f"ParrotError(type={type(self._exc)}, msg={self._exc.args[0]})"
+        return f"ParrotError(type={type(self.exception)}, msg={self.exception.args[0]})"
 
 
 class ParrotOSUserError(ParrotError):

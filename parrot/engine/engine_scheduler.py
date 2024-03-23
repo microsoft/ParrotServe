@@ -35,29 +35,29 @@ class EngineScheduler:
 
         # Use context id as key. Different jobs with the same context id can't
         # present at the same time.
-        self._job_arrival_time: Dict[int, float] = {}
+        self.job_arrival_time: Dict[int, float] = {}
 
         # pid_tid as key.
-        self._thread_arrival_time: Dict[str, float] = {}
+        self.thread_arrival_time: Dict[str, float] = {}
 
     def add_job(self, job: PrimitiveJob):
         """Add a job to the scheduler."""
 
         self.waiting_jobs.append(job)
         cur_time = time.perf_counter()
-        self._job_arrival_time[job.context_id] = cur_time
+        self.job_arrival_time[job.context_id] = cur_time
         key = f"{job.pid}_{job.tid}"
-        if key not in self._thread_arrival_time:
-            self._thread_arrival_time[key] = cur_time
+        if key not in self.thread_arrival_time:
+            self.thread_arrival_time[key] = cur_time
 
     def remove_job(self, job: PrimitiveJob):
         """Remove a job from the scheduler."""
 
         # self.running_jobs.remove(job)
-        self._job_arrival_time.pop(job.context_id)
+        self.job_arrival_time.pop(job.context_id)
         if job.end_flag:
             key = f"{job.pid}_{job.tid}"
-            self._thread_arrival_time.pop(key)
+            self.thread_arrival_time.pop(key)
 
     @property
     def num_running_jobs(self) -> int:
@@ -163,8 +163,8 @@ class EngineScheduler:
 
         self.running_jobs.sort(
             key=lambda job: (
-                self._thread_arrival_time[f"{job.pid}_{job.tid}"],
-                self._job_arrival_time[job.context_id],
+                self.thread_arrival_time[f"{job.pid}_{job.tid}"],
+                self.job_arrival_time[job.context_id],
             )
         )
 
@@ -172,21 +172,21 @@ class EngineScheduler:
         # self.running_jobs.sort(key=lambda job: job.pid)
 
         # print(f"Running jobs: {self.running_jobs}")
-        # print(self._thread_arrival_time)
+        # print(self.thread_arrival_time)
 
         new_running: List[PrimitiveJob] = []
         cur_total_tokens = 0
         preempted = False
         for job in self.running_jobs:
             if preempted:
-                self._preempt(job)
+                self.preempt(job)
                 continue
 
             # NOTE(chaofan): In shared prefix mode, we should only count the prefix context once.
             job_tokens = job.context.get_context_len()
             if cur_total_tokens + job_tokens > self.max_total_tokens:
                 preempted = True
-                self._preempt(job)
+                self.preempt(job)
                 continue
 
             new_running.append(job)

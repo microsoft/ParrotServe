@@ -41,6 +41,12 @@ class BaseNode:
         return isinstance(self, PlaceholderGen)
 
     @property
+    def has_placeholder(self) -> bool:
+        """Whether the node has a placeholder."""
+
+        return not isinstance(self, ConstantFill)
+
+    @property
     def edge_b_prev_node(self) -> Optional["BaseNode"]:
         """Edge type B: prev node. 0 or 1."""
 
@@ -81,9 +87,6 @@ class BaseNode:
     def sv_id(self) -> str:
         parrot_assert(self.has_var, "This node has no SV.")
         return self.sv.sv_id
-
-    def has_placeholder(self) -> bool:
-        return False
 
     def get(self) -> str:
         """Get the content of the node."""
@@ -157,9 +160,6 @@ class PlaceholderFill(BaseNode):
             "placeholder_name": self.placeholder.name,
         }
 
-    def has_placeholder(self) -> bool:
-        return True
-
     def short_repr(self) -> str:
         return self._short_repr_add_graph_id(
             f"PlaceholderFill({self.placeholder.name})"
@@ -184,9 +184,6 @@ class PlaceholderGen(BaseNode):
             "placeholder_name": self.placeholder.name,
             "sampling_config": self.sampling_config,
         }
-
-    def has_placeholder(self) -> bool:
-        return True
 
     def short_repr(self) -> str:
         return self._short_repr_add_graph_id(f"PlaceholderGen({self.placeholder.name})")

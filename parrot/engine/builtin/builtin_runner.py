@@ -15,7 +15,7 @@ from .model_instantiation import instantiate_model
 from .mem import init_model_cache_storage
 from ..context.block_context import BlockContext
 from .iter_state import IterationState
-from ..context.context_manager import ContextManager
+from ..context.context_manager import EngineContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import BuiltinConfig
 
@@ -37,7 +37,7 @@ class BuiltinRunner:
 
     def __init__(self, model_name: str, config: BuiltinConfig):
         self.builtin_config = config
-        self.context_manager = ContextManager()
+        self.context_manager = EngineContextManager()
         self.kv_cache_manager = RecyclePool(
             "KVCache pool", self.builtin_config.num_kv_cache_blocks
         )

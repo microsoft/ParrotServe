@@ -2,14 +2,13 @@
 # Licensed under the MIT license.
 
 
-"""Parrot: Efficient Serving LLM-based Agents with Dependent Semantic Variables.
+"""Parrot: Efficient Serving LLM-based Applications with Dependent Semantic Variables."""
 
-(Scalable and Efficient Runtime System for Semantic Programming.)
-"""
+__version__ = "0.01"
 
 # Program Interface and Transforms
 from .frontend.pfunc import *
 
 # Sampling config and annotations
-from .serve.scheduler.annotation import DispatchAnnotation
+from .serve.graph.annotation import DispatchAnnotation
 from .sampling_config import SamplingConfig

@@ -9,12 +9,11 @@ class MultiProcessManager:
     """A util to run multi processes and gather the results."""
 
     def __init__(self):
+        self.counter = 0
         self.lock = Lock()
         self.manager = Manager()
         self.data = self.manager.dict()  # id -> return value
         self.jobs = []
-
-        self._counter = 0
 
     def _proc_wrapper(self, id: int, target, args):
         """A wrapper for the target function."""
@@ -26,9 +25,9 @@ class MultiProcessManager:
     def add_proc(self, target, args):
         """Add a process to run."""
 
-        process = Process(target=self._proc_wrapper, args=(self._counter, target, args))
+        process = Process(target=self._proc_wrapper, args=(self.counter, target, args))
         self.jobs.append(process)
-        self._counter += 1
+        self.counter += 1
 
     def run_all(self):
         """Run all processes. Get the results from `self.data`."""
@@ -44,4 +43,4 @@ class MultiProcessManager:
 
         self.data.clear()
         self.jobs.clear()
-        self._counter = 0
+        self.counter = 0

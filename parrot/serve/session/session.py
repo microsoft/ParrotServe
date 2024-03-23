@@ -2,23 +2,29 @@
 # Licensed under the MIT license.
 
 
+from enum import Enum
 import asyncio
 from typing import List, Dict, Optional
 from queue import Queue
 
-from parrot.pfunc.semantic_variable import ParameterLoc, SemanticVariable
-from parrot.pfunc.function_call import BasicCall, SemanticCall, NativeCall
-from parrot.utils import get_logger, RecyclePool, create_task_in_loop
-from parrot.constants import THREAD_POOL_SIZE
+from parrot.utils import get_logger
 from parrot.exceptions import ParrotOSUserError, parrot_assert
 
-from ..manager.context_manager import ContextManager
-from ..scheduler.task_dispatcher import ChainDispatcher
+from ..graph import SemanticVariable
+from ..backend_repr import Context
+from ..global_scheduler import TaskDispatcher
 from ..tokenizer_wrapper import TokenizersWrapper
-from .graph_executor import Executor
+from ..context_manager import ServeCoreContextManager
+from .graph_poller import GraphExecutor
 
 
 logger = get_logger("Session")
+
+
+class SessionStatus(Enum):
+    RUNNING = 0  # The session is running
+    DEAD = 1  # The session is dead, i.e. the program (in the frontend) is disconnected / timed out
+    BAD = 2  # The session is bad, i.e. the session throws an exception during execution
 
 
 class Session:
@@ -26,65 +32,50 @@ class Session:
     A session is an abstraction of a program interacting with the OS: When a program connected to the OS,
     a session will be created for it. The session will be removed when the program is disconnected/timed out.
 
-    A session has its own Executor. But the ContextManager, TokenizerManager and ChainDispatcher are
-    shared between sessions (i.e. global).
-
+    A session has its own ComputeGraph and GraphExecutor.
     """
 
     def __init__(
         self,
         session_id: int,
-        dispatcher: ChainDispatcher,
+        life_span: int,
+        dispatcher: TaskDispatcher,
         context_mgr: ContextManager,
-        tokenizer_mgr: TokenizersWrapper,
+        tokenizers_wrapper: TokenizersWrapper,
     ):
         # ---------- Basic Info ----------
         self.session_id = session_id
+        self.life_span = life_span  # In seconds
 
         # ---------- Global Components ----------
-        self.dispatcher = dispatcher
         self.context_mgr = context_mgr
-        self.tokenizer_mgr = tokenizer_mgr
 
-        # ---------- Session-private Components ----------
-        self.executor = Executor(tokenizer_mgr)
+        # ---------- Executor ----------
+        self.executor = GraphExecutor(
+            dispatcher=dispatcher,
+            tokenizers_wrapper=tokenizers_wrapper,
+        )
 
         # ---------- Runtime Status ----------
-        self.dead = False  # Mark if the process is dead
-        self.bad = False
-        self.bad_exception: Optional[BaseException] = None
+        self.status = SessionStatus.RUNNING
+        self.bad_exception: Optional[Exception] = None
+
+    # ---------- Internal methods ----------
+
+    # ---------- Status Methods ----------
+
+    def mark_dead(self) -> None:
+        self.status = SessionStatus.DEAD
+
+    def mark_bad(self, exception: Exception) -> None:
+        self.status = SessionStatus.BAD
+        self.bad_exception = exception
 
     @property
-    def live(self):
-        return not self.dead and not self.bad
+    def not_running(self) -> bool:
+        return self.status != SessionStatus.RUNNING
 
-    # ---------- Internal ----------
-
-    def _new_thread(self, call: SemanticCall, context_id: int) -> Thread:
-        tid = self.threads_pool.allocate()
-        thread = Thread(tid=tid, process=self, call=call, context_id=context_id)
-        self.threads.append(thread)
-        return thread
-
-    def _free_thread(self, thread: Thread):
-        logger.info(f"Process (pid={self.pid}): Free thread {thread.tid}")
-        self.threads_pool.free(thread.tid)
-        self.threads.remove(thread)
-
-        thread.engine.remove_thread(thread)
-
-        # For stateful call
-        if not thread.is_stateful:
-            self.memory_space.free_thread_memory(thread)
-        else:
-            # Maintain the stateful context
-            self.memory_space.set_state_context_id(
-                pid=self.pid,
-                func_name=thread.call.func.name,
-                context_id=thread.context_id,
-            )
-
-    # ---------- Interfaces to PCore ----------
+    # ---------- Interfaces to ServeCore ----------
 
     def rewrite_call(self, call: BasicCall):
         r"""This function does two things:
@@ -184,44 +175,44 @@ class Session:
         except ParrotOSUserError as e:
             self.exception_interrupt(e)
 
-    def execute_native_call(self, call: NativeCall):
-        async def _execute_body(func, *args):
-            return func(*args)
+    # def execute_native_call(self, call: NativeCall):
+    #     async def _execute_body(func, *args):
+    #         return func(*args)
 
-        async def _execute_main():
-            try:
-                # Mark all placeholders as start
-                for _, value in call.bindings.items():
-                    if isinstance(value, SVPlaceholder):
-                        value.start_event.set()
+    #     async def _execute_main():
+    #         try:
+    #             # Mark all placeholders as start
+    #             for _, value in call.bindings.items():
+    #                 if isinstance(value, SVPlaceholder):
+    #                     value.start_event.set()
 
-                # Wait all inputs to be ready
-                args = []
-                for name, value in call.bindings.items():
-                    if call.func.params_map[name].is_output:
-                        continue
-                    elif isinstance(value, SVPlaceholder):
-                        args.append(await value.get())  # Maybe block here
-                        continue
-                    else:
-                        args.append(value)
+    #             # Wait all inputs to be ready
+    #             args = []
+    #             for name, value in call.bindings.items():
+    #                 if call.func.params_map[name].is_output:
+    #                     continue
+    #                 elif isinstance(value, SVPlaceholder):
+    #                     args.append(await value.get())  # Maybe block here
+    #                     continue
+    #                 else:
+    #                     args.append(value)
 
-                # Execute the native call
-                native_pyfunc = call.func.get_pyfunc()
-                result = await asyncio.wait_for(
-                    _execute_body(native_pyfunc, *args),
-                    call.func.metadata.timeout,
-                )
+    #             # Execute the native call
+    #             native_pyfunc = call.func.get_pyfunc()
+    #             result = await asyncio.wait_for(
+    #                 _execute_body(native_pyfunc, *args),
+    #                 call.func.metadata.timeout,
+    #             )
 
-                # Set the output
-                call.output_vars[0].set(result)
-            except BaseException as e:
-                self.exception_interrupt(e)
+    #             # Set the output
+    #             call.output_vars[0].set(result)
+    #         except BaseException as e:
+    #             self.exception_interrupt(e)
 
-        create_task_in_loop(_execute_main(), fail_fast=False)
+    #     create_task_in_loop(_execute_main(), fail_fast=False)
 
     def exception_interrupt(self, exception: BaseException):
-        self.bad = True
+        self.status = SessionStatus.BAD
         self.bad_exception = exception
 
     def free_process(self):
