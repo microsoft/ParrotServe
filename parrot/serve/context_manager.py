@@ -11,6 +11,7 @@ from parrot.exceptions import parrot_assert, ParrotOSInternalError
 
 from parrot.serve.graph import CompletionChain
 from parrot.serve.backend_repr import Context, ExecutionEngine
+from parrot.serve.scheduler import CompletionTask
 
 
 logger = get_logger("ContextManager")
@@ -29,22 +30,38 @@ class PrefixCache:
         # reversed dict for freeing context.
         self.prefix_cache_reversed: Dict[int, str] = {}
 
-    def _hash_prefix(self, chain: CompletionChain) -> str:
-        pass
+    def get_cached_prefix_context(self, prefix_hash: str) -> int:
+        """Get the context id of a prefix from the cache.
 
-    def get_context_id(self, prefix: str) -> int:
-        """Get the context id of a prefix."""
-        return self.prefix_cache.get(prefix, NONE_CONTEXT_ID)
+        Args:
+            prefix_hash: The hash of the prefix.
 
-    def set_context_id(self, prefix: str, context_id: int):
-        """Set the context id of a prefix."""
-        self.prefix_cache[prefix] = context_id
-        self.prefix_cache_reversed[context_id] = prefix
+        Returns:
+            The context id of the prefix. If the prefix is not in the cache, return NONE_CONTEXT_ID.
+        """
 
-    def remove_context_id(self, prefix: str):
+        return self.prefix_cache.get(prefix_hash, NONE_CONTEXT_ID)
+
+    def cache_prefix_context(self, prefix_hash: str, context_id: int) -> None:
+        """Cache contexts of the prefix.
+
+        Args:
+            prefix_hash: The hash of the prefix.
+            context_id: The context id of the prefix.
+        """
+
+        parrot_assert(
+            prefix_hash not in self.prefix_cache, "Prefix should not be cached."
+        )
+        self.prefix_cache[prefix_hash] = context_id
+        self.prefix_cache_reversed[context_id] = prefix_hash
+
+    def remove_context_id(self, context_id: int):
         """Remove the context id of a prefix."""
-        context_id = self.prefix_cache.pop(prefix, NONE_CONTEXT_ID)
-        if context_id != NONE_CONTEXT_ID:
+
+        if context_id not in self.prefix_cache_reversed:
+            prefix_hash = self.prefix_cache_reversed[context_id]
+            self.prefix_cache.pop(prefix_hash)
             self.prefix_cache_reversed.pop(context_id)
 
 
@@ -64,36 +81,46 @@ class ServeCoreContextManager:
         # context_id -> ref_counter
         # Ref counter increases when the context is used.
         # And decreases when the context is freed.
-
         # We track counter in ContextManager instead of Context, for putting the logic of
         # new and free context in one place.
         self.context_ref_counter: Dict[int, int] = {}
 
-        self.id_pool = RecyclePool("Context pool")
+        self.context_id_pool = RecyclePool("Context pool")
 
-        self.prefix_cache = PrefixCache()
+        # engine_id -> PrefixCache
+        self.prefix_caches: Dict[int, PrefixCache] = {}
 
     # ---------- Basic Context Operation ----------
 
     def _new_context(self, engine: ExecutionEngine) -> Context:
-        context_id = self.id_pool.allocate()
+        context_id = self.context_id_pool.allocate()
+
         # NOTE(chaofan): Context created here is not forked from any parent context by default.
         # For creating-and-forking a context, check _fork_context.
         context = Context(context_id=context_id, engine=engine)
+
         self.contexts[context_id] = context
+        self._add_ref_counter(context)
+
         logger.debug(f"Context created: {context_id}")
         return context
 
     def _fork_context(self, parent_context: Context) -> Context:
-        context_id = self.id_pool.allocate()
+        context_id = self.context_id_pool.allocate()
         # NOTE(chaofan): The engine of new context is the same as the parent context.
         engine = parent_context.engine
+
+        # NOTE(chaofan): We don't need to add ref_counter for the parent context.
+        # Check the logic of set_task_ctx.
         context = Context(
             context_id=context_id,
             engine=engine,
             parent_context=parent_context,
         )
+
         self.contexts[context_id] = context
+        self._add_ref_counter(context)
+
         logger.debug(
             f"Context created: {context_id} (Fork from {parent_context.context_id})"
         )
@@ -126,16 +153,13 @@ class ServeCoreContextManager:
             )
 
         self.contexts.pop(context_id)
-        self.pool.free(context_id)
-        if context_id in self._prefix_cache_reversed:
-            prefix_key = self._prefix_cache_reversed.pop(context_id)
-            self.prefix_cache.pop(prefix_key)
+        self.context_id_pool.free(context_id)
 
     def _add_ref_counter(self, context: Context):
         context_id = context.context_id
-        if context_id not in self.ref_counter:
-            self.ref_counter[context_id] = 0
-        self.ref_counter[context_id] += 1
+        if context_id not in self.context_ref_counter:
+            self.context_ref_counter[context_id] = 0
+        self.context_ref_counter[context_id] += 1
 
     # ---------- Memory Management Public Methods ----------
 
@@ -151,80 +175,132 @@ class ServeCoreContextManager:
         )
         self._free_context(context)
 
-    def get_state_context_id(self, pid: int, func_name: StopIteration) -> int:
-        """Get the context id of a stateful function."""
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
-        return self.process_memory[pid].get_state_context_id(func_name)
+    def set_task_ctx(self, task: CompletionTask) -> None:
+        """Initialize the contexts for a CompletionTask.
 
-    def set_state_context_id(self, pid: int, func_name: str, context_id: int):
-        """Update the context id of a stateful function."""
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
-        self.process_memory[pid].set_state_context_id(func_name, context_id)
-
-    def set_thread_ctx(self, thread: Thread):
-        """Initialize the context for a thread.
-        It will first try to find a cached prefix and fork a context from it.
-        If no cached prefix found:
-        - If the function is marked as "cache_prefix", it will create a new context for prefix;
-        - Otherwise, the whole function will be executed in the same new context.
+        For every node,
+        1. Check whether the prefix is already cached. If there is a cached context, use it.
+        2. If the prefix is not cached, create a new context and cache it.
         """
-        parrot_assert(
-            thread.dispatched, "Thread should be dispatched before getting context."
-        )
-        pid = thread.process.pid
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
 
-        # Stateful call:
-        if thread.context_id_exists:
-            thread.prefix_mode = PrefixMode.SAME_CTX  # Fill in the same context
-            thread.ctx = self.contexts[thread.context_id]
+        parrot_assert(
+            task.scheduled, "Task should be scheduled before being set context."
+        )
+
+        chain = task.chain
+        prefix_cache = self.prefix_caches[task.engine.engine_id]
+        prefix_hash = ""
+        prefix_no_cache_flag = False
+
+        for node in chain.iter():
+            prefix_hash += str(node.sv_id)
+
+            if not prefix_no_cache_flag:
+                # If the prefix is already cached, use cached context
+                context_id = prefix_cache.get_cached_prefix_context(prefix_hash)
+                if context_id != NONE_CONTEXT_ID:
+                    context = self.contexts[context_id]
+                    self._add_ref_counter(context)
+                    task.ctxs.append(context)
+                    continue
+                else:
+                    # For succeeding nodes, the prefix couldn't be cached.
+                    prefix_no_cache_flag = True
+
+            # The prefix is not cached. Create a new context and cache it.
+            # If the node is the first node in the chain, create a new context.
+            if len(task.ctxs) == 0:
+                context = self._new_context(task.engine)
+            # If the node is not the first node in the chain, fork the context.
+            else:
+                context = self._fork_context(task.ctxs[-1])
+
+            task.ctxs.append(context)
+            # Cache the context, if it's the prefix.
+            if not node.is_gen:
+                prefix_cache.cache_prefix_context(prefix_hash, context.context_id)
+
+    # ---------- For Scheduler ----------
+
+    def query_prefixes_in_engines(self, task: CompletionTask) -> List[int]:
+        """Query whether there are prefixes cached in some engines.
+
+        Args:
+            task: The task to query.
+
+        Returns:
+            A list of engine ids that have cached the prefixes.
+            Sorted by the number of cached prefixes in descending order.
+        """
+
+        parrot_assert(not task.scheduled, "Task should not be scheduled.")
+
+        # engine_id -> cached_prefix_num
+        sort_dict = {}
+
+        for engine_id, prefix_cache in self.prefix_caches.items():
+            prefix_hash = ""
+            for node in task.chain.iter():
+                prefix_hash += str(node.sv_id)
+                if (
+                    prefix_cache.get_cached_prefix_context(prefix_hash)
+                    != NONE_CONTEXT_ID
+                ):
+                    if engine_id not in sort_dict:
+                        sort_dict[engine_id] = 0
+                    sort_dict[engine_id] += 1
+                else:
+                    break
+
+        return sorted(sort_dict, key=lambda x: sort_dict[x], reverse=True)
+
+    # ---------- Profiling ----------
+
+    def profile_session_memory(self, session_id: int) -> float:
+        """Profile the memory usage of a session."""
+
+        parrot_assert(
+            session_id in self.session_contexts, "Session should have contexts."
+        )
+
+        session_ctxs = self.session_contexts[session_id]
+        return sum([ctx.memory_usage for ctx in session_ctxs])
+
+    def profile_session_tokens(self, session_id: int) -> int:
+        """Profile the total number of tokens in a session."""
+
+        parrot_assert(
+            session_id in self.session_contexts, "Session should have contexts."
+        )
+
+        session_ctxs = self.session_contexts[session_id]
+        return sum([ctx.tokens_num for ctx in session_ctxs])
+
+    # ---------- Registering ----------
+
+    def register_session_contexts(self, session_id: int):
+        """Register the contexts of a session."""
+
+        self.session_contexts[session_id] = []
+
+    def free_session_contexts(self, session_id: int):
+        """Free the contexts of a session."""
+
+        if session_id not in self.session_contexts:
             return
 
-        # Not stateful call: handling prefix
-        if thread.call.func.metadata.cache_prefix:
-            # Try to find a cached prefix
-            prefix_key = (thread.call.func.prefix.text, thread.engine.engine_id)
+        session_ctxs = self.session_contexts[session_id]
+        for ctx in session_ctxs:
+            self._free_context(ctx)
 
-            if prefix_key not in self.prefix_cache:
-                # No cached prefix found, create a new context
-                prefix_context = self._new_context(thread.engine)
-                self.prefix_cache[prefix_key] = prefix_context
-                self._prefix_cache_reversed[prefix_context.context_id] = prefix_key
-                thread.prefix_mode = PrefixMode.DIFF_CTX  # Fill in different context
-                self.process_memory[pid].add_context(prefix_context)
-            else:
-                prefix_context = self.prefix_cache[prefix_key]
-                logger.debug(
-                    f"Thread {thread.unique_id}: Prefix cache hit! Using prefix ontext: {prefix_context.context_id}"
-                )
-                thread.prefix_mode = PrefixMode.SKIP  # Skip the prefix fill
+        self.session_contexts.pop(session_id)
 
-            new_context = self._fork_context(self.prefix_cache[prefix_key])
-        else:
-            new_context = self._new_context(thread.engine)
-            thread.prefix_mode = PrefixMode.SAME_CTX  # Fill in the same context
+    def register_engine_prefix_cache(self, engine_id: int):
+        """Register the prefix cache of an engine."""
 
-        self.process_memory[pid].add_context(new_context)
+        self.prefix_caches[engine_id] = PrefixCache()
 
-        thread.ctx = new_context
-        thread.context_id = new_context.context_id
+    def remove_engine_prefix_cache(self, engine_id: int):
+        """Remove the prefix cache of an engine."""
 
-    # ---------- Profiling & Info ----------
-
-    def profile_session_memory(self, pid: int) -> float:
-        """Profile the memory usage of a session."""
-        return self.process_memory[pid].get_mem_usage()
-
-    def profile_process_tokens(self, pid: int) -> int:
-        """Profile the total number of tokens in a process."""
-        parrot_assert(pid in self.process_memory, "Process should have memory space.")
-        return self.process_memory[pid].get_total_tokens()
-
-    def get_engines_with_ctx(self, ctx: str) -> List[int]:
-        """Get the engines that have a context."""
-
-        ret = []
-        for key in self.prefix_cache:
-            if key[0] == ctx:
-                ret.append(key[1])
-        return ret
+        self.prefix_caches.pop(engine_id)

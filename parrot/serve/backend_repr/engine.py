@@ -35,6 +35,9 @@ class ServeLayerRuntimeInfo:
         self.num_tasks = 0
         self.tokens_num = 0
 
+        # task_id -> upperbound
+        self.num_tasks_upperbounds: Dict[int, int] = {}
+
 
 class ExecutionEngine:
     """Represent an execution engine in the backend."""
@@ -102,65 +105,42 @@ class ExecutionEngine:
 
     # ---------- For Scheduling ----------
 
-    @property
-    def remain_thread_locs(self) -> int:
-        return self.config.threads_capacity - self.num_threads
+    def get_num_tasks(self) -> int:
+        """Return the number of tasks scheduled to this engine."""
 
-    @property
-    def num_threads(self) -> int:
-        return len(self.threads)
+        return self.serve_layer_runtime_info.num_tasks
 
-    @property
-    def requests_num_upperbound(self) -> int:
-        """Return the upperbound of the number of jobs that can be dispatched to this self."""
+    def get_tokens_num(self) -> int:
+        """Return the number of tokens scheduled to this engine."""
+
+        return self.serve_layer_runtime_info.tokens_num
+
+    def get_remain_tokens_capacity(self) -> int:
+        """Return the number of tokens that can be scheduled to this engine."""
+
+        return self.config.tokens_capacity - self.serve_layer_runtime_info.tokens_num
+
+    def get_remain_tasks_capacity(self) -> int:
+        """Return the number of tasks that can be scheduled to this engine."""
+
+        return self.config.tasks_capacity - self.serve_layer_runtime_info.num_tasks
+
+    def get_num_tasks_upperbound(self) -> int:
+        """Return the upperbound of the number of tasks of this engine."""
+
         return min(
-            [self.config.threads_capacity]
-            + [thread.requests_num_upperbound for thread in self.threads]
+            [self.config.tasks_capacity]
+            + list(self.serve_layer_runtime_info.num_tasks_upperbounds.values())
         )
 
-    def count_thread_token_nums(self, thread: "Thread") -> int:
-        if self.config.engine_type != ENGINE_TYPE_BUILTIN:
-            return 0  # TODO(chaofan): support other engines
+    def update_servelayer_runtime_info(
+        self, task_id: int, tokens_num: int, num_tasks_upperbound: int
+    ) -> None:
+        """Update the serve-layer runtime info by some tasks scheduled to it."""
 
-        tokenizer_name = self.config.tokenizer
+        self.serve_layer_runtime_info.num_tasks += 1
+        self.serve_layer_runtime_info.tokens_num += tokens_num
 
-        length = 0
-
-        # Count the length of the thread.
-        for region in thread.call.func.body:
-            if isinstance(region, ParameterLoc):
-                value = thread.call.bindings[region.param.name]
-                if isinstance(value, SVPlaceholder):
-                    length += value.max_length
-                else:
-                    parrot_assert(
-                        isinstance(value, str), f"Value must be str. Got {type(value)}"
-                    )
-                    length += len(self.tokenizer.tokenize(value, tokenizer_name))
-            else:
-                parrot_assert(
-                    isinstance(region, Constant),
-                    f"Invalid region type: {type(region)}.",
-                )
-                length += len(self.tokenizer.tokenize(region.text, tokenizer_name))
-
-        return length
-
-    def accept_thread(self, thread: "Thread"):
-        """Accept a thread to this self."""
-
-        thread.engine = self
-        thread_len = self.count_thread_token_nums(thread)
-        self.threads.append(thread)
-        self.threads_len[thread.unique_id] = thread_len
-        self.tokens_num += thread_len
-
-    def remove_thread(self, thread: "Thread"):
-        """Remove a thread from this self."""
-
-        # Don't do this! Because hence the thread will be marked as not dispatched.
-        # thread.engine = None
-
-        self.threads.remove(thread)
-        self.tokens_num -= self.threads_len[thread.unique_id]
-        self.threads_len.pop(thread.unique_id)
+        self.serve_layer_runtime_info.num_tasks_upperbounds[task_id] = (
+            num_tasks_upperbound
+        )

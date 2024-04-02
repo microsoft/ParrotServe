@@ -127,7 +127,7 @@ class EngineConfig:
     device: str = "cuda"  # cpu, cuda, cuda:x
 
     # Max threads the engine can handle.
-    threads_capacity: int = 256
+    tasks_capacity: int = 256
 
     # For non-builtin engines, it's useless.
     tokens_capacity: int = 262144

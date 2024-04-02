@@ -63,15 +63,30 @@ class CompletionChain:
     Fill -> Fill -> Fill -> Gen.
     """
 
-    def __init__(self, request_chain: "RequestChain", first_node: BaseNode) -> None:
+    def __init__(
+        self,
+        request_chain: "RequestChain",
+        first_node: BaseNode,
+        gen_node: Optional[PlaceholderGen],
+    ) -> None:
         self.request_chain = request_chain
         self.first_node = first_node
+        self.gen_node = gen_node
 
     def iter(self) -> _CompletionChainIterator:
         return _CompletionChainIterator(self.first_node)
 
     def iter_fill(self) -> _CompletionChainFillIterator:
         return _CompletionChainFillIterator(self.first_node)
+
+    def get_producers(self) -> List[BaseNode]:
+        """Get the list of Fill nodes in the chain."""
+
+        return [
+            node.edge_b_prev_node
+            for node in self.iter()
+            if node.edge_b_prev_node is not None
+        ]
 
 
 class _RequestChainIterator:
@@ -110,7 +125,7 @@ class RequestChain:
         self.inserted = False
 
         # Only valid after inserted into a graph.
-        self._placeholder_mapping: List[Dict] = []
+        self.placeholder_mapping: List[Dict] = []
 
     def iter(self) -> _RequestChainIterator:
         return _RequestChainIterator(self.first_node)
@@ -168,6 +183,7 @@ class RequestChain:
                 completion_chain = CompletionChain(
                     request_chain=request_chain,
                     first_node=completion_chain_first_node,
+                    gen_node=node,
                 )
                 request_chain.completed_chains.append(completion_chain)
                 completion_chain_first_node = node.edge_a_next_node
@@ -181,7 +197,7 @@ class RequestChain:
             self.inserted,
             "Get placeholder mapping failed: RequestChain has not been inserted into a graph.",
         )
-        return self._placeholder_mapping
+        return self.placeholder_mapping
 
 
 class ComputeGraph:
@@ -236,7 +252,8 @@ class ComputeGraph:
             if node.has_placeholder():
                 placeholder: RequestPlaceholder = node.placeholder
 
-                request_chain._placeholder_mapping.append(
+                # Maintain the placeholder mapping
+                request_chain.placeholder_mapping.append(
                     {
                         "placeholder_name": placeholder.name,
                         "is_output": placeholder.is_output,
@@ -248,13 +265,13 @@ class ComputeGraph:
 
         request_chain.inserted = True
 
-    def remove_completion_chain(self, completion_chain: CompletionChain):
+    def remove_completion_chain(self, completion_chain: CompletionChain) -> None:
         """Remove a CompletionChain from the graph. This is called when the task is finished."""
 
         self.chains.remove(completion_chain)
         for node in completion_chain.iter():
             self.nodes.remove(node)
-            self._node_id_pool.free(node.id_in_graph)
+            self.node_id_pool.free(node.id_in_graph)
 
             # Remove edge type B
             if node.is_gen:

@@ -10,12 +10,20 @@ from queue import Queue
 from parrot.utils import get_logger
 from parrot.exceptions import ParrotOSUserError, parrot_assert
 
-from ..graph import SemanticVariable
-from ..backend_repr import Context
-from ..global_scheduler import TaskDispatcher
+from parrot.serve.graph import (
+    ChunkedRequest,
+    RequestChain,
+)
+
+from parrot.serve.backend_repr import Context
+
+from ..prefix_matcher import PrefixMatcher
+from ..scheduler.global_scheduler import GlobalScheduler
+from ..variable_manager import SemanticVariableManager
+from ..engine_manager import EngineManager
 from ..tokenizer_wrapper import TokenizersWrapper
 from ..context_manager import ServeCoreContextManager
-from .graph_poller import GraphExecutor
+from .graph_executor import GraphExecutor
 
 
 logger = get_logger("Session")
@@ -39,8 +47,11 @@ class Session:
         self,
         session_id: int,
         life_span: int,
-        dispatcher: TaskDispatcher,
-        context_mgr: ContextManager,
+        prefix_matcher: PrefixMatcher,
+        scheduler: GlobalScheduler,
+        var_mgr: SemanticVariableManager,
+        engine_mgr: EngineManager,
+        context_mgr: ServeCoreContextManager,
         tokenizers_wrapper: TokenizersWrapper,
     ):
         # ---------- Basic Info ----------
@@ -48,17 +59,28 @@ class Session:
         self.life_span = life_span  # In seconds
 
         # ---------- Global Components ----------
+        self.prefix_matcher = prefix_matcher
+        self.scheduler = scheduler
+        self.var_mgr = var_mgr
+        self.engine_mgr = engine_mgr
         self.context_mgr = context_mgr
+        self.tokenizers_wrapper = tokenizers_wrapper
 
         # ---------- Executor ----------
         self.executor = GraphExecutor(
-            dispatcher=dispatcher,
+            session_id=session_id,
+            scheduler=scheduler,
+            engine_mgr=engine_mgr,
             tokenizers_wrapper=tokenizers_wrapper,
         )
 
         # ---------- Runtime Status ----------
         self.status = SessionStatus.RUNNING
         self.bad_exception: Optional[Exception] = None
+
+        # Register local spaces
+        # self.context_mgr.
+        self.var_mgr.register_local_var_space(session_id=self.session_id)
 
     # ---------- Internal methods ----------
 
@@ -77,103 +99,32 @@ class Session:
 
     # ---------- Interfaces to ServeCore ----------
 
-    def rewrite_call(self, call: BasicCall):
-        r"""This function does two things:
+    async def add_request(self, request_payload: Dict) -> Dict:
+        """Add a request to the session and assign a coroutine to the request.
 
-        1. Rewrite the "Semantic Variables (Program-level)" to "Placeholders (OS-level)",
-           using the namespace of the process.
-        2. Make the DAG according to the dependencies between the placeholders.
+        Args:
+            request_payload (Dict): The request payload.
+
+        Returns:
+            Dict: The response payload.
         """
 
-        # Rewrite SemanticVariable to Placeholder
-        for name, value in call.bindings.items():
-            if not isinstance(value, SemanticVariable):
-                continue
+        # Convert the request to a RequestChain.
+        chunked_request = ChunkedRequest.parse_from_payload(request_payload)
+        request_chain = RequestChain.from_chunked_request(chunked_request)
 
-            if value.id not in self.placeholders_map:
-                self.placeholders_map[value.id] = SVPlaceholder(
-                    id=value.id, name=value.name
-                )
-
-            call.bindings[name] = self.placeholders_map[value.id]
-            if value.ready:
-                self.placeholders_map[value.id].set(value.get())
-
-        # Rewrite SemanticVariable to Placeholder
-        for i, var in enumerate(call.output_vars):
-            if var.id not in self.placeholders_map:
-                self.placeholders_map[var.id] = SVPlaceholder(
-                    id=value.id, name=value.name
-                )
-            call.output_vars[i] = self.placeholders_map[var.id]
-
-        # Make DAG
-        cur_edge = DAGEdge(call)
-        call.edges.append(cur_edge)
-
-        if isinstance(call, SemanticCall):
-            """Semantic Call has multiple regions, hence multiple edges."""
-            for region in call.func.body:
-                call.edges_map[region.idx] = cur_edge
-
-                if isinstance(region, ParameterLoc):
-                    sv_placeholder = call.bindings[region.param.name]
-                    if isinstance(sv_placeholder, SVPlaceholder):
-                        if region.param.is_input_loc:
-                            cur_edge.link_with_from_node(sv_placeholder)
-                        elif region.param.is_output:
-                            cur_edge.link_with_to_node(sv_placeholder)
-
-                    if region.param.is_output:
-                        # make a new node for the next segment
-                        cur_edge = DAGEdge(call)
-                        call.edges.append(cur_edge)
-
-                        # Update max length of the placeholder
-                        sv_placeholder.max_length = (
-                            region.param.sampling_config.max_gen_length
-                        )
-        else:
-            """Native Call has only one edge."""
-            for name, value in call.bindings.items():
-                if (
-                    not isinstance(value, SVPlaceholder)
-                    or call.func.params_map[name].is_output
-                ):
-                    continue
-
-                sv_placeholder = self.placeholders_map[value.id]
-                cur_edge.link_with_from_node(sv_placeholder)
-
-            for var in call.output_vars:
-                sv_placeholder = self.placeholders_map[var.id]
-                cur_edge.link_with_to_node(sv_placeholder)
-
-    def make_thread(self, call: SemanticCall) -> Thread:
-        # Get state context (if any)
-        # -1 indicates no state context
-        context_id = self.memory_space.get_state_context_id(
-            pid=self.pid,
-            func_name=call.func.name,
+        # Assign Semantic Variables to the RequestChain.
+        self.var_mgr.create_vars(
+            session_id=self.session_id, request_chain=request_chain
         )
 
-        call.thread = self._new_thread(call, context_id)
-        return call.thread
+        # Add the request to the executor.
+        self.executor.add_request(request_chain=request_chain)
 
-    def execute_thread(self, thread: Thread):
-        try:
-            # Mark all placeholders as start
-            for _, value in thread.call.bindings.items():
-                if isinstance(value, SVPlaceholder):
-                    value.start_event.set()
+        # It must be inserted. So we can get the mapping.
+        placeholder_mapping = request_chain.get_placeholder_mapping()
 
-            # Allocate memory
-            self.memory_space.set_thread_ctx(thread)
-
-            # Execute the thread
-            self.executor.submit(thread)
-        except ParrotOSUserError as e:
-            self.exception_interrupt(e)
+        return placeholder_mapping
 
     # def execute_native_call(self, call: NativeCall):
     #     async def _execute_body(func, *args):
@@ -215,14 +166,7 @@ class Session:
         self.status = SessionStatus.BAD
         self.bad_exception = exception
 
-    def free_process(self):
-        self.monitor_threads()
-        logger.info(
-            f"Free process {self.pid} with running threads num: {len(self.threads)}"
-        )
-        self.memory_space.free_memory_space(self.pid)
+    def free_session(self):
+        """Free the session and all its resources."""
 
-    def monitor_threads(self):
-        for thread in self.threads:
-            if thread.finished:
-                self._free_thread(thread)
+        pass

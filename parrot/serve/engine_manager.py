@@ -7,6 +7,7 @@ from typing import Dict, List, Optional, Tuple
 from parrot.utils import RecyclePool, get_logger, time_counter_in_nanoseconds
 from parrot.constants import ENGINE_HEARTBEAT_TIMEOUT_INTERVAL
 from parrot.engine.config import EngineConfig
+from parrot.protocol.internal.layer_apis import ping_engine
 
 from parrot.serve.backend_repr import ExecutionEngine, LanguageModel
 
@@ -68,6 +69,13 @@ class EngineManager:
 
         engine = self.engines[engine_id]
         engine.mark_bad(exception=exception)
+
+    # ---------- Methods for Global Scheduler ----------
+
+    def get_live_engines(self) -> List[ExecutionEngine]:
+        """Get all live engines."""
+
+        return [engine for engine in self.engines.values() if not engine.not_running]
 
     # ---------- Methods for Core ----------
 

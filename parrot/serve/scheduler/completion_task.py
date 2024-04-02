@@ -3,12 +3,15 @@
 
 
 from typing import List, Dict, Optional
+from asyncio import Event
 
-from parrot.serve.backend_repr import ExecutionEngine
+from parrot.exceptions import parrot_assert
+
+from parrot.serve.backend_repr import ExecutionEngine, Context
 from parrot.serve.graph import CompletionChain
 
 
-class ScheduleUnit:
+class CompletionTask:
     """ScheduleUnit wraps CompletionChain."""
 
     def __init__(self, task_id: int, chain: CompletionChain):
@@ -20,12 +23,25 @@ class ScheduleUnit:
         # A tokenized result is a List of token ids, i.e. List[List[int]]
         self.tokenized_result: Optional[Dict[str, List[List[int]]]] = None
 
+        # Context bound to the task
+        # A list of contexts that are bound to the task
+        self.ctxs: List[Context] = []
+
         # Scheduled result
+        self.scheduled: Event = Event()
         self.engine: Optional[ExecutionEngine] = None
+
+        # Scheduled hint
+        # TODO
+        self.num_tasks_upperbound: int = 4
 
     @property
     def is_tokenized(self) -> bool:
         return self.tokenized_result is not None
+
+    @property
+    def context_bound(self) -> bool:
+        return len(self.ctxs) > 0
 
     def tokenize_chain(self, tokenizers_wrapper: "TokenizersWrapper"):
         """Tokenize the chain using the tokenizers in the wrapper."""
@@ -49,13 +65,3 @@ class ScheduleUnit:
 
     def __str__(self):
         return f"CompletionTask(chain={self.chain})"
-
-
-class GlobalScheduler:
-    """GlobalScheduler(GS) solves the task scheduling problem in the global scope.
-
-    A scheduling unit is a
-    """
-
-    def __init__(self):
-        pass

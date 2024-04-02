@@ -10,5 +10,5 @@ __version__ = "0.01"
 from .frontend.pfunc import *
 
 # Sampling config and annotations
-from .serve.graph.annotation import DispatchAnnotation
+from .serve.scheduler.annotation import DispatchAnnotation
 from .sampling_config import SamplingConfig

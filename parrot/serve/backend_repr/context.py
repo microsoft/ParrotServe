@@ -36,10 +36,12 @@ class Context:
         self.context_id = context_id
         self.engine = engine
         self.parent_context = parent_context
-        self.prefix_ready_event = Event()
+
+        # Ready event: whether the Fill/Generate in this context is executed.
+        self.ready_event = Event()
 
         # The number of tokens this context (don't include its parent) holds.
-        self.token_nums = 0
+        self.tokens_num = 0
 
     @property
     def parent_context_id(self) -> int:
@@ -52,13 +54,13 @@ class Context:
     @property
     def memory_usage(self) -> float:
         memory_per_token = (
-            self.engine.runtime_info.cache_mem
-            / self.engine.runtime_info.num_cached_tokens
-            if self.engine.runtime_info.num_cached_tokens > 0
+            self.engine.real_time_runtime_info.cache_mem
+            / self.engine.real_time_runtime_info.num_cached_tokens
+            if self.engine.real_time_runtime_info.num_cached_tokens > 0
             else 0
         )
 
-        return memory_per_token * self.token_nums
+        return memory_per_token * self.tokens_num
 
     @property
     def engine_url(self) -> str:

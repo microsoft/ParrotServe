@@ -6,7 +6,6 @@ from typing import List
 
 from parrot.exceptions import parrot_assert
 from parrot.protocol.internal.primitive_request import Primitive, Fill, Generate
-from parrot.serve.task.task import CompletionTask
 
 
 class PrimitiveBuilder:
