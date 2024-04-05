@@ -12,7 +12,7 @@ class ParrotError(Exception):
         return f"ParrotError(type={type(self.exception)}, msg={self.exception.args[0]})"
 
 
-class ParrotOSUserError(ParrotError):
+class ParrotCoreUserError(ParrotError):
     """This type of error doesn't affect the internal state of OS. It will be passed back
     to the client to handle it."""
 
@@ -22,7 +22,7 @@ class ParrotEngineUserError(ParrotError):
     to the client to handle it."""
 
 
-class ParrotOSInternalError(ParrotError):
+class ParrotCoreInternalError(ParrotError):
     """This type of error represents a unrecoverable error in the ParrotOS, which means
     when this error is raised, the ParrotOS will be terminated."""
 

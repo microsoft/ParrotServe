@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 
+from enum import Enum
 from typing import List, Dict, Optional
 from asyncio import Event
 
@@ -11,12 +12,19 @@ from parrot.serve.backend_repr import ExecutionEngine, Context
 from parrot.serve.graph import CompletionChain
 
 
+class TaskStatus(Enum):
+    CREATED = 0
+    IN_QUEUE = 1
+    EXECUTING = 2
+
+
 class CompletionTask:
     """ScheduleUnit wraps CompletionChain."""
 
     def __init__(self, task_id: int, chain: CompletionChain):
         self.task_id = task_id
         self.chain = chain
+        self.status = TaskStatus.CREATED
 
         # Tokenized result
         # Map from tokenizer name to tokenized result

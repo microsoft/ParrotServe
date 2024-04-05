@@ -16,6 +16,7 @@ class ServeCoreConfig:
     port: int = DEFAULT_OS_SERVER_PORT
     max_sessions_num: int = 2048
     max_engines_num: int = 2048
+    session_life_span: int = 600
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:
@@ -26,11 +27,11 @@ class ServeCoreConfig:
         - port: int
         - max_sessions_num: int
         - max_engines_num: int
-        - dispatcher: Dict (Dispatcher config)
-
+        - session_life_span: int
+        - global_scheduler: Dict (Global scheduler config)
         """
 
-        if "dispatcher" not in config:
+        if "global_scheduler" not in config:
             return False
 
         return True

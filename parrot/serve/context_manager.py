@@ -7,7 +7,7 @@ from typing import Dict, List, Callable
 from parrot.protocol.internal.layer_apis import free_context
 from parrot.utils import get_logger, RecyclePool
 from parrot.constants import NONE_CONTEXT_ID
-from parrot.exceptions import parrot_assert, ParrotOSInternalError
+from parrot.exceptions import parrot_assert, ParrotCoreInternalError
 
 from parrot.serve.graph import CompletionChain
 from parrot.serve.backend_repr import Context, ExecutionEngine
@@ -146,7 +146,7 @@ class ServeCoreContextManager:
             logger.error(
                 f"Context: {context_id} did not free correctly: {type(e)}, {e}."
             )
-            raise ParrotOSInternalError(e)
+            raise ParrotCoreInternalError(e)
         else:
             logger.debug(
                 f"Context: {context_id} freed. Freed tokens: {resp.context_len}"

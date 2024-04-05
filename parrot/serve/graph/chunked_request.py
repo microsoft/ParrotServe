@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Union, Dict, Optional, List, Type
 import re
 
-from parrot.exceptions import parrot_assert, ParrotOSUserError
+from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.sampling_config import SamplingConfig
 
 
@@ -194,7 +194,7 @@ class ChunkedRequest:
             try:
                 parsed_placeholder = RequestPlaceholder(**placeholder)
             except BaseException as e:
-                raise ParrotOSUserError(e)
+                raise ParrotCoreUserError(e)
 
             placeholder_name = parsed_placeholder.name
 

@@ -3,23 +3,24 @@
 
 
 import json
-from typing import Dict, List
+from typing import Dict
 import asyncio
-import time
-from dataclasses import asdict
 
-from parrot.utils import RecyclePool
-from parrot.constants import OS_LOOP_INTERVAL
-from parrot.protocol.internal.layer_apis import ping_engine
-from parrot.protocol.internal.runtime_info import VMRuntimeInfo, EngineRuntimeInfo
+from parrot.utils import get_logger
+from parrot.constants import CORE_LOOP_INTERVAL
+from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
-from parrot.utils import get_logger, cprofile
-from parrot.exceptions import ParrotOSUserError, ParrotOSInternalError, parrot_assert
+from parrot.exceptions import ParrotCoreInternalError
+
+from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig
 
 from .config import ServeCoreConfig
+from .prefix_matcher import PrefixMatcher
+from .variable_manager import SemanticVariableManager
+from .tokenizer_wrapper import TokenizersWrapper
 from .context_manager import ServeCoreContextManager
+from .session_manager import SessionManager
 from .engine_manager import EngineManager
-from .dispatcher import ThreadDispatcher
 
 
 logger = get_logger("ServeCore")
@@ -39,51 +40,38 @@ class ParrotServeCore:
     - Semantic variables.
     - Tokenizer.
 
-    There is a Dispatcher to schedule and dispatch Tasks generated from sessions' GraphExecutor
+    There is a GlobalScheduler to schedule and dispatch Tasks generated from sessions' GraphExecutor
     to different engines.
     """
 
-    def __init__(self, os_config: Dict):
+    def __init__(self, config: Dict):
         # ---------- Config ----------
-        dispatcher_config = os_config.pop("dispatcher")
-        dispatcher_config = DispatcherConfig(**dispatcher_config)
-        self.os_config = OSConfig(**os_config)
-
-        if self.os_config.max_proc_num > PROCESS_POOL_SIZE:
-            logger.warning(
-                f"Config max_proc_num: {self.os_config.max_proc_num} larger than "
-                "proc_pool_size: {PROCESS_POOL_SIZE}"
-            )
-        if self.os_config.max_engines_num > ENGINE_POOL_SIZE:
-            logger.warning(
-                f"Config max_engines_num: {self.os_config.max_engines_num} larger than "
-                "engine_pool_size: {ENGINE_POOL_SIZE}"
-            )
+        gs_config = config.pop("global_scheduler")
+        gs_config = GlobalSchedulerConfig(**gs_config)
+        self.config = ServeCoreConfig(**config)
 
         # ---------- Components ----------
-        self.processes: Dict[int, Process] = {}  # pid -> process
-        self.engines: Dict[int, ExecutionEngine] = {}  # engine_id -> engine
-        self.mem_space = MemorySpace()
+        self.prefix_matcher = PrefixMatcher()
+        self.var_mgr = SemanticVariableManager()
+        self.tokenizers_wrapper = TokenizersWrapper()
+        self.context_mgr = ServeCoreContextManager()
 
-        def _ping_engine_method(engine: ExecutionEngine):
-            self._ping_engine(engine)
-
-        self.tokenizer = TokenizersWrapper()
-        self.dispatcher = ThreadDispatcher(
-            config=dispatcher_config,
-            engines=self.engines,
-            ping_engine_method=_ping_engine_method,
-            memory_space=self.mem_space,
+        self.engine_mgr = EngineManager(tokenizers_wrapper=self.tokenizers_wrapper)
+        self.session_mgr = SessionManager(
+            life_span=self.config.session_life_span,
+            prefix_matcher=self.prefix_matcher,
+            scheduler=self.global_scheduler,
+            var_mgr=self.var_mgr,
+            engine_mgr=self.engine_mgr,
+            context_mgr=self.context_mgr,
+            tokenizers_wrapper=self.tokenizers_wrapper,
         )
 
-        # ---------- Id Allocator ----------
-        self.pid_pool = RecyclePool("OS Process pool", PROCESS_POOL_SIZE)
-        self.engine_pool = RecyclePool("OS Engine pool", ENGINE_POOL_SIZE)
-
-        # ---------- Last Seen Time ----------
-        self.proc_last_seen_time: Dict[int, float] = {}  # pid -> last_seen_time
-        self.engine_last_seen_time: Dict[int, float] = {}  # engine_id -> last_seen_time
-
+        self.global_scheduler = GlobalScheduler(
+            config=gs_config,
+            engine_mgr=self.engine_mgr,
+            context_mgr=self.context_mgr,
+        )
         logger.info(
             f"PCore started with config: \n"
             + "\n".join(
@@ -91,291 +79,168 @@ class ParrotServeCore:
             )
         )
 
-    def _check_expired(self):
-        cur_time = time.perf_counter_ns()
+    # ---------- APIs to Engine Layer ----------
 
-        # VMs
-        for pid, last_seen_time in self.proc_last_seen_time.items():
-            if (cur_time - last_seen_time) / 1e9 > VM_EXPIRE_TIME:
-                self.processes[pid].dead = True
+    def register_engine(self, config: EngineConfig) -> int:
+        """Register a new engine in the OS.
 
-        # Engines
-        for engine_id, last_seen_time in self.engine_last_seen_time.items():
-            if (cur_time - last_seen_time) / 1e9 > ENGINE_EXPIRE_TIME:
-                self.engines[engine_id].dead = True
+        Args:
+            config: EngineConfig. The engine config.
 
-    def _ping_engine(self, engine: ExecutionEngine):
-        if not engine.dead:
-            resp = ping_engine(engine.http_address)
-            if resp.pong:
-                engine.runtime_info = EngineRuntimeInfo(**resp.runtime_info)
-                # logger.debug(
-                #     "Ping engine success. Runtime info: \n"
-                #     + engine.runtime_info.display()
-                # )
-            else:
-                engine.dead = True
+        Returns:
+            int. The engine ID.
+        """
 
-    def _sweep_dead_clients(self):
-        dead_procs: List[Process] = [
-            proc for proc in self.processes.values() if proc.dead
-        ]
-        dead_engines: List[ExecutionEngine] = [
-            engine for engine in self.engines.values() if engine.dead
-        ]
-
-        # VMs
-        for process in dead_procs:
-            pid = process.pid
-            self.processes.pop(pid)
-            logger.info(f"VM (pid={pid}) disconnected.")
-            # If a VM is dead, we need to free all its resources (garbage collection).
-            process.free_process()
-            self.proc_last_seen_time.pop(pid)
-            self.pid_pool.free(pid)
-
-        # Engines
-        for engine in dead_engines:
-            engine_id = engine.engine_id
-            logger.info(f"Engine {engine.name} (id={engine_id}) disconnected.")
-            self.engines.pop(engine_id)
-            self.engine_last_seen_time.pop(engine_id)
-            self.engine_pool.free(engine_id)
-
-    def _check_process(self, pid: int):
-        if pid not in self.processes:
-            raise ParrotOSUserError(ValueError(f"Unknown pid: {pid}"))
-
-        process = self.processes[pid]
-        if process.dead:
-            logger.error(f"Process (pid={pid}) is dead. Raise exception.")
-            raise ParrotOSUserError(RuntimeError(f"Process (pid={pid}) is dead."))
-
-        if process.bad:
-            process.dead = True
-            logger.error(
-                f"Process (pid={pid}) is bad. Raise exception: {process.bad_exception.args}."
-            )
-            raise process.bad_exception
-
-    # ---------- Public APIs ----------
-
-    async def register_vm(self) -> int:
-        """Register a new VM as a process in the OS."""
-        pid = self.pid_pool.allocate()
-        process = Process(
-            pid=pid,
-            dispatcher=self.dispatcher,
-            memory_space=self.mem_space,
-            tokenizer=self.tokenizer,
-        )
-        self.processes[pid] = process
-        self.proc_last_seen_time[pid] = time.perf_counter_ns()
-        logger.info(f"VM (pid={pid}) registered.")
-        return pid
-
-    async def register_engine(self, config: EngineConfig) -> int:
-        """Register a new engine in the OS."""
-        engine_id = self.engine_pool.allocate()
-        engine = ExecutionEngine(
-            engine_id=engine_id,
-            config=config,
-            tokenizer=self.tokenizer,
-        )
-        self.engines[engine_id] = engine
-        self.engine_last_seen_time[engine_id] = time.perf_counter_ns()
-        logger.debug(f"Engine {engine.name} (id={engine_id}) registered.")
+        engine_id = self.engine_mgr.register_engine(config)
         return engine_id
 
-    async def vm_heartbeat(self, pid: int) -> Dict:
-        """Update the last seen time of a VM, and return required data."""
-
-        self._check_process(pid)
-
-        self.proc_last_seen_time[pid] = time.perf_counter_ns()
-
-        mem_used = self.mem_space.profile_process_memory(pid)
-        num_total_tokens = self.mem_space.profile_process_tokens(pid)
-        num_threads = len(self.processes[pid].threads)
-
-        vm_runtime_info = VMRuntimeInfo(
-            mem_used=mem_used,
-            num_total_tokens=num_total_tokens,
-            num_threads=num_threads,
-        )
-
-        logger.debug(
-            f"VM (pid={pid}) heartbeat received. Profiled status: \n"
-            + vm_runtime_info.display()
-        )
-
-        return asdict(vm_runtime_info)
-
-    async def engine_heartbeat(
+    def engine_heartbeat(
         self,
         engine_id: int,
         engine_runtime_info: EngineRuntimeInfo,
-    ):
-        """Update the last seen time of an engine and other engine info."""
+    ) -> None:
+        """Update the last seen time of an engine and other engine info.
 
-        if engine_id not in self.engines:
-            raise ParrotOSUserError(ValueError(f"Unknown engine_id: {engine_id}"))
+        Args:
+            engine_id: int. The engine ID.
+            engine_runtime_info: EngineRuntimeInfo. The engine runtime info.
+        """
 
-        engine = self.engines[engine_id]
-        self.engine_last_seen_time[engine_id] = time.perf_counter_ns()
-        engine.runtime_info = engine_runtime_info
-        logger.debug(
-            f"Engine {engine.name} (id={engine_id}) heartbeat received. "
-            "Runtime info: \n" + engine_runtime_info.display()
-        )
+        self.engine_mgr.engine_heartbeat(engine_id, engine_runtime_info)
 
-    async def submit_native_call(self, pid: int, call: NativeCall) -> int:
-        """Submit a native call from a VM to the OS."""
+    # ---------- Public Serving APIs ----------
 
-        # The native call must be a short, executable and stateless call. (FaaS)
-        # The native call will be executed immediately once all its inputs are ready.
+    def register_session(self) -> int:
+        """Register a new session in the OS.
 
-        self._check_process(pid)
-        process = self.processes[pid]
+        Returns:
+            int: The session ID.
+        """
 
-        # Rewrite the call using namespace
-        process.rewrite_call(call)
+        session_id = self.session_mgr.register_session()
+        return session_id
 
-        # Execute it immediately
-        process.execute_native_call(call)
+    # TODO: Support native call
+    # async def submit_native_call(self, pid: int, call: NativeCall) -> int:
+    #     """Submit a native call from a VM to the OS."""
 
-    async def submit_semantic_call(self, pid: int, call: SemanticCall) -> int:
-        """Submit a semantic call from a VM to the OS."""
+    #     # The native call must be a short, executable and stateless call. (FaaS)
+    #     # The native call will be executed immediately once all its inputs are ready.
 
-        # Submit call will only put the call into a Queue, and the call will be executed later.
+    #     self._check_process(pid)
+    #     process = self.processes[pid]
+
+    #     # Rewrite the call using namespace
+    #     process.rewrite_call(call)
+
+    #     # Execute it immediately
+    #     process.execute_native_call(call)
+
+    def submit_semantic_call(self, session_id: int, request_payload: Dict) -> Dict:
+        """Submit a semantic call in a session to the ServeCore.
+
+        Args:
+            session_id: int. The session ID.
+            request_payload: Dict. The remain request payload.
+
+        Returns:
+            A Dict. The response payload.
+        """
+
+        # The design of Parrot's completion API is asynchronous. We split up the "request"
+        # into "submit" and "get" operations.
         # This is for get the partial DAG and do optimized scheduling.
 
-        # NOTE(chaofan): For stateful call, since the queue is FIFO, the state contexts are
-        # correctly maintained.
+        # Update session last access time
+        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.session_access_update(session_id)
 
-        self._check_process(pid)
-        process = self.processes[pid]
+        # Add the request to the session.
+        session = self.session_mgr.get_session(session_id)
+        response = session.add_request(request_payload)
+        response["session_id"] = session_id
+        return response
 
-        # Rewrite the call using namespace
-        process.rewrite_call(call)
+    def semantic_variable_set(self, session_id: int, sv_id: str, content: str) -> None:
+        """Set the content of a semantic variable.
 
-        # Convert it to a "Thread"
-        thread = process.make_thread(call)
+        Args:
+            session_id: int. The session ID.
+            sv_id: str. The semantic variable ID.
+            content: str. The content.
+        """
 
-        # Push it to the dispatcher
-        self.dispatcher.push_thread(thread)
+        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.session_access_update(session_id)
 
-        logger.info(
-            f'Function call "{call.func.name}" submitted from VM (pid={pid}). '
-            f"Created thread: tid={thread.tid}"
-        )
-
-        # HACK(chaofan): Get req no.
-        if call.func.name == "chat":
-            prompt = call.bindings["input"]
-            assert "lcf%" in prompt
-            l_pos = prompt.find("lcf%")
-            r_pos = prompt.rfind("lcf%")
-            assert l_pos != r_pos
-            req_no = int(prompt[l_pos + 4 : r_pos])
-            print(f"Req mapping: {req_no}, {thread.tid}", flush=True)
-
-    async def placeholder_set(self, pid: int, placeholder_id: int, content: str):
-        """Set a placeholder content from VM."""
-
-        self._check_process(pid)
-
-        process = self.processes[pid]
-        if placeholder_id not in process.placeholders_map:
-            raise ParrotOSUserError(
-                ValueError(f"Unknown placeholder_id: {placeholder_id}")
-            )
-
-        placeholder = process.placeholders_map[placeholder_id]
-
-        # NOTE(chaofan): The "start event" of the placeholder is set when the related process is executed.
-        # It is to ensure the "check_process" is called after the process is executed.
-        await placeholder.start_event.wait()
-
-        placeholder.set(content)
+        var = self.var_mgr.get_var(session_id, sv_id)
+        var.set(content)
 
         logger.debug(
-            f"Placeholder set (id={placeholder_id}) from VM (pid={pid}). "
+            f"SV set (id={sv_id}) from session (session_id={session_id}). "
             f"Set content length: {len(content)} "
         )
 
-    async def placeholder_fetch(self, pid: int, placeholder_id: int):
-        """Fetch a placeholder content from OS to VM."""
+    async def semantic_variable_get(self, session_id: int, sv_id: str) -> str:
+        """Get the content from a Semantic Variable.
 
-        self._check_process(pid)
+        Args:
+            session_id: int. The session ID.
+            sv_id: str. The Semantic Variable ID.
+        """
 
-        process = self.processes[pid]
-        if placeholder_id not in process.placeholders_map:
-            raise ParrotOSUserError(
-                ValueError(f"Unknown placeholder_id: {placeholder_id}")
-            )
-        placeholder = process.placeholders_map[placeholder_id]
+        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.session_access_update(session_id)
 
-        # NOTE(chaofan): The "start event" of the placeholder is set when the related process is executed.
-        # It is to ensure the "check_process" is called after the process is executed.
+        var = self.var_mgr.get_var(session_id, sv_id)
 
-        # with cprofile("wait_placeholder_start"):
-        await placeholder.start_event.wait()
+        await var.wait_ready()
+        content = var.get()
 
-        # NOTE(chaofan): Recheck the process since it may become bad after starting.
-        self._check_process(pid)
-
-        logger.debug(f"Placeholder (id={placeholder_id}) fetching from VM (pid={pid})")
-
-        # with cprofile("wait_placeholder_get"):
-        content = await placeholder.get()
-        parrot_assert(content is not None, "Placeholder content is None.")
-
-        logger.debug(f"Placeholder (id={placeholder_id}) fetched.")
+        logger.debug(f"Semantic variable (id={sv_id}) get.")
 
         return content
 
-    async def os_loop(self):
-        """Start the OS loop."""
+    # ---------- ServeCore Loop ----------
+
+    async def core_loop(self) -> None:
+        """Start the Core loop."""
 
         while True:
-            self._check_expired()
-            self._sweep_dead_clients()
+            # Update and clean up sessions and engines
+            await self.session_mgr.check_running_sessions()
+            await self.session_mgr.sweep_not_running_sessions()
+            await self.engine_mgr.update_expired_engines()
+            await self.engine_mgr.sweep_not_running_engines()
 
-            threads = self.dispatcher.dispatch()
+            # Schedule tasks
+            await self.global_scheduler.schedule()
 
-            for thread in threads:
-                thread.process.execute_thread(thread)
-
-            for process in self.processes.values():
-                if process.live:
-                    process.monitor_threads()
-
-            await asyncio.sleep(OS_LOOP_INTERVAL)
+            await asyncio.sleep(CORE_LOOP_INTERVAL)
 
 
-def create_os(
-    os_config_path: str,
+def create_serve_core(
+    core_config_path: str,
     release_mode: bool = False,
     override_args: Dict = {},
 ) -> ParrotServeCore:
-    """Create the PCore.
+    """Create the ServeCore.
 
     Args:
-        os_config_path: str. The path to the OS config file.
+        core_config_path: str. The path to the ServeCore config file.
         release_mode: bool. Whether to run in release mode.
         override_args: Dict. The override arguments.
 
     Returns:
-        PCore. The created Parrot OS Core.
+        ParrotServeCore. The created Parrot Serve Core.
     """
 
-    with open(os_config_path) as f:
-        os_config = dict(json.load(f))
+    with open(core_config_path) as f:
+        core_config = dict(json.load(f))
 
-    os_config.update(override_args)
+    core_config.update(override_args)
 
-    if not OSConfig.verify_config(os_config):
-        raise ParrotOSInternalError(f"Invalid OS config: {os_config}")
+    if not ServeCoreConfig.verify_config(core_config):
+        raise ParrotCoreInternalError(f"Invalid ServeCore config: {core_config}")
 
-    return ParrotServeCore(os_config)
+    return ParrotServeCore(core_config)

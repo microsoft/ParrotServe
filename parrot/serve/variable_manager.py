@@ -8,7 +8,7 @@ import time
 from typing import List, Optional, Dict
 
 from parrot.utils import RecyclePool
-from parrot.exceptions import parrot_assert
+from parrot.exceptions import parrot_assert, ParrotCoreUserError
 
 from parrot.serve.graph import (
     SemanticVariable,
@@ -160,8 +160,36 @@ class SemanticVariableManager:
 
         self.local_namespace.pop(session_id)
 
-    def create_vars(self, session_id: int, request_chain: RequestChain) -> None:
-        """Create all the Semantic Variables in the request chain."""
+    def get_var(self, session_id: int, sv_id: str) -> SemanticVariable:
+        """Get a Semantic Variable by ID.
+
+        Args:
+            session_id: int. The session ID.
+            sv_id: str. The Semantic Variable ID.
+        """
+
+        if sv_id in self.global_namespace.vars:
+            return self.global_namespace.vars[sv_id]
+
+        parrot_assert(
+            session_id in self.local_namespace,
+            f"Local namespace of {session_id} does not exist.",
+        )
+
+        if sv_id in self.local_namespace[session_id].vars:
+            return self.local_namespace[session_id].vars[sv_id]
+
+        raise ParrotCoreUserError(ValueError(f"Unknown Semantic Variable ID: {sv_id}"))
+
+    def create_vars_for_request(
+        self, session_id: int, request_chain: RequestChain
+    ) -> None:
+        """Create all the Semantic Variables in the request chain.
+
+        Args:
+            session_id: int. The session ID.
+            request_chain: RequestChain. The request chain.
+        """
 
         constant_prefix_flag: bool = True
         for node in request_chain.iter():

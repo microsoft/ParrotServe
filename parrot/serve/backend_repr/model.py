@@ -7,7 +7,7 @@ from typing import Dict
 
 from parrot.engine.config import EngineConfig
 
-from parrot.exceptions import ParrotOSUserError
+from parrot.exceptions import ParrotCoreUserError
 from parrot.constants import (
     ENGINE_TYPE_BUILTIN,
     ENGINE_TYPE_OPENAI,
@@ -39,7 +39,7 @@ def get_model_type(model_type_str: str) -> ModelType:
     elif model_type_str == "text":
         return ModelType.TEXT
     else:
-        raise ParrotOSUserError(ValueError(f"Unknown model type: {model_type_str}"))
+        raise ParrotCoreUserError(ValueError(f"Unknown model type: {model_type_str}"))
 
 
 class LanguageModel:

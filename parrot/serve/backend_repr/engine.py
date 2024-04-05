@@ -3,7 +3,7 @@
 
 
 from enum import Enum
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 
@@ -55,6 +55,7 @@ class ExecutionEngine:
 
         # ---------- Status ----------
         self.status: EngineStatus = EngineStatus.RUNNING
+        self.bad_exception: Optional[Exception] = None
 
         # ---------- Runtime Info ----------
 
@@ -71,15 +72,13 @@ class ExecutionEngine:
 
     # ---------- Status Methods ----------
 
-    def mark_dead(self) -> None:
-        self.status = EngineStatus.DEAD
-
-    def mark_bad(self) -> None:
+    def mark_bad(self, exception: Exception) -> None:
         self.status = EngineStatus.BAD
+        self.bad_exception = exception
 
     @property
-    def not_running(self) -> bool:
-        return self.status != EngineStatus.RUNNING
+    def is_running(self) -> bool:
+        return self.status == EngineStatus.RUNNING
 
     # ---------- Basic Info ----------
 
@@ -98,6 +97,10 @@ class ExecutionEngine:
     @property
     def model_type(self) -> ModelType:
         return self.model.model_type
+
+    @property
+    def tokenizer_name(self) -> str:
+        return self.model.tokenizer_name
 
     @property
     def requires_token_ids(self) -> bool:
@@ -132,6 +135,11 @@ class ExecutionEngine:
             [self.config.tasks_capacity]
             + list(self.serve_layer_runtime_info.num_tasks_upperbounds.values())
         )
+
+    def update_realtime_runtime_info(self, runtime_info: EngineRuntimeInfo) -> None:
+        """Update the real-time runtime info of the engine."""
+
+        self.real_time_runtime_info = runtime_info
 
     def update_servelayer_runtime_info(
         self, task_id: int, tokens_num: int, num_tasks_upperbound: int

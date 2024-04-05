@@ -5,7 +5,7 @@
 from typing import Dict, Union, List, Callable, Optional, Set
 from dataclasses import dataclass
 
-from parrot.exceptions import ParrotOSUserError
+from parrot.exceptions import ParrotCoreUserError
 from parrot.utils import get_logger, RecyclePool
 
 from parrot.serve.graph import CompletionChain, PlaceholderGen
@@ -13,7 +13,7 @@ from parrot.serve.backend_repr import ExecutionEngine
 
 from ..engine_manager import EngineManager
 from ..context_manager import ServeCoreContextManager
-from .completion_task import CompletionTask
+from .completion_task import CompletionTask, TaskStatus
 
 
 logger = get_logger("GlobalScheduler")
@@ -36,13 +36,11 @@ class GlobalScheduler:
         config: GlobalSchedulerConfig,
         engine_mgr: EngineManager,
         context_mgr: ServeCoreContextManager,
-        ping_engine_method: Optional[Callable] = None,
     ):
         # ---------- Basic ----------
         self.config = config
         self.engine_mgr = engine_mgr
         self.context_mgr = context_mgr
-        self.ping_engine_method = ping_engine_method
 
         # ---------- Task ----------
         # task_id -> task
@@ -152,28 +150,40 @@ class GlobalScheduler:
 
     # ---------- Public Methods ----------
 
-    def submit_completion(self, chain: CompletionChain) -> CompletionTask:
-        """Submit a completion chain to the scheduler.
+    def create_task(self, chain: CompletionChain) -> CompletionTask:
+        """Create a task for CompletionChain.
 
         Returns:
             A CompletionTask object representing the task.
         """
 
+        task_id = self.task_id_pool.allocate()
+        task = CompletionTask(task_id=task_id, chain=chain)
+        return task
+
+    def submit_task(self, task: CompletionTask) -> None:
+        """Submit a task to the scheduler's queue."""
+
         if len(self.task_queue) >= self.config.max_queue_size:
-            raise ParrotOSUserError(
+            raise ParrotCoreUserError(
                 RuntimeError(
                     f"Task queue is full. Current size: {len(self.task_queue)}. "
                     f"Hence the incoming task is rejected."
                 )
             )
 
-        task_id = self.task_id_pool.allocate()
-        task = CompletionTask(task_id=task_id, chain=chain)
         self.task_queue.append(task)
-        self.tasks[task_id] = task
-        return task
+        self.tasks[task.task_id] = task
+        task.status = TaskStatus.IN_QUEUE
+        return
 
-    def schedule(self) -> None:
+    def free_task(self, task_id: int) -> None:
+        """Free a task from the scheduler's queue."""
+
+        self.task_id_pool.free(task_id)
+        return
+
+    async def schedule(self) -> None:
         """Try to schedule all tasks in scheduler's queue."""
 
         # NOTE(chaofan): The tasks are sorted by priority, by default.

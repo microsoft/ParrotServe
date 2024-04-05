@@ -8,7 +8,7 @@ from typing import List, Dict, Optional
 from queue import Queue
 
 from parrot.utils import get_logger
-from parrot.exceptions import ParrotOSUserError, parrot_assert
+from parrot.exceptions import ParrotCoreUserError, parrot_assert
 
 from parrot.serve.graph import (
     ChunkedRequest,
@@ -76,7 +76,6 @@ class Session:
 
         # ---------- Runtime Status ----------
         self.status = SessionStatus.RUNNING
-        self.bad_exception: Optional[Exception] = None
 
         # Register local spaces
         # self.context_mgr.
@@ -86,20 +85,13 @@ class Session:
 
     # ---------- Status Methods ----------
 
-    def mark_dead(self) -> None:
-        self.status = SessionStatus.DEAD
-
-    def mark_bad(self, exception: Exception) -> None:
-        self.status = SessionStatus.BAD
-        self.bad_exception = exception
-
     @property
-    def not_running(self) -> bool:
-        return self.status != SessionStatus.RUNNING
+    def is_running(self) -> bool:
+        return self.status == SessionStatus.RUNNING
 
     # ---------- Interfaces to ServeCore ----------
 
-    async def add_request(self, request_payload: Dict) -> Dict:
+    def add_request(self, request_payload: Dict) -> Dict:
         """Add a request to the session and assign a coroutine to the request.
 
         Args:
@@ -114,7 +106,7 @@ class Session:
         request_chain = RequestChain.from_chunked_request(chunked_request)
 
         # Assign Semantic Variables to the RequestChain.
-        self.var_mgr.create_vars(
+        self.var_mgr.create_vars_for_request(
             session_id=self.session_id, request_chain=request_chain
         )
 
@@ -162,11 +154,15 @@ class Session:
 
     #     create_task_in_loop(_execute_main(), fail_fast=False)
 
-    def exception_interrupt(self, exception: BaseException):
-        self.status = SessionStatus.BAD
-        self.bad_exception = exception
-
-    def free_session(self):
+    def free_session(self) -> None:
         """Free the session and all its resources."""
 
-        pass
+        # Free the contexts of session.
+        self.context_mgr.free_session_contexts(session_id=self.session_id)
+
+        # Free the local var space of the session.
+        self.var_mgr.free_local_var_space(session_id=self.session_id)
+
+        logger.info(
+            f"Free session (id={self.session_id}) with running threads num: {len(self.threads)}"
+        )

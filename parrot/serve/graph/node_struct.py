@@ -5,7 +5,7 @@
 import re
 from typing import List, Dict, Set, Optional, Union
 
-from parrot.exceptions import parrot_assert, ParrotOSUserError
+from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.utils import RecyclePool
 
 from .chunked_request import (
@@ -117,7 +117,7 @@ class RequestChain:
 
     def __init__(self, metadta: RequestMetadata) -> None:
         self.first_node: Optional[BaseNode] = None
-        self.completed_chains: List[CompletionChain] = []
+        self.completion_chains: List[CompletionChain] = []
         self.metadata = metadta
 
         # Flags
@@ -165,7 +165,7 @@ class RequestChain:
                 else:
                     node = PlaceholderFill(placeholder=placeholder)
             else:
-                raise ParrotOSUserError(ValueError("Unknown chunk type."))
+                raise ParrotCoreUserError(ValueError("Unknown chunk type."))
 
             # Record first node
             if i == 0:
@@ -185,7 +185,7 @@ class RequestChain:
                     first_node=completion_chain_first_node,
                     gen_node=node,
                 )
-                request_chain.completed_chains.append(completion_chain)
+                request_chain.completion_chains.append(completion_chain)
                 completion_chain_first_node = node.edge_a_next_node
 
         return request_chain
@@ -261,7 +261,7 @@ class ComputeGraph:
                         "var_id": node.sv_id,
                     }
                 )
-        self.chains.extend(request_chain.completed_chains)
+        self.chains.extend(request_chain.completion_chains)
 
         request_chain.inserted = True
 

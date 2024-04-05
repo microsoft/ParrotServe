@@ -4,12 +4,14 @@
 
 from typing import Dict, List, Optional, Tuple
 
+from parrot.exceptions import ParrotCoreUserError
 from parrot.utils import RecyclePool, get_logger, time_counter_in_nanoseconds
+from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.constants import ENGINE_HEARTBEAT_TIMEOUT_INTERVAL
 from parrot.engine.config import EngineConfig
 from parrot.protocol.internal.layer_apis import ping_engine
 
-from parrot.serve.backend_repr import ExecutionEngine, LanguageModel
+from parrot.serve.backend_repr import ExecutionEngine, LanguageModel, EngineStatus
 
 from .tokenizer_wrapper import TokenizersWrapper
 
@@ -68,18 +70,18 @@ class EngineManager:
         """
 
         engine = self.engines[engine_id]
-        engine.mark_bad(exception=exception)
+        engine.mark_bad(exception)
 
     # ---------- Methods for Global Scheduler ----------
 
     def get_live_engines(self) -> List[ExecutionEngine]:
         """Get all live engines."""
 
-        return [engine for engine in self.engines.values() if not engine.not_running]
+        return [engine for engine in self.engines.values() if engine.is_running]
 
     # ---------- Methods for Core ----------
 
-    async def register_engine(self, engine_config: EngineConfig) -> int:
+    def register_engine(self, engine_config: EngineConfig) -> int:
         """Register an engine to the cluster.
 
         Args:
@@ -102,12 +104,20 @@ class EngineManager:
         logger.debug(f"Engine {engine.name} (id={engine_id}) registered.")
         return engine_id
 
-    async def engine_heartbeat(self, engine_id: int) -> None:
+    def engine_heartbeat(
+        self, engine_id: int, engine_runtime_info: EngineRuntimeInfo
+    ) -> None:
         """Update the last seen time of the engine.
 
         Args:
             engine_id (int): The engine ID.
         """
+
+        if engine_id not in self.engines:
+            raise ParrotCoreUserError(f"Engine {engine_id} not found.")
+
+        engine = self.engines[engine_id]
+        engine.update_realtime_runtime_info(engine_runtime_info)
 
         self.engine_last_seen_time[engine_id] = time_counter_in_nanoseconds()
 
@@ -121,14 +131,14 @@ class EngineManager:
                 current_time - last_seen_time
                 > ENGINE_HEARTBEAT_TIMEOUT_INTERVAL * 1_000_000_000
             ):
-                engine.mark_dead()
+                engine.status = EngineStatus.DEAD
                 logger.debug(f"Engine {engine_id} is expired.")
 
-    async def sweep_dead_engines(self) -> None:
+    async def sweep_not_running_engines(self) -> None:
         """Sweep the dead/bad engines."""
 
         for engine_id, engine in self.engines.items():
-            if engine.not_running:
+            if not engine.is_running:
                 self.engines.pop(engine_id)
                 self.engine_last_seen_time.pop(engine_id)
                 self.id_pool.free(engine_id)

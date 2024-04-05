@@ -37,8 +37,13 @@ class Context:
         self.engine = engine
         self.parent_context = parent_context
 
-        # Ready event: whether the Fill/Generate in this context is executed.
-        self.ready_event = Event()
+        # Events.
+        self.start_event = (
+            Event()
+        )  # Start event indicates a request has been sent to fill this context.
+        self.ready_event = (
+            Event()
+        )  # Ready event indicates the context has been filled in the backend.
 
         # The number of tokens this context (don't include its parent) holds.
         self.tokens_num = 0

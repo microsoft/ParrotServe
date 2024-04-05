@@ -22,7 +22,7 @@ from parrot.utils import (
     set_log_output_file,
     redirect_stdout_stderr_to_file,
 )
-from parrot.exceptions import ParrotOSUserError, ParrotOSInternalError
+from parrot.exceptions import ParrotCoreUserError, ParrotCoreInternalError
 from parrot.testing.latency_simulator import get_latency
 
 
@@ -38,8 +38,8 @@ pcore: Optional[PCore] = None
 release_mode = False
 
 
-@app.exception_handler(ParrotOSUserError)
-async def parrot_os_internal_error_handler(request: Request, exc: ParrotOSUserError):
+@app.exception_handler(ParrotCoreUserError)
+async def parrot_os_internal_error_handler(request: Request, exc: ParrotCoreUserError):
     traceback_info = "" if release_mode else traceback.format_exc()
     return JSONResponse(
         status_code=500,
@@ -50,9 +50,9 @@ async def parrot_os_internal_error_handler(request: Request, exc: ParrotOSUserEr
     )
 
 
-@app.exception_handler(ParrotOSInternalError)
+@app.exception_handler(ParrotCoreInternalError)
 async def parrot_os_internal_error_handler(
-    request: Request, exc: ParrotOSInternalError
+    request: Request, exc: ParrotCoreInternalError
 ):
     raise exc
 
