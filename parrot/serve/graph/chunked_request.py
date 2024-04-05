@@ -79,7 +79,7 @@ class RequestMetadata:
 
     REQUEST_METADATA_KEYS = ["session_id", "models", "model_type", "remove_pure_fill"]
 
-    session_id: str
+    session_id: int
     models: List[str]
     model_type: str
     remove_pure_fill: bool

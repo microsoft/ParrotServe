@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Dict
 
@@ -42,15 +43,13 @@ def get_model_type(model_type_str: str) -> ModelType:
         raise ParrotCoreUserError(ValueError(f"Unknown model type: {model_type_str}"))
 
 
+@dataclass
 class LanguageModel:
     """Represent a large language model in the backend."""
 
-    def __init__(
-        self, model_name: str, tokenizer_name: str, model_type: ModelType
-    ) -> None:
-        self.model_name = model_name
-        self.tokenizer_name = tokenizer_name
-        self.model_type = model_type
+    model_name: str
+    tokenizer_name: str
+    model_type: ModelType
 
     @classmethod
     def from_engine_config(cls, engine_config: EngineConfig) -> "LanguageModel":

@@ -19,7 +19,7 @@ TESTING_SERVER_PORT = DEFAULT_OS_SERVER_PORT
 TESTING_SERVER_URL = f"http://{TESTING_SERVER_HOST}:{TESTING_SERVER_PORT}"
 
 
-logger = get_logger("Fake OS Server")
+logger = get_logger("Fake ServeCore Server")
 
 
 app = FastAPI()

@@ -7,7 +7,7 @@
     "tokenizer": "facebook/opt-13b",
     "random_seed": 0,
     "fill_chunk_size": -1,
-    "threads_capacity": 256,
+    "tasks_capacity": 256,
     "instance": {
         "num_kv_cache_blocks": 2000,
         "attn_func": "xformers_with_buffer"
@@ -17,7 +17,7 @@
         "max_num_batched_tokens": 2560,
         "max_total_tokens": 8192
     },
-    "os": {
+    "serve_core": {
         "host": "localhost",
         "port": 9000
     }

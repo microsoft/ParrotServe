@@ -30,7 +30,10 @@ class _CompletionChainIterator:
         return self
 
     def __next__(self) -> BaseNode:
-        if self.cur_node is None or self.cur_node.edge_a_prev_node.is_gen:
+        if self.cur_node is None or (
+            self.cur_node.edge_a_prev_node is not None
+            and self.cur_node.edge_a_prev_node.is_gen
+        ):
             raise StopIteration
         else:
             ret = self.cur_node
@@ -145,6 +148,40 @@ class RequestChain:
         return ret
 
     @classmethod
+    def from_nodes(
+        cls, nodes: List[BaseNode], metadata: RequestMetadata
+    ) -> "RequestChain":
+        """Convert a list of nodes into a RequestChain."""
+
+        request_chain = cls(metadata)
+        prev_node: Optional[BaseNode] = None
+        completion_chain_first_node: Optional[BaseNode] = None
+
+        for i, node in enumerate(nodes):
+            # Record first node
+            if i == 0:
+                request_chain.first_node = node
+                completion_chain_first_node = node
+
+            # Link edge type A with previous node.
+            if prev_node is not None:
+                prev_node.edge_a_next_node = node
+                node.edge_a_prev_node = prev_node
+            prev_node = node
+
+            # If current node is Gen, create a new CompletionChain.
+            if node.is_gen:
+                completion_chain = CompletionChain(
+                    request_chain=request_chain,
+                    first_node=completion_chain_first_node,
+                    gen_node=node,
+                )
+                request_chain.completion_chains.append(completion_chain)
+                completion_chain_first_node = node.edge_a_next_node
+
+        return request_chain
+
+    @classmethod
     def from_chunked_request(cls, chunked_request: ChunkedRequest) -> "RequestChain":
         """Convert a ChunkedRequest into a RequestChain."""
 
@@ -249,7 +286,7 @@ class ComputeGraph:
             self._insert_node(node)
 
             parrot_assert(node.sv is not None, "Insert failed: SV is not created.")
-            if node.has_placeholder():
+            if node.has_placeholder:
                 placeholder: RequestPlaceholder = node.placeholder
 
                 # Maintain the placeholder mapping
@@ -268,13 +305,9 @@ class ComputeGraph:
     def remove_completion_chain(self, completion_chain: CompletionChain) -> None:
         """Remove a CompletionChain from the graph. This is called when the task is finished."""
 
+        # Remove chain
         self.chains.remove(completion_chain)
         for node in completion_chain.iter():
+            # Remove node
             self.nodes.remove(node)
             self.node_id_pool.free(node.id_in_graph)
-
-            # Remove edge type B
-            if node.is_gen:
-                node.sv.remove_producer()
-            else:
-                node.sv.remove_consumer(node)

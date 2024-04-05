@@ -25,7 +25,7 @@ from parrot.protocol.internal.layer_apis import (
 from parrot.protocol.internal.primitive_request import Fill, Generate
 from parrot.sampling_config import SamplingConfig
 
-from parrot.testing.fake_os_server import TESTING_SERVER_URL as OS_URL
+from parrot.testing.fake_serve_core_server import TESTING_SERVER_URL as OS_URL
 from parrot.testing.fake_engine_server import TESTING_SERVER_URL as ENGINE_URL
 from parrot.testing.fake_engine_server import TESTING_SERVER_HOST, TESTING_SERVER_PORT
 from parrot.testing.localhost_server_daemon import fake_os_server, fake_engine_server

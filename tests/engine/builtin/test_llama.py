@@ -30,12 +30,12 @@ def test_llama_vllm():
         attn_func="xformers_fill_vllm_paged_attention_generate",
     )
 
-    # test_single_fill(model_name, builtin_config)
-    # test_batch_fills(model_name, builtin_config)
-    # test_fill_then_gen(model_name, builtin_config)
-    # test_generate_single_text(model_name, builtin_config)
-    # test_generate_batch_text(model_name, builtin_config)
-    template_test_fill_generate_mixed(model_name, builtin_config)
+    # template_test_single_fill(model_name, builtin_config)
+    # template_test_batch_fills(model_name, builtin_config)
+    # template_test_fill_then_gen(model_name, builtin_config)
+    template_test_generate_single_text(model_name, builtin_config)
+    # template_test_generate_batch_text(model_name, builtin_config)
+    # template_test_fill_generate_mixed(model_name, builtin_config)
 
 
 if __name__ == "__main__":

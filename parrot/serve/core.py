@@ -136,16 +136,17 @@ class ParrotServeCore:
     #     # Execute it immediately
     #     process.execute_native_call(call)
 
-    def submit_semantic_call(self, session_id: int, request_payload: Dict) -> Dict:
+    def submit_semantic_call(self, request_payload: Dict) -> Dict:
         """Submit a semantic call in a session to the ServeCore.
 
         Args:
-            session_id: int. The session ID.
             request_payload: Dict. The remain request payload.
 
         Returns:
             A Dict. The response payload.
         """
+
+        session_id = request_payload["session_id"]
 
         # The design of Parrot's completion API is asynchronous. We split up the "request"
         # into "submit" and "get" operations.
@@ -208,13 +209,13 @@ class ParrotServeCore:
 
         while True:
             # Update and clean up sessions and engines
-            await self.session_mgr.check_running_sessions()
-            await self.session_mgr.sweep_not_running_sessions()
-            await self.engine_mgr.update_expired_engines()
-            await self.engine_mgr.sweep_not_running_engines()
+            self.session_mgr.check_running_sessions()
+            self.session_mgr.sweep_not_running_sessions()
+            self.engine_mgr.update_expired_engines()
+            self.engine_mgr.sweep_not_running_engines()
 
             # Schedule tasks
-            await self.global_scheduler.schedule()
+            self.global_scheduler.schedule()
 
             await asyncio.sleep(CORE_LOOP_INTERVAL)
 

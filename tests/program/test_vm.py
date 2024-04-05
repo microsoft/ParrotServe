@@ -2,7 +2,7 @@ import parrot as P
 import time
 import pytest
 
-from parrot.testing.fake_os_server import TESTING_SERVER_URL
+from parrot.testing.fake_serve_core_server import TESTING_SERVER_URL
 from parrot.testing.localhost_server_daemon import fake_os_server
 
 

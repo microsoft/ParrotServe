@@ -25,20 +25,22 @@ TESTING_TOKEN_IDS = [
 
 
 def test_encode():
-    tokenizer = TokenizersWrapper()
+    tokenizers_wrapper = TokenizersWrapper()
     tokenizer_name = "hf-internal-testing/llama-tokenizer"
+    tokenizers_wrapper.register_tokenizer(tokenizer_name)
 
-    encoded = tokenizer.tokenize(TESTING_PROMPT_TEXT, tokenizer_name)
+    encoded = tokenizers_wrapper.tokenize(TESTING_PROMPT_TEXT, tokenizer_name)
 
     # print(encoded)
     assert encoded == TESTING_TOKEN_IDS
 
 
 def test_decode():
-    tokenizer = TokenizersWrapper()
+    tokenizers_wrapper = TokenizersWrapper()
     tokenizer_name = "hf-internal-testing/llama-tokenizer"
+    tokenizers_wrapper.register_tokenizer(tokenizer_name)
 
-    decoded = tokenizer.detokenize(TESTING_TOKEN_IDS, tokenizer_name)
+    decoded = tokenizers_wrapper.detokenize(TESTING_TOKEN_IDS, tokenizer_name)
 
     assert TESTING_PROMPT_TEXT == decoded
 

@@ -4,7 +4,7 @@
 
 # Constants for Parrot
 
-# NOTE(chaofan): All time constansts (with the name of *_TIME, *_INTERVAL) are in seconds.
+# NOTE(chaofan): All time constansts (With suffix *_TIME, *_INTERVAL) are in seconds.
 
 # ---------- HTTP Server ----------
 DEFAULT_SERVER_HOST = "localhost"
@@ -20,7 +20,7 @@ CORE_LOOP_INTERVAL = 0.0001
 ENGINE_LOOP_INTERVAL = 0.000001
 
 # NOTE(chaofan): HEARTBEAT_INTERVAL + LOOP_INTERVAL < TIMEOUT_INTERVAL
-ENGINE_HEARTBEAT_TIMEOUT_INTERVAL = 999999
+ENGINE_HEARTBEAT_TIMEOUT_INTERVAL = 5
 
 # ---------- Chunk Related ----------
 FILL_NO_CHUNK = -1

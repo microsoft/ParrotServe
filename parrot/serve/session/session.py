@@ -78,7 +78,7 @@ class Session:
         self.status = SessionStatus.RUNNING
 
         # Register local spaces
-        # self.context_mgr.
+        self.context_mgr.register_session_contexts(session_id=self.session_id)
         self.var_mgr.register_local_var_space(session_id=self.session_id)
 
     # ---------- Internal methods ----------

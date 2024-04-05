@@ -183,7 +183,7 @@ class GlobalScheduler:
         self.task_id_pool.free(task_id)
         return
 
-    async def schedule(self) -> None:
+    def schedule(self) -> None:
         """Try to schedule all tasks in scheduler's queue."""
 
         # NOTE(chaofan): The tasks are sorted by priority, by default.

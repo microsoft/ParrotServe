@@ -22,7 +22,7 @@ class SessionManager:
         # ---------- Session Managing ----------
         # session_id -> session
         self.sessions: Dict[int, Session] = {}
-        self.session_id_pool: RecyclePool = ()
+        self.session_id_pool = RecyclePool()
 
         # session_id -> last_access_time (nanoseconds)
         self.session_last_access_time: Dict[int, int] = {}
@@ -60,10 +60,10 @@ class SessionManager:
         """Get the session by session ID.
 
         Args:
-            session_id (int): The session ID.
+            session_id: int. The session ID.
 
         Returns:
-            Optional[Session]: The session.
+            Session: The session.
         """
 
         parrot_assert(
@@ -76,7 +76,7 @@ class SessionManager:
         """Update the last access time of the session.
 
         Args:
-            session_id (int): The session ID.
+            session_id: int. The session ID.
         """
 
         parrot_assert(
@@ -89,7 +89,7 @@ class SessionManager:
         """Check the status of the session.
 
         Args:
-            session_id (int): The session ID.
+            session_id: int. The session ID.
         """
 
         if session_id not in self.sessions:
@@ -101,7 +101,7 @@ class SessionManager:
                 RuntimeError(f"Session {session_id} is not valid.")
             )
 
-    async def check_running_sessions(self) -> None:
+    def check_running_sessions(self) -> None:
         """1. If the session is expired, mark it as DEAD.
         2. If the executor of the session raises an exception, mark it as BAD.
         """
@@ -120,9 +120,11 @@ class SessionManager:
                 session.status = SessionStatus.BAD
                 logger.debug(f"Session {session_id} is bad.")
 
-    async def sweep_not_running_sessions(self) -> None:
+    def sweep_not_running_sessions(self) -> None:
         """Sweep the dead/bad sessions."""
 
-        for session_id, session in self.sessions.items():
+        sessions_copy = self.sessions.copy()
+
+        for session_id, session in sessions_copy.items():
             if not session.is_running:
                 self._remove_session(session_id)

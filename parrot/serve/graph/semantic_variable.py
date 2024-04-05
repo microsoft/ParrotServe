@@ -89,23 +89,7 @@ class SemanticVariable:
         parrot_assert(self.producer is None, "This SV already has a producer")
         self.producer = producer
 
-    def remove_producer(self):
-        """Remove the producer of this SV because the content is already generated.
-        This will remove some edges in the graph.
-        """
-
-        parrot_assert(self.ready, "This SV is not ready")
-        self.producer = None
-
     def add_consumer(self, consumer: "PlaceholderFill"):
         """Add a consumer of this SV. This will add some edges in the graph."""
 
         self.consumers.append(consumer)
-
-    def remove_consumer(self, consumer: "PlaceholderFill"):
-        """Remove a consumer of this SV because the content is already consumed.
-        This will remove some edges in the graph.
-        """
-
-        parrot_assert(self.ready, "This SV is not ready")
-        self.consumers.remove(consumer)

@@ -38,9 +38,7 @@ class BuiltinRunner:
     def __init__(self, model_name: str, config: BuiltinConfig):
         self.builtin_config = config
         self.context_manager = EngineContextManager()
-        self.kv_cache_manager = RecyclePool(
-            "KVCache pool", self.builtin_config.num_kv_cache_blocks
-        )
+        self.kv_cache_manager = RecyclePool("KVCache pool")
 
         # Init CUDA env
         if self.builtin_config.device_str.startswith("cuda:"):

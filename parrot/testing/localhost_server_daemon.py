@@ -25,9 +25,9 @@ from parrot.constants import (
 from parrot.serve.http_server import start_server as start_os_server
 from parrot.engine.http_server import start_server as start_engine_server
 
-from .get_configs import get_sample_engine_config_path, get_sample_os_config_path
+from .get_configs import get_sample_engine_config_path, get_sample_core_config_path
 from .fake_engine_server import app as FakeEngineApp
-from .fake_os_server import app as FakeOSApp
+from .fake_serve_core_server import app as FakeOSApp
 
 # RuntimeError: Cannot re-initialize CUDA in forked subprocess.
 # To use CUDA with multiprocessing, you must use the 'spawn' start method
@@ -89,7 +89,7 @@ def fake_engine_server():
 
 
 def _launch_os():
-    os_config_path = get_sample_os_config_path("localhost_os.json")
+    os_config_path = get_sample_core_config_path("localhost_os.json")
     release_mode = False
 
     start_os_server(os_config_path=os_config_path, release_mode=release_mode)

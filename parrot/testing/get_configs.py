@@ -19,6 +19,6 @@ def get_sample_engine_config_path(config_file_name: str) -> str:
     return f"{package_path}/../sample_configs/engine/{config_file_name}"
 
 
-def get_sample_os_config_path(config_file_name: str) -> str:
+def get_sample_core_config_path(config_file_name: str) -> str:
     package_path = parrot.__path__[0]
-    return package_path + "/../sample_configs/os/" + config_file_name
+    return f"{package_path}/../sample_configs/core/{config_file_name}"

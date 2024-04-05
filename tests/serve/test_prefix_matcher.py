@@ -1,19 +1,19 @@
-from parrot.serve.prefix_matcher import GlobalPrefixMatcher
+from parrot.serve.prefix_matcher import PrefixMatcher
 
 
 def test_prefix_matcher():
-    prefix_matcher = GlobalPrefixMatcher()
+    prefix_matcher = PrefixMatcher()
 
     # Will not add
     prefix_matcher.add_prefix("This is a test")
 
     # Will add
-    for i in range(GlobalPrefixMatcher._GP_THRESHOLD + 1):
-        prefix_matcher.add_prefix("A" * GlobalPrefixMatcher._START_LEN + "BBB" + str(i))
+    for i in range(PrefixMatcher._GP_THRESHOLD + 1):
+        prefix_matcher.add_prefix("A" * PrefixMatcher._START_LEN + "BBB" + str(i))
 
-    print(prefix_matcher._prefix_counter)
+    print(prefix_matcher.prefix_counter)
 
-    query_str = "A" * GlobalPrefixMatcher._START_LEN + "BBB" + "XXX"
+    query_str = "A" * PrefixMatcher._START_LEN + "BBB" + "XXX"
     pos = prefix_matcher.query_prefix(query_str)
     assert pos != -1
     print("prefix: " + query_str[:pos], "suffix: " + query_str[pos:])

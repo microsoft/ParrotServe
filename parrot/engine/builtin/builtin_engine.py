@@ -13,7 +13,7 @@ from ..llm_engine import LLMEngine
 from .builtin_runner import BuiltinRunner
 from ..latency_analyzer import LatencyAnalyzer
 from ..context.block_context import BlockContext
-from ..engine_scheduler import Scheduler
+from ..engine_scheduler import EngineScheduler
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import BuiltinConfig, SchedulerConfig, EngineConfig
 
@@ -28,20 +28,19 @@ class BuiltinEngine(LLMEngine):
         super().__init__(engine_config, connect_to_os)
 
         # ---------- Configs ----------
-        builtin_config = BuiltinConfig(**engine_config.pop("instance"))
-        scheduler_config = SchedulerConfig(**engine_config.pop("scheduler"))
-        self.engine_config = EngineConfig(
-            dtype=builtin_config.dtype_str,
-            device=builtin_config.device_str,
-            **engine_config,
-        )
+        builtin_config = BuiltinConfig(engine_config["instance"])
+        scheduler_config = SchedulerConfig(**engine_config["scheduler"])
+        self.engine_config = EngineConfig.from_dict(engine_config)
         self.builtin_config = builtin_config
+        # Assign dtype and device to engine_config
+        self.engine_config.dtype = builtin_config.dtype_str
+        self.engine_config.device = builtin_config.device_str
 
         # ---------- Components ----------
         self.runner = BuiltinRunner(
             model_name=self.engine_config.model, config=builtin_config
         )
-        self.scheduler = Scheduler(scheduler_config)
+        self.scheduler = EngineScheduler(scheduler_config)
         self.latency_analyzer = LatencyAnalyzer()
         self.gpu_mem_tracker = MemTracker(device=self.runner.local_rank)
 

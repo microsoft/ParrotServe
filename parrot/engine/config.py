@@ -151,3 +151,11 @@ class EngineConfig:
             return False
 
         return True
+
+    @classmethod
+    def from_dict(cls, config_dict: Dict) -> "EngineConfig":
+        config_dict = config_dict.copy()
+        config_dict.pop("instance")
+        config_dict.pop("scheduler")
+        config_dict.pop("serve_core")
+        return cls(**config_dict)

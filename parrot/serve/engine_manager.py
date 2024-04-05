@@ -4,7 +4,7 @@
 
 from typing import Dict, List, Optional, Tuple
 
-from parrot.exceptions import ParrotCoreUserError
+from parrot.exceptions import ParrotCoreUserError, parrot_assert
 from parrot.utils import RecyclePool, get_logger, time_counter_in_nanoseconds
 from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.constants import ENGINE_HEARTBEAT_TIMEOUT_INTERVAL
@@ -36,14 +36,20 @@ class EngineManager:
         # model_name -> model
         self.models: Dict[str, LanguageModel] = {}
         self.models_ref_counter: Dict[str, int] = {}
-        self.id_pool: RecyclePool = ()
+        self.engine_id_pool = RecyclePool()
 
         self.tokenizers_wrapper = tokenizers_wrapper
 
-    def _register_model(self, model: LanguageModel) -> None:
+    def _register_model(self, model: LanguageModel) -> LanguageModel:
+        if model.model_name in self.models:
+            self.models_ref_counter[model.model_name] += 1
+            return self.models[model.model_name]
+
         self.models[model.model_name] = model
+        self.models_ref_counter[model.model_name] = 1
         self.tokenizers_wrapper.register_tokenizer(model.tokenizer_name)
         logger.debug(f"Model {model.model_name} registered.")
+        return model
 
     def _remove_model(self, model_name: str) -> None:
         self.models_ref_counter[model_name] -= 1
@@ -55,8 +61,8 @@ class EngineManager:
     def _remove_engine(self, engine_id: int) -> None:
         engine = self.engines.pop(engine_id)
         self.engine_last_seen_time.pop(engine_id)
-        self.id_pool.free(engine_id)
-        self._remove_model(engine.model.model_name)
+        self.engine_id_pool.free(engine_id)
+        self._remove_model(engine.model_name)
         logger.debug(f"Engine {engine.name} (id={engine_id}) is removed.")
 
     # ---------- Methods for Executor ----------
@@ -65,8 +71,8 @@ class EngineManager:
         """Raise an exception in the engine.
 
         Args:
-            engine_id (int): The engine ID.
-            exception (Exception): The exception to be raised.
+            engine_id: int. The engine ID.
+            exception: Exception. The exception to be raised.
         """
 
         engine = self.engines[engine_id]
@@ -85,7 +91,7 @@ class EngineManager:
         """Register an engine to the cluster.
 
         Args:
-            engine_config (EngineConfig): The configuration of the engine.
+            engine_config: EngineConfig. The configuration of the engine.
 
         Returns:
             int: The engine ID.
@@ -93,10 +99,10 @@ class EngineManager:
 
         # Register the model
         model = LanguageModel.from_engine_config(engine_config)
-        self._register_model(model)
+        model = self._register_model(model)
 
         # Register the engine
-        engine_id = self.id_pool.allocate()
+        engine_id = self.engine_id_pool.allocate()
         engine = ExecutionEngine(engine_id=engine_id, config=engine_config, model=model)
         self.engines[engine_id] = engine
         self.engine_last_seen_time[engine_id] = time_counter_in_nanoseconds()
@@ -110,7 +116,7 @@ class EngineManager:
         """Update the last seen time of the engine.
 
         Args:
-            engine_id (int): The engine ID.
+            engine_id: int. The engine ID.
         """
 
         if engine_id not in self.engines:
@@ -121,12 +127,26 @@ class EngineManager:
 
         self.engine_last_seen_time[engine_id] = time_counter_in_nanoseconds()
 
-    async def update_expired_engines(self) -> None:
+    def get_engine(self, engine_id: int) -> ExecutionEngine:
+        """Get the ExecutionEngine by engine ID.
+
+        Args:
+            engine_id: int. The engine ID.
+
+        Returns:
+            ExecutionEngine: The engine.
+        """
+
+        parrot_assert(engine_id in self.engines, f"Engine {engine_id} not found.")
+        return self.engines[engine_id]
+
+    def update_expired_engines(self) -> None:
         """If the engine is expired, update the engine status."""
 
         current_time = time_counter_in_nanoseconds()
         for engine_id, last_seen_time in self.engine_last_seen_time.items():
             engine = self.engines[engine_id]
+            print(ENGINE_HEARTBEAT_TIMEOUT_INTERVAL)
             if (
                 current_time - last_seen_time
                 > ENGINE_HEARTBEAT_TIMEOUT_INTERVAL * 1_000_000_000
@@ -134,13 +154,11 @@ class EngineManager:
                 engine.status = EngineStatus.DEAD
                 logger.debug(f"Engine {engine_id} is expired.")
 
-    async def sweep_not_running_engines(self) -> None:
+    def sweep_not_running_engines(self) -> None:
         """Sweep the dead/bad engines."""
 
-        for engine_id, engine in self.engines.items():
+        engines_copy = self.engines.copy()
+
+        for engine_id, engine in engines_copy.items():
             if not engine.is_running:
-                self.engines.pop(engine_id)
-                self.engine_last_seen_time.pop(engine_id)
-                self.id_pool.free(engine_id)
-                logger.debug(f"Engine {engine.name} (id={engine_id}) is removed.")
-                continue
+                self._remove_engine(engine_id)

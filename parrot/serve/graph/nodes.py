@@ -80,12 +80,16 @@ class BaseNode:
 
     @property
     def sv_name(self) -> str:
-        parrot_assert(self.has_var, "This node has no SV.")
+        # parrot_assert(self.has_var, "This node has no SV.")
+        if not self.has_var:
+            return "(no SV)"
         return self.sv.name
 
     @property
     def sv_id(self) -> str:
-        parrot_assert(self.has_var, "This node has no SV.")
+        # parrot_assert(self.has_var, "This node has no SV.")
+        if not self.has_var:
+            return "(no SV)"
         return self.sv.sv_id
 
     def get(self) -> str:
