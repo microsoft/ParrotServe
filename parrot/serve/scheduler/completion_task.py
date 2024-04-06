@@ -33,7 +33,7 @@ class CompletionTask:
 
         # Context bound to the task
         # A list of contexts that are bound to the task
-        self.ctxs: List[Context] = []
+        self.contexts: List[Context] = []
 
         # Scheduled result
         self.scheduled: Event = Event()
@@ -49,7 +49,7 @@ class CompletionTask:
 
     @property
     def context_bound(self) -> bool:
-        return len(self.ctxs) > 0
+        return len(self.contexts) > 0
 
     def tokenize_chain(self, tokenizers_wrapper: "TokenizersWrapper"):
         """Tokenize the chain using the tokenizers in the wrapper."""

@@ -104,6 +104,9 @@ class EngineConfig:
     host: str = DEFAULT_SERVER_HOST
     port: int = DEFAULT_ENGINE_SERVER_PORT
 
+    # Heartbeat interval in seconds.
+    heartbeat_interval: int = 3
+
     # The name of engine.
     engine_name: str = "unknown"
 

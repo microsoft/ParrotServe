@@ -36,7 +36,7 @@ class SemanticVariable:
         self,
         name: str,
         sv_id: str,
-        is_global: bool,
+        is_constant_prefix: bool,
         seed: int,
     ) -> None:
         # Basic Info
@@ -56,9 +56,8 @@ class SemanticVariable:
         # Consumers of this SV. It must be Fill nodes.
         self.consumers: List["PlaceholderFill"] = []
 
-        # Whether this SV is global.
-        # If it is global, it will be shared across different sessions.
-        self.is_global = is_global
+        # Whether this SV is a constant prefix.
+        self.is_constant_prefix = is_constant_prefix
 
     @property
     def ready(self) -> bool:

@@ -107,11 +107,11 @@ def os_server():
     time.sleep(0.1)
 
 
-def _launch_engine(engine_config_name: str, connect_to_os: bool, override_args: Dict):
+def _launch_engine(engine_config_name: str, connect_to_core: bool, override_args: Dict):
     engine_config_path = get_sample_engine_config_path(engine_config_name)
     start_engine_server(
         engine_config_path=engine_config_path,
-        connect_to_os=connect_to_os,
+        connect_to_core=connect_to_core,
         override_args=override_args,
     )
 
@@ -120,7 +120,7 @@ def _launch_engine(engine_config_name: str, connect_to_os: bool, override_args: 
 def engine_server(
     engine_config_name: str,
     wait_ready_time: float = 0.1,
-    connect_to_os: bool = False,
+    connect_to_core: bool = False,
     **args,
 ):
     override_args = args
@@ -128,7 +128,7 @@ def engine_server(
         target=_launch_engine,
         args=(
             engine_config_name,
-            connect_to_os,
+            connect_to_core,
             override_args,
         ),
         daemon=True,
@@ -148,7 +148,7 @@ def system_opt():
         with engine_server(
             engine_config_name="opt-125m.json",
             wait_ready_time=3.0,
-            connect_to_os=True,
+            connect_to_core=True,
         ):
             yield
 
@@ -159,7 +159,7 @@ def system_vicuna():
         with engine_server(
             engine_config_name="vicuna-7b-v1.3.json",
             wait_ready_time=5.0,
-            connect_to_os=True,
+            connect_to_core=True,
         ):
             yield
 
@@ -170,7 +170,7 @@ def system_vicuna_vllm():
         with engine_server(
             engine_config_name="vicuna-7b-v1.3-vllm.json",
             wait_ready_time=5.0,
-            connect_to_os=True,
+            connect_to_core=True,
         ):
             yield
 
@@ -181,6 +181,6 @@ def system_openai():
         with engine_server(
             engine_config_name="azure-openai-gpt-3.5-turbo.json",
             wait_ready_time=3.0,
-            connect_to_os=True,
+            connect_to_core=True,
         ):
             yield

@@ -21,7 +21,7 @@ logger = get_logger("Engine Creator")
 
 def create_engine(
     engine_config_path: str,
-    connect_to_os: bool = True,
+    connect_to_core: bool = True,
     override_args: Dict = {},
 ) -> LLMEngine:
     """Create an execution engine.
@@ -30,7 +30,7 @@ def create_engine(
 
     Args:
         engine_config_path: str. The path to the engine config file.
-        connect_to_os: bool. Whether to connect to the OS.
+        connect_to_core: bool. Whether to connect to the Serve Core.
         override_args: Dict. The override arguments.
 
     Returns:
@@ -51,8 +51,8 @@ def create_engine(
     engine_type = engine_config["engine_type"]
 
     if engine_type == ENGINE_TYPE_BUILTIN:
-        return BuiltinEngine(engine_config, connect_to_os)
+        return BuiltinEngine(engine_config, connect_to_core)
     elif engine_type == ENGINE_TYPE_OPENAI:
-        return OpenAIEngine(engine_config, connect_to_os)
+        return OpenAIEngine(engine_config, connect_to_core)
     else:
         raise ParrotEngineInternalError(f"Unsupported engine type: {engine_type}")

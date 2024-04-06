@@ -111,7 +111,7 @@ class ParrotServeCore:
     # ---------- Public Serving APIs ----------
 
     def register_session(self) -> int:
-        """Register a new session in the OS.
+        """Register a new session in Serve Core.
 
         Returns:
             int: The session ID.
@@ -119,6 +119,16 @@ class ParrotServeCore:
 
         session_id = self.session_mgr.register_session()
         return session_id
+
+    def remove_session(self, session_id: int) -> None:
+        """Remove a session in Serve Core.
+
+        Args:
+            session_id: int. The session ID.
+        """
+
+        self.session_mgr.check_session_status(session_id)
+        self.session_mgr._remove_session(session_id)
 
     # TODO: Support native call
     # async def submit_native_call(self, pid: int, call: NativeCall) -> int:
@@ -213,6 +223,11 @@ class ParrotServeCore:
             self.session_mgr.sweep_not_running_sessions()
             self.engine_mgr.update_expired_engines()
             self.engine_mgr.sweep_not_running_engines()
+
+            # Clean up expired constant prefix vars
+            expired_vars = self.var_mgr.free_expired_constant_prefix_vars()
+            for var in expired_vars:
+                self.context_mgr.free_constant_prefix_contexts(var.sv_id)
 
             # Schedule tasks
             self.global_scheduler.schedule()

@@ -28,8 +28,8 @@ logger = get_logger("OpenAIEngine")
 class OpenAIEngine(LLMEngine):
     """OpenAIEngine powered by OpenAI APIs."""
 
-    def __init__(self, engine_config: Dict, connect_to_os: bool = True):
-        super().__init__(engine_config, connect_to_os)
+    def __init__(self, engine_config: Dict, connect_to_core: bool = True):
+        super().__init__(engine_config, connect_to_core)
 
         scheduler_config = engine_config.pop("scheduler")
         scheduler_config = SchedulerConfig(**scheduler_config)

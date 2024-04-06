@@ -17,6 +17,8 @@ class ServeCoreConfig:
     max_sessions_num: int = 2048
     max_engines_num: int = 2048
     session_life_span: int = 600
+    engine_heartbeat_timeout: int = 600
+    constant_prefix_var_timeout: int = 600
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:

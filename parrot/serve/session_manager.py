@@ -56,6 +56,19 @@ class SessionManager:
         logger.debug(f"Session (id={session_id}) registered.")
         return session_id
 
+    def remove_session(self, session_id: int) -> None:
+        """Remove a session.
+
+        Args:
+            session_id: int. The session ID.
+        """
+
+        parrot_assert(
+            session_id in self.sessions,
+            f"Session {session_id} not found.",
+        )
+        self._remove_session(session_id)
+
     def get_session(self, session_id: int) -> Session:
         """Get the session by session ID.
 

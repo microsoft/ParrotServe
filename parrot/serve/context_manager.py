@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 
-from typing import Dict, List, Callable
+from typing import Dict, List
 
 from parrot.protocol.internal.layer_apis import free_context
 from parrot.utils import get_logger, RecyclePool
@@ -17,10 +17,20 @@ from parrot.serve.scheduler import CompletionTask
 logger = get_logger("ContextManager")
 
 
+_PREFIX_HASH_BRACKET_LEFT = "{{"
+_PREFIX_HASH_BRACKET_RIGHT = "}}"
+
+
 class PrefixCache:
     """PrefixCache maps a prefix hash to a context id.
 
     A prefix hash is a List of SemanticVariable ids.
+
+    Example:
+    {{sv0}} -> Context0
+    {{sv0}}{{sv1}} -> Context1
+    {{sv0}}{{sv1}}{{sv2}} -> Context2
+    {{sv0}}{{sv1}}{{sv3}} -> Context3
     """
 
     def __init__(self):
@@ -56,7 +66,7 @@ class PrefixCache:
         self.prefix_cache[prefix_hash] = context_id
         self.prefix_cache_reversed[context_id] = prefix_hash
 
-    def remove_context_id(self, context_id: int):
+    def remove_context_id(self, context_id: int) -> None:
         """Remove the context id of a prefix."""
 
         if context_id not in self.prefix_cache_reversed:
@@ -68,6 +78,10 @@ class PrefixCache:
 class ServeCoreContextManager:
     """Manage all contexts in the ServeLayer.
 
+    Since Context can be forked and shared by different tasks in the same session/different sessions,
+    we use a ref_counter to track the usage of the context. Normally, a Context is actually freed when
+    the ref_counter decreases to 0.
+
     Note that this class is global (id pool is global), so each context_id is unique in all engines.
     """
 
@@ -77,6 +91,12 @@ class ServeCoreContextManager:
 
         # session_id -> List of Context
         self.session_contexts: Dict[int, List[Context]] = {}
+
+        # sv_id -> List of context ids
+        # Record extra ref_counters contributed by constant prefix variables.
+        # If a constant prefix variable is freed, we should decrease the ref_counter of the
+        # corresponding contexts.
+        self.constant_prefix_contexts: Dict[str, List[Context]] = {}
 
         # context_id -> ref_counter
         # Ref counter increases when the context is used.
@@ -89,6 +109,10 @@ class ServeCoreContextManager:
 
         # engine_id -> PrefixCache
         self.prefix_caches: Dict[int, PrefixCache] = {}
+
+    @staticmethod
+    def _hash_sv_id(sv_id: str) -> str:
+        return f"{_PREFIX_HASH_BRACKET_LEFT}{sv_id}{_PREFIX_HASH_BRACKET_RIGHT}"
 
     # ---------- Basic Context Operation ----------
 
@@ -126,7 +150,7 @@ class ServeCoreContextManager:
         )
         return context
 
-    def _free_context(self, context: Context):
+    def _free_context(self, context: Context) -> None:
         context_id = context.context_id
         parrot_assert(
             context_id in self.context_ref_counter, "Context should have ref_counter."
@@ -152,10 +176,15 @@ class ServeCoreContextManager:
                 f"Context: {context_id} freed. Freed tokens: {resp.context_len}"
             )
 
+        # Remove context from the PrefixCache.
+        prefix_cache = self.prefix_caches[engine.engine_id]
+        prefix_cache.remove_context_id(context_id)
+
+        # Remove context from the Manager.
         self.contexts.pop(context_id)
         self.context_id_pool.free(context_id)
 
-    def _add_ref_counter(self, context: Context):
+    def _add_ref_counter(self, context: Context) -> None:
         context_id = context.context_id
         if context_id not in self.context_ref_counter:
             self.context_ref_counter[context_id] = 0
@@ -175,7 +204,7 @@ class ServeCoreContextManager:
         )
         self._free_context(context)
 
-    def set_task_ctx(self, task: CompletionTask) -> None:
+    def set_task_contexts(self, task: CompletionTask) -> None:
         """Initialize the contexts for a CompletionTask.
 
         For every node,
@@ -193,7 +222,7 @@ class ServeCoreContextManager:
         prefix_no_cache_flag = False
 
         for node in chain.iter():
-            prefix_hash += str(node.sv_id)
+            prefix_hash += self._hash_sv_id(node.sv_id)
 
             if not prefix_no_cache_flag:
                 # If the prefix is already cached, use cached context
@@ -201,7 +230,7 @@ class ServeCoreContextManager:
                 if context_id != NONE_CONTEXT_ID:
                     context = self.contexts[context_id]
                     self._add_ref_counter(context)
-                    task.ctxs.append(context)
+                    task.contexts.append(context)
                     continue
                 else:
                     # For succeeding nodes, the prefix couldn't be cached.
@@ -209,16 +238,49 @@ class ServeCoreContextManager:
 
             # The prefix is not cached. Create a new context and cache it.
             # If the node is the first node in the chain, create a new context.
-            if len(task.ctxs) == 0:
+            if len(task.contexts) == 0:
                 context = self._new_context(task.engine)
+                # If this is a constant prefix context, we add an extra ref_counter.
+                if node.sv.is_constant_prefix:
+                    if node.sv.sv_id not in self.constant_prefix_contexts:
+                        self.constant_prefix_contexts[node.sv.sv_id] = []
+                    parrot_assert(
+                        context not in self.constant_prefix_contexts[node.sv.sv_id],
+                        "Context should not be in the ref map.",
+                    )
+                    self.constant_prefix_contexts[node.sv.sv_id].append(context)
+                    self._add_ref_counter(context)
             # If the node is not the first node in the chain, fork the context.
             else:
-                context = self._fork_context(task.ctxs[-1])
+                context = self._fork_context(task.contexts[-1])
 
-            task.ctxs.append(context)
+            task.contexts.append(context)
             # Cache the context, if it's the prefix.
             if not node.is_gen:
                 prefix_cache.cache_prefix_context(prefix_hash, context.context_id)
+
+    def free_task_contexts(self, task: CompletionTask) -> None:
+        """Free the contexts of a task."""
+
+        parrot_assert(
+            task.scheduled, "Task should be scheduled before being freed context."
+        )
+
+        for context in task.contexts:
+            self._free_context(context)
+
+    def free_constant_prefix_contexts(self, sv_id: str) -> None:
+        """Free the contexts of a constant prefix variable."""
+
+        parrot_assert(
+            sv_id in self.constant_prefix_contexts,
+            "Constant prefix variable should have contexts.",
+        )
+
+        for context in self.constant_prefix_contexts[sv_id]:
+            self._free_context(context)
+
+        self.constant_prefix_contexts.pop(sv_id)
 
     # ---------- For Scheduler ----------
 
@@ -241,7 +303,7 @@ class ServeCoreContextManager:
         for engine_id, prefix_cache in self.prefix_caches.items():
             prefix_hash = ""
             for node in task.chain.iter():
-                prefix_hash += str(node.sv_id)
+                prefix_hash += self._hash_sv_id(node.sv_id)
                 if (
                     prefix_cache.get_cached_prefix_context(prefix_hash)
                     != NONE_CONTEXT_ID

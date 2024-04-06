@@ -15,6 +15,7 @@ from parrot.serve.graph import (
 )
 from parrot.serve.scheduler import CompletionTask, GlobalScheduler
 
+from ..context_manager import ServeCoreContextManager
 from ..engine_manager import EngineManager
 from ..tokenizer_wrapper import TokenizersWrapper
 
@@ -33,6 +34,7 @@ class GraphExecutor:
         session_id: int,
         scheduler: GlobalScheduler,
         engine_mgr: EngineManager,
+        context_mgr: ServeCoreContextManager,
         tokenizers_wrapper: TokenizersWrapper,
     ):
         # ---------- Basic Info ----------
@@ -42,6 +44,7 @@ class GraphExecutor:
         # ---------- Global Components ----------
         self.scheduler = scheduler
         self.engine_mgr = engine_mgr
+        self.context_mgr = context_mgr
         self.tokenizers_wrapper = tokenizers_wrapper
 
         # ---------- Exception Handling ----------
@@ -73,6 +76,11 @@ class GraphExecutor:
         # Execute the task.
         await self.execute(task)
 
+        # Free the tas resources.
+        # TODO(chaofan): Current implementation has BUGS in stateful generation cases.
+        self.scheduler.free_task(task)
+        self.context_mgr.free_task_contexts(task)
+
     def exception_interrupt(self, exception: BaseException):
         self.bad_exception = exception
 
@@ -101,7 +109,7 @@ class GraphExecutor:
             tokenizer_name = completion_task.engine.tokenizer_name
 
         for i, node in enumerate(completion_task.chain.iter()):
-            context = completion_task.ctxs[i]
+            context = completion_task.contexts[i]
             engine = context.engine
 
             # Skip the node if the context is ready.

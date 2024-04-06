@@ -12,7 +12,9 @@ from parrot.testing.get_configs import get_sample_engine_config_path
 def test_engine_manager():
 
     tokenizers_wrapper = TokenizersWrapper()
-    engine_manager = EngineManager(tokenizers_wrapper=tokenizers_wrapper)
+    engine_manager = EngineManager(
+        tokenizers_wrapper=tokenizers_wrapper, engine_heartbeat_timeout=5
+    )
     config_path = get_sample_engine_config_path("opt-13b.json")
 
     with open(config_path, "r") as f:

@@ -7,7 +7,6 @@ from typing import Dict, List, Optional, Tuple
 from parrot.exceptions import ParrotCoreUserError, parrot_assert
 from parrot.utils import RecyclePool, get_logger, time_counter_in_nanoseconds
 from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
-from parrot.constants import ENGINE_HEARTBEAT_TIMEOUT_INTERVAL
 from parrot.engine.config import EngineConfig
 from parrot.protocol.internal.layer_apis import ping_engine
 
@@ -26,7 +25,9 @@ class EngineManager:
     Note that engines may connect/disconnect to the cluster at any time.
     """
 
-    def __init__(self, tokenizers_wrapper: TokenizersWrapper) -> None:
+    def __init__(
+        self, tokenizers_wrapper: TokenizersWrapper, engine_heartbeat_timeout: int
+    ) -> None:
         # engine_id -> engine
         self.engines: Dict[int, ExecutionEngine] = {}
 
@@ -39,6 +40,7 @@ class EngineManager:
         self.engine_id_pool = RecyclePool()
 
         self.tokenizers_wrapper = tokenizers_wrapper
+        self.engine_heartbeat_timeout = engine_heartbeat_timeout
 
     def _register_model(self, model: LanguageModel) -> LanguageModel:
         if model.model_name in self.models:
@@ -146,10 +148,9 @@ class EngineManager:
         current_time = time_counter_in_nanoseconds()
         for engine_id, last_seen_time in self.engine_last_seen_time.items():
             engine = self.engines[engine_id]
-            print(ENGINE_HEARTBEAT_TIMEOUT_INTERVAL)
             if (
                 current_time - last_seen_time
-                > ENGINE_HEARTBEAT_TIMEOUT_INTERVAL * 1_000_000_000
+                > self.engine_heartbeat_timeout * 1_000_000_000
             ):
                 engine.status = EngineStatus.DEAD
                 logger.debug(f"Engine {engine_id} is expired.")

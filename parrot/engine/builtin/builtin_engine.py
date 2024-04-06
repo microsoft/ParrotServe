@@ -24,13 +24,12 @@ logger = get_logger("BuiltinEngine")
 class BuiltinEngine(LLMEngine):
     """Parrot built-in LLM Engine, supporting the most fine-grained level optimization."""
 
-    def __init__(self, engine_config: Dict, connect_to_os: bool = True):
-        super().__init__(engine_config, connect_to_os)
+    def __init__(self, engine_config: Dict, connect_to_core: bool = True):
+        super().__init__(engine_config, connect_to_core)
 
         # ---------- Configs ----------
         builtin_config = BuiltinConfig(engine_config["instance"])
         scheduler_config = SchedulerConfig(**engine_config["scheduler"])
-        self.engine_config = EngineConfig.from_dict(engine_config)
         self.builtin_config = builtin_config
         # Assign dtype and device to engine_config
         self.engine_config.dtype = builtin_config.dtype_str

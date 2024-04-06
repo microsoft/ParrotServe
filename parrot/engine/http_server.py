@@ -67,7 +67,7 @@ async def ping(request: Request):
 
 def start_server(
     engine_config_path: str,
-    connect_to_os: bool = True,
+    connect_to_core: bool = True,
     override_args: Dict = {},
 ):
     global llm_engine
@@ -75,7 +75,7 @@ def start_server(
 
     llm_engine = create_engine(
         engine_config_path=engine_config_path,
-        connect_to_os=connect_to_os,
+        connect_to_core=connect_to_core,
         override_args=override_args,
     )
 
@@ -129,9 +129,9 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--without_os",
+        "--without_core",
         action="store_true",
-        help="Whether to start the engine without connecting to OS.",
+        help="Whether to start the engine without connecting to Serve Core.",
     )
 
     parser.add_argument(
@@ -191,6 +191,6 @@ if __name__ == "__main__":
 
     start_server(
         engine_config_path=args.config_path,
-        connect_to_os=not args.without_os,
+        connect_to_core=not args.without_core,
         override_args=override_args,
     )

@@ -71,6 +71,7 @@ class Session:
             session_id=session_id,
             scheduler=scheduler,
             engine_mgr=engine_mgr,
+            context_mgr=context_mgr,
             tokenizers_wrapper=tokenizers_wrapper,
         )
 

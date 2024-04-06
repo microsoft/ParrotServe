@@ -41,7 +41,7 @@ class RequestPlaceholder:
 
     def __post_init__(self) -> None:
         # Cast sampling_config to SamplingConfig.
-        if self.sampling_config is not None:
+        if isinstance(self.sampling_config, dict):
             self.sampling_config = SamplingConfig(**self.sampling_config)
 
         # Check input/output arguments.

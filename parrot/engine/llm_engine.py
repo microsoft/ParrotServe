@@ -8,7 +8,7 @@ import asyncio
 import time
 import threading
 
-from parrot.constants import ENGINE_LOOP_INTERVAL, ENGINE_HEARTBEAT_INTERVAL
+from parrot.constants import ENGINE_LOOP_INTERVAL
 from parrot.protocol.internal.layer_apis import register_engine, engine_heartbeat
 from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.utils import get_logger, set_random_seed
@@ -23,30 +23,33 @@ class LLMEngine(ABC):
     """Base class for all LLM engines. It provides a minimal interface for
     LLM engines."""
 
-    def __init__(self, engine_config: Dict, connect_to_os: bool = True):
+    def __init__(self, engine_config: Dict, connect_to_core: bool = True):
         # Set global random seed
         set_random_seed(engine_config["random_seed"])
 
-        self.connect_to_os = connect_to_os
-        if self.connect_to_os:
-            assert (
-                "os" in engine_config
-            ), "If connect_to_os is True, os config must be provided."
-            os_config = engine_config["os"]
+        self.engine_config = EngineConfig.from_dict(engine_config)
 
-            self.os_http_address = f"http://{os_config['host']}:{os_config['port']}"
-        engine_config.pop("os")
+        self.connect_to_core = connect_to_core
+        if self.connect_to_core:
+            assert (
+                "serve_core" in engine_config
+            ), 'If connect_to_core is True, "serve core" config must be provided.'
+            core_config = engine_config["serve_core"]
+
+            self.serve_core_http_address = (
+                f"http://{core_config['host']}:{core_config['port']}"
+            )
 
         self.heartbeat_thread = threading.Thread(
             target=self._heartbeat_daemon, daemon=True
         )
 
     def _register_engine(self, engine_config: EngineConfig):
-        """Register engine to OS."""
+        """Register engine to ServeCore."""
 
-        if self.connect_to_os:
+        if self.connect_to_core:
             resp = register_engine(
-                http_addr=self.os_http_address,
+                http_addr=self.serve_core_http_address,
                 engine_config=engine_config,
             )
             self.engine_id = resp.engine_id
@@ -118,14 +121,14 @@ class LLMEngine(ABC):
     # Implemented methods
 
     def heartbeat(self):
-        """Heartbeat sent to OS.
+        """Heartbeat sent to ServeCore.
 
         Return: num_cached_tokens, cached_tokens_size. num_running_jobs."""
 
-        if not self.connect_to_os:
+        if not self.connect_to_core:
             return
 
-        logger.debug(f"Heartbeat sent to OS (address={self.os_http_address}).")
+        logger.debug(f"Heartbeat sent to OS (address={self.serve_core_http_address}).")
 
         engine_name = self.engine_config.engine_name
         engine_id = self.engine_id
@@ -137,7 +140,7 @@ class LLMEngine(ABC):
         )
 
         resp = engine_heartbeat(
-            http_addr=self.os_http_address,
+            http_addr=self.serve_core_http_address,
             engine_id=engine_id,
             engine_name=engine_name,
             runtime_info=engine_runtime_info,
@@ -148,7 +151,7 @@ class LLMEngine(ABC):
 
         while True:
             self.heartbeat()  # Send heartbeat to OS
-            time.sleep(ENGINE_HEARTBEAT_INTERVAL)
+            time.sleep(self.engine_config.heartbeat_interval)
 
     async def engine_loop(self):
         """Engine loop, execute jobs token by token.
