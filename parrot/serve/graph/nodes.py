@@ -18,7 +18,7 @@ class BaseNode:
         self.sv: Optional[SemanticVariable] = None
         self.id_in_graph: Optional[int] = None
         self.completion_chain: Optional["CompletionChain"] = None
-        self.request_chain: Optional["RequestChain"] = None
+        # self.request_chain: Optional["RequestChain"] = None
 
         # Edge type A: Fill -> Fill -> Fill -> Gen -> Fill -> Fill -> Gen -> ...
         self.edge_a_prev_node: Optional["BaseNode"] = None

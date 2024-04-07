@@ -16,7 +16,7 @@ from matplotlib import pyplot as plt
 
 from .semantic_variable import SemanticVariable
 from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
-from .node_struct import ComputeGraph
+from .graph import ComputeGraph
 
 # logger = get_logger("GraphViz")
 

@@ -7,7 +7,8 @@ in Parrot OS.
 """
 
 from .request import ChunkedSemanticCallRequest
-from .perf_criteria import PerformanceCriteria
+from .perf_criteria import PerformanceCriteria, get_performance_criteria
 from .semantic_variable import SemanticVariable
 from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
-from .node_struct import CompletionChain, RequestChain, ComputeGraph
+from .graph import CompletionChain, RequestChain, ComputeGraph
+from .graph_traverse import activate_completion_chain

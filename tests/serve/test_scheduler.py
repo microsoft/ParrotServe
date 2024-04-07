@@ -8,6 +8,7 @@ from parrot.serve.graph import (
     PlaceholderGen,
     ComputeGraph,
     PerformanceCriteria,
+    activate_completion_chain,
 )
 from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
 from parrot.engine.config import EngineConfig
@@ -66,9 +67,9 @@ def test_default_policy_throughput():
         )
         var_mgr.create_vars_for_request(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
-        task = task_creator.create_task(
-            request_chain.completion_chains[0], PerformanceCriteria.THROUGHPUT
-        )
+        comp_chain = request_chain.completion_chains[0]
+        activate_completion_chain(comp_chain, PerformanceCriteria.THROUGHPUT)
+        task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
 
@@ -129,9 +130,9 @@ def test_default_policy_latency():
         )
         var_mgr.create_vars_for_request(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
-        task = task_creator.create_task(
-            request_chain.completion_chains[0], PerformanceCriteria.LATENCY
-        )
+        comp_chain = request_chain.completion_chains[0]
+        activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+        task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
 
@@ -140,6 +141,22 @@ def test_default_policy_latency():
     # Expect results: 4 tasks engine0, 4 tasks engine1
 
 
+def test_app_fifo():
+    pass
+
+
+def test_graph_group():
+    pass
+
+
+def test_ctx_group():
+    pass
+
+
+def test_ctx_aware():
+    pass
+
+
 if __name__ == "__main__":
-    test_default_policy_throughput()
+    # test_default_policy_throughput()
     test_default_policy_latency()

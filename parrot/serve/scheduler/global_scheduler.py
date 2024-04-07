@@ -179,7 +179,7 @@ class GlobalScheduler:
             # Group tasks in rest queue
             cur_group: List[CompletionTask] = [task]
             checked_tasks.add(task.task_id)
-            consumer_reqs = task.chain.get_consumer_requests()
+            chain_groups = set(task.chain.chain_groups)
 
             # Only allow one type of grouping at a time
             graph_group_enabled = self.config.graph_group
@@ -197,12 +197,12 @@ class GlobalScheduler:
 
                     # Graph group check
                     if graph_group_enabled:
-                        consumer_reqs_j = task_j.chain.get_consumer_requests()
-                        common_consumers = consumer_reqs & consumer_reqs_j
-                        if len(common_consumers) > 0:
+                        chain_groups_j = set(task_j.chain.chain_groups)
+                        common_groups = chain_groups.intersection(chain_groups_j)
+                        if len(common_groups) > 0:
                             cur_group.append(task_j)
                             checked_tasks.add(task_j.task_id)
-                            consumer_reqs = common_consumers
+                            chain_groups = common_groups
                             ctx_group_enabled = False  # Use graph group this round
 
                     # Context group check

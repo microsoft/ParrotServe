@@ -2,12 +2,13 @@
 # Licensed under the MIT license.
 
 
-import re
+from asyncio import Event
 from typing import List, Dict, Set, Optional, Union
 
 from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.utils import RecyclePool
 
+from .perf_criteria import PerformanceCriteria
 from .request import (
     TextChunk,
     PlaceholderNameChunk,
@@ -58,6 +59,13 @@ class _CompletionChainFillIterator:
             return ret
 
 
+class CompChainGroup:
+    """A ChainGroup is a set of parallel chains that point to the same consumer."""
+
+    def __init__(self) -> None:
+        self.chains: Set[CompletionChain] = set()
+
+
 class CompletionChain:
     """A CompletionChain is the basic unit of scheduling (a.k.a Task).
 
@@ -80,16 +88,30 @@ class CompletionChain:
         for node in self.iter():
             node.completion_chain = self
 
+        # Activate
+        self.activated_event: Event = Event()
+        # Performance criteria of "get" to the GenNode.
+        self.get_criteria: Optional[PerformanceCriteria] = None
+        # Distance to "get" node.
+        self.depth: int = 99999
+        # Groups this chain belongs to.
+        self.chain_groups: List[CompChainGroup] = []
+
+    @property
+    def is_activated(self) -> bool:
+        return self.activated_event.is_set()
+
+    def activate(self, criteria: PerformanceCriteria) -> None:
+        """Activate the CompletionChain with a given PerformanceCriteria."""
+
+        self.get_criteria = criteria
+        self.activated_event.set()
+
     def iter(self) -> _CompletionChainIterator:
         return _CompletionChainIterator(self.first_node)
 
     def iter_fill(self) -> _CompletionChainFillIterator:
         return _CompletionChainFillIterator(self.first_node)
-
-    def get_consumer_requests(self) -> Set["RequestChain"]:
-        """Get a set of RequestChains which are consumers of the Gen node."""
-
-        return set([node.request_chain for node in self.gen_node.sv.consumers])
 
 
 class _RequestChainIterator:
@@ -131,8 +153,8 @@ class RequestChain:
         self.placeholder_mapping: List[Dict] = []
 
         # Assign request chain to nodes
-        for node in self.iter():
-            node.request_chain = self
+        # for node in self.iter():
+        #     node.request_chain = self
 
     def iter(self) -> _RequestChainIterator:
         return _RequestChainIterator(self.first_node)

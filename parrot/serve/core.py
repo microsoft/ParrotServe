@@ -12,7 +12,7 @@ from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.exceptions import ParrotCoreInternalError
 
-from parrot.serve.graph import PerformanceCriteria
+from parrot.serve.graph import get_performance_criteria, activate_completion_chain
 from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig
 
 from .config import ServeCoreConfig
@@ -214,9 +214,11 @@ class ParrotServeCore:
         self.session_mgr.session_access_update(session_id)
 
         var = self.var_mgr.get_var(session_id, sv_id)
-
-        if not var.activated:
-            var.activate(criteria)
+        if var.producer is not None and not var.producer.completion_chain.activated:
+            # Activate the chain and propagate the performance criteria
+            activate_completion_chain(
+                var.producer.completion_chain, get_performance_criteria(criteria)
+            )
 
         await var.wait_ready()
         content = var.get()

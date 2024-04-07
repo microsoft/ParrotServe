@@ -62,11 +62,10 @@ class GraphExecutor:
 
         try:
             # Block until it's activated by a GET.
-            await completion_chain.gen_node.sv.activated_event.wait()
-            criteria = completion_chain.gen_node.sv.criteria
+            await completion_chain.activated_event.wait()
 
             # Create a task object for the completion chain.
-            task = self.task_creator.create_task(completion_chain, criteria)
+            task = self.task_creator.create_task(completion_chain)
 
             # Block until all inputs are ready.
             for node in completion_chain.iter_fill():
@@ -187,6 +186,7 @@ class GraphExecutor:
                         )
                         resp = await primitive.apost(engine.http_address)
 
+                context.ready_event.set()
                 completion_task.status = TaskStatus.FINISHED
 
             except Exception as e:

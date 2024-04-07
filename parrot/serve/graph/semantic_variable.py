@@ -50,11 +50,7 @@ class SemanticVariable:
         self.content: Optional[str] = None
 
         # Events
-        self.activated_event: Event = (
-            Event()
-        )  # Activated event means an external "Get" request comes to this SV.
         self.ready_event: Event = Event()  # Ready event means the content is ready.
-        self.criteria: Optional[PerformanceCriteria] = None
 
         # Producer of this SV. It must be a PlaceholderGen node.
         self.producer: Optional["PlaceholderGen"] = None
@@ -64,10 +60,6 @@ class SemanticVariable:
 
         # Whether this SV is a constant prefix.
         self.is_constant_prefix = is_constant_prefix
-
-    @property
-    def activated(self) -> bool:
-        return self.activated_event.is_set()
 
     @property
     def ready(self) -> bool:
@@ -90,14 +82,6 @@ class SemanticVariable:
         )
 
         return self.content
-
-    def activate(self, criteria: PerformanceCriteria):
-        """Activate this SV."""
-
-        parrot_assert(not self.activated, "This SV is already activated")
-
-        self.criteria = criteria
-        self.activated_event.set()
 
     async def wait_ready(self):
         """Wait until the content of this SV is ready."""
