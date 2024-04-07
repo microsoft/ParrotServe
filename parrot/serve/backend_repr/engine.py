@@ -16,9 +16,6 @@ from parrot.constants import (
 )
 from parrot.exceptions import parrot_assert
 
-
-from ..tokenizer_wrapper import TokenizersWrapper
-
 from .model import LanguageModel, ModelType
 
 

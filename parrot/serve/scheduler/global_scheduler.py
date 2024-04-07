@@ -140,8 +140,7 @@ class GlobalScheduler:
         # Dispatch the tasks to the engine
         assert best_engine is not None
         for task in tasks:
-            task.engine = best_engine
-            task.scheduled.set()
+            task.schedule_to(best_engine)
             best_engine.update_servelayer_runtime_info(
                 task_id=task.task_id,
                 tokens_num=task.get_token_nums(best_engine.model.tokenizer_name),
@@ -174,7 +173,7 @@ class GlobalScheduler:
 
         self.task_queue.append(task)
         self.tasks[task.task_id] = task
-        task.status = TaskStatus.IN_QUEUE
+        task.status = TaskStatus.INQUEUE
         return
 
     def free_task(self, task_id: int) -> None:

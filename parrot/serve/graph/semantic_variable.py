@@ -64,16 +64,20 @@ class SemanticVariable:
         return self.ready_event.is_set()
 
     def set(self, content: str):
-        """Set the content of the placeholder."""
+        """Set the content of the semantic variable."""
 
-        assert self.content is None, "This placeholder is filled"
+        assert (
+            self.content is None
+        ), f"This semantic variable (id={self.sv_id}) is filled"
         self.content = content
         self.ready_event.set()
 
     def get(self) -> str:
-        """Get the content of the placeholder."""
+        """Get the content of the semantic variable."""
 
-        parrot_assert(self.ready, "This placeholder is not ready")
+        parrot_assert(
+            self.ready, f"This semantic variable (id={self.sv_id}) is not ready"
+        )
 
         return self.content
 

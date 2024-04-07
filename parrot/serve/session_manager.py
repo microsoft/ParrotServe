@@ -9,6 +9,12 @@ from parrot.utils import RecyclePool, get_logger, time_counter_in_nanoseconds
 
 from .session.session import Session, SessionStatus
 
+from .scheduler.global_scheduler import GlobalScheduler
+from .variable_manager import SemanticVariableManager
+from .engine_manager import EngineManager
+from .tokenizer_wrapper import TokenizersWrapper
+from .context_manager import ServeCoreContextManager
+
 
 logger = get_logger("SessionManager")
 
@@ -33,7 +39,7 @@ class SessionManager:
     def _remove_session(self, session_id: int) -> None:
         session = self.sessions.pop(session_id)
         self.session_last_access_time.pop(session_id)
-        session.free_session()
+        session.free_session_resources()
         self.session_id_pool.free(session_id)
 
         logger.debug(f"Session {session_id} is removed.")
@@ -47,9 +53,11 @@ class SessionManager:
             int: The session ID.
         """
 
+        # Create session object
         session_id = self.session_id_pool.allocate()
         session = Session(session_id=session_id, **self.session_create_kwargs)
 
+        # Maintain session info
         self.sessions[session_id] = session
         self.session_last_access_time[session_id] = time_counter_in_nanoseconds()
 

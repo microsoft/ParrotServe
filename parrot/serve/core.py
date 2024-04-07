@@ -52,11 +52,18 @@ class ParrotServeCore:
 
         # ---------- Components ----------
         self.prefix_matcher = PrefixMatcher()
-        self.var_mgr = SemanticVariableManager()
+        self.var_mgr = SemanticVariableManager(
+            constant_prefix_var_timeout=self.config.constant_prefix_var_timeout
+        )
         self.tokenizers_wrapper = TokenizersWrapper()
         self.context_mgr = ServeCoreContextManager()
 
-        self.engine_mgr = EngineManager(tokenizers_wrapper=self.tokenizers_wrapper)
+        self.engine_mgr = EngineManager(
+            tokenizers_wrapper=self.tokenizers_wrapper,
+            context_mgr=self.context_mgr,
+            engine_heartbeat_timeout=self.config.engine_heartbeat_timeout,
+        )
+
         self.session_mgr = SessionManager(
             life_span=self.config.session_life_span,
             prefix_matcher=self.prefix_matcher,

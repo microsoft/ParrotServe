@@ -13,6 +13,8 @@ from parrot.protocol.internal.layer_apis import ping_engine
 from parrot.serve.backend_repr import ExecutionEngine, LanguageModel, EngineStatus
 
 from .tokenizer_wrapper import TokenizersWrapper
+from .context_manager import ServeCoreContextManager
+
 
 logger = get_logger("EngineManager")
 
@@ -26,7 +28,10 @@ class EngineManager:
     """
 
     def __init__(
-        self, tokenizers_wrapper: TokenizersWrapper, engine_heartbeat_timeout: int
+        self,
+        tokenizers_wrapper: TokenizersWrapper,
+        context_mgr: ServeCoreContextManager,
+        engine_heartbeat_timeout: int,
     ) -> None:
         # engine_id -> engine
         self.engines: Dict[int, ExecutionEngine] = {}
@@ -39,7 +44,10 @@ class EngineManager:
         self.models_ref_counter: Dict[str, int] = {}
         self.engine_id_pool = RecyclePool()
 
+        # ---------- Global Components ----------
+        self.context_mgr = context_mgr
         self.tokenizers_wrapper = tokenizers_wrapper
+
         self.engine_heartbeat_timeout = engine_heartbeat_timeout
 
     def _register_model(self, model: LanguageModel) -> LanguageModel:
@@ -62,9 +70,14 @@ class EngineManager:
 
     def _remove_engine(self, engine_id: int) -> None:
         engine = self.engines.pop(engine_id)
+
+        self._remove_model(engine.model_name)
+
         self.engine_last_seen_time.pop(engine_id)
         self.engine_id_pool.free(engine_id)
-        self._remove_model(engine.model_name)
+
+        self.context_mgr.remove_engine_prefix_cache(engine_id)
+
         logger.debug(f"Engine {engine.name} (id={engine_id}) is removed.")
 
     # ---------- Methods for Executor ----------
@@ -106,8 +119,12 @@ class EngineManager:
         # Register the engine
         engine_id = self.engine_id_pool.allocate()
         engine = ExecutionEngine(engine_id=engine_id, config=engine_config, model=model)
+
         self.engines[engine_id] = engine
         self.engine_last_seen_time[engine_id] = time_counter_in_nanoseconds()
+
+        # Register engine prefix cache
+        self.context_mgr.register_engine_prefix_cache(engine_id=engine_id)
 
         logger.debug(f"Engine {engine.name} (id={engine_id}) registered.")
         return engine_id

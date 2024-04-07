@@ -2,18 +2,20 @@ import json
 import time
 
 
-from parrot.serve.backend_repr import ExecutionEngine, LanguageModel
 from parrot.engine.config import EngineConfig
+from parrot.serve.context_manager import ServeCoreContextManager
 from parrot.serve.tokenizer_wrapper import TokenizersWrapper
 from parrot.serve.engine_manager import EngineManager
 from parrot.testing.get_configs import get_sample_engine_config_path
 
 
 def test_engine_manager():
-
+    context_mgr = ServeCoreContextManager()
     tokenizers_wrapper = TokenizersWrapper()
-    engine_manager = EngineManager(
-        tokenizers_wrapper=tokenizers_wrapper, engine_heartbeat_timeout=5
+    engine_mgr = EngineManager(
+        tokenizers_wrapper=tokenizers_wrapper,
+        context_mgr=context_mgr,
+        engine_heartbeat_timeout=5,
     )
     config_path = get_sample_engine_config_path("opt-13b.json")
 
@@ -21,18 +23,18 @@ def test_engine_manager():
         engine_config = EngineConfig.from_dict(json.load(f))
 
     # Test engine registration
-    engine_id = engine_manager.register_engine(engine_config)
+    engine_id = engine_mgr.register_engine(engine_config)
 
-    engine = engine_manager.get_engine(engine_id)
+    engine = engine_mgr.get_engine(engine_id)
     print(engine.model)
     assert engine.engine_id == engine_id
 
     # Test engine expiration
     time.sleep(6)
-    engine_manager.update_expired_engines()
-    engine_manager.sweep_not_running_engines()
+    engine_mgr.update_expired_engines()
+    engine_mgr.sweep_not_running_engines()
 
-    print(engine_manager.engines, engine_manager.models)
+    print(engine_mgr.engines, engine_mgr.models)
 
 
 if __name__ == "__main__":

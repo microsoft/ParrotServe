@@ -9,7 +9,6 @@ from parrot.utils import get_logger, RecyclePool
 from parrot.constants import NONE_CONTEXT_ID
 from parrot.exceptions import parrot_assert, ParrotCoreInternalError
 
-from parrot.serve.graph import CompletionChain
 from parrot.serve.backend_repr import Context, ExecutionEngine
 from parrot.serve.scheduler import CompletionTask
 
@@ -35,10 +34,10 @@ class PrefixCache:
 
     def __init__(self):
         # prefix hash -> context id.
-        self.prefix_cache: Dict[str, int] = {}
+        self.prefix_ctx_map: Dict[str, int] = {}
 
         # reversed dict for freeing context.
-        self.prefix_cache_reversed: Dict[int, str] = {}
+        self.prefix_ctx_map_reversed: Dict[int, str] = {}
 
     def get_cached_prefix_context(self, prefix_hash: str) -> int:
         """Get the context id of a prefix from the cache.
@@ -50,7 +49,7 @@ class PrefixCache:
             The context id of the prefix. If the prefix is not in the cache, return NONE_CONTEXT_ID.
         """
 
-        return self.prefix_cache.get(prefix_hash, NONE_CONTEXT_ID)
+        return self.prefix_ctx_map.get(prefix_hash, NONE_CONTEXT_ID)
 
     def cache_prefix_context(self, prefix_hash: str, context_id: int) -> None:
         """Cache contexts of the prefix.
@@ -61,18 +60,18 @@ class PrefixCache:
         """
 
         parrot_assert(
-            prefix_hash not in self.prefix_cache, "Prefix should not be cached."
+            prefix_hash not in self.prefix_ctx_map, "Prefix should not be cached."
         )
-        self.prefix_cache[prefix_hash] = context_id
-        self.prefix_cache_reversed[context_id] = prefix_hash
+        self.prefix_ctx_map[prefix_hash] = context_id
+        self.prefix_ctx_map_reversed[context_id] = prefix_hash
 
     def remove_context_id(self, context_id: int) -> None:
         """Remove the context id of a prefix."""
 
-        if context_id not in self.prefix_cache_reversed:
-            prefix_hash = self.prefix_cache_reversed[context_id]
-            self.prefix_cache.pop(prefix_hash)
-            self.prefix_cache_reversed.pop(context_id)
+        if context_id not in self.prefix_ctx_map_reversed:
+            prefix_hash = self.prefix_ctx_map_reversed[context_id]
+            self.prefix_ctx_map.pop(prefix_hash)
+            self.prefix_ctx_map_reversed.pop(context_id)
 
 
 class ServeCoreContextManager:
@@ -212,6 +211,7 @@ class ServeCoreContextManager:
         2. If the prefix is not cached, create a new context and cache it.
         """
 
+        parrot_assert(task.chain.request_chain.sv_created, "SVs are not created yet.")
         parrot_assert(
             task.scheduled, "Task should be scheduled before being set context."
         )

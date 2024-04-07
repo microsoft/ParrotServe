@@ -2,5 +2,5 @@
 # Licensed under the MIT license.
 
 
-from .completion_task import CompletionTask
+from .completion_task import CompletionTask, TaskStatus
 from .global_scheduler import GlobalScheduler, GlobalSchedulerConfig

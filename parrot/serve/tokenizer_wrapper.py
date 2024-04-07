@@ -65,6 +65,7 @@ class TokenizersWrapper:
         result = {}
         for tokenizer_name in self.tokenizers:
             result[tokenizer_name] = self.tokenize(text, tokenizer_name)
+        return result
 
     def detokenize(
         self,

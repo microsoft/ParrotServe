@@ -14,8 +14,10 @@ from parrot.serve.graph import CompletionChain
 
 class TaskStatus(Enum):
     CREATED = 0
-    IN_QUEUE = 1
+    INQUEUE = 1
     EXECUTING = 2
+    FINISHED = 3
+    ERROR = 4
 
 
 class CompletionTask:
@@ -51,8 +53,17 @@ class CompletionTask:
     def context_bound(self) -> bool:
         return len(self.contexts) > 0
 
-    def tokenize_chain(self, tokenizers_wrapper: "TokenizersWrapper"):
+    def schedule_to(self, engine: ExecutionEngine) -> None:
+        """Schedule the task to the engine."""
+
+        self.engine = engine
+        self.scheduled.set()
+
+    def tokenize_chain(self, tokenizers_wrapper: "TokenizersWrapper") -> None:
         """Tokenize the chain using the tokenizers in the wrapper."""
+
+        parrot_assert(not self.is_tokenized, "Tokenized result is already available.")
+        parrot_assert(self.chain.request_chain.sv_created, "SVs are not created yet.")
 
         self.tokenized_result = {}
         for fill_node in self.chain.iter_fill():

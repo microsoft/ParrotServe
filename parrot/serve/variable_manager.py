@@ -76,6 +76,9 @@ class SemanticVariableNamespace:
             is_constant_prefix=is_constant_prefix,
             seed=seed,
         )
+        # NOTE(chaofan): Directly set the content in this case.
+        sv.set(content)
+
         self.vars[sv_id] = sv
 
         return sv
@@ -217,6 +220,23 @@ class SemanticVariableManager:
                 logger.debug(f"Constant Prefix Variable (id={sv_id}) expired.")
 
         return ret
+
+    def create_var(self, session_id: int, name: str) -> SemanticVariable:
+        """Create a Semantic Variable in the local namespace.]
+
+        Args:
+            session_id: int. The session ID.
+            name: str. The name of the Semantic Variable.
+        """
+
+        parrot_assert(
+            session_id in self.session_namespaces,
+            f"Local namespace of {session_id} does not exist.",
+        )
+
+        return self.session_namespaces[session_id].new_var_by_name(
+            name, is_constant_prefix=False
+        )
 
     def get_var(self, session_id: int, sv_id: str) -> SemanticVariable:
         """Get a Semantic Variable by ID.

@@ -12,15 +12,15 @@ from parrot.sampling_config import SamplingConfig
 def test_content_hash():
     session_id = 0
     sv_content = "test"
-    variable_manager = SemanticVariableManager(constant_prefix_var_timeout=10)
-    variable_manager.register_local_var_space(session_id)
-    var1 = variable_manager._get_local_var_by_content(session_id, sv_content)
-    var2 = variable_manager._get_local_var_by_content(session_id, sv_content)
+    var_mgr = SemanticVariableManager(constant_prefix_var_timeout=10)
+    var_mgr.register_local_var_space(session_id)
+    var1 = var_mgr._get_local_var_by_content(session_id, sv_content)
+    var2 = var_mgr._get_local_var_by_content(session_id, sv_content)
     assert var1 == var2
 
 
 def test_request_chain_hash():
-    variable_manager = SemanticVariableManager(constant_prefix_var_timeout=10)
+    var_mgr = SemanticVariableManager(constant_prefix_var_timeout=10)
 
     metadata = RequestMetadata(
         session_id=0,
@@ -57,9 +57,9 @@ def test_request_chain_hash():
     )
 
     session_id = 0
-    variable_manager.register_local_var_space(session_id)
-    variable_manager.create_vars_for_request(session_id, request_chain1)
-    variable_manager.create_vars_for_request(session_id, request_chain2)
+    var_mgr.register_local_var_space(session_id)
+    var_mgr.create_vars_for_request(session_id, request_chain1)
+    var_mgr.create_vars_for_request(session_id, request_chain2)
 
     # Check the first chain
     print(request_chain1.pretty_print())

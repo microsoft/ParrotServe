@@ -16,13 +16,17 @@ from parrot.serve.engine_manager import EngineManager
 def test_session_manager():
     scheduler_config = GlobalSchedulerConfig()
     prefix_matcher = PrefixMatcher()
-    var_mgr = SemanticVariableManager()
+    var_mgr = SemanticVariableManager(666)
     tokenizers_wrapper = TokenizersWrapper()
     context_mgr = ServeCoreContextManager()
-    engine_mgr = EngineManager(tokenizers_wrapper=tokenizers_wrapper)
+    engine_mgr = EngineManager(
+        tokenizers_wrapper=tokenizers_wrapper,
+        context_mgr=context_mgr,
+        engine_heartbeat_timeout=666,
+    )
     scheduler = GlobalScheduler(scheduler_config, engine_mgr, context_mgr)
 
-    session_manager = SessionManager(
+    session_mgr = SessionManager(
         life_span=10,
         prefix_matcher=prefix_matcher,
         scheduler=scheduler,
@@ -33,17 +37,17 @@ def test_session_manager():
     )
 
     # Test session registration
-    session_id = session_manager.register_session()
+    session_id = session_mgr.register_session()
 
-    session = session_manager.get_session(session_id)
+    session = session_mgr.get_session(session_id)
     assert session.session_id == session_id
 
     # Test session expiration
     time.sleep(11)
-    session_manager.check_running_sessions()
+    session_mgr.check_running_sessions()
 
     with pytest.raises(ParrotCoreUserError):
-        session_manager.check_session_status(session_id)
+        session_mgr.check_session_status(session_id)
 
 
 if __name__ == "__main__":

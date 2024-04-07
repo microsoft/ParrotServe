@@ -78,9 +78,7 @@ class Session:
         # ---------- Runtime Status ----------
         self.status = SessionStatus.RUNNING
 
-        # Register local spaces
-        self.context_mgr.register_session_contexts(session_id=self.session_id)
-        self.var_mgr.register_local_var_space(session_id=self.session_id)
+        self._register_session_resources()
 
     # ---------- Internal methods ----------
 
@@ -102,8 +100,12 @@ class Session:
             Dict: The response payload.
         """
 
-        # Convert the request to a RequestChain.
+        # Convert the request to a ChunkedRequest.
         chunked_request = ChunkedRequest.parse_from_payload(request_payload)
+
+        # Prefix matching and splitting.
+
+        # Convert the ChunkedRequest to a RequestChain.
         request_chain = RequestChain.from_chunked_request(chunked_request)
 
         # Assign Semantic Variables to the RequestChain.
@@ -155,7 +157,11 @@ class Session:
 
     #     create_task_in_loop(_execute_main(), fail_fast=False)
 
-    def free_session(self) -> None:
+    def _register_session_resources(self) -> None:
+        self.context_mgr.register_session_contexts(session_id=self.session_id)
+        self.var_mgr.register_local_var_space(session_id=self.session_id)
+
+    def free_session_resources(self) -> None:
         """Free the session and all its resources."""
 
         # Free the contexts of session.

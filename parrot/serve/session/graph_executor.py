@@ -13,7 +13,7 @@ from parrot.serve.graph import (
     RequestChain,
     CompletionChain,
 )
-from parrot.serve.scheduler import CompletionTask, GlobalScheduler
+from parrot.serve.scheduler import CompletionTask, GlobalScheduler, TaskStatus
 
 from ..context_manager import ServeCoreContextManager
 from ..engine_manager import EngineManager
@@ -101,6 +101,8 @@ class GraphExecutor:
             completion_task.engine is not None, "Execution engine is not available."
         )
 
+        completion_task.status = TaskStatus.EXECUTING
+
         requires_token_ids = completion_task.engine.model_type
         if requires_token_ids:
             parrot_assert(
@@ -173,10 +175,14 @@ class GraphExecutor:
                             f"Task {completion_task.task_id} (session_id={self.session_id}) submit Fill primitive (text len: {len(text)})"
                         )
                         resp = await primitive.apost(engine.http_address)
+
+                completion_task.status = TaskStatus.FINISHED
+
             except Exception as e:
                 logger.error(
                     f"Error when executing node {node}. (session_id={self.session_id}): {e}"
                 )
                 self.engine_mgr.raise_exception(engine_id=engine.engine_id, exception=e)
                 self.exception_interrupt(e)
+                completion_task.status = TaskStatus.ERROR
                 break

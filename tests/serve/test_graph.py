@@ -123,7 +123,7 @@ def test_graph_remove():
         ),
     )
 
-    var_mgr = SemanticVariableManager()
+    var_mgr = SemanticVariableManager(666)
     session_id = 0
     var_mgr.register_local_var_space(session_id)
     var_mgr.create_vars_for_request(session_id, request_chain)
