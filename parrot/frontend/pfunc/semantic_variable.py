@@ -39,7 +39,7 @@ from enum import Enum
 from typing import Optional
 
 from parrot.sampling_config import SamplingConfig
-from parrot.serve.scheduler.annotation import DispatchAnnotation
+from parrot.serve.scheduler.schedule_annotation import ScheduleAnnotation
 
 
 from typing import Optional
@@ -137,7 +137,7 @@ class Parameter:
     name: str
     typ: ParamType
     sampling_config: Optional[SamplingConfig] = None
-    dispatch_annotation: Optional[DispatchAnnotation] = None
+    dispatch_annotation: Optional[ScheduleAnnotation] = None
 
     @property
     def is_input_loc(self) -> bool:

@@ -2,13 +2,13 @@
 # Licensed under the MIT license.
 
 
-from typing import Dict, Union, List, Callable, Optional, Set
+from typing import Optional, List, Set
 from dataclasses import dataclass
 
 from parrot.exceptions import ParrotCoreUserError
 from parrot.utils import get_logger, RecyclePool
 
-from parrot.serve.graph import CompletionChain, PlaceholderGen
+from parrot.serve.graph import RequestChain
 from parrot.serve.backend_repr import ExecutionEngine
 
 from ..engine_manager import EngineManager
@@ -42,19 +42,16 @@ class GlobalScheduler:
         self.engine_mgr = engine_mgr
         self.context_mgr = context_mgr
 
-        # ---------- Task ----------
-        # task_id -> task
-        self.tasks: Dict[int, CompletionTask] = {}
-
-        self.task_id_pool = RecyclePool("TaskIDPool")
+        # ---------- Task Queue ----------
         self.task_queue: List[CompletionTask] = []
 
     def _get_engine_list(
         self,
         tasks: List[CompletionTask],
-        num_tasks_upperbound: int,
+        tasks_num_upperbound: int,
     ) -> List[ExecutionEngine]:
         engine_list = self.engine_mgr.get_live_engines()
+
         # NOTE(chaofan): Suppose all tasks noted the same "models" arg.
         models = tasks[0].chain.request_chain.metadata.models
         # TODO(chaofan): Throughput/latency criteria
@@ -64,14 +61,18 @@ class GlobalScheduler:
             for task in tasks:
                 total_tokens_num += task.get_token_nums(engine.model.tokenizer_name)
 
-            # Check whether it violates the num_tasks_upperbound of the tasks.
-            # NOTE(chaofan): For TaskGroup (i.e. tasks passed to this function),
-            # the whole group is considered as a single task.
-            if 1 + engine.get_num_tasks() > num_tasks_upperbound:
+            # Check whether the model matches
+            if len(models) > 0 and engine.model_name not in models:
                 return False
 
-            # Check whether it violates the num_tasks_upperbound of the engine.
-            if len(tasks) + engine.get_num_tasks() > engine.get_num_tasks_upperbound():
+            # Check whether it violates the tasks_num_upperbound of the tasks.
+            # NOTE(chaofan): For TaskGroup (i.e. tasks passed to this function),
+            # the whole group is considered as a single task.
+            if 1 + engine.get_num_tasks() > tasks_num_upperbound:
+                return False
+
+            # Check whether it violates the tasks_num_upperbound of the engine.
+            if len(tasks) + engine.get_num_tasks() > engine.get_tasks_num_upperbound():
                 return False
 
             # Check whether the engine has enough token capacity.
@@ -89,12 +90,14 @@ class GlobalScheduler:
     def _find_engine(self, tasks: List[CompletionTask]) -> None:
         """Find the best engine for a group of tasks."""
 
-        num_tasks_upperbound = 999999999
+        tasks_num_upperbound = 999999999
         for task in tasks:
-            num_tasks_upperbound = min(num_tasks_upperbound, task.num_tasks_upperbound)
+            tasks_num_upperbound = min(
+                tasks_num_upperbound, task.schedule_annotation.tasks_num_upperbound
+            )
 
         # Get the engine list
-        engine_list = self._get_engine_list(tasks, num_tasks_upperbound)
+        engine_list = self._get_engine_list(tasks, tasks_num_upperbound)
 
         if len(engine_list) == 0:
             if len(tasks) == 1:
@@ -127,8 +130,8 @@ class GlobalScheduler:
                 # Select the best engine (minimizing the negative impacts, i.e. minimizing the decreasing of upperbound)
                 # If the upperbound is not affected, select the engine with the most capacity.
                 if (
-                    engine.get_num_tasks_upperbound()
-                    < best_engine.get_num_tasks_upperbound()
+                    engine.get_tasks_num_upperbound()
+                    < best_engine.get_tasks_num_upperbound()
                 ):
                     best_engine = engine
                 elif (
@@ -144,21 +147,10 @@ class GlobalScheduler:
             best_engine.update_servelayer_runtime_info(
                 task_id=task.task_id,
                 tokens_num=task.get_token_nums(best_engine.model.tokenizer_name),
-                num_tasks_upperbound=task.num_tasks_upperbound,
+                tasks_num_upperbound=task.schedule_annotation.tasks_num_upperbound,
             )
 
     # ---------- Public Methods ----------
-
-    def create_task(self, chain: CompletionChain) -> CompletionTask:
-        """Create a task for CompletionChain.
-
-        Returns:
-            A CompletionTask object representing the task.
-        """
-
-        task_id = self.task_id_pool.allocate()
-        task = CompletionTask(task_id=task_id, chain=chain)
-        return task
 
     def submit_task(self, task: CompletionTask) -> None:
         """Submit a task to the scheduler's queue."""
@@ -172,14 +164,7 @@ class GlobalScheduler:
             )
 
         self.task_queue.append(task)
-        self.tasks[task.task_id] = task
         task.status = TaskStatus.INQUEUE
-        return
-
-    def free_task(self, task_id: int) -> None:
-        """Free a task from the scheduler's queue."""
-
-        self.task_id_pool.free(task_id)
         return
 
     def schedule(self) -> None:
@@ -194,7 +179,7 @@ class GlobalScheduler:
             # Group tasks in rest queue
             cur_group: List[CompletionTask] = [task]
             checked_tasks.add(task.task_id)
-            producers: Set[PlaceholderGen] = set(task.chain.get_producers())
+            consumer_reqs = task.chain.get_consumer_requests()
 
             # Only allow one type of grouping at a time
             graph_group_enabled = self.config.graph_group
@@ -212,20 +197,20 @@ class GlobalScheduler:
 
                     # Graph group check
                     if graph_group_enabled:
-                        producers_j: Set[PlaceholderGen] = set(
-                            task_j.chain.get_producers()
-                        )
-                        if producers.intersection(producers_j):
+                        consumer_reqs_j = task_j.chain.get_consumer_requests()
+                        common_consumers = consumer_reqs & consumer_reqs_j
+                        if len(common_consumers) > 0:
                             cur_group.append(task_j)
                             checked_tasks.add(task_j.task_id)
-                            ctx_group_enabled = False
+                            consumer_reqs = common_consumers
+                            ctx_group_enabled = False  # Use graph group this round
 
                     # Context group check
                     if ctx_group_enabled:
                         if task.chain.first_node.sv_id == task_j.chain.first_node.sv_id:
                             cur_group.append(task_j)
                             checked_tasks.add(task_j.task_id)
-                            graph_group_enabled = False
+                            graph_group_enabled = False  # Use context group this round
 
             # Try to find engines for the group
             self._find_engine(cur_group)
@@ -250,7 +235,7 @@ class GlobalScheduler:
                         f"num_tasks={task.engine.get_num_tasks()}, "
                         f"remain_tasks_capacity={task.engine.get_remain_tasks_capacity()}, "
                         f"remain_tokens_capacity={task.engine.get_remain_tokens_capacity()}, "
-                        f"num_tasks_upperbound={task.engine.get_num_tasks_upperbound()}, "
+                        f"tasks_num_upperbound={task.engine.get_tasks_num_upperbound()}, "
                         f"tokens_num={task.engine.get_tokens_num()}, "
                         for task in scheduled_task
                     ]

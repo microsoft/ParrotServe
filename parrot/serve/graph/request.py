@@ -9,6 +9,9 @@ from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.sampling_config import SamplingConfig
 
 
+# ------------------------ Semantic Call Request ------------------------
+
+
 @dataclass
 class RequestBodyChunk:
     """Base class of all chunks in the request body."""
@@ -74,8 +77,8 @@ class RequestPlaceholder:
 
 
 @dataclass
-class RequestMetadata:
-    """RequestMetadata contains metadata for a Request."""
+class SemanticCallMetadata:
+    """SemanticCallMetadata contains metadata for a Request."""
 
     REQUEST_METADATA_KEYS = ["session_id", "models", "model_type", "remove_pure_fill"]
 
@@ -85,14 +88,14 @@ class RequestMetadata:
     remove_pure_fill: bool
 
 
-class ChunkedRequest:
+class ChunkedSemanticCallRequest:
     """Parsed semantic call request.
 
     We firstly parse the prompt part into a list of text chunks and placeholders, and
-    pack metadata and parsed prompt into a ChunkedRequest for further processing.
+    pack metadata and parsed prompt into a ChunkedSemanticCallRequest for further processing.
     """
 
-    def __init__(self, metadata: RequestMetadata) -> None:
+    def __init__(self, metadata: SemanticCallMetadata) -> None:
         # Metadata: additional information of the request.
         self.metadata = metadata
 
@@ -162,7 +165,7 @@ class ChunkedRequest:
         return processed_payload
 
     @classmethod
-    def parse_from_payload(cls, payload: Dict) -> "ChunkedRequest":
+    def parse_from_payload(cls, payload: Dict) -> "ChunkedSemanticCallRequest":
         """Parse the payload of semantic call request into structural ChunkedRequest format for further processing.
 
         Args:
@@ -183,9 +186,9 @@ class ChunkedRequest:
 
         # Step 1. Packing metadata.
         metadata_dict = {}
-        for key in RequestMetadata.REQUEST_METADATA_KEYS:
+        for key in SemanticCallMetadata.REQUEST_METADATA_KEYS:
             metadata_dict[key] = payload[key]
-        metadata = RequestMetadata(**metadata_dict)
+        metadata = SemanticCallMetadata(**metadata_dict)
         chunked_request = cls(metadata)
 
         # Step 2. Extract the "placeholders" field and create placeholders dict.
@@ -237,3 +240,6 @@ class ChunkedRequest:
             chunked_request.body.append(TextChunk(text=last_text_chunk))
 
         return chunked_request
+
+
+# ------------------------ Native Call Request ------------------------

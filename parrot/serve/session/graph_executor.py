@@ -13,7 +13,12 @@ from parrot.serve.graph import (
     RequestChain,
     CompletionChain,
 )
-from parrot.serve.scheduler import CompletionTask, GlobalScheduler, TaskStatus
+from parrot.serve.scheduler import (
+    CompletionTask,
+    TaskCreator,
+    GlobalScheduler,
+    TaskStatus,
+)
 
 from ..context_manager import ServeCoreContextManager
 from ..engine_manager import EngineManager
@@ -32,6 +37,7 @@ class GraphExecutor:
     def __init__(
         self,
         session_id: int,
+        task_creator: TaskCreator,
         scheduler: GlobalScheduler,
         engine_mgr: EngineManager,
         context_mgr: ServeCoreContextManager,
@@ -42,6 +48,7 @@ class GraphExecutor:
         self.graph = ComputeGraph()
 
         # ---------- Global Components ----------
+        self.task_creator = task_creator
         self.scheduler = scheduler
         self.engine_mgr = engine_mgr
         self.context_mgr = context_mgr
@@ -54,12 +61,16 @@ class GraphExecutor:
         """Coroutine for executing a CompletionChain."""
 
         try:
-            # Blocking until all inputs are ready.
-            for node in completion_chain.iter_fill():
-                await node.wait_ready()
+            # Block until it's activated by a GET.
+            await completion_chain.gen_node.sv.activated_event.wait()
+            criteria = completion_chain.gen_node.sv.criteria
 
             # Create a task object for the completion chain.
-            task = self.scheduler.create_task(completion_chain)
+            task = self.task_creator.create_task(completion_chain, criteria)
+
+            # Block until all inputs are ready.
+            for node in completion_chain.iter_fill():
+                await node.wait_ready()
 
             # Tokenize the task.
             task.tokenize_chain(self.tokenizers_wrapper)
@@ -78,7 +89,7 @@ class GraphExecutor:
 
         # Free the tas resources.
         # TODO(chaofan): Current implementation has BUGS in stateful generation cases.
-        self.scheduler.free_task(task)
+        self.task_creator.free_task(task)
         self.context_mgr.free_task_contexts(task)
 
     def exception_interrupt(self, exception: BaseException):

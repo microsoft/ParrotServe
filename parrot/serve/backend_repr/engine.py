@@ -33,7 +33,7 @@ class ServeLayerRuntimeInfo:
         self.tokens_num = 0
 
         # task_id -> upperbound
-        self.num_tasks_upperbounds: Dict[int, int] = {}
+        self.tasks_num_upperbounds: Dict[int, int] = {}
 
 
 class ExecutionEngine:
@@ -125,12 +125,12 @@ class ExecutionEngine:
 
         return self.config.tasks_capacity - self.serve_layer_runtime_info.num_tasks
 
-    def get_num_tasks_upperbound(self) -> int:
+    def get_tasks_num_upperbound(self) -> int:
         """Return the upperbound of the number of tasks of this engine."""
 
         return min(
             [self.config.tasks_capacity]
-            + list(self.serve_layer_runtime_info.num_tasks_upperbounds.values())
+            + list(self.serve_layer_runtime_info.tasks_num_upperbounds.values())
         )
 
     def update_realtime_runtime_info(self, runtime_info: EngineRuntimeInfo) -> None:
@@ -139,13 +139,13 @@ class ExecutionEngine:
         self.real_time_runtime_info = runtime_info
 
     def update_servelayer_runtime_info(
-        self, task_id: int, tokens_num: int, num_tasks_upperbound: int
+        self, task_id: int, tokens_num: int, tasks_num_upperbound: int
     ) -> None:
         """Update the serve-layer runtime info by some tasks scheduled to it."""
 
         self.serve_layer_runtime_info.num_tasks += 1
         self.serve_layer_runtime_info.tokens_num += tokens_num
 
-        self.serve_layer_runtime_info.num_tasks_upperbounds[task_id] = (
-            num_tasks_upperbound
+        self.serve_layer_runtime_info.tasks_num_upperbounds[task_id] = (
+            tasks_num_upperbound
         )

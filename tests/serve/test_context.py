@@ -14,7 +14,7 @@ from parrot.serve.graph import (
     PlaceholderGen,
     PlaceholderFill,
 )
-from parrot.serve.graph.chunked_request import RequestMetadata, RequestPlaceholder
+from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
 
 
 def test_prefix_cache():
@@ -28,7 +28,7 @@ def test_prefix_cache():
 
 
 def test_context_manager():
-    metadata = RequestMetadata(
+    metadata = SemanticCallMetadata(
         session_id=0,
         models=[],
         model_type="token_id",

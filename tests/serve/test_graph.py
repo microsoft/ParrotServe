@@ -1,7 +1,7 @@
-from parrot.serve.graph.chunked_request import ChunkedRequest
+from parrot.serve.graph.request import ChunkedSemanticCallRequest
 from parrot.serve.variable_manager import SemanticVariableManager
 from parrot.serve.graph import RequestChain, ComputeGraph, ConstantFill, PlaceholderGen
-from parrot.serve.graph.chunked_request import RequestMetadata, RequestPlaceholder
+from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
 from parrot.serve.graph.visualize_utils import view_graph
 
 
@@ -29,7 +29,7 @@ def test_request_parse():
         "remove_pure_fill": True,
     }
 
-    chunked_request = ChunkedRequest.parse_from_payload(payload)
+    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(payload)
     print(chunked_request)
 
 
@@ -57,7 +57,7 @@ def test_split_prefix():
         "remove_pure_fill": True,
     }
 
-    chunked_request = ChunkedRequest.parse_from_payload(payload)
+    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(payload)
     chunked_request.split_prefix_chunk(5)
     print(chunked_request)
 
@@ -68,7 +68,7 @@ def test_request_chain_print():
             ConstantFill("This is a test "),
             PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
         ],
-        metadata=RequestMetadata(
+        metadata=SemanticCallMetadata(
             session_id=0,
             models=[],
             model_type="token_id",
@@ -102,7 +102,7 @@ def test_chunked_request_to_chain():
         "model_type": "token_id",
         "remove_pure_fill": True,
     }
-    chunked_request = ChunkedRequest.parse_from_payload(payload)
+    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(payload)
     request_chain = RequestChain.from_chunked_request(chunked_request)
     print(request_chain.pretty_print())
 
@@ -115,7 +115,7 @@ def test_graph_remove():
             ConstantFill("This is a test "),
             PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
         ],
-        metadata=RequestMetadata(
+        metadata=SemanticCallMetadata(
             session_id=0,
             models=[],
             model_type="token_id",
@@ -146,7 +146,7 @@ def test_view_graph():
             ConstantFill("This is a test "),
             PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
         ],
-        metadata=RequestMetadata(
+        metadata=SemanticCallMetadata(
             session_id=0,
             models=[],
             model_type="token_id",
@@ -154,7 +154,7 @@ def test_view_graph():
         ),
     )
 
-    var_mgr = SemanticVariableManager()
+    var_mgr = SemanticVariableManager(666)
     session_id = 0
     var_mgr.register_local_var_space(session_id)
     var_mgr.create_vars_for_request(session_id, request_chain)

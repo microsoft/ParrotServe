@@ -12,6 +12,7 @@ from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.exceptions import ParrotCoreInternalError
 
+from parrot.serve.graph import PerformanceCriteria
 from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig
 
 from .config import ServeCoreConfig
@@ -199,7 +200,9 @@ class ParrotServeCore:
             f"Set content length: {len(content)} "
         )
 
-    async def semantic_variable_get(self, session_id: int, sv_id: str) -> str:
+    async def semantic_variable_get(
+        self, session_id: int, sv_id: str, criteria: str
+    ) -> str:
         """Get the content from a Semantic Variable.
 
         Args:
@@ -212,10 +215,13 @@ class ParrotServeCore:
 
         var = self.var_mgr.get_var(session_id, sv_id)
 
+        if not var.activated:
+            var.activate(criteria)
+
         await var.wait_ready()
         content = var.get()
 
-        logger.debug(f"Semantic variable (id={sv_id}) get.")
+        logger.debug(f"Semantic variable (id={sv_id}) get with criteria: {criteria}.")
 
         return content
 

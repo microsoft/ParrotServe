@@ -18,7 +18,7 @@ def map_sum_test_baseline(
     doc_chunk: P.Input,
     doc_sum: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
-        P.DispatchAnnotation(requests_num_upperbound=4),
+        P.ScheduleAnnotation(requests_num_upperbound=4),
     ),
 ):
     pass
@@ -30,7 +30,7 @@ def map_sum_test_main(
     doc_chunk: P.Input,
     doc_sum: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
-        P.DispatchAnnotation(requests_num_upperbound=9999999999),
+        P.ScheduleAnnotation(requests_num_upperbound=9999999999),
     ),
 ):
     pass
@@ -123,7 +123,7 @@ def reduce_sum_test_30(
     chunk_sum_30: P.Input,
     output: P.Output(
         P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=50),
-        P.DispatchAnnotation(requests_num_upperbound=1),
+        P.ScheduleAnnotation(requests_num_upperbound=1),
     ),
 ):
     pass

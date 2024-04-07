@@ -85,9 +85,9 @@ CONCISE SUMMARY:{{summary}}""",
             ignore_tokenizer_eos=True,
             max_gen_length=output_len,
         ),
-        dispatch_annotation=P.DispatchAnnotation(
+        dispatch_annotation=P.ScheduleAnnotation(
             requests_num_upperbound=32,
-        )
+        ),
     )
 
     reduce_func = vm.define_function(
@@ -102,8 +102,18 @@ CONCISE SUMMARY:{{summary}}""",
 
 def sample_requests(
     num_apps: int,
-) -> List[int]: # article_no
-    return [(0, 0.5), (0, 0.5), (0, 10), (0, 0.5), (0, 0.5), (0, 10), (0, 0.5), (0, 0.5), (0, 10)]
+) -> List[int]:  # article_no
+    return [
+        (0, 0.5),
+        (0, 0.5),
+        (0, 10),
+        (0, 0.5),
+        (0, 0.5),
+        (0, 10),
+        (0, 0.5),
+        (0, 0.5),
+        (0, 10),
+    ]
 
 
 async def get_request(
@@ -120,10 +130,7 @@ async def get_request(
         await asyncio.sleep(request[1])
 
 
-async def send_request(
-    vm: P.VirtualMachine,
-    article_no: int
-) -> None:
+async def send_request(vm: P.VirtualMachine, article_no: int) -> None:
     global REQUEST_LATENCY
 
     chunk_size = 1024
@@ -133,12 +140,12 @@ async def send_request(
     chunks = get_chunks(file_name, chunk_size)
     chunk_num = len(chunks)
     map_func, reduce_func = get_map_reduce_functions(vm, chunk_num, output_length)
-   
+
     docs = [P.variable(name=f"output_{i}") for i in range(chunk_num)]
     coros = []
     for i, chunk in enumerate(chunks):
         coros.append(map_func.ainvoke(text=chunk, summary=docs[i]))
-    
+
     request_start_time = time.perf_counter_ns()
     await asyncio.gather(*coros)
     output = await reduce_func.ainvoke(*docs)
@@ -156,9 +163,7 @@ async def benchmark(
 ) -> None:
     tasks: List[asyncio.Task] = []
     async for article_no in get_request(input_requests, app_rate):
-        task = asyncio.create_task(
-            send_request(vm, article_no)
-        )
+        task = asyncio.create_task(send_request(vm, article_no))
         tasks.append(task)
     await asyncio.gather(*tasks)
 
@@ -203,11 +208,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num-apps", type=int, default=1000, help="Number of MR apps to process."
     )
-    parser.add_argument(
-        "--app-rate",
-        type=float,
-        default=float("inf")
-    )
+    parser.add_argument("--app-rate", type=float, default=float("inf"))
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
     main(args)

@@ -4,7 +4,7 @@ import pytest
 from parrot.exceptions import ParrotCoreUserError
 
 from parrot.serve.session_manager import SessionManager
-from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig
+from parrot.serve.scheduler import TaskCreator, GlobalScheduler, GlobalSchedulerConfig
 from parrot.serve.prefix_matcher import PrefixMatcher
 from parrot.serve.variable_manager import SemanticVariableManager
 from parrot.serve.tokenizer_wrapper import TokenizersWrapper
@@ -24,11 +24,13 @@ def test_session_manager():
         context_mgr=context_mgr,
         engine_heartbeat_timeout=666,
     )
+    task_creator = TaskCreator()
     scheduler = GlobalScheduler(scheduler_config, engine_mgr, context_mgr)
 
     session_mgr = SessionManager(
         life_span=10,
         prefix_matcher=prefix_matcher,
+        task_creator=task_creator,
         scheduler=scheduler,
         var_mgr=var_mgr,
         engine_mgr=engine_mgr,

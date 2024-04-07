@@ -11,14 +11,14 @@ from parrot.utils import get_logger
 from parrot.exceptions import ParrotCoreUserError, parrot_assert
 
 from parrot.serve.graph import (
-    ChunkedRequest,
+    ChunkedSemanticCallRequest,
     RequestChain,
 )
 
 from parrot.serve.backend_repr import Context
+from parrot.serve.scheduler import TaskCreator, GlobalScheduler
 
 from ..prefix_matcher import PrefixMatcher
-from ..scheduler.global_scheduler import GlobalScheduler
 from ..variable_manager import SemanticVariableManager
 from ..engine_manager import EngineManager
 from ..tokenizer_wrapper import TokenizersWrapper
@@ -48,6 +48,7 @@ class Session:
         session_id: int,
         life_span: int,
         prefix_matcher: PrefixMatcher,
+        task_creator: TaskCreator,
         scheduler: GlobalScheduler,
         var_mgr: SemanticVariableManager,
         engine_mgr: EngineManager,
@@ -60,6 +61,7 @@ class Session:
 
         # ---------- Global Components ----------
         self.prefix_matcher = prefix_matcher
+        self.task_creator = task_creator
         self.scheduler = scheduler
         self.var_mgr = var_mgr
         self.engine_mgr = engine_mgr
@@ -69,6 +71,7 @@ class Session:
         # ---------- Executor ----------
         self.executor = GraphExecutor(
             session_id=session_id,
+            task_creator=task_creator,
             scheduler=scheduler,
             engine_mgr=engine_mgr,
             context_mgr=context_mgr,
@@ -101,7 +104,7 @@ class Session:
         """
 
         # Convert the request to a ChunkedRequest.
-        chunked_request = ChunkedRequest.parse_from_payload(request_payload)
+        chunked_request = ChunkedSemanticCallRequest.parse_from_payload(request_payload)
 
         # Prefix matching and splitting.
 

@@ -7,14 +7,14 @@ from dataclasses import dataclass
 
 
 @dataclass
-class DispatchAnnotation:
-    """Annotations for dispatching LLM calls."""
+class ScheduleAnnotation:
+    """Annotations for dispatching Tasks."""
 
-    # This field means this request should not be dispatched to a engine
+    # This field means this task should not be dispatched to a engine
     # with more than this number of jobs.
-    requests_num_upperbound: int = 256
+    tasks_num_upperbound: int = 256
 
-    # This field means this request should not be dispatched to a engine
+    # This field means this task should not be dispatched to a engine
     # with more than this number of tokens.
     tokens_num_upperbound: int = 2048
 

@@ -11,6 +11,8 @@ from parrot.exceptions import parrot_assert
 from parrot.serve.backend_repr import ExecutionEngine, Context
 from parrot.serve.graph import CompletionChain
 
+from .schedule_annotation import ScheduleAnnotation
+
 
 class TaskStatus(Enum):
     CREATED = 0
@@ -23,7 +25,12 @@ class TaskStatus(Enum):
 class CompletionTask:
     """ScheduleUnit wraps CompletionChain."""
 
-    def __init__(self, task_id: int, chain: CompletionChain):
+    def __init__(
+        self,
+        task_id: int,
+        chain: CompletionChain,
+        schedule_annotation: ScheduleAnnotation = ScheduleAnnotation(),
+    ):
         self.task_id = task_id
         self.chain = chain
         self.status = TaskStatus.CREATED
@@ -37,13 +44,10 @@ class CompletionTask:
         # A list of contexts that are bound to the task
         self.contexts: List[Context] = []
 
-        # Scheduled result
+        # Scheduling
+        self.schedule_annotation = schedule_annotation
         self.scheduled: Event = Event()
         self.engine: Optional[ExecutionEngine] = None
-
-        # Scheduled hint
-        # TODO
-        self.num_tasks_upperbound: int = 4
 
     @property
     def is_tokenized(self) -> bool:
@@ -78,8 +82,11 @@ class CompletionTask:
 
         parrot_assert(self.is_tokenized, "Tokenized result is not available.")
         tokens_num = 0
+        # Add the number of tokens in Fill part.
         for token_ids in self.tokenized_result[tokenizer_name]:
             tokens_num += len(token_ids)
+        # Add the number of tokens in Gen part.
+        tokens_num += self.chain.gen_node.sampling_config.max_gen_length
         return tokens_num
 
     def __str__(self):

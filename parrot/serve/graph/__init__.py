@@ -6,7 +6,8 @@ Intermediate representation of LLM requests (ChunkedRequest, Graph, Semantic Var
 in Parrot OS.
 """
 
-from .chunked_request import ChunkedRequest
+from .request import ChunkedSemanticCallRequest
+from .perf_criteria import PerformanceCriteria
 from .semantic_variable import SemanticVariable
 from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
 from .node_struct import CompletionChain, RequestChain, ComputeGraph

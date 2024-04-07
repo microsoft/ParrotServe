@@ -9,7 +9,7 @@ from parrot.serve.graph import (
     PlaceholderGen,
     PlaceholderFill,
 )
-from parrot.serve.graph.chunked_request import RequestMetadata, RequestPlaceholder
+from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
 
 
 TESTING_PROMPT_TEXT = (
@@ -57,7 +57,7 @@ def test_decode():
 
 
 def test_tokenize_request():
-    metadata = RequestMetadata(
+    metadata = SemanticCallMetadata(
         session_id=0,
         models=[],
         model_type="token_id",

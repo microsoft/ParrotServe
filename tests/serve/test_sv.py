@@ -4,7 +4,7 @@ from parrot.serve.graph import (
     PlaceholderFill,
     PlaceholderGen,
 )
-from parrot.serve.graph.chunked_request import RequestMetadata, RequestPlaceholder
+from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
 from parrot.serve.variable_manager import SemanticVariableManager
 from parrot.sampling_config import SamplingConfig
 
@@ -22,7 +22,7 @@ def test_content_hash():
 def test_request_chain_hash():
     var_mgr = SemanticVariableManager(constant_prefix_var_timeout=10)
 
-    metadata = RequestMetadata(
+    metadata = SemanticCallMetadata(
         session_id=0,
         models=[],
         model_type="token_id",

@@ -100,7 +100,7 @@ async def get_request(
             continue
         # Sample the request interval from the exponential distribution.
         # interval = np.random.exponential(1.0 / request_rate)
-        interval = 1.0 / request_rate # uniform
+        interval = 1.0 / request_rate  # uniform
         # The next request will be sent after the interval.
         await asyncio.sleep(interval)
 
@@ -123,15 +123,17 @@ async def send_request(
         func_body="{{input}}{{output}}",
         params=[
             P.Parameter("input", P.ParamType.INPUT_LOC),
-            P.Parameter("output", P.ParamType.OUTPUT_LOC, 
-                        sampling_config=P.SamplingConfig(
-                            max_gen_length=output_len,
-                            ignore_tokenizer_eos=True,
-                        ),  
-                        dispatch_annotation=P.DispatchAnnotation(
-                            requests_num_upperbound=16,
-                        ),
-                    ),
+            P.Parameter(
+                "output",
+                P.ParamType.OUTPUT_LOC,
+                sampling_config=P.SamplingConfig(
+                    max_gen_length=output_len,
+                    ignore_tokenizer_eos=True,
+                ),
+                dispatch_annotation=P.ScheduleAnnotation(
+                    requests_num_upperbound=16,
+                ),
+            ),
         ],
         cache_prefix=False,
     )
@@ -140,7 +142,7 @@ async def send_request(
 
     output = await func.ainvoke(f"lcf%{req_no}lcf%" + prompt)
     await output.aget()
-    
+
     request_end_time = time.perf_counter_ns()
     request_latency = (request_end_time - request_start_time) / 1e6
     REQUEST_LATENCY.append((req_no, prompt_len, output_len, request_latency))
@@ -194,7 +196,9 @@ def main(args: argparse.Namespace):
 
     # Compute the latency statistics.
     for req_no, prompt_len, output_len, request_latency in REQUEST_LATENCY:
-        print(f"Request {req_no}: latency={request_latency:.2f} ms, output_len={output_len}")
+        print(
+            f"Request {req_no}: latency={request_latency:.2f} ms, output_len={output_len}"
+        )
 
 
 if __name__ == "__main__":

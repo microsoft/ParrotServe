@@ -7,7 +7,7 @@ from typing import List, Optional, Dict
 from parrot.sampling_config import SamplingConfig
 from parrot.exceptions import parrot_assert
 
-from .chunked_request import RequestPlaceholder
+from .request import RequestPlaceholder
 from .semantic_variable import SemanticVariable
 
 
@@ -17,6 +17,8 @@ class BaseNode:
     def __init__(self):
         self.sv: Optional[SemanticVariable] = None
         self.id_in_graph: Optional[int] = None
+        self.completion_chain: Optional["CompletionChain"] = None
+        self.request_chain: Optional["RequestChain"] = None
 
         # Edge type A: Fill -> Fill -> Fill -> Gen -> Fill -> Fill -> Gen -> ...
         self.edge_a_prev_node: Optional["BaseNode"] = None

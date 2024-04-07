@@ -315,8 +315,8 @@ class SemanticVariableManager:
                     "Unknown node type.",
                 )
 
-            debug_info += f"\t{node.__class__.__name__} -> {node.sv.sv_id}, is_constant_prefix: {node.sv.is_constant_prefix}\n"
+            debug_info += f"\n\t{node.__class__.__name__} -> {node.sv.sv_id}, is_constant_prefix: {node.sv.is_constant_prefix}"
 
         request_chain.sv_created = True
 
-        logger.debug("SVs created for request chain:\n" + debug_info)
+        logger.debug("SVs created for request chain:" + debug_info)

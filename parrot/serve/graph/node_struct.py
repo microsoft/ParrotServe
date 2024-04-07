@@ -8,12 +8,12 @@ from typing import List, Dict, Set, Optional, Union
 from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.utils import RecyclePool
 
-from .chunked_request import (
+from .request import (
     TextChunk,
     PlaceholderNameChunk,
     RequestPlaceholder,
-    RequestMetadata,
-    ChunkedRequest,
+    SemanticCallMetadata,
+    ChunkedSemanticCallRequest,
 )
 from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
 
@@ -76,20 +76,20 @@ class CompletionChain:
         self.first_node = first_node
         self.gen_node = gen_node
 
+        # Assign completion chain to nodes
+        for node in self.iter():
+            node.completion_chain = self
+
     def iter(self) -> _CompletionChainIterator:
         return _CompletionChainIterator(self.first_node)
 
     def iter_fill(self) -> _CompletionChainFillIterator:
         return _CompletionChainFillIterator(self.first_node)
 
-    def get_producers(self) -> List[BaseNode]:
-        """Get the list of Fill nodes in the chain."""
+    def get_consumer_requests(self) -> Set["RequestChain"]:
+        """Get a set of RequestChains which are consumers of the Gen node."""
 
-        return [
-            node.edge_b_prev_node
-            for node in self.iter()
-            if node.edge_b_prev_node is not None
-        ]
+        return set([node.request_chain for node in self.gen_node.sv.consumers])
 
 
 class _RequestChainIterator:
@@ -118,7 +118,7 @@ class RequestChain:
     It can be inserted into a graph directly.
     """
 
-    def __init__(self, metadta: RequestMetadata) -> None:
+    def __init__(self, metadta: SemanticCallMetadata) -> None:
         self.first_node: Optional[BaseNode] = None
         self.completion_chains: List[CompletionChain] = []
         self.metadata = metadta
@@ -129,6 +129,10 @@ class RequestChain:
 
         # Only valid after inserted into a graph.
         self.placeholder_mapping: List[Dict] = []
+
+        # Assign request chain to nodes
+        for node in self.iter():
+            node.request_chain = self
 
     def iter(self) -> _RequestChainIterator:
         return _RequestChainIterator(self.first_node)
@@ -149,7 +153,7 @@ class RequestChain:
 
     @classmethod
     def from_nodes(
-        cls, nodes: List[BaseNode], metadata: RequestMetadata
+        cls, nodes: List[BaseNode], metadata: SemanticCallMetadata
     ) -> "RequestChain":
         """Convert a list of nodes into a RequestChain."""
 
@@ -182,7 +186,9 @@ class RequestChain:
         return request_chain
 
     @classmethod
-    def from_chunked_request(cls, chunked_request: ChunkedRequest) -> "RequestChain":
+    def from_chunked_request(
+        cls, chunked_request: ChunkedSemanticCallRequest
+    ) -> "RequestChain":
         """Convert a ChunkedRequest into a RequestChain."""
 
         request_chain = cls(chunked_request.metadata)
