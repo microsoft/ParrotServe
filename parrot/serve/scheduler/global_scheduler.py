@@ -100,13 +100,16 @@ class GlobalScheduler:
         engine_list = self._get_engine_list(tasks, tasks_num_upperbound)
 
         if len(engine_list) == 0:
-            if len(tasks) == 1:
-                return
-            else:
-                # Split the group
-                for task in tasks:
-                    self._find_engine([task])
-                return
+            return
+
+        # if len(engine_list) == 0:
+        #     if len(tasks) == 1:
+        #         return
+        #     else:
+        #         # Split the group
+        #         for task in tasks:
+        #             self._find_engine([task])
+        #         return
 
         # Get the engines with Context
         # We use the first task's context to find the engines with the same context
@@ -114,6 +117,7 @@ class GlobalScheduler:
             engine_ids_with_prefixes = self.context_mgr.query_prefixes_in_engines(
                 tasks[0]
             )
+            print(engine_ids_with_prefixes)
 
         best_engine = None
         for engine in engine_list:
@@ -203,7 +207,7 @@ class GlobalScheduler:
 
                     # Context group check
                     if ctx_group_enabled:
-                        if task.contexts[0] == task_j.contexts[0]:
+                        if task.chain.first_node.sv == task_j.chain.first_node.sv:
                             cur_group.append(task_j)
                             graph_group_enabled = False  # Use context group this round
 

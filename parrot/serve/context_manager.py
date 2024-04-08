@@ -296,7 +296,7 @@ class ServeCoreContextManager:
             Sorted by the number of cached prefixes in descending order.
         """
 
-        parrot_assert(not task._scheduled_event, "Task should not be scheduled.")
+        parrot_assert(not task.is_scheduled, "Task should not be scheduled.")
 
         # engine_id -> cached_prefix_num
         sort_dict = {}

@@ -129,7 +129,7 @@ class ExecutionEngine:
         """Return the upperbound of the number of tasks of this engine."""
 
         return min(
-            [self.config.tasks_capacity]
+            [9999999999]
             + list(self._serve_layer_runtime_info.tasks_num_upperbounds.values())
         )
 

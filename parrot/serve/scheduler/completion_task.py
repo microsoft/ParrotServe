@@ -68,6 +68,11 @@ class CompletionTask:
         self._scheduled_event.set()
         engine.update_servelayer_runtime_info_add_task(self)
 
+    async def wait_scheduled(self) -> None:
+        """Wait until the task is scheduled."""
+
+        await self._scheduled_event.wait()
+
     def leave_scheduled(self) -> None:
         """Leave the scheduled status."""
 

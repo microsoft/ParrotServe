@@ -62,7 +62,7 @@ class GraphExecutor:
 
         try:
             # Block until it's activated by a GET.
-            await completion_chain._activated_event.wait()
+            await completion_chain.wait_activated()
 
             # Create a task object for the completion chain.
             task = self._task_creator.create_task(completion_chain)
@@ -76,7 +76,7 @@ class GraphExecutor:
 
             # Submit the task to the scheduler and wait for the task to be scheduled.
             self._scheduler.submit_task(task)
-            await task._scheduled_event.wait()
+            await task.wait_scheduled()
         except Exception as e:
             logger.error(
                 f"Error when scheduling chain. (session_id={self._session_id}): {e}"

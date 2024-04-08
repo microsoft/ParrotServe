@@ -221,7 +221,7 @@ def test_app_fifo():
 
         scheduler.submit_task(task1)
 
-    view_graph(graph)
+    # view_graph(graph)
 
     for i in range(4):
         # Schedule.
@@ -249,18 +249,218 @@ def test_app_fifo():
 
 
 def test_graph_group():
-    pass
+    scheduler_cfg = GlobalSchedulerConfig(
+        app_fifo=False,
+        graph_group=True,
+        ctx_group=False,
+        ctx_aware=False,
+        max_queue_size=1024,
+    )
+
+    graph = ComputeGraph()
+    tokenizers_wrapper = TokenizersWrapper()
+    context_mgr = ServeCoreContextManager()
+    engine_mgr = EngineManager(
+        tokenizers_wrapper=tokenizers_wrapper,
+        context_mgr=context_mgr,
+        engine_heartbeat_timeout=666,
+    )
+
+    scheduler = GlobalScheduler(
+        config=scheduler_cfg,
+        engine_mgr=engine_mgr,
+        context_mgr=context_mgr,
+    )
+    task_creator = TaskCreator()
+
+    # Register 1 engine
+    engine_config = EngineConfig(tokenizer="hf-internal-testing/llama-tokenizer")
+    engine_mgr.register_engine(engine_config)
+
+    var_mgr = SemanticVariableManager(666)
+    session_id = 0
+    var_mgr.register_local_var_space(session_id)
+
+    # In this case we construct a graph with 17 requests, with 16 requests dependent on the 17th.
+    out_vars: List[SemanticVariable] = []
+    chains: List[CompletionChain] = []
+    for _ in range(16):
+        request_chain = RequestChain.from_nodes(
+            nodes=[
+                ConstantFill("This is a test "),
+                PlaceholderGen(
+                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                ),
+            ]
+        )
+
+        var_mgr.create_vars_for_request(session_id, request_chain)
+        graph.insert_and_update_request_chain(request_chain)
+        comp_chain = request_chain.comp_chains[0]
+        out_vars.append(comp_chain.gen_node.sv)
+        chains.append(comp_chain)
+
+    # Construct the final request
+    request_chain = RequestChain.from_nodes(
+        nodes=[
+            PlaceholderFill(
+                placeholder=RequestPlaceholder(
+                    name=f"a_{i}",
+                    var_id=out_vars[i].id,
+                    is_output=False,
+                )
+            )
+            for i in range(16)
+        ]
+        + [
+            PlaceholderGen(placeholder=RequestPlaceholder(name="b", is_output=True)),
+        ]
+    )
+    var_mgr.create_vars_for_request(session_id, request_chain)
+    graph.insert_and_update_request_chain(request_chain)
+    comp_chain = request_chain.comp_chains[0]
+    activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+
+    # view_graph(graph)
+
+    for i in range(16):
+        task = task_creator.create_task(chains[i])
+        task.tokenize_chain(tokenizers_wrapper)
+        scheduler.submit_task(task)
+
+    scheduler.schedule()
+
+    # Expected result: 16 tasks go to the engine 0, ignoring the task_num_upperbound as a group.
 
 
 def test_ctx_group():
-    pass
+    scheduler_cfg = GlobalSchedulerConfig(
+        app_fifo=False,
+        graph_group=False,
+        ctx_group=True,
+        ctx_aware=False,
+        max_queue_size=1024,
+    )
+
+    graph = ComputeGraph()
+    tokenizers_wrapper = TokenizersWrapper()
+    context_mgr = ServeCoreContextManager()
+    engine_mgr = EngineManager(
+        tokenizers_wrapper=tokenizers_wrapper,
+        context_mgr=context_mgr,
+        engine_heartbeat_timeout=666,
+    )
+
+    scheduler = GlobalScheduler(
+        config=scheduler_cfg,
+        engine_mgr=engine_mgr,
+        context_mgr=context_mgr,
+    )
+    task_creator = TaskCreator()
+
+    # Register 4 identical engines
+    engine_config = EngineConfig(tokenizer="hf-internal-testing/llama-tokenizer")
+    for _ in range(4):
+        engine_mgr.register_engine(engine_config)
+
+    var_mgr = SemanticVariableManager(666)
+    session_id = 0
+    var_mgr.register_local_var_space(session_id)
+
+    # 16 identical tasks
+    prompts = [f"This is a test {i}" for i in range(4)]
+    for i in range(16):
+        request_chain = RequestChain.from_nodes(
+            nodes=[
+                ConstantFill(prompts[i % 4]),
+                PlaceholderGen(
+                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                ),
+            ]
+        )
+        var_mgr.create_vars_for_request(session_id, request_chain)
+        graph.insert_and_update_request_chain(request_chain)
+        comp_chain = request_chain.comp_chains[0]
+        activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+        task = task_creator.create_task(comp_chain)
+        task.tokenize_chain(tokenizers_wrapper)
+        scheduler.submit_task(task)
+
+    scheduler.schedule()
+
+    # Expected results: 0, 4, 8, 12 tasks go to engine 0, 1, 2, 3 respectively.
 
 
 def test_ctx_aware():
-    pass
+    scheduler_cfg = GlobalSchedulerConfig(
+        app_fifo=False,
+        graph_group=False,
+        ctx_group=False,
+        ctx_aware=True,
+        max_queue_size=1024,
+    )
+
+    graph = ComputeGraph()
+    tokenizers_wrapper = TokenizersWrapper()
+    context_mgr = ServeCoreContextManager()
+    engine_mgr = EngineManager(
+        tokenizers_wrapper=tokenizers_wrapper,
+        context_mgr=context_mgr,
+        engine_heartbeat_timeout=666,
+    )
+
+    scheduler = GlobalScheduler(
+        config=scheduler_cfg,
+        engine_mgr=engine_mgr,
+        context_mgr=context_mgr,
+    )
+    task_creator = TaskCreator()
+
+    # Register 4 identical engines
+    engine_config = EngineConfig(tokenizer="hf-internal-testing/llama-tokenizer")
+    for _ in range(4):
+        engine_mgr.register_engine(engine_config)
+
+    var_mgr = SemanticVariableManager(666)
+    session_id = 0
+    var_mgr.register_local_var_space(session_id)
+
+    # 16 identical tasks
+    prompts = [f"This is a test {i}" for i in range(4)]
+    first_vars: List[SemanticVariable] = []
+    for i in range(16):
+        request_chain = RequestChain.from_nodes(
+            nodes=[
+                ConstantFill(prompts[i % 4]),
+                PlaceholderGen(
+                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                ),
+            ]
+        )
+        var_mgr.create_vars_for_request(session_id, request_chain)
+        graph.insert_and_update_request_chain(request_chain)
+        comp_chain = request_chain.comp_chains[0]
+        first_vars.append(comp_chain.first_node.sv)
+        activate_completion_chain(comp_chain, PerformanceCriteria.THROUGHPUT)
+        task = task_creator.create_task(comp_chain)
+        task.tokenize_chain(tokenizers_wrapper)
+        scheduler.submit_task(task)
+
+    # Assign context in a round-robin manner (hacky)
+    for i in range(4):
+        prefix_cache = context_mgr._prefix_caches[i]
+        prefix_hash = context_mgr._hash_sv_id(first_vars[i].id)
+        prefix_cache.cache_prefix_context(prefix_hash=prefix_hash, context_id=i)
+
+    scheduler.schedule()
+
+    # Expected results: 0, 4, 8, 12 tasks go to engine 0, 1, 2, 3 respectively.
 
 
 if __name__ == "__main__":
     # test_default_policy_throughput()
     # test_default_policy_latency()
-    test_app_fifo()
+    # test_app_fifo()
+    # test_graph_group()
+    # test_ctx_group()
+    test_ctx_aware()

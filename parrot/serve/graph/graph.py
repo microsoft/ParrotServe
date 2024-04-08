@@ -81,8 +81,8 @@ class CompletionChain:
         gen_node: Optional[PlaceholderGen],
     ) -> None:
         self._request_chain = request_chain
-        self._first_node = first_node
 
+        self.first_node = first_node
         self.gen_node = gen_node
 
         # Assign completion chain to nodes
@@ -122,6 +122,9 @@ class CompletionChain:
         self._depth = depth
         self._activated_event.set()
 
+    async def wait_activated(self) -> None:
+        await self._activated_event.wait()
+
     @property
     def criteria(self) -> PerformanceCriteria:
         parrot_assert(self.is_activated, "CompletionChain has not been activated.")
@@ -133,10 +136,10 @@ class CompletionChain:
         return self._depth
 
     def iter(self) -> _CompletionChainIterator:
-        return _CompletionChainIterator(self._first_node)
+        return _CompletionChainIterator(self.first_node)
 
     def iter_fill(self) -> _CompletionChainFillIterator:
-        return _CompletionChainFillIterator(self._first_node)
+        return _CompletionChainFillIterator(self.first_node)
 
 
 class _RequestChainIterator:
@@ -166,8 +169,7 @@ class RequestChain:
     """
 
     def __init__(self, first_node: BaseNode, metadta: SemanticCallMetadata) -> None:
-        self._first_node = first_node
-
+        self.first_node = first_node
         self.metadata = metadta
         self.comp_chains: List[CompletionChain] = []
 
@@ -180,17 +182,17 @@ class RequestChain:
 
     @property
     def sv_created(self) -> bool:
-        return self._first_node.sv is not None
+        return self.first_node.sv is not None
 
     @property
     def is_inserted(self) -> bool:
-        return self._first_node.is_inserted
+        return self.first_node.is_inserted
 
     def iter(self) -> _RequestChainIterator:
-        return _RequestChainIterator(self._first_node)
+        return _RequestChainIterator(self.first_node)
 
     def __repr__(self) -> str:
-        return f"RequestChain(first_node={self._first_node})"
+        return f"RequestChain(first_node={self.first_node})"
 
     def pretty_print(self) -> str:
         """Pretty print it using Graph's pretty print APIs."""
