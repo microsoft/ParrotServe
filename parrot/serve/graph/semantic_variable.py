@@ -6,8 +6,6 @@ from asyncio import Event
 
 from parrot.exceptions import parrot_assert
 
-from .perf_criteria import PerformanceCriteria
-
 
 # ---------- SemanticVariable ----------
 
@@ -43,58 +41,65 @@ class SemanticVariable:
     ) -> None:
         # Basic Info
         self.name = name
-        self.sv_id = sv_id
+        self.id = sv_id
         self.seed = seed  # A seed for generating the sv_id. For id recycling.
+        self.is_constant_prefix = (
+            is_constant_prefix  # Whether this SV is a constant prefix.
+        )
 
         # Text content.
-        self.content: Optional[str] = None
+        self._content: Optional[str] = None
 
         # Events
-        self.ready_event: Event = Event()  # Ready event means the content is ready.
+        self._ready_event: Event = Event()  # Ready event means the content is ready.
 
         # Producer of this SV. It must be a PlaceholderGen node.
-        self.producer: Optional["PlaceholderGen"] = None
+        self._producer: Optional["PlaceholderGen"] = None
 
         # Consumers of this SV. It must be Fill nodes.
-        self.consumers: List["PlaceholderFill"] = []
+        self._consumers: List["PlaceholderFill"] = []
 
-        # Whether this SV is a constant prefix.
-        self.is_constant_prefix = is_constant_prefix
+    def is_ready(self) -> bool:
+        return self._ready_event.is_set()
 
-    @property
-    def ready(self) -> bool:
-        return self.ready_event.is_set()
-
-    def set(self, content: str):
+    def set(self, content: str) -> None:
         """Set the content of the semantic variable."""
 
-        assert (
-            self.content is None
-        ), f"This semantic variable (id={self.sv_id}) is filled"
-        self.content = content
-        self.ready_event.set()
+        assert self._content is None, f"This semantic variable (id={self.id}) is filled"
+        self._content = content
+        self._ready_event.set()
 
     def get(self) -> str:
         """Get the content of the semantic variable."""
 
         parrot_assert(
-            self.ready, f"This semantic variable (id={self.sv_id}) is not ready"
+            self.is_ready(), f"This semantic variable (id={self.id}) is not ready"
         )
 
-        return self.content
+        return self._content
 
-    async def wait_ready(self):
+    async def wait_ready(self) -> None:
         """Wait until the content of this SV is ready."""
 
-        await self.ready_event.wait()
+        await self._ready_event.wait()
 
-    def assign_producer(self, producer: "PlaceholderGen"):
+    def assign_producer(self, producer: "PlaceholderGen") -> None:
         """Assign the producer of this SV. This will add some edges in the graph."""
 
-        parrot_assert(self.producer is None, "This SV already has a producer")
-        self.producer = producer
+        parrot_assert(self._producer is None, "This SV already has a producer")
+        self._producer = producer
 
-    def add_consumer(self, consumer: "PlaceholderFill"):
+    def add_consumer(self, consumer: "PlaceholderFill") -> None:
         """Add a consumer of this SV. This will add some edges in the graph."""
 
-        self.consumers.append(consumer)
+        self._consumers.append(consumer)
+
+    @property
+    def has_producer(self) -> bool:
+        return self._producer is not None
+
+    def get_producer(self) -> Optional["PlaceholderGen"]:
+        return self._producer
+
+    def get_consumers(self) -> List["PlaceholderFill"]:
+        return self._consumers

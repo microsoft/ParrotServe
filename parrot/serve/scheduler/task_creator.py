@@ -52,7 +52,7 @@ class TaskCreator:
 
         # Create a new Task
         task_id = self.task_id_pool.allocate()
-        schedule_annotation = self._lower_criteria(completion_chain.get_criteria)
+        schedule_annotation = self._lower_criteria(completion_chain.criteria)
         return CompletionTask(
             task_id=task_id,
             chain=completion_chain,
@@ -67,4 +67,7 @@ class TaskCreator:
         """
 
         self.task_id_pool.free(task.task_id)
+
+        # Remove from the engine
+        task.leave_scheduled()
         return

@@ -80,12 +80,17 @@ class RequestPlaceholder:
 class SemanticCallMetadata:
     """SemanticCallMetadata contains metadata for a Request."""
 
-    REQUEST_METADATA_KEYS = ["session_id", "models", "model_type", "remove_pure_fill"]
+    REQUEST_METADATA_KEYS = ["models", "model_type", "remove_pure_fill"]
 
-    session_id: int
     models: List[str]
     model_type: str
     remove_pure_fill: bool
+
+    @classmethod
+    def get_default(cls) -> "SemanticCallMetadata":
+        """Get the default metadata for a Request."""
+
+        return cls(models=[], model_type="token_id", remove_pure_fill=True)
 
 
 class ChunkedSemanticCallRequest:
@@ -95,7 +100,13 @@ class ChunkedSemanticCallRequest:
     pack metadata and parsed prompt into a ChunkedSemanticCallRequest for further processing.
     """
 
-    def __init__(self, metadata: SemanticCallMetadata) -> None:
+    def __init__(
+        self,
+        session_id: int,
+        metadata: SemanticCallMetadata = SemanticCallMetadata.get_default(),
+    ) -> None:
+        self.session_id = session_id
+
         # Metadata: additional information of the request.
         self.metadata = metadata
 
@@ -141,10 +152,6 @@ class ChunkedSemanticCallRequest:
             f"placeholders_map: {self.placeholders_map}"
         )
 
-    @property
-    def session_id(self) -> str:
-        return self.metadata.session_id
-
     @staticmethod
     def _preprocess(payload: Dict) -> Dict:
         """Preprocess the payload packet. This will do the format check and assign default values."""
@@ -165,7 +172,9 @@ class ChunkedSemanticCallRequest:
         return processed_payload
 
     @classmethod
-    def parse_from_payload(cls, payload: Dict) -> "ChunkedSemanticCallRequest":
+    def parse_from_payload(
+        cls, session_id: int, payload: Dict
+    ) -> "ChunkedSemanticCallRequest":
         """Parse the payload of semantic call request into structural ChunkedRequest format for further processing.
 
         Args:
@@ -189,7 +198,8 @@ class ChunkedSemanticCallRequest:
         for key in SemanticCallMetadata.REQUEST_METADATA_KEYS:
             metadata_dict[key] = payload[key]
         metadata = SemanticCallMetadata(**metadata_dict)
-        chunked_request = cls(metadata)
+
+        chunked_request = cls(session_id, metadata)
 
         # Step 2. Extract the "placeholders" field and create placeholders dict.
         for placeholder in placeholders:

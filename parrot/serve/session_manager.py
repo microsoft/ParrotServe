@@ -27,20 +27,20 @@ class SessionManager:
     def __init__(self, **session_create_kwargs) -> None:
         # ---------- Session Managing ----------
         # session_id -> session
-        self.sessions: Dict[int, Session] = {}
-        self.session_id_pool = RecyclePool()
+        self._sessions: Dict[int, Session] = {}
+        self._session_id_pool = RecyclePool()
 
         # session_id -> last_access_time (nanoseconds)
-        self.session_last_access_time: Dict[int, int] = {}
+        self._session_last_access_time: Dict[int, int] = {}
 
         # ---------- Arguments for Creating Session ----------
-        self.session_create_kwargs = session_create_kwargs
+        self._session_create_kwargs = session_create_kwargs
 
     def _remove_session(self, session_id: int) -> None:
-        session = self.sessions.pop(session_id)
-        self.session_last_access_time.pop(session_id)
+        session = self._sessions.pop(session_id)
+        self._session_last_access_time.pop(session_id)
         session.free_session_resources()
-        self.session_id_pool.free(session_id)
+        self._session_id_pool.free(session_id)
 
         logger.debug(f"Session {session_id} is removed.")
 
@@ -54,12 +54,12 @@ class SessionManager:
         """
 
         # Create session object
-        session_id = self.session_id_pool.allocate()
-        session = Session(session_id=session_id, **self.session_create_kwargs)
+        session_id = self._session_id_pool.allocate()
+        session = Session(session_id=session_id, **self._session_create_kwargs)
 
         # Maintain session info
-        self.sessions[session_id] = session
-        self.session_last_access_time[session_id] = time_counter_in_nanoseconds()
+        self._sessions[session_id] = session
+        self._session_last_access_time[session_id] = time_counter_in_nanoseconds()
 
         logger.debug(f"Session (id={session_id}) registered.")
         return session_id
@@ -72,7 +72,7 @@ class SessionManager:
         """
 
         parrot_assert(
-            session_id in self.sessions,
+            session_id in self._sessions,
             f"Session {session_id} not found.",
         )
         self._remove_session(session_id)
@@ -88,10 +88,10 @@ class SessionManager:
         """
 
         parrot_assert(
-            session_id in self.sessions,
+            session_id in self._sessions,
             f"Session {session_id} not found.",
         )
-        return self.sessions[session_id]
+        return self._sessions[session_id]
 
     def session_access_update(self, session_id: int) -> None:
         """Update the last access time of the session.
@@ -101,10 +101,10 @@ class SessionManager:
         """
 
         parrot_assert(
-            session_id in self.sessions,
+            session_id in self._sessions,
             f"Session {session_id} not found.",
         )
-        self.session_last_access_time[session_id] = time_counter_in_nanoseconds()
+        self._session_last_access_time[session_id] = time_counter_in_nanoseconds()
 
     def check_session_status(self, session_id: int) -> None:
         """Check the status of the session.
@@ -113,10 +113,10 @@ class SessionManager:
             session_id: int. The session ID.
         """
 
-        if session_id not in self.sessions:
+        if session_id not in self._sessions:
             raise ParrotCoreUserError(RuntimeError(f"Session {session_id} not found."))
 
-        session = self.sessions[session_id]
+        session = self._sessions[session_id]
         if session.status != SessionStatus.RUNNING:
             raise ParrotCoreUserError(
                 RuntimeError(f"Session {session_id} is not valid.")
@@ -128,8 +128,8 @@ class SessionManager:
         """
 
         current_time = time_counter_in_nanoseconds()
-        for session_id, last_access_time in self.session_last_access_time.items():
-            session = self.sessions[session_id]
+        for session_id, last_access_time in self._session_last_access_time.items():
+            session = self._sessions[session_id]
 
             if not session.is_running:
                 continue
@@ -139,12 +139,14 @@ class SessionManager:
                 logger.debug(f"Session {session_id} is expired.")
             elif session.executor.bad_exception is not None:
                 session.status = SessionStatus.BAD
-                logger.debug(f"Session {session_id} is bad.")
+                logger.debug(
+                    f"Session {session_id} is bad. Exception: {session.executor.bad_exception.args[0]}"
+                )
 
     def sweep_not_running_sessions(self) -> None:
         """Sweep the dead/bad sessions."""
 
-        sessions_copy = self.sessions.copy()
+        sessions_copy = self._sessions.copy()
 
         for session_id, session in sessions_copy.items():
             if not session.is_running:

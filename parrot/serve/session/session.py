@@ -60,13 +60,9 @@ class Session:
         self.life_span = life_span  # In seconds
 
         # ---------- Global Components ----------
-        self.prefix_matcher = prefix_matcher
-        self.task_creator = task_creator
-        self.scheduler = scheduler
-        self.var_mgr = var_mgr
-        self.engine_mgr = engine_mgr
-        self.context_mgr = context_mgr
-        self.tokenizers_wrapper = tokenizers_wrapper
+        self._prefix_matcher = prefix_matcher
+        self._var_mgr = var_mgr
+        self._context_mgr = context_mgr
 
         # ---------- Executor ----------
         self.executor = GraphExecutor(
@@ -104,7 +100,9 @@ class Session:
         """
 
         # Convert the request to a ChunkedRequest.
-        chunked_request = ChunkedSemanticCallRequest.parse_from_payload(request_payload)
+        chunked_request = ChunkedSemanticCallRequest.parse_from_payload(
+            self.session_id, request_payload
+        )
 
         # Prefix matching and splitting.
 
@@ -112,7 +110,7 @@ class Session:
         request_chain = RequestChain.from_chunked_request(chunked_request)
 
         # Assign Semantic Variables to the RequestChain.
-        self.var_mgr.create_vars_for_request(
+        self._var_mgr.create_vars_for_request(
             session_id=self.session_id, request_chain=request_chain
         )
 
@@ -161,17 +159,17 @@ class Session:
     #     create_task_in_loop(_execute_main(), fail_fast=False)
 
     def _register_session_resources(self) -> None:
-        self.context_mgr.register_session_contexts(session_id=self.session_id)
-        self.var_mgr.register_local_var_space(session_id=self.session_id)
+        self._context_mgr.register_session_contexts(session_id=self.session_id)
+        self._var_mgr.register_local_var_space(session_id=self.session_id)
 
     def free_session_resources(self) -> None:
         """Free the session and all its resources."""
 
         # Free the contexts of session.
-        self.context_mgr.free_session_contexts(session_id=self.session_id)
+        self._context_mgr.free_session_contexts(session_id=self.session_id)
 
         # Free the local var space of the session.
-        self.var_mgr.free_local_var_space(session_id=self.session_id)
+        self._var_mgr.free_local_var_space(session_id=self.session_id)
 
         logger.info(
             f"Free session (id={self.session_id}) with running threads num: {len(self.threads)}"

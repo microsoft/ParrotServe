@@ -214,10 +214,10 @@ class ParrotServeCore:
         self.session_mgr.session_access_update(session_id)
 
         var = self.var_mgr.get_var(session_id, sv_id)
-        if var.producer is not None and not var.producer.completion_chain.activated:
+        if var._producer is not None and not var._producer.completion_chain.activated:
             # Activate the chain and propagate the performance criteria
             activate_completion_chain(
-                var.producer.completion_chain, get_performance_criteria(criteria)
+                var._producer.completion_chain, get_performance_criteria(criteria)
             )
 
         await var.wait_ready()
@@ -242,7 +242,7 @@ class ParrotServeCore:
             # Clean up expired constant prefix vars
             expired_vars = self.var_mgr.free_expired_constant_prefix_vars()
             for var in expired_vars:
-                self.context_mgr.free_constant_prefix_contexts(var.sv_id)
+                self.context_mgr.free_constant_prefix_contexts(var.id)
 
             # Schedule tasks
             self.global_scheduler.schedule()

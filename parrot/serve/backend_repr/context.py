@@ -49,19 +49,23 @@ class Context:
         self.tokens_num = 0
 
     @property
+    def has_parent_context(self) -> bool:
+        return self.parent_context is not None
+
+    @property
     def parent_context_id(self) -> int:
         return (
             self.parent_context.context_id
-            if self.parent_context is not None
+            if self.has_parent_context
             else NONE_CONTEXT_ID
         )
 
     @property
     def memory_usage(self) -> float:
+        num_cached_tokens = self.engine.get_num_cached_tokens()
         memory_per_token = (
-            self.engine.real_time_runtime_info.cache_mem
-            / self.engine.real_time_runtime_info.num_cached_tokens
-            if self.engine.real_time_runtime_info.num_cached_tokens > 0
+            self.engine.get_cache_mem() / num_cached_tokens
+            if num_cached_tokens > 0
             else 0
         )
 

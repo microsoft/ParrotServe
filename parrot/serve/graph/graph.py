@@ -25,37 +25,37 @@ from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
 class _CompletionChainIterator:
 
     def __init__(self, first_node: BaseNode) -> None:
-        self.cur_node = first_node
+        self._cur_node = first_node
 
     def __iter__(self) -> "_CompletionChainIterator":
         return self
 
     def __next__(self) -> BaseNode:
-        if self.cur_node is None or (
-            self.cur_node.edge_a_prev_node is not None
-            and self.cur_node.edge_a_prev_node.is_gen
+        if self._cur_node is None or (
+            self._cur_node.has_edge_a_prev_node
+            and self._cur_node.get_edge_a_prev_node().is_gen
         ):
             raise StopIteration
         else:
-            ret = self.cur_node
-            self.cur_node = self.cur_node.edge_a_next_node
+            ret = self._cur_node
+            self._cur_node = self._cur_node.get_edge_a_next_node()
             return ret
 
 
 class _CompletionChainFillIterator:
 
     def __init__(self, first_node: BaseNode) -> None:
-        self.cur_node = first_node
+        self._cur_node = first_node
 
     def __iter__(self) -> "_CompletionChainFillIterator":
         return self
 
     def __next__(self) -> Union[ConstantFill, PlaceholderFill]:
-        if self.cur_node.is_gen:
+        if self._cur_node.is_gen:
             raise StopIteration
         else:
-            ret = self.cur_node
-            self.cur_node = self.cur_node.edge_a_next_node
+            ret = self._cur_node
+            self._cur_node = self._cur_node.get_edge_a_next_node()
             return ret
 
 
@@ -80,54 +80,79 @@ class CompletionChain:
         first_node: BaseNode,
         gen_node: Optional[PlaceholderGen],
     ) -> None:
-        self.request_chain = request_chain
-        self.first_node = first_node
+        self._request_chain = request_chain
+        self._first_node = first_node
+
         self.gen_node = gen_node
 
         # Assign completion chain to nodes
         for node in self.iter():
-            node.completion_chain = self
+            node.set_comp_chain(self)
 
         # Activate
-        self.activated_event: Event = Event()
+        self._activated_event: Event = Event()
         # Performance criteria of "get" to the GenNode.
-        self.get_criteria: Optional[PerformanceCriteria] = None
+        self._criteria: Optional[PerformanceCriteria] = None
         # Distance to "get" node.
-        self.depth: int = 99999
+        self._depth: int = 99999
+
         # Groups this chain belongs to.
         self.chain_groups: List[CompChainGroup] = []
 
     @property
     def is_activated(self) -> bool:
-        return self.activated_event.is_set()
+        return self._activated_event.is_set()
 
-    def activate(self, criteria: PerformanceCriteria) -> None:
+    @property
+    def sv_created(self) -> bool:
+        return self._request_chain.sv_created
+
+    @property
+    def metadata(self) -> SemanticCallMetadata:
+        return self._request_chain.metadata
+
+    def activate(self, criteria: PerformanceCriteria, depth: int) -> None:
         """Activate the CompletionChain with a given PerformanceCriteria."""
 
-        self.get_criteria = criteria
-        self.activated_event.set()
+        parrot_assert(
+            not self.is_activated,
+            "CompletionChain has been activated.",
+        )
+        self._criteria = criteria
+        self._depth = depth
+        self._activated_event.set()
+
+    @property
+    def criteria(self) -> PerformanceCriteria:
+        parrot_assert(self.is_activated, "CompletionChain has not been activated.")
+        return self._criteria
+
+    @property
+    def depth(self) -> int:
+        parrot_assert(self.is_activated, "CompletionChain has not been activated.")
+        return self._depth
 
     def iter(self) -> _CompletionChainIterator:
-        return _CompletionChainIterator(self.first_node)
+        return _CompletionChainIterator(self._first_node)
 
     def iter_fill(self) -> _CompletionChainFillIterator:
-        return _CompletionChainFillIterator(self.first_node)
+        return _CompletionChainFillIterator(self._first_node)
 
 
 class _RequestChainIterator:
 
     def __init__(self, first_node: BaseNode) -> None:
-        self.cur_node = first_node
+        self._cur_node = first_node
 
     def __iter__(self) -> "_RequestChainIterator":
         return self
 
     def __next__(self) -> BaseNode:
-        if self.cur_node is None:
+        if self._cur_node is None:
             raise StopIteration
         else:
-            ret = self.cur_node
-            self.cur_node = self.cur_node.edge_a_next_node
+            ret = self._cur_node
+            self._cur_node = self._cur_node.get_edge_a_next_node()
             return ret
 
 
@@ -140,27 +165,32 @@ class RequestChain:
     It can be inserted into a graph directly.
     """
 
-    def __init__(self, metadta: SemanticCallMetadata) -> None:
-        self.first_node: Optional[BaseNode] = None
-        self.completion_chains: List[CompletionChain] = []
-        self.metadata = metadta
+    def __init__(self, first_node: BaseNode, metadta: SemanticCallMetadata) -> None:
+        self._first_node = first_node
 
-        # Flags
-        self.sv_created = False
-        self.inserted = False
+        self.metadata = metadta
+        self.comp_chains: List[CompletionChain] = []
 
         # Only valid after inserted into a graph.
-        self.placeholder_mapping: List[Dict] = []
+        self._placeholder_mapping: List[Dict] = []
 
         # Assign request chain to nodes
         # for node in self.iter():
         #     node.request_chain = self
 
+    @property
+    def sv_created(self) -> bool:
+        return self._first_node.sv is not None
+
+    @property
+    def is_inserted(self) -> bool:
+        return self._first_node.is_inserted
+
     def iter(self) -> _RequestChainIterator:
-        return _RequestChainIterator(self.first_node)
+        return _RequestChainIterator(self._first_node)
 
     def __repr__(self) -> str:
-        return f"RequestChain(first_node={self.first_node})"
+        return f"RequestChain(first_node={self._first_node})"
 
     def pretty_print(self) -> str:
         """Pretty print it using Graph's pretty print APIs."""
@@ -175,24 +205,25 @@ class RequestChain:
 
     @classmethod
     def from_nodes(
-        cls, nodes: List[BaseNode], metadata: SemanticCallMetadata
+        cls,
+        nodes: List[BaseNode],
+        metadata: SemanticCallMetadata = SemanticCallMetadata.get_default(),
     ) -> "RequestChain":
         """Convert a list of nodes into a RequestChain."""
 
-        request_chain = cls(metadata)
-        prev_node: Optional[BaseNode] = None
-        completion_chain_first_node: Optional[BaseNode] = None
+        parrot_assert(
+            len(nodes) > 0,
+            "RequestChain creation failed: Empty nodes.",
+        )
 
-        for i, node in enumerate(nodes):
-            # Record first node
-            if i == 0:
-                request_chain.first_node = node
-                completion_chain_first_node = node
+        request_chain = cls(nodes[0], metadata)
+        prev_node = nodes[0]
+        completion_chain_first_node = nodes[0]
 
+        for node in nodes[1:]:
             # Link edge type A with previous node.
             if prev_node is not None:
-                prev_node.edge_a_next_node = node
-                node.edge_a_prev_node = prev_node
+                node.link_edge_a_with(prev_node)
             prev_node = node
 
             # If current node is Gen, create a new CompletionChain.
@@ -202,8 +233,8 @@ class RequestChain:
                     first_node=completion_chain_first_node,
                     gen_node=node,
                 )
-                request_chain.completion_chains.append(completion_chain)
-                completion_chain_first_node = node.edge_a_next_node
+                request_chain.comp_chains.append(completion_chain)
+                completion_chain_first_node = node.get_edge_a_next_node()
 
         return request_chain
 
@@ -212,10 +243,6 @@ class RequestChain:
         cls, chunked_request: ChunkedSemanticCallRequest
     ) -> "RequestChain":
         """Convert a ChunkedRequest into a RequestChain."""
-
-        request_chain = cls(chunked_request.metadata)
-        prev_node: Optional[BaseNode] = None
-        completion_chain_first_node: Optional[BaseNode] = None
 
         for i, chunk in enumerate(chunked_request.body):
             is_gen: bool = False
@@ -234,13 +261,13 @@ class RequestChain:
 
             # Record first node
             if i == 0:
-                request_chain.first_node = node
+                request_chain = cls(node, chunked_request.metadata)
+                prev_node = node
                 completion_chain_first_node = node
 
             # Link edge type A with previous node.
             if prev_node is not None:
-                prev_node.edge_a_next_node = node
-                node.edge_a_prev_node = prev_node
+                node.link_edge_a_with(prev_node)
             prev_node = node
 
             # If current node is Gen, create a new CompletionChain.
@@ -250,19 +277,26 @@ class RequestChain:
                     first_node=completion_chain_first_node,
                     gen_node=node,
                 )
-                request_chain.completion_chains.append(completion_chain)
-                completion_chain_first_node = node.edge_a_next_node
+                request_chain.comp_chains.append(completion_chain)
+                parrot_assert(
+                    node.has_edge_a_prev_node, "Gen node should have a prev node."
+                )
+                completion_chain_first_node = node.get_edge_a_prev_node()
 
         return request_chain
 
     def get_placeholder_mapping(self) -> List[Dict]:
-        """Get the placeholder mapping after inserted into a graph."""
+        """Get the placeholder mapping after inserted into a graph.
+
+        Returns:
+            List[Dict]: Placeholder mapping.
+        """
 
         parrot_assert(
-            self.inserted,
+            self.is_inserted,
             "Get placeholder mapping failed: RequestChain has not been inserted into a graph.",
         )
-        return self.placeholder_mapping
+        return self._placeholder_mapping
 
 
 class ComputeGraph:
@@ -281,11 +315,12 @@ class ComputeGraph:
         self.nodes: Set[BaseNode] = set()
         self.chains: List[CompletionChain] = []
 
-        self.node_id_pool = RecyclePool("Node Pool")
+        self._node_id_pool = RecyclePool("Node Pool")
 
     def _insert_node(self, node: BaseNode) -> None:
         self.nodes.add(node)
-        node.id_in_graph = self.node_id_pool.allocate()
+        id_in_graph = self._node_id_pool.allocate()
+        node.set_id_in_graph(id_in_graph)
 
         # Link edge type B
         if node.is_gen:
@@ -306,7 +341,7 @@ class ComputeGraph:
         )
 
         parrot_assert(
-            not request_chain.inserted,
+            not request_chain.is_inserted,
             "Insert failed: RequestChain has been inserted into a graph.",
         )
 
@@ -318,7 +353,8 @@ class ComputeGraph:
                 placeholder: RequestPlaceholder = node.placeholder
 
                 # Maintain the placeholder mapping
-                request_chain.placeholder_mapping.append(
+                # HACK: Access the private member directly
+                request_chain._placeholder_mapping.append(
                     {
                         "placeholder_name": placeholder.name,
                         "is_output": placeholder.is_output,
@@ -326,9 +362,7 @@ class ComputeGraph:
                         "var_id": node.sv_id,
                     }
                 )
-        self.chains.extend(request_chain.completion_chains)
-
-        request_chain.inserted = True
+        self.chains.extend(request_chain.comp_chains)
 
     def remove_completion_chain(self, completion_chain: CompletionChain) -> None:
         """Remove a CompletionChain from the graph. This is called when the task is finished."""
@@ -338,4 +372,4 @@ class ComputeGraph:
         for node in completion_chain.iter():
             # Remove node
             self.nodes.remove(node)
-            self.node_id_pool.free(node.id_in_graph)
+            self._node_id_pool.free(node.id_in_graph)

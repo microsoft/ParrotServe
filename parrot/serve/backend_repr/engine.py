@@ -64,8 +64,8 @@ class ExecutionEngine:
         # Synchronization between these two info packages is necessary: by updating the static info
         # when the real-time info changes.
 
-        self.real_time_runtime_info = EngineRuntimeInfo()
-        self.serve_layer_runtime_info = ServeLayerRuntimeInfo()
+        self._real_time_runtime_info = EngineRuntimeInfo()
+        self._serve_layer_runtime_info = ServeLayerRuntimeInfo()
 
     # ---------- Status Methods ----------
 
@@ -108,44 +108,69 @@ class ExecutionEngine:
     def get_num_tasks(self) -> int:
         """Return the number of tasks scheduled to this engine."""
 
-        return self.serve_layer_runtime_info.num_tasks
+        return self._serve_layer_runtime_info.num_tasks
 
     def get_tokens_num(self) -> int:
         """Return the number of tokens scheduled to this engine."""
 
-        return self.serve_layer_runtime_info.tokens_num
+        return self._serve_layer_runtime_info.tokens_num
 
     def get_remain_tokens_capacity(self) -> int:
         """Return the number of tokens that can be scheduled to this engine."""
 
-        return self.config.tokens_capacity - self.serve_layer_runtime_info.tokens_num
+        return self.config.tokens_capacity - self._serve_layer_runtime_info.tokens_num
 
     def get_remain_tasks_capacity(self) -> int:
         """Return the number of tasks that can be scheduled to this engine."""
 
-        return self.config.tasks_capacity - self.serve_layer_runtime_info.num_tasks
+        return self.config.tasks_capacity - self._serve_layer_runtime_info.num_tasks
 
     def get_tasks_num_upperbound(self) -> int:
         """Return the upperbound of the number of tasks of this engine."""
 
         return min(
             [self.config.tasks_capacity]
-            + list(self.serve_layer_runtime_info.tasks_num_upperbounds.values())
+            + list(self._serve_layer_runtime_info.tasks_num_upperbounds.values())
         )
 
     def update_realtime_runtime_info(self, runtime_info: EngineRuntimeInfo) -> None:
         """Update the real-time runtime info of the engine."""
 
-        self.real_time_runtime_info = runtime_info
+        self._real_time_runtime_info = runtime_info
 
-    def update_servelayer_runtime_info(
-        self, task_id: int, tokens_num: int, tasks_num_upperbound: int
-    ) -> None:
-        """Update the serve-layer runtime info by some tasks scheduled to it."""
+    def update_servelayer_runtime_info_add_task(self, task: "CompletionTask") -> None:
+        """Update the serve-layer runtime info by a task scheduled to it."""
 
-        self.serve_layer_runtime_info.num_tasks += 1
-        self.serve_layer_runtime_info.tokens_num += tokens_num
+        parrot_assert(task.is_scheduled, "The task is not scheduled.")
 
-        self.serve_layer_runtime_info.tasks_num_upperbounds[task_id] = (
+        self._serve_layer_runtime_info.num_tasks += 1
+
+        tokens_num = task.get_token_nums(self.tokenizer_name)
+        self._serve_layer_runtime_info.tokens_num += tokens_num
+
+        tasks_num_upperbound = task.schedule_annotation.tasks_num_upperbound
+        self._serve_layer_runtime_info.tasks_num_upperbounds[task.task_id] = (
             tasks_num_upperbound
         )
+
+    def update_servelayer_runtime_info_remove_task(
+        self, task: "CompletionTask"
+    ) -> None:
+        """Update the serve-layer runtime info by a task removed from it."""
+
+        parrot_assert(task.is_scheduled, "The task is not scheduled.")
+
+        self._serve_layer_runtime_info.num_tasks -= 1
+
+        tokens_num = task.get_token_nums(self.tokenizer_name)
+        self._serve_layer_runtime_info.tokens_num -= tokens_num
+
+        self._serve_layer_runtime_info.tasks_num_upperbounds.pop(task.task_id)
+
+    # ---------- For Profiling ----------
+
+    def get_cache_mem(self) -> float:
+        return self._real_time_runtime_info.cache_mem
+
+    def get_num_cached_tokens(self) -> int:
+        return self._real_time_runtime_info.num_cached_tokens

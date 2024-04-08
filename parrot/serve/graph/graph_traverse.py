@@ -38,25 +38,21 @@ def _traverse(
     if chain.is_activated:
         return
 
-    chain.depth = depth
-
     # Propagate the performance criteria.
     next_criteria = _back_propagate_criteria(criteria)
     # Grouping chains.
     chain_group = CompChainGroup()
 
     for node in chain.iter_fill():
-        if node.sv.producer is not None:
-            parrot_assert(
-                node.sv.producer.completion_chain is not None, "Producer chain is None."
-            )
-            next_chain: CompletionChain = node.sv.producer.completion_chain
+        if node.sv.has_producer:
+            producer: PlaceholderGen = node.sv.get_producer()
+            next_chain: CompletionChain = producer.comp_chain
             next_chain.chain_groups.append(chain_group)
             chain_group.chains.add(next_chain)
             _traverse(next_chain, next_criteria, depth + 1)
 
     # Lastly, activate the chain.
-    chain.activate(criteria)
+    chain.activate(criteria, depth)
 
 
 def activate_completion_chain(

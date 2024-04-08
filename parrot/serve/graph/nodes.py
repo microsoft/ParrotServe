@@ -15,26 +15,32 @@ class BaseNode:
     """Represent a computational node in the graph."""
 
     def __init__(self):
-        self.sv: Optional[SemanticVariable] = None
-        self.id_in_graph: Optional[int] = None
-        self.completion_chain: Optional["CompletionChain"] = None
+        self._sv: Optional[SemanticVariable] = None
+        self._id_in_graph: Optional[int] = None
+        self._completion_chain: Optional["CompletionChain"] = None
         # self.request_chain: Optional["RequestChain"] = None
 
         # Edge type A: Fill -> Fill -> Fill -> Gen -> Fill -> Fill -> Gen -> ...
-        self.edge_a_prev_node: Optional["BaseNode"] = None
-        self.edge_a_next_node: Optional["BaseNode"] = None
+        self._edge_a_prev_node: Optional["BaseNode"] = None
+        self._edge_a_next_node: Optional["BaseNode"] = None
+
+    # ---------- SV ----------
 
     @property
-    def has_var(self) -> bool:
+    def has_sv(self) -> bool:
         """Whether the node has a SV."""
 
-        return self.sv is not None
+        return self._sv is not None
 
     @property
-    def is_inserted(self) -> bool:
-        """Whether the node is inserted into the graph."""
+    def sv(self) -> SemanticVariable:
+        parrot_assert(self.has_sv, "This node has no SV.")
+        return self._sv
 
-        return self.id_in_graph is not None
+    def set_sv(self, sv: SemanticVariable) -> None:
+        self._sv = sv
+
+    # ---------- Node Properties ----------
 
     @property
     def is_gen(self) -> bool:
@@ -48,23 +54,76 @@ class BaseNode:
 
         return not isinstance(self, ConstantFill)
 
+    # ---------- Graph ----------
+
     @property
-    def edge_b_prev_node(self) -> Optional["BaseNode"]:
+    def is_inserted(self) -> bool:
+        """Whether the node is inserted into the graph."""
+
+        return self._id_in_graph is not None
+
+    @property
+    def id_in_graph(self) -> int:
+        parrot_assert(self.is_inserted, "This node is not inserted.")
+        return self._id_in_graph
+
+    def set_id_in_graph(self, id_in_graph: int) -> None:
+        self._id_in_graph = id_in_graph
+
+    def link_edge_a_with(self, prev_node: "BaseNode") -> None:
+        """Link the node with its predecessor in edge type A."""
+
+        self._edge_a_prev_node = prev_node
+        prev_node._edge_a_next_node = self
+
+    @property
+    def has_edge_a_prev_node(self) -> bool:
+        return self._edge_a_prev_node is not None
+
+    @property
+    def has_edge_a_next_node(self) -> bool:
+        return self._edge_a_next_node is not None
+
+    def get_edge_a_prev_node(self) -> Optional["BaseNode"]:
+        return self._edge_a_prev_node
+
+    def get_edge_a_next_node(self) -> Optional["BaseNode"]:
+        return self._edge_a_next_node
+
+    @property
+    def has_edge_b_prev_node(self) -> bool:
+        return self.sv.has_producer
+
+    def get_edge_b_prev_node(self) -> Optional["BaseNode"]:
         """Edge type B: prev node. 0 or 1."""
 
         parrot_assert(self.is_inserted, "Should be inserted before get DAG info.")
-        return self.sv.producer
+        return self.sv.get_producer()
 
-    @property
-    def edge_b_next_nodes(self) -> List["BaseNode"]:
+    def get_edge_b_next_nodes(self) -> List["BaseNode"]:
         """Edge type B: next node. Only Gen node has multiple next nodes."""
 
         parrot_assert(self.is_inserted, "Should be inserted before get DAG info.")
         if not isinstance(self, PlaceholderGen):
             return []
-        return self.sv.consumers
+        return self.sv.get_consumers()
 
-    async def wait_ready(self):
+    @property
+    def comp_chain(self) -> "CompletionChain":
+        parrot_assert(self.is_inserted, "Should be inserted before get DAG info.")
+        parrot_assert(self.comp_chain_is_set, "This node has no completion chain.")
+        return self._completion_chain
+
+    @property
+    def comp_chain_is_set(self) -> bool:
+        return self._completion_chain is not None
+
+    def set_comp_chain(self, comp_chain: "CompletionChain") -> None:
+        self._completion_chain = comp_chain
+
+    # ---------- Polling ----------
+
+    async def wait_ready(self) -> None:
         """Wait until the node is ready. A node is ready if all its inputs are ready.
 
         To be specific, a node in our graph can only have at most 2 inputs:
@@ -74,25 +133,26 @@ class BaseNode:
         The node is ready iff. all its predecessors' SVs are ready.
         """
 
-        if self.edge_a_prev_node is not None:
-            await self.edge_a_prev_node.sv.wait_ready()
+        if self._edge_a_prev_node is not None:
+            await self._edge_a_prev_node.sv.wait_ready()
 
-        if self.edge_b_prev_node is not None:
-            await self.edge_b_prev_node.sv.wait_ready()
+        if self.has_edge_b_prev_node:
+            sv = self.get_edge_b_prev_node()
+            await sv.wait_ready()
 
     @property
     def sv_name(self) -> str:
         # parrot_assert(self.has_var, "This node has no SV.")
-        if not self.has_var:
+        if not self.has_sv:
             return "(no SV)"
         return self.sv.name
 
     @property
     def sv_id(self) -> str:
         # parrot_assert(self.has_var, "This node has no SV.")
-        if not self.has_var:
+        if not self.has_sv:
             return "(no SV)"
-        return self.sv.sv_id
+        return self.sv.id
 
     def get(self) -> str:
         """Get the content of the node."""
@@ -119,7 +179,7 @@ class BaseNode:
 
     def _short_repr_add_graph_id(self, repr: str) -> str:
         if self.is_inserted:
-            return f"{self.id_in_graph}: " + repr
+            return f"{self._id_in_graph}: " + repr
         return repr
 
     def short_repr(self) -> str:

@@ -1,10 +1,16 @@
-from typing import List
-from parrot.serve.scheduler import TaskCreator, GlobalScheduler, GlobalSchedulerConfig
+from typing import List, Optional
+from parrot.serve.scheduler import (
+    CompletionTask,
+    TaskCreator,
+    GlobalScheduler,
+    GlobalSchedulerConfig,
+)
 from parrot.serve.tokenizer_wrapper import TokenizersWrapper
 from parrot.serve.context_manager import ServeCoreContextManager
 from parrot.serve.variable_manager import SemanticVariableManager
 from parrot.serve.graph import (
     RequestChain,
+    CompletionChain,
     ConstantFill,
     PlaceholderFill,
     PlaceholderGen,
@@ -16,6 +22,7 @@ from parrot.serve.graph import (
 from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
 from parrot.engine.config import EngineConfig
 from parrot.serve.engine_manager import EngineManager
+from parrot.serve.graph.visualize_utils import view_graph
 
 
 def test_default_policy_throughput():
@@ -168,11 +175,12 @@ def test_app_fifo():
     var_mgr.register_local_var_space(session_id)
 
     # 8 tasks. Each group of 2 tasks with A->B dependency.
-    tasks = []
+    first_batch_tasks: List[CompletionTask] = []
+    second_batch_chains: List[CompletionChain] = []
     out_vars: List[SemanticVariable] = []
 
-    for _ in range(4):
-        request_chain = RequestChain.from_nodes(
+    for i in range(4):
+        request_chain1 = RequestChain.from_nodes(
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
@@ -180,25 +188,13 @@ def test_app_fifo():
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
-        graph.insert_and_update_request_chain(request_chain)
-        comp_chain = request_chain.comp_chains[0]
-        activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
-        task = task_creator.create_task(comp_chain)
-        task.tokenize_chain(tokenizers_wrapper)
-        out_vars.append(comp_chain.gen_node.sv)
-        tasks.append(task)
-        # First 4 tasks
-        scheduler.submit_task(task)
 
-    for i in range(4):
-        # Schedule.
-        # Expected result: No. i task in engine0.
-        scheduler.schedule()
-        # Set var as finish
-        out_vars[i].set("Content0")
+        var_mgr.create_vars_for_request(session_id, request_chain1)
+        graph.insert_and_update_request_chain(request_chain1)
+        comp_chain1 = request_chain1.comp_chains[0]
+        out_vars.append(comp_chain1.gen_node.sv)
 
-        request_chain = RequestChain.from_nodes(
+        request_chain2 = RequestChain.from_nodes(
             nodes=[
                 PlaceholderFill(
                     placeholder=RequestPlaceholder(
@@ -212,18 +208,44 @@ def test_app_fifo():
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
-        graph.insert_and_update_request_chain(request_chain)
-        comp_chain = request_chain.comp_chains[0]
-        activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+
+        var_mgr.create_vars_for_request(session_id, request_chain2)
+        graph.insert_and_update_request_chain(request_chain2)
+        comp_chain2 = request_chain2.comp_chains[0]
+        activate_completion_chain(comp_chain2, PerformanceCriteria.LATENCY)
+
+        task1 = task_creator.create_task(comp_chain1)
+        task1.tokenize_chain(tokenizers_wrapper)
+        first_batch_tasks.append(task1)
+        second_batch_chains.append(comp_chain2)
+
+        scheduler.submit_task(task1)
+
+    view_graph(graph)
+
+    for i in range(4):
+        # Schedule.
+        # Expected result: No. i task in engine0.
+        scheduler.schedule()
+        # Set var as finish
+        out_vars[i].set("Content0")
+        assert first_batch_tasks[i].is_scheduled
+        first_batch_tasks[i].leave_scheduled()
+
+        # Submit 2
+        comp_chain = second_batch_chains[i]
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
-        tasks.append(task)
         scheduler.submit_task(task)
 
         # Schedule again.
         # Expected result: No. i+4 task in engine 0.
         scheduler.schedule()
+        assert task.is_scheduled
+        task.engine.update_servelayer_runtime_info_remove_task(task)
+
+    # view_graph(graph)
+    # 0 4 1 5 2 6 3 7
 
 
 def test_graph_group():

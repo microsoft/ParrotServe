@@ -47,12 +47,12 @@ def get_nx_graph(graph: ComputeGraph) -> nx.DiGraph:
 
     for node in graph.nodes:
         # Edge type A: using -
-        if node.edge_a_next_node:
+        if node.has_edge_a_next_node:
             nx_graph.add_edge(
-                node.short_repr(), node.edge_a_next_node.short_repr(), weight=1
+                node.short_repr(), node.get_edge_a_next_node().short_repr(), weight=1
             )
 
-        edge_b_next_nodes = node.edge_b_next_nodes
+        edge_b_next_nodes = node.get_edge_b_next_nodes()
         for next_node in edge_b_next_nodes:
             nx_graph.add_edge(node.short_repr(), next_node.short_repr(), weight=2)
 

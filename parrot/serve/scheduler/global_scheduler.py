@@ -29,7 +29,7 @@ class GlobalSchedulerConfig:
 
 
 class GlobalScheduler:
-    """GlobalScheduler(GS) solves the task scheduling problem in the global scope."""
+    """GlobalScheduler (GS) solves the task scheduling problem in the global scope."""
 
     def __init__(
         self,
@@ -53,7 +53,7 @@ class GlobalScheduler:
         engine_list = self.engine_mgr.get_live_engines()
 
         # NOTE(chaofan): Suppose all tasks noted the same "models" arg.
-        models = tasks[0].chain.request_chain.metadata.models
+        models = tasks[0].chain.metadata.models
         # TODO(chaofan): Throughput/latency criteria
 
         def check_engine_available(engine: ExecutionEngine):
@@ -144,11 +144,6 @@ class GlobalScheduler:
         assert best_engine is not None
         for task in tasks:
             task.schedule_to(best_engine)
-            best_engine.update_servelayer_runtime_info(
-                task_id=task.task_id,
-                tokens_num=task.get_token_nums(best_engine.model.tokenizer_name),
-                tasks_num_upperbound=task.schedule_annotation.tasks_num_upperbound,
-            )
 
     # ---------- Public Methods ----------
 
@@ -170,15 +165,17 @@ class GlobalScheduler:
     def schedule(self) -> None:
         """Try to schedule all tasks in scheduler's queue."""
 
+        if self.config.app_fifo:
+            # Sort the tasks by the order of depth
+            self.task_queue.sort(key=lambda x: x.chain.depth)
+
         # NOTE(chaofan): The tasks are sorted by priority, by default.
-        checked_tasks: Set[int] = set()
         for i, task in enumerate(self.task_queue):
-            if task.task_id in checked_tasks:
+            if task.is_scheduled:
                 continue
 
             # Group tasks in rest queue
             cur_group: List[CompletionTask] = [task]
-            checked_tasks.add(task.task_id)
             chain_groups = set(task.chain.chain_groups)
 
             # Only allow one type of grouping at a time
@@ -190,8 +187,8 @@ class GlobalScheduler:
                     task_j = self.task_queue[j]
 
                     # TODO(chaofan): Models match check
-                    models_i = task.chain.request_chain.metadata.models
-                    models_j = task_j.chain.request_chain.metadata.models
+                    models_i = task.chain.metadata.models
+                    models_j = task_j.chain.metadata.models
 
                     # TODO(chaofan): Criteria match check. Only group tasks with the same criteria.
 
@@ -201,15 +198,13 @@ class GlobalScheduler:
                         common_groups = chain_groups.intersection(chain_groups_j)
                         if len(common_groups) > 0:
                             cur_group.append(task_j)
-                            checked_tasks.add(task_j.task_id)
                             chain_groups = common_groups
                             ctx_group_enabled = False  # Use graph group this round
 
                     # Context group check
                     if ctx_group_enabled:
-                        if task.chain.first_node.sv_id == task_j.chain.first_node.sv_id:
+                        if task.contexts[0] == task_j.contexts[0]:
                             cur_group.append(task_j)
-                            checked_tasks.add(task_j.task_id)
                             graph_group_enabled = False  # Use context group this round
 
             # Try to find engines for the group
@@ -217,18 +212,14 @@ class GlobalScheduler:
 
         # Update the task queue
         prev_task_queue = self.task_queue
-        scheduled_task = [
-            task for task in prev_task_queue if task.task_id in checked_tasks
-        ]
-        self.task_queue = [
-            task for task in prev_task_queue if task.task_id not in checked_tasks
-        ]
+        scheduled_task = [task for task in prev_task_queue if task.is_scheduled]
+        self.task_queue = [task for task in prev_task_queue if not task.is_scheduled]
 
         # Display the scheduled results.
         # NOTE(chaofan): Only display >0 case to reduce the log size.
-        if len(checked_tasks) > 0:
+        if len(scheduled_task) > 0:
             logger.debug(
-                f"Scheduled {len(checked_tasks)} tasks. Results: \n"
+                f"Scheduled {len(scheduled_task)} tasks. Results: \n"
                 + "\n".join(
                     [
                         f"  Task {task.task_id} -> engine: id={task.engine.engine_id}, name={task.engine.name}, "

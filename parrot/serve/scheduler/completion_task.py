@@ -45,8 +45,8 @@ class CompletionTask:
         self.contexts: List[Context] = []
 
         # Scheduling
+        self._scheduled_event: Event = Event()
         self.schedule_annotation = schedule_annotation
-        self.scheduled: Event = Event()
         self.engine: Optional[ExecutionEngine] = None
 
     @property
@@ -57,17 +57,27 @@ class CompletionTask:
     def context_bound(self) -> bool:
         return len(self.contexts) > 0
 
+    @property
+    def is_scheduled(self) -> bool:
+        return self._scheduled_event.is_set()
+
     def schedule_to(self, engine: ExecutionEngine) -> None:
         """Schedule the task to the engine."""
 
         self.engine = engine
-        self.scheduled.set()
+        self._scheduled_event.set()
+        engine.update_servelayer_runtime_info_add_task(self)
+
+    def leave_scheduled(self) -> None:
+        """Leave the scheduled status."""
+
+        self.engine.update_servelayer_runtime_info_remove_task(self)
 
     def tokenize_chain(self, tokenizers_wrapper: "TokenizersWrapper") -> None:
         """Tokenize the chain using the tokenizers in the wrapper."""
 
         parrot_assert(not self.is_tokenized, "Tokenized result is already available.")
-        parrot_assert(self.chain.request_chain.sv_created, "SVs are not created yet.")
+        parrot_assert(self.chain.sv_created, "SVs are not created yet.")
 
         self.tokenized_result = {}
         for fill_node in self.chain.iter_fill():

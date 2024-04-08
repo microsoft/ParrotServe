@@ -188,7 +188,7 @@ class BuiltinEngine(LLMEngine):
     # override
     async def engine_iter(self):
         # If there is no job, we don't need to run.
-        if self.scheduler.empty:
+        if self.scheduler.is_empty:
             return
 
         jobs = self.scheduler.schedule()

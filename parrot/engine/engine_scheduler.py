@@ -72,8 +72,8 @@ class EngineScheduler:
         return len(self.waiting_jobs) + len(self.running_jobs)
 
     @property
-    def empty(self) -> bool:
-        """Check if the scheduler is empty."""
+    def is_empty(self) -> bool:
+        """Whether the scheduler is empty."""
 
         # print(f"Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}")
         # return len(self.waiting_jobs) == 0 and len(self.running_jobs) == 0
