@@ -22,13 +22,6 @@ def test_content_hash():
 def test_request_chain_hash():
     var_mgr = SemanticVariableManager(constant_prefix_var_timeout=10)
 
-    metadata = SemanticCallMetadata(
-        session_id=0,
-        models=[],
-        model_type="token_id",
-        remove_pure_fill=True,
-    )
-
     request_chain1 = RequestChain.from_nodes(
         nodes=[
             ConstantFill("Test1"),
@@ -39,8 +32,7 @@ def test_request_chain_hash():
                     name="b", is_output=True, sampling_config=SamplingConfig()
                 )
             ),
-        ],
-        metadata=metadata,
+        ]
     )
     request_chain2 = RequestChain.from_nodes(
         nodes=[
@@ -52,8 +44,7 @@ def test_request_chain_hash():
                     name="b", is_output=True, sampling_config=SamplingConfig()
                 )
             ),
-        ],
-        metadata=metadata,
+        ]
     )
 
     session_id = 0

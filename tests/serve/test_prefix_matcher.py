@@ -11,7 +11,7 @@ def test_prefix_matcher():
     for i in range(PrefixMatcher._GP_THRESHOLD + 1):
         prefix_matcher.add_prefix("A" * PrefixMatcher._START_LEN + "BBB" + str(i))
 
-    print(prefix_matcher.prefix_counter)
+    print(prefix_matcher._prefix_counter)
 
     query_str = "A" * PrefixMatcher._START_LEN + "BBB" + "XXX"
     pos = prefix_matcher.query_prefix(query_str)

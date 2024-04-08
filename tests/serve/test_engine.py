@@ -34,7 +34,7 @@ def test_engine_manager():
     engine_mgr.update_expired_engines()
     engine_mgr.sweep_not_running_engines()
 
-    print(engine_mgr.engines, engine_mgr.models)
+    print(engine_mgr._engines, engine_mgr._models)
 
 
 if __name__ == "__main__":

@@ -24,17 +24,10 @@ def test_prefix_cache():
     for context_id, sv in enumerate(svs):
         prefix_hash += ServeCoreContextManager._hash_sv_id(sv)
         prefix_cache.cache_prefix_context(prefix_hash, context_id)
-    print(prefix_cache.prefix_ctx_map)
+    print(prefix_cache._prefix_ctx_map)
 
 
 def test_context_manager():
-    metadata = SemanticCallMetadata(
-        session_id=0,
-        models=[],
-        model_type="token_id",
-        remove_pure_fill=True,
-    )
-
     session_id = 0
     var_mgr = SemanticVariableManager(666)
     var_mgr.register_local_var_space(session_id=0)
@@ -46,7 +39,7 @@ def test_context_manager():
             ConstantFill("Test1"),
             PlaceholderFill(
                 placeholder=RequestPlaceholder(
-                    name="a", var_id=var0.sv_id, is_output=False
+                    name="a", var_id=var0.id, is_output=False
                 )
             ),
             ConstantFill("Test2"),
@@ -55,12 +48,11 @@ def test_context_manager():
                     name="b", is_output=True, sampling_config=SamplingConfig()
                 )
             ),
-        ],
-        metadata=metadata,
+        ]
     )
     var_mgr.create_vars_for_request(session_id, request_chain)
 
-    task = CompletionTask(task_id=0, chain=request_chain.completion_chains[0])
+    task = CompletionTask(task_id=0, chain=request_chain.comp_chains[0])
 
     config_path = get_sample_engine_config_path("opt-13b.json")
     with open(config_path, "r") as f:
@@ -74,8 +66,8 @@ def test_context_manager():
     context_mgr.register_engine_prefix_cache(engine.engine_id)
     context_mgr.set_task_contexts(task)
 
-    print(context_mgr.context_ref_counter)
-    print(context_mgr.prefix_caches[engine.engine_id].prefix_ctx_map)
+    print(context_mgr._context_ref_counter)
+    print(context_mgr._prefix_caches[engine.engine_id]._prefix_ctx_map)
 
 
 if __name__ == "__main__":

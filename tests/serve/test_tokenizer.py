@@ -57,13 +57,6 @@ def test_decode():
 
 
 def test_tokenize_request():
-    metadata = SemanticCallMetadata(
-        session_id=0,
-        models=[],
-        model_type="token_id",
-        remove_pure_fill=True,
-    )
-
     session_id = 0
     var_mgr = SemanticVariableManager(666)
     var_mgr.register_local_var_space(session_id=0)
@@ -74,7 +67,7 @@ def test_tokenize_request():
             ConstantFill("Test1"),
             PlaceholderFill(
                 placeholder=RequestPlaceholder(
-                    name="a", var_id=var0.sv_id, is_output=False
+                    name="a", var_id=var0.id, is_output=False
                 )
             ),
             ConstantFill("Test2"),
@@ -83,11 +76,10 @@ def test_tokenize_request():
                     name="b", is_output=True, sampling_config=SamplingConfig()
                 )
             ),
-        ],
-        metadata=metadata,
+        ]
     )
 
-    task = CompletionTask(task_id=0, chain=request_chain.completion_chains[0])
+    task = CompletionTask(task_id=0, chain=request_chain.comp_chains[0])
 
     tokenizers_wrapper = TokenizersWrapper()
     tokenizer_name1 = "hf-internal-testing/llama-tokenizer"
