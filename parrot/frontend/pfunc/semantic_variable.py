@@ -2,38 +2,6 @@
 # Licensed under the MIT license.
 
 
-"""
-Semantic Variable: the core abstraction in Parrot system.
-
-Its main purpose is to chunk a LLM request into smaller pieces, so that
-we can do fine-grained management and optimization.
-
-Definition: a Semantic Variable (SV) is a part of prompts with specific semantic
-purpose. A SV can be:
-- 1. A system prompt of a request (Also called prefix).
-- 2. A user-input of a request (Also called an input / a parameter of a function).
-- 3. An output location of a request (Also called a return value of a function).
-- 4. A communication port of two LLM Agents.
-- 5. A few-shot example of a request.
-- ...
-
-The motivation is that the prompt itself is structural, and can be split into
-different independent parts with different semantic purposes.
-
-
-NOTE(chaofan):
-
-In real code implementation, we use the name "Semantic Variable" to refer specifically 
-to the input/output locations in the prompts (which is 2. & 3. in the definition above), 
-to align with the APIs in paper.
-
-And we refer to those "part of prompts with specific semantic purpose" as "Semantic Region", 
-because they don't flow across requests, which is more "static".
-
-But in a word, it's just a naming issue, not a big deal.
-"""
-
-
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
@@ -45,16 +13,9 @@ from parrot.serve.scheduler.schedule_annotation import ScheduleAnnotation
 from typing import Optional
 
 
-class SemanticVariable:
-    """Represents a string which will be filled in the Future.
+class PFuncSemanticVariable:
+    """Maintain an object that represents a semantic variable in PFunc frontend."""
 
-    It's like "Future" in the Python asynchronous programming, or "Promise" in JavaScript.
-    As its name suggests, it's a placeholder for the content to be filled in the future.
-
-    It also corresponds to a Input/Output semantic variable in Parrot System.
-    """
-
-    _counter = 0
     _virtual_machine_env: Optional["VirtualMachine"] = None
 
     def __init__(
@@ -62,14 +23,8 @@ class SemanticVariable:
         name: Optional[str] = None,
         content: Optional[str] = None,
     ):
-        self.id = self._increment()
         self.name = name if name is not None else f"v{self.id}"
         self.content = content
-
-    @classmethod
-    def _increment(cls) -> int:
-        cls._counter += 1
-        return cls._counter
 
     def __repr__(self) -> str:
         if self.ready:

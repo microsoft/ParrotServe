@@ -4,150 +4,63 @@
 
 import aiohttp
 from dataclasses import asdict
+from typing import List, Dict
 
-from .responses import (
-    VMHeartbeatResponse,
-    RegisterVMResponse,
-    SubmitCallResponse,
-    PlaceholderSetResponse,
-    PlaceholderFetchResponse,
-    EngineHeartbeatResponse,
-    FreeContextResponse,
-    RegisterEngineResponse,
-    PingResponse,
-)
-from ..http_utils import (
-    send_http_request,
-    async_send_http_request,
-    logger,
-)
+from parrot.utils import get_logger
+
+from ..base_response import BaseResponse
+from ..http_utils import send_http_request
 from .runtime_info import EngineRuntimeInfo
 
 
-# ---------- Program Layer to OS Layer APIs ----------
+"""
+Internal APIs (used for communication between ServeLayer and EngineLayer).
+
+Engine Management (Server side):
+    - register_engine POST
+    - engine_heartbeat POST
+
+Engine Management (Engine side):
+    - ping POST
+
+Context & LLMs:
+    - free_context POST
+    - fill POST
+    - generate POST
+    - generate_stream POST
+"""
 
 
-def vm_heartbeat(
-    http_addr: str,
-    pid: int,
-) -> VMHeartbeatResponse:
-    try:
-        return send_http_request(
-            response_cls=VMHeartbeatResponse,
-            http_addr=http_addr,
-            api_url="/vm_heartbeat",
-            retry_times=3,
-            # timeout=3,
-            pid=pid,
-        )
-    except BaseException as e:
-        logger.error(
-            f"Check vm (pid: {pid}) heartbeat error in {http_addr}. Error: {e}"
-        )
-        raise e
+logger = get_logger("Layer APIs")
 
 
-def register_vm(http_addr: str) -> RegisterVMResponse:
-    try:
-        return send_http_request(
-            RegisterVMResponse,
-            http_addr,
-            "/register_vm",
-            retry_times=1,
-        )
-    except BaseException as e:
-        logger.error(f"Register VM error in {http_addr}. Error: {e}")
-        raise e
+# ---------- Responses ----------
 
 
-def submit_call(
-    http_addr: str, pid: int, call: "BasicCall", is_native: bool
-) -> SubmitCallResponse:
-    try:
-        return send_http_request(
-            SubmitCallResponse,
-            http_addr,
-            "/submit_call",
-            retry_times=1,
-            pid=pid,
-            call=call.pickle(),
-            is_native=is_native,
-        )
-    except BaseException as e:
-        logger.error(f"Execute func (pid: {pid}) error in {http_addr}. Error: {e}")
-        raise e
+class EngineHeartbeatResponse(BaseResponse):
+    pass
 
 
-async def asubmit_call(
-    http_addr: str, pid: int, call: "BasicCall", is_native: bool
-) -> SubmitCallResponse:
-    try:
-        async with aiohttp.ClientSession() as client_session:
-            return await async_send_http_request(
-                client_session,
-                SubmitCallResponse,
-                http_addr,
-                "/submit_call",
-                retry_times=1,
-                pid=pid,
-                call=call.pickle(),
-                is_native=is_native,
-            )
-    except BaseException as e:
-        logger.error(f"Execute func (pid: {pid}) error in {http_addr}. Error: {e}")
-        raise e
+class RegisterEngineResponse(BaseResponse):
+    engine_id: int
 
 
-def placeholder_set(http_addr: str, pid: int, placeholder_id: int, content: str):
-    try:
-        send_http_request(
-            PlaceholderSetResponse,
-            http_addr,
-            "/placeholder_set",
-            retry_times=1,
-            pid=pid,
-            placeholder_id=placeholder_id,
-            content=content,
-        )
-    except BaseException as e:
-        logger.error(f"Placeholder set (pid: {pid}) error in {http_addr}. Error: {e}")
-        raise e
+class PingEngineResponse(BaseResponse):
+    pong: bool = True
+    runtime_info: Dict = {}
 
 
-def placeholder_fetch(
-    http_addr: str, pid: int, placeholder_id: int
-) -> PlaceholderFetchResponse:
-    try:
-        return send_http_request(
-            PlaceholderFetchResponse,
-            http_addr,
-            "/placeholder_fetch",
-            retry_times=1,
-            pid=pid,
-            placeholder_id=placeholder_id,
-        )
-    except BaseException as e:
-        logger.error(f"Placeholder fetch (pid: {pid}) error in {http_addr}. Error: {e}")
-        raise e
+class FreeContextResponse(BaseResponse):
+    context_len: int
 
 
-async def aplaceholder_fetch(
-    http_addr: str, pid: int, placeholder_id: int
-) -> PlaceholderFetchResponse:
-    try:
-        async with aiohttp.ClientSession() as client_session:
-            return await async_send_http_request(
-                client_session,
-                PlaceholderFetchResponse,
-                http_addr,
-                "/placeholder_fetch",
-                retry_times=1,
-                pid=pid,
-                placeholder_id=placeholder_id,
-            )
-    except BaseException as e:
-        logger.error(f"Placeholder fetch (pid: {pid}) error in {http_addr}. Error: {e}")
-        raise e
+class FillResponse(BaseResponse):
+    filled_len: int
+
+
+class GenerateResponse(BaseResponse):
+    generated_text: str
+    generated_ids: List[int]
 
 
 # ---------- OS Layer to Engine Layer APIs ----------
@@ -167,17 +80,17 @@ def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
         raise e
 
 
-def ping_engine(http_addr: str) -> PingResponse:
+def ping_engine(http_addr: str) -> PingEngineResponse:
     try:
         return send_http_request(
-            PingResponse,
+            PingEngineResponse,
             http_addr,
             "/ping",
             retry_times=5,
         )
     except BaseException as e:
         print(e.args)
-        return PingResponse(pong=False)
+        return PingEngineResponse(pong=False)
 
 
 # ---------- Engine Layer to OS Layer APIs ----------

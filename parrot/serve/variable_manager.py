@@ -230,7 +230,7 @@ class SemanticVariableManager:
         return ret
 
     def create_var(self, session_id: int, name: str) -> SemanticVariable:
-        """Create a Semantic Variable in the local namespace.]
+        """Create a Semantic Variable in the local namespace.
 
         Args:
             session_id: int. The session ID.

@@ -2,7 +2,6 @@
 # Licensed under the MIT license.
 
 
-import os
 import argparse
 import asyncio
 import traceback
@@ -11,10 +10,9 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from uvicorn import Config, Server
 
-from parrot.pfunc.function import SemanticCall, NativeCall
-from parrot.serve.core import PCore
-from parrot.serve.os_creator import create_os
-from Parrot.parrot.os.engine.engine_node import EngineRuntimeInfo
+from parrot.serve.core import ParrotServeCore, create_serve_core
+from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
+from parrot.protocol.public.api_version import API_VERSION
 from parrot.engine.config import EngineConfig
 from parrot.utils import (
     get_logger,
@@ -26,13 +24,13 @@ from parrot.exceptions import ParrotCoreUserError, ParrotCoreInternalError
 from parrot.testing.latency_simulator import get_latency
 
 
-logger = get_logger("OS Server")
+logger = get_logger("Parrot ServeCore Server")
 
 # FastAPI app
 app = FastAPI()
 
-# Engine
-pcore: Optional[PCore] = None
+# Core
+pcore: Optional[ParrotServeCore] = None
 
 # Mode
 release_mode = False
@@ -61,14 +59,47 @@ async def parrot_os_internal_error_handler(
 Public APIs.
 """
 
-API_VERSION = "v1"
-
 
 @app.post(f"/{API_VERSION}/session")
-async def create_session(request: Request):
+async def register_session(request: Request):
     payload = await request.json()
-    session_id = await pcore.create_session()
-    return {"session_id": session_id}
+    response = await pcore.register_session(payload)
+    return response
+
+
+@app.delete(f"/{API_VERSION}" + "/session/{session_id}")
+async def remove_session(session_id: int, request: Request):
+    payload = await request.json()
+    response = await pcore.remove_session(session_id, payload)
+    return response
+
+
+@app.post(f"/{API_VERSION}/submit_semantic_call")
+async def submit_semantic_call(request: Request):
+    payload = await request.json()
+    response = await pcore.submit_semantic_call(payload)
+    return response
+
+
+@app.post(f"/{API_VERSION}/semantic_var")
+async def register_semantic_variable(request: Request):
+    payload = await request.json()
+    response = await pcore.register_semantic_variable(payload)
+    return response
+
+
+@app.post(f"/{API_VERSION}" + "/semantic_var/{var_id}")
+async def set_semantic_variable(var_id: int, request: Request):
+    payload = await request.json()
+    response = await pcore.set_semantic_variable(var_id, payload)
+    return response
+
+
+@app.get(f"/{API_VERSION}" + "/semantic_var/{var_id}")
+async def get_semantic_variable(var_id: int, request: Request):
+    payload = await request.json()
+    response = await pcore.get_semantic_variable(var_id, payload)
+    return response
 
 
 """
@@ -79,34 +110,28 @@ Internal APIs.
 @app.post("/engine_heartbeat")
 async def engine_heartbeat(request: Request):
     payload = await request.json()
-    engine_id = payload["engine_id"]
-    engine_name = payload["engine_name"]
-    logger.debug(f"Engine {engine_name} (id={engine_id}) heartbeat received.")
-    engine_info = EngineRuntimeInfo(**payload["runtime_info"])
-    await pcore.engine_heartbeat(engine_id, engine_info)
-    return {}
+    response = await pcore.engine_heartbeat(payload)
+    return response
 
 
 @app.post("/register_engine")
 async def register_engine(request: Request):
     payload = await request.json()
-    logger.debug(f"Register engine received.")
-    engine_config = EngineConfig(**payload["engine_config"])
-    engine_id = await pcore.register_engine(engine_config)
-    return {"engine_id": engine_id}
+    response = await pcore.register_engine(payload)
+    return response
 
 
 def start_server(
-    os_config_path: str,
+    core_config_path: str,
     release_mode: bool = False,
     override_args: dict = {},
 ):
     global pcore
     global app
 
-    # The Operating System Core
-    pcore = create_os(
-        os_config_path=os_config_path,
+    # Create ServeCore
+    pcore = create_serve_core(
+        core_config_path=core_config_path,
         release_mode=release_mode,
         override_args=override_args,
     )
@@ -115,30 +140,30 @@ def start_server(
     config = Config(
         app=app,
         loop=loop,
-        host=pcore.os_config.host,
-        port=pcore.os_config.port,
+        host=pcore.config.host,
+        port=pcore.config.port,
         log_level="info",
     )
     uvicorn_server = Server(config)
     # NOTE(chaofan): We use `fail_fast` because this project is still in development
     # For real deployment, maybe we don't need to quit the backend when there is an error
-    create_task_in_loop(pcore.os_loop(), loop=loop, fail_fast=True)
+    create_task_in_loop(pcore.serve_loop(), loop=loop, fail_fast=True)
     loop.run_until_complete(uvicorn_server.serve())
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parrot OS server")
+    parser = argparse.ArgumentParser(description="Parrot ServeCore http server")
 
     parser.add_argument(
         "--host",
         type=str,
-        help="Host of OS server",
+        help="Host of PCore server",
     )
 
     parser.add_argument(
         "--port",
         type=int,
-        help="Port of OS server",
+        help="Port of PCore server",
     )
 
     parser.add_argument(
@@ -158,7 +183,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--log_filename",
         type=str,
-        default="os.log",
+        default="core.log",
         help="Filename of the OS server.",
     )
 
@@ -166,7 +191,7 @@ if __name__ == "__main__":
         "--release_mode",
         action="store_true",
         help="Run in release mode. In debug mode, "
-        "OS will print logs and expose extra information to clients.",
+        "Core will print logs and expose extra information to clients.",
     )
 
     args = parser.parse_args()
@@ -199,7 +224,7 @@ if __name__ == "__main__":
         override_args["port"] = args.port
 
     start_server(
-        os_config_path=args.config_path,
+        core_config_path=args.config_path,
         release_mode=release_mode,
         override_args=override_args,
     )

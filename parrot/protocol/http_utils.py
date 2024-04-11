@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 
-from typing import Type
+from typing import Type, Optional, Literal
 import requests
 import aiohttp
 
@@ -19,7 +19,8 @@ def send_http_request(
     http_addr: str,
     api_url: str,
     retry_times: int,
-    timeout=None,
+    timeout: Optional[int] = None,
+    method: Literal["GET", "POST", "DELETE"] = "POST",
     **kwargs,
 ) -> BaseResponse:
     url = http_addr + api_url
@@ -27,7 +28,15 @@ def send_http_request(
     error_resp = None
     for _ in range(retry_times):
         try:
-            resp = requests.post(url, json=kwargs, timeout=timeout)
+            if method == "GET":
+                resp = requests.get(url, json=kwargs, timeout=timeout)
+            elif method == "POST":
+                resp = requests.post(url, json=kwargs, timeout=timeout)
+            elif method == "DELETE":
+                resp = requests.delete(url, json=kwargs, timeout=timeout)
+            else:
+                raise ValueError(f"Invalid http method: {method}")
+
             if resp.status_code != 200:
                 error_resp = resp
                 continue

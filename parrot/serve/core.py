@@ -12,7 +12,12 @@ from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.exceptions import ParrotCoreInternalError
 
-from parrot.serve.graph import get_performance_criteria, activate_completion_chain
+from parrot.serve.graph import (
+    SemanticVariable,
+    PlaceholderGen,
+    get_performance_criteria,
+    activate_completion_chain,
+)
 from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig
 
 from .config import ServeCoreConfig
@@ -81,15 +86,15 @@ class ParrotServeCore:
             context_mgr=self.context_mgr,
         )
         logger.info(
-            f"PCore started with config: \n"
+            f"Parrot ServeCore started with config: \n"
             + "\n".join(
-                [f"  {key}={value}, " for key, value in self.os_config.__dict__.items()]
+                [f"  {key}={value}, " for key, value in self.config.__dict__.items()]
             )
         )
 
     # ---------- APIs to Engine Layer ----------
 
-    def register_engine(self, config: EngineConfig) -> int:
+    def register_engine(self, payload: Dict) -> int:
         """Register a new engine in the OS.
 
         Args:
@@ -99,14 +104,12 @@ class ParrotServeCore:
             int. The engine ID.
         """
 
-        engine_id = self.engine_mgr.register_engine(config)
-        return engine_id
+        logger.debug(f"Register engine received.")
+        engine_config = EngineConfig(**payload["engine_config"])
+        engine_id = self.engine_mgr.register_engine(engine_config)
+        return {"engine_id": engine_id}
 
-    def engine_heartbeat(
-        self,
-        engine_id: int,
-        engine_runtime_info: EngineRuntimeInfo,
-    ) -> None:
+    def engine_heartbeat(self, payload: Dict) -> Dict:
         """Update the last seen time of an engine and other engine info.
 
         Args:
@@ -114,29 +117,59 @@ class ParrotServeCore:
             engine_runtime_info: EngineRuntimeInfo. The engine runtime info.
         """
 
-        self.engine_mgr.engine_heartbeat(engine_id, engine_runtime_info)
+        engine_id = payload["engine_id"]
+        engine_name = payload["engine_name"]
+        logger.debug(f"Engine {engine_name} (id={engine_id}) heartbeat received.")
+        engine_info = EngineRuntimeInfo(**payload["runtime_info"])
+
+        self.engine_mgr.engine_heartbeat(engine_id, engine_info)
+
+        return {}
 
     # ---------- Public Serving APIs ----------
 
-    def register_session(self) -> int:
+    # ---------- Session Management ----------
+
+    def register_session(self, payload: Dict) -> Dict:
         """Register a new session in Serve Core.
+
+        Args:
+            payload: Dict. The payload.
 
         Returns:
             int: The session ID.
         """
 
         session_id = self.session_mgr.register_session()
-        return session_id
+        return {"session_id": session_id}
 
-    def remove_session(self, session_id: int) -> None:
+    def remove_session(self, session_id: int, payload: Dict) -> Dict:
         """Remove a session in Serve Core.
 
         Args:
             session_id: int. The session ID.
+            payload: Dict. The payload.
         """
 
         self.session_mgr.check_session_status(session_id)
         self.session_mgr._remove_session(session_id)
+
+        return {}
+
+    def get_session_info(self, session_id: int, payload: Dict) -> Dict:
+        """Get the session info.
+
+        Args:
+            session_id: int. The session ID.
+            payload: Dict. The payload.
+
+        Returns:
+            Dict. The session info.
+        """
+
+        return {}
+
+    # ---------- Function Call ----------
 
     # TODO: Support native call
     # async def submit_native_call(self, pid: int, call: NativeCall) -> int:
@@ -154,17 +187,17 @@ class ParrotServeCore:
     #     # Execute it immediately
     #     process.execute_native_call(call)
 
-    def submit_semantic_call(self, request_payload: Dict) -> Dict:
+    def submit_semantic_call(self, payload: Dict) -> Dict:
         """Submit a semantic call in a session to the ServeCore.
 
         Args:
-            request_payload: Dict. The remain request payload.
+            payload: Dict. The request payload.
 
         Returns:
             A Dict. The response payload.
         """
 
-        session_id = request_payload["session_id"]
+        session_id = payload["session_id"]
 
         # The design of Parrot's completion API is asynchronous. We split up the "request"
         # into "submit" and "get" operations.
@@ -176,61 +209,90 @@ class ParrotServeCore:
 
         # Add the request to the session.
         session = self.session_mgr.get_session(session_id)
-        response = session.add_request(request_payload)
+        response = session.add_request(payload)
         response["session_id"] = session_id
         return response
 
-    def semantic_variable_set(self, session_id: int, sv_id: str, content: str) -> None:
+    # ---------- Semantic Variable ----------
+
+    def register_semantic_variable(self, payload: Dict) -> Dict:
+        """Register a semantic variable in a session.
+
+        Args:
+            payload: Dict. The payload.
+        """
+
+        session_id = payload["session_id"]
+        name = payload["name"]
+
+        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.session_access_update(session_id)
+
+        var = self.var_mgr.create_var(session_id, name)
+        logger.debug(
+            f"SV registered (id={var.id}) in session (session_id={session_id})."
+        )
+
+        return {"var_name": var.name, "var_id": var.id}
+
+    def set_semantic_variable(self, var_id: str, payload: Dict) -> Dict:
         """Set the content of a semantic variable.
 
         Args:
-            session_id: int. The session ID.
-            sv_id: str. The semantic variable ID.
-            content: str. The content.
+            var_id: str. The variable ID.
+            payload: Dict. The payload.
         """
+
+        session_id = payload["session_id"]
+        content = payload["content"]
 
         self.session_mgr.check_session_status(session_id)
         self.session_mgr.session_access_update(session_id)
 
-        var = self.var_mgr.get_var(session_id, sv_id)
+        var = self.var_mgr.get_var(session_id, var_id)
         var.set(content)
 
         logger.debug(
-            f"SV set (id={sv_id}) from session (session_id={session_id}). "
+            f"SV set (id={var_id}) from session (session_id={session_id}). "
             f"Set content length: {len(content)} "
         )
 
-    async def semantic_variable_get(
-        self, session_id: int, sv_id: str, criteria: str
-    ) -> str:
+        return {}
+
+    async def get_semantic_variable(self, var_id: str, payload: Dict) -> {}:
         """Get the content from a Semantic Variable.
 
         Args:
-            session_id: int. The session ID.
-            sv_id: str. The Semantic Variable ID.
+            var_id: str. The variable ID.
+            payload: Dict. The payload.
         """
+
+        session_id = payload["session_id"]
+        criteria = payload["criteria"]
 
         self.session_mgr.check_session_status(session_id)
         self.session_mgr.session_access_update(session_id)
 
-        var = self.var_mgr.get_var(session_id, sv_id)
-        if var._producer is not None and not var._producer.completion_chain.activated:
-            # Activate the chain and propagate the performance criteria
-            activate_completion_chain(
-                var._producer.completion_chain, get_performance_criteria(criteria)
-            )
+        var = self.var_mgr.get_var(session_id, var_id)
+        if var.has_producer:
+            producer: PlaceholderGen = var.get_producer()
+            if not producer.is_activated:
+                # Activate the chain and propagate the performance criteria
+                activate_completion_chain(
+                    producer.completion_chain, get_performance_criteria(criteria)
+                )
 
         await var.wait_ready()
         content = var.get()
 
-        logger.debug(f"Semantic variable (id={sv_id}) get with criteria: {criteria}.")
+        logger.debug(f"Semantic variable (id={var_id}) get with criteria: {criteria}.")
 
-        return content
+        return {"content": content}
 
     # ---------- ServeCore Loop ----------
 
-    async def core_loop(self) -> None:
-        """Start the Core loop."""
+    async def serve_loop(self) -> None:
+        """Start the Core serving loop."""
 
         while True:
             # Update and clean up sessions and engines
