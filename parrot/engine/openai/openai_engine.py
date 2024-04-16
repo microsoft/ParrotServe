@@ -17,7 +17,7 @@ from ..context.text_context import TextContext
 from ...protocol.internal.runtime_info import EngineRuntimeInfo
 from ..context.context_manager import EngineContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
-from ..engine_scheduler import Scheduler
+from ..engine_scheduler import EngineScheduler
 from ..llm_engine import LLMEngine
 from ..config import OpenAIConfig, EngineConfig, SchedulerConfig
 from ..latency_analyzer import LatencyAnalyzer
@@ -46,7 +46,7 @@ class OpenAIEngine(LLMEngine):
         )
 
         # ---------- Components ----------
-        self.scheduler = Scheduler(scheduler_config)
+        self.scheduler = EngineScheduler(scheduler_config)
         self.context_manager = EngineContextManager()
         # self.latency_analyzer = LatencyAnalyzer()
 
@@ -231,7 +231,7 @@ class OpenAIEngine(LLMEngine):
     async def engine_iter(self):
         """Get the jobs and execute them asynchronously."""
 
-        if self.scheduler.empty:
+        if self.scheduler.is_empty:
             return
 
         await self._execute_iter()

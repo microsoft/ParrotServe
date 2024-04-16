@@ -22,7 +22,7 @@ def test_prefix_cache():
     prefix_cache = PrefixCache()
     prefix_hash = ""
     for context_id, sv in enumerate(svs):
-        prefix_hash += ServeCoreContextManager._hash_sv_id(sv)
+        prefix_hash += ServeCoreContextManager._hash_var_id(sv)
         prefix_cache.cache_prefix_context(prefix_hash, context_id)
     print(prefix_cache._prefix_ctx_map)
 
@@ -60,7 +60,7 @@ def test_context_manager():
     model = LanguageModel.from_engine_config(engine_config)
     engine = ExecutionEngine(engine_id=0, config=engine_config, model=model)
 
-    task.schedule_to(engine)
+    task.schedule_to(engine, update_engine_info=False)
 
     context_mgr = ServeCoreContextManager()
     context_mgr.register_engine_prefix_cache(engine.engine_id)

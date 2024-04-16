@@ -61,12 +61,16 @@ class CompletionTask:
     def is_scheduled(self) -> bool:
         return self._scheduled_event.is_set()
 
-    def schedule_to(self, engine: ExecutionEngine) -> None:
+    def schedule_to(
+        self, engine: ExecutionEngine, update_engine_info: bool = True
+    ) -> None:
         """Schedule the task to the engine."""
 
         self.engine = engine
         self._scheduled_event.set()
-        engine.update_servelayer_runtime_info_add_task(self)
+
+        if update_engine_info:
+            self.engine.update_servelayer_runtime_info_add_task(self)
 
     async def wait_scheduled(self) -> None:
         """Wait until the task is scheduled."""

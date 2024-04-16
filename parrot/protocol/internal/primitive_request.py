@@ -17,7 +17,7 @@ from ..http_utils import (
     logger,
 )
 from ...sampling_config import SamplingConfig
-from .responses import FillResponse, GenerateResponse
+from .layer_apis import FillResponse, GenerateResponse
 
 
 logger = get_logger("Primitive")
@@ -80,7 +80,7 @@ class Fill(Primitive):
                     http_addr=engine_url,
                     api_url="/fill",
                     pid=self.session_id,
-                    tid=self.task_id,
+                    task_id=self.task_id,
                     context_id=self.context_id,
                     end_flag=self.end_flag,
                     parent_context_id=self.parent_context_id,
@@ -116,8 +116,8 @@ class Generate(Primitive):
                     response_cls=GenerateResponse,
                     http_addr=engine_url,
                     api_url="/generate",
-                    pid=self.session_id,
-                    tid=self.task_id,
+                    session_id=self.session_id,
+                    task_id=self.task_id,
                     context_id=self.context_id,
                     parent_context_id=self.parent_context_id,
                     end_flag=self.end_flag,
@@ -152,7 +152,7 @@ class Generate(Primitive):
                     yield resp
                 ed = time.perf_counter_ns()
                 logger.debug(
-                    f"Generate stream latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, tid={self.task_id}"
+                    f"Generate stream latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, task_id={self.task_id}"
                 )
         except BaseException as e:
             logger.error(f"Generate error in {engine_url} error: {e}")

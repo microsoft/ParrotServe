@@ -91,7 +91,7 @@ class ServeCoreContextManager:
         # session_id -> List of Context
         self._session_contexts: Dict[int, List[Context]] = {}
 
-        # sv_id -> List of context ids
+        # var_id -> List of context ids
         # Record extra ref_counters contributed by constant prefix variables.
         # If a constant prefix variable is freed, we should decrease the ref_counter of the
         # corresponding contexts.
@@ -110,8 +110,8 @@ class ServeCoreContextManager:
         self._prefix_caches: Dict[int, PrefixCache] = {}
 
     @staticmethod
-    def _hash_sv_id(sv_id: str) -> str:
-        return f"{_PREFIX_HASH_BRACKET_LEFT}{sv_id}{_PREFIX_HASH_BRACKET_RIGHT}"
+    def _hash_var_id(var_id: str) -> str:
+        return f"{_PREFIX_HASH_BRACKET_LEFT}{var_id}{_PREFIX_HASH_BRACKET_RIGHT}"
 
     # ---------- Basic Context Operation ----------
 
@@ -222,7 +222,7 @@ class ServeCoreContextManager:
         prefix_no_cache_flag = False
 
         for node in chain.iter():
-            prefix_hash += self._hash_sv_id(node.sv_id)
+            prefix_hash += self._hash_var_id(node.var_id)
 
             if not prefix_no_cache_flag:
                 # If the prefix is already cached, use cached context
@@ -270,18 +270,18 @@ class ServeCoreContextManager:
         for context in task.contexts:
             self._free_context(context)
 
-    def free_constant_prefix_contexts(self, sv_id: str) -> None:
+    def free_constant_prefix_contexts(self, var_id: str) -> None:
         """Free the contexts of a constant prefix variable."""
 
         parrot_assert(
-            sv_id in self._constant_prefix_contexts,
+            var_id in self._constant_prefix_contexts,
             "Constant prefix variable should have contexts.",
         )
 
-        for context in self._constant_prefix_contexts[sv_id]:
+        for context in self._constant_prefix_contexts[var_id]:
             self._free_context(context)
 
-        self._constant_prefix_contexts.pop(sv_id)
+        self._constant_prefix_contexts.pop(var_id)
 
     # ---------- For Scheduler ----------
 
@@ -304,7 +304,7 @@ class ServeCoreContextManager:
         for engine_id, prefix_cache in self._prefix_caches.items():
             prefix_hash = ""
             for node in task.chain.iter():
-                prefix_hash += self._hash_sv_id(node.sv_id)
+                prefix_hash += self._hash_var_id(node.var_id)
                 if (
                     prefix_cache.get_cached_prefix_context(prefix_hash)
                     != NONE_CONTEXT_ID

@@ -1,11 +1,11 @@
 import time
 import parrot as P
-from parrot.testing.localhost_server_daemon import fake_os_server
+from parrot.testing.localhost_server_daemon import fake_core_server
 from parrot.utils import cprofile
 
 
 def def_func():
-    with fake_os_server():
+    with fake_core_server():
         vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
         st = time.perf_counter_ns()
         output_len = 32
@@ -35,7 +35,7 @@ def def_func():
 
 
 def call_func():
-    with fake_os_server():
+    with fake_core_server():
         vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
         output_len = 32
         func = vm.define_function(

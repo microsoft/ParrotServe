@@ -21,12 +21,11 @@ import time
 import numpy as np
 
 from parrot.engine.config import EngineConfig
-from Parrot.parrot.os.engine.engine_node import EngineRuntimeInfo
 from parrot.constants import (
     DEFAULT_SERVER_HOST,
     DEFAULT_ENGINE_SERVER_PORT,
-    ENGINE_HEARTBEAT_INTERVAL,
 )
+from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.protocol.internal.layer_apis import register_engine, engine_heartbeat
 from parrot.utils import get_logger, create_task_in_loop
 
@@ -35,6 +34,7 @@ TESTING_RANDOM_SEED = 2333
 TESTING_SERVER_HOST = DEFAULT_SERVER_HOST
 TESTING_SERVER_PORT = DEFAULT_ENGINE_SERVER_PORT
 TESTING_SERVER_URL = f"http://{TESTING_SERVER_HOST}:{TESTING_SERVER_PORT}"
+TESTING_ENGINE_HEARTBEAT_INTERVAL = 5  # seconds
 TESTING_FILL_PERTOKEN_TIME = 0.1
 TESTING_DECODE_PERTOKEN_TIME = 0.1
 
@@ -83,7 +83,7 @@ def fake_engine_daemon():
             ),
         )
 
-        time.sleep(ENGINE_HEARTBEAT_INTERVAL)
+        time.sleep(TESTING_ENGINE_HEARTBEAT_INTERVAL)
 
 
 @app.post("/fill")

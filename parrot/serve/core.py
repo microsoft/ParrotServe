@@ -233,7 +233,7 @@ class ParrotServeCore:
             f"SV registered (id={var.id}) in session (session_id={session_id})."
         )
 
-        return {"var_name": var.name, "var_id": var.id}
+        return {"var_id": var.id}
 
     def set_semantic_variable(self, var_id: str, payload: Dict) -> Dict:
         """Set the content of a semantic variable.

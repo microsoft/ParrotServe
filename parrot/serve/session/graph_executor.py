@@ -6,7 +6,7 @@ from typing import Optional, Dict
 from parrot.utils import get_logger, create_task_in_loop
 from parrot.exceptions import parrot_assert
 from parrot.protocol.internal.primitive_request import Primitive, Fill, Generate
-from parrot.protocol.internal.responses import FillResponse, GenerateResponse
+from parrot.protocol.internal.layer_apis import FillResponse, GenerateResponse
 
 from parrot.serve.graph import (
     ComputeGraph,

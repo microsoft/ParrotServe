@@ -35,14 +35,14 @@ class SemanticVariable:
     def __init__(
         self,
         name: str,
-        sv_id: str,
+        var_id: str,
         is_constant_prefix: bool,
         seed: int,
     ) -> None:
         # Basic Info
         self.name = name
-        self.id = sv_id
-        self.seed = seed  # A seed for generating the sv_id. For id recycling.
+        self.id = var_id
+        self.seed = seed  # A seed for generating the var_id. For id recycling.
         self.is_constant_prefix = (
             is_constant_prefix  # Whether this SV is a constant prefix.
         )

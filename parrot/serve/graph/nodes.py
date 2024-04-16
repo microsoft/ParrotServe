@@ -148,7 +148,7 @@ class BaseNode:
         return self.sv.name
 
     @property
-    def sv_id(self) -> str:
+    def var_id(self) -> str:
         # parrot_assert(self.has_var, "This node has no SV.")
         if not self.has_sv:
             return "(no SV)"
@@ -198,7 +198,7 @@ class ConstantFill(BaseNode):
     def _get_display_elements(self) -> Dict:
         return {
             "sv_name": self.sv_name,
-            "sv_id": self.sv_id,
+            "var_id": self.var_id,
             "constant_text": self.constant_text,
         }
 
@@ -222,7 +222,7 @@ class PlaceholderFill(BaseNode):
     def _get_display_elements(self) -> Dict:
         return {
             "sv_name": self.sv_name,
-            "sv_id": self.sv_id,
+            "var_id": self.var_id,
             "placeholder_name": self.placeholder.name,
         }
 
@@ -246,7 +246,7 @@ class PlaceholderGen(BaseNode):
     def _get_display_elements(self) -> Dict:
         return {
             "sv_name": self.sv_name,
-            "sv_id": self.sv_id,
+            "var_id": self.var_id,
             "placeholder_name": self.placeholder.name,
             "sampling_config": self.sampling_config,
         }

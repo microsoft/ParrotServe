@@ -361,7 +361,7 @@ class ComputeGraph:
                         "placeholder_name": placeholder.name,
                         "is_output": placeholder.is_output,
                         "var_name": node.sv_name,
-                        "var_id": node.sv_id,
+                        "var_id": node.var_id,
                     }
                 )
         self.chains.extend(request_chain.comp_chains)

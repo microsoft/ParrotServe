@@ -74,6 +74,11 @@ async def remove_session(session_id: int, request: Request):
     return response
 
 
+@app.get(f"/{API_VERSION}" + "/session/{session_id}")
+async def get_session_info(session_id: int, request: Request):
+    raise NotImplementedError("Not implemented yet.")
+
+
 @app.post(f"/{API_VERSION}/submit_semantic_call")
 async def submit_semantic_call(request: Request):
     payload = await request.json()
@@ -100,6 +105,11 @@ async def get_semantic_variable(var_id: int, request: Request):
     payload = await request.json()
     response = await pcore.get_semantic_variable(var_id, payload)
     return response
+
+
+@app.get(f"/{API_VERSION}/semantic_var")
+async def get_semantic_variable_list(request: Request):
+    raise NotImplementedError("Not implemented yet.")
 
 
 """

@@ -8,7 +8,7 @@ import aiohttp
 
 from parrot.utils import get_logger
 
-from .internal.responses import BaseResponse, make_response, async_make_response
+from .base_response import BaseResponse, make_response, async_make_response
 
 
 logger = get_logger("API")

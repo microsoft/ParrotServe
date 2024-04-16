@@ -7,7 +7,7 @@ import asyncio
 
 import parrot as P
 from parrot.utils import cprofile
-from parrot.testing.localhost_server_daemon import fake_os_server
+from parrot.testing.localhost_server_daemon import fake_core_server
 
 vm = P.VirtualMachine(os_http_addr="http://localhost:9000", mode="debug")
 

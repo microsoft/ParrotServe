@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 
-from typing import Dict
+from typing import Dict, List
 import aiohttp
 
 from parrot.utils import get_logger
@@ -48,13 +48,11 @@ class RemoveSessionResponse(BaseResponse):
 
 
 class SubmitSemanticCallResponse(BaseResponse):
-    session_id: int
-    request_id: str
-    created_vars: Dict
+    created_vars: List
 
 
 class RegisterSemanticVariableResponse(BaseResponse):
-    pass
+    var_id: str
 
 
 class SetSemanticVariableResponse(BaseResponse):
@@ -159,16 +157,20 @@ async def asubmit_semantic_call(
 
 
 def register_semantic_variable(
-    http_addr: str, session_id: int, session_auth: str
+    http_addr: str,
+    session_id: int,
+    session_auth: str,
+    var_name: str,
 ) -> RegisterSemanticVariableResponse:
     try:
-        send_http_request(
+        return send_http_request(
             RegisterSemanticVariableResponse,
             http_addr,
-            f"/{API_VERSION}/semantic_variable",
+            f"/{API_VERSION}/semantic_var",
             retry_times=1,
             session_id=session_id,
             session_auth=session_auth,
+            var_name=var_name,
         )
     except BaseException as e:
         logger.error(
@@ -181,10 +183,10 @@ def set_semantic_variable(
     http_addr: str, session_id: int, session_auth: str, var_id: str, content: str
 ) -> SetSemanticVariableResponse:
     try:
-        send_http_request(
+        return send_http_request(
             SetSemanticVariableResponse,
             http_addr,
-            f"/{API_VERSION}/set_semantic_variable/{var_id}",
+            f"/{API_VERSION}/semantic_var/{var_id}",
             retry_times=1,
             session_id=session_id,
             session_auth=session_auth,
@@ -204,7 +206,7 @@ def get_semantic_variable(
         return send_http_request(
             GetSemanticVariableResponse,
             http_addr,
-            f"/{API_VERSION}/get_semantic_variable/{var_id}",
+            f"/{API_VERSION}/semantic_var/{var_id}",
             method="GET",
             retry_times=1,
             session_id=session_id,
@@ -226,7 +228,7 @@ async def aget_semantic_variable(
                 client_session,
                 GetSemanticVariableResponse,
                 http_addr,
-                f"/{API_VERSION}/semantic_variable/{var_id}",
+                f"/{API_VERSION}/semantic_var/{var_id}",
                 method="GET",
                 retry_times=1,
                 session_id=session_id,
@@ -246,7 +248,7 @@ def get_semantic_variable_list(
         return send_http_request(
             GetSemanticVariableListResponse,
             http_addr,
-            f"/{API_VERSION}/semantic_variable",
+            f"/{API_VERSION}/semantic_var",
             method="GET",
             retry_times=1,
             session_id=session_id,

@@ -5,7 +5,7 @@
 from dataclasses import dataclass
 from typing import Dict
 
-from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_OS_SERVER_PORT
+from parrot.constants import DEFAULT_SERVER_HOST, DEFAULT_CORE_SERVER_PORT
 
 
 @dataclass
@@ -13,7 +13,7 @@ class ServeCoreConfig:
     """Config for launching ServeCore."""
 
     host: str = DEFAULT_SERVER_HOST
-    port: int = DEFAULT_OS_SERVER_PORT
+    port: int = DEFAULT_CORE_SERVER_PORT
     max_sessions_num: int = 2048
     max_engines_num: int = 2048
     session_life_span: int = 600

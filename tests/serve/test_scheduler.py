@@ -449,7 +449,7 @@ def test_ctx_aware():
     # Assign context in a round-robin manner (hacky)
     for i in range(4):
         prefix_cache = context_mgr._prefix_caches[i]
-        prefix_hash = context_mgr._hash_sv_id(first_vars[i].id)
+        prefix_hash = context_mgr._hash_var_id(first_vars[i].id)
         prefix_cache.cache_prefix_context(prefix_hash=prefix_hash, context_id=i)
 
     scheduler.schedule()
