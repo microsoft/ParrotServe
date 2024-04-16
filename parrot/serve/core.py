@@ -209,9 +209,12 @@ class ParrotServeCore:
 
         # Add the request to the session.
         session = self.session_mgr.get_session(session_id)
-        response = session.add_request(payload)
-        response["session_id"] = session_id
-        return response
+        request_id, placeholders_mapping = session.add_request(payload)
+
+        return {
+            "request_id": request_id,
+            "placeholders_mapping": placeholders_mapping,
+        }
 
     # ---------- Semantic Variable ----------
 

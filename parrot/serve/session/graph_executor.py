@@ -82,6 +82,10 @@ class GraphExecutor:
                 f"Error when scheduling chain. (session_id={self._session_id}): {e}"
             )
             self.exception_interrupt(e)
+            return
+
+        # The task is scheduled. Assign contexts to the task.
+        self._context_mgr.set_task_contexts(task)
 
         # Execute the task.
         await self.execute(task)
@@ -97,6 +101,10 @@ class GraphExecutor:
     def add_request(self, request_chain: RequestChain) -> None:
         """Add a request to the graph and assign a coroutine to the request."""
 
+        logger.debug(
+            f"Add Request(request_id={request_chain.request_id}) to executor of Session(session_id={self._session_id})."
+        )
+
         # Insert the request chain into the graph.
         self._graph.insert_and_update_request_chain(request_chain)
 
@@ -107,9 +115,7 @@ class GraphExecutor:
     async def execute(self, completion_task: CompletionTask) -> None:
         """Execute a CompletionTask."""
 
-        parrot_assert(
-            completion_task.engine is not None, "Execution engine is not available."
-        )
+        parrot_assert(completion_task.is_scheduled, "Task is not scheduled.")
 
         completion_task.status = TaskStatus.EXECUTING
 

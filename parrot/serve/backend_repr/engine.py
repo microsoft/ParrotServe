@@ -67,6 +67,16 @@ class ExecutionEngine:
         self._real_time_runtime_info = EngineRuntimeInfo()
         self._serve_layer_runtime_info = ServeLayerRuntimeInfo()
 
+    @classmethod
+    def from_engine_config(
+        cls, engine_id: int, config: EngineConfig
+    ) -> "ExecutionEngine":
+        """Create an ExecutionEngine from an EngineConfig."""
+
+        model = LanguageModel.from_engine_config(config)
+
+        return cls(engine_id, config, model)
+
     # ---------- Status Methods ----------
 
     def mark_bad(self, exception: Exception) -> None:

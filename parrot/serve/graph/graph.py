@@ -100,6 +100,14 @@ class CompletionChain:
         self.chain_groups: List[CompChainGroup] = []
 
     @property
+    def request_id(self) -> int:
+        return self._request_chain.request_id
+
+    @property
+    def session_id(self) -> int:
+        return self._request_chain.session_id
+
+    @property
     def is_activated(self) -> bool:
         return self._activated_event.is_set()
 
@@ -110,6 +118,17 @@ class CompletionChain:
     @property
     def metadata(self) -> SemanticCallMetadata:
         return self._request_chain.metadata
+
+    def pretty_print(self) -> str:
+        """Pretty print it using Graph's pretty print APIs."""
+
+        ret = "CompletionChain: Nodes: \n"
+        for node in self.iter():
+            ret += node.pretty_print()
+
+        # ret += "Metadata: \n" + str(self.metadata) + "\n"
+
+        return ret
 
     def activate(self, criteria: PerformanceCriteria, depth: int) -> None:
         """Activate the CompletionChain with a given PerformanceCriteria."""
@@ -168,13 +187,21 @@ class RequestChain:
     It can be inserted into a graph directly.
     """
 
-    def __init__(self, first_node: BaseNode, metadta: SemanticCallMetadata) -> None:
+    def __init__(
+        self,
+        request_id: int,
+        session_id: int,
+        first_node: BaseNode,
+        metadata: SemanticCallMetadata,
+    ) -> None:
+        self.request_id = request_id
+        self.session_id = session_id
         self.first_node = first_node
-        self.metadata = metadta
+        self.metadata = metadata
         self.comp_chains: List[CompletionChain] = []
 
         # Only valid after inserted into a graph.
-        self._placeholder_mapping: List[Dict] = []
+        self._placeholders_mapping: List[Dict] = []
 
         # Assign request chain to nodes
         # for node in self.iter():
@@ -197,7 +224,7 @@ class RequestChain:
     def pretty_print(self) -> str:
         """Pretty print it using Graph's pretty print APIs."""
 
-        ret = "Nodes: \n"
+        ret = "RequestChain: Nodes: \n"
         for node in self.iter():
             ret += node.pretty_print()
 
@@ -211,14 +238,19 @@ class RequestChain:
         nodes: List[BaseNode],
         metadata: SemanticCallMetadata = SemanticCallMetadata.get_default(),
     ) -> "RequestChain":
-        """Convert a list of nodes into a RequestChain."""
+        """Convert a list of nodes into a RequestChain.
+
+        This function is ususally used in tests.
+        """
 
         parrot_assert(
             len(nodes) > 0,
             "RequestChain creation failed: Empty nodes.",
         )
 
-        request_chain = cls(nodes[0], metadata)
+        request_chain = cls(
+            request_id=0, session_id=0, first_node=nodes[0], metadata=metadata
+        )
         prev_node = nodes[0]
         completion_chain_first_node = nodes[0]
 
@@ -263,7 +295,12 @@ class RequestChain:
 
             # Record first node
             if i == 0:
-                request_chain = cls(node, chunked_request.metadata)
+                request_chain = cls(
+                    request_id=0,
+                    session_id=0,
+                    first_node=node,
+                    metadata=chunked_request.metadata,
+                )
                 prev_node = node
                 completion_chain_first_node = node
 
@@ -287,7 +324,7 @@ class RequestChain:
 
         return request_chain
 
-    def get_placeholder_mapping(self) -> List[Dict]:
+    def get_placeholders_mapping(self) -> List[Dict]:
         """Get the placeholder mapping after inserted into a graph.
 
         Returns:
@@ -298,7 +335,7 @@ class RequestChain:
             self.is_inserted,
             "Get placeholder mapping failed: RequestChain has not been inserted into a graph.",
         )
-        return self._placeholder_mapping
+        return self._placeholders_mapping
 
 
 class ComputeGraph:
@@ -356,7 +393,7 @@ class ComputeGraph:
 
                 # Maintain the placeholder mapping
                 # HACK: Access the private member directly
-                request_chain._placeholder_mapping.append(
+                request_chain._placeholders_mapping.append(
                     {
                         "placeholder_name": placeholder.name,
                         "is_output": placeholder.is_output,

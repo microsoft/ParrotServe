@@ -48,7 +48,8 @@ class RemoveSessionResponse(BaseResponse):
 
 
 class SubmitSemanticCallResponse(BaseResponse):
-    created_vars: List
+    request_id: int
+    placeholders_mapping: List
 
 
 class RegisterSemanticVariableResponse(BaseResponse):

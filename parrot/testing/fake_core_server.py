@@ -52,14 +52,25 @@ async def remove_session(session_id: int, request: Request):
     return {}
 
 
+_request_counter = 0
+
+
 @app.post(f"/{API_VERSION}/submit_semantic_call")
 async def submit_semantic_call(request: Request):
+    global _request_counter
+
     payload = await request.json()
 
     session_id = payload["session_id"]
-    logger.debug(f"Submit semantic call. Session id={session_id}")
+    request_id = _request_counter
+    _request_counter += 1
+
+    logger.debug(
+        f"Submit semantic call. Session id={session_id}. Request id={request_id}."
+    )
     return {
-        "created_vars": [],
+        "request_id": request_id,
+        "placeholders_mapping": [],
     }
 
 

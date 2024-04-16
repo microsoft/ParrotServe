@@ -124,11 +124,12 @@ class BaseNode:
     # ---------- Polling ----------
 
     async def wait_ready(self) -> None:
-        """Wait until the node is ready. A node is ready if all its inputs are ready.
+        """Wait until the node is ready. A node is ready if all its inputs are ready
+        and the SV is ready.
 
         To be specific, a node in our graph can only have at most 2 inputs:
         - Predecessor in edge type A (previous Fill)
-        - Predcessor in edge type B (Gen in the same SV)
+        - Predecessor in edge type B (Gen in the same SV)
 
         The node is ready iff. all its predecessors' SVs are ready.
         """
@@ -136,9 +137,7 @@ class BaseNode:
         if self._edge_a_prev_node is not None:
             await self._edge_a_prev_node.sv.wait_ready()
 
-        if self.has_edge_b_prev_node:
-            sv = self.get_edge_b_prev_node()
-            await sv.wait_ready()
+        await self.sv.wait_ready()
 
     @property
     def sv_name(self) -> str:

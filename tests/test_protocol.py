@@ -80,6 +80,8 @@ def test_submit_semantic_call():
             payload=payload,
         )
 
+        assert resp.request_id == 0
+
 
 def test_register_semantic_variable():
     with fake_core_server():
@@ -197,12 +199,7 @@ def test_register_engine():
 
 def test_fill():
     engine_config = _get_opt_125m_engine_config()
-    model = LanguageModel.from_engine_config(engine_config)
-    engine = ExecutionEngine(
-        engine_id=0,
-        config=engine_config,
-        model=model,
-    )
+    engine = ExecutionEngine.from_engine_config(engine_id=0, config=engine_config)
 
     async def main():
         primitve = Fill(
@@ -276,11 +273,11 @@ def test_generate():
 if __name__ == "__main__":
     # test_register_session()
     # test_remove_session()
-    # test_submit_semantic_call()
+    test_submit_semantic_call()
     # test_register_semantic_variable()
     # test_set_semantic_variable()
     # test_get_semantic_variable()
     # test_free_context()
     # test_fill()
-    test_generate()
+    # test_generate()
     pass

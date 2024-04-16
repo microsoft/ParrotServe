@@ -77,6 +77,11 @@ class Session:
         # ---------- Runtime Status ----------
         self.status = SessionStatus.RUNNING
 
+        # ---------- Requests ----------
+        self._request_id_counter = (
+            0  # We don't use RecyclePool since the lifetime of a session is short.
+        )
+
         self._register_session_resources()
 
     # ---------- Internal methods ----------
@@ -96,12 +101,19 @@ class Session:
             request_payload (Dict): The request payload.
 
         Returns:
-            Dict: The response payload.
+            int: The request id.
+            List: The placeholder mapping.
         """
+
+        # Get the request id.
+        request_id = self._request_id_counter
+        self._request_id_counter += 1
 
         # Convert the request to a ChunkedRequest.
         chunked_request = ChunkedSemanticCallRequest.parse_from_payload(
-            self.session_id, request_payload
+            request_id=request_id,
+            session_id=self.session_id,
+            payload=request_payload,
         )
 
         # Prefix matching and splitting.
@@ -118,9 +130,12 @@ class Session:
         self.executor.add_request(request_chain=request_chain)
 
         # It must be inserted. So we can get the mapping.
-        placeholder_mapping = request_chain.get_placeholder_mapping()
+        placeholders_mapping = request_chain.get_placeholders_mapping()
 
-        return placeholder_mapping
+        return {
+            "request_id": request_id,
+            "placeholders_mapping": placeholders_mapping,
+        }
 
     # def execute_native_call(self, call: NativeCall):
     #     async def _execute_body(func, *args):
@@ -172,5 +187,5 @@ class Session:
         self._var_mgr.free_local_var_space(session_id=self.session_id)
 
         logger.info(
-            f"Free session (id={self.session_id}) with running threads num: {len(self.threads)}"
+            f"Free Session(session_id={self.session_id}) with running tasks num: {0}"
         )

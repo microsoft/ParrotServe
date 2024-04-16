@@ -57,8 +57,7 @@ def test_context_manager():
     config_path = get_sample_engine_config_path("opt-13b.json")
     with open(config_path, "r") as f:
         engine_config = EngineConfig.from_dict(json.load(f))
-    model = LanguageModel.from_engine_config(engine_config)
-    engine = ExecutionEngine(engine_id=0, config=engine_config, model=model)
+    engine = ExecutionEngine.from_engine_config(0, engine_config)
 
     task.schedule_to(engine, update_engine_info=False)
 

@@ -117,7 +117,7 @@ class GlobalScheduler:
             engine_ids_with_prefixes = self.context_mgr.query_prefixes_in_engines(
                 tasks[0]
             )
-            print(engine_ids_with_prefixes)
+            # print(engine_ids_with_prefixes)
 
         best_engine = None
         for engine in engine_list:
@@ -161,6 +161,11 @@ class GlobalScheduler:
                     f"Hence the incoming task is rejected."
                 )
             )
+
+        logger.debug(
+            f"Session(session_id={task.chain.session_id}) submit Task(task_id={task.task_id})"
+            " to GlobalScheduler."
+        )
 
         self.task_queue.append(task)
         task.status = TaskStatus.INQUEUE

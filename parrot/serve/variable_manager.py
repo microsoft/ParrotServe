@@ -339,4 +339,7 @@ class SemanticVariableManager:
 
             debug_info += f"\n\t{node.__class__.__name__} -> {node.sv.id}, is_constant_prefix: {node.sv.is_constant_prefix}"
 
-        logger.debug("SVs created for request chain:" + debug_info)
+        logger.debug(
+            f"SVs created for RequestChain(request_id={request_chain.request_id}):"
+            + debug_info
+        )

@@ -53,6 +53,12 @@ class TaskCreator:
         # Create a new Task
         task_id = self.task_id_pool.allocate()
         schedule_annotation = self._lower_criteria(completion_chain.criteria)
+
+        logger.debug(
+            f"Create Task(task_id={task_id}) for CompletionChain(request_id={completion_chain.request_id},"
+            f" session_id={completion_chain.session_id})."
+        )
+
         return CompletionTask(
             task_id=task_id,
             chain=completion_chain,

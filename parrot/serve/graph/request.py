@@ -102,9 +102,11 @@ class ChunkedSemanticCallRequest:
 
     def __init__(
         self,
+        request_id: int,
         session_id: int,
         metadata: SemanticCallMetadata = SemanticCallMetadata.get_default(),
     ) -> None:
+        self.request_id = request_id
         self.session_id = session_id
 
         # Metadata: additional information of the request.
@@ -173,7 +175,7 @@ class ChunkedSemanticCallRequest:
 
     @classmethod
     def parse_from_payload(
-        cls, session_id: int, payload: Dict
+        cls, request_id: int, session_id: int, payload: Dict
     ) -> "ChunkedSemanticCallRequest":
         """Parse the payload of semantic call request into structural ChunkedRequest format for further processing.
 
@@ -199,7 +201,7 @@ class ChunkedSemanticCallRequest:
             metadata_dict[key] = payload[key]
         metadata = SemanticCallMetadata(**metadata_dict)
 
-        chunked_request = cls(session_id, metadata)
+        chunked_request = cls(request_id, session_id, metadata)
 
         # Step 2. Extract the "placeholders" field and create placeholders dict.
         for placeholder in placeholders:

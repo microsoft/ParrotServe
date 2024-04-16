@@ -68,7 +68,7 @@ class PrefixCache:
     def remove_context_id(self, context_id: int) -> None:
         """Remove the context id of a prefix."""
 
-        if context_id not in self._prefix_ctx_map_reversed:
+        if context_id in self._prefix_ctx_map_reversed:
             prefix_hash = self._prefix_ctx_map_reversed[context_id]
             self._prefix_ctx_map.pop(prefix_hash)
             self._prefix_ctx_map_reversed.pop(context_id)

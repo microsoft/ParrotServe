@@ -36,7 +36,9 @@ def test_request_parse():
         "remove_pure_fill": True,
     }
 
-    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(0, payload)
+    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(
+        request_id=0, session_id=0, payload=payload
+    )
     print(chunked_request)
 
 
@@ -63,7 +65,9 @@ def test_split_prefix():
         "remove_pure_fill": True,
     }
 
-    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(0, payload)
+    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(
+        request_id=0, session_id=0, payload=payload
+    )
     chunked_request.split_prefix_chunk(5)
     print(chunked_request)
 
@@ -101,7 +105,9 @@ def test_chunked_request_to_chain():
         "model_type": "token_id",
         "remove_pure_fill": True,
     }
-    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(0, payload)
+    chunked_request = ChunkedSemanticCallRequest.parse_from_payload(
+        request_id=0, session_id=0, payload=payload
+    )
     request_chain = RequestChain.from_chunked_request(chunked_request)
     print(request_chain.pretty_print())
 

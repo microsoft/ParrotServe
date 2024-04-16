@@ -47,7 +47,7 @@ logger = get_logger("Fake Engine Server")
 
 # Status Data
 
-context = {}  # Context_id -> context_length
+context_len_map = {}  # Context_id -> context_length
 num_cached_tokens = 0
 num_running_jobs = 0
 
@@ -110,9 +110,9 @@ async def fill(request: Request):
 
     num_cached_tokens += length
     context_id = payload["context_id"]
-    if context_id not in context:
-        context[context_id] = 0
-    context[context_id] += length
+    if context_id not in context_len_map:
+        context_len_map[context_id] = 0
+    context_len_map[context_id] += length
 
     num_running_jobs -= 1
 
@@ -129,7 +129,12 @@ async def generate(request: Request):
     num_running_jobs += 1
     payload = await request.json()
 
-    gen_len = int(np.random.exponential(32) + 3)
+    gen_len = min(45, int(np.random.exponential(32) + 3))
+
+    context_id = payload["context_id"]
+    if context_id not in context_len_map:
+        context_len_map[context_id] = 0
+    context_len_map[context_id] += gen_len
 
     time.sleep(TESTING_DECODE_PERTOKEN_TIME * gen_len)
 
@@ -147,15 +152,15 @@ async def generate_stream(request: Request):
     num_running_jobs += 1
     payload = await request.json()
 
-    gen_len = int(np.random.exponential(32) + 3)
+    gen_len = min(45, int(np.random.exponential(32) + 3))
     # gen_len = 512
     gen_data = np.random.randint(10, 10000, size=(gen_len,)).tolist()
 
     num_cached_tokens += gen_len
     context_id = payload["context_id"]
-    if context_id not in context:
-        context[context_id] = 0
-    context[context_id] += gen_len
+    if context_id not in context_len_map:
+        context_len_map[context_id] = 0
+    context_len_map[context_id] += gen_len
 
     def generator():
         for data in gen_data:
@@ -177,9 +182,9 @@ async def free_context(request: Request):
 
     context_len = 0
 
-    if payload["context_id"] in context:
-        num_cached_tokens -= context[payload["context_id"]]
-        context_len = context[payload["context_id"]]
+    if payload["context_id"] in context_len_map:
+        num_cached_tokens -= context_len_map[payload["context_id"]]
+        context_len = context_len_map[payload["context_id"]]
 
     return {
         "context_len": context_len,
