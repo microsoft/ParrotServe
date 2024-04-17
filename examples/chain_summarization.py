@@ -1,10 +1,10 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
-import parrot as P
+from parrot import P
 
 vm = P.VirtualMachine(
-    os_http_addr="http://localhost:9000",
+    core_http_addr="http://localhost:9000",
     mode="debug",
 )
 

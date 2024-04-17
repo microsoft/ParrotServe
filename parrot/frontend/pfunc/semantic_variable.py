@@ -25,6 +25,7 @@ class SemanticVariable:
         self,
         name: Optional[str] = None,
         content: Optional[str] = None,
+        register: bool = True,
     ) -> None:
         if name is None:
             self.name = f"var_{SemanticVariable._var_counter}"
@@ -32,7 +33,8 @@ class SemanticVariable:
         else:
             self.name = name
 
-        if SemanticVariable._virtual_machine_env is not None:
+        self.id: Optional[str] = None
+        if register and self._has_vm_env():
             self.id = self._register_semantic_variable(self.name)
 
         self.content = content
@@ -40,7 +42,7 @@ class SemanticVariable:
             self._set_semantic_variable(self.content)
 
     def __repr__(self) -> str:
-        if self.ready:
+        if self.is_ready:
             return f"SemanticVariable(name={self.name}, id={self.id}, content={self.content})"
         return f"SemanticVariable(name={self.name}, id={self.id})"
 
@@ -93,13 +95,22 @@ class SemanticVariable:
     # ---------- Public Methods ----------
 
     @property
-    def ready(self) -> bool:
+    def is_registered(self) -> bool:
+        return self.id is not None
+
+    def assign_id(self, id: str) -> None:
+        self.id = id
+
+    @property
+    def is_ready(self) -> bool:
         return self.content is not None
 
     def set(self, content: str) -> None:
         """Set the content of variable."""
 
-        assert (not self.ready, "The variable can't be set repeatedly.")
+        assert (self.is_registered, "The variable must be registered before setting.")
+
+        assert (not self.is_ready, "The variable can't be set repeatedly.")
 
         self._set_semantic_variable(self.id, content)
         self.content = content
@@ -108,7 +119,9 @@ class SemanticVariable:
     def get(self, criteria: PerformanceCriteria) -> str:
         """(Blocking) Get the content of the variable."""
 
-        if self.ready:
+        assert (self.is_registered, "The variable must be registered before getting.")
+
+        if self.is_ready:
             return self.content
 
         self.content = self._get_semantic_variable(criteria)
@@ -117,7 +130,9 @@ class SemanticVariable:
     async def aget(self, criteria: PerformanceCriteria) -> str:
         """(Asynchronous) Get the content of the variable."""
 
-        if self.ready:
+        assert (self.is_registered, "The variable must be registered before getting.")
+
+        if self.is_ready:
             return self.content
 
         content = await self._aget_semantic_variable(criteria)

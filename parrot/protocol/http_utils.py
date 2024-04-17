@@ -44,7 +44,7 @@ def send_http_request(
         except BaseException as e:
             error = e
 
-    if error_resp is not None and error_resp.status_code == 500:
+    if error_resp is not None:  # and error_resp.status_code == 500:
         resp_data = error_resp.json()
         assert "error" in resp_data
         assert "traceback" in resp_data

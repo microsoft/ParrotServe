@@ -8,13 +8,13 @@
 #                       Reviewer
 #  Reviser (main.py) | Reviser (snake.py) | Reviser (game.py)
 
-import parrot as P
+from parrot import P
 
 
-import parrot as P
+from parrot import P
 
 vm = P.VirtualMachine(
-    os_http_addr="http://localhost:9000",
+    core_http_addr="http://localhost:9000",
     mode="debug",
 )
 

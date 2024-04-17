@@ -258,8 +258,8 @@ class ChunkedSemanticCallRequest:
 
         # Push the last constant text chunk (after the last placeholder) into the body queue.
         last_text_chunk = template[last_pos:]
-        if last_text_chunk != "":
-            chunked_request.body.append(TextChunk(text=last_text_chunk))
+        if not metadata.remove_pure_fill and last_text_chunk != "":
+            chunked_request.push_chunk(TextChunk, last_text_chunk)
 
         return chunked_request
 

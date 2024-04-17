@@ -53,6 +53,15 @@ def test_call_function():
     print(test("a", b="b"))
 
 
+def test_call_to_payload():
+    @P.semantic_function()
+    def test(a: P.Input, b: P.Input, c: P.Output):
+        """This {{b}} is a test {{a}} function {{c}}"""
+
+    call: SemanticCall = test("a", b="b")
+    print(call.to_request_payload())
+
+
 def test_call_function_with_pyobjects():
     @P.semantic_function()
     def test(a: float, b: int, c: list, d: P.Output):
@@ -77,5 +86,6 @@ def test_wrongly_pass_output_argument():
 if __name__ == "__main__":
     # test_parse_semantic_function()
     # test_call_function()
+    test_call_to_payload()
     # test_call_function_with_pyobjects()
-    test_wrongly_pass_output_argument()
+    # test_wrongly_pass_output_argument()

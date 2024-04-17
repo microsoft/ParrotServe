@@ -9,11 +9,11 @@
 # 2023.10.23: TODO: Support stateful call in V2
 # 2023.10.31: Implemented.
 
-import parrot as P
+from parrot import P
 
 
 vm = P.VirtualMachine(
-    os_http_addr="http://localhost:9000",
+    core_http_addr="http://localhost:9000",
     mode="release",
 )
 

@@ -1,6 +1,6 @@
 #!/bin/sh
-echo "Start OS server ..."
-python3 -m parrot.os.http_server --config_path sample_configs/os/localhost_os.json --log_dir log/ --log_filename os_single_openai.log &
+echo "Start ServeCore server ..."
+python3 -m parrot.serve.http_server --config_path sample_configs/core/localhost_serve_core.json --log_dir log/ --log_filename core_1_openai.log &
 
 sleep 1
 

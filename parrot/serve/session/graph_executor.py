@@ -44,15 +44,15 @@ class GraphExecutor:
         tokenizers_wrapper: TokenizersWrapper,
     ):
         # ---------- Basic Info ----------
-        self._session_id = session_id
-        self._graph = ComputeGraph()
+        self.session_id = session_id
+        self.graph = ComputeGraph()
 
         # ---------- Global Components ----------
-        self._task_creator = task_creator
-        self._scheduler = scheduler
-        self._engine_mgr = engine_mgr
-        self._context_mgr = context_mgr
-        self._tokenizers_wrapper = tokenizers_wrapper
+        self.task_creator = task_creator
+        self.scheduler = scheduler
+        self.engine_mgr = engine_mgr
+        self.context_mgr = context_mgr
+        self.tokenizers_wrapper = tokenizers_wrapper
 
         # ---------- Exception Handling ----------
         self.bad_exception: Optional[Exception] = None
@@ -65,35 +65,35 @@ class GraphExecutor:
             await completion_chain.wait_activated()
 
             # Create a task object for the completion chain.
-            task = self._task_creator.create_task(completion_chain)
+            task = self.task_creator.create_task(completion_chain)
 
             # Block until all inputs are ready.
             for node in completion_chain.iter_fill():
                 await node.wait_ready()
 
             # Tokenize the task.
-            task.tokenize_chain(self._tokenizers_wrapper)
+            task.tokenize_chain(self.tokenizers_wrapper)
 
             # Submit the task to the scheduler and wait for the task to be scheduled.
-            self._scheduler.submit_task(task)
+            self.scheduler.submit_task(task)
             await task.wait_scheduled()
         except Exception as e:
             logger.error(
-                f"Error when scheduling chain. (session_id={self._session_id}): {e}"
+                f"Error when scheduling chain. (session_id={self.session_id}): {e}"
             )
             self.exception_interrupt(e)
             return
 
         # The task is scheduled. Assign contexts to the task.
-        self._context_mgr.set_task_contexts(task)
+        self.context_mgr.set_task_contexts(task)
 
         # Execute the task.
         await self.execute(task)
 
         # Free the tas resources.
         # TODO(chaofan): Current implementation has BUGS in stateful generation cases.
-        self._task_creator.free_task(task)
-        self._context_mgr.free_task_contexts(task)
+        self.task_creator.free_task(task)
+        self.context_mgr.free_task_contexts(task)
 
     def exception_interrupt(self, exception: BaseException):
         self.bad_exception = exception
@@ -102,11 +102,11 @@ class GraphExecutor:
         """Add a request to the graph and assign a coroutine to the request."""
 
         logger.debug(
-            f"Add Request(request_id={request_chain.request_id}) to executor of Session(session_id={self._session_id})."
+            f"Add Request(request_id={request_chain.request_id}) to executor of Session(session_id={self.session_id})."
         )
 
         # Insert the request chain into the graph.
-        self._graph.insert_and_update_request_chain(request_chain)
+        self.graph.insert_and_update_request_chain(request_chain)
 
         # Create execution coroutines for the request chain.
         for completion_chain in request_chain.comp_chains:
@@ -125,6 +125,9 @@ class GraphExecutor:
                 completion_task.is_tokenized, "Tokenized result is not available."
             )
             tokenizer_name = completion_task.engine.tokenizer_name
+            eos_token_id = self.tokenizers_wrapper.get_tokenizer(
+                tokenizer_name
+            ).eos_token_id
 
         for i, node in enumerate(completion_task.chain.iter()):
             context = completion_task.contexts[i]
@@ -145,19 +148,34 @@ class GraphExecutor:
                 if node.is_gen:
                     # TODO(chaofan): Add streaming generation support.
                     if requires_token_ids:
+                        # If not ignore_tokenizer_eos, we should add eos_token_id to stop_token_ids
+                        if not node.sampling_config.ignore_tokenizer_eos:
+                            node.sampling_config.stop_token_ids.append(eos_token_id)
+
                         primitive = Generate(
-                            session_id=self._session_id,
+                            session_id=self.session_id,
                             task_id=completion_task.task_id,
                             context_id=context.context_id,
                             parent_context_id=context.parent_context_id,
                             end_flag=False,
                             sampling_config=node.sampling_config,
                         )
+
+                        logger.debug(
+                            f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
+                            f"submit Generate primitive. (sampling_config={node.sampling_config})"
+                        )
+
                         resp = await primitive.apost(engine.http_address)
                         generated_ids = resp.generated_ids
-                        generated_text = self._tokenizers_wrapper.detokenize(
+                        generated_text = self.tokenizers_wrapper.detokenize(
                             token_ids=generated_ids,
                             tokenizer_name=tokenizer_name,
+                        )
+
+                        logger.debug(
+                            f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
+                            f"receive Generate primitive's result. (generated_tokens_num={len(generated_ids)})"
                         )
 
                         # Set the content of the node.
@@ -166,7 +184,7 @@ class GraphExecutor:
                     if requires_token_ids:
                         token_ids = completion_task.tokenized_result[tokenizer_name][i]
                         primitive = Fill(
-                            session_id=self._session_id,
+                            session_id=self.session_id,
                             task_id=completion_task.task_id,
                             context_id=context.context_id,
                             parent_context_id=context.parent_context_id,
@@ -174,14 +192,14 @@ class GraphExecutor:
                             token_ids=token_ids,
                         )
                         logger.debug(
-                            f"Task (task_id={completion_task.task_id}, session_id={self._session_id}) "
-                            f"submit Fill primitive (tokens num: {len(token_ids)})"
+                            f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
+                            f"submit Fill primitive. (tokens_num={len(token_ids)})"
                         )
                         resp = await primitive.apost(engine.http_address)
                     else:
                         text = node.get()
                         primitive = Fill(
-                            session_id=self._session_id,
+                            session_id=self.session_id,
                             task_id=completion_task.task_id,
                             context_id=context.context_id,
                             parent_context_id=context.parent_context_id,
@@ -189,8 +207,8 @@ class GraphExecutor:
                             text=text,
                         )
                         logger.debug(
-                            f"Task (task={completion_task.task_id}, session_id={self._session_id}) "
-                            f"submit Fill primitive (text len: {len(text)})"
+                            f"Task (task={completion_task.task_id}, session_id={self.session_id}) "
+                            f"submit Fill primitive. (text_len={len(text)})"
                         )
                         resp = await primitive.apost(engine.http_address)
 
@@ -199,11 +217,9 @@ class GraphExecutor:
 
             except Exception as e:
                 logger.error(
-                    f"Error when executing node {node}. (session_id={self._session_id}): {e}"
+                    f"Error when executing node {node}. (session_id={self.session_id}): {e}"
                 )
-                self._engine_mgr.raise_exception(
-                    engine_id=engine.engine_id, exception=e
-                )
+                self.engine_mgr.raise_exception(engine_id=engine.engine_id, exception=e)
                 self.exception_interrupt(e)
                 completion_task.status = TaskStatus.ERROR
                 break

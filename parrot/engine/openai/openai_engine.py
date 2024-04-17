@@ -7,7 +7,7 @@ import openai
 import time
 import asyncio
 
-from parrot.utils import get_logger, create_task_in_loop
+from parrot.utils import get_logger, create_task_in_loop, time_counter_in_nanoseconds
 from parrot.sampling_config import SamplingConfig
 from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.constants import UNKNOWN_DATA_FIELD
@@ -97,7 +97,7 @@ class OpenAIEngine(LLMEngine):
             # Generate text and append it to the text context.
 
             logger.debug("Generate job started. Submit request to OpenAI API...")
-            st = time.perf_counter_ns()
+            st = time_counter_in_nanoseconds()
 
             if self.openai_config.api_endpoint == Endpoint.COMPLETION:
                 prompt = job.context.get_whole_context_text()
@@ -119,7 +119,7 @@ class OpenAIEngine(LLMEngine):
                 )
                 generated_result = chat_completion.choices[0].message.content
 
-            ed = time.perf_counter_ns()
+            ed = time_counter_in_nanoseconds()
             logger.debug(
                 f"Generate job done. Request E2E latency: {(ed - st) / 1e9:.3f} (s)."
             )
@@ -135,8 +135,8 @@ class OpenAIEngine(LLMEngine):
     # override
     async def fill(self, payload: Dict) -> Dict:
         fill_job = Fill(
-            pid=payload["pid"],
-            tid=payload["tid"],
+            session_id=payload["session_id"],
+            task_id=payload["task_id"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             text=payload["text"],
@@ -154,8 +154,8 @@ class OpenAIEngine(LLMEngine):
     # override
     async def generate(self, payload: Dict) -> Dict:
         generation_job = Generate(
-            pid=payload["pid"],
-            tid=payload["tid"],
+            session_id=payload["session_id"],
+            task_id=payload["task_id"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             sampling_config=SamplingConfig(**payload["sampling_config"]),
@@ -221,9 +221,9 @@ class OpenAIEngine(LLMEngine):
         self.scheduler.finish()
 
         # if len(coroutines) > 0:
-        # st = time.perf_counter_ns()
+        # st = time_counter_in_nanoseconds()
         # await asyncio.gather(*coroutines)
-        # ed = time.perf_counter_ns()
+        # ed = time_counter_in_nanoseconds()
         # iter_latency = ed - st
         # self.latency_analyzer.add_latency(iter_latency)
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo "Start OS server ..."
-python3 -m parrot.os.http_server --config_path sample_configs/os/localhost_os.json --log_dir log/ --log_filename os_4_opt_125m.log &
+echo "Start ServeCore server ..."
+python3 -m parrot.serve.http_server --config_path sample_configs/core/localhost_serve_core.json --log_dir log/ --log_filename core_4_opt_125m.log &
 
 sleep 1
 for i in {1..4} 

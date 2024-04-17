@@ -5,14 +5,16 @@
 # Given the basic information of a student, it can generate a recommendation letter for him/her.
 # But we don't recommend you to use it in real life, if you are really a professor !!!
 
-import parrot as P
+from parrot import P
 
 vm = P.VirtualMachine(
-    os_http_addr="http://localhost:9000",
+    core_http_addr="http://localhost:9000",
     mode="debug",
 )
 
-letter_generator = vm.import_function("write_recommendation_letter", "codelib.app.common")
+letter_generator = vm.import_function(
+    "write_recommendation_letter", "codelib.app.common"
+)
 
 
 def main():
@@ -24,7 +26,7 @@ def main():
         specialty="Basketball. Good at playing basketball. Used to be team leader of the school basketball team.",
     )
 
-    letter_str = letter.get()
+    letter_str = letter.get(P.PerformanceCriteria.LATENCY)
     print("\n\n ---------- RECOMMEND LETTER ---------- ")
     print(letter_str)
 

@@ -70,8 +70,8 @@ class BuiltinEngine(LLMEngine):
     # override
     async def fill(self, payload: Dict) -> Dict:
         fill_job = Fill(
-            pid=payload["pid"],
-            tid=payload["tid"],
+            session_id=payload["session_id"],
+            task_id=payload["task_id"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             end_flag=payload["end_flag"],
@@ -87,20 +87,20 @@ class BuiltinEngine(LLMEngine):
     # override
     async def generate(self, payload: Dict) -> Dict:
         generation_job = Generate(
-            pid=payload["pid"],
-            tid=payload["tid"],
+            session_id=payload["session_id"],
+            task_id=payload["task_id"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             sampling_config=SamplingConfig(**payload["sampling_config"]),
             end_flag=payload["end_flag"],
         )
-        self._add_job(generation_job)
 
+        self._add_job(generation_job)
         await generation_job.finish_event.wait()
 
         generated_token_ids = []
         while not generation_job.output_queue.empty():
-            generated_token_ids.append(generation_job.output_queue.get())
+            generated_token_ids.append(await generation_job.output_queue.get())
 
         return {
             "generated_text": "",
@@ -109,16 +109,16 @@ class BuiltinEngine(LLMEngine):
 
     # override
     def generate_stream(self, payload: Dict) -> AsyncGenerator:
-        pid = payload["pid"]
-        tid = payload["tid"]
+        session_id = payload["session_id"]
+        task_id = payload["task_id"]
         context_id = payload["context_id"]
         parent_context_id = payload["parent_context_id"]
         sampling_config = SamplingConfig(**payload["sampling_config"])
         end_flag = payload["end_flag"]
 
         generation_job = Generate(
-            pid=pid,
-            tid=tid,
+            session_id=session_id,
+            task_id=task_id,
             context_id=context_id,
             parent_context_id=parent_context_id,
             sampling_config=sampling_config,

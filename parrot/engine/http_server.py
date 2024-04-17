@@ -32,21 +32,23 @@ llm_engine: Optional[LLMEngine] = None
 @app.post("/fill")
 async def fill(request: Request):
     payload = await request.json()
-    logger.debug(f"Received fill request from pid={payload['pid']}")
+    logger.debug(f"Received fill request from session_id={payload['session_id']}")
     return await llm_engine.fill(payload)
 
 
 @app.post("/generate")
 async def generate(request: Request):
     payload = await request.json()
-    logger.debug(f"Received generate request from pid={payload['pid']}")
+    logger.debug(f"Received generate request from session_id={payload['session_id']}")
     return await llm_engine.generate(payload)
 
 
 @app.post("/generate_stream")
 async def generate_stream(request: Request):
     payload = await request.json()
-    logger.debug(f"Received generate_stream request from pid={payload['pid']}")
+    logger.debug(
+        f"Received generate_stream request from session_id={payload['session_id']}"
+    )
     return StreamingResponse(llm_engine.generate_stream(payload))
 
 

@@ -99,7 +99,7 @@ class BasicCall(ABC):
         for param in self.func.outputs:
             # Skip the output locs that are already set.
             if param.name not in self.bindings:
-                out_var = SemanticVariable(name=param.name)
+                out_var = SemanticVariable(name=param.name, register=False)
                 self.output_vars.append(out_var)
                 self._set_value(param, out_var, self.bindings)
 
@@ -272,23 +272,29 @@ class SemanticFunction(BasicFunction):
 
     # ---------- VM Env Methods ----------
 
-    def _submit_semantic_call(self, call: "SemanticCall") -> None:
+    def _submit_semantic_call(self, call: "SemanticCall") -> List:
         if self._has_vm_env():
-            BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
+            return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
         else:
             logger.warning(
                 "VM environment is not set. Not submit the Call. Return Call instead. "
                 "(Please run a Parrot function under a VM context.)"
             )
+            return {}
 
-    async def _asubmit_semantic_call(self, call: "SemanticCall") -> None:
+    async def _asubmit_semantic_call(self, call: "SemanticCall") -> List:
         if self._has_vm_env():
-            await BasicFunction._virtual_machine_env.asubmit_semantic_call_handler(call)
+            return (
+                await BasicFunction._virtual_machine_env.asubmit_semantic_call_handler(
+                    call
+                )
+            )
         else:
             logger.warning(
                 "VM environment is not set. Not submit the Call. Return Call instead. "
                 "(Please run a Parrot function under a VM context.)"
             )
+            return {}
 
     # ---------- Call Methods ----------
 
@@ -346,9 +352,11 @@ class SemanticFunction(BasicFunction):
     ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         call = SemanticCall(self, *args, **kwargs)
 
-        self._submit_semantic_call(call)
+        placeholders_mapping = self._submit_semantic_call(call)
         if not self._has_vm_env():
             return call
+        else:
+            call.update_var_ids(placeholders_mapping)
 
         # Unpack the output SemanticVariables
         if len(call.output_vars) == 1:
@@ -362,9 +370,11 @@ class SemanticFunction(BasicFunction):
     ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         call = SemanticCall(self, *args, **kwargs)
 
-        await self._asubmit_semantic_call(call)
+        placeholders_mapping = await self._asubmit_semantic_call(call)
         if not self._has_vm_env():
             return call
+        else:
+            call.update_var_ids(placeholders_mapping)
 
         # Unpack the output SemanticVariables
         if len(call.output_vars) == 1:
@@ -397,6 +407,14 @@ class SemanticCall(BasicCall):
     ):
         super().__init__(func, *args, **kwargs)
 
+    def update_var_ids(self, placeholders_mapping: List[Dict]) -> None:
+        for mapping in placeholders_mapping:
+            param_name = mapping["placeholder_name"]
+            var_id = mapping["var_id"]
+            var = self.bindings[param_name]
+            assert isinstance(var, SemanticVariable), f"Unexpected var type: {var}"
+            var.assign_id(var_id)
+
     def to_request_payload(self) -> Dict:
         """Convert the call to a request payload."""
 
@@ -420,10 +438,11 @@ class SemanticCall(BasicCall):
                 param_dict["sampling_config"] = asdict(param.sampling_config)
 
             if isinstance(param_value, SemanticVariable):
-                param_dict["var_id"] = param_value.id
+                if param_value.is_registered:
+                    param_dict["var_id"] = param_value.id
             elif isinstance(param_value, str):
                 param_str = param.get_param_str()
-                template_str.replace(
+                template_str = template_str.replace(
                     param_str, param_value
                 )  # Render the template string
             else:

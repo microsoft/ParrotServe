@@ -60,9 +60,9 @@ class Session:
         self.life_span = life_span  # In seconds
 
         # ---------- Global Components ----------
-        self._prefix_matcher = prefix_matcher
-        self._var_mgr = var_mgr
-        self._context_mgr = context_mgr
+        self.prefix_matcher = prefix_matcher
+        self.var_mgr = var_mgr
+        self.context_mgr = context_mgr
 
         # ---------- Executor ----------
         self.executor = GraphExecutor(
@@ -94,7 +94,7 @@ class Session:
 
     # ---------- Interfaces to ServeCore ----------
 
-    def add_request(self, request_payload: Dict) -> Dict:
+    def add_request(self, request_payload: Dict) -> (int, List):
         """Add a request to the session and assign a coroutine to the request.
 
         Args:
@@ -122,7 +122,7 @@ class Session:
         request_chain = RequestChain.from_chunked_request(chunked_request)
 
         # Assign Semantic Variables to the RequestChain.
-        self._var_mgr.create_vars_for_request(
+        self.var_mgr.create_vars_for_request(
             session_id=self.session_id, request_chain=request_chain
         )
 
@@ -132,10 +132,7 @@ class Session:
         # It must be inserted. So we can get the mapping.
         placeholders_mapping = request_chain.get_placeholders_mapping()
 
-        return {
-            "request_id": request_id,
-            "placeholders_mapping": placeholders_mapping,
-        }
+        return request_id, placeholders_mapping
 
     # def execute_native_call(self, call: NativeCall):
     #     async def _execute_body(func, *args):
@@ -174,17 +171,17 @@ class Session:
     #     create_task_in_loop(_execute_main(), fail_fast=False)
 
     def _register_session_resources(self) -> None:
-        self._context_mgr.register_session_contexts(session_id=self.session_id)
-        self._var_mgr.register_local_var_space(session_id=self.session_id)
+        self.context_mgr.register_session_contexts(session_id=self.session_id)
+        self.var_mgr.register_local_var_space(session_id=self.session_id)
 
     def free_session_resources(self) -> None:
         """Free the session and all its resources."""
 
         # Free the contexts of session.
-        self._context_mgr.free_session_contexts(session_id=self.session_id)
+        self.context_mgr.free_session_contexts(session_id=self.session_id)
 
         # Free the local var space of the session.
-        self._var_mgr.free_local_var_space(session_id=self.session_id)
+        self.var_mgr.free_local_var_space(session_id=self.session_id)
 
         logger.info(
             f"Free Session(session_id={self.session_id}) with running tasks num: {0}"

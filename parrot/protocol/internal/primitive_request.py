@@ -7,8 +7,7 @@ from typing import List, Optional, AsyncGenerator
 import time
 import aiohttp
 
-from parrot.constants import NONE_THREAD_ID
-from parrot.utils import get_logger
+from parrot.utils import get_logger, time_counter_in_nanoseconds
 
 from ..http_utils import (
     send_http_request,
@@ -47,7 +46,7 @@ class Fill(Primitive):
 
     def post(self, engine_url: str) -> FillResponse:
         try:
-            st = time.perf_counter_ns()
+            st = time_counter_in_nanoseconds()
             resp: FillResponse = send_http_request(
                 response_cls=FillResponse,
                 http_addr=engine_url,
@@ -61,7 +60,7 @@ class Fill(Primitive):
                 token_ids=self.token_ids,
                 text=self.text,
             )
-            ed = time.perf_counter_ns()
+            ed = time_counter_in_nanoseconds()
             logger.debug(
                 f"Fill request latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, task_id={self.task_id}"
             )
@@ -73,13 +72,13 @@ class Fill(Primitive):
     async def apost(self, engine_url: str) -> FillResponse:
         try:
             async with aiohttp.ClientSession() as client_session:
-                st = time.perf_counter_ns()
+                st = time_counter_in_nanoseconds()
                 resp: FillResponse = await async_send_http_request(
                     client_session=client_session,
                     response_cls=FillResponse,
                     http_addr=engine_url,
                     api_url="/fill",
-                    pid=self.session_id,
+                    session_id=self.session_id,
                     task_id=self.task_id,
                     context_id=self.context_id,
                     end_flag=self.end_flag,
@@ -87,7 +86,7 @@ class Fill(Primitive):
                     token_ids=self.token_ids,
                     text=self.text,
                 )
-                ed = time.perf_counter_ns()
+                ed = time_counter_in_nanoseconds()
                 logger.debug(
                     f"Fill request latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, task_id={self.task_id}"
                 )
@@ -110,7 +109,7 @@ class Generate(Primitive):
     async def apost(self, engine_url: str) -> GenerateResponse:
         try:
             async with aiohttp.ClientSession() as client_session:
-                st = time.perf_counter_ns()
+                st = time_counter_in_nanoseconds()
                 resp: GenerateResponse = await async_send_http_request(
                     client_session=client_session,
                     response_cls=GenerateResponse,
@@ -123,7 +122,7 @@ class Generate(Primitive):
                     end_flag=self.end_flag,
                     sampling_config=asdict(self.sampling_config),
                 )
-                ed = time.perf_counter_ns()
+                ed = time_counter_in_nanoseconds()
                 logger.debug(
                     f"Generate request latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, task_id={self.task_id}"
                 )
@@ -136,7 +135,7 @@ class Generate(Primitive):
     async def astream(self, engine_url: str) -> AsyncGenerator:
         try:
             async with aiohttp.ClientSession() as client_session:
-                st = time.perf_counter_ns()
+                st = time_counter_in_nanoseconds()
                 async for resp in async_send_http_request_streaming(
                     client_session=client_session,
                     http_addr=engine_url,
@@ -150,7 +149,7 @@ class Generate(Primitive):
                 ):
                     # self.context.token_nums += 1
                     yield resp
-                ed = time.perf_counter_ns()
+                ed = time_counter_in_nanoseconds()
                 logger.debug(
                     f"Generate stream latency: {(ed - st) / 1e6} ms. session_id={self.session_id}, task_id={self.task_id}"
                 )

@@ -72,7 +72,15 @@ class VirtualMachine:
             logging.disable(logging.DEBUG)
             logging.disable(logging.INFO)
 
-        logger.info(f"VM (session_id={self.session_id}) launched.")
+        logger.info(f"VM (session_id={self.session_id}) is launched.")
+
+    def __del__(self) -> None:
+        remove_session(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+        )
+        logger.info(f"VM (session_id={self.session_id}) is destructed.")
 
     # ----------Methods for Program Interface ----------
 
@@ -174,8 +182,15 @@ class VirtualMachine:
             f"VM (session_id={self.session_id}) registers function: {func.name}"
         )
 
-    def submit_semantic_call_handler(self, call: SemanticCall) -> None:
-        """Submit a SemanticCall to the OS."""
+    def submit_semantic_call_handler(self, call: SemanticCall) -> List:
+        """Submit a SemanticCall to the ServeCore.
+
+        Args:
+            call: SemanticCall. The call to be submitted.
+
+        Returns:
+            Dict. The placeholders mapping returned by the ServeCore.
+        """
 
         logger.info(
             f"VM (session_id={self.session_id}) submits SemanticCall: {call.func.name}"
@@ -188,8 +203,17 @@ class VirtualMachine:
             payload=call.to_request_payload(),
         )
 
-    async def asubmit_semantic_call_handler(self, call: SemanticCall) -> None:
-        """Submit a call to the OS."""
+        return resp.placeholders_mapping
+
+    async def asubmit_semantic_call_handler(self, call: SemanticCall) -> List:
+        """Submit a call to the ServeCore.
+
+        Args:
+            call: SemanticCall. The call to be submitted.
+
+        Returns:
+            Dict. The placeholders mapping returned by the ServeCore.
+        """
 
         logger.info(
             f"VM (session_id={self.session_id}) submits SemanticCall: {call.func.name}"
@@ -201,6 +225,8 @@ class VirtualMachine:
             session_auth=self._session_auth,
             payload=call.to_request_payload(),
         )
+
+        return resp.placeholders_mapping
 
     # ---------- Public Methods ----------
 

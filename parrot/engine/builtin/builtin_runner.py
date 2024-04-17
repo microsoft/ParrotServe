@@ -8,7 +8,7 @@ import torch
 import time
 import psutil
 
-from parrot.utils import RecyclePool, get_logger
+from parrot.utils import RecyclePool, get_logger, time_counter_in_nanoseconds
 from parrot.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
@@ -70,7 +70,7 @@ class BuiltinRunner:
         logger.debug(f"Running {len(jobs)} jobs. ")
 
         # torch.cuda.synchronize()
-        st = time.perf_counter_ns()
+        st = time_counter_in_nanoseconds()
 
         # We should sort jobs such that Fill jobs are before Generation jobs.
         jobs.sort(key=lambda job: isinstance(job, Generate))
@@ -156,7 +156,7 @@ class BuiltinRunner:
         )
 
         torch.cuda.synchronize()
-        st_model = time.perf_counter_ns()
+        st_model = time_counter_in_nanoseconds()
 
         # Execute model
         fill_hidden_states, next_tokens = self.model(
@@ -166,7 +166,7 @@ class BuiltinRunner:
         next_tokens = next_tokens.cpu().tolist()
 
         torch.cuda.synchronize()
-        ed_model = time.perf_counter_ns()
+        ed_model = time_counter_in_nanoseconds()
 
         torch.cuda.empty_cache()  # Release unactivated GPU memory
 
@@ -186,7 +186,7 @@ class BuiltinRunner:
                 if job.check_stop():
                     job.finish_event.set()
 
-        ed = time.perf_counter_ns()
+        ed = time_counter_in_nanoseconds()
 
         e2e_time = ed - st
         logger.debug(

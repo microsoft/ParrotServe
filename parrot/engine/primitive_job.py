@@ -15,14 +15,14 @@ class PrimitiveJob:
 
     def __init__(
         self,
-        pid: int,
-        tid: int,
+        session_id: int,
+        task_id: int,
         context_id: int,
         parent_context_id: int,
         end_flag: bool,
     ) -> None:
-        self.pid = pid
-        self.tid = tid
+        self.session_id = session_id
+        self.task_id = task_id
         self.end_flag = end_flag
         self.context_id = context_id
         self.parent_context_id = parent_context_id
@@ -42,22 +42,22 @@ class Fill(PrimitiveJob):
 
     def __init__(
         self,
-        pid: int,
-        tid: int,
+        session_id: int,
+        task_id: int,
         context_id: int,
         parent_context_id: int,
         end_flag: bool = False,
         token_ids: Optional[List[int]] = None,
         text: Optional[str] = None,
     ) -> None:
-        super().__init__(pid, tid, context_id, parent_context_id, end_flag)
+        super().__init__(session_id, task_id, context_id, parent_context_id, end_flag)
         self.token_ids = token_ids
         self.text = text
 
     def __repr__(self) -> str:
         return (
-            f"Fill(pid={self.pid}, "
-            f"tid={self.tid}, "
+            f"Fill(session_id={self.session_id}, "
+            f"task_id={self.task_id}, "
             f"context_id={self.context_id}, "
             f"parent_context_id={self.parent_context_id})"
         )
@@ -71,14 +71,14 @@ class Generate(PrimitiveJob):
 
     def __init__(
         self,
-        pid: int,
-        tid: int,
+        session_id: int,
+        task_id: int,
         context_id: int,
         parent_context_id: int,
         sampling_config: SamplingConfig,
         end_flag: bool = False,
     ) -> None:
-        super().__init__(pid, tid, context_id, parent_context_id, end_flag)
+        super().__init__(session_id, task_id, context_id, parent_context_id, end_flag)
         self.sampling_config = sampling_config
         self.output_queue: AsyncQueue[int] = AsyncQueue()  # For token streaming
         self.gen_text = ""  # For text generation
@@ -86,8 +86,8 @@ class Generate(PrimitiveJob):
 
     def __repr__(self) -> str:
         return (
-            f"Generation(pid={self.pid}, "
-            f"tid={self.tid}, "
+            f"Generation(session_id={self.session_id}, "
+            f"task_id={self.task_id}, "
             f"context_id={self.context_id}, "
             f"parent_context_id={self.parent_context_id})"
         )

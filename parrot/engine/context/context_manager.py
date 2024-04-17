@@ -13,7 +13,7 @@ from ..primitive_job import PrimitiveJob
 class EngineContextManager:
     """Manage all low-level contexts in a single engine."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.map: Dict[str, LowLevelContext] = {}
 
     def free_context(self, context_id: int) -> int:
@@ -33,7 +33,7 @@ class EngineContextManager:
         context.destruction()
         return context_len
 
-    def bind_job_context(self, job: PrimitiveJob, ctx_cls, **ctx_kwargs):
+    def bind_job_context(self, job: PrimitiveJob, ctx_cls, **ctx_kwargs) -> None:
         """Set the `context` attribute of the job."""
 
         if job.context_id not in self.map:
@@ -49,7 +49,7 @@ class EngineContextManager:
             )
         job.context = self.map[job.context_id]
 
-    def get_num_cached_tokens(self):
+    def get_num_cached_tokens(self) -> int:
         # NOTE(chaofan): Use `get_this_context_len` instead of `get_context_len` to avoid
         # recalculation of the parent contexts.
         return sum([context.get_this_context_len() for context in self.map.values()])

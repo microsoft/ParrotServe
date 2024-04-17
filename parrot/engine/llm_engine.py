@@ -128,7 +128,9 @@ class LLMEngine(ABC):
         if not self.connect_to_core:
             return
 
-        logger.debug(f"Heartbeat sent to OS (address={self.serve_core_http_address}).")
+        logger.debug(
+            f"Heartbeat sent to ServeCore (address={self.serve_core_http_address})."
+        )
 
         engine_name = self.engine_config.engine_name
         engine_id = self.engine_id
@@ -150,7 +152,7 @@ class LLMEngine(ABC):
         """Loop for heartbeat."""
 
         while True:
-            self.heartbeat()  # Send heartbeat to OS
+            self.heartbeat()  # Send heartbeat to ServeCore
             time.sleep(self.engine_config.heartbeat_interval)
 
     async def engine_loop(self):

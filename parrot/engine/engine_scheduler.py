@@ -6,7 +6,7 @@ from typing import List, Dict
 import time
 
 from parrot.exceptions import parrot_assert
-from parrot.utils import get_logger
+from parrot.utils import get_logger, time_counter_in_nanoseconds
 
 from .primitive_job import PrimitiveJob, Fill, Generate
 from .config import SchedulerConfig
@@ -23,7 +23,7 @@ class EngineScheduler:
     next batch.
     """
 
-    def __init__(self, config: SchedulerConfig):
+    def __init__(self, config: SchedulerConfig) -> None:
         self.max_batch_size = config.max_batch_size
         self.max_num_batched_tokens = config.max_num_batched_tokens
         self.max_total_tokens = config.max_total_tokens
@@ -37,27 +37,25 @@ class EngineScheduler:
         # present at the same time.
         self.job_arrival_time: Dict[int, float] = {}
 
-        # pid_tid as key.
-        self.thread_arrival_time: Dict[str, float] = {}
+        # task_id as key.
+        self.task_arrival_time: Dict[int, float] = {}
 
-    def add_job(self, job: PrimitiveJob):
+    def add_job(self, job: PrimitiveJob) -> None:
         """Add a job to the scheduler."""
 
         self.waiting_jobs.append(job)
-        cur_time = time.perf_counter()
+        cur_time = time_counter_in_nanoseconds()
         self.job_arrival_time[job.context_id] = cur_time
-        key = f"{job.pid}_{job.tid}"
-        if key not in self.thread_arrival_time:
-            self.thread_arrival_time[key] = cur_time
+        if job.task_id not in self.task_arrival_time:
+            self.task_arrival_time[job.task_id] = cur_time
 
-    def remove_job(self, job: PrimitiveJob):
+    def remove_job(self, job: PrimitiveJob) -> None:
         """Remove a job from the scheduler."""
 
         # self.running_jobs.remove(job)
         self.job_arrival_time.pop(job.context_id)
         if job.end_flag:
-            key = f"{job.pid}_{job.tid}"
-            self.thread_arrival_time.pop(key)
+            self.task_arrival_time.pop(job.task_id)
 
     @property
     def num_running_jobs(self) -> int:
@@ -99,7 +97,7 @@ class EngineScheduler:
 
                 fill_running_jobs.append(job)
                 if job.start_time == -1:
-                    job.start_time = time.perf_counter_ns()
+                    job.start_time = time_counter_in_nanoseconds()
                 cur_tokens_sum += job_num_tokens
                 cur_num_jobs += 1
 
@@ -139,7 +137,7 @@ class EngineScheduler:
 
             self.running_jobs.append(job)
             if job.start_time == -1:
-                job.start_time = time.perf_counter_ns()
+                job.start_time = time_counter_in_nanoseconds()
             self.waiting_jobs.pop(0)
 
             # Update
@@ -163,13 +161,10 @@ class EngineScheduler:
 
         self.running_jobs.sort(
             key=lambda job: (
-                self.thread_arrival_time[f"{job.pid}_{job.tid}"],
+                self.task_arrival_time[job.task_id],
                 self.job_arrival_time[job.context_id],
             )
         )
-
-        # HACK(chaofan): App FIFO
-        # self.running_jobs.sort(key=lambda job: job.pid)
 
         # print(f"Running jobs: {self.running_jobs}")
         # print(self.thread_arrival_time)
@@ -179,14 +174,14 @@ class EngineScheduler:
         preempted = False
         for job in self.running_jobs:
             if preempted:
-                self.preempt(job)
+                self._preempt(job)
                 continue
 
             # NOTE(chaofan): In shared prefix mode, we should only count the prefix context once.
             job_tokens = job.context.get_context_len()
             if cur_total_tokens + job_tokens > self.max_total_tokens:
                 preempted = True
-                self.preempt(job)
+                self._preempt(job)
                 continue
 
             new_running.append(job)
@@ -198,11 +193,11 @@ class EngineScheduler:
         ret = self.running_jobs.copy()
         return ret
 
-    def _preempt(self, job):
+    def _preempt(self, job) -> None:
         self.waiting_jobs.insert(0, job)
         # logger.debug(f"Job {job} preempted.")
 
-    def finish(self):
+    def finish(self) -> None:
         """Finish jobs."""
 
         new_running: List[PrimitiveJob] = []
@@ -211,7 +206,7 @@ class EngineScheduler:
                 new_running.append(job)
             else:
                 self.remove_job(job)
-                job.end_time = time.perf_counter_ns()
+                job.end_time = time_counter_in_nanoseconds()
                 logger.debug(
                     f"Job {job} finished. Latency: {(job.end_time - job.start_time) / 1e6} ms"
                 )

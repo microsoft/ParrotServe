@@ -63,14 +63,14 @@ Public APIs.
 @app.post(f"/{API_VERSION}/session")
 async def register_session(request: Request):
     payload = await request.json()
-    response = await pcore.register_session(payload)
+    response = pcore.register_session(payload)
     return response
 
 
 @app.delete(f"/{API_VERSION}" + "/session/{session_id}")
 async def remove_session(session_id: int, request: Request):
     payload = await request.json()
-    response = await pcore.remove_session(session_id, payload)
+    response = pcore.remove_session(session_id, payload)
     return response
 
 
@@ -82,26 +82,26 @@ async def get_session_info(session_id: int, request: Request):
 @app.post(f"/{API_VERSION}/submit_semantic_call")
 async def submit_semantic_call(request: Request):
     payload = await request.json()
-    response = await pcore.submit_semantic_call(payload)
+    response = pcore.submit_semantic_call(payload)
     return response
 
 
 @app.post(f"/{API_VERSION}/semantic_var")
 async def register_semantic_variable(request: Request):
     payload = await request.json()
-    response = await pcore.register_semantic_variable(payload)
+    response = pcore.register_semantic_variable(payload)
     return response
 
 
 @app.post(f"/{API_VERSION}" + "/semantic_var/{var_id}")
-async def set_semantic_variable(var_id: int, request: Request):
+async def set_semantic_variable(var_id: str, request: Request):
     payload = await request.json()
-    response = await pcore.set_semantic_variable(var_id, payload)
+    response = pcore.set_semantic_variable(var_id, payload)
     return response
 
 
 @app.get(f"/{API_VERSION}" + "/semantic_var/{var_id}")
-async def get_semantic_variable(var_id: int, request: Request):
+async def get_semantic_variable(var_id: str, request: Request):
     payload = await request.json()
     response = await pcore.get_semantic_variable(var_id, payload)
     return response
@@ -120,14 +120,14 @@ Internal APIs.
 @app.post("/engine_heartbeat")
 async def engine_heartbeat(request: Request):
     payload = await request.json()
-    response = await pcore.engine_heartbeat(payload)
+    response = pcore.engine_heartbeat(payload)
     return response
 
 
 @app.post("/register_engine")
 async def register_engine(request: Request):
     payload = await request.json()
-    response = await pcore.register_engine(payload)
+    response = pcore.register_engine(payload)
     return response
 
 
@@ -224,7 +224,7 @@ if __name__ == "__main__":
 
         redirect_stdout_stderr_to_file(
             log_file_dir_path=args.log_dir,
-            file_name="os_stdout.out",
+            file_name="core_stdout.out",
         )
 
     override_args = {}

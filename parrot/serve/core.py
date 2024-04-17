@@ -13,12 +13,11 @@ from parrot.engine.config import EngineConfig
 from parrot.exceptions import ParrotCoreInternalError
 
 from parrot.serve.graph import (
-    SemanticVariable,
     PlaceholderGen,
     get_performance_criteria,
     activate_completion_chain,
 )
-from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig
+from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig, TaskCreator
 
 from .config import ServeCoreConfig
 from .prefix_matcher import PrefixMatcher
@@ -63,6 +62,7 @@ class ParrotServeCore:
         )
         self.tokenizers_wrapper = TokenizersWrapper()
         self.context_mgr = ServeCoreContextManager()
+        self.task_creator = TaskCreator()
 
         self.engine_mgr = EngineManager(
             tokenizers_wrapper=self.tokenizers_wrapper,
@@ -70,9 +70,16 @@ class ParrotServeCore:
             engine_heartbeat_timeout=self.config.engine_heartbeat_timeout,
         )
 
+        self.global_scheduler = GlobalScheduler(
+            config=gs_config,
+            engine_mgr=self.engine_mgr,
+            context_mgr=self.context_mgr,
+        )
+
         self.session_mgr = SessionManager(
             life_span=self.config.session_life_span,
             prefix_matcher=self.prefix_matcher,
+            task_creator=self.task_creator,
             scheduler=self.global_scheduler,
             var_mgr=self.var_mgr,
             engine_mgr=self.engine_mgr,
@@ -80,11 +87,6 @@ class ParrotServeCore:
             tokenizers_wrapper=self.tokenizers_wrapper,
         )
 
-        self.global_scheduler = GlobalScheduler(
-            config=gs_config,
-            engine_mgr=self.engine_mgr,
-            context_mgr=self.context_mgr,
-        )
         logger.info(
             f"Parrot ServeCore started with config: \n"
             + "\n".join(
@@ -94,14 +96,14 @@ class ParrotServeCore:
 
     # ---------- APIs to Engine Layer ----------
 
-    def register_engine(self, payload: Dict) -> int:
+    def register_engine(self, payload: Dict) -> Dict:
         """Register a new engine in the OS.
 
         Args:
             config: EngineConfig. The engine config.
 
         Returns:
-            int. The engine ID.
+            Dict. The response.
         """
 
         logger.debug(f"Register engine received.")
@@ -115,6 +117,9 @@ class ParrotServeCore:
         Args:
             engine_id: int. The engine ID.
             engine_runtime_info: EngineRuntimeInfo. The engine runtime info.
+
+        Returns:
+            Dict. The response.
         """
 
         engine_id = payload["engine_id"]
@@ -137,11 +142,11 @@ class ParrotServeCore:
             payload: Dict. The payload.
 
         Returns:
-            int: The session ID.
+            Dict. The response.
         """
 
         session_id = self.session_mgr.register_session()
-        return {"session_id": session_id}
+        return {"session_id": session_id, "session_auth": "1"}
 
     def remove_session(self, session_id: int, payload: Dict) -> Dict:
         """Remove a session in Serve Core.
@@ -149,6 +154,9 @@ class ParrotServeCore:
         Args:
             session_id: int. The session ID.
             payload: Dict. The payload.
+
+        Returns:
+            Dict. The response.
         """
 
         self.session_mgr.check_session_status(session_id)
@@ -164,7 +172,7 @@ class ParrotServeCore:
             payload: Dict. The payload.
 
         Returns:
-            Dict. The session info.
+            Dict. The response.
         """
 
         return {}
@@ -194,7 +202,7 @@ class ParrotServeCore:
             payload: Dict. The request payload.
 
         Returns:
-            A Dict. The response payload.
+            Dict. The response.
         """
 
         session_id = payload["session_id"]
@@ -223,10 +231,13 @@ class ParrotServeCore:
 
         Args:
             payload: Dict. The payload.
+
+        Returns:
+            Dict. The response.
         """
 
         session_id = payload["session_id"]
-        name = payload["name"]
+        name = payload["var_name"]
 
         self.session_mgr.check_session_status(session_id)
         self.session_mgr.session_access_update(session_id)
@@ -244,6 +255,9 @@ class ParrotServeCore:
         Args:
             var_id: str. The variable ID.
             payload: Dict. The payload.
+
+        Returns:
+            Dict. The response.
         """
 
         session_id = payload["session_id"]
@@ -262,12 +276,15 @@ class ParrotServeCore:
 
         return {}
 
-    async def get_semantic_variable(self, var_id: str, payload: Dict) -> {}:
+    async def get_semantic_variable(self, var_id: str, payload: Dict) -> Dict:
         """Get the content from a Semantic Variable.
 
         Args:
             var_id: str. The variable ID.
             payload: Dict. The payload.
+
+        Returns:
+            Dict. The response.
         """
 
         session_id = payload["session_id"]
@@ -279,10 +296,10 @@ class ParrotServeCore:
         var = self.var_mgr.get_var(session_id, var_id)
         if var.has_producer:
             producer: PlaceholderGen = var.get_producer()
-            if not producer.is_activated:
+            if not producer.comp_chain.is_activated:
                 # Activate the chain and propagate the performance criteria
                 activate_completion_chain(
-                    producer.completion_chain, get_performance_criteria(criteria)
+                    producer.comp_chain, get_performance_criteria(criteria)
                 )
 
         await var.wait_ready()
