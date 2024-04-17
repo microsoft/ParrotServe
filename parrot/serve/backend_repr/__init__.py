@@ -7,4 +7,4 @@ Representation of some backend components (Context, Model, Engine) in Parrot OS.
 
 from .context import Context
 from .engine import ExecutionEngine, EngineStatus
-from .model import LanguageModel
+from .model import LanguageModel, ModelType

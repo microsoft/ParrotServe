@@ -31,19 +31,14 @@ class OpenAIEngine(LLMEngine):
     def __init__(self, engine_config: Dict, connect_to_core: bool = True):
         super().__init__(engine_config, connect_to_core)
 
-        scheduler_config = engine_config.pop("scheduler")
-        scheduler_config = SchedulerConfig(**scheduler_config)
+        scheduler_config = SchedulerConfig(**engine_config["scheduler"])
         scheduler_config.max_batch_size = 9999999999999  # Unlimited
         scheduler_config.max_num_batched_tokens = 9999999999999  # Unlimited
         scheduler_config.max_total_tokens = 9999999999999  # Unlimited
 
         # ---------- Configs ----------
-        self.openai_config = OpenAIConfig(**engine_config.pop("instance"))
-        self.engine_config = EngineConfig(
-            dtype="unknown",
-            device="unknown",
-            **engine_config,
-        )
+        self.openai_config = OpenAIConfig(**engine_config["instance"])
+        self.engine_config = EngineConfig.from_dict(engine_config)
 
         # ---------- Components ----------
         self.scheduler = EngineScheduler(scheduler_config)
@@ -101,6 +96,7 @@ class OpenAIEngine(LLMEngine):
 
             if self.openai_config.api_endpoint == Endpoint.COMPLETION:
                 prompt = job.context.get_whole_context_text()
+                logger.debug(f"Send messages: {prompt} to OpenAI API.")
                 completion = await self.client.completions.create(
                     prompt=prompt,
                     model=self.engine_config.model,

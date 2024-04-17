@@ -27,7 +27,7 @@ vm = P.VirtualMachine(
 # LLMs to print the exact the same string we want.
 
 
-@P.semantic_function()
+@P.semantic_function(model_type="text")
 def llm_print(string: P.Input, output: P.Output):
     """You are a repeater. Given a string, it is your job to print it out.
     User input: {{string}}

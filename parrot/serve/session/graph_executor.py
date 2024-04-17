@@ -19,6 +19,7 @@ from parrot.serve.scheduler import (
     GlobalScheduler,
     TaskStatus,
 )
+from parrot.serve.backend_repr import ModelType
 
 from ..context_manager import ServeCoreContextManager
 from ..engine_manager import EngineManager
@@ -119,8 +120,8 @@ class GraphExecutor:
 
         completion_task.status = TaskStatus.EXECUTING
 
-        requires_token_ids = completion_task.engine.model_type
-        if requires_token_ids:
+        type_token_id_flag = completion_task.engine.model_type == ModelType.TOKEN_ID
+        if type_token_id_flag:
             parrot_assert(
                 completion_task.is_tokenized, "Tokenized result is not available."
             )
@@ -147,41 +148,50 @@ class GraphExecutor:
             try:
                 if node.is_gen:
                     # TODO(chaofan): Add streaming generation support.
-                    if requires_token_ids:
+                    if type_token_id_flag:
                         # If not ignore_tokenizer_eos, we should add eos_token_id to stop_token_ids
                         if not node.sampling_config.ignore_tokenizer_eos:
                             node.sampling_config.stop_token_ids.append(eos_token_id)
 
-                        primitive = Generate(
-                            session_id=self.session_id,
-                            task_id=completion_task.task_id,
-                            context_id=context.context_id,
-                            parent_context_id=context.parent_context_id,
-                            end_flag=False,
-                            sampling_config=node.sampling_config,
-                        )
+                    primitive = Generate(
+                        session_id=self.session_id,
+                        task_id=completion_task.task_id,
+                        context_id=context.context_id,
+                        parent_context_id=context.parent_context_id,
+                        end_flag=False,
+                        sampling_config=node.sampling_config,
+                    )
 
-                        logger.debug(
-                            f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
-                            f"submit Generate primitive. (sampling_config={node.sampling_config})"
-                        )
+                    logger.debug(
+                        f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
+                        f"submit Generate primitive. (sampling_config={node.sampling_config})"
+                    )
 
-                        resp = await primitive.apost(engine.http_address)
+                    resp = await primitive.apost(engine.http_address)
+
+                    if type_token_id_flag:
                         generated_ids = resp.generated_ids
-                        generated_text = self.tokenizers_wrapper.detokenize(
-                            token_ids=generated_ids,
-                            tokenizer_name=tokenizer_name,
-                        )
-
                         logger.debug(
                             f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
                             f"receive Generate primitive's result. (generated_tokens_num={len(generated_ids)})"
                         )
 
-                        # Set the content of the node.
-                        node.sv.set(content=generated_text)
+                        generated_text = self.tokenizers_wrapper.detokenize(
+                            token_ids=generated_ids,
+                            tokenizer_name=tokenizer_name,
+                        )
+                    else:
+                        generated_text = resp.generated_text
+
+                        logger.debug(
+                            f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
+                            f"receive Generate primitive's result. (generated_text_len={len(generated_text)})"
+                        )
+
+                    # Set the content of the node.
+                    node.sv.set(content=generated_text)
                 else:
-                    if requires_token_ids:
+                    if type_token_id_flag:
                         token_ids = completion_task.tokenized_result[tokenizer_name][i]
                         primitive = Fill(
                             session_id=self.session_id,

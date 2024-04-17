@@ -10,6 +10,7 @@ from parrot.utils import get_logger, RecyclePool
 
 from parrot.serve.graph import RequestChain
 from parrot.serve.backend_repr import ExecutionEngine
+from parrot.serve.backend_repr.model import get_model_type, ModelType
 
 from ..engine_manager import EngineManager
 from ..context_manager import ServeCoreContextManager
@@ -54,12 +55,14 @@ class GlobalScheduler:
 
         # NOTE(chaofan): Suppose all tasks noted the same "models" arg.
         models = tasks[0].chain.metadata.models
+        model_type_str = tasks[0].chain.metadata.model_type
+        model_type = get_model_type(model_type_str)
         # TODO(chaofan): Throughput/latency criteria
 
         def check_engine_available(engine: ExecutionEngine):
-            total_tokens_num = 0
-            for task in tasks:
-                total_tokens_num += task.get_token_nums(engine.model.tokenizer_name)
+            # Check whether the mode type matches
+            if model_type != engine.model.model_type:
+                return False
 
             # Check whether the model matches
             if len(models) > 0 and engine.model_name not in models:
@@ -75,13 +78,18 @@ class GlobalScheduler:
             if len(tasks) + engine.get_num_tasks() > engine.get_tasks_num_upperbound():
                 return False
 
-            # Check whether the engine has enough token capacity.
-            if total_tokens_num > engine.get_remain_tokens_capacity():
-                return False
-
             # Check whether the engine has enough task capacity.
             if len(tasks) > engine.get_remain_tasks_capacity():
                 return False
+            
+            if model_type == ModelType.TOKEN_ID:
+                total_tokens_num = 0
+                for task in tasks:
+                    total_tokens_num += task.get_token_nums(engine.model.tokenizer_name)
+
+                # Check whether the engine has enough token capacity.
+                if total_tokens_num > engine.get_remain_tokens_capacity():
+                    return False
 
             return True
 

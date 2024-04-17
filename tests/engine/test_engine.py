@@ -23,8 +23,8 @@ def _test_single_engine_simple_serving(config):
     tokenizer_name = engine.engine_config.tokenizer
     if tokenizer_name == "unknown":
         fill_job = Fill(
-            pid=0,
-            tid=0,
+            session_id=0,
+            task_id=0,
             context_id=0,
             parent_context_id=-1,
             text=prompt_text,
@@ -33,16 +33,16 @@ def _test_single_engine_simple_serving(config):
         tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
         prompt_tokens = tokenizer(prompt_text)["input_ids"]
         fill_job = Fill(
-            pid=0,
-            tid=0,
+            session_id=0,
+            task_id=0,
             context_id=0,
             parent_context_id=-1,
             token_ids=prompt_tokens,
         )
 
     gen_job = Generate(
-        pid=0,
-        tid=0,
+        session_id=0,
+        task_id=0,
         context_id=0,
         parent_context_id=-1,
         sampling_config=SamplingConfig(
@@ -81,9 +81,9 @@ def _test_single_engine_simple_serving(config):
 
 
 TEST_CONFIGS_LIST = [
-    ("builtin", "opt-125m.json"),
-    ("builtin", "vicuna-7b-v1.3.json"),
-    # ("openai", "azure-openai-gpt-3.5-turbo.json"),
+    # ("builtin", "opt-125m.json"),
+    # ("builtin", "vicuna-7b-v1.3.json"),
+    ("openai", "azure-openai-gpt-3.5-turbo.json"),
 ]
 
 

@@ -1,11 +1,11 @@
 {
-    "model": "gpt35turobo4k",
+    "model": "gpt35turobo4k (// write your deployment name)",
     "engine_name": "Azure-OpenAI-GPT-3.5-Turbo-4K",
     "host": "localhost",
     "port": 9001,
     "engine_type": "openai",
     "random_seed": 0,
-    "threads_capacity": 64,
+    "tasks_capacity": 64,
     "instance": {
         "api_key": "xxx",
         "api_endpoint": "completion",
@@ -18,7 +18,7 @@
         "max_num_batched_tokens": 99999999,
         "max_total_tokens": 99999999
     },
-    "os": {
+    "serve_core": {
         "host": "localhost",
         "port": 9000
     }

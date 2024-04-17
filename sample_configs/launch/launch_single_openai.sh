@@ -5,7 +5,7 @@ python3 -m parrot.serve.http_server --config_path sample_configs/core/localhost_
 sleep 1
 
 echo "Start one single Azure OpenAI server ..."
-python3 -m parrot.engine.http_server --config_path sample_configs/engine/azure-openai-gpt-4.json --log_dir log/ --log_filename engine_openai.log &
+python3 -m parrot.engine.http_server --config_path sample_configs/engine/azure-openai-gpt-3.5-turbo.json --log_dir log/ --log_filename engine_openai.log &
 
 sleep 3
 

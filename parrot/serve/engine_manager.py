@@ -10,7 +10,12 @@ from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.engine.config import EngineConfig
 from parrot.protocol.internal.layer_apis import ping_engine
 
-from parrot.serve.backend_repr import ExecutionEngine, LanguageModel, EngineStatus
+from parrot.serve.backend_repr import (
+    ExecutionEngine,
+    LanguageModel,
+    EngineStatus,
+    ModelType,
+)
 
 from .tokenizer_wrapper import TokenizersWrapper
 from .context_manager import ServeCoreContextManager
@@ -57,7 +62,10 @@ class EngineManager:
 
         self.models[model.model_name] = model
         self._models_ref_counter[model.model_name] = 1
-        self.tokenizers_wrapper.register_tokenizer(model.tokenizer_name)
+
+        if model.model_type == ModelType.TOKEN_ID:
+            self.tokenizers_wrapper.register_tokenizer(model.tokenizer_name)
+
         logger.debug(f"Model {model.model_name} registered.")
         return model
 
@@ -65,7 +73,10 @@ class EngineManager:
         self._models_ref_counter[model_name] -= 1
         if self._models_ref_counter[model_name] == 0:
             model = self.models.pop(model_name)
-            self.tokenizers_wrapper.remove_tokenizer(model.tokenizer_name)
+
+            if model.model_type == ModelType.TOKEN_ID:
+                self.tokenizers_wrapper.remove_tokenizer(model.tokenizer_name)
+
             logger.debug(f"Model {model_name} removed.")
 
     def _remove_engine(self, engine_id: int) -> None:

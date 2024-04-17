@@ -107,6 +107,9 @@ class ExecutionEngine:
 
     @property
     def tokenizer_name(self) -> str:
+        parrot_assert(
+            self.model_type == ModelType.TOKEN_ID, "Only TOKEN_ID model has tokenizer."
+        )
         return self.model.tokenizer_name
 
     @property
@@ -155,13 +158,14 @@ class ExecutionEngine:
 
         self._serve_layer_runtime_info.num_tasks += 1
 
-        tokens_num = task.get_token_nums(self.tokenizer_name)
-        self._serve_layer_runtime_info.tokens_num += tokens_num
-
         tasks_num_upperbound = task.schedule_annotation.tasks_num_upperbound
         self._serve_layer_runtime_info.tasks_num_upperbounds[task.task_id] = (
             tasks_num_upperbound
         )
+
+        if self.model_type == ModelType.TOKEN_ID:
+            tokens_num = task.get_token_nums(self.tokenizer_name)
+            self._serve_layer_runtime_info.tokens_num += tokens_num
 
     def update_servelayer_runtime_info_remove_task(
         self, task: "CompletionTask"
@@ -171,11 +175,11 @@ class ExecutionEngine:
         parrot_assert(task.is_scheduled, "The task is not scheduled.")
 
         self._serve_layer_runtime_info.num_tasks -= 1
-
-        tokens_num = task.get_token_nums(self.tokenizer_name)
-        self._serve_layer_runtime_info.tokens_num -= tokens_num
-
         self._serve_layer_runtime_info.tasks_num_upperbounds.pop(task.task_id)
+
+        if self.model_type == ModelType.TOKEN_ID:
+            tokens_num = task.get_token_nums(self.tokenizer_name)
+            self._serve_layer_runtime_info.tokens_num -= tokens_num
 
     # ---------- For Profiling ----------
 
