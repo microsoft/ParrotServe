@@ -51,15 +51,15 @@ sample_configs/engine/openai*
 !sample_configs/engine/openai-example-config.json
 
 # Benchmark workloads
-benchmark/workloads/*/*.json
-benchmark/workloads/*/*.jsonl
+artifact_osdi24/workloads/*/*.json
+artifact_osdi24/workloads/*/*.jsonl
 *.parquet
 # It's safe!
-!benchmark/workloads/gpts/*.json 
+!artifact_osdi24/workloads/gpts/*.json 
 
 # Safe to upload
-!benchmark/workloads/metagpt/*.json
-!benchmark/workloads/metagpt/*.jsonl
+!artifact_osdi24/workloads/metagpt/*.json
+!artifact_osdi24/workloads/metagpt/*.jsonl
 
 # Evaluation data
 !benchmark/*/results/*/*.log

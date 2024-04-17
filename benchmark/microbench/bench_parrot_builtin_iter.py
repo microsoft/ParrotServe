@@ -20,11 +20,13 @@ def _init(model):
 
     prompt_len = 3000
 
-    fill1 = Fill(pid=0, tid=0, context_id=0, parent_context_id=-1, token_ids=[100])
+    fill1 = Fill(
+        session_id=0, task_id=0, context_id=0, parent_context_id=-1, token_ids=[100]
+    )
 
     fill2 = Fill(
-        pid=0,
-        tid=0,
+        session_id=0,
+        task_id=0,
         context_id=0,
         parent_context_id=-1,
         token_ids=[100] * prompt_len,
@@ -36,8 +38,8 @@ def _init(model):
     )
 
     gen = Generate(
-        pid=0,
-        tid=0,
+        session_id=0,
+        task_id=0,
         context_id=0,
         parent_context_id=-1,
         sampling_config=sampling_config,

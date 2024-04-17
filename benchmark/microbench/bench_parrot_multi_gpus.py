@@ -2,7 +2,7 @@
 # Please manually do this by:
 #   bash sample_configs/launch/launch_4_vicuna_7b.sh
 
-import parrot as P
+from parrot import P
 import asyncio
 import time
 

@@ -131,8 +131,8 @@ class FIFOContextPool(object):
     def push(self, prompt_token_ids: list[int], parent_context_id: int, gen_limit: int):
         context_idx = self._jobs.index(None)
         self._jobs[context_idx] = Fill(
-            pid=0,
-            tid=0,
+            session_id=0,
+            task_id=0,
             context_id=context_idx,
             parent_context_id=parent_context_id,
             token_ids=prompt_token_ids,
@@ -150,8 +150,8 @@ class FIFOContextPool(object):
             else:
                 if isinstance(job, Fill):
                     self._jobs[context_idx] = Generate(
-                        pid=0,
-                        tid=0,
+                        session_id=0,
+                        task_id=0,
                         context_id=job.context_id,
                         parent_context_id=job.parent_context_id,
                         sampling_config=self._sampling_config,
@@ -213,8 +213,8 @@ def profile_bing_chat(
 
     if shared:
         shared_fill = Fill(
-            pid=0,
-            tid=0,
+            session_id=0,
+            task_id=0,
             context_id=batch_size,
             parent_context_id=-1,
             token_ids=prompt_token_ids[0][:shared_ids],
