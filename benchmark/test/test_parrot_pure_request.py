@@ -1,4 +1,4 @@
-import parrot as P
+from parrot import P
 
 vm = P.VirtualMachine("http://localhost:9000", mode="release")
 
