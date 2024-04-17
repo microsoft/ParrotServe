@@ -2,7 +2,7 @@ from parrot.utils import RecyclePool
 
 
 def test_recycle_pool():
-    pool = RecyclePool(4)
+    pool = RecyclePool()
     for i in range(4):
         assert pool.allocate() in [0, 1, 2, 3]
 
@@ -15,7 +15,7 @@ def test_recycle_pool():
 
 
 def test_recycle_pool_error():
-    pool = RecyclePool(1)
+    pool = RecyclePool()
     pool.allocate()
 
     try:

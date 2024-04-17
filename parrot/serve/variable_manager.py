@@ -33,7 +33,7 @@ class SemanticVariableNamespace:
 
     def __init__(self) -> None:
         # Variables: var_id -> variable
-        self._vars: Dict[str, SemanticVariable] = {}
+        self.vars: Dict[str, SemanticVariable] = {}
 
         # Name Generating
         # Seed is for generating unique names.
@@ -51,14 +51,14 @@ class SemanticVariableNamespace:
     def get_var_by_id(self, var_id: str) -> Optional[SemanticVariable]:
         """Get a Semantic Variable by ID."""
 
-        return self._vars.get(var_id)
+        return self.vars.get(var_id)
 
     def get_var_by_content(self, content: str) -> Optional[SemanticVariable]:
         """Get a Semantic Variable by content."""
 
         var_id = self._get_hashed_var_id(content)
 
-        return self._vars.get(var_id)
+        return self.vars.get(var_id)
 
     def new_var_by_content(
         self, content: str, is_constant_prefix: bool
@@ -72,8 +72,8 @@ class SemanticVariableNamespace:
 
         var_id = self._get_hashed_var_id(hash_name)
 
-        if var_id in self._vars:
-            return self._vars[var_id]
+        if var_id in self.vars:
+            return self.vars[var_id]
 
         sv = SemanticVariable(
             name="constant",
@@ -84,7 +84,7 @@ class SemanticVariableNamespace:
         # NOTE(chaofan): Directly set the content in this case.
         sv.set(content)
 
-        self._vars[var_id] = sv
+        self.vars[var_id] = sv
 
         return sv
 
@@ -97,22 +97,22 @@ class SemanticVariableNamespace:
         var_id = self._get_hashed_var_id(hash_name)
 
         # Must be different.
-        parrot_assert(var_id not in self._vars, "SV ID already exists.")
+        parrot_assert(var_id not in self.vars, "SV ID already exists.")
 
         sv = SemanticVariable(
             name=name, var_id=var_id, is_constant_prefix=is_constant_prefix, seed=seed
         )
-        self._vars[var_id] = sv
+        self.vars[var_id] = sv
 
         return sv
 
     def free_var(self, sv: SemanticVariable) -> None:
         """Free a Semantic Variable."""
 
-        parrot_assert(sv.id in self._vars, "SV ID does not exist.")
+        parrot_assert(sv.id in self.vars, "SV ID does not exist.")
 
         self._seed_pool.free(sv.seed)
-        self._vars.pop(sv.id)
+        self.vars.pop(sv.id)
 
 
 class SemanticVariableManager:
@@ -134,23 +134,24 @@ class SemanticVariableManager:
 
     def __init__(self, constant_prefix_var_timeout: int) -> None:
         # ---------- Namespace ----------
-        self._constant_prefix_namespace = SemanticVariableNamespace()
+        self.constant_prefix_namespace = SemanticVariableNamespace()
 
         # session_id -> namespace
-        self._session_namespaces: Dict[int, SemanticVariableNamespace] = {}
+        self.session_namespaces: Dict[int, SemanticVariableNamespace] = {}
 
         # ---------- Constant Prefixes Management ----------
 
         # var_id -> last_access_time
         self._constant_prefix_last_access_time: Dict[str, float] = {}
-        self._constant_prefix_var_timeout = constant_prefix_var_timeout
+
+        self.constant_prefix_var_timeout = constant_prefix_var_timeout
 
     # ---------- Internal methods ----------
 
     def _get_constant_prefix_var(self, content: str) -> SemanticVariable:
         """Get/create a prefix-constant variable (hashed by content)."""
 
-        pc_var = self._constant_prefix_namespace.new_var_by_content(
+        pc_var = self.constant_prefix_namespace.new_var_by_content(
             content, is_constant_prefix=True
         )
         # Update the last access time.
@@ -164,19 +165,19 @@ class SemanticVariableManager:
     ) -> SemanticVariable:
         """Get/create a variable in a session scope (hashed by content)."""
 
-        namespace = self._session_namespaces[session_id]
+        namespace = self.session_namespaces[session_id]
         lvar = namespace.new_var_by_content(content, is_constant_prefix=False)
         return lvar
 
     def _create_local_var_by_name(
         self, session_id: int, var_name: str
     ) -> SemanticVariable:
-        namespace = self._session_namespaces[session_id]
+        namespace = self.session_namespaces[session_id]
         lvar = namespace.new_var_by_name(var_name, is_constant_prefix=False)
         return lvar
 
     def _get_local_var_by_id(self, session_id: int, var_id: str) -> SemanticVariable:
-        namespace = self._session_namespaces[session_id]
+        namespace = self.session_namespaces[session_id]
         lvar = namespace.get_var_by_id(var_id)
         parrot_assert(lvar is not None, "Local variable does not exist.")
         return lvar
@@ -187,21 +188,21 @@ class SemanticVariableManager:
         """Register a local namespace."""
 
         parrot_assert(
-            session_id not in self._session_namespaces,
+            session_id not in self.session_namespaces,
             "Session ID already exists.",
         )
 
-        self._session_namespaces[session_id] = SemanticVariableNamespace()
+        self.session_namespaces[session_id] = SemanticVariableNamespace()
 
     def free_local_var_space(self, session_id: int) -> None:
         """Free a local namespace."""
 
         parrot_assert(
-            session_id in self._session_namespaces,
+            session_id in self.session_namespaces,
             "Session ID does not exist.",
         )
 
-        self._session_namespaces.pop(session_id)
+        self.session_namespaces.pop(session_id)
 
     def free_expired_constant_prefix_vars(self) -> List[SemanticVariable]:
         """Free expired constant prefix variables.
@@ -218,13 +219,13 @@ class SemanticVariableManager:
         ):
             if (
                 cur_time - last_access_time
-                > self._constant_prefix_var_timeout * 1_000_000_000
+                > self.constant_prefix_var_timeout * 1_000_000_000
             ):
-                var = self._constant_prefix_namespace.get_var_by_id(var_id)
+                var = self.constant_prefix_namespace.get_var_by_id(var_id)
                 parrot_assert(
                     var is not None, "Constant prefix variable does not exist."
                 )
-                self._constant_prefix_namespace.free_var(var)
+                self.constant_prefix_namespace.free_var(var)
                 self._constant_prefix_last_access_time.pop(var_id)
                 ret.append(var)
                 logger.debug(f"Constant Prefix Variable (id={var_id}) expired.")
@@ -240,11 +241,11 @@ class SemanticVariableManager:
         """
 
         parrot_assert(
-            session_id in self._session_namespaces,
+            session_id in self.session_namespaces,
             f"Local namespace of {session_id} does not exist.",
         )
 
-        return self._session_namespaces[session_id].new_var_by_name(
+        return self.session_namespaces[session_id].new_var_by_name(
             var_name, is_constant_prefix=False
         )
 
@@ -256,16 +257,16 @@ class SemanticVariableManager:
             var_id: str. The Semantic Variable ID.
         """
 
-        cp_var = self._constant_prefix_namespace.get_var_by_id(var_id)
+        cp_var = self.constant_prefix_namespace.get_var_by_id(var_id)
         if cp_var is not None:
             return cp_var
 
         parrot_assert(
-            session_id in self._session_namespaces,
+            session_id in self.session_namespaces,
             f"Local namespace of {session_id} does not exist.",
         )
 
-        namespace = self._session_namespaces[session_id]
+        namespace = self.session_namespaces[session_id]
         var = namespace.get_var_by_id(var_id)
 
         if var is None:

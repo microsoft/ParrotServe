@@ -34,3 +34,18 @@ def get_performance_criteria(criteria: str) -> PerformanceCriteria:
         return PerformanceCriteria.TPOT
     else:
         raise NotImplementedError(f"PerformanceCriteria {criteria} is not supported.")
+
+
+def get_performance_criteria_str(criteria: PerformanceCriteria) -> str:
+    """Convert the performance criteria to a string."""
+
+    if criteria == PerformanceCriteria.LATENCY:
+        return "latency"
+    elif criteria == PerformanceCriteria.THROUGHPUT:
+        return "throughput"
+    elif criteria == PerformanceCriteria.TTFT:
+        return "TTFT"
+    elif criteria == PerformanceCriteria.TPOT:
+        return "TPOT"
+    else:
+        raise NotImplementedError(f"PerformanceCriteria {criteria} is not supported.")

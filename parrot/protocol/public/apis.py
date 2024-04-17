@@ -201,7 +201,7 @@ def set_semantic_variable(
 
 
 def get_semantic_variable(
-    http_addr: str, session_id: int, session_auth: str, var_id: str
+    http_addr: str, session_id: int, session_auth: str, var_id: str, criteria: str
 ) -> GetSemanticVariableResponse:
     try:
         return send_http_request(
@@ -212,6 +212,7 @@ def get_semantic_variable(
             retry_times=1,
             session_id=session_id,
             session_auth=session_auth,
+            criteria=criteria,
         )
     except BaseException as e:
         logger.error(
@@ -221,7 +222,7 @@ def get_semantic_variable(
 
 
 async def aget_semantic_variable(
-    http_addr: str, session_id: int, session_auth: str, var_id: str
+    http_addr: str, session_id: int, session_auth: str, var_id: str, criteria: str
 ) -> GetSemanticVariableResponse:
     try:
         async with aiohttp.ClientSession() as client_session:
@@ -234,6 +235,7 @@ async def aget_semantic_variable(
                 retry_times=1,
                 session_id=session_id,
                 session_auth=session_auth,
+                criteria=criteria,
             )
     except BaseException as e:
         logger.error(

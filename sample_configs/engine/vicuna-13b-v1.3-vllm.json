@@ -7,7 +7,7 @@
     "random_seed": 0,
     "tokenizer": "hf-internal-testing/llama-tokenizer",
     "fill_chunk_size": -1,
-    "threads_capacity": 256,
+    "tasks_capacity": 256,
     "instance": {
         "block_size": 16,
         "num_kv_cache_blocks": 1000,
@@ -18,7 +18,7 @@
         "max_num_batched_tokens": 2560,
         "max_total_tokens": 8192
     },
-    "os": {
+    "serve_core": {
         "host": "localhost",
         "port": 9000
     }

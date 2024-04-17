@@ -86,16 +86,16 @@ class ServeCoreContextManager:
 
     def __init__(self):
         # context_id -> Context
-        self._contexts: Dict[int, Context] = {}
+        self.contexts: Dict[int, Context] = {}
 
         # session_id -> List of Context
-        self._session_contexts: Dict[int, List[Context]] = {}
+        self.session_contexts: Dict[int, List[Context]] = {}
 
         # var_id -> List of context ids
         # Record extra ref_counters contributed by constant prefix variables.
         # If a constant prefix variable is freed, we should decrease the ref_counter of the
         # corresponding contexts.
-        self._constant_prefix_contexts: Dict[str, List[Context]] = {}
+        self.constant_prefix_contexts: Dict[str, List[Context]] = {}
 
         # context_id -> ref_counter
         # Ref counter increases when the context is used.
@@ -107,7 +107,7 @@ class ServeCoreContextManager:
         self._context_id_pool = RecyclePool("Context pool")
 
         # engine_id -> PrefixCache
-        self._prefix_caches: Dict[int, PrefixCache] = {}
+        self.prefix_caches: Dict[int, PrefixCache] = {}
 
     @staticmethod
     def _hash_var_id(var_id: str) -> str:
@@ -122,7 +122,7 @@ class ServeCoreContextManager:
         # For creating-and-forking a context, check _fork_context.
         context = Context(context_id=context_id, engine=engine)
 
-        self._contexts[context_id] = context
+        self.contexts[context_id] = context
         self._add_ref_counter(context)
 
         logger.debug(f"Context created: {context_id}")
@@ -141,7 +141,7 @@ class ServeCoreContextManager:
             parent_context=parent_context,
         )
 
-        self._contexts[context_id] = context
+        self.contexts[context_id] = context
         self._add_ref_counter(context)
 
         logger.debug(
@@ -176,11 +176,11 @@ class ServeCoreContextManager:
             )
 
         # Remove context from the PrefixCache.
-        prefix_cache = self._prefix_caches[engine.engine_id]
+        prefix_cache = self.prefix_caches[engine.engine_id]
         prefix_cache.remove_context_id(context_id)
 
         # Remove context from the Manager.
-        self._contexts.pop(context_id)
+        self.contexts.pop(context_id)
         self._context_id_pool.free(context_id)
 
     def _add_ref_counter(self, context: Context) -> None:
@@ -198,7 +198,7 @@ class ServeCoreContextManager:
         """
 
         parrot_assert(
-            context.context_id in self._contexts,
+            context.context_id in self.contexts,
             "Context should be in the context pool.",
         )
         self._free_context(context)
@@ -217,7 +217,7 @@ class ServeCoreContextManager:
         )
 
         chain = task.chain
-        prefix_cache = self._prefix_caches[task.engine.engine_id]
+        prefix_cache = self.prefix_caches[task.engine.engine_id]
         prefix_hash = ""
         prefix_no_cache_flag = False
 
@@ -228,7 +228,7 @@ class ServeCoreContextManager:
                 # If the prefix is already cached, use cached context
                 context_id = prefix_cache.get_cached_prefix_context(prefix_hash)
                 if context_id != NONE_CONTEXT_ID:
-                    context = self._contexts[context_id]
+                    context = self.contexts[context_id]
                     self._add_ref_counter(context)
                     task.contexts.append(context)
                     continue
@@ -242,13 +242,13 @@ class ServeCoreContextManager:
                 context = self._new_context(task.engine)
                 # If this is a constant prefix context, we add an extra ref_counter.
                 if node.sv.is_constant_prefix:
-                    if node.sv.id not in self._constant_prefix_contexts:
-                        self._constant_prefix_contexts[node.sv.id] = []
+                    if node.sv.id not in self.constant_prefix_contexts:
+                        self.constant_prefix_contexts[node.sv.id] = []
                     parrot_assert(
-                        context not in self._constant_prefix_contexts[node.sv.id],
+                        context not in self.constant_prefix_contexts[node.sv.id],
                         "Context should not be in the ref map.",
                     )
-                    self._constant_prefix_contexts[node.sv.id].append(context)
+                    self.constant_prefix_contexts[node.sv.id].append(context)
                     self._add_ref_counter(context)
             # If the node is not the first node in the chain, fork the context.
             else:
@@ -274,14 +274,14 @@ class ServeCoreContextManager:
         """Free the contexts of a constant prefix variable."""
 
         parrot_assert(
-            var_id in self._constant_prefix_contexts,
+            var_id in self.constant_prefix_contexts,
             "Constant prefix variable should have contexts.",
         )
 
-        for context in self._constant_prefix_contexts[var_id]:
+        for context in self.constant_prefix_contexts[var_id]:
             self._free_context(context)
 
-        self._constant_prefix_contexts.pop(var_id)
+        self.constant_prefix_contexts.pop(var_id)
 
     # ---------- For Scheduler ----------
 
@@ -301,7 +301,7 @@ class ServeCoreContextManager:
         # engine_id -> cached_prefix_num
         sort_dict = {}
 
-        for engine_id, prefix_cache in self._prefix_caches.items():
+        for engine_id, prefix_cache in self.prefix_caches.items():
             prefix_hash = ""
             for node in task.chain.iter():
                 prefix_hash += self._hash_var_id(node.var_id)
@@ -323,20 +323,20 @@ class ServeCoreContextManager:
         """Profile the memory usage of a session."""
 
         parrot_assert(
-            session_id in self._session_contexts, "Session should have contexts."
+            session_id in self.session_contexts, "Session should have contexts."
         )
 
-        session_ctxs = self._session_contexts[session_id]
+        session_ctxs = self.session_contexts[session_id]
         return sum([ctx.memory_usage for ctx in session_ctxs])
 
     def profile_session_tokens(self, session_id: int) -> int:
         """Profile the total number of tokens in a session."""
 
         parrot_assert(
-            session_id in self._session_contexts, "Session should have contexts."
+            session_id in self.session_contexts, "Session should have contexts."
         )
 
-        session_ctxs = self._session_contexts[session_id]
+        session_ctxs = self.session_contexts[session_id]
         return sum([ctx.tokens_num for ctx in session_ctxs])
 
     # ---------- Registering ----------
@@ -344,26 +344,26 @@ class ServeCoreContextManager:
     def register_session_contexts(self, session_id: int):
         """Register the contexts of a session."""
 
-        self._session_contexts[session_id] = []
+        self.session_contexts[session_id] = []
 
     def free_session_contexts(self, session_id: int):
         """Free the contexts of a session."""
 
-        if session_id not in self._session_contexts:
+        if session_id not in self.session_contexts:
             return
 
-        session_ctxs = self._session_contexts[session_id]
+        session_ctxs = self.session_contexts[session_id]
         for ctx in session_ctxs:
             self._free_context(ctx)
 
-        self._session_contexts.pop(session_id)
+        self.session_contexts.pop(session_id)
 
     def register_engine_prefix_cache(self, engine_id: int):
         """Register the prefix cache of an engine."""
 
-        self._prefix_caches[engine_id] = PrefixCache()
+        self.prefix_caches[engine_id] = PrefixCache()
 
     def remove_engine_prefix_cache(self, engine_id: int):
         """Remove the prefix cache of an engine."""
 
-        self._prefix_caches.pop(engine_id)
+        self.prefix_caches.pop(engine_id)

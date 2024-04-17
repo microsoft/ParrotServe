@@ -140,6 +140,7 @@ def test_get_semantic_variable():
             session_id=0,
             session_auth="1",
             var_id=resp.var_id,
+            criteria="latency",
         )
 
         assert resp2.content == content

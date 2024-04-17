@@ -6,62 +6,62 @@ import asyncio
 import contextlib
 import time
 import traceback
-import threading
 import importlib
 import inspect
-from dataclasses import dataclass
-from typing import Callable, Optional, Literal, Dict, List, Any
+from typing import Callable, Optional, Literal, Dict, List, Any, Generator
 
 
-from parrot.exceptions import parrot_assert
-from parrot.protocol.internal.runtime_info import VMRuntimeInfo
-from parrot.protocol.internal.layer_apis import (
-    register_vm,
-    vm_heartbeat,
-    submit_call,
-    asubmit_call,
-    placeholder_set,
-    placeholder_fetch,
-    aplaceholder_fetch,
+from parrot.protocol.public.apis import (
+    register_session,
+    get_session_info,
+    remove_session,
+    submit_semantic_call,
+    asubmit_semantic_call,
+    register_semantic_variable,
+    set_semantic_variable,
+    get_semantic_variable,
+    aget_semantic_variable,
 )
-from parrot.pfunc.semantic_variable import SemanticVariable
-from parrot.pfunc.function import (
+
+from .semantic_variable import SemanticVariable
+from .perf_criteria import PerformanceCriteria, get_performance_criteria_str
+from .function import (
     BasicFunction,
     NativeFunction,
     SemanticFunction,
+    SemanticCall,
     ParamType,
     Parameter,
 )
-from Parrot.parrot.os.graph.annotation import DispatchAnnotation
 from parrot.sampling_config import SamplingConfig
-from parrot.pfunc.function_call import BasicCall
 from parrot.utils import get_logger
-from parrot.constants import VM_HEARTBEAT_INTERVAL, NONE_CONTEXT_ID
 
 
-logger = get_logger("VM")
+logger = get_logger("PFunc VM")
 
 
 class VirtualMachine:
-    """The Virtual Machine for Parrot semantic programming.
+    """VirtualMachine for running Parrot semantic programming.
 
-    Different from the traditional VM, there is no complex execution logic in Parrot VM.
-    Instead, it's more like a client, which sends semantc function calls to OS and waits for
-    the results.
+    It represents a session in Parrot's ServeLayer, and proxyes the requests to the session in the ServeLayer.
+
+    It also maintains the function registry.
     """
 
     def __init__(
-        self, os_http_addr: str, mode: Literal["release", "debug"] = "release"
-    ):
-        # Public info (User can directly access): os_http_addr, pid, runtime_info
+        self, core_http_addr: str, mode: Literal["release", "debug"] = "release"
+    ) -> None:
+        # Public info (User can directly access): core_http_addr, session_id
+        self.core_http_addr = core_http_addr
 
-        self.os_http_addr = os_http_addr
+        # Register session and get session_id
+        resp = register_session(http_addr=self.core_http_addr, api_key="1")
+        self.session_id = resp.session_id
+        self._session_auth = resp.session_auth
 
-        # Call OS to register VM, and allocate a pid
-        resp = register_vm(self.os_http_addr)
-
-        self.pid = resp.pid
-        self.runtime_info = VMRuntimeInfo()
+        # Function registry
+        self._function_registry: Dict[str, BasicFunction] = {}
+        self._anonymous_funcname_counter = 0
 
         self.stat_run_time = 0.0
 
@@ -72,90 +72,96 @@ class VirtualMachine:
             logging.disable(logging.DEBUG)
             logging.disable(logging.INFO)
 
-        # The following attributes are internal.
-
-        self._heartbeat_thread = threading.Thread(
-            target=self._heartbeat_daemon, daemon=True
-        )
-        self._function_registry: Dict[str, BasicFunction] = {}
-        self._heartbeat_thread.start()
-
-        self._anonymous_funcname_counter = 0
-
-        self._batch = []
-        self._batch_latency = 0.0
-        self._batch_flag = False
-
-        logger.info(f"Virtual Machine (pid: {self.pid}) launched.")
-
-    # ---------- Private Methods ----------
-
-    def _heartbeat_daemon(self):
-        while True:
-            resp = vm_heartbeat(
-                http_addr=self.os_http_addr,
-                pid=self.pid,
-            )
-
-            self.runtime_info = VMRuntimeInfo(**resp.dict())
-
-            time.sleep(VM_HEARTBEAT_INTERVAL)
-
-    def _batch_hook(self, call: BasicCall) -> bool:
-        if not self._batch_flag:
-            return False
-
-        is_native = isinstance(call.func, NativeFunction)
-
-        async def _submit_call(idx: int):
-            if self._batch_latency > 0:
-                await asyncio.sleep(
-                    idx * self._batch_latency
-                )  # Order the batch, 1ms latency
-            await asubmit_call(
-                http_addr=self.os_http_addr,
-                pid=self.pid,
-                call=call,
-                is_native=is_native,
-            )
-
-        self._batch.append(_submit_call(len(self._batch)))
-
-        return True
+        logger.info(f"VM (session_id={self.session_id}) launched.")
 
     # ----------Methods for Program Interface ----------
 
-    def placeholder_set_handler(self, placeholder_id: int, content: str):
-        """Set the content of a placeholder to OS."""
+    def register_semantic_variable_handler(self, var_name: str) -> str:
+        """Register a semantic variable to the VM.
 
-        resp = placeholder_set(
-            http_addr=self.os_http_addr,
-            pid=self.pid,
-            placeholder_id=placeholder_id,
+        Args:
+            var_name: str. The name of the variable.
+
+        Returns:
+            str: The id of the variable.
+        """
+
+        resp = register_semantic_variable(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+            var_name=var_name,
+        )
+
+        var_id = resp.var_id
+
+        logger.info(
+            f"VM (session_id={self.session_id}) registers SemanticVariable: {var_name} (id={var_id})"
+        )
+
+        return var_id
+
+    def set_semantic_variable_handler(self, var_id: str, content: str) -> None:
+        """Set the content of a SemanticVariable.
+
+        Args:
+            var_id: str. The id of the SemanticVariable.
+            content: str. The content to be set.
+        """
+
+        resp = set_semantic_variable(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+            var_id=var_id,
             content=content,
         )
 
-    def placeholder_fetch_handler(self, placeholder_id: int) -> str:
-        """Fetch a placeholder from OS."""
+    def get_semantic_variable_handler(
+        self, var_id: str, criteria: PerformanceCriteria
+    ) -> str:
+        """Fetch the content of a SemanticVariable.
 
-        resp = placeholder_fetch(
-            http_addr=self.os_http_addr,
-            pid=self.pid,
-            placeholder_id=placeholder_id,
+        Args:
+            var_id: str. The id of the SemanticVariable.
+            criteria: PerformanceCriteria. The performance criteria for fetching the variable.
+
+        Returns:
+            str: The content of the SemanticVariable.
+        """
+
+        resp = get_semantic_variable(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+            var_id=var_id,
+            criteria=get_performance_criteria_str(criteria),
         )
         return resp.content
 
-    async def aplaceholder_fetch_handler(self, placeholder_id: int) -> str:
-        """(Async) fetch a placeholder from OS."""
+    async def aget_semantic_variable_handler(
+        self, var_id: str, criteria: PerformanceCriteria
+    ) -> str:
+        """(Async) Fetch the content of a SemanticVariable.
 
-        resp = await aplaceholder_fetch(
-            http_addr=self.os_http_addr,
-            pid=self.pid,
-            placeholder_id=placeholder_id,
+        Args:
+            var_id: str. The id of the SemanticVariable.
+            criteria: PerformanceCriteria. The performance criteria for fetching the variable.
+
+        Returns:
+            str: The content of the SemanticVariable.
+        """
+
+        resp = await aget_semantic_variable(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+            var_id=var_id,
+            criteria=get_performance_criteria_str(criteria),
         )
         return resp.content
 
-    def register_function_handler(self, func: BasicFunction):
+    def register_function_handler(self, func: BasicFunction) -> None:
         """Register a function to the VM."""
 
         if func.name in self._function_registry:
@@ -164,69 +170,47 @@ class VirtualMachine:
             return
 
         self._function_registry[func.name] = func
-        logger.info(f"VM (pid: {self.pid}) registers function: {func.name}")
-
-    def submit_call_handler(self, call: BasicCall):
-        """Submit a call to the OS."""
-
-        # If batching
-        if self._batch_hook(call):
-            return
-
-        logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
-
-        is_native = isinstance(call.func, NativeFunction)
-
-        resp = submit_call(
-            http_addr=self.os_http_addr,
-            pid=self.pid,
-            call=call,
-            is_native=is_native,
+        logger.info(
+            f"VM (session_id={self.session_id}) registers function: {func.name}"
         )
 
-    async def asubmit_call_handler(self, call: BasicCall):
+    def submit_semantic_call_handler(self, call: SemanticCall) -> None:
+        """Submit a SemanticCall to the OS."""
+
+        logger.info(
+            f"VM (session_id={self.session_id}) submits SemanticCall: {call.func.name}"
+        )
+
+        resp = submit_semantic_call(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+            payload=call.to_request_payload(),
+        )
+
+    async def asubmit_semantic_call_handler(self, call: SemanticCall) -> None:
         """Submit a call to the OS."""
 
-        logger.info(f"VM (pid: {self.pid}) submits call: {call.func.name}")
+        logger.info(
+            f"VM (session_id={self.session_id}) submits SemanticCall: {call.func.name}"
+        )
 
-        is_native = isinstance(call.func, NativeFunction)
-
-        resp = await asubmit_call(
-            http_addr=self.os_http_addr,
-            pid=self.pid,
-            call=call,
-            is_native=is_native,
+        resp = await asubmit_semantic_call(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+            payload=call.to_request_payload(),
         )
 
     # ---------- Public Methods ----------
-
-    # Submit batching calls with ordering!
-
-    def set_batch(self, latency: float = 0.001):
-        """Set the batch flag to True."""
-
-        parrot_assert(not self._batch_flag, "Batching is already set.")
-        self._batch_flag = True
-        self._batch_latency = latency
-
-    async def submit_batch(self):
-        """Submit the batch to OS."""
-
-        parrot_assert(self._batch_flag, "Batching is not set.")
-        self._batch_flag = False
-        self._batch_latency = 0.001
-
-        await asyncio.gather(*self._batch)
-        self._batch = []
 
     def define_function(
         self,
         func_name: Optional[str],
         func_body: str,
         params: List[Parameter],
-        models: List[str] = [],
-        cache_prefix: bool = True,
-        remove_pure_fill: bool = True,
+        try_register: bool = True,
+        **semantic_func_metadata,
     ) -> SemanticFunction:
         if func_name is None:
             func_name = f"anonymous_{self._anonymous_funcname_counter}"
@@ -234,8 +218,6 @@ class VirtualMachine:
 
         for param in params:
             if param.typ == ParamType.OUTPUT_LOC:
-                if param.dispatch_annotation is None:
-                    param.dispatch_annotation = DispatchAnnotation()
                 if param.sampling_config is None:
                     param.sampling_config = SamplingConfig()
 
@@ -243,10 +225,8 @@ class VirtualMachine:
             name=func_name,
             func_body_str=func_body,
             params=params,
-            # Func Metadata
-            models=models,
-            cache_prefix=cache_prefix,
-            remove_pure_fill=remove_pure_fill,
+            try_register=try_register,
+            **semantic_func_metadata,
         )
 
         self.register_function_handler(func)
@@ -257,7 +237,7 @@ class VirtualMachine:
         self,
         function_name: str,
         module_path: str,
-    ):
+    ) -> SemanticFunction:
         """Import a semantic function from a Python module.
 
         - The function name is the name of the semantic function in the module file;
@@ -281,7 +261,7 @@ class VirtualMachine:
         self.register_function_handler(semantic_function)
         return semantic_function
 
-    def set_global_env(self):
+    def set_global_env(self) -> None:
         """Set the global environment for current Python process."""
 
         BasicFunction._virtual_machine_env = self
@@ -289,7 +269,7 @@ class VirtualMachine:
         # SharedContext._controller = self.controller
         # SharedContext._tokenized_storage = self.tokenizer
 
-    def unset_global_env(self):
+    def unset_global_env(self) -> None:
         """Unset the global environment for current Python process."""
 
         BasicFunction._virtual_machine_env = None
@@ -298,7 +278,7 @@ class VirtualMachine:
         # SharedContext._tokenized_storage = None
 
     @contextlib.contextmanager
-    def running_scope(self, timeit: bool = False):
+    def running_scope(self, timeit: bool = False) -> Generator[Any, Any, Any]:
         """Any code that runs under this scope will be executed under the VM context.
 
         - For native code, it will be executed by the system Python interpreter.
@@ -345,7 +325,9 @@ class VirtualMachine:
         Return the E2E running time of the program.
         """
 
-        logger.info(f"VM (pid: {self.pid}) runs program: {program.__name__}")
+        logger.info(
+            f"VM (session_id={self.session_id}) runs program: {program.__name__}"
+        )
 
         if inspect.iscoroutinefunction(program):
             coroutine = program(*args)

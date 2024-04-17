@@ -4,14 +4,14 @@
 # This module contains functions for making LLM to act as a simulator for a real-world
 # software, like Linux terminal, SQL, Web server, etc.
 
-import parrot as P
+from parrot import P
 
 
 # Reference: https://github.com/f/awesome-chatgpt-prompts
 # Act as a Linux Terminal
 
 
-@P.semantic_function()
+@P.semantic_function(try_register=False)
 def linux_terminal(
     command: P.Input,
     output: P.Output(P.SamplingConfig(temperature=0.5)),

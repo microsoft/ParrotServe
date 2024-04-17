@@ -66,7 +66,7 @@ def test_context_manager():
     context_mgr.set_task_contexts(task)
 
     print(context_mgr._context_ref_counter)
-    print(context_mgr._prefix_caches[engine.engine_id]._prefix_ctx_map)
+    print(context_mgr.prefix_caches[engine.engine_id]._prefix_ctx_map)
 
 
 if __name__ == "__main__":

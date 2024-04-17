@@ -20,7 +20,7 @@ class TaskCreator:
     """TaskCreator creates a CompletionTask object for the CompletionChain."""
 
     def __init__(self) -> None:
-        self.task_id_pool = RecyclePool("TaskIDPool")
+        self._task_id_pool = RecyclePool("TaskIDPool")
 
     def _lower_criteria(self, criteria: PerformanceCriteria) -> ScheduleAnnotation:
         if criteria == PerformanceCriteria.LATENCY:
@@ -51,7 +51,7 @@ class TaskCreator:
         parrot_assert(completion_chain.is_activated, "The chain is not activated.")
 
         # Create a new Task
-        task_id = self.task_id_pool.allocate()
+        task_id = self._task_id_pool.allocate()
         schedule_annotation = self._lower_criteria(completion_chain.criteria)
 
         logger.debug(
@@ -72,7 +72,7 @@ class TaskCreator:
             task: CompletionTask. The task to be freed.
         """
 
-        self.task_id_pool.free(task.task_id)
+        self._task_id_pool.free(task.task_id)
 
         # Remove from the engine
         task.leave_scheduled()

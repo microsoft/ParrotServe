@@ -7,7 +7,6 @@ import collections
 from typing import Optional, List
 
 from parrot.sampling_config import SamplingConfig
-from Parrot.parrot.os.graph.annotation import DispatchAnnotation
 from parrot.utils import get_logger, change_signature
 
 from .semantic_variable import SemanticVariable
@@ -31,18 +30,15 @@ class Output:
     def __init__(
         self,
         sampling_config: SamplingConfig = SamplingConfig(),
-        dispatch_annotation: DispatchAnnotation = DispatchAnnotation(),
-    ):
+    ) -> None:
         self.sampling_config = sampling_config
-        self.dispatch_annotation = dispatch_annotation
 
 
 def semantic_function(
-    models: List[str] = [],
-    cache_prefix: bool = True,
-    remove_pure_fill: bool = True,
     formatter: Optional[Sequential] = standard_formatter,
     conversation_template: Optional[FuncMutator] = None,
+    try_register: bool = True,
+    **semantic_func_metadata,
 ):
     """A decorator for users to define parrot functions."""
 
@@ -70,14 +66,12 @@ def semantic_function(
                 param_typ = ParamType.OUTPUT_LOC
                 kwargs = {
                     "sampling_config": SamplingConfig(),
-                    "dispatch_annotation": DispatchAnnotation(),
                 }
             elif param.annotation.__class__ == Output:
                 # Output loc with sampling config
                 param_typ = ParamType.OUTPUT_LOC
                 kwargs = {
                     "sampling_config": param.annotation.sampling_config,
-                    "dispatch_annotation": param.annotation.dispatch_annotation,
                 }
             else:
                 param_typ = ParamType.INPUT_PYOBJ
@@ -87,10 +81,8 @@ def semantic_function(
             name=func_name,
             params=func_params,
             func_body_str=doc_str,
-            # Func Metadata
-            models=models,
-            cache_prefix=cache_prefix,
-            remove_pure_fill=remove_pure_fill,
+            try_register=try_register,
+            **semantic_func_metadata,
         )
 
         if formatter is not None:

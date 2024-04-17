@@ -3,10 +3,13 @@
 
 # This module contains functions that used in the common daily life and workflow.
 
-import parrot as P
+from parrot import P
 
 
-@P.semantic_function(conversation_template=P.vicuna_template)
+@P.semantic_function(
+    conversation_template=P.vicuna_template,
+    try_register=False,
+)
 def tell_me_a_joke(
     topic: P.Input,
     topic2: P.Input,
@@ -19,7 +22,10 @@ def tell_me_a_joke(
     """
 
 
-@P.semantic_function(formatter=P.allowing_newline, cache_prefix=False)
+@P.semantic_function(
+    formatter=P.allowing_newline,
+    try_register=False,
+)
 def write_recommendation_letter(
     stu_name: P.Input,
     prof_name: P.Input,
@@ -42,7 +48,10 @@ def write_recommendation_letter(
     """
 
 
-@P.semantic_function(formatter=P.allowing_newline)
+@P.semantic_function(
+    formatter=P.allowing_newline,
+    try_register=False,
+)
 def qa(
     question: P.Input,
     answer: P.Output,

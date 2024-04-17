@@ -1,5 +1,5 @@
-import parrot as P
-from parrot.pfunc.transforms.conversation_template import vicuna_template
+from parrot import P
+from parrot.frontend.pfunc.transforms.conversation_template import vicuna_template
 
 
 def test_vicuna_template():
@@ -11,11 +11,11 @@ def test_vicuna_template():
         And something else. {{d}}
         """
 
-    print("Before:", foo.display())
+    print("Before:", foo.to_template_str())
 
     foo = vicuna_template.transform(foo)
 
-    print("After:", foo.display())
+    print("After:", foo.to_template_str())
 
 
 if __name__ == "__main__":

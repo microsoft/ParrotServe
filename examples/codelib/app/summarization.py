@@ -3,7 +3,7 @@
 
 # This module contains functions for text summarization.
 
-import parrot as P
+from parrot import P
 
 
 ### MapReduce Functions Start
@@ -11,7 +11,10 @@ import parrot as P
 # Reference: https://python.langchain.com/docs/use_cases/summarization
 
 
-@P.semantic_function(formatter=P.allowing_newline)
+@P.semantic_function(
+    formatter=P.allowing_newline,
+    try_register=False,
+)
 def summarize_map(
     doc_pieces: P.Input,
     summary: P.Output(P.SamplingConfig(temperature=0.5, max_gen_length=50)),

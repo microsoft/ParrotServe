@@ -2,44 +2,24 @@
 # Licensed under the MIT license.
 
 
-import types
-from abc import abstractmethod, ABC
-import marshal
-from typing import List, Dict, Type, Optional, Any, Set, Union, Tuple, Callable
+from typing import Tuple
+from abc import ABC
+from typing import List, Dict, Type, Optional, Any, Set, Union
 import regex as re
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 from parrot.utils import get_logger
 
-from .semantic_variable import (
-    SemanticVariable,
-    SemanticRegion,
-    Constant,
-    Parameter,
-    ParamType,
-    ParameterLoc,
-)
+from parrot.serve.graph.request import SemanticCallMetadata as SemanticFuncMetadata
 
-from .function_call import SemanticCall, NativeCall
+from .function_body import FuncBodyPiece, Constant, Parameter, ParamType, ParameterLoc
+from .semantic_variable import SemanticVariable
 
 
-logger = get_logger("Function")
+logger = get_logger("PFunc Function")
 
 
-@dataclass
-class NativeFuncMetadata:
-    """Metadata of a native function."""
-
-    timeout: float
-
-
-@dataclass
-class SemaFuncMetadata:
-    """Metadata of a semantic function."""
-
-    cache_prefix: bool
-    remove_pure_fill: bool
-    models: List[str]
+# ---------- Basic ----------
 
 
 class BasicFunction(ABC):
@@ -58,6 +38,94 @@ class BasicFunction(ABC):
             param for param in self.params if param.typ == ParamType.OUTPUT_LOC
         ]
 
+    # ---------- VM Env Methods ----------
+
+    def _has_vm_env(self) -> bool:
+        return BasicFunction._virtual_machine_env is not None
+
+    def _register_function(self) -> None:
+        if self._has_vm_env():
+            BasicFunction._virtual_machine_env.register_function_handler(self)
+        else:
+            logger.warning(
+                f'VM environment is not set. Not register the function "{self.name}".'
+            )
+
+
+class BasicCall(ABC):
+    """Basic call model."""
+
+    def __init__(
+        self, func: "BasicFunction", *args: List[Any], **kwargs: Dict[str, Any]
+    ):
+        # ---------- Basic Info ----------
+        self.func = func
+        self.bindings: Dict[str, Any] = {}
+        self.output_vars: List[Any] = []
+
+        self.set_bindings(args, kwargs)
+
+    def set_bindings(
+        self,
+        args: List[Any],
+        kwargs: Dict[str, Any],
+    ):
+        """Set the bindings for the call."""
+
+        # Set positional arguments
+        for i, arg_value in enumerate(args):
+            if i >= len(self.func.inputs):
+                raise ValueError(
+                    f"Function {self.func.name} got too many positional arguments."
+                )
+            self._set_value(self.func.inputs[i], arg_value, self.bindings)
+
+        # Set keyword arguments
+        for name, arg_value in kwargs.items():
+            assert (
+                name not in self.bindings
+            ), f"Function {self.func.name} got multiple values for argument {name}"
+            assert (
+                name in self.func.params_map
+            ), f"Function {self.func.name} got an unexpected keyword argument {name}"
+            param = self.func.params_map[name]
+            # if param in self.func.outputs:
+            #     raise ValueError(
+            #         f"Argument {name} is an output parameter hence cannot be set."
+            #     )
+            self._set_value(param, arg_value, self.bindings)
+
+        # Create output variables.
+        for param in self.func.outputs:
+            # Skip the output locs that are already set.
+            if param.name not in self.bindings:
+                out_var = SemanticVariable(name=param.name)
+                self.output_vars.append(out_var)
+                self._set_value(param, out_var, self.bindings)
+
+    @staticmethod
+    def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
+        if param.typ != ParamType.INPUT_PYOBJ:
+            if not isinstance(value, str) and not isinstance(value, SemanticVariable):
+                raise TypeError(
+                    f"Argument {param.name} in an input loc should be a str or a SemanticVariable, "
+                    f"but got {type(value)}: {value}"
+                )
+        else:
+            # For Python object, we use __str__ instead of __repr__ to serialize it.
+            value = str(value)
+        bindings[param.name] = value
+
+
+# ---------- Native Function ----------
+
+
+@dataclass
+class NativeFuncMetadata:
+    """Metadata of a native function."""
+
+    timeout: float
+
 
 class NativeFunction(BasicFunction):
     """A native function.
@@ -65,95 +133,42 @@ class NativeFunction(BasicFunction):
     It should be defined by a Python function, with inputs and outputs as strings.
     """
 
-    def __init__(self, name, pyfunc: Callable, params: list[Parameter], **kwargs):
-        super().__init__(name, params)
+    pass
 
-        self.pyfunc_code_dumped = marshal.dumps(pyfunc.__code__)
-        self.metadata = NativeFuncMetadata(**kwargs)
 
-        if BasicFunction._virtual_machine_env is not None:
-            BasicFunction._virtual_machine_env.register_function_handler(self)
+class NativeCall(BasicCall):
+    """A call to a native function."""
 
-    def __call__(
+    def __init__(
         self,
+        func: "NativeFunction",
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
-        """Call to a native function."""
-
-        return self._call_func(*args, **kwargs)
-
-    def invoke(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
-        """Same as __call__."""
-
-        return self._call_func(*args, **kwargs)
-
-    async def ainvoke(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
-        """Async call."""
-
-        return await self._acall_func(*args, **kwargs)
-
-    def _call_func(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
-        call = NativeCall(self, *args, **kwargs)
-        if BasicFunction._virtual_machine_env is not None:
-            BasicFunction._virtual_machine_env.submit_call_handler(call)
-        else:
-            logger.warning(
-                "VM environment is not set. Not submit the Call. Return Call instead. "
-                "(Please run a Parrot function under a VM context.)"
-            )
-            return call
-
-        # Unpack the output SemanticVariables
-        if len(call.output_vars) == 1:
-            return call.output_vars[0]
-        return tuple(call.output_vars)
-
-    async def _acall_func(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
-        call = NativeCall(self, *args, **kwargs)
-        if BasicFunction._virtual_machine_env is not None:
-            # Different from _call_func, we use asubmit_call_handler here.
-            await BasicFunction._virtual_machine_env.asubmit_call_handler(call)
-        else:
-            logger.warning(
-                "VM environment is not set. Not submit the Call. Return Call instead. "
-                "(Please run a Parrot function under a VM context.)"
-            )
-            return call
-
-        # Unpack the output SemanticVariables
-        if len(call.output_vars) == 1:
-            return call.output_vars[0]
-        return tuple(call.output_vars)
-
-    def display_signature(self) -> str:
-        """Display the function signature."""
-        return f"{self.name}({', '.join([f'{param.name}: {param.typ}' for param in self.params])})"
-
-    def get_pyfunc(self) -> Callable:
-        if self.name in globals():
-            return globals()[self.name]
-        code_decoded = marshal.loads(self.pyfunc_code_dumped)
-        return types.FunctionType(code_decoded, globals(), self.name)
+    ):
+        # ---------- Basic Info ----------
+        super().__init__(func, *args, **kwargs)
 
 
-def push_to_body(piece_cls: Type[SemanticRegion], body: List[SemanticRegion], **kwargs):
+# ---------- Semantic Function ----------
+
+
+# @dataclass
+# class SemanticFuncMetadata:
+#     """Metadata of a semantic function."""
+
+#     remove_pure_fill: bool
+#     models: List[str]
+#     model_type: str
+
+
+@dataclass
+class ParameterLoc(FuncBodyPiece):
+    """An input/output location in the function."""
+
+    param: Parameter
+
+
+def push_to_body(piece_cls: Type[FuncBodyPiece], body: List[FuncBodyPiece], **kwargs):
     idx = len(body)
     body.append(piece_cls(idx=idx, **kwargs))
 
@@ -161,8 +176,8 @@ def push_to_body(piece_cls: Type[SemanticRegion], body: List[SemanticRegion], **
 def parse_func_body(
     body_str: str,
     params_map: Dict[str, Parameter],
-    metadata: SemaFuncMetadata,
-) -> List[SemanticRegion]:
+    metadata: SemanticFuncMetadata,
+) -> List[FuncBodyPiece]:
     """Parse the function body string to a list of semantic variables."""
 
     PLACEHOLDER_REGEX = "{{[a-zA-Z_][a-zA-Z0-9_]*}}"
@@ -170,7 +185,7 @@ def parse_func_body(
     iterator = pattern.finditer(body_str)
     last_pos = 0
 
-    ret: List[SemanticRegion] = []
+    ret: List[FuncBodyPiece] = []
 
     last_output_loc_idx = -1
     outputs: Set[str] = set()
@@ -228,8 +243,9 @@ class SemanticFunction(BasicFunction):
         name: str,
         params: List[Parameter],
         func_body_str: Optional[str] = None,
-        func_body: Optional[List[SemanticRegion]] = None,
-        **kwargs,
+        func_body: Optional[List[FuncBodyPiece]] = None,
+        try_register: bool = True,
+        **metadata_kwargs,
     ):
         """For semantic function, function body is just a prompt template.
         After parsed, it turns to be a list of semantic variables.
@@ -237,9 +253,12 @@ class SemanticFunction(BasicFunction):
 
         # ---------- Basic Info ----------
         super().__init__(name, params)
-        self.metadata = SemaFuncMetadata(**kwargs)
+        metadata_dict = SemanticFuncMetadata.get_default_dict()
+        metadata_dict.update(**metadata_kwargs)
+        self.metadata = SemanticFuncMetadata(**metadata_dict)
+
         if func_body_str is not None:
-            self.body: List[SemanticRegion] = parse_func_body(
+            self.body: List[FuncBodyPiece] = parse_func_body(
                 func_body_str, self.params_map, self.metadata
             )
         elif func_body is not None:
@@ -247,20 +266,43 @@ class SemanticFunction(BasicFunction):
         else:
             raise ValueError("Either func_body_str or func_body should be provided.")
 
-        if BasicFunction._virtual_machine_env is not None:
-            BasicFunction._virtual_machine_env.register_function_handler(self)
+        if try_register:
+            # This will generate a register warning if the VM environment is not set.
+            self._register_function()
+
+    # ---------- VM Env Methods ----------
+
+    def _submit_semantic_call(self, call: "SemanticCall") -> None:
+        if self._has_vm_env():
+            BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+
+    async def _asubmit_semantic_call(self, call: "SemanticCall") -> None:
+        if self._has_vm_env():
+            await BasicFunction._virtual_machine_env.asubmit_semantic_call_handler(call)
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+
+    # ---------- Call Methods ----------
 
     def __call__(
         self,
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], SemanticCall]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...]]:
         """Call to a semantic function.
 
         Some NOTES:
 
         - Calling a parrot semantic function will not execute it immediately.
-          Instead, this will submit the call to OS.
+          Instead, this will submit the call to ServeLayer.
 
         - The return value is a list of SemanticVariable objects, which can be used to get the
           output contents or passed to other functions.
@@ -277,57 +319,35 @@ class SemanticFunction(BasicFunction):
           using __str__ method.
         """
 
-        return self._call_func(None, *args, **kwargs)
+        return self._call_func(*args, **kwargs)
 
     def invoke(
         self,
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], SemanticCall]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         """Same as __call__."""
 
-        return self._call_func(None, *args, **kwargs)
+        return self._call_func(*args, **kwargs)
 
     async def ainvoke(
         self,
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], SemanticCall]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         """Async call."""
 
-        return await self._acall_func(None, *args, **kwargs)
-
-    def invoke_statefully(
-        self,
-        context_successor: "SemanticFunction",
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], SemanticCall]:
-        """Call a semantic function statefully.
-
-        This means the context of the function will not be freed immediately. Instead, it will
-        be passed to the successor function.
-
-        For example, if we execute `f1.invoke_statefully(f2, ...)`, then the next call to `f2`
-        will use the context of `f1` this round.
-        """
-
-        return self._call_func(context_successor, *args, **kwargs)
+        return await self._acall_func(*args, **kwargs)
 
     def _call_func(
         self,
-        context_successor: Optional["SemanticFunction"],
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], SemanticCall]:
-        call = SemanticCall(self, context_successor, *args, **kwargs)
-        if BasicFunction._virtual_machine_env is not None:
-            BasicFunction._virtual_machine_env.submit_call_handler(call)
-        else:
-            logger.warning(
-                "VM environment is not set. Not submit the Call. Return Call instead. "
-                "(Please run a Parrot function under a VM context.)"
-            )
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
+        call = SemanticCall(self, *args, **kwargs)
+
+        self._submit_semantic_call(call)
+        if not self._has_vm_env():
             return call
 
         # Unpack the output SemanticVariables
@@ -337,19 +357,13 @@ class SemanticFunction(BasicFunction):
 
     async def _acall_func(
         self,
-        context_successor: Optional["SemanticFunction"],
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], SemanticCall]:
-        call = SemanticCall(self, context_successor, *args, **kwargs)
-        if BasicFunction._virtual_machine_env is not None:
-            # Different from _call_func, we use asubmit_call_handler here.
-            await BasicFunction._virtual_machine_env.asubmit_call_handler(call)
-        else:
-            logger.warning(
-                "VM environment is not set. Not submit the Call. Return Call instead. "
-                "(Please run a Parrot function under a VM context.)"
-            )
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
+        call = SemanticCall(self, *args, **kwargs)
+
+        await self._asubmit_semantic_call(call)
+        if not self._has_vm_env():
             return call
 
         # Unpack the output SemanticVariables
@@ -357,18 +371,67 @@ class SemanticFunction(BasicFunction):
             return call.output_vars[0]
         return tuple(call.output_vars)
 
-    @property
-    def prefix(self) -> Constant:
-        """Get the prefix of the function body."""
-        return self.body[0]
+    def to_template_str(self) -> str:
+        """Convert the function body to template string."""
 
-    def display(self) -> str:
-        """Display the function body."""
         return "".join(
             [
-                piece.text
-                if isinstance(piece, Constant)
-                else "{{" + piece.param.name + "}}"
+                (
+                    piece.text
+                    if isinstance(piece, Constant)
+                    else piece.param.get_param_str()
+                )
                 for piece in self.body
             ]
         )
+
+
+class SemanticCall(BasicCall):
+    """A call to a semantic function."""
+
+    def __init__(
+        self,
+        func: "SemanticFunction",
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ):
+        super().__init__(func, *args, **kwargs)
+
+    def to_request_payload(self) -> Dict:
+        """Convert the call to a request payload."""
+
+        payload = asdict(self.func.metadata)
+        template_str: str = self.func.to_template_str()
+        placeholders = []
+
+        for param in self.func.params:
+            param_value = self.bindings[param.name]
+
+            param_dict = {
+                "name": param.name,
+                "is_output": param.is_output,
+            }
+
+            if param.is_output:
+                assert (
+                    param.sampling_config is not None
+                ), "Output loc must have sampling config."
+
+                param_dict["sampling_config"] = asdict(param.sampling_config)
+
+            if isinstance(param_value, SemanticVariable):
+                param_dict["var_id"] = param_value.id
+            elif isinstance(param_value, str):
+                param_str = param.get_param_str()
+                template_str.replace(
+                    param_str, param_value
+                )  # Render the template string
+            else:
+                raise ValueError(f"Unexpected param value: {param_value}")
+
+            placeholders.append(param_dict)
+
+        payload["template"] = template_str
+        payload["placeholders"] = placeholders
+
+        return payload

@@ -2,34 +2,93 @@
 # Licensed under the MIT license.
 
 
-from dataclasses import dataclass
-from enum import Enum
 from typing import Optional
 
-from parrot.sampling_config import SamplingConfig
-from parrot.serve.scheduler.schedule_annotation import ScheduleAnnotation
+from parrot.utils import get_logger
+
+from .perf_criteria import PerformanceCriteria
 
 
-from typing import Optional
+logger = get_logger("PFunc Variable")
 
 
-class PFuncSemanticVariable:
-    """Maintain an object that represents a semantic variable in PFunc frontend."""
+class SemanticVariable:
+    """Maintain an object in PFunc frontend, which represents a semantic variable in ServeLayer.
 
+    The register/unregister of the variable is managed collaboratively by VM and Python Interpreter.
+    """
+
+    _var_counter = 0
     _virtual_machine_env: Optional["VirtualMachine"] = None
 
     def __init__(
         self,
         name: Optional[str] = None,
         content: Optional[str] = None,
-    ):
-        self.name = name if name is not None else f"v{self.id}"
+    ) -> None:
+        if name is None:
+            self.name = f"var_{SemanticVariable._var_counter}"
+            SemanticVariable._var_counter += 1
+        else:
+            self.name = name
+
+        if SemanticVariable._virtual_machine_env is not None:
+            self.id = self._register_semantic_variable(self.name)
+
         self.content = content
+        if self.content is not None:
+            self._set_semantic_variable(self.content)
 
     def __repr__(self) -> str:
         if self.ready:
-            return f"Future(name={self.name}, id={self.id}, content={self.content})"
-        return f"Future(name={self.name}, id={self.id})"
+            return f"SemanticVariable(name={self.name}, id={self.id}, content={self.content})"
+        return f"SemanticVariable(name={self.name}, id={self.id})"
+
+    # ---------- VM Env Methods ----------
+
+    def _has_vm_env(self) -> bool:
+        return SemanticVariable._virtual_machine_env is not None
+
+    def _register_semantic_variable(self, name: str) -> str:
+        if self._has_vm_env():
+            return self._virtual_machine_env.register_semantic_variable_handler(
+                self.name
+            )
+        else:
+            logger.warning(
+                f"VM environment is not set. Not register variable (name={name})."
+            )
+            return str(self._var_counter)
+
+    def _set_semantic_variable(self, content: str) -> None:
+        if self._has_vm_env():
+            self._virtual_machine_env.set_semantic_variable_handler(self.id, content)
+        else:
+            logger.warning(
+                f"VM environment is not set. Set variable (id={self.id}) failed."
+            )
+
+    def _get_semantic_variable(self, criteria: PerformanceCriteria) -> str:
+        if self._has_vm_env():
+            return self._virtual_machine_env.get_semantic_variable_handler(
+                self.id, criteria
+            )
+        else:
+            logger.warning(
+                f"VM environment is not set. Get variable (id={self.id}) failed."
+            )
+            return ""
+
+    async def _aget_semantic_variable(self, criteria: PerformanceCriteria) -> str:
+        if self._has_vm_env():
+            return await self._virtual_machine_env.aget_semantic_variable_handler(
+                self.id, criteria
+            )
+        else:
+            logger.warning(
+                f"VM environment is not set. Get variable (id={self.id}) failed."
+            )
+            return ""
 
     # ---------- Public Methods ----------
 
@@ -37,74 +96,29 @@ class PFuncSemanticVariable:
     def ready(self) -> bool:
         return self.content is not None
 
-    def set(self, content):
-        """Public API: Set the content of the future."""
+    def set(self, content: str) -> None:
+        """Set the content of variable."""
 
+        assert (not self.ready, "The variable can't be set repeatedly.")
+
+        self._set_semantic_variable(self.id, content)
         self.content = content
-        self._virtual_machine_env.placeholder_set_handler(self.id, content)
         return
 
-    def get(self) -> str:
-        """Public API: (Blocking) Get the content of the future."""
+    def get(self, criteria: PerformanceCriteria) -> str:
+        """(Blocking) Get the content of the variable."""
 
         if self.ready:
             return self.content
-        content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
-        return content
 
-    async def aget(self) -> str:
-        """Public API: (Asynchronous) Get the content of the future."""
+        self.content = self._get_semantic_variable(criteria)
+        return self.content
+
+    async def aget(self, criteria: PerformanceCriteria) -> str:
+        """(Asynchronous) Get the content of the variable."""
 
         if self.ready:
             return self.content
-        content = await self._virtual_machine_env.aplaceholder_fetch_handler(self.id)
+
+        content = await self._aget_semantic_variable(criteria)
         return content
-
-
-@dataclass
-class SemanticRegion:
-    idx: int
-
-
-@dataclass
-class Constant(SemanticRegion):
-    """Constant text."""
-
-    text: str
-
-
-class ParamType(Enum):
-    """Type of a parameter."""
-
-    INPUT_LOC = 0
-    OUTPUT_LOC = 1
-    INPUT_PYOBJ = 2
-
-
-@dataclass
-class Parameter:
-    """Parameter of a function.
-
-    A parameter is a special semantic variable that represents a user-input / output
-    of a LLM request.
-    """
-
-    name: str
-    typ: ParamType
-    sampling_config: Optional[SamplingConfig] = None
-    dispatch_annotation: Optional[ScheduleAnnotation] = None
-
-    @property
-    def is_input_loc(self) -> bool:
-        return self.typ == ParamType.INPUT_LOC
-
-    @property
-    def is_output(self) -> bool:
-        return self.typ == ParamType.OUTPUT_LOC
-
-
-@dataclass
-class ParameterLoc(SemanticRegion):
-    """An input/output location in the function."""
-
-    param: Parameter

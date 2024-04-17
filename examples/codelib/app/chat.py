@@ -3,20 +3,20 @@
 
 # This module contains functions in chatting senario.
 
-import parrot as P
+from parrot import P
 
 
 ### Vicuna Chat Functions Start
 
 
-@P.semantic_function(remove_pure_fill=False)
+@P.semantic_function(remove_pure_fill=False, try_register=False)
 def vicuna_chat_start():
     """A chat between a curious user and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the user's questions.
     """
 
 
-@P.semantic_function()
+@P.semantic_function(try_register=False)
 def vicuna_chat_per_round(
     human_input: P.Input,
     ai_output: P.Output(P.SamplingConfig(temperature=0.5, max_gen_length=50)),
@@ -34,8 +34,8 @@ def vicuna_chat_per_round(
 
 
 @P.semantic_function(
+    try_register=False,
     conversation_template=P.vicuna_template,
-    cache_prefix=True,
 )
 def dan(
     ack: P.Output(P.SamplingConfig(max_gen_length=15)),

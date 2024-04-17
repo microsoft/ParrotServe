@@ -20,13 +20,13 @@ class TokenizersWrapper:
 
     def __init__(self):
         # Map from tokenizer name to tokenizer object
-        self._tokenizers: Dict[str, HFTokenizer] = {}
+        self.tokenizers: Dict[str, HFTokenizer] = {}
 
     def register_tokenizer(self, tokenizer_name: str):
         """Register a new tokenizer in the server."""
 
-        if tokenizer_name not in self._tokenizers:
-            self._tokenizers[tokenizer_name] = AutoTokenizer.from_pretrained(
+        if tokenizer_name not in self.tokenizers:
+            self.tokenizers[tokenizer_name] = AutoTokenizer.from_pretrained(
                 tokenizer_name
             )
 
@@ -34,18 +34,18 @@ class TokenizersWrapper:
         """Remove a tokenizer from the server."""
 
         parrot_assert(
-            tokenizer_name in self._tokenizers,
+            tokenizer_name in self.tokenizers,
             f"Tokenizer {tokenizer_name} does not exist.",
         )
-        self._tokenizers.pop(tokenizer_name)
+        self.tokenizers.pop(tokenizer_name)
 
     def get_tokenizer(self, tokenizer_name: str):
         parrot_assert(
-            tokenizer_name in self._tokenizers,
+            tokenizer_name in self.tokenizers,
             f"Tokenizer {tokenizer_name} does not exist.",
         )
 
-        return self._tokenizers[tokenizer_name]
+        return self.tokenizers[tokenizer_name]
 
     # NOTE(chaofan): Ignore special tokens because we chunk the inputs.
 
@@ -63,7 +63,7 @@ class TokenizersWrapper:
         """
 
         result = {}
-        for tokenizer_name in self._tokenizers:
+        for tokenizer_name in self.tokenizers:
             result[tokenizer_name] = self.tokenize(text, tokenizer_name)
         return result
 

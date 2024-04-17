@@ -6,9 +6,5 @@
 
 __version__ = "0.01"
 
-# Program Interface and Transforms
-from .frontend.pfunc import *
-
-# Sampling config and annotations
-from .serve.scheduler.schedule_annotation import ScheduleAnnotation
-from .sampling_config import SamplingConfig
+# Import PFunc frontend
+import parrot.frontend.pfunc as P

@@ -10,7 +10,7 @@ from .func_mutator import (
     FuncMutator,
     SemanticFunction,
     Constant,
-    SemanticRegion,
+    FuncBodyPiece,
     ParameterLoc,
     Parameter,
 )
@@ -62,7 +62,7 @@ class ConversationTemplate(FuncMutator):
         return param
 
     def _visit_func(self, func: SemanticFunction) -> SemanticFunction:
-        new_body: List[SemanticRegion] = []
+        new_body: List[FuncBodyPiece] = []
 
         # Add system message
         push_to_body(
@@ -121,6 +121,7 @@ class ConversationTemplate(FuncMutator):
             name=func.name,
             params=func.params,
             func_body=new_body,
+            try_register=False,
             **asdict(func.metadata),
         )
 

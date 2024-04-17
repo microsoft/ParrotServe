@@ -87,10 +87,20 @@ class SemanticCallMetadata:
     remove_pure_fill: bool
 
     @classmethod
+    def get_default_dict(cls) -> Dict:
+        """Get the default metadata for a Request in dict format."""
+
+        return {
+            "models": [],
+            "model_type": "token_id",
+            "remove_pure_fill": True,
+        }
+
+    @classmethod
     def get_default(cls) -> "SemanticCallMetadata":
         """Get the default metadata for a Request."""
 
-        return cls(models=[], model_type="token_id", remove_pure_fill=True)
+        return SemanticCallMetadata(**cls.get_default_dict())
 
 
 class ChunkedSemanticCallRequest:

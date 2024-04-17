@@ -28,7 +28,7 @@ class BuiltinEngine(LLMEngine):
         super().__init__(engine_config, connect_to_core)
 
         # ---------- Configs ----------
-        builtin_config = BuiltinConfig(engine_config["instance"])
+        builtin_config = BuiltinConfig(**engine_config["instance"])
         scheduler_config = SchedulerConfig(**engine_config["scheduler"])
         self.builtin_config = builtin_config
         # Assign dtype and device to engine_config

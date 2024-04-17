@@ -174,7 +174,8 @@ class GraphExecutor:
                             token_ids=token_ids,
                         )
                         logger.debug(
-                            f"Task {completion_task.task_id} (session_id={self._session_id}) submit Fill primitive (tokens num: {len(token_ids)})"
+                            f"Task (task_id={completion_task.task_id}, session_id={self._session_id}) "
+                            f"submit Fill primitive (tokens num: {len(token_ids)})"
                         )
                         resp = await primitive.apost(engine.http_address)
                     else:
@@ -188,7 +189,8 @@ class GraphExecutor:
                             text=text,
                         )
                         logger.debug(
-                            f"Task {completion_task.task_id} (session_id={self._session_id}) submit Fill primitive (text len: {len(text)})"
+                            f"Task (task={completion_task.task_id}, session_id={self._session_id}) "
+                            f"submit Fill primitive (text len: {len(text)})"
                         )
                         resp = await primitive.apost(engine.http_address)
 

@@ -1,7 +1,8 @@
 import pytest
-import parrot as P
 
-from parrot.pfunc.function import Constant, ParameterLoc, SemanticCall
+from parrot import P
+
+from parrot.frontend.pfunc.function import Constant, ParameterLoc, SemanticCall
 
 
 def test_parse_semantic_function():
@@ -42,33 +43,12 @@ def test_parse_semantic_function():
             j += 1
 
 
-def test_parse_semantic_function_corner_cases():
-    @P.semantic_function()
-    def single_output(output: P.Output):
-        """This is a test for single output: {{output}}"""
-
-    @P.semantic_function()
-    def pure_locs(
-        input: P.Input,
-        output: P.Output,
-    ):
-        """This is a test for pure locs: {{input}}{{output}}"""
-
-    @P.semantic_function()
-    def test_utf8(
-        input: P.Input,
-        output: P.Output,
-    ):
-        """This is a test for utf8: {{input}}中文{{output}}"""
-
-    pickled = test_utf8("a").pickle()
-    # print(pickled)
-
-
 def test_call_function():
     @P.semantic_function()
     def test(a: P.Input, b: P.Input, c: P.Output):
         """This {{b}} is a test {{a}} function {{c}}"""
+
+    print(test.body)
 
     print(test("a", b="b"))
 
@@ -94,32 +74,8 @@ def test_wrongly_pass_output_argument():
         test("a", "b", "c")
 
 
-def test_serialize_call():
-    @P.semantic_function()
-    def test(a: P.Input, b: P.Input, c: P.Output):
-        """This {{b}} is a test {{a}} function {{c}}"""
-
-    call = test("a", b="b")
-    print(call)
-    call_pickled = call.pickle()
-    # print(call_pickled)
-    call_unpickled = SemanticCall.unpickle(call_pickled)
-    print(call_unpickled)
-
-    assert call.func.name == call_unpickled.func.name
-    assert len(call.func.body) == len(call_unpickled.func.body)
-    for i, piece in enumerate(call.func.body):
-        assert type(piece) == type(call_unpickled.func.body[i])
-
-    assert len(call.bindings) == len(call_unpickled.bindings)
-    for k, v in call.bindings.items():
-        assert type(call_unpickled.bindings[k]) == type(v)
-
-
 if __name__ == "__main__":
     # test_parse_semantic_function()
-    test_parse_semantic_function_corner_cases()
     # test_call_function()
     # test_call_function_with_pyobjects()
-    # test_wrongly_pass_output_argument()
-    # test_serialize_call()
+    test_wrongly_pass_output_argument()
