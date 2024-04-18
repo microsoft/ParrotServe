@@ -1,0 +1,1388 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1]Ehsan Haghighat
+
+2]David Santillándavid.santillan@upm.es
+
+
+
+
+
+
+[1]Department of Civil and Environmental Engineering, Massachusetts Institute of Technology, 77 Massachusetts Ave, Cambridge, 02139, Massachusetts, USA
+
+[2]Departamento de Ingenería Civil: Hidráulica, Energía y Medio Ambiente , Universidad Politécnica de Madrid, C/Profesor Aranguren 3,  Madrid, 28040, Spain
+
+
+
+
+
+
+
+We propose a phase-field model of shear fractures using the deviatoric stress decomposition (DSD). This choice allows us to use general three-dimensional Mohr-Coulomb's (MC) failure function for formulating the relations and evaluating peak and residual stresses. We apply the model to a few benchmark problems of shear fracture and strain localization and report remarkable performance. Our model is able to capture conjugate failure modes under biaxial compression test and for the slope stability problem, a challenging task for most models of geomechanics.
+
+
+
+
+
+An efficient phase-field model of shear fractures using deviatoric stress split
+    [
+    March 30, 2023
+===============================================================================
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+
+The shear failure of brittle materials in compression, also known as shear bands or localized strains, are one of the dominant modes of failure in geo-structures. It has recently emerged as an active research topic due to its interest in structural geology and engineering. The growing interest stems from its engineering applications in subsurface energy technologies, including enhanced geothermal energy systems where the hydro-shearing technique is aimed to reactivate and slide the preexisting fracture network to increase the rock mass permeability <cit.>, large-scale CO_2 sequestration in deep saline aquifers <cit.>, impoundment and level changes of artificial water reservoirs of hydropower plants <cit.> and underground natural gas storage facilities <cit.>, where their mechanics are crucial to understanding the stability of faults and hence earthquake mechanisms <cit.>. Other engineering applications include fault and slope stability assessment <cit.>, or the stability of faults during the groundwater injection and production operations <cit.>.
+
+
+
+The simulation of shear fracturing processes is a challenging task. The finite element method (FEM) has been the dominant numerical method for modeling solids and continua. Classically, two fundamentally different perspectives are proposed to study compressive fractures using FEM:
+
+
+  - Discrete fracture models (DFM) that are based on the classical theory of Linear Elastic Fracture Mechanics (LEFM) founded by <cit.>. 
+
+  - Smeared fracture models (SFM) that are based on the classical theory of Continuum Damage Mechanics (CDM) proposed initially by <cit.>.
+
+Each class includes extensive literature dating back to the 1960s that is out of the scope of this text to cover comprehensively. Therefore we only point the interested reader to a few primary studies of each class. 
+
+Within the DFM realm, common approaches include node duplication on fracture interface <cit.>, strong discontinuity approaches <cit.>, and Extended Finite Element Methods (XFEM) <cit.>. 
+These methods require using geometrical algorithms to trace the fracture propagation, which has been found very challenging for generic three-dimensional setups. Such methods are efficient for modeling single fractures. However, they become quickly impractical when dealing with complex fracture nucleation and propagation patterns. 
+
+As per the SFMs, we can point to continuum damage models (CDM) <cit.>, peridynamic models <cit.>, and phase-field models (PFM) <cit.>, which we discuss next in more details. 
+While early models showed significant mesh dependencies, these models have been used to simulate very complex fracture patterns under realistic conditions. Among this class, phase-field models have been most attractive in recent years due to their thermodynamically sound foundations and their ability to model complex fracture patterns. 
+
+
+Phase-field models have been extensively used for modeling brittle, cohesive, and ductile Mode-I fracture patterns, in elastic or poroelastic materials and homogeneous or heterogeneous domains <cit.> <cit.>. 
+Although  proposed a simple extension for shear fractures, the applicability of phase-field for modeling shear failure remained virtually untouched until very recently <cit.>. In a detailed study,  presented a phase-field formulation of frictional fracture based on  theory and using a similar stress decomposition approach to the one proposed by  for tensile cracks. The authors validated their model on a set of classical problems as well as various experimental setups <cit.>.
+
+
+In the present study, we propose a phase field model of shear failure that adapts the cohesive model of shear fractures proposed by  for deviatoric stress decomposition (DSD) instead of the proposed contact stress decomposition (CSD). Hence, we arrive at an alternative descriptor for the shear fracture orientation (i.e., the α tensor) which is solely based on the deviatoric strain. We adapt the crack driving force to be consistent with the DSD decomposition. The resulting formulation simplifies the damage criterion since it results in damaging the shear modulus. Lastly, the proposed model allows us to use the general forms of the failure functions from the classical plasticity theory and therefore is not limited to Mohr-Coulomb failure model.
+
+In what follows, we first briefly describe the original framework based on CSD. We then discuss our generalization proposal. Lastly, we use both frameworks to model a set of benchmark problems. 
+
+
+
+
+
+§ PHASE-FIELD METHOD
+
+In this section, we first describe the general phase-field framework for modeling crack propagation in materials. We then summarize the most recent CSD shear model <cit.>. Finally, we discuss our proposed adjustment for better stability. 
+
+
+
+
+
+
+
+ §.§ Phase-field governing equations
+
+
+Consider the continua Ω∈ℝ^D in D-dimensional space, depicted in <Ref>, with its boundary represented as Γ. The boundary Γ is subjected to Neumann boundary conditions on Γ_t and Dirichlet boundary conditions on Γ_u, where Γ_u ∪Γ_t = Γ and Γ_u ∩Γ_t = ∅. The set of discontinuities in the domain is represented by a discrete surface Γ_d. 
+
+According to the phase-field formulation, the fracture's discrete surface Γ_d is approximated implicitly as a continuous function over a width l using the Allen-Cahn fracture surface density function γ(d) as
+
+    γ(d) = 1/c_0 l( w(d) + l^2 ∇ d ^2 ),   with   c_0 = 4∫_0^1 √(w(l)) dl
+
+where d is the phase-field variable, with d=0 presenting the intact part of the domain while d=1 expressing a point on Γ_d. 
+w(d) is the transition function, also known as the dissipation function, defined for cohesive cracks as w(d)=d <cit.>, hence c_0=8/3. Accordingly, a surface integral ∫ ds is approximated using a volume integral as ∫ ds ≈∫γ(d) dv.
+
+Given the displacement field u, the small-deformation strain measure =(∇u + ∇u^T)/2, and the crack surface density function γ(d), the total energy of a fractured continua, occupying the domain Ω and bounded by the boundary Γ, shown in <Ref>, is expressed as 
+
+    Ψ = -Ψ^external + Ψ^internal + Ψ^fracture,
+
+where, Ψ^external is the work done by the external traction stress τ and body force b, and expressed as 
+
+    Ψ^external   = ∫_Γ_tu·τ ds + ∫_Ωu·b dv.
+
+The fracture energy, i.e., Ψ^fracture, is the energy dissipated from the system to create a fracture surface Γ_d. Given the energy release rate G_c (per unit fracture length), Ψ^fracture is expressed as  
+
+    Ψ^fracture   = ∫_Γ_dG_c  ds ≈∫_ΩG_c γ(d) dv.
+
+
+The stored internal energy of the system Ψ^internal consists of the elastic stored energy in the intact part of the domain and stored energy in the damaged part of the domain, expressed as 
+
+    Ψ^internal   = ∫_Ωψ(, d) dv.
+
+The internal energy density function ψ(, d) is defined as ψ(,d) = 12 :, which consists of both inactive and damaged counterparts. For the intact part of continuum, i.e., where d=0, the Cauchy stress tensor (, d=0) is expressed using Hook's law as
+
+    (, d=0) = (κ-2/3μ) ε_v 1 + 2μ,
+
+where, κ and μ are bulk and shear moduli of the intact material, respectively, and ε_v is the volumetric strain, expressed as ε_v = (). For the parts of the domain where d > 0, the Cauchy stress tensor is  decomposed into inactive part ^I and active part ^A as 
+
+    (, d)    = ^I() + ^A(,d) 
+       = ^I() + g(d) () + (1-g(d))().
+
+The active part of the stress tensor undergoes the damage process, and g(d) is a degradation function that expresses the stress transition from bulk () to fracture (). We will discuss these in more details in the next sections. 
+
+Therefore, there are two solution variables associated with the phase-field formulation, the standard displacement field u and the additional phase-field variable d. Taking the variation of Ψ with respect to u and d, and following the standard weak to strong form steps of the FEM <cit.> and phase-field <cit.>, we can arrive at the following governing relations: 
+
+
+    ∇·(,d) + b = 0, 
+       3G_c/8l(2l^2∇^2 d - 1) - g'(d) H() = 0.
+
+The irreversibility of the fracture process is guaranteed with the local history field of maximum stored shear energy H^+() that allows us to solve the constrained minimization of <ref> in a straightforward way <cit.> and avoids unphysical self-healing. H^+() is defined as follows:
+
+    H^+() = max_s∈[0,t]( H() ),
+
+where t is time. <Ref> is then rewritten as follows:
+
+    3G_c/8l(2l^2∇^2 d - 1) - g'(d) H^+() = 0.
+
+Since Ḣ≥0, non-negative ḋ is guaranteed and, consequently, the irreversibility of the fracture growth. We define H() after describing the stress decomposition approach. 
+
+In this work, we use the Lorenz degradation function g(d) defined as  <cit.>:
+
+    g(d, p) = (1-d)^2/(1-d)^2 + M/ψ_cd(1+p d)
+
+where, M=G_c/(c_0 l) and ψ_c is the critical crack driving force at the material's peak strength, evaluated as ψ_c = -M w'(0)/g'(0). The damage begins to accumulate as soon as elastic stored energy exceeds this critical threshold. Here, we take p=1.
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Stress decomposition. Introduction
+
+
+The split of the strain energy density into crack driving and intact components defines the damage mode and fracture pattern. Up to date, two fundamental approaches are available. 
+The approaches of the first class do not take into account the local fracture orientation, whereas the second approaches take into consideration the local crack orientation.
+
+The first group of models includes the isotropic model, the volumetric and deviatoric decomposition model, the spectral decomposition model, or the anisotropic models. The isotropic model proposed by  where the entire strain energy density is degraded. The volumetric and deviatoric decomposition model proposed by  splits the strain tensor into its volumetric and deviatoric components. This approach avoids crack inter-penetration in composites and masonry structures. The fracture is then assumed to be driven by volumetric expansion and deviatoric strains. The spectral decomposition model proposed by  splits the strain tensor into its principal components and only tensile components drive the fracture propagation. The anisotropic models are based on the spectral decomposition of the strain tensor using other projections, such as the eigenvalue and eigenvector of the effective stress tensor <cit.>. 
+
+
+The second group of approaches take into consideration the local crack orientation. The directional model proposed by  splits the stress tensor into the crack driving and persistent components using the fracture orientation. For each point, a fracture coordinate system is defined and the fracture orientation is obtained from the maximum principal stress direction.   and  computed the fracture orientation from the phase-field gradients. Following this way to compute the fracture direction,  developed a phase field model based on micromechanical modeling, i.e., the macroscopic fracture is modeled as a collection of microscopic fractures.
+
+In the following subsections, we describe the contact stress decomposition (CSD), used satisfactorily to simulate shear fractures under confining pressures, and lastly we present our proposal based on the deviatoric stress decomposition (DSD). 
+Both models do not take into account the local fracture orientation.
+
+
+
+  §.§.§ Contact stress decomposition (CSD)
+
+
+Since a compressive fracture behaves like a contact problem,  proposed a stress decomposition approach that is closely related to the contact formulation, which we refer here as CSD. It starts by considering a corotational coordinate system on the fracture surface with m and n as tangential and normal vectors to the crack surface, and m along the direction of sliding. Additionally, let us define α = (mn + nm)/2. 
+
+According to this approach and under the assumption that the fracture remains closed, i.e., no tensile fracture, the only stress component that should undergo damage is the shear stress, and other stress components remain inactive. The bulk shear stress can be expressed as  
+
+    τ̂   = :α = με_γ,
+
+where, ε_γ = 2 :α = 2 m··n. Consider the contact shear stress as τ̃. Then, the inactive stress tensor is expressed as 
+
+    ^I = (, d=0) - με_γ α,
+
+and the active stress tensor as 
+
+    ^A = τ^A α,   where  τ^A = με_γ g(d)+ τ̃ (1-g(d)).
+
+Here, τ̃ is the residual contact stress while the fracture is fully developed, i.e., d=1. 
+
+
+
+
+Given the Mohr-Coulomb's failure function as, 
+
+    F = |τ| - σ_ntanϕ - c = 0
+
+with σ_n=n··n as to normal stress on the fracture surface, and c and ϕ as cohesion and friction angle of the intact material, the peak and residual shear stresses are expressed as 
+
+    τ̃_p = c + σ_n tan(ϕ),   τ̃_r = c_r + σ_n tan(ϕ_r),
+
+where c_r and ϕ_r are residual friction and cohesion at the fully developed failure state.
+
+
+
+Based on the Mohr-Coulomb failure criterion, the critical plane for the failure is evaluated at two conjugate angles θ = ±(45^∘ - ϕ_r/2) <cit.> with respect to the direction of the maximum principal stress. However, the authors only consider θ = +(45^∘ - ϕ_r/2) <cit.>. This restriction is required otherwise m,n is not uniquely defined. 
+
+
+
+
+
+
+
+
+
+
+
+
+  §.§.§ Our proposal: deviatoric stress decomposition (DSD)
+
+
+The total strain tensor can be decomposed into volumetric and deviatoric parts, as = ε_v1 + e. We can also express the Cauchy tensor in terms of the mean confining stress p and the deviatoric stress tensor s as = -p1 + s. Therefore, we can  re-write Hook's law for the intact part as <cit.> 
+
+    (, d=0) 
+    = -p1 + s = κ ε_v 1 + 2μe.
+
+Given the equivalent deviatoric (Mises) stress q = (3/2s:s)^1/2 and the equivalent deviatoric strain ε_q = (2/3e:e)^1/2 and with some algebra, we can write that 
+
+    q = 3με_q.
+
+Let us now define the Unit Deviator Tensor α_q as
+
+    α_q = √(2/3)e/ε_q,  where  α_q = √(α_q:α_q) = 1,
+
+Hook's law can therefore be expressed as 
+
+    σ = -p1 + √(2/3)qα_q,   where  p = κε_v,   q = 3με_q.
+
+
+Equivalent to the CSD, we can describe the compressive failure in a material as damage in the deviatoric stress component. Therefore, the compressive pressure becomes the inactive part of the stress tensor, i.e.,
+
+    ^I = -p1 = κε_v1,
+
+and active stress is described as 
+
+    ^A = q(, d) α_q,   where   q(, d) = g(d) q̂ + (1-g(d)) q̃_r,
+
+where the bulk deviatoric stress is q̂ = 3με_q. 
+
+
+
+This deviatoric stress decomposition allows us to leverage the general form of virtually any failure surface that are described in the classical plasticity theory, including the Mohr-Coulomb failure function. Given the friction angle ϕ and cohesion coefficient c, the general form of the Mohr-Coulomb's failure criterion is expressed as
+
+    F = R_MCq - ptanϕ - c = 0.
+
+Here, R_MC defines the shape of the Mohr-Coulomb's failure surface and is expressed as 
+
+    R_MC = 1/√(3)cosϕsin(Θ + π/3) + 1/3cos(Θ + π/3)tanϕ,
+
+where Θ is the Lodè angle, evaluated as cos(3Θ) = (r/q)^3. The invariant r is the third invariant of the deviatoric stress tensor, and is defined as r = (9/2tr(s^3))^1/3. 
+Based on this criterion, we can find the peak and residual Mises stresses as 
+
+    q̃_p = ptanϕ + c/R_MC,   q̃_r = ptanϕ_r + c_r/R_MC,
+
+with ϕ_r and c_r as the residual values for friction angle and cohesion at the fully damaged state. 
+
+
+
+We can easily replace the non-smooth Mohr-Coulomb surface R_MC with some alternatives <cit.>. In fact, we can potentially pick any alternative failure function available for different materials. 
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Crack driving force
+
+
+Given τ = με_γ and τ_p = p tanϕ + c = με_γ^p, the crack driving force relations for CSD is derived as <cit.>
+
+    H = H_t + H_slip
+
+where
+
+    H_t = τ̃_p - τ̃_r/2μ, 
+       H_slip = 1/2μ[ (τ̂ - τ̃_r)^2 - (τ̃_p - τ̃_r)^2 ]
+
+and they showed that this model is consistent with  model. 
+Now, for the deviatoric stress decomposition discussed above, we can revise the crack driving force, given q̂ = 3με_q and q̃_p = (p tanϕ + c)/R_MC = 3με_q^p, as
+
+    H_t = (q̃_p - q̃_r)^2/6μ, 
+       H_slip = 1/6μ[ (q̂ - q̃_r)^2 - (q̃_p - q̃_r)^2 ] .
+
+More details on the derivation of H_t and H_slip for CSD approach are provided in <Ref>.
+
+
+
+ §.§ Boundary conditions
+
+To have a complete mathematical description of the problem, we lastly need to describe the boundary conditions. Considering <Ref>, the boundary conditions are described as 
+
+    u = u̅,      on  Γ_u, 
+    τ = ·n = τ̅,      on  Γ_t, 
+    ∇ d·n = 0,      on  Γ,
+
+where u̅ and τ̅ are prescribed displacement and traction forces, respectively. 
+
+The steps used to solve the problem are detailed in Algorithm 1.
+
+
+
+
+
+
+
+§ APPLICATIONS TO COMPRESSIVE STRAIN LOCALIZATION
+
+
+Here, we consider three reference problems of shear fractures, including direct shear test, biaxial compression test, and slope failure analysis. We show that our model can effectively capture multiple modes of failure concurrently. 
+
+
+
+
+ §.§ Direct shear test
+
+
+
+Our first example is the direct shear test. We simulate the propagation of a fracture in a long shear apparatus and we compare our results with analytical solutions and Fei and Choo's numerical simulations <cit.>. 
+The setup of the experiment is plotted in <Ref>. The domain is 500 mm long, 100 mm tall, and an initial 10-mm horizontal fracture is carved in the middle of the left boundary. The boundary conditions are: the bottom boundary is fixed, the top boundary is displaced horizontally, and the two lateral boundaries are fixed vertically. We neglect gravity. 
+
+The material properties are: shear modulus G=10 MPa, Poisson's ratio ν=0.3, cohesion strength c=40 kPa, peak and residual friction angle ϕ=ϕ_r=15^∘, shear fracture energy 𝒢_c=30 J/m^2, and fracture's length-scale l=2 mm. As in the previous works of  and , we impose the fracture propagation to be horizontal. Following Fei and Choo's simulations <cit.>, we initialize vertical compressive normal stress to 149 kPa, which results in τ_p=80 kPa and τ_r=40 kPa. We mesh the domain near the fracture path with a mapped squared mesh of size l/4=0.5 mm and the remaining domain with a 1-mm free triangular mesh.
+
+The horizontal force-displacement curve is shown in <Ref>. The agreement of the peak and residual forces provided by our numerical simulation is very satisfactory.
+Theoretically, the peak load, i.e., the peak shear stress times the width of the specimen, is 40 kN, and the output of our simulation is 40.387 kN. In the same way, the theoretical residual load is 20 kN and the output of our simulation is 19.978 kN. We estimate the fracture energy from the force-displacement curve, the shaded area in <Ref>. The output of our model provides a fracture energy equal to 14.6914 J, while the theoretical value is 15 J. Therefore, we report a remarkable agreement between our simulations and expected theoretical values.
+
+
+
+
+
+
+
+
+
+We analyze the sensitivity of our model to the phase-field length parameter, l. We run several simulations of the direct shear test problem for several values of l, ranging from 1 mm to 10 mm. Results are depicted in <Ref>(a). The force-displacement curves for the four values of l confirm that the model is virtually insensitive to the phase-field length parameter. We check the mesh dependency of our model by running three problems of the long-shear apparatus problem. We fix the ratio length scale parameter to mesh size, l/h, to 20 and we run three simulations for three l- and h-values. Results are plot in <Ref>(b). The curves confirm that the model is insensible to the mesh size.
+
+
+
+
+We plot the phase-field distribution at three time steps in <Ref>. The peak load is given for U_x=0.8083 mm, after this value is reached the phase-field has already emerged and propagate along the whole fracture, <Ref> (a). Afterward, the phase-field value intensifies during the softening stage, <Ref> (b), up to the time the fracture is completely developed, <Ref> (c). At this time, the domain is split into two parts. The upper part slips over the bottom one, and the shear stress between both parts is constant and equal to the residual shear stress, τ_r=40 kPa, resulting in a theoretical horizontal force of 20 kN.   
+
+
+
+
+
+
+ §.§ Biaxial compression test
+
+Our next example is a biaxial compression test. We simulate a laboratory-size specimen under plane strain, different confining pressures and with different residual friction angles. This example allows us to show the ability of the model to simulate the pressure dependence of the peak and residual strengths. We compare our numerical results with peak and residual strengths computed with a mechanical equilibrium model before and after the rupture.
+
+The model setup is shown in <Ref>(a). The domain is 80-mm wide and 170-mm tall rectangular. The bottom boundary is supported by rollers, whereas a prescribed vertical displacement is imposed in the top boundary and zero horizontal displacement in the top middle point. The two lateral boundaries are subjected to the confining pressure, p_c, which is constant during the experiment. 
+
+The material properties are: shear modulus G=10 MPa, Poisson's ratio ν=0.3, cohesion strength c=40 kPa, peak friction angle ϕ=15^∘, shear fracture energy 𝒢_c=30 J/m^2, and fracture's length-scale l=2 mm. We neglect gravity. We simulate three cases of p_c, 50 kPa, 100 kPa, and 200 kPa, and repeat each case with three values of the residual friction angles, ϕ_r=20^∘, 15^∘, and 0^∘. These simulations let us check whether our model captures the pressure dependence of the peak and residual strengths. We discretize the domain with a free triangular mesh with size h=0.2 mm that satisfy l/h=10.
+
+
+
+We include two typical vertical force-displacement curves in <Ref>(b). The confining pressure is p_c=200 kPa, the peak friction angle is ϕ=20^∘, and we consider two residual friction angles, ϕ_r=20^∘ and 0^∘. Initially, both vertical forces change linearly with the imposed vertical displacement until the peak strength is reached. The peak strength is the same in both models since they have the same p_c, c, and ϕ. 
+Afterward the fracture propagates suddenly across the domain, reaching both lateral boundaries, and the vertical force suddenly sinks. Our numerical model is able to capture the fracture propagation during the transition from the peak to the residual strengths due to the adaptive time step. Moreover, the curves evidence that the phase-field model is able to simulate the residual strength, which depends on the confining pressure, the residual friction angle, and the fracture path. 
+
+
+
+We run several simulations of the biaxial compression problem for several values of l, ranging from 1 mm to 10 mm. The force-displacement curves for the four values of l are included in Figure <ref>. As in the previous problem, the curves for the values of l confirm that the model is virtually insensitive to the phase-field length parameter.
+
+
+The evolution of the phase-field variable for p_c=200 kPa, ϕ=20^∘, and ϕ_r=20^∘, at three time steps is shown in <Ref>. The phase-field is almost zero when the peak strength is reached, <Ref>(a). In fact, due to the isotropic material model and homogeneous stress conditions of the biaxial test, two equally like fracture paths nucleate. This is consistent with the Mohr-Coulomb model. Nevertheless, only of the trajectories evolves and result in the final fracture pattern during the sudden decrease in the peak strength, <Ref>(b). Later, the phase-field variable increases its value along the fracture path up to the residual peak strength is reached, <Ref>(c).
+
+
+
+
+
+We simulate nine cases with several combinations of p_c, ϕ, and ϕ_r values. 
+We also compute the peak and residual strengths applying mechanical equilibrium prior and after the fracture propagation. Given the fracture path, the mechanical equilibrium is illustrated in <Ref>. The total vertical force applied on the top boundary is F_V, the total horizontal force on the left lateral boundary is F_H, and the tangential and normal forces on the fracture path are T and N respectively. We suppose the nucleation and fracture propagation is instantaneous and the fracture path is a straight line. the angle between the fracture path and the vertical axis is θ. Then, at the onset of the fracture propagation, the tangential force on the fracture is:
+
+    T=L/sinθc+Ntanϕ,
+
+and once the fracture is fully developed, the tangential force on the fracture is:
+
+    T=Ntanϕ_r.
+
+
+
+The mechanical equilibrium in the vertical direction is given by:
+
+    V-T cosθ -N sinθ=0,
+
+and in the horizontal direction:
+
+    H+T sinθ -N cosθ=0,
+
+where H is:
+
+    H=p_c L/tanθ.
+
+
+
+Solving V from Eq. (<ref>), substituting V in Eq. (<ref>) and operating, the vertical force at the onset of the fracture propagation V_p –peak strength– is:
+
+    V_p=1/cosθ -sinθtanϕ(  L · c/sinθ +p_c  L/tanθ( cosθ tan ϕ + sinθ) ),
+
+and the vertical force once the fracture is fully propagated V_r –residual strength– is:
+
+    V_r=1/cosθ -sinθtanϕ_r( p_c  L/tanθ( cosθ tan ϕ_r + sinθ) ).
+
+
+We compute V_p and V_r for the nine simulated cases. The results are listed in Table <ref>. The agreement between both models is remarkable.
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Slope failure analysis
+
+
+
+
+As the last example, we consider the problem of slope failure analysis reported in <cit.>. Consider the soil slope shown in <Ref>. The domain is 20 m wide and 10 m tall, with a slope 1:1 on the left side. A 4 m wide rigid footing is placed on the crest of the slope. 
+The slope is first subjected to a body force b=20 kN/m^3, and then these body-force stresses are used as the initial state for the footing loading step. 
+Displacement at the bottom edge is fixed in both directions, while for the right edge, only horizontal displacement is fixed. 
+As the main loading step, a displacement U_y=0.3 m is prescribed in the middle of a rigid foundation, which simulates the effect of a building imposing a stress on the slope. 
+
+The elastic parameters of the soil include E=10 MPa and ν = 0.4. The initial friction angle and cohesion are ϕ = 16.7^∘ and c=40 kPa, with ϕ_r=10^∘ and c_r = 0 kPa as their respective residual values. The phase-field length scale parameter is set to l = 200 mm, and the domain is discretized using a free triangular mesh with mesh-size 20 mm. The resulting mesh roughly has 1M triangles and 500K vertices. The computational time takes about 12 hours in our desktop machine with i9-10900 processor with 10 cores and 20 threads.
+
+
+Due to the relatively high cohesion and low friction angle, the shear-band formation for this problem is particularly interesting. If we plot the evolution of the Mohr-Coulomb’s failure envelope right before the onset of fractures, as shown in <Ref>-(a), we observe that the failure should onset from both ends of the footing. This fact has also been reported by <cit.>, however, due to the pre-specification of only one orientation angle (θ), the crack formation from the left side was not captured by <cit.>. 
+Therefore, to perform a comparison, we consider two cases:
+
+    
+  I. Shear band formation only from the right corner of the footing by suppressing the phase field variable to zero (d=0) in the gray region (see <Ref>).
+    
+  II. Free shear-band formation, which results in two patterns from each side followed by coalesces. 
+Additionally, we consider two critical fracture energies of G_c = 10 kJ/m^2 and G_c = 5 kJ/m^2. The final fracture patterns of these two cases are shown in <Ref>. 
+
+
+
+
+The evolution of phase-field variable for case I, with G_c = 5 kJ/m^2, are plotted for different loading steps in <Ref>. The force-displacement response is plotted in <Ref>-(b). 
+As the reader can find, the proposed formulation captures the peak and residual loads as well as the crack patterns accurately, and the results are consistent with those reported by . The failure surface evaluated using phase-field method and the peak-load is well-aligned with potential failure surfaces and critical load F=0.8MN/m resulting from  limit-equilibrium analysis of the slope using the GeoStudio software (see <Ref>-b-d).
+
+Lastly, we run a new set of simulations for case II. The results are plotted in <Ref>. As we find, here the model captures first a shear band formation from the left corner of the footing. This is in fact expected because of the stress-free surface of the slope creates a more critical failure condition on the left corner. The propagation of the mode, however, stops because it is directing to Mohr-Coulomb stable regions of the domain. Later, the main failure mode initiates and propagates from the right corner, and collides with the first mode somewhere underneath the footing, which is also consistent with the results of the limit state theories. A final branch is then generated and causes the ultimate failure of the slope. The pick stress, however, does not seem to be very different from those of Case I, as plotted in <Ref>-(b).
+
+
+
+
+
+
+
+
+
+
+
+§ CONCLUDING REMARKS
+
+
+We presented a phase-field model of shear fractures using deviatoric stress decomposition (DSD). We validated the model by solving reference problems of shear fractures in geotechnical engineering. Our model has excellent performance. 
+
+The main advantages of our phase-field approach are: (1) the model does not require re-meshing, (2) nucleation, propagation, and fracture path are automatically computed without the need to track fractures or pre-specify orientations, and (3) fracture joining and branching do not need additional algorithms. 
+
+
+For an isotropic Mohr-Coulomb material under homogeneous loading, it has been shown that there are two conjugate surfaces having the same likelihood for shear band formation. In fact, our model captures this for the biaxial compression problem without any intervention.
+
+This is the same for the slope stability problem, where our model was able to capture crack initiation from both corners of the foundation.
+While accurate in peak and residual force calculations, 
+
+we found that the CSD model of shear fractures is more accurate in capturing such a transition. 
+
+The study was limited to modeling two-dimensional problems of compressive fracture. However, the proposed formulation is not limited to any dimensions. Therefore, we plan to explore three-dimensional models as a follow-up study. Additionally, pore-fluid consideration is critically important for modeling failure in geomaterials. This is also an area that will be considered next. Additional paths include incorporating rate-and-state friction models that are best suited for modeling geologic systems, and thermal coupling that is important for modeling geothermal systems. 
+
+
+
+
+§ CRACK DRIVING FORCE FOR DEVIATORIC STRESS DECOMPOSITION
+
+
+Reminding that q̂, q̃_p, q̃_r denote the bulk and fractured deviatoric stresses at peak and residual stages, respectively, and q̂ = 3με_q, with ε_q and the deviatoric strain, the crack driving force during a plastic dissipation process as a result of frictional sliding can be expressed as 
+
+    H_slip    = ∫_ε_γ^p^ε_γ (q̂ - q̃_r) dε_γ
+        = ∫_ε_γ^p^ε_γ (3με_q - q̃_r) dε_γ
+        = 1/6μ(q̂^2 - q̃_p^2) - q̃_r/3μ(q̂- q̃_p ) 
+        = 1/6μ{(q̂ - q̃_r)^2 - (q̃_p - q̃_r)^2 }.
+
+Since q = g(d)q̂ + (1-g(d))q̃_r, we will have,
+
+    H_slip    = 1/6μ{(q - q̃_r/g(d))^2 - (q̃_p - q̃_r)^2 }.
+
+We observe that the relations are quite similar to those reported by  using shear stress split, except that shear stresses and strains are replaced now with deviatoric ones and therefore division by 3μ instead of μ. 
+
+Noting that total driving energy is expressed as H = H_t + H_slip, re-arranging <ref>, we can write
+
+    H = {H_t - 1/6μ(q̃_p - q̃_r)^2} + 1/6μ(q - q̃_r/g(d))^2.
+
+Now, one can substitute this relation into the phase field PDE <ref>, and with 1D simplifications, integrate the phase field relation, as detailed in <cit.>, to arrive at approximate relations for the evolution of deviatoric stress q as a function damage. Again, since the phase field PDE <ref> and driving force <ref> are very similar to those in <cit.>, all the derivations hold identical and true for the deviatoric stress decomposition. Finally, by imposing length-scale independency to the deviatoric stress evolution, one obtains that 
+
+    H_t = 1/6μ(q̃_p - q̃_r)^2.
+
+This completes the derivation of crack driving force relations introduced in <ref>.
+
+
+
+
+
+§ DATA AVAILABILITY STATEMENT
+
+
+All data, models, or code generated or used during the study will be made available online at https://github.com/ehsanhaghighat/PhaseField-DSDhttps://github.com/ehsanhaghighat/PhaseField-DSD upon publication.
+
+
+
+§ ACKNOWLEDGEMENTS
+
+This research Project has been funded by the Comunidad de Madrid through the call Research Grants for Young Investigators from Universidad Politécnica de Madrid under grant APOYO-JOVENES-21-6YB2DD-127-N6ZTY3, RSIEIH project, research program V PRICIT. Authors acknowledge the help of Mrs. Aida Rezapour (M.Sc., P.Eng.) in preparing slope stability results using the limit equilibrium method.
+
+
+
+
+natexlab#1#1
+
+
+
+
+
+
+
+
+
+[#1],#1
+
+[Rinaldi et al.(2015)Rinaldi, Rutqvist, Sonnenthal, and
+  Cladouhos]rinaldi2015coupled
+authorA. P. Rinaldi, authorJ. Rutqvist,
+  authorE. L. Sonnenthal, authorT. T. Cladouhos,
+titleCoupled THM modeling of hydroshearing stimulation
+  in tight fractured volcanic rock,
+journalTransport in Porous Media volume108
+  (year2015) pages131–150.
+
+[Rinaldi and Rutqvist(2019)]rinaldi2019joint
+authorA. P. Rinaldi, authorJ. Rutqvist,
+titleJoint opening or hydroshearing? Analyzing a
+  fracture zone stimulation at Fenton Hill,
+journalGeothermics volume77
+  (year2019) pages83–98.
+
+[Andrés et al.(2019)Andrés, Santillán, Mosquera, and
+  Cueto-Felgueroso]andres2019thermo
+authorS. Andrés, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleThermo-poroelastic analysis of induced seismicity at
+  the Basel enhanced geothermal system,
+journalSustainability volume11
+  (year2019) pages6904.
+
+[Andrés et al.(2022)Andrés, Santillán, Mosquera, and
+  Cueto-Felgueroso]andres2022hydraulic
+authorS. Andrés, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleHydraulic stimulation of geothermal reservoirs:
+  Numerical simulation of induced seismicity and thermal decline,
+journalWater volume14 (year2022)
+  pages3697.
+
+[Vilarrasa and Carrera(2015)]vilarrasa2015geologic
+authorV. Vilarrasa, authorJ. Carrera,
+titleGeologic carbon storage is unlikely to trigger large
+  earthquakes and reactivate faults through which CO2 could leak,
+journalProceedings of the National Academy of Sciences
+  volume112 (year2015) pages5938–5943.
+
+[Juanes et al.(2012)Juanes, Hager, and Herzog]juanes2012no
+authorR. Juanes, authorB. H. Hager,
+  authorH. J. Herzog,
+titleNo geologic evidence that seismicity causes fault
+  leakage that would render large-scale carbon capture and storage
+  unsuccessful,
+journalProceedings of the National Academy of Sciences
+  volume109 (year2012) pagesE3623–E3623.
+
+[White and Foxall(2016)]white2016assessing
+authorJ. A. White, authorW. Foxall,
+titleAssessing induced seismicity risk at co2 storage
+  projects: Recent progress and remaining challenges,
+journalInternational Journal of Greenhouse Gas Control
+  volume49 (year2016) pages413–424.
+
+[Gupta(2002)]gupta2002review
+authorH. K. Gupta,
+titleA review of recent studies of triggered earthquakes
+  by artificial water reservoirs with special emphasis on earthquakes in
+  Koyna, India,
+journalEarth-Science Reviews volume58
+  (year2002) pages279–310.
+
+[McGarr et al.(2002)McGarr, Simpson, Seeber, and Lee]mcgarr2002case
+authorA. McGarr, authorD. Simpson,
+  authorL. Seeber, authorW. Lee,
+titleCase histories of induced and triggered seismicity,
+in: booktitleInternational Handbook of Earthquake and
+  Engineering Seismology, volume volume81A,
+  publisherAcademic Press LTD, year2002, pp.
+  pages647–664.
+
+[Rinaldi et al.(2020)Rinaldi, Improta, Hainzl, Catalli, Urpi, and
+  Wiemer]rinaldi2020combined
+authorA. P. Rinaldi, authorL. Improta,
+  authorS. Hainzl, authorF. Catalli,
+  authorL. Urpi, authorS. Wiemer,
+titleCombined approach of poroelastic and earthquake
+  nucleation applied to the reservoir-induced seismic activity in the Val
+  d'Agri area, Italy,
+journalJournal of Rock Mechanics and Geotechnical
+  Engineering volume12 (year2020)
+  pages802–810.
+
+[Pampillón et al.(2020)Pampillón, Santillán, Mosquera, and
+  Cueto-Felgueroso]pampillon2020geomechanical
+authorP. Pampillón, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleGeomechanical constraints on hydro-seismicity:
+  Tidal forcing and reservoir operation,
+journalWater volume12 (year2020)
+  pages2724.
+	
+[Pampillón et al.(2023)Pampillón, Santillán, Mosquera, and
+  Cueto-Felgueroso]pampillon2023
+authorP. Pampillón, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleThe role of pore fluids in supershear earthquake ruptures,
+journalScientific Reports volume13 (year2023)
+  pages398.
+	
+	
+	
+
+[Vilarrasa et al.(2021)Vilarrasa, De Simone, Carrera, and
+  Villaseñor]vilarrasa2021unraveling
+authorV. Vilarrasa, authorS. De Simone,
+  authorJ. Carrera, authorA. Villaseñor,
+titleUnraveling the causes of the seismicity induced by
+  underground gas storage at Castor, Spain,
+journalGeophysical Research Letters volume48
+  (year2021) pagese2020GL092038.
+
+[Cueto-Felgueroso et al.(2017)Cueto-Felgueroso, Santillán, and
+  Mosquera]cueto2017stick
+authorL. Cueto-Felgueroso, authorD. Santillán,
+  authorJ. C. Mosquera,
+titleStick-slip dynamics of flow-induced seismicity on
+  rate and state faults,
+journalGeophysical Research Letters volume44
+  (year2017) pages4098–4106.
+
+[Cueto-Felgueroso et al.(2018)Cueto-Felgueroso, Vila, Santillán,
+  and Mosquera]cueto2018numerical
+authorL. Cueto-Felgueroso, authorC. Vila,
+  authorD. Santillán, authorJ. C. Mosquera,
+titleNumerical modeling of injection-induced earthquakes
+  using laboratory-derived friction laws,
+journalWater Resources Research volume54
+  (year2018) pages9833–9859.
+
+[Andrés et al.(2019)Andrés, Santillán, Mosquera, and
+  Cueto-Felgueroso]andres2019delayed
+authorS. Andrés, authorD. Santillán,
+  authorJ. C. Mosquera, authorL. Cueto-Felgueroso,
+titleDelayed weakening and reactivation of rate-and-state
+  faults driven by pressure changes due to fluid injection,
+journalJournal of Geophysical Research: Solid Earth
+  volume124 (year2019) pages11917–11937.
+
+[Veveakis et al.(2007)Veveakis, Vardoulakis, and
+  Di Toro]veveakis2007thermoporomechanics
+authorE. Veveakis, authorI. Vardoulakis,
+  authorG. Di Toro,
+titleThermoporomechanics of creeping landslides: The
+  1963 Vaiont slide, northern Italy,
+journalJournal of Geophysical Research: Earth Surface
+  volume112 (year2007).
+
+[Borja et al.(2016)Borja, Choo, and White]borja2016rock
+authorR. I. Borja, authorJ. Choo,
+  authorJ. A. White,
+titleRock moisture dynamics, preferential flow, and the
+  stability of hillside slopes,
+in: booktitleMulti-Hazard Approaches to Civil
+  Infrastructure Engineering, publisherSpringer,
+  year2016, pp. pages443–464.
+
+[González et al.(2012)González, Tiampo, Palano, Cannavó,
+  and Fernández]gonzalez20122011
+authorP. J. González, authorK. F. Tiampo,
+  authorM. Palano, authorF. Cannavó,
+  authorJ. Fernández,
+titleThe 2011 Lorca earthquake slip distribution
+  controlled by groundwater crustal unloading,
+journalNature Geoscience volume5
+  (year2012) pages821–825.
+
+[Tiwari et al.(2021)Tiwari, Jha, Kundu, Gahalaut, and
+  Vissa]tiwari2021groundwater
+authorD. K. Tiwari, authorB. Jha,
+  authorB. Kundu, authorV. K. Gahalaut,
+  authorN. K. Vissa,
+titleGroundwater extraction-induced seismicity around
+  Delhi region, India,
+journalScientific Reports volume11
+  (year2021) pages1–14.
+
+[Griffith(1921)]griffith1921vi
+authorA. A. Griffith,
+titleVi. the phenomena of rupture and flow in solids,
+journalPhilosophical Transactions of the Royal Society of
+  London. Series A volume221 (year1921)
+  pages163–198.
+
+[Irwin(1956)]irwin1956onset
+authorG. R. Irwin, titleOnset of fast crack propagation
+  in high strength steel and aluminum alloys, typeTechnical
+  Report, Naval Research Lab Washington DC, year1956.
+
+[Kachanov(1958)]kachanov1958rupture
+authorL. Kachanov,
+titleRupture time under creep conditions,
+journalIzv. Akad. Nauk SSSR volume8
+  (year1958) pages26–31.
+
+[Chan et al.(1970)Chan, Tuba, and Wilson]chan1970finite
+authorS. Chan, authorI. Tuba,
+  authorW. Wilson,
+titleOn the finite element method in linear fracture
+  mechanics,
+journalEngineering Fracture Mechanics volume2
+  (year1970) pages1–17.
+
+[Rybicki and Kanninen(1977)]rybicki1977finite
+authorE. F. Rybicki, authorM. F. Kanninen,
+titleA finite element calculation of stress intensity
+  factors by a modified crack closure integral,
+journalEngineering Fracture Mechanics volume9
+  (year1977) pages931–938.
+
+[Bažant and Cedolin(1979)]bavzant1979blunt
+authorZ. P. Bažant, authorL. Cedolin,
+titleBlunt crack band propagation in finite element
+  analysis,
+journalJournal of the Engineering Mechanics Division
+  volume105 (year1979) pages297–315.
+
+[Pietruszczak and Mroz(1981)]pietruszczak1981finite
+authorS. Pietruszczak, authorZ. Mroz,
+titleFinite element analysis of deformation of
+  strain-softening materials,
+journalInternational Journal for Numerical Methods in
+  Engineering volume17 (year1981)
+  pages327–334.
+
+[Simo and Ju(1987)]simo1987strain
+authorJ. C. Simo, authorJ. Ju,
+titleStrain-and stress-based continuum damage
+  models—I. Formulation,
+journalInternational Journal of Solids and Structures
+  volume23 (year1987) pages821–840.
+
+[Belytschko et al.(1988)Belytschko, Fish, and
+  Engelmann]belytschko1988finite
+authorT. Belytschko, authorJ. Fish,
+  authorB. E. Engelmann,
+titleA finite element with embedded localization zones,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume70 (year1988)
+  pages59–89.
+
+[Simo et al.(1993)Simo, Oliver, and Armero]simo1993analysis
+authorJ. C. Simo, authorJ. Oliver,
+  authorF. Armero,
+titleAn analysis of strong discontinuities induced by
+  strain-softening in rate-independent inelastic solids,
+journalComputational Mechanics volume12
+  (year1993) pages277–296.
+
+[Simo and Oliver(1994)]simo1994new
+authorJ. Simo, authorJ. Oliver,
+titleA new approach to the analysis and simulation of
+  strain softening in solids,
+journalFracture and Damage in Quasibrittle Structures
+  (year1994) pages25–39.
+
+[Oliver(2000)]oliver2000discrete
+authorJ. Oliver,
+titleOn the discrete constitutive models induced by strong
+  discontinuity kinematics and continuum constitutive equations,
+journalInternational Journal of Solids and Structures
+  volume37 (year2000) pages7207–7229.
+
+[Regueiro and Borja(2001)]regueiro2001plane
+authorR. A. Regueiro, authorR. I. Borja,
+titlePlane strain finite element analysis of pressure
+  sensitive plasticity with strong discontinuity,
+journalInternational Journal of Solids and Structures
+  volume38 (year2001) pages3647–3672.
+
+[Wells and Sluys(2001)]wells2001three
+authorG. Wells, authorL. Sluys,
+titleThree-dimensional embedded discontinuity model for
+  brittle fracture,
+journalInternational Journal of Solids and Structures
+  volume38 (year2001) pages897–913.
+
+[Foster et al.(2007)Foster, Borja, and Regueiro]foster2007embedded
+authorC. Foster, authorR. Borja,
+  authorR. Regueiro,
+titleEmbedded strong discontinuity finite elements for
+  fractured geomaterials with variable friction,
+journalInternational Journal for Numerical Methods in
+  Engineering volume72 (year2007)
+  pages549–581.
+
+[Liu and Borja(2008)]liu2008contact
+authorF. Liu, authorR. I. Borja,
+titleA contact algorithm for frictional crack propagation
+  with the extended finite element method,
+journalInternational Journal for Numerical Methods in
+  Engineering volume76 (year2008)
+  pages1489–1512.
+
+[Dias-da Costa et al.(2009)Dias-da Costa, Alfaiate, Sluys, and
+  Júlio]dias2009discrete
+authorD. Dias-da Costa, authorJ. Alfaiate,
+  authorL. Sluys, authorE. Júlio,
+titleA discrete strong discontinuity approach,
+journalEngineering Fracture Mechanics
+  volume76 (year2009) pages1176–1201.
+
+[Haghighat and Pietruszczak(2015)]haghighat2015modeling
+authorE. Haghighat, authorS. Pietruszczak,
+titleOn modeling of discrete propagation of localized
+  damage in cohesive-frictional materials,
+journalInternational Journal for Numerical and Analytical
+  Methods in Geomechanics volume39 (year2015)
+  pages1774–1790.
+
+[Moës et al.(1999)Moës, Dolbow, and
+  Belytschko]moes1999finite
+authorN. Moës, authorJ. Dolbow,
+  authorT. Belytschko,
+titleA finite element method for crack growth without
+  remeshing,
+journalInternational Journal for Numerical Methods in
+  Engineering volume46 (year1999)
+  pages131–150.
+
+[Dolbow et al.(2001)Dolbow, Moës, and
+  Belytschko]dolbow2001extended
+authorJ. Dolbow, authorN. Moës,
+  authorT. Belytschko,
+titleAn extended finite element method for modeling crack
+  growth with frictional contact,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume190 (year2001)
+  pages6825–6846.
+
+[Moës and Belytschko(2002)]moes2002extended
+authorN. Moës, authorT. Belytschko,
+titleExtended finite element method for cohesive crack
+  growth,
+journalEngineering Fracture Mechanics
+  volume69 (year2002) pages813–833.
+
+[Areias and Belytschko(2005)]areias2005analysis
+authorP. M. Areias, authorT. Belytschko,
+titleAnalysis of three-dimensional crack initiation and
+  propagation using the extended finite element method,
+journalInternational Journal for Numerical Methods in
+  Engineering volume63 (year2005)
+  pages760–788.
+
+[Song et al.(2006)Song, Areias, and Belytschko]song2006method
+authorJ.-H. Song, authorP. M. Areias,
+  authorT. Belytschko,
+titleA method for dynamic crack and shear band propagation
+  with phantom nodes,
+journalInternational Journal for Numerical Methods in
+  Engineering volume67 (year2006)
+  pages868–893.
+
+[Borja(2008)]borja2008assumed
+authorR. I. Borja,
+titleAssumed enhanced strain and the extended finite
+  element methods: A unification of concepts,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume197 (year2008)
+  pages2789–2803.
+
+[Sanborn and Prévost(2011)]sanborn2011frictional
+authorS. E. Sanborn, authorJ. H. Prévost,
+titleFrictional slip plane growth by localization
+  detection and the extended finite element method (XFEM),
+journalInternational Journal for Numerical and Analytical
+  Methods in Geomechanics volume35 (year2011)
+  pages1278–1298.
+
+[Mikaeili and Schrefler(2018)]mikaeili2018xfem
+authorE. Mikaeili, authorB. Schrefler,
+titleXFEM, strong discontinuities and second-order work
+  in shear band modeling of saturated porous media,
+journalActa Geotechnica volume13
+  (year2018) pages1249–1264.
+
+[Hirmand et al.(2015)Hirmand, Vahab, and Khoei]hirmand2015augmented
+authorM. Hirmand, authorM. Vahab,
+  authorA. Khoei,
+titleAn augmented Lagrangian contact formulation for
+  frictional discontinuities with the extended finite element method,
+journalFinite Elements in Analysis and Design
+  volume107 (year2015) pages28–43.
+
+[Kachanov(1986)]kachanov1986introduction
+authorL. Kachanov, titleIntroduction to continuum damage
+  mechanics, volume volume10, publisherSpringer Science
+  & Business Media, year1986.
+
+[Bažant and Lin(1988)]bavzant1988nonlocal
+authorZ. P. Bažant, authorF.-B. Lin,
+titleNonlocal smeared cracking model for concrete
+  fracture,
+journalJournal of Structural Engineering
+  volume114 (year1988) pages2493–2510.
+
+[Leroy and Ortiz(1989)]leroy1989finite
+authorY. Leroy, authorM. Ortiz,
+titleFinite element analysis of strain localization in
+  frictional materials,
+journalInternational Journal for Numerical and Analytical
+  Methods in Geomechanics volume13 (year1989)
+  pages53–74.
+
+[Ožbolt and BAŽANT(1996)]ovzbolt1996numerical
+authorJ. Ožbolt, authorZ. P. BAŽANT,
+titleNumerical smeared fracture analysis: Nonlocal
+  microcrack interaction approach,
+journalInternational Journal for Numerical Methods in
+  Engineering volume39 (year1996)
+  pages635–661.
+
+[Bažant and Jirásek(2002)]bavzant2002nonlocal
+authorZ. P. Bažant, authorM. Jirásek,
+titleNonlocal integral formulations of plasticity and
+  damage: survey of progress,
+journalJournal of Engineering Mechanics
+  volume128 (year2002) pages1119–1149.
+
+[Silling(2000)]silling2000reformulation
+authorS. A. Silling,
+titleReformulation of elasticity theory for
+  discontinuities and long-range forces,
+journalJournal of the Mechanics and Physics of Solids
+  volume48 (year2000) pages175–209.
+
+[Kilic and Madenci(2009)]kilic2009structural
+authorB. Kilic, authorE. Madenci,
+titleStructural stability and failure analysis using
+  peridynamic theory,
+journalInternational Journal of Non-Linear Mechanics
+  volume44 (year2009) pages845–854.
+
+[Silling and Lehoucq(2010)]silling2010peridynamic
+authorS. A. Silling, authorR. B. Lehoucq,
+titlePeridynamic theory of solid mechanics,
+journalAdvances in Applied Mechanics volume44
+  (year2010) pages73–168.
+
+[Agwai et al.(2011)Agwai, Guven, and Madenci]agwai2011predicting
+authorA. Agwai, authorI. Guven,
+  authorE. Madenci,
+titlePredicting crack propagation with peridynamics: a
+  comparative study,
+journalInternational Journal of Fracture
+  volume171 (year2011) pages65–78.
+
+[Madenci and Oterkus(2014)]madenci2014peridynamic
+authorE. Madenci, authorE. Oterkus,
+titlePeridynamic theory,
+in: booktitlePeridynamic theory and its applications,
+  publisherSpringer, year2014, pp.
+  pages19–43.
+
+[Ren et al.(2016)Ren, Zhuang, and Rabczuk]ren2016new
+authorH. Ren, authorX. Zhuang,
+  authorT. Rabczuk,
+titleA new peridynamic formulation with shear deformation
+  for elastic solid,
+journalJournal of Micromechanics and Molecular Physics
+  volume1 (year2016) pages1650009.
+
+[Madenci et al.(2016)Madenci, Barut, and
+  Futch]madenci2016peridynamic
+authorE. Madenci, authorA. Barut,
+  authorM. Futch,
+titlePeridynamic differential operator and its
+  applications,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume304 (year2016)
+  pages408–451.
+
+[Kamensky et al.(2019)Kamensky, Behzadinasab, Foster, and
+  Bazilevs]kamensky2019peridynamic
+authorD. Kamensky, authorM. Behzadinasab,
+  authorJ. T. Foster, authorY. Bazilevs,
+titlePeridynamic modeling of frictional contact,
+journalJournal of Peridynamics and Nonlocal Modeling
+  volume1 (year2019) pages107–121.
+
+[Song and Khalili(2019)]song2019peridynamics
+authorX. Song, authorN. Khalili,
+titleA peridynamics model for strain localization analysis
+  of geomaterials,
+journalInternational Journal for Numerical and Analytical
+  Methods in Geomechanics volume43 (year2019)
+  pages77–96.
+
+[Zhang et al.(2022)Zhang, Zhang, and Liu]zhang2022peridynamic
+authorH. Zhang, authorX. Zhang,
+  authorY. Liu,
+titleA peridynamic model for contact problems involving
+  fracture,
+journalEngineering Fracture Mechanics
+  volume267 (year2022) pages108436.
+
+[Francfort and Marigo(1998)]francfort1998revisiting
+authorG. A. Francfort, authorJ.-J. Marigo,
+titleRevisiting brittle fracture as an energy minimization
+  problem,
+journalJournal of the Mechanics and Physics of Solids
+  volume46 (year1998) pages1319–1342.
+
+[Bourdin et al.(2000)Bourdin, Francfort, and
+  Marigo]bourdin2000numerical
+authorB. Bourdin, authorG. A. Francfort,
+  authorJ.-J. Marigo,
+titleNumerical experiments in revisited brittle fracture,
+journalJournal of the Mechanics and Physics of Solids
+  volume48 (year2000) pages797–826.
+
+[Bourdin et al.(2008)Bourdin, Francfort, and
+  Marigo]bourdin2008variational
+authorB. Bourdin, authorG. A. Francfort,
+  authorJ.-J. Marigo,
+titleThe variational approach to fracture,
+journalJournal of Elasticity volume91
+  (year2008) pages5–148.
+
+[Miehe et al.(2010a)Miehe, Welschinger, and
+  Hofacker]miehe2010thermodynamically
+authorC. Miehe, authorF. Welschinger,
+  authorM. Hofacker,
+titleThermodynamically consistent phase-field models of
+  fracture: Variational principles and multi-field fe implementations,
+journalInternational Journal for Numerical Methods in
+  Engineering volume83 (year2010a)
+  pages1273–1311.
+
+[Miehe et al.(2010b)Miehe, Hofacker, and
+  Welschinger]miehe2010phase
+authorC. Miehe, authorM. Hofacker,
+  authorF. Welschinger,
+titleA phase field model for rate-independent crack
+  propagation: Robust algorithmic implementation based on operator splits,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume199 (year2010b)
+  pages2765–2778.
+
+[Kuhn and Müller(2010)]kuhn2010continuum
+authorC. Kuhn, authorR. Müller,
+titleA continuum phase field model for fracture,
+journalEngineering Fracture Mechanics
+  volume77 (year2010) pages3625–3634.
+
+[Borden et al.(2012)Borden, Verhoosel, Scott, Hughes, and
+  Landis]borden2012phase
+authorM. J. Borden, authorC. V. Verhoosel,
+  authorM. A. Scott, authorT. J. Hughes,
+  authorC. M. Landis,
+titleA phase-field description of dynamic brittle
+  fracture,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume217 (year2012)
+  pages77–95.
+
+[Verhoosel and de Borst(2013)]verhoosel2013phase
+authorC. V. Verhoosel, authorR. de Borst,
+titleA phase-field model for cohesive fracture,
+journalInternational Journal for Numerical Methods in
+  Engineering volume96 (year2013)
+  pages43–62.
+
+[Borden et al.(2014)Borden, Hughes, Landis, and
+  Verhoosel]borden2014higher
+authorM. J. Borden, authorT. J. Hughes,
+  authorC. M. Landis, authorC. V. Verhoosel,
+titleA higher-order phase-field model for brittle
+  fracture: Formulation and analysis within the isogeometric analysis
+  framework,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume273 (year2014)
+  pages100–118.
+
+[Ambati et al.(2015)Ambati, Gerasimov, and
+  De Lorenzis]ambati2015phase
+authorM. Ambati, authorT. Gerasimov,
+  authorL. De Lorenzis,
+titlePhase-field modeling of ductile fracture,
+journalComputational Mechanics volume55
+  (year2015) pages1017–1040.
+
+[Santillán et al.(2017a)Santillán, Mosquera, and
+  Cueto-Felgueroso]santillan2017phase
+authorD. Santillán, authorJ. C. Mosquera,
+  authorL. Cueto-Felgueroso,
+titlePhase-field model for brittle fracture. Validation
+  with experimental results and extension to dam engineering problems,
+journalEngineering Fracture Mechanics
+  volume178 (year2017a)
+  pages109–125.
+
+[Santillán et al.(2017b)Santillán, Juanes, and
+  Cueto-Felgueroso]santillan2017b
+authorD. Santillán, authorR. Juanes,
+  authorL. Cueto-Felgueroso,
+titlePhase field model of fluid-driven fracture in elastic
+  media: Immersed-fracture formulation and validation with analytical
+  solutions,
+journalJournal of Geophysical Research: Solid Earth
+  volume122 (year2017b)
+  pages2565–2589.
+
+[Santillán et al.(2018)Santillán, Juanes, and
+  Cueto-Felgueroso]santillan2018phase
+authorD. Santillán, authorR. Juanes,
+  authorL. Cueto-Felgueroso,
+titlePhase field model of hydraulic fracturing in
+  poroelastic media: Fracture propagation, arrest, and branching under fluid
+  injection and extraction,
+journalJournal of Geophysical Research: Solid Earth
+  volume123 (year2018) pages2127–2155.
+
+[Santillán et al.(2017)Santillán, Mosquera, and
+  Cueto-Felgueroso]santillan2017fluid
+authorD. Santillán, authorJ.-C. Mosquera,
+  authorL. Cueto-Felgueroso,
+titleFluid-driven fracture propagation in heterogeneous
+  media: Probability distributions of fracture trajectories,
+journalPhysical Review E volume96
+  (year2017) pages053002.
+	
+[Aldakheel et al.(2021)Aldakheel, Noii, Wick, and Wriggers]Aldakheel2021
+authorF. Aldakheel, authorN. Noii, authorT. Wick, authorP. Wriggers,
+titleA global–local approach for hydraulic phase-field fracture in poroelastic media,
+journalComputers & Mathematics with Applications volume91
+  (year2021) pages99–121.
+	
+
+[Seles et al.(2021)Seles, Aldakheel, Tonkovic, Soric, and Wriggers]Seles2021
+authorA.K. Seles, authorF. Aldakheel, authorZ. 
+Tonkovic, authorJ. Soric, authorP. Wriggers
+titleA general phase-field model for fatigue failure in brittle and ductile solids,
+journalComputational Mechanics volume67
+  (year2021) pages1431–1452.
+	
+
+[Wu et al.(2020)Wu, Nguyen, Nguyen, Sutula, Sinaie, and
+  Bordas]wu2020phase
+authorJ.-Y. Wu, authorV. P. Nguyen,
+  authorC. T. Nguyen, authorD. Sutula,
+  authorS. Sinaie, authorS. P. Bordas,
+titlePhase-field modeling of fracture,
+journalAdvances in Applied Mechanics volume53
+  (year2020) pages1–183.
+
+[Lancioni and Royer-Carfagni(2009)]lancioni2009variational
+authorG. Lancioni, authorG. Royer-Carfagni,
+titleThe variational approach to fracture mechanics. A
+  practical application to the French Panthéon in Paris,
+journalJournal of Elasticity volume95
+  (year2009) pages1–30.
+
+[Bryant and Sun(2018)]bryant2018mixed
+authorE. C. Bryant, authorW. Sun,
+titleA mixed-mode phase field fracture model in
+  anisotropic rocks with consistent kinematics,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume342 (year2018)
+  pages561–584.
+
+[Zhou et al.(2019)Zhou, Zhuang, and Rabczuk]zhou2019phase
+authorS. Zhou, authorX. Zhuang,
+  authorT. Rabczuk,
+titlePhase field modeling of brittle compressive-shear
+  fractures in rock-like materials: A new driving force and a hybrid
+  formulation,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume355 (year2019)
+  pages729–752.
+
+[Fei and Choo(2020)]fei2020phase
+authorF. Fei, authorJ. Choo,
+titleA phase-field model of frictional shear fracture in
+  geologic materials,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume369 (year2020)
+  pages113265.
+
+[Palmer and Rice(1973)]palmer1973growth
+authorA. C. Palmer, authorJ. R. Rice,
+titleThe growth of slip surfaces in the progressive
+  failure of over-consolidated clay,
+journalProc. R. Soc. Lond. A volume332
+  (year1973) pages527–548.
+
+[Hu et al.(2020)Hu, Guilleminot, and Dolbow]hu2020phase
+authorT. Hu, authorJ. Guilleminot,
+  authorJ. E. Dolbow,
+titleA phase-field model of fracture with frictionless
+  contact and random fracture properties: Application to thin-film fracture
+  and soil desiccation,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume368 (year2020)
+  pages113106.
+
+[Fei and Choo(2021)]fei2021double
+authorF. Fei, authorJ. Choo,
+titleDouble-phase-field formulation for mixed-mode
+  fracture in rocks,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume376 (year2021)
+  pages113655.
+
+[Kuhn et al.(2015)Kuhn, Schlüter, and
+  Müller]kuhn2015degradation
+authorC. Kuhn, authorA. Schlüter,
+  authorR. Müller,
+titleOn degradation functions in phase field fracture
+  models,
+journalComputational Materials Science
+  volume108 (year2015) pages374–384.
+
+[Geelen et al.(2019)Geelen, Liu, Hu, Tupek, and
+  Dolbow]geelen2019phase
+authorR. J. Geelen, authorY. Liu,
+  authorT. Hu, authorM. R. Tupek,
+  authorJ. E. Dolbow,
+titleA phase-field formulation for dynamic cohesive
+  fracture,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume348 (year2019)
+  pages680–711.
+
+[Hughes(2012)]hughes_fem_book_2012
+authorT. J. Hughes, titleThe finite element method:
+  linear static and dynamic finite element analysis,
+  publisherCourier Corporation, year2012.
+
+[Belytschko et al.(2014)Belytschko, Liu, Moran, and
+  Elkhodary]belytschko_fem_book_2014
+authorT. Belytschko, authorW. K. Liu,
+  authorB. Moran, authorK. Elkhodary,
+  titleNonlinear finite elements for continua and structures,
+  publisherJohn Wiley & sons, year2014.
+
+[Lorentz et al.(2011)Lorentz, Cuvilliez, and
+  Kazymyrenko]lorentz2011convergence
+authorE. Lorentz, authorS. Cuvilliez,
+  authorK. Kazymyrenko,
+titleConvergence of a gradient damage model toward a
+  cohesive zone model,
+journalComptes Rendus Mécanique volume339
+  (year2011) pages20–26.
+
+[Lorentz(2017)]lorentz2017nonlocal
+authorE. Lorentz,
+titleA nonlocal damage model for plain concrete consistent
+  with cohesive fracture,
+journalInternational Journal of Fracture
+  volume207 (year2017) pages123–159.
+
+[Amor et al.(2009)Amor, Marigo, and Maurini]amor2009regularized
+authorH. Amor, authorJ.-J. Marigo,
+  authorC. Maurini,
+titleRegularized formulation of the variational brittle
+  fracture with unilateral contact: Numerical experiments,
+journalJournal of the Mechanics and Physics of Solids
+  volume57 (year2009) pages1209–1229.
+
+[Wu et al.(2020)Wu, Nguyen, Zhou, and Huang]wu2020variationally
+authorJ.-Y. Wu, authorV. P. Nguyen,
+  authorH. Zhou, authorY. Huang,
+titleA variationally consistent phase-field anisotropic
+  damage model for fracture,
+journalComputer Methods in Applied Mechanics and
+  Engineering volume358 (year2020)
+  pages112629.
+
+[Steinke and Kaliske(2019)]steinke2019phase
+authorC. Steinke, authorM. Kaliske,
+titleA phase-field crack model based on directional stress
+  decomposition,
+journalComputational Mechanics volume63
+  (year2019) pages1019–1046.
+
+[Strobl and Seelig(2016)]strobl2016constitutive
+authorM. Strobl, authorT. Seelig,
+titleOn constitutive assumptions in phase field approaches
+  to brittle fracture,
+journalProcedia Structural Integrity volume2
+  (year2016) pages3705–3712.
+
+[Strobl and Seelig(2015)]strobl2015novel
+authorM. Strobl, authorT. Seelig,
+titleA novel treatment of crack boundary conditions in
+  phase field models of fracture,
+journalPamm volume15 (year2015)
+  pages155–156.
+
+[Liu et al.(2021)Liu, Cheng, Ziaei-Rad, and
+  Shen]liu2021micromechanics
+authorY. Liu, authorC. Cheng,
+  authorV. Ziaei-Rad, authorY. Shen,
+titleA micromechanics-informed phase field model for
+  brittle fracture accounting for unilateral constraint,
+journalEngineering Fracture Mechanics
+  volume241 (year2021) pages107358.
+
+[Zhang et al.(2022)Zhang, Jiang, and Tonks]zhang2022assessment
+authorS. Zhang, authorW. Jiang, authorM. R.
+  Tonks,
+titleAssessment of four strain energy decomposition
+  methods for phase field fracture models using quasi-static and dynamic
+  benchmark cases,
+journalMaterials Theory volume6
+  (year2022) pages1–24.
+
+[Pietruszczak(2010)]pietruszczak_plasticity_book_2010
+authorS. Pietruszczak, titleFundamentals of plasticity
+  in geomechanics, publisherCrc Press Boca Raton, FL,
+  year2010.
+
+[Borja(2013)]borja_plasticity_book_2013
+authorR. I. Borja, titlePlasticity,
+  volume volume2, publisherSpringer,
+  year2013.
+
+
+
+
+

@@ -1,0 +1,1193 @@
+
+
+
+
+Department of Physics, Harvard University, Cambridge, Massachusetts 02138, USA
+
+
+These authors contributed equally to this work
+
+These authors contributed equally to this work
+
+
+
+lukin@physics.harvard.edu
+
+
+
+
+We introduce a framework for designing Hamiltonian engineering pulse sequences that systematically accounts for the effects of higher-order contributions to the Floquet-Magnus expansion.
+
+Our techniques result in simple, intuitive decoupling rules, despite the higher-order contributions naively involving complicated, non-local-in-time commutators.
+
+We illustrate how these rules can be used to efficiently design improved Hamiltonian engineering pulse sequences for a wide variety of tasks, such as dynamical decoupling, quantum sensing, and quantum simulation.
+
+Higher-Order Methods for Hamiltonian Engineering Pulse Sequence Design
+    Mikhail D. Lukin^1
+    March 30, 2023
+======================================================================
+
+
+
+
+
+
+
+§ INTRODUCTION AND MOTIVATION
+
+The effective control of many-body quantum dynamics is an important challenge in the emerging field of quantum science and technology, with wide-ranging applications in quantum computation <cit.>, quantum sensing <cit.>, and quantum simulation <cit.>.
+
+One of the key tools for controlling such many-body quantum dynamics is Hamiltonian engineering <cit.>, in which a train of pulses transform the original system Hamiltonian into a desired target Hamiltonian for various applications.
+
+Indeed, from the inception of such techniques in early NMR work to the present day, Hamiltonian engineering has enabled high resolution spectroscopy <cit.>, high sensitivity metrology <cit.>, as well as the realization of exotic Floquet phases of matter <cit.>.
+
+One of the key tools for performing Hamiltonian engineering is average Hamiltonian theory <cit.>.
+
+Here, the engineered Hamiltonian is approximated by the time-average of interaction-picture Hamiltonians with respect to the control pulses.
+
+This allows the effective engineering of many-body Hamiltonians, even in the case where only global manipulation of spins is accessible, as is the case in many large-scale quantum systems <cit.>.
+
+Moreover, design rules that systematically take into account robustness against various imperfections can be derived <cit.>, enabling robust pulse sequence design as well.
+
+Despite the success of techniques based on average Hamiltonian theory, large variations in performance still exist among the different sequences obtained, suggesting that higher-order contributions in the full Magnus expansion may play an important role.
+
+Existing works treating higher-order contributions often rely purely on symmetrization, or treat the higher-order terms on a case-by-case basis <cit.>.
+
+However, finding general conditions for the cancellation of higher-order Magnus terms can be non-trivial, as the expressions involve commutators that are non-local in time.
+
+In this paper, we systematically analyze higher-order Magnus contributions to effective Hamiltonians, providing a general toolset for pulse sequence design in interacting spin systems in the form of concise decoupling rules.
+
+Despite the non-local nature of the commutators involved in higher-order contributions, we are still able to generalize many results from average Hamiltonian theory. First, we find that the frame representation employed in Ref. <cit.> still provides a convenient way to describe the pulse sequence and contributions, resulting in analytical decoupling rules for higher-order terms.
+
+As an example, in Fig. <ref>(c) we illustrate how first-order Magnus terms involving disorder and Heisenberg interactions have a simple geometric interpretation in analogy with dipoles, and in Fig. <ref>(d) we illustrate how first-order Magnus terms involving Ising and Heisenberg interactions have a similar interpretation as balancing the center of mass along a given axis.
+Second, we find that although there exist additional cross-terms, the majority of finite pulse duration effects can still be described as a simple extension of the effective free evolution time <cit.>, making it easy to build in robustness to sequence design.
+Finally, we extend the principle of pulse cycle decoupling <cit.> to more general pulse sequences and Hamiltonians, beyond those where the zeroth-order average Hamiltonian vanishes.
+
+We use this to show how decoupling rules can be significantly simplified for pulse sequences that are composed of common motifs, such as spin echoes <cit.> or WAHUHA blocks <cit.> (Fig. <ref>(a,b)), resulting in time-local decoupling conditions even for higher-order Magnus contributions.
+Together, these techniques allow us to find higher-order robust pulse sequences with substantially improved performance for a variety of dynamical decoupling, Hamiltonian engineering and quantum sensing applications, as discussed here and in the accompanying paper, Ref. <cit.>.
+
+This paper is organized as follows: in Sec. <ref>, we review our representation of the pulse sequence and associated interaction picture Hamiltonian, as well as existing decoupling rules for the zeroth order effective Hamiltonian.
+
+In Sec. <ref>, we utilize this representation to provide general expressions for the higher-order Magnus contributions and present systematic decoupling conditions for higher-order terms.
+
+We then analyze the structures present in these decoupling rules in Sec. <ref>, finding significant simplifications for commonly-found pulse sequence structures in both the disorder-dominant and interaction-dominant regimes.
+
+We also tabulate the resulting decoupling rules, and provide a pictorial depiction of them.
+
+In Sec. <ref>, we provide further details on the efficient numerical screening of pulse sequences, resulting in high-performance pulse sequences for dynamical decoupling, quantum sensing, and quantum simulation. Finally, in Sec. <ref> we conclude with a discussion of further extensions and future directions of the formalism.
+
+A summary of the notation adopted in this manuscript can be found in Appendix. <ref>.
+
+
+
+
+
+
+§ GENERAL FRAMEWORK AND REVIEW OF EXISTING RESULTS
+
+
+
+
+
+ §.§ General Framework and Frame Representation
+
+
+We begin by introducing our method to represent the pulse sequence and associated average Hamiltonian, which will greatly simplify the analysis of effective Hamiltonians and finite pulse effects compared to the conventional representation of individual pulses. We will adopt the toggling-frame sequence representation (also known as the Mansfield representation) used in Choi et al. <cit.>, which focuses on how operators are transformed under the pulses, rather than the applied pulses themselves. In addition to being a complete and concise representation of the pulse sequence, this representation also has the additional advantage that it leads to simple decoupling conditions that are amenable to fast numerical screening.
+
+Consider a pulse sequence composed of n global spin-rotation pulses {P_1, ⋯, P_n} acting on a system with native Hamiltonian H, with a free evolution time τ_k preceding the kth pulse P_k. The interaction picture Hamiltonian with respect to the ideal control pulses can then be written as
+
+    H̃(t)=U_c^†(t)^⊗ m H U_c(t)^⊗ m,
+
+where H̃(t) is the interaction picture Hamiltonian at time t, U_c(t) is the single spin rotation due to the control field (e.g. U_c(t)=P_kP_k-1⋯ P_1 right after the kth pulse), and m is the number of spins in the system.
+
+Assuming ideal, infinitely fast rotation pulses, and that the combined rotation unitary is identity P_n⋯ P_1=I, we can write the total unitary evolution as
+
+    U(T)=𝒯exp(-∫_0^T iH̃(t)dt)≈exp(-iH^(0)T),
+
+where 𝒯 indicates time-ordering and T is the Floquet period. For pulse separations much shorter than the dynamical timescale of the system, we can conveniently write the effective Hamiltonian to leading order as
+
+    H^(0)=1/T∫_0^T H̃(t_1)dt_1.
+
+
+For general system Hamiltonians satisfying the secular approximation (rotating wave approximation under a strong quantizing field) <cit.>, the interaction picture Hamiltonian H̃_s(t) can be uniquely determined by transformations of the S^z operator (we will refer to these as toggling “frames")
+
+    S̃^z(t)=U_c^†(t)S^zU_c(t)=∑_μ F_μ(t)S^μ,
+
+where S^μ is a basis for the spin system, e.g. the Pauli spin operators for qubits, and we have defined the coefficients
+
+    F_μ(t)=2Tr[S^μS̃^z(t)].
+
+
+Assuming ideal, instantaneous pulses (the case of finite pulse effects and other associated imperfections are discussed in Sec. <ref>), we can express the preceding information in the form of a single 4× N matrix, where each element F_μ,k corresponds to the coefficient F_μ(t) during the kth free evolution time, and the last row contains the free evolution time duration.
+
+As a concrete example, let us consider a spin-1/2 system, where each pulse P_k is assumed to be a π/2 pulse around ±x̂,ŷ.
+
+Note that π pulses can be viewed as two consecutive π/2 pulses, with zero time separation in between.
+
+With S^μ chosen to be the Pauli basis, a spin echo can be represented as
+
+    [ F; τ ]_echo
+    =[  0  0;  0  0; +1 -1;  τ  τ;    ],
+
+while the WAHUHA decoupling sequence for dipolar interactions <cit.> can be expressed as
+
+    [ F; τ ]_WAHUHA
+    =[  0  0 +1 +1  0  0;  0 +1  0  0 +1  0; +1  0  0  0  0 +1;  τ  τ  τ  τ  τ  τ;    ].
+
+
+Pictorially, we can represent the first three rows of the matrix by the blocks in Fig. <ref>(a,b), in which a yellow(green) block indicates a +1(-1) value along the given axis (row) at a given time (column).
+
+We illustrate more advanced versions of spin echoes and WAHUHA blocks in Fig. <ref>(a,b), in both pulse notation and the frame matrix notation utilized here.
+
+In the preceding examples, we have neglected finite pulse duration effects, but they can be easily treated by specifying an additional intermediate toggling frame with zero time duration.
+
+This representation allows us to easily express the interaction picture Hamiltonian H̃(t). For example, for a spin-1/2 dipolar-interacting many-body spin system with on-site disorder, the system Hamiltonian can be written as
+
+    H_dip   =∑_i h_iS_i^z+∑_ijJ_ij(S_i^xS_j^x+S_i^yS_j^y-2S_i^zS_j^z)
+       =∑_i h_iS_i^z+∑_ijJ_ij(S⃗_i·S⃗_j-3S_i^zS_j^z),
+
+where h_i is the on-site disorder strength for spin i, and J_ij is the dipolar interaction between spins i and j.
+
+With our representation, for sequences composed of π/2 or π pulses around ±x̂,ŷ, the interaction picture Hamiltonian during the kth free evolution time can be easily expressed as
+
+    H̃_dip,k   =∑_iμ F_μ,k h_i S_i^μ+∑_ijJ_ijS⃗_i·S⃗_j-3∑_ijμF_μ,k^2 J_ijS_i^μ S_j^μ,
+
+where we have organized the terms according to how they transform with F_μ,k. Using these expressions, it is easy to verify that the spin echo cancels disorder, since ∑_k F_μ,kτ_k=0, while the WAHUHA pulse sequence fully symmetrizes (decouples) dipolar interactions, since ∑_k F_μ,k^2τ_k is the same for all μ.
+
+Motivated by these considerations, for any secular Hamiltonian, we will organize the interaction picture Hamiltonian in terms of how the operators transform as the toggling frame changes.
+
+Let us write
+
+    H̃(t)=∑_α c_α(t)𝒪^α,
+
+where c_α(t) are time-dependent coefficients encoding the frame transformations of a general operator basis set 𝒪^α (we will use greek letters to denote labels of operator sets in the remainder of the paper). For the example above in Eq. (<ref>), we can write out the individual terms in the summation as
+
+    𝒪^0   =∑_ijJ_ijS⃗_i·S⃗_j,    c_0(t)   =1,
+    𝒪^1,μ   =∑_i  h_i S_i^μ,    c_1,μ(t)   =F_μ,k,
+    𝒪^2,μ   =3∑_ij J_ijS_i^μ S_j^μ,    c_2,μ(t)   =F_μ,k^2,
+
+which clearly illustrates how the various terms in the Hamiltonian transform differently with the toggling frames.
+
+
+
+ §.§ Magnus Expansion
+
+With this general representation framework in hand, we will now briefly review the Magnus expansion, which provides a useful tool to calculate the effective dynamics of the periodically-driven system, and extend the analysis beyond the average Hamiltonian described in Eq. (<ref>).
+
+The total unitary over a single Floquet cycle can be expressed in terms of a time-independent effective Hamiltonian 𝒰(T)=exp(-iH_effT), where in the fast-driving limit, the effective Hamiltonian can be written via the Magnus expansion up to order l as H_eff≈∑_k=0^lH^(k), with
+
+    H^(0)   =1/T∫_0^TH(t_1)dt_1,
+    
+        H^(1)   =-i/2T∫_0^Tdt_1∫_0^t_1dt_2[H(t_1),H(t_2)],
+    
+        H^(2)   =1/6T∫_0^Tdt_1∫_0^t_1dt_2∫_0^t_2dt_3
+       ([H(t_1),[H(t_2),H(t_3)]]+[H(t_3),[H(t_2),H(t_1)]]).
+
+
+Higher-order terms are more complex, involving progressively deeper nested commutators, but in the fast-driving limit they will be relatively suppressed, and we can focus on the leading order terms above.
+
+Plugging in Eq. (<ref>) and separating the time-independent operator commutation relation information from the time integrals, we have
+
+    H^(0)   =∑_α1/T^α∫_0^T dt_1c_α (t_1),
+     H^(1)
+           =∑_α,β-i/2T[^α ,^β ]∫_0^Tdt_1∫_0^t_1dt_2c_α (t_1)c_β (t_2),
+     H^(2)   =∑_α,β,γ1/6T[^α,[^β,^γ]]∭_0≤ t_3≤ t_2≤ t_1≤ Tdt_1dt_2dt_3
+       (c_α(t_1)c_β(t_2)c_γ(t_3)+c_α(t_3)c_β(t_2)c_γ(t_1)).
+
+This allows us to reduce the computation of the Magnus expansion to the evaluation of a few integrals on the c(t) coefficients, which can in turn be readily phrased as algebraic conditions on the set of frame transformations.
+
+
+
+ §.§ Review of Zeroth Order Rules
+
+Using the preceding framework, we can readily write down conditions for the cancellation or symmetrization of various zeroth order average Hamiltonian terms, see also Ref. <cit.> for details.
+
+For example, plugging Eqs. (<ref>-<ref>) into Eq. (<ref>), and assuming ideal, instantaneous pulses, we can easily see that on-site disorder is cancelled when ∑_k F_μ,kτ_k=0 for each axis μ=x̂,ŷ,ẑ, while interactions are symmetrized into a Heisenberg Hamiltonian or cancelled when ∑_k F_μ,k^2τ_k is equal for all different μ.
+
+More importantly, as shown in Ref. <cit.>, these conditions can be readily generalized to the case with pulse imperfections.
+
+The primary effect of finite pulse durations is to extend the effective free evolution times in each frame, as most of the terms generated by π/2 rotations can be written as an average of the Hamiltonian before and after the pulse.
+
+However, there will be additional terms arising from rotation angle errors or interaction cross-terms during rotations, which give rise to additional chirality or parity conditions between neighboring frames <cit.>.
+
+The simple, time-local nature (all rules only involve neighboring frames) of these decoupling conditions enabled efficient design and screening of pulse sequences.
+
+Indeed, using these simple decoupling conditions, novel pulse sequences with improved decoupling performance have been found, leading to the demonstration of the first solid-state AC magnetometer that operates beyond the limits of spin-spin interactions <cit.>.
+
+However, the further extension of such techniques to incorporate higher-order Magnus contributions and improve performance is at first sight challenging, given the time-non-local nature of higher-order Magnus terms, which involve commutators between all times of a Floquet cycle.
+
+In the following, we demonstrate how this challenge can be systematically overcome by utilizing the structure of commonly-used pulse sequences.
+
+
+
+§ SYSTEMATIC ANALYSIS OF HIGHER-ORDER MAGNUS TERMS
+
+
+
+With the basic formalism in hand, we now turn to the systematic extension of these decoupling rules from zeroth-order to higher-order.
+
+First, we will describe the pulse cycle decoupling principle <cit.> and extend it to the case of more general interactions, which serves as a useful tool to decompose non-local higher-order terms into local blocks.
+
+We will then systematically derive expressions for first- and second-order Magnus contributions in the general case, assuming ideal pulses.
+
+Finally, we briefly describe how the treatment can be readily generalized to the case with finite pulse durations, primarily by extending the effective duration of free evolution times, with more details given in Appendix. <ref>.
+
+
+
+ §.§ Pulse Cycle Decoupling
+
+
+In order to simplify sequence analysis, it is helpful to be able to break down larger pulse sequences into smaller blocks and analyze them independently.
+
+In this section, we show how common motifs used in sequence design—in the form of spin echoes or interaction symmetrization—allow us to decompose higher-order contributions into a sum of independent, local pieces, no longer requiring non-local correlators between arbitrary locations and thus significantly simplifying the design.
+
+Our results are applicable even to some cases where the symmetrization results in a residual Heisenberg interaction Hamiltonian, thus extending the existing methods <cit.> of pulse cycle decoupling to new and experimentally important regimes.
+
+Let us proceed by examining the first-order contribution when sequentially applying two sequences A and B of equal length T.
+
+We can split the first-order Magnus contribution in Eq. (<ref>) into integrals within the first and second sequence respectively, and cross terms between the two sequences, resulting in
+
+    H^(1)=1/2H^(1)_A+(-i/4T)[TH^(0)_B,TH^(0)_A]+1/2H^(1)_B,
+
+where H^(0,1)_A,B are the zeroth (first) order effective Hamiltonians during pulse sequences A and B.
+
+The key observation of pulse cycle decoupling is that if the commutator [H^(0)_A, H^(0)_B] vanishes, then the first-order contribution fully decouples into the sum of that in each individual block, regardless of the details.
+
+In prior work <cit.>, this was achieved by making one of the average Hamiltonians vanish, thus causing the commutator to automatically vanish as well.
+
+For more general Hamiltonians, however, this no longer directly applies, since the Heisenberg interaction is invariant under global rotations and cannot be cancelled with a global drive <cit.>.
+
+Despite this challenge, we find that we can still make use of the pulse cycle decoupling principle in many scenarios beyond the case where the Hamiltonian vanishes.
+
+First, even if the total Hamiltonian does not vanish, pulse cycle decoupling can still apply to individual terms.
+
+For example, if a given block fully decouples disorder (the rapid echo blocks in Fig. <ref>(a)), then any first-order terms involving disorder will not have cross terms between this block and other parts of the sequence, simplifying the design.
+
+Second, if the interaction is transformed into the same form in two separate blocks, then although H_A,B^(0) are both nonzero, they still commute, and so the pulse cycle decoupling principle still applies (see e.g. Fig. <ref>).
+
+Thus, even if the interaction has a Heisenberg component that cannot be cancelled, the cross-term is still zero because [∑_ijJ_ijS_i· S_j, ∑_ijJ_ijS_i· S_j]=0.
+
+This insight generalizes the pulse cycle decoupling principle to cases in which one desires to engineer a non-zero target Hamiltonian, significantly expanding its applicability.
+
+
+
+While we have illustrated the pulse cycle decoupling principle at first order, the same methods also apply at higher-order by generalizing the arguments in Ref. <cit.>.
+
+For example, the second-order Magnus contribution can be expressed as a sum of commutators between zeroth and first-order terms, and thus if lower orders are fully symmetrized, then the second-order Magnus contribution will also separate into independent, local blocks.
+
+
+
+ §.§ First-Order Decoupling
+
+
+We now return to analyze the structure of higher-order Magnus terms directly and derive decoupling rules for various contributions.
+
+The expressions here will be derived in full generality, without making use of the pulse cycle decoupling principle, although we will use this to further simplify the expressions in following sections.
+
+In order to better understand the structure of the first-order Magnus contributions and derive decoupling rules, let us rewrite the preceding expressions into a form that relates them to zeroth-order Magnus contributions and makes clear how terms can be cancelled.
+
+Denoting the zeroth order contribution up to a given time as _α(t)≡∫_0^tc_α (t_1)dt_1, we can rewrite Eq. (<ref>) as
+
+    H^(1)   =-i/T∑_α>β[^α ,^β ]
+       ×∫_0^Tc_α (t_1)_β(t_1)dt_1-1/2_α(T)_β(T).
+
+
+Focusing first on the case of instantaneous, ideal pulses (the more general case will be treated in Sec. <ref>), our toggling-frame Hamiltonian becomes piecewise-constant in time, allowing us to replace integrals with summations.
+
+We can then define the discrete frame equivalents of the terms in the previous section, letting c_α,k=c_α (t) for t∈[t_k-τ_k/2,t_k+τ_k/2] and _α,k≡∑_l<kc_α,lτ_l, and find
+
+    H^(1)   =∑_β<α[^α ,^β ]
+       ×(∑_k=1^n c_α,kτ_k(_β, k+1/2τ_k c_β,k)-1/2_α,n+1_β,n+1),
+
+The first term in the parenthesis can be interpreted as a product between the c_α coefficient during a given frame and the integral of zeroth order average Hamiltonians up to the center of the frame.
+
+The last term is simply the product of two zeroth-order contributions over the entire Floquet period, which will vanish when zeroth-order decoupling rules are satisfied.
+
+Geometrically, this expression can be understood as rewriting the triangular integration area in Eq. (<ref>) into a sum over thin column slices.
+
+We emphasize that these results apply to all first-order contributions, illustrating the common structure found in the decoupling of many different types of terms.
+
+By keeping track of the running sum, the evaluation of this expression now requires only linear time, as opposed to the naive quadratic complexity.
+
+In addition, although Eq. (<ref>) still contains products of coefficients that are non-local in time, in Sec. <ref> we shall see that in many cases of interest, it can be reduced into simple, local decoupling rules.
+
+We also generalize these results to the case with finite pulse durations in Sec. <ref>.
+
+The primary effect, similar to the zeroth-order case <cit.>, is to lengthen the effective duration of each free evolution time by an amount proportional to the pulse duration.
+
+There will be additional cross terms that we tabulate in the appendix, but they are generally smaller.
+
+
+
+ §.§ Second-Order Decoupling
+
+
+We can now apply the same formalism to the second-order Magnus contributions.
+
+As we show in Appendix. <ref>, by reordering the integrals, we can re-express the second-order contribution in terms of the zeroth- and first-order contributions at different times. Let us define the first-order contribution from time t_1 to t_2 of the operator [^β,^γ] as
+
+
+    c^(1)_β, γ(t_1,t_2)
+       =∬
+    t_1<t_b<t_a<t_2(c_β(t_a)c_γ(t_b)-c_β(t_b)c_γ(t_a)),
+
+where we have dropped the integrand dt_a dt_b for notational simplicity here and below.
+
+We can rewrite the expression as follows
+
+    H^(2)   =1/6T∑_α<β<γ ([^α,[^β,^γ]])
+    ×   ∫_0^Tdt_1c_α(t_1)(c^(1)_β,γ(0,t_1)-c^(1)_β,γ(t_1,T) ).
+
+
+Thus, we see a very similar structure as at first order, wherein the second-order term can also be expressed as a simple integral of lower-order products, enabling formulation of simple decoupling rules.
+
+
+
+ §.§ Robustness Conditions
+
+
+We now extend these results to the case with finite pulse durations, and describe how to incorporate robustness to these effects into the sequence design.
+
+We will focus our attention on the dominant contribution, which we find to be a simple extension of the effective free evolution time by an amount proportional to the pulse duration.
+
+A full treatment of the finite pulse effects, including additional sub-leading cross terms, can be found in Appendix. <ref>.
+
+
+
+As shown in Fig. <ref>, with a finite pulse duration, the coefficient c_α(t) of each term of the Hamiltonian will consist of a ramp up (the preceding rotation), free evolution in the frame, a ramp down (the following rotation), as well as some additional cross-terms between the frames.
+
+The primary effect of finite pulse effects is illustrated in Fig. <ref>(b), in which the effective duration of each frame is lengthened by the integral of _α, k and _α , k over time.
+
+This is a simple extension of the calculation for the zeroth-order case, and scales as O(ττ_p), where τ is the free evolution time and τ_p is the pulse duration.
+
+We incorporate this into the main term in the decoupling rule table, Tab. <ref>, as described in more detail in the next section.
+
+In addition to this dominant term, there are contributions that scale as O(τ_p^2) or higher powers.
+
+First, we have to treat the overlap of the frames, which gives rise to the additional term:
+
+    ∬_0<θ_2<θ_1<π/2_α,k(θ_1)_β,k+1(θ_2)-_α,k+1(θ_2)_β,k(θ_1).
+
+These terms correspond to the overlap of the ramp up of one frame with the ramp down of another. We note that we get a positive effect from the ramp down of one into the ramp up of the other, and a negative effect from the ramp up of one with the ramp down of the other. These are the main finite pulse effects to each of the correction terms, and are shown in column 4 of Tab. <ref>. 
+
+The final contribution originates from first-order contributions involving interaction cross-terms q_ρ.
+
+More specifically, during the continuous rotation from an XX Hamiltonian to a YY Hamiltonian, XY-type terms are generated; the q_ρ cross-terms come from first-order cross-terms between these XY-type terms and other terms.
+
+Note that there will be no such cross-terms for the disorder part of our Hamiltonian.
+
+Thus, although the magnitude of this term can in principle scale as O(τ_pτ), in practice the coefficients are small for disorder-dominated systems, and we will analyze this in detail instead in Appendix <ref>.
+
+
+
+§ HIGHER-ORDER DECOUPLING RULES
+
+
+
+
+ §.§ Summary of General Rules
+
+
+
+
+
+
+
+
+
+
+We now utilize the results from the preceding section to derive concrete decoupling rules for various important higher-order contributions.
+
+Plugging in different Hamiltonian terms into the expressions derived in Sec. <ref>,<ref>, we arrive at the decoupling rules in Tab. <ref>.
+
+As higher-order terms originate from commutators between different terms, we label the cancellation rules with all operators involved.
+
+The table includes two types of contributions: first, there are the main terms that will appear even with ideal, infinitesimally short pulses, together with corrections to their effective duration due to finite pulse durations; second, we include terms that come purely from the finite pulse duration, in the form of the overlapping pulse term derived in Eq. (<ref>).
+
+There is one additional type of term, as mentioned in the preceding section, that involves interaction cross terms q_ρ during continuous rotations.
+
+We omit them from this table, since they do not appear for disorder terms that are dominant in our experiments, but we discuss them in more detail in Appendix <ref>.
+
+Note also that since the Magnus expansion is not invariant with respect to cyclic permutations of the pulse sequence, there are modifications to terms relating to the first and last frames in the complete expression.
+
+However, we neglect them from this table, both to simplify notation, as well as due to the fact that after many Floquet cycles we expect the contributions from these boundary terms to be diminished.
+
+While the decoupling rules are somewhat more complicated than the zeroth-order rules derived in Ref. <cit.>, many of them nonetheless have simple geometric intuitions (Fig. <ref>), and can be further simplified for many common scenarios.
+
+Moreover, the decoupling rules can often be satisfied with simple local motifs, further simplifying the pulse sequence design task.
+
+For example, in many cases, by using the pulse cycle decoupling principle described in Sec. <ref>, one can apply the same rules as zeroth-order sequence design, except requiring the cancellation on a much faster timescale.
+
+These considerations are summarized in the last column of Tab. <ref>.
+
+We will now go through a few representative examples in more detail, and explain how to interpret and simplify the rules.
+
+
+
+ §.§ Fast Echo Cancellation for Disorder-Related Terms
+
+Let us now focus our attention on first-order rules related to disorder-disorder and disorder-Ising terms.
+
+To derive the first and second conditions in Tab. <ref>, which hold with full generality and no restrictions on the frame matrix, let us examine the structure of the first-order Magnus contribution shown in Eq. (<ref>).
+
+There, we found that a generic first-order Magnus contribution can be rewritten as a product between the current frame contribution of one term and the cumulative contribution of another term, together with a factor corresponding to the total zeroth order contribution of both terms.
+
+Plugging the disorder and Ising expressions in Eqs. (<ref>-<ref>) into Eq. (<ref>) results in the rules in the third column of Tab. <ref>.
+
+Due to this common structure, we see in Tab. <ref> that the decoupling of first-order disorder-disorder and disorder-Ising contributions are almost identical, except replacing one term from scaling with F_μ,k to be scaling instead as F_μ,k^2=|F_μ,k| for F_μ,k=0,± 1.
+
+We can thus decouple the primary contribution of both of these first-order effects with the same pulse sequence block, simply by arranging the frames to form fast spin echoes.
+
+These fast spin echoes are illustrated in Fig. <ref>(a).
+
+To see this, first note that the commutator pre-factor implies that there will be a nonzero contribution only when μ≠ν.
+
+With a spin echo block, the contribution from F_μ,k flips and cancels, while the sum F_<k^ν or I_<k^ν is along a different axis and thus remains unchanged during this time.
+
+Moreover, the average zeroth order disorder Hamiltonian over the entire pulse sequence will also vanish due to the spin echo blocks.
+
+Thus, the main term rules in conditions 1 and 2 are satisfied in Tab. <ref>.
+
+In column 4 of Tab. <ref>, we derived additional corrections to the expressions, originating from the pulse-induced overlaps in Eq. (<ref>).
+
+Interestingly, we find again that the different terms share some common structures, where they can be related to each other simply by replacing F_ν,k by |F_ν,k|.
+
+Moreover, we find that the finite pulse duration corrections for first-order disorder-disorder terms are proportional to that of rotation angle errors at zeroth-order <cit.>, making it automatically satisfied if the latter has been incorporated into sequence design.
+
+We also include an example of a second-order rule involving disorder only in Tab. <ref>.
+
+As one can see, the structure bears many similarities with the first-order contributions.
+
+In the case where the pulse sequence is composed of fast echoes, we can further simplify the expressions.
+
+
+
+ §.§ Block Symmetrization for Ising-Ising Terms
+
+Moving on to the first-order Ising-Ising terms (row 3 of Tab. <ref>), we see that the structure of the expression again has many similarities as above.
+
+However, here we have grouped the terms slightly differently, since the zeroth-order sum I̅^ν=∑_k |F_k^ν|(τ_k+τ_p) will always be nonzero.
+
+Expressed in this way, first-order Ising-Ising interactions are decoupled by ensuring that for every pair of axes μ and ν, the cumulative occurrences of ν frames before and after each μ frame are equal, i.e. the appearance of the two frames is balanced.
+
+Based on this result, we find that a simple motif is to perform a mirror symmetrization <cit.> of the frames within each block, as illustrated in Fig. <ref>(b).
+
+Note that since the coefficient of the Ising contribution is identical regardless of the sign of the frame, only the relative frame ordering matters and not the sign.
+
+If within each block the frames are balanced along the x̂, ŷ and ẑ directions, and mirror symmetrization in terms of ordering is performed, then using the pulse cycle decoupling principle, the first-order Ising-Ising contribution will be cancelled.
+
+Here, contrary to global mirror symmetrization, we find that symmetrization within local blocks can also be a useful tool to effectively cancel certain first-order contributions.
+
+The finite pulse duration correction terms for the first-order Ising-Ising contribution are shown in the fourth column of the Tab. <ref>.
+
+They resemble the other correction terms, but with additional absolute value signs, and can be easily incorporated as decoupling rules in a similar fashion.
+ 
+
+
+ §.§ Dipole Cancellation and Row Balancing for Heisenberg-Related Terms
+
+Let us now examine terms related to the Heisenberg interaction S⃗·S⃗.
+
+As noted in Eq. (<ref>), the Heisenberg interaction is invariant under frame transformations.
+
+Thus, the first-order expression resulting from the Heisenberg term and a different term will be the commutator between a constant term (Heisenberg), and a term that depends on the frame transformations (other).
+
+The inclusion of the time integrals then result in the expressions in row 4-6 of Tab. <ref>, where there are no first-order contributions between two Heisenberg Hamiltonians because they are identical and thus commute.
+
+In this case, because the Heisenberg Hamiltonian is invariant, the frame length extension becomes exact, and we do not need to include any additional finite pulse corrections in the table.
+
+To explore in more detail what the resulting rules mean, let us first recall the expressions for cancelling disorder at zeroth order.
+
+Here, we found that in order for disorder to be cancelled at zeroth order, we require the average disorder along each axis to vanish, i.e.
+
+    ∑_k=1^n F_μ,k(τ_k+4/πτ_p)=0.
+
+
+A useful physical analogy to interpret this expression is to associate a positive(negative) charge with F_μ,a=+1(-1).
+
+The zeroth-order decoupling condition then dictates that the average charge is 0.
+
+Generalizing the analogy to first-order terms, the first-order term of a given Hamiltonian contribution with the invariant Heisenberg Hamiltonian will be proportional to the given Hamiltonian, weighted by its location in time in the sequence.
+
+This is because of the integration limits in Eq. (<ref>), where the relative ordering of the time variable values of the two Hamiltonians determines the sign of the expression.
+
+Furthering the electromagnetic analogy, this results in a distance weighting factor from the center of the pulse sequence timing.
+
+Thus, the first-order expression resembles the expression of a dipole, with charge given by F_μ,k at each time point and distance being the distance in time to the center of the sequence.
+
+Cancelling this contribution requires the net dipole along each axis to vanish, as illustrated in Fig. <ref>(c).
+
+We note that this intuition was key to improving decoupling pulse sequence performance in Sec. <ref>, and led to insights regarding the dichotomy between AC field sensing and decoupling for existing pulse sequences described in Ref. <cit.>.
+
+Similarly, we can also analyze the expression for cross-terms between Ising interactions and Heisenberg interactions, simply by replacing the general charge by a non-negative charge value (|F_μ,k|).
+
+With only positive charges, the condition can also be alternatively viewed geometrically as balancing frame weights in each row;
+
+as illustrated in Fig. <ref>(d), one can imagine a fulcrum placed at the middle of a sequence, and for a given axis, placing a weight whenever the frame is along this axis (regardless of it being a positive or negative frame); the rule then becomes that the row would balance.
+
+
+
+§ DETAILED SEQUENCE DESIGN PROCEDURE
+
+
+
+We now utilize the preceding insights to design higher-order pulse sequences for various applications, focusing on the case of interacting spin ensembles dominated by on-site disorder <cit.>.
+
+The result is a pulse sequence that decouples all zeroth-order and first-order contributions in the Magnus expansion, and is robust against disorder to second order, which we name DROID-R2D2 (Disorder RObust Interaction Decoupling - Robust To Disorder 2nd order), and a pulse sequence that achieves similar results but also has interesting AC field sensing capabilities <cit.>.
+
+These pulse sequences were crucial for a variety of our recent experiments in dynamical decoupling, quantum metrology <cit.>, and Hamiltonian engineering <cit.>.
+
+We will illustrate the complete design procedure in detail, and mention a few practical tricks to improve the efficiency of sequence screening and to examine larger design spaces of pulse sequences.
+
+
+    
+  1. Choose target decoupling rules
+
+
+The first step is to determine the set of decoupling rules that should be satisfied by the desired sequence.
+
+The choice of this set is usually informed by several factors: First, the target application may influence which terms need to be decoupled.
+
+For example, if we wish to study many-body dynamics in a disordered system, we may wish to preserve the disorder term while engineering interactions.
+
+Alternatively, if we are interested in quantum sensing, then there may be additional design rules that are imposed to maximize sensitivity.
+
+
+
+
+
+Second, the experimental system characteristics may inform which contributions are most important to decouple.
+
+As an example, dense electronic spin ensembles, such as nitrogen-vacancy (NV) centers and nitrogen (P1) defects in diamond, or rare earth ions, typically have much larger disorder than interactions <cit.>.
+
+Thus, it is much more important to address disorder-related effects to higher-order than interaction-related effects.
+
+The relative importance of different contributions can be made more quantitative by using our expressions for various terms to estimate the typical total magnitude of each of the Hamiltonian terms.
+
+Finally, for a given pulse sequence, we can also diagnose the dominant residual term by examining a cluster of a few spins, typically two or three, and computing the exact unitary for a set of disorder and interaction values.
+
+Taking the matrix log of the unitary yields the exact effective Hamiltonian, and performing polynomial fits of the dominant terms with respect to the disorder and interaction strengths informs us which type of contribution is the largest, as well as the order at which it contributes in the Magnus expansion.
+
+For example, in Fig. <ref>(a), we find that the dominant error terms for the existing DROID sequence from Ref. <cit.> are the XZ and ZX components of the Hamiltonians, when decomposed in the Pauli basis.
+
+In Fig. <ref>(a,b), we find that the dominant scaling of this term is linear in both the disorder strength and interaction strength, suggesting that it originates from a first-order cross-term between them.
+
+This motivated us to systematically include decoupling rules that target this effect.
+
+In practice, we search for sequences by randomly enumerating those of a fixed length that satisfy a chosen set of rules (see below for a description of how to efficiently enforce rules).
+
+We iterate the preceding error diagnosis step several times by identifying the dominant contributions for typical pulse sequences, and adding in new rules to fully decouple them.
+
+Each addition of a new dominant rule eliminates the most poorly performing sequences, and increases the probability of enumerating a sequence with high coherence time; see Fig. 2 of the accompanying paper <cit.>.
+
+Following this procedure leads us to include the following decoupling rules for our disorder-dominated NV center ensemble: decoupling of all zeroth-order conditions, as described in Ref. <cit.>; decoupling of all first-order conditions involving at least one factor of disorder, including disorder-disorder cross-terms, disorder-Ising and disorder-Heisenberg cross-terms, for both free evolution times and pulses; second-order disorder-disorder-disorder cross-terms, for both free evolution times and pulses.
+
+
+    
+  2. Efficiently construct candidate frame sets
+
+
+With the set of target decoupling rules in hand, we now discuss how to efficiently enumerate pulse sequences satisfying a set of imposed decoupling rules.
+
+The number of possible frame sets without any additional constraints is combinatorially large.
+
+For example, even a sequence consisting of 12 free evolution times connected by π/2 pulses, including intermediate frames for the finite pulse durations (e.g. the frame half way through π pulses or composite π/2 pulses), admits approximately 4^23≈ 10^14 distinct pulse sequences (each frame is connected to 4 other frames by π/2 pulses, and the first frame is fixed to be +ẑ).
+
+However the vast majority of these sequences will not satisfy our rules. 
+
+Therefore it is essential to enumerate only sequences that satisfy them.
+
+For the disorder-dominated interacting NV ensembles we work with, we choose to impose the following structures to efficiently pre-screen pulse sequences:
+
+we require that all frames, including both free evolution and pulse frames, come in spin echo pairs, in order to echo out disorder on the fastest possible timescale.
+
+In addition, we require an equal number of elements along each row, so as to symmetrize interactions.
+
+Finally, we impose the “dipole" rules for first-order disorder-Heisenberg cross-terms, by requiring there to be an equal number of +- and -+ spin echoes.
+
+In order to directly restrict the search space to candidate frame sequences that satisfy the above rules, we separately enumerate the locations of X, Y and Z spin echo pairs, and enumerate the echo ordering signs (i.e. whether the echo frames has the ordering +- or -+) of both free evolution frames and finite pulse frames.
+
+We then combine these pieces of information to generate candidate frame sequences, imposing the additional constraint that each frame must be distinct from the two neighboring frames, to ensure that a π/2 pulse is applied and the pulse error calculation is accurate.
+
+
+    
+  3. Screen frame sets using decoupling rules
+
+
+Having generated candidate frame sets that already have a number of rules enforced by construction, we now proceed to screen through them by applying the remaining decoupling rules.
+
+In order to speed up the screening process, the key insight is to transform the original rules into a vectorized form, such that fast matrix computation can be performed, significantly reducing the run time.
+
+This is achieved by labeling the frames as 1 to 6 for +x,+y,+z,-x,-y,-z, and noting that the rules become simple cumulative sums of index matching results when expressed in this fashion.
+
+We then further simplify them based on known decoupling structures (e.g. the rapid spin echoes built into the sequence).
+
+Moreover, when evaluating some of the higher-order expressions in full generality, we can keep track of the cumulative integral of lower-order terms <cit.>, which reduces the time complexity of computing many such terms to linear in the sequence length, rather than a higher polynomial scaling.
+
+
+    
+  4. Verify performance and further optimization
+
+
+To optimize the performance of the pulse sequences, we further symmetrize the pulse sequence to reduce higher-order error contributions.
+
+Here, for dynamical decoupling, we employ the symmetrization used in Ref. <cit.>, where the frames are repeated twice, but the frame ordering is reversed and sign of all frames flipped in the second repetition.
+
+For the quantum metrology pulse sequences designed here and in Ref. <cit.>, this symmetrization will affect the magnetic field sensitivity, and consequently we employ a mirror-symmetrization instead, where the frame ordering is reversed but the sign is not flipped in the second repetition.
+
+Finally, we numerically simulate the performance of these pulse sequences to identify the ones with the longest decoupling timescales.
+
+Effective Hamiltonian extraction using the matrix log of the unitary can identify dominant error terms for the pulse sequences employed, and the whole design procedure can be repeated with an improved rule set.
+
+For the above final set of decoupling rules, we no longer find a single contribution that dominates over the others, instead seeing a competition between several different contributions.
+
+
+
+
+
+ §.§ Resulting Pulse Sequences
+
+
+Using the decoupling rules described above, we designed pulse sequences for dynamical interaction decoupling, many-body physics, and quantum metrology.
+
+For dynamical decoupling and Hamiltonian engineering, one of the best pulse sequences we identified, DROID-R2D2, is shown in Fig. <ref>(b).
+
+We find that compared to the previous best pulse sequence DROID <cit.>, as shown in Fig. <ref>(a), that had significant residual first-order cross terms (Fig. <ref>(a)), primarily cross terms between disorder and first-order Heisenberg interactions, the residual errors when examining the effective Hamiltonian are much reduced (Fig. <ref>(b)).
+
+Moreover, we can adapt this pulse sequence to perform Hamiltonian engineering by adjusting the frame durations along the x̂, ŷ and ẑ axes <cit.>, resulting in a tunable interaction Hamiltonian
+
+
+    H_XXZ=∑_ijJ_ij[1+λ/3(S_i^xS_j^x+S_i^yS_j^y)+1-2λ/3S_i^zS_j^z],
+
+
+where λ is a coefficient that tunes the XXZ Hamiltonian.
+
+We find that our techniques also significantly reduce the error in engineering a wide range of generic XXZ Hamiltonians.
+
+In Fig. <ref>(c,d), we see that both two-body and single-body imperfection terms are much smaller across a wide range of different Hamiltonians, which can help improve the fidelity of Hamiltonian engineering and reduce systematic artifacts.
+
+These techniques can be readily generalized to engineer XYZ Hamiltonians, with different coefficients in front of each term, or even more complex many-body Hamiltonians.
+
+The same techniques can also be used to design pulse sequences for improved quantum sensing, as we explain in more detail in Ref. <cit.>.
+
+The key insight is that current pulse sequences for quantum sensing <cit.>, which periodically flip the spin along each axis with the same frequency as the target signal, will always result in a violation of the “net dipole cancellation" rule in Fig. <ref>(c) for first-order disorder-Heisenberg terms.
+
+This imposes a fundamental trade-off between sensitivity and decoupling quality for current pulse sequences.
+
+With this insight from higher-order decoupling rules, we are able to design the new pulse sequence DIRAC2 (DIsorder Robust AC sensing with period 2), as shown in Fig. <ref>(c), which circumvents this issue by targeting a sensing signal half the frequency of frame flipping, thereby fully cancelling all first-order Magnus contributions while also increasing the rate of spin echo decoupling, leading to better performance.
+
+See Ref. <cit.> for a more detailed description.
+
+
+
+§ DISCUSSION AND CONCLUSION
+
+
+We have developed a general framework for dynamical Hamiltonian engineering that includes higher-order considerations.
+
+Contrary to the naive expectation, we found that many higher-order decoupling conditions can still have simple, intuitive interpretations, particularly when the pulse sequence is designed to have certain structures in it.
+
+We analytically derived a number of decoupling rules for higher-order contributions, and used them to design robust pulse sequences in disorder-dominated systems for dynamical decoupling, Hamiltonian engineering, and quantum sensing, significantly improving upon state-of-the-art pulse sequences.
+
+While we have focused on the application of our techniques to the case of electronic spin ensembles, where disorder is much larger than spin-spin interactions, we believe that our techniques can be applied to disparate systems such as NMR <cit.>, simply by changing which rules are emphasized and included at higher-order.
+
+It may also be interesting to further extend the techniques to even higher-order than the ones that we have considered here <cit.>, or to examine alternative expansions beyond the Magnus expansion <cit.>.
+
+In our formalism, the contributions from higher-order terms are decomposed into an operator commutation portion, and a portion that relates to the frame matrix and pre-factors.
+
+This also makes the extension to higher-spin systems relatively straightforward, and can be combined with recent methods for robust Hamiltonian engineering with higher-spin systems <cit.>.
+
+With these further improvements, we believe that our framework presents a key tool for advanced Hamiltonian engineering pulse sequence design, with broad applications in dynamical decoupling, quantum many-body physics, and quantum metrology.
+
+
+
+§ ACKNOWLEDGEMENTS
+
+We thank J. Choi, A. Douglas, H. Gao, N. Maskara, P. Peng, M. Yu for helpful discussions. This work was supported in part by CUA, HQI, NSSEFF, ARO MURI, DARPA DRINQS, Moore Foundation GBMF-4306, NSF PHY-1506284.
+
+
+
+
+
+§ CONVENTIONS
+
+
+See Tab. <ref> for a summary of the conventions employed in this manuscript.
+
+
+
+
+§ DERIVATION OF FIRST-ORDER MAGNUS FORMALISM
+
+
+
+To develop the full expression at first order, we extend the formalism developed in Ref. <cit.>. To keep the expressions fully general, we do not restrict to a specific qubit Hamiltonian here, and specialize to the dipolar Hamiltonian only in the following sections.
+
+Following Ref. <cit.>, we can separate the evolution into free evolution periods and evolution during pulses.
+
+We will write the coefficient of a given operator ^α during the k-th free evolution period as c_α(t)=c_α,k, and during the π/2 pulse after the k-th free evolution period as
+
+    c_α(t)=_α,k(t/r)+q_α,k,k+1(t/r)+_α,k+1(t/r).
+
+Here, r is the rate of angular precession under the applied pulses, and the rotation angles during the π/2 pulse are given by θ=t/r.
+
+The first term _α,k(θ) describes the finite pulse duration contribution from the k-th frame that precedes the pulse, while _α,k+1(θ) describes the contribution from the (k+1)-th frame that follows the pulse.
+
+q_α,k,k+1(θ) is an additional cross-term between the two frames that arises for certain types of interaction terms.
+
+Note that similar to Ref. <cit.>, in our pulse sequence composed of π/2 pulses and π pulses, we treat each π pulse as a combination of two π/2 pulses with zero free evolution time in between.
+
+As a concrete example to illustrate these terms, let us consider a rotation that transformed the S^z operator into S^x, i.e. S̃^z(θ)=cosθ S^z+sinθ S^x.
+
+For an Ising interaction H_I=JS_i^zS_j^z, the time-dependent operator would be
+
+    H̃_I(t)   =J[cos^2θ S_i^zS_j^z+sinθcosθ(S_i^xS_j^z+S_i^zS_j^x)+sin^2θ S_i^xS_j^x].
+
+The three terms in the parenthesis correspond to the _α,k(θ), q_α,k,k+1(θ) and _α,k+1(θ) terms, respectively.
+
+With this representation in hand, we proceed by rewriting the integral in Eq. (<ref>) as a summation over the distinct blocks.
+
+Let us examine the first term, which integrates all c_β terms occurring temporally before c_α:
+
+    A=∫_0^Tdt_1c_α(t_1)∫_0^t_1dt_2c_β(t_2)
+
+
+To compute this, we first define the integral of the coefficient of a given frame, including its finite pulse duration effects:
+
+    C_α,k=r∫_0^π/2_α,k(θ)dθ+∫_0^τ_kc_α,kdt+r∫_0^π/2_α,k(θ)dθ.
+
+
+This can be viewed as a simple extension of the effective free evolution time.
+
+We can then decompose the inner integral in Eq. (<ref>) into three parts (ignoring additional contributions from q_α,k,k+1-terms for now): a contribution from previous, non-overlapping free evolution times, together with their surrounding pulses (A_free); a contribution from integrating both time variables within the same free evolution period, corresponding to first-order contributions within the same frame (C_α,β,k^(1)); and a further correction arising from the pulse overlaps of neighboring free evolution times (P_k,k+1,α,β).
+
+This is illustrated in Fig. <ref>.
+
+More concretely, the first term describes contributions where t_1 lies within the k-th frame, and t_2 originates from an earlier frame. As most of these contributions will be temporally non-overlapping, we can factorize these contributions as
+
+    A_free=∑_k=1^n C_α,k∑_j=1^k-1C_β,j.
+
+
+The next term describes contributions where both t_1 and t_2 come from the k-th frame, with t_2<t_1∈[t_k-1+τ_k-1/2,t_k+1-τ_k+1/2], i.e. the first-order Magnus contribution of a frame with itself.
+
+We can explicitly write this as
+
+    C^(1)_α,β,k=∫_t_k-1+τ_k-1/2^t_k+1-τ_k+1/2c_α(t_1)dt_1∫_t_k-1+τ_k-1/2^t_1c_β(t_2)dt_2.
+
+Note that this term is usually zero in our case, as the commutator [^α,^β] vanishes when α=β, and otherwise c_α, c_β are both non-zero within the same free evolution period only when they originate from different types of non-commuting Hamiltonians, e.g. one coming from local S^z disorder, and the other coming from Heisenberg interactions.
+
+Finally, we have additional corrections P_k,k+1,α,β that arise from the overlap in terms due to the pulses: for the k-th frame, we overcounted the overlap contribution with the previous (k-1)-th frame by assuming that the k-th frame came completely after the (k-1)-th frame, but undercounted the overlap contribution with the next (k+1)-th frame.
+
+Explicit calculation shows that this results in a first order pulse correction that is related to both the preceding and subsequent frame:
+
+    P_k,k+1,α,β=∫_0^π/2_α,k(θ_1)rdθ_1∫_0^θ_1_β,k+1(θ_2)rdθ_2-∫_0^π/2_α,k+1(θ_1)rdθ_1∫_θ_1^π/2_β,k(θ_2)rdθ_2.
+
+
+Thus, neglecting all terms that directly dependent on multiple pulses (see q-terms below), we can express the integral in a clean manner as
+
+    A=A_free+∑_k=1^n-1P_k,k+1,α,β+∑_k=1^nC^(1)_α,β,k.
+
+
+For certain interaction terms such as the Ising Hamiltonian, there is an additional contribution we need to keep track of, the q_α,k,k+1(θ) terms described in Eq. (<ref>).
+
+These terms come from the fact that the Ising interaction transforms as the square of the frame coefficients, introducing additional cross-terms when expanding the square.
+
+These terms are ignored in the main text, as they are negligible for our disorder-dominated system, but we will analyze them in more detail here.
+
+We can perform a similar decomposition of the terms as above, now adding in the contributions from the q-terms.
+
+We can treat the q-terms as a special type of free evolution frame, and decompose the sum into the three types again, this time keeping track also of whether the other term is a q-term or a regular free evolution period.
+
+Similar to Eq. (<ref>), we can evaluate the first-order contributions involving a single q-term and a single free evolution frame as
+
+    QA_free=∑_k=1^nC_α,k∑_j=1^k-1Q_β,j,j+1+∑_k=1^nQ_α,k,k+1∑_j=1^kC_β,j,
+
+where
+
+    Q_α,k,k+1=∫_0^π/2q_α,k,k+1(θ)dθ
+
+is the integral of the q-term during a given pulse.
+
+In analogy to the corrections P_k,k+1,α,β found above, we also have similar corrections here
+
+    QP_k,k+1,α,β   =∫_0^π/2q_α,k,k+1(θ_1)rdθ_1∫_0^θ_1_β,k+1(θ_2)rdθ_2-∫_0^π/2q_α,k,k+1(θ_1)rdθ_1∫_θ_1^π/2_β,k(θ_2)rdθ_2
+       +∫_0^π/2_α,k(θ_1)rdθ_1∫_0^θ_1q_β,k,k+1(θ_2)rdθ_2-∫_0^π/2_α,k(θ_1)rdθ_1∫_θ_1^π/2q_β,k-1,k(θ_2)rdθ_2.
+
+
+Finally, we also have corrections coming from the first-order contributions between q-terms at different times and in the same pulse
+
+    Q_self=∑_k=1^nQ_α,k,k+1∑_l=1^k-1Q_β, l,l+1+∑_k=1^n∫_0^π/2q_α,k,k+1(θ_1)rdθ_1∫_θ_1^π/2q_β,k,k+1(θ_2)rdθ_2.
+
+
+Putting all of this together, the final, complete expression for first-order terms is
+
+    A=A_free+∑_k=1^n-1P_k,k+1,α,β+∑_k=1^nC^(1)_α,β,k+QA_free+Q_self+∑_k=1^nQP_k,k+1,α,β
+
+
+
+
+§ DERIVATION OF FIRST-ORDER CANCELLATION RULES
+
+
+
+
+
+We will now apply the preceding general calculations to specific first-order terms, in order to derive first-order decoupling rules.
+
+As we shall see, in many cases of interest, a lot of the terms in Eq. (<ref>) will drop out, resulting in simple expressions.
+
+
+
+ §.§ Disorder-Disorder Rules
+
+Let us start with first-order disorder-disorder contributions, involving commutators between disorder at different times.
+
+Since this Hamiltonian involves only single-qubit terms, there will be no q-terms.
+
+Furthermore, there are no C^(1)_α,β,k terms, as the operator in each frame commutes with itself.
+
+We thus have
+
+    A_dis-dis=A_free+∑_k=1^n-1P_k,k+1,α,β.
+
+
+Examining the transformation of the operators for different frames, we have
+
+    c_α,k   → F_μ,k,
+    _α,k(θ)   → F_μ,ksin(θ),
+    _α,k(θ)   → F_μ,kcos(θ),
+    
+    C_α,k   = F_μ,k(τ_k+4τ_p/π).
+
+
+Plugging this into the preceding definitions of the individual terms, we find
+
+    A_free   =∑_k=1^nF_μ,k(τ_k+4τ_p/π)∑_l=1^k-1F_ν,l(τ_l+4τ_p/π),
+    
+    P_k,k+1,dis,dis   = (F_μ,kF_ν,k+1-F_μ,k+1F_ν,k)(1-π/4)(2τ_p/π)^2,
+
+
+Further plugging this into the full expression Eq. (<ref>) for the first-order disorder-disorder term, we arrive at the full expression for the main term
+
+    ∑_k=1^nF_μ,k(τ_k+4/πτ_p)F^ν_<k-1/2F̅^μF̅^ν,
+
+and the finite pulse correction
+
+    (1-π/4)(2τ_p/π)∑_k=1^nF_μ,kF_ν,k+1-F_ν,kF_μ,k+1,
+
+as described in Tab. <ref>.
+
+Based on these expressions, we can formulate relatively simple rules for their cancellation in sequence design.
+
+The expression P_k,k+1,α,β involves a term that can be rewritten as F⃗_k×F⃗_k+1, and thus has the same conditions for cancellation as zeroth-order rotation angle errors <cit.>.
+
+Due to the rapid spin echo structure found in many decoupling sequences for disorder-dominated systems, e.g. DROID-60 in Ref. <cit.>, the majority of terms in A_free are also cancelled in the inner sum, and the only contribution remaining is from the commutator between a spin echo pair and the intermediate pulse frame that the π pulse uses.
+
+To give a concrete example of this remaining contribution, consider a sequence of two π pulses around X, which implements the following frame transformations +Z → +Y → -Z → -Y, with +Z and -Z being longer free evolution frames, and +Y and -Y being shorter frames with zero free evolution time and only pulse effects.
+
+The first-order contribution from this will then be proportional to the commutator between Z and Y, and changes sign both when we flip the sign of one of the operators (e.g. +Z → -Y → -Z → +Y), as well as when we switch the order of the operators (e.g. +Y → +Z → -Y → -Z).
+
+Thus, this term has the same transformation properties as a rotation angle error that acts only within such spin echo blocks.
+
+
+
+ §.§ Disorder-Heisenberg Rules
+
+The next term we consider is the first-order disorder-Heisenberg contribution, which was the dominant imperfection in the previous DROID-60 sequence <cit.> and key to the design of improved sensing sequences such as DIRAC2 <cit.>.
+
+As shown in Eq. (<ref>), we can choose an index ordering where disorder is after Heisenberg interactions, such that α is a disorder index and β is a Heisenberg interaction index.
+
+The case where both are Heisenberg indices gives zero contribution, as the operator terms are equal to the fixed Heisenberg Hamiltonian and hence commute.
+
+As the Heisenberg interaction is invariant under frame transformations, the coefficients can be chosen to take a particularly simple form:
+
+    c_β,k   → 1,
+        
+    _β,k(θ)   → 1,
+        
+    _β,k(θ)   → 0,
+        
+    
+        C_β,k   =τ_k+τ_p.
+
+Plugging these into the preceding expressions, we find
+
+    A_free   =∑_k=1^nF_μ,k(τ_k+4τ_p/π)∑_j=1^k-1(τ_j+τ_p),
+    
+    P_k,k+1,α,β   =F_μ,k(π/2-1)(2τ_p/π)^2,
+    
+    C_α,β,k^(1)   =F_μ,k[∫_0^π/2sin(θ_1)rdθ_1∫_0^θ_1rdθ_2+∫_0^τ_kdt_1(τ_p+∫_0^t_1dt_2)+∫_0^π/2cos(θ)rdθ(τ_p+τ_k)]
+       =F_μ,k[(2τ_p/π)^2+τ_kτ_p+τ_k^2/2+(τ_p+τ_k)(2τ_p/π)].
+
+
+We can simplify the sum of the last two contributions
+
+    P_k,k+1,α,β+C^(1)_α,β,k   =F_μ,k(τ_kτ_p+1/2τ_k^2+(2τ_p+τ_k)(2τ_p/π))
+       =F_μ,k(τ_p+1/2τ_k)(τ_k+4τ_p/π).
+
+
+Adding the corrections together, we get
+
+    A=∑_k=1^nF_μ,k(τ_k+4τ_p/π)∑_j=1^k-1(τ_j+τ_p+τ_p+1/2τ_k)=∑_k=1^nF_μ,kt_k(τ_k+4τ_p/π),
+
+where t_k is the midpoint of the kth free evolution frame.
+
+The remaining term in Eq. (<ref>) can be evaluated to be
+
+    1/2_α(T)_β(T)=F̅^μT/2,
+
+which combined give us the full algebraic condition for first-order disorder-Heisenberg decoupling
+
+    ∑_k=1^nF_μ,k(τ_k+4/πτ_p)(t_k-T/2).
+
+
+As described in the main text and in Ref. <cit.>, there is a relatively simple intuition for these contributions, which we visualize using dipole balancing.
+
+If we associate a charge to each frame, with +1(-1) values of F_μ,k being a positive(negative) charge, then the above expression corresponds to the product of charges (F_μ,k) with their center-of-mass location (t_k-T/2), which is precisely the definition of a dipole.
+
+Thus, geometrically, we can visualize the cancellation of first-order disorder-Heisenberg contributions as requiring that the net dipole corresponding to a frame configuration to be 0.
+
+
+
+ §.§ Disorder-Ising Rules
+
+Next we move on to the Ising contributions, starting with first-order disorder-Ising terms.
+
+For this, we use c_α,k from the disorder term, and we use the following for the c_β,k terms:
+
+    c_β,k   → |F_ν,k|, 
+    
+    _β,k(θ)   → |F_ν,k|sin^2(θ),
+    
+    _β,k(θ)   → |F_ν,k|cos^2(θ),
+    
+    
+    q_β,k,k+1(θ)   → F_ν,kF_ρ,k+1sin(θ)cos(θ),
+    
+    
+    C_β,k   =|F_ν,k|(τ_k+τ_p),
+    
+    
+    Q_β,k,k+1   =F_ν,kF_ρ,k+1τ_p/π.
+
+
+Plugging these into the definitions for the individual terms, we find
+
+
+    A_free   =∑_k=1^nF_μ,k(τ_k+4τ_p/π)∑_l=1^k-1|F_ν,l|(τ_l+τ_p),
+    
+    
+    P_k,k+1,dis,isi   =(F_μ,k|F_ν,k+1|-F_μ,k+1|F_ν,k|)(π/4-2/3)(2τ_p/π)^2.
+
+
+The term C^(1)_α,β,k will not contribute, as the disorder and Ising Hamiltonian within the same free evolution time commute with each other, [S^μ⊗ I, S^μ⊗ S^μ]=0.
+
+The algebraic conditions in the Tab. <ref> are based on the preceding expressions, and ignore the q-terms.
+
+Combining A_free with the rest of the terms gives the main term:
+
+    ∑_k=1^nF_μ,k(τ_k+4/πτ_p)I_<k^ν-1/2F̅^μI̅^ν.
+
+Summing over pulses in the pulse term gives the finite pulse correction
+
+    ∑_k=1^n(2τ_p/π)^2(π/4-2/3)(F_μ,k|F_ν,k+1|-|F_ν,k|F_μ,k+1).
+
+The main term will vanish with the same fast spin echo blocks as that found in the first-order disorder-disorder term, and the finite pulse correction can be viewed as a simple generalization of, e.g. the chirality condition in Ref. <cit.>.
+
+We now further evaluate the q-terms.
+
+As any two adjacent frames will have different operators due to the frame change, we will have no contribution when ν=ρ. Explicitly plugging into the above expressions gives
+
+    QA_free   =∑_k=1^nF_α,k(τ_k+4/πτ_p)∑_j=1^k-1F_ν,jF_ρ,j+1τ_p/π,
+    
+    
+    QP_k,k+1,dis,isi   =1/6(F_μ,kF_ν,kF_ρ,k+1- F_μ,kF_ν,k-1F_ρ,k)(2τ_p/π)^2,
+    
+    
+    Q_self   =0.
+
+
+
+
+ §.§ Ising-Ising Rules
+
+We will now compute the first-order Ising-Ising term. Using the definitions of the individual terms as in the previous calculation (taking both α and β to be Ising indices), we find
+
+    A_free   =∑_k=1^n|F_μ,k|(τ_k+τ_p)∑_l=1^k-1|F_ν,l|(τ_l+τ_p)
+       =∑_k=1^n|F_μ,k|(τ_k+τ_p)I_<a^ν,
+    
+    P_k,k+1,isi,isi   =(|F_μ,k||F_ν,k+1|-|F_μ,k+1||F_ν,k|)(π^2/32-1/4)(2τ_p/π)^2
+
+Similar to the disorder-disorder case and the disorder-Ising case, we have no contribution from the C^(1)_α,β,k terms. Next, we calculate the contribution from the q-terms. Directly plugging things in
+
+    QA_free   =∑_k=1^n|F_μ,k|(τ_k+τ_p)∑_j=1^k-1F_ν,kF_ρ,k+1τ_p/π+∑_k=1^nF_μ,kF_ρ,k+1τ_p/π∑_l=1^k|F_ν,l|(τ_l+τ_p),
+    
+    QP_k,k+1,isi,isi   =τ_p^2/8π(F_μ,kF_λ,k+1|F_ν,k+1|-F_μ,kF_λ,k+1|F_ν,k|+|F_μ,k|F_ν,kF_ρ,k+1-|F_μ,k|F_ν,k-1F_ρ,k),
+    
+    Q_self   =∑_k=1^nF_μ,kF_λ,k+1τ_p/π∑_l=1^k-1F_ν,lF_ρ,l+1τ_p/π+∑_k=1^nτ_p^2/2π^2F_μ,kF_λ,k+1F_ν,kF_ρ,k+1.
+
+
+
+
+ §.§ Ising-Heisenberg Rules
+
+Finally, we calculate the first-order Ising-Heisenberg terms.
+
+Taking α to be the Ising terms, we can repeat the derivation from disorder-Heisenberg rules to find that the main terms can be written as
+
+    ∑_k=1^n|F_μ,k|(τ_k+τ_p)(t_k-T/2),
+
+which simply replaces the F_μ,k in the original disorder-Heisenberg rule by |F_μ,k|.
+
+Although this term is no longer cancelled by imposing a zero net dipole, we can still formulate a simple condition for it to be cancelled: if we have “balanced" rows, in which the center of mass of each row is in the middle, then this term will be cancelled.
+
+For example, a simple mirror symmetrization will cancel this first-order term.
+
+For the q-terms, using the expressions found above, we can easily calculate
+
+    QA_free   =∑_k=1^nF_μ,kF_λ,k+1τ_p/π∑_l=1^k(τ_l+τ_p),
+    
+    QP_k,k+1,isi,heis   =π/8(2τ_p/π)^2F_μ,kF_λ,k+1,
+    
+    
+    Q_free   =0.
+
+We note that after summing the pulse term over k, we can add the two expressions together to obtain
+
+    Q_tot=∑_k=1^nF_μ,kF_λ,k+1τ_p/π(∑_l=1^k(τ_l+τ_p)+τ_p/2).
+
+We note that the second sum is exactly the time at the middle of the pulse, similarly to the other Heisenberg rules. This tells us that we can cancel this the same way, by balancing the center of mass for terms of the form F_μ,kF_λ,k+1.
+
+
+
+ §.§ Summary of Two Qubit Commutators
+
+We lastly summarize the general commutators of the form 𝒪_α, 𝒪_β over a basis of two-qubit operators, { O_α}_α, to be defined shortly. To this end, it is convienent to write a generic two-qubit Hamiltonian in the form of a 4 × 4 matrix 𝒜, 
+
+    H(𝒜)    = ∑_μν=0^3 𝒜_μν σ_μ⊗σ_ν,
+
+where we have defined σ_μ = ( 1, σ⃗) as a 4-vector of Pauli operators, including the 2 × 2 identity matrix 1. It follows that a native symmetric secular Hamiltonian can be specified by the matrix
+
+    𝒜   = ([       0       0       0     h_2;       0     g_0       0       0;       0       0     g_0       0;     h_1       0       0 g_0+g_1;         ]),
+
+parameterized by disorder fields h_1,h_2 and Heisenberg/Ising interactions g_0, g_1. Note that we have introduced horizontal and vertical bars to visually distinguish between interactions and disorder. As explained in the main-text, under global driving mapping S_z → F_μ S_μ the secular Hamiltonian will depend only on this column vector F. This representation of the 2-qubit interaction will thus transform as 
+
+    𝒜↦𝒜'( F)   =([                                               h_2 F^T                  ;                                                                        ;             h_1 F                   g_0 1 + g_1  FF^T                  ;                                                                        ;                   ]), 
+       = ∑_α c_α 𝒜_α(F),
+
+where {𝒜_α(F) }_α are judicious choice of operator basis. A particular choice of operators that is convenient to summarize the commutators is the following 
+
+    {𝒜_α(F) }_α   = {𝒜_±(F) = ([           ±F^T     ;                    ;    F         0     ;                    ;      ]), 𝒜_H =([        ;        ;     1  ;        ;   ]),  𝒜_I(F) = ([                    ;                    ;           FF^T     ;                    ;      ]) }.
+
+The matrix commutator between the interaction picture Hamiltonians in different frames lifts to a bracket on the basis 𝒞 matrices, yielding surprisingly simple “selection rules" for understanding the structure behind the first order Magnus calculation. 
+
+Before presenting the result, we define two more interactions
+        
+        
+    𝒜̃_I( F,  G)    =  ([                                                                    ;                                                                    ;                                   (FG^T + GF^T )/2                 ;                                                                    ;                  ]), 
+    𝒜_A( F)    =  ([                                        ;                                        ;                     ϵ_ijk F_k          ;                                        ;           ]),
+
+
+where the first one contains the Ising interaction 𝒜_I( F) = 𝒜̃_I( F, F) as a special case, and the second one is an anti-symmetric exchange  𝒜_A( F).
+
+Disorder, Disorder → Disorder
+
+
+	
+  * 𝒜_σ(𝐅),𝒜_σ'(𝐆) = 2i  𝒜_σσ'(𝐅×𝐆)     σ, σ' ∈± 
+
+
+Disorder, Interaction → Interaction
+
+
+	
+  * 𝒜_+(𝐅), 𝒜_H  =0
+	
+  * 𝒜_+(𝐅), 𝒜_I(𝐆)  = 4i  𝒜̃_I(𝐆, 𝐅×𝐆)
+	
+  * 𝒜_-(𝐅), 𝒜_H  = -4 i  𝒜_A(𝐅)
+	
+  * 𝒜_-(𝐅), 𝒜_I(𝐆)  = 2i((F· G) 𝒜_A(𝐆)-𝒜_A(𝐅))
+
+
+Interaction, Interaction → Disorder
+
+
+	
+  * 𝒜_H, 𝒜_H  = 0
+	
+  * 𝒜_H, 𝒜_I(𝐆)  = 0
+	
+  * 𝒜_I(𝐅), 𝒜_I(𝐆)  = 2i   (F · G) 𝒜_+(𝐅×𝐆)=0 for pulse sequences built from π/2,π pulses
+
+
+
+
+
+
+§ DERIVATION OF SECOND-ORDER DECOUPLING RULES
+
+
+From Eq. (<ref>), we have that the cancellation condition for the second-order term is given by two integrals
+
+    ∭_0<t_3<t_2<t_1<Tc_α(t_1)c_β(t_2)c_γ(t_3)+∭_0<t_1<t_2<t_3<Tc_α(t_1)c_β(t_2)c_γ(t_3).
+
+
+In order to see the similarities to the previous order, we write the above integrals as follows
+
+    ∫_0^Tdt_1c_α(t_1)(∬_0<t_3<t_2<t_1c_β(t_2)c_γ(t_3)+∬_t_1<t_2<t_3<Tc_β(t_2)c_γ(t_3)).
+
+Noting that the coefficient here is [^α,[^β,^γ]], we can again sum the terms which have β and γ switched, as we did with first order, and derive the following expression
+
+    H^(2)   =1/6T ([^α,[^β,^γ]])∫_0^Tdt_1c_α(t_1)·
+       ·( ∬_0<t_3<t_2<t_1 c_β(t_2)c_γ(t_3)-∬_0<t_2<t_3<t_1 c_β(t_2)c_γ(t_3).+
+       +.∬_t_1<t_2<t_3<Tc_β(t_2)c_γ(t_3)-∬_t_1<t_3<t_2<Tc_β(t_2)c_γ(t_3)).
+
+The inner integrals in the above expression are the first order contribution of the β,γ first order term for all times before t_1, minus the first order contribution of the β,γ first order term for all times after t_1. Letting 
+
+    c^(1)_β, γ(t_1,t_2)   = ∬
+    t_1<t_a<t_b<t_2c_β(t_a)c_γ(t_b)-∬
+    t_1<t_b<t_a<t_2c_β(t_a)c_γ(t_b),
+
+which is exactly the first order contribution between times t_1 and t_2 of the operator [^β,^γ], we can rewrite the expression as follows
+
+
+    H^(2)   =1/6T ([^α,[^β,^γ]])∫_0^Tdt_1c_α(t_1)(c^(1)_β,γ(0,t_1)-c^(1)_β,γ(t_1,T) ).
+
+We then write
+
+    ∫_0^Tdt_1c_α(t_1) (c^(1)_β,γ(0,t_1)-c^(1)_β,γ(t_1,T) )
+    
+        =   ∫_0^Tdt_1c_α(t_1)c^(1)_β,γ(0,t_1)-∫_0^Tdt_1c_α(t_1)(c^(1)_β,γ(0,T)-c^(1)_β,γ(0,t_1))
+    =    2∫_0^Tdt_1c_α(t_1)c^(1)_β,γ(0,t_1)-c^(1)_β,γ(0,T)∫_0^Tdt_1c_α(t_1).
+
+
+We note that this form is identical to the first order case, with c_β(t) replaced by c^(1)_β,γ(0,t). We will now perform the same substitution that we did for first order to convert the integral expression into a summation expression. For simplicity, we restrict our discussion to Hamiltonians involving disorder only. In this case, c^(1)_β,γ does not change over a free evolution period, i.e. looking at c^(1)_β,γ(0,t_a) and c^(1)_β,γ(0,t_b), for t_a,t_b in the same free evolution period, the contribution to the overall term is 0, as the commutator [^β,^γ] will be 0 during this time. Thus we can write the same approximation for this term as in the 1st order term
+
+    A   =∫_0^Tdt_1c_α(t_1)c^(1)_β,γ(0,t_1)
+       =A_free+∑_k=1^n-1P_k,k+1,α,β,γ+∑_k=1^nC^(2)_α,β,γ,k,
+
+where
+
+    C^(2)_α,β,γ,k   =∫_t_k-1+τ_k-1/2^t_k+1-τ_k+1/2c_α(t_1)dt_1∫_t_k-1+τ_k-1/2^t_1c^(1)_β,γ(0,t_2)dt_2,
+    
+        P_k,k+1,α,β,γ   =∫_0^π/2_α,k(θ_1)rdθ_1∫_0^θ_1^(1)_β,γ,k+1(θ_2)rdθ_2-∫_0^π/2_α,k+1(θ_1)rdθ_1∫_θ_1^π/2^(1)_β,γ,k(θ_2)rdθ_2,
+    
+        A_free   =∑_k=1^nC_α,k∑_j=1^k-1C_β,γ,j.
+
+Here C_β,γ,j=C_β,j∑_ℓ=1^j-1C_γ,ℓ, and the angle terms are defined as follows:
+
+    ^(1)_β,γ,k(θ)   =   ∬_0≤θ_1≤θ_2≤θ_β(θ_1)_γ(θ_2)-∬_0≤θ_2≤θ_1≤θ_β(θ_1)_γ(θ_2),
+    ^(1)_β,γ,k(θ)   =    ∬_0≤θ_1≤θ_2≤θ_β(θ_1)_γ(θ_2)-∬_0≤θ_2≤θ_1≤θ_β(θ_1)_γ(θ_2).
+
+We note that this means if the two ramp up functions are proportional, i.e. _γ(θ)=F_γ,ksin(θ), _β(θ)=F_β,ksin(θ), these terms will always be 0. There are also no q-terms as we are restricting to a disorder Hamiltonian. Thus, the only term left is the free evolution term with the frame-lengthening correction.
+
+We can now plug in expressions for the explicit terms in the qubit Hamiltonian to calculate the leading second-order effects. The free evolution period is much like the lower orders
+
+    A_free=∑_k=1^nF_μ,k(τ_k+4/πτ_p)F^ν,ρ_<k,
+
+where F^ν,ρ_<k=∑_l=1^kF_ν,l(τ_l+4/πτ_p)(F^ρ_<l-F^ρ_>l) is the first-order contribution given by ν,ρ through time k. By combining A_free with the rest of the terms, we obtain the expression in Tab. <ref>
+
+    2∑_k=1^n F_μ,k(τ_k+4/πτ_p)F_<k^ν,ρ - F^μF^ν,ρ,
+
+where F^ν,ρ=∑_k=1^nF_ν,k(τ_k+4/πτ_p)F_<k^ρ is the total first-order disorder-disorder term between axes ν and ρ.

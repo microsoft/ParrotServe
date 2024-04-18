@@ -1,0 +1,2000 @@
+
+
+
+
+
+
+ Bogolyubov Institute for Theoretical Physics, 03143 Kyiv, Ukraine
+ Taras Shevchenko National University of Kyiv, 03022 Kyiv, Ukraine
+Frankfurt Institute for Advanced Studies,
+
+60438 Frankfurt am Main, Germany
+
+
+ 12.40.Ee, 12.40.-y
+
+
+
+
+
+A quantum generalization of the Cooper-Fry recipe is proposed. The
+single-particle spectrum arising from relativistic collisions of
+particles and nuclei is calculated within the thermal quantum field
+theory framework. The starting point of consideration is the
+solution of the initial-value problem of particle emission from a
+space-like hypersurface. In the following steps, we obtain the
+single-particle spectrum using the “smaller” Green's function
+associated with the fireball medium. Based on this result, several
+specific examples of particle emission are considered.
+
+
+
+Single-Particle Spectra in Relativistic Heavy-Ion Collisions
+Within the Thermal Quantum Field Theory
+    D. Anchishkin
+    
+====================================================================================================
+
+
+
+
+
+§ INTRODUCTION
+
+
+
+Models and approaches that are used to describe the processes occurring
+in the reaction region during relativistic nucleus collisions are
+investigated by comparing the predictions made with experimental data
+on one-, two-, and many-particle momentum spectra, which contain information
+about the source at an early stage (photons, dileptons) and at the stage
+of the so-called freeze-out (hadron spectra).
+The freeze-out hypersurface Σ is a kind of spatial surface moving in time,
+which is an imaginary boundary between two regions: there is strong dynamics
+inside the surface, and outside the surface, particles freely propagate outward.
+
+Wave function at the freeze-out times can be considered as the initial one for its
+further history, and, since its further evolution is free, it can be easily
+taken into account (we do not discuss final state interactions so far).
+Intuitively, free evolution can be reversed, making it possible that the cross
+section and other measurable physical quantities are determined through the
+initial values of the wave function,
+i.e. the values of the wave function at the times of freezing.
+Rigorous evaluations give exactly this result.
+On the other hand, the strong dynamics acting inside a freeze-out
+hyper-surface leads to the creation of a certain quantum state at freeze-out times.
+Consequently, the wave function at the freeze-out times is the final state of
+strong dynamics.
+By representing experimentally measured quantities with the
+help of these states, we can study strong interactions in dense and
+hot nuclear matter.
+Because of this creativity, the separation of the scales of interaction in space
+and time, which is carried out using the freeze-out hypersurface, looks
+very attractive.
+
+
+In this article, we consider the emission of hadrons from a space-like
+hypersurface, which is related to the initial-value problem.
+The particles are emitted by the donor system (fireball), which exhibits
+sharp kinetic freezing: space-like and time-like hypersurfaces separate the
+excited (interacting) particle system from its noninteracting stage in the
+evolutionary process.
+
+
+
+
+
+§ NOTION OF FREEZE-OUT HYPERSURFACE
+
+
+
+
+
+
+An important question that can be clarified by studying the reaction zone
+is how the space-time boundary of the fireball is
+related to the so-called sharp freeze-out hypersurface.
+(A discussion of various approaches to the design and use of freeze-out hypersurface
+can be found in
+<cit.>.)
+
+Usually, the sharp freeze-out hypersurface is defined by the parameter
+P(t, r) taking the critical value P_ c on the hypersurface.
+
+
+That is, the equation of the hypersurface has a form
+
+
+    P(t, r) =  P_ c .
+
+
+The parameter to for defining the hypersurface can be selected as:
+
+
+1) The density of particles <cit.>:   n(t, r)  =  n_ c ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+2) The energy density <cit.>:   ϵ(t, r)  = ϵ_ c ;
+
+
+
+
+
+
+
+
+
+
+
+
+3)  The temperature <cit.>:   T(t, r)  =  T_ c .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+It should be noted that any definition of sharp freeze-out is possible precisely
+with the selected accuracy.
+
+Let us list the basic notions of the relativistic kinetic theory <cit.>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Invariant particle number density:
+
+    
+    n(x) = N^μ (x)   u_μ (x)  ,
+
+
+where N^μ(x) = ∫ (d^3 p/p^0)  p^μ  f(x,p) =
+(n_ lab, n_ lab v__ E) is the particle four-flow
+with f(x,p) as the distribution function,
+and
+u^μ(x) = N^μ/(N^ν N_ν)^1/2
+= (γ__ E, γ__ E v__ E)
+is the collective four-velocity (the Eckart definition).
+
+Invariant particle energy density:
+
+    
+    ϵ(x) = u_μ (x)  T^μν (x)  u_ν (x)  ,
+
+
+where T^μν(x) = ∫ (d^3 p/p^0) p^μ p^ν f(x,p) is the
+energy-momentum tensor.
+
+With the help of relativistic transport model, the last two equations
+(<ref>) and (<ref>) were used to determine the freeze-out
+hypersurface for pions <cit.>.
+In Fig. <ref> these freeze-out hypersurfaces, together with the
+corresponding projections on three planes, can be seen for different collision energies.
+The critical value was taken as n_ c = 0.08 fm^-3 for the particle density
+and ε_ c = 0.035 GeV/fm^3 for the energy density.
+The freeze-out hypersurfaces in the figures are represented in
+quasi-four-dimensional form, the compactification of spatial transverse coordinates
+is made in the form (x,y) → r = √(x^2+y^2).
+Then the coordinates of the four-dimensional surfaces are (t, r, z), note the
+coordinate r is reflected symmetrically to negative values.
+
+
+
+
+
+From comparing each pair of plots for the same energy, we can see that
+there is no difference in determining the freeze-out hypersurface based
+on particle density or based on energy density.
+
+
+
+
+This can be considered as a statement that for the pion particle density
+
+n = n_ c = 0.035 GeV/fm^3 or the pion energy density
+ε = ε_ c = 0.035 GeV/fm^3
+the behavior of a pion system is very close to an ideal gas
+(for details see <cit.>).
+
+
+
+
+
+
+
+
+§ RADIATION OF QUANTUM FIELDS FROM SPACE-LIKE HYPERSURFACE: THE CAUCHY PROBLEM
+
+
+
+
+
+
+The space-like  hypersurface, together with the time-like hypersurface,
+determines the boundary
+of the four-dimensional volume occupied by a many-particle system.
+Kinetic freeze-out that occurs from a space-like hypersurface (any tangent to
+this surface lies outside the light cone) can be treated as an initial-value
+problem for the radiation of particles from a fireball.
+
+In the present approach,  we first use a simplified shape of the
+freeze-out hypersurface.
+The space-like part of the total hypersurface will simply be a surface
+of constant time t=t_0.
+It should be noted that such a condition is a standard approach that is commonly
+used in mathematical physics.
+On the other hand, we do not lose generality, because the results obtained for an
+equal-time hypersurface can be converted to results for a space-like hypersurface
+of a given shape, as we will show later.
+An example of an equal-time hypersurface for a spherically symmetric expansion of
+a fireball is shown in Fig. <ref>, on left panel.
+One more way is shown, how a complete freeze-out hypersurface, which also includes a
+time-like part, can be reduced to an equal-time space-like hypersurface
+even in the general case (see the right panel).
+
+
+
+
+So, our goal is to solve the initial-value problem for the propagation of free
+particles to the detector when they are “emitted from the space-like hypersurface”.
+In fact, we would like to reproduce and generalize the Cooper-Frye formula
+<cit.> for the emission of particles from a finite
+space-time volume.
+
+
+After freeze-out, the particles propagate without interaction (this is the
+freeze-out condition).
+This system of “traveling” free particles is described by the field operator
+φ̂ (x), which satisfies the Klein-Gordon equation
+
+
+    (∂_μ∂^μ  +  m^2)  φ̂ (x)  =  0  ,
+
+
+where ∂_μ∂^μ =∂_t^2-∇⃗^2.
+The Cauchy problem or the initial conditions for this equation are specified
+on a space-like hyper-surface.
+Without loss of generality, for simplicity, this hypersurface has the form
+x^0 = t_0 = const (see Fig. <ref>)
+
+
+    φ̂ (x^0, x)|_x^0=t_0  = Φ̂_0( x)   ,      ∂φ̂(x^0, x)/∂ x^0|_x^0=t_0 
+    = Φ̂_1( x)  .
+
+
+As it is shown in the textbook <cit.>, equation (<ref>) together
+with the initial conditions (<ref>) can be written  as an
+inhomogeneous differential equation (for details see <cit.>)
+
+
+    (∂_μ∂^μ  +m^2)  φ̂(x) 
+    = δ(x^0-t_0)Φ̂_1( x) 
+     + δ'(x^0-t_0)Φ̂_0( x)  ,
+
+
+where using the δ'(t)  function is well known:
+∫ dt F(t)δ'(t)=-∫ dt dF(t)/dtδ(t).
+This equation can be solved with the help of the retarded Green's
+function of the Klein-Gordon equation (see, for example, <cit.>
+or <cit.>)
+
+
+    (∂_μ∂^μ + m^2)G_R(x-y)  = δ ^4(x-y)  ,
+
+
+where
+
+
+    G_R(x-y)    =    -∫d^4k/(2π )^4  e^- ik· (x-y)/(k_0 + iδ)^2- k^2 - m^2
+       =    i θ( x^0-y^0 ) ∫d^3k/(2π )^3 2ω ( k) [    f_ k(x)  f^*_ k(y)- f^*_ k(x)  f_ k(y) ]
+
+
+with f_ k(x)=e^- i ω ( k)x^0+i  k· x
+and ω( k) = √(m^2+ k^2).
+Hence, for the field operator, φ̂(x), from (<ref>)
+one obtains
+
+
+    φ̂(x)
+       =   ∫ d^4y   G_R(x-y) [ δ(y^0-t_0)Φ̂_1( y)
+     + δ'(y^0-t_0)Φ̂_0( y) ]
+    
+       =   ∫ d^4y  δ(y^0-t_0)  [ G_R(x-y)   ↔∂/∂ y^0Φ̂(y^0, y) ]  ,
+
+
+where we update notations of the initial conditions in the following
+way: Φ̂_0( y) = Φ̂(y^0, y)|_y^0=t_0
+and
+Φ̂_1( y) = ∂Φ̂(y^0, y)/∂ y^0
+|_y^0=t_0.
+Indeed, we associate the field Φ̂(y^0, y) with the
+interacting system which exists before freeze-out, i.e. at the times
+which are less then that on the hyper-surface, which represents the
+initial conditions.
+In particular case of the flat hyper-surface, y^0 = t_0, the field
+Φ̂(y^0, y) exists at times y^0 < t_0.
+Hence, this field and its derivatives determine the initial
+conditions for particles emitted from the freeze-out hyper-surface
+which we described by the field φ̂(x).
+
+We note, for the arbitrary space-like hyper-surface, σ(y), solution
+(<ref>) looks like <cit.>
+
+
+    φ̂(x)  = ∫_σ dσ^μ(y) [ G_R(x-y) ↔∂/∂ y^μΦ̂(y) ] .
+
+
+
+
+
+
+On the other hand, in the free space
+for the system without interaction solution of the Klein-Gordon equation
+(<ref>) can be written as expansion over eigne functions of the operator of
+momentum with the infinite boundary conditions, that coincides with expansion
+in the Fourier integral
+
+
+    φ̂ (x^0, x)    =   ∫d^3k/(2π)^3  2ω_k [b( k) 
+    e^-iω_k t+i k· x 
+    +  b^+( k)    e^iω_k t-i k· x]
+    
+       =   ∫d^4k/(2π)^4  2πδ( k^2-m^2)  e^-ik· x  b( k) ,
+
+
+where ω_k=√(m^2+ k^2),   b( k) and
+b^+( k) are the annihilation and creation operators which
+satisfy the following commutation relation
+
+
+    [b( k), b^+( p)]  =  (2π)^3   2ω_k  δ^3( k- p) .
+
+
+For the real field, which we consider, these operators should obey
+equality
+
+
+    b(- k) = b^+( k)    ⇒  φ̂^+ ( x) = φ̂ ( x)  .
+
+
+We assume that the detector measures asymptotic momentum eigenstates,
+i.e. that it acts by projecting the emitted single-particle state onto
+
+
+    ϕ^ out_ k( x,t)  =  e^ -i ω_k t+i  k· x ≡  f_ k(x)  ,
+
+
+where ω_k=ω( k)=√(m^2+ k^2) is the energy of the
+particle and we label out-state by the value of measured momentum, i.e. k.
+Evidently, these functions are the solutions of eq.(<ref>).
+So, we defined the set of the basic functions (asymptotic states)
+
+
+    f_ k(x) ≡  e^- i k· x | _k^0=ω ( k)  ,
+
+
+which are orthogonal with respect to the scalar product
+
+
+    ∫ d^3x  f^*_ k(x)   i ↔∂_x^0  f_ p(x) 
+    =  (2π )^3  2ω ( k) δ ^3( k- p) ,   ∫ d^3x  f_ k(x)  i ↔∂_x^0 f_ p(x) = 0 .
+
+
+In fact, the expansion (<ref>) is made in terms of the asymptotic states (<ref>).
+Then, if the field operator, φ̂(x), is known the annihilation
+and creation operators can be evaluated
+
+
+    b( k)  = ∫ d^3x  f^*_ k(x)   i ↔∂_x^0φ̂(x) ,   
+    b^+( k)  =  - ∫ d^3x  f_ k(x)  i ↔∂_x^0φ̂^+(x)  .
+
+
+
+The goal of our investigation is a calculation of the single- and
+two-particle spectra which can be written with the help of
+annihilation and creation operators in the following way
+(see, for instance, <cit.>)
+
+
+    P_1( p) = ⟨  b^+( p)  b( p)  ⟩  ,
+      
+    P_2( p_1, p_2) = ⟨ 
+    b^+( p_1)  b^+( p_2)  b( p_2)  b( p_1)  ⟩ ,
+
+
+where averaging is taking with respect to the states of the donor
+system described by the field Φ̂(x).
+That is why we are interesting in exact expressions of the creation
+b^+( k) and annihilation b( k) operators at asymptotic
+times, t →∞.
+Inserting solution (<ref>) into (<ref>) one obtains
+
+
+    b( k)    =   lim_x^0 →∞ ∫ d^3x  d^4y δ(y^0-t_0) f^*_ k(x) 
+    i ↔∂/∂ x^0[ G_R(x-y) ↔∂/∂ y^0Φ̂(y) ]
+    
+       =   ∫ d^4y δ(y^0-t_0)[ f^*_ k(y)
+    i ↔∂/∂ y^0Φ̂(y) ] ,
+
+
+and
+
+
+    b^+( k)    =   lim_x^0 →∞ - ∫ d^3x   d^4y  δ(y^0-t_0)  
+    f_ k(x) i ↔∂/∂ x^0[ G_R(x-y) ↔∂/∂ y^0Φ̂^+(y) ]
+    
+       =    -∫ d^4y  δ(y^0-t_0) [ f_ k(y)
+    i ↔∂/∂ y^0Φ̂^+(y) ],
+
+
+where we use representation of the Green's function (<ref>) and
+the orthogonal relations (<ref>).
+It is seen that the projection of the donor field Φ̂(y) is
+taken at the times of the freeze-out and all evolution history of the
+free propagation (after freeze-out) is ridded out.
+
+Actually, integration over measure d^4y  δ(y^0-t_0) in
+(<ref>) and (<ref>) is nothing more as integration over
+the flat space-like hyper-surface, y^0=t_0.
+For the arbitrary space-like hyper-surface, σ(x), the
+annihilation and creation operators expressed through the field
+operator Φ̂(x) look like
+
+
+    b( k)  =  i ∫_σ dσ^μ(x) [ f^*_ k(x) ↔∂/∂ x^μ Φ̂(x) ]   ,
+       b^+( k)  =  - i ∫_σ dσ^μ(x)  [ f_ k(x) ↔∂/∂ x^μ Φ̂^+(x) ]  .
+
+
+
+
+
+
+
+
+§ SINGLE-PARTICLE SPECTRUM
+
+
+
+With creation and annihilation operators in hand we come to the
+evaluation of the single-particle spectrum.
+We write
+
+
+    2E_p d N/d^3p= ⟨  b^+( p)   b( p) ⟩  ,
+
+
+where E_p=ω_p=√(m^2+ p^2).
+Next, introducing here creation b^+( k) and annihilation b( k)
+operators from (<ref>) and (<ref>) one gets
+
+
+    2E_p d N/d^3p   =   ∫ d^4x_1  d^4x_2  δ(x_1^0-t_0)  δ(x_2^0-t_0)
+    ⟨[
+    f_ p(x_1) ↔∂/∂ x_1^0Φ̂^+ (x_1) ] [  f^*_ p(x_2)
+    ↔∂/∂ x_2^0Φ̂ (x_2) ] ⟩
+       =   ∫ d^4x_1  d^4x_2 δ(x_1^0-t_0) δ(x_2^0-t_0)
+    ⟨[
+    f_ p(x_1) ∂/∂ x_1^0Φ̂^+ (x_1)
+    - (∂/∂ x_1^0 f_ p(x_1)) Φ̂^+ (x_1)]
+    
+          ×[  
+        f^*_ p(x_2) ∂/∂ x_2^0 Φ̂ (x_2)
+    - ( ∂/∂ x_2^0  f^*_ p(x_2)) Φ̂ (x_2)
+    ] ⟩ .
+
+
+All this can be written in a compact form
+
+
+    2E_p d N/d^3p = ∫ d^4x_1   d^4x_2  δ(x_1^0-t_0)  δ(x_2^0-t_0)  [   f_ p(x_1)   f^*_ p(x_2)  ↔∂/∂ x_1^0↔∂/∂ x_2^0⟨Φ̂^+ (x_1)   Φ̂ (x_2) ⟩]  .
+
+
+
+One immediately recognize that angle brackets on the r.h.s. of this
+equation give us the correlation function or the lesser Green's function
+<cit.>
+
+
+    i  G^<(x_2,x_1)  = ± ⟨Φ̂^+(x_1) Φ̂(x_2)
+    ⟩ ,
+
+
+where the plus sign reads for bosons and the minus sign for fermions (see Appendix).
+As an example, in what follows  we consider the Bose statistics.
+
+
+Hence, for the single-particle spectrum, we obtain the following basic expression
+
+
+    2E_p d N/d^3p  =  i ∫ d^4x_1  d^4x_2 δ(x_1^0-t_0) δ(x_2^0-t_0) [   f_ p(x_1)   f^*_ p(x_2)  ↔∂/∂ x_1^0↔∂/∂ x_2^0  G^<(x_2,x_1) ]  .
+
+
+As seen from (<ref>) in covariant form the single-particle spectrum looks like
+
+
+    2E_p d N/d^3p  =  i ∫ dσ^μ(x_1)  dσ^ν(x_2) [  f_ p(x_1)  f^*_ p(x_2) ↔∂/∂ x_1^μ↔∂/∂ x_2^ν  G^<(x_2,x_1) ]  .
+
+
+The formula (<ref>) (and (<ref>)) forms the basis for further
+approximations that take into account the special properties of the system
+emitting particles.
+
+
+
+
+
+ §.§ A note on the description of fermionic radiation
+
+
+Let us assume that polarization effects are not taken into account when
+registering fermionic particles.
+In this case, all polarized states are summed, and the description of the
+free state of the propagating particle does not require the details of the
+fermionic spin state.
+Therefore, for such an experiment, it is quite satisfactory to describe
+freely propagating fermions as solutions of the Klein-Gordon equation.
+
+
+Indeed, let us consider freeze-out of the fermionic system.
+After freeze-out the fermions are described by the field
+operator ψ̂(x), which satisfies the free Dirac equation
+
+
+    (iγ^μ∂_μ -  m)  ψ̂(x)  =  0  ,
+
+
+where ψ̂ is the four-spinor (four-component column vector), and the
+γ-matrices satisfy the anticommutation relations
+{γ^μ, γ^ν} = 2g^μν with g^μν as the
+metric tensor, sign(g^μν) = (1,-1,-1,-1).
+In eq. (<ref>) the “Dirac” operator can be acted on
+from the left by the adjoint operator (iγ^ν∂_ν + m).
+Using the anticommutation relations of the γ-matrices, we obtain that
+each component of ψ̂(x) must satisfy the Klein-Gordon equation
+(<ref>), i.e., (∂_μ∂^μ + m^2)  ψ̂(x) = 0.
+
+
+So, we can conclude that if the experimental registration of fermions does not
+fix the polarization of particles, then we can use the solutions of the
+Klein-Gordon equation to describe the free propagation of fermions and use
+the quantum generalization of the kinetic approach proposed in the present paper
+to describe fermion radiation.
+
+
+
+
+
+
+
+
+
+ §.§ Single-particle spectrum from homogeneous system
+
+
+
+For a homogeneous system the correlation function can be expanded in the
+Fourier integral only with respect to a difference of coordinates
+
+
+    G^<(x_2,x_1)  =  G^<(x_2-x_1)  = ∫d^4k/(2π)^4 
+    e^-ik· (x_2-x_1)   G^<(k^0, k)  .
+
+
+ 
+ 
+Substituting then the Green's function in this form into (<ref>)
+we obtain
+
+
+    2E_p d N/d^3p   =   ∫d^4k/(2π)^4  d^3x_1   d^3x_2  
+    iG^<(k^0, k)  e^i( p- k)· ( x_1- x_2) ×
+          × ∫ dx_1^0   dx_2^0  δ(x_1^0-t_0)  δ(x_2^0-t_0)  [  e^-ip^0 (x_1^0-x_2^0)  ↔∂/∂ x_1^0↔∂/∂ x_2^0 
+     e^ik^0 (x_1^0-x_2^0)] ,
+
+
+where p^0=ω_p.
+For two arbitrary functions we have
+
+
+    f(t_1,t_2)   ↔∂/∂ t_1↔∂/∂ t_2  g(t_1,t_2)
+    =
+     f ↔∂_t_1∂ g/∂ t_2
+     -
+     ∂ f/∂ t_2 ↔∂_t_1 g
+    =
+     f ∂ ^2 g/∂ t_1  ∂ t_2
+     -
+     ∂ f/∂ t_1 ∂ g/∂ t_2
+     -
+     ∂ f/∂ t_2 ∂ g/∂ t_1
+     +
+     ∂ ^2 f/∂ t_1  ∂ t_2  g
+      .
+
+
+Then, expression in square brackets in the last line in (<ref>)
+can be easily calculated and one can rewrite (<ref>) in the following way
+
+
+    2E_p d N/d^3p   =   ∫d^4k/(2π)^4 d^3x_1  d^3x_2 
+    iG^<(k^0, k)  e^i( p- k)· ( x_1- x_2)( p^0+k^0 )^2
+    
+          × ∫ dx_1^0  dx_2^0 δ(x_1^0-t_0) δ(x_2^0-t_0) 
+    e^-i(p^0-k^0)(x_1^0-x_2^0) ,
+
+
+what finally gives
+
+
+    2E_p d N/d^3p  = ∫d^4k/(2π)^4  i G^<(k^0, k) ∫ d^3x_1  d^3x_2 
+    e^i( p- k)· ( x_1- x_2)( E_p + k^0 )^2  .
+
+
+
+
+
+
+Expansion (<ref>) assumes that the donor many-particle system is big enough
+to neglect the surface effects.
+On the other hand, following the common point of view
+<cit.> we
+assume that the Green's function significantly different from zero only when the
+differences of arguments, x_1- x_2, are close to zero.
+Hence, the integrations on the r.h.s. of (<ref>) with respect to
+the spatial coordinates x= x_1- x_2 can be done with
+infinite limits, then, it gives the δ-function:
+(2π)^3δ^3( p- k).
+
+Thus, the single-particle spectrum in a homogeneous system in the rest
+frame of the fireball reads
+
+
+    2E_p d N/d^3p  =  V ∫dω/2π ( E_p + ω)^2  i G^<(ω, p)  ,
+
+
+where V =∫ d^3X with X=( x_1+ x_2 )/2 as the 3D-volume of
+the element from which particles are emitted.
+
+
+
+
+
+
+
+
+To represent the single-particle spectrum (<ref>) in covariant form,
+
+insert (<ref>) into (<ref>) and get
+
+
+    2E_p d N/d^3p  = ∫d^4k/(2π)^4   iG^<(k)
+    ∫ dσ^μ(x_1)  dσ^ν(x_2) [  f_ p(x_1)  f^*_ p(x_2) ↔∂/∂ x_1^μ↔∂/∂ x_2^ν
+     e^-ik· (x_2-x_1) ]  .
+
+
+Calculating the derivatives on the right-hand side of this equation,
+we find that the single-particle spectrum of particles emitted by a
+homogeneous system in covariant form is written as
+
+
+    2E_p d N/d^3p=      ∫d^4k/(2π)^4  (p+k)_μ (p+k)_ν  iG^<(k)
+    ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+    
+    =      ∫d^4k/(2π)^4  iG^<(k)
+    | ∫_σ dσ^μ(x)    (p+k)_μ e^-i(p-k)· x |^2  ,
+
+
+where p^0 = E_p = √(m^2 +  p^2).
+
+
+
+
+
+
+ §.§  Single-particle spectrum from homogeneous system in
+thermodynamic equilibrium 
+
+
+
+If the system possesses a global thermodynamic equilibrium, which is
+an attribute of the homogeneous system under consideration, the
+correlation function G^<(k) can be expressed (see
+<cit.>, in particular in
+Ref. <cit.>, eq.(2.19)) with the help of the
+spectral function and the equilibrium distribution function
+
+
+
+    i  G^<(k)  = θ(k_0)  A(k)  f(k^0)  
+    - θ(-k_0)  A(k) f(-k^0)
+
+
+with
+
+
+    f(k^0)  = 1/e^ (k^0-μ)/T + a ,
+
+
+where a = - 1 for the Bose statistics, a = 1 for the Fermi statistics and
+a = 0 for the classical Boltzmann gas.
+
+To be specific, we consider the Bose statistics below and therefore take
+the Bose-Einstein distribution function, that is, a = - 1 in (<ref>).
+
+
+If the emitted 3D-area is an element of the freeze-out hyper-surface,
+one can assume an absence of interaction on this surface.
+For the system of free particles which are in thermal equilibrium
+
+(ideal gas) the spectral function expresses
+that all particles are on the mass shell.
+ 
+Hence, the spectral function of the free fields can be found as
+<cit.>
+
+
+    A_0(k)  =  2π δ(k^2-m^2)  [ θ(k^0)-θ(-k^0) ]  ,
+
+
+and satisfies the sum-rule <cit.>
+
+
+    ∫dk^0/2π  k^0  A(k^0, k) = 1  .
+
+
+Using (<ref>), we can write the representation of the Green's function
+G^<(k) given in eq. (<ref>) as follows
+
+
+    i G^<(k) =
+     π/ω_k δ(k_0-ω_k)  f__ BE (k^0)  
+    - π/ω_k δ(k_0+ω_k)  f__ BE (-k^0)  .
+
+
+For the single-particle spectrum (<ref>) we need the Green's function,
+G^<(k^0, p), where the measured momentum p is put on place of
+the momentum k
+(remind, that is due to an integration with infinite limits of the spatial
+coordinates x= x_1- x_2 in (<ref>))
+
+
+    i G^<(ω, p) =
+     π/E_p δ(ω - E_p)  f__ BE(ω) 
+    - π/E_p δ(ω + E_p)  f__ BE(-ω)  .
+
+
+Inserting this in <ref>) one gets
+
+
+    2E_p d N/d^3p =  V ∫dω/2π ( E_p + ω)^2 π/E_p [ δ(ω - E_p)  f__ BE(ω)  
+    - δ(ω + E_p)  f__ BE(-ω) ]  .
+
+
+Due to the presence of the factor (E_p + ω_p)^2 under the integral in
+(<ref>), the second term in square brackets does not contribute at all,
+because  ω = - E_p due to the delta-function.
+
+This means that antiparticles do not contribute to the particle spectrum.
+Then the single-particle spectrum in the fireball rest frame in the case of
+global thermodynamic equilibrium has the form
+
+
+    d N/d^3p =  V   f__ BE(E_p)  ,
+
+
+where V is the spatial volume of the system from which the particles are
+emitted, and the system of bosons is taken as an example.
+
+
+
+
+
+
+ §.§ The local thermodynamic equilibrium
+
+
+
+We can go further.
+In general case the Fourier expansion of the Green's function looks like
+
+
+
+    G^<(x_2,x_1)  = ∫d^4k/(2π)^4  e^-ik· x   G^<(X;k)  ,
+
+
+where we have made the following transformation of coordinates:
+x = x_1 - x_2 and X = (x_1 + x_2)/2.
+
+Inserting this representation of the Green's function into basic
+eq. (<ref>) and then calculating the derivatives on the right-hand
+side of this equation, we obtain
+
+
+    2E_p d N/d^3p = i ∫d^4k/(2π)^4
+    d^4X d^4x δ(X^0-t_0) δ(x^0) e^-i(p-k) · x
+    
+    [( p^0+k^0 )^2 G^<(X;k)
+    + ∂^2 G^<(X;k)/4 ∂ X_0^2]  ,
+
+
+where p^0 = E_p = √(m^2 +  p^2) and we  used identity
+
+    dX^0  dx^0 δ(X^0+x^0/2-t_0) δ(X^0-x^0/2-t_0)  
+    =  dX^0   dx^0 δ(X^0-t_0) δ(x^0)  .
+
+In fact, eq. (<ref>) is a generalization of equation
+(<ref>), which was derived for a completely homogeneous system.
+
+
+We can write also a generalization of the formula (<ref>) for
+the single-particle spectrum of particles emitted by the
+system from a space-like freeze-out hypersurface in covariant form
+
+
+    2E_p d N/d^3p=      
+    i ∫d^4k/(2π)^4 ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+          ×[(p+k)_μ (p+k)_ν  G^<(X;k)
+    + 1/4∂^2 G^<(X;k)/∂ X_μ∂ X^ν]   ,
+
+
+where p^0 = E_p and X = (x_1 + x_2)/2.
+Here we returned  to the variables of integration (x_1,x_2) and used the
+transition d^4x_1 δ(x_1^0-t_0) p^0 = dσ^μ(x_1) p_μ
+and the same for the x_2  coordinate.
+
+
+
+If the Green's function G^<(X;k) weakly depends on the
+sum of arguments, X, it can be represented in
+the form <cit.>
+
+
+    i  G^<(X; k)  = θ(k_0)  A(X; k)  f(X;k)
+     - θ(-k_0)  A(X; k) [ f(X;-k) + 1 ]   ,
+
+
+where A(X;k) is the spectral function and f(X;k) is the
+distribution function, which in the kinetic approach is defined as
+
+
+    θ(k_0)  A(X;k)  f(X;k)  = θ(k_0)  i  G^<(X;k)  .
+
+
+The unit in the square brackets on the r.h.s. of (<ref>) is due
+to the tadpole contributions and can be rid out upon subtracting of
+the vacuum values as in the case of the vacuum quantum field theory.
+Hence, we will skip it in the future.
+
+To take into account the local equilibrium of the radiating system, we use
+eq. (<ref>) with several approximations.
+Indeed, in the kinetic approach, the second derivatives of the distribution
+function are usually neglected due to the weak dependence on the
+coordinates X = (x_1 + x_2)/2.
+Therefore, we neglect the second derivative of the Green's function on the
+right-hand side of (<ref>) and write
+
+
+    2E_p d N/d^3p = i ∫d^4k/(2π)^4  d^4X  δ(X^0-t_0) 
+    (2π)^3 Δ(p-k) ( E_p+k^0 )^2   G^<(X;k)  .
+
+
+Here
+
+
+    (2π)^3  Δ(p - k)  =  ∫ d^4x  δ(x^0)   e^-i(p-k) · x ,
+
+
+is a kind of form factor that reflects the finiteness of the spatial volume of
+the system.
+As was argued before, we assume that the correlation function G^<(X,x) significantly
+different from zero only when the differences of arguments, x_1- x_2,
+are close to zero.
+Therefore, the integrations in (<ref>) can be done with infinite limits, then,
+Δ( p -  k) →δ^3( p- k).
+
+
+Further, as before, we assume that on the  freeze-out hypersurface
+G^<(X;k) ≈ G_0^<(X;k).
+Taking into account (<ref>) and (<ref>) only for particles
+(as we have seen, antiparticles do not contribute) in a system with a slowly varying
+inhomogeneity, the Green's function has the form
+
+
+    i G^<_0(X;k^0, k)  = π/ω_k δ(k^0 - ω_k) 
+    f__ BE(X;k^0)  ,
+         where    ω_k = √(m^2 +  k^2) .
+
+
+Then, by inserting (<ref>) into eq. (<ref>), one can obtain a
+formula for calculating the single-particle spectrum in the fireball rest frame
+when the radiating system has a weak inhomogeneity
+
+
+    2 E_p d N/d^3p   =   ∫d^4k/(2π)^4  d^4X  δ(X^0-t_0) 
+    (2π)^3 δ^3( k -  p)
+    ( E_p + k^0 )^2  π/ω_k δ(k^0 - ω_k) 
+    f__ BE(X;k^0)
+    
+       =   ∫ d^4X δ(X^0-t_0)  2 E_p  f__ BE(X;E_p) .
+
+
+Obviously, the formula for spectrum (<ref>) in a homogeneous system
+(without dependence on X) reduces to (<ref>).
+The right-hand side of eq. (<ref>) can be rewritten in covariant notations
+
+
+
+    d^4x δ(x^0-t_0) p^0  = (d^3x p^0 - dtdydz p^x - dtdxdz p^y - dtdxdy p^z)
+    |_t = t_0 =  const ,
+
+
+where we keep in mind that for the equal-time initial conditions it is valid
+dt = dX^0 = 0.
+So we get
+
+
+    d^4X δ(X^0-t_0) p^0  =  dσ_μ(X) p^μ .
+
+
+By inserting this into eq. (<ref>), we rewrite it in covariant
+notations as
+
+
+    E_p d N/d^3p  = ∫ dσ_μ(X) p^μ  f__ BE(X;p· u) ,
+
+
+where the particles are on the mass shell p^0=E_p=√(m^2+ p^2),
+and u(X) is the four-velocity at the point X = (X^0,  X) given on a
+space-like hypersurface, on which the initial conditions are now taken into account.
+(Remind, to be specific the boson system is considered.)
+
+
+So, for the particle spectrum we obtain covariant expression (<ref>)
+which is valid in any frame.
+This expression coincides with the Cooper-Frye formula
+<cit.>.
+To obtain it we assume the following:
+
+
+(1) The many-particle system possess a weak spatially inhomogeneity and
+a stationarity of the system is weakly broken.
+Due to that reason in the basic equation (<ref>)
+
+we have neglected the second derivative of the Green's function
+G^<(X;x) with respect to the “center of mass” coordinate X = (x_1 + x_2)/2.
+
+
+
+(2) The many-particle system is at least in the local thermodynamic equilibrium
+what is reflected in the dependencies T(X), μ(X) and u(X).
+
+
+
+(3) To obtain eq. (<ref>) and then eq. (<ref>), we assumed
+that the particles are free on the freeze-out hypersurface, which leads to
+the approximation G^<(X;k) ≈ G_0^<(X;k).
+
+
+(4) We have assumed that the correlation function G^<(x_1,x_2) differs
+significantly from zero only if the differences of the arguments
+x_1- x_2 are close to zero.
+Therefore, integrations in (<ref>) can be performed with infinite limits.
+
+In fact, this is not the case for a system close to a second-order phase
+transition, when the correlation length becomes large enough.
+
+
+Meanwhile, the covariant formula that takes into account all quantum effects is
+still (<ref>).
+Even if we take into account approximations (1), (2) and (3)
+and therefore use the Green's function in the form
+
+
+    i  G^<(X; k)  ≈  i G_0^<(X;k)  
+    = θ(k_0)   2π δ(k^2-m^2)  f(X;k)  ,
+
+
+we come to
+
+
+    2E_p d N/d^3p=      ∫d^4k/(2π)^4 ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+          ×  (p+k)_μ (p+k)_ν θ(k_0)   2π δ(k^2-m^2)  f(X;k) .
+
+
+After some simplification, we obtain
+
+
+    2E_p d N/d^3p 
+    = ∫d^3k/(2π)^3 2ω_k ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+    (p+k)_μ (p+k)_ν  f(X;k) ,
+
+
+where p^0 = √(m^2 +  p^2) and k^0 = ω_k = √(m^2 +  k^2).
+Reduction of (<ref>) to the Cooper-Frye formula (<ref>) is
+possible if we can integrate with respect to x =  x_1 -  x_2 on
+the right-hand side of eq. (<ref>).
+This integration will immediately result in delta function
+δ^3( p -  k), which helps to convert the integrand to the same form
+as in eq. (<ref>).
+However, this cannot be done for an arbitrary freeze-out hypersurface.
+Thus, we can argue that eq. (<ref>) is a generalization of the
+Cooper-Frye formula (<ref>), which takes into account quantum effects.
+Indeed, one can rewrite eq. (<ref>) as
+
+
+    2E_p d N/d^3p 
+    = ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  J_μν(x_1 - x_2,  p) ,
+
+
+were we define the tensor J_μν
+
+
+    J_μν(x_1 - x_2,  p)  =  e^-i p· (x_1-x_2)∫d^3k/(2π)^3 2ω_k 
+    e^i k· (x_1-x_2) (p + k)_μ (p + k)_ν  f(X;k) .
+
+
+As one can see, the integral in (<ref>) includes interference of
+waves with different momenta k, which are projected onto the out-state
+with momentum p.
+There is no such interference in the Cooper-Frye formula (<ref>),
+where k =  p is taken.
+
+
+
+
+
+
+
+ §.§ Single-particle spectrum from spatially inhomogeneous
+but stationary system
+
+
+
+
+
+For the spatially inhomogeneous, but stationary system, the lesser Green's function
+can be represented as G^<(x_2,x_1) = G^<(x_2^0 - x_1^0; r_1, r_2).
+Then, after the Fourier transform with respect to the time variable
+x^0 = x_2^0 - x_1^0
+
+
+    G^<(x_2^0 - x_1^0; r_1, r_2)  = ∫dω/2π 
+    e^- i ω (x_2^0 - x_1^0)  G^<(ω; r_1, r_2)  ,
+
+
+we represent the Fourier transform of the Green's function in the form
+
+
+    iG^<(ω; r_1, r_2)  =  A(ω; r_1, r_2) f__ BE(ω)  ,
+
+
+where A(ω; r_1, r_2) is the following spectral function
+
+
+    A(ω; r_1, r_2)  = ∑_k φ_k( r_1) φ_k^*( r_2) π/ϵ_kδ(ω - ϵ_k)  .
+
+
+Here {φ_k( r)} is the orthogonal and complete set of functions
+describing the spatial distribution of particles in a fireball.
+
+Let us check the reduction to the homogeneous case.
+When particles on the freeze-out hypersurface are free, their wave
+functions will be plane waves
+φ_k( r) → (1/√(V))exp(i  k · r) and
+hence ϵ_k → E_k = √(m^2 +  k^2).
+By inserting this into eq. (<ref>) one gets
+
+
+    A(ω; r_1, r_2)  = ∫d^3k/(2π)^3 
+    e^i  k · ( r_1 -  r_2) π/E_k δ(ω - E_k)  .
+
+
+Making the Fourier transform with respect to the relative coordinate
+r =  r_1 -  r_2 we come to the spectral function
+
+
+    A(ω, p)  = ∫d^3k/(2π)^3  d^3 r  
+    e^-i ( p -  k) · r π/E_k δ(ω - E_k)
+    
+    
+    = π/E_p δ(ω - E_p)  .
+
+
+That is, in the case of a homogeneous system in thermal equilibrium, we arrive
+at the same free spectral function as in (<ref>).
+
+
+To calculate the spectrum of particles we use the basic eq. (<ref>), where
+we introduced the Green's function in the form (<ref>)
+
+
+and using representation (<ref>) we obtain
+
+
+    2E_p d N/d^3p   =   ∫ d^4x_1   d^4x_2  δ(t_1-t_0)  δ(t_2-t_0)  ∫_-∞^∞ dω/2π A(ω; r_1, r_2)  f__
+    BE(ω) ×
+          × [   f_ p(t_1, r_1)   f^*_ p(t_2, r_2)  ↔∂/∂ t_1↔∂/∂ t_2 
+     e^-iω (t_2-t_1)]  .
+
+
+
+We calculate two-side derivatives (remind,
+f_ p(x) = exp(- i E_p x^0 + i  p · x))
+
+
+    [   e^-iE_p (t_1-t_2) ↔∂/∂ t_1↔∂/∂ t_2 
+     e^-iω (t_2-t_1)] 
+     =  (ω + E_p)^2  e^-i(E_p - ω) (t_1-t_2) .
+
+
+
+Then we put everything together and rewrite (<ref>) as
+
+
+    2E_p d N/d^3p = ∫_-∞^∞ dω/2π f__ BE(ω)  (ω + E_p)^2 ∫ d^3r_1   d^3r_2   e^i p · ( r_1- r_2)
+    A(ω; r_1, r_2)  .
+
+
+Using the spectral function representation (<ref>), we can go further
+
+
+    2E_p d N/d^3p   =   ∫_-∞^∞ dω/2π 
+    f__ BE(ω)  (ω + E_p)^2 ∑_k φ_k(
+    p) φ_k^*( p) π/ϵ_kδ(ω -ϵ_k)
+    
+       =   ∑_k | φ_k( p) |^2 1/2 ϵ_k 
+    (ϵ_k + E_p)^2  f__ BE(ϵ_k) ,
+
+
+where
+
+
+    φ_k( p)  = ∫ d^3r  e^i p · r φ_k( r) .
+
+
+If the quasi-momentum k is assumed to be continuous variable, then the
+single-particle spectrum has the form
+
+
+    2E_p d N/d^3p  =  V ∫d^3k/(2π)^3 | φ_k( p) |^2 1/2 ϵ_k 
+    (ϵ_k + E_p)^2  f__ BE(ϵ_k) .
+
+
+
+For example, for a system in a box V = L^3 with the Dirichlet
+boundary conditions, the functions φ_n( r) satisfy the
+stationary Klein-Gordon equation
+
+
+    ( ϵ_ n^2 - m^2 + ∇^2 ) φ_ n( r)   =  0  .
+
+
+The solutions of this equation normalized to unity have the form
+
+
+    φ_ n( r)   = √(8/V) sin(k_x  x)  sin(k_y  y)  sin(k_z  z)  ,
+
+
+where n = (n_x,n_y,n_z) with n_i = 0, 1, 2, … and
+k = (π/L n_x, π/L n_y, π/L n_z).
+Each quantum state of the system, marked with the symbol n, has a self energy
+ϵ_ n = √(m^2 + (π/L)^2  n^2).
+Then, using the set of wave functions φ_ n( r) and the set of
+self-energies ϵ_ n, one can calculate the spectrum
+(<ref>) or for large volume of the box can use eq. (<ref>).
+
+For greater realism, one can consider a cylinder extended along the z axis,
+or a cylinder with an elliptical cross section to take into account the
+azimuthal dependence of particle radiation.
+
+
+
+
+
+
+
+ §.§ Radiation of particles from a system with a finite lifetime
+
+
+
+
+To reflect the finite lifetime of the system, we can use the parameterization
+of the spectral function in the spirit of the Bright-Wigner distribution
+function since each particle of the system is characterized by the smearing
+of its energy in the same way as resonances.
+It can be done by smearing the delta function in eq. (<ref>)
+
+
+    δ(k_0^2-ω_k^2) →  A_γ(k)  = 1/π mγ/(k_0^2-ω_k^2)^2 + (mγ)^2 ,
+
+
+where γ=1/τ with τ as the lifetime of the donor
+many-particle system.
+Here we use the limit equality
+δ(x) = lim_γ→ 01/πγ/x^2 + γ^2.
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+ 
+Then the spectral function of free fields (<ref>) is transformed
+into a new spectral function A(k), which reflects the finite life time τ
+of the system
+
+
+    A_0(k)  →  A(k)  =  2π   A_γ(k) [θ(k^0)  - θ(-k^0) ]  .
+
+
+Let us check the sum rule (<ref>) for the resulting parametrization
+(<ref>) of the spectral function
+
+
+    ∫_-∞^∞dk^0/2π  k^0  A(k^0, k)
+       =   ∫_0^∞dk^0/π k_0  mγ/(k_0^2-ω_k^2 )^2+(mγ)^2 
+    - ∫_-∞^0 dk^0/π k_0  mγ/(k_0^2-ω_k^2 )^2+(mγ)^2
+       =   
+    2∫_0^∞dk^0/π k_0  mγ/(k_0^2-ω_k^2 )^2+(mγ)^2
+       =   ∫_0^∞ds/π  mγ/(s-ω_k^2 )^2+(mγ)^2 
+    =  0.5 + 1/πarctan( m γ/ω_k^2)
+    ≈ 1  ,
+
+
+
+
+
+where the last approximation is valid if the inequality
+
+
+    mγ ≪ ω_k^2   ,    →  γ ≪  m+ k^2/m .
+
+
+Since the inverse lifetime of the system γ is an average
+value, i.e. we do not separate γ and ⟨γ⟩,
+the inequality (<ref>) can be considered as averaged for a thermal
+many-particle system at a temperature T:
+
+
+    ⟨γ⟩ ≪  m + 2⟨ k^2/2m⟩
+    = m+3T  ,
+
+
+
+where the last equality uses the nonrelativistic relation
+⟨ k^2/2m⟩=3/2 T.
+For example, for the thermal system of pions m_π=140 MeV, which
+is created in collisions of relativistic nuclei, the freeze-out temperature
+T≃ 150 MeV is known.
+
+Therefore, we can make the following estimate of the allowable width γ:
+1/τ = γ ≪  590 MeV.
+With good accuracy (∫dk^0/2π k^0 A(k) ≈ 0.95),
+the lower limit of the lifetime can be taken equal to
+τ_c≃ 2 fm/c (γ_c≃ 100 MeV).
+Then for the total lifetime of the multipion system τ greater than τ_c the
+spectral function (<ref>) satisfies the sum rule (<ref>).
+
+
+
+Following the spirit of the Breit-Wigner distribution function, we only
+use it for positive energies.
+With this in mind, we write the Green's function
+
+
+
+    i G^<(k_0, k)  =  2πθ(k_0)    A_γ(k_0, k)  f__ BE(k_0) .
+
+
+Then the single-particle spectrum (<ref>) can be expressed as
+(note, we introduce into (<ref>) the Green's function in the form
+G^<(k_0, p))
+
+
+    2E_p  d N/d^3p =  V ∫_0^∞ dk^0 ( E_p+k_0 )^2 
+    A_γ(k_0, p)  f__ BE(k_0)  .
+
+
+And, finally, we get the spectrum of particles emitted from the system with
+a finite lifetime, τ = 1/γ,
+
+
+    2E_p  d N/d^3p 
+    =  V ∫_0^∞dk^0/π ( E_p+k_0 )^2  mγ/(k_0^2-E_p^2)^2+(mγ )^2  f__ BE(k^0) .
+
+
+
+
+Let us check the convergence to the previous result.
+When γ→ 0, the integrand in (<ref>) is converted as
+
+
+    2E_p  d N/d^3p   =    V ∫_0^∞ dk^0  ( E_p+k_0 )^2 δ(k_0^2-E_p^2)  f__ BE(k_0)  .
+
+
+That leads to
+
+
+    d N/d^3p =  V   f__ BE(E_p) .
+
+
+This formula coincides with (<ref>), which gives the single-particle
+spectrum in the fireball rest frame in the case of global thermodynamic
+equilibrium.
+
+
+
+
+
+
+
+§ APPLICATIONS
+
+
+
+
+The goal of this section is to compare on the basis of the specific
+examples, the Cooper-Frye formula (<ref>) and a quantum
+generalization of the kinetic approach given in eq. (<ref>).
+
+
+
+
+
+
+ §.§ Constant time hypersurface: Rapidity distribution
+
+
+
+In case, of the constant-time space-like hypersurface, i.e., x_0 =
+t_0 = const on the hypersurface, we have dσ^μ(x) = d^4x
+δ(x_0 - t_0).
+To make the comparison as transparent as possible, we consider the pion
+system in the global thermodynamic equilibrium.
+In this case formula (<ref>) looks like
+
+
+    2E_p d N/d^3p   =   ∫d^3k/(2π)^3 2ω_k 
+    f__ BE(ω_k)
+     | ∫_σ dσ^μ(x)  (p+k)_μ  e^-i(p-k)· x |^2
+     
+    
+    
+    
+       =   ∫d^3k/(2π)^3 2ω_k  f__ BE(ω_k) 
+    (E_p + ω_k)^2
+     | ∫ d^2x_T   e^i( p_T -  k_T)· x_T ∫_0^L_z dz  e^i(p_z - k_z)z |^2   ,
+
+
+where p^0 = E_p =√(m^2 +  p^2) and k^0 = ω_k =
+√(m^2 +  k^2).
+Our goal is to calculate rapidity
+distribution, then let us assume that in the transverse direction, a
+2D volume is big enough that the integration over the transverse
+spatial coordinates in (<ref>) leads to the
+delta-function. In detail, it looks like
+
+
+    |∫ d^2x_T   e^i( p_T -  k_T)· x_T |^2   =  (2π)^2 δ^2( p_T -  k_T) ∫_(S_T)
+    d^2x_T  e^i( p_T -  k_T)· x_T   =  S_T  
+    (2π)^2 δ^2( p_T -  k_T)   ,
+
+
+where S_T is the square of the transverse cross section. After
+inserting the obtained δ-function into
+eq. (<ref>) we get k_T = p_T and consequently
+m_T(k_T) = m_T(p_T).
+Integration over z-direction over the
+longitudinal size of the system L_z gives a one-dimensional form
+factor
+
+
+    ∫_0^L_z dz  e^i(p_z - k_z)z   = e^i (p_z -
+    k_z)L_z - 1/i(p_z - k_z)  =  e^i(p_z - k_z)L_z/22sin[ (p_z - k_z)L_z/2]/i(p_z - k_z) .
+
+
+In fact, this is a particular example of the relativistic form
+factor introduced in eq. (<ref>).
+
+
+
+
+
+
+We are going to consider the rapidity distributions and transverse
+momentum spectra.
+That is why it is reasonable to make
+transform of the momentum coordinates: (p_x,p_y,p_z) → (φ,
+p_T, y), where φ is the azimuthal angle, p_T = √(p_x^2
++ p_y^2) is the transverse momentum and tanhy = p_z/E_p is the
+rapidity.
+For the differential, we get d^3p = 2π E_p p_T dp_T
+dy, where we integrate over the azimuthal angle assuming the
+azimuthal symmetry.
+Then, inserting (<ref>) and
+(<ref>) into eq. (<ref>) for dependence of the
+spectrum on variables (p_T,y) we get
+
+
+    d N/2π  p_T dp_T dy =  S_T ∫dy_k/2π 
+    f__ BE(m_T(p_T) coshy_k) 
+    (coshy + coshy_k)^2   F_L(y_k;y,p_T)  ,
+
+
+where
+
+
+    F_L(y_k;y,p_T)  = [ sin[ L_z m_T(p_T) (sinhy
+    - sinhy_k)/2]/(sinhy - sinhy_k)]^2  ,
+
+
+is the longitudinal form factor and tanhy_k = k_z/ω_k is
+the rapidity of particle with the momentum k.
+To derive eq. (<ref>) we have used that m_T(k_T) = m_T(p_T),
+what results in k_z =  m_T(p_T) sinhy_k, and then dk_z =
+m_T(p_T) coshy_k  dy_k.
+
+
+On the other hand, the Cooper-Frye spectrum in the fireball rest
+frame in the case of global thermodynamic equilibrium has the form
+(<ref>).
+In the Cooper-Frye approach, the rapidity distribution
+for the fixed transverse momentum looks like
+
+
+    d N/2π p_T dp_T dy =  S_T   L_z  m_T(p_T) coshy 
+    f__ BE(m_T(p_T) coshy)  .
+
+
+
+Here, we have factorized the volume of the system V into the
+transverse cross section S_T and the longitudinal size of the
+system L_z that is V = S_T L_z.
+To compare the spectrum (<ref>) with the spectrum
+(<ref>) we set S_T = 1.
+At the same time, to keep right dimensionality in the
+adopted system of units (c = ħ = 1) we take the numerical
+value of L_z as: N[L_z] fm → (N[L_z]/C_c) MeV^-1, where
+C_c = 197.3 (remind, C_c·MeV·fm = 1).
+
+
+The calculated rapidity distributions are depicted in
+Fig. <ref> in three panel in a correspondence with
+three values of the fixed transverse momentum of the π-meson,
+p_T = 100,  400,  800 MeV/c, respectively, and for a given
+longitudinal size of the system L_z = 10 fm.
+Parameters of the Bose-Einstein distribution function are
+T = 160 MeV, μ = 0.
+Black solid curves, which are marked as QG, reflect calculations
+with the help of eq. (<ref>), i.e., it is a quantum
+generalization of the kinetic approach.
+Red dashed curves, which are marked as CF, reflect calculations with
+the help of eq. (<ref>).
+
+It is seen that the difference between the two distributions goes up
+with an increase in the transverse momentum.
+
+
+
+
+
+
+
+ §.§ Radiation of particles from a system with a finite lifetime
+
+
+
+
+We have calculated the spectrum of pions (<ref>), as a
+dependence on the | p| = p, using a representation of the
+element of the momentum space in the form d^3p = sinθ
+dθ dφ p^2 dp.
+To get the dependence of the spectrum only
+on a modulus of the particle momentum p, we assume the isotropic
+symmetry of the pion radiation and integrate over the angles. Then,
+formula (<ref>) can be written as
+
+
+    d N/4π p^2dp =  V ∫_0^∞dk^0/π ( E_p+k_0 )^2/2E_p  mγ/(k_0^2-E_p^2)^2+(mγ )^2  f__ BE(k^0) .
+
+
+Our goal is to compare this spectrum with the Cooper-Frye formula
+(<ref>), which for the isotropic symmetry of radiation looks
+like
+
+
+    d N/4π p^2 dp =  V   f__ BE(E_p)  ,
+
+
+where E_p = √(m^2 + p^2).
+In both formulae, we take the unit volume of the pion system, V = 1.
+To show the quantum generalization we have calculated three patterns
+of the life time τ = 1/γ of the pion system, i.e.,
+γ = 50,  100,  150 MeV.
+The spectra are plotted in Fig. <ref>, left panel.
+One can see a significant difference in the dependencies
+generated by the two approaches.
+The Cooper-Frye kinetic approach is
+represented as the Bose-Einstein distribution function f__
+BE, which on a logarithmic scale is just a straight line.
+Meanwhile, the quantum generalization of the kinetic approach, which
+takes into account the finite lifetime of the radiating system
+(eq. (<ref>)), is represented by the curves, resembling power
+dependence, rather than an exponential one.
+
+
+
+
+
+
+
+
+Our following example implies a comparison of the pion transverse
+spectra at midrapidity in the case of the global thermodynamic
+equilibrium.
+To calculate the spectrum based on the quantum
+generalization of the kinetic approach we use eq. (<ref>) and
+make the transform of the momentum coordinates as in
+Section <ref>, (p_x,p_y,p_z) → (φ, p_T, y).
+For these conditions the spectrum, which depends now on on the
+transverse momentum p__T = | p__T|, looks like
+
+
+    d N/2π p_Tdp_T dy =  V ∫_0^∞dk^0/π ( m_T + k_0 )^2  mγ/(k_0^2-m_T^2)^2+(mγ )^2  f__ BE(k^0) ,
+
+
+where m_T = √(m^2_π + p_T^2) and y = 0.
+For the sake of simplicity, we consider the many-particle system as a gas at
+rest (no hydrodynamical flows).
+For instance, it is the pion system at
+midrapidity in the laboratory frame created in the central Pb+Pb
+collision in the collider experiment.
+These calculations aim to
+compare, on the most transparent basis, the spectrum of pions
+emitted by a system with a finite lifetime τ = 1/γ with
+the Cooper-Frye formula, which at midrapidity y = 0 looks like
+
+
+    d N/2π p_T dp_T =  V   m_T(p_T)   f__
+    BE(m_T(p_T))  .
+
+
+In both approaches, we assume the azimuthal symmetry. The spectra
+are plotted in Fig. <ref>, right panel. A straight
+black line marked as “CF” was obtained in the Cooper-Frye
+approach.
+Three upper curves, which represent the quantum
+generalization approach, are marked by the digits 1,2,3 following
+a value of the parameter γ = 5,  10,  50 MeV, respectively.
+Both spectra are normalized to unity at p_T = 0.
+Again, we can see a significant difference in the behavior of curves,
+which correspond to different approaches.
+The Cooper-Frye kinetic approach leads to a straight line
+(on a logarithmic scale).
+Meanwhile, the quantum generalization of the kinetic approach, which takes
+into account the finite lifetime of the radiating system (eq. (<ref>)),
+is represented by the curves, resembling power dependence at big p_T,
+rather than an exponential one.
+
+It is interesting to compare our results with pion spectrum versus
+transverse momentum at midrapidity in the transverse momentum range
+0.6 GeV/c < p_T < 12 GeV/c measured in Pb-Pb collisions at
+√(s_NN) = 2.76 TeV <cit.>.
+We will see that
+dependencies obtained in the quantum generalization approach, which
+accounts for the finite lifetime of the system, and which are
+depicted in Fig. <ref> on the right panel, have the
+same tendencies as the experimental results, or can even fit the
+data at big p_T.
+At the same time, our calculations within the approach developed in
+Section <ref> show that the same behavior has the
+spectra of particles radiating from a spatially inhomogeneous system,
+for example from a finite-size system.
+
+
+
+
+
+
+
+
+§ CONCLUSION
+
+
+
+
+In this work, we investigate the propagation of particles (quantum fields)
+from the fireball to the detector by solving the corresponding initial-value problem.
+With the help of the “thermal” Green's function, which describes a system of
+many particles created in collisions of relativistic nuclei and determines
+the initial values, we are able to express the detected single-particle spectrum.
+
+For the single-particle spectrum we obtain formula (<ref>), which coincide
+with the Cooper-Frye prescription
+
+<cit.> (as an example we follow the Bose-Einstein statistics)
+
+
+    E_p d N/d^3p  = ∫ dσ_μ(X) p^μ  f__ BE(X;p· u) .
+
+
+We obtained formula (<ref>) in the framework of the following  assumptions:
+(1) The many-particle system has a weak inhomogeneity;
+(2) The many-particle system is in local thermodynamic equilibrium;
+(3) Particles are in free states on the freeze-out hypersurface;
+(4) The correlation function G^<(x_1,x_2) differs
+significantly from zero only if the differences of the arguments
+x_1- x_2 are close to zero.
+
+
+The latter assumption (4) cannot be applied if the system is close to a second-order
+phase transition, when the correlation length becomes sufficiently large.
+At the same time, as we discussed in the Section <ref>,
+this approximation excludes quantum effects.
+Based on the same assumptions (1) - (3), taking into account, in addition to
+kinetic contributions, also quantum effects, we obtain the formula (<ref>)
+for the single-particle spectrum
+
+
+    2E_p d N/d^3p 
+    = ∫d^3k/(2π)^3 2ω_k ∫_σ dσ^μ(x_1)  dσ^ν(x_2)  e^-i(p-k)· (x_1-x_2) 
+    (p+k)_μ (p+k)_ν  f(X;k) ,
+
+
+where p^0 = E_p = √(m^2 +  p^2), k^0 = ω_k = √(m^2 +  k^2) and
+f(X;k) is the distribution function.
+In the case of global equilibrium, this equation  reduces to
+
+
+    2 E_p d N/d^3p  = ∫d^3k/(2π)^3 2ω_k  f(k)  | ∫_σ dσ^μ(x)    (p+k)_μ e^-i(p-k)· x |^2  .
+
+
+where p^0 = E_p and k^0 = ω_k.
+
+When stationary many-particle system is in spatially inhomogeneous state,
+as discussed in the Section <ref>, we obtain the formula
+(<ref>) to calculate the single-particle spectrum in this case.
+To reflect finite lifetime of a spatially homogeneous system of many
+particles, we propose to use a parametrization of the spectral function
+similar to the relativistic Breit-Wigner function.
+The emission of particles from a system with finite lifetime was discussed
+in Section <ref>, where the formula (<ref>) was
+obtained for calculating the single-particle spectrum in this case.
+
+
+In order to clarify the differences in the results of the Cooper-Frye
+kinetic approach and a proposed quantum generalization,
+Section <ref> presents single-particle spectra obtained
+for several specific cases.
+The rapidity distribution, momentum, and transverse momentum spectra at
+midrapidity were calculated to compare the emitted spectra of pions on
+the most transparent basis.
+
+
+
+
+
+In conclusion, we note that the generalization of the Cooper-Frye formula
+(<ref>), obtained in this article, takes into account quantum
+effects arising for various reasons.
+
+
+
+First, there is a complete quantum treatment of the emission process that
+includes quantum interference, as in the formula (<ref>).
+Second, the radiation from a spatially inhomogeneous system, as in the formula
+(<ref>), which, for example, is applied to a system with
+a finite spatial volume.
+And, of course, taking into account the finite lifetime of a system of
+many particles was obtained in the formula (<ref>).
+
+
+In the next article, the author plans to consider the two-particle spectra
+arising from relativistic collisions of particles and nuclei.
+Meanwhile, the reader can gain basic knowledge in this area
+from Refs. <cit.>.
+For example, final-state interaction effects are very important when
+considering two-particle spectra (two-particle interferometry).
+An introduction to this topic can be found at
+Refs. <cit.>.
+
+
+
+
+
+
+§ ACKNOWLEDGEMENTS
+
+The author is grateful to I. Mishustin, L. Csernai, L. Satarov, H. Stoecker for
+useful discussions and comments.
+The author also thanks the referees for their valuable comments and suggestions
+for improving the manuscript.
+The work is supported by the National Academy of Sciences of Ukraine
+by its priority project "Fundamental properties of matter in the microworld,
+astrophysics, and cosmology".
+
+
+
+
+
+
+
+§ QUANTUM STATISTICS
+
+
+
+
+
+
+
+In quantum statistics, the mean value of the operator Â is defined as:
+
+
+    ⟨ Â ⟩ 
+    = 1/Z  Tr( ρ̂ Â) 
+    = 1/Z ∑_n ⟨Ψ_n | ρ̂ Â |
+    Ψ_n ⟩ ,
+      
+    Z  = ∑_n ⟨Ψ_n | ρ̂ | Ψ_n ⟩ ,
+
+
+where {Ψ_n( r_1, r_2, … , r_N)} is the complete set of
+many-particle wave functions and ρ̂ is the density matrix.
+
+
+
+For the local thermal equilibrium the density matrix reduces to the diagonal form
+
+
+    ρ_nn'  = δ_nn' e^E_n/T .
+
+
+Then, the average of the product of two field operators in the grand canonical
+ensemble reads
+
+
+    ⟨ ψ̂^+(t_2, r_2)  ψ̂(t_1, r_1) ⟩ 
+    = 1/Z ∑_n ⟨Φ_n | e^-(H - μ N)/T ψ̂^+(t_2, r_2)  ψ̂(t_1, r_1) | Φ_n ⟩ .
+
+
+The lesser Green's function is defined on the base of this averaging
+
+
+    iħ  G^<(x_1,x_2) 
+    = ± ⟨ ψ̂^+(x_2)  ψ̂(x_1) ⟩ ,
+
+
+where x = (t,  r), the plus sign reads for bosons and the minus sign
+for fermions.
+
+In accordance with the quantum fluctuation-dissipation theorem for the system
+which in local (global) thermal equilibrium the lesser Green's function can be
+expressed as <cit.>
+
+
+    iħ  G^<(ω, k)  =  A(ω, k) f(ω)  ,
+
+
+where G^<(ω, k) is the Fourier transform of the Green's function
+G^<(x_1-x_2), A(ω, k) is the spectral function, f(ω) is the
+Bose-Einstein or Fermi-Dirac distribution function.
+
+
+
+
+40
+
+    huovinen-2008
+    
+    P. Huovinen,
+    Chemical freeze-out temperature in hydrodynamical description,
+    Eur. Phys. J. A 37, 121 (2008); [arXiv: 0710.4379 [nucl-th]].
+
+    adamova-2003
+    
+    D.Adamova (CERES Collaboration),
+    Universal Pion Freeze-out in Heavy-Ion Collisions,
+    Phys. Rev. Lett. 90, 022301 (2003); [arXiv: nucl-ex/0207008].
+
+    russkikh-ivanov-2006
+    
+    V.N. Russkikh and Y.B. Ivanov,
+    Dynamical Freeze-out in 3-Fluid Hydrodynamics,
+    Phys. Rev. C 76, 054907 (2007); [arXiv: nucl-th/0611094].
+
+    sollfrank-1999
+    
+    J. Sollfrank, P. Huovinen, and P.V. Ruuskanen,
+    Mass number scaling in ultrarelativistic nuclear collisions from a
+    hydrodynamical approach,
+    Eur. Phys. J. C 6, 525 (1999).
+
+    gersdorff-1986
+    
+    H. von Gersdorff, L. McLerran, M. Kataja, and P.V. Ruuskanen,
+    Studies of the Hydrodynamic Evolution of Matter Produced in Fluctuations
+    in anti-p p Collisions and in Ultrarelativistic Nuclear Collisions,
+    Phys. Rev. D 34, 794 (1986).
+
+    strickland-2015
+    M. Nopoush, M. Strickland, R. Ryblewski, D. Bazow, U. Heinz, and M. Martinez,
+    Leading-order anisotropic hydrodynamics for central collisions,
+    Phys. Rev. C 92, 044912 (2015); [arXiv:1506.05278 [nucl-th]].
+
+    strickland-2016
+    M. Alqahtani, M. Nopoush, and M. Strickland,
+    “Quasiparticle anisotropic hydrodynamics for central collisions”,
+    Phys. Rev. C 95, 034906 (2017); [arXiv:1605.02101 [nucl-th]].
+
+
+    groot-1980
+    S.R. de Groot, W.A. van Leeuwen, Ch.G. van Weert,
+    Relativistic Kinetic Theory,
+    Noth-Holland P.C., Amsterdam, 1980.
+
+    anchishkin-2013
+    D. Anchishkin, V. Vovchenko, and L.P. Csernai,
+    Pionic freeze-out hypersurfaces in relativistic nucleus-nucleus collisions,
+    Phys. Rev. C 87, 014906 (2013).
+
+    cooper-frye-PRD-v10-1974
+    F. Cooper and G. Frye,
+    Single-particle distribution in the hydrodynamic and statistical
+    thermodynamic models of multiparticle production,
+    Phys. Rev. D 10, 186 (1974).
+
+    
+    vladimirov
+    V.S. Vladimirov,
+    Equations of the Mathematical Physics,
+    
+    Moscow: Mir Publishers, p. 464, 1983.
+
+    anch2007
+    D. Anchishkin, U. Heinz,
+    Two-particle correlations in the wave function and covariant current approaches,
+    
+    Phys. Atom. Nucl. 71, 1632-1646  (2008);
+    [arXiv: 0712.1104 [hep-ph]].
+
+    schweber
+    Silvan S. Schweber,
+    An Introduction to Relativistic Quantum Field Theory,
+    Row, Peterson and Co., N.Y., 1961.
+
+    peskin
+    Michael E. Peskin, Daniel V. Schroeder,
+    An Introduction to Quantum Field Theory,
+    Addison-Wesley Co., 1995.
+
+    GKW
+    M. Gyulassy, S.K. Kauffmann and L.W. Wilson,
+    Pion Interferometry of Nuclear Collisions. 1. Theory,
+    Phys. Rev. C 20, 2267-2292 (1979).
+
+    boal
+    D.H. Boal, C.-K. Gelbke and B.K. Jennings,
+    Intensity interferometry in subatomic physics,
+    Rev. Mod. Phys. 62, 553-602 (1990).
+
+    heinz99
+    U. Heinz and B.V. Jacak,
+    Two-particle correlations in relativistic heavy-ion collisions,
+    [arXiv: nucl-th/9902020].
+
+    anch98
+    D. Anchishkin, U. Heinz, and P. Renk,
+    Final state interactions in two-particle interferometry,
+    Phys. Rev. C 57, 1428 (1998); [arXiv: nucl-th/9710051].
+
+    chapman94
+    S. Chapman, and U. Heinz,
+    HBT correlators: Current formalism versus Wigner function formulation,
+    Phys. Lett. B 340, 250 (1994).
+
+    pratt90
+    S. Pratt, T. Csörgö, and J. Zimányi,
+    Detailed predictions for two pion correlations in
+    ultrarelativistic heavy ion collisions,
+    Phys. Rev. C 42, 2646 (1990).
+
+    kadanoff
+    L.P.Kadanoff, G.Baym,
+    Quantum statistical mechanics,
+    W.A.Benjamin, Inc., N.Y. 1962.
+
+    chou1985
+    K. Chou, Z. Su, B. Hao, and L. Yu,
+    Equilibrium and Nonequilibrium Formalisms Made Unified,
+    Phys. Rep. 118, 1 (1985).
+
+    blaizot
+    J.-P. Blaizot,
+    Quantum fields at finite temperature and density,
+    Saclay preprint SPhT/91/188.
+
+    mrowczynski-1990
+    S. Mrówczyński, P. Danielewicz,
+    Green function approach to transport theory of scalar fields,
+    Nucl. Phys. B 342, 345-380 (1990).
+
+    mrowczynski-1998
+    Stanislaw Mrówczyński,
+    Topics in the Transport Theory of Quark-Gluon Plasma,
+    [arXiv: hep-ph/9805435].
+
+abelev-2014
+B. Abelev, J. Adam, D. Adamová et al. (The ALICE Collaboration),
+Neutral pion production at midrapidity in pp and Pb-Pb collisions
+at √(s_NN) = 2.76 TeV,
+Eur. Phys. J. C 74, 3108 (2014); [arXiv: 1405.3794 [nucl-ex]].
+
+
+anch-heinz-2008
+D. Anchishkin, U. Heinz,
+Two-particle correlations in the wave function and covariant
+current approaches,
+Phys. Atom. Nucl. 71, 1632 (2008), [arXiv: 0712.1104 [hep-ph]].
+
+
+anch-anch-heinz-2006
+D. Anchishkin, Ye. Anchishkin, U. Heinz,
+Final State Distortions in Two-Particle Correlations,
+Proceedings of Science, CFRNC2006, 025 (2006), [arXiv: nucl-th/0611088].
+
+anch-1996
+D.V. Anchishkin, W.A. Zajc, G.M. Zinovjev,
+Coulomb corrections in two particle correlations for the processes
+of high multiplicity,
+Ukr. J. Phys. 41, 363 (1996).
+
+
+
+
+

@@ -1,0 +1,1700 @@
+
+Near-field imaging of domain switching in in-operando VO_2 devices
+    Erik van Heumen
+    March 30, 2023
+==================================================================
+
+
+
+Existence proof of librational invariant tori in an averaged model of HD60532V. Danesi, U. Locatelli, M. Sansottera
+
+
+ We investigate the
+    long-term dynamics of HD60532, an extrasolar system hosting two giant planets orbiting in a 3:1 mean motion resonance. We consider an average approximation  at order one in the masses which results
+  (after the reduction of the constants of motion) in a resonant
+  Hamiltonian with two libration angles. In this framework, the usual
+  algorithms constructing the Kolmogorov normal form approach do not
+  easily apply and we need to perform some untrivial preliminary
+  operations, in order to adapt the method to this kind of
+  problems. First, we perform an average over the
+  fast angle of libration which provides an integrable approximation
+  of the Hamiltonian. Then, we introduce action-angle variables
+  that are adapted to such an integrable approximation. This sequence
+  of preliminary operations brings the Hamiltonian in a suitable form
+  to successfully start the Kolmogorov normalization scheme. The
+  convergence of the KAM algorithm is proved by applying a technique
+  based on a computer-assisted proof. This allows us to reconstruct
+  the quasi-periodic motion of the system, with initial conditions
+  that are compatible with the observations.
+
+
+
+
+Near-field imaging of domain switching in in-operando VO_2 devices
+    Erik van Heumen
+    March 30, 2023
+==================================================================
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+The discovery of the first multiple-planet extrasolar
+  system, υ Andromedæ (see <cit.>),
+  immediately raised the question of its stability, notably from a
+  dynamical system point of view.  Nowadays more than 800
+  multiple-planet extrasolar systems have been discovered, making the
+  question even more relevant.
+
+  Typically, these systems have been numerically investigated as a
+  sort of inverse problem, prescribing their stability in order
+  to determine ranges of possible values of a few orbital elements
+  which are unknown or poorly known (e.g., inclinations and longitudes
+  of the nodes).  The numerical investigations of the dynamical
+  behavior of many interesting extrasolar planetary systems have been
+  done complementing long-term integrations (see,
+  e.g., <cit.> and <cit.>) with
+  refined numerical techniques, like for instance the frequency
+  analysis method or the MEGNO chaos indicator (see,
+  e.g., <cit.> and <cit.>,
+  respectively).
+
+
+Perturbation theory allows to complement the numerical investigations
+with rigorous analytic results.  Normal form methods have a
+long-standing tradition and their applications to problems that are
+relevant in Celestial Mechanics have grown more and more with the
+development of the algebraic manipulators (for an introduction to the
+main concepts of this kind of software see,
+e.g., <cit.>). Therefore, in such a framework the
+study of extrasolar planetary systems (in particular, of their secular
+dynamics) started very soon (see, e.g., <cit.>).  The
+analytic investigation via computer algebra complements the knowledge
+provided by long-term numerical integrations.  In particular, we think
+that the modern Hamiltonian perturbation theory gives a proper
+framework, where it is possible to naturally explain why a
+  planetary configuration is stable and answer this question also
+with quantitative arguments. In this respect, such a goal of the
+normal form approaches is somehow reminiscent of the aims of other
+recent works about the planetary system dynamics, which are not
+limited just to detection of chaos, but they succeed in
+explaining which is the source of instability in terms of
+superposition of a few resonances that are properly determined
+(see <cit.>).
+
+According to the main results for quasi-integrable systems that have
+been obtained in the last decades, effective stability[A
+  dynamical system is said to be effectively stable when the
+  time needed to eventually escape from a small region of the phase
+  space is proved to largely exceed the expected life-time of such a
+  system.] is ensured in the vicinity of an invariant torus by
+  applying the KAM theorem jointly with the Birkhoff normal form and,
+  eventually, the Nekhoroshev theorem (see <cit.> for a
+  complete discussion of this strategy, while applications to
+  planetary dynamical models are described in <cit.>
+  and <cit.>).
+
+In turn, the construction of the invariant torus
+  through Kolmogorov normal form is more effective if the starting
+  Hamiltonian is close to a suitable normal form designed to locate
+  another invariant object. For instance,
+  a preliminar (partial) construction of the Birkhoff normal form
+  allows one to prove the existence of invariant tori which are in the
+  neighborhood of a stable equilibrium point and are well
+  approximating the orbits of celestial objects for both the secular dynamics of the
+  Sun-Jupiter-Saturn system and the Trojan asteroids
+  (see <cit.> and <cit.>, respectively).
+  In the former case, the equilibrium solution corresponds to orbits
+  which are both circular and coplanar in the approximation provided
+  by the average over the fast angles (up to order two in the masses)
+  of the planetary three-body model; such an approach has been used to
+  study the inverse problem concerning the stability of a few
+  extrasolar systems in the framework we have sketched above
+  (see <cit.>). In the latter case, the stationary
+  solution is represented by one of the equilateral Lagrangian points,
+  that are commonly denoted with L_4, L_5; moreover, here it
+  has been necessary to preliminarly perform also the construction of
+  an intermediate invariant torus well approximating each sought
+  torus, by using a variant of the Kolmogorov normalization algorithm
+  that avoids small translations on the actions at every step of such
+  a computational procedure (which is detailed in
+  Section <ref>).  In all these works, the rate of convergence
+  of the normalization algorithm is as faster as the final invariant
+  torus is closer to the equilibrium solution, this distance being
+  proportional to the norm of the actions, which are properly defined
+  with respect to action-angle canonical coordinates that are
+  preliminarly introduced in a suitable way. Therefore, these examples
+  highlight that there are regions of the phase space which are
+  dynamically stable because they are surrounding KAM tori that, in
+  turn, are persistent to perturbations due to their vicinity to
+  an elliptic equilibrium point.
+
+A strategy that is similar to the previous one (except for some further
+refinement) has made possible to fully develop an application of the
+KAM theory to the secular dynamics of a three-body model of the
+υ Andromedæ planetary system
+(see <cit.>). For that problem, first the normal form for
+an elliptic torus has been constructed. Afterwards, an intermediate
+invariant torus is constructed by performing the already mentioned
+variant of the Kolmogorov algorithm designed so as to skip the small
+translations at each normalization step (as it is described in
+Section <ref>). Finally, the classical Kolmogorov algorithm is
+proved to converge to the normal form corresponding to the desired
+torus. This result can be explained as follows: the secular dynamics
+of the three main bodies of the υ Andromedæ planetary
+system is stable because it is strictly winding around a linearly
+stable periodic orbit (i.e., a one-dimensional elliptic torus).  The
+distance from the elliptic torus to the orbit under consideration
+(which is measured with respect to the value of a suitable action
+coordinate) has been translated in an easy-to-use numerical
+criterion evaluating the robustness of planetary configurations.  Such
+a numerical indicator has been successfully applied to the study of
+the inverse problem concerning the stability of the
+υ Andromedæ planetary system
+(see <cit.>). This kind of numerical exploration
+looks to be very suitable for applications to several (similar)
+exoplanetary systems and it is subject of some works in progress.[M. Volpi,
+  U. Locatelli, C.Caracciolo, M. Sansottera. In preparation.] 
+
+As far as we know, an application of KAM theory to
+  realistic models of planetary systems in Mean Motion Resonance
+(hereafter often replaced with its acronym MMR) is still lacking;
+filling this gap is the main motivation of the present work. Let us
+recall that a non-negligible fraction of the multiple-planet
+extrasolar systems which have been recently discovered are expected to
+be in MMR (see “The Extrasolar Planet Encyclopedia”, http://exoplanet.eu). A few of them are hosting exoplanets that
+move on rather eccentric orbits; usually they have been detected by
+using the Radial Velocity method. We focus our attention on the two
+exoplanets orbiting around the HD60532 star. We consider their orbital
+dynamics in the framework of the same planar model already considered
+in <cit.> and <cit.>, where the existence of
+quasi-periodic stable motions is shown by applying the methods of
+frequency analysis and a basic normal form approach jointly with
+numerical integrations, respectively. In both the papers we have just
+mentioned, the model is unambiguously shown to be locked in a 3:1
+MMR, which is double in the sense that there are two independent
+combinations of angles (including the mean anomalies) which are in a
+libration regime. After having performed an average over a fast
+revolution angle and the reduction of the angular momentum, the
+problem is described by a two degrees of freedom Hamiltonian. Since
+the orbits of those exoplanets are rather far from being circular, we
+think that it is not appropriate to limit us to an approach based on
+expansions up to the second order in the eccentricities (as it has
+been successfully done, with different purposes, in <cit.>
+and  <cit.>). Therefore, in the present work we study an
+Hamiltonian model which is defined by suitable expansions in the
+canonical coordinates up to a larger order in the eccentricities
+(i.e., 6; see Section <ref> for the proper definitions of
+these rather standard expansions). At the end of this paper, in
+Section <ref> we prove the existence of an invariant KAM torus
+carrying quasi-periodic motions which are consistent with the orbits
+generated by the numerical integrations starting with initial
+conditions compatible with the observations. This result of ours is
+fully rigorous in the sense that it is completely demonstrated by
+using a computer-assisted proof, based on a normal
+  form approach (for an introduction to this method see, e.g., the
+  Appendixes of <cit.>). Let us recall that this is not
+  the only viable technique in this context; in particular, a careful
+  application of the so called a posteriori approach has been
+  able to prove the existence of KAM tori for values of the small
+  parameter ϵ extremely close to the breakdown threshold in
+  the famous case of the standard map[So
+      remarkable performances are also due to the fact that the
+      a posteriori method tries to determine just the
+      parameterization of the invariant torus, whose existence proof is
+      aimed at. Therefore, this approach takes profit of the fact that
+      the dimension of the problem is reduced, because the equivalent
+      of Taylor expansions with respect to the actions in the phase
+      space is not considered (see <cit.> for a
+      description of this computer-assisted technique).] (see
+  <cit.>). In the framework of the computer-assisted
+  approach we work with, we emphasize that the preliminary
+  approximation of the Kolmogorov normal form is fundamental for the
+  eventual success of the application of KAM theory.  Indeed, the
+convergence to the final sought KAM torus strongly depends on the
+accuracy given by the intermediate normal forms. We emphasize that
+none of the strategies we have previously sketched (even if they are
+used in junction each other) is sufficient to perform the preliminary
+operations in such a way to allow the final constructive algorithm to
+be convergent.  Therefore, in
+Sections <ref>–<ref> we need to
+carefully describe that part of our approach that is new and so
+crucial. We stress that the intermediate Hamiltonian acting as a
+keystone for our approach is provided by a further average with
+respect to one of the librational angles; this is done so as to
+produce an integrable approximation of the final Kolmogorov normal
+form, after having performed some further (and suitable) canonical
+transformations. Let us also recall that an integrable model for the
+dynamics of planetary systems in MMR has been derived in another way
+in <cit.> and it is used for a different analysis with
+respect to ours.
+
+We do believe that the whole computational procedure we describe in
+the present paper can apply also to extrasolar planetary systems that
+are similar to the one orbiting around HD60532. Nevertheless, the
+discussion of the generality of the approach goes beyond our scope
+and it is deferred to future investigations.
+
+
+
+
+
+
+§ RESONANT HAMILTONIAN MODEL AT ORDER ONE IN THE MASSES
+
+
+
+We consider a planar planetary three-body problem, consisting of a
+central star having mass m_0 and two coplanar planets having masses
+m_1 and m_2. The problem has 6 degrees of freedom, which can be
+reduced to 4 due to the conservation of the linear momentum.
+Introducing the canonical astrocentric variables
+  (𝐫̃_1 , 𝐫̃_2 , 𝐫_1 , 𝐫_2),
+  𝐫_j being the coordinates and 𝐫̃_j the
+  conjugate momenta, the Hamiltonian reads
+
+    H(𝐫̃,𝐫)=T^(0)(𝐫̃)+U^(0)(𝐫)+T^(1)(𝐫̃)+U^(1)(𝐫)  ,
+
+where
+
+    T^(0)(𝐫̃)=1/2∑_j=1^2𝐫̃_j^2
+      (1/m_0+1/m_j) ,
+         U^(0)(𝐫)   =-∑_j=1^2m_0 m_j/𝐫_j ,
+      
+        T^(1)(𝐫̃)=𝐫̃_1 ·𝐫̃_2/m_0 ,
+         U^(1)(𝐫)   =-m_1 m_2/𝐫_1-𝐫_2
+
+and  is the gravitational constant (see,
+e.g., <cit.>).  It is convenient to introduce the
+Poincaré canonical variables
+
+    Λ_j    = m_0 m_j/m_0+m_j√( (m_0 + m_j) a_j) ,
+           λ_j   =M_j + ω_j ,
+    ξ_j   =√(2Λ_j)√(1-√(1-e_j^2))cos(ω_j) ,
+         η_j   = -√(2Λ_j)√(1-√(1-e_j^2))sin(ω_j) ,
+
+where a_j, e_j, M_j and ω_j are the semi-major axis, the
+eccentricity, the mean anomaly and the argument of the pericenter of
+the j-th planet, respectively.  In addition, we also introduce the
+translations L_j=Λ_j-Λ_j^* where Λ_j^* is
+defined taking into account the corresponding value a_j^* of the
+semi-axis which is compatible with the observations.  Expanding the
+Hamiltonian in Taylor-Fourier series around the origin of the
+variables (L,ξ,η), we get
+
+    1#   #   #
+     H(L,λ,ξ,η)   =K(L)+μ P(L,λ,ξ,η)   =n^*·L+∑_j_1=2^∞h_j_1,0^(Kep)( L)+μ∑_j_1=0^∞∑_j_2=0^∞h_j_1,j_2^(P)(L,λ,ξ,η) ,
+
+where n_j^*=√((m_0+m_j)/(a_j^*)^3), for j=1,2, and
+μ=max{m_1/m_0,m_2/m_0 }. The action-angle variables (
+L,λ) are referred to as the fast variables and the cartesian
+variables (ξ,η) as the secular ones.  In particular,
+the functions h_j_1,0^(Kep) of the Keplerian part K(L)
+are homogeneous polynomials of degree j_1 in the actions L,
+while the terms h_j_1,j_2^(P) of the perturbation
+P(L,λ,ξ,η) are homogeneous
+polynomials of degree j_1 in L, degree j_2 in
+the secular variables (ξ,η) and trigonometric
+polynomials in the angles λ.
+
+Of course, in practical applications a finite truncation of the
+Hamiltonian above is in order. The truncation rules adopted in the present work will be detailed in the
+following.
+
+
+
+
+
+
+§ THE CASE STUDY OF THE HD60532 EXTRA-SOLAR SYSTEM
+
+
+
+
+Let us focus on the planar three-body problem for the HD60532
+extra-solar system.  The orbital parameters and the initial conditions
+are fixed as in Table <ref>, according to the values
+given in <cit.>.  This
+system consists of two giant planets in a 3:1 MMR, orbiting around
+the star named HD60532.  The motion is assumed to be co-planar with an
+inclination i (with respect to the plane that is normal to the line
+of sight) which is fixed at 20^∘.  As a consequence, the initial
+masses of the planets are increased by the factor 1/sin(i) with
+respect to the minimum ones detected by means of the radial velocity
+method.  The presence of the mean motion resonance is confirmed by the
+evolution of the resonant angle λ_1-3λ_2+2ω_1,
+which librates around 180^∘.  Moreover, the system also exhibits
+a second libration angle given by the difference of the arguments of
+the pericenters ω_2-ω_1, as it has been remarked
+in <cit.>. Therefore, also the
+average of λ̇_1-3λ̇_2+2ω̇_2 is equal to
+zero.  The evolutions of the resonant angles are reported in
+Fig. <ref>; they have been produced by running a
+symplectic integrator of type _3, which is
+described in <cit.>.  The plots of the resonant angles
+highlight that the amplitudes of libration are wide, in particular for the resonant angle λ_1-3λ_2+2ω_1,
+which has a width of about 280^∘.  This makes the study of the
+long-term dynamics much more tricky, making it necessary to develop a
+suitable approach in order to reconstruct the quasi-periodic motion
+pointed out by the numerical integrations of the system. This is the
+reason why it is natural to expect that it is convenient to consider
+λ_1-3λ_2+2ω_1 as resonant angle
+instead of λ_1-3λ_2+2ω_2, the libration amplitude
+of the latter being larger than 360^∘.
+
+
+
+For what concerns the eccentricities, looking at
+Fig. <ref> one can easily remark that the one of the
+inner planet can also exceed the value 0.3, during its dynamical
+evolution. This makes evident that the orbital configuration of these
+exoplanets is quite different with respect to that of the biggest
+planets of our Solar System, whose orbits are nearly
+circular. Therefore, it is natural to expect that a remarkable effort
+will be needed to adapt normal forms algorithms which worked
+efficiently to construct quasi-periodic approximations of the orbital
+motions of the major planets in our Solar System
+(see <cit.> and <cit.>). In order to
+efficiently implement a normal form approach to the HD60532
+extra-solar system, we will need to design a few modifications to that
+basic scheme. This has to be done in such a way to make it more
+similar to the approach that successfully worked in the case of the
+υ Andromedæ planetary system (see <cit.>),
+which also shows the phenomenon of the librations of the difference of
+the pericenters arguments (i.e., the so called apsidal locking) as in
+the case under study of HD60532.
+
+
+
+
+
+
+ §.§ The resonant model
+
+
+Being interested in the long-term dynamics of a system
+  that is in MMR, we consider a resonant approximation of the
+  Hamiltonian that allows to reduce the number of degrees of freedom
+  to 2. Hence, we
+now consider a set of coordinates which allows to better highlight
+this point.  First of all, let us introduce the action-angle variables
+( I,ω) which replace the secular variables (ξ,η) by means of the following canonical transformation:
+
+    ξ_j= √(2I_j)cos(ω_j) ,
+        η_j=-√(2I_j)sin(ω_j) ,
+        for   j=1,2 .
+
+Now, we also introduce the resonant variables related to the two
+libration angles,
+
+    {    p_δ=I_1+2L_1 
+        p_σ=L_1 
+        p_ϕ=I_1+I_2+2L_1 
+        p_θ=L_2+3L_1
+      .
+              {   δ=ω_2-ω_1 
+       σ=λ_1-3λ_2+2ω_1
+       ϕ=-ω_2 
+       θ=λ_2
+      .  
+         .
+
+In this new set of action-angle coordinates, we consider the average
+of the Hamiltonian over the (unique) non-resonant revolution angle
+θ, i.e.,
+
+    H̅ = 1/2π∫_0^2π
+    H(p_δ , p_σ , p_ϕ , p_θ , δ , σ , ϕ , θ)  dθ .
+
+Therefore, the angles ϕ and θ turn out to be cyclic
+variables for the Hamiltonian H̅.  Indeed, the action
+p_ϕ is exactly the total angular momentum, which is a constant of
+motion for the whole three-body planetary system.  Since we perform
+an average of the Hamiltonian with respect to a fast angle of orbital
+revolution, then it is usual to refer to H̅ as a resonant
+approximation at order one in the masses. Such an averaged model shows
+two first integrals and can be reduced to two degrees of freedom.
+The accuracy of the approximation at order one in the masses is discussed in <cit.> and <cit.>, for 
+general 2D three-body models of exoplanetary systems and for particular cases in mean-motion resonance, respectively. This is made by means of comparisons with the results  provided by both the approximation at order two in the masses and the numerical integrations of the non-averaged system.
+
+
+
+The center of the librations of the resonant angles δ and
+σ corresponds to an equilibrium point of the angle variables of
+the resonant Hamiltonian H̅.  With the aim of expanding
+the Hamiltonian H̅ around its equilibrium point, we also
+look for the values, say (p_δ^*,p_σ^*), of the conjugate
+momenta p_δ and p_σ such that the Jacobian of the
+Hamiltonian H̅ is equal zero.  Once we have determined
+the equilibrium point[For the problem we are considering, we have found the following values: p_δ^*=0.0227533, p_σ^*=-0.00128589.] (p_δ^*,p_σ^*,π,π), we can
+translate the origin of the canonical variables, by defining
+
+    y_1=p_δ-p_δ^* ,     y_2=p_σ-p_σ^* ,   
+      x_1=δ-π ,    x_2=σ-π ,
+
+and expand the Hamiltonian in Taylor series around the origin.  We
+also proceed with a diagonalization of the quadratic part of the
+Hamiltonian.  Indeed, there is a linear canonical
+transformation[A procedure which allows to determine such a
+  canonical transformation 𝒞 can be found in Section 7 of
+  <cit.>. In order to avoid ambiguities, here the linear transformation C is chosen  in such a way that |ω_1| <|ω_2|.]
+(y_1,y_2,x_1,x_2)=𝒞(Y_1,Y_2,X_1,X_2) conjugating the
+quadratic approximation to a couple of harmonic oscillators.  As a
+result, the Hamiltonian in the new polynomial variables ( Y,
+X) reads
+
+    H( Y, X)=
+      ω_1/2(Y_1^2+X_1^2) + ω_2/2(Y_2^2+X_2^2) +
+      ∑_ℓ≥ 1 h_ℓ ( Y, X)  ,
+ 
+where the functions h_ℓ are homogeneous polynomials of degree
+ℓ+2 in the variables ( Y, X).  Let us remark that,
+according to a standard notation in the context of the KAM theory,
+hereafter, ω_1 and ω_2 are used to denote the
+frequencies (while they have been used before to refer to the
+arguments of the pericenters).
+
+The main goal of this work is to investigate the stability of the
+Hamiltonian model given by (<ref>) and to reconstruct its
+quasi-periodic motion, starting from initial conditions corresponding
+to the data reported in Table <ref>.  First of all, let
+us stress that the Hamiltonian (<ref>) has an elliptic
+equilibrium point at the origin and, in addition, in the case of the
+extra-solar system HD60532, the two frequencies ω_1 and
+ω_2 also have the same sign.  Hence, it would be quite natural
+to try to deal with the problem using a Lyapunov confinement argument
+about the values of the actions after having performed a few steps of
+the Birkhoff normalization algorithm.  However, this approach fails because the initial conditions (expressed in the polynomial variables ( Y, X)) are too far from the equilibrium point situated at the origin.
+Hence, we need a less naif method in order to tackle the problem under
+study.  Therefore, one could try another constructive procedure that
+has shown to be successful in a similar context, i.e., for models of
+the secular planetary dynamics (see <cit.>,
+<cit.> and <cit.>). Indeed, it could
+be convenient to first introduce action-angle variables, with the aim
+of performing a translation of the actions and then applying the
+standard Kolmogorov normalization algorithm.  Nevertheless, also this
+attempt fails, because it is not enough to achieve the convergence of
+the final procedure, even if preceded by a finite number of steps of
+the Birkhoff normalization algorithm.
+
+We are then led to develop a different approach which is adapted to
+the special kind of problem we are considering.  Let us remark that in
+this model a slow dynamics can be distinguished from a faster one, as
+we can see from the plots of the two libration angles that are
+reported in the first panel of Fig. <ref> and the
+third one.  In particular, the difference of the argument of the
+pericenters points out the slow period, that is (1/μ), while
+the mean motion resonant angle σ also highlights the presence
+of a faster period.  Therefore, the key strategy to face the problem
+is to preliminarly average the Hamiltonian with respect to the faster
+libration angle, namely over an angle related to the MMR. Let us recall that, by applying the procedure mentioned in
+footnote<ref>1, it can be
+easily shown that the period of such a (so called) fast libration
+  angle is (1/√(μ)). Therefore, it is somehow
+intermediate between the secular angles and the orbital revolution
+ones. This justifies the name we have decided to adopt, in order to
+refer to it.
+
+
+
+
+
+
+§ AVERAGE OVER THE FAST LIBRATION ANGLE
+
+
+In this section we describe the algorithm which allows to perform the
+average of the Hamiltonian with respect to the fast libration angle.
+
+We introduce the action-angle variables ( J,ϑ)
+via the canonical transformation ( Y, X)=( J,ϑ), namely
+
+    Y_j= √(2J_j)cos(ϑ_j) ,
+           X_j=√(2J_j)sin(ϑ_j) ,     for   j=1,2 .
+
+After this canonical change of coordinates the Hamiltonian
+(<ref>) reads
+
+    ^(0)( J,ϑ)=ω· J
+      +∑_ℓ≥ 1 h^(0)_ℓ( J,ϑ) ,
+          with   ( J,ϑ)∈^2×^2  ,
+
+where the functions h^(0)_ℓ are homogeneous polynomials of
+degree ℓ+2 in the square root of the actions J and
+trigonometric polynomials in the angles ϑ.  The
+superscript refers to the normalization step of the averaging
+algorithm we are going to describe in detail.
+
+
+
+ §.§ Formal algorithm for the construction of a resonant Birkhoff normal form
+
+
+As usual, this normal form is constructed by using the Lie series
+formalism, with the Lie series operator exp( χ)
+defined as follows:
+
+    exp( χ)=
+    ∑_s≥ 01s!χ^s
+      and  χ·={·,χ} .
+
+Moreover, we denote by _s the class of functions depending
+on the action-angle variables ( J,ϑ) in such a way
+that, ∀ g∈_s, g∘^-1 is an homogeneous
+polynomial of degree s in the cartesian canonical variables (
+Y, X). In more detail, the Taylor-Fourier expansion of a
+generic function g∈_s can be written as
+
+    g(  J, ϑ) =∑_ℓ∈^2ℓ_1+ℓ_2=s ∑_k_1=-ℓ_1, -ℓ_1+2,…, ℓ_1k_2=-ℓ_2, -ℓ_2+2,…, ℓ_2c_ℓ, k (√(J_1))^ℓ_1 (√(J_2))^ℓ_2exp[ (k_1ϑ_1+k_2ϑ_2)] ,
+
+where the complex coefficients are such that c_ℓ,-
+  k=c̅_ℓ, k. For the sake of brevity, in the
+following we will adopt the usual multi-index notation for the powers
+in the square roots of the actions, i.e, the product
+(√(J_1))^ℓ_1 (√(J_2))^ℓ_2 will be denoted as
+(√( J))^ℓ; moreover, they will be subject to the
+restriction |ℓ|=s for every term appearing in the expansion
+of a function g∈_s, being |ℓ|:=ℓ_1+ℓ_2.
+In the following Lemma[Its easy
+  proof is sketched (for a wider type of classes of functions) in
+  Subsection 3.1 of <cit.>.], we are going to
+describe the behaviour of such a class of functions with respect to
+the Poisson brackets.
+
+  
+  Let f∈_s_1+2 and g∈_s_2+2, then {f, g}∈_s_1+s_2+2 ∀ s_1∈∖{0},
+  s_2∈∖{0}.
+
+
+Proceeding in a perturbative way, we want to remove step by step the
+dependence on the fast angle ϑ_2 (which is related to the
+fast libration angle σ) from the perturbative part of the
+Hamiltonian.  Hence, after having performed r-1 canonical changes of
+coordinates defined by the Lie series operator, the
+Hamiltonian (<ref>) is brought to the following form:
+
+    ^(r-1)( J,ϑ)=
+      ω· J+∑_ℓ= 1^r-1Z_ℓ( J,ϑ_1)
+      + ∑_ℓ≥ r h_ℓ^(r-1)( J,ϑ) ,
+
+where Z_ℓ∈_ℓ+2 and h_ℓ^(r-1)∈_ℓ+2.
+
+Let us remark that, with abuse of notation, we are denoting the new
+action-angle variables (that are introduced by the canonical
+transformation defined by any normalization step) with the same pair
+of symbols ( J,ϑ), which has been used to denote the
+arguments of ^(0). As it is usual for the Lie series formalism,
+this is done in order to contain the proliferation of the symbols.
+
+The Hamiltonian in normal form up to order r is obtained as
+^(r)=exp(χ_r)^(r-1), where the generating
+function χ_r is determined by solving the homological equation
+
+    χ_r(ω· J) +
+      h_r^(r-1)( J,ϑ)= Z_r( J,ϑ_1)  ,
+
+with Z_r( J,ϑ_1):=⟨
+h^(r-1)_r⟩_ϑ_2 where as usual
+⟨·⟩_ψ denotes the angular average with respect
+to ψ.  In order to solve such an equation, let us first write the
+Taylor-Fourier expansion of the perturbative term as
+
+    h_r^(r-1)( J,ϑ)=
+     ∑_ℓ∈^2|ℓ|=r+2 ∑_k_1=-ℓ_1, -ℓ_1+2,…, ℓ_1k_2=-ℓ_2, -ℓ_2+2,…, ℓ_2
+     c_ℓ, k^(r) (√( J))^ℓexp( k·ϑ) .
+
+Therefore, the r-th generating function writes as
+
+    χ_r( J,ϑ)=
+      ∑_ℓ∈^2|ℓ|=r+2 ∑_k_1=-ℓ_1, -ℓ_1+2,…, ℓ_1k_2=-ℓ_2, -ℓ_2+2,…, ℓ_2 ; k_2≠ 0c_ℓ, k^(r)/ k ·ω (√( J))^ℓexp( k·ϑ) .
+
+Clearly, the generating function can be properly defined if and only
+if the frequency vector ω is non-resonant up to the order
+r+2.  This means that k ·ω≠ 0
+∀ 0<| k|≤ r+2. Such a property is certainly satisfied if
+we assume that ω satisfies the Diophantine condition, namely
+
+    | k ·ω|≥γ/| k|^τ ,
+        ∀  k∈^2∖{0} ,
+
+for some fixed values of γ>0 and τ≥ 1. Let us also
+recall that almost all the vectors in ^2 are Diophantine with
+respect to the Lebesgue measure.
+
+The transformed functions h_ℓ^(r) appearing in the expansion of
+the new Hamiltonian
+
+    ^(r)( J,ϑ)   =
+      𝒵^(r)( J,ϑ_1)+ℛ^(r+1)( J,ϑ)
+       =
+      ω· J+∑_ℓ= 1^rZ_ℓ( J,ϑ_1)
+      + ∑_ℓ≥ r+1 h_ℓ^(r)( J,ϑ) ,
+
+are defined as follows
+
+    h_ℓ^(r)= ∑_j=0^⌊ℓ/r ⌋1/j!χ_r^j h^(r-1)_ℓ-jr ,
+                              for ℓ≥ r+1 .
+
+A simple induction argument, which is based on the application
+of Lemma <ref>, allows us to verify that
+h^(r)_ℓ∈_ℓ+2 ∀ ℓ.
+Hence, after a finite number r of normalization steps, we get the
+Hamiltonian ^(r), which is the sum of a normal form part
+𝒵^(r)( J,ϑ_1)=ω·
+J+∑_ℓ= 1^rZ_ℓ( J,ϑ_1), which is integrable,
+and a remainder ℛ^(r+1)( J,ϑ)=∑_ℓ≥ r+1 h_ℓ^(r)( J,ϑ).
+Indeed, the averaged part 𝒵^(r)( J,ϑ_1) is
+independent of the fast angle ϑ_2.  Therefore, the action
+J_2 is constant along the flow induced by 𝒵^(r),
+because {J_2 , 𝒵^(r)}=0. Moreover, the
+averaged part 𝒵^(r) results in an integrable
+approximation, because it can be reduced to an Hamiltonian having just
+one degree of freedom.
+
+For later convenience, it is also worth to recall that the canonical
+transformation 𝒞^(r) defining the resonant Birkhoff
+normal form up to the r-th step of the constructive algorithm is
+explicitly given by
+
+    𝒞^(r)( J,ϑ)=
+      expχ_r ∘ expχ_r-1 ∘ … expχ_1 ( J,ϑ) .
+
+In fact, the exchange theorem for Lie series ensures us that
+^(r)( J,ϑ)=^(0)(𝒞^(r)( J,ϑ))
+∀ ( J,ϑ)∈( 0)×^2,
+being ( 0) a suitable open ball centered
+around the origin of ^2 (see <cit.>
+and <cit.>).
+
+
+
+
+ §.§ Comparison between numerical integrations and semi-analytic solutions
+
+
+In this subsection, we are going to check the validity of the averaged
+Hamiltonian up to a finite order r̃ (namely the integrable
+approximation 𝒵^(r̃)) in describing the orbital
+motions induced by the Hamiltonian (<ref>) which describes the slow dynamics of a planetary system in MMR.  For what
+concerns our extra-solar model, this latter Hamiltonian, expressed in
+action-angle variables as in (<ref>), has been expanded
+up to order 6 in the square root of the actions.  We perform 6
+normalization steps and our goal is to compare numerical
+integrations[All the computations discussed in the present
+Section and in the following one, which are both of symbolic type and
+of purely numerical kind, have been performed by using Mathematica.] of the Hamiltonian in MMR (<ref>) with the
+semi-analytic solution of the averaged Hamiltonian up to order 6,
+both described in the cartesian variables Y_j=
+√(2J_j)cos(ϑ_j) and X_j=√(2J_j)sin(ϑ_j),
+for j=1,2. The choice r̃=6 allows to obtain
+  a reasonable balance between the accuracy and the needed
+  computational time.
+
+
+Let us recall that the averaged Hamiltonian 𝒵^(6) is
+integrable according to the
+Liouville-Arnold-Jost theorem (for a complete proof, see,
+e.g., <cit.>).  Therefore, there exists an
+analytic expression (eventually involving also the computation of
+integrals and the inversion of some functions) which defines a
+canonical transformation ( J,ϑ)=Ψ( P,φ),
+such that the averaged approximation 𝒵^(6) depends on
+the actions P only, when it is transformed according to the
+change of variables Ψ, i.e.,
+
+    ∂ 𝒵^(6)(Ψ( P,φ))/∂φ_j=0
+      ∀ j=1, 2 .
+ Thus, in the new set of action-angle variables ( P,φ) the equations of motion related to the averaged Hamiltonian
+𝒵^(6)∘Ψ can be solved very easily.  Moreover, we
+can also evaluate the composition 𝒞^(6) of canonical
+transformations introduced in the previous Subsection in order to
+define the action-angle variables ( P,φ) and to
+obtain the Hamiltonian in normal form up to order 6. The normal form
+algorithm can be finally translated in a so called semi-analytic
+procedure which allows to determine the motion law t↦(
+Y(t), X(t)) that is defined by the flow induced by the averaged
+Hamiltonian 𝒵^(6). Such a computational procedure is
+summarized (∀ t∈) by the following scheme:
+
+    [row sep=5em, column sep=9em,every label/.append style = font = ]
+      ( Y(0), X(0)) [r, "(∘𝒞^(6)∘Ψ)^-1",shorten <=1em,shorten >=1em]    ( P(0),φ(0)) [d, "Φ_𝒵^(6)∘Ψ^t",shorten <=0.5em,shorten >=0.5em] 
+    ( Y(t), X(t)) [r,leftarrow,"∘𝒞^(6)∘Ψ",shorten <=0.5em,shorten >=0.5em]    ( P(t)= P(0),φ(t)=β t+φ(0))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+where Φ_𝒵^(6)∘Ψ^t is nothing but the flow at
+time t induced by the Hamiltonian 𝒵^(6)∘Ψ and
+the angular velocity is given by β_j=∂/∂
+  P_j(𝒵^(6)∘Ψ), while  and
+𝒞^(6) are defined in (<ref>)
+and (<ref>), respectively.  Let us stress that the
+initial conditions ( P(0),φ(0)) can be obtained by
+inverting the composition of the canonical transformations previously
+described, while the initial conditions ( Y(0), X(0)) are the
+ones derived from the observations.  This semi-analytic solution could
+be compared with the one obtained by a direct integration of the
+Hamiltonian (<ref>).  For the sake of simplicity, we do not
+perform the last canonical transformation Ψ, which is essential
+to properly define the semi-analytic
+scheme (<ref>), but it would require to perform
+some operations (e.g., the aforementioned integrals and the inversions
+of functions) that can be hard to implement in a fully explicit way.
+We just exploit the uniqueness of the solution of the corresponding
+Cauchy problem and we approximate it numerically, by directly
+integrating the equations of motion of the averaged Hamiltonian
+𝒵^(6).  Afterwards, we use the canonical
+transformations (<ref>)
+and (<ref>) to express the solution in the
+variables ( Y(t), X(t)) and we compare it with the numerical
+integration of the Hamiltonian (<ref>).
+
+As we can see from the plots in Fig. <ref>, for the
+relatively faster pair of variables (Y_2,X_2) we have a good
+agreement between the two solutions, both in terms of amplitude and in
+terms of frequency.  Instead, as regards the slow variables
+(Y_1,X_1), there is a remarkable error concerning the frequency.
+In principle, this discrepancy might be amended with an approximation
+  at order two in the masses (which can be adapted to planetary systems in MMR, as explained in <cit.>), but this goes beyond the scope of the present paper.
+
+
+
+
+
+§ ACTION-ANGLE VARIABLES ADAPTED TO THE INTEGRABLE APPROXIMATION
+
+
+Before showing that KAM theorem applies in the present context, we
+need another preliminary essential step in order to make the algorithm
+convergent.  Specifically, we have to introduce a set of action-angle
+variables, that are more suitable to describe the integrable
+approximation of the Hamiltonian (<ref>) than the pair
+( J,ϑ) as it is defined after having performed the
+canonical transformation 𝒞^(6). Indeed, the ideal
+action-angle coordinates would be ( P,φ), the
+ones we avoided to compute, because of the technical difficulties due
+to an eventual application of the Liouville-Arnold-Jost theorem. Let us
+recall that P_1 and P_2 would be constant of motion for the
+integrable approximation 𝒵^(6) and the same holds true
+also for the action J_2.
+
+Hence, if we consider the orbit of the fast motion of the integrable
+approximation 𝒵^(6) in the cartesian
+variables[Let us remark that, once again, with a little abuse
+  of notation, we are denoting the variables used before and after the
+  averaging normalization algorithm with the same name.]
+(Y_2,X_2)=(√(2J_2)cos(ϑ_2),√(2J_2)sin(ϑ_2)),
+we get a circular orbit, as it is shown in the right panel of
+Fig. <ref>.  Instead, looking at the orbit of the
+slow motion in the cartesian variables
+(Y_1,X_1)=(√(2J_1)cos(ϑ_1),√(2J_1)sin(ϑ_1)),
+that are related to the secular dynamics, we can observe that such an
+orbit is far from being circular.  Therefore, at this stage we aim at
+introducing a second action which is closer than J_1 to be a
+constant of motion. In other words, our approach consists in the
+construction of action-angle variables with the aim of trying to
+circularize (at least partially) the orbit describing the slow
+dynamics in the integrable approximation.  Thus, trying to introduce
+an action which depends only on the distance from the origin in the
+cartesian plane endowed with coordinates (Y_1,X_1), we are dealing
+with a quasi-constant of motion and we approach better the sought
+(final) KAM torus. From a practical point of view, our approach is
+translated in an explicit computational procedure, by suitably
+applying the frequency analysis method to the flow induced by the
+integrable approximation 𝒵^(6) (see <cit.>
+for an introduction to such a numerical technique). This can be done
+by studying the Fourier decomposition of the signal Y_1(t)+
+X_1(t)≃∑_j=1^𝒩_cA_1,j e^(k_jν_1
+  t+φ_1,j), where 𝒩_c is the number of
+components considered, A_1,j>0, k_j∈,
+φ_1,j∈(-π,π] and 2π/ν_1 is the period of such a
+motion law.  By taking into consideration only the 𝒩_c=3
+components of the signal which correspond to k_j=0,± 1 for
+j=1,2,3, it is easy to show that the corresponding approximation of
+the orbit which describes the secular dynamics is an ellipse.
+Therefore, in order to give a circular shape to such an approximation
+of the orbit it is necessary to perform two changes of coordinates: a
+shift on the variable X_1 of a translation value X_1^* and a
+dilatation/contraction with coefficient α.  The value X_1^*
+of the translation is determined by exploiting the constant component
+(because for j=1 we have k_1=0 and φ_1,1=-π/2, then
+A_1,j e^φ_1,1 is purely imaginary and so is
+aligned with the X_1 axis), while the coefficient α is
+defined as follows
+
+    α=√(c_- -c_+/c_- +c_+) ,
+
+where c_- and c_+ are the absolute values of the complex
+coefficients of the components with k_2=-1 and k_3=1,
+respectively. In more detail, we define c_-=A_1,2 and
+c_+=A_1,3 for j=2,3; indeed, the easy computation of the
+suitable coefficient α of dilatation/contraction takes
+profit of the values of the corresponding angles, which are
+such that φ_1,2=-φ_1,3. Therefore, we
+introduce the new variables
+
+    v_1=α· Y_1 ,      u_1=X_1-X_1^*/α .
+
+
+
+
+The new orbit of the slow motion in the variables (v_1,u_1) is
+represented in Fig. <ref>.  Let us remark that this plot
+does not represent exactly a circular orbit; this was somehow expected
+since we have considered only a limited number of Fourier components
+in the computational method we have introduced in the present Section
+with the aim of trying to circularize the orbit itself.  However, by
+looking at the scales reported on the vertical axes of the two panels
+included in Fig. <ref>, one can appreciate that the
+canonical change of coordinates (<ref>) allows
+us to reduce the oscillations of the value of the action involved in
+the description of the slow dynamics. In fact, when the plot of the
+motion law t↦(Y_1^2(t)+X_1^2(t))/2 is compared to the
+one of t↦(v_1^2(t)+u_1^2(t))/2, the gain of about 30%
+in the circularization of the orbit is highlighted.  This is enough
+for the purpose of obtaining a Kolmogorov normalization algorithm
+which is convergent to the normal form related to the desired final
+invariant torus.
+
+
+
+
+We can now introduce the action-angle variables that are more
+suitably adapted to the integrable approximation, i.e.,
+
+    v_1   =√(2(p_1+p_1^*))cos(q_1) ,
+           Y_2   =√(2J_2)cos(ϑ_2) ,
+    
+      u_1   =√(2(p_1+p_1^*))sin(q_1) , 
+           X_2   =√(2J_2)sin(ϑ_2) ,
+
+where p_1^* is the value of the area enclosed by the orbit that
+describes the secular dynamics in the phase plane (v_1,u_1) (or in
+the one endowed with coordinates (Y_1,X_1), since canonical
+transformations preserve the areas) multiplied by the factor
+1/(2π). Therefore, we are imposing that the value p_1^*, which
+corresponds to the closed curve {(p_1,q_1) : p_1=0 ,
+q_1∈}, is equal to the usual definition of the action for
+Hamiltonian systems with one degree of freedom (see, e.g., Chap. 3
+of <cit.>).
+
+
+
+
+
+
+§ CONSTRUCTION OF THE KAM TORUS
+
+
+We can now start the construction of the KAM torus for the averaged dynamics of HD60532.  First, we perform a
+translation of the fast action and we rename the fast angle, i.e.
+
+    p_2=J_2-J_2^*  ,      q_2=ϑ_2 ,
+
+where J_2^* is the mean value of the action J_2.  In the new
+action-angle variables ( p, q) the Hamiltonian
+(<ref>) can be expanded as follows
+
+    1#   #   #
+     H^(0)( p, q)    =
+        E^(0)+ω^(0)· p
+     +∑_s≥ 0∑_ℓ≥ 2 f_ℓ^(0,s)( p, q)
+           +∑_s≥ 1( f_0^(0,s)( q) + f_1^(0,s)( p, q)) ,
+
+where f_ℓ^(0,s) is a homogeneous polynomial of degree ℓ in
+p and a trigonometric polynomial of degree[More
+  generically, the functions f_ℓ^(0,s) are usually defined as
+  trigonometric polynomials of degree sK (for some positive fixed
+  value of the parameter K∈) in q. We choose to set
+  K=2, accordingly to what is usually done for quasi-integrable
+  Hamiltonian system that are in the vicinity of an elliptic
+  equilibrium point as it is in the model we are studying (see,
+  e.g., <cit.> and recall the discussion in
+  Section <ref>).] 2s in q. The first
+superscript of the functions f_ℓ^(0,s) denotes the
+normalization step.  Furthermore, E^(0) is the constant of the
+energy level of p=0 when f_ℓ^(0,s)=0 ∀ ℓ
+and s=0, 1.  The goal is to construct the Kolmogorov normal form
+
+    H^(∞)( p, q)=ω^*· p +( p^2) ,
+
+where ω^* is the angular velocity vector characterizing the
+quasi-periodic motion on the invariant (KAM) torus corresponding to
+p= 0. In other words, the Kolmogorov normalization algorithm
+is designed in such a way to remove the terms appearing in the second
+row of formula (<ref>) by a sequence of canonical
+transformations.  Here, it is convenient to adopt a different version
+of the classical Kolmogorov normalization algorithm, which is slightly
+modified in such a way to not keep fixed the angular velocity vector
+ω^(r), that is defined at the r-th step of the
+procedure and corresponds to the quasi-periodic approximation of the
+motion on the final sought KAM torus. We basically follow the approach
+described in <cit.>, where the normalization procedure introduced by Kolmogorov is adapted in such a way to skip the small translation of the actions performed at every step of that algorithm. This modification allows to make the computational procedure more stable; such an improvement can play a crucial role when the action–frequency map is (close to be) degenerate (see <cit.>). Moreover, in order to improve its efficiency, this small adaptation of the Kolmogorov normalization algorithm has to be formulated so as to suitably determine the preliminary translation in (<ref>). All this computational procedure is summarized in the
+following in order to make our discussion rather
+self-consistent.
+
+As in Section <ref>, it is convenient to introduce suitable
+classes of functions; here, we are going to say that g∈_ℓ,sK
+if its Taylor-Fourier expansion writes as
+
+    g( p,  q) =
+      ∑_ j∈^n|  j|=ℓ∑_ k∈^n|  k|≤ sK 
+      c_ j, k  p^ jexp( k· q)  ,
+
+for some fixed values of the non-negative integer parameters
+ℓ, s and K. The following statement allows us to describe the
+behaviour of such a class of functions with respect to the Poisson
+brackets.
+
+  
+  Let us consider two generic functions g∈_ℓ,sK and
+  h∈_m,rK, where K is a fixed positive integer
+  number. Then, the following inclusion property holds
+  true:
+  
+    {g,h} = h g ∈_ℓ+m-1,(r+s)K   ∀ℓ, m, r, s∈  with ℓ+m≥ 1 ,
+
+  while {g,h} = 0 when ℓ=m=0.
+
+
+Let us imagine to have already performed r-1 normalization steps by
+using, once again, the Lie series formalism; then, we have to
+deal with an Hamiltonian of the following type:
+
+    1#   #   #
+     H^(r-1)( p, q)    =
+        E^(r-1)+ω^(r-1)· p
+     +∑_s≥ 0∑_ℓ≥ 2 f_ℓ^(r-1,s)( p, q)
+           +∑_s≥ r( f_0^(r-1,s)( q) + f_1^(r-1,s)( p, q))
+      ,
+
+where f_ℓ^(r-1,s)∈_ℓ,2s
+∀ ℓ, s ∈, while E^(r-1)∈. Let us
+remark that the expansion of H^(0), which is reported
+in (<ref>), agrees with the more general one, that is written
+just above in (<ref>), in the case with r=1. The Kolmogorov
+normalization algorithm at step r is aimed to remove the main
+perturbing terms (that are the functions f_0^(r-1,r) and
+f_1^(r-1,r)), which are independent of and linear in the actions,
+respectively.
+
+In order to perform the r-th normalization step, first we need to
+determine the generating function χ_0^(r) in such a way to
+solve the following homological equation:
+
+    χ_0^(r)(ω^(r-1)· p) +f_0^(r-1,r)=
+      ⟨ f_0^(r-1,r)⟩_ q .
+
+As a matter of fact,
+⟨ f_0^(r-1,r)⟩_ q∈_0,0 is nothing but a
+constant term. Therefore, it can be added to E^(r-1), in order
+to update the energy level, whose new value is denoted with E^(r).
+By considering the Taylor-Fourier expansion of the perturbing term we
+aim to remove, i.e.,
+
+    f_0^(r-1,r)( q)=
+      ∑_0<| k|≤ 2r c_ 0, k^(r-1,r)exp( k· q) ,
+
+we obtain the following expression for the generating function:
+
+    χ_0^(r)( q) = ∑_0<| k|≤ 2rc_ 0, k^(r-1,r)/ k·ω^(r-1)exp( k· q) .
+
+Let us remark that the homological equation can be solved provided
+that the following non-resonance condition holds true
+
+    k·ω^(r-1)≠ 0 ,     ∀  k∈^2∖{0} ,
+        with   | k|≤ 2r .
+
+
+We then introduce the transformed Hamiltonian
+Ĥ^(r)=exp(χ_0^(r))H^(r-1),
+whose expansion
+
+    1#   #   #Ĥ^(r)( p, q)    =
+        Ê^(r)+ω^(r-1)· p
+     +∑_s≥ 0∑_ℓ≥ 2f̂_ℓ^(r,s)( p, q)
+           +∑_s≥ r( f̂_0^(r,s)( q) +
+     f̂_1^(r,s)( p, q))
+
+is such that the new Hamiltonian terms f̂_ℓ^(r,s) are defined
+so that
+
+    f̂_0^(r,r)   = 0  , 
+    f̂_ℓ^(r,s)   = ∑_j=0^⌊ s/r ⌋1/j!χ^(r)_0^j f^(r-1,s-jr)_ℓ+j ,
+                for ℓ=0, s≠ r ,-2pt-14pt or ℓ≠0  s≥ 0 .
+
+By applying repeatedly Lemma <ref>, one
+can easily verify that f̂_ℓ^(r,s)∈_ℓ,2s
+∀ ℓ, s.
+
+The second generating function χ_1^(r) is determined by solving
+the following homological equation:
+
+    χ_1^(r)(ω^(r-1)· p )+
+      f̂_1^(r,r)=⟨f̂_1^(r,r)⟩_ q .
+
+The term ⟨f̂_1^(r,r)⟩_ q∈_1,0. This
+means that it is not dependent on the angles q and is linear in
+the actions p; thus, it gives a contribution to the definition
+of the value of the angular velocity vector ω^(r), which
+in principle should converge to its limit ω^* (if the
+normalization algorithm is convergent) and is defined so that
+
+    ω^(r)· p=
+      ω^(r-1)· p +⟨f̂_1^(r,r)⟩_ q .
+
+
+By considering the following Taylor-Fourier expansion of the new
+perturbing term we aim to remove, i.e.
+
+    f̂_1^(r,r)( q) - ⟨f̂_1^(r,r)⟩_ q =
+      ∑_|ℓ|=1 ∑_0<| k|≤ 2rĉ_ℓ, k^(r,r) p^ℓexp( k· q) ,
+
+then we easily determine the new generating function as
+
+    χ_1^(r)( q)= ∑_|ℓ|=1 ∑_0<| k|≤ 2rĉ_ℓ, k^(r,r)/ k·ω^(r-1) p^ℓexp( k· q) .
+
+Once again, the homological equation can be solved provided that the
+frequencies satisfy the non resonance condition (<ref>).
+The new Hamiltonian is defined as
+H^(r)=exp(χ_1^(r))Ĥ^(r-1). Its
+expansion is completely analogous to the one reported
+in (<ref>). Moreover,
+the terms f_ℓ^(r,s)∈_ℓ,2s appearing in the
+expansion of H^(r) are defined in the following way:
+
+    f_1^(r,r)   = 0  , 
+    
+    f_1^(r,ir)   =
+    i-1/i!χ^(r)_1^i-1f̂^(r,r)_1+
+    ∑_j=0^i-21/j!χ^(r)_1^jf̂^(r,(i-j)r)_1 ,
+            for i≥ 2 ,
+     
+    f_ℓ^(r,s)   =
+    ∑_j=0^⌊ s/r ⌋1/j!χ^(r)_1^jf̂^(r,s-jr)_ℓ ,
+            for ℓ=1, s≠ ir ,-2pt-14pt or ℓ≠1,  s≥ 0 ,
+
+where we have exploited the second homological
+equation (<ref>).
+
+From a practical point of view, we can iterate the algorithm only up
+to a finite number of steps, say, r. This allows us to
+determine
+
+    H^(r)( p, q)=E^(r)
+      +ω^(r)· p
+      +∑_s≥ 0∑_ℓ≥ 2 f_ℓ^(r,s)( p, q)
+      +∑_s≥r+1( f_0^(r,s)( q) + f_1^(r,s)( p, q))
+       .
+
+Hence, we obtain an approximation of the final invariant torus which
+is characterized by an angular velocity vector
+ω^(r).  If the value (say) I_1^* of the
+initial shift on the first action, which has been preliminarly fixed
+equal to p_1^* in formula (<ref>), is accurate
+enough, then the slow frequency ω^(r)_1 is close
+to the one we are aiming at, which is numerically determined by
+applying the frequency analysis method, namely
+ω^(r)_1≃ω_1^*.  We then calibrate the
+initial translation of the first action I_1^*=p_1^* by means of a
+Newton method.  The goal is to solve the implicit equation
+ω_1(Ĩ_1)=ω_1^* with respect to the initial
+shift Ĩ_1.  The value Ĩ_1 is iteratively
+computed using the formula
+
+    Ĩ_1^(n)=Ĩ_1^(n-1)+
+      ω_1^*-ω_1^(r)(Ĩ_1^(n-1))/ω_1^'(Ĩ_1^(n-1)) ,
+
+where Ĩ_1^(0)=I_1^* and the value of the derivative
+ω_1^'(Ĩ_1^(n-1)) is numerically
+approximated by using the finite difference method.  Let us recall
+that, after having performed the average with respect to the fast
+angle of libration as it has been described in the previous section,
+we are mainly focusing on the study of the secular dynamics.  In
+addition, for what concerns the (relatively) faster frequency
+ω_2^(r)/(2π) we automatically have a good enough
+approximation of both the frequencies of the averaged Hamiltonian, as
+it can be appreciated looking at the comparison between the
+semi-analytic solutions showed in Fig. <ref>, which will
+be widely commented in the next subsection.
+
+By supposing to iterate the normalization algorithm ad infinitum, one
+would get the Hamiltonian (<ref>), which admits the
+invariant torus p=0 with frequency ω^*.
+
+From a practical point of view, we are able to explicitly iterate the
+algorithm only up to a finite normalization step r and we
+can numerically check the convergence of the procedure by controlling
+the decrease of the norms of the generating functions. Hereafter, we
+define the norm of any generic function g∈_ℓ,sK as
+
+    g( p,  q) =
+    ∑_ j∈^n|  j|=ℓ∑_ k∈^n|  k|≤ sK|c_ j, k| ,
+
+∀ ℓ, s, K ∈, where the Taylor-Fourier
+expansion of g is written
+in (<ref>).  The behavior of χ_0^(r) and
+χ_1^(r) for values of the normalization step r up to 9
+are reported in Fig. <ref>.
+
+
+
+
+ §.§ Comparison between two different kinds of semi-analytic solutions
+
+
+In this subsection we check the accuracy of the
+Hamiltonian (<ref>) in Kolmogorov normal form up to a
+finite order r in describing the motion of the averaged
+integrable Hamiltonian 𝒵^(r̃) up to order r̃.  For what concerns our model of the librational dynamics of the
+extrasolar system HD60532, we consider the Hamiltonian H^(5),
+expanded as in (<ref>) and truncated up to degree 2
+in the actions and to trigonometrical degree 12 in the angles.  The
+aim is to make a comparison with the solution associated to the
+averaged integrable Hamiltonian 𝒵^(6), computed in
+Subsection <ref>.  The semi-analytic solution of
+the equations of motion which is related to the Hamiltonian H^(5)
+can be obtained with a procedure similar to the one previously
+described and represented in (<ref>).
+Moreover, as we can see in Fig. <ref>, we compare the
+motion laws induced by two different Hamiltonians by considering in
+both cases the cartesian variables Y_j=√(2J_j)cos(ϑ_j)
+and X_j=√(2J_j)sin(ϑ_j), for j=1, 2, that were
+adopted as canonical coordinates before starting the averaging
+procedure which constructs the resonant Birkhoff normal form. In more
+detail, we can determine the expansions of all the canonical
+transformations introduced in Sections <ref>,
+<ref> and <ref> with the aim of constructing
+a Hamiltonian in Kolmogorov normal form up to order 5. Let us denote
+with the symbol 𝒦^(5) the composition of the canonical
+transformations introduced by the Kolmogorov algorithm (described in
+the previous Subsection) up to the 5-th normalization step, i.e.,
+
+    𝒦^(5)( p, q)=
+      expχ_1^(5) ∘ expχ_0^(5) ∘ … ∘expχ_1^(1) ∘ expχ_0^(1) ( p, q) .
+
+Therefore, ∀ t∈, we can compute the values of the
+canonical variables ( Y(t), X(t)) corresponding to the (
+p(t), q(t))=(0,ω^(5) t+ q(0)), which describe the
+quasi-periodic motion of the final KAM torus as it is approximately reproduced by the Kolmogorov normalization algorithm,
+when it is iterated up to the 5-th step. This computation is
+performed according to the following scheme:
+
+    [row sep=5em, column sep=10em,every label/.append style = font = ]
+      ( Y(0), X(0)) [r, "(∘𝒞^(5)∘𝒯_Ĩ_1∘𝒦^(5))^-1",shorten <=1em,shorten >=1em]    ( 0, q(0)) [d, "Φ_ω^(5)· p^t",shorten <=0.5em,shorten >=0.5em] 
+    ( Y(t), X(t)) [r,leftarrow,"∘𝒞^(5)∘𝒯_Ĩ_1∘𝒦^(5)",shorten <=0.5em,shorten >=0.5em]    ( p(t)= 0, q(t)=ω^(5) t+ q(0))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Here a few further explanations are in order. We denote with (
+J,ϑ)=𝒯_Ĩ_1( p, q) the canonical
+transformation that is obtained by making the composition of all the
+canonical transformations described in Section <ref>
+and in formula (<ref>); moreover, one has to
+take care of slightly modifying (<ref>) in
+such a way to replace p_1^* with the value of Ĩ_1 (i.e.,
+the solution of equation ω_1(Ĩ_1)=ω_1^*
+numerically obtained by applying the Newton method). In the
+scheme (<ref>) we have also decided to
+consider 𝒞^(5) instead of 𝒞^(6), because
+otherwise with the adopted rules of truncation the Hamiltonian would
+be integrable already before the Kolmogorov normalization; this would
+make trivial the application of such an algorithm. Finally, let us
+recall that H^(5)( p, q)≃ω^(5)· p
++( p^2) and ω^(5)≃ω^*; this allows us
+to put the flow of ω^(5)· p in order to
+approximate (in the semi-analytical scheme above) the solution of the
+equations of motion related to H^(5) and with initial conditions
+p(0)= 0.
+
+
+
+The plots in Fig. <ref> show an excellent
+superimposition between the two solutions, with respect to both the
+amplitudes and the frequencies. This makes evident the effectiveness
+of our computational algorithm. Let us also recall that the initial
+conditions ( Y(0), X(0)) are the ones compatible with the
+observations.
+
+
+
+
+ §.§ Computer-assisted proof
+
+
+By looking at the plots in Fig. <ref>, it can be
+noticed that the decrease of the norms of the generating functions, in
+particular for what concerns the finite sequence of the second
+generating function χ_1^(r), is not so regular and the
+convergence of the algorithm looks doubtful.  In order to rigorously
+prove that the KAM algorithm is convergent, we adopt a rigorous
+approach based on a computer-assisted proof. For this purpose, we
+follow the method which has been described in <cit.> and
+further developed in <cit.>, where a publicly available
+software package[That software package can be freely
+  downloaded from the web address <http://dx.doi.org/10.17632/jdx22ysh2s.1>] is provided as
+supplementary material. Such a package is designed for doing just this
+kind of computer-assisted proof for Hamiltonian systems having two
+degrees of freedom. In order to use this software so as to apply it to
+the problem under consideration, it is just matter to prepare some
+input files, which basically describe the starting Hamiltonian; in
+principle, this can allow us to prove the existence of the KAM torus
+we are aiming at, if the corresponding Kolmogorov normal form is close
+enough to such an initial Hamiltonian. More precisely, we consider
+H^(5) as the starting Hamiltonian. It is fully determined at the
+end of the application of the Newton method, which has been described
+in the previous Section; in terms of a single mathematical formula, it
+can be written as
+
+    H∘∘𝒞^(5)∘𝒯_Ĩ_1∘𝒦^(5)
+
+where H, , 𝒞^(5),
+𝒯_Ĩ_1 and 𝒦^(5) are defined
+in (<ref>), (<ref>),
+(<ref>), just below
+formula (<ref>)
+and (<ref>), respectively.  Moreover, the expansion
+of H^(5) can be written as in (<ref>) and is
+truncated up to degree 2 in the actions and to trigonometrical
+degree 12 in the angles, while the expansion (<ref>)
+of the intermediate Hamiltonian
+^(5)=H∘∘𝒞^(5) has been preliminarly
+truncated so as to exclude the sum of terms ∑_ℓ>6
+h_ℓ^(r)( J,ϑ)=( J^7/2).
+Therefore, H^(5) is not in Kolmogorov normal form because of a few
+(small) Hamiltonian terms that are either dependent on the angles q only or linearly dependent on the actions p.
+
+During the initial stage of the computer-assisted proof, a first code
+explicitly performs a (possibly large) number R_ I of
+normalization steps of a classical formulation of the Kolmogorov
+algorithm, which includes also small translations of the actions that
+aim at keeping fixed the desired angular velocity vector of the
+quasi-periodic motion on the final torus, i.e.,
+ω^*. Afterwards, the size of the perturbation is further
+reduced (although in a less efficient way) by another code which just
+iterates the estimates of the norms of the terms of order r with
+R_ I<r≤ R_ II. In the case of the model we are
+studying, in order to achieve the convergence of the algorithm, we
+have found convenient to set R_ I=200 and R_ II=20 000.
+The whole computer-assisted proof[The
+    software package allowing to perform the computer-assisted proof
+    of theorem <ref> is available at https://www.mat.uniroma2.it/~locatell/CAPs/CAP4KAM-HD60532.zip
+ As
+    a matter of fact, the codes included in this software package are
+    exactly the same as the ones which can be downloaded from the
+    website mentioned in
+    footnote<ref>1. The
+    differences between the two packages just concern the files
+    defining the expansions of the initial Hamiltonians to which the
+    computer-assisted proofs are applied.] required a total
+computational time of about 52.5 hours on a
+workstation equipped with CPUs of type 
+(2.2 GHz) and 384 GB of RAM. Nearly all the time (i.e., more than
+50 hours) has been requested by the first explicit
+computation of the (truncated) expansions of the Hamiltonians
+H^(r) for r=1 , … , R_I=200.
+
+
+
+The plot of the norms of the generating functions χ_1^(r) (in
+semi-log scale) is reported in Fig. <ref>, where
+the occurrence of a regular decrease is clearly highlighted.  In
+particular, looking at the panel on the right, we can appreciate that
+the decrease is sharper for the first R_ I normalization steps,
+where the expansions of the generating functions are computed
+explicitly.  Afterwards, there is a transition to the regime of the
+iteration of the norms and, after some initially periodic jumps, the
+decrease becomes more regular.
+
+At the end of the running of the codes which make part of the software
+package designed to perform this kind of computer-assisted proofs,
+upper bounds for all the terms appearing in the expansion of
+H^(R_ II), which is written as in (<ref>),
+are available. Therefore, one can check in an automatic way the
+applicability of the KAM theorem (e.g., in the version proved
+in <cit.>, which fits perfectly in this framework).  The
+application of all this computational procedure allows us to prove our
+final result, that is summarized in the following statement.
+
+
+
+  Let us consider the Hamiltonian H^(5), expanded as
+  in (<ref>) and truncated up to degree 2 in the
+  actions and to trigonometrical degree 12 in the angles.  Let
+  ω^*∈^2 be such that
+  
+    ω_1^*∈( -2.72805620345077182 × 10^-2,
+        -2.72805620345057182× 10^-2)
+       ω_2^*∈( -3.0574227066998818 × 10^-1,
+        -3.0574227066978818 × 10^-1)
+
+  and it satisfies the Diophantine condition
+  
+    | k·ω^*|≥γ/| k|^τ ,
+          ∀  k∈^2∖{0} ,
+
+  with γ=2.7280562034505684× 10^-2 and τ=1.
+  Therefore, there exists an analytic canonical transformation which
+  transforms the Hamiltonian H^(5) in the Kolmogorov normal
+  form (<ref>). In the new action-angle coordinates, the
+  torus { p= 0 ,  q∈^2} is invariant and carries
+  quasi-periodic orbits whose corresponding angular velocity vector is
+  ω^*.
+
+
+
+
+
+
+
+§ ACKNOWLEDGMENTS
+
+This work was partially supported by the MIUR-PRIN 20178CJA2B “New
+Frontiers of Celestial Mechanics: theory and Applications”, by the
+MIUR Excellence Department Project awarded to the Department of
+Mathematics of the University of Rome “Tor Vergata” (CUP
+E83C18000100006) and by the National Group of Mathematical
+Physics (GNFM-INdAM).
+
+
+
+
+10
+
+
+Alv-Mich-Mal-2016
+  A.J. Alves, T.A. Michtchenko, M. Tadeu dos Santos.
+  Dynamics of the 3/1 planetary mean-motion resonance: an application to the HD60532 b-c planetary system.
+  Cel. Mech. & Dyn. Astr., 124, 311–334 (2016).
+
+
+
+BatMor-2013K. Batygin, A. Morbidelli.
+  Analytical treatment of planetary resonances
+  A&A, 556, A28 (2013). 
+  
+Butler-et-al-1999R.P. Butler, G.W. Marcy, D.A. Fischer,
+  T.M. Brown, A.R. Contos, S.G. Korzennik, P. Nisenson, R.W. Noyes.
+  Evidence for Multiple Companions to υ Andromedæ.
+  Astroph. Jour., 526, 916–927 (1999). 
+
+Car-Loc-2020C. Caracciolo, U. Locatelli.
+  Computer-assisted estimates for Birkhoff normal forms.
+  Journal of Computational Dynamics, 7, 425–460 (2020).
+
+  
+CarLSV-2022C. Caracciolo, U. Locatelli, M. Sansottera, M. Volpi.
+  Librational KAM tori in the secular dynamics of the
+    υ Andromedæ planetary system.
+  MNRAS, 510, 2147–2166 (2022).  
+
+CelGL-2000A. Celletti, A. Giorgilli, U. Locatelli.
+  Improved estimates on the existence of invariant tori
+    for Hamiltonian systems.
+  Nonlinearity, 13, 397–412 (2000).
+
+
+Deitrick-et-al-2015R. Deitrick, R. Barnes, B.E. McArthur,
+  T.R. Quinn, R. Luger, A. Antonsen, G.F. Benedict.
+  The Three–Dimensional Architecture of the
+    υ Andromedæ.
+  Astroph. Jour., 798:46 (2015).
+
+  Fig-Har-Luq-2017J.-Ll. Figueras, A. Haro and A. Luque.
+  Rigorous computer-assisted application of KAM theory: a modern
+    approach. 
+    Found. Comput. Math., 17 (2017), 1123–1193.
+  
+  
+Gab-Jor-Loc-2005F. Gabern, A. Jorba, U. Locatelli.
+  On the construction of the Kolmogorov normal form for the
+    Trojan asteroids.
+  Nonlinearity, 18, 1705–1734 (2005).
+  
+Giorgilli-Libro-2022 
+  A. Giorgilli.
+  Notes on Hamiltonian Dynamical Systems.
+  London Mathematical Society Student Texts,
+  102, ISBN: 9781009151139 (2022).
+
+
+GioDFGS-1989A. Giorgilli, A. Delshams, E. Fontich,
+  L. Galgani, C. Simó.
+  Effective stability for a Hamiltonian system near an
+    elliptic equilibrium point, with an application to the restricted
+    three–body problem.
+  J. Differential Equations, 77, 167–198 (1989).
+
+ 
+Gio-Loc-San-2009A. Giorgilli, U. Locatelli, M. Sansottera.
+  Kolmogorov and Nekhoroshev theory for the
+    problem of three bodies.
+  Cel. Mech. & Dyn. Astr., 104, 159–173 (2009).
+
+  
+Gio-Loc-San-2017A. Giorgilli, U. Locatelli, M. Sansottera.
+  Secular dynamics of a planar model of the
+  Sun-Jupiter-Saturn-Uranus system; effective stability in the light
+  of Kolmogorov and Nekhoroshev theories.
+  Reg. & Chaotic Dyn., 22, 54–77 (2017).
+
+Gio-San-Chronos-2012A. Giorgilli, M. Sansottera.
+  Methods of algebraic manipulation in perturbation theory.
+  In P.M. Cincotta, C.M. Giordano, C. Efthymiopoulos (eds.):
+    “Chaos, Diffusion and Non-integrability in Hamiltonian Systems –
+    Applications to Astronomy”, Proceedings of the Third La Plata
+    International School on Astronomy and Geophysics, Universidad
+  Nacional de La Plata and Asociación Argentina de Astronomía
+  Publishers, La Plata (2012).  
+  
+Grobner-60W. Gröbner.
+  Die  Lie-Reihen und Ihre 
+    Anwendungen.
+  Springer Verlag, Berlin (1960).
+  Italian transl. in Le
+  serie di Lie e le loro applicazioni. Cremonese, Roma (1973).
+
+Hadden-2019
+  S. Hadden.
+  An Integrable Model for the Dynamics of Planetary
+    Mean-motion Resonances.
+  Astron. Jour., 158:238 (2019).
+
+
+Haro-et-al_book_2016
+  A. Haro, M. Canadell, J-LL. Figueras, A. Luque, J-M. Mondelo.
+  The parameterization method for invariant manifolds.
+  Applied Mathematical Sciences, vol. 195, Springer (2016).
+
+
+Laskar-1989J. Laskar.
+  Les variables de Poincaré et le
+  développement de la fonction perturbatrice.  Groupe de travail
+  sur la lecture des Méthodes nouvelles de la Mécanique
+  Céleste.
+  Notes scientifiques et techniques du Bureau des
+  Longitudes, S026
+  (1989).
+  https://www.imcce.fr/content/medias/publications/publications
+-recherche/nst/docs/S026.pdf
+  
+Laskar-2003J. Laskar.
+  Frequency map analysis and quasi periodic decompositions.
+  In D. Benest, C. Froeschlé, &  E. Lega E. (eds.),
+    Hamiltonian systems and Fourier analysis,
+    Taylor and Francis, Cambridge (2003)
+  
+
+Las-Cor-2009
+  J. Laskar, A. C. M. Correia.
+  HD 60532, a planetary system in a 3:1 mean motion resonance.
+  Astron. & Astroph., 496, L5–L8 (2009).
+
+
+Las-Rob-2001J. Laskar, P. Robutel.
+  High order symplectic integrators for perturbed Hamiltonian
+    systems.
+  Cel. Mech. & Dyn. Astr., 80, 39–62 (2001).
+
+Lib-San-2013A.-S. Libert, M. Sansottera. On the extension of the Laplace-Lagrange secular theory to order two in the masses for extrasolar systems. Cel. Mech. & Dyn. Astr., 117, 149–168 (2013).
+  
+Loc-Car-San-Vol-2021U. Locatelli, C. Caracciolo, M. Sansottera, M. Volpi. A numerical criterion evaluating the robustness of planetary architectures; applications to the υ Andromedæ system  In A. Celletti, C. Galeş, C. Beaugé, A. Lemaitre, eds., Multi-scale (time and mass) dynamics of space objects, Proceedings of the International Astronomical Union Symposium No. 364, Book Series, Volume 15, Pages 65-84, DOI 10.1017/S1743921322000461 (2021).
+  
+  
+Loc-Car-San-Vol-2022U. Locatelli, C. Caracciolo, M. Sansottera,
+  M. Volpi.
+  Invariant KAM tori: from theory to applications to exoplanetary systems
+   In G. Baù,
+  S. Di Ruzza, R.I. Páez, T. Penati & M. Sansottera (eds.),
+  I-CELMECH Training School — New frontiers of Celestial
+    Mechanics: theory and applications, Springer PROMS, volume 399, eBook ISBN 978-3-031-13115-8 (2022).
+    
+Loc-Gio-2000U. Locatelli, A. Giorgilli.
+  Invariant tori in the secular motions of the three–body
+    planetary systems.
+  Cel. Mech. & Dyn. Astr., 78, 47–74 (2000).
+
+Loc-Gio-2005U. Locatelli, A. Giorgilli.
+  Construction of the Kolmogorov's normal form for a
+    planetary system.
+  Reg. & Chaot. Dyn., 10, 153–171 (2005).
+
+Loc-Gio-2007U. Locatelli, A. Giorgilli.
+  Invariant tori in the Sun–Jupiter–Saturn system.
+  Discr. & Cont. Dyn. Sys. — B, 7, 377–398 (2007).
+  
+McArt-et-al-2010B.E. McArthur, G.F. Benedict, R. Barnes,
+  E. Martioli, S. Korzennik, E. Nelan, R.P. Butler.
+  New observational constraints on the
+    υ Andromedæ system with data from the Hubble Space
+    telescope and Hobby-Eberly telescope.
+  Astroph. Jour., 715, 1203–1220 (2010).
+
+Mich-Mal-2004T.A. Michtchenko, R. Malhotra.
+  Secular Dynamics of the Three-Body Problem:
+    Application to the υ Andromedæ Planetary System.
+  Icarus, 168, 237–248 (2004).
+
+
+
+
+
+  
+Mog-Las-2022
+  F. Mogavero, J. Laskar.
+  The origin of chaos in the Solar System through
+    computer algebra
+  Astron. & Astroph., 662, L3 (2022).
+
+
+Mor-Gio-1995A. Morbidelli, A. Giorgilli.
+  Superexponential stability of KAM tori.
+  J. Stat. Phys., 78, 1607–1617 (1995).
+
+  
+Pucacco-2021G. Pucacco.
+  Normal forms for the Laplace resonance.
+  Cel. Mech. & Dyn. Astr., 133:3 (2021).
+
+  
+SanLib-2019M. Sansottera, A.-S. Libert.
+  Resonant Laplace-Lagrange theory for extrasolar systems
+    in mean-motion resonance.
+  Cel. Mech. & Dyn. Astr., 131:38 (2019).
+
+
+SteLoc-2012L. Stefanelli , U. Locatelli.
+  Kolmogorov's normal form for equations of motion with
+    dissipative effects.
+  Discr. & Cont. Dyn. Sys. — B, 17, 2561–2593
+  (2012).
+
+
+ValLoc-2021 
+  L. Valvo, U. Locatelli.
+  Hamiltonian control of magnetic field lines: Computer assisted
+    results proving the existence of KAM barriers.
+  Journal of Computational Dynamics, 9, 505–527 (2022).
+
+
+Vol-Loc-San-2018M. Volpi, U. Locatelli, M. Sansottera.
+  A reverse KAM method to estimate unknown mutual
+    inclinations in exoplanetary systems.  Cel. Mech. &
+    Dyn. Astr., 130:36 (2018).
+
+Vol-Roi-Lib-2019M. Volpi, A. Roisin, A.-S. Libert.
+  On the 3D secular dynamics of radial-velocity-detected
+    planetary systems.
+  Astron. & Astroph., 626, A74 (2019).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,14 +1,43 @@
-# Project
+# Parrot: Efficient Serving of LLM-based Application with Semantic Variables
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+This project is a research prototype for now. Being eargerly iterated.
 
-As the maintainer of this project, please make a few updates:
+![](assets/layers_arch.png)
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+
+## Install
+
+See [INSTALL.md](INSTALL.md) for installation instructions.
+
+## Run Parrot
+
+**Run the Compose Script in a Single Machine**
+
+We provide some one-click scripts to run Parrot in a single machine with sample configs. You can check them in the `sample_configs/launch` folder.
+
+```bash
+bash sample_configs/launch/launch_single_vicuna_13b.sh
+```
+
+<!-- **Run Docker Compose in a Cluster**
+
+TODO -->
+
+**Start a ServeCore Server**
+
+You can separately start a ServeCore server.
+
+```bash
+python3 -m parrot.serve.http_server --config_path <config_path>
+```
+
+**Start an Engine Server**
+
+You can separately start an engine server. If you choose to connect to the ServeCore server, you need to start the ServeCore server first and specify the ServeCore server address in the config file.
+
+```bash
+python3 -m parrot.engine.http_server --config_path <config_path>
+```
 
 ## Contributing
 

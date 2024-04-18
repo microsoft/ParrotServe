@@ -1,0 +1,1107 @@
+
+
+Improvement of Neutron-HP package: Doppler broadening of the neutron elastic scattering kernel and cross sections
+    [
+    March 30, 2023
+=================================================================================================================
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+In the recent past, a new paradigm for the notion of symmetry in QFTs became dominant. It is based on the necessity to include higher-form symmetries and the corresponding extended objects in the description of quantum field theories <cit.>.
+Restricting to four-dimensional QFTs, the simplest way to proceed consists in classifying the one-form symmetries in supersymmetric and conformal theories (SCFTs). A seminal paper that allowed for such a classification has been <cit.> where a general prescription was given in terms of the spectrum of mutually local Wilson and 't Hooft lines <cit.>.
+Such a prescription was initially based on the existence of a Lagrangian description for the SCFT under investigation. In absence of a Lagrangian description it is nevertheless possible to use other tools, coming from supersymmetry, holography and/or branes.
+These constructions have allowed to figure out the one-form symmetry structure of many 4d non-Lagrangian SCFTs constructed in various ways
+<cit.>.
+
+
+A class of theories that has not been deeply investigated so far are SCFTs with 24 supercharges, i.e. 𝒩=3 conformal theories. Such models have been predicted
+in <cit.>, and then found in  <cit.>.
+Many generalizations have been then studied by using various approaches
+ <cit.>.
+ A key role in the analysis of <cit.> is based on the existence, in the string theory setup, of non-perturbative extended objects that generalizes the notion 
+of orientifolds, the S-folds (see <cit.> for their original definition). From the field theory side, the projection implied by such S-folds on 𝒩=4 SYM has been associated to the combined action of an R-symmetry and an S-duality twist on the model at a fixed value of the holomorphic gauge coupling, where the global symmetry is enhanced by opportune discrete factors. Four possible ℤ_k have been identified, corresponding to k=2, 3, 4 and 6. While the ℤ_2 case corresponds to the original case of the orientifolds <cit.>, where actually the holomorphic gauge coupling does not require to be fixed, the other values of k correspond to new projections that can break supersymmetry down to 𝒩=3.
+The analysis has been further refined in <cit.>, where the discrete torsion, in analogy with the case of orientifolds, has been added to this description.
+In this way, it has been possible to achieve a classification of such 𝒩=3 S-folds SCFT in terms of the Shephard–Todd complex reflection groups.
+
+
+The goal of this paper consists in classifying one-form symmetries for such theories, constructing the lattices of lines 
+and identifying which models possess non-invertible symmetries.
+The main motivation behind this expectation is that for the rank-2 S-folds, in absence of discrete torsion, the SCFTs enhance to 
+𝒩=4 SYM <cit.> where these properties are present.
+
+Our strategy adapts the one presented in <cit.> to S-fold setups. There, the spectrum of lines is built from the knowledge of the electromagnetic charges of massive states in a generic point of the Coulomb branch. These charges are read from the BPS quiver, under the assumption that the BPS spectrum is a good representative of the whole spectrum of electromagnetic charges. In the case of S-folds however such a BPS quiver description has not been worked out and 
+we extract the electromagnetic charges of dynamical particles from the knowledge of 
+the (p,q)-strings  configurations in the Type IIB setup <cit.>. The main assumption behind the analysis is that such charges are a good representative of the electromagnetic spectrum. 
+
+We proceed as follows.
+First we choose an 𝒩=3 theory constructed via an S-fold projection of Type IIB. This consists in having N D3-branes, together with their images, on the background of an S-fold. At a generic point of the Coulomb branch, the corresponding low energy gauge dynamics corresponds to a U(1)^N gauge theory where each U(1) is associated to a D3.
+Then we list all (p,q)-strings that can be stretched between D3-branes and their images. They have electric and magnetic charges with respect to U(1)^N.
+Eventually we run the procedure of <cit.>. This consist in finding all the lines that are genuine, i.e. have integer Dirac pairing with the local particles, modulo screening by the dynamical particles. This gives the lattice of possible charges, then the different global structures correspond to maximal sub–lattices of mutually local lines.
+
+
+
+Our results are summarized in <Ref>. In the first column, one finds the type of S-fold projection that has been considered. 
+Such projections are identified by the two integers k and ℓ in S_k,ℓ.
+The integer k corresponds to the ℤ_k projection while the second integer ℓ is associated to the discrete torsion.
+Then, when considering an S_k,ℓ S-fold on a stack of N D3-branes the complex reflection group associated to such a 
+projection is G(k,k/ℓ,N). 
+In the second column, we provide the one-form symmetry that we found in our analysis, and in the third, the number of inequivalent line lattices that we have obtained. The last column specifies whether there exist cases that admit non-invertible symmetries.
+Indeed, here we find that in some of the cases there exists a zero-form symmetry mapping some of the different line lattices, that are therefore equivalent.
+Furthermore in such cases we expect the existence of non-invertible symmetries obtained by combining the zero-form symmetry with a suitable gauging of the one-form symmetry.
+
+A remarkable observation strengthening our results regards the fact that our analysis reproduces the limiting  G(k,k,2)
+cases, where supersymmetry enhances to 𝒩=4  with  𝔰𝔲(3), 𝔰𝔬(5) and 𝔤_2 gauge groups for k=3, 4 and 6 respectively.
+Another check of our result is that it matches with the cases G(3,1,1) and G(3,3,3), where an 𝒩=1 Lagrangian picture has been worked out in <cit.>.
+
+
+
+Note added: When concluding this paper, the reference <cit.> appeared on arXiv. There, they study  the classification of zero, one and two-form symmetries 
+in 𝒩=3 S-fold SCFTs. Their analysis is holographic, along the lines of the construction of <cit.> for 𝒩=4 SYM. We have checked that our results are in agreement with their predictions.
+
+
+
+
+
+
+§ GENERALITIES
+
+
+
+
+
+
+
+
+
+ §.§ Global structures from the IR
+
+
+
+
+The strategy adopted here, as already discussed in the introduction, is inspired by the one of <cit.>.
+The main difference is that instead of using BPS quivers, not yet available for our S-folds,
+we take advantage of the type IIB geometric setups and probe the charge spectrum with (p,q)-strings – the bound state of p fundamental  strings F1 and q Dirichlet strings D1.[In order to provide the IR spectrum of line operators of the SCFTs from this UV perspective, we assume the absence of wall-crossing.
+While such an assumption is a priori motivated by the high degree of supersymmetry,  a posteriori it is justified by 
+the consistency of our results with the literature.] 
+
+Despite this difference, the rest of the procedure is the one of <cit.> which we now summarize.
+Denote as 
+
+    γ^i = (e^(i)_1, m^(i)_1; …; e^(i)_r, m^(i)_r)
+
+a basis vector of the electromagnetic lattice of dynamical state charges under the U(1)_e^r × U(1)_m^r gauge symmetry on the Coulomb branch.
+The spectrum of lines can be determined by considering a general line ℒ with charge
+
+    ℓ=(e^(l)_1, m^(l)_1; …; e^(l)_r, m^(l)_r)   .
+
+This is a genuine line operator if the Dirac pairings with all dynamical states Ψ are integer:
+
+    ⟨Ψ, ℒ⟩∈ℤ    ∀ Ψ  .
+
+This can be rephrased as the condition
+
+    ∑_j=1^r e^(i)_j m^(l)_j - m^(i)_j e^(l)_j ∈ℤ    ∀  i   .
+
+
+Furthermore, inserting a local operator with charge γ_i on the worldline of a line with charge ℓ shifts its charge by γ_i.
+Therefore if a line with charge ℓ appears in the spectrum then a line with charges ℓ +  ∑ k_i γ_i with k_i ∈ℤ
+must also appear. 
+When classifying the spectrum of charges of the line operators of a QFT it is then useful to consider  the charges ℓ modulo these insertions of local states.
+This gives rise to equivalence classes of charges with respect to the relation:
+
+    ℓ∼ℓ + γ_i
+    	    ∀  i  .
+
+Borrowing the nomenclature of <cit.>, we will refer to such identification as screening and we will
+work with each equivalence class by picking one representative. 
+The genuine lines after screening form a lattice. In general two such lines are not mutually local and a choice of global structure corresponds to a choice of a maximal sublattice of mutually local lines.
+
+
+
+
+ §.§ Charged states in S_k,l-folds
+
+
+
+
+We aim to determine the electromagnetic charges of the local states generated by (p,q)-strings stretched between (images of) D3-branes in presence of an S-fold. 
+The S-fold background of Type IIB string theory consist of a spacetime ℝ^4 × (ℝ^6/ℤ_k) where the _k quotient involves an S-duality twist by an element ρ_k ∈ SL(2,) of order k, where k=2,3,4,6. For k>2 the value of the axio-dilaton vev is fixed by the requirement that it must be invariant under the modular transformation associated to ρ_k. The matrices ρ_k and the corresponding values[In our convention, an SL(2,ℤ) transformation of the axio-dilaton τ→ (aτ + b) / (cτ +d) relates to a matrix ρ_k = [ d c; b a ]. We also have S = [  0 -1;  1  0 ] and T = [ 1 0; 1 1 ].] of τ are given in Table <ref>.
+
+
+A stack of N D3-branes probing the singular point of the S-fold background engineer an 𝒩=3 field theory on the worldvolume of the stack of D3-branes. It is useful to consider the k-fold cover of spacetime, and visualize the N D3-branes together with their (k-1)N images under the S_k-fold projection. We are going to label the m-th image of the i-th D3-brane with the index i_m, where i=1,…,N and m=1,…,k.
+
+Under the S-fold projection, the two-form gauge fields of the closed string sector B_2 and C_2 transform in the fundamental representation:
+
+    ([ B_2; C_2 ])
+    	→ρ_k  ([ B_2; C_2 ])   .
+
+Consistently, the (p,q) strings charged under these potentials are mapped to (p',q') where:
+
+    (p' q') =   (p q)·ρ_k^-1 .
+
+We denote a state associated to a (p,q) connecting the i_m-th D3-brane and the j_n D3-brane as:
+
+    |p,q⟩ _i_m, j_n= |-p,-q⟩ _j_n , i_m  ,
+
+where we identity states with both opposite charges and orientation.
+
+First, strings linking branes in the same copy of ℝ^6/ ℤ_2 transform as follows:
+
+    |p,q⟩ _i_m, j_m→ζ_k^-1 |p',q'⟩_i_m+1,j_m+1  ,
+
+where (p',q') are related to (p,q) by (<ref>) and ζ_k is the primitive k-th root of unity. These states always collectively give rise to a single state in the quotient theory, with charges:
+
+    D3_iD3_j   :   (0,0 ; … ;p,q^i-th; …; -p,-q^j-th; … ; 0,0)   .
+
+
+An important ingredient we need to add to our picture is the discrete torsion for B_2 and C_2 <cit.>. In presence of such a discrete torsion, a string going from the i_m-th brane to the j_m+1-th brane should pick up an extra phase which depends only on its (p,q)-charge and the couple (θ_NS,θ_RR). More precisely, one expects that the S-fold action can be written as follows <cit.>:[We thank Shani Meynet for pointing out <cit.> to us.]
+
+    |p,q⟩_i_mj_m+1→ζ_k^-1 e^2π i (pθ_NS+qθ_RR)|p',q'⟩_i_m+1j_m+2 ,
+
+where again (p',q') are related to (p,q) by (<ref>). For i≠ j, this always leads to the following state in the projected theory <cit.>:[The action on (p,q) involves ρ_k^-1, see (<ref>). In writing (<ref>) however, we measure the charge with respect to the brane in the chosen fundamental domain, hence the appearance of ρ_k instead of its inverse.]
+
+    D3_iD3_j^ρ  :  	(0,0 ; … ;p,q^i-th; …; -(p q)·ρ_k^j-th; … ; 0,0)   .
+
+
+Note that this is the only case that might not lead to any state in the quotient theory when i=j, i.e. when a string links a brane and its image. When the quotient state exists, it has charges
+
+    D3_iD3_i^ρ  :  	(0,0 ; … ;(p q)-(p q)·ρ_k^i-th;  … ; 0,0)   .
+
+
+Analogously, strings twisting around the S-fold locus n-times pick up n-times the phase in (<ref>). 
+
+A last remark is that discrete torsion allows some strings to attach to the S-fold if the latter has the appropriate NS and/or RR charge. If this is the case, the state is mapped as in (<ref>):
+
+    |p,q⟩_S_k  i_m→|p^',q^'⟩_S_k  i_m+1  ,
+
+and provides the following charge in the projected theory:
+
+    S_k D3_i   :   (0,0 ; … ;p,q^i-th;  … ; 0,0)   .
+
+
+These rules are illustrated and details on discrete torsion are provided in the remaining of this section for orientifolds and S-folds separately.
+
+
+
+  §.§.§ The case with k=2: orientifolds
+
+
+
+In this subsection we apply the formalism described above for orientifolds and reproduce the spectrum of strings known in the literature.
+
+The matrix ρ_2 is diagonal, therefore the two p and q factors can be considered independently. In this case the field theory obtained after the projection is Lagrangian and can be studied in perturbative string theory with unoriented strings. Discrete torsion takes value in (θ_NS,θ_RR)∈_2 ⊕_2, giving four different choices of O3-planes related by SL(2,ℤ) actions <cit.>, see <Ref>.
+
+
+The orientifold action is then recovered from (<ref>) and (<ref>) with ζ_2 = -1. First, we have
+
+    |p,q⟩_i_1 j_1→ - |-p,-q⟩_ i_2 j_2  = -|p,q⟩_ j_2 i_2  .
+
+For the strings that stretch from one fundamental domain of ℝ^6/ℤ_2 to the next, there are four cases depending on the values of θ_NS and θ_RR:
+
+    [                                        O3^-                                           :           |p,q⟩_i_1 j_2→ -|p,q⟩_ j_1 i_2  ,;                                        O3^+                                           :     |p,q⟩_i_1 j_2→ -e^pπ i |p,q⟩_j_1 i_2  ,;                                        O3^-                                           :     |p,q⟩_i_1 j_2→ -e^qπ i |p,q⟩_j_1 i_2  ,;                                        O3^+                                           : |p,q⟩_i_1 j_2→ -e^(p+q)π i |p,q⟩_j_1 i_2  . ]
+
+It is interesting to consider strings connecting one brane to its image, i=j. In the case of trivial discrete torsion, corresponding to the O3^--plane, all such strings are projected out. On the contrary, in the O3^+ case, an F1-string linking mirror branes survives the projection, while a D1-string similarly positioned is projected out. We also find strings that can attach to the different orientifolds following <cit.>:
+
+    O3^-   :  none  ,    	O3^+   :  |0,1⟩_O3^+ i_m  ,    O3^-   :  |1,0⟩_O3^- i_m  ,   O3^+   :  |1,1⟩_O3^+ i_m  ,
+
+as well as bound states of these.
+
+
+
+
+  §.§.§ The cases with k>2: S-folds
+
+
+The construction discussed above can be applied to S_k>2 in order to obtain the string states in the quotient theory. For k>2, the discrete torsion groups have been computed in <cit.>, the result being θ_NS=θ_RR∈_3 for the S_3-case and θ_NS=θ_RR∈_2 for the S_4-case. The S_6-fold does not admit non-trivial discrete torsion. It was also pointed out that, for the S_3-case, the choices θ_NS=θ_RR=1/3 and θ_NS=θ_RR=2/3 are related by charge conjugation; therefore everything boils down to whether the discrete torsion is trivial or not. Following the notation of <cit.>, we denote as S_k,1 the S-folds with trivial discrete torsion and as S_k,k the S-folds with non-trivial discrete torsion.
+
+
+
+
+
+As before, the only states that might not lead to any state in the quotient theory are the strings linking different covers of ℝ^6/ℤ_k. These transform as follows:
+
+    [                                                        S_3,1                                                            :               |p,q⟩_i_1 j_m+1→ e^-i2π/3|q-p,-p⟩_i_2 j_m+2  ,;                                                        S_3,3                                                            : |p,q⟩_i_1 j_m+1→ e^-i2π/3e^im(p+q)2π/3 |q-p,-p⟩_i_2 j_m+2  ,;                                                        S_4,1                                                            :                 |p,q⟩_i_1 j_m+1→ e^-iπ/2 |-q,p⟩_i_2 j_m+2  ,;                                                        S_4,4                                                            :       |p,q⟩_i_1 j_m+1→ e^-iπ/2e^im(p+q)π |-q,p⟩_i_2 j_m+2  ,;                                                        S_6,1                                                            :              |p,q⟩_i_1 j_m+1→ e^-iπ/3 |p-q  ,p⟩_i_2 j_m+2  .;                                                              ]
+
+This shows that no state is projected out for S_3,1 and  S_3,3. Analogously to the orientifold cases, we project out some strings linking mirror branes: |p,q⟩_i_n i_n+2 in S_4,1 and S_4,4, and |p,q⟩_i_n i_n+3 in S_6,1 respectively.
+
+Finally, we get extra strings linking the S-fold to D-branes for the cases with discrete torsion. Following the discussion in <cit.>, we know that these S-folds admit all kinds of p and q numbers:
+
+    S_3,3  :   |p,q ⟩_S_3,3 i_n  ,    S_4,4  :  |p,q⟩_S_4,4 i_n  .
+
+
+
+
+
+
+
+
+
+ §.§ Dirac pairing from (p,q)-strings
+
+
+
+
+Having determined the states associated to (p,q)-strings that survive the S-fold projection we now analyze the electromagnetic charges of these states. It is useful to consider the system of a stack of D3-branes and an S_k,ℓ-fold on a generic point of the Coulomb branch. This corresponds to moving away the D3-branes from the S-plane. On a generic point of the Coulomb branch, the low energy theory on the D3-branes is a U(1)_i^N gauge symmetry, where each U(1)_i factor  is associated to the i-th D3-brane. The theory includes massive charged states generated by the (p,q)-strings studied in the previous section. A (p,q)-string stretched between the i-th and j-th D3-brane has electric charge p and magnetic charge q under U(1)_i as well as electric charge -p and magnetic charge -q under U(1)_j, and is neutral with respect to other branes.
+We organize the charges under the various U(1)s in a vector:
+
+    (e_1, m_1; e_2,m_2; …; e_N,m_N)
+
+where e_i and m_i are the electric and magnetic charge under U(1)_i, respectively. In this notation the charge of a string stretched between the i-th and j-th D3-brane in the same cover of ℝ^6/ℤ_2 has charge:
+
+    D3_iD3_j: (0,0;…; p,q^i-th;0,0; …;  -p,-q^j-th;… )   ,
+
+where the dots stand for null entries. We will keep using this notation in the rest of the paper.
+A (p,q)-string stretched between the i-th D3-brane and the l-th image of the j-th D3-brane imparts electromagnetic charges (p,q) under U(1)_i and charges - (p,q)ρ_k^l under U(1)_j. In formulas:
+
+    D3_iD3_j^ρ^l: (0,0;…; p,q^i-th;0,0; …;  -(p q)·ρ_k^l^j-th;… )   .
+
+
+The last ingredient for our analysis is given by the Dirac pairing between two states. Consider a state Ψ with charges e_i,m_i under U(1)_i and a state Ψ' with charges e'_i,m'_i under U(1)_i. The pairing between F1 and D1-strings in Type IIB dictates that the Dirac pairing between these states is given by:
+
+    ⟨Ψ, Ψ' ⟩ = ∑_i=1^N (e_i m'_i - m_i e'_i)   .
+
+
+By using this construction we can reproduce the usual Dirac pairing of 𝒩=4 SYM with ABCD gauge algebras. As an example we now reproduce the Dirac pairing of D_N, engineered as a stack of N D3-branes probing an O3^--plane. 
+In this case the allowed (p,q)-strings have the following charges:
+
+    D3_iD3_j: (0,0;…; p,q^i-th;0,0; …;  -p,-q^j-th;… )
+    
+       D3_iD3_j^ρ: (0,0;…; p,q^i-th;0,0; …;  p,q^j-th;… )
+
+The states associated to (1,0)-strings correspond to the 𝒲 bosons while the states associated to (0,1)-strings correspond to magnetic monopoles ℳ. For each root 𝒲_i of D_N let ℳ_i be the corresponding coroot. More precisely if 𝒲_i is associated to a (1,0)-string connecting two D3-branes, then the coroot ℳ_i corresponds to the string (0,1) stretched between the same pair of D3-branes.
+The only non-vanishing Dirac pairing is the one between a 𝒲_i boson and an ℳ_j monopole. This pairing between the simple (co)roots 𝒲_i and ℳ_j is given by the intersection between 𝒲_i and 𝒲_j, explicitly:
+
+    ⟨𝒲_i,ℳ_j ⟩ = (A_D_N )_i,j  ,
+
+where A_D_N is the Cartan matrix of the D_N algebra, corresponding to an 𝔰𝔬(2N) gauge theory. 
+Indeed the intersection between F1 strings in the background of an O3^- reproduces the intersection of the roots of D_N. 
+The Dirac pairing (<ref>) reproduces the Dirac pairing of 𝔰𝔬(2N) 𝒩=4 SYM.
+Similar constructions for O3^+, O3^-, and O3^+ lead to the B and C cases (while branes in absence of orientifold would give A). The corresponding gauge algebras are summarized in <Ref>.
+
+
+
+
+
+
+ §.§ Lines in O3-planes
+
+
+
+
+Before moving to new results, we illustrate our method with well understood O3-planes. Specifically, we consider placing N=2 D3-branes in the background of an O3^+-plane.
+
+
+
+
+In this specific example, the F1-strings corresponding to elementary dynamical states in the quotient theory can be chosen to be |1,0 ⟩_1_2 1_1 and |1,0 ⟩_1_1 2_1. The first links the i=1 brane to its mirror (D3_1^ρ D3_1) and the second links the i=1 to the i=2 brane (D3_1 D3_2). A pictorial representation of this setup is shown in Figure <ref>. In the notation of the previous section, they lead to 𝒲_i-bosons in the gauge theory with the following charge basis:
+
+    D3_1^ρ D3_1   :  	w_1 =  (2,0;0,0)   ,     D3_1 D3_2  :   w_2 =  (-1,0;1,0)   .
+
+These generate the algebra 𝔲𝔰𝔭(4) of electric charges. The elementary magnetic monopoles ℳ_i come from the D1-strings |0,1 ⟩_O3^+ 1_1 and |0,1 ⟩_1_1 2_1, and provide the following charges:
+
+    O3^+ D3_1  :   m_1  =  (0,1;0,0)   ,     D3_1D3_2  :    m_2 =  (0,-1;0,1)   .
+
+This generates the algebra 𝔰𝔬(5) of magnetic charges. Finally, the elementary (1,1)-strings leading to states in the quotient theory can be chosen to be |1,1 ⟩_1_2 1_1 and |1,1 ⟩_1_1 2_1, i.e. D3_1^ρ D3_1 and D3_1D3_2 respectively. They provide dyons 𝒟_i:
+
+    D3_1^ρ D3_1   :   d_1 =  (2,2;0,0)   ,    D3_1D3_2  :   d_2 =  (-1,-1;1,1)   ,
+
+which reproduces an 𝔲𝔰𝔭(4) algebra. We will limit ourselves to considering the 𝒲-bosons and magnetic monopoles ℳ. Indeed, they generate the full lattice of electromagnetic charges admissible in the orientifold theory. See that
+
+    d_1 = w_1 + 2 m_1     d_2 = w_2 + m_2   .
+
+Clearly, all other allowed (p,q)-charges can be reconstructed in this way. The Dirac pairing between these elementary electromagnetic charges reads
+
+    ⟨𝒲_1, 𝒲_2 ⟩ = ⟨ℳ_1, ℳ_2 ⟩ = 0  ,
+    		
+       ⟨ℳ_1, 𝒲_2 ⟩ = 1  ,
+    		
+       ⟨𝒲_1,ℳ_1 ⟩ =⟨ℳ_2,𝒲_1 ⟩ =⟨𝒲_2,ℳ_2 ⟩ = 2  .
+
+
+Now, introduce a line operator ℒ with charge vector ℓ. It is convenient to express it in the basis of dynamical charges: 
+
+    ℓ = α_1 w_1 + α_2 w_2 + β_1 m_1 + β_2 m_2   ,
+
+where α_i and β_i to be determined. Screening with respect to 𝒲_1 and 𝒲_2 imposes
+
+    α_1 ∼α_1  + 1   ,   α_2 ∼α_2  + 1   ,
+
+respectively, while screening with respect to ℳ_1 and ℳ_2 imposes
+
+    β_1 ∼β_1  + 1   ,   β_2 ∼β_2  + 1   .
+
+Mutual locality with respect to the dynamical charges requires the quantities
+
+    [    ⟨ℒ,  𝒲_1 ⟩ = - 2β_1 +2 β_2  ,                                    ⟨ℒ,  𝒲_2 ⟩ =  β_1 - 2β_2     ,;     ⟨ℒ,  ℳ_1 ⟩ = 2α_1 - α_2    ,                                  ⟨ℒ,  ℳ_2 ⟩ =  -2 α_1 + 2α_2    , ]
+
+to be integers. All these constraints set
+
+    α_1 = e/2   α_2 = 0   ,   β_1 = 0    ,    β_2 = m/2   1   ,
+
+with e,m=0,1. Linearity of the Dirac pairing then guarantees mutual locality with respect to the full dynamical spectrum. Thus, the charge of the most general line (modulo screening) must read:
+
+    ℓ_e,m = 1/2(2e, -m ; 0 , m)   .
+
+
+A choice of global structure consists in finding a set of mutually local lines. The mutual locality condition between two lines ℒ and ℒ' with charges ℓ_e,m and ℓ_e',m' is given by:
+
+    ⟨ℒ , ℒ^'⟩ = 1/2 (-em^' +  e^' m) ∈ℤ  .
+
+Equivalently:
+
+    em'-me' = 0  2  .
+We find three such sets, each composed of a single line with non-trivial charge: ℓ_1,0, ℓ_0,1, or ℓ_1,1. In agreement with <cit.>, we find that the line with charge ℓ_1,0 transforms as a vector of 𝔲𝔰𝔭(4) and the theory is USp(4). The line with charge ℓ_0,1 transforms as a spinor of 𝔰𝔬(5) and corresponds to the global structure (USp(4)/ℤ_2)_0. The line with charge ℓ_1,1 transforms both as a vector and a spinor, and the gauge group is (USp(4)/ℤ_2)_1.
+Motivated by the match between our results (obtained through the procedure described above) and the global structures of Lagrangian theories <cit.>, in the next sections we use our method to analyze the line spectra of S-fold theories. 
+
+
+
+
+
+
+
+
+
+§ LINES IN S-FOLDS WITH 𝒩=4 ENHANCEMENT
+
+
+
+
+
+We now derive the spectrum of mutually local lines for the gauge theories obtained with N=2 D3-branes in the background of an S_k,1 plane, in each case k=3, 4 and 6. More precisely, exploiting the strategy spelled out in Section <ref>, we first compute the electromagnetic charge lattice of local states generated by (p,q)-strings. From this we extract the possible spectra of lines and compare them with the ones obtained in an 𝒩=4 Lagrangian formalism <cit.>, since these theories have been claimed to enhance to 𝒩=4 SYM  <cit.>.
+Matching the spectra provides an explicit dictionary between the various lattices and corroborates the validity of our procedure. In section <ref> we will then generalize the analysis to the pure 𝒩=3 S_k,ℓ projections for any rank, thus providing the full classification for the one-form symmetries in all such cases.
+
+
+
+
+ §.§ Lines in 𝔰𝔲(3) from S_3,1
+
+
+
+
+
+
+  §.§.§ Dynamical states and their charges
+
+
+Two D3-branes probing the singular point of the S_3,1-fold are claimed to engineer 𝔰𝔲(3) 𝒩=4 SYM. The charges of states generated by (p,q)-strings stretching between D3_1 and D3_2 or its first copy (see Figure <ref>) are
+
+    D3_1 D3_2  :  (p,q;-p,-q)   ,    D3_1 D3_2^ρ :   (p,q;q, q-p)   ,    D3_1 D3_2^ρ^2  :  (p,q;p-q, p)   .
+
+
+
+
+
+One may also consider copies of the strings listed in Equation <ref> such as:
+
+    D3_1^ρ D3_2^ρ  :  (-q,p-q;q,q-p)   ,
+
+as well as the strings going from one D3-brane to its own copies, for instance[In the absence of discrete torsion, these states have not been considered previously in the literature <cit.>, and we do here for the sake of consistency with the analysis of section <ref>. Note however that since their charge (which is the only feature that matters in order to derive line spectra) can be expressed as linear combinations of the charges of more conventional states, our results are independent of whether we consider them or not. ]
+
+    D3_1 D3_1^ρ  :  (2p-q,p+q;0,0)   .
+
+
+
+
+The charges of a generic string D3_1 D3_2^ρ^2 in (<ref>) can be expressed in terms of D3_1 D3_2 and D3_1 D3_2^ρ charges: 
+
+    [     D3_1D3_2^ρ^2  :    (p,q;p-q,p)                                  =     q (1,0;-1,0) + (q-p)(0,1;0,-1);                                                                       +(p-q) (1,0;0,-1) +p (0,1;1,1)   , ]
+
+where the first two vectors on the RHS come from D3_1 D3_2 with p=1, q=0 and p=0, q=1 respectively, and the last two come from D3_1 D3_2^ρ with p=1, q=0 and p=0, q=1 respectively. Acting with ρ_3, one can express all D3_1^ρ D3_2^ρ and D3_1^ρ^2 D3_2^ρ^2 charges in terms of D3_1 D3_2 charges. The charges D3_i D3_i^ρ can also be expressed as linear combinations of D3_1 D3_2^ρ and D3_2^ρ D3_1^ρ charges. All in all, we find that the charges of the strings D3_1 D3_2 and D3_1D3_2^ρ form a basis of the lattice of dynamical charges.
+
+The states corresponding to the 𝒲-bosons generate the 𝔰𝔲(3) algebra. One can take the strings D3_1D3_2 with p=1 and q=0 and D3_1D3_2^ρ with p=0 and q=1 as representing a choice of positive simple roots. Their electromagnetic charge w reads:
+
+    w_1 = (1,0;-1,0)   ,      w_2 =(0,1;1,1)  .
+
+Furthermore, one can choose the strings D3_1D3_2 with p=0 and q=1 and D3_1D3_2^ρ with p=-1 and q=-1 as generating the charge lattice of magnetic monopoles ℳ of 𝒩=4 SYM with gauge algebra 𝔰𝔲(3):
+
+    m_1 = (0,1;0,-1)   ,      m_2 =(-1,-1;-1,0)  .
+
+The qualification of electric charges 𝒲 and magnetic monopoles ℳ of the 𝒩=4 theory makes sense since the Dirac pairing reads:
+
+    [ ⟨𝒲_1, 𝒲_2 ⟩           = ⟨ℳ_1, ℳ_2 ⟩           =       0   ,; ⟨𝒲_1, ℳ_1 ⟩           = ⟨𝒲_2, ℳ_2 ⟩           =       2   ,;  ⟨𝒲_1,ℳ_2 ⟩           =  ⟨𝒲_2,ℳ_1 ⟩           =      -1   . ]
+
+In <cit.>, it has been shown that these states correspond indeed to BPS states, and this is a strong check of the claim of the supersymmetry enhancement in this case. 
+
+
+
+
+
+  §.§.§ Line lattices
+
+
+Having identified the electromagnetic lattice of charges of (p,q)-strings we can now construct the spectrum of line operators and the corresponding one-form symmetries.
+It is useful to consider the charge ℓ = (e_1, m_1 ; e_2, m_2) of a general line ℒ to be parameterized as follows:
+
+    [                                                           ℓ                                                           =                       α_1 w_1 + α_2 w_2 + β_1 m_1 + β_2 m_2;                                                                                                                       = (α_1-β_2,   α_2 + β_1-β_2 ;
+    	  -α_1 +α_2-β_2,α_2 -β_1 )   . ]
+
+Screening with respect to w_i and m_i translates as the identifications:
+
+    α_i ∼α_i+1   ,
+    	  β_i ∼β_i+1   .
+
+The Dirac pairing between the generic line ℒ with charge ℓ given in  (<ref>)  and the states 𝒲 and ℳ must be an integer, i.e.:
+
+    [      ⟨ℒ,  𝒲_1 ⟩               =  2β_1 - β_2   ,                      ⟨ℒ,  𝒲_2 ⟩               = -β_1 + 2β_2   ,;      ⟨ℒ,  ℳ_1 ⟩               = -2α_1 + α_2   ,                      ⟨ℒ,  ℳ_2 ⟩               =      α_1 - 2α_2 ]  ∈  .
+
+Mutual locality with respect to the other states then follows by linearity as soon as (<ref>) holds.
+Combining (<ref>) and (<ref>) we have
+
+    α_1 = - α_2 = e/3 ,  and  β_1 = -β_2 = m/3  ,
+
+for e,m=0, 1, 2. Then, the charge of the most general line compatible with the spectrum of local operators modulo screening reads
+
+    ℓ_e,m =1/3  (
+    		2e-m,  
+    		e+m;   
+    		-e-m,  
+    		e-2m
+    	)   .
+
+These charges form a finite 3 × 3 square lattice. The Dirac pairing between two lines ℒ and ℒ'  with charges 
+ℓ_e,m and ℓ_e',m' is
+
+    ⟨ℒ ,  ℒ' ⟩ =
+    	2/3 (e m' - e' m)   .
+
+Two lines ℒ and ℒ' are mutually local if their Dirac pairing is properly quantized. 
+In our conventions this corresponds to the requirement that ⟨ℒ ,  ℒ' ⟩ is an integer:
+
+    e' m - e m' = 0  3   .
+
+
+The lattice of lines together with the mutual locality condition obtained in (<ref>)
+fully specifies the global structure of the S_3,1 SCFT of rank-2.
+
+Our result is equivalent to the one obtained in <cit.> from the Lagrangian description of 
+𝔰𝔲(3) 𝒩=4 SYM theory. Let us first write the charges in (<ref>) as:
+
+    ℓ_e,m =  e  w_1- w_2/3 + m  m_1 - m_2/3  .
+
+Note that (w_1-w_2)/3 (respectively, (m_1 - m_2)/3) is a weight of the electric (respectively, magnetic) algebra 𝔰𝔲(3) with charge 1 under the center ℤ_3   of the simply-connected group SU(3). Therefore, the line ℓ_e,m corresponds to a Wilson-'t Hooft line of charge (e,m) under ℤ_3×ℤ_3.
+ 
+As shown in <cit.>, there are four possible lattices of mutually local Wilson-'t Hooft lines specified by two integers i=0,1,2 and p=1,3.
+The corresponding gauge theories are denoted (SU(3)/ℤ_p)_i and relate to the line spectra we have obtained as follows:
+
+    [                    SU(3)                        ↔ {ℓ_0,0, ℓ_1,0, ℓ_2,0}  ,;            (SU(3)/ℤ_3)_0                        ↔ {ℓ_0,0, ℓ_0,1, ℓ_0,2}  ,;            (SU(3)/ℤ_3)_1                        ↔ {ℓ_0,0, ℓ_1,1, ℓ_2,2}  ,;            (SU(3)/ℤ_3)_2                        ↔ {ℓ_0,0, ℓ_2,1, ℓ_1,2}  . ]
+
+It follows from linearity and screening that each lattice in the S-fold picture is determined by a single non-trivial representative, that can itself be identified by two integers (e,m). For example, a possible choice is
+
+    (e,m)= (1,0),   (0,1),    (1,1),   (2,1)   .
+
+
+
+
+
+
+
+
+ §.§ Lines in  𝔰𝔬(5) from S_4,1
+
+
+
+
+
+
+
+  §.§.§ Dynamical states and their charges
+
+
+Two D3-branes probing the singular point of the S_4,1-fold are claimed to engineer 𝔰𝔬(5) 𝒩=4 SYM. Following a reasoning similar to one of the S_3,1-fold case, we can write all string charges as linear combinations of two kinds of strings, say
+
+    D3_1 D3_2  :   (p,q;-p,-q)  ,    D3_1 D3_2^ρ :  (p,q;-q,p)   .
+
+States corresponding to the 𝒲-bosons of 𝒩=4 SYM are generated by D3_1D3_2 with p=1 and q=0, and D3_1D3_2^ρ with p=-1 and q=-1. Their charges are
+
+    w_1 = (1,0;-1,0)   ,      w_2 = (-1,-1;1,-1)   .
+
+These states generate the algebra 𝔰𝔬(5) with short and long positive simple roots w_1 and w_2, respectively. A possible choice of states corresponding to elementary magnetic monopoles ℳ is D3_1D3_2 with p=-1 and q=1, and D3_1D3_2^ρ with p=1 and q=0. The charges of these strings are:
+
+    m_1= (-1,1;1,-1)   ,    m_2 = (1,0;0,1)   ,
+
+with m_1 the long and m_2 the short positive simple roots of the Langland dual algebra 𝔲𝔰𝔭(4). The Dirac pairings between 𝒲 and ℳ are as expected:
+
+    [         ⟨𝒲_1, 𝒲_2 ⟩                   =         ⟨ℳ_1, ℳ_2 ⟩                   =               0   ,;         ⟨𝒲_1, ℳ_1 ⟩                   =         ⟨𝒲_2, ℳ_2 ⟩                   = ⟨ℳ_1, 𝒲_2 ⟩ = 2   ,;        ⟨ℳ_2 , 𝒲_1 ⟩                   =                1  .                                         ]
+
+
+
+
+
+
+
+  §.§.§ Line lattices
+
+We begin by parametrizing the charge ℓ of a general line ℒ as:
+
+    ℓ   = α_1 w_1 + α_2 w_2+β_1 m_1 + β_2 m_2 
+    	
+       = (α_1-α_2-β_1+β_2,  β_1-α_2 ; 
+    		-α_1+α_2+β_1,   -α_2-β_1+β_2)   .
+
+Screening with respect to the local states 𝒲 and ℳ translates as:
+
+    α_i ∼α_i + 1   ,   β_i ∼β_i +1   .
+
+Mutual locality with respect to the dynamical states generated by (p,q)-strings reads:
+
+    [     ⟨ℒ,𝒲_1 ⟩            =     2β_1-β_2;     ⟨ℒ,𝒲_2 ⟩            = -2 β_1 +2β_2;      ⟨ℒ,ℳ_1⟩            =  -2α_1 +2α_2;     ⟨ℒ,ℳ_2 ⟩            =   α_1 - 2α_2;              ]  ∈  .
+
+This imposes α_1 = β_2 = 0 and α_2, β_1 ∈1/2, and therefore the charge of the most general line compatible with the spectrum of local states can be written as:
+
+    ℓ_e,m = e/2 w_2 + m/2 m_1 = 1/2 (-e-m ,-e+m; e+m, -e-m)   .
+
+The Dirac pairing between two lines ℒ and ℒ' with charges ℓ_e,m and ℓ_e',m' is:
+
+    ⟨ℒ, ℒ' ⟩ =  1/2 (e'm - em')    .
+
+Two such lines are mutually local if their Dirac pairing if ⟨ℒ, ℒ' ⟩ is an integer, i.e.:
+
+    (e'm - em') = 0  2   .
+
+Therefore, the allowed lines form a finite 2× 2 square lattice parametrized by e,m=0,1, where the mutual locality condition is given by (<ref>). This reproduces the expected global structures of 𝒩=4 𝔰𝔬(5) SYM. There are three possible choices of maximal lattices of mutually local lines which correspond to the three possible global structures of 𝔰𝔬(5). The explicit mapping can be obtained by comparing the electromagnetic charges of the lines with the charges of the 𝒲 bosons and monopoles ℳ, along the lines of the analysis of above in the 𝔰𝔲(3) case. We obtain the following global structures:
+
+    [           Spin(5)                 ↔ {ℓ_0,0, ℓ_1,0}  ,;           SO(5)_0                 ↔ {ℓ_0,0, ℓ_0,1}  ,;           SO(5)_1                 ↔ {ℓ_0,0, ℓ_1,1}  . ]
+
+
+
+
+
+
+
+ §.§ Trivial line in 𝔤_2 from S_6,1
+
+
+
+
+
+
+
+  §.§.§ Dynamical states and their charges
+
+
+Two D3-branes probing the singular point of the S_6,1-fold are claimed to engineer 𝔤_2 𝒩=4 SYM. The charges of states generated by (p,q)-strings are:
+
+    [         D3_1 D3_2                 :   (p,q;-p,-q)   ,       D3_1 D3_2^ρ                 :  (p,q;-q,p-q)   ,;     D3_1 D3_2^ρ^2                 :   (p,q;p-q,p)   ,     D3_1 D3_2^ρ^3                 :     (p,q;p,q)   ,;     D3_1 D3_2^ρ^4                 :   (p,q;q,-p+q)  ,     D3_1 D3_2^ρ^5                 : (p,q;-p+q,-p)   ,;              etc.                                                                                           ]
+
+
+
+As shown in <cit.> and as before, one can choose a set of strings representing dynamical particles and generating the algebra 𝔤_2. 
+
+
+
+
+
+
+
+
+  §.§.§ Line lattice
+
+The analysis of the charge spectrum in the case of the S_6,1-fold can be carried out along the lines of the previous sections. One can show that the only line that is mutually local with respect to the local states generated by (p,q)-strings modulo screening is the trivial line with charges ℓ = (0,0;0,0). This is consistent with the enhancement to 𝒩=4 with gauge algebra 𝔤_2 because the center of the simply-connected G_2 is trivial, which implies the absence of non-trivial lines <cit.>. There is only one possible global structure, and the one-form symmetry is trivial.
+
+
+
+
+
+§ LINES IN 𝒩=3 S-FOLDS
+
+
+
+
+In this section, we generalize the procedure spelled out in the previous sections to S-folds theories of arbitrary rank, and later to the cases with non-trivial discrete torsion for the B_2 and C_2 fields. This allows us to classify the line spectrum for every 𝒩=3 S-fold theory, and identify the one-form symmetry group as well as the allowed global structures for a given theory.
+
+The basic ingredients needed in the analysis are the lattice of electromagnetic charges of local states and the Dirac pairing, both of which can be inferred from the Type IIB setup along the lines of the rank-2 cases studied in Section <ref>.
+As already emphasized, we work under the assumption that the states generated by (p,q)-string form a good set of representatives of the electromagnetic charge lattice of the full spectrum. 
+
+Note that it does not strictly make sense to talk about (p,q)-strings on the ℝ^4×ℝ^6/ℤ_k S-fold background because the S-fold projection involves an SL(2,ℤ) action which mixes F1 and D1 strings. This is analogous to the fact that in the orientifold cases it only makes sense to consider unoriented strings, since the orientifold action reverses the worldsheet parity (equivalently, it involves the element -𝕀_2 ∈ SL(2,)). Nevertheless it makes sense to consider oriented strings (together with their images) on the double cover of the spacetime; this allows the computation of the electromagnetic charge lattice of local states and the Dirac pairing, as reviewed in Section <ref>. Similarly when dealing with S_k-folds we consider (p,q)-strings on the k-cover of the spacetime, and extract from this the charges of local states and the Dirac pairing. The spectrum of lines can then be obtained using the procedure of <cit.> reviewed in Section <ref>.
+
+
+
+
+
+
+
+
+
+ §.§ Lines in S_3,1-fold
+
+
+
+Let us first determine the lattice of electromagnetic charges of dynamical states. The charges generated by (p,q)-strings on the background of an S_3,1 fold are given by
+
+    D3_iD3_j^ρ^l  :   
+    	(0,0; … ; p,q^i-th; …;  
+    	- (p     q)·ρ^l_3^j-th; … ; 0,0)   .
+
+
+This expression is obtained from a (p,q)-string stretched between the i-th D3-brane and the l-th image of the j-th D3-brane. Recall that ρ_3 generates a _3 subgroup of SL(2,). A possible basis for the lattice of charges generated by (p,q)-strings is given by:
+
+    [                               w_1                                 =                  (1,0;-1,0;…)   ,;                               w_2                                 =                   (0,1;1,1;…)   ,;                               m_1                                 =                  (0,1;0,-1;…)   ,;                               m_2                                 =                (-1,-1;-1,0;…)   ,;                               P_i                                 = (1,0;0,0; … ;-1,0^i-th;0,0;…)   ,;                               Q_i                                 = (0,1;0,0; … ;0,-1^i-th;0,0;…)   , ]
+
+where w_i and m_i are the charges of the corresponding states in the rank-2 case, with all other entries set to 0. 
+Let 𝒫_i and 𝒬_i be the states with charges P_i and Q_i respectively, for i=3,…,N.
+Note that when the rank is N>2, it does not make sense to talk about 𝒲-bosons and magnetic monopoles ℳ since the pure 𝒩=3 theories are inherently strongly coupled and do not admit a Lagrangian description.
+Nevertheless, we will denote 𝒲_i and ℳ_i the states with charges w_i and m_i respectively, by analogy with the above.
+
+
+
+The charge ℓ of a general line ℒ can be written as the linear combination:
+
+    ℓ = α_1 w_1 + α_2 w_2 + β_1 m_1 + β_2 m_2 + ∑_i=3^N ( δ_i P_i + γ_i Q_i)   .
+
+Besides, screening translates into the identifications:
+
+    α_i ∼α_i + 1   ,   β_i ∼β_i +1 ,  δ_i ∼δ_i+1   ,   γ_i ∼γ_i+1   .
+
+
+
+
+Let us now analyze the constraints imposed on this line given by mutual locality with respect to the dynamical states generated by (p,q)-strings. Our results are summarized in Table <ref>.
+
+
+Consider the mutual locality conditions:
+
+    ⟨ℒ, 𝒫_i - 𝒫_j ⟩ = δ_i - δ_j ∈  ⇒  δ_i = δ_j = δ      i,j=3,…,N   ,
+
+and
+
+    ⟨ℒ, 𝒬_i - 𝒬_j ⟩ =γ_j - γ_i ∈  ⇒  γ_j = γ_i = γ      i,j=3,…,N   .
+
+Furthermore, there are dynamical states with charges:
+
+    (0,0; … ;1,-1^i-th; …)=   (p,q;…; -p,-q^i-th; …)_|[ p=0; q=1 ] + (p,q; …; p-q,p^i-th;…)_|[  p=0; q=-1 ] ,
+    	
+    
+    	(0,0 ; …;2,1^i-th; …) =    
+    	(p,q; …; -p,-q^i-th; …)_|[ p=-1;  q=0 ] + (p,q; …; p-q,p^i-th;…)_|[ p=1; q=0 ] .
+
+Mutual locality with respect to these implies:
+
+    γ = -δ  ,
+    	    δ∈1/3 .
+
+
+Therefore, the charge of a general line can be rewritten as:
+
+    ℓ = α_1 w_1 + α_2 w_2 + β_1 m_1 + β_2 m_2 +  δ (P - Q) ,
+
+where
+
+    P =  ∑_i=3^N p_i = (N-2, 0; 0,0;-1,0;-1,0;…;-1,0) ,
+    	
+    
+    	Q =  ∑_i=3^N q_i = (0,N-2;0,0;0,-1;0,-1;…;0,-1) .
+
+
+In (<ref>), we have modified our notation slightly since the dots … now represent a sequence of pairs (-1,0) and (0,-1) for P and Q respectively.
+Mutual locality between the line ℒ and the generators of the charge lattice of dynamical states imposes the following constraints:
+
+    [                   ⟨ℒ, 𝒫_i ⟩                           = (N-1)δ -α_2 - β_1 + β_2   ,;                   ⟨ℒ, 𝒬_i ⟩                           =      (N-1)δ + α_1 - β_2   ,;                   ⟨ℒ, 𝒲_1 ⟩                           =      (N-2)δ -2β_1 + β_2   ,;                   ⟨ℒ, 𝒲_2 ⟩                           =    (N-2)δ - 2β_2 + β_1    ,;                   ⟨ℒ, ℳ_1 ⟩                           =       (N-2)δ +2α_1-α_2    ,;                   ⟨ℒ, ℳ_2 ⟩                           =         -2(N-2)δ-α_1 + 2α_2 ]  ∈ .
+
+
+One can compute the following:
+
+    [       ⟨ℒ, 𝒲_1 + 2 𝒲_2 ⟩                       =          3(N-2) δ -3β_2                       ∈                       ⇒              β_2 ∈1/3 ,;       ⟨ℒ, ℳ_1 + 2 ℳ_2 ⟩                       =                   -3α_1                       ∈                       ⇒              α_1 ∈1/3 ,;        ⟨ℒ, 𝒲_1 -  𝒲_2 ⟩                       =            3(β_2 - β_1)                       ∈                       ⇒              β_1 ∈1/3 ,;         ⟨ℒ, ℳ_1 - ℳ_2 ⟩                       = 3(N-2) δ + 3(α_1 - α_2)                       ∈                       ⇒              α_2 ∈1/3 . ]
+
+In brief, we have found that α_i, β_i, δ∈1/3. It is now useful to treat separately three cases, depending on the value of N mod 3. 
+In all these cases we find that the lines modulo screening can be arranged in a finite 3×3 lattice, the one-form symmetry group is _3 and there are four choices of global structure. 
+
+
+  §.§.§ Case N = 3n 
+
+The mutual locality conditions in (<ref>) can be written as:
+
+    [               ⟨ℒ, 𝒫_i ⟩                       = -δ -α_2 - β_1 + β_2   ,;               ⟨ℒ, 𝒬_i ⟩                       =       -δ + α_1 - β_2  ,;               ⟨ℒ, 𝒲_1 ⟩                       =        δ -2β_1 + β_2  ,;               ⟨ℒ, 𝒲_2 ⟩                       =       δ - 2β_2 + β_1  ,;               ⟨ℒ, ℳ_1 ⟩                       =          δ +2α_1-α_2  ,;               ⟨ℒ, ℳ_2 ⟩                       =            δ-α_1 + 2α_2 ]  ∈ .
+
+One computes that:
+
+    [  ⟨ℒ, 𝒬_i +  𝒲_1 ⟩                 =         α_1 + β_1                 ⇒               β_1                 =           - α_1 ,; ⟨ℒ,  𝒫_i +  𝒲_2 ⟩                 =         -α_2 -β_2                 ⇒               β_2                 =           - α_2 ,;        ⟨ℒ,  𝒬_i ⟩                 =      -δ + α_1+α_2                 ⇒                 δ                 =       α_1 + α_2 , ]
+
+and this implies:
+
+    α_1 = -β_1 = r/3 ,
+    	    α_2 = -β_2 = s/3 ,
+    	    δ = r+s/3 ,
+    	    
+    r,s = 0,1,2 .
+
+Therefore the lines form a finite 3×3 lattice parametrized by r and s. Mutual locality between two general lines ℒ and ℒ' with charges ℓ_r,s and ℓ_r',s' reads:
+
+    ⟨ℒ, ℒ' ⟩ = 2/3 (s r' - r s') ∈ ,
+
+or equivalently:
+
+    s r' - r s' = 0  mod 3 .
+
+There are four possible choices of maximal lattices of mutually local lines. As in the rank-2 case discussed in section <ref>, each lattice is uniquely identified by one of its element, or equivalently by the pair (r,s) of one of its non-trivial elements:
+
+    (r,s) = 
+    {   (1,0) ↔{ℓ_0,0, ℓ_1,0,ℓ_2,0}
+       (0,1) ↔{ℓ_0,0, ℓ_0,1,ℓ_0,2}
+       (1,1) ↔{ℓ_0,0, ℓ_1,1,ℓ_2,2}
+       (1,2) ↔{ℓ_0,0, ℓ_1,2,ℓ_2,1}. .
+
+
+
+
+
+  §.§.§ Case N = 3n+1
+
+In this case the mutual locality constraints (<ref>) are:
+
+    [        ⟨ℒ, 𝒫_i ⟩                = -α_2 - β_1 + β_2;        ⟨ℒ, 𝒬_i ⟩                =        α_1 - β_2;        ⟨ℒ, 𝒲_1 ⟩                =   -δ -2β_1 + β_2;        ⟨ℒ, 𝒲_2 ⟩                =  -δ - 2β_2 + β_1;        ⟨ℒ, ℳ_1 ⟩                =     -δ +2α_1-α_2;        ⟨ℒ, ℳ_2 ⟩                =   2 δ-α_1 + 2α_2 ]  ∈ .
+
+
+One computes that:
+
+    [         α_2           =  α_1 -β_1 ,;           δ           = α_1 + β_1 ,;         α_1           =       β_2 . ]
+
+
+Therefore the most general α_i,β_i and δ satisfy:
+
+    α_1 = β_2 = r/3 ,
+      β_1 = s/3 ,
+      α_2 = r-s/3 ,
+      δ = r+s/3 ,
+       r,s=0,1,2 .
+
+The lines again form a finite 3×3 lattice parametrized by r and s. Mutual locality between two general lines ℒ and ℒ' with charges ℓ_r,s and ℓ_r',s' reads:
+
+    ⟨ℒ, ℒ' ⟩ = 1/3 (s r' - r s') ∈ ,
+
+or equivalently:
+
+    s r' - r s' = 0  3 .
+
+Similarly to the case N=3n there are four possible choices of maximal lattices of mutually local lines that can be indexed by one of their element, or equivalently by (r,s)=(1,0), (0,1), (1,1), (1,2). 
+
+
+
+
+
+
+  §.§.§ Case N = 3n+2
+
+In this case, the mutual locality constraints (<ref>) are
+
+    [               ⟨ℒ, 𝒫_i ⟩                       =      δ -α_2 - β_1 + β_2;               ⟨ℒ, 𝒬_i ⟩                       =           δ + α_1 - β_2;               ⟨ℒ, 𝒲_1 ⟩                       = -2β_1 + β_2 = β_1 + β_2;               ⟨ℒ, 𝒲_2 ⟩                       =            - 2β_2 + β_1;               ⟨ℒ, ℳ_1 ⟩                       =    2α_1-α_2 = -α_1 -α_2;               ⟨ℒ, ℳ_2 ⟩                       =             -α_1 + 2α_2 ]  ∈ .
+
+One can compute that the solution is given by
+
+    [          β_2            =       -β_1 ,;          α_2            =       -α_1 ,;            δ            = -α_1 - β_1 . ]
+
+
+Therefore the most general α_i,β_i and δ satisfy:
+
+    α_1 = -α_2 = r/3 ,
+      β_1 = -β_2 = s/3 ,
+      δ = - r+s/3 ,
+      
+    r,s=0,1,2 .
+
+
+Dirac pairing between two general lines ℒ and ℒ' with charges ℓ_r,s and ℓ_r',s' reads:
+
+    ⟨ℒ, ℒ' ⟩ = 2/3 (s r' - r s') ∈ .
+
+Two such lines are mutually local if they satisfy the constraint:
+
+    s r' - r s' = 0  mod 3 .
+
+As before, there are four possible choices of maximal lattices of mutually local lines that can be indexed by one of their element, or equivalently by 
+
+    (r,s)=(1,0),  (0,1), (1,1), (1,2) .
+ 
+
+
+
+
+
+
+
+
+ §.§ Lines in S_4,1-fold
+
+
+
+We now study the spectrum of lines in theories engineered by a stack of D3-branes probing the S_4,1-fold. 
+The charges of states generated by a (p,q)-string on the background of an S_4,1-fold read
+
+    D3_iD3_j^ρ^l  :  
+    (0,0; … ; p,q^i-th; …; 
+    -(p     q)·ρ_4^l^j-th; …;0,0)
+
+for a (p,q)-strings stretched between the i-th D3-brane and the l-th image of the j-th D3-brane.
+One possible basis for the lattice of charges generated by (p,q)-strings is:
+
+    [                             w_1                               =              (1,0;-1,0;0,0;…) ,;                             w_2                               =            (-1,-1;1,-1;0,0;…) ,;                             m_1                               =             (-1,1;1,-1;0,0;…) ,;                             m_2                               =               (1,0;0,1;0,0;…) ,;                             P_i                               = (1,0;0,0; … ;-1,0^i-th;0,0;…) ,;                             Q_i                               = (0,1;0,0; … ;0,-1^i-th;0,0;…) , ]
+
+where w_i and m_i are the charges of the corresponding states in the rank-2 case, with all other entries set to 0. We denote 𝒲_i, ℳ_i, 𝒫_i and 𝒬_i the states with charges w_i, m_i, P_i and Q_i, respectively.
+
+The charge ℓ of a general line ℒ can be written as the linear combination:
+
+    ℓ = α_1 w_1 + α_2 w_2 + β_1 m_1 + β_2 m_2 + ∑_i=3^N ( δ_i P_i + γ_i Q_i) .
+
+Screening translates into the identifications:
+
+    α_i ∼α_i + 1,   β_i ∼β_i +1,  δ_i ∼δ_i+1,   γ_i ∼γ_i+1 .
+
+
+
+In the remainder of this section we compute the constraints imposed by mutual locality between the general line ℒ and dynamical states. Our results are summarized in Table <ref>.
+
+
+
+Consider first the mutual locality conditions:
+
+    ⟨ℒ, 𝒫_i - 𝒫_j ⟩ = δ_i - δ_j ∈  ⇒  δ_i = δ_j = δ ,
+
+
+    ⟨ℒ, 𝒬_i - 𝒬_j ⟩ =γ_j - γ_i ∈  ⇒  γ_j = γ_i = γ .
+
+Furthermore, there are dynamical states with charges:
+
+    [                                                            (0,0; … ;1,-1^i-th; …)                                                                                 = (p,q;…; -p,-q^i-th;  …)_|[ p=0; q=1 ] 
+    	+ (p,q; …; -q,p^i-th;…)_|[  p=0; q=-1 ] ,;                                                             (0 ,0;…; 1,1^i-th; …)                                                                                 = (p,q; …; -p,-q^i-th; …)_|[ p=-1;  q=0 ] 
+    	+ (p,q; …; -q,p^i-th;…)_|[ p=1; q=0 ] . ]
+
+and mutual locality with respect to these states implies:
+
+    γ = -δ,
+    	    δ∈1/2 .
+
+
+Therefore, the charge of a general line can be rewritten as:
+
+    ℓ = α_1 w_1 + α_2 w_2 + β_1 m_1 + β_2 m_2 +  δ (P - Q) ,
+
+where P and Q are defined in (<ref>).
+Mutual locality between the line ℒ and the generators of the charge lattice of dynamical states implies:
+
+    [                      ⟨ℒ, 𝒫_i ⟩                              =         (N-1)δ +α_2 - β_1    ,;                     ⟨ℒ,  𝒬_i ⟩                              = (N-1)δ + α_1 - α_2-β_1+β_2   ,;                     ⟨ℒ,  𝒲_1 ⟩                              =           (N-2)δ -2β_1+β_2   ,;                     ⟨ℒ,  𝒲_2 ⟩                              =       2(N-2)δ - 2β_2 + 2β_1  ,;                     ⟨ℒ,  ℳ_1 ⟩                              =                    2α_1 - 2α_2;                     ⟨ℒ,  ℳ_2 ⟩                              =              (N-2)δ-α_1 + 2α_2 ]  ∈ .
+
+
+
+One computes the following:
+
+    [ ⟨ℒ,  𝒲_1+ 𝒲_2- ℳ_1- ℳ_2 ⟩ =
+    -β_2 - α_1∈                           ⇒β_2 = -α_1 ,;             ⟨ℒ,  𝒬_i +  𝒫_i ⟩ = -2β_1 ∈                             ⇒β_1 ∈1/2 ,;             ⟨ℒ,  𝒬_i -  𝒫_i ⟩ = -2α_2 ∈                             ⇒α_2 ∈1/2 ,;                     ⟨ℒ,  ℳ_1 ⟩ = 2α_1 ∈                         ⇒α_1,β_2 ∈1/2 . ]
+
+We have thus shown that α_i, β_i, δ∈1/2 and α_1 = -β_2. It is now useful to treat separately the cases of odd and even N.
+In both cases we find that the lines form a 2×2 lattice, the one-form symmetry is _2 and there are three choices of global structure.
+
+
+
+
+
+  §.§.§ Case N = 2n
+
+Mutual locality conditions (<ref>) read:
+
+    [     ⟨ℒ, 𝒫_i ⟩             = -δ - β_1 +α_2;     ⟨ℒ, 𝒬_i ⟩             = -δ  - α_2-β_1;     ⟨ℒ, 𝒲_1 ⟩             =           β_2;     ⟨ℒ, 𝒲_2 ⟩             =             0;     ⟨ℒ, ℳ_1 ⟩             =             0;     ⟨ℒ, ℳ_2 ⟩             =          -α_1 ]  ∈ ,
+
+and each solution can be written as:
+
+    α_2 = r/2 ,   β_1 = s/2 ,   α_1 = β_2 = 0 ,   δ = r+s/2 ,    r,s = 0,1 .
+
+
+Therefore the lines form a 2×2 lattice parametrized by r,s. Mutual locality between two lines ℒ and ℒ' with charges ℓ_r,s and ℓ_r',s' respectively translates into:
+
+    ⟨ℒ,ℒ'⟩ = 1/2  (r's - r s') ∈ ,
+
+or equivalently:
+
+    r's - r s' = 0  2 .
+
+The one-form symmetry group is thus _2 and there are three different choices of maximal lattices of mutually local lines parametrized by (r,s) = (1,0), (0,1), (1,1).
+
+
+
+  §.§.§ Case N = 2n+1 
+
+The Dirac pairings (<ref>) read:
+
+    [     ⟨ℒ, 𝒫_i ⟩             = α_2 - β_1   ,;     ⟨ℒ, 𝒬_i ⟩             =  - α_2-β_1  ,;     ⟨ℒ, 𝒲_1 ⟩             =     δ +β_2  ,;     ⟨ℒ, 𝒲_2 ⟩             =         0   ,;     ⟨ℒ, ℳ_1 ⟩             =         0   ,;     ⟨ℒ, ℳ_2 ⟩             =         δ-α_1 ]  ∈ ,
+
+and the general solution can be written as:
+
+    α_1 = β_2 = δ = r/2 ,     α_2 = β_1 = s/2 ,      r,s = 0,1 .
+
+
+Mutual locality between two lines ℒ and ℒ' with charges ℓ_r,s and ℓ_r',s' respectively translates into:
+
+    ⟨ℒ,ℒ'⟩ = 1/2  (r's - r s') ∈ ,
+
+or equivalently:
+
+    r's - r s' = 0  2 .
+
+
+As in the previous case, the one-form symmetry group is therefore _2 and there are three different choices of maximal lattices of mutually local lines that can be parametrized by:
+
+    (r,s) = (1,0), (0,1), (1,1) .
+
+
+
+
+
+
+
+ §.§ Trivial line in S_6,1-fold
+
+
+
+
+The analysis of the spectrum of lines in the case of the S_6,1-fold can be carried out along the lines of the previous subsections. One finds that the integer lattice of charges associated to (p,q)-strings is fully occupied. 
+To see this notice that there are two states with the following charges:
+
+    [                                                          (1,0;0,0;0,0;…)                                                                        = (p,q;p-q,p;0,0;…)_|[  p=0; q=-1 ]
+    				- (p,q;-q,p,0,0;…)_|[ p=1; q=0 ] ,;                                                          (0,1;0,0;0,0;…)                                                                        =                       (1,0;0,0;0,0;…) 
+    	- (p,q;-p-q;0,0;…)_|[ p=0; q=1 ];                                                                                                              - (p,q;-q,p;0,0;…)_|[  p=0; q=-1 ] . ]
+
+By combining these states with 𝒫_i and 𝒬_i we can obtain states with electric or magnetic charge 1 with respect to the i-th brane, and all other charges set to zero. Let us now consider a general line ℒ with charge ℓ = (e_1,m_1; e_2,m_2,…). Mutual locality with respect to the local states we have just discussed implies:
+
+    e_i, m_i ∈  ∀ i ,
+
+and the insertion of the same local states along the lines translates to the identification:
+
+    e_i ∼ e_i +1,      m_i ∼ m_i+1 .
+
+Therefore, the only allowed line modulo screening is the trivial line, with charge ℓ = (0,0;0,0;…). This implies that the one form symmetry group is trivial, and accordingly there is only one possible choice of global form.
+
+
+
+
+ §.§ Trivial line in the discrete torsion cases
+
+
+
+We generalize the analysis discussed in the previous sections to the cases with non-trivial discrete torsion in the S_3,3-fold and S_4,4-fold. 
+
+As we argued in Section <ref> all the strings states that are present when the discrete torsion is trivial are also allowed when the discrete torsion is non-zero. Furthermore, there are strings ending on the S-fold itself, as discussed in Section <ref>. Thus, the lattice of charges of local states in the case of the S_3,3-fold and S_4,4-fold are generated by strings stretched between (images of) D3-branes – as in the cases with trivial discrete torsion – together with those additional strings. One can show that the integer lattice of electromagnetic charges of dynamical states is then fully occupied. Therefore, by a similar argument to the one used in the case of the S_6,1-fold in Section <ref>, the only line that is allowed is the trivial one, and the one-form symmetry group is 1 for the S_3,3-fold and S_4,4-fold with non-zero discrete torsion.
+
+
+
+
+
+
+§ NON-INVERTIBLE SYMMETRIES
+
+
+
+
+We now discuss the possible presence of non-invertible symmetries in S-fold theories. In the case of 𝒩=4 theories, the presence of S-duality orbits can imply the existence of non-invertible duality defects which are built by combining the action of some element of SL(2,ℤ) and the gauging of a discrete one-form symmetry <cit.>.
+
+
+Similar structures can be inferred from the S-fold construction. Consider moving one of the D3-brane along the non-contractible one-cycle of S^5/ℤ_k until it reaches its original position. The brane configurations before and after this are identical, and therefore the S-fold theories are invariant under this action. Going around the non-contractible one-cycle of S^5/ℤ_k in the case an S_k,l-fold involves an SL(2,)-transformation on the electric and magnetic charges e_i, m_i associated to the D3-brane that has been moved. Let Σ_k^i denote the process of moving the i-th D3-brane along the non-contractible cycle of an S_k,l-fold. The action of Σ_k^i on the charges is:
+
+    Σ_k^i: ( [ e_j; m_j ])→{   ρ_k ·( [ e_j; m_j ])    j=i
+    		
+       ( [ e_j; m_j ])      j≠ i
+    	 .
+    	.
+
+The charge lattice of dynamical states is invariant under Σ_k^i, while the set of line lattices can be shuffled. Consider for example the S_3,1-case with rank N=2. One can compute explicitly the following orbits:
+
+    (1,0) [<->]r   
+    		(0,1) [<->]r    
+    		(1,1)
+    	    
+    		(1,2) [loop above,looseness=8]    ,
+
+where the pairs (e,m) parametrize the maximal sub-lattice of mutually local lines as discussed in section (<ref>). Two line lattices connected by an arrow in (<ref>) are mapped to each other under proper combinations of Σ_3^i.
+
+
+This theory enhances to 𝔰𝔲(3)  𝒩=4  SYM.  
+Using the mapping  (<ref>) between the line lattices parametrized by (e,m) and the global structures of 𝔰𝔲(3), the formula (<ref>) reproduces the 𝒩=4 orbits under the element ST∈ SL(2,ℤ). As shown in the literature <cit.>, this transformation can be combined with a proper gauging of the one-form symmetry to construct the non-invertible self-duality defects of 𝔰𝔲(3) at τ=e^2π i/3. Therefore in our notation we expect the existence of non-invertible symmetries involving Σ_k^i for the lattices labeled by (e,m)=(1,0),(0,1),(1,1), and none in the (e,m)=(1,2) case.
+
+Similarly, one can consider the orbits in the case of S_4,1 with N=2, where the SCFT enhances to 𝔰𝔬(5) 𝒩=4 SYM. By using the transformations Σ_4^i as above we find the following orbits
+
+    (0,1) ⟷
+    		(1,0)    
+    			(1,1) [loop above,looseness=8]
+    		 ,
+
+where the pairs (e,m) parametrize the maximal sub-lattices of mutually local lines as discussed in section (<ref>).
+
+These reproduce the 𝒩=4 orbits under the element S∈ SL(2,). Again this transformation can be combined with a proper gauging of the one-form symmetry to construct the non-invertible self-duality defects of 𝔰𝔬(5) at τ=i.
+
+Motivated by this match, one can expect that in the case of general rank, non-invertible symmetries will be present when multiple choices of maximal sub-lattices of mutually local lines are related by the transformations Σ_k^i, as above. 
+The orbits are:
+
+    S_3,1:
+    	(1,0)⟷(0,1)⟷ (1,1)  
+    		(1,2) [loop right,looseness=5]
+    	 ,
+    	
+       S_4,1:
+    		(0,1) ⟷
+    		(1,0)  
+    			(1,1) [loop right,looseness=5]
+    		   N=0 2
+    
+    		(1,0)⟷ (1,1)  
+    			(0,1) [loop right,looseness=5]
+    		   N=1 2
+    	 ,
+
+where the pairs (r,s) parametrize the maximal sub-lattices of mutually local lines as in section <ref>.
+
+
+In the S_6,1, S_3,3 and S_4,4-cases, there is only one possible global structure that is mapped to itself by the Σ_k^i transformations. 
+
+By analogy with the cases where there is 𝒩=4 enhancement, we expect the existence of non-invertible symmetries when the transformations Σ_k^i map different line lattices, built by combining this Σ_k^i-action with a suitable gauging of the one-form symmetry.
+
+
+
+
+
+§ CONCLUSIONS
+
+
+
+
+
+In this paper, we have exploited  the recipe of <cit.> for arranging the charge lattice of
+genuine lines modulo screening by dynamical particles.
+We have adapted such strategy, originally designed for BPS quivers, to the case of (p,q)-strings, in order to access to the
+electromagnetic charges of non-Lagrangian 𝒩=3 S-fold SCFTs.
+This procedure has allowed us to provide a full classification of the one-form symmetries of every S-fold SCFT. 
+We singled out two cases  with a non-trivial one-form symmetry, corresponding to  the ℤ_3 and the ℤ_4 S-folds in absence of discrete torsion, denoted here as S_3,1 and S_4,1 respectively.
+Our results are consistent with the supersymmetry enhancement that takes place when two D3-branes are considered.
+Lastly, we discuss the possibility of non-invertible duality defects, by recovering the expected results for the cases with 
+supersymmetry enhancement and proposing a generalization at any rank.
+
+
+We left many open questions that deserve further investigations.
+It would for example be interesting to study in more details the projection of the states generated by the (p,q)-configurations in an S-fold 
+background. In the present article, the only relevant information was the electromagnetic charges carried by these states, but a deeper analysis of the dynamics of these S-fold theories requires more work. This would in turn improve our understanding of their mass spectrum. For instance, a comparison of the BPS spectrum could be made exploiting the Lagrangian descriptions of <cit.>.
+This could also help finding the origin of the mapping between the multiple lattices found in the S_3,1 and S_4,1-cases. 
+Further investigations in this direction would deepen our geometric understanding of the non-invertible symmetries expected in this class of theories, along the lines of the brane analysis of <cit.>.
+
+It would also be of interest to generalize the analysis to other 𝒩=3 SCFTs that are not constructed from S-fold projections, such as the exceptional 𝒩 = 3 theories <cit.>. These theories can be obtained from M-theory backgrounds and one may study the charge lattice with probe M2-branes. One could therefore apply an analysis similar to the one spelled in <cit.>.
+
+Regarding the S-fold constructions, the cases of S-folds with 𝒩=2 supersymmetry <cit.> also deserve further investigations (see <cit.> for similar analysis in class S theories). In the absence of BPS quivers, one needs to adapt the UV analysis of <cit.>. In general, one would like to find a stringy description that avoids wall crossing and allows reading the charge lattices and the one-form symmetries for such theories.
+
+
+
+ 
+
+
+§ ACKNOWLEDGEMENTS
+
+
+We are grateful to Iñaki García Etxebarria for valuable insights on the manuscript, and to Shani Meynet and Robert Moscrop for useful discussions.
+The work of A.A., D.M., A.P. and S.R. has been supported in part by the Italian Ministero dell’Istruzione, Università e Ricerca (MIUR), in part by Istituto Nazionale di Fisica Nucleare (INFN) through the “Gauge Theories, Strings, Supergravity” (GSS) research project and in part by MIUR-PRIN contract 2017CC72MK-003. 
+V.T. acknowledges funding by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy EXC 2181/1 - 390900948 (the Heidelberg STRUCTURES Excellence Cluster).
+
+
+
+JHEP
+
+

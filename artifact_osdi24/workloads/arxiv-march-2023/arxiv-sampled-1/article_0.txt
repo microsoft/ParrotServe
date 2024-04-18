@@ -1,0 +1,503 @@
+
+
+firstpage–lastpage
+Spatial Attention and Syntax Rule Enhanced Tree Decoder for Offline Handwritten Mathematical Expression Recognition
+    Zihao Lin1 Jinrong Li2 Fan Yang1Shuangping Huang13Xu Yang4
+
+Jianmin Lin2Ming Yang2
+
+    March 30, 2023
+===================================================================================================================
+
+
+
+
+ 
+
+The recent ∼ 4  σ Hubble constant, H_0, tension is observed between the value of H_0 from the Cosmic Microwave Background (CMB) and Type Ia Supernovae (SNe Ia). It is a decade since this tension is excruciating the modern astrophysical community. To shed light on this problem is key to consider probes at intermediate redshifts between SNe Ia and CMB and reduce the uncertainty on H_0. 
+Toward these goals, we fill the redshift gap by employing Gamma-Ray Bursts (GRBs) and Quasars (QSOs), reaching z=9.4 and z=7.6, respectively, combined with Baryonic Acoustic Oscillations (BAO) and SNe Ia.
+To this end, we employ the “Dainotti GRB 3D relation"
+among the rest-frame end time of the X-ray plateau emission, its corresponding luminosity, and the peak prompt luminosity, 
+and the “Risaliti-Lusso" QSO relation between ultraviolet and X-ray luminosities.
+
+
+
+We inquire the commonly adopted Gaussianity assumption on GRBs, QSOs, and BAO.
+With the joint sample, we fit the flat Λ Cold Dark Matter model with both the Gaussian and the newly discovered likelihoods. We also investigate the impact of the calibration assumed for Pantheon and Pantheon + SNe Ia on this analysis.  
+Remarkably, we show that only GRBs fulfill the Gaussianity assumption.
+
+
+
+
+We achieve
+
+small uncertainties on the matter density parameter Ω_M and H_0. We find H_0 values compatible within 2 σ with the one from the Tip of the Red Giant Branch. Finally, we show that the cosmological results are heavily biased against the arbitrary calibration choice for SNe Ia.
+
+
+
+
+
+
+methods: statistical - cosmology: theory - cosmology: observations - cosmological parameters
+
+
+
+
+
+§ INTRODUCTION
+
+
+Currently, the spatially flat Λ Cold Dark Matter (ΛCDM) model <cit.> is the cosmological model commonly adopted to describe the Universe. It relies on a flat geometry with a cold dark matter (CDM) component and a dark energy corresponding to a cosmological constant Λ <cit.>. Indeed, this scenario is grounded on several observational probes: the cosmic microwave background <cit.>, the baryonic acoustic oscillations <cit.>, and the current accelerated expansion of the Universe, discovered from type Ia Supernovae <cit.>. Nevertheless, the reliability of this model is still being questioned due to well-known longstanding, but also more recent, theoretical and observational issues: the fine-tuning between the current values of the density parameters of matter (Ω_M) and dark energy (Ω_Λ), the cosmological constant problem <cit.>, the origin and properties of dark energy, and the Hubble constant (H_0) tension. The H_0 tension is the most recently discovered shortcoming and it corresponds to a discrepancy between the value of H_0 measured locally from SNe Ia and Cepheids (H_0 = 73.04 ± 1.04   km s^-1 Mpc^-1, ) and the one derived from the Planck data of the CMB with the assumption of a flat ΛCDM model (H_0 = 67.4 ± 0.5   km s^-1 Mpc^-1, ). This is a ∼ 4  σ deviation, which increases up to 6 σ depending on the samples considered <cit.>. Additionally, the investigation of this problem with other cosmological probes has shown a more complex pattern. For example, cosmic chronometers prefer a H_0 value close to the one of the CMB <cit.>, while time-delay and strong lensing of quasars (QSOs) favor the one of SNe Ia <cit.>, and other probes, such as QSOs <cit.>, the Tip of the Red-Giant Branch (TRGB; ), and Gamma-Ray Bursts (GRBs; ) reveal a H_0 value halfway between the two. This challenging scenario has recently boosted the efforts to solve the H_0 tension, which still remains one of the most studied and puzzling open questions for the astrophysical and cosmological community (see e.g. ). 
+
+One of the major limitations that prevents to better investigate this discrepancy is the limited number of cosmological probes at redshifts intermediate between the ones of SNe Ia (with a maximum z=2.26, ) and CMB (z=1100). To fill this gap, thus shedding light on the H_0 tension, GRBs and QSOs have been recently applied as high-redshift cosmological tools.
+
+GRBs are extremely powerful and bright sources that are observed up to very high redshifts, reaching z=8.2 <cit.> and z=9.4 <cit.>. As a consequence, GRBs could represent a possible new step in the cosmic distance ladder beyond SNe Ia. However, to apply GRBs as probes in cosmology, their physical mechanisms should be first understood. While the community is still debating on the nature of their progenitors and energy processes, their origin is commonly ascribed to two different scenarios. One is the explosion of a massive star <cit.> followed by a core-collapse SNe <cit.> and the other is the merging of two compact objects <cit.>. 
+
+A classification of GRBs based on their observed light curves (LCs) is then crucial to distinguish between the different possible origins. The LCs are generally described with a short prompt high-energy emission followed by an afterglow, which is an emission of longer duration observed in X-ray, optical, and radio wavelengths <cit.>. 
+
+The flat part of GRB LCs after the prompt is the plateau phase, which lasts from 10^2 to 10^5 s and is followed by a decay that could be described through a power-law.
+An explanation of the plateau can be provided in terms of the external shock model, in which the front of the shock between the interstellar medium and the ejecta is powered by the emission from the central engine <cit.>, or the spin-down of a new-born magnetar <cit.>.
+
+Historically, GRBs have been classified as Short (SGRBs) and Long (LGRBs), depending on their prompt emission's duration: T_90≤ 2 s or T_90≥ 2 s, respectively <cit.>, where T_90 is the time in which a GRB emits from 5% to 95% of the total number of photons emitted in the prompt. This categorization is directly related to the GRB progenitors since LGRBs often derive from the core collapse of a very massive star and SGRBs from the coalescence of two compact objects <cit.>. 
+Based on the properties of the LCs, several groups have striven to reveal correlations between prompt or plateau, or both GRB features.
+
+
+
+Among the correlations involving only plateau properties one can refer to a series of works <cit.>.
+Some of the previously cited correlations have been applied in cosmology <cit.>. 
+We here focus on the “fundamental plane correlation" or the “3D Dainotti relation" in X-rays [Our use of the term “fundamental plane" is strictly related to GRBs and does not refer to other astronomical meanings, such as the fundamental plane of elliptical galaxies <cit.>.]. 
+This is a three-dimension correlation between the rest-frame time at the end of the plateau emission, T^*_χ, its X-ray luminosity L_χ <cit.>, and the prompt peak luminosity, L_peak <cit.>. This relation can be theoretically explained within the magnetar model <cit.> and has already been applied in cosmology <cit.> by using a GRB sample properly selected <cit.>, as described in Section <ref>, and also accounting for the evolution in redshift of the GRB physical quantities (see Section <ref>).
+
+
+Concerning QSOs, they are incredibly luminous Active Galactic Nuclei (AGNs) observed up to z = 7.642 <cit.>. As for GRBs, their application as high-redshift cosmological probes relies on the understanding of their physical mechanisms, which are still being studied. Indeed, the huge amount of energy emitted from QSOs could not be explained only with standard  stellar processes and galactic components, such as stars, dust, and interstellar gas, but requires an extreme mechanism of different nature. In the commonly accepted picture, QSOs are powered by the accretion on a central supermassive BH, which efficiently converts mass into energy <cit.>. This scenario can actually reproduce the observed features of QSO emission, especially the ultraviolet (UV) and X-ray emissions. In this regard, a relation between the UV and X-ray luminosities was proposed after the observations of the ﬁrst X-ray surveys
+<cit.>, and then validated by using several different QSO samples <cit.>.
+
+This relation could be ascribed to the above-described QSO engine as follows: the QSO accretion disk around the central supermassive BH produces photons at UV wavelengths, which are processed by an external region of relativistic electrons via the inverse Compton effect, thus originating the emission in X-rays. Besides its viability, this mechanism does not account for the X-ray emission's stability, since the inverse Compton effect should cool down the electrons making them fall onto the central region. To avoid this, a mechanism that efficiently transfers energy from the accretion disk to the external region is required. The origin of such a link is still debated and some theoretical models have been studied to account for the stability of the X-ray emission <cit.>.
+
+
+Similarly to GRBs, the application of QSOs in cosmology requires finding correlations among observables intrinsic to the QSO physics.
+In principle, the relation between UV and X-ray luminosities just described can be used to infer QSO distances, thus standardizing QSOs as cosmological probes. 
+
+However, the first attempts performed in this direction were strongly limited by the very large intrinsic dispersion of the relation, with a value ∼ 0.35/0.40 dex in logarithmic units <cit.>. Only recently, it has been discovered that the main contribution to this dispersion is not intrinsic, but due to observational issues <cit.>, thus an accurate selection of the sample is crucial for the cosmological purpose. Carefully removing as many as possible observational biases, such as galaxy contamination, dust reddening, Eddington bias, and X-ray absorption, has led to a reduction of the dispersion up to ∼ 0.2 dex <cit.>. As a consequence, the X-UV relation, denoted as the “Risaliti-Lusso" (RL) relation in its cosmological application, has turned QSOs into cosmological tools <cit.>.
+The reliability of the RL relation has been debated in some recent studies from different points of view. <cit.> have pointed out the presence of the circularity problem in the procedure applied to constrain cosmological parameters with QSOs. In this regard, we here completely overcome this issue following a method already applied to GRBs <cit.> and QSOs <cit.>, as detailed in Section <ref>. Another point of criticism concerns the possible dependence of the RL relation parameters on both the cosmological model assumed and the redshift <cit.>. In this work, we remove the evolution in redshift of luminosities using the same approach already applied to QSOs in <cit.> and <cit.> (see Section <ref>). However, <cit.> have validated the cosmological use of this relation showing  through well-established statistical tests that it is intrinsic to QSOs and not merely induced by redshift evolution and/or selection effects. Additionally, <cit.> have also proved that the parameters of the RL relation are compatible within 1 σ independently on the cosmological model investigated. 
+Thus, the debates on the cosmological applicability of the RL relation are not a concern given the results of <cit.> and <cit.> and their innovative approach in the QSO realm, which we apply in this study.
+
+As a matter of fact, the use of GRBs and QSOs could enhance the cosmological analysis both by adding high-z data, more suitable to probe the evolution of the Universe, and by increasing the statistics with additional sources. Indeed, increasing the number of probes leads to smaller uncertainties in the cosmological parameters derived. To this concern, <cit.> have recently proved that, as an alternative to the use of huge data sets, it is also possible to significantly reduce the uncertainties on cosmological parameters only through a purely statistical investigation in the probes used. Specifically, they have examined the Pantheon <cit.> and Pantheon + <cit.> SNe Ia samples by inquiring into the statistical assumption generally adopted to constrain cosmological parameters with Gaussian likelihoods. This analysis has shown that both the samples do not verify the Gaussianity assumption and that, by choosing the proper likelihood for each data set, the uncertainties on Ω_M and H_0 are reduced even by a factor ∼ 40 %. 
+In this epoch dominated by precision cosmology and discrepancies in the measurements of cosmological parameters, constraining them more precisely is key to further understanding, and even alleviating or solving, these tensions. 
+
+To this end, we here leverage the advantages of both the possible approaches described above: the inclusion of high-redshift probes in the cosmological analysis and the examination of the statistical foundation of each probe considered. Indeed, in this study, we investigate the Gaussianity assumption and uncover the proper cosmological likelihood for the samples of BAO, GRBs, and QSOs. Then, we combine these data with the SNe Ia samples from the Pantheon and Pantheon + releases to fit a flat ΛCDM model by using, in one case, the standard method with Gaussian likelihoods and, in the other case, the novel discovered likelihoods. In both cases, GRB and QSO redshift evolution are treated following different approaches. In addition, we delve into the a-priori assumptions imposed by the Pantheon and Pantheon + releases to test to what extent these assumptions affect the cosmological results. This work presents clear points of originality compared to other previous analyses in this realm. 
+Although GRBs, QSOs, SNe Ia and BAO have already been applied jointly <cit.>, this has never been done with the GRB fundamental plane relation and with the most updated samples of SNe Ia, GRB, and QSO samples.
+This is also the first time that the Gaussianity assumption is inspected and the actual proper cosmological likelihoods are uncovered for the investigated samples of BAO, GRBs, and QSOs. This analysis allows us to investigate if and to what extent the use of different likelihoods impacts the best-fit values and the uncertainties of Ω_M and H_0 in a flat ΛCDM model, also in light of the comparison of our results with determinations of these parameters from other sources. 
+We also stress here that the main goal of our study is to prove that QSOs and GRBs can be implemented in the cosmological analysis to extend the redshift range up 7.5 without introducing additional uncertainties on the cosmological parameters also with the new likelihood functions used. This is the first essential step to enhance their use in cosmology. The improvement of the cosmological power of QSOs and GRBs is underway, but it is out of the scope of this paper.
+
+The manuscript is structured as follows. Section <ref> describes each sample used and its selection. Section <ref> details the methods employed for all the steps of our analysis. The treatment of the redshift evolution, selection biases, and circularity problem for GRBs and QSOs is in Section <ref>, the physical quantities investigated for each probe is in Section <ref>, the normality tests is applied in Section <ref>, and the search for the best-fit likelihoods, the fit of the flat ΛCDM model, and the test on SNe Ia assumptions are in Section <ref>. Section <ref> reports the results of all our investigations. The outcomes of the tests on Gaussianity and the new likelihoods are presented in Section <ref> and Section <ref>, respectively, while the cosmological findings and implications are detailed in Section <ref> together with the comparison with previous works in the literature. We summarize our work and draw our conclusions in Section <ref>.
+
+
+
+
+§ DATA
+
+
+
+This study makes use of the combination of four cosmological probes: SNe Ia, GRBs, QSOs, and BAO. We here detail the data set considered for each of them.
+
+We employ the two most recent SNe Ia collections of “Pantheon" <cit.> and “Pantheon +" <cit.> with the full covariance matrix that includes both statistical and systematic uncertainties. The first sample is composed of 1048 sources in the redshift range between z=0.01 and z=2.26 gathered from CfA1-4, Carnegie Supernova Project, Pan-STARRS1,  Sloan Digital Sky Survey (SDSS), Supernova Legacy Survey, and Hubble Space Telescope, while the second one consists of 1701 SNe Ia collected from 18 different surveys in the range z=0.001 - 2.26. The Pantheon + sample significantly enhances the previous release with an increased redshift span and number of sources, in particular at low redshift, and with an enriched treatment of systematic uncertainties. These improvements enable SNe Ia to better constrain cosmological parameters <cit.>. The use of both samples in this work allows us to reveal if and how our analysis is affected by the choice of the SNe Ia sample.
+
+For GRBs, we use the so-called “Platinum" sample <cit.> composed of 50 X-ray sources between z=0.055 and z=5 that have been selected according to the following procedure <cit.>. Starting from the 372 GRBs observed by the Neil Gehrels Swift Observatory (Swift) from January 2005 to August 2019 with a known redshift from Swift+Burst Alert Telescope (BAT)+ X-Ray Telescope (XRT) repository <cit.>, the 222 which present a reliable plateau and which can be fitted using the <cit.> model are retained. To reduce the intrinsic dispersion of the 3D Dainotti relation and restrict to a more homogeneous physical mechanism, only LGRBs are considered
+
+<cit.>. The final sub-sample is then obtained by removing sources that present 1) a plateau that lasts <500 s, or 2) less than 5 points in the region before the plateau, or 3) a time at the end of the plateau that could not be directly determined as it falls within an observational gap region, or 4) flares in the plateau, or 5) a not well-defined starting point of the plateau phase, or 6) a plateau inclination >41° <cit.>. These criteria define our final GRB sample.
+
+The QSO data set is the one detailed in <cit.>, with 2421 sources from z=0.009 to z =7.54 <cit.> and assembled by eight samples from
+literature and archives. Specifically, these data belong to <cit.>, <cit.>, and <cit.> samples, XMM–XXL North QSO sample <cit.>, SDSS Data Release 14 (SDSS DR14; ), 4XMM Newton <cit.>, and Chandra <cit.>, with additional low-z QSOs with UV measurements from the International Ultraviolet Explorer and X-ray archival data. Lots of efforts have been spent to select these sources to be suitable for cosmological studies by carefully removing as much as possible observational biases, as described in <cit.>, <cit.>, <cit.>, <cit.> and <cit.>. We below summarize the main criteria applied in this selection procedure.
+As a preliminary screening, sources with a signal-to-noise ratio S/N < 1 are discarded. Then, only QSOs with extinction E(B-V)≤ 0.1 are retained to remove UV reddening and contamination of the host galaxy. The corresponding requirement to be satisfied is √((Γ_1,UV-0.82)^2 + (Γ_2,UV-0.40)^2)≤ 1.1, where Γ_1, UV and Γ_2, UV are the slopes of the log(ν)-log(ν  L_ν) power-law in the rest-frame 0.3-1μm and 1450-3000 Å  ranges, respectively, and L_ν is the luminosity per unit of  ν. The values  Γ_1, UV=0.82 and Γ_2, UV=0.4 correspond to a spectral energy distribution (SED) with zero extinction <cit.>. The possible presence of absorption in X-ray is then accounted for by requiring Γ_X + ΔΓ_X ≥ 1.7 and Γ_X ≤ 2.8 if z < 4 and Γ_X ≥ 1.7 if z ≥ 4, where Γ_X is the photon index and ΔΓ_X its associated uncertainty. The last step of this selection procedure consists of correcting QSOs for the Eddington bias by imposing logF_X,exp - logF_min≥ F, where F_X,exp is the X-ray flux computed from the UV flux with the assumptions of the RL relation and a flat ΛCDM model with Ω_M=0.3 and H_0 = 70 km s^-1 Mpc^-1. F_min represents the minimum detectable flux of the observation that, as detailed in <cit.>, can be computed for each source from the total exposure time of the charge-coupled device (CCD), provided in the catalogues, by using the functions presented by <cit.> in Fig. 3. The threshold value F is F = 0.9 for the SDSS DR14– 4XMM Newton and XXL sub-samples and F = 0.5 for the SDSS DR14-Chandra. Since multiple X-ray observations of the same QSO can survive these filters, they are averaged, thus reducing also the X-ray variability effects.
+As in <cit.> and <cit.>, we use this final cleaned sample without imposing any cut in redshift, such as the one at z=0.7 investigated in <cit.>, to avoid introducing arbitrary truncation.
+
+The BAO collection we use is the one described in <cit.>, composed of 26 data points for which the covariance matrix is detailed in <cit.>. Out of these 26, 24 measurements are in the low redshift range between z=0.106 <cit.> and z=0.73 <cit.>, with data from <cit.>, <cit.>, <cit.>, <cit.>, <cit.>, and <cit.>, while the other two measurements are at z=2.34 <cit.> and z=2.36 <cit.>. This data set has already been used in <cit.> and <cit.> in combination with Pantheon SNe Ia and  GRBs.
+
+
+
+§ METHODOLOGY
+
+
+
+
+
+ §.§ Redshift evolution treatment
+
+
+
+GRBs and QSOs are high-redshift sources, which establishes their invaluable role in investigating the evolution of the Universe. Nevertheless, at high redshifts we need to account for possible selection biases and evolutionary effects, that can in principle distort or even induce a correlation between physical quantities of a source, leading to an incorrect determination of the cosmological parameters <cit.>. To correct for these effects, we can use the Efron & Petrosian (EP) statistical method <cit.>, which has already been applied to the GRB <cit.> and QSO domains <cit.>. In this work, we make use of the results reported in <cit.> for GRBs and in <cit.> and <cit.> for QSOs. We here briefly summarize their methods and outcomes.
+
+In their approach, the physical quantities of interest, luminosities and also time in the case of GRBs, evolve with redshift as L' = L/(1+z)^k and T' = T/(1+z)^k, where L and T are the observed quantities, L' and T' the corresponding corrected ones, and k the evolutionary parameter. As proved in <cit.>, <cit.>, and <cit.>, the results of this method are not affected by the choice of the power-law, which could also be replaced by more complex functions of the redshift. 
+To determine the value of k that removes the dependence on the redshift, the Kendall's τ statistic is applied, where the coefficient τ is defined as
+
+    τ =∑_i(ℛ_i-ℰ_i)/√(∑_i𝒱_i).
+
+Here, the index i refers to all the sources that at redshift z_i have a luminosity greater than the lowest luminosity (L_min,i) that can be observed at that redshift. This minimum luminosity is computed by choosing a limiting flux. The assumed value must guarantee that the retained sample is at least 90% of the total one and that it resembles as much as possible the overall
+distribution, which can be verified by applying the Kolmogorov-Smirnov test <cit.>. The rank ℛ_i in Eq. (<ref>) corresponds to the number of data points in the associated set of the i-source, where the associated set is defined by all j-points that verify z_j ≤ z_i and L_z_j≥  L_min,i. ℰ_i = 1/2(i+1) and 𝒱_i = 1/12(i^2+1) are the expectation value and variance, respectively, in the case of the absence of correlation. Thus, the redshift dependence is removed when τ = 0, and this condition provides us the value of k that eliminates the correlation. If | τ | > n the hypothesis of uncorrelation is rejected at n σ level, hence we obtain the 1 σ uncertainty on the k value by requiring |τ| ≤ 1. The uncovered dependence on the redshift is then used to derive the de-evolved L' for the total sample. This procedure can be straightforward applied also to the time variable for GRBs by replacing the luminosity with the time.
+The k values obtained for the quantities of our interest and used in this work are k_L_peak = 2.24 ± 0.30, k_T_χ = - 1.25^+0.28_-0.27, and k_L_χ = 2.42^+0.41_-0.74 for GRBs <cit.>, and k_UV = 4.36 ± 0.08 and k_X = 3.36 ± 0.07 for QSOs <cit.>. The de-evolved quantities computed with these k values are thus used in our cosmological fits when accounting for a “fixed" evolution. The notation “fixed" refers to the fact that k is determined under the assumption of a specific cosmological model, which is required to compute the luminosities L from the measured fluxes. In both <cit.> and <cit.> the fiducial model is a flat ΛCDM model with Ω_M =0.3 and H_0 = 70   km s^-1 Mpc^-1. As a consequence, this method suffers from the “circularity problem": the a-priori assumption of a cosmological model affects the constraints on cosmological parameters that are found by fitting the luminosities computed under this assumption.
+To overcome this issue, <cit.> (for GRBs), and <cit.> and <cit.> (for QSOs) have studied the behaviour of k as a function of the cosmology. Specifically, in these works, k is evaluated not for fixed cosmological parameters, but over a set of several values of the cosmological parameters (i.e. Ω_M, H_0, and also other parameters for extensions of the flat ΛCDM model), leading to the functions k(Ω_M) and k(H_0). These analyses show that k does not depend on H_0, while it depends on Ω_M. Hence, the function k(Ω_M) can be applied in the cosmological fits to let k vary together with the cosmological parameters, without the need to fix a cosmology. This method completely solves the circularity problem and we refer to it as “varying" evolution. In this work, we compare the results from all possible treatments of the evolution: without correction, with “fixed", and “varying" evolution (see Table <ref>).
+We are aware that the a more complete and independent treatment of the evolution would require to leave free to vary the sets of four parameters for the evolution, k for L_X, QSOs, L_UV, QSOs, L_X,GRBs, L_peak,GRBs. However, we here anticipate that if we apply this more general procedure imposing uniform priors on the evolutionary parameters, we cannot constrain the k parameters. Thus, the only chance to obtain an idea of how the evolution would play a role is to impose Gaussian priors on the evolution based on the analysis of how k(Ω_M) varies for the luminosities. We perform these fits by imposing a Gaussian prior in which the mean corresponds to the expected value of k and the standard deviation is five times the error on this k value. More precisely, the values of k assumed as mean of the Gaussian and their errors are k_L_peak,GRBs = 2.24 ± 0.30 and k_L_X,GRBs = 2.42 ± 0.58 for GRBs, and k_L_UV,QSOs = 4.36 ± 0.08 and k_L_X,QSOs = 3.36 ± 0.07 for QSOs, when considering the Pantheon sample, while k_L_peak,GRBs = 2.19 ± 0.29 and k_L_X,GRBs = 2.37 ± 0.56 for GRBs, and k_L_UV,QSOs = 4.29 ± 0.08 and k_L_X,QSOs = 3.29 ± 0.06 for QSOs, when using the Pantheon + SNe Ia. These values are indeed the ones obtained from the functions k(Ω_M) when assuming Ω_M=0.3 for Pantheon and Ω_M=0.35 for Pantheon +. The results of these fits are reported in Figures <ref> and <ref> for all cases studied in this work.
+
+
+ §.§ Theoretical and measured physical quantities
+
+
+
+SNe Ia presents an almost uniform intrinsic luminosity and thus can be considered among the most reliable classes of standard candles. To apply them as cosmological probes, we use the distance modulus μ defined as μ = m - M, where m and M are the apparent and absolute magnitude, respectively. The critical point in this definition is the computation of M that depends on several factors, such as selection biases, microlensing, and different contributions to statistical and systematic uncertainties <cit.>. The observed SNe Ia μ is 
+
+    μ_obs, SNe   Ia = m_B - M + α x_1 - β c + Δ_M + Δ_B
+
+where m_B is the B-band overall amplitude, x_1 the stretch parameter, c the color, α and β the coefficients of the relation of luminosity with x_1 and c, respectively, M the fiducial B-band absolute magnitude of a SN with x_1 = 0 and c=0, Δ_M and Δ_B the corrections on the distance that account for the mass of the host-galaxy and biases predicted through simulations, respectively <cit.>.  M is degenerate with H_0, hence H_0 cannot be determined by SNe Ia alone
+
+<cit.>.
+However, H_0 can be derived if M is fixed.
+In this regard, we employ the data directly provided by Pantheon and Pantheon +, thus we do not fix a priori ourselves any value of M, but we use the same assumption of Pantheon and values of Pantheon + releases.
+Indeed, primary distance anchors, such as Cepheids and the TRGB, are usually used to calibrate M from which μ is then computed <cit.>. <cit.> fix M=-19.35
+
+corresponding to H_0 = 70  km s^-1 Mpc^-1 <cit.>. <cit.> find M = -19.253 ± 0.027 and H_0 = 73.04 ± 1.04   km s^-1 Mpc^-1 using 42 SNe Ia combined with Cepheids hosted in the same galaxies of these SNe Ia. The μ provided for the Pantheon + sample are computed assuming this value of M. 
+In our analysis, we directly use the μ_obs, SNe   Ia supplied by Pantheon[<https://github.com/dscolnic/Pantheon>] and Pantheon +[<https://github.com/PantheonPlusSH0ES>] releases. 
+Within a flat ΛCDM model and ignoring the current relativistic density parameter, whose contribution is negligible in the late epochs, the theoretical μ is
+
+    μ_th = 5  log_10  d_l (Ω_M, H_0) + 25 = 5   (1+z) c/H_0 ∫^z_0dz'/E(z') + 25
+
+where d_l is the luminosity distance in Megaparsec (Mpc), c the speed of light, and E(z) the dimensionless Hubble parameter given by
+
+    E(z) = H(z)/H_0 = √(Ω_M (1+z)^3 + (1- Ω_M)).
+
+In the case of SNe Ia, we slightly modify Eq. (<ref>) using the more precise formula provided by <cit.>
+
+    μ_th = 5   (1+z_hel) c/H_0 ∫^z_HD_0d z'/√(Ω_M (1+z)^3 + (1- Ω_M)) + 25
+
+where z_HD the “Hubble-Lemaître diagram” redshift that accounts for peculiar velocity and CMB corrections and z_hel is the heliocentric redshift.
+
+
+For GRBs, the 3D X-ray fundamental plane relation employed to use them as cosmological tools has the following form:
+
+    log_10 L_χ =  a  log_10 T^*_χ + b  log_10 L_peak + c.
+
+
+The luminosities are computed from the measured fluxes by applying the relation between fluxes F and luminosities L, L= 4 π d_l^2 ·  F ·  K, where d_l is in units of cm and K is K-correction accounting for the cosmic expansion <cit.>. As the GRB spectrum is well reproduced by a simple power-law, the K-correction is given by K = (1+z)^γ -1, with γ the spectral index of the X-ray plateau.
+The values of a, b, and c parameters in Eq. (<ref>) are determined by fitting the 3D relation with the Bayesian technique of the D'Agostini method <cit.>, which is based on the Markov Chain Monte Carlo (MCMC) approach and allows us to consider error bars on all quantities and also an intrinsic dispersion sv of the relation. 
+
+As detailed in Section <ref>, L_χ,  T^*_χ, and L_peak in Eq. (<ref>) could also be corrected to account for their redshift evolution through the application of the EP method <cit.>.
+
+As for SNe Ia, the physical quantity we consider for GRBs is μ. The observed μ for GRBs (μ_obs, GRBs) is computed assuming the 3D relation. Converting luminosities into fluxes in Eq. (<ref>) through the above-defined relation between these two quantities and using μ = 5  log_10  d_l + 25 <cit.>, we obtain 
+
+
+    μ_obs, GRBs =     5 [ -log_10 F_χ/2 (1-b)+b ·log_10 F_peak/2 (1-b) - (1-b)log_10(4π)+c/2 (1-b)+ 
+        + a log_10 T^*_χ/2 (1-b)] + 25
+
+
+where we consider the K-correction already applied to all quantities. Following <cit.>, we fix c=23 when applying Eq. (<ref>).
+Under the same cosmological assumption applied to SNe Ia, μ_th for GRBs is the one already defined in Eq. (<ref>) with E(z) specified in Eq. (<ref>) .
+
+
+To standardize QSOs as cosmological probes and compute their distances, we use the X-UV RL relation, which is commonly parameterized through a linear relation between logarithmic quantities as
+
+    log_10  L_X = g_1  log_10  L_UV + n_1
+
+where L_X and L_UV are the luminosities (in units of erg   s^-1  Hz^-1) at 2 keV and 2500 Å, respectively. 
+As for GRBs, we compute L_X and L_UV in Eq. (<ref>) from the observed flux densities F_X and F_UV (in erg   s^-1  cm^-2  Hz^-1), respectively, using L_X,UV= 4 π d_l^2 F_X, UV. Indeed, for QSOs the spectral index γ is assumed to be 1, leading to K=1 <cit.>, and thus the K-correction is omitted in this case. As detailed in Section <ref> and already stressed for GRBs, we can correct L_X and L_UV for evolutionary effects by applying the EP method <cit.>. The parameters g_1 and n_1 can be fitted, along with the intrinsic dispersion sv_1 of the RL relation, through the D'Agostini method.
+Inserting log_10L_UV =  log_10(4  π  d_l^2) + log_10F_UV in Eq. (<ref>) provides us the observed physical quantity log_10L_X,obs under the assumption of the RL relation:
+
+    log_10  L_X,obs = g_1 [ log_10(4  π  d_l^2) + log_10F_UV] + n_1.
+
+The theoretical quantity is computed according to log_10L_X,th = log_10(4  π  d_l^2) + log_10F_X. Both log_10L_X,obs and log_10L_X,th require a fixed cosmological model in the computation of d_l.
+
+To be more precise, in principle, we could also consider as physical quantities the logarithmic luminosities for GRBs and the distance moduli for QSOs, since the approaches with luminosities and with distance moduli are equivalent (i.e. they are related through d_l). Nevertheless, we have here described only the case of distance moduli for GRBs and the case of luminosities for QSOs to be consistent with the fitting procedure we apply in the following cosmological analysis. Concerning GRBs, <cit.> have proved that the cosmological constraints do not depend on the choice of using distance moduli or logarithmic luminosities in the likelihood; indeed, the values of cosmological parameters obtained in the two approaches are consistent within 1 σ. Thus, we prefer to use the distance moduli to remove one degree of freedom, as the parameter c is fixed in this case <cit.>
+
+as this choice also guarantees the same number of free parameters (2) for both the 3D and the RL relations. Concerning QSOs, we prefer to construct the cosmological likelihood with the logarithmic luminosities as these are the quantities intrinsic to the RL relation (see Eq.(<ref>)) and also the ones that are commonly and robustly used for cosmological analyses in the literature <cit.>. Thus, this approach allows an easier and more immediate comparison with results from other studies, without the need for taking into account possible differences in the respective methodologies. 
+
+For BAO, the investigated physical quantity is d_z = r_s(z_d)/D_V(z) <cit.>, where r_s(z_d) is the sound horizon at the baryon drag epoch z_d and D_V(z) is the volume averaged distance. The observed d_z,obs provided in <cit.> are obtained from the measured D_V(z) and assuming the fiducial (r_s(z_d)  · h)_fid = 104.57 Mpc, where h is the dimensionless Hubble constant h= H_0/100  km  s^-1  Mpc^-1, which corresponds to the best-fit of a ΛCDM model <cit.>.
+The theoretical d_z,th are instead computed as follows. Since an exact computation of r_s(z_d) would require the use of Boltzmann codes, we estimate it with the following numerical approximation <cit.>:
+
+
+    r_s(z_d) ∼55.154   e^-72.3  (Ω_ν  h^2 + 0.0006)^2/(Ω_M   h^2)^0.25351  (Ω_b   h^2)^0.12807 Mpc
+
+where Ω_b and Ω_ν are the baryon and neutrino density parameters. In this formula, we fix Ω_ν  h^2 = 0.00064 and Ω_b  h^2 = 0.002237 (according to  and ).
+The theoretical distance D_V(z) required to compute d_z,th is defined as <cit.>
+
+    D_V(z) = [ cz/H(z)d_l^2(z)/(1+z)^2]^1/3.
+
+
+
+
+ §.§ Tests of the Gaussianity assumption
+
+
+
+To check the assumptions underlying the applicability of a Gaussian likelihood (L_Gaussian) to fit cosmological models, we apply to each probe several methods to test if the difference between the measured and the theoretical quantities is normally distributed. Indeed, this is the statistical condition required to constrain cosmological parameters by applying the likelihood function 
+
+    ℒ_Gaussian =  1/√(2  π) σ  e^-Δ^2/ 2  σ^2
+
+where σ is the standard deviation.
+For sake of clarity, we generically denote with Δ the difference computed for each probe with its own quantities: Δμ_SNe   Ia = μ_obs, SNe   Ia - μ_th for SNe Ia, Δμ_GRBs = μ_obs, GRBs - μ_th for  GRBs, Δlog_10L_X = log_10L_X,obs - log_10L_X,th for QSOs, and Δ d_z = d_z,obs - d_z,th for BAO. As shown in Section <ref>, the computation of the theoretical quantities requires the assumption of a specific cosmological model, hence we here assume a flat ΛCDM model with Ω_M = 0.3 and H_0 = 70  km s^-1 Mpc^-1. Actually, we here stress that also some of the observed quantities do rely on the choice of the cosmological model.
+
+Nevertheless, we test our results in relation to the assumptions for Ω_M and H_0. 
+
+In addition, the computation of μ_obs, GRBs and log_10L_X,obs requires to fix the values of the parameters of the 3D and RL relations, respectively. Thus, we use the values obtained from the fit of these relations in the different evolutionary cases, which are provided in  <cit.> for GRBs and <cit.> for QSOs. We here stress that for the investigation of the Gaussianity assumptions, the two treatments of the evolution (fixed and varying) are equivalent as the evolutionary parameter k of the fixed correction is obtained from the assumption of Ω_M=0.3 <cit.>, and also the function k(Ω_M) is computed for Ω_M = 0.3, as assumed in our Gaussianity tests. Nevertheless, <cit.> and <cit.> have proved, for QSOs and GRBs respectively, that k(Ω_M) remains compatible within 1 σ with k(Ω_M=0.3) also when Ω_M spans all the range of physical values. As a consequence, we do not expect differences between the cases with fixed k and with k(Ω_M) even if we change the values assumed for Ω_M and H_0.
+
+Our analysis of the Gaussianity assumption follows the one detailed in <cit.> for the Pantheon and Pantheon + SNe Ia samples. Specifically, we investigate the Anderson-Darling <cit.> and Shapiro-Wilk <cit.> tests for normality, we compute the skewness and kurtosis of each Δ distribution, we apply the skewness <cit.> and kurtosis <cit.> tests, and the “skewness+kurtosis" test that is based on a combination of these two <cit.>[All the analyses are carried out with the scipy Python package.].  
+Both the Anderson-Darling and Shapiro-Wilk statistical tests allow us to determine if the investigated data are drawn from a specific probability distribution, which in our case is the Gaussian distribution. These methods are commonly applied in different domains (see e.g.  in statistics, and  and  in cosmology), due to their capability of identifying any small, regardless of how small, deviation from the Gaussianity in samples statistically large enough <cit.>. However, this property also limits their applicability. Indeed, as the sample size increases, these tests tend to reject the normality hypothesis even in presence of very small deviations <cit.>, which can be caused for example by ties generated by limited precision (i.e. the number of decimal digits). This weakness should be accounted for when dealing with large data samples. 
+
+For this reason, we additionally include investigations on the skewness and the kurtosis of the Δ distributions. The skewness of a variable x is the third standardized moment, which can be written as E[ ((x - x̂)/ σ)^3  ] in the Fisher's definition. Here, E is the expectation operator and x̂ the mean (or location). The skewness measures the asymmetry of a distribution about x̂ by distinguishing extreme values in one tail compared to the other tail. The kurtosis is the fourth standardized moment, defined as  E[ ((x - x̂)/ σ)^4  ], and it identifies extreme values in both the tails: the larger the kurtosis, the more populated the tails compared to the Gaussian tails, and vice versa.
+If we consider the Fisher’s definition of kurtosis, in which 3 is subtracted from the result, a Gaussian distribution has both skewness and kurtosis equal to zero. Thus, the computation of skewness and kurtosis of Δ allows us to obtain information on the deviation of these distributions from normality.
+As a further step, we apply the skewness, kurtosis, and “skewness+kurtosis" tests, that determine if the values of skewness and kurtosis guarantee a statistically good Gaussian approximation. The application of all these different and complementary methods is crucial to overcome the limits of the Anderson-Darling and Shapiro-Wilk tests. It also leverages the advantages of each approach, and to obtain reliable results on the investigation of the Gaussianity assumption on Δ.
+
+
+
+ §.§ New likelihoods and fit of flat ΛCDM model
+
+
+
+
+As detailed in <cit.>, neither the Pantheon nor the Pantheon + SNe Ia sample passes the normality tests described in Section <ref>. Furthermore, we prove in Section <ref> that also QSOs and BAO do not pass these tests. Hence, only GRBs obey the Gaussianity requisite.
+As a consequence, we further extend our analysis on the non-Gaussianity of QSOs and BAO with a deeper investigation, following the same procedure employed in <cit.> for SNe Ia. As a first step, we fit the histogram of the corresponding Δ to find the best-fit distribution. To this end, we use both Python 3 <cit.> and Wolfram Mathematica 12.3 <cit.> built-in functions. The discovered actual underlying distributions are then used in the likelihood of the cosmological analysis in place of L_Gaussian. As we fit jointly all the probes, we choose for each one the proper likelihood and we multiply them to construct the final new likelihood (L_new).  
+
+Specifically, we fit with the D'Agostini method a flat ΛCDM model considering the most general case in which both Ω_M and H_0 are free parameters. The fit is performed in two separate cases: with the standard ℒ_Gaussian for each probe and with the novel ℒ_new. To ensure that the MCMC process explores all possible physical regions of the (Ω_M, H_0) parameter space, we assume the wide uniform priors 0 ≤Ω_M ≤ 1 and 50  km s^-1 Mpc^-1≤ H_0 ≤ 100  km s^-1 Mpc^-1. Additionally, broad uniform priors are considered also for the parameters of the 3D and RL relations: -2 < a < 0, 0 < b < 2, 0< sv < 2, 0.1 < g_1 < 1, 2< n_1 < 20, and 0 < sv_1 < 2. 
+As anticipated, when also the evolutionary parameters k are free parameters of the fit, we need to assume Gaussian priors on them, which are detailed in Section <ref>.
+As stressed in <cit.>, the comparison between the results obtained with L_Gaussian and L_new is pivotal to test how the change in the likelihood affects the cosmological results. Indeed, it is particularly interesting to investigate if and to what extent L_new changes the values of the cosmological parameters and if it performs better, even reducing the uncertainties of the cosmological parameters.
+
+To statistically interpret our results on the H_0 values, we compute for each of them the z-scores ζ <cit.> with respect to three H_0 fiducial values. By definition, ζ= |H_0,i - H_0,our|/ √(σ^2_H_0,i + σ^2_H_0,our) where H_0,i and σ_H_0,i are the reference value and its 1 σ uncertainty, respectively, while H_0,our and σ_H_0,our are our H_0 value and its 1 σ uncertainty, respectively.
+The parameter ζ quantifies the deviation of the H_0 values obtained in this work from the fiducial ones.
+The assumed reference values are:  H_0 = 73.04 ± 1.04  km s^-1 Mpc^-1 <cit.>, H_0 = 67.4 ± 0.5  km s^-1 Mpc^-1, <cit.>, and H_0 = 70.00 ± 0.13  km s^-1 Mpc^-1 obtained in <cit.> when fitting a flat ΛCDM model with Ω_M = 0.3, as in <cit.>. Furthermore, H_0 = 70  km s^-1 Mpc^-1 is also justified by the results of several works that use Pantheon SNe Ia with other cosmological probes <cit.>.
+In our notation, we use ζ_P+,  ζ_CMB, ζ_P when referring to the H_0 value derived from Pantheon +, from the CMB, and from H_0 = 70.00 ± 0.13  km s^-1 Mpc^-1, respectively (see Table <ref>).
+
+
+
+
+
+§ RESULTS
+
+
+
+
+
+
+
+ §.§ Results of the Gaussianity tests
+
+
+
+<cit.> have shown that both Pantheon and Pantheon + Δμ_SNe   Ia are not normally distributed. More specifically, for both samples the null Gaussian hypothesis is rejected at a significance level > 15 % from the Anderson-Darling test, and with p-value < 5%, the minimum threshold required for the acceptance of the null hypothesis, from the Shapiro-Wilk, skewness, kurtosis, and “skewness+kurtosis" tests. The skewness and kurtosis of the Δμ_SNe   Ia distributions reported in <cit.> are -0.19 and 0.69 for Pantheon, and -0.19 and 4.2 for Pantheon +, respectively (see also their Fig. 1). These results have been proved not to depend on the a priori assumption of Ω_M = 0.3 and H_0 = 70   km s^-1 Mpc^-1.
+
+On the other hand, GRBs pass all the tests, independently on the treatment of the redshift evolution and the values assumed for Ω_M and H_0. Indeed, the distribution in the left panel of Fig. <ref> could appear roughly non-Gaussian, but this is only due to the binned representation of the few data points. On the contrary, it reveals to be Gaussian under our statistical investigations.
+The computation of skewness and kurtosis is not affected by the assumptions on the cosmological parameters, but it is slightly impacted by the approach employed for the redshift evolution. More precisely, when not accounting for any evolution, skewness and kurtosis of the Δμ_GRBs distribution are 0.34 and -0.74, respectively, with a central value shifted toward a positive value. Indeed, in this case, the best-fit Gaussian distribution has x̂ = 1.38 and σ = 2.0. When including the correction for the evolution, 
+
+the distribution becomes more symmetric around 0 with a skewness of 0.25, kurtosis of -0.65, and best-fit Gaussian parameters x̂ =-0.21 and σ = 2.04 (see left panel of Fig. <ref>).
+
+The results of the normality tests on QSOs do not depend neither on the fixed values of Ω_M and H_0 nor on the approach for the redshift evolution. In all cases, the null hypothesis of Gaussianity of QSO Δlog_10L_X is rejected by the Anderson-Darling, Shapiro-Wilk, kurtosis, and “skewness+kurtosis" tests. Only the skewness test is fulfilled as a consequence of the value of the skewness being very close to 0. Indeed, without the correction for the evolution, the skewness is 0.07 (and the kurtosis is 0.84), hence the test is fulfilled with p-value = 0.14. Correcting for the evolution, skewness and kurtosis become 0.0007 and 0.79, respectively, and the p-value of the skewness test significantly increases up to 0.99. For a direct visualization, we show in the middle panel of Fig. <ref> the histogram obtained including the redshift evolution correction.
+It is indeed interesting to  note from the computed skewness values and the histogram in Fig. <ref>, that the QSO Δlog_10L_X distribution is symmetric around 0 and this symmetry increases when accounting for the redshift evolution. As a matter of fact, the best-fit Gaussian distribution (green curve in the middle panel of Fig. <ref>) has x̂ = 0.009 and σ = 0.24. Nevertheless, due to the high kurtosis, the combination of both features, considered in the “skewness+kurtosis" test, confirms the non-Gaussianity distribution of Δlog_10L_X. 
+
+BAO do pass none of the normality tests applied in this work, independently on the values assumed a-priori for Ω_M and H_0 to compute d_z,th. However, in this case, differently from GRBs and QSOs, the values of skewness and kurtosis do depend on the cosmological model assumed. This can be ascribed to the fact that the assumptions on Ω_M and H_0 impact the computation of dz_th (see Eqs. <ref> and <ref>), but not d_z,obs, hence this choice affects the difference Δ d_z.
+
+<cit.> proved that, fixing r_s(z_d)  · h = 104.57 Mpc, as assumed in our data <cit.>, the best-fit values within a ΛCDM model are Ω_M = 0.278 and H_0 = 70.07   km s^-1 Mpc^-1. Thus, we use these values to compute skewness and kurtosis obtaining a skewness of 2.55 and a kurtosis of 9.23 (see right panel of Fig. <ref>). Despite its asymmetry, the distribution is centered on 0. Indeed, the best-fit Gaussian curve (in green in the right panel of Fig. <ref>) has x̂ = 0.001 and σ = 0.004.
+
+
+
+ §.§ The best-fit distributions
+
+
+
+As proved in Section <ref>, only GRBs, independent of the treatment of the redshift evolution, can be well approximated by the Gaussian probability distribution function (PDF)
+
+    PDF_Gaussian = 1/√(2  π) σ  e^-1/2(x- x̂/σ)^2
+
+where, in our case, x = Δμ_GRBs. 
+Investigating Pantheon and Pantheon + SNe Ia, <cit.> have determined that the best-fit Δμ_SNe   Ia distributions are a logistic and a Student's t distribution, respectively (see their Fig. 1). The logistic PDF reads as follows:
+
+    PDF_logistic = e^-(x-x̂)/s/s  (1+ e^-(x-x̂)/s)^2
+
+where s is the scale parameter and the variance σ^2 is given by σ^2 = (s^2  π^2)/3. The best-fit parameters of <cit.> are x̂= -0.004 and s=0.08. The generalized Student's t PDF is defined as 
+
+    PDF_student = Γ(ν +1/2)/√(ν π)  s  Γ(ν/2) [1 + ((x- x̂)/s)^2/ν]^-ν +1/2
+
+where Γ is the gamma function, ν are the degrees of freedom (>0), and the variance is σ^2 = (s^2  ν) / (ν -2). The corresponding best-fit parameters in <cit.> are x̂= 0.1, s=0.12, and ν = 3.8. 
+
+Fitting the QSO Δlog_10L_X, we find that, for all evolutionary cases, the best-fit distribution is the logistic distribution, whose PDF is the one in Eq. (<ref>). The middle panel of Fig. <ref> shows the normalized histogram, once accounted for the correction for evolution, superimposed with the best-fit logistic curve (in orange) with x̂= 0.009 and s=0.13 and with the best-fit Gaussian curve (in green) with  x̂= 0.009 and σ=0.24. In the case without evolution, the best-fit parameters for the logistic and the normal distribution are x̂= 0.0006 and s=0.13, and x̂= 0.002 and σ=0.24, respectively.
+
+For BAO, the best-fit of the Δ d_z histogram (right panel of Fig. <ref>) is the Student's t distribution in Eq. (<ref>).
+The best-fit Student's t curve shown in orange in the right panel of Fig. <ref> has x̂ = 0.0003, s = 0.002, and ν = 2.23, while the best-fit Gaussian curve in green has x̂ = 0.001 and σ = 0.004. For both QSOs and BAO, the logistic and the Student's t distributions, respectively, better reproduce Δ in all the features (e.g. peak, central width, and tails) compared to the Gaussian PDF. We here stress that these investigations on the Gaussianity assumption and the proper distribution are crucial to validate the results of cosmological analyses and have to be performed on each probe used and also on future new samples. 
+
+
+
+
+ §.§ Cosmological results by using Gaussian and the best-fit likelihoods
+
+
+
+As detailed in Section <ref>, we fit a flat ΛCDM model with Ω_M and H_0 free parameters using the joint samples of SNe Ia (from Pantheon) + GRBs + QSOs + BAO and SNe Ia (from Pantheon +) + GRBs + QSOs + BAO both considering ℒ_Gaussian for all the probes and using ℒ_new.
+
+As the Student's t distribution depends also on the parameter ν, in ℒ_new we consider it as an additional free parameter for Pantheon + SNe Ia (ν_SNe) and BAO (ν_BAO), imposing the wide uniform prior 0 < ν < 10. All results are reported in Table <ref> and Figs. <ref>, <ref>, <ref>, <ref>, and <ref> according to the different treatments of redshift evolution for GRBs and QSOs. For easier and more direct comparison, we also include in Table <ref> the results obtained in <cit.> with only Pantheon and Pantheon + SNe Ia samples. In these cases, L_new corresponds to the likelihood with the logistic and the Student's t distribution, respectively for Pantheon and Pantheon +. 
+
+We here discuss our main findings.
+
+
+
+
+
+
+
+
+
+    
+  * For both SNe Ia samples considered and independently on the evolutionary treatment employed, the best-fit values of Ω_M and H_0 are compatible within 1 σ when comparing the application of ℒ_new and ℒ_Gaussian, even if the use of ℒ_new slightly lowers the Ω_M values (see Table <ref>). This result is completely consistent with the analysis on SNe Ia reported by <cit.>, in which the values of the cosmological parameters proved not to be affected by the choice of the likelihood function. Concerning the uncertainties on Ω_M and H_0, they do not show any dependence on the correction for the evolution and the likelihoods used. More precisely, we obtain ΔΩ_M ∼ 0.007 and ΔΩ_M ∼ 0.009 when including Pantheon and Pantheon + samples, respectively, and Δ H_0 ∼ 0.14 with both SNe Ia samples (see Table <ref>). On the contrary, <cit.> have achieved a significant reduction of the uncertainties of a factor ∼ 40% by applying the proper likelihood to SNe Ia instead of the traditional Gaussian one. Indeed, <cit.> have used only SNe Ia, while we here consider the combination of SNe Ia, GRBs, QSOs, and BAO, increasing the sample of SNe Ia with 2497 additional sources.
+    The combination of different probes and the increase in the number of data, compared to the use of SNe Ia alone, already reduces the uncertainties up to a value lower than the one obtained with the new likelihoods in <cit.>. Specifically, using the new proper likelihoods they reach ΔΩ_M = 0.012 and Δ H_0 = 0.20 with the Pantheon sample, and ΔΩ_M = 0.011 and Δ H_0 = 0.16 with the Pantheon + sample. In our analysis, we achieve ΔΩ_M ∼ 0.08 and Δ H_0 = 0.15 just by combining all the probes with the standard ℒ_Gaussian. Hence, the increment in the number of data (i.e. 3545 with Pantheon and 4198 with Pantheon +) and the combination of different probes are the principal causes of the reduction on the uncertainties of cosmological parameters, making the choice of the proper likelihood of secondary impact. 
+    However, as proved by the results of <cit.>, the search for the proper likelihood still represents a crucial point to validate the cosmological analysis on a statistical basis and for precision cosmology, in particular when dealing with new probes, small data sets, different combinations of probes, and new samples. 
+    We here also stress that, between the two primary factors,
+    
+    the use of independent probes has the strongest impact. In this regard, the addition of BAO has the most relevant effect. Indeed, <cit.> have already shown that adding BAO to Pantheon SNe Ia lowers the uncertainties up to ΔΩ_M = 0.07 and  Δ H_0 = 0.14 (see their Table 5). Nevertheless, increasing the number of cosmological data sets could still play a significant role in future analyses, depending also on the cosmological probes investigated. 
+    
+    We here also would like to stress that the difference between the uncertainties on H_0 that we obtain and the ones reported in <cit.> for Pantheon and <cit.> for Pantheon + are due to the different approaches used to determine H_0. Indeed, <cit.> and <cit.> use Cepheids in SNe Ia hosts, Cepheids as anchors or non–SNe Ia hosts, SNe Ia in Cepheids hosts, external constraints, and SNe Ia in the Hubble flow to determine, among all the free parameters of the fit, 5  log_10H_0, and hence H_0 and its uncertainty (by also adding a contribution to the systematic uncertainty from the analysis variants). The value of H_0 presented in <cit.> is then used (with its corresponding M) to compute the distance moduli and the corresponding uncertainties both supplied by the Pantheon + release. On the other hand, the Pantheon release provides the distance moduli with the arbitrary assumption of H_0= 70  km s^-1 Mpc^-1. In this work instead we consider the whole SNe Ia sample (1048 sources for Pantheon and 1701 sources for Pantheon +) and not only 42 SNe Ia by fitting directly the distance moduli and their uncertainties, which are provided by the Pantheon and Pantheon + releases, as described in Section <ref>. Thus, since in the values of the distance moduli the values of M are fixed in correspondence of either H_0= 70  km s^-1 Mpc^-1 and H_0= 73.04  km s^-1 Mpc^-1 for the Pantheon and Pantheon + sample respectively, this leads to uncertainties on H_0 that are significantly reduced compared to the ones reported in <cit.> and <cit.>.
+
+
+    
+  * Independently on the approach of the likelihood and correction for evolution, we can identify a specific trend when comparing the two cases with the inclusion of Pantheon and Pantheon + samples provided in Table <ref>. This trend has already been pointed out in <cit.> through a deep investigation of the assumptions on which the two releases rely. Indeed, as in their work, we find that the inclusion of SNe Ia from Pantheon results in Ω_M ∼ 0.3 and H_0 = 70  km s^-1 Mpc^-1, while considering the Pantheon + sample we obtain Ω_ M ∼ 0.36 and H_0 = 73  km s^-1 Mpc^-1. More precisely, the values we obtain for Ω_M and H_0 show a discrepancy always greater than 3 σ between the data sets with Pantheon and with Pantheon + SNe Ia, with the largest inconsistency being 10 σ in the H_0 value (see Table <ref>). As stressed in <cit.>, this difference can be ascribed to the a-priori assumption on M in Eq. (<ref>) for the two data sets. As already detailed in Section <ref>, <cit.> assumes M=-19.35 corresponding to H_0 = 70  km s^-1 Mpc^-1, while <cit.> uses M=-19.253 corresponding to H_0 = 73.04  km s^-1 Mpc^-1, as obtained in <cit.>. Since Ω_M and H_0 are related through Eq. (<ref>), an assumption on H_0 directly impacts the constraints on Ω_M. 
+    
+    
+  * Our best-fit results and the ones presented in <cit.> are completely compatible (see Table <ref>) even if we are adding GRBs, QSOs, and BAO. Indeed, GRBs and QSOs alone cannot constrain cosmological parameters, while BAO provide best-fit values of the cosmological parameters compatible in 1 σ with the ones of SNe Ia, but with larger uncertainties <cit.>, due to the few number of data. Thus, in our combination of four cosmological probes, SNe Ia play the leading role in the determination of Ω_M and H_0.
+
+    
+  * 
+    Similarly to <cit.>, we obtain ζ_P+∼ 3 when it is computed for the values obtained with Pantheon, and ζ_P ∼ 15 when calculated for the data set with Pantheon + SNe Ia, mainly due to the error on the reference value (i.e. 0.13) which is much lower than the errors of the other two H_0 reference values (i.e. 0.5 for ζ_CMB and 1.04 for ζ_P+). Concerning ζ_CMB, it is ∼ 5 and ∼ 10 when considering Pantheon and Pantheon + samples, respectively, since the H_0 obtained in <cit.> is less discrepant from the one in <cit.> compared to H_0 in <cit.>.
+    
+    In addition, we also stress that all our H_0 values are compatible with the one obtained in <cit.> from the TRGB, which is H_0=69.80 ± 1.60  km s^-1 Mpc^-1 when including systematic uncertainties. Specifically, the consistency is within 1 σ when considering the Pantheon SNe Ia, and within 2 σ when using the Pantheon + sample.
+
+    
+  * Comparing our results on Ω_M with Ω_M=0.315 ± 0.007 from <cit.>, Ω_M=0.298 ± 0.022 from <cit.>, and Ω_M=0.338 ± 0.018 from <cit.>, we find that our Ω_M values are always compatible within 3 σ with each of these values, with no dependence on the SNe Ia sample, likelihood, or correction for evolution considered. More specifically, if we use the Pantheon sample, the compatibility with Ω_M=0.315 ± 0.007 is within 1 σ with ℒ_Gaussian and within 2 σ with ℒ_new, while, using the Pantheon + sample, the difference increases to 2–3 σ for both likelihoods. Compared with Ω_M=0.298 ± 0.022, the consistency is within 1 σ for the case with Pantheon SNe Ia, and within 2 σ with Pantheon +. In relation to Ω_M=0.338 ± 0.018, both data sets show a 1–2 σ compatibility.
+
+
+    
+    
+    
+
+    
+  * 
+    We explore the QSO role in the overall data set by comparing our results with the ones in <cit.>, in which the combination of the same samples of GRBs and BAO as in this work and SNe Ia from Pantheon is used to constrain Ω_M and H_0 both without correction for evolution and with a fixed correction. We find compatibility in 1 σ for the values of Ω_M and H_0.
+    
+    In addition, also the uncertainties on these parameters do not show any difference. This implies that QSOs are still too weak, mainly due to the intrinsic dispersion of the RL relation, to significantly contribute to constraining cosmological parameters, compared to the dominant power of SNe Ia and BAO. As a matter of fact, the same conclusion can be drawn for GRBs. Indeed, as shown in <cit.>, the inclusion of GRBs in the BAO + Pantheon SNe Ia data set does not impact the cosmological results, neither in the best-fit values nor in the associated uncertainties (see their Table 5). On the other hand, <cit.> proved that adding BAO to SNe Ia
+    
+    significantly reduces the uncertainties on these parameters, as already stressed above. Thus, in the total data set used in this work, BAO and SNe Ia play the primary role in constraining the cosmological parameters. The non-predominant role of QSOs and GRBs in our analysis is also the reason why different treatments for the evolution in redshift of their physical quantities do not affect the results, leading to best-fit values of Ω_M and H_0 compatible within 1 σ, independently on the likelihood and SNe Ia sample considered. 
+    Regarding the different approaches to treat the reshift evolution of QSOs and GRBs, we here also stress that we obtain completely consistent results both when using the functions k(Ω_M) and k as free parameters (see Figures <ref>, <ref>, and <ref>). Indeed, not only Ω_M and H_0 are compatible within less than 0.1 σ, but also the best-fits of k parameters are within less than 1 σ compared to the ones expected from k(Ω_M). This proves also the reliability of our method of varying evolution with the use of the functions k(Ω_M).
+    
+    Besides their secondary role in this analysis, GRBs and QSOs are still very promising cosmological tools. Indeed, as the methodology to standardize them as cosmological probes has been developed only very recently, they cannot be as powerful as the traditionally used probes. Nonetheless, they manifest an incredible potential to significantly contribute to the cosmological analysis. First, as high-z probes,
+    
+    they allow us to investigate a previously unexplored region in the Universe evolution, which is the one crucially needed to discern between predictions of different cosmological models, indistinguishable in low-z range of SNe Ia. 
+    
+    Additionally, their power in constraining cosmological parameters shows significant margins of improvement under different points of view. We here list a few: an increase in the number of sources, new and higher-quality observations, a refining in the selection of the samples, that would lead to a reduced intrinsic dispersion of the Dainotti and RL relations (and thus to tighter constraints on cosmological parameters). 
+     Indeed, as already anticipated in <cit.> and <cit.>, the choice of a morphological well-behaved sample can lead to these probes as distance indicators and to reduced cosmological parameters uncertainties.
+     Lastly, and very importantly new studies that can enhance further the understanding on their physical mechanisms and backgrounds will better validate their application in cosmology.
+   
+    
+
+
+
+
+§ SUMMARY & CONCLUSIONS
+
+
+
+In this work, we have first performed a statistical investigation on BAO and the most updated cosmological samples of GRBs and QSOs to test if the commonly adopted approach to constrain cosmological parameters by using a Gaussian likelihood is actually legitimated. 
+For GRBs and QSOs, we have also taken into account the evolution in redshift of the variables as done in <cit.> and <cit.>. Following the method applied to SNe Ia in <cit.>, we have employed several independent normality tests and fitted the Δ histograms to find the best-fit distribution. Indeed, when fitting cosmological models, the use of the best-fit likelihood function for each probe considered is crucial not only to build a cosmological likelihood that is statistically well-founded and justified, but also to obtain reliable and intrinsic results and the smallest uncertainties on cosmological parameters <cit.>. As a second step in our analysis, we have fitted the flat ΛCDM model with the combination of SNe Ia, GRBs, QSOs, and BAO considering both Pantheon and Pantheon + SNe Ia samples, applying different approaches to treat the redshift evolution for GRBs and QSOs, and leaving both Ω_M and H_0 as free parameters. This fit is performed with two different methods: using Gaussian likelihoods for all the probes (ℒ_Gaussian), as in the usual practise in the literature, and considering for each probe the new likelihoods uncovered in this work (ℒ_new). 
+
+
+
+Surprisingly, the statistical investigation on the Gaussianity assumption has revealed that only GRBs obey a Gaussian distribution, while QSOs and BAO show a logistic and a Student's t distribution, respectively. 
+
+Despite this unexpected result, this analysis is significantly relevant, because the Gaussianity requirement is not the only requirement to be considered in enlarging the current statistical samples and probes.
+Thus, the practise traditionally trusted in cosmological analyses and also future studies will have to be inspected carefully for new samples and probes. 
+
+Concerning the fit of the flat ΛCDM model, we have shown that our cosmological results are not affected either by the approach used for the redshift evolution of GRBs and QSOs or by the choice of the likelihood. Indeed, in all the cosmological cases studied, the main role is played by SNe Ia and BAO. Indeed, SNe Ia are the leading probes that dominate above GRBs, QSOs, and BAO in driving the determination of Ω_M and H_0, as proved also by the analysis on the rescaling of M. On the other side, the inclusion of BAO represents the dominant factor in reducing the uncertainties on the cosmological parameters.
+
+Specifically, we have obtained very tight constraints, up to ΔΩ_M = 0.007 and Δ H_0 = 0.13. Our values of Ω_M are always compatible
+
+with the values from <cit.>, <cit.>, and <cit.>. Regarding H_0, our results are consistent
+
+with the value obtained from the TRGB, while they show a significant discrepancy from the value derived from the CMB.
+
+
+
+
+
+In conclusion, this work shows 
+
+the importance of inspecting the Gaussianity assumption for all cosmological probes and future new samples in order to apply the most appropriate likelihood in constraining cosmological parameters.
+
+
+We have also clearly stressed that the cosmological results on Ω_M and H_0 obtained with SNe Ia are induced by the a-priori calibration imposed on them. Bearing this in mind, we have found compatibility between our H_0 values and the one from the TRGB, and between our Ω_M values and the ones from <cit.>, <cit.>, and <cit.>. 
+Finally, we have also highlighted the relevance of the inclusion of GRBs and QSOs in cosmological studies and their bright potential in this field.
+Indeed, our study is motivated by the current need of cosmological probes at intermediate redshift between the one of SNe Ia and CMB, and, to this end, QSOs and GRBs represent the most promising sources to date. Thus, we have here proved their applicability in cosmological analyses when they are used jointly with more powerful and well-established probes, such as SNe Ia and BAO. We are not at the stage in which we expect QSOs or GRBs to play the leading role in constraining cosmological parameter. Nevertheless, we have shown how they can be implemented in the cosmological analysis to extend the redshift range up 7.5 without introducing additional uncertainties on the cosmological parameters. This is the first essential step to improve their use in cosmology. In this regard, <cit.> have already estimated the number of GRBs (and the time needed to observe them) to reach the same precision of Pantheon SNe Ia with GRBs. Similar efforts in determining a sub-sample of QSOs that even now provides constraints on Ω_M with a precision comparable with the one obtained from Pantheon +  SNe Ia is underway.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ ACKNOWLEDGEMENTS
+
+
+This study uses data supplied by SNe Ia GitHub repositories <https://github.com/dscolnic/Pantheon> and <https://github.com/PantheonPlusSH0ES>.
+GB acknowledges the Istituto Nazionale di Fisica Nucleare (INFN), sezione di Napoli, for supporting her visit at NAOJ. GB is grateful to be hosted by Division of Science. MGD acknowledges the Division of Science and NAOJ. SN acknowledges JSPS KAKENHI (A: 19H00693), Interdisciplinary Theoretical and Mathematical Sciences Program (iTHEMS), and the Pioneering Program of RIKEN for Evolution of Matter in the Universe (r-EMU). SC acknowledges Istituto Nazionale di Fisica Nucleare (INFN), sezione di Napoli, iniziativa specifica QGSKY.
+This paper is partially based upon work from COST Action CA21136 Addressing
+observational tensions in cosmology with systematics and fundamental
+physics (CosmoVerse) supported by COST (European Cooperation in Science and
+Technology).
+We are particularly grateful to H. Nomura for the discussion about the Gaussianity results on GRBs. We also acknowledge B. De Simone for his help in launching some of the notebooks to produce the results with the evolutionary parameters free to vary.
+
+
+
+§ DATA AVAILABILITY
+
+
+ 
+The data underlying this article will be shared upon a reasonable request to the corresponding author.
+
+
+
+
+
+
+
+mnras
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,799 @@
+
+
+Anyon condensation in the string-net models
+    Fiona J. Burnell
+    March 30, 2023
+===========================================
+
+
+
+arabic
+
+
+Recently, many studies have been devoted to finding diverse solutions in classical combinatorial problems, such as Vertex Cover (Baste et al., IJCAI'20), Matching (Fomin et al., ISAAC'20) and Spanning Tree (Hanaka et al., AAAI'21). Finding diverse solutions is important in settings where the user is not able to specify all criteria of the desired solution. Motivated by an application in the field of system identification, we initiate the algorithmic study of k-Diverse Minimum s-t Cuts which, given a directed graph G = (V, E), two specified vertices s,t ∈ V, and an integer k > 0, asks for a collection of k minimum s-t cuts in G that has maximum diversity. We investigate the complexity of the problem for two diversity measures for a collection of cuts: (i) the sum of all pairwise Hamming distances, and (ii) the cardinality of the union of cuts in the collection. We prove that k-Diverse Minimum s-t Cuts can be solved in strongly polynomial time for both diversity measures via submodular function minimization. We obtain this result by establishing a connection between ordered collections of minimum s-t cuts and the theory of distributive lattices. When restricted to finding only collections of mutually disjoint solutions, we provide a more practical algorithm that finds a maximum set of pairwise disjoint minimum s-t cuts. For graphs with small minimum s-t cut, it runs in the time of a single max-flow computation. These results stand in contrast to the problem of finding k diverse global minimum cuts—which is known to be NP-hard even for the disjoint case (Hanaka et al., 2022)—and partially answer a long-standing open question of Wagner (Networks 1990) about improving the complexity of finding disjoint collections of minimum s-t cuts.  
+
+
+
+
+§ INTRODUCTION
+
+
+The Minimum s-t Cut problem is a classic combinatorial optimization problem. Given a directed graph G = (V, E) and two special 
+vertices s, t ∈ V, the problem asks for a subset S ⊆ E of minimum cardinality that separates vertices s and t, meaning that removing these edges from G ensures there is no path from s to t. Such a set is called a minimum s-t cut or s-t mincut, and it need not be unique. This problem has been studied extensively and has numerous practical and theoretical applications. Moreover, it is known to be solvable in polynomial time. Several variants and generalizations of the problem have been studied; we mention the global minimum cut problem and the problem of enumerating all minimum s-t cuts in a graph.
+In this paper, we initiate the algorithmic study of computing diverse minimum s-t cuts. Concretely, we introduce the following optimization problem. 
+
+[k-Diverse Minimum s-t Cuts (k-DMC)] 
+Given are a directed graph G = (V, E), vertices s,t ∈ V and an integer k > 0. Let Γ_G(s, t) be the set of minimum s-t cuts in G, and let U_k be the set of k-element multisets of Γ_G(s, t). We want to find C ∈ U_k such that d(C) = max_S ∈ U_k d(S), where d : 2^U_k→ℕ is a measure of diversity.
+
+
+Informally, given a directed graph G along with two specified vertices s and t, and an integer k, we are interested in finding a collection of k s-t mincuts in G that are as different from each other as possible; that is, a collection having maximum diversity. Notice that the problem is well defined even when there are less than k s-t mincuts in G, because we allow multisets in the solution. To formally capture the notion of diversity of a collection of sets, several measures have been proposed in literature <cit.>. 
+In this work, we choose two natural and general measures as our notions of diversity. Given a collection (X_1, X_2, …, X_k) of subsets of a set A (not necessarily distinct), we define 
+
+    d_sum(X_1, …, X_k) = ∑_1≤ i < j ≤ k |X_i  X_j|, 
+        d_cov(X_1, …, X_k) = |⋃_1 ≤ i ≤ k X_i |
+
+where X_i  X_j = (X_i ∪ X_j) ∖ (X_i ∩ X_j) is the symmetric difference (or Hamming distance) of X_i and X_j. Throughout, we call function (<ref>) the pairwise-sum diversity and function (<ref>) the coverage diversity. 
+These measures are amongst the most broadly used in describing diversity among solutions in combinatorial problems.  
+
+
+
+  
+Motivation.
+We now briefly motivate why finding diverse minimum s-t cuts in a graph can be of interest. In general, to solve a real-world problem, one typically formulates the problem as an instance of a computational problem and proceeds to find a solution with the help of an optimization algorithm. However, this is not always an easy task, and the abstraction to a mathematical formulation is usually just a simplification. From a theoretical perspective, an optimal solution to the simplified problem is as good as any other optimal solution, but due to the loss of information during the abstraction process, not every such solution is guaranteed to be adequate for practical usage. 
+An illustrating example is the so-called synthesis problem in the field of system identification, where (under special conditions) the Minimum s-t Cut problem can be used to determine an optimal placement of input and output signals in a physical system (modeled as a directed graph) to gather information about its behaviour <cit.>. 
+An optimal placement obtained from the abstract model, however, is not always practically feasible due to omitted physical constraints of the system that would otherwise render the model unmanageable <cit.>.
+
+One way of dealing with this issue is to present all optimal solutions of the simplified model and let a user choose between them based on external factors ignored by the mathematical model. Such an approach is useful when the number of optimal solutions is small, but in most cases (as in the Minimum s-t Cut problem) the number of optimal solutions can be exponential in the input size, rendering the approach infeasible. Another approach is to present only a small number k of optimal solutions, but one should be careful not to output solutions that are very similar to each other, as a solution resembling a practically infeasible solution is likely to be practically infeasible as well. Thus, we would like to somehow obtain a small list of k optimal, yet sufficiently “diverse” solutions from which a user can make a choice a posteriori. 
+
+
+
+  
+Our results. 
+We investigate the complexity of the following two variants of k-Diverse Minimum s-t Cuts: (i) Sum k-Diverse Minimum s-t Cuts (Sum-k-DMC), and (ii) Cover k-Diverse Minimum s-t Cuts (Cov-k-DMC). These are the problems obtained when defining function d in k-DMC as diversity measures (<ref>) and (<ref>), respectively. For a graph G, we use n to denote the number of nodes and m to denote the number of edges.
+
+Contrary to the hardness of finding diverse global mincuts in a graph <cit.>, we show that both Sum-k-DMC and Cov-k-DMC can be solved in polynomial time. We show this via a reduction to the submodular function minimization problem (SFM) on a lattice, which is known to be solvable in strongly polynomial time when the lattice is distributive <cit.>.
+
+[]theoremmainTheorem 
+    Sum-k-DMC and Cov-k-DMC can be solved in strongly polynomial time.
+
+
+At the core of this reduction is a generalization of an old result of Escalante <cit.> establishing a connection between minimum s-t cuts and distributive lattices. As will be elaborated in Section <ref>, we obtain our results by showing that the pairwise-sum and coverage diversity measures (reformulated as minimization objectives) are submodular functions on the lattice L^* defined by left-right ordered collections of s-t mincuts, and that this lattice is in fact distributive. Using the currently fastest algorithm for SFM by Jiang <cit.>, together with an appropriate representation of the lattice L^*, we can obtain an algorithm solving these problems in O(k^5n^5) time. 
+
+In Section <ref>, we obtain better time bounds for the special case of finding collections of s-t mincuts that are pairwise disjoint. Similar to SUM-k-DMC and COV-k-DMC, our approach exploits the partial order structure of s-t mincuts. We use this to efficiently solve the following optimization problem, which we call k-Disjoint Minimum s-t Cuts: given a graph G = (V, E), vertices s,t ∈ V, and an integer k ≤ k_max, find k pairwise disjoint s-t mincuts in G. Here, k_max denotes the maximum number of disjoint s-t mincuts in G. Our algorithm is significantly simpler than the previous best algorithm by Wagner <cit.>, which runs in the time of a poly-logarithmic number of calls to any min-cost flow algorithm. Our algorithm takes O(F(m, n) + mλ) time, where F(m, n) is the time required by a unit-capacity max-flow computation, and λ is the size of an s-t mincut in the graph. By plugging in the running time of the current fastest deterministic max-flow algorithms of <cit.>, we obtain the following time bounds. When λ≤ m^1/3 + o(1), our algorithm improves upon the previous best runtime for this problem. 
+
+ 
+k-Disjoint Minimum s-t Cuts can be solved in time O(m^4/3 + o(1) + m λ). 
+
+
+
+
+  
+Related Work.
+Many efforts have been devoted to finding diverse solutions in combinatorial problems. In their seminal paper <cit.>, Kuo et al. were the first to explore this problem from a complexity-theoretic perspective. They showed that the basic problem of maximizing a distance norm 
+over a set of elements is already NP-hard. Since then, the computational complexity of finding diverse solutions in many other combinatorial problems has been studied. For instance, diverse variants of Vertex Cover, Matching and Hitting Set have been shown to be NP-hard, even when considering simple diversity measures like the pairwise-sum of Hamming distances, or the minimum Hamming distance between sets. This has motivated the study of these and similar problems from the perspective of fixed-parameter tractable (FPT) algorithms <cit.>. 
+
+Along the same line, Hanaka et al. <cit.> recently developed a framework to design approximation algorithms for diverse variants of combinatorial problems. On the positive side, diverse variants of other classic problems are known to be polynomially solvable when considering certain set-based diversity measures, such as Spanning Tree <cit.> and Shortest Path <cit.>, but not much is known about graph partitioning problems in light of diversity. 
+
+The problem of finding multiple minimum cuts has received considerable attention <cit.>. Picard and Queyranne <cit.> initiated the study of finding all minimum s-t cuts in a graph, showing that these can be enumerated efficiently. They observe that the closures of a naturally-defined poset over the vertices of the graph, correspond bijectively to minimum s-t cuts. An earlier work of Escalante <cit.> already introduced an equivalent poset for minimum s-t cuts, but contrary to Picard and Queyranne, no algorithmic implications were given. Nonetheless, Escalante shows that the set of s-t mincuts in a graph, together with this poset, defines a distributive lattice. Similar structural results for stable matchings and circulations have been shown to have algorithmic implications <cit.>, but as far as we know, the lattice structure of s-t mincuts has been seldomly exploited in the algorithmic literature.[Bonsma <cit.> does make implicit use of the lattice structure of minimum s-t cuts to investigate the complexity of finding most balanced minimum cuts and partially ordered knapsack problems, but does not make this connection to lattice theory explicit.]
+
+Wagner <cit.> studied the problem of finding k pairwise-disjoint s-t cuts of minimum total cost in an edge-weighted graph.[Notice that when the input graph is unweighted and k ≤ k_max, Wagner's problem reduces to k-Disjoint Minimum s-t Cuts.] He showed that this problem can be solved in polynomial time by means of a reduction to a transshipment problem; where he raised the question of whether improved complexity bounds were possible by further exploiting the structure of the problem, as opposed to using a general purpose min-cost flow algorithm for solving the transshipment formulation. In sharp contrast, Hanaka et al. <cit.> recently established that the problem of finding k pairwise-disjoint global minimum cuts in a graph is NP-hard (for k part of the input). We are not aware of any algorithm for minimum s-t cuts that runs in polynomial time with theoretical guarantees on diversity. 
+
+
+
+
+§ PRELIMINARIES
+
+
+
+
+ §.§ Distributive Lattices
+ 
+
+In this paper, we use properties of distributive lattices. Here we introduce basic concepts and results on posets and lattices while making an effort to minimize new terminology. For a more detailed introduction to lattice theory see e.g., <cit.>. 
+
+A partially ordered set (poset) P = (X, ≼) is a ground set X together with a binary relation ≼ on X that is reflexive, antisymmetric, and transitive. We use 𝒟(P) to denote the family of all ideals of P. When the binary operation ≼ is clear from the context, we use the same notation for a poset and its ground set. Here, we consider the standard representation of a poset P as a directed graph G(P) containing a node for each element and edges from an element to its 
+predecessors. For a poset P = (X, ≼), an ideal is a set U ⊆ X where u ∈ U implies that v ∈ U for all v ≼ u. In terms of G(P) = (V, E), a subset W of V is an ideal if and only if there is no outgoing edge from W. 
+
+A lattice is a poset L = (X, ≼) in which any two elements x, y ∈ X have a (unique) greatest lower bound, or meet, denoted by x ∧ y, as well as a (unique) least upper bound, or join, denoted by x ∨ y. We can uniquely identify L by the tuple (X, ∨, ∧). A lattice L' is a sublattice of L if L' ⊆ L and L' has the same meet and join operations as L. In this paper we only consider distributive lattices, which are lattices whose meet and join operations satisfy distributivity; that is, x ∨ (y ∧ z) = (x ∨ y) ∧ (x ∨ z) and x ∧ (y ∨ z) = (x ∧ y) ∨ (x ∧ z), for any x,y,z ∈ L. Note that a sublattice of a distributive lattice is also distributive. 
+
+Suppose we have a collection L_1, …, L_k of lattices L_i = (X_i, ∨_i, ∧_i) with i ∈ [k].[Throughout, we use [k] to denote the set {1,...,k}.] The (direct) product lattice L_1 ×…× L_k is a lattice with ground set X = {(x_1, …, x_k)   :   x_i ∈ L_i} and join ∨ and meet ∧ operations acting component-wise; that is, x ∨ y = (x_1 ∨_1 y_1, …, x_k ∨_k y_k) and x ∧ y = (x_1 ∧_1 y_1, …, x_k ∧_k y_k) for any x, y ∈ X. The lattice L^k is the product lattice of k copies of L, and is called the kth power of L. If L is a distributive lattice, then L^k is also distributive. 
+
+A crucial notion we will need is that of join-irreducibles. An element x of a lattice L is called join-irreducible if it cannot be expressed as the join of two elements y, z ∈ L with y, z ≠ x. In a lattice, any element is equal to the join of all join-irreducible elements lower than or equal to it. The set of join-irreducible elements of L is denoted by J(L). Note that J(L) is a poset whose order is inherited from L. 
+
+
+Any distributive lattice L can be represented as the poset of its join-irreducibles J(L), with the order induced from L.
+
+
+Due to Birkhoff's representation theorem—a fundamental tool for studying distributive lattices—every distributive lattice L is isomorphic to the lattice 𝒟(J(L)) of ideals of its poset of join-irreducibles, with union and intersection as join and meet operations. Hence, a distributive lattice L can be uniquely recovered from its poset J(L). For a distributive lattice L, this implies that there is a compact representation of L as the directed graph G(L) that characterizes its set of join-irreducibles. (The graph G(L) is unique if we remove transitive edges.) This is useful when designing algorithms, as the size of G(L) is O(|J(L)|^2), while L can have as many as 2^|J(L)| elements. See Figure <ref> for an illustration. 
+
+
+
+
+
+ §.§ Submodular Function Minimization
+ 
+Let f be a real-valued function on a lattice L = (X, ≼). We say that f is submodular on L if 
+
+    f(x ∧ y) + f(x ∨ y) ≤ f(x) + f(y),   for all  x,y ∈ X.
+
+If -f is submodular on L, then we say that f is supermodular in L and just modular if f satisfies (<ref>) with equality. The submodular function minimization problem (SFM) on lattices is, given a submodular function f on L, to find an element x ∈ L such that f(x) is minimum. An important fact that we use in our work is that the sum of submodular functions is also submodular. Also, note 
+that minimizing f is equivalent to maximizing -f. 
+
+Consider the special case of a lattice whose ground set X ⊆ 2^U is a family of subsets of a set U, and meet and join are intersection and union of sets, respectively. It is known that any function f satisfying (<ref>) on such a lattice can be minimized in polynomial time in |U| <cit.>. This holds when assuming that for any Y ⊆ U, the value of f(Y) is given by an evaluation oracle that also runs in polynomial time in |U|. The current fastest algorithm for SFM on sets runs in O(|U|^3 T_EO) time <cit.>, where T_EO is the time required for one call to the evaluation oracle. 
+
+Due to Birkhoff's theorem, the seemingly more general case of SFM on distributive lattices can be reduced to SFM on sets as follows.[For a more detailed description of the reduction from SFM on a distributive lattice to SFM on sets, we refer the reader to <cit.>.] First, recall that every distributive lattice L can be seen as the poset 𝒟(J(L)) of ideals of its join-irreducibles, with union and intersection of ideals as join and meet operations, respectively. 
+Then, one can always construct an analogue function f̂ on 𝒟(J(L)) of the original function f on L in the following way. For the ideal A ∈𝒟(J(L)) corresponding to the set of join-irreducibles lower than or equal to a ∈ L, simply set f̂(A) = f(a). 
+Then, the submodularity of f on L gets translated to the submodularity of f̂ on 𝒟(J(L)). Moreover, provided that union and intersection of sets can be computed in polynomial time, computing f̂ is polynomially no harder than computing f. So, any polynomial-time algorithm for SFM on sets can be used to minimize a submodular function f 
+on a distributive lattice L by minimizing the analogue function f̂ on 𝒟(J(L)). An important remark 
+is that the running time now depends on the size of the set J(L) of join-irreducibles.
+
+ 
+For any distributive lattice L, given by its poset of join-irreducibles J(L), a submodular function f: L →ℝ can be minimized in polynomial time in |J(L)|, provided a polynomial time evaluation oracle for f.
+
+
+
+
+ §.§ Minimum Cuts
+
+Throughout this paper, we restrict our discussion to directed graphs. All our results can be extended to undirected graphs by means of well-known transformations. Likewise, we deal only with edge-cuts, although our approach can be adapted to vertex-cuts as well.
+
+Let G be a directed graph with vertex set V(G) and edge set E(G). As usual, we define n  |V(G)| and m  |E(G)|. 
+Given a source s ∈ V(G) and target t ∈ V(G) in G, we call a subset X ⊂ E(G) an s-t cut if the removal of X from the graph ensures that no path from s to t exists in G ∖ X. The size of a cut is the total number of edges it contains. If an s-t cut in G has smallest size λ(G), we call it a minimum s-t cut, or an s-t mincut. Note that such a cut need not be unique (in fact, there can be exponentially many). To denote the set of all s-t mincuts of G, we use the notation Γ_G(s, t). 
+
+A (directed) path starting in a vertex u and ending in a vertex v is called a u-v path. By Menger's theorem, the cardinality of a minimum s-t cut in G is equal to the maximum number of internally edge-disjoint s-t paths in the graph. Let 𝒫_s, t(G) denote a maximum-sized set of edge-disjoint paths from s to t in G. Any minimum s-t cut in G contains exactly one edge from each path in 𝒫_s, t(G).
+
+For two distinct edges (resp. vertices) x and y in a u-v path p, we say that x is a path-predecessor of y in p and write x ≺_p y if the path p meets x before y. We use this notation indistinctly for edges and vertices. It is easily seen that the relation ≺_p extends uniquely to a non-strict partial order. We denote this partial order by x ≼_p y. Consider now any subset W ⊆Γ_G(s, t) of s-t mincuts in G, and let E(W) denote the set of edges used in any of these cuts. Two crucial notions in this work are those of leftmost and rightmost s-t mincuts. The leftmost s-t mincut in W consists of the set of edges S_min(W) ⊆ E(W) such that, for every path p ∈𝒫(s, t), there is no edge e ∈ E(W) satisfying e ≺_p f for any f ∈ S_min(W). Note that S_min(W) is not necessarily one of the cuts in W. Similarly for the rightmost s-t mincut S_max(W) ⊆ E(W). It can be shown that both S_min(W) and S_max(W) are also s-t mincuts in G (see proof of Claim <ref> in the appendix). When W consists of the entire set of s-t mincuts in G, we denote these extremal cuts by S_min(G) and S_max(G). 
+
+On the set of s-t cuts (not necessarily minimum), the following predecessor-successor relation defines a partial order: an s-t cut X is a predecessor of another s-t cut Y, denoted by X ≤ Y, if every path from s to t in G meets an edge of X at or before an edge of Y. 
+It is known that the set of s-t mincuts together with relation ≤ defines a distributive lattice L <cit.>. Moreover, a compact representation G(L) can be constructed from a maximum flow in linear time <cit.>. These two facts play a crucial role in the proof of our main result in the next section.
+
+
+
+§ A POLYNOMIAL TIME ALGORITHM FOR SUM-K-DMC AND COV-K-DMC
+
+This section is devoted to proving Theorem <ref> by reducing SUM-k-DMC and COV-k-DMC to SMF on distributive lattices. Before giving the actual reduction, however, we need one additional step; which is to show that the domain of solutions of SUM-k-DMC and COV-k-DMC can be restricted to the set of k-tuples that satisfy a particular order, as opposed to the set of k-sized multisets of s-t mincuts (see Corollary <ref> below). 
+The reason for doing so is that the structure provided by the former set can be exploited to assess the “modularity” of 
+the total-sum and coverage objectives. We begin by introducing the notions of left-right order and edge multiplicity, which are needed throughout the section.
+
+Consider a graph G with source and target s, t ∈ V(G), and let U^k be the set of all k-tuples over Γ_G(s, t). An element C ∈ U^k is a (ordered) collection or sequence [X_1, …, X_k] of cuts X_i ∈Γ_G(s, t), where i runs over the index set [k]. 
+We say that C is in left-right order if X_i ≤ X_j for all i < j. Let us denote by U_lr^k ⊆ U^k the set of all k-tuples over Γ_G(s, t) that are in left-right order. Then, for any two C_1, C_2 ∈ U_lr^k, with C_1 = [X_1, …, X_k], C_2 = [Y_1, …, Y_k], we say that C_1 is a predecessor of C_2 (and C_2 a successor of C_1) if X_i ≤ Y_i for all i ∈ [k], and denote this by C_1 ≼ C_2. Now, consider again a collection C ∈ U^k. The set of edges ⋃{E(X) : X ∈ C} is denoted by E(C). We define the multiplicity of an edge e ∈ E(G) with respect to C as the number of cuts in C that contain e and denote it by μ_e(C). We say that an edge e ∈ E(C) is a shared edge if μ_e(C) ≥ 2. The set of shared edges in C is denoted by E_shr(C). Next we make the following proposition, whose proof is deferred to Appendix <ref>.
+
+propositionpropMultCons 
+For every C ∈ U^k there exists Ĉ∈ U_lr^k such that μ_e(C) = μ_e(Ĉ) for all e ∈ E(G). 
+
+
+In other words, given a k-tuple of s-t mincuts, there always exists a k-tuple on the same set of edges that is in left-right order; each edge occurring with the same multiplicity. Consider now the total-sum and the coverage diversity measures first introduced in Section <ref>. We can rewrite them directly in terms of the multiplicity of shared edges as 
+
+    d_sum(C) = 2 [λk2 - ∑_e ∈ E_shr(C)μ_e(C)2],   and
+        d_cov(C) = k λ - ∑_e ∈ E_shr(C)( μ_e(C) - 1 ).
+
+Notice that the terms outside the summations are constant terms. Equation (<ref>) follows from the fact that we count a shared edge once per pair of cuts that contain it—and there are μ_e(C) such cuts—while equation (<ref>) follows from removing doubly counted edges. From combining (<ref>) (resp. (<ref>)) with Proposition <ref>, we can obtain the following corollary. (For simplicity, we state this only for the d_sum diversity measure, but an analogous claim holds for the d_cov measure.)
+
+ 
+Let C ∈ U^k such that d_sum(C) = max_S ∈ U^k d_sum(S). Then there exists C' ∈ U_lr^k such that d_sum(C') = d_sum(C). 
+
+
+This corollary tells us that in order to solve SUM-k-DMC (resp. COV-k-DMC) we do not need to optimize over the set U_k of k-element multisets of Γ_G(s, t). Instead, we can look at the set U_lr^k ⊆ U^k of k-tuples that are in left-right order. On the other hand, from equations (<ref>) and (<ref>) it follows that the problem of maximizing d_sum(C) and d_cov(C) is equivalent to that of minimizing 
+
+    d̂_sum(C) = ∑_e ∈ E_shr(C)μ_e(C)2,   and
+       d̂_cov(C) = ∑_e ∈ E_shr(C)( μ_e(C) - 1 ),
+
+respectively. 
+In turn, the submodularity of (<ref>) (resp. (<ref>)) 
+implies the supermodularity of (<ref>) (resp. (<ref>)) 
+and vice versa. In the remaining of the section, we shall only focus on the minimization objectives d̂_sum and d̂_cov. 
+
+We are now ready to show that both SUM-k-DMC and COV-k-DMC can be reduced to SFM. We first show that the poset L^* = (U_lr^k, ≼) is a distributive lattice (Section <ref>). Next we prove that the diversity measures d̂_sum and d̂_cov are submodular functions on L^* (Section <ref>). Lastly, we show that there is a compact representation of the lattice L^* and that it can be constructed in polynomial time, concluding with the proof of Theorem <ref> (Section <ref>). 
+
+
+
+ §.§ Proof of Distributivity
+ 
+We use the following result of Escalante <cit.> (see also <cit.>). Recall that ≤ denotes the predecessor-successor relation between two s-t mincuts. 
+
+ 
+The set Γ_G(s, t) of s-t mincuts of G together with the binary relation ≤ forms a distributive lattice L. For any two cuts X, Y ∈ L, the join and meet operations are given respectively by 
+
+    X ∨ Y =      S_max(X ∪ Y),   and
+    
+        X ∧ Y =      S_min(X ∪ Y).
+
+
+
+We can extend this result to the corresponding relation ≼ on the set U_lr^k of k-tuples of s-t mincuts that are in left-right order. 
+
+ 
+The set U_lr^k, together with relation ≼, defines a distributive lattice L^*. For any two elements C_1 = [X_1, …, X_k] and C_2 = [Y_1, …, Y_k] in L^*, the join and meet operations are given respectively by
+
+    C_1 ∨ C_2 =     [S_max(X_1 ∪ Y_1), …, S_max(X_k ∪ Y_k)],   and
+    
+        C_1 ∧ C_2 =     [S_min(X_1 ∪ Y_1), …, S_min(X_k ∪ Y_k)].
+
+
+ 
+This follows directly from Lemma <ref> and the definition of product lattice (see Section <ref>). Let L^k = (U^k, ≼) be the kth power of the lattice L = (Γ_G(s, t), ≤) of minimum s-t cuts, and let L^* = (U_lr^k, ≼) with U_lr^k ⊆ U^k be the sublattice of left-right ordered k-tuples of minimum s-t cuts. We know from Section <ref> that since L is distributive, then so is the power lattice L^k. Moreover, any sublattice of a distributive lattice is also distributive. Hence, it follows that the lattice L^* is also distributive.
+
+
+
+
+ §.§ Proof of Submodularity
+ 
+Now we prove that the functions d̂_sum and d̂_cov are submodular on the lattice L^*. 
+We start with 
+two results that establish useful properties of the multiplicity function μ_e(C) on L^* (see the corresponding proofs in Appendix <ref> and <ref>). 
+
+ 
+The multiplicity function μ_e: U_lr^k →ℕ is modular on L^*.  
+
+
+
+
+[]lemmamultiplicityProperty 
+For any two C_1, C_2 ∈ L^* and e ∈ E(C_1) ∪ E(C_2), it holds that max(μ_e(C_1 ∨ C_2), μ_e(C_1 ∧ C_2)) ≤max(μ_e(C_1), μ_e(C_2)).
+
+
+
+
+
+
+
+
+
+
+
+
+With these results at our disposal, we 
+prove the submodularity of our diversity objectives. 
+
+
+
+
+  
+Submodularity of d̂_sum. 
+Recall the definition of d̂_sum(C) in (<ref>), and let B_e: U_lr^k →ℕ be the function defined by B_e(C) = μ_e(C)2. We can rewrite (<ref>) as d̂_sum(C) = ∑_e ∈ E_shr(C) B_e(C). The following is a consequence of Lemmas <ref> and <ref> (see proof in Appendix <ref>).
+
+ 
+For any two C_1, C_2 ∈ L^* and e ∈ E(G), we have 
+B(C_1 ∨ C_2) + B(C_1 ∧ C_2) ≤ B(C_1) + B(C_2).
+
+
+In other words, the function B_e(C) is submodular in the lattice L^*. 
+Now, recall that the sum of submodular functions is also submodular. Then, taking the sum of B_e(C) over all edges e ∈ E(G) results in a submodular function. 
+From here, notice that B_e(C) = 0 for unshared edges; that is, when μ_e(C) < 2. This means that such edges do not contribute to the sum. It follows that, for any two C_1, C_2 ∈ L^*, we have
+
+    ∑_e ∈ E_shr(C_1 ∨ C_2)B_e(C_1 ∨ C_2) + ∑_e ∈ E_shr(C_1 ∧ C_2)B_e(C_1 ∧ C_2) ≤∑_e ∈ E_shr(C_1)B_e(C_1) + ∑_e ∈ E_shr(C_2)B_e(C_2).
+
+Observe that each sum in the inequality corresponds to the definition of d̂_sum applied to the arguments C_1 ∨ C_2, C_1 ∧ C_2, C_1 and C_2, respectively. Hence, by definition of submodularity, we obtain our desired result. 
+
+ 
+The function d̂_sum: U_lr^k →ℕ is submodular on the lattice L^*.
+
+
+
+
+
+  
+Submodularity of d̂_cov. Consider the function F_e(C) : U_lr^k →ℕ defined by F_e(C) = μ_e(C)-1. It is an immediate corollary of Lemma <ref> that F_e(C) is modular in L^*. Then, the sum ∑_e F_e(C) taken over all edges e ∈ E(G) is still a modular function. Notice that only shared edges in C contribute positively to the sum, while the contribution of unshared edges can be neutral or negative. We can split this sum into two parts: the sum over shared edges e ∈ E_shr(C), and the sum over e ∈ E(G) ∖ E_shr(C). The latter sum can be further simplified to |E(C)| - |E(G)| by observing that only the edges e ∈ E(G) ∖ E(C) make a (negative) contribution. Therefore, we can write
+
+    ∑_e ∈ E(G) F_e(C) = ( ∑_e ∈ E_shr(C)μ_e(C) ) + |E(C)| - |E(G)|.
+
+We know ∑_e F_e(C) to be a modular function on L^*, hence for any two C_1, C_2 ∈ L^* we have
+
+    ∑_e ∈ E(G) F_e(C_1 ∨ C_2) + ∑_e ∈ E(G) F_e(C_1 ∧ C_2) = ∑_e ∈ E(G) F_e(C_1) + ∑_e ∈ E(G) F_e(C_2),
+
+which, by equation <ref>, is equivalent to
+
+    ( ∑_e ∈ E_shr(C_1 ∨ C_2)μ_e(C_1 ∨ C_2) + ∑_e ∈ E_shr(C_1 ∧ C_2)μ_e(C_1 ∧ C_2) ) + |E(C_1 ∨ C_2)| + |E(C_1 ∧ C_2)| = 
+       ( ∑_e ∈ E_shr(C_1)μ_e(C_1) + ∑_e ∈ E_shr(C_2)μ_e(C_2) ) + |E(C_1)| + |E(C_2)|.
+
+Now, from Lemmas <ref> and <ref>, we observe the following property (see proof in Appendix <ref>). 
+
+ 
+For any two C_1, C_2 ∈ L^* we have |E(C_1 ∨ C_2)| + |E(C_1 ∧ C_2)| ≥ |E(C_1)| + |E(C_2)|.
+
+
+Given Claim <ref>, it is clear that to satisfy equality in equation (<ref>) it must be the case that: 
+
+    ∑_e ∈ E_shr(C_1 ∨ C_2)μ_e(C_1 ∨ C_2) + ∑_e ∈ E_shr(C_1 ∧ C_2)μ_e(C_1 ∧ C_2) ≤∑_e ∈ E_shr(C_1)μ_e(C_1) + ∑_e ∈ E_shr(C_2)μ_e(C_2),
+
+from which the submodularity of d̂_cov immediately follows.
+
+ 
+The function d̂_cov: U_lr^k →ℕ is submodular on the lattice L^*.
+
+
+
+
+ §.§ Finding the Set of Join-Irreducibles
+ 
+We now turn to the final part of the reduction to SFM. By Lemma <ref>, we know that the lattice L^* of left-right ordered collections of s-t mincuts is distributive. And it follows from Theorems <ref> and <ref> that the objective functions d̂_sum and d̂_cov are submodular in L^*. As discussed in Section <ref>, it only remains to find an appropriate (compact) representation of L^* in the form of its poset of join-irreducibles J(L^*). 
+
+Recall the distributive lattice L of s-t mincuts of a graph G, defined in Lemma <ref>. The leftmost cut S_min(G) can be seen as the meet of all elements in L. In standard lattice notation, this smallest element is often denoted by 0_L := ⋁_x ∈ L x. We use the following result of Picard and Queyranne.
+
+ 
+    Let L be the distributive lattice of s-t mincuts in a graph G, there is a compact representation G(L) of L with the following properties: 
+    
+        
+  * The vertex set is J(L) ∪ 0_L,
+        
+  * |G(L)| ≤ |V(G)|,
+        
+  * Given G as input, G(L) can be constructed in F(n, m) + O(m) time. 
+    
+
+
+In other words, the set J(L) is of size O(n) and can be recovered from G in the time of a single max-flow computation. Moreover, each element of J(L) corresponds to an s-t mincut in G. In view of this lemma, we obtain the following for the poset of join-irreducibles J(L^*). 
+
+ 
+    The set of join-irreducibles of L^* is of size O(kn) and is given by
+    
+  
+        J(L^*) = ⋃_i = 1^k J_i, where J_i := {(0_L, …, 0_L_i-1  times, p, …, p_k-i+1  times)  :   p ∈ J(L)}.
+    
+
+
+
+We know that for an element x ∈ L^* such that x ≠ 0_L, by definition of join-irreducible, x ∈ J(L^*) if and only if x has a single immediate predecessor in L^*. To prove our claim, we show that (i) the k-tuples J_i, with 1 ≤ i ≤ k, are in L^* and satisfy this property, and (ii) that no other tuple in L^* satisfies it. 
+    
+    For (i), let C(i, p) denote the k-tuple (0_L, …, 0_L, p, …, p) ∈ J_i, where the first i-1 entries contain 0_L and the remaining k-i+1 entries contain the element p, with i ∈ [k] and p ∈ J(L). It is clear that C(i, p) ∈ L^*since each entry in C(i, p) is an s-t mincut, and 0_L ≤ X for any X ∈Γ_s, t(G). 
+    Consider now the arbitrary element p ∈ J(L), and let q denote the immediate predecessor of p in J(L) (with q = 0_L if p has no predecessors). We claim that the k-tuple Q(i, q, p) := (0_L, …, 0_L, q, p, …, p) obtained from C(i, p) by replacing its ith entry with element q, is the unique immediate predecessor of C(i, p). This follows because: (a) replacing any other entry of C(i, p) with q results in a tuple that violates the left-right order, (b) any other choice of q either violates the order or has the tuple Q(i, q, p) as a successor, and (c) replacing any subsequence of ps by qs in C(i, p) has the same consequences as (b).[There is also the case where all ps are replaced by a q such that q > p, but it is clear that no such tuple can be a predecessor of C(i, p).] Since this holds for all i∈ [k] and arbitrary p, it follows that each tuple in J(L^*) has a single immediate predecessor. 
+
+    It remains to show (ii); that is, that there is no tuple in L^* ∖⋃_i = 1^k J_i which is also a join-irreducible of L^*. For the sake of contradiction, assume that such a tuple T exists in L^*. There are two possibilities for T: (1) T contains more than 2 elements from the set J(L), and (2) T contains no elements from J(L). 
+    
+    Consider case (2) first, and let γ be the kth entry in T. Since γ∉J(L), then it has more than one immediate predecessor in L. Let α and β be two such predecessors (notice that α and β are incomparable). Then, we can construct two distinct tuples T_1 ∈ L^* and T_2 ∈ L^* from T by replacing γ by α and β, respectively. But T_1 and T_2 are both immediate predecessors of T in L^*, which gives the necessary contradiction. 
+
+    Case (1) follows a similar argument. Suppose a, b, c ∈ J(L) are the last three entries in tuple T; where a < b < c. Let p(c), p(b) ∈ J(L) be the immediate predecessors of elements c and b, respectively. Notice that a ≤ p(b) and b ≤ p(c). Then, like before, we can construct two distinct tuples T_1 ∈ L^* and T_2 ∈ L^* from T by replacing c by p(c) and b by p(b), respectively. It is clear that T_1 and T_2 are both immediate predecessors of T in L^*, which once more results in a contradiction. 
+
+    From (i) and (ii) above, we have thus shown that the set of join-irreducibles J(L^*) is given by ⋃_i = 1^k J_i. To conclude the proof, we look at the size of J(L^*). First, observe that the index i runs from 1 to k. Also, by Lemma <ref> we know that |J(L)| = O(n). It then follows that |J(L^*)| = O(kn).
+
+
+Given Lemma <ref>, a compact representation of the lattice L^* can be obtained as the directed graph G(L^*) that characterizes its poset of join-irreducibles J(L^*) in polynomial time (since |J(L^*)| is polynomial). It is also clear that the functions d̂_sum and d̂_cov can be computed in polynomial time. Then, by Theorem <ref>, together with Theorems <ref>, <ref> and <ref>, the reduction to SFM is complete. 
+
+*
+
+To give a precise running time bound, we can use Jiang's algorithm <cit.> for minimizing a submodular function on sets. The total running time of our algorithm is O(|U|^3 T_EO), where |U| = O(k n) is the size of the ground set J(L^*), and T_EO = O(k^2 n^2) is the time required to evaluate the analogue function on 𝒟(J(L^*)) of the function d̂_sum (resp. d̂_cov) on L^*. The graph representation of the poset J(L^*) can be constructed within the same time bounds since |G(L^*)| = O(k^2n^2). Thus, we get the following result (see Appendix <ref> for a detailed derivation of the time bound.)
+
+[]theorempreciseruntime
+    Sum-k-DMC and Cov-k-DMC can be solved in O(k^5n^5) time.
+
+
+
+
+§ A SIMPLE ALGORITHM FOR FINDING DISJOINT MINIMUM S-T CUTS
+
+
+In the previous section, we looked at the problem of finding the k most diverse minimum s-t cuts in a graph. Here, we consider a slightly different problem. Observe that for diversity measures d_sum and d_cov, the maximum diversity is achieved when the elements of a collection are all pairwise disjoint. Thus, it is natural to ask for a maximum cardinality collection of s-t mincuts that are pairwise disjoint; i.e., that are as diverse as possible. We call this problem Maximum Disjoint Minimum s-t Cuts (or Max-Disjoint MC for short). 
+
+[Max-Disjoint MC] 
+Given a graph G = (V, E) and vertices s,t ∈ V(G), find a set S ⊆Γ_G(s, t) such that X ∩ Y = ∅ for all X, Y ∈ S, and |S| is as large as possible. 
+
+
+Now, recall k-Disjoint Minimum s-t Cuts from Section <ref>. Observe that one can easily obtain a solution to this problem by simply returning any k-sized subset of cuts from a solution to Max-Disjoint MC. Hence, any algorithm for Max-Disjoint MC can be used to solve k-Disjoint Minimum s-t Cuts within the same time bound. In this section, we prove Theorem <ref> by giving an algorithm for Max-Disjoint MC that runs in O(F(m, n) + λ(G)m) time, where F(m, n) is the time required by a max-flow computation. First, we look at a restricted case when the input graph can be decomposed into a collection of edge-disjoint s-t paths and (possibly) some additional edges—we refer to such a graph as an s-t path graph—and devise an algorithm that handles such graphs. Then, we use this algorithm as a subroutine to obtain an algorithm that makes no assumption about the structure of the input graph. 
+
+
+
+ §.§ When the input is an s-t path graph
+
+
+
+
+
+
+
+
+
+Let H_s,t be a graph with designated vertices s and t. We call H_s,t an s-t path graph (or path graph for short) if there is a collection of edge-disjoint s-t paths P such that P covers all vertices in V(H_s,t); see Figure <ref> for an illustration. The height of H_s,t, denoted by λ(H_s,t), is the maximum number of edge-disjoint s-t paths in the graph. For fixed P, we call the edges of H_s,t in P path edges and edges of H_s,t not in P non-path edges. Two vertices in H_s,t are path neighbors if they are joined by a path edge, and non-path neighbors if they are joined (exclusively) by a non-path edge. 
+
+
+
+
+Two remarks are in order. The first is that, by Menger's theorem, the size of a minimum s-t cut in an s-t path graph coincides with its height. The second remark is that, from a graph G, one can easily obtain a path graph H_s,t of height λ(G) by finding a maximum-sized set 𝒫_s,t(G) of edge-disjoint s-t paths in G and letting H_s,t be the induced subgraph of their union. Recall that, by Menger's theorem, a minimum s-t cut in G must contain exactly one edge from each path p ∈𝒫_s,t(G). Thus, every minimum s-t cut of G is in H_s,t. However, the reverse is not always true. In the above construction, there could be multiple new minimum s-t cuts introduced in H_s, t that arise from ignoring the reachability between 
+vertices of 𝒫_s,t(G) in G. 
+We will come back to this issue when discussing the general case in Section <ref>. 
+
+
+
+  
+The algorithm.
+
+The goal in this subsection is to find a maximum cardinality collection Ĉ of pairwise disjoint s-t mincuts in a path graph H_s, t. 
+We now explain the main ideas behind the algorithm. Without loss of generality, assume that the underlying set of edge-disjoint s-t paths that define H_s,t is of maximum cardinality. 
+To simplify notation, here we denote such set 𝒫_s, t(H_s,t) simply by 𝒫_s, t. 
+
+Let X be an s-t mincut in H_s,t, and suppose we are interested in finding an s-t mincut Y disjoint from X such that X < Y. Consider any two edges e = (u, u') and f = (v, v') in X, and let g = (w, w') be a path successor of f; that is f ≺_p  g with p ∈𝒫_s,t. If there is a non-path edge h = (u', z) such that w' ≤ z, we say that h is crossing with respect to g, and that g is invalid with respect to X (see Figure <ref> for an illustration).
+
+
+
+The notions of crossing and invalid edges provide the means to identify the edges that cannot possibly be contained in Y. Let E_inv(X) denote the set of invalid edges with respect to X. We make the following observation. 
+ 
+ 
+Let Y > X. Then Y cannot contain an edge from E_inv(X).
+
+
+    For the sake of contradiction, suppose there exists and edge g=(w,w') in E_inv(X)∩ Y. Consider the path p_1 ∈𝒫_s,t, and let f be the predecessor of g on p_1 that is in X. Since g ∈ E_inv(X), there is a crossing edge h=(u',z) with respect to g. Let p_2 ∈𝒫_s,t be the path containing u', and let (u,u') be the edge of p_2 that is in X. Let p_3 be the s-t path that follows p_2 from s to u, then follows the crossing edge h, and then continues along p_1 to t. Since Y is an s-t cut it must contain an edge from this path. Since Y must contain exactly one edge from each path in 𝒫_s,t, it cannot contain h. Moreover, Y already contains edge g from p_1. Then Y must contain an edge from the part of p_2 from s to u'. But this contradicts that Y>X. 
+
+
+If we extend the definition of E_inv(X) to also include all the edges that are path predecessors of edges in X, we immediately obtain the following key property. 
+ 
+    For any s-t path p ∈𝒫_s,t, the poset E_inv(X) ∩ p with order relation given by path-distance from s is an ideal of the set E(p) of edges of p.  
+
+
+Observation <ref> implies that if we can identify the (extended) set E_inv(X), then we can restrict our search of cut Y to only the set of valid edges E_val(X):= E(H_s,t) ∖ E_inv(X). 
+This, in turn, motivates the following iterative algorithm for finding a pairwise disjoint collection of s-t mincuts: Find the leftmost s-t mincut X in H_s,t. Identify the set E_inv(X) and find the leftmost s-t mincut Y amongst E_val(X). Set X = Y and repeat the previous step until E_val(X) ∩ p = ∅ for any one path p ∈𝒫_s,t. Output the union of identified cuts as the returned collection Ĉ. 
+
+Notice that the s-t mincut identified at iteration i is a (strict) successor of the mincuts identified at iterations j < i. Hence, the returned collection will consist of left-right ordered and pairwise disjoint s-t mincuts. Moreover, picking the leftmost cut at each iteration prevents the set of invalid edges from growing unnecessarily large, which allows for more iterations and thus, a larger set returned. Next, we give a more formal description of the algorithm, the details of which are presented in Algorithm <ref>.  
+
+
+
+The algorithm works by traversing the graph from left to right in iterations while marking the vertices it visits. Initially, all vertices are unmarked, except for s. Each iteration consists of two parts: a marking step, and a cut-finding step. In the marking step (Lines 3-9), the algorithm identifies currently invalid edges by marking the non-path neighbors—and their path-predecessors—of currently marked vertices. (Observe that a path edge becomes invalid if both of its endpoints are marked.) In Algorithm <ref>, this is realized by a variable M that keeps track of the vertices that have just been marked as a consequence of the marking of vertices previously present in M.
+
+In the cut-finding step (Lines 10-14), the algorithm then finds the leftmost minimum s-t cut amongst valid path edges. Notice that, for each s-t path in 𝒫_s,t, removing its first valid edge prevents s from reaching t via that path. This means that our leftmost cut of interest is simply the set of all path edges that have exactly one of their endpoints marked. Following the identification of this cut, the step concludes by marking the head vertices of the identified cut edges. 
+Finally, the algorithm terminates when the target vertex t is visited and marked. See Figure <ref> for an example execution of the algorithm. 
+
+ 
+
+We now make the following claim about the complexity of the algorithm, followed by an analysis of its correctness. 
+
+ 
+The complexity of Algorithm <ref> on an m-edge, n-vertex path graph is O(m log n). 
+ 
+
+Let H_s,t be our input path graph. First, notice that each vertex v ∈ H_s, t is visited at most deg(v) times by the algorithm. This follows from the fact that v is only visited whenever one of three cases occurs: (i) v is reachable by a marked vertex via a non-path edge (Line 6), (ii) v is a predecessor of a marked vertex u on a path p ∈𝒫_s,t (Line 8), or (iii) v is the head node of an identified minimum s-t cut (Line 12). 
+We know that v can be the endpoint of at most deg(v) - 2 non-path edges. Similarly, v can be the endpoint of at most 2 path edges. Since a vertex cannot be reached again by a previously traversed edge, the remark follows. 
+
+Now, observe that each time a vertex is visited, the algorithm performs only O(1) work, except for the step in Line 6 where each currently marked vertex v ∈ M must identify its rightmost neighbor on each path in 𝒫_s,t. We can assume that each vertex v ∈ H_s,t is equipped with a data structure A_v that given a query path p ∈ P(H_s, t), can answer in O(log n) time which is the rightmost neighbor u of v in p.[If we are willing to forego worst-case complexity for amortized complexity, we can assume a data structure with constant insert and query complexity via hash tables.] Therefore, as the algorithm performs O(log n) work each time it visits a vertex v ∈ H_s,t, and it does so at most deg(v) times, the claim would follow. It only remains to analyze the preprocessing time of equipping the graph with such data structures. 
+
+We claim that the graph can be preprocessed in O(m log n) time as follows. Assume that each node u ∈ H_s,t has two variables path(u) and pos(u) which store the path to which it belongs and its position in said path, respectively. 
+First, for each vertex v ∈ H_s,t we initialize an empty list A_v of tuples of the form (a, b). Then, for each neighbor u of v, query the list A_v for the tuple (x, y) such that x = path(u). If it exists and pos(u) > y, set y = pos(u). If it does not exist, then create the tuple (path(u), pos(u)) and insert it in A_v in sorted order (by path). Since A_v can be of size at most λ(H_s, t), it is clear that querying and inserting can be implemented in O(log (H_s, t)) time by binary search. Equipping each vertex with these lists then requires O(deg(v) ·log (H_s. t)) time per vertex. Thus, the total preprocessing time is O(m log (λ(H_s,t))), which can be simplified to O(m log n).
+
+
+
+
+  
+Correctness of Algorithm <ref>. 
+We note an important property of collections of s-t mincuts. 
+(We use d(C) to denote any of d_sum(C) or d_cov(C).)
+
+ 
+Let C be a left-right ordered collection of minimum s-t cuts in a graph G, the collection C̃ obtained by replacing S_min(⋃_X ∈ C X) with S_min(G) has cost d(C̃) ≤ d(C). 
+
+
+For simplicity, let us denote S_min(C) := S_min(⋃_X ∈ C X). By definition, we know that no edge of ⋃_X ∈ C X lies to the left of S_min(G). Then replacing S_min(C) with S_min(G) can only decrease the number of pairwise intersections previously present between S_min(C) and the cuts in C ∖ S_min(C). Notice that our measures of diversity only penalize edge intersections. Hence, the cost of collection C̃ cannot be greater than that of C.
+
+
+Now, consider an arbitrary collection of k edge-disjoint s-t mincuts in a path graph H_s,t. Corollary <ref> implies that there also exists a collection of k edge-disjoint s-t mincuts in H_s,t that is in left-right order. In particular, this is true for a collection of maximum cardinality k_max. Together with Claim <ref>, this means that there always exists a collection Ĉ of edge-disjoint s-t mincuts in H_s, t with the following properties: 
+
+    
+  * Ĉ has size k_max, 
+    
+  * Ĉ is in left-right order, and  
+    
+  * Ĉ contains the leftmost minimum s-t cut of H_s, t. 
+
+We devote the rest of the subsection to proving the following lemma, which serves to prove the correctness of Algorithm <ref>. 
+
+ 
+Algorithm <ref> returns a collection of edge-disjoint minimum s-t cuts that satisfies Properties <ref>–<ref>.
+
+
+Let Ĉ denote the solution returned by the algorithm. First we show that Ĉ contains only disjoint cuts. This follows from the fact that a cut can only be found amongst valid edges at any given iteration, and once an edge has been included in a cut, it becomes invalid at every subsequent iteration. Similarly, Properties <ref> and <ref> are consequences of the notion of invalid edges. We start by proving the latter. Let X_1 denote the leftmost cut in Ĉ. For the sake of contradiction, assume there is a minimum s-t cut Y such that e ≺_p  f. Here, e ∈ Y, f ∈ X_1 and w.l.o.g. p is an s-t path from any arbitrary maximum collection of s-t paths in H_s,t. For the algorithm to pick edge f = (u, u') as part of X_1 it must be that vertex u is marked and u' is not. We know that the predecessors of marked vertices must be also marked. Hence we know that both endpoints of edge e are marked. But by definition, this means that edge e is invalid, and cannot be in a minimum s-t cut. This gives us the necessary contradiction, and X_1 must be the leftmost cut in the graph. We continue with Property <ref>. This property follows from the fact that, at any given iteration, the posets of invalid path-edges on each path of H_s,t are ideals of the set of path edges. This means that the edges in the cut found by the algorithm at iteration i are all path predecessors of an edge in the cut found at iteration i+1. It only remains to show Property <ref>, which states that collection Ĉ is of maximum cardinality k_max. For this, we make the following claim, whose proof is analogous to the proof of Property <ref>. 
+
+ 
+Consider set Ĉ_i-1 and let X_i be the minimum s-t cut found by the algorithm at iteration i. Then, there is no minimum s-t cut Y such that: (i) Y is disjoint from each X ∈ C_i-1, and (ii) Y contains an edge that is a path predecessor of an edge of X_i.
+
+
+In other words, as the algorithm makes progress, no minimum s-t cut—that is disjoint from the ones found so far by the algorithm—has edges to the left of the minimum s-t cut found by the algorithm at the present iteration. Next we show that this implies the maximality of the size of the solution returned by the algorithm. 
+
+Let C_max be a maximum-sized collection of s-t mincuts in the graph. Without loss of generality, assume that C_max is in left right order (otherwise, by Corollary <ref> we can always obtain an equivalent collection that is left-right ordered). For the sake of contradiction, suppose that the collection Ĉ returned by our algorithm is not of maximum cardinality. We make the following observation about the interaction between cuts in Ĉ and C_max.
+
+ 
+The collections Ĉ and C_max satisfy the following properties: 
+
+    
+  * Every cut of Ĉ intersects with at least one cut of C_max. 
+    
+  * At least |Ĉ| many cuts of C_max intersect with at least one cut of Ĉ. 
+
+
+
+Property <ref> is valid since we could otherwise increase the size of C_max by extending the collection with the non-intersecting cuts from Ĉ. Similarly, Property <ref> holds as we could otherwise extend C_max by replacing the less-than-|Ĉ| many cuts from C_max that intersect with Ĉ, with the set of |Ĉ| cuts that they intersect with.
+
+
+By Observation <ref> and the pigeonhole principle, there must exist at least one minimum s-t cut Y ∈ C_max such that X_i-1 < Y ≤ X_i, with X_i-1 and X_i two consecutive cuts in Ĉ. Thus, Y is disjoint from X_i-1 and all the cuts preceding it. That is, Y is disjoint from each cut in C_i-1. On the other hand, Y ≤ X_i implies that Y has edges that are path predecessors of edges in X_i. (Notice that Y cannot entirely overlap with X_i, as otherwise, it would intersect with another cut in C_max.) But by Claim <ref>, we know that such a cut cannot exist. Hence, we obtain a contradiction, and the collection Ĉ returned by the algorithm must be of maximum cardinality. This completes the proof of Lemma <ref>. 
+
+
+
+ §.§ Handling the general case
+ 
+
+We now consider Max-Disjoint MC in general graphs. Recall from the previous subsection that, from a graph G, one can construct a path graph H_s, t such that every minimum s-t cut in G is also a minimum s-t cut in H_s, t. Ideally, we would like to use Algorithm <ref> in H_s, t to solve Max-Disjoint MC in G. But, as we argued, the path graph H_s,t may not have the same set of s-t mincuts as G. Here we show that H_s,t can be augmented with edges such that its minimum s-t cuts correspond bijectively to those in G, which serves to solve the general problem. 
+
+ 
+An augmented s-t path graph of G is the subgraph H_s,t(G) induced by the set V(𝒫_s,t(G)), with additional 
+edges between any two vertices u, v ∈ V(H_s,t(G)) 
+if v is reachable from u in G by a path whose internal vertices are exclusively in V(G) ∖ V(H_s,t(G)). 
+
+
+In view of this definition, the following claim and lemma serve as the correctness and complexity proofs of the proposed algorithm for the general case (see proofs in Appendix <ref>). 
+
+ 
+An augmented s-t path graph of G has the same set of s-t mincuts as G. 
+
+
+ 
+An augmented s-t path graph H of a graph G can be constructed in time O(F(m, n) + mλ(G)), where F(m, n) is the time required by a max-flow computation.
+
+
+The following is an immediate consequence of Lemma <ref> and Claim <ref>. 
+
+ 
+There is an algorithm that, given a graph G and two specified vertices s, t ∈ V(G), in O(F(m, n) + mλ(G)) time finds a collection of maximum cardinality of pairwise disjoint s-t mincuts in G. 
+
+
+By replacing F(m, n) in Corollary <ref> with the running time of the current best algorithms of <cit.> for finding a maximum flow, we obtain the desired running time of Theorem <ref>.
+
+
+
+§ CONCLUDING REMARKS
+
+We showed that the k-Diverse Minimum s-t Cuts problem can be solved efficiently when considering two natural measures for the diversity of a set of solutions. There exist, however, other sensible measures of diversity. One that often arises in literature is the bottleneck objective. In our context, it consists of maximizing the minimum pairwise Hamming distance of a collection of s-t mincuts. The complexity of k-DMC when considering the bottleneck objective is still open. The challenge of extending our approach to this measure is that it is not immediately clear how to apply our ordering results to this variant of k-DMC.  
+
+For the special case of finding pairwise-disjoint collections of s-t mincuts, we showed that faster algorithms exist when compared to solving k-DMC for the total-sum and coverage diversity measures. It is thus natural to ask whether there are faster algorithms for Sum-k-DMC and Cov-k-DMC (or other variants of k-DMC) that do not require the sophisticated framework of submodular function minimization. In this work, we relied on the algebraic structure of the problem to obtain a polynomial time algorithm. We believe it is an interesting research direction to assess whether the notion of diversity in other combinatorial problems leads to similar structures, which could then be exploited for developing efficient algorithms. 
+
+
+
+§ ACKNOWLEDGEMENT
+
+We thank Martin Frohn for bringing the theory of lattices to our attention, and for fruitful discussions on different stages of this work. 
+
+This research was supported by the European Union’s Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement no. 945045, and by the NWO Gravitation project NETWORKS under grant no. 024.002.003.
+
+
+
+
+
+§ PROOFS OF SECTION <REF>
+ 
+
+
+
+ §.§ Proof of Proposition <ref>
+ 
+Before proving the proposition, we require the following claim. 
+
+ 
+For any X, Y ∈Γ_G(s, t), we have S_min(X ∪ Y), S_max(X ∪ Y) ∈Γ_G(s, t) and |S_min(X ∪ Y) ∩ S_max(X ∪ Y)| = |X ∩ Y|.
+
+
+Without loss of generality, let 𝒫_s,t(G) be any maximum-sized set of edge-disjoint paths from s to t. Recall that, by Menger's theorem, any minimum s-t cut in G contains exactly one edge from each path in 𝒫_s,t(G).
+Thus, for a path p ∈𝒫_s,t(G), let e, f ∈ p be the edges that intersect with cuts X and Y, respectively. Then the set S_min(X ∪ Y) can be seen as the subset of X ∪ Y where e ∈ S_min(X ∪ Y) if e ≤ f, for each path p ∈𝒫_s,t(G). Analogous for S_max(X ∪ Y). 
+
+We want to prove that S_min(X ∪ Y) (resp. S_max(X ∪ Y)) is an s-t cut[Notice that the size of S_min(X ∪ Y) (resp. S_max(X ∪ Y)) is already minimum, as it contains exactly one edge from each path p ∈𝒫_s,t(G), which has cardinality λ.], and that |S_min(X ∪ Y) ∩ S_max(X ∪ Y)| = |X ∩ Y|. For the latter, simply observe that whenever X and Y intersect at an edge e, by Menger's theorem, the path p ∈𝒫_s,t(G) that contains e contains no other edge f from X ∪ Y. Thus, by 
+definition, the edge e will be contained by both S_min(X ∪ Y) and S_max(X ∪ Y). On the other hand, if S_min(X ∪ Y) and S_max(X ∪ Y) intersect at an edge e'; by definition, the path from 𝒫_s,t(G) containing e' cannot include another edge from X ∪ Y, since either S_min(X ∪ Y) or S_max(X ∪ Y) would contain it, which we know is not the case. Thus, e' ∈ X ∩ Y, and the second part of the claim is proven. 
+
+Now we show that S_min(X ∪ Y) and S_max(X ∪ Y) are s-t cuts. We only prove this for S_min(X ∪ Y) since the proof for S_max(X ∪ Y) is analogous. For the sake of contradiction, suppose that S_min(X ∪ Y) is not an s-t cut. Then, there exists an s-t path π = (s, …, t) in G that does not contain en edge from S_min(X ∪ Y). This means that π has a subpath π^* = (v_1, …, v_2) satisfying v_1 ≤_p w and w' ≤_q v_2, where w and w' are, respectively, the head and tail nodes of two (not necessarily distinct) edges e, f ∈ S_min(X ∪ Y), and p, q ∈𝒫_s,t(G). 
+In other words, there exists a path π^* starting at a node v_1 which appears before an edge e ∈ S_min in a path p ∈𝒫_s,t(G), and ending at a node v_2 that appears after an edge f ∈ S_min in a path q ∈𝒫_s,t(G).   
+It follows that edge f in path q can never be in an s-t cut together with an edge in path p that is to the right of (and including) edge e (unless an edge from π is also cut, but then the cut is not of minimum size). But, since e ∈ S_min(X ∪ Y), we know that e is the leftmost edge from X ∪ Y in path p. Therefore, f ∉X ∪ Y, otherwise neither X nor Y would be cuts. But we know that f ∈ S_min(X ∪ Y), which means f ∈ X ∪ Y, and we reach a contradiction. Thus, the set S_min(X ∪ Y) is a minimum s-t cut, and the claim is proven. 
+
+
+We now prove Proposition <ref>. We restate it here for the convenience of the reader. 
+
+*
+
+We prove this by giving an algorithm that takes any k-tuple C ∈ U^k 
+to a k-tuple Ĉ∈ U^k_lr that is in left-right order. The algorithm can be seen in Algorithm <ref>. 
+
+
+We have to verify that for any k-tuple C, the algorithm 
+produces a k-tuple Ĉ that is in left-right order, and that μ_C(e) = μ_Ĉ(e) for all e ∈ E(G). 
+To prove 
+
+the latter, 
+notice that at iteration i of the algorithm, the two cuts X_i and X_j are replaced by S_min(X_i ∪ X_j) and S_max(X_i ∪ X_j), respectively. By definition, S_min(X_i ∪ X_j) ∪ S_max(X_i ∪ X_j) = X_i ∪ X_j and, by Claim <ref>, we know that X_i ∩ X_j = S_min(X_i ∪ X_j) ∩ S_max(X_i ∪ X_j). Therefore, the multiplicity of the edges e ∈ E(G) remains invariant at every iteration. It then follows that the k-tuple Ĉ = LRO(C) output by the algorithm contains the same set of edges as the input tuple; each of them preserving its multiplicity. 
+
+It remains to show that Ĉ is in left-right order. First, notice that Ĉ iterates over every pair of indices (i, j) such that i < j. Furthermore, the algorithm sees such a pair only once. Now, assume that Ĉ is not in left-right order. Then, it contains a pair (X_i, X_j) of incomparable (crossing) cuts; but this cannot be the case, as these would have been replaced by S_min(X_i ∪ X_j) and S_max(X_i ∪ X_j) at iteration (i, j). Therefore Ĉ is in left-right order[Alternatively, one can see that cut X_i at the end of the inner loop satisfies that X_i ≤ X_j for all i < j; hence, at iteration i of the outer loop the algorithm finds a cut X̂_i to the right of X̂_i-1 that is leftmost with respect to X̂_j for all i < j. That is, X_i-1≤ X_i ≤ X_j for all i ∈ [k] and i < j.] and the proposition is proved. 
+
+
+
+
+ §.§ Proof of Lemma <ref>
+ 
+Let C_1 = [X_1, …, X_k] and C_2 = [Y_1, …, Y_k] be distinct elements in the lattice L^* = (U_lr^k, ≼). 
+For a fixed edge e ∈ E(G), we are interested in μ_e(C_1 ∨ C_2) + μ_e(C_1 ∧ C_2). For this purpose, consider the set of indices P = {1, …, k}. We partition P into four parts: (i) P_1 = {i   :   e ∉ X_i ∪ Y_i}, (ii) P_2 = {i   :   e ∈ X_i, e ∉ Y_i}, (iii) P_3 = {i   :   e ∉ X_i, e ∈ Y_i} and (iv) P_4 = {i   :   e ∈ X_i ∩ Y_i}. 
+We claim that μ_e(C_1 ∨ C_2) + μ_e(C_1 ∧ C_2) = |P_2| + |P_3| + 2|P_4|. This follows because on the one hand, by definition, the edge e must appear in either S_min(X_i ∪ Y_i) or S_max(X_i ∪ Y_i) for each i ∈ P_2 ∪ P_3. On the other hand, the edge e appears in both S_min(X_i ∪ Y_i) and S_max(X_i ∪ Y_i) for every i ∈ P_4, since there is no edge f ∈ X_i ∪ Y_i on the same s-t path p as e such that f ≤_p e or e ≤_p f (otherwise it could not be that e ∈ X_i ∩ Y_i). 
+Now, observe that from the way we partitioned the set P, we have 
+μ_e(C_1) = |P_2| + |P_4| and μ_e(C_2) = |P_3| + |P_4|. Combining this with our previous claim, we obtain μ_e(C_1 ∨ C_2) + μ_e(C_1 ∧ C_2) = μ_e(C_1) + μ_e(C_2). 
+By definition of modularity, the multiplicity function μ_e is thus modular on the lattice L^* for any edge e ∈ E(G). 
+
+
+
+ §.§ Proof of Lemma <ref>
+ 
+We require the following proposition. 
+
+ 
+For any C = [X_1, …, X_k] in L^*, the edge e ∈ E(C) appears in every cut of a contiguous subsequence C' = [X_i, …, X_j] of C, 1 ≤ i ≤ j ≤ k, with size |C'| = μ_e(C).
+
+
+    The case when μ_e(C) = 1 is trivial. Next, we prove the case when μ_e(C) ≥ 2. By contradiction, suppose that e does not appear in a contiguous subsequence of C. Then, there exists some cut X_h ∈ C with i < h < j such that e ∈ X_i, e ∉X_h, and e ∈ X_j. We know that collection C is in left-right order, thus we have that X_i ≤ X_j for every i < j. Now, from e ∈ X_i, it follows that e is a path-predecessor of en edge f in X_h. But from e ∈ X_j, edge e must also be a path-successor of f. The edges e and f cannot be equal since e ∉X_h, thus we get the necessary contradiction.
+
+
+  
+By Proposition <ref>, we can represent the containment of an edge e in a collection C ∈ L^* as an interval I_e(C) = (i, j), where i ≤ j, of length μ_e(C) defined on the set of integers {1, …, k}. In this interval representation, the elements of I_e(C) correspond bijectively to the positions of the cuts in C that contain edge e. This will be useful in the proofs of Lemma <ref> and Claim <ref>. 
+
+
+
+
+We are now ready to prove Lemma <ref>. We restate it here for the reader's convenience. 
+
+*
+
+We prove this by case distinction on the containment of e in E(C_1) ∪ E(C_2). There are three cases: e ∈ E(C_1) ∖ E(C_2), e ∈ E(C_2) ∖ E(C_1), and e ∈ E(C_1) ∩ E(C_2). 
+
+   
+  Case 1: e ∈ E(C_1) ∖ E(C_2). 
+   We prove this case by contradiction. Assume that max(μ_e(C_1 ∨ C_2), μ_e(C_1 ∧ C_2)) > μ_e(C_1). By Lemma <ref>, we know that μ_e(C_1 ∨ C_2) + μ_e(C_1 ∧ C_2) = μ_e(C_1). W.l.o.g., we can assume that μ_e(C_1 ∧ C_2) > μ_e(C_1 ∨ C_2). This implies that μ_e(C_1 ∨ C_2) < 0, which is a contradiction. Hence, it must be that max(μ_e(C_1 ∨ C_2), μ_e(C_1 ∧ C_2)) ≤μ_e(C_1).
+   
+  Case 2: e ∈ E(C_2) ∖ E(C_1). 
+   This case is symmetrical to Case 1, hence is already proven. 
+   
+  Case 3: e ∈ E(C_1) ∩ E(C_2).
+   To prove that the statement is true in this case, it is convenient to consider the interval representation of edge e in E(C_1) and E(C_2). Let I_e(C_1) = (α, β) and I_e(C_2) = (σ, τ) be such intervals as defined by Remark <ref>. There are two subcases to consider: I_e(C_1) ∩ I_e(C_2) = ∅, and I_e(C_1) ∩ I_e(C_2) ≠∅. 
+   
+       
+  Subcase 3.1. We claim that max(μ_e(C_1 ∨ C_2), μ_e(C_1 ∧ C_2)) = max(μ_e(C_1), μ_e(C_2)) holds in this subcase. To see this, w.l.o.g., suppose that β < σ. Then, because C_2 is in left-right order, the cuts of C_2 in the interval (α, β) each contain a path-predecessor of edge e. Then, by definition of the join operation in L^*, we have I_e(C_1 ∨ C_2) = (α, β). Similarly, the cuts of C_1 in the interval (σ, τ) each contain a path-successor of e. Hence, by the meet operation in L^*, we have I_e(C_1 ∧ C_2) = (σ, τ). Taking the length of the intervals, we obtain μ_e(C_1 ∨ C_2) = μ_e(C_1) and μ_e(C_1 ∧ C_2) = μ_e(C_2), from which the claim follows. 
+       
+  Subcase 3.2. We have two further subcases to consider: I_e(C_1) ⊈I_e(C_2) (or I_e(C_2) ⊈I_e(C_1)), and I_e(C_1) ⊆ I_e(C_2) (or vice versa). 
+       
+           
+  Subcase 3.2.1.
+           The proof of this subcase is analogous to the proof of subcase (3.1), where we also obtain that max(μ_e(C_1 ∨ C_2), μ_e(C_1 ∧ C_2)) = max(μ_e(C_1), μ_e(C_2)). 
+           
+  Subcase 3.2.2.
+           W.l.o.g., suppose that I_e(C_2) ⊆ I_e(C_1) (see Figure <ref> for an illustration). Then α≤σ≤τ≤β. Again, by definition of join and meet, we have that I_e(C_1 ∨ C_2) = (α, τ) and I_e(C_1 ∧ C_2) = (σ, β). Now, since τ - α≤β - α and β - σ≤β - α, we obtain max(μ_e(C_1 ∨ C_2), μ_e(C_1 ∧ C_2)) ≤max(μ_e(C_1), μ_e(C_2)), which is what we wanted.
+       
+   
+
+
+Since the claim is true for all cases covered and all cases have been considered, the claim is proved.
+
+
+
+
+ §.§ Proof of Claim <ref>
+ 
+We know that e ∈ E(C_1 ∨ C_2) ∪ E(C_1 ∧ C_2) iff e ∈ E(C_1) ∪ E(C_2) (see proof in Appendix <ref>). Hence, we may only consider the edge set E(C_1) ∪ E(C_2). We prove the claim by case distinction on the containment of e in E(C_1) ∪ E(C_2). There are three cases: e ∈ E(C_1) ∖ E(C_2), e ∈ E(C_2) ∖ E(C_1), and e ∈ E(C_1) ∪ E(C_2).
+
+    
+  Case 1: e ∈ E(C_1) ∖ E(C_2).
+    We know from Lemma <ref> that μ_e(C_1 ∨ C_2) ≤μ_e(C_1) and μ_e(C_1 ∧ C_2) ≤μ_e(C_1). Hence we have μ_e(C_1 ∨ C_2)2≤μ_e(C_1)2 and μ_e(C_1 ∧ C_2)2≤μ_e(C_1)2. Moreover, from Lemma <ref>, we know that μ_e(C_1 ∨ C_2) + μ_e(C_1 ∧ C_2) = μ_e(C_1). It is clear that a2 + b2 < a + b2 for any a, b ∈ℕ. Therefore, the claim is satisfied in this case.
+    
+  Case 2: e ∈ E(C_2) ∖ E(C_1).
+    This case is symmetrical to Case 1, hence is already proven.
+    
+  Case 3: e ∈ E(C_1) ∪ E(C_2).
+    Consider the interval representation of e in E(C_1) ∪ E(C_2) (see Remark <ref> for details). There are three subcases: (3.1) I_e(C_1) and I_e(C_2) have no overlap (i.e., I_e(C_1) ∩ I_e(C_2) = ∅), (3.2) I_e(C_1) and I_2(C_2) overlap but neither is entirely contained in the other (i.e., I_e(C_1) ∩ I_e(C_2) ≠∅ and I_e(C_1) ⊈I_e(C_2) nor I_e(C_2) ⊈I_e(C_1)), and (3.3) one of I_e(C_1) or I_e(C_2) is entirely contained in the other (i.e., I_e(C_1) ⊆ I_e(C_2) or I_e(C_2) ⊆ I_e(C_1)). 
+    
+        
+  Subcase 3.1.
+        We know by the proof of Lemma <ref> that max(μ_e(C_1 ∨ C_2), μ_e(C_1 ∧ C_2)) = max(μ_e(C_1), μ_e(C_2)). And by Lemma <ref>, we also have min(μ_e(C_1 ∨ C_2), μ_e(C_1 ∧ C_2)) = min(μ_e(C_1), μ_e(C_2)). It is then immediate that the claim is satisfied with equality in this case. 
+        
+        
+  Subcase 3.2.
+        Analogous to Subcase 3.1.
+        
+        
+  Subcase 3.3.
+        It is easy to show that a2 + b2≤c2 + d2 for a, b, c, d ∈ℕ, given that the following properties hold: a + b = c + d, and max(a, b) ≤max(c, d).[By combining the two properties, we have a · b ≥ c · d. Moreover, by the former property, we know that (a+b)^2 = (c+d)^2. Together, these facts imply that a^2 + b^2 ≤ c^2 + d^2. Again by the first property, we can subtract (a+b) and (c+d) from each side, respectively, resulting in a(a-1) + b(b-1) ≤ c(c-1) + d(d-1). Then, by definition of the binomial coefficient, the claim immediately follows.] In our context, these are the properties satisfied by the multiplicity function stated in Lemmas <ref> and <ref>. Therefore, the claim is also satisfied in this subcase.
+    
+
+
+Since we have considered all cases, we conclude that the claim holds for every edge e ∈ E(C_2) ∪ E(C_1). And, since it holds vacuously for edges e ∉E(C_2) ∪ E(C_1), the generalized claim follows. 
+
+
+
+ §.§ Proof of Claim <ref>
+ 
+To prove this claim, we shall look at each edge in the graph, and inspect whether it is contained in each of the four edge sets E(C_1 ∨ C_2), E(C_1 ∧ C_2), E(C_1), and E(C_2). 
+For simplicity, we shall denote these sets by A, B, C, and D, respectively. 
+We begin with two simple facts. First, for any two sets X and Y, we may write |X|+|Y| = |X ∖ Y| + |Y ∖ X| + 2 |X ∩ Y|. Second, any edge e ∈ A ∪ B iff e ∈ C ∪ D (see proof in Appendix <ref>). 
+Thus, for an edge e, we can restrict to analyze the following cases: e ∈ A ∖ B, e ∈ B ∖ A, and e ∈ A ∩ B. 
+
+
+
+    
+  Case 1: e ∈ A ∖ B.
+    We claim that e must be contained in either C or D, but not in both. By contradiction, assume that e is contained in C ∩ D. Then, by Lemma <ref>, we have μ_e(A) = μ_e(C) + μ_e(D). But this implies that μ_e(A) > max(μ_e(C), μ_e(D)), which stands in contradiction with Lemma <ref>.  
+    Therefore, every time an edge appears exclusively in A or B, it also appears exclusively in C or D (observe that the reverse is not always true). More formally, we have |C ∖ D| + |D ∖ C| = |A ∖ B| + |B ∖ A| + |X|, where X is the set of edges in C or D that could also appear in A ∩ B. 
+    
+  Case 2: e ∈ B ∖ A.
+    Symmetrical to Case 1. 
+    
+  Case 3: e ∈ A ∩ B.
+    We have three subcases: (3.1) e ∈ C ∖ D, (3.2) e ∈ D ∖ C, and (3.3) e ∈ C ∩ D. 
+    
+        
+  Subcases 3.1 & 3.2.
+        An observant reader may notice that these subcases are equivalent to inspecting the set X. In fact, it is enough for our purposes to show that |X| ≥ 0. To see why this holds, assume w.l.o.g. that e ∈ C ∖ D in the interval (i, j). Now, consider the case where D contains only cuts that each contains a path-predecessor of e in the interval (1, h) and cuts that each contains a path-successor of e in the interval (h+1, k), with i < h < j. Then, by definition of join and meet in L^*, e ∈ A in the interval (1,h) and e ∈ B in the interval (h+1, k). Therefore, e ∈ A ∩ B, which implies |X| ≥ 0.
+        
+  Subcase 3.3.
+        By a similar argument to Case 1, it follows that every edge that appears in C ∩ D also appears in A ∩ B. Therefore, |A ∩ B| = |C ∩ D| + |X|.
+    
+
+
+Putting everything together, we obtain the following:
+
+    |C| + |D|     = |C ∖ D| + |D ∖ C| + 2 |C ∩ D| 
+        = |A ∖ B| + |B ∖ A| + |X| + 2 |A ∩ B| - 2 |X| 
+        = |A| + |B| - |X|,
+
+and since |X| ≥ 0, we have that |A| + |B| ≥ |C| + |D| and the claim is proven. 
+
+
+
+§ SOLVING SUM-K-DMC AND COV-K-DMC IN O(K5N5) TIME
+ 
+*
+
+Let us first look at each step in the reduction to SFM. From the discussion in Section <ref>, to minimize a submodular function f in a distributive lattice L, we should first transform the problem into an equivalent version on sets. For this, we require (i) a compact representation of the lattice L, and (ii) a polynomial evaluation oracle for the function f̂ : 𝒟(J(L)) →ℝ, which is an analogue of f on L but defined on the poset of ideals of the join-irreducibles of L. Then, any algorithm for SFM on sets can be used to solve the original problem. 
+
+In our context, the total running time of the algorithm is, 
+
+
+    O(t_c(n, m) + t_SFM(n, m, T_EO)),
+
+
+where t_c(n, m) is the time required to construct a compact representation of the lattice L^*, t_SFM(n, m, T_EO) is the time taken by an SFM algorithm on sets, and T_EO is the time required to compute d̂'_sum (resp. d̂'_cov) by an evaluation oracle. Here d̂'_sum (resp. d̂'_cov) denotes the analog function on 𝒟(J(L^*)) of d̂_sum (resp. d̂_cov) on L^*, and n and m denote the number of vertices and edges of our input graph G. 
+
+By Lemmas <ref> and <ref>, a compact representation of L^* can be computed in time t_c(n, m) = F(n, m) + O(k^2n^2), where F(n, m) is the time required by a max-flow computation. The latter term follows from considering all potential edges between pairs of nodes in the construction of G(L^*) from the set of join-irreducibles J(L^*), which has size O(kn). 
+
+Next, we analyze the time T_EO required to compute d̂'_sum(A); where A is the set of join-irreducibles lower than or equal to the corresponding element a ∈ L^*. We know that the original function d̂_sum(a) can be efficiently computed in O(kn) time. Hence, if we can recover the element a ∈ L^* from the ideal A ∈𝒟(J(L)) in t_ideal(n, m) time, we can use our familiar function d̂_sum to compute d̂'_sum in time t_ideal(n, m) + O(kn). We claim that t_ideal(n, m) = O(k^2n^2). This follows from the fact that a can be recovered from A by computing the join of all O(kn) elements in A, where a join operation between two elements in L^* has complexity O(k λ(G)) = O(kn). 
+
+Using the above, and plugging into t_SFM(n, m, T_EO) the running time of the current best SFM algorithm of Jiang <cit.>, we obtain a total running time of F(n, m) + O(k^2n^2) + O(k^3 n^3 · k^2n^2), which simplifies to O(k^5n^5). 
+
+
+
+
+§ PROOFS OF SECTION <REF>
+ 
+
+
+ §.§ Proof of Claim <ref>
+
+By Menger's theorem, we know that a minimum s-t cut in G must contain exactly one edge from each path in 𝒫_s, t(G), where |𝒫_s, t(G)| = |λ(G)|. W.l.o.g., let H_s, t(G) be the augmented s-t path graph of G such that each path p ∈𝒫_s, t(G) is also present in H_s, t(G). 
+We now show that a minimum s-t cut in G is also present in H_s, t(G). The argument in the other direction is similar and is thus omitted. 
+
+Consider an arbitrary minimum s-t cut X in G. For the sake of contradiction, assume that X is not a minimum s-t cut in H_s, t(G). Then, after removing every edge of X in H_s, t(G), there is still at least one s-t path left in the graph. Such a path must contain an edge (u, v) such that u ≤ w and w' ≤ v, where w and w' are the tail and head nodes of two (not necessarily distinct) edges in X, respectively. By definition of H_s, t(G), there is a path from u to v in G that does not use edges in 𝒫_s, t(G). But then removing the edges of X in G still leaves an s-t path in the graph. Thus X cannot be an s-t cut, and we reach our contradiction. 
+
+
+
+ §.§ Proof of Lemma <ref>
+
+The idea of the algorithm is rather simple. First, we find a maximum cardinality collection 𝒫_s,t(G) of edge-disjoint s-t paths in G and take their union to construct a “skeleton” graph H. (We call the vertices of G in 𝒫_s,t(G) path vertices and vertices of G not in 𝒫_s,t(G) non-path vertices.) Then, we augment H by drawing an edge between two vertices u, v ∈ H if v is reachable from u in G by using exclusively non-path vertices. By definition, the resulting graph is an augmented s-t path graph of G.
+
+Now we look into the algorithm's implementation and analyze its running time. It is folklore knowledge that the problem of finding a maximum-sized collection 𝒫_s,t(G) of edge-disjoint s-t paths in a graph with n vertices and m edges can be formulated as a maximum flow problem. Hence, the first step of the algorithm can be performed in F(m, n) time. 
+
+The second step of the algorithm could be computed in O(mn) time by means of an all-pairs reachability algorithm. Notice, however, that for a path vertex v all we require for a correct execution of Algorithm <ref> is knowledge of the rightmost vertices it can reach on each of the λ(G) paths (Line 6 of Algorithm <ref>). Hence, we do not need to augment H with edges between every pair of reachable path vertices (using exclusively non-path vertices) in G, at most λ(G) edges per vertex suffice. This can be achieved in O(m λ(G)) time as follows.   
+
+In the original graph, first equip each vertex u ∈ V(G) with a set of λ(G) variables R(p, u), one for each path p∈𝒫_s, t(G). These variables will be used to store the rightmost vertex v ∈ p that is reachable from u. Next, consider a path p ∈𝒫_s, t(G) represented as a sequence [v_1, v_2, …, v_p] of internal vertices (i.e., with s and t removed). For each vertex v ∈ p, in descending order, execute the following procedure : Find the set N(v) of incoming neighbors of v in G and, for each w ∈ N(v) if R(p, w) has not been set, let R(p, w) = v and mark w as visited. 
+Then, for each node w ∈ N(v), if w is an unvisited non-path vertex, execute ; 
+otherwise, do nothing. Notice that, since we iterate from the rightmost vertex in p, any node u such that R(u, p) = v_i cannot change its value when executing  with j < i. In other words, each vertex only stores information about the rightmost vertex it can reach in p. Complexity-wise, every vertex v in G will be operated upon at most deg(v) times. Hence, starting from an unmarked graph, a call to  takes O(m) time. Now, we want to execute the above for each path p ∈𝒫_s, t(G) (unmarking all vertices before the start of each iteration). This then gives us our claimed complexity of O(m λ(G)). 
+
+By combining the running time of both steps of the algorithm, the claim follows. 
+
+
+
+§ OTHER PROOFS
+
+
+
+ §.§ Fact in Claims <ref> and <ref>
+
+
+
+For any two C_1, C_2 ∈ L^*, we have that e ∈ E(C_1 ∨ C_2) ∪ E(C_1 ∧ C_2) iff e ∈ E(C_1) ∪ E(C_2).
+
+
+    Assume, for the sake of contradiction, that there exists an edge e such that e ∈ E(C_1) ∪ E(C_2) but e ∉E(C_1 ∨ C_2) ∪ E(C_1 ∧ C_2). If e ∈ E(C_1) ∪ E(C_2), then there exists at least one cut X_i ∈ C_1 ∪ C_2 such that e ∈ X_i. W.l.o.g., suppose that X_i ∈ C_1, and let Y_i be the ith cut in C_2. If e ∉S_min(X_i ∪ Y_i) then, by definition, it must be that e ∈ S_max(X_i ∪ Y_i) and vice versa. 
+    This gives us the necessary contradiction and e must also be contained in E(C_1 ∨ C_2) ∪ E(C_1 ∧ C_2). The other direction of the argument is similar and is thus omitted. 
+

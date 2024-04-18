@@ -1,0 +1,1759 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Design, Control, and Motion Strategy of TRADY: Tilted-Rotor-Equipped Aerial Robot With Autonomous In-flight Assembly and Disassembly Ability
+    Junichiro Sugihara,
+        Takuzumi Nishio,
+        Keisuke Nagato,
+        Masayuki Nakao,
+        and Moju Zhao
+Junichiro Sugihara, Keisuke Nagato, Masayuki Nakao, and
+        Moju Zhao (corresponding author) are with the Department of Mechanical-Engineering, The University of Tokyo, Bunkyo-ku, Tokyo 113-8656, Japan (e-mail:j-sugihara@jsk.imi.i.u-tokyo.ac.jp; chou@jsk.imi.i.u-tokyo.ac.jp; nagato@hnl.t.u-tokyo.ac.jp; nakao@hnl.t.u-tokyo.ac.jp).
+        
+Takuzumi Nishio is with the Department of Mechano-Infomatics, The University of Tokyo, Bunkyo-ku, Tokyo 113-8656, Japan (e-mail:nishio@jsk.imi.i.u-tokyo.ac.jp).
+
+
+    March 30, 2023
+==================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+
+
+
+
+
+Various types of aerial robots have been demonstrated in prior works
+ with the intention of enhancing their maneuverability or manipulation
+ capabilities. However, the problem remains in earlier researches that
+ it is difficult to achieve both mobility and manipulation capability. This
+ issue arises due to the fact that aerial robots with high mobility
+ possess insufficient rotors to execute manipulation tasks, while
+ aerial robots with manipulation ability are too large to achieve
+ high mobility. To tackle this problem, we introduce in this article a
+ novel aerial robot unit named TRADY. TRADY is a tilted-rotor-equipped
+ aerial robot with autonomous in-flight assembly and disassembly
+ capability. It can be autonomously combined and separated from another
+ TRADY unit in the air, which alters the degree of control freedom of
+ the aircraft by switching the control model between the under-actuated
+ and fully-actuated models. To implement this system, we begin by
+ introducing a novel design of the docking mechanism and an optimized
+ rotor configuration. Additionally, we present the configuration of the
+ control system, which enables the switching of controllers between
+ under-actuated and fully-actuated modes in the air. We also include the
+ state transition method, which compensates for discrete changes during
+ the system switchover process. Furthermore, we introduce a new motion
+ strategy for assembly/disassembly motion that incorporates recovery
+ behavior from hazardous conditions. Finally, we evaluate the
+ performance of our proposed platform through experiments, which
+ demonstrated that TRADY is
+ capable of successfully executing aerial assembly/disassembly motions
+ with a rate of approximately 90%. Furthermore, we confirmed that in the assembly state,
+ TRADY can utilize full-pose tracking, and it can generate more than
+ nine times the torque of a single unit. To the best of our knowledge,
+ this work represents the first time that a robot system has been
+ developed that can perform both assembly and disassembly while
+ seamlessly transitioning between fully-actuated and under-actuated
+ models.
+
+
+
+
+
+Aerial systems, mechanics and control, aerial assembly and disassembly,
+ distributed control system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+ 
+In recent years, aerial robots have undergone
+significant development <cit.>, <cit.> and have proven to be useful for various
+practical applications. Compact aerial robots such as quadrotors with
+terrain-independent mobility have enabled
+
+ 
+ various autonomous applications such as cinematography <cit.>,
+inspection <cit.>, disaster response <cit.>, and
+surveillance <cit.>. Furthermore, to enhance mobility, numerous designs that
+enable robots to navigate through narrow spaces have been proposed, such
+as quadrotors with morphing capabilities that allow their airframe to
+shrink <cit.>. On the other hand, there has been a growing demand for aerial
+robots to possess manipulation capabilities, which require larger
+controllable degrees of freedom (DoF) and available force and torque (wrench). As a
+solution, more intricate and sizable aerial robots have been developed,
+including multirotors equipped with over six tiltable rotors enabling
+omni-directional control <cit.>, and arm-manipulator-installed multirotors
+capable of interacting with the environment <cit.>.However, a significant issue in the conventional works is the inherent trade-off between
+mobility and manipulation capability. To clarify, High-mobility
+under-actuated aerial robots often lack the necessary controllable DoF
+and available wrench to achieve manipulation tasks, whereas
+fully-actuated robots with manipulation capability often lack
+compactness. To address this problem, some researchers have
+proposed a transformable multilink design <cit.> that enables robots to
+navigate narrow spaces and perform manipulation tasks using their entire
+body <cit.>. Nonetheless, these transformable aerial robots
+require a significant number of additional
+actuators, making them heavy, and even with transforming capability, it remains challenging
+to achieve the same maneuverability as a small quadrotor in a narrow
+space with three-dimensional complexity.In this article, we present a solution to the aforementioned trade-off problem by introducing TRADY, a novel aerial robot platform that can perform aerial assembly
+and disassembly motion, as depicted in figure:trady_main (A), while changing
+its controllable DoF and available wrench. In its unitary state, TRADY
+is a compact under-actuated quadrotor, however, in its assembly state,
+it becomes a fully-actuated octorotor, enabling it to execute aerial
+manipulation tasks as depicted in figure:trady_main (B).
+
+
+
+ §.§ Related works
+
+TRADY is a type of modular aerial robot, and previous studies have
+ developed several other modular aerial robots. In <cit.>, Naldi
+ et al. introduce a single ducted-fan module, and in <cit.>, a
+ tetrahedron-shaped quadrotor module consisting of four fractal
+ single-rotor submodules is presented. Furthermore, in <cit.>, a
+ modular quadrotor equipped with tilted rotors is proposed. These
+ modular aerial robots can combine with one another and expand their
+ degrees of freedom and wrench, however, <cit.> are currently not focused
+ on self-assembly/disassembly. On the other hand, several aerial robots
+ capable of self-assembly or self-disassembly have previously been developed. For
+ instance, in <cit.>, <cit.>, a robot unit composed of wheels
+ and rotors capable of docking on the ground and taking off afterwards
+ is presented. Additionally, in <cit.>, a modular quadrotor with
+ the capability of aerial self-assembly is proposed, followed by one
+ with the ability of aerial self-disassembly proposed in
+ <cit.>. However, the issue that remains is that the robot
+ presented in <cit.>, <cit.> is restricted to
+ assembly/disassembly on the ground, and mid-air assembly/disassembly are unfeasible,
+ whereas <cit.>, <cit.> virtually specialize in
+ either aerial assembly or aerial disassembly but not both. Futhermore, assembly or disassembly motion
+ demonstrated in
+ <cit.> are
+ unaccompanied by the alternation of controllable DoF, implying that the
+ robots are under the control of an under-actuated model in both the
+ assembly and unitary states. The utilization instance
+ of TRADY envisioned in this research comprises tasks illustrated in
+ figure:trady_concept. To accomplish this, movement in a narrow
+ space must be carried out in the unitary state, and during manipulation
+ tasks, the
+ units must assemble to extend the controllable DoF and wrench, then
+ return to the unitary state afterwards. Therefore, the compatibility of
+ aerial self-assembly and self-disassembly, and the consequent alteration of the
+ controllable DoF, remain crucial unachieved issues that are
+ necessary for realizing TRADY. In this study, we tackle this issue
+ from the perspectives of design, control, and motion strategy.
+
+Concerning the design of the self-docking mechanism, various designs
+have been previously presented. For example, in <cit.>,
+autonomous boats equipped with hook-string docking mechanisms are
+introduced. In this system, the hooks of the male mechanism attach to
+the loop of string on the female mechanism, and the female side winches
+the loop of thread and the male mechanism together, thereby merging the
+modules. While this mechanism works effectively on the water, the
+coupling force is not sufficiently strong to be applicable to aerial
+systems. On the other hand, in <cit.>, to achieve aerial docking, a
+quadrotor is enclosed in a rectangular frame equipped with permanent
+magnets. While this mechanism can construct a highly rigid structure, it
+has the disadvantage of being unable to release the coupling once it has
+been established. On the contrary, a quadrotor unit that can undock
+through the torque generated by the unit itself is developed in
+<cit.>. However, to achieve undocking capability, the docking mechanism is
+significantly downsized in comparison to the one used in <cit.>, and the
+design is not suitable for aerial docking. Furthermore, as the docking
+can be released through the torque output of a unit, the strength of the
+mechanism becomes a bottleneck for available torque, making it arduous to execute
+tasks that necessitate high torque. As an alternative method for
+releasing the magnetic coupling, the utilization of elastic energy is
+proposed in <cit.>. The mechanism proposed in <cit.> shortens the internal
+spring of the mechanism using an actuator, and releases it to generate
+restoring force, thereby releasing the magnetic coupling. In the case of
+this mechanism, it is possible to release high rigidity coupling by
+using a spring with a high spring constant and a powerful
+actuator. However, pulling and detaching magnets in the translational
+direction is an inefficient, resulting in the mechanism becoming
+extremely large. Furthermore, with the docking mechanism that uses
+magnets, in addition to the method of detachment, attention should be
+paid to the magnetic interference from the external environment. When
+the structure exposes the magnet to the outside as in [1], [2], although
+normal flight is not a problem, magnetic interference from the
+surroundings becomes a significant obstacle in manipulation tasks and
+interaction with the external environment. Therefore, in this work, we introduce a novel
+high-rigidity docking mechanism, which consists of a powerful magnetic mechanism that can be switched
+on and off by a low-torque motor and a movable peg, thus enabling both
+aerial docking and undocking to be achieved. Furthermore, we ensure that
+the magnets are not exposed to the outside during flight through
+appropriate structural design.
+
+Regarding rotor configuration, in order to expand the controllable DoF
+and available wrench through assembly and change the control model from
+an under-actuated model to a fully-actuated model, it is necessary to
+use tilted rotors. As mentioned earlier, <cit.> has made it possible to
+achieve fully-actuated model control by combining four quadrotor units
+of different types with tilted rotors. In this case, the concept of the
+actuation ellipsoid is used to determine the appropriate rotor
+configuration. In this work, we propose a new rotor configuration
+optimization method that focuses not only on maximizing the performance
+in the assembly state, but also on achieving high-precision aerial
+self-assembly/disassembly motion. Additionally, in order to achieve
+simplicity in the system, TRADY acheive fully-actuated model by docking
+two unit quadrotors with the same rotor configuration.
+
+Subsequently, regarding the controller, TRADY utilizes distinct controllers for
+the assembly and unitary states. The aircraft in the assembly state is a
+typical fully-actuated multirotor, which can employ a conventional hexarotor control
+method based on thrust allocation matrices, as presented in
+<cit.>, <cit.>. By means of this method, TRADY in
+the assembly state is capable of controlling six DoF, which consist of
+forces and torques in all axes. On the other hand, TRADY in its unitary state
+is a tilted quadrotor that is controlled as a under-actuated model. In this
+case, the controllable DoF are four: the z-direction
+force and torque on all axes, but it is not possible to control the x
+and y-directional forces generated by the tilted rotors. Therefore, it is
+necessary to suppress the generation of these horizontal forces through some
+means. While in <cit.>,
+which also uses a tilted quadrotor as a unit machine, the horizontal
+forces are suppressed solely through design method, in this work, we focuses on suppressing the
+horizontal forces through both design and control method. Therefore, LQI
+control is adopted for unit control, explicitly minimizing the
+horizontal forces generated during flight. Another important point to
+consider in the control of TRADY is the switching between under-actuated
+and fully-actuated models during aerial assembly/disassembly motion. When the control
+model is discretely changed during flight, the control of the vehicle
+becomes unstable (e.g., the vehicle suddenly rising or falling) due to
+the influence of model errors. The elimination of this instability is
+crucial for achieving stable assembly/disassembly. Therefore, in this
+study, we introduce a novel method to eliminate this instability by applying
+our own transition processing during the control model switching. Finally, regarding motion strategy, several previous studies have
+presented strategies for self-assembly of robots. For instance, in
+<cit.>, a path planning method based on global optimization is employed to
+enable self-assembly of boats on water surfaces, while <cit.> utilizes vehicle
+guidance via gradient method for quadrotor self-assembly in
+mid-air. These strategy are efficacious in circumstances
+where the high positional accuracy of unit vehicles can be
+maintained during the assembly motion. Nonetheless, when it comes to the
+aerial assembly motion of unit vehicles that are furnished with tilted rotors,
+as employed in this study, the thrust of each unit interferes with one
+another, resulting in unstable position control as the two units
+approach. Consequently, in this study, we assume the existence of
+positional errors and suggests a motion strategy that iteratively
+approaches until the assembly is successfully achieved,  while avoiding
+dangerous situations. This facilitates an autonomous and reliable
+assembly motion. Additionally, we extend the strategy to encompass
+self-disassembly, providing a comprehensive approach.
+
+To sum up, the main contribution of this work can be summarized as
+follows;
+
+
+ 
+ 
+  * We propose the design of docking mechanisms that combines strong
+       coupling and easy separation.
+ 
+  * We present the optimized rotor configuration to achieve controllability
+       with under-actuated model in the unitary state and with
+       fully-actuated model in the assembly state. Moreover, this rotor
+       configuration also takes into account the stability improvement
+       of aerial assembly/disassembly motion.
+ 
+  * We develop a control system that allows for switching between
+       control models and includes transition processing to compensate
+       for control instability during model switching.
+ 
+  * We introduce the motion strategy that enables autonomous and
+       stable aerial assembly/disassembly motion even in
+       situations where position control is unstable.
+ 
+ 
+
+Although we focus on the evaluation with two units, our methodology can be easily applied to more
+units by installing both male and female docking mechanisms in a single
+unit. Furthermore, to the best of our knowledge, this is the first time
+to achieve the both self-assembly and self-dessembly with the same robot
+platform in an autonomous manner, and also achieved the manipulation
+task by switching between under-actuated and fully-actuated models.
+
+
+ §.§ Notation
+
+From this section, nonbold lowercase symbols (e.g., m) represent
+scalars, nonbold uppercase symbols (e.g., R) represent sets or linear spaces, and
+bold symbols (e.g., u, Q) represent vectors or
+matrices. Superscripts (e.g, ^{CoG}p)
+represent the frame in which the vector or matrics is expressed, and
+subscripts represent the target frame or an axis, e.g.,
+^{ W}r_{ CoG } represents a
+vector point from { W} to { CoG}
+w.r.t. { W}, whereas u_x denotes the x component
+of the vector u.
+
+
+ §.§ Organization
+
+The remainder of this paper is organized as follows. The mechanical
+design including the design of docking mechanisms is presented in
+sec:mech_design, and the modeling of our
+robot and optimized rotor configuration is introduced in
+sec:rotor_config. Next, the flight control and model switching method are
+presented in sec:control, followed by motion strategy in
+sec:motion_strategy. We then show the experimental result of
+trajectory following flights, aerial assembly and disassembly, and
+object manipulation tasks in sec:experiment before concluding
+in sec:conclusion.
+
+
+
+§ MECHANICAL DESIGN
+
+In this section, we present the mechanical design of the proposed robot,
+TRADY. Initially, we provide an overview of the entire robot design and
+subsequently expound upon the design of the docking mechanisms.
+
+
+ §.§ Entire Robot Design
+
+In this study, the minimum unit comprising TRADY is designed as a
+quadrotor unit. Each unit is equipped with a common rotor configuration,
+as well as either a male-side or female-side the mechanism at the
+same position. Therefore, the overall structure of the device is
+depicted in figure:whole_design.
+
+
+
+ §.§ Docking Mechanism
+
+The prerequisites for the design of a docking mechanism are twofold:
+firstly, it should be capable of accomplishing both docking and
+undocking operations in the air, and secondly, it should possess
+sufficient rigidity to execute high-load tasks. Therefore, we propose a
+methodology of coupling with a permanent magnet and movable pegs.
+
+
+  §.§.§ Female side
+
+As shown in figure:female_mech, the main components of the female mechanism are a
+permanent magnet equipped with a magnetic switching mechanism and a
+mechanism called a drogue, which compensates for positioning
+errors. The on-off switching of the magnetic force is realized by the principle
+illustrated in the cut model in figure:female_mech. In this mechanism, it is
+possible to interrupt the magnetic force by rotating one of the two
+permanent magnets 180deg using a servo motor. Since the two magnets do not directly touch each other, the force that
+hinders the rotation of the magnet is only friction with the housing,
+and rotation is easily possible with a low-torque servo motor. Through
+the use of this magnet, restraint in the translational direction of the
+docking mechanism is achieved.Furthermore, the drogue attached to the tip of the female mechanism is a
+mechanism adopted in autonomous aerial refueling systems for fighter
+aircraft such as <cit.>, <cit.>,
+which compensates for control errors of the size corresponding to the
+diameter of the mechanism. In this study, the radius of the drogue was
+set to 5cm in order to absorb errors within
+±2.5cm. Additionally, the gradient inside the drogue was
+empirically determined to be approximately 35deg. The drogue not
+only compensates for position errors, but also has two additional
+functions. One is to improve rigidity by increasing the contact area,
+and the other is to prevent the influence of external magnetic forces by
+covering the magnets.
+
+
+
+  §.§.§ Male side
+
+As shown in figure:male_mech, the male mechanism is composed of an steel plate
+for magnetic attraction and movable pegs. The movement of the peg is
+achieved using a slider-crank mechanism powered by a servo motor, and
+during docking, the peg is inserted into the receptor of the female
+mechanism to provide confinement in the bending direction. The tip of
+the mechanism is designed to closely adhere to the drogue of the female
+mechanism. The overall size of the docking mechanism is determined
+based on the clearance that should be maintained between the rotors in
+the assembly state.
+
+
+
+
+§ MODELING AND ROTOR CONFIGURATION
+
+In this section, we introduce the kinematics and dynamics model of our
+robot in the first place, followed by the thrust allocation. Then, we present the method of optimization of
+rotor configuration.
+
+
+ §.§ Modeling
+
+
+
+
+
+
+
+The kinematics model of TRADY is depicted in
+figure:multirotor_model(A) and each quantities are difined as
+shown in table:multirotorparam. Since this model can be applied
+to multirotors with any number of rotors, the model of TRADY is
+represented by figure:multirotor_model with n = 4 in the unitary state, and with n = 8
+in the assembly state.Based on this kinematics model, the wrench-force
+^{CoG}f and torque
+^{CoG}τ )  can be written as
+
+
+    ^{CoG}f = ∑_i=1^nλ_i^{CoG}u_i,
+
+
+    ^{CoG}τ = ∑_i=1^nλ_i^{CoG}p_i×^{CoG}u_i+σ^{CoG}f,
+
+where {CoG} is the frame that have the origin at
+the center-of-mass of the body.
+From (<ref>) and (<ref>), the
+translational and rotational dynamics of a multirotor unit are given by the Newton-Euler
+equation as followings:
+
+    M^{ W}r̈_{ CoG } =
+     ^{ W}R_{ CoG }^{CoG}f+
+     ([   0;   0; -Mg ]),
+
+
+    ^{CoG}I^{CoG}ω̇   =
+     ^{CoG}τ+σ^{CoG}f
+          -
+     ^{CoG}ω×^{CoG}I^{CoG}ω,
+
+where { W} frame represent the world coordinate system.
+Then, using (<ref>) and
+(<ref>), allocation from the thrust force λ
+to the resultant wrench can be given by following:
+
+    ([ ^{CoG}f; ^{CoG}τ ])
+     =
+     ([ Q_tran;  Q_rot ])
+     λ
+     =
+     Qλ,
+
+where
+
+    Q_tran = ( ^{CoG}u_1,^{CoG}u_2,⋯,^{CoG}u_n),
+
+
+    Q_rot = (^{CoG}v_1,^{CoG}v_2,⋯,^{CoG}v_n),
+
+
+    ^{CoG}v_i = ^{CoG}p_i×^{CoG}u_i.
+
+Note that the second term in (<ref>) is omitted for the
+remainder of the analysis because it is one order of magnitude smaller
+than the first term in general.
+
+
+ §.§ Thrust Allocation
+
+
+
+  §.§.§ In the Assembly State
+
+In the assembly state, TRADY is fully-actuated, and the allocation matrics Q
+is full-rank. Therefore, we can gain MP pseudo-inverse
+matrics ^#Q.
+Given a desired wrench, the target thrust can be computed by following:
+
+    λ = ^#Q([ ^{CoG}f; ^{CoG}τ ]).
+
+
+
+  §.§.§ In the Unitary State
+
+In the unitary
+state, Q∈ R^6× 4 is rank deficient, and we need to adopt under-actuated model. As the conventional method, the control targets for
+under-actuated model are f_z, τ_x, τ_y, and
+τ_z. Applying the control method illustrated in sec:control, we can
+achieve the hovering of a quadrotor unit with these four inputs.
+In the case of a quadrotor with non-tilted rotors, because it does not produce
+f_x and f_y, desired thrusts are easily calcurated as following:
+
+    λ = ^#(^quadQ) ^t[ f_z τ_x τ_y τ_z ],
+
+where
+
+    ^quadQ = (
+         [ Q_tran,z;    Q_rot ]) ∈ R^4× 4 ,
+
+and Q_tran, z∈ R^1 × 4 is the third row vector
+of Q_tran.However, TRADY unit is a tilted quadrotor that produces translation forces
+f_x, f_y  and these are uncontrollable with
+(<ref>). Therefore,  assuming the existence of
+the static thrust λ_s that enables hovering while suppressing the
+generation of f_x and f_y, we introduce a method to apply
+(<ref>) to the thrust
+allocation of tilted quadrotor by utilizing λ_s. In <cit.>, Zhao et al. use a tilted
+coodinate system in order to obtain λ_s and we apply this
+idea to our work. Now, we introduce a new coodinate system {C} that has
+the origin at the center-of-mass of body as shown in figure:multirotor_model(B). Furthermore, we define {C} to fulfill the following conditions:
+
+    Q_tran'λ_s = -mg,
+
+
+    Q_rot'λ_s = 0,
+
+where Q_tran', Q_rot' are allocation matrices defined
+in {C}.
+
+(<ref>), (<ref>)
+indicate that the direction of the resultant force due to
+λ_s coincides with the z-axis of
+{C}. In other word, by controlling the robot's attitude
+so that {C} is horizontal, it becomes possible to
+hover the robot without generating excess forces in the horizontal
+direction. In this case, by using Q_tran' and Q_rot',
+thrust allocation can be achieved through (<ref>), similar to that
+of a non-tilt quadrotor. Therefore, we focus on deriving
+Q_tran', Q_rot', and {C}.Since both {C} and {CoG} have
+origins at the center-of-mass, from (<ref>),
+following is also satisfied:
+
+    Q_rotλ_s = 0.
+
+Additionally, regarding translation, following is valid from
+(<ref>):
+
+    F_z = mg,
+
+where F_z =  Q_transλ_s.
+Then, we difine the rotation matrics R_C that satisfies:
+
+    R_CF_z =^t[  0  0 mg ].
+
+Integrating (<ref>),
+(<ref>), and (<ref>) we can gain follows:
+
+    R_C(
+      [ Q_tran;  Q_rot ])
+     λ_s
+     =
+     ^t[  0  0 mg  0  0  0 ] .
+
+Comparing
+(<ref>) and (<ref>) with
+(<ref>), our discussion results in followings:
+
+    R_CQ_tran=Q_tran' ,
+
+
+    R_CQ_rot=Q_rot' .
+
+Because (<ref>), (<ref>) mean that R_C
+is the rotation matrics that maps {CoG} to
+{C}, the conversion from {CoG} to
+{C} is easily calcurated with
+R_C. Furthermore, (<ref>) to (<ref>) suggest that if there exists
+a Q that satisfies (<ref>) and
+(<ref>) for a given λ_s, it is
+possible to hover tilted quadrotor using that λ_s.
+
+
+ §.§ Optimized Rotor Configuration
+
+The TRADY rotor configuration must meet three prerequisites. Firstly, it
+must enable fully-actuated model control in the assembly
+state. Secondly, it should allow for under-actuated model control in the
+unitary state. Finally, it must attain the necessary flight properties
+required for aerial assembly/disassembly motion. Therefore, we propose a methodology to
+optimize the rotor configuration that satidsfies these conditions.
+
+  §.§.§ Fully-actuated Model Controllability
+
+Initially, we propose a technique for achieving fully-actuated model
+control when TRADY is in the assembly state. As described in Equation 1,
+the full rank of matrix Q is equivalent to fully-actuated
+model control, as Q can map L to an arbitrary wrench in real
+space if it is full rank. However, each rotor has a limit of thrust
+force, which can lead to instability of control due to weak resultant
+force or torque in certain directions. Thus, rather than directly
+employing algebraic methods to make Q full rank, we seek to
+maximize the available force and torque region to ensure translational
+and rotational controllability in all axes. To accomplish this, a
+concept of feasible control force convex polyhedron
+𝒱_ℱ, and torque convex polyhedron
+𝒱_𝒯 were introduced by <cit.>. These are
+defined as follows:
+
+    𝒱_ℱ(U):={^{CoG}f∈ R^3| 0 ≤λ_i≤λ_max},
+
+
+    𝒱_𝒯(U):=
+      {^{CoG}τ∈R^3| 0≤λ_i≤λ_max} ,
+
+where the set of rotor direction vectors U is defined as
+U = [ u_1   ⋯ u_8;     ]. In addition, ^{CoG}f,
+^{CoG}τ are defined in
+(<ref>), (<ref>) and maximum thrust for
+each rotor in TRADY is denoted by λ_max, while the minimum
+thrust is established at 0, as we utilize unidirectional rotors.Then,  we define the values for the guaranteed minimum control force,
+denoted as f_min, and the corresponding torque, represented by
+τ_min, in accordance with the subsequent equations are being
+satisfied:
+
+    ^{CoG}f - m g≤ f_min ⇒ ^{CoG}f∈𝒱_ℱ,
+
+
+    ^{CoG}τ≤τ_min ⇒ ^{CoG}τ∈𝒱_𝒯.
+Note that our robot is controled under the premise that the roll and
+pitch angles are proximate to zero. As such, we posit that the gravity
+force is horizontal to the CoG frame, and we account for this force as
+an offset when defining the guaranteed control force.Therefore, by maximizing these f_min and τ_min, the guaranteed force and torque regions
+can be maximized. Thus, we initially explicate the methodology for
+computing f_min.
+As an example of feasible control force convex polyhedron which is depicted in
+figure:convex, f_min is equal to the radius of the
+inscribed sphere of this polyhedron, and the same is true for
+torque. Thereby, f_min is calculated by exploiting the distance d^f_ij(U), which is the length from
+the origin to a plane of polyhedron  along its normal vector h^f_ij.
+
+The calculation of d^f_ij(U) can be performed as following.
+
+    d_i j^f(U) =|∑_k=1^Nmax(0, λ_max ^th^f_ij^{CoG}u_k)
+      -
+       ^th^f_ijm
+      g|,
+
+where
+
+    h^f_ij =
+     ^{CoG}u_i×^{CoG}u_j/|^{CoG}u_i×^{CoG}u_j|
+                    .
+
+Moreover, as f_min corresponds to the radius of the inscribed sphere,
+we may ascertain f_min in the following manner:
+
+    f_min=min _i, j d_i j^f .
+
+Note that, if f_min > 0, the robot can fly.Similarly, τ_min can be acquired by calculating d_i j^τ
+in the following manner.
+
+    d_i j^τ(U)=|∑_k=1^Nmax(0, λ_max ^th^τ_ij^{CoG}v_k)|,
+
+
+
+    τ_min=min _i, j d_i j^τ,
+
+where
+
+    h^τ_ij =
+     ^{CoG}v_i×^{CoG}v_j/|^{CoG}v_i×^{CoG}v_j|
+                    .
+
+To sum up, the objective function to be maximized in this optimization of TRADY's rotor
+configuration is formulated as follows.
+
+
+
+
+  
+
+    S(U) =  w_1f_min + w_2τ_min,
+
+where w_1 and w_2 are the positive weights to balance between
+force and torque.
+Additionally, the constraints can be expressed as follows:
+
+    ∗ 1:       
+      f_min > 0,
+
+
+    ∗ 2:       τ_min > 0.
+
+Although our primary focus is on the assembled aircraft consisting of
+two quadrotor units, the maximization of S(U) within the constraints
+described in (<ref>) and (<ref>) ensures the attainment of fully-actuated
+model control in aircraft composed of an arbitrary number of units.
+
+
+  §.§.§ Under-actuated Model Controllability
+
+Subsequently, we present the constraints for (<ref>) to enable TRADY
+to achieve stable flight in the unitary state. Firstly, as previously
+noted in sec:introduction, the TRADY is composed of two quadrotor units, each
+possessing an identical rotor configuration. Consequently, the whole
+structure can be illustrated as figure:unit_config(A), with a
+constraint expressed as follows:
+
+    u_1 = u_5,  u_2 = u_6,  u_3 =
+      u_7,  u_4 = u_8 .
+
+
+Additionally, as noted above, the prerequisite for stable flight of the units is that
+both (<ref>) and (<ref>) are satisfied. Despite the presence of an
+infinite number of combinations for {C} and
+λ_s, we assume that λ_s =
+λ_s ^t[ 1 1 1 1;   ], to
+ensure even distribution of workload across each rotor. Consequently, an
+additional constraint can be formulated as follows.
+
+    ∗ 3:       λ_sQ_trans ^t[ 1 1 1 1;   ] 
+                                                 = mg,
+
+
+
+    ∗ 4:       λ_sQ_rot ^t[ 1 1 1 1;   ]
+                                                 = 0 .
+
+
+
+  §.§.§ Flight Characteristics for Aerial Assembly/Disassembly
+
+Next, we consider the flight characteristics required for aerial
+assembly/disassembly. Generally, quadrotors obtain translational
+propulsion by inclining their airframe. However, this inclination impedes
+parallel contact between two units during assembly motion. The coupling
+mechanism proposed in this study has a small contact area, which renders
+this non-parallel relationship a hindrance to the assembly
+process.However, in the instance of the TRADY unit, its target
+coordinate system is {C}, which is inclined with respect to
+{CoG}. Consequently, the airframe inclines during hovering, and
+conversely, it assumes a horizontal orientation during movement in a
+specified direction. Hence, we establish a novel constraint for the optimization to regulate the tilted angle of {C} in such a way
+that the airframe assumes a horizontal orientation when it accelerates along
+the positive x-axis direction in figure:unit_config(B).Assuming
+that the inclination angle during hovering is -γ as
+shown in figure:unit_config(C), the force exerted by the
+unit in the x-direction when it is in a horizontal state can be written as
+mgtanγ. Then the desired value of γ is
+calculated as follows:
+
+    γ = -tan^-1(^desa/g),
+
+where ^desa is the target acceleration in the x-direction.
+Consequently, we introduce the following constraint condition for the
+rotation matrix R_C, to ensure that {C} tilts by -γ around the
+y-axis:
+
+    ∗ 5:       R_c = [
+    [  cos(-γ)        0  sin(-γ);        0        1        0; -sin(-γ)        0  cos(-γ);          ]] .
+To sum up, the optimization problem for the rotor configuration can be
+summarized as follows:
+
+    Umaximize       S(U)
+       subject to      ∗ 1∼∗ 5
+
+
+
+  §.§.§ Solver for Optimization Problem
+
+Finally, in order to solve the designed optimization problem, it is
+necessary to choose an algorithm, but it is not always guaranteed that a
+solution that satisfies all the set constraints exists. Therefore, we
+use the  global optimization algorithm ISRES <cit.> that can find
+the closest possible solution even if a perfect solution is not found. The optimized U obtained as a result of solving the
+optimization problem using the parameters shown in table:op_param and the
+guaranteed minimum force and torque in the unitary and assembly states
+are presented in table:op_result. Here, each u is represented by spherical
+coordinate parameters α and β as shown in
+figure:unit_config(B). Furthermore, the outcomes are rounded off to two significant digits. The obtained outcome reveals that the
+optimized rotor angles exhibit a symmetrical pattern. This occurrence
+can be attributed to the constraints established in
+(<ref>) and (<ref>), as
+these equations embody force and torque offsets.
+In addition to this, it can be seen that both the minimum guaranteed force and torque become more than twice as
+high in the assembly state when using fully-actuated model compared to the
+unitary state.
+
+
+
+
+
+
+
+
+§ CONTROL
+
+Firstly, we outline the methodology for flight control, which
+incorporates fully-actuated model control for the unitary state and
+fully-actuated model control for the assembly state. Next, we propose a system switching
+strategy to be executed during the docking or undocking process.
+
+
+ §.§ Fully-actuated Flight Control
+
+
+
+
+  §.§.§ Position Control
+
+For position control, a general PID controller is adopted. Thus, from (<ref>),
+(<ref>), the desired force and torque can be derived as
+following:
+
+    f^des = m ^{ W}R_{ CoG }^-1(K_pe_r +K_i∫e_rdt
+                           +K_dė_̇ṙ),
+
+
+where e_r is a position error defined as e_r =
+^{ W }r^des_{ CoG } - ^{ W }r_{ CoG }, and
+K_p, K_i, K_d are gains for
+controller. Additionally, { C } is used instead of
+{ CoG } in the unitary state.In the assembly state, as shown in figure:a_fc, the obtained f^des from
+(<ref>) is allocated to the desired thrust by Q_trans.
+
+
+  §.§.§ Attitude Control
+
+Next, we explain attitude control. In the case of a fully-actuated
+model, it is possible to apply traditional PID control for attitude
+control. Here, by using (<ref>), the desired torque can
+be obtained as follows:
+
+    τ^des = ^{CoG}I(K_pe_α +K_i∫e_αdt
+      + K_dė_̇α̇) 
+    
+       +
+      ^{CoG}ω× ^{CoG}I ^{CoG}ω,
+
+where e_α is an attitude error defined as e_α = ^{ W
+}α^des_{CoG} - ^{ W }α_{CoG} and
+K_p, K_i, K_d are gains for controller.
+Then, the desired torque τ^des obtained from attitude control is allocated into the
+desired thrust for each rotor using the allocation matrix Q_rot
+as shown in figure:a_fc.
+
+
+ §.§ Under-actuated Flight Control
+
+
+
+
+
+  §.§.§ Position Control
+
+The position control for the underactuated model is developed using the
+methodology presented in <cit.>, which involves determining the
+target force via conventional PID feedback loop and subsequently converting
+it to target roll and pitch angles. The target forces f^des_x and f^des_y can be
+obtained using (<ref>), followed by determining the
+target roll θ and
+pitch ϕ as outlined below:
+
+    ^{ W}θ^des_{ C } =
+     atan^-1(-f_y, √(f^2_x+f^2_z)),
+
+
+    ^{ W}ϕ^des_{ C } =
+     atan^-1(f^2_x, f^2_z).
+
+These target angles are achieved by attitude controller.Additionally, regarding the position control in z-direction, collctive thrust force f^des_z is calculated in
+the following manner:
+
+    f^des_z = ^t(^{ W}R_{ C }b)f^des,
+
+where b is a unit vector ^t[[ 0 0 1;   ]].Then, using λ_s defined in
+(<ref>) and (<ref>),
+the target thrust for z-directional control is calculated as follows:
+
+    λ^des_z = f^des_z/mgλ_s.
+
+
+
+  §.§.§ Attitude Control
+
+In attitude control, to suppresse the uncontrollable horizontal forces
+due to the tilted rotors, we adopt LQI control<cit.> which is a type of optimal control that derives control inputs that minimize the cost function. Therefore, by designing the cost function appropriately, various requirements can be met in addition to convergence speed. The state equation of posture control is described as follows:
+
+    ẋ = Ax+
+      Bλ+D( ^{ C }I^-1 ^{ C}ω× ^{ C }I ^{ C}ω), 
+       y = Cx,
+
+where
+
+    x  =  ^t[[  e_x ė_̇ẋ  e_y ė_̇ẏ  e_z ė_̇ż ∫e_x ∫e_y ∫e_z ]], 
+       e = α^des - α, 
+       ė = α̇^des - α̇, 
+       B =  ^t[[ 0_4×1   B_1 0_4×1   B_2 0_4×1   B_3 0_4×3;       ]], 
+       [
+     [ B_1 B_2 B_3;     ]]
+      =  ^t(^{ C }I^-1Q_rot').
+
+Note that the target roll and pitch angle is ^{
+W}θ_{ C }, ^{
+W}ϕ_{ C } obtained from (<ref>) and (<ref>).
+In regards to the cost function, this study designs a function with the
+objective of improving convergence, suppressing the control input, and suppressing translational forces. In this case, the cost function is given as follows:
+
+    J = ∫_0^∞( ^txMx +  ^tλNλ)dt,
+
+where M and N are diagonal weight matrices. The first term
+in (<ref>) corresponds to the control output's norm,
+and minimizing this norm can enhance the convergence. Moreover,
+concerning the second term in (<ref>), the method of defining N as follows has been proposed in <cit.>:
+
+    N = W_1 + Q_trans^T 'W_2Q_trans',
+
+where W_1 and W_2 are also diagonal weight
+matrices. Then, the first term of (<ref>) creates a
+quadratic form ^tλNλ when substituted into (<ref>), corresponding to
+the norm of control input. Therefore, by minimizing this term, the
+control input can be suppressed. Furthermore, when the second term is
+substituted into (<ref>), the following equation is derived.
+
+
+    ^tλ ^tQ_trans'Q_trans'λ
+      =  ^tff = f^2.
+
+As seen from (<ref>), the norm of translational
+force is represented by the second term of (<ref>). Therefore, by employing the control input λ that minimizes the cost function
+defined in (<ref>), stable attitude control of a unit
+equipped with tilted rotors can be achieved.
+By solving the algebraic Riccati equations derived from
+(<ref>) and (<ref>), we obtain
+the feedback gain K. Therefore, the desired
+λ is calculated as follows:
+
+    λ^des_rot = Kx+
+      ^#Q_rot' ^{
+      C}ω× ^{ C}I ^{
+      C}ω .
+Finally, in combination with the z axis position control, the final
+output in the unitary state is ultimately calculated as follows:
+
+    λ^des = λ^des_z + λ^des_rot .
+
+
+
+
+ §.§ System Switching
+
+
+We present a methodology for system switching that is executed
+during assembling and disassembling actions.
+
+
+  §.§.§ Overall Control System
+
+To begin with, the overall
+control system is designed, as depicted in figure:whole_system. The “Motion
+Planner”, “Estimator”, and “Robot” sections adopt common processes in
+both the assembly state and the unitary state. Conversely, the
+“Switching Section” serves as a partition that alternates between the
+assembly and unitary states. During the assembly state, the entire
+system is controlled by a distributed control system, while each unit
+controls its respective rotors based on a common robot model without
+communicating with one another.
+Therefore, the overall structure of the system remains unchanged between
+the assembly state and the unitary state, with only the contents of the
+“Switching Section” being switched.
+
+
+  §.§.§ Transition Process
+
+Next, we explain the transition process that should be performed when
+switching systems. The problem when switching the system is the model
+error related to the inertia values and rotor performance of the
+robot. In normal flight control of TRADY, model errors are compensated
+for by the integral term of PID and LQI. In addition, there is no offset
+thrust based on default values in the gravity direction, and it is all
+compensated for by the integral term. Model error compensation by
+integral value is gradually performed while gradually increasing the
+rotor thrusts during takeoff, so it is generally completed until
+hovering.As an example, we consider the system switching during the assembly
+action. When switching the system, most control values are reset because
+the controller is switched. However, as mentioned earlier, gravity
+compensation is performed by the integral term, so only the integral
+terms are carried over in order to continue the flight. However, since
+this integral term compensates for the model error of the robot in the
+unitary state, the model error in the assembly state is not compensated
+for. Model errors that suddenly occur during flight, unlike during
+takeoff, cause discrete increases or decreases in rotor thrusts, which
+have a significant negative effect on control stability.
+
+To address this issue, a method of gradually transitioning rotor thrusts
+while compensating for the model error of the assembly state model was
+developed. Although it is impossible to predict each rotor thrust after
+model error compensation, the total weight of the system does not change
+before and after system switching, thereby the total thrust force acting in
+the gravity direction after model error compensation can be said to be
+the same as in the unitary state. Furthermore, since among each rotor thrust,
+the proportion that works in the direction of gravity does not change,
+consequently, the total thrust of all rotors can be said to be equal before and
+after switching. Therefore, the influence of sudden model errors can be
+suppressed by scaling the rotor thrusts output from the controller based
+on the total thrust in the unitary state. However, it is necessary to
+reflect the influence of the control output in the assembly state,
+thereby the control output is scaled using the value obtained by
+superimposing the total thrust in these two states.Here, the total thrust in the unitary state is obtained using the total thrust
+immediately before the system switch, and the total thrust in the
+assembly state is obtained using the real-time control output. Then, rotor thrusts during the transition is scaled as follows:
+
+    λ^des_trans =
+      
+      S_trans/
+      S_assemλ^des_assem,
+
+
+    S_trans =
+      W(t)S_assem+
+      (1- W(t)) S_unit,
+
+where S_assem is the total thrust in the assembly state defined as S_assem =
+∑_i=1^nλ^des_assem, i and S_unit is that in
+the unitary state. Note that S_assem is a variable but S_unit is a constant because S_unit competed
+by the thrust at the moment of switching. Additionally, W(t) is the weight
+function used in the superimposing and it is desirable for it to
+smoothly converge to 1. Therefore, W(t) is defined as follows:
+
+    W(t) = 1-1/at+1,
+
+where a is a constant and t is a variable representing time. Then, W(t) satisfies follows:
+
+    W(0) = 0, 
+       lim_t →∞W(t) → 1 .
+
+Therefore, in (<ref>), initially the influence of S_unit is
+dominant, but gradually S_assem becomes dominant and ultimately λ_trans becomes
+indistinguishable from the normal output of the assembly state controller. Thus, as a result, even after the system switch, the rotor thrust
+transitions smoothly. The variable a in (<ref>) determines the
+convergence rate of the function, and in this work, it was empirically
+set to a = 0.9.
+In this case, W(t) attains a value of 0.99 when t = 120. During actual
+implementation, W(t) is refreshed at each control cycle with a frequency of
+0.025s. Consequently, W(t) achieves 0.99 after approximately 3s
+of real time have elapsed.To sum up, by utilizing the aforementioned methodology, it is possible to
+address the discrete thrust changes caused by model errors during system
+switching. This transition process occurs outside the controller, as
+illustrated in figure:a_fc and figure:u_fc, and can be regarded as a kind of
+disturbance to the feedback loop. However, if this disturbance itself
+converges sufficiently quickly, the overall system stability is
+ultimately dependent on the stability of controllers. In the case of our
+method, the tuning of a in (<ref>) ensures the
+convergence rate of the transition process, while the stability of the
+PID controller is achieved through the tuning of its gains, and the
+stability of the LQI controller is guaranteed by
+(<ref>). Therefore, the proposed transition process
+has no impact on the stability of the feedback loop.
+
+
+
+§ MOTION STRATEGY
+
+In this section, we introduce the motion strategy for executing
+assembly/disassembly motion in mid-air. Initially, we propose the
+overarching strategy, followed by an specific explication of each constituent.
+
+
+ §.§ Overall Strategy
+
+As explained in Section. <ref>, in aerial assembly/disassembly motions,
+the two units come into extreme proximity, causing unstable flight. This
+makes high-precision position control difficult. Therefore, a motion strategy is required that ensures the certainty of the motion under
+multiple conditions, and executes it only if these conditions are
+met. Then, in this study, we divide the target action into several
+stages and represent them as an Finite State Machine (FSM) as shown in figure:state_machine.
+In this FSM, conditions are set to transition between states, and when two units fulfill them, the motion transitions to the next state.  By repeating this process, it becomes
+possible to autonomously perform aerial assembly/disassembly motion while avoiding
+hazardous conditions.
+
+
+
+ §.§ Assembly Motion
+
+Now, we explain each state in the FSM, focusing on the assembly motion.
+
+
+  §.§.§ Standby State
+
+This state is the initial
+state of the FSM, where both units are guided towards their respective standby
+positions and yaw angles.
+The female unit maintains its position and yaw angle at the start of
+assembly, while the male unit is guided to a position and yaw angle
+ψ that
+satisfies the following relationship:
+
+    ^{ F }r_{ M } =
+       ^t[
+       [ d^st    0    0 ]] , 
+       ^{ F }ψ_{ M } = -π
+
+where{ F } represents the { C } frame
+of the female unit, while { M } represent that of the
+male unit. Additionally, d^st is the desired distance between two
+units' CoG. Note that the direction of each axis is the same as that shown in
+figure:unit_config.Here, we define the following condition #1 with respect to the
+errors in r_y, r_z, and ψ:
+
+    # 1:       (
+       [      ^{ F }r_y{ M }; ^{ F
+         }r_z{ M };       ^{ F }ψ_{ M };                     ])
+      ≤(
+       [ e^# 1_y; e^# 1_z; e^# 1_ψ;         ])
+
+where e^# 1_y,e^# 1_z,e^# 1_ψ are tolerable
+errors. Condition # 1 is used as a criterion to determine if the
+positional relationship between the two units is safe. If the
+relationship between the female unit and the male unit satisfies #
+1, the state transitions to the “Approach” state.
+
+
+  §.§.§ Approach State
+
+At this state, the male unit moves towards the female unit, while the
+female unit maintains its position and angle. During the approach phase,
+if condition #
+1 is no longer met, the approach motion is interrupted and
+the system transitions to the “Standby” state. By virtue of this process, it becomes possible to instantaneously recover from a hazardous positional state between the two units and continue with the assembly motion unimpeded.Here, we define the following condition # 2 with respect to the
+errors in r_x, r_y, r_z, and ψ:
+
+    # 2:       (
+       [      ^{ F }r_x{ M };      ^{ F }r_y{ M }; ^{ F
+         }r_z{ M };       ^{ F }ψ_{ M };                     ])
+      ≤(
+       [ e^# 2_x; e^# 2_y; e^# 2_z; e^# 2_ψ;         ])
+
+where e^# 2_x,e^# 2_y,e^# 2_z,e^# 1_ψ are
+tolerable errors. Condition # 2 is used as a criterion to determine if
+the two units are in a position where they can docking. If the condition # 2 is satisfied, the state transitions
+to the “Assembly” state.
+
+
+  §.§.§ Assembly State
+
+In this state, initially, the docking mechanism is activated by
+turning on the magnet and inserting the pegs, and subsequently, the
+system is transitioned into the assembly mode. During the aforementioned movements, if condition # 2 is no longer met, the movement is halted and the state transitions to the “Approach” state.
+
+
+  §.§.§ Transition State
+
+In this state, the process of transition presented in
+Section. <ref> is executed.
+
+
+ §.§ Disassembly Motion
+
+In the case of aerial disassembly, the system transitions from “Hovering” to
+“Transition,” and then proceeds to “Disassembly.” During “Disassembly,”
+the coupling mechanism is released, allowing the two units to
+separate. Unlike in assembly, positional control of the bodies is not
+critical during disassembly, and therefore, there are no conditions that
+must be satisfied for the state transitions.
+
+
+
+§ EXPERIMENT
+
+In this section, we first describe the robot platform utilized in each
+experiment. Next, we present the experimental results, which include the
+evaluation of flight stability in each state, aearil assembly and disassembly motion based on proposed control method and motion strategy, and object manipulation in the assembly state.
+
+
+ §.§ Robot Platform
+
+
+
+  §.§.§ Hardware
+
+
+Based on the design proposed in sec:mech_design and sec:rotor_config, we introduce the
+hardware configuration illustrated in figure:hardware_config. The frame of the body is made of a 5mm
+CFRP plate, while the other parts are mainly made of PLA material. In
+determining the size of the entire body, we first determined the size of
+the docking mechanism based on the rigidity required for the coupling
+portion and then selected the minimum body size that can accommodate the
+docking mechanism.
+
+The rotors are composed of 5 inch propellers (GEMFAN Hulkie 5055S-3) and
+brushless motors (ARRIS S2205), driven by ESC (T-Motor F45A). Each rotor
+is tilted based on the optimized U in sec:rotor_config. With this
+configuration, each rotor exerts a thrust of approximately 1N-8N at a
+voltage of 15V.
+
+
+Furthermore, an on-board PC (Khadas VIM4) and a flight controller called
+Spinal, which uses an STM32 microcontroller, are installed on the
+body. The housing of the docking mechanism is made of PLA, and a servo
+motor (KONDO KRS-3302) is installed on both the male and female
+sides. In addition, Arduino nano is used to control the servo motor.
+
+
+In addition, a 2200mAh four-cell LiPo battery is used as the power
+source. However, in some experiments, power is supplied from a
+bground-based stabilizing power source instead of a battery to enable
+emergency stop.
+
+
+Finally, table:hard_prop shows the characteristics of the robot.
+
+
+
+
+  §.§.§ Software
+
+
+Next, we introduce the communication system for proposed robot TRADY as
+shwon in figure:software_config. Firstly, the external PC executes
+motion planning including the strategy for the assembly/disassembly
+motion presented in sec:motion_strategy, and it outputs
+position attitude commands.
+Subsequently, these commands are transmitted to the onboard PC through a
+Wi-Fi network. Furthermore, the external motion capture system transmits
+the positional state of the robot to the onboard PC. The onboard PC
+consists of a robot model calculation, position estimator by Kalman
+filter, and position controller. Afterward, the onboard PC transmits
+commands to Arduino and Spinal with UART communication. Spinal also
+receives self-attitude information from the IMU sensor and estimates the
+attitude of the robot with a Kalman filter. Target PWM is output from
+the attitude controller based on the estimated attitude values and
+commands from the onboard PC. Moreover, Arduino receives commands from the onboard PC and sends angle commands to the servo motors of the coupling mechanism.
+
+
+ §.§ Flight stability
+
+We first conduct a circular trajectory tracking flight experiment in
+order to verify the flight stability of both the unitary state and
+the assembly state. In this experiment, a circular trajectory with a radius of
+0.5m at an altitude of 1m was adopted, and a robot circles
+this obit twice in one minute. The result is shown
+in figure:circle_track and table:circle_track. Figure
+1 visualizes the tracking error, while table:circle_track shows
+the Root Mean Squared Error (RMSE) from the trajectory for each state.
+From these results, it is found that both the under-actuated model
+control in the unitary state and the fully-actuated model control in the
+assembly state are possible. The control accuracy is inferior in the
+unitary state compared to the assembly state, which is due
+to not only the under-actuated model control but also the large moment of
+inertia of the body despite its weight. However, the positional error
+within this range can be
+dealt with by the drogue on the female-side docking mechanism and the
+proposed motion strategy, thus not posing significant issues.
+
+
+
+
+
+ §.§ In-flight assembly and disassembly
+
+
+
+  §.§.§ Reliability of Aerial Assembly/Disassembly
+
+ To conduct an airborne coalescence experiment, the parameters in
+ (<ref>) and (<ref>) must first be determined.
+ The parameters e^#1_y, e^#1_z, e^#1_ψ in (<ref>) are the criteria for determining the
+ dangerous state, and therefore, smaller values of these parameters will
+ result in more reliable merging, but will also increase the time
+ required to complete the merging. Since the parameters e^#2_x, e^#2_y, e^#2_z, e^#2_ψ in (<ref>)
+ are the criteria for docking certainty, there is also a tradeoff
+ between certainty and time required to adjust these parameters. In this
+ study, these values were adjusted through experiments on actual
+ equipment, and the final values were determined as shown in
+ table:hash_cond.After determining the parameters, we conducted 15 experiments for
+ both aerial assembly and disassembly. The results indicated a success
+ rate of 86.7% (13 successful attempts) for assembly behavior and a
+ 100% success rate (15 successful attempts) for disassembly
+ behavior. In addition to this, the time required for the merging
+ behavior ranged from 3s to 15s, and there was a large
+ variation. In two failed assembly experiments, the docking mechanism
+ became stuck in a part of the airframe, making it impossible to
+ transit from the “Approach” state to the “Standby” state,
+ necessitating an emergency stop of the robot. As a solution to this
+ issue, covering the entire unit body with a spherical guard would allow
+ avoidance of contact between the docking mechanism and the airframe.
+
+
+
+
+  §.§.§ Stability of System Switching
+
+Next, to evaluate the flight stability during the system switchover, we
+conducted in-flight assembly and disassembly experiments with and without
+the thrust transition method proposed in
+Section. subsec:transition. First, for the aerial assembly, the
+results with the transition process are shown in figure:assembly_trans, and the
+results without the proposed thurst transition process are shown in
+figure:assembly_notrans. In the event of an increase in rotor
+thrust during the system switch, the forces in the x and y directions
+are offset; however, significant effects are apparent in the control of
+the z direction. Therefore, both figure:assembly_trans and figure:assembly_notrans include plots of
+rotor thrust displacement and z-directional position error.
+
+
+Concerning the case of transition processing, it can be
+observed from figure:assembly_trans that stable aerial assembly and thrust
+transitions are achieved. As shown in figure:assembly_trans(B) and (C), the total
+rotor thrust remains constant before and after the system switch, and
+the subsequent ascent of robot is limited to approximately
+0.065m. Additionally, the control is rapidly stabilized following
+the switchover. Note that, despite the transition process, there are still discrete changes in the
+thrust of each rotor. However, these changes are due to alterations in
+the allocation of thrust to each rotor and not to model errors, and they
+have a negligible adverse effect on control performance.
+
+On the contrary, regarding the experiment without
+transition processing, figure:assembly_notrans(B) shows that
+the target rotor thrust changed abruptly due to model errors that occur
+during the system switchover. The total rotor thrust increases by about 5N before and after the switchover, and for some rotors the
+target thrust greatly exceeds the upper thrust limit. As a result, the
+robot rose about 0.39m at a stretch immediately after assembly as
+show in figure:assembly_notrans(C), and
+unstable control continued after that.  These results indicate the efficacy of our proposed method for switching systems in
+aerial assembly motion.Next, regarding aerial disassembly, figure:disassembly_trans
+illustrates the experimental result of aerial disassembly with proposed
+transition process. Moreover, figure:disassembly_notrans illustrates the variation in
+rotor thrust before and after mid-air disassembly when the transition
+process was not applied. From these results, it was found that in aerial disassembly, it is
+possible to safely switch the system with or without transition
+processing. This is likely due to the fact that in the assembly state,
+decentralized control is performed by two controllers, resulting in
+model errors equivalent to those of two aircraft. In contrast, in the
+unitary state, only model errors equivalent to those of one aircraft are
+generated. As a result, in the unitary state, the effect of system switching on thrust is
+presumed to be small.
+
+
+
+
+ §.§ Peg Insertion
+
+Next, we conducted an experiment to verify the aerial object
+manipulation ability in the assembly state. First, we conducted an
+experiment to insert a diameter of 6mm peg into a diameter of 25mm pipe as an analogy to drilling and Pic-and-Place
+tasks.
+ Due to the requirement of high position accuracy and independent
+ control of translation and rotation for this task, the fully-actuated model
+ control is necessary. Note that in this study, we focus on the control
+ performance of the robot, and therefore, the task is performed by manual
+ operation, not by automatic control based on motion planning. The
+ experimental results are shown in figure:peg.From these results, it was demonstrated that the robot can be
+ maneuvered with an error of approximately ±1cm. Furthermore, as shown in figure:peg(B),(C), the pitch angle of
+ the robot was kept within approximately ± 1.5 degrees
+ during movement and hovering, demonstrating translational control can
+ be achieved while suppressing the impact on the attitude.
+
+
+
+ §.§ Valve Opening
+
+Finally, to demonstrate the expansion of achievable torque through
+assembly of units, we conducted a valve opening experiment. An
+industrial gate valve was used for the experiment, and end effectors
+for valve operation was attached to the robot. These end effectors are
+capable of passive expansion and contraction, and do not hinder
+takeoff and landing. The results of the experiment are presented in
+figure:peg. From these results, it was demonstrated that
+proposed robot TRADY
+is capable of stable valve opening operations in the air. figure:peg(B)
+shows that a maximum torque of 2.4Nm is required during task execution
+(actually, about 2.2Nm of torque is required to open this valve). Here,
+it can be seen that by assembling units, the torque performance is
+improved by approximately nine times with respect to the yaw direction
+torque that can be exerted in unit state, which is a maximum of
+0.28Nm. This is due to the fact that the size of the body has increased by
+assembling units and that torque realization using the horizontal
+component of rotor thrusts is possible due to the fully-actuated model
+control.
+
+
+
+
+§ CONCLUSION
+
+In this study, we have developed the configuration of the quadrotor unit
+named TRADY that
+possesses the ability to engage in aerial self-assembly and
+self-disassembly. A noteworthy achievement of this work is that the
+robot can perform both assembly and disassembly while seamlessly
+transitioning between fully-actuated and under-actuated models. Building
+upon the proposed design, control methodology, and motion strategy, we
+conducted empirical experiments that demonstrated the robot's ability to
+perform stable assembly/disassembly movements, as well as execute
+various aerial manipulation tasks. During the assembly/disassembly
+experiment, we established that the proposed robot can successfully
+complete assembly/disassembly movements at a rate of 90%, while also
+observing that the proposed thrust transition method can suppress
+instability during switching. Additionally, in the task
+execution experiment, we determined that the robot in the assembly state
+can exercise independent control over translation and rotation, while
+also generating nine times the torque compared to the unitary state.The pivotal concern that remains in this study is that TRADY, while in
+the assembly state, is fully-actuated but not omni-directional, which
+restricts its ability to hover at a significantly tilted posture. As a
+future prospect, we intend to design a new docking mechanism equipped
+with joints that will enable the robot to alter rotor directions after
+assembly. This will expand the robot's controllability in a more
+significant manner. Furthermore, expanding the system by utilizing three
+or more units remains a future challenge. In cases involving three or
+more units, multiple combinations are possible, allowing for the
+selection of appropriate units based on the task at hand.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+IEEEtran
+
+
+
+
+
+
+
+
+
+10
+
+url@samestyle
+
+
+
+
+
+
+
+
+Floreano2015
+D. Floreano and R. J. Wood, “Science, technology and the future of small
+  autonomous drones,” Nature, vol. 521, pp. 460–466, 2015.
+
+kumar2012
+V. Kumar and N. Michael, “Opportunities and challenges with autonomous micro
+  aerial vehicles,” The International Journal of Robotics Research,
+  vol. 31, no. 11, pp. 1279–1291, 2012.
+
+Bonatti2020
+R. Bonatti, Y. Zhang, S. Choudhury, W. Wang, and S. Scherer, “Autonomous drone
+  cinematographer: Using artistic principles to create smooth, safe,
+  occlusion-free trajectories for aerial filming,” in Proceedings of the
+  2018 international symposium on experimental robotics.1em plus 0.5em
+  minus 0.4emSpringer, 2020, pp. 119–129.
+
+Sewer
+F. Chataigner, “Arsi: an aerial robot for sewer inspection.” Advances
+  in Robotics Research: From Lab to Market. Springer, Cham, 2020, pp.
+  249–274, 2020.
+
+Michael2012
+N. Michael, S. Shen, K. Mohta, Y. Mulgaonkar, V. Kumar, K. Nagatani, Y. Okada,
+  S. Kiribayashi, K. Otake, K. Yoshida, K. Ohno, E. Takeuchi, and S. Tadokoro,
+  “Collaborative mapping of an earthquake-damaged building via ground and
+  aerial robots,” Journal of Field Robotics, vol. 29, no. 5, pp.
+  832–841, 2012.
+
+Doitsidis2012
+L. Doitsidis, S. Weiss, A. Renzaglia, M. W. Achtelik, E. Kosmatopoulos,
+  R. Siegwart, and D. Scaramuzza, “Optimal surveillance coverage for teams of
+  micro aerial vehicles in gps-denied environments using onboard vision,”
+  Autonomous Robots, vol. 33, pp. 173–188, 2012.
+
+figure_8
+Y. Bai and S. Gururajan, “Evaluation of a baseline controller for autonomous
+  “figure-8” flights of a morphing geometry quadcopter: Flight performance,”
+  Drones, 2019.
+
+morphing_quad
+D. Falanga, K. Kleber, S. Mintchev, D. Floreano, and D. Scaramuzza, “The
+  foldable drone: A morphing quadrotor that can squeeze and fly,” IEEE
+  Robotics and Automation Letters, vol. 4, no. 2, pp. 209–216, 2019.
+
+origami
+D. Yang, S. Mishra, D. M. Aukes, and W. Zhang, “Design, planning, and control
+  of an origami-inspired foldable quadrotor,” in 2019 American Control
+  Conference (ACC), 2019, pp. 2551–2556.
+
+n_zhao
+N. Zhao, Y. Luo, H. Deng, and Y. Shen, “The deformable quad-rotor: Design,
+  kinematics and dynamics characterization, and flight performance
+  validation,” in 2017 IEEE/RSJ International Conference on Intelligent
+  Robots and Systems (IROS), 2017, pp. 2391–2396.
+
+Bucki
+N. Bucki, J. Tang, and M. W. Mueller, “Design and control of a
+  midair-reconfigurable quadcopter using unactuated hinges,” IEEE
+  Transactions on Robotics, vol. 39, no. 1, pp. 539–557, 2023.
+
+Voliro
+“The voliro omniorientational hexacopter: An agile and maneuverable
+  tiltable-rotor aerial vehicle,” IEEE Robotics and Automation
+  Magazine, vol. 25, pp. 34–44, 12 2018.
+
+khamseh2018
+H. B. Khamseh, F. Janabi-Sharifi, and A. Abdessameud, “Aerial manipulation―a
+  literature survey,” Robotics and Autonomous Systems, vol. 107, pp.
+  221–235, 2018.
+
+Mellinger2011
+D. Mellinger, Q. Lindsey, M. Shomin, and V. Kumar, “Design, modeling,
+  estimation and control for aerial grasping and manipulation,” in 2011
+  IEEE/RSJ International Conference on Intelligent Robots and Systems, 2011,
+  pp. 2668–2673.
+
+Heredia2014
+G. Heredia, A. Jimenez-Cano, I. Sanchez, D. Llorente, V. Vega, J. Braga,
+  J. Acosta, and A. Ollero, “Control of a multirotor outdoor aerial
+  manipulator,” in 2014 IEEE/RSJ International Conference on Intelligent
+  Robots and Systems, 2014, pp. 3417–3422.
+
+hydrus
+M. Zhao, K. Kawasaki, K. Okada, and M. Inaba, “Transformable multirotor with
+  two-dimensional multilinks: modeling, control, and motion planning for aerial
+  transformation,” Advanced Robotics, vol. 30, no. 13, pp. 825–845,
+  2016.
+
+dragon
+M. Zhao, F. Shi, T. Anzai, K. Okada, and M. Inaba, “Online motion planning for
+  deforming maneuvering and manipulation by multilinked aerial robot based on
+  differential kinematics,” IEEE Robotics and Automation Letters,
+  vol. 5, no. 2, pp. 1602–1609, 2020.
+
+Lasdra
+H. Yang, S. Park, J. Lee, J. Ahn, D. Son, and D. Lee, “Lasdra: Large-size
+  aerial skeleton system with distributed rotor actuation,” in 2018 IEEE
+  International Conference on Robotics and Automation (ICRA), 2018, pp.
+  7017–7023.
+
+Zhao2022
+M. Zhao, K. Okada, and M. Inaba, “Versatile articulated aerial robot dragon:
+  Aerial manipulation and grasping by vectorable thrust control,”
+  International Journal of Robotics Research, 2022.
+
+Naldi2015
+R. Naldi, F. Forte, A. Serrani, and L. Marconi, “Modeling and control of a
+  class of modular aerial robots combining under actuated and fully actuated
+  behavior,” IEEE Transactions on Control Systems Technology, vol. 23,
+  no. 5, pp. 1869–1885, 2015.
+
+Granger
+K. Garanger, J. Epps, and E. Feron, “Modeling and experimental validation of a
+  fractal tetrahedron uas assembly,” in 2020 IEEE Aerospace Conference,
+  2020, pp. 1–11.
+
+Xu2021
+J. Xu, D. S. D'Antonio, and D. Saldana, “H-modquad: Modular multi-rotors with
+  4, 5, and 6 controllable dof,” vol. 2021-May.1em plus 0.5em minus
+  0.4emInstitute of Electrical and Electronics Engineers Inc., 2021, pp.
+  190–196.
+
+Flightarray1
+R. Oung, A. Ramezani, and R. D'Andrea, “Feasibility of a distributed flight
+  array,” in Proceedings of the 48h IEEE Conference on Decision and
+  Control (CDC) held jointly with 2009 28th Chinese Control Conference, 2009,
+  pp. 3038–3044.
+
+Flightarray2
+R. Oung, F. Bourgault, M. Donovan, and R. D'Andrea, “The distributed flight
+  array,” in 2010 IEEE International Conference on Robotics and
+  Automation, 2010, pp. 601–607.
+
+Saldana2018
+D. Saldana, B. Gabrich, G. Li, M. Yim, and V. Kumar, “Modquad: The flying
+  modular structure that self-assembles in midair.”1em plus 0.5em minus
+  0.4emInstitute of Electrical and Electronics Engineers Inc., 9 2018,
+  pp. 691–698.
+
+moddessemble
+D. Saldana, P. M. Gupta, and V. Kumar, “Design and control of aerial modules
+  for inflight self-disassembly,” IEEE Robotics and Automation Letters,
+  vol. 4, pp. 3402–3409, 10 2019.
+
+Hara2014
+I. O'Hara, J. Paulos, J. Davey, N. Eckenstein, N. Doshi, T. Tosun, J. Greco,
+  J. Seo, M. Turpin, V. Kumar, and M. Yim, “Self-assembly of a swarm of
+  autonomous boats into floating structures,” in 2014 IEEE International
+  Conference on Robotics and Automation (ICRA), 2014, pp. 1234–1240.
+
+Yanagimura
+K. Yanagimura, K. Ohno, Y. Okada, E. Takeuchi, and S. Tadokoro, “Hovering of
+  mav by using magnetic adhesion and winch mechanisms,” in 2014 IEEE
+  International Conference on Robotics and Automation (ICRA), 2014, pp.
+  6250–6257.
+
+Ryll2016
+M. Ryll, D. Bicego, and A. Franchi, “Modeling and control of fast-hex: A
+  fully-actuated by synchronized-tilting hexarotor,” in 2016 IEEE/RSJ
+  International Conference on Intelligent Robots and Systems (IROS).1em
+  plus 0.5em minus 0.4emIEEE, 2016, pp. 1689–1694.
+
+Park2016
+S. Park, J. Her, J. Kim, and D. Lee, “Design, modeling and control of
+  omni-directional aerial robot,” vol. 2016-November.1em plus 0.5em
+  minus 0.4emInstitute of Electrical and Electronics Engineers Inc., 11
+  2016, pp. 1570–1575.
+
+Tandale
+M. D. Tandale, R. Bowers, and J. Valasek, “Trajectory tracking controller for
+  vision-based probe and drogue autonomous aerial refueling,” Journal of
+  Guidance, Control, and Dynamics, vol. 29, no. 4, pp. 846–857, 2006.
+
+FRAVOLINI2004611
+M. L. Fravolini, A. Ficola, G. Campa, M. R. Napolitano, and B. Seanor,
+  “Modeling and control issues for autonomous aerial refueling for uavs using
+  a probe^^e2^^80^^93drogue refueling system,” Aerospace Science and
+  Technology, vol. 8, no. 7, pp. 611–618, 2004. [Online]. Available:
+  <https://www.sciencedirect.com/science/article/pii/S1270963804000744>
+
+
+singularity
+M. Zhao, T. Anzai, K. Okada, K. Kawasaki, and M. Inaba, “Singularity-free
+  aerial deformation by two-dimensional multilinked aerial robot with 1-dof
+p  vectorable propeller,” IEEE Robotics and Automation Letters, vol. 6,
+  pp. 1367–1374, 4 2021.
+
+Convex
+P. Bosscher, A. Riechel, and I. Ebert-Uphoff, “Wrench-feasible workspace
+  generation for cable-driven robots,” IEEE Transactions on Robotics,
+  vol. 22, no. 5, pp. 890–902, 2006.
+
+Isres
+N. Documentation, “Nlopt algorithms,”
+  <https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#isres-improved-stochastic-ranking-evolution-strategy>.
+
+Lee2010
+T. Lee, M. Leok, and N. H. McClamroch, “Geometric tracking control of a
+  quadrotor uav on se(3),” in 49th IEEE Conference on Decision and
+  Control (CDC), 2010, pp. 5420–5425.
+
+LQI
+P. Young and J. Willems, “An approach to the linear multivariable
+  servomechanism problem,” International Journal of Control, vol. 15,
+  06 1972.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

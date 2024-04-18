@@ -1,0 +1,1177 @@
+
+
+Coupled Hénon Map, Part II]Coupled Hénon Map, Part II: Doubly and Singly Folded Horseshoes in Four Dimensions
+
+
+
+
+
+^1RIKEN iTHEMS, Wako, Saitama 351-0198, Japan
+^2Department of Physics, Tokyo Metropolitan University, Tokyo 192-0397, Japan
+
+jizhou.li@riken.jp   shudo@tmu.ac.jp
+
+
+
+
+  March 2023
+
+
+
+As a continuation of a previous paper (arXiv:2303.05769 [nlin.CD]), we introduce examples of Hénon-type mappings that exhibit new horseshoe topologies in three and four dimensional spaces that are otherwise impossible in two dimensions.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+In a previous paper <cit.> we have derived a sufficient condition for topological horseshoe and uniform hyperbolicity of a 4-dimensional symplectic map, which is introduced by coupling the two 2-dimensional Hénon maps via linear terms. The coupled Hénon map thus constructed can be viewed as a simple map modeling the horseshoe in higher dimensions. In this paper we further explore new possibilities of horseshoe topologies in three and four dimensions by investigating several new types of coupled Hénon maps. The horseshoes introduced here can only exist beyond two or three dimensions and may serve as templates for the future investigation of horseshoes in multidimensional spaces. 
+
+Two well-known ingredients that give rise to the classical phenomenon of chaos are “stretching" and “folding" of phase-space volumes. The stretching creates divergence between nearby initial conditions, and the folding leads to mixing and thus ergodicity of the system. A generic prototype incorporating both ingredients is the Smale horseshoe <cit.> which acts on a finite region in phase space, expands it along the unstable direction, contracts it along the stable direction, then folds and re-injects it into the original region.  In the due process, mixing is created by folding and re-injection, which leads to nonlinear dynamics that displays typical phenomena of chaos. 
+
+The most well-known example that realizes the Smale horseshoe would be the Hénon map, which is a 2D quadratic map with parameters <cit.>. There is an elementary proof showing that the horseshoe is realized in a certain parameter space <cit.>, and a necessary and sufficient condition has been pursued using sophisticated techniques in the theory of complex dynamical systems <cit.>. The studies of the higher dimensional extension, a class of the coupled Hénon maps, have been done in various directions 
+(see for example <cit.>), 
+not only to provide examples of hyperchaos <cit.> but also to seek the nature of dynamics absent in 2D. 
+
+In physics and chemistry, there is a growing interest in higher-dimensional 
+Hamiltonian dynamics. In particular,  the situation in which regular and chaotic orbits coexist 
+in a single phase space is often realized not only in astrophysical or chemical reaction dynamics <cit.>
+but also in Lagrangian descriptions of fluid dynamics <cit.>. 
+These studies have paid special attention to invariant structures associated with 
+regular motions, and related bifurcations in higher-dimensional spaces as well, 
+but we may expect a variety of horseshoes with different topologies in chaotic domains. 
+
+
+To the authors' knowledge, 
+although the original Smale horseshoe was proposed in the context of arbitrary dimensions, 
+it only considered either singly-folded horseshoes or multiply-folded horseshoes with creases 
+in the same direction <cit.>. Therefore, the original horseshoes, even in multidimensional settings, can always be visualized by collapsing the unstable and stable subspaces into one-dimensional unstable and stable directions, respectively, which leads us back to the picture of 2D horseshoes. In this sense, they did not make use of all possible choices of the directions of creases in multidimensional spaces. This leaves one to wonder what would happen if a generalization of the horseshoe folds a multidimensional hyper-cube twice, with creases in mutually independent directions. Although horseshoes in higher dimensions with creases in different directions 
+have been illustrated qualitatively <cit.> or modeled by the composition of piecewise linear maps <cit.>, an explicit and minimal form of such maps has not been provided.  
+
+In this article, we propose several mappings which give rise to doubly-folded horseshoes that can only exist beyond two or three dimensions. More specifically, we will introduce a class of Hénon maps that display five different kinds of horseshoe topology, labeled by Topology I, II, III-A, III-B and IV, respectively, which are:
+
+
+  a) Topology I: Singly-folded horseshoe in three dimensions (Section. <ref>).
+
+  b) Topology II: Doubly-folded horseshoe with independent creases in three dimensions (Section. <ref>).
+
+  c) Topology III-A: Doubly-folded horseshoe with independent creases and independent stacking directions in four dimensions (Section. <ref>).
+
+  d) Topology III-B: Singly-folded horseshoe in four dimensions (Section. <ref>).
+
+  e) Topology IV: Doubly-folded horseshoe with independent creases and common stacking direction in four dimensions (Section. <ref>).
+
+We emphasize that these five types of topology are by no means comprehensive. Our main purpose here is to list up examples in a heuristic way. These examples would prepare us for the future construction of the entire library of unexplored horseshoe topologies that may give rise to new dynamical phenomena. 
+
+This article is structured as follows. Section. <ref> reviews the background theory of Smale horseshoe in its original context. Section. <ref> introduces a three-dimensional Hénon-type mapping that possesses a doubly-folded horseshoe with creases in mutually independent directions. Section. <ref> proposes a coupled Hénon map in four dimensions which, depending on the ranges of parameters, displays either a doubly-folded horseshoe with creases in mutually independent directions and independent stacking directions, or a singly-folded horseshoe. Section. <ref> demonstrates another type of doubly-folded horseshoe in four dimensions which has the same stacking directions after the two foldings. Section. <ref> concludes the paper and proposes new directions for future study. 
+
+
+
+
+§ BACKGROUND: SMALE HORSESHOES IN TWO AND THREE DIMENSIONS
+
+In this section we briefly outline the background theory of Smale horseshoe with examples from the Hénon map. The map gives rise to a singly-folded horseshoe whose cross-sections reduce to the well-studied two-dimensional horseshoe, therefore topologically conjugate to a full shift on two symbols. This topology, denoted by Topology I hereafter, is the most well-known Smale horseshoe studied in many articles and textbooks. An illustration is given by Fig. <ref>.  
+
+A concrete realization of Type I is the Hénon map of the form 
+
+    ( [ x_n+1; y_n+1; z_n+1 ]) = 
+    f_ I( [ x_n; y_n; z_n ]) =
+    ( [ a_0 - x^2_n - z_n;             b y_n;               x_n ])
+
+where (x_n,y_n,z_n)^𝖳 denotes the position of the nth iteration, and the parameters a_0, b satisfy  
+
+    a_0  > 5+2√(5)
+        b > 1
+
+where the bound on a_0 is obtained by Devaney and Nitecki in <cit.> to realize the horseshoe in the two-dimensional Hénon map, and the bound on b guarantees uniform expansion in y. It is trivial to see that the dynamics in y is a constant uniform expansion uncoupled from (x,z). Therefore, on every (x,z)-slice we have the two-dimensional Hénon map
+
+    ( [ x_n+1; z_n+1 ]) = 
+    ( [ a_0 - x^2_n - z_n;               x_n ]) ,
+
+which is the one originally proposed in <cit.> and studied in detail in <cit.>. Generalizing the results established by <cit.> to the three-dimensional map f_ I, it is straightforward to see that given a_0>5+2√(5), a cube V can be identified as
+
+    V = { (x,y,z) |  |x|,|y|,|z|≤ r } ,      where r=1+√(1+a_0)
+
+such that f_ I(V) gives rise to a horseshoe. As depicted by Fig. <ref>, the map expands V in the unstable directions ((x,y)-plane), contracts it in the stable direction (z-axis), then folds it with a crease in the y-direction and stacks it along the z-direction. The intersection V∩ f_ I(V) consists of a pair of three-dimensional “horizontal" slabs, which, when viewed in every (x,z)-slice, reduces to a pair of two-dimensional horizontal strips. Furthermore, the resulting non-wandering set Λ = ⋂_n=-∞^∞f^n_ I(V) is uniformly hyperbolic and conjugate to a full shift on two symbols. 
+
+
+
+To avoid potential ambiguities, we now give precise definitions of two-dimensional horizontal strips and three-dimensional horizontal slabs.
+
+
+Let V be a square in the (x,z)-plane centered at the origin:
+
+    V = { (x,z) |  |x|,|z|≤ r } .
+
+A set h is a horizontal strip of V if there exist two curves z=u_1(x) and z=u_2(x) for which
+
+    -r ≤ u_1(x) < u_2(x) ≤ r
+
+such that 
+
+    h = { (x,z) | -r ≤ x ≤ r, u_1(x) ≤ z ≤ u_2(x) } .
+
+
+
+This definition is quite general as it does not impose any Lipschitz conditions on the boundary curves u_1(x) and u_2(x). This is in contrast to the definitions of “horizontal strips" in <cit.> and <cit.> (Sec. 2.3 therein), where Lipschitz conditions were imposed to guarantee that the regularity of horizontal and vertical strips so that the non-wandering set is fully conjugate to a subshift on finite symbols. Since the purpose of this article is to establish the existence of topological horseshoes, which may include the cases where the non-wandering set is only semi-conjugate to a subshift on finite symbols, to make the proceeding derivations simpler, we do not impose such Lipschitz conditions in the current study. Two essential properties of horizontal strips are that they intersect V fully in the horizontal direction, i.e., no marginal intersections are allowed, and they are subsets of V that partition V into disjoint regions. See Fig. <ref> for some examples. 
+
+Following <cit.>, the definition of horizontal strips in two dimensions can be generalized to horizontal slabs in three dimensions. 
+
+
+Let V be a cube in the (x,y,z)-space centered at the origin:
+
+    V = { (x,y,z) |  |x|,|y|,|z|≤ r } .
+
+A set h is a horizontal slab of V if there exists two surfaces z=u_1(x,y) and z=u_2(x,y) for which
+
+    -r ≤ u_1(x,y) < u_2(x,y) ≤ r
+
+such that 
+
+    h = { (x,y,z) | -r ≤ x ≤ r,  -r ≤ y ≤ r,  u_1(x,y) ≤ z ≤ u_2(x,y) } .
+
+
+An example of a horizontal slab is given by Fig. <ref>. 
+
+
+
+ 
+In the next sections we will introduce horseshoes that are folded for multiple times and therefore exhibit more complicated topologies. These horseshoes are constructed by exploring various possibilities of folding and stacking in three and four dimensions.  
+
+
+
+
+§ TOPOLOGY II: DOUBLY-FOLDED HORSESHOE IN THREE DIMENSIONS
+
+The first generalization that we introduce here, namely Topology II, is based on Figure 3.2.47 of <cit.>. Qualitatively, it can be considered as a Topology-I horseshoe further folded with a crease along x, as illustrated by Fig. <ref>. 
+
+A realization is also provided by the Hénon-type map
+
+    ( [ x_n+1; y_n+1; z_n+1 ]) = 
+    f_ II( [ x_n; y_n; z_n ]) =
+    ( [ a_0 - x^2_n - z_n; a_1 - y^2_n - x_n;               y_n ])
+
+with parameters a_0,a_1 > 5+2√(5). The mapping f_ II can be written as the compound mapping of two successive Type-I horseshoes, namely f^'_ I and f^''_ I:
+
+    f_ II = f^''_ I∘ f^'_ I
+
+where f^'_ I takes the form Eq. (<ref>) with b=1:
+
+    ( [ x^'; y^'; z^' ]) = 
+    f^'_ I( [ x; y; z ]) =
+    ( [ a_0 - x^2 - z;             y;             x ])
+
+and f^''_ I resembles f^'_ I but interchanges the roles of the x and y axis, i.e., it expands V in y, contracts V in z, folds it with a crease along x, then stacks along z. Therefore, the mapping equations of f^''_ I is obtained from that of f^'_ I by interchanging x and y:
+
+    ( [ x^''; y^''; z^'' ]) = 
+    f^''_ I( [ x^'; y^'; z^' ]) =
+    ( [                 x^'; a_1 - (y^')^2 - z^';                 y^' ]) .
+
+The inverse map f^-1_ II is slightly complicated as it involves quartic terms:
+
+    ( [ x_n-1; y_n-1; z_n-1 ])     = f^-1_ II( [ x_n; y_n; z_n ]) 
+        =
+    ( [                                                        -y_n - z^2_n + a_1;                                                                       z_n; -x_n - y^2_n -2 y_n z^2_n - z^4_n + a_0 + 2 a_1 y_n + 2 a_1 z^2_n - a^2_1 ]).
+
+We propose the following theorem on the topological structure of f_ II:
+
+Let a_0 = a_1 = a > 5+2√(5) and r= (1+√(1+a)). Let V be a hypercube centered at the origin with side length 2r, i.e.,
+
+    V = { (x,y,z) | |x|,|y|,|z| ≤ r } .
+  
+Then the intersection V ∩ f_ II(V) consists of four disjoint horizontal slabs of V, as shown by Fig. <ref>. 
+
+
+Using the identity relation f_ II^-1(f_ II(V))=V, we obtain an analytic expression for f_ II(V)
+
+    f_ II(V) = 
+    { (x,y,z) | [                                                 |z| ≤ r;                                      |-y - z^2 + a| ≤ r; |-x - y^2 -2 y z^2 - z^4 + a + 2 a (y + z^2) - a^2| ≤ r ]}
+
+The expression for V ∩ f_ II(V) is then obtained trivially by imposing the additional bounds on x and y
+
+    V ∩ f_ II(V) = 
+    { (x,y,z) | [                                         |x|,|y|,|z| ≤ r;                                      |-y - z^2 + a| ≤ r; |-x - y^2 -2 y z^2 - z^4 + a + 2 a (y + z^2) - a^2| ≤ r ]}
+
+Let Σ^2(y) be the (x,z)-plane parameterized by y (the superscript indicates the dimensionality of the plane), i.e.,
+
+    Σ^2(y) = { (x',y',z') | x',z'∈ℝ, y'=y }
+
+and similarly Σ^2(x) the (y,z)-plane parameterized by x, i.e.,
+
+    Σ^2(x) = { (x',y',z') | y',z'∈ℝ, x'=x } .
+
+Moreover, define the line segments
+
+    S^±_y = { (y,z) | y=± r, |z| ≤ r }
+
+i.e., S^+_y and S^-_y are the right and left boundaries of V, respectively, in each Σ^2(x) slice, as labeled in Fig. <ref>.
+
+To prove this theorem, we need to show that V ∩ f_ II(V) consists of
+
+
+  (a) Four disjoint horizontal strips in every Σ^2(x) for |x| ≤ r;
+
+  (b) Four disjoint horizontal strips in every Σ^2(y) for |y| ≤ r. 
+ 
+We now establish conditions (a) and (b) individually.
+
+
+
+Condition (a): the second row of Eq. (<ref>) can be rewritten in the parameterized form
+
+    y = -z^2 + a + s,      where  |s| ≤ r  .
+
+Let Γ_y(z,s) be the family of parabolas in Σ^2(x)
+
+    Γ_y(z,s) = -z^2 + a + s
+
+where s is viewed as a parameter within range |s| ≤ r. It is obvious that Γ_y(z,s) is bounded by
+
+    Γ^min_y(z) ≤Γ_y(z,s) ≤Γ^max_y(z)
+
+with lower and upper bounds
+
+    Γ^min_y(z) = Γ_y(z,s)|_s=-r = -z^2 + a -r  
+       Γ^max_y(z) =  Γ_y(z,s)|_s=r = -z^2 + a + r   .
+
+When viewed in each Σ^2(x) slice, f_ II(V) is the gap region between the two parabolas Γ^min_y(z) and Γ^max_y(z) (see Fig. <ref>). The possible location of the two parabolas can be further narrowed down by establishing the following facts:
+
+
+  (a.1) The vertex of Γ^min_y(z) is located on the right-hand side of S^+_y, as labeled by A in Fig. <ref>;
+
+  (a.2) Γ^max_y(z) intersects S^-_y at two points, as labeled by C and D in Fig. <ref>. 
+ 
+
+To establish (a.1), let A=(y_A,z_A). It can be solved easily that
+
+    z_A=0,      y_A = Γ^min_y(z_A=0)=a-r.
+
+Using the assumption that a>5+2√(5), it is straightforward to verify that a-2r>0, thus y_A >r, i.e., A is on the right-hand side of S^+_y. 
+
+To establish (a.2), notice that
+
+    Γ^max_y(z=± r) = -r^2 +a +r = -r ,
+
+thus C and D are located at
+
+    C = (-r,r),      D=(-r,-r) ,
+
+i.e., C and D are the upper-left and lower-left corners of V, respectively, as labeled in Fig. <ref>. Therefore, Γ^max_y(z) intersects S^-_y at its two endpoints. 
+
+Combining (a.1) and (a.2), we know that the region bounded by Γ^max_y(z), Γ^min_y(z), and S^±_y consists of two disjoint horizontal strips, labeled by H_1 and H_2 in Fig. <ref>. Strictly speaking, both H_1 and H_2 depend on x, i.e., the position of (y,z)-slice along the x-axis, therefore should be written as H_1(x) and H_2(x). However, since the x-dependence will not be used for the rest of the proof, we simply omit it and write the horizontal strips without explicit x-dependence. When viewed in each Σ^2(x)-slice, V ∩ f_ II(V) can only exist inside H_1 and H_2:
+
+    V ∩ f_ II(V) |_Σ^2(x)⊂ H_1 ∪ H_2  .
+
+
+At this point, let us notice that Eq. (<ref>) only makes use of the second row of Eq. (<ref>), thus only provides a crude bound for V ∩ f_ II(V) |_Σ^2(x). Based upon Eq. (<ref>), we now further refine the bound for V ∩ f_ II(V) |_Σ^2(x) by imposing the third row of Eq. (<ref>). 
+
+The third row of Eq. (<ref>) can be rewritten into the parameterized form
+
+    -x - y^2 -2 y z^2 - z^4 + a + 2 a (y + z^2) - a^2 = -s,      where  |s| ≤ r
+
+from which we solve for y and obtain two branches of solutions:
+
+    y_±(z,x,s) = -z^2 + a ±√(s-x+a) .
+
+Accordingly, let us define two families of parabolas in Σ^2(x), denoted by Λ^±_y(z,x,s), where
+
+    Λ^±_y(z,x,s) = -z^2 + a ±√(s-x+a)
+
+where x and s are viewed as parameters with bounds |x|,|s| ≤ r. When viewed in each Σ^2(x) slice, Λ^+_y(z,x,s) is a family of parabolas parameterized by s, bounded by
+
+    Λ^+,1_y(z,x) ≤Λ^+_y(z,x,s) ≤Λ^+,2_y(z,x)
+ 
+where the lower and upper bounds are attained at
+
+    Λ^+,1_y(z,x) = Λ^+_y(z,x,s)|_s=-r = -z^2 + a + √(a-x-r)
+       Λ^+,2_y(z,x) = Λ^+_y(z,x,s)|_s=r = -z^2 + a + √(a-x+r) .
+
+Similarly, when viewed in each Σ^2(x) slice, Λ^-_y(z,x,s) is a family of parabolas parameterized by s, bounded by
+
+    Λ^-,1_y(z,x) ≤Λ^-_y(z,x,s) ≤Λ^-,2_y(z,x)
+ 
+where the lower and upper bounds are attained at
+
+    Λ^-,1_y(z,x) = Λ^-_y(z,x,s)|_s=r = -z^2 + a - √(a-x+r)
+       Λ^-,2_y(z,x) = Λ^-_y(z,x,s)|_s=-r = -z^2 + a - √(a-x-r) .
+
+
+
+
+It is desirable to get rid of the x-dependence in Eqs. (<ref>) and (<ref>). This can be done by obtaining uniform lower and upper bounds for Λ^±_y(z,x,s) with respect to change in (x,s). A simple calculation shows:
+
+    Λ^±,min_y (z) ≤Λ^±_y(z,x,s) ≤Λ^±,max_y (z)
+
+where the bounds are attained at
+
+    Λ^+,min_y(z) = Λ^+_y(z,x,s)|_(x,s)=(r,-r) = -z^2 + a + √(a-2r)
+       Λ^+,max_y(z) = Λ^+_y(z,x,s)|_(x,s)=(-r,r) = -z^2 + a + √(a+2r)
+       Λ^-,min_y(z) = Λ^-_y(z,x,s)|_(x,s)=(-r,r) = -z^2 + a - √(a+2r)
+       Λ^-,max_y(z) = Λ^-_y(z,x,s)|_(x,s)=(r,-r) = -z^2 + a - √(a-2r) .
+
+A schematic illustration of the four parabolas is given in Fig. <ref>. At this point, it is worthwhile checking that since a > 5 + 2√(5), we have 
+
+    a-2r >0 ,
+
+i.e., the square roots in Eqs. (<ref>) and (<ref>) are real-valued. Also, it is easy to check that r = √(a+2r), therefore we obtain the important relations
+
+    Λ^+,max_y(z) = Γ^max_y(z) 
+       Λ^-,min_y(z) = Γ^min_y(z)  ,
+
+as indicated by Fig. <ref>. Therefore, conditions (a.1) and (a.2) immediately apply to Λ^-,min_y(z) and Λ^+,max_y(z), respectively. This guarantees that the four parabolas (Λ^±,max_y(z) and Λ^±,min_y(z)) cut V into four disjoint horizontal strips, as labeled by h^±_1 and h^±_2 in Fig. <ref>. Furthermore, Eqs. (<ref>) and (<ref>) also guarantee that h^±_1 ⊂ H_1 and h^±_2 ⊂ H_2. Hence when viewed in each Σ^2(x) slice (see Fig. <ref>), V ∩ f_ II(V)|_Σ^2(x) lies within the four strips 
+
+    V ∩ f_ II(V) |_Σ^2(x)⊂ h^+_1∪ h^-_1 ∪ h^+_2 ∪ h^-_2 ⊂ H_1 ∪ H_2  ,
+
+which establishes condition (a): V ∩ f_ II(V) consists of four disjoint horizontal strips in every Σ^2(x) for |x| ≤ r. 
+
+Condition (b): from Eq. (<ref>) we solve for x and obtain
+
+    x = -z^4 + 2(a-y)z^2 - (y-a)^2 + a + s,      where  |s| ≤ r.
+
+Correspondingly, define the family of quartic polynomials
+
+    Γ_x(z,y,s) = -z^4 + 2(a-y)z^2 - (y-a)^2 + a + s .
+
+
+When viewed in Σ^2(y), Γ_x(z,y,s) is a parameterized quartic function of z with parameters y and s. By solving for dΓ_x/ dz=0 and d^2 Γ_x/ dz^2=0 we can easily obtain the three extremals of the quartic function, namely A, B, and C, where
+
+    A = (x_A,z_A) = ( -(y-a)^2+a+s,0 )    is a local minimum
+        B = (x_B,z_B) = ( a+s,√(a-y))    is a global maximum
+        C = (x_C,z_C) = ( a+s,-√(a-y))    is a global maximum
+
+as demonstrated schematically by Fig. <ref>. Upon changing the value of s within the range |s| ≤ r, Γ_x(z,y,s) is bounded by
+
+    Γ^min_x(z,y) ≤Γ_x(z,y,s) ≤Γ^max_x(z,y)
+
+where
+
+    Γ^min_x(z,y) = Γ_x(z,y,s)|_s=-r = -z^4 + 2(a-y)z^2 - (y-a)^2 + a - r 
+       Γ^max_x(z,y) = Γ_x(z,y,s)|_s=r = -z^4 + 2(a-y)z^2 - (y-a)^2 + a + r .
+
+
+Therefore within each Σ^2(y), f_ II(V) is the gap region bounded from left and right by Γ^min_x(z,y) and Γ^max_x(z,y), respectively, as shown by Fig. <ref>. Let A_1, B_1, C_1 be the three extremals of Γ^min_x(z,y), and A_2, B_2, C_2 be the three extremals of Γ^max_x(z,y), as labeled in the figure. Moreover, define the line segments
+
+    S^±_x = { (x,z) | x=± r, |z| ≤ r }
+
+i.e., S^+_x and S^-_x are the right and left boundaries of V, respectively, in Σ^2(y). The following two conditions are sufficient for condition (b):
+
+
+  (b.1) The global maximums of Γ^min_x(z,y), labeled by B_1 and C_1 in Fig. <ref>, are on the right-hand side of S^+_x;
+
+  (b.2) Γ^max_x(z,y) intersects S^-_x at four points, as labeled by E, F, G, and H in Fig. <ref>. 
+
+We now show that conditions (b.1) and (b.2) hold for all |y| ≤ r. 
+
+Condition (b.1): The global maximums of Γ^min_x(z,y) are located at
+
+    B_1 = (x_B_1, z_B_1),      C_1 = (x_C_1,z_C_1)
+
+where x_B_1 = x_C_1 = a-r >r. Thus (b.1) is established. 
+
+Condition (b.2): First, notice that the local minimum of Γ^max_x(z,y) is A_2 = (x_A_2,0) where
+
+    x_A_2 = -(y-a)^2 +a +r ≤ -(r-a)^2+a+r < -r^2 +a +r = -r
+
+where the second inequality comes from the fact that a-2r>0. Therefore, A_2 is located on the left-hand side of S^-_x, as shown in Fig. <ref>. Second, it can be verified easily that
+
+    Γ^max_x(z,y)|_z=± r≤ -r.
+
+Combining Eqs. (<ref>) and (<ref>), (b.2) is established as well. Therefore we have proved condition (b), i.e., V ∩ f_ II(V)|_Σ^2(y) consists of four disjoint horizontal strips, as labeled by h_1, h_2, h_3, and h_4 in Fig. <ref>. 
+
+
+
+
+
+§ TOPOLOGY III: HORSESHOES IN FOUR DIMENSIONS
+
+In the preceding sections we have demonstrated two Hénon-type maps in three dimensions, namely f_ I and f_ II, where f_ I folds V once with a creasing along an expanding direction (y), and f_ II folds V twice with creases along independent expanding directions (y and x). As explained in Fig. <ref>, because there are only three dimensions, the two folding operations in f_ II share the same stacking direction (z), which results in four disjoint horizontal slabs in Fig. <ref>. A natural question is then what would happen if the dimensionality increases to four. In this section, to address this question, we consider a Hénon-type map in four dimensions and introduce a new type of doubly-folded horseshoe which can exist only in dimensions ≥ 4. Then we show that upon changing the parameters of the map, the doubly-folded horseshoe unfolds into a singly-folded horseshoe in four dimensions, which represents a reduction of topological entropy of the system. 
+
+Consider the Hénon-type map in four dimensions, namely f_ III
+
+    ( [ x_n+1; y_n+1; z_n+1; w_n+1 ]) = 
+    f_ III( [ x_n; y_n; z_n; w_n ]) =
+    ( [ a_0 - x^2_n - z_n + c(x_n - y_n); a_1 - y^2_n - w_n - c(x_n - y_n);                              x_n;                              y_n ])
+
+which is the coupled Hénon map studied in Part I of this article <cit.>. The parameters here are a_0, a_1, and c. a_0 and a_1 control the rate of expansion in x and y, respectively, and c controls the coupling strength between the dynamics in the (x,z)-plane and the (y,w)-plane. 
+
+The inverse of f_ III is 
+
+    ( [ x_n-1; y_n-1; z_n-1; w_n-1 ]) = 
+    f^-1_ III( [ x_n; y_n; z_n; w_n ]) =
+    ( [                              z_n;                              w_n; a_0 - z^2_n - x_n + c(z_n - w_n); a_1 - w^2_n - y_n - c(z_n - w_n) ]) .
+
+Notice that by replacement of variables (x,y,z,w) ↦ (z,w,x,y), f_ III is transformed into f^-1_ III. 
+
+In Section. 2.2 of Part I, we have proposed two types of Anti-Integrable (AI) limits <cit.> of Eq. (<ref>), namely Type A and Type B, where Type A is an AI limit with four symbols (Eq. (2.7) therein) and Type B is an AI limit with two symbols (Eq. (2.9) therein). Type A is obtained by taking a_0=a_1→∞ while keeping c fixed and finite. Intuitively speaking, it gives rise to infinite expansion rates within the (x,z) and (y,w) planes but only allows finite coupling between the two planes. Type B is obtained by taking a_0=a_1→∞ while keeping c/√(a)=γ constant. Intuitively, it also gives rise to infinite expansion rates within the (x,z) and (y,w) planes but imposes a coupling strength c proportional to √(a). As we show next, the topologies of the horseshoes near these two AI limits are fundamentally different: Type A is a doubly-folded horseshoe topologically equivalent to a direct product between a pair of two-dimensional singly-folded horseshoes in the (x,z) and (y,w) planes, while Type B is a singly-folded horseshoe in four dimensions. Therefore, when changing the values of parameters (a_0,a_1,c) from the neighborhood of Type A to the neighborhood of Type B, global bifurcations must happen that unfold the doubly-folded horseshoe into the singly-folded horseshoe. 
+ 
+
+
+ §.§ Topology III-A: doubly folded horseshoe in four dimensions, with independent stacking directions
+
+
+Topology III-A can only exist in dimensions ≥ 4. Using our example here, it can be realized near the Type-A AI limit of Eq. (<ref>). To better understand the Type-A AI limit, a simple case to start with is when c=0, i.e., zero coupling, for which f_ III reduces to a direct-product between the two-dimensional Hénon maps in the (x,z)-plane and the (y,w)-plane. Therefore when c=0 and a_0, a_1 values greater than the bound given by Devaney and Nitecki (a_0, a_1 > 5+2√(5)), f_ III is identical to a direct-product between the Smale horseshoe maps in the (x,z)-plane and the (y,w)-plane, as illustrated by  Fig. <ref>.
+
+
+Geometrically, the action of f_ III on V involves two steps: the first step expands V in x, contracts it in z, folds it with a crease along y, and stacks it along z; the second step expands it in y, contracts it in w, folds it with a crease along x, and stacks it along w. Although f_ III and f_ II both involve two folding operations, the difference between them is critical: the two folding operations in f_ II share the same stacking direction (z), while the two folding operations in f_ III have independent stacking directions (z and w). Therefore, unlike V∩ f_ II(V) which is composed by four disjoint horizontal slabs, V ∩ f_ III(V) consists of four hypercylinders, each being a direct product of a horizontal strip in the (x,z)-plane and a horizontal strip in the (y,w)-plane. Equivalently speaking, when c=0, V ∩ f_ III(V) is a direct product between two horizontal strips in the (x,z)-plane and two horizontal strips in the (y,w)-plane, as demonstrated by Fig. <ref>.
+
+When c>0, it is reasonable to expect that if c is finite and a_0,a_1≫ c>0, i.e., when the expansion rates in the (x,z) and (y,w) planes (governed by a_0 and a_1, respectively) are much greater compared to the coupling strength c between the two planes, the coupling could be neglected and the resulting topology of V ∩ f_ III(V) should be identical to the c=0 case. Therefore when a_0,a_1≫ c>0, we expect V ∩ f_ III(V) to be topologically equivalent to a direct product of a pair of two-dimensional Smale horseshoes, as illustrated by Fig. <ref>. We now give a concrete proof of this under some analytical bounds on the parameters a_0, a_1, and c. 
+
+
+Let A_0 = (a_0 + a_1)/2 ≥ -1 and r= 2 √(2)(1+√(1+A_0)). Let V be a hypercube centered at the origin with side length 2r, i.e.,
+
+    V = { (x,y,z,w) | |x|,|y|,|z|,|w| ≤ r } .
+  
+Given the bounds on parameters
+
+    0 < 1/4c^2 + a_i - (c+2) r , (i=0,1) 
+        0 ≤ r^2 - 2(c+1) r - a_i , (i=0,1)
+
+the intersection V ∩ f_ III(V) is homeomorphic to a direct product between two disjoint horizontal strips in the (x,z)-plane and two disjoint horizontal strips in the (y,w)-plane, i.e., it retains the direct-product structure shown by Fig. <ref>. 
+
+
+Note that the definitions of A_0 and r are the same as in Part I of this article <cit.>, and the bounds provided by Eqs. (<ref>) and (<ref>) are identical to Eqs. (3.12) and (3.13) of Part I as well. 
+
+
+Let Σ^2(y,w) be the (x,z)-plane parameterized by (y,w), i.e.,
+
+    Σ^2(y,w) = { (x',y',z',w') | x',z'∈ℝ, y'=y, w'=w }
+
+and similarly Σ^2(x,z) the (y,w)-plane parameterized by (x,z), i.e.,
+
+    Σ^2(x,z) = { (x',y',z',w') | y',w'∈ℝ, x'=x, z'=z } .
+
+Moreover, let V ∩ f_ III(V)|_Σ^2(y,w) denote the restriction of V ∩ f_ III(V)∩Σ^2(y,w) on Σ^2(y,w), i.e., the (x,z)-slice of V ∩ f_ III(V). Similarly, let V ∩ f_ III(V)|_Σ^2(x,z) denote the restriction of V∩ f_ III(V)∩Σ^2(x,z) on Σ^2(x,z), i.e., the (y,w)-slice of V∩ f_ III(V).
+
+Using the identity relation f_ III^-1(f_ III(V))=V we obtain an analytic expression for f_ III(V)
+
+    f_ III(V) = 
+    { (x,y,z,w) | [                      |z| ≤ r;                      |w| ≤ r; |a_0 - z^2 - x + c(z-w)| ≤ r; |a_1 - w^2 - y - c(z-w)| ≤ r ]} .
+
+
+The expression for V ∩ f_ III(V) is then easily obtained by imposing the additional constraints of |x|,|y| ≤ r:
+
+    V ∩ f_ III(V) = 
+    { (x,y,z,w) | [          |x|,|y|,|z|,|w| ≤ r; |a_0 - z^2 - x + c(z-w)| ≤ r; |a_1 - w^2 - y - c(z-w)| ≤ r ]} .
+
+
+To prove this theorem, it is sufficient to establish the following two conditions:
+
+
+  (a) V ∩ f_ III(V)|_Σ^2(y,w) consists of two disjoint horizontal strips for all |y|,|w| ≤ r.
+
+  (b) V ∩ f_ III(V)|_Σ^2(x,z) consists of two disjoint horizontal strips for all |x|,|z| ≤ r.
+
+We now establish these two conditions individually. 
+
+Condition (a): the second row of Eq. (<ref>) is equivalent to 
+
+    -s = a_0 - z^2 - x + c(z-w),  where |s|≤ r
+
+and thus 
+
+    x=-z^2 + cz + a_0 + s-cw,  where |s|≤ r .
+
+Correspondingly, define a family of parabolas 
+
+    Γ_x(z,w,s)=-z^2 + cz + a_0 + s-cw ,
+
+which is viewed as a quadratic function of z with parameters w and s bounded by |w|,|s|≤ r.
+ 
+With the help of Eqs. (<ref>) and (<ref>), V ∩ f_ III(V)|_Σ^2(y,w) (for which |y|,|w| ≤ r) can be expressed as
+
+    V ∩ f_ III(V)|_Σ^2(y,w) = { (x,z) | [ |x|,|z|,|s| ≤ r;    x=Γ_x(z,w,s) ]} ,
+
+as illustrated schematically by Fig. <ref>.
+
+
+
+Let Γ^1_x(z,w) and Γ^2_x(z,w) be parabolas in Σ^2(y,w) obtained by setting the s parameter in Eq. (<ref>) to -r and r, respectively: 
+
+    Γ^1_x(z,w) =Γ_x(z,w,s)|_s=-r = -z^2 +cz + a_0 -r -cw  
+       Γ^2_x(z,w) =Γ_x(z,w,s)|_s=r = -z^2 +cz + a_0 +r -cw   .
+
+Furthermore, let Let Γ^min_x(z) and Γ^max_x(z) be parabolas in Σ^2(y,w) obtained by setting (s,w)=(-r,r) and (s,w)=(r,-r), respectively:
+
+    Γ^min_x(z) = Γ_x(z,w,s)|_(s,w)=(-r,r) = -z^2 +cz + a_0 - (c+1)r  
+       Γ^max_x(z) = Γ_x(z,w,s)|_(s,w)=(r,-r) = -z^2 +cz + a_0 + (c+1)r   .
+
+Notice that the w-dependence is removed in the expressions of Γ^min_x and Γ^max_x. Since |w|≤ r, Γ^min_x(z) and Γ^max_x(z) provide uniform lower and upper bounds for Γ^1_x(z,w) and Γ^2_x(z,w):
+
+    Γ^min_x(z) ≤Γ^1_x(z,w) ≤Γ_x(z,w,s) ≤Γ^2_x(z,w) ≤Γ^max_x(z) .
+
+Geometrically, Γ^1_x(z,w) and Γ^2_x(z,w) are the left and right boundaries of f_ III(V), and they must exist in the gap between Γ^min_x(z) and Γ^max_x(z), as shown by Fig. <ref>. 
+
+Let S^+_x and S^-_x be the right and left boundaries of V, respectively
+
+    S^+_x = { (x,z) | x=r, |z| ≤ r  }
+        S^-_x = { (x,z) | x=-r, |z| ≤ r  } .
+
+
+It is straightforward that condition (a) is equivalent to the following two conditions:
+
+
+  (a.1) The vertex of Γ^min_x(z), as labeled by A in Fig. <ref>, is located on the right-hand side of S^+_x.
+
+  (a.2) Γ^max_x(z) intersects S^-_x at two points (e.g., points C and D in Fig. <ref>) .
+
+When both are satisfied, f_ III(V) must intersect V at two disjoint horizontal strips, therefore give rise two a topological binary horseshoe in every Σ^2(y,w) slice. We now show that conditions (a.1) and (a.2) are satisfied given the bounds of Eqs. (<ref>) and (<ref>). 
+
+Condition (a.1): the vertex A of Γ^min_x(z) is computed as
+
+    (x_A,z_A) = ( c^2/4 + a_0 - (c+1)r, c/2) .
+
+From Eq. (<ref>) we immediately know that x_A >r, i.e., A is located on the right-hand side of S^+_x. 
+
+Condition (a.2): this is equivalent to the condition that Γ^max_x(z=± r) ≤ r, which can be easily deduced from Eq. (<ref>).
+
+Therefore, Eqs. (<ref>) and (<ref>) are sufficient for the existence of two disjoint horizontal strips, which gives rise to a topological binary horseshoe in every Σ^2(y,w) slice. Condition (a) is established. 
+
+Condition (b): due to the symmetry of Eq. (<ref>), by interchanging (x,z) with (y,w), our proof for condition (a) immediately applies to condition (b). Consequently, V ∩ f_ III(V) is topologically equivalent to a direct product between a pair of two-dimensional Smale horseshoes, which is a doubly-folded horseshoe in four dimensions as shown by Fig. <ref>. 
+
+
+
+
+
+
+ §.§ Topology III-B: singly folded horseshoe in four dimensions
+
+
+By taking the limit a_0=a_1=a →∞ while keeping c/√(a)=γ=constant, we obtain the Type-B AI limit. Equivalently speaking, Type-B can be attained by allowing the coupling strength c in Type-A to approach infinity while keeping it in constant proportion to √(a). As we will show next, the topology of Type-B AI limit is simpler compared to Type-A as it involves only one folding.
+
+As shown by Part I of this paper, Type-B AI limit is more conveniently studied by performing the change of coordinates 
+
+    ([ X; Y; Z; W ])
+    	=1/2([ x+y; x-y; z+w; z-w;     ]),
+
+under which Eq. (<ref>) can be rewritten as
+
+    ([ X_n+1; Y_n+1; Z_n+1; W_n+1 ])
+      =F([ X_n; Y_n; Z_n; W_n ])
+      =([ A_0-(X_n^2+Y_n^2)-Z_n; A_1-2X_nY_n-W_n+2cY_n;                   X_n;                   Y_n ])
+
+where 
+    A_0=a_0+a_1/2,      A_1=a_0-a_1/2.
+
+The inverse map F^-1 is given by
+
+    ([ X_n-1; Y_n-1; Z_n-1; W_n-1 ])
+      =F^-1([ X_n; Y_n; Z_n; W_n ])
+      =([                   Z_n;                   W_n; A_0-(Z_n^2+W_n^2)-X_n; A_1-2Z_nW_n-Y_n+2cW_n;                       ]) .
+
+
+
+Let R= 1 + √(1+ A_0), and V_F be a hypercube centered at the origin with side length 2R, i.e., 
+    V_F = { (X,Y,Z,W) | |X|,|Y|,|Z|,|W| ≤ R } .
+  
+If the parameters satisfy the following conditions:
+		
+    A_1 ≤ R<c,
+       R<A_0-(W^*)^2-R,
+       W^*≤ R
+
+where W^*=max(|2R-A_1/2(c-R)|, |-2R-A_1/2(c-R)|), then V_F ∩ F(V_F) is homeomorphic to a direct product between two disjoint horizontal strips in the (X,Z) plane and a single horizontal strip in the (Y,W) plane.
+
+
+Let Σ^2(Y,W) be the (X,Z)-plane parameterized by (Y,W):
+
+    Σ^2(Y,W) = { (X',Y',Z',W') | X',Z'∈ℝ, Y'=Y, W'=W }
+
+and similarly Σ^2(X,Z) the (Y,W)-plane parameterized by (X,Z):
+
+    Σ^2(X,Z) = { (X',Y',Z',W') | Y',W'∈ℝ, X'=X, Z'=Z } .
+
+Moreover, let V_F ∩ F(V_F)|_Σ^2(Y,W) denote the restriction of V_F ∩ F(V_F)∩Σ^2(Y,W) on Σ^2(Y,W), i.e., the (X,Z)-slice of V_F ∩ F(V_F). Similarly, let V_F ∩ F(V_F)|_Σ^2(X,Z) denote the restriction of V_F∩ F(V_F)∩Σ^2(X,Z) on Σ^2(X,Z), i.e., the (Y,W)-slice of V_F∩ F(V_F).
+
+Using the identity relation F^-1(F(V_F)) = V_F, we obtain an analytic expression for F(V_F)
+
+    F(V_F) = 
+    { (X,Y,Z,W) | [                |Z|,|W| ≤ R; |A_0 - (Z^2+W^2) - X | ≤ R;  |A_1 - 2ZW - Y + 2cW| ≤ R ]} ,
+
+therefore the expression for V_F ∩ F(V_F) is obtained by imposing the trivial constraints on X and Y:
+
+    V_F ∩ F(V_F) = 
+    { (X,Y,Z,W) | [        |X|,|Y|,|Z|,|W| ≤ R; |A_0 - (Z^2+W^2) - X | ≤ R;  |A_1 - 2ZW - Y + 2cW| ≤ R ]} .
+
+
+To prove this theorem, it is sufficient to establish the following two conditions:
+
+
+  (a)  V_F ∩ F(V_F)|_Σ^2(X,Z) consists of a single horizontal strip for all |X|,|Z|≤ R.
+
+  (b) V_F ∩ F(V_F)|_Σ^2(Y,W) consists of two disjoint horizontal strips for all |Y|,|W|≤ R.
+
+We now proceed to establish conditions (a)  and (b) individually. 
+
+Condition (a): by restricting Eq. (<ref>) to a particular Σ^2(X,Z) plane for which |X|,|Z| ≤ R, we obtain the expression for V_F ∩ F(V_F)|_Σ^2(X,Z):
+
+    V_F ∩ F(V_F) |_Σ^2(X,Z) = 
+    { (Y,W) | [               |Y|,|W| ≤ R; |A_1 - 2ZW - Y + 2cW| ≤ R ]} .
+
+The second row of Eq. (<ref>) is equivalent to 
+
+    Y = 2(c-Z)W + A_1 + s
+
+where s is a parameter within bound |s| ≤ R. Thus Eq. (<ref>) can be rewritten as
+
+    V_F ∩ F(V_F) |_Σ^2(X,Z) = 
+    { (Y,W) | [       |Y|,|W|,|s| ≤ R; Y = 2(c-Z)W + A_1 + s ]} .
+
+From Eq. (<ref>) we solve for W:
+
+    W = Γ_W(Y,Z,s) ≡Y - A_1 - s/2(c-Z) .
+
+Within each Σ^2(X,Z) plane, Γ_W(Y,Z,s) is a function of Y with fixed parameter Z and varying parameter s. From Eq. (<ref>) we know c>R, since |Z| ≤ R, it is obvious that the denominator in Eq. (<ref>) is always positive. Therefore Γ_W is a straight-line parameterized by s with positive slope, with uniform lower and upper bounds Γ_W^1 (Y,Z) and Γ_W^2 (Y,Z), respectively, where
+
+    Γ_W^1 (Y,Z) = Γ_W(Y,Z,s)|_s=R = Y - A_1 - R/2(c-Z)
+          Γ_W^2 (Y,Z) = Γ_W(Y,Z,s)|_s=-R = Y - A_1 + R/2(c-Z) .
+ 
+Furthermore, the maximum and minimum of W under all possible (Y,Z,s) values, denoted by W^max and W^min respectively, are
+
+    W^ max = Γ_W(Y,Z,s)|_(Y,Z,s)=(R,R,-R) = 2R-A_1/2(c-R)
+          W^ min = Γ_W(Y,Z,s)|_(Y,Z,s)=(-R,R,R) =-2R-A_1/2(c-R) .
+ 
+W^min and W^max provide uniform upper and lower bounds for Γ_W^1 (Y,Z) and Γ_W^2 (Y,Z), respectively, in every Σ^2(X,Z) plane:
+
+    W^min≤Γ_W^1 (Y,Z) < Γ_W^2 (Y,Z) ≤ W^max,
+
+as depicted in Fig. <ref>.  
+
+Since Eq. (<ref>) already guarantees that W^*=max( |W^min|,|W^max| ) ≤ R, Eq. (<ref>) can be further bounded by
+
+    -R ≤ -W^*≤ W^min≤Γ_W^1 (Y,Z) < Γ_W^2 (Y,Z) ≤ W^max≤ W^*≤ R  .
+
+Since V_F ∩ F(V_F)|_Σ^2(X,Z) is the gap between Γ_W^1(Y,Z) and Γ_W^2(Y,Z), Eq. (<ref>) indicates that this gap is a horizontal strip which intersects V_F fully in the Y-direction, and the width of V_F ∩ F(V_F) must be strictly smaller than 2R when measured in the W-direction, as shown by Fig. <ref>. Thus condition (a) is established.  
+
+Condition (b): by constraining Eq. (<ref>) to a particular Σ^2(Y,W) plane for which |Y|,|W| ≤ R, we obtain the expression for V_F ∩ F(V_F)|_Σ^2(Y,W):
+
+    V_F ∩ F(V_F) |_Σ^2(Y,W) = 
+    { (X,Z) | [              |X|,|Z| ≤ R; |A_0 -(Z^2+W^2) -X | ≤ R ]} .
+
+The second row of Eq. (<ref>) is equivalent to 
+
+    X = Γ_X(Z,W,s) ≡ -Z^2 - W^2 + A_0 + s .
+
+Within each particular Σ^2(Y,W) plane, Γ_X(Z,W,s) is a quadratic function of Z with fixed parameter W and varying parameter s (|s| ≤ R). Eq. (<ref>) can thus be rewritten as
+
+    V_F ∩ F(V_F) |_Σ^2(Y,W) = 
+    { (X,Z) | [ |X|,|Z|,|s| ≤ R;    X=Γ_X(Z,W,s) ]} .
+
+
+
+
+Let Γ^1_X(Z,W) and Γ^2_X(Z,W) be parabolas in Σ^2(Y,W) obtained by setting the s parameter in Eq. (<ref>) to -R and R, respectively: 
+
+    Γ^1_X(Z,W) = Γ_X(Z,W,s)|_s=-R = -Z^2 - W^2 + A_0 -R
+       Γ^2_X(Z,W) = Γ_X(Z,W,s)|_s=R = -Z^2 -W^2 + A_0 +R   .
+
+
+Furthermore, let Γ^min_X(Z) and Γ^max_X(Z) be parabolas obtained by setting (W,s)=(W^*,-R) and (W,s)=(0,R), respectively:
+
+    Γ^min_X(Z) = Γ_X(Z,W,s)|_(W,s)=(W^*,-R) = -Z^2 - (W^*)^2 + A_0 -R  
+       Γ^max_X(Z) = Γ_X(Z,W,s)|_(W,s)=(0,R) = -Z^2 + A_0 + R   .
+
+
+Notice that the W-dependence is removed in the expressions for Γ^min_X and Γ^max_X. From Eq. (<ref>) we know |W| ≤ W^*, thus Γ^min_X(Z) and Γ^max_X(Z) provide uniform lower and upper bounds for Γ^1_X(Z,W) and Γ^2_X(Z,W):
+
+    Γ^min_X(Z) ≤Γ^1_X(Z,W)  < Γ^2_X(Z,W) ≤Γ^max_X(Z) .
+
+Geometrically, when observed within each Σ^2(Y,W) plane, Γ^1_X(Z,W) and Γ^2_X(Z,W) are the left and right boundaries of F(V_F), and they must exist in the gap region bounded by Γ^min_X(Z) and Γ^max_X(Z), as shown by Fig. <ref>. 
+
+Let S^+_X and S^-_X be the right and left boundaries of V_F|_Σ^2(Y,W), respectively
+
+    S^+_X = { (X,Z) | X=R, |Z| ≤ R  }
+        S^-_X = { (X,Z) | X=-R, |Z| ≤ R  } .
+
+
+To prove condition (b), it is sufficient to prove the following two conditions:
+
+
+  (b.1) The vertex of Γ^min_X(Z), labeled by A in Fig. <ref>, is located on the right-hand side of S^+_X;
+
+  (b.2) Γ^max_X(Z) intersects S^-_X at two points (points C and D in Fig. <ref>) .
+
+We now show that conditions (b.1) and (b.2) are satisfied by the parameter bounds in Eqs. (<ref>)-(<ref>). 
+
+Condition (b.1): the vertex A of Γ^min_X(Z) is computed as
+
+    (X_A,Z_A) = ( A_0 - (W^*)^2 -R, 0 ) .
+
+From Eq. (<ref>) we immediately know that X_A > R, i.e., A is located on the right-hand side of S^+_X. 
+
+Condition (b.2): this is equivalent to the condition that Γ^max_X(Z=± R) ≤ R. Since
+
+    Γ^max_X(Z=± R) = -R^2 + A_0 +R = -R ≤ -R
+
+where the second equality is due to the fact that R=1+√(1+A_0), condition (b.2) follows. In fact, Eq. (<ref>) indicates that the parabola Γ^max_X(Z) intersects V_F at its two corner points, as labeled by C and D in Fig. <ref>.  
+
+Therefore, Eqs. (<ref>)-(<ref>) are sufficient for the existence of two disjoint horizontal strips, which gives rise to topological binary horseshoes in every Σ^2(Y,W) slice. Condition (b) is established. 
+
+
+
+
+
+§ TOPOLOGY IV: DOUBLY-FOLDED HORSESHOE IN FOUR DIMENSIONS, WITH A COMMON STACKING DIRECTION
+
+In Section. <ref>, we have introduced Topology II, a doubly-folded horseshoe with a common stacking direction in three dimensions, with an example realization given by f_ II.  In this section, we introduce Topology IV, a four-dimensional horseshoe which is topologically equivalent to a direct product between a three-dimensional Topology II horseshoe and an one-dimensional uniform contraction. 
+
+
+
+The example realization that we use here is f_ IV, a four-dimensional generalization of f_ II: 
+
+    ( [ x^'; y^'; z^'; w^' ]) = 
+    f_ IV( [ x; y; z; w ]) =
+    ( [ a_0 - x^2 - z + c(x-w);          a_1 - y^2 - x;                      y;            bw + c(w-x) ])
+
+where a_0, a_1, b, and c are parameters and 0≤ c<b<1. Since we only focus on the topological structure and are not interested in the metric properties, we assume a_0=a_1=a hereafter. The inverse mapping f^-1_ IV is given by 
+
+    ( [ x; y; z; w ]) = 
+    f^-1_ IV( [ x^'; y^'; z^'; w^' ]) =
+    ( [     -y^'-(z^')^2+a;                z^'; z(x^',y^',z^',w^');     w(y^',z^',w^') ])
+
+where 
+
+    z(x^',y^',z^',w^')=-(z^')^4 + [ 2(a-y^')-bc/b+c](z^')^2 
+           + [ -(y^')^2 + ( 2a-bc/b+c)y^' +a -a^2 + abc/b+c - x^' - c/b+cw^']
+
+and
+
+    w(y^',z^',w^')=w^'-cy^'-c(z^')^2+ca/b+c .
+
+
+When c=0, f_ IV reduces to a pseudo three-dimensional map for which the dynamics in the (x,y,z)-hyperplane is decoupled from the dynamics along the w-axis. The (x,y,z)-dynamics is identical to f_ II, and w-dynamics is a uniform contraction by constant factor b. Therefore when c=0, under suitable choices of a_0, a_1, and V, we expect V ∩ f_ IV(V) to reproduce the topology of V ∩ f_ II(V) in the (x,y,z)-hyperplane, while in the w-direction, f_ IV(V) is simply a sub-segment of the line segment V. This geometry is demonstrated by Fig. <ref>. 
+
+When c>0, the c(x-w) and c(w-x) terms in Eq. (<ref>) introduce linear coupling between the (x,y,z)-subspace and the w-subspace dynamics, thus gives rise to dynamics more complicated than the previous c=0 case. However, it is reasonable to expect that when c is small enough, the coupling terms should act as a perturbation to the uncoupled dynamics, thus the topological structure of V ∩ f_ IV(V) should be preserved. The next theorem shows that this is indeed the case for certain range of parameters. 
+
+
+Let a_0=a_1=a>32+8√(2), 0 ≤ c < b < 1, and r= 2 √(2)(1+√(1+a)). Let V be a hypercube centered at the origin with side length 2r, i.e.,
+
+    V = { (x,y,z,w) | |x|,|y|,|z|,|w| ≤ r } .
+  
+Given the following additional bounds on parameters b and c:
+
+    c ≤(1-b)r/r^2+2r-a
+       bc/b+c<2(a-r) 
+       c/b+c < 2r-2√(r^2-b^2(a-2r))/b^2
+       c/b+c < a(a-2r)/ab+(1-b)r
+       c/b+c < r^2-2r-a/(1+b)r ,
+
+the intersection V ∩ f_ IV(V) is homeomorphic to a direct product between four disjoint horizontal slabs in the (x,y,z)-subspace and an one-dimensional line segment in the (w)-subspace, as illustrated by Fig. <ref>. 
+
+
+Eqs. (<ref>)-(<ref>) provide upper bounds on c such that the topology of the c=0 case (Fig. <ref>) is preserved.    
+
+
+Let Σ^3(w) be the (x,y,z)-hyperplane parameterized by w, i.e.,
+
+    Σ^3(w) = { (x̃,ỹ,z̃,w̃) |  x̃,ỹ,z̃∈ℝ,  w̃=w }
+
+and Σ^1(x,y,z) the w-line parameterized by (x,y,z), i.e.,
+
+    Σ^1(x,y,z) = { (x̃,ỹ,z̃,w̃) | w̃∈ℝ,  x̃=x, ỹ=y, z̃=z } .
+
+From the identity relation f^-1_ IV( f_ IV(V) )=V, the analytic expression for V ∩ f_ IV(V) can be obtained:
+
+    V ∩ f_ IV(V) = 
+    { (x^',y^',z^',w^') | [ |x^'|,|y^'|,|z^'|,|w^'| ≤ r;        |-y^'-(z^')^2+a| ≤ r;    |z(x^',y^',z^',w^')| ≤ r;        |w(y^',z^',w^')| ≤ r ]}
+
+where the functions z(x^',y^',z^',w^') and w(y^',z^',w^') are defined by Eq. (<ref>) and Eq. (<ref>), respectively. To prove the theorem, it is sufficient to prove that V ∩ f_ IV(V) is topologically equivalent to:
+
+
+  (a) Topology-II horseshoe in every Σ^3(w) for which |w| ≤ r, as illustrated by Fig. <ref>.
+
+  (b) Line segment which is a subset of [-r,r] in every Σ^1(x,y,z) for which |x|,|y|,|z| ≤ r, as illustrated by Fig. <ref> .
+
+
+We have already established in Sec. <ref> that condition (a) is equivalent to the following two conditions:
+
+
+  (a.1) V ∩ f_ IV(V)|_Σ^2(y,w) consists of four disjoint horizontal strips for all |y|,|w| ≤ r, as shown by Fig. <ref>.
+
+  (a.2) V ∩ f_ IV(V)|_Σ^2(x,w) consists of four disjoint horizontal strips for all |x|,|w| ≤ r, as shown by Fig. <ref>.
+
+Next, we prove conditions (a.1), (a.2), and (b) individually.  
+
+(a.1): Combining Eq. (<ref>) and the third row of Eq. (<ref>) we obtain
+
+    -s = -(z^')^4 + [ 2(a-y^')-bc/b+c](z^')^2 
+           + [ -(y^')^2 + ( 2a-bc/b+c)y^' +a -a^2 + abc/b+c - x^' - c/b+cw^']
+
+where the parameter s varies within range -r ≤ s ≤ r. Omitting the primes on the variables and expressing x in terms of (z,y,w,s) we get
+
+    x = Γ_x(z,y,w,s) = -z^4 + [ 2(a-y)-bc/b+c]z^2 
+           -[ (y-a)^2+bc/b+c y ] + (1+bc/b+c)a +s - c/b+c w  .
+
+Γ_x(z,y,w,s) is viewed as a quartic function of z, parameterized by (y,w,s) with range |y|,|w|,|s| ≤ r. 
+
+In a particular Σ^2(y,w) slice, the values of (y,w) are fixed, the maximum and minimum of Γ_x(z,y,w,s) are attained at
+
+    Γ^max_x(z,y,w)=Γ_x(z,y,w,s)|_s=r = -z^4 + [ 2(a-y)-bc/b+c]z^2 
+           -[ (y-a)^2+bc/b+c y ] + (1+bc/b+c)a +r - c/b+c w  ,
+
+
+    Γ^min_x(z,y,w)=Γ_x(z,y,w,s)|_s=-r = -z^4 + [ 2(a-y)-bc/b+c]z^2 
+           -[ (y-a)^2+bc/b+c y ] + (1+bc/b+c)a -r - c/b+c w  .
+
+Furthermore, the extremals of Γ_x(z,y,w,s) within a particular Σ^2(y,w) slice can be identified by the condition
+
+    d/dzΓ_x(z,y,w,s) = 0
+
+which leads to
+
+    -4z^3 + 2[ 2(a-y)-bc/b+c]z = 0   .
+
+Eq. (<ref>) has three solutions, which lead to three extremals, namely point A, B, and C, where
+
+    A = (x_A,z_A) 
+        x_A = -[ (y-a)^2 + bc/b+cy ] + ( 1+bc/b+c)a +s - c/b+c w  
+        z_A = 0  ,
+
+
+    B = (x_B,z_B) 
+         x_B = a+s+b^2c^2-4c(b+c)w/4(b+c)^2
+        z_B = √((a-y)-bc/2(b+c)) ,
+
+and
+
+    C = (x_C,z_C) 
+         x_C = a+s+b^2c^2-4c(b+c)w/4(b+c)^2
+        z_C = -√((a-y)-bc/2(b+c)) .
+
+The second derivatives of Γ_x at the three extremals can be computed as
+
+    d^2 Γ_x/dz^2|_A = 4(a-y) -2bc/b+c≥ 4(a-r) -2bc/b+c , 
+       d^2 Γ_x/dz^2|_B =   d^2 Γ_x/dz^2|_C =  -8(a-y) + 4 bc/b+c≤ -8(a-r) + 4 bc/b+c .
+
+
+Using the bound imposed by Eq. (<ref>) we can easily derive that 
+
+    d^2 Γ_x/dz^2|_A >0  , 
+       d^2 Γ_x/dz^2|_B =   d^2 Γ_x/dz^2|_C < 0  .
+
+This indicates that A is a local minimum, while B and C are two global maximums of the quartic function Γ_x, as illustrated by Fig. <ref>.
+
+
+
+At this point, we have shown that Γ_x has the desired shape. Consequently, the following two conditions are sufficient for (a.1):
+
+
+  (a.1.1) The global maximums of Γ^min_x(z,y,w), as labeled by B_1 and C_1 in Fig. <ref>, are on the right-hand side of S^+_x;
+
+  (a.1.2) Γ^max_x(z,y,w) intersects S^-_x at four points, as labeled by E, F, G, H in Fig. <ref>.
+ 
+
+To establish (a.1.1), note that the global maximums of Γ^min_x(z,y,w) are B_1=(x_B_1,z_B_1) and C_1=(x_C_1,z_C_1), where 
+
+    x_B_1 = x_C_1 = a - r + b^2 c^2 - 4c(b+c)w/4(b+c)^2 .
+
+The bound imposed by Eq. (<ref>) guarantees that
+
+    b^2 ( c/b+c)^2 -4r ( c/b+c) + 4(a-2r) > 0
+
+which can be simplified into
+
+    cr/b+c - b^2c^2/4(b+c)^2 < a-2r .
+
+Since |w|≤ r we have
+
+    cw/b+c - b^2c^2/4(b+c)^2 < cr/b+c - b^2c^2/4(b+c)^2 <a-2r ,
+
+which, upon some algebraic manipulations, yields
+
+    a - r + b^2 c^2 - 4c(b+c)w/4(b+c)^2 > r  ,
+
+i.e., x_B_1=x_C_1 > r. Thus (a.1.1) is established. 
+
+To establish (a.1.2), it is sufficient to establish the following two conditions:
+
+
+  (a.1.2.1) The local minimum of Γ^max_x(z,y,w), labeled by A_2 in Fig. <ref>, is located on the left-hand side of S^-_x .
+
+  (a.1.2.2) Γ^max_x(z,y,w)|_z=± r≤ -r for all |y|,|w| ≤ r. 
+
+
+
+
+To prove (a.1.2.1), note that the horizontal position of A_2 is 
+
+    x_A_2 = -[ (y-a)^2 + bc/b+cy ] + ( 1+bc/b+c)a +r - c/b+c w  .
+
+Let 
+
+    g(y) ≡ (y-a)^2 + bc/b+cy = y^2 - ( 2a-bc/b+c)y + a^2 ,
+
+then x_A_2 is re-written as
+
+    x_A_2 = -g(y) + ( 1+bc/b+c)a +r - c/b+c w  .
+
+The vertex of the parabola g(y) is 
+
+    Vertex of  g(y) = ( a-bc/2(b+c), 4a^2 - (2a-bc/b+c)^2/4) ,
+
+as demonstrated by Fig. <ref>. From the bound imposed by Eq. (<ref>) we know
+
+    a-bc/2(b+c)>r ,
+
+thus the vertex of g(y) is not attained within |y| ≤ r. Therefore, the minimum of g(y) within |y|≤ r is attained at y=r:
+
+    g(y) ≥ g(r) = (a-r)^2 + bc/b+cr,   ∀ |y|≤ r ,
+
+as illustrated by Fig. <ref>. Consequently, x_A_2 is bounded from above by 
+
+    x_A_2≤ -g(r) + ( 1+bc/b+c)a + r + c/b+cr 
+             = -(a-r)^2 - bc/b+cr + ( 1+bc/b+c)a + r + c/b+cr  .
+
+From the bound imposed by Eq. (<ref>) we obtain
+
+    c/b+c < a(a-2r)/ab+(1-b)r < (a-r)^2-a-2r/ab+(1-b)r
+
+where the second inequality comes from the fact that r^2 - 2r -a >0. Eq. (<ref>) is equivalent to 
+
+    -(a-r)^2 - bc/b+cr + ( 1+bc/b+c)a + r + c/b+cr < -r  ,
+
+which, when substituted into Eq. (<ref>), yields 
+
+    x_A_2 < -r  .
+
+Condition (a.1.2.1) is thus established. 
+
+To prove (a.1.2.2), notice that upon straightforward algebraic manipulations, Γ^max_x(z,y,w)|_z=± r≤ -r can be shown to be equivalent to
+
+    h(y) ≡ y^2 + ( 14a + bc/b+c + 8√(2)r )y + 49a^2 + 8abc/b+c
+           - a( 1+bc/b+c) -2r + 56√(2)ar + 4√(2)rbc/b+c + 32r^2 + c/b+cw ≥ 0
+
+where the facts that r^2 = 4√(2)r + 8a and r^4 = 32 r^2 + 64√(2)ar + 64 a^2 have been used. Treating h(y) as a quadratic function of y whose graph gives rise to a parabola, the vertex of the parabola is attained at 
+
+    y_ vertex = -7a - 4√(2)r - bc/2(b+c) < -r .
+
+Consequently, the minimum of h(y) within y ∈ [-r,r] is attained at y=-r, thus
+
+    h(y)|_y∈ [-r,r]≥ h(-r) .
+
+Furthermore, h(-r) can be shown to be positive. This is due to the fact that
+
+    h(-r) = r^2 - ( 14a + bc/b+c + 8√(2)r )r + 49a^2 + 8abc/b+c
+           - a( 1+bc/b+c) -2r + 56√(2)ar + 4√(2)rbc/b+c + 32r^2 + c/b+cw 
+       ≥ r^2 - ( 14a + bc/b+c + 8√(2)r )r + 49a^2 + 8abc/b+c
+           - a( 1+bc/b+c) -2r + 56√(2)ar + 4√(2)rbc/b+c + 32r^2 - c/b+cr 
+        = [ (4√(2)-1)br + 7ab - r ]c/b+c + (132√(2) - 66)r  
+          + (263-64√(2))a + (56√(2)-14)ar + 49a^2 >0
+
+where the fact that r^2 = 4√(2)r + 8a is again used. Combining Eqs. (<ref>) and (<ref>) we get
+
+    h(y)|_y∈[-r,r] > 0 ,
+
+which is equivalent to 
+
+    Γ^max_x(z,y,w)|_z=± r≤ -r .
+
+Thus (a.1.2.2) is established. Consequently, conditions (a.1.2) and (a.1) are established as well. 
+
+
+(a.2): from the second row in Eq. (<ref>) we know
+
+    -y-z^2+a=-s
+
+where |s| ≤ r and the primes on the variables are omitted for simplicity. Therefore 
+
+    y = -z^2+a+s
+
+which is identical to Eq. (<ref>). Therefore, repeating the same steps in Section. <ref>, we define the parabolas Γ_y(z,s), Γ^min_y(z), and Γ^max_y(z) using Eq. (<ref>), (<ref>) and (<ref>), respectively, and the relationship in Eq. (<ref>) holds immediately. 
+
+Within each Σ^2(x,w) with |x|,|w| ≤ r, f_ IV(V) lies within the gap  between the two parabolas Γ^min_y(z) and Γ^max_y(z). The locations of the two parabolas can be further narrowed down by establishing the following facts:
+
+
+  (a.2.1) The vertex of Γ^min_y(z) is located on the right-hand side of S^+_y, labeled by A in Fig. <ref>;
+
+  (a.2.2) Γ^max_y(z) intersects S^-_y at two points, labeled by C and D in Fig. <ref>. 
+ 
+
+To establish (a.2.1), let A=(y_A,z_A). It can be solved easily that
+
+    z_A=0,      y_A = Γ^min_y(z_A=0)=a-r.
+
+Recall that a-2r>0, thus y_A >r, i.e., A is on the right-hand side of S^+_y. 
+
+To establish (a.2.2), notice that since r = 2√(2)(1+1√(1+a))>1+1√(1+a),
+
+    Γ^max_y(z=± r) = -r^2 +a +r < -r ,
+
+thus (a.2.2) follows. Combining conditions (a.2.1) and (a.2.2), we obtain
+
+    V ∩ f_ IV(V)|_Σ^2(x,w)⊂ H_1 ∪ H_2
+
+where H_1 and H_2 are horizontal strips shown by Fig. <ref>. 
+
+At this point, Eq. (<ref>) provides a coarse bound for V ∩ f_ IV(V)|_Σ^2(x,w). A refined bound can be obtained in the following. Using the third row of Eq. (<ref>) along with Eq. (<ref>) we get:
+
+    -s =-(z^')^4 + [ 2(a-y^')-bc/b+c](z^')^2 
+           + [ -(y^')^2 + ( 2a-bc/b+c)y^' +a -a^2 + abc/b+c - x^' - c/b+cw^']
+
+where s is a parameter within range -r ≤ s ≤ r. Omitting the primes on the variables and expressing y in terms of (z,x,w,s) lead to two branches of solutions 
+
+    Λ^±_y(z,x,w,s) = y_±(z,x,w,s) 
+        = -z^2 + a - bc/2(b+c)±√((a-x+s)-cw/b+c + b^2 c^2/4(b+c)^2) .
+
+Notice that for the c=0 special cases, f_ IV reduces to the uncoupled direct product between f_ II in (x,y,z) and a uniform contraction in (w), correspondingly, Eq. (<ref>) reduces to Eq. (<ref>). 
+
+Upon varying the values of (x,w,s) within range |x|,|w|,|s| ≤ r while keeping z fixed, the maximum and minimum of Eq. (<ref>) are attained at
+
+    Λ^+,max_y(z) = Λ^+_y(z,x,w,s)|_x=-r, w=-r, s=r
+        = -z^2 + a - bc/2(b+c) +  √((a+2r)+cr/b+c + b^2 c^2/4(b+c)^2)
+       Λ^+,min_y(z) = Λ^+_y(z,x,w,s)|_x=r, w=r, s=-r
+        = -z^2 + a - bc/2(b+c) +  √((a-2r)-cr/b+c + b^2 c^2/4(b+c)^2)
+       Λ^-,max_y(z) = Λ^-_y(z,x,w,s)|_x=r, w=r, s=-r
+        = -z^2 + a - bc/2(b+c) -  √((a-2r)-cr/b+c + b^2 c^2/4(b+c)^2)
+       Λ^-,min_y(z) = Λ^-_y(z,x,w,s)|_x=-r, w=-r, s=r
+        = -z^2 + a - bc/2(b+c) -  √((a+2r)+cr/b+c + b^2 c^2/4(b+c)^2) .
+
+It can be verified that Eq. (<ref>) guarantees
+
+    (a-2r)-cr/b+c + b^2 c^2/4(b+c)^2 > 0 ,
+
+thus the square roots in Eqs. (<ref>) and (<ref>) are real-valued. It is quite obvious that
+
+    Λ^-,min_y(z)<Λ^-,max_y(z)<Λ^+,min_y(z)<Λ^+,max_y(z) .
+
+
+
+
+Recall that we have previously obtained a coarse bound for V ∩ f_ IV(V)|_Σ^2(x,w) in Eq. (<ref>), where the horizontal strips H_1 and H_2 are bounded by parabolas Γ^min_y(z) and Γ^max_y(z) defined by Eq. (<ref>) and (<ref>), respectively. We now compare the horizontal positions of the six parabolas (Γ^max_y(z), Γ^min_y(z), Λ^±,max_y(z), and Λ^±,min_y(z)), and we would like to show that under the assumptions of the theorem,
+
+    Γ^min_y(z) < Λ^-,min_y(z) 
+       Λ^+,max_y(z) < Γ^max_y(z)  .
+
+
+To prove Eq. (<ref>), notice that it is equivalent to
+
+    - bc/2(b+c) +  √((a+2r)+cr/b+c + b^2 c^2/4(b+c)^2) < r ,
+
+which can be simplified into
+
+    c/b+c < r^2-2r-a/(1-b)r .
+
+Since Eq. (<ref>) is guaranteed by Eq. (<ref>), Eq. (<ref>) holds. 
+
+To prove Eq. (<ref>), notice that it is equivalent to 
+
+    -r < - bc/2(b+c) -  √((a+2r)+cr/b+c + b^2 c^2/4(b+c)^2) ,
+
+which can be further simplified into 
+
+    c/b+c < r^2-2r-a/(1+b)r ,
+
+which is identical to Eq. (<ref>). Thus Eq. (<ref>) is established as well. Combining Eqs. (<ref>), (<ref>) and (<ref>) we obtain
+
+    Γ^min_y(z) <Λ^-,min_y(z)<Λ^-,max_y(z)<Λ^+,min_y(z)<Λ^+,max_y(z) < Γ^max_y(z)
+
+i.e., the six parabolas are positioned from left to right as illustrated by Fig. <ref>. Therefore we obtain the final expression 
+
+    V ∩ f_ IV(V)|_Σ^2(x,w) = h^+_1 ∪ h^+_2 ∪ h^-_1 ∪ h^-_2 ⊂ H_1 ∪ H_2
+
+where the four horizontal strips h^±_1 and h^±_2 are indicated by the shaded regions in Fig. <ref>. Condition (a.2) is thus established. Consequently, condition (a) is established as well. 
+
+(b): Let V ∩ f_ IV(V)|_Σ^1(x,y,z) be the restriction of V ∩ f_ IV(V) ∩Σ^1(x,y,z) on Σ^1(x,y,z). We need to show that V ∩ f_ IV(V)|_Σ^1(x,y,z) is a line segment which is a proper subset of V|_Σ^1(x,y,z), i.e., the configuration illustrated by Fig. <ref>. 
+
+From Eq. (<ref>) we know that |w(y^',z^',w^')|≤ r. This is equivalent to setting w(y^',z^',w^')=-s with parameter |s| ≤ r. Substituting Eq. (<ref>) we get
+
+    w'(s)=cy' - ca + c(z')^2 - s(b+c)
+
+or simply 
+
+    w(s)=cy - ca + cz^2 - s(b+c)
+
+in which the primes on the variables are omitted for simplicity. In every Σ^1(x,y,z), w(s) is interpreted as a one-dimensional family of points parameterized by s with fixed (x,y,z) values. Let l be the line segment such that 
+
+    l = { w(s) | -r ≤ s ≤ r } .
+
+Then combining Eqs. (<ref>) and (<ref>) we obtain 
+
+    V ∩ f_ IV(V) |_Σ^1(x,y,z) = l  .
+
+The two endpoints of l are attained at
+
+    w^max=w(s=-r)=cy - ca + cz^2 + r(b+c) 
+        w^min=w(s=r)=cy - ca + cz^2 - r(b+c) .
+
+Notice that w^max is bounded from above by 
+
+    w^max≤ c(r^2+2r-a)+br ≤ r ,
+
+where the second inequality comes from Eq. (<ref>). Meanwhile, w^min is bounded from below by
+
+    w^min≥ -c(a+2r)-br > -r
+
+where the second equality comes from Eq. (<ref>) and the fact that r^2+2r-a>a+2r. Therefore in every Σ^1(x,y,z) we have
+
+    V ∩ f_ IV(V) |_Σ^1(x,y,z)⊂ (-r,r]
+
+which proves (b). Having established both (a) and (b), Theorem <ref> is proved. 
+
+
+
+To demonstrate that the combination of parameters (a,b,c) that satisfies the bounds imposed by Theorem <ref> indeed exists, Fig. <ref> illustrates the domain in the three-dimensional parameter space (a,b,c) that satisfies Eqs. (<ref>)-(<ref>) and b>c, within range (a,b,c) ∈ [32+8√(2),42+8√(2)] × [0,1] × [0,0.04]. When (a,b,c) lies within the colored domain, f_ IV(V) exhibits the topological structure shown by Fig. <ref>. 
+
+
+
+
+
+
+§ CONCLUSION
+
+
+We have introduced several examples using Hénon-type mappings in three and four dimensions and demonstrated analytically that they possess horseshoe structures with nontrivial folding topologies that are otherwise impossible in two dimensions. In essence, we have designed these maps so that they give rise to different combinations of folding and stacking directions. More specifically, Topology II and IV are twice-folded horseshoes with independent creases but a common stacking direction, Topology III-A is a twice-folded horseshoe with independent creases and independent stacking directions, and Topology III-B is just a once-folded horseshoe in four dimensions. Interestingly, when the parameters of f_ III are changed from the neighborhood of the Type-A AI limit to the neighborhood of the Type-B AI limit, the twice-folded horseshoe (Topology III-A) undergoes an unfolding process to transition into the once-foled horseshoe (Topology III-B). 
+
+It is obvious that the topological structures introduced here only represent a small fraction of all possible horseshoe topologies. In higher dimensions, more combinations of folding and stacking directions can be selected to create more complicated horseshoe structures, the exploration of which may be potentially fruitful. Furthermore, it is also meaningful to ask the question of 
+which type of horseshoe topology is generic for certain types of multidimensional maps, 
+and what are the consequent implications on the symbolic dynamics of the systems. 
+In particular, within the symplectic setting, according to the paper of Moser <cit.>, 
+there is a normal form for quadratic symplectic maps with parameters on R^2. 
+It is therefore interesting to explore how the horseshoe with different topologies 
+coexist in the parameter space of the normal form, and it then automatically raises 
+the question what types of bifurcations occur among
+different types of horseshoes found here. 
+Notice that all these problems do not exist in the horseshoe formed in the 2-dimensional plane. 
+
+Regarding uniform hyperbolicity, we have shown in Part I <cit.> that 
+the map forming Topology III-A and III-B horseshoes has parameter regions in which 
+not only topological horseshoe but also uniform hyperbolicity holds, 
+thus the conjugacy to the symbolic dynamics follows. 
+It is then natural to confirm that the same is true as well for the rest of cases. 
+The computer-assisted proof <cit.> 
+will be helpful to more precisely specify the region where 
+ uniform hyperbolicity holds, and hence to clarify how different types of 
+ topological horseshoe coexist in their parameter space. 
+Those are topics for our futures studies.  
+
+
+
+
+§ ACKNOWLEDGEMENT
+
+J.L. gratefully acknowledges many inspiring discussions with Steven Tomsovic. J.L. and A.S. acknowledge financial support from Japan Society for the Promotion of Science (JSPS) through JSPS Postdoctoral Fellowships for Research in Japan (Standard). This work has been supported by JSPS KAKENHI Grant No. 17K05583, and also by JST, the establishment of university fellowships towards the creation of science technology innovation, Grant Number JPMJFS2139.
+
+
+
+
+
+§ REFERENCES
+
+iopart-num
+

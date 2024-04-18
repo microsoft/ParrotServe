@@ -1,0 +1,2294 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+Intern Project
+    
+Yichuan Deng. University of Science and Technology of China.
+Zhihang Li. Huazhong Agriculture University. 
+Zhao Song. Adobe Research
+
+    
+==========================================================================================================================================
+
+????
+
+
+[
+
+???
+
+
+
+
+
+
+
+
+
+
+
+
+
+equal*
+
+
+Aeiau Zzzzequal,to
+Bauiu C. Yyyyequal,to,goo
+Cieua Vvvvvgoo
+Iaesut Saoeued
+Fiuea Rrrrto
+Tateu H. Yaseheed,to,goo
+Aaoeu Iasohgoo
+Buiui Eueued
+Aeuia Zzzzed
+Bieea C. Yyyyto,goo
+Teoau Xxxxed
+Eee Pppped
+
+
+toDepartment of Computation, University of Torontoland, Torontoland, Canada
+gooGoogol ShallowMind, New London, Michigan, USA
+edSchool of Computation, University of Edenborrow, Edenborrow, United Kingdom
+
+Cieua Vvvvvc.vvvvv@googol.com
+Eee Ppppep@eden.co.uk
+
+
+
+
+Machine Learning, ICML
+
+0.3in
+]
+
+ 
+
+
+
+
+
+
+
+  Intern Project
+    
+Yichuan Deng. University of Science and Technology of China.
+Zhihang Li. Huazhong Agriculture University. 
+Zhao Song. Adobe Research
+
+    
+==========================================================================================================================================
+
+
+Matrix sensing is a problem in signal processing and machine learning that involves recovering a low-rank matrix from a set of linear measurements. The goal is to reconstruct the original matrix as accurately as possible, given only a set of linear measurements obtained by sensing the matrix <cit.>. In this work, we focus on a particular direction of matrix sensing, which is called rank-1 matrix sensing <cit.>. 
+We present an improvement over the original algorithm in <cit.>. 
+It is based on a novel analysis and sketching technique that enables faster convergence rates and better accuracy in recovering low-rank matrices. The algorithm focuses on developing a theoretical understanding of the matrix sensing problem and establishing its advantages over previous methods. The proposed sketching technique allows for efficiently extracting relevant information from the linear measurements, making the algorithm computationally efficient and scalable. 
+
+Our novel matrix sensing algorithm improves former result <cit.> on in two senses,
+
+    
+  * We improve the sample complexity from O(ϵ^-2 dk^2) to O(ϵ^-2 (d+k^2)).
+    
+  * We improve the running time from O(md^2 k^2) to O(m d^2 k).   
+
+The proposed algorithm has theoretical guarantees and is analyzed to provide insights into the underlying structure of low-rank matrices and the nature of the linear measurements used in the recovery process. 
+It advances the theoretical understanding of matrix sensing and provides a new approach for solving this important problem. 
+
+  
+  empty
+
+
+
+
+
+
+
+
+
+
+Matrix sensing is a problem in signal processing and machine learning that involves recovering a low-rank matrix from a set of linear measurements. The goal is to reconstruct the original matrix as accurately as possible, given only a set of linear measurements obtained by sensing the matrix <cit.>. In this work, we focus on a particular direction of matrix sensing, which is called rank-1 matrix sensing <cit.>. 
+We present an improvement over the original algorithm in <cit.>. 
+It is based on a novel analysis and sketching technique that enables faster convergence rates and better accuracy in recovering low-rank matrices. The algorithm focuses on developing a theoretical understanding of the matrix sensing problem and establishing its advantages over previous methods. The proposed sketching technique allows for efficiently extracting relevant information from the linear measurements, making the algorithm computationally efficient and scalable. 
+
+Our novel matrix sensing algorithm improves former result <cit.> on in two senses,
+
+    
+  * We improve the sample complexity from O(ϵ^-2 dk^2) to O(ϵ^-2 (d+k^2)).
+    
+  * We improve the running time from O(md^2 k^2) to O(m d^2 k).   
+
+The proposed algorithm has theoretical guarantees and is analyzed to provide insights into the underlying structure of low-rank matrices and the nature of the linear measurements used in the recovery process. 
+It advances the theoretical understanding of matrix sensing and provides a new approach for solving this important problem. 
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+
+
+The matrix sensing problem is a fundamental problem in signal processing and machine learning that involves recovering a low-rank matrix from a set of linear measurement. This problem arises in various applications such as image and video processing <cit.> and sensor networks <cit.>. 
+Mathematically, matrix sensing can be formulated as a matrix view of compressive sensing problem <cit.>. The rank-1 matrix sensing problem was formally raised in <cit.>. 
+
+The matrix sensing problem has attracted significant attention in recent years, and several algorithms have been proposed to solve it efficiently. In this paper, we provide a novel improvement over the origin algorithm in <cit.>, with improvement both on running time and sample complexity. 
+ 
+
+Matrix sensing is a fundamental problem in signal processing and machine learning that involves recovering a low-rank matrix from a set of linear measurements. Specifically, given a matrix W_*∈ℝ^d × d of rank k that is not directly accessible, we aim to recover W_* from a set of linear measurements b ∈^n applied to the ground truth matrix W^* where
+
+    b_i=[A_i^⊤ W_*],   ∀ i=1, …, m,
+
+where A_i are known linear operators. The measurements b_i are obtained by sensing the matrix W_* using a set of linear measurements, and the goal is to reconstruct the original matrix W_* as accurately as possible. This problem arises in various applications such as image and video processing, sensor networks, and recommendation systems.
+
+The matrix sensing problem is ill-posed since there may exist multiple low-rank matrices that satisfy the given linear measurements. However, the problem becomes well-posed under some assumptions on the underlying matrix, such as incoherence and restricted isometry property (RIP) <cit.>
+, which ensure unique and stable recovery of the matrix. A well-used method to solve this problem is to use convex optimization techniques that minimize a certain loss function subject to the linear constraints. Specifically, one can solve the following convex optimization problem:
+
+    min_W_* (W_*)
+    s.t.    [A_i^⊤ W_*] = b_i, ∀ i=1,…,m.
+
+However, this problem is NP-hard <cit.> and intractable in general, and hence, various relaxation methods 
+have been proposed, such as nuclear norm minimization and its variants, which provide computationally efficient solutions with theoretical guarantees. In this work, we focus on the rank-one independent measurements. Under this setting, the linear operators A_i can be decomposed into the form of A_i = x_iy_i^⊤, where x_i ∈^d, y_i ∈^d are all sampled from zero-mean multivariate Gaussian distribution N(0, I_d). 
+
+Our work on improving the matrix sensing algorithm is based on a novel analysis and sketching technique 
+that enables faster convergence rates and better accuracy in recovering low-rank matrices. We focus on developing a theoretical understanding of the proposed algorithm and establishing its advantages over previous methods. Our analysis provides insights into the underlying structure of the low-rank matrices and the nature of the linear measurements used in the recovery process. The proposed sketching technique allows us to efficiently extract relevant information from the linear measurements, making our algorithm computationally efficient and scalable. Overall, our contribution advances the theoretical understanding of matrix sensing and provides a new approach for solving this important problem. 
+
+
+
+
+ §.§ Our Result
+
+To summarize, we improve both the running time of original algorithm <cit.> from O(md^2k^2) to O(md^2k), and the sample complexity from O(ϵ^-2dk^2) to O(ϵ^-2(d + k^2)). Formally, we get the following result, 
+ 
+
+
+
+Let ϵ_0 ∈ (0,0.1) denote the final accuracy of the algorithm. Let δ∈ (0,0.1) denote the failure probability of the algorithm. Let σ_1^* denote the largest singular value of ground-truth matrix W_* ∈^d × d. Let κ denote the condition number of ground-truth matrix W_* ∈^d × d. 
+Let ϵ∈ (0, 0.001/(k^1.5κ)) denote the RIP parameter. Let m = Θ (ϵ^-2 (d+k^2)log(d/δ)). Let T = Θ(log(k κσ_1^* /ϵ_0)) . There is a matrix sensing algorithm (Algorithm <ref>) that takes O(m T) samples, runs in T iterations, and each iteration takes O(md^2 k) time, finally outputs a matrix W ∈^d × d such that
+
+    (1-ϵ_0) W_* ≼ W ≼ (1+ϵ_0) W_*
+
+holds with probability at least 1-δ.
+
+
+ 
+
+
+
+
+
+ §.§ Related Work
+
+
+
+
+  
+Matrix Sensing
+
+
+The matrix sensing problem has attracted significant attention in recent years, and several algorithms have been proposed to solve it efficiently. One of the earliest approaches is the convex optimization-based algorithm proposed by Candès and Recht in 2009 <cit.>, which minimizes the nuclear norm of the matrix subject to the linear constraints. This approach has been shown to achieve optimal recovery guarantees under certain conditions on the linear operators, such as incoherence and RIP.
+Since then, various algorithms have been proposed that improve upon the original approach in terms of computational efficiency and theoretical guarantees. For instance, the iterative hard
+thresholding algorithm (IHT) proposed by Blumensath and Davies in 2009 <cit.>, and its variants, such
+as the iterative soft thresholding algorithm (IST), provide computationally efficient solutions with
+improved recovery guarantees. 
+In the work by Recht, Fazel, and Parrilo 
+
+<cit.>, they gave some measurement operators satisfying the RIP and proved that, with O(k d log d) measurements, a rank-k matrix W_* ∈^d × d can be recovered. 
+Moreover, later works have proposed new approaches that exploit additional structure in the low-rank matrix, such as sparsity or group sparsity, to further improve recovery guarantees and efficiency. For instance, the sparse plus low-rank (S + L) approach proposed by 
+<cit.>, and its variants, such as the robust principal component analysis (RPCA) and the sparse subspace clustering (SSC), provide efficient solutions with improved robustness to outliers and noise. More recently, <cit.> considers the non-square matrix sensing under RIP assumptions, and show that matrix factorization 
+does not introduce any spurious
+local minima 
+under RIP. <cit.> studies the technique of discrete-time mirror descent utilized to address the unregularized empirical risk in matrix sensing.
+
+
+
+
+  
+Compressive Sensing
+ 
+Compressive sensing has been a widely studied topic in signal processing and theoretical computer science field <cit.>. <cit.> gave a fast algorithm (runs in time O(klog n log( n/k)) for generall in puts and O(klog n log(n/k)) for at most k non-zero Fourier coefficients input) for k-sparse approximation to the discrete Fourier transform of an n-dimensional signal. <cit.> provided an algorithm such that it uses O_d(k log N loglog N) samples of signal and runs in time O_d(klog^d+3 N) for k-sparse approximation to the Fourier transform of a length of N signal. Later work <cit.> proposed a new technique for analysing noisy hashing schemes that arise in Sparse FFT, which is called isolation on average, and applying it, it achieves sample-optimal results in klog^O(1)n time for estimating the values of a list of frequencies using few samples and computing Sparse FFT itself. 
+<cit.> gave the first sublinear-time ℓ_2/ℓ_2 compressed sensing which achieves the optimal number of measurements without iterating. After that, <cit.> provided an algorithm which uses O(k log k log n) samples to compute a k-sparse approximation to the d-dimensional Fourier transform of a length n signal. 
+Later by <cit.> provided an efficient Fourier Interpolation algorithm that improves the previous best algorithm <cit.> on sample complexity, time complexity and output sparsity. And in <cit.> they presented a unified framework for the problem of band-limited signal reconstruction and achieves high-dimensional Fourier sparse recovery and high-accuracy Fourier interpolation. 
+Recent work <cit.> designed robust algorithms for super-resolution imaging that are efficient in terms of both running time and sample complexity for any constant dimension under the same noise model as <cit.>, based on new techniques in Sparse Fourier transform. 
+
+
+
+
+
+
+
+  
+Faster Iterative Algorithm via Sketching
+
+Low rank matrix completion is a well-known problem in machine learning with various applications in practical fields such as recommender systems, computer vision, and signal processing. Some notable surveys of this problem are provided in <cit.>. While Candes and Recht <cit.> first proved the sample complexity for low rank matrix completion, other works such as <cit.> and <cit.> have provided improvements and guarantees on convergence for heuristics. In recent years, sketching has been applied to various machine learning problems such as linear regression <cit.>, low-rank approximation <cit.>, weighted low rank approximation, matrix CUR decomposition <cit.>, and tensor regression <cit.>, leading to improved efficiency of optimization algorithms in many problems. For examples, linear programming <cit.>, matrix completion <cit.>, empirical risk minimization <cit.>, training over-parameterized neural network <cit.>, discrepancy algorithm <cit.>, frank-wolfe method <cit.>, and reinforcement learning <cit.>.
+
+ 
+
+
+
+  
+Roadmap.
+We organize the following paper as follows. In Section <ref> we provide the technique overview for our paper. In Section <ref> we provide some tools and existing results for our work. In Section <ref> we provide the detailed analysis for our algorithm. In Section <ref> we argue that our measurements are good. In Section <ref> we provide analysis for a shrinking step. 
+In Section <ref> we provide the analysis for our techniques used to solve the optimization problem at each iteration. 
+
+ 
+
+
+
+§ TECHNIQUE OVERVIEW
+
+
+ 
+
+In this section, we provide a detailed overview of the techniques used to prove our results. Our approach is based on a combination of matrix sketching and low-rank matrix recovery techniques. Specifically, we use a sketching technique that allows us to efficiently extract relevant information from linear measurements of the low-rank matrix. We then use this information to recover the low-rank matrix using a convex optimization algorithm. With these techniques, we are able to improve previous results in both sample complexity and running time. From the two perspective, we give the overview of our techniques here. 
+
+
+
+ §.§ Tighter Analysis Implies Reduction to Sample Complexity
+
+Our approach achieves this improvement by using a new sketching technique that compresses the original matrix into a smaller one while preserving its low-rank structure. This compressed version can then be used to efficiently extract relevant information from linear measurements of the original matrix.
+
+To analyze the performance of our approach, we use tools from random matrix theory and concentration inequalities. Specifically, we use the Bernstein's inequality for matrices to establish bounds on the error of our recovery algorithm. 
+We first define our measurements and operators, for each i ∈ [m], let x_i, y_i denotes samples from (0, I_d). We define
+
+    
+  * A_i := x_i y_i^⊤;
+    
+  * b_i := x_i^⊤ W_* y_i;
+    
+  * W_0 := 1/m∑_i = 1^m b_i A_i;
+    
+  * B_x := 1/m∑_i = 1^m (y_i^⊤ v)^2 x_ix_i^⊤;
+    
+  * B_y := 1/m∑_i = 1^m (x_i^⊤ v)^2 y_iy_i^⊤;
+    
+  * G_x := 1/m∑_i=1^m (y_i^⊤ v)(y_i^⊤ v_)x_ix_i^⊤;
+    
+  * G_x := 1/m∑_i=1^m (x_i^⊤ v)(x_i^⊤ v_)y_iy_i^⊤.
+
+We need to argue that our measurements are good under our choices of m, here the word “good” means that 
+
+    
+  * W_0 - W_*≤ϵ·W_*;
+    
+  * B_x- I≤ϵ and B_y - I≤ϵ;
+    
+  * G_x≤ϵ and G_y≤ϵ.
+
+In our analysis we need to first bound Z_i and [Z_iZ_i^⊤], where Z_i := x_ix_i^⊤ U_*Σ_*Y_*^⊤ y_iy_i^⊤. With an analysis, we are able to show that (Lemma <ref> and Lemma <ref>)
+
+    [Z_i≤ C^2 k^2 log^2(d/δ)σ^4 ·σ_1^*]     ≥ 1 - δ/(d) 
+    [Z_iZ_i^⊤]    ≤ C^2k^2σ^4(σ_1^*)^2.
+
+Now, applying these two results and by Bernstein's inequality, we are able to show that our operators are all “good” (Theorem <ref>). 
+
+
+
+
+ §.§ Induction Implies Correctness
+
+
+To get the final error bounded, we use an inductive strategy to analyze. Here we let U_* and V_* be the decomposition of ground truth W_*, i.e., W_* = U_* V_*. We show that, when iteratively applying our alternating minimization method, if U_t and V_t are closed to U_* and V_* respectively, then the output of next iteration t+1 is close to U_* and V_*. Specifically, we show that, if (U_t, U_*) ≤1/4·(V_t, V_*), then it yields
+
+    (V_t+1, V_*) ≤1/4·(U_t, U_*).
+
+Similarly, from the other side, if (V_t+1, V_*) ≤1/4·(U_t, U_*), we have
+
+    (U_t+1, U_*) ≤1/4·(V_t+1, V_*).
+
+This two recurrence relations together give the guarantee that, if the starting error U_0 - U_* and V_0 - V_*, the distance from V_t and U_t to V_* and U_*, respectively.
+
+To prove the result, we first define the value of ϵ_d as /10. Then, by the algorithm, we have the following relationship between V_t+1 and V_t+1 R^-1,
+
+    V_t+1 = V_t+1 R^-1 = (W_*^⊤ U_t - F)R^-1,
+
+where the second step follows from the definition of V and defining F as Definition <ref>. Now we show that, F and R^-1 can be bound respectively,
+
+    F    ≤ 2ϵ k^1.5·σ_1^* ·(U_t, U_*)   Lemma <ref>
+    R^-1    ≤ 10/σ_k^*    Lemma <ref>
+
+Note that the bound of ^-1 need (U_t, U_*) ≤1/4·(V_t, V_*))
+
+With these bounds, we are able to show the bound for (V_t+1, V_*). We first notice that, (V_t+1, V_*) can be represented as (V_*,)^⊤ V_t+1, where V_*,∈^d × (d-k) is a fixed orthonormal basis of the subspace orthogonal to span(V_*). Then we show that (Claim <ref>)
+
+    (V_*,)^⊤ V_t+1 = -(V_*, )^⊤ FR^-1.
+
+Now, by turning (V_t+1, V_*) to the term of F and R, and using the bound for F and R^-1, we are finally able to reach the bound 
+
+    (V_t+1, V_*) 
+        =     FR^-1
+    ≤    F·R^-1
+    ≤     2ϵ k^1.5·σ_1^* ·(U_t, U_*) ·R^-1
+    ≤     2ϵ k^1.5·σ_1^* ·(U_t, U_*) · 10/σ_k^* 
+    ≤     0.01 ·(U_t, U_*).
+
+By a similar analysis, we can show Eq.(<ref>). 
+
+Now applying them and with a detailed analysis, we have the claimed proved. Finally, when we prove that the initialization of the parameters are good, we can show that, the final output W_T satisfies
+
+    W_T - W_*≤ϵ_0.
+
+
+
+
+ §.§ Speeding up with Sketching Technique
+
+Now we consider the running time at each iteration. 
+At each iteration of our algorithm, we need to solve the following optimization problem: 
+
+    min_V ∈^d × k∑_i = 1^m ([A_i^⊤ UV^⊤] - b)^2.
+
+When this problem is straightforwardly solved, it costs O(md^2k^2) time, which is very expensive. So from another new direction, we give an analysis such that, this problem can be converted to a minimization problem where the target variable is a vector. To be specific, we show that, above optimization question (<ref>) is equivalent to the following (Lemma <ref>),
+
+    min_v ∈^dkMv - b_2^2,
+
+where the matrix M ∈^m × dk
+is defined to be the reformed matrix of U^⊤ A_i's, i.e.,
+
+    M_i,* := (U^⊤ A_i),   ∀ i ∈ [m].
+
+When working on this form of optimization problem, inspired by a recent work <cit.>, we apply the fast sketch-to-solve low-rank matrix completion method. With this technique, we are able to reduce the running time to O(md^2k) (Theorem <ref>), which is much more acceptable. 
+
+
+
+
+§ PRELIMINARY
+
+
+In this section, we provide preliminaries to be used in our paper.  In Section <ref> we introduce notations we use. In Section <ref> and Section <ref> we provide some randomness facts and algebra facts respectively. In Section <ref> we introduce the important definition of restricted isometry property. In Section <ref> we provide results fro rank-one estimation. In Section <ref> we introduce the rank-one independent Gaussian operator. In Section <ref> we state our notations for angles and distances. In Section <ref> we provide some matrix concentration results. 
+
+
+
+ §.§ Notations
+
+
+
+Let x ∈^n and w ∈_≥ 0^n, we define the norm x_w := (∑_i=1^n w_i x_i^2)^1/2.  
+
+For n > k, for any matrix A ∈^n × k, we denote the spectral norm of A by A, i.e., A  := sup_x∈^k A x _2 /  x _2.
+
+
+We denote the Frobenius norm of A by A _F, i.e., A _F : = (∑_i=1^n ∑_j=1^k A_i,j^2 )^1/2.
+
+For any square matrix A ∈^n × n, we denote its trace by [A], i.e., [A] := ∑_i=1^n A_i,i.
+
+For any A ∈^n × d and B ∈^n × d, we denote ⟨ A , B ⟩ = [A^⊤ B].
+
+Let A ∈^n × d and x ∈^d be any matrix and vector, we have that
+
+    A x _2^2 = ⟨ A x, A x ⟩ = ⟨ x , A^⊤ A x ⟩ = x^⊤ A^⊤ A x.
+
+
+Let the SVD of A ∈^n × k to be UΣ B^⊤, where U ∈^n × k and V ∈^k × k have orthonormal columns and Σ∈^k × k be diagonal matrix. We say the columns of U are the singular vectors of A. We denote the Moore-Penrose pseudoinverse matrix of A as A^†∈k × n, i.e., A^† := VΣ^-1U^⊤. We call the diagonal entries σ_1, σ_2, …, σ_k of Σ to be the eigenvalues of A. We assume they are sorted from largest to lowest, so σ_i denotes its i-th largest eigenvalue, and we can write it as σ_i(A). 
+
+
+
+
+For A ∈^n_1 × d_1, B ∈^n_2 × d_2. We define kronecker product ⊗ as (A ⊗ B)_i_1+(i_2-1)n_1, j_1 + (j_2-1)n_2
+ 
+for all i_1 ∈ [n_1], j_1 ∈ [d_1], i_2 ∈ [n_2] and j_2 ∈ [d_2].
+
+For any non-singular matrix A ∈^n × n, we define A=QR its QR-decomposition, where Q ∈^n × n is an orthogonal matrix and R ∈^n × n is an non-singular lower triangular matrix. For any full-rank matrix A ∈^n × m, we define A=QR its QR-decomposition, where Q ∈^m × n is an orthogonal matrix and R ∈^n × n is an non-singular lower triangular matrix. We use R=QR(A) ∈^n × n to denote the lower triangular matrix obtained by the QR-decomposition of A ∈^m × n. 
+
+Let A ∈^k× k be a symmetric matrix. The eigenvalue decomposition of A is A = UΛ U^⊤, where Λ is a diagonal matrix. 
+
+
+
+If a matrix A is positive semidefinite (PSD) matrix, we denote it as A ≽ 0, which means x^⊤ A x ≥ 0 for all x. 
+
+Similarly, we say A ≽ B if x^⊤  Ax ≥ x^⊤ B x for all vector x. 
+ 
+
+For any matrix U ∈^n × k, we say U is an orthonormal basis if U_i=1 for all i ∈ [k] and for any i≠ j, we have ⟨ U_i, U_j ⟩ = 0. Here for each i ∈ [k], we use U_i to denote the i-th column of matrix U.
+
+For any U ∈^n × k (suppose n > k)which is an orthonormal basis, 
+we define U_∈^n × (n-k) to be another orthonormial basis that, 
+
+    U U^⊤ + U_ U_^⊤ = I_n
+
+and
+
+    U^⊤ U_ =  0^k × (n-k)
+
+where we use 0^k × (n-k) to denote a k × (n-k) all-zero matrix. 
+
+We say a vector x lies in the span of U, if there exists a vector y such that x = U y.
+
+We say a vector z lies in the complement of span of U, if there exists a vector w such that z = U_ w. Then it is obvious that ⟨ x,z ⟩ = x^⊤ z =z^⊤ x =0.
+
+For a matrix A, we define σ_min(A) := min_x A x _2 /  x _2. Equivalently,  σ_min(A) := min_x:  x _2=1 A x _2.
+
+Similarly, we define σ_max(A) := max_x  A x _2 /  x _2. Equivalently,  σ_max(A) := max_x:  x _2=1 A x _2 
+
+Let A_1, ⋯, A_n denote a list of square matrices. Let S denote a block diagonal matrix S = [ A_1            ;     A_2        ;           ⋱    ;             A_n ]. Then S  = max_i∈ [n] A_i. 
+
+We use [] to denote probability. We use [] to denote expectation.
+
+
+
+Let a and b denote two random variables. Let f(a) denote some event that depends on a (for example f(a) can be a=0 or a ≥ 10.). Let g(b) denote some event that depends on b. We say a and b are independent if [f(a)  and  g(b)] = [f(a)] ·[g(b)]. We say a and b are not independent if [ f(a)  and  g(b)] ≠[f(a)] ·[g(b)]. Usually if a and b are independent, then we also have [ab] = [a] ·[b]. 
+
+We say a random variable x is symmetric if [x = u] = [x=-u].
+ 
+
+For any random variable x ∼ N(μ,σ^2). This means [x ] = μ and [x^2] = σ^2.
+
+We use O(f) to denote f ·(log f).
+
+
+
+
+We use (a,b,c) to denote the time of multiplying an a × b matrix with another b × c matrix.
+ 
+  
+We use ω to denote the exponent of matrix multiplication, i.e., n^ω =(n,n,n).
+
+
+
+ §.§ Randomness Facts
+
+
+
+
+We have
+
+    
+  * Part 1. Expectation has linearity, i.e., [ ∑_i=1^n x_i ] = ∑_i=1^n [x_i].
+    
+  * Part 2. For any random vectors x and y, if x and y are independent, then for any fixed function f, we have _x,y[f(x) f(y)] = _x[f(x) ] ·_y[ f(y)].
+    
+  * Part 3. Let A∈^d × d denote a fixed matrix. For any fixed function f : ^d →^d × d, we have _x[f(x) · A ] = _x [f(x)] · A.
+    
+  * Part 4. Given n events A_1, A_2, ⋯ A_n. For each i ∈ [n], if [ A_i ] ≥ 1-δ_i. Then taking a union bound over all the n events, we have [ A_1  and  A_2 ⋯ A_n] ≥ 1- ∑_i=1^n δ_i.
+
+
+
+
+
+ §.§ Algebra Facts
+
+
+We state some standard facts and omit their proofs, since they're very standard.
+
+
+We have
+
+
+    
+  * For any orthonormal basis U ∈^n × k, we have U x _2 =  x _2.
+    
+  * For any orthonornal basis U ∈^n × k, we have U _F ≤√(k).
+    
+  * For any diagonal matrix Σ∈^k × k and any vector x ∈^k, we have Σ x _2 ≥σ_min(Σ)  x _2. 
+    
+  * For symmetric matrix A, we have σ_min(A) = min_z :  z _2=1 z^⊤ A z.
+    
+  * For symmetric matrix A, we have σ_min(A)  z_2^2 ≤ z^⊤ A z for all vectors z.
+    
+  * For symmetric matrix A, we have σ_max(A)  z_2^2 ≥ z^⊤ A z for all vectors z.
+    
+  * For any matrix A, we have A≤ A _F.
+    
+  * For any square matrix A ∈^k × k and vector x ∈^k, we have x^⊤ A x = ∑_i=1^k ∑_j=1^k x_i A_i,j x_j = ∑_i=1^k x_i A_i,i x_i + ∑_i≠ j x_i A_i,j x_j.
+    
+  * For any square and invertible matrix R, we have R^-1 = σ_min(R)^-1
+    
+  * For any matrix A and for any unit vector x, we have A ≥ A x _2.
+    
+  * For any matrix A, A A^⊤ =  A^⊤ A.
+
+
+
+
+
+
+
+ §.§ Restricted Isometry Property
+
+
+
+
+    A linear operator 𝒜: ^d× d→^m satisfies RIP iff, for ∀ W ∈^d × d  
+    s.t. (W)≤ k, the following holds:
+    
+    (1-ϵ_k) ·W_F^2≤ A(W)_F^2≤(1+ϵ_k) ·W_F^2
+
+    where ϵ_k > 0 is a constant dependent only on k.
+
+
+
+
+ §.§ Rank-one Estimation
+
+
+The goal of matrix sensing is to design a linear operator 𝒜:^d × d→^m and a recovery algorithm so that a low-rank matrix W_*∈^d × d can be recovered exactly using 𝒜(W_*). 
+
+
+Given a ground-truth matrix W_* ∈^d × d. Let (x_1, y_1) , ⋯,  (x_m, y_m) ∈^d×^d denote m pair of feature vectors. Let b ∈^m be defined
+
+    b_i = x_i^⊤ W_* y_i,    ∀ i ∈ [m].
+
+The goal is to use b ∈^m and { (x_i,y_i)}_i ∈ [m]⊂^d ×^d to recover W_* ∈^d × d.
+
+
+
+
+We propose two different kinds of rank-one measurement operators based on Gaussian distribution.
+
+
+
+ §.§ Rank-one Independent Gaussian Operator
+
+
+
+We formally define Gaussian independent operator, here.
+
+Let (x_1, y_1) , ⋯, (x_m, y_m) ⊂^d ×^d denote i.i.d. samples from  Gaussian distribution.
+
+For each i ∈ [m], we define A_i ∈^d × d as follows
+
+    A_i := x_i y_i^⊤ .
+ 
+
+We define A_GI∈^d × m d as follows: 
+
+    𝒜_GI := [ A_1 A_2   ⋯ A_m ] .
+
+Here GI denotes Gaussian Independent. 
+ 
+
+
+
+
+
+
+
+
+
+
+ §.§ Matrix Angle and Distance
+
+
+
+We list several basic definitions and tools in literature, e.g., see <cit.>.
+
+Let X, Y ∈^n × k denote two matrices.
+
+For any matrix X, and for orthonormal matrix Y (Y^⊤ Y = I_k) we define
+
+    
+  * tanθ(Y,X) :=  Y_^⊤ X ( Y^⊤ X )^-1
+
+For orthonormal matrices Y and X (Y^⊤ Y = I_k and X^⊤ X = I_k), we define
+
+    
+  * cosθ (Y,X) := σ_min (Y^⊤ X). 
+     
+        
+  * It is obvious that cos (Y,X) = 1/  (Y^⊤ X)^-1 and cos(Y,X) ≤ 1.
+    
+    
+  * sinθ(Y,X) :=  (I - Y Y^⊤) X.
+     
+        
+  * It is obvious that sinθ(Y,X) =  Y_ Y_^⊤ X  =  Y_^⊤ X and sinθ(Y,X) ≤ 1.
+        
+  * From Lemma <ref>, we know that sin^2θ(Y,X) + cos^2θ(Y,X) = 1. 
+    
+    
+  * (Y,X) := sinθ(Y,X)
+  
+
+
+
+
+
+
+
+Let X, Y∈^n× k be orthogonal matrices, then 
+
+    tanθ(Y,X) = sinθ(Y,X)/cosθ(Y,X).
+
+
+
+
+
+
+
+Let X, Y∈^n× k be orthogonal matrices, then 
+
+    sin^2θ(Y, X) + cos^2θ(Y,X) =1.
+
+
+
+
+
+
+
+ §.§ Matrix Concentration
+
+
+
+
+  Given a finite sequence { X_1, ⋯ X_m }⊂^n_1 × n_2 of independent, random matrices all with the dimension of n_1 × n_2.
+
+    Let Z = ∑_i=1^m X_i.
+
+  Assume that
+  
+    [X_i] = 0, ∀ i ∈ [m],  X_i ≤ M, ∀ i ∈ [m]
+
+
+Let [Z] be the matrix variances statistic of sum
+
+    [Z] = max{∑_i=1^m [X_iX_i^⊤]  , ∑_i=1^m [X_i^⊤ X_i] }
+
+Then it holds that
+
+    [ Z ] ≤ (2 [Z] ·log(n_1+n_2))^1/2 + M log(n_1 + n_3) /3
+
+Further, for all t>0
+
+    [  Z ≥ t ] ≤ (n_1 + n_2) ·exp( -t^2/2/[Z] + M t/3 )
+
+
+
+
+
+
+
+§ ANALYSIS
+
+
+Here in this section, we provide analysis for our proposed algorithm. In Section <ref>, we provide definitions in our algorithm analysis. In Section <ref> we define the operators to be used. In Section <ref> we provide our main theorem together with its proof. In Section <ref> we introduce our main induction hypothesis. 
+
+
+
+ §.§ Definitions
+
+
+
+
+
+
+We define W_* ∈^d × d as follows
+
+    W_* = U_* Σ_* V_*^⊤
+
+where U_* ∈^n × k are orthonormal columns,  
+and V_* ∈^n × k are orthonormal columns.
+Let σ_1^*, σ_2^*, ⋯σ_k^* denote the diagonal entries of diagonal  matrix Σ_* ∈^d × d.
+
+
+
+Let W_* be defined as Definition <ref>. We define κ to the condition number of W_*, i.e.,
+
+    κ : = σ_1/σ_k.
+
+It is obvious that κ≥ 1.
+
+
+
+For each i ∈ [m], let x_i,y_i denote samples from N(0,I_d).
+
+For each i ∈ [m], we define
+
+    A_i = x_i y_i^⊤
+
+and
+
+    b_i = x_i^⊤ W_* y_i.
+
+
+
+
+
+ §.§ Operators
+
+
+
+
+For each i ∈ [m], let A_i and b_i be defined as Definition <ref>. 
+
+ We define W_0 := 1/m∑_i=1^m b_i A_i.
+
+We say initialization matrix W_0 ∈^d × d is an ϵ-good operator if 
+
+    W_0 - W_* ≤ W_* ·ϵ.
+
+
+
+
+
+ 
+For any vectors u,v, we define  
+
+    
+  * B_x:=1/m∑_l=1^m(y_l^⊤ v)^2x_lx_l^⊤
+    
+  * B_y:=1/m∑_l=1^m(x_l^⊤ u)^2 y_ly_l^⊤
+  
+ We say B = (B_x,B_y) is ϵ-operator if the following holds: 
+
+ 
+ 
+  * B_x-I≤ϵ 
+ 
+  * B_y-I≤ϵ
+ 
+
+
+
+For any vectors u,v ∈^d. 
+We define  
+
+    
+  * G_x:=1/m∑_l=1^m(y_l^⊤ v)(y_l^⊤ v_)x_lx_l^⊤ 
+    
+  * G_y:=1/m∑_l=1^m(x_l^⊤ u)(x_l^⊤ u_ ) y_ly_l^⊤
+
+ u,u_∈^d,v,v_∈^d are unit vectors, s.t., u^⊤ u_=0 and v^⊤ v_=0. 
+ We say G = (G_x,G_y) is ϵ-operator if the following holds
+
+ 
+ 
+  * G_x≤ϵ,
+ 
+  * G_y≤ϵ.
+ 
+
+
+
+
+ §.§ Main Result
+
+
+
+We prove our main convergence result as follows:  
+
+Let W_* ∈^d × d be defined as Definition <ref>. 
+
+
+
+Also, let 𝒜:^d × d→^m be a linear measurement operator parameterized by m matrices, i.e., 𝒜={A_1,A_2,⋯,A_m} where A_l=x_l y_l^⊤. Let 𝒜(W) be as given by
+
+    b=𝒜(W)=
+        [ [ A_1^⊤ W] [ A_2^⊤ W]          ⋯  [A_m^⊤ W] ]^⊤
+
+
+
+If the following conditions hold 
+
+    
+  * ϵ= 0.001 / (k^1.5κ ) 
+    
+  * T =  100log( κ k / ϵ_0)
+    
+  * Let {(b_i,A_i)}_i∈ [m] be an ϵ-init operator (Definition <ref>).
+    
+  * Let B be an ϵ-operator (Definition <ref>).  
+    
+  * Let G be an ϵ-operator(Definition <ref>).
+
+Then, after T-iterations of the alternating minimization method (Algorithm <ref>), we obtain W_T=U_T V_T^⊤ s.t., 
+
+    W_T-W_*≤ϵ_0.
+
+
+
+ 
+
+ 
+
+We first present the update equation for V̂_t+1∈^d × k. 
+
+
+
+ 
+
+Also, note that using the initialization property (first property mentioned in Theorem <ref>), we get, 
+
+    W_0 -W_*≤ϵσ_1^* ≤σ_k^*/100 .
+
+
+Now, using the standard sin theta theorem for singular vector perturbation <cit.>, we get: 
+
+    (U_0,U_*) ≤    1/100
+    (V_0,V_*) ≤    1/100
+
+
+After T iteration (via Lemma <ref>), we obtain
+
+    (U_T,U_*) ≤     (1/4)^T 
+    (V_T,V_*) ≤     (1/4)^T
+
+which implies that
+
+    W_T - W_* ≤ϵ_0
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Main Induction Hypothesis
+
+
+
+
+    We define ϵ_d: = 1/10.
+    We assume that ϵ= 0.001 / (k^1.5κ ).
+    For all t ∈ [T], we have the following results.
+    
+    
+        
+  * Part 1. If (U_t,U_*) ≤1/4(V_t, V_*) ≤ϵ_d, then we have
+        
+            
+  * (V_t+1, V_*) ≤1/4(U_t,U_*) ≤ϵ_d
+        
+        
+  * Part 2. If (V_t+1, V_*) ≤1/4(U_t,U_*) ≤ϵ_d, then we have
+        
+            
+  * (U_t+1,U_*) ≤1/4(V_t+1, V_*) ≤ϵ_d
+        
+    
+
+
+
+Proof of Part 1.
+
+Recall that for each i ∈ [n], we have
+
+    b_i = x_i^⊤ W_* y_i = ⟨ x_i y_i^⊤ , W_* ⟩  = ⟨ A_i, W_* ⟩ = [A_i^⊤ W_*].
+
+
+ 
+
+Recall that  
+
+    V̂_t+1=    min_V∈^d× k∑_i=1^m(b_i-x_i^⊤ U_t V^⊤ y_i)^2
+    
+    =    min_V∈^d× k∑_i=1^m(x_i^⊤ W_* y_i-x_i^⊤ U_t V^⊤ y_i)^2
+
+
+ 
+
+Hence, by setting gradient of this objective function to zero. Let F ∈^d × k be defined as Definition <ref>.
+
+We have V_t+1∈^d × k can be written as follows: 
+
+    V̂_t+1 = W_*^⊤ U_t - F
+
+where F ∈^d × k is the error matrix
+
+    F = [ F_1 F_2   ⋯ F_k ]
+
+where F_i ∈^d for each i ∈ [k].  
+ 
+
+
+
+Then, using the definitions of F ∈^d × k and Definition <ref>,  
+we get:
+
+
+    [
+        [ F_1;   ⋮; F_k ]]
+        =B^-1(BD-C)S·(V_*)
+
+where (V_*) ∈^dk is the vectorization of matrix V_* ∈^d × k.
+ 
+ 
+
+Now, recall that in the t+1-th iteration of Algorithm <ref>, V_t+1∈^d × k is obtained by QR decomposition of V̂_t+1∈^d × k. Using notation mentioned above,
+
+    V̂_t+1=V_t+1R
+
+
+where R ∈^k × k denotes the lower triangular matrix R_t+1∈^k × k obtained by the QR decomposition of V_t+1∈^d × k.
+
+ 
+
+We can rewrite V_t+1∈^d × k as follows
+
+    V_t+1 =     V̂_t+1 R^-1
+    
+          =      (W_*^⊤ U_t-F)R^-1
+
+where the first step follows from  Eq. (<ref>) , and the last step follows from Eq. (<ref>).
+
+Multiplying both the sides by V_*,∈^d × (d-k), where V_*,∈^d × (d-k) is a fixed orthonormal basis of the subspace orthogonal to span(V_*), using Claim <ref>
+
+    (V_*, )^⊤ V_t+1 = -(V_*, )^⊤ FR^-1
+
+
+Thus, we get:
+
+    (V_t+1, V_*) =    (V_*, )^⊤ V_t+1
+    
+        =      (V_*, )^⊤ F R^-1
+        =      F R^-1
+    ≤    F·R^-1
+    ≤     0.001 σ_k^* (U_t, U_*) · R^-1
+    ≤     0.001 σ_k^* (U_t, U_*) · 2 (σ_k^*)^-1
+    ≤     0.01 ·(U_t,U_*)
+
+
+where the first step follows from definition of  (see Definition <ref>), the second step follows from Eq. (<ref>), the third step follows from V_*, is an orthonormal basis, 
+ and the forth step follows from  Fact <ref>, the fifth step follows from Lemma. <ref>, the sixth step follows from Lemma <ref> (In order to run this lemma, we need to the condition of Part 1 statement to be holding), the last step follows from simple algebra. 
+
+
+Proof of Part 2.
+
+Similarly, we can prove this as Part 1.
+
+
+
+ 
+
+
+
+§ MEASUREMENTS ARE GOOD OPERATOR
+
+
+In this section, we provide detailed analysis for our operators. First Section <ref> we introduce some standard results for truncated Gaussian. In Section <ref> and Section <ref> we bound the term Z_i and [Z_iZ_i^⊤] respectively. In Section <ref> we state our main lemma. In Section <ref> we show that out initialization is good. In Section <ref> we show our two operators are good. 
+ 
+
+
+
+ §.§ Tools for Gaussian
+
+
+
+We state a standard tool from literature,
+
+    Let X ∼𝒳_k^2 be a chi-squared distributed random variable with k degrees of freedom. Each one has zero means and σ^2 variance. 
+    
+    Then it holds that
+    
+    [X - kσ^2 ≥ (2√(kt) + 2t) σ^2]
+            ≤    exp(-t)
+    [kσ^2 - X ≥ 2√(kt)σ^2]
+            ≤    exp(-t)
+
+    Further if k ≥Ω(ϵ^-2 t) and t ≥Ω(log(1/δ)), then we have
+    
+    [ | X - k σ^2 | ≤ϵ k σ^2 ] ≤δ.
+
+
+
+We state a standard fact for the 4-th moment of Gaussian distribution.
+
+Let x ∼ N(0,σ^2), then it holds that _x ∼ N(0,σ^2)[x^4] = 3 σ^2.
+
+
+
+Let x ∼ N(0, σ^2 I_d) denote a random Gaussian vector. Then we have
+
+
+  * Part 1 
+
+    [x x^⊤ x x^⊤] = (d+2) σ^4
+
+
+  * Part 2
+
+    [ x x^⊤ x x^⊤ ] = (d+2) σ^4
+
+
+
+
+We define A:=xx^⊤ xx^⊤. Then we have
+
+    A_i,j = x_i ∑_l=1^d x_l x_l x_j
+
+For i=j, we have
+
+    [A_i,i] =     [ x_i ∑_l=1^d x_l x_l x_i ] 
+    
+    =     [x_i(∑_l=1^i-1x_l x_l + x_i x_i + ∑_l=i+1^d x_l x_l) x_i] 
+    
+    =     [x_i^4] + ∑_l ∈ [d] \ i[x_l^2 x_i^2] 
+    
+    =     [x_i^4] + ∑_l ∈ [d] \ i[x_l^2] [x_i^2] 
+    
+    =     [x_i^4] + (d-1) σ^4 
+    
+    =      3 σ^4 + (d-1) σ^4 
+    
+    =      (d + 2) σ^4
+
+
+where the third step follows from linearity of expectation (Fact <ref>), the forth step follows from x_l and x_i are independent, the fifth step follows _z ∼ N(0,σ^2)[z^4] =3 σ^4.
+ 
+
+For i≠ j, we have
+
+    [A_i,j] =     [ x_i ∑_l=1^d x_l x_l x_j ] 
+    
+    =     [x_i x_j^3] + [x_i^3 x_j] + ∑_l ∈ [d] \ i,j[x_i x_l^2 x_j] 
+    
+    =      0
+
+where the second step follows from linearity of expectation (Fact <ref>).
+
+
+
+[Rotation invariance property of Gaussian]
+
+    Let A^⊤∈^d × k with k < d denote an orthonormal basis (i.e., AA^⊤ = I_k). Then for a Gaussian x ∼(0, σ^2 I_d), we have
+    
+    Ax ∼(0, σ^2 I_k).
+
+
+
+
+    Let y := Ax ∈^k, then
+    
+    y_i = ∑_j = 1^dA_ijx_j,   ∀ i ∈ [k].
+
+    By definition of Gaussian distribution
+ 
+    
+    y_i ∼(0, σ^2∑_j = 1^dA_ij^2).
+
+    Recall that A^⊤ is an orthonormal basis.
+
+    
+    We have
+    
+    A_ij^2 = 1.
+
+    Thus we have
+    
+    y ∼(0, σ^2 I_k),
+
+
+
+
+
+ §.§ Bounding 
+
+
+
+
+Let x_i denote a random Gaussian vector samples from N(0, σ^2 I_d). Let y_i denote a random Gaussian vector samples from N(0, σ^2 I_d).
+
+Let U_*, V_* ∈^d × k.
+
+We define
+
+    Z_i := x_i x_i^⊤ U_* Σ_* V_*^⊤ y_i y_i^⊤,    ∀ i ∈ [m]
+
+
+
+  * Part 1. We have
+
+    [  Z_i ≤ C^2 k^2 log^2(d/δ) σ^4 ·σ_1^* ] ≥ 1-δ/(d).
+
+
+  * Part 2. If k ≥Ω(log(d/δ))  We have
+
+    [  Z_i ≤ C^2 k^2 σ^4 ·σ_1^* ] ≥ 1-δ/(d).
+
+
+
+
+
+Proof of Part 1.
+
+We define 
+
+    a_i := U_*^⊤ x_i ∈^k 
+    
+    b_i := V_*^⊤ y_i ∈^k
+
+Since U_* and V_* are orthornormal basis, due to rotation invariance property of Gaussian (Fact <ref>) 
+, we know that a_i ∼ N(0,σ^2 I_k) and b_i ∼ N(0, σ^2 I_k).
+
+We also know that 
+
+
+    x_i = (U_*^⊤)^† a_i = U_* a_i 
+    
+    y_i = (V_*^⊤)^† b_i = V_* b_i
+
+
+Thus, by replacing x_i,y_i with a_i,b_i, we have
+
+    Z_i  
+    =      x_i x_i^⊤ U_* Σ_* V_*^⊤ y_i y_i^⊤
+    
+    =      U_* a_i a_i^⊤ U_*^⊤ U_* Σ_* V_*^⊤ V_* b_i b_i^⊤ V_*^⊤
+    
+    =      U_* a_i a_i^⊤Σ_* b_i b_i^⊤ V_*^⊤
+    ≤     U_* · a_i a_i^⊤·Σ_* · b_i b_i^⊤· V_*^⊤
+    ≤    σ_1^* · a_i _2^2 · b_i _2^2
+
+where the second step follows from replacing x,y by a,b, the third step follows from U_*^⊤ U_* = I and V_*^⊤ V_* = I, the forth step follows from Fact <ref>. 
+
+ 
+
+Due to property of Gaussian, we know that
+
+    [ |a_i,j| > √(Clog(d/δ))σ ] ≤δ/(d)
+
+
+Taking a union bound over k coordinates, we know that
+
+    [  a_i _2^2 ≤ C k log(d/δ) σ^2 ] ≥ 1-δ /(d)
+
+Similarly, we can prove it for b_i _2^2.
+
+
+Proof of Part 2.
+Since k ≥Ω(log(d/δ)), then we can use Lemma <ref> to obtain a better bound.
+ 
+
+
+
+
+
+
+
+ §.§ Bounding 
+
+
+We can show that
+
+    [ Z_i Z_i^⊤] ≤ C^2 k^2 σ^4 (σ_1^*)^2.
+
+
+
+
+
+
+
+ 
+
+Using Lemma <ref>
+
+
+    _a ∼ N(0, σ^2 I_k )[ a_i a_i^⊤ a_i a_i^⊤ ] ≤ C k σ^2.
+
+Thus, we have
+
+    [ a_i a_i^⊤ a_i a_i^⊤] ≼ Ck σ^2 · I_k
+
+
+Then, we have
+
+    [Z_i Z_i^⊤] 
+             =     _x,y[ x_i x_i^⊤ U_* Σ_* V_*^⊤ y_i y_i^⊤ y_i y_i^⊤ V_* Σ_* U_*^⊤ x_i x_i^⊤ ] 
+    
+             =     _a,b[ U_* a_i a_i^⊤ U_*^⊤ U_* Σ_* V_*^⊤ V_* b_i b_i^⊤ V_*^⊤ V_* b_i b_i^⊤ V_*^⊤ V_* Σ_* U_*^⊤ U_* a_i a_i^⊤ U_*^⊤ ]
+    
+             =     _a,b[ U_* a_i a_i^⊤Σ_*  b_i b_i^⊤  V_*^⊤ V_* b_i b_i^⊤Σ_*  a_i a_i^⊤ U_*^⊤ ] 
+     
+             =     _a,b[ U_* a_i a_i^⊤Σ_*  b_i b_i^⊤ b_i b_i^⊤Σ_*  a_i a_i^⊤ U_*^⊤ ] 
+    ≤    _a,b[ a_i a_i^⊤Σ_*  b_i b_i^⊤ b_i b_i^⊤Σ_*  a_i a_i^⊤  ]  
+    ≤    _a[ a_i a_i^⊤Σ_* _b[ b_i b_i^⊤ b_i b_i^⊤ ] Σ_*  a_i a_i^⊤  ]  
+    ≤     C^2 k^2 σ^4 (σ_1^*)^2
+
+     where the first step follows from the definition of Z_i, the second step follows from replacing x_i,y_i with a_i,b_i, the third step follows from U_*,V_* are orthonormal columns, the fourth step follows from V_* are orthonormal columns, the fifth step follows from
+    U_* ≤ 1
+    , the sixth step follows from
+    using Lemma <ref> twice.
+
+
+
+
+
+ §.§ Main Results
+
+
+
+We prove our main result for measurements.  
+
+
+
+     Let {A_i,b_i}_i∈ [m] denote measurements be defined as Definition <ref>.
+
+     Assuming the following conditions are holding
+     
+        
+  * k = Ω(log(d/δ))
+        
+  * m = Ω(ϵ^-2 (d+k^2) log(d/δ))
+      
+     
+     Then, 
+     
+        
+  * The property in Definition <ref>, initialization is a ϵ-operator
+        
+  * The property in Definition <ref>, B are ϵ-operator.
+        
+  * The property in Definition <ref>, G are ϵ-operator.
+     
+     holds with probability at least 1-δ/(d).
+
+
+
+Using Lemma <ref> and Lemma <ref>, we complete the proof.
+
+
+
+
+
+ §.§ Initialization Is a Good Operator
+
+
+
+We define matrix S ∈^d × d as follows
+
+    S: = 1/m∑_i=1^m b_i A_i.
+
+
+If the following two condition holds
+ 
+
+    
+  * Condition 1. k = Ω(log(d/δ)),
+    
+  * Condition 2. m = Ω( ϵ^-2 k^2 log(d/δ) ).
+
+
+Then we have
+
+    [  S  - W_* ≤ϵ· W_*  ] ≥ 1-δ.
+
+
+
+
+
+
+
+    
+ 
+    
+    (Initialization in Definition <ref>) Now, we have: 
+
+    
+    S =     1/m∑_i=1^m b_i A_i 
+    
+              =     1/m∑_i=1^m b_i x_i y_i^⊤
+    
+              =     1/m∑_i=1^m  x_i b_i y_i^⊤
+    
+              =     1/m∑_i=1^m x_i x_i^⊤ W_* y_i  y_i^⊤
+     
+              =     1/m∑_i=1^m x_i x_i^⊤ U_* Σ_* V_*^⊤ y_i y_i^⊤,
+
+     where the first step follows from Definition <ref>, the second step follows from A_i = x_i y_i^⊤, the third step follows from b_i is a scalar, the forth step follows from b_i = x_i^⊤ W_* y_i, the fifth step follows from W_* = U_* Σ_* V_*^⊤. 
+
+For each i ∈ [m], we define matrix Z_i ∈^d × d as follows:
+
+    Z_i := x_i x_i^⊤ U_* Σ_* V_*^⊤ y_i y_i^⊤,
+
+then we can rewrite S ∈^d × d in the following sense,
+     
+    S = 1/m∑_i=1^m Z_i
+
+     
+     Note that, we can compute [Z_i] ∈^d × d
+     
+    _x_i,y_i[Z_i]
+            =     _x_i, y_i[  x_ix_i^⊤_d × d U_* Σ_* V_*^⊤_ d × d y_i y_i^⊤_d × d ] 
+    
+            =     _x_i[  x_ix_i^⊤_d × d U_* Σ_* V_*^⊤_ d × d ]  ·_y_i [ y_i y_i^⊤_d × d ] 
+    
+            =     _x_i [x_i x_i^⊤ ] · U_* Σ_* V_*^⊤·_y_i[ y_i y_i^⊤] 
+     
+            =      U_* Σ_* V_*^⊤
+
+    where the first step follows definition of Z_i, the second step follows from x_i and y_i are independent and Fact <ref>, the third step follows from Fact <ref> the forth step follows from [x_ix_i^⊤] = I_d and [y_i y_i^⊤] = I_d.
+
+ 
+
+     As S ∈^d × d is a sum of m random matrices, the goal is to apply Theorem <ref>
+    to show that S is close to
+    
+    [S] =       W_* 
+    
+        =      U_* Σ_* V_*^⊤
+
+    for large enough m. 
+    
+Using Lemma <ref> (Part 2) with choosing Gaussian variance σ^2=1, we have
+ 
+
+    [  Z_i ≤ C^2 k^2  σ_1^*, ∀ i ∈ [m] ] ≥ 1-δ/(d)
+
+
+
+
+    
+     Using Lemma <ref> with choosing Gaussian variance σ^2= 1, we can bound [Z_i Z_i^⊤] as follows  
+     
+     
+    [Z_i Z_i^⊤] ≤     C^2 k^2 (σ_1^*)^2
+
+
+
+    
+ Let Z = ∑_i=1^m (Z_i - W_*).
+ 
+ Applying Theorem <ref> we get 
+     
+    [  Z ≥ t ] ≤ 2d ·exp( -t^2/2/[Z] + M t/3 )
+
+     where
+
+ 
+    Z =      m S - m W_* 
+    [Z] =      m · C^2 k^2  (σ_1^*)^2,     by Eq. (<ref>)
+    
+     M=      C^2 k^2 σ_1^*     by Eq. (<ref>)
+
+
+Replacing t= ϵσ_1^* m and Z = mS - mW_* inside [] in Eq. (<ref>), we have 
+
+
+    [  S - W^* ≥    ϵσ_1^* ] ≤ 2d ·exp( -t^2 /2/[Z] + M t /3)
+
+Our goal is to choose m sufficiently large such that the above quantity is upper bounded by 2d ·exp ( - Ω( log(d/δ) )).
+
+First, we need 
+
+
+    t^2/[Z]
+    =     ϵ^2 m^2 (σ_1^*)^2 / m · C^2 k^2  (σ_1^*)^2  
+    
+    =     ϵ^2 m / C^2 k^2  
+    ≥    log(d/δ)
+
+where the first step follows from choice of t and bound for [Z].
+
+This requires
+
+    m ≥ C^2 ϵ^-2 k^2 log(d/δ)
+
+
+Second, we need 
+
+    t^2 /  M t   =     ϵ m σ_1^* / M 
+    
+    =     ϵ m σ_1^* /C^2 k^2   σ_1^*
+    
+    =     ϵ m /C^2 k^2  
+    ≥    log(d/δ)
+
+where the first step follows from choice of t and the second step follows from bound on M.
+
+This requires
+
+    m ≥ C^2 ϵ^-2 k^2 log(d/δ)
+
+    
+  Finally, we should choose
+     
+    m ≥ 10C^2 ϵ^-2 k^2 log(d/δ) ,
+
+
+    Which implies that 
+     
+    [  S - W_* ≤ϵ·σ_1^* ] ≥ 1- δ/(d).
+
+     
+   Taking the union bound with all Z_i are upper bounded, then we complete the proof.
+
+
+ 
+
+
+
+ §.§ Operator  and  is good
+
+
+
+
+If the following two conditions hold
+
+    
+  * Condition 1. d = Ω(log(d/δ))
+    
+  * Condition 2. m = Ω(ϵ^-2 d log(d/δ))
+
+Then operator B (see Definition <ref>) is ϵ good, i.e.,
+
+    [  B_x - I_d≤ϵ ] ≥     1-δ/(d)  
+    [  B_y - I_d ≤ϵ ] ≥     1-δ/(d)
+
+Similar results hold for operator G (see Definition <ref>).
+
+
+
+
+
+
+ 
+
+ 
+     
+     Recall that
+     B_x:=1/m∑_l=1^m(y_l^⊤ v)^2x_lx_l^⊤.
+
+     Recall that B_y:=1/m∑_l=1^m(x_l^⊤ u)^2 y_ly_l^⊤.
+     
+     Now, as x_i,y_i are rotationally invariant random variables 
+     , wlog, we can assume u=e_1.
+     
+     We use x_i,1∈ to denote the first entry of x_i ∈^d. 
+
+     
+     Thus,  
+     
+    (x_i^⊤ u u^⊤ x_i)=x_i,1^2
+
+     Then 
+     
+    [ (x_i^⊤ u u^⊤ x_i)^2 ] = [x_i,1^4 ] = 3
+
+
+    We define
+    
+    Z_i = (x_i^⊤ u)^2 y_i y_i^⊤
+
+    then
+    
+    [Z_i] = I_d
+    
+    
+   Using similar idea in Lemma <ref>, we have
+    
+    [  Z_i ≤ C d , ∀ i ∈ [m] ] ≥ 1- δ/(d)
+
+    
+    We can bound
+    
+    [ Z_i Z_i^⊤ ] 
+        =     _x,y[ (x_i^⊤ u)^2 y_i y_i^⊤  y_i y_i^⊤  (x_i^⊤ u)^2 ] 
+    
+        =     _x[ (x_i^⊤ u)^2 _y[y_i y_i^⊤  y_i y_i^⊤ ]  (x_i^⊤ u)^2 ] 
+    
+        =      (d+2) · | _x[ (x_i^⊤ u)^2  (x_i^⊤ u)^2 ] | 
+    
+        =      (d+2) · 3 
+    ≤     C d
+
+where the fourth step follows from C ≥ 1 is a sufficiently large constant.
+
+
+Let Z = ∑_i=1^m (Z_i - I_d).
+
+    Applying Theorem <ref> we get
+    
+    [ Z≥ t] ≤ 2d ·exp(-t^2/2/[Z] + Mt/3),
+
+where
+
+    Z =      m · B - m · I 
+    [Z] =      C m d 
+    
+        M =      C d
+
+
+Using t = m ϵ and Z = ∑_i=1^m (Z_i - I_d), and B = 1/m∑_i=1^m Z_i, we have
+
+    [  Z ≥ t] 
+    =     [ ∑_i=1^m (Z_i - I_d) ≥ m ϵ ] 
+    
+    =     [ 1/m∑_i=1^m Z_i - I_d ≥ϵ ] 
+    
+    =     [  B - I_d ≥ϵ ]
+
+    
+By choosing t = m ϵ and m = Ω(ϵ^-2 d log(d/δ)) we have
+
+    
+    [  B - I_d ≥ϵ ] ≤δ/(d).
+
+where B can be either B_x or B_y.
+
+
+    Similarly, we can prove 
+    
+    [G_x≤ϵ] ≥ 1 - δ, 
+    [G_y≤ϵ] ≥ 1 - δ.
+
+
+
+
+
+
+
+
+
+§ ONE SHRINKING STEP
+
+
+In this section, we provide a shirking step for our result. In Section <ref> we define the matrices B, C, D ,S to be used in analysis. In Section <ref> we upper bound the norm of BD- C. In Section <ref> we show the update term V_t + 1 can be written in a different way. In Section <ref> and Section <ref> we upper bounded F and R^-1 respectively. 
+
+
+
+ §.§ Definitions of 
+
+
+
+ 
+
+For each p ∈ [k], let u_*,p∈^n denotes the p-th column of matrix U_* ∈^n × k. 
+
+For each p ∈ [k], let u_t,p denote the p-th column of matrix U_t ∈^n × k.
+
+We define block matrices B, C, D, S ∈^kd × kd as follows:
+For each (p,q) ∈ [k] × [k]
+
+    
+  * Let B_p,q∈^d × d denote the (p,q)-th block of B 
+    
+    B_p,q= ∑_i=1^m  y_i y_i^⊤_d × d  matrix· (x_i^⊤ u_t,p)_scalar· (x_i^⊤ u_t,q) _scalar
+
+    
+  * Let C_p,q∈^d × d denote the (p,q)-th block of C, 
+    
+    C_p,q= ∑_i=1^m  y_i y_i^⊤_ d × d  matrix· (x_i^⊤ u_t,p ) _scalar· (x_i^⊤ u_*q) _scalar
+
+    
+  * Let D_p,q∈^d × d denote the (p,q)-th block of D, 
+    
+    D_p,q= u_t,p^⊤ u_*q I
+
+    
+  * Let S_p,q∈^d × d denote the (p,q)-th block of S, 
+    
+    S_p,q= σ_p^* I ,    if  p=q; 
+      0,    if  p  q.
+
+    Here σ_1^*, ⋯σ_k^* are singular values of W_* ∈^d × d.
+   
+  * We define F ∈^d × k as follows
+   
+    (F) _d × 1 :=  B^-1_d × d (BD-C) _d × d S _d × d·(V_*) _d × 1.
+
+
+
+
+
+
+
+ §.§ Upper Bound on 
+
+
+
+Let B, C and D be defined as Definition <ref>. Then we have
+
+    BD-C≤ϵ·(U,U_*) ·  k
+
+
+
+
+
+Let z_1, ⋯, z_k ∈^d denote k vectors. Let z = [ z_1;   ⋮; z_k ]. 
+
+We define f(z):=z^⊤ (BD-  C)z
+
+We define f(z,p,q) = z_p^⊤ (BD-C)_p,q z_q.
+
+Then we can rewrite
+
+    z^⊤ (BD - C) z
+    =     ∑_p=1^k ∑_q=1^k z_p^⊤ (BD-C)_p,q z_q 
+    
+    =     ∑_p=1^k ∑_q=1^k z_p^⊤ ( B_p,: D_:,q - C_p,q ) z_q  
+    
+    =     ∑_p=1^k ∑_q=1^k z_p^⊤ ( ∑_l=1^k B_p,l D_l,q - C_p,q ) z_q
+
+By definition, we know
+
+    B_p,l =     ∑_i=1^m y_i y_i^⊤ (x_i^⊤ u_t,p) · (  u_t,l^⊤ x_i ) 
+    
+    D_l,q =      (u_*,q^⊤ u_t,l ) I_d 
+    
+    C_p,q =     ∑_i=1^m y_i y_i^⊤ (x_i^⊤ u_t,p) · (  u_*,q^⊤ x_i )
+
+
+We can rewrite C_p,q as follows
+
+    C_p,q = ∑_i=1^m y_i y_i^⊤· (x_i^⊤ u_t,p) · (  u_*,q^⊤ I_d x_i )
+
+
+Let us compute 
+
+    B_p,l D_l,q 
+    =     ∑_i=1^m y_i y_i^⊤ (x_i^⊤ u_t,p) · ( u_t,l^⊤ x_i  ) · ( u_*,q^⊤ u_t,l  )  
+    
+    =     ∑_i=1^m y_i y_i^⊤ (x_i^⊤ u_t,p) ·  ( u_*,q^⊤ u_t,l  ) · ( u_t,l^⊤ x_i  )
+
+where the second step follows from a · b = b · a for any two scalars.
+
+ 
+
+Taking the summation over all l ∈ [k], we have
+
+    ∑_l=1^k B_p,l D_l,q 
+    =     ∑_l=1^k ∑_i=1^m y_i y_i^⊤ (x_i^⊤ u_t,p) ·  ( u_*,q^⊤ u_t,l  ) · ( u_t,l^⊤ x_i  ) 
+    
+    =     ∑_i=1^m y_i y_i^⊤ (x_i^⊤ u_t,p) ·   u_*,q^⊤∑_l=1^k (u_t,l· u_t,l^⊤ ) x_i   
+    
+    =     ∑_i=1^m  y_i y_i^⊤_matrix· (x_i^⊤ u_t,p) _scalar·  u_*,q^⊤  U_t U_t^⊤ x_i _scalar
+
+where first step follows from definition of B and D.
+
+Then, we have
+
+    ∑_l=1^k B_p,l D_l,q - C_p,q
+    =      (∑_i=1^m  y_i y_i^⊤_matrix· (x_i^⊤ u_t,p) _scalar·  u_*,q^⊤  U_t U_t^⊤ x_i _scalar) - C_p,q
+    
+    =      (∑_i=1^m  y_i y_i^⊤_matrix· (x_i^⊤ u_t,p) _scalar·  u_*,q^⊤  U_t U_t^⊤ x_i _scalar) - (∑_i=1^m y_i y_i^⊤· (x_i^⊤ u_t,p) · (  u_*,q^⊤ I_d x_i )) 
+    
+    =     ∑_i=1^m  y_i y_i^⊤_matrix· (x_i^⊤ u_t,p) _scalar·  u_*,q^⊤ ( U_t U_t^⊤ - I_d) x_i _scalar
+
+where the first step follows from Eq. (<ref>), the second step follows from Eq. (<ref>), the last step follows from merging the terms to obtain (U_t U_t^⊤ - I_d).
+
+
+Thus,
+
+    f(z,p,q)
+    =     z_p^⊤ ( ∑_l=1^k B_p,l D_l,q - C_p,q ) z_q 
+    
+    =     ∑_i=1^m  ( z_p^⊤ y_i ) _scalar ( y_i^⊤ z_q ) _scalar· (x_i^⊤ u_t,p) _scalar·   u_*,q^⊤  ( U_t U_t^⊤ - I_d) x_i _scalar
+
+
+ 
+For easy of analysis, we define v_t:= u_*,q^⊤  ( U_t U_t^⊤ - I_d). This means v_t lies in the complement of span of U_t. 
+
+Then 
+
+    v_t _2 
+    =      u_*,q^⊤  ( U_t U_t^⊤ - I_d) _2 
+    
+    =      e_q^⊤ U_*^⊤ (U_t U_t^⊤ - I_d) 
+    ≤     U_*^⊤ (U_t U_t^⊤ - I_d) 
+    
+    =     (U_*,U_t).
+
+where the second step follows from u_*,q^⊤ = e_q^⊤ U_*^⊤ (e_q ∈^k is the vector q-th location is 1 and all other locations are 0s), 
+third step follows from Fact <ref>.
+
+We want to apply Definition <ref>, but the issue is z_p, z_q and v_t are not unit vectors. So normalize them. Let z_p = z_p / z_p _2 , z_q = z_q / z_q _2 and v_t = v_t/  v_t _2.
+
+In order to apply for Definition <ref>, we also need v_t^⊤ u_t,p=0. 
+
+This is obvious true, since v_t lies in the complement of span of U_t and u_t,p in the span of U_t. 
+
+We define 
+
+    G := ∑_i=1^m  (x_i^⊤ u_t,p) _scalar· (x_i^⊤v_t) _scalar· y_i y_i^⊤_matrix
+
+
+By  Definition <ref>, we know that 
+
+    G ≤ϵ.
+
+By definition of spectral norm, we have for any unit vector z_p and z_q, we know that
+
+    |z_p^⊤ G z_q | ≤ G ≤ϵ.
+
+where the first step follows from definition of spectral norm (Fact <ref>), and the last step follows from Definition <ref>.
+ 
+
+Note that
+
+    f(p,q,z) =     ∑_i=1^m  (x_i^⊤ u_t,p) · (x_i^⊤v_t) _scalar· (z_p^⊤ y_i) · (y_i^⊤z_q) _scalar· z_p _2 · z_q _2 · v_t _2 _scalar
+    
+    =     z_p^⊤_ 1 × d·( ∑_i=1^m  (x_i^⊤ u_t,p) · (x_i^⊤v_t) _scalar· y_i y_i^⊤_ d × d ) ·z_q _d × 1· z_p _2 · z_q _2 · v_t _2 _scalar
+    
+    =     z_p^⊤_1 × d· G _d × d·z_q _d × 1· z_p _2 · z_q _2 · v_t _2 _scalar
+
+where the second step follows from rewrite the second scalar (z_p^⊤ y_i) (y_i^⊤z_q) = z_p^⊤ (y_i y_i^⊤) z_q, the last step follows from definition of G.
+
+Then,
+
+    |f(z,p,q)|
+    =      | ∑_i=1^m z_p^⊤ G z_q | · z_p _2  z_q _2  v_t _2 
+    ≤    ϵ z_p _2  z_q _2 · v_t _2 
+    ≤    ϵ z_p _2  z_q _2 ·(U_t,U_*)
+
+where the last step follows from Eq. (<ref>).
+
+
+
+Finally, we have
+
+    BD-C
+        =     max_z,z_2=1|z^⊤(BD-C)z| 
+    
+        =     max_z,z_2=1|∑_ p ∈ [ k ],q ∈ [k] f(z,p,q)| 
+    ≤    max_z,z_2=1∑_ p ∈ [ k ],q ∈ [k] | f(z,p,q)| 
+    ≤    ϵ·(U_t,U_*) max_z,z_2=1∑_p∈ [k] , q ∈ [k] z_p_2z_q_2 
+    ≤    ϵ·(U,U_*) ·  k
+
+where the first step follows from Fact <ref>, the last step step follows from ∑_p=1^k  z_p _2 ≤√(k) (∑_p=1^k  z_p _2^2)^1/2 = √(k).
+
+  
+
+
+
+
+
+ §.§ Rewrite 
+
+
+
+
+If 
+
+    V_t+1 = (W_*^⊤ U_t-F)R^-1
+
+then, 
+
+    (V_*, )^⊤ V_t+1 = -(V_*, )^⊤ FR^-1
+
+
+
+
+
+ 
+    Multiplying both sides by V_*,∈^d × (d-k):
+    
+    V_t+1=     (W_*^⊤ U_t-F)R^-1
+    
+            (V_*, )^⊤ V_t+1=    (V_*, )^⊤(W_*^⊤ U_t-F)R^-1
+    
+            (V_*, )^⊤ V_t+1=    (V_*, )^⊤ W_*^⊤ R^-1-(V_*, )^⊤ FR^-1
+
+    We just need to show (V_*, )^⊤ W_*^⊤ R^-1=0.
+
+By definition of V_*,, we know:
+
+    V_*,^⊤ V_*= 0_k × (n-k)
+
+
+Thus, we have:
+
+    (V_*, )^⊤ W_*^⊤ =     V_*,^⊤ V_* Σ_* U_*^⊤
+    
+        =     0
+
+ 
+
+
+
+
+
+
+ §.§ Upper bound on 
+
+
+
+Let 𝒜 be a rank-one measurement operator where A_i = x_i u_i^⊤. Let κ be defined as Definition <ref>.  
+
+ 
+ Then, we have
+ 
+    F ≤ 2 ϵ k^1.5·σ_1^* ·(U_t,U_*)
+
+
+ Further, if ϵ≤ 0.001 / ( k^1.5κ )
+
+    F ≤ 0.01 ·σ_k^* ·(U_t,U_*).
+
+
+
+Recall that 
+
+    (F) = B^-1(BD-C)S ·(V_*).
+
+
+Here, we can upper bound F as follows
+
+    F≤    F_F 
+    
+        =     (F) _2 
+    ≤    B^-1·BD-C·S·(V_*)_2 
+    
+        =     B^-1·(BD-C)· S ·√(k)
+    ≤    B^-1·(BD-C)·σ_1^* ·√(k)
+
+where the first step follows from ·≤·_F (Fact <ref>), the second step follows vectorization of F is a vector, the third step follows from A x _2 ≤A · x _2, the forth step follows from (V_*) _2 =  V_* _F ≤√(k)  
+(Fact <ref>) and the last step follows from S ≤σ_1^* (see Definition <ref>). 
+
+Now, we first bound B^-1=1/(σ_min(B)). 
+
+Also, let Z=[ z_1 z_2   ⋯ z_k ] and let z=(Z). 
+
+
+Note that B_p,q denotes the (p,q)-th block of B.
+
+We define 
+
+    B := { x ∈^kd |  x _2 = 1 }.
+
+
+Then  
+
+
+
+    σ_min(B)
+        =     min_z ∈ Bz^⊤ B z 
+    
+        =     min_z ∈ B∑_ p ∈ [k], q ∈ [k] z_p^⊤ B_pqz_q 
+    
+        =     min_z ∈ B∑_p=1^k z_p^⊤ B_p,pz_p+∑_p≠ qz_p^⊤ B_p,qz_q.
+
+where the first step follows from Fact <ref>, 
+the second step follows from simple algebra, the last step follows from  
+(Fact <ref>).
+
+
+
+ 
+
+We can lower bound z_p^⊤ B_p,pz_p as follows
+
+    z_p^⊤ B_p,p z_p
+        ≥    σ_min(B_p,p) · z_p _2^2 
+    ≥     (1-ϵ) · z_p _2^2
+
+where the first step follows from Fact <ref>  
+, the last step follows from Definition <ref> .
+
+
+We can upper bound | z^⊤ B_p,q z_q | as follows,
+
+    |z_p^⊤ B_p,q z_q|
+        ≤     z_p _2 · B_p,q· z_q _2 
+    ≤    ϵ· z_p _2 · z_q _2
+
+where the first step follows from Fact <ref>, the last step follows from Definition <ref> . 
+
+We have
+
+    σ_min(B)
+        =     min_z,z_2=1∑_p=1^k z_p^⊤ B_p,pz_p+∑_p≠ qz_p^⊤ B_p,qz_q 
+    ≥    min_z,z_2=1 (1-ϵ)∑_p=1^k  z_p _2^2 +∑_p≠ qz_p^⊤ B_p,qz_q 
+    ≥    min_z,z_2=1(1-ϵ)∑_p=1^kz_p_2^2-ϵ∑_p ≠ qz_p_2z_q_2 
+    
+        =     min_z,z_2=1 (1-ϵ) -ϵ∑_p ≠ qz_p_2z_q_2  
+    
+        =     min_z,z_2=1 (1-ϵ) - k ϵ
+    ≥     1- 2 kϵ
+    ≥     1/2
+
+
+
+where the first step follows from Eq. (<ref>),
+the second step follows from Eq. (<ref>), the third step follows from Eq. (<ref>), the forth step follows from ∑_p=1^k  z_p _2^2 = 1(which derived from the z_2=1 constraint and the definition of z_2), the fifth step follows from ∑_p ≠ q z_p _2  z_q _2 ≤ k, 
+and the last step follows from ϵ≤ 0.1/k. 
+
+ We can show that
+ 
+    B^-1 = σ_min(B) ≤ 2.
+
+ where the first step follows from Fact <ref>, the second step follows from Eq. (<ref>).
+
+Now, consider BD-C, using Claim <ref>, we have
+
+    BD-C≤  k·ϵ·(U_t,U_*)
+
+
+
+Now, we have
+
+    F ≤     B^-1· (BD - C) ·σ_1^* ·√(k)
+    ≤     2 · (BD - C) ·σ_1^* ·√(k)
+    ≤     2 · k ·ϵ·(U_t,U_*) ·σ_1^* ·√(k)
+ 
+where the first step follows from Eq .(<ref>), the second step follows from Eq. (<ref>),  
+and the third step follows from  Eq. (<ref>).
+
+
+
+
+ §.§ Upper bound on 
+
+
+
+Let 𝒜 be a rank-one measurement operator matrix where A_i=x_i y_i^⊤. Also, let 𝒜 satisfy three properties mentioned in Theorem <ref>.
+
+If the following condition holds
+
+    
+  * (U_t, U_*) ≤1/4≤ϵ_d = 1/10 (The condition of Part 1 of Lemma <ref>)
+
+
+
+Then, 
+
+    R^-1≤     10 /σ_k^*
+
+
+
+For simplicity, in the following proof, we use V to denote V_t+1. We use U to denote U_t.
+
+Using Fact <ref>
+
+    R^-1 = σ_min(R)^-1
+
+
+We can lower bound σ_min(R) as follows:
+
+    σ_min(R)
+        =     min_z,z_2=1Rz_2 
+    
+        =     min_z,z_2=1VRz_2 
+    
+        =     min_z,z_2=1V_*Σ_*U_*^⊤ Uz-Fz_2 
+    ≥    min_z,z_2=1V_*Σ_*U_*^⊤ Uz_2-Fz_2 
+    ≥    min_z,z_2=1V_*Σ_*U_*^⊤ Uz_2-F
+
+where the first step follows from definition of σ_min,
+the second step follows from Fact <ref>,  
+the third step follows from V = (W_*^⊤ U-F)R^-1 =  (V_* Σ_* U_*^⊤ U - F) R^-1 (due to Eq. (<ref>) and Definition <ref>)  
+, the forth step follows from triangle inequality,  
+the fifth step follows from A x _2 ≤ A for all x _2=1.
+
+Next, we can show that
+
+    min_z,z_2=1V_*Σ_*U_*^⊤ Uz_2
+    =     min_z,z_2=1Σ_*U_*^⊤ Uz_2 
+    ≥    min_z,z_2=1σ_k^* · U_*^⊤ Uz_2 
+    
+    =     σ_k^* ·σ_min(U^⊤ U_*)
+ 
+where the first step follows from Fact <ref>,  
+ the second step follows from Fact <ref>, the third step follows from definition of σ_min,  
+ 
+Next, we have
+
+    σ_min(U^⊤ U_*) 
+    =     cosθ(U_*, U) 
+    
+    =     √(1-sin^2 θ(U_*,U))
+    ≥    √(1- (U_*,U)^2)
+ 
+where the first step follows definition of cos, the second step follows from sin^2 θ + cos^2 θ  =1 (Lemma <ref>), the third step follows from sin≤ (see Definition <ref>).
+
+
+Putting it all together, we have
+
+    σ_min(R) ≥    σ_k^* √(1-(U_*,U)^2) -  F 
+    ≥    σ_k^* √(1-(U_*,U)^2) - 0.001 σ_k^* (U_*,U) 
+    
+    =     σ_k^* ( √(1-(U_*,U)^2) - 0.001 (U_*,U)  ) 
+    ≥     0.2 σ_k^*
+
+where the second step follows from Lemma <ref>, the last step follows from (U_*,U) < 1/10.
+ 
+
+
+
+
+
+§ MATRIX SENSING REGRESSION
+
+
+
+Our algorithm has O(log(1/ϵ_0)) iterations, in previous section we have proved why is that number of iterations sufficient. In order to show the final running time, we still need to provide a bound for the time we spend in each iteration. In this section, we prove a bound for cost per iteration. 
+In Section <ref> we provide a basic claim that, our sensing problem is equivalent to some regression problem. In Section <ref> we show the different running time of the two implementation of each iteration. In Section <ref> we provide the time analysis for each of the iteration of our solver. In Section <ref> shows the complexity for the straightforward solver. Finally in Section <ref> we show the bound for the condition number. 
+
+
+
+ §.§ Definition and Equivalence
+
+
+In matrix sensing, we need to solve the following problem per iteration:
+
+
+Let A_1,…,A_m ∈^d× d, U∈^d× k and b∈^m be given. The goal is to solve the following minimization problem
+
+    min_V∈^d× k∑_i=1^m ([A_i^⊤ U V^⊤]-b_i)^2,
+
+
+
+We define another regression problem 
+
+Let A_1,…,A_m ∈^d× d, U∈^d× k and b∈^m be given.
+
+We define matrix M∈^m× dk as follows
+
+    M_i,* :=     (U^⊤ A_i),    ∀ i ∈ [m].
+
+
+The goal is to solve the following minimization problem.
+
+    min_v∈^d kMv-b _2^2,
+
+
+
+We can prove the following equivalence result
+
+
+Let A_1,…,A_m ∈^d× d, U∈^d× k and b∈^m be given.
+
+If the following conditions hold
+
+    
+  * M_i,* :=  (U^⊤ A_i),    ∀ i ∈ [m].
+
+  * The solution matrix V ∈^d × k can be reshaped through vector v ∈^dk, i.e., v = (V^⊤).
+
+
+
+Then, the problem (defined in Definition <ref>) is equivalent to problem (defined in Definition <ref>) .
+ 
+
+
+
+Let X, Y∈^d× d, we want to show that 
+
+    [X^⊤ Y] =     (X)^⊤(Y).
+
+Note that the RHS is essentially
+∑_i ∈ [d]∑_j ∈ [d] X_i,jY_i,j, for the LHS, note that 
+
+    (X^⊤ Y)_j,j =     ∑_i∈ [d] X_i,j Y_i,j,
+
+the trace is then sum over j. 
+
+Thus, we have Eq. (<ref>). This means that for each i∈ [d], 
+
+    [A_i^⊤ UV^⊤]=(U^⊤ A_i)^⊤(V^⊤).
+
+
+
+Set M∈^m × dk be the matrix where each row is (U^⊤ A_i), we see Definition <ref> is equivalent to solve the regression problem as in the statement. This completes the proof.
+
+
+
+
+ §.§ From Sensing Matrix to Regression Matrix
+
+
+
+
+Let A_1,…,A_m ∈^d× d, U∈^d× k . 
+ We define matrix M∈^m× dk as follows
+
+    M_i,* :=     (U^⊤ A_i),    ∀ i ∈ [m].
+
+
+
+The naive implementation of computing M ∈^m × dk
+takes m ·(k,d,d) time.
+Without using fast matrix multiplication, it is O(md^2k) time.
+
+
+For each i ∈ [m], computing matrix U^⊤∈^k × d times A_i ∈^d × d takes (k,d,d) time. Thus, we complete the proof.
+
+
+
+The batch implementation takes (k,dm,d) time. 
+Without using fast matrix multiplication, it takes O(md^2 k) time.
+
+
+We can stack all the A_i together, then we matrix multiplication. For example, we construct matrix A ∈^d × dm. Then computing U^⊤ A takes (k,d,dm) time.
+
+The above two approach only has difference when we use fast matrix multiplication.
+
+
+
+ §.§ Our Fast Regression Solver
+
+In this section, we provide the results of our fast regression solver. Our approach is basically as in <cit.>. For detailed analysis, we refer the readers to the Section 5 in <cit.>. 
+
+
+Assume m = Ω(dk).  
+There is an algorithm that runs in time
+
+    O( m d^2 k + d^3 k^3 )
+
+and outputs a v' such that 
+
+    M v' - b _2 ≤ (1+ϵ) min_v ∈^dk M v - b_2
+
+
+
+
+From Claim <ref>, writing down M ∈^m × dk takes O(md^2 k) time.
+
+
+ 
+
+Using Fast regression resolver as <cit.>, the fast regression solver takes
+ 
+
+    O( ( m· dk  + (dk)^3 ) ·log(κ(M)/ϵ) ·log^2(n/δ) )
+
+
+
+
+In each iteration, our requires takes O( m d^2 k) time.
+
+
+Finally, in order to run Lemma <ref>, we need to argue that κ(M) ≤(k,d,κ(W_*)).
+
+
+ This is true because κ(U) ≤ O(κ(W_*)) and condition number of random Gaussian matrices is bounded by (k,d).
+
+
+
+Then applying Lemma <ref>, we can bound κ(M) in each iteration.
+
+
+
+Eventually, we just run standard error analysis in <cit.>. Thus, we should get the desired speedup.
+
+The reason we can drop the (dk)^3 is m ≥ dk^2.
+
+
+
+
+
+ §.§ Straightforward Solver
+
+
+Note that from sample complexity analysis, we know that m = Ω(dk).
+
+Assume m = Ω(dk). 
+The straightforward implementation of the regression problem (Defintion <ref>) takes 
+
+    O(md^2 k^2)
+
+time.
+
+
+The algorithm has two steps. From Claim <ref>, writing down M ∈^m × dk takes O(md^2 k) time.
+
+The first step is writing down the matrix M ∈^m × dk.
+
+The second step is solving regression, it needs to compute M^† b (where M^†∈^d k × m )
+
+    M^† b = ( M^⊤ M )^-1 M b
+
+
+this will take time
+
+    (dk,m,dk) + (dk,dk,dk) 
+    =      m d^2k^2 + (dk)^3 
+    
+    =      m d^2 k^2
+
+the second step follows from m =Ω(dk)
+.
+
+Thus, the total time is
+
+    m d^2 k + md^2 k^2 = O(m d^2k^2)
+
+
+
+
+
+
+ §.§ Condition Number
+
+
+
+
+
+We define B ∈^m × k as follows B := X U and X ∈^m × d and U ∈^d × k.
+
+Then, we can rewrite M ∈^m × dk
+ 
+
+    M_m × dk = B_m × k⊗Y_m × d
+
+
+Then, we know that κ(M) = κ(B) ·κ(Y) ≤κ(U) κ(X) κ(Y).
+ 
+
+
+
+
+Recall U ∈^d × k. Then we define b_i = U^⊤ x_i for each i ∈ [m].
+
+Then we have
+
+    M_i,* = ( U^⊤ x_i y_i^⊤ ) = (b_i y_i^⊤ ).
+
+
+Thus, it implies 
+
+    M = B ⊗ Y
+ 
+
+ 
+
+
+
+
+
+alpha
+
+
+
+alpha
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

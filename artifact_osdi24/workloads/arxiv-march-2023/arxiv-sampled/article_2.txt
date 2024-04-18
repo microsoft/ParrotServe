@@ -1,0 +1,946 @@
+
+
+firstpage–lastpage
+Effects of Nb Doping on the Charge-Density Wave and Electronic Correlations in the Kagome Metal Cs(V_1-xNb_x)_3Sb_5
+    Hai-Hu Wen
+    March 30, 2023
+===================================================================================================================
+
+
+
+
+
+GRB 210704A is a burst of intermediate duration (T_90∼ 1-4 s) followed by a fading afterglow and an optical excess that peaked about 7 days after the explosion.  
+Its properties, and in particular those of the excess, do not easily fit into the well established classification scheme of GRBs as being long or short,
+leaving the nature of its progenitor uncertain. 
+We present multi-wavelength observations of the GRB and its counterpart, observed up to 160 days after the burst. 
+In order to decipher the nature of the progenitor system, we present a detailed analysis of the GRB high-energy properties (duration, spectral lag, and Amati correlation), its environment, and late-time optical excess. 
+We discuss three possible scenarios: a neutron star merger, a collapsing massive star, and an atypical explosion possibly hosted in a cluster of galaxies. We find that traditional kilonova and supernova models do not match well the properties of the optical excess, leaving us with the intriguing suggestion that this event was an exotic high-energy merger. 
+
+
+
+
+
+(stars:) gamma-ray burst: individual: GRB 210704A – (transients:) gamma-ray bursts
+
+
+
+
+§ INTRODUCTION
+
+
+
+Gamma-ray bursts (GRBs) are the brightest explosive events in the universe <cit.>. They are classified according to their duration T_90 and spectral hardness <cit.>. The population of short GRBs (SGRBs) typically has T_90≲ 2 s and harder spectra, whereas the population of long GRBs (LGRBs) typically has T_90≳ 2 s and softer spectra <cit.>. However, there is overlap between the two populations, and so in some cases it is not clear whether a burst with intermediate properties belongs to the one population or the other <cit.>.
+
+Nowadays, it is known that at least some SGRBs are the consequence of mergers between compact objects, driven by angular momentum and energy losses to gravitational radiation <cit.> and as such are sources of gravitational wave emission <cit.>. These mergers are followed by a luminous and short-lived kilonova emission, visible at optical and near-infrared wavelengths <cit.>.
+
+In contrast, LGRBs are thought to be the result of the core-collapse of a star <cit.> whose mass exceeds about 10 M_⊙ <cit.>.  
+In this scenario, the optical emission from the SN appears a few days after the GRB, when the afterglow has faded sufficiently and the component powered by radioactive heating can be seen. This leads to two ways to identify the presence of a SN associated with a LGRB. First, through a “rebrightening” or “excess” in the optical /nIR light curve of the LGRB, visible for several days/weeks after the burst as a consequence of the SN emission <cit.>. 
+Second, by the appearance of the broad spectral lines characteristic of rapidly expanding ejecta.
+The identification of a SN associated with GRB 980425  <cit.> and of several more in the following years (see, e.g., ) confirmed that this scenario applies to most LGRBs. 
+
+In this work, we investigate the nature of GRB 210704A, a burst first classified as a SGRB, but later considered to be of intermediate duration. We study the high-energy properties of the GRB prompt phase, and present  X-ray, optical, and infrared observations of its afterglow to 15 days after the burst. These observations show that the afterglow initially fades but then becomes brighter again in the optical and, to a less extent, in the near-infrared.  We also present late HST observations of a possible host galaxy. We derive constraints on the redshift of the bursts and consider three possible host environments: a nearby galaxy, a nearby cluster of galaxies, and a distant galaxy. We explore different scenarios to explain our data, and eliminate all of the those involving standard SGRBs or LGRBs. We are left with the intriguing possibility that GRB 210704A was an exotic transient in a cluster at z≈ 0.2.
+
+Our paper is organised as follows. In section <ref>, we present the observations with Fermi, Swift, Chandra, GTC, LDT, Gemini, Subaru, HST, and other telescopes. In section <ref> we present our analysis. We discuss the nature of the GRB in section <ref>. Finally, in section <ref> we summarise our results. 
+
+
+
+§ OBSERVATIONS
+
+
+
+
+
+ §.§ Gamma-rays
+
+
+The prompt gamma-ray emission of GRB 210704A was detected by six instruments: Fermi/GBM <cit.>, AGILE/MCAL <cit.>, Fermi/LAT <cit.>,  AstroSat/CZTI <cit.>, Konus-Wind <cit.>, INTEGRAL/SPI-ACS, and INTEGRAL/ISGRI <cit.>.
+Hereafter, we use the Fermi/GBM trigger time as reference time  T = 2021 July 4 19:33:24.59 UTC. 
+
+<cit.> estimated a duration of about T_90 = 1.06 s based on the  AGILE/MCAL data (0.4-100 MeV), and classified it as a SGRB. 
+A similar short duration, T_90 = 1.0± 0.4 s (20-200 keV), was derived by the analysis of the AstroSat/CZTI dataset <cit.>. 
+
+
+<cit.> reported instead that the Fermi/GBM light curve consisted of a main bright peak with a duration T_90 of about 4.7 s (50-300 keV), with possible faint emission extending to T+20 s <cit.>. 
+In the time interval between T and T+10 s, high-energy (>100 MeV) emission was detected by the Fermi/LAT <cit.> with a photon flux of (1.6±0.3)×10^-3 ph cm^-2 s^-1 and a photon index of -1.74±0.13. 
+The LAT localization was RA, Dec (J2000) = 159.08, +57.31 with a 90% error radius of 6.7 arcmin, critical to enable follow-up observations with narrow-field instruments.
+
+<cit.> reported Konus-Wind observations of a bright peak
+in the interval from T to T+2 s followed by a weaker pulse peaked at T+4.5 s (20 keV - 4 MeV). Finally, <cit.> estimated a duration of T_90 = 3.5± 0.7 s (>80 keV) based on the INTEGRAL/SPI-ACS data.
+All the durations T_90 cited above are summarised in Table <ref>. 
+
+
+
+
+
+
+The values of T_90 reported in GCNs range from 1.0 to 4.7 seconds (see Table <ref>) and do not unambiguously aid in the classification of GRB 210704A. 
+This discrepancy can largely be understood by considering Figure <ref>, which shows the Fermi/GBM light curves in three energy bands.
+
+
+It shows that the observed emission in the soft energy range (8-50 keV; top panel) consists of a weak precursor, followed by strong initial peak with a duration of less than 2 seconds and then an extended tail out to about 6 seconds with two weaker peaks at about 3.5 and 4.8 seconds. 
+However, the precursor and tail are not seen in the harder 300-1000 keV band. 
+Therefore, we suggest that gamma-ray instruments that are not sensitive to soft (≲50 keV) energies would not detect the extended emission and would measure shorter values of T_90.  
+This sort of instrumental selection effect is well known <cit.> and can explain the short T_90 measured by AGILE/MCAL, but does not completely explain the short value measured by AstroSat/CZTI. 
+
+We conclude that from the prompt gamma-ray light curve alone it is not clear whether the GRB is a LGRB or a SGRB with temporally extended spectrally soft emission.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ X-rays
+
+
+
+Following the localisation by the Fermi/LAT,
+the X-Ray Telescope (XRT) aboard Swift initiated automated Target of Opportunity (ToO) observations of the field <cit.>. 
+A first visit was carried out between T+53.5 ks and  T+61.6 ks for a total exposure of 2.6 ks. This led to the identification of the X-ray afterglow at an enhanced position of RA, Dec (J2000) = 10:36:05.21 +57:12:59.1 with a 90% uncertainty radius of 2.7.
+Monitoring of the source continued until T + 5.3 d, when the X-ray afterglow fell below the XRT detection threshold. 
+
+In our analysis, we use light curves and spectra from the UK Swift Science Data Centre (UKSSDC) on-line repository <cit.>. 
+The XRT light curve displays a simple power-law decline, t^-α with α=1.3±0.2.
+The time-averaged XRT spectrum, from T+53 ks to T+455 ks, is best described by an absorbed power-law with a photon index Γ=1.7±0.2 and hydrogen column density N_ H = 5.6× 10^19 cm^-2 fixed at the Galactic value. 
+Based on this model, the unabsorbed X-ray flux (0.3–10 keV) at 11 hrs is approximately 8×10^-13 erg cm^-2 s^-1, in agreement with the distribution of X-ray fluxes of bright SGRBs <cit.>.
+
+In order to characterise the afterglow temporal evolution at late times, we requested Director's Discretionary Time (DDT) observations with the Chandra X-ray Telescope. The target was observed with the ACIS-S3 camera, starting at 01:32:42 UTC on 2021 July 22 (T+14.25 d) for a total exposure of 19.8 ks (ObsID: 25093; PI: Troja). The Chandra data were processed using  4.12 with  Version 4.9.0. 
+At the afterglow position we detect 12 photons within a 1 extraction radius. 
+After correcting for PSF-losses, we derive a count rate of (6.6^+2.1_-1.7) × 10^-4 cts s^-1 in the 0.5-7.0 keV energy range.
+This translates to an unabsorbed X-ray flux of (1.3^+0.4_-0.3) × 10^-14 erg cm^-2 s^-1 in the 0.3-10 keV energy band using the best fit parameters derived from the Swift/XRT spectrum. 
+The combined Swift/Chandra light curve is best described by a power-law decay with α=1.26±0.04. 
+
+
+
+
+ §.§ Optical and Infrared Photometry
+
+
+
+
+We carried out an extensive campaign of follow-up observations using 
+the Deca-Degree Optical Transient Imager (DDOTI; ),
+the Large Monolithic Imager (LMI) on the 4.3-m Lowell Discovery Telescope (LDT; ), the Near Infra-red Imager (NIRI) and the Gemini Multi-Object Spectrographs (GMOS) instruments on the 8.1-m Gemini-North Telescope  <cit.>,  the Hyper Suprime-Cam (HSC) on the Subaru 8.2 m telescope <cit.>, and the Optical System for Imaging and low-Intermediate-Resolution Integrated Spectroscopy (OSIRIS) instrument on the 10.4-m Gran Telescopio de Canarias (GTC; ). 
+Table <ref> gives a log of the observations. 
+
+This dataset was supplemented by archival observations from the
+Hubble Space Telescope (HST) obtained with the Wide Field Camera 3 (WFC3), and 
+from the Canada-France-Hawaii Telescope (CFHT) obtained with MegaPrime/MegaCam during December 2004 (PI: Tanvir and Cowie) (observationID: G013.158.521+57.697) 
+and retrieved from the MegaPipe image stacking pipeline[https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/megapipe/access/graph.html]. 
+
+
+Data were processed following standard techniques for CCD data reduction (e.g., bias subtraction, flat-fielding, cosmic-ray rejection).  
+The Gemini images were reduced using the Gemini  package v1.14[https://www.gemini.edu/observing/phase-iii/understanding-and-processing-data/data-processing-software/gemini-iraf-general], whereas the GTC, LDT and Subaru images were reduced using custom Python-based software. The HST data were processed using standard procedures within the  package <cit.>. The final pixel scale was 0.09/pix for WFC3/IR (F105W and F160W filters) and 0.03/pix for the WFC3/UVIS data.
+
+
+
+We performed PSF photometry on the optical images using  <cit.>. To minimize systematic errors in the calibration, we calibrated all of the r and z photometry using the same six nearby Sloan Digital Sky Survey (SDSS) Data Release 12 (DR12) stars <cit.>. 
+In the nIR images from Gemini, only a weak signal is visible at the GRB position. We estimated its brightness by performing forced aperture photometry, calibrated against nearby Two Micron All-Sky Survey (2MASS; ) sources. Due to the low number of 
+2MASS sources within the NIRI field of view and their likely extended nature, a systematic error of 0.1 mag was added to the absolute calibration of the nIR photometry.  
+
+We performed photometry of the two galaxies S1 and S2 (see Figure <ref>) in the late-epoch HST images using using  aperture photometry and the photometric zeropoints in the image headers. We will discuss the possibility of these galaxies being the host of the GRB in <ref>, but for the time being we will simply note that S1 is almost coincident with the GRB position and therefore our ground-based observations combine the flux of both the GRB counterpart and S1.
+
+Our photometry is shown in Table <ref> (with upper limits being 3σ) and Table <ref> and is plotted in Figure <ref>. All our magnitudes were converted to an AB scale and not corrected for Milky Way extinction, E(B-V) = 0.007 <cit.>. We also include additional measurements from the literature <cit.>. 
+
+
+
+
+
+
+
+
+
+
+ §.§ Optical Spectroscopy
+
+
+Optical spectroscopy of the afterglow at T + 1.1 d was obtained by <cit.> 
+ 
+using the OSIRIS instrument on GTC. We downloaded their calibrated spectrum from the GRBSpec database <cit.>, and show it in Figure <ref>. 
+
+
+
+
+<cit.> noted the clear presence of a continuum down to at least 4200 Å, which implies z < 3.6. 
+They also noted a tentative detection of a broad absorption dip at about 4050 Å, which they interpreted as Ly-α at z = 2.34. We note that this feature occurs in a part of the spectrum that is quite noisy, which calls its reality into doubt.
+They also commented on possible low-significance detections of absorption from OI (1302/1304 Å), SiII (1260 Å), and CII (1334 Å),
+but the absence of corresponding absorption from CIV and SiIV.
+
+
+Another clue to the GRB redshift comes
+from the lack of MgII absorption features.
+The MgII doublet was observed with a mean rest-frame equivalent width of about 3.8 Å in 27 of the sample of 31 LGRBs observed by <cit.> and <cit.>. 
+The optical spectrum of GRB210704A has a signal-to-noise ratio (SNR) of at least 5 from 5000 to 7200 Å and shows no strong absorption lines. For this reason, we suggest that if the GRB is similar to typical LGRBs, then the absence of MgII disfavours the redshift range 
+0.8<z<1.6. However, if the GRB is similar to typical SGRBs, whose spectra do not show strong host absorption lines, then we have the weaker constraint that the redshift is less than 3.6.
+
+
+
+
+
+§ ANALYSIS
+
+
+
+
+
+ §.§ Amati correlation
+
+
+
+Given the ambiguity of the GRB duration, we will consider its properties in the context of the Amati correlation <cit.>. For this, we analysed the Fermi/GBM data from T-0.2 to T+6.1 s and found the best fitting function was a Band function with α=-0.59±0.02, β=-2.95± 0.20, and E_ peak= 283± 8 keV. 
+The fluence in the 10-1000 keV interval (observer's frame) is F=(2.3±0.3)× 10^-5 erg cm^-2.  In the top panel of Figure <ref>, we show the position of the GRB at z = 0.1, 0.4, 0.8, and 2.34. We also show the populations of SGRBs and LGRBs from <cit.>. We see that GRB 210704A is consistent with being a SGRB at low redshift (z<0.4) or with being a LGRB at higher redshift (z ≳ 0.4).
+
+
+
+
+
+ §.§ Spectral lag
+
+
+
+We also consider the spectral lag GRB 210704A in the context of other GRBs, following <cit.> and <cit.>. 
+
+We derive the GRB peak flux by fitting the spectrum of the brightest 1.024 s interval <cit.>  with a Band function.
+The best fit model yields α=-0.36± 0.02, β=-2.82± 0.12, E_ peak= 302± 8 keV), and a peak flux of F=(1.53± 0.02)× 10^-5 erg cm^-2 s^-1. 
+From this value, we derive the isotropic-equivalent peak luminosity,
+ L_ peak, by assuming different redshifts.
+ For example, at z=0.5 the measured peak flux corresponds to L_ peak  = (5.46 ± 0.07)× 10^51 erg s^-1 in the comoving 50–300 keV energy range.
+
+We calculated the lag between the energy bands 25–50 keV and 100–300 keV using the 10 ms resolution light curve and the sum of the signals from the three brightest Fermi NaI detectors (1, 3 and 5). 
+The lag was determined by the maximum of the cross-correlation function between the two light curves. We fit a 4th-degree polynomial around the peak in order to accurately determine the lag. We find that the lag is:
+τ = 80± 9  ms,
+in which the uncertainties are 1σ.
+We estimated the uncertainty by adding Poisson noise to the data <cit.> and repeating the cross-correlation analysis. 
+
+
+In the bottom panel of Figure <ref>, we show the spectral lag (corrected for redshift as (1+z)^0.67, following ) and peak luminosity L_ peak of the GRB at z=0.1, 0.4, 0.8, and 2.34. We also show the populations of LGRBs and SGRBs from <cit.> and <cit.>. 
+We see that, for any redshift, the GRB lag is longer than typical SGRBs.
+Its luminosity fits within the distribution
+of cosmological LGRBs for z ≳ 0.8, whereas for lower redshifts its location in the lag-luminosity diagram would be unusual. 
+Other outliers in a similar position are 
+GRB 031203 and GRB 060729A, peculiar LGRBs associated with bright supernovae. 
+
+
+
+
+
+
+
+
+
+
+ §.§ Afterglow
+
+
+
+In the standard fireball model for GRBs, the afterglow emission is produced by external shocks resulting from the interaction between the relativistic jet and the circumstellar medium <cit.>. 
+Typically, the afterglow phase can be explained as synchrotron radiation from a power-law energy distribution of shocked electrons, N(E)∝ E^-p, which lead to the observed flux density being a series of power-laws segments as a function of time t and frequency ν as F_ν∝ t^-αν^-β <cit.> in which F_ν is the observed flux density and α and β are the temporal and spectral indices, respectively. 
+
+The early optical and X-ray data can be fit with a with a simple absorbed power-law of slope β=0.84±0.02 (see Figure <ref>), indicating that they belong to the same spectral segment and therefore they are expected to display the same temporal decay. 
+We identify this segment as ν_m≲ν_opt≲ν_X≲ν_c (and therefore a slow-cooling regime), where ν_m is the synchrotron characteristic frequency and ν_c is the cooling frequency <cit.>. 
+In this case, F_ν∝ν^(1-p)/2 and the electron index is p=2.68±0.04.
+For a fireball expanding into a uniform density medium, the relation of flux density and time is F_ν∝ t^3(1-p)/4. With the electron index previously estimated, we obtain F_ν∝ t^-1.26±0.03.
+
+
+
+
+
+
+
+A simple power-law decay of slope -1.26 is consistent with X-ray observations at all epochs and with the early optical observations (see Figure <ref>). However, beginning at T+5.5 d, it underpredicts the observed optical and near-infrared emission. 
+We interpret this as evidence of an additional component powering the late-time optical/nIR light curve and will return to discuss it in detail in <ref>.
+
+
+
+
+From the condition that the X-ray afterglow is in slow-cooling regime, we derive an upper limit on the circumburst density n following <cit.>: 
+
+    n ≲  0.4    (1+z/ 2)^-6/11(t/ 1 d)^-4/11(E_ K,iso/10^52 erg)^-6/11
+       (ϵ_e/0.1)^-40/33(ϵ_B/10^-5)^-5/9 cm^-3,
+
+which is consistent with densities typical of the interstellar medium, and disfavors the high-density environment where some LGRBs are found.
+
+Finally, by assuming that the GeV flux is also produced by external forward shocks, 
+we can use the flux above 100 MeV <cit.> as proxy for the blastwave kinetic energy <cit.>. For p≈2.6, we obtain: 
+
+    E_ K,iso≈      10^53(1+z/3)^-1(d_L,28/5)^1.74(F_LAT/ 0.2 nJy)^0.87(t/ 5 s)^1.25
+       (ϵ_e/0.1)^-1.38(ϵ_B/10^-3)^0.13 erg,
+
+where d_L,28 is the luminosity distance in units of 10^28 cm.
+For z≳2, this value fits well within the distribution of LGRBs. 
+
+
+
+
+
+ §.§ Late-time Excess
+
+
+
+The light curves in Figure <ref> are compared to the standard power-law afterglow.  A late-time flattening is expected due to the contribution of the source S1, underlying the GRB position. This model (solid lines) underpredicts the optical and, to a less extent, near-infrared photometry from T+5 d to T+15 d. We consider this to be indicative of an excess component in addition to the afterglow. We identify the peak of this excess at around T+6.5 d, when the observed light is 3-5 times brighter than the afterglow+S1 model. 
+
+Figure <ref> shows the spectral energy distribution (SED) of the GRB counterpart at 
+two epochs, T+1.1 d and  T+5.5 d, respectively. 
+The earlier SED is well described by a power-law function, as expected for a non-thermal afterglow spectrum.
+The later SED shows an excess in the optical (grz) and J band. 
+
+
+We consider a simple model for the excess, treating it as black-body emission arising from a spherical fireball in expansion and ignoring relativistic effects. The rest-frame parameters of this model are the temperature T' and radius R' of the photosphere. 
+
+In the observer's frame, the spectrum will have the shape of a black-body with T_ obs = T'/(1+z).
+
+If we fit this simple black-body model to the grzJK data in Figure <ref>, we obtain T_ obs≈ 3800 K (orange thin line) and a reduced χ^2 ≈ 2 as this model severely underpredicts the K-band measurement. 
+This discrepancy could be due the presence of broad line spectral features that either suppress the K-band emission or enhance the zJ-band measurements. 
+In the latter case, if we exclude the zJ-band points from the fit, the continuum is 
+well described by a hotter black-body with T_ obs≈ 9000 K (blue thick line). 
+We examine both these models in more detail when we discuss likely progenitors and redshifts in <ref>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Environment
+
+
+
+
+
+
+
+
+
+
+
+The field of GRB 210704A  is shown in Figure <ref>. 
+The GRB region shows an overdensity of low-redshift galaxies, notably
+the galaxy WISEA J103604.24+571327.7 (labelled G1 in Figure <ref>) at z = 0.0817 and the galaxies' cluster 400d J1036+5713 at z = 0.203 <cit.>. 
+Two faint (r≈25 AB mag) sources (labelled S1 and S2 in Figure <ref>) lie closer to the GRB position and are also plausible candidate host galaxies. 
+
+Unfortunately, optical spectroscopy does not allow us to conclusively determine the redshift of GRB 210704A and use this redshift to determine the host galaxy (see  <ref>). Therefore, we analyse the projected angular offsets between the galaxies and the GRB to quantify the probability of association.
+
+
+We determined the positions, statistical uncertainties, and half-light radii using the pre-explosion r-band image from MegaPrime/MegaCam for S1 and S2, and the Gemini/GMOS-N r-band image obtained at T+10.44 d for the GRB afterglow and the other host candidates. We likewise confirm the offsets with the HST imaging and derive the photometry for these galaxies in the HST filters (see Table <ref>). To determine the offset for each galaxy we followed the methods outlined by <cit.>. 
+We first aligned the afterglow image (Gemini) and pre-explosion image (MegaPrime) using  to identify point sources in each image and then  to determine the astrometric solution. Using 19 common point sources between the two images, we derive a relative astrometric uncertainty of σ_tie ∼ 0.09. This astrometric uncertainty is included in the offset determination. 
+
+
+Using the Equations 1 to 3 from <cit.> and the galaxy number counts from deep optical imaging <cit.>, the probability of finding an unrelated galaxy of magnitude m_r or brighter within the vicinity of a GRB can be approximated as:
+
+    P_ ch =1-exp(-π r^2_ i× 10^a (m_r - m_0) + b  ),
+
+with a=0.36, b = -2.42, and m_0=24 for galaxies fainter than m_r≳19 mag
+and a=0.56, b = -4.80 and m_0=18 for brighter galaxies. 
+The effective radius  r_ i depends on the projected angular separation R_0 between the GRB and the galaxy and on the half-light radius R_half of the galaxy. We take r_ i=2R_ half for S1 since GRB 210704A is localized inside the detectable light, whereas for other candidates we use r_ i=(R^2_ 0+4R^2_ half)^1/2 because the GRB position is well outside the light of these galaxies. In Table <ref>, we summarize the information on the galaxies that have P_ ch<0.15.
+
+
+Often a galaxy is more likely to be the host than all the other ones, however, in the crowded field of GRB 210704A, two galaxies have comparably low probabilities of chance alignment with the GRB. 
+The bright nearby galaxy G1, located  about 29from the afterglow, has a low chance coincidence probability of 0.5%.  However, the faint galaxy S1, detected close to the afterglow position, has 
+a similarly  probability of 2%. 
+
+
+
+
+ §.§ The Properties of the Possible Host Galaxy G1
+
+
+According to the spectrum  from the Sloan Digital Sky Survey Data Release 7, the galaxy G1 shows the signature of Ca H and K (at 3934 Å and 3969 Å respectively), the G-band (4304 Å), Mg (5175 Å) and Na (5894 Å) absorption lines, all of which are consistent with an old population. Moreover, the decomposition of stellar populations and their analysis using pyPipe3D[<http://ifs.astroscu.unam.mx/pyPipe3D/>], suggest of an old dominant population. Nevertheless, the analysis confirms that a young population is also present, with about 15% of the light corresponding to stars of less than 2 Gyr of age. 
+Based on its spectral properties and observed morphology, we classify G1 as a Sa/Sb galaxy. 
+
+
+
+
+ §.§ The Properties of the Possible Host Galaxy S1
+
+
+We do not have a spectroscopic redshift for S1. Therefore, we modelled its SED (Table <ref>) using  <cit.> using the methodology previously described in <cit.>. The model parameters are the redshift z, total mass M, galaxy age t_ age, e-folding timescale τ, extinction A_V, and metallicity Z. We use these parameters to derive the stellar mass M_* and the star formation rate (SFR) as outlined in <cit.>. Following <cit.>, we apply uniform priors in log t_ age, log τ, log Z, and A_V. We leave the redshift as a free parameter with a uniform prior between 0 and 5. We performed a fit to the data using the  package <cit.>. 
+
+
+
+
+We obtain a photometric redshift z_phot=2.15±0.10, driven by the flux increase in the 
+F160W filter interpreted as the 4000 Å break
+(see Figure <ref>). 
+The best fit yields a galaxy's stellar mass M_*=(1-3)× 10^9 M_⊙, a sub-solar metallicity Z/Z_⊙=0.3^+0.4_-0.2, a moderate star formation rate SFR=2.5^+1.7_-0.9 M_⊙ yr^-1, a relatively young stellar population with age t_m=0.8±0.5 Gyr, and an intrinsic extinction of A_V=0.30±0.15 mag. 
+These parameters are typical of GRB host galaxies in this redshift range for both long and short GRBs <cit.>, although the low metallicity tends to favor the former class. 
+Moreover, the galaxy's absolute magnitude of M_ r=-21.0 is similar to other host galaxies associated to LGRBs <cit.>. 
+
+
+
+
+ §.§ A Possible Host Cluster
+
+
+The overdensity of galaxies
+in this vicinity of the burst is related to the X-ray cluster 400d J1036+5713 (see Figure <ref>). 
+The cluster has an estimated mass of approximately 9×10^13  and a virial radius of R_500≈3. As shown in Figure <ref>, the GRB afterglow lies about 1.5 from the peak of the X-ray diffuse emission, within the cluster's angular radius. 
+In this case, the probabilities reported in Table 2 might overestimate the chance of a random alignment between the GRB and the galaxies in the cluster. 
+To better estimate this value we consider the Swift XRT Cluster Survey <cit.> and search for the number of X-ray clusters serendipitously located within 2 arcmin of a GRB position. Among over 300 long GRB fields examined in the survey, only 4 closely intercept an X-ray cluster, from which we derive a chance probability of P_ ch≈0.012, comparable to the probabilities derived for S1 and G1. 
+If we factor in the cluster brightness and consider only sources with f_X ≳2 × 10^-13 erg cm^-2 s^-1, then the probability of a chance alignment drops to 10^-3. A spurious GRB/cluster association is therefore unlikely, although not impossible when considering the large sample of more than 1500 Swift bursts. Notably, the only other known case of an association with an X-ray cluster is the short GRB 050509B <cit.>. 
+
+
+
+
+
+
+
+
+§ DISCUSSION
+
+
+
+
+
+In this section, we interpret and discuss the physical implications of the results obtained in section <ref>. We consider the nature of the burst (SGRB or LGRB), its redshift, and its likely environment (G1, S1 or the galaxy cluster). For distances, we assume a ΛCDM model with a H_0=67.8 km s^-1 Mpc^-1 <cit.>.
+
+
+
+
+ §.§ A nearby short GRB
+
+
+
+We first consider the possibility of a GRB hosted by the bright (M_r≈-21.5) galaxy G1 (WISEA J103604.24+571327.7) at z = 0.08168. This is supported by the low probability of coincidence of only 0.5% (see Table <ref>). 
+
+
+
+
+The relatively large projected offset of about 52 kpc from G1 is an important constraint. 
+The observed distribution for LGRBs does not extend beyond 10 kpc <cit.>, which allows us to disfavour this possibility. Furthermore, the high-energy properties of GRB 210704A do not resemble those of nearby LGRBs <cit.>. 
+
+The case for a SGRB is less clear. Between 5% and 25% of SGRBs are observed to lie beyond 20 kpc from their host galaxies <cit.>. Assuming an age of 1–0.1 Gyr for the GRB progenitor, the inferred offset would require an intrinsic kick velocity of v_ kick≈50–500 km s^-1, in the range observed for Galactic NS binaries.
+A SGRB at z ∼ 0.08 would be consistent with the properties of other cosmological SGRBs (section <ref>), and would not obey the spectral lag-luminosity relation of LGRBs (section <ref>) as observed in the case of other nearby events <cit.>. 
+Therefore, based on the GRB high-energy properties and its location, a nearby SGRB remains a plausible option. 
+
+
+On the other hand, the observed peak luminosity and peak time of the excess emission do not match well the properties of the kilonova AT2017gfo: 
+the peak brightness  would be about two magnitudes fainter (M_r=-14.6) than AT2017gfo (M_r=-16.4), and the peak time would be several days later.  It was no later than T+12 hours for AT2017gfo whereas for GRB 210704A we observe a maximum around T+7 days.
+
+Using the one-zone model of <cit.>, a radioactively powered transient peaks at a time t_peak given by 
+
+
+    t_peak≈ 1.5  d (M_ej/0.01 M_⊙)^0.5(κ/1 cm^2 g^-1)^0.5(v_ej/0.1 c)^-0.5
+
+where M_ ej is the ejecta mass,  
+v_ ej its velocity, and κ its opacity. 
+To explain a peak of about 7 days, one needs to either increase the mass to of order 0.1 and/or increase the opacity. As a result, the spectral peak would shift to redder wavelengths than the ones observed in this case. 
+Alternatively, a delayed peak can be explained by a low expansion velocity, v≈0.01 c. This latter solution
+is consistent with the simple blackbody model for the optical/nIR excess, which, at a redshift of 0.08, implies temperatures of 4000-10000 K and expansion velocities of 20000-2000 km s^-1, slower than typical merger ejecta.
+
+We also compared our case to the library of simulated kilonova light curves  by <cit.>, incorporating a broad range of ejecta compositions, morphologies and viewing angles. 
+We find that, although the luminosities of the kilonova models are in agreement with the observations for z ≲ 0.4,  the optical peak can only range from a few hours up to a couple of days after the explosion, whereas we observe a peak at T+7 d.
+We note that the mismatch between the observed peak and the kilonova timescale applies to any SGRB up to z≈1, and therefore we can rule out any typical kilonova in this range. 
+
+
+
+ §.§ A distant long GRB
+
+
+
+We next consider the possibility that GRB 210704A is associated with the faint source S1. Intuitively, this may appear as the most likely association given the positional coincidence between S1 and the GRB. However,  the probability of chance coincidence is 2% (Table <ref>), the highest among the three possible host candidates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+The high-redshift derived from the photometric fit in  <ref> is consistent with the weak absorption feature in the afterglow optical spectrum (section <ref>). This provides us with tantalizing evidence that GRB 210704A was indeed located at z≈2.3.
+At this distance, its rest-frame duration would be ≲1.5 s.
+However, its other high-energy properties such as spectral lag (section <ref>), peak energy, and energetics (section <ref>), would fit within the distribution of typical LGRBs (see Figure <ref>). 
+
+
+In this high-redshift scenario, the case of GRB 210704A is reminiscent of other bursts, such as GRB 090426A <cit.> and GRB 200826A <cit.>, characterized by a short duration of the gamma-ray emission despite likely having collapsing massive stars as progenitors. 
+Based on the observed BATSE distribution of GRB durations <cit.>, a small fraction of LGRBs (≲1%) is expected to last less than 2 s. It is therefore not surprising to find some of these examples within the sample of over 1,000 bursts discovered by Swift.
+
+However, in the case of GRB 210704A, the observed optical bump would be challenging to explain with standard SN models.
+At a redshift of 2.3, the simple blackbody model adopted for the optical/nIR excess implies a
+temperature of 30000 K and a sub-relativistic velocity of ∼ 0.2 c. The second solution of a colder black body peaking in the observed J-band requires a superluminal speed, and is thus considered unphysical.
+
+The observed magnitude of the excess of r≈23 AB at T+7 d implies an absolute magnitude of M_UV≈-23.2 at T+2.3 d (rest-frame) (after subtracting the afterglow contribution), brighter than most known SNe <cit.> and AT2018cow-like events <cit.> (see Figure <ref>). The only event whose brightness in UV is comparable with the excess of GRB 210704A is the Dougie tidal disruption event (TDE) candidate <cit.>. However, 
+known TDEs evolve on slower timescales than the excess of GRB210704A. 
+
+Mechanisms capable of producing such a high peak brightness and rapid rise time are rare.
+For instance, the interaction between the SN shock wave and a dense environment, or the continued energy injection from a long-lived central engine are also expected to act on longer timescales than the ones observed here <cit.> . 
+<cit.> suggested that, for the most energetic explosions (≳10^52 erg), a shock breakout propagating through a dense stellar wind could produce strong emission in excess of 10^44 erg s^-1, peaking 
+in the UV on timescales of a few days after the burst. This emission becomes dominant when the Ni^56 yield is low
+as expected if the star directly collapses to a black hole. 
+
+
+
+
+
+
+
+
+
+ §.§ A nearby peculiar GRB
+
+
+
+A final possibility is that GRB 210704A is a peculiar GRB associated with a member of the galaxy cluster at z = 0.203. 
+
+
+
+<cit.> showed that progenitor systems formed within a cluster are likely to be retained within the potential well of its halo, regardless of the intrinsic kick velocity of the progenitor system. However, due to the high merger activity in such crowded environment, the GRB may happen far from its true birthplace. As a result, its host galaxy cannot be confidently identified based on its spatial proximity. 
+
+A cluster environment, although rarely associated with a GRB, has been discussed in the case of both SGRBs and LGRBs. 
+The connection with SGRBs naturally arises as NS binaries with long merger timescales are expected to track the stellar mass density and reside in evolved stellar environments. 
+However, as discussed in section <ref>, a SGRB produced by a typical NS merger would not produce a kilonova compatible with the luminosity and late-onset of the optical excess.
+
+In the case of LGRBs, their typical progenitors, young massive stars <cit.>, are not found in clusters, and a merger-driven explosion with unusual progenitors appears to be the most likely explanation. For example, black hole and neutron star systems (BH-NS), black hole and white dwarf (BH-WD), white dwarf and neutron star (WD-NS) or WD-WD  encounters have been considered <cit.>. 
+
+An exotic progenitor system could explain the unusual high-energy properties of this event and why they do not fit within the standard relations of typical LGRBs for z∼0.2. In addition, we note that the only other LGRB possibly associated with a galaxy cluster is GRB 050911 <cit.>, whose prompt emission was a short duration (∼1 s) peak followed by a weak 16 s long tail and as such resembles the light curve of GRB 210704A. A LGRB produced by an exotic merger system could also give rise to a peculiar optical transient, although in this case, predictions are less secure. 
+
+Assuming that the optical excess is radioactively-powered, we consider the case of ejecta with pure nickel abundance. This is justified by the rapid evolution of the optical emission, comparable to the ^56Ni half-life timescale  of about 6 d. 
+At a redshift of z ≈ 0.2, the optical bump would peak at an absolute magnitude of M_r≈-16.5, corresponding to a luminosity of about 10^42 erg s^-1. The peak bolometric luminosity can be related to the ejecta mass M_ej using Arnett's law, L_pk≈ϵ_ Ni(t_pk) M_ej, where ϵ_ Ni(t_pk) ≈ 5×10^43 erg s^-1 is the energy generation rate at 6 d (rest-frame). 
+The derived mass M_ej≈0.1  is much smaller than in a typical SN, and indicative of a weaker explosion. 
+
+Based on the black-body fit of the optical excess, we derived a temperature of 4500–10000  K and ejecta velocity v_ ej≈0.2-0.02 c. 
+Therefore, the basic properties of the  optical excess, such as its luminosity and fast timescales, could be reproduced by an explosion ejecting a low-mass shell of fast-moving material, composed mainly of ^56Ni. 
+At first order, this is consistent with the predictions of an  accretion-induced collapse (AIC) of a WD <cit.>, 
+driven for example from a WD-WD encounter <cit.>.
+
+
+
+
+
+
+
+
+§ SUMMARY
+
+
+
+
+We have presented broadband observations of GRB 210704A, its afterglow, and environment.
+
+
+After its discovery, the burst was initially classified as a SGRB.
+Our analysis of the high-energy prompt emission shows that the GRB duration is affected by instrumental selection effects, and that the GRB lies at the intersection between SGRBs and LGRBs.
+We place the GRB in the context of the Amati and spectral lag correlations, and show that these can provide information on the nature of the GRB at different possible redshifts.
+
+
+An additional peculiar feature of this GRB is an optical/nIR excess, observed to peak at about T+7 days (observer's frame)
+at a magnitude r≈23.2 AB. 
+We identified this excess by comparing our optical and nIR photometry with a simple afterglow model derived from the X-ray data. 
+
+
+
+
+
+We consider three possible host environments and distance scales: the galaxy G1 at z ≈ 0.08, the galaxy S1 at z ≈ 2.3, and a galaxy's cluster at z≈0.2. We also discuss three different progenitors: a standard SGRB with a kilonova, a standard LGRB with a SN, and an exotic LGRB, perhaps an accretion-induced collapse of a WD <cit.>.
+
+None of the standard explanations is entirely satisfactory. A SGRB followed by a kilonova, perhaps associated with G1, explains the short duration of the prompt gamma-ray emission, its other high-energy properties, and the large distance from the host galaxy. However, the color and timescales of the observed optical excess imply an expansion velocity not typical for the ejecta of a compact binary merger. 
+
+On the other hand, a LGRB associated with the galaxy S1 remains consistent with all the high-energy properties of the event but is challenged by the extreme luminosity of the optical excess. No known transient matches the high luminosity, blue color, and rapid timescales implied by the observations.  
+
+Finally, we considered an exotic progenitor, involving the merger of a WD with another compact objects (either a BH, a NS, or another WD), in the cluster at z ≈ 0.2. 
+Such stellar encounters can explain GRB durations longer than the canonical 2 seconds and could be followed by fast-evolving optical transients consistent with the observed excess. This is the only scenario that matches all the observed properties of GRB210704A although, admittedly, is also the least constrained one. 
+
+
+The difficulty we have had in identifying the progenitor of GRB 210704A highlights the limitations of the traditional GRB dichotomy in long/short, collapsars/mergers events. Although valid for the majority of bursts, it is not sufficient to describe the GRB population in its entirety. The large Swift sample of well-localized bursts has been instrumental to identify these oddball GRBs and start exploring their possible origins. In the next few years, the arrival of the Vera C. Rubin Observatory will undoubtedly enlarge the sample of exotic transient events and perhaps help us find analogues to GRB 210704A.
+
+
+
+
+
+
+
+§ RESEARCH DATA POLICY
+
+The data underlying this article will be shared on reasonable request to the corresponding author.
+
+
+
+
+§ ACKNOWLEDGEMENTS
+
+
+
+We thank the staff of GTC and Gemini for scheduling and executing the observations included in this work, especially Antonio Cabrera and  David Garcia.
+
+
+This project has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme, grant  101002761 (BHianca; PI: Troja).
+
+Some of the data used in this paper were acquired with the RATIR instrument, funded by the University of California and NASA Goddard Space Flight Center, and the 1.5-meter Harold L. Johnson telescope at the Observatorio Astronómico Nacional on the Sierra de San Pedro Mártir, operated and maintained by the Observatorio Astronómico Nacional and the Instituto de Astronomía of the Universidad Nacional Autónoma de México. Operations are partially funded by the Universidad Nacional Autónoma de México (DGAPA/PAPIIT IG100414, IT102715, AG100317, IN109418, IG100820, and IN105921). We acknowledge the contribution of Leonid Georgiev and Neil Gehrels to the development of RATIR.
+
+Some of the data used in this paper were acquired with the DDOTI instrument at the Observatorio Astronómico Nacional on the Sierra de San Pedro Mártir. DDOTI is partially funded by CONACyT (LN 232649, LN 260369, LN 271117, and 277901), the Universidad Nacional Autónoma de México (CIC and DGAPA/PAPIIT IG100414, IT102715, AG100317, IN109418, and IN105921), the NASA Goddard Space Flight Center and is partially funded by the University of Maryland (NNX17AK54G). DDOTI is operated and maintained by the Observatorio Astronómico Nacional and the Instituto de Astronomía of the Universidad Nacional Autónoma de México. We acknowledge the contribution of Neil Gehrels to the development of DDOTI.
+
+We thank the staff of the Observatorio Astronómico Nacional.
+
+We thank Ori Fox, Antonio Castellanos-Ramírez, Yuri Cavecchi and Sebastián F. Sánchez for their useful comments. We also thank Rubén Sánchez Ramírez and Aishwarya Thakur for their support in the reduction of GTC data.
+
+We acknowledge support from the DGAPA/UNAM IG100820 and IN105921. RLB acknowledges support from CONACyT and DGAPA postdoctoral fellowships.
+
+M.I. and G.S.H.P. acknowledge the support from the National Research Foundation grants No. 2020R1A2C3011091 and No. 2021M3F7A1084525, and the R&D program (Project No. 2022-1-860-03) of the Korea Astronomy and Space Science Institute.
+
+This research is based in part on data collected at the Subaru Telescope, which is operated by the National Astronomical Observatory of Japan. We are honored and grateful for the opportunity of observing the Universe from Maunakea, which has the cultural, historical, and natural significance in Hawaii. 
+
+This work is partly based on data obtained with the Gran Telescopio Canarias (GTC), installed in the Spanish Observatorio del Roque de los Muchachos of the Instituto de Astrofísica de Canarias, in the island of La Palma, and with the instrument OSIRIS, built by a Consortium led by the Instituto de Astrofísica de Canarias in collaboration with the Instituto de Astronomía of the Universidad Autónoma de México. OSIRIS was funded by GRANTECAN and the National Plan of Astronomy and Astrophysics of the Spanish Government.
+
+The scientific results reported in this article are based in part on observations made by the Chandra X-ray Observatory through Director's Discretionary Time (ObsID: 25093; PI: Troja). 
+
+This work made use of data supplied by the UK Swift Science Data Centre at the University of Leicester. 
+
+RLB dedicates this work to Cicerón. Thanks for sharing your life with me. I will always love you.
+
+
+
+
+
+
+
+
+
+
+
+
+99
+[Abbott et al.2017a]Abbott2017 Abbott B. P., et al., 2017a, PhRvL, 119, 161101
+
+
+
+[Ahumada et al.2020]SDSS16 Ahumada R., Prieto C. A., Almeida A., Anders F., Anderson S. F., Andrews B. H., Anguiano B., et al., 2020, ApJS, 249, 3. doi:10.3847/1538-4365/ab929e
+
+[Ahumada et al.(2021)]Ahumada2021 Ahumada, T., Singer, L. P., Anand, S., et al. 2021, Nature Astronomy, 5, 917. doi:10.1038/s41550-021-01428-7
+
+
+[Alam et al.2015]SDSS12 Alam S., Albareti F. D., Allende Prieto C., Anders F., Anderson S. F., Anderton T., Andrews B. H., et al., 2015, ApJS, 219, 12. doi:10.1088/0067-0049/219/1/12
+
+[Amati et al.2008]Amati2008 Amati L., Guidorzi C., Frontera F., Della Valle M., Finelli F., Landi R., Montanari E., 2008, MNRAS, 391, 577. doi:10.1111/j.1365-2966.2008.13943.x
+
+[Antonelli et al.(2009)]Antonelli09 Antonelli, L. A., D'Avanzo, P., Perna, R., et al. 2009, , 507, L45. doi:10.1051/0004-6361/200913062
+
+[Arnett1982]Arnett1982 Arnett W. D., 1982, ApJ, 253, 785. doi:10.1086/159681
+
+[Barbieri et al.2019]Barbieri2019 Barbieri C., Salafia O. S., Colpi M., Ghirlanda G., Perego A., Colombo A., 2019, ApJL, 887, L35. doi:10.3847/2041-8213/ab5c1e
+
+[Becerra et al.2017]Becerra2017 Becerra R. L., Watson A. M., Lee W. H., Fraija N., Butler N. R., Bloom J. S., Capone J. I., et al., 2017, ApJ, 837, 116. doi:10.3847/1538-4357/aa610f
+
+[Beckwith et al.2006]Beckwith2006 Beckwith S. V. W., Stiavelli M., Koekemoer A. M., Caldwell J. A. R., Ferguson H. C., Hook R., Lucas R. A., et al., 2006, AJ, 132, 1729. doi:10.1086/507302
+
+[Beniamini et al.2015]Beniamini2015 Beniamini P., Nava L., Duran R. B., Piran T., 2015, MNRAS, 454, 1073. doi:10.1093/mnras/stv2033
+
+[Berger2010]Berger2010 Berger E., 2010, ApJ, 722, 1946. doi:10.1088/0004-637X/722/2/1946
+
+[Berger et al.2011]Berger2011 Berger E., Chornock R., Holmes T. R., Foley R. J., Cucchiara A., Wolf C., Podsiadlowski P., et al., 2011, ApJ, 743, 204. doi:10.1088/0004-637X/743/2/204
+
+[Berretta et al.2021]30375 Berretta A., Longo F., Axelsson M., Bissaldi E., Piron F., Arimoto M., Fermi-LAT Collaboration, 2021, GCN, 30375
+
+[Bertin & Arnouts1996]Bertin1996 Bertin E., Arnouts S., 1996, A&AS, 117, 393
+
+[Bloom, Kulkarni, & Djorgovski2002]Bloom2002 Bloom J. S., Kulkarni S. R., Djorgovski S. G., 2002, AJ, 123, 1111. doi:10.1086/338893
+
+[Bloom et al.2006]Bloom2006 Bloom J. S., Prochaska J. X., Pooley D., Blake C. H., Foley R. J., Jha S., Ramirez-Ruiz E., et al., 2006, ApJ, 638, 354. doi:10.1086/498107
+
+
+
+
+[Breeveld, Lien, & Swift/UVOT Team2021]30389 Breeveld A. A., Lien A. Y., Swift/UVOT Team, 2021, GCN, 30389
+
+[Burenin et al.2007]ROSAT Burenin R. A., Vikhlinin A., Hornstrup A., Ebeling H., Quintana H., Mescheryakov A., 2007, ApJS, 172, 561. doi:10.1086/519457
+
+[Campana et al.2006]Campana2006 Campana S., Mangano V., Blustin A. J., Brown P., Burrows D. N., Chincarini G., Cummings J. R., et al., 2006, Natur, 442, 1008. doi:10.1038/nature04892
+
+[Cartier et al.2021]Cartier2021 Cartier R., Hamuy M., Contreras C., Anderson J. P., Phillips M. M., Morrell N., Stritzinger M. D., et al., 2021, arXiv, arXiv:2108.09828
+
+[Cucchiara et al.2013]Cucchiara2013 Cucchiara A., Prochaska J. X., Zhu G., Ménard B., Fynbo J. P. U., Fox D. B., Chen H.-W., et al., 2013, ApJ, 773, 82. doi:10.1088/0004-637X/773/2/82
+
+[Cutri et al.2003]Cutri2003 Cutri R. M., Skrutskie M. F., van Dyk S., Beichman C. A., Carpenter J. M., Chester T., Cambresy L., et al., 2003, tmc..book
+
+[D'Ai et al.2021]30379 D'Ai A., Kennea J. A., Tohuvavohu A., Sbarufatti B., Page K. L., Beardmore A. P., Melandri A., et al., 2021, GCN, 30379
+
+[D'Avanzo et al.2021]30385 D'Avanzo P., D'Elia V., Fiorenzano A., Padilla C., CIBO Collaboration, 2021, GCN, 30385
+
+[D'Avanzo et al.2021]30432 D'Avanzo P., D'Elia V., Campana S., De Pasquale M., Melandri A., Rossi A., Salvaterra R., et al., 2021, GCN, 30432
+
+[de Ugarte Postigo et al.2012]deUgarte2012 de Ugarte Postigo A., Fynbo J. P. U., Thöne C. C., Christensen L., Gorosabel J., Milvang-Jensen B., Schulze S., et al., 2012, A&A, 548, A11. doi:10.1051/0004-6361/201219894
+
+[de Ugarte Postigo et al.2014]deUgarte2014 de Ugarte Postigo A., Blazek M., Janout P., Sprimont P., Thöne C. C., Gorosabel J., Sánchez-Ramírez R., 2014, SPIE, 9152, 91520B. doi:10.1117/12.2055774
+
+[de Ugarte Postigo et al.2021]30392 de Ugarte Postigo A., Kann D. A., Thoene C., Blazek M., Agui Fernandez J. F., Fynbo J. P. U., Izzo L., et al., 2021, GCN, 30392
+
+[Dichiara et al.2021]30383 Dichiara S., Troja E., Butler N., Watson A. M., Becerra R. L., Kutyrev A., Lee W. H., et al., 2021, GCN, 30383
+
+[Dichiara et al.2021]Dichiara2021 Dichiara S., Troja E., Lipunov V., Ricci R., Oates S. R., Butler N. R., Liuzzo E., et al., 2021, arXiv, arXiv:2111.14861
+
+[Dimple et al.2022]Dimple2022 Dimple, Misra K., Ghosh A., Arun K. G., Gupta R., Kumar A., Resmi L., et al., 2022, arXiv, arXiv:2202.01191. doi:10.48550/arXiv.2202.01191
+
+[Drout et al.2017]Drout17 Drout M. R., Piro A. L., Shappee B. J., Kilpatrick C. D., Simon J. D., Contreras C., Coulter D. A., et al., 2017, Sci, 358, 1570. doi:10.1126/science.aaq0049
+
+[Eichler et al.1989]Eichler1989 Eichler D., Livio M., Piran T., Schramm D. N., 1989, Natur, 340, 126. doi:10.1038/340126a0
+
+[Evans et al.2009]Evans2009 Evans P. A., Beardmore A. P., Page K. L., Osborne J. P., O'Brien P. T., Willingale R., Starling R. L. C., et al., 2009, MNRAS, 397, 1177. doi:10.1111/j.1365-2966.2009.14913.x
+
+[Evans et al.2017]Evans17 Evans P. A., Cenko S. B., Kennea J. A., Emery S. W. K., Kuin N. P. M., Korobkin O., Wollaeger R. T., et al., 2017, Sci, 358, 1565. doi:10.1126/science.aap9580
+
+[Evans & Swift Team2021]30374 Evans P. A., Swift Team, 2021, GCN, 30374
+
+[Fong, Berger, & Fox2010]Fong2010 Fong W., Berger E., Fox D. B., 2010, ApJ, 708, 9. doi:10.1088/0004-637X/708/1/9
+
+[Fong & Rastinejad2021]30445 Fong W., Rastinejad J., 2021, GCN, 30445
+
+[Fraija2015]Fraija2015 Fraija N., 2015, ApJ, 804, 105. doi:10.1088/0004-637X/804/2/105
+
+[Fryer, Burrows, & Benz1998]Fryer1998 Fryer C., Burrows A., Benz W., 1998, ApJ, 496, 333. doi:10.1086/305348
+
+[Fryer, Hungerford, & Young2007]Fryer2007 Fryer C. L., Hungerford A. L., Young P. A., 2007, ApJL, 662, L55. doi:10.1086/519523
+
+
+[Fynbo et al.2009]Fynbo2009 Fynbo J. P. U., Jakobsson P., Prochaska J. X., Malesani D., Ledoux C., de Ugarte Postigo A., Nardini M., et al., 2009, ApJS, 185, 526. doi:10.1088/0067-0049/185/2/526
+
+
+[Galama et al.1998]Galama1998 Galama T. J., Vreeswijk P. M., van Paradijs J., Kouveliotou C., Augusteijn T., Böhnhardt H., Brewer J. P., et al., 1998, Nature, 395, 670. doi:10.1038/27150
+
+[Garcia-Cifuentes al.2023]Garcia-Cifuentes2023 Garcia-Cifuentes, K., Becerra R. L., De Colle F., Cabrera J. I., del Burgo, C. 2023, ApJ, submitted
+
+[Gehrels et al.2005]Gehrels2005 Gehrels N., Sarazin C. L., O'Brien P. T., Zhang B., Barbier L., Barthelmy S. D., Blustin A., et al., 2005, Natur, 437, 851. doi:10.1038/nature04142
+
+[Gehrels et al.2006]Gehrels2006 Gehrels N., Norris J. P., Barthelmy S. D., Granot J., Kaneko Y., Kouveliotou C., Markwardt C. B., et al., 2006, Natur, 444, 1044. doi:10.1038/nature05376
+
+[Gehrels & Razzaque2013]Gehrels2013 Gehrels N., Razzaque S., 2013, FrPhy, 8, 661. doi:10.1007/s11467-013-0282-3
+
+[Giacomazzo, Rezzolla, & Stergioulas2011]Giacomazzo2011 Giacomazzo B., Rezzolla L., Stergioulas N., 2011, PhRvD, 84, 024022. doi:10.1103/PhysRevD.84.024022
+
+[Gonzaga et al.2012]Gonzaga2012 Gonzaga S., Hack W., Fruchter A., Mack J., 2012, drzp.book
+
+[Granot & Sari2002]Granot2002 Granot J., Sari R., 2002, ApJ, 568, 820. doi:10.1086/338966
+
+[Grossman et al.2014]Grossman2014 Grossman D., Korobkin O., Rosswog S., Piran T., 2014, MNRAS, 439, 757. doi:10.1093/mnras/stt2503
+
+[Hakkila et al.2018]Hakkila+18smoke Hakkila J., Lesage S., McAfee S., Hofesmann E., Maly Taylor C., Cannon T., 2018, ApJ, 863, 77. doi:10.3847/1538-4357/aad335
+
+[Hjorth & Bloom2012]Hjorth2012 Hjorth J., Bloom J. S., 2012, grb..book, 169
+
+[Ho et al.(2020)]Ho2020 Ho, A. Y. Q., Perley, D. A., Kulkarni, S. R., et al. 2020, , 895, 49. doi:10.3847/1538-4357/ab8bcf
+
+[Hosseinzadeh et al.2017]Hosseinzadeh2017 Hosseinzadeh G., Arcavi I., Valenti S., McCully C., Howell D. A., Johansson J., Sollerman J., et al., 2017, ApJ, 836, 158. doi:10.3847/1538-4357/836/2/158
+
+
+[Johnson et al.2019]Johnson2019 Johnson B. D., Leja J. L., Conroy C., Speagle J. S., 2019, ascl.soft
+
+[Kashikawa et al.2004]Kashikawa2004 Kashikawa N., Shimasaku K., Yasuda N., Ajiki M., Akiyama M., Ando H., Aoki K., et al., 2004, PASJ, 56, 1011. doi:10.1093/pasj/56.6.1011
+
+[Kann et al.2021]30391 Kann D. A., de Ugarte Postigo A., Thoene C., Blazek M., Agui Fernandez J. F., Martin-Fernandez P., 2021, GCN, 30391
+
+[Kann et al.2021]30401 Kann D. A., de Ugarte Postigo A., Thoene C., Blazek M., Agui Fernandez J. F., Maicas N., Lamadrid (COAJ J. L., 2021, GCN, 30401
+
+[Kann et al.2021]30443 Kann D. A., Izzo L., Galindo Guil F. J., Kasikov A., 2021, GCN, 30443
+
+[Kim et al.2021]30384 Kim V., Pozanenko A., Krugov M., Belkin S., Pankov N., IKI FuN G., 2021, GCN, 30384
+
+[King, Olsson, & Davies2007]King2007 King A., Olsson E., Davies M. B., 2007, MNRAS, 374, L34. doi:10.1111/j.1745-3933.2006.00259.x
+
+[Kouveliotou, et al.1993]Kouveliotou93 Kouveliotou C., et al., 1993, ApJL, 413, L101
+
+[Kumar & Piran2000]Kumar2000 Kumar P., Piran T., 2000, ApJ, 532, 286. doi:10.1086/308537
+
+[Kunzweiler et al.2021]30369 Kunzweiler F., Biltzinger B., Berlato F., Burgess J., Greiner J., 2021, GCN, 30369
+
+[Le Fèvre et al.2004]LeFevre2004 Le Fèvre O., Vettolani G., Paltani S., Tresse L., Zamorani G., Le Brun V., Moreau C., et al., 2004, A&A, 428, 1043. doi:10.1051/0004-6361:20048072
+
+
+[Lee & Ramirez-Ruiz2007]Lee2007 Lee W. H., Ramirez-Ruiz E., 2007, NJPh, 9, 17. doi:10.1088/1367-2630/9/1/017
+
+[Levan et al.2006]Levan2006 Levan A. J., Wynn G. A., Chapman R., Davies M. B., King A. R., Priddey R. S., Tanvir N. R., 2006, MNRAS, 368, L1. doi:10.1111/j.1745-3933.2006.00144.x
+
+[Levan et al.2021]30381 Levan A. J., Campana S., Kann D. A., D'Avanzo P., 2021, GCN, 30381
+
+[Levesque2014]Levesque2014 Levesque E. M., 2014, PASP, 126, 1. doi:10.1086/674531
+
+[Lyutikov & Toonen2019]LyutikovToonen2019 Lyutikov M., Toonen S., 2019, MNRAS, 487, 5618. doi:10.1093/mnras/stz1640
+
+[MacFadyen & Woosley1999]MacFadyen1999ApJ MacFadyen A. I., Woosley S. E., 1999, ApJ, 524, 262. doi:10.1086/307790
+
+[Malacaria, Meegan, & Fermi GBM Team2021]30380 Malacaria C., Meegan C., Fermi GBM Team, 2021, GCN, 30380
+
+[Mazzali et al.2006]Mazzali2006 Mazzali P. A., Deng J., Nomoto K., Sauer D. N., Pian E., Tominaga N., Tanaka M., et al., 2006, Natur, 442, 1018. doi:10.1038/nature05081
+
+[McCracken et al.2003]McCracken2003 McCracken H. J., Radovich M., Bertin E., Mellier Y., Dantel-Fort M., Le Fèvre O., Cuillandre J. C., et al., 2003, A&A, 410, 17. doi:10.1051/0004-6361:20031081
+
+[Mendel et al.2014]Mendel2014 Mendel J. T., Simard L., Palmer M., Ellison S. L., Patton D. R., 2014, ApJS, 210, 3
+
+[Metcalfe et al.2001]Metcalfe2001 Metcalfe N., Shanks T., Campos A., McCracken H. J., Fong R., 2001, MNRAS, 323, 795. doi:10.1046/j.1365-8711.2001.04168.x
+
+[Minaev & Pozanenko2020]Minaev2020 Minaev P. Y., Pozanenko A. S., 2020, MNRAS, 492, 1919. doi:10.1093/mnras/stz3611
+
+[Minaev et al.2021a]30444 Minaev, Pozanenko, Chelovekov, Grebenev, GRB IKI FuN, 2021, GCN, 30444
+
+[Minaev et al.2021b]30452 Minaev P., Pozanenko A., Chelovekov I., Grebenev S., GRB IKI FuN, 2021, GCN, 30452
+
+[Mirabal et al.2006]Mirabal2006 Mirabal N., Halpern J. P., An D., Thorstensen J. R., Terndrup D. M., 2006, ApJL, 643, L99. doi:10.1086/505177
+
+[Miyazaki et al.2018]Miyazaki2018 Miyazaki S., Komiyama Y., Kawanomoto S., Doi Y., Furusawa H., Hamana T., Hayashi Y., et al., 2018, PASJ, 70, S1. doi:10.1093/pasj/psx063
+
+[Moss et al.2022]Moss2022 Moss M., Lien A., Guiriec S., Cenko S. B., Sakamoto T., 2022, ApJ, 927, 157. doi:10.3847/1538-4357/ac4d94
+
+[Nakar & Piran(2017)]nakar17 Nakar, E. & Piran, T. 2017, , 834, 28. doi:10.3847/1538-4357/834/1/28
+
+[Narayan, Paczynski, & Piran1992]Narayan1992 Narayan R., Paczynski B., Piran T., 1992, ApJL, 395, L83. doi:10.1086/186493
+
+[Norris, Marani, & Bonnell2000]Norris2000 Norris J. P., Marani G. F., Bonnell J. T., 2000, ApJ, 534, 248. doi:10.1086/308725
+
+[Norris2002]Norris2002 Norris J. P., 2002, ApJ, 579, 386. doi:10.1086/342747
+
+[O'Connor, Beniamini, & Kouveliotou2020]OConnor2020 O'Connor B., Beniamini P., Kouveliotou C., 2020, MNRAS, 495, 4782. doi:10.1093/mnras/staa1433
+
+[O'Connor et al.2021]OConnor2021 O'Connor B., Troja E., Dichiara S., Chase E. A., Ryan G., Cenko S. B., Fryer C. L., et al., 2021, MNRAS, 502, 1279. doi:10.1093/mnras/stab132
+
+[O'Connor et al.2021]30451
+O'Connor, B., Troja, E., Zack, E., Dichiara, S., Gatkine, P., Durbak J. M., Cenko, S. B., Kutyrev, A., & Veilleux, S. 2021, GCN, 30451
+
+[O'Connor et al.2022]OConnor2022 O'Connor B., Troja E., Dichiara S., Beniamini P., Cenko S. B., Kouveliotou C., González J. B., et al., 2022, MNRAS.tmp. doi:10.1093/mnras/stac1982
+
+[O'Connor et al.2023]OConnor2023 O'Connor B., Troja E., Ryan G., Beniamini P., van Eerten H., Granot J., Dichiara S., et al., 2023, arXiv, arXiv:2302.07906. doi:10.48550/arXiv.2302.07906
+
+[Page et al.2006]Page2006 Page K. L., King A. R., Levan A. J., O'Brien P. T., Osborne J. P., Barthelmy S. D., Beardmore A. P., et al., 2006, ApJL, 637, L13. doi:10.1086/500430
+
+[Palmerio, et al.2019]Palmerio2019 Palmerio J. T., et al., 2019, A&A, 623, A26
+
+[Pankov et al.2021]30440 Pankov N., Belkin S., Kim V., Pozanenko A., Krugov M., GRB IKI FuN, 2021, GCN, 30440
+
+[Pastorello et al.2010]Pastorello2010 Pastorello A., Smartt S. J., Botticella M. T., Maguire K., Fraser M., Smith K., Kotak R., et al., 2010, ApJL, 724, L16. doi:10.1088/2041-8205/724/1/L16
+
+
+[Perley et al.2019]Perley2019 Perley D. A., Mazzali P. A., Yan L., Cenko S. B., Gezari S., Taggart K., Blagorodnova N., et al., 2019, MNRAS, 484, 1031. doi:10.1093/mnras/sty3420
+
+[Perley et al.2021]Perley2021 Perley D. A., Ho A. Y. Q., Yao Y., Fremling C., Anderson J. P., Schulze S., Kumar H., et al., 2021, MNRAS, 508, 5138. doi:10.1093/mnras/stab2785
+
+[Planck Collaboration et al.2014]Planck2014 Planck Collaboration, Ade P. A. R., Aghanim N., Alves M. I. R., Armitage-Caplan C., Arnaud M., Ashdown M., et al., 2014, A&A, 571, A1. doi:10.1051/0004-6361/201321529
+
+[Poolakkil et al.2021]Poolakkil2021 Poolakkil S., Preece R., Fletcher C., Goldstein A., Bhat P. N., Bissaldi E., Briggs M. S., et al., 2021, ApJ, 913, 60. doi:10.3847/1538-4357/abf24d
+
+[Prasad et al.2021]30378 Prasad V., Sawant P., Waratkar G., Vibhute A., Bhalerao V., Bhattacharya D., Rao A. R., et al., 2021, GCN, 30378
+
+[Qin et al.2013]Qin2013 Qin Y., Liang E.-W., Liang Y.-F., Yi S.-X., Lin L., Zhang B.-B., Zhang J., et al., 2013, ApJ, 763, 15. doi:10.1088/0004-637X/763/1/15
+
+[Rastinejad et al.2021]Rastinejad2021 Rastinejad J. C., Fong W., Kilpatrick C. D., Paterson K., Tanvir N. R., Levan A. J., Metzger B. D., et al., 2021, ApJ, 916, 89. doi:10.3847/1538-4357/ac04b4
+
+[Rastinejad et al.2021]30433 Rastinejad J., Levan A., Fong W., Tanvir N. R., Rouco Escorial A., 2021, GCN, 30433
+
+[Richardson et al.2014]Richardson2014 Richardson D., Jenkins R. L., Wright J., Maddox L., 2014, AJ, 147, 118. doi:10.1088/0004-6256/147/5/118
+
+[Richmond et al.1996]Richmon1996 Richmond M. W., van Dyk S. D., Ho W., Peng C. Y., Paik Y., Treffers R. R., Filippenko A. V., et al., 1996, AJ, 111, 327. doi:10.1086/117785
+
+[Ridnaia et al.2021]30388 Ridnaia A., Frederiks D., Golenetskii S., Lysenko A., Svinkin D., Tsvetkova A., Ulanov M., et al., 2021, GCN, 30388
+
+[Rosswog & Ramirez-Ruiz2002]Rosswog2002 Rosswog S., Ramirez-Ruiz E., 2002, MNRAS, 336, L7. doi:10.1046/j.1365-8711.2002.05898.x
+
+[Rueda et al.2018]Rueda2018 Rueda J. A., Ruffini R., Wang Y., Aimuratov Y., Barres de Almeida U., Bianco C. L., Chen Y. C., et al., 2018, JCAP, 2018, 006. doi:10.1088/1475-7516/2018/10/006
+
+[Ruffert & Janka1998]Ruffert1998 Ruffert M., Janka H.-T., 1998, A&A, 338, 535
+
+[Salafia et al.2021]Salafia2021 Salafia O. S., Ravasio M. E., Yang J., An T., Orienti M., Ghirlanda G., Nava L., et al., 2021, arXiv, arXiv:2106.07169
+
+[Sari, Piran, & Narayan1998]Sari1998 Sari R., Piran T., Narayan R., 1998, ApJL, 497, L17. doi:10.1086/311269
+
+[Savaglio, Glazebrook, & Le Borgne2009]Savaglio09 Savaglio S., Glazebrook K., Le Borgne D., 2009, ApJ, 691, 182. doi:10.1088/0004-637X/691/1/182
+
+[Schlegel, Finkbeiner, & Davis1998]Schlegel1998 Schlegel D. J., Finkbeiner D. P., Davis M., 1998, ApJ, 500, 525. doi:10.1086/305772
+
+[Sharon & Kushnir2020]SharonKushnir2020 Sharon A., Kushnir D., 2020, ApJ, 894, 146. doi:10.3847/1538-4357/ab8a31
+
+[Speagle2020]dynesty Speagle J. S., 2020, MNRAS, 493, 3132.
+
+[Sun et al.2021]30411 Sun T.-R., Hu Y.-D., Fernandez-Garcia E., Caballero-Garcia A. J. C.-T. M. D., Castro Tirado M. A., Martin-Fernandez P., 2021, GCN, 30411
+
+[Tanvir et al.2013]Tanvir13 Tanvir N. R., Levan A. J., Fruchter A. S., Hjorth J., Hounsell R. A., Wiersema K., Tunnicliffe R. L., 2013, Natur, 500, 547. doi:10.1038/nature12505
+
+[Toba et al.2014]Toba2014 Toba Y., Oyabu S., Matsuhara H., Malkan M. A., Gandhi P., Nakagawa T., Isobe N., et al., 2014, ApJ, 788, 45. doi:10.1088/0004-637X/788/1/45
+
+[Troja et al.2008]Troja2008 Troja E., King A. R., O'Brien P. T., Lyons N., Cusumano G., 2008, MNRAS, 385, L10. doi:10.1111/j.1745-3933.2007.00421.x
+
+[Troja et al.2012]Troja2012 Troja E., Sakamoto T., Guidorzi C., Norris J. P., Panaitescu A., Kobayashi S., Omodei N., et al., 2012, ApJ, 761, 50. doi:10.1088/0004-637X/761/1/50
+
+[Troja et al.2019]Troja2019 Troja E., Castro-Tirado A. J., Becerra González J., Hu Y., Ryan G. S., Cenko S. B., Ricci R., et al., 2019, MNRAS, 489, 2104. doi:10.1093/mnras/stz2255
+
+[Troja et al.2021]30390 Troja E., Butler N., Watson A. M., Kutyrev A., Lee W. H., Richer M. G., Fox O., et al., 2021, GCN, 30390
+
+[Troja et al.2022]Troja2022 Troja E., Fryer C. L., O'Connor B., Ryan G., Dichiara S., Kumar A., Ito N., et al., 2022, Natur, 612, 228. doi:10.1038/s41586-022-05327-3
+
+[Troja, Watson, & O'Connor2021]30442 Troja E., Watson A., O'Connor B., 2021, GCN, 30442
+
+[Tundo et al.2012]Tundo2012 Tundo E., Moretti A., Tozzi P., Teng L., Rosati P., Tagliaferri G., Campana S., 2012, A&A, 547, A57. doi:10.1051/0004-6361/201219038
+
+[Tunnicliffe et al.2014]Tunnicliffe2014 Tunnicliffe R. L., Levan A. J., Tanvir N. R., Rowlinson A., Perley D. A., Bloom J. S., Cenko S. B., et al., 2014, MNRAS, 437, 1495. doi:10.1093/mnras/stt1975
+
+
+[Ukwatta et al.2010]Ukwatta+10lag Ukwatta T. N., Stamatikos M., Dhuga K. S., Sakamoto T., Barthelmy S. D., Eskandarian A., Gehrels N., et al., 2010, ApJ, 711, 1073. doi:10.1088/0004-637X/711/2/1073
+
+
+[Ursi et al.2021]30372 Ursi A., Pittori C., Verrecchia F., Tavani M., Argan A., Cardillo M., Casentini C., et al., 2021, GCN, 30372
+
+[Valenti et al.2008]Valenti2008 Valenti S., Benetti S., Cappellaro E., Patat F., Mazzali P., Turatto M., Hurley K., et al., 2008, MNRAS, 383, 1485. doi:10.1111/j.1365-2966.2007.12647.x
+
+
+[Villar et al.2017]Villar2017 Villar V. A., Guillochon J., Berger E., Metzger B. D., Cowperthwaite P. S., Nicholl M., Alexander K. D., et al., 2017, ApJL, 851, L21. doi:10.3847/2041-8213/aa9c84
+
+[Vinkó et al.2015]Vinko2015 Vinkó J., Yuan F., Quimby R. M., Wheeler J. C., Ramirez-Ruiz E., Guillochon J., Chatzopoulos E., et al., 2015, ApJ, 798, 12. doi:10.1088/0004-637X/798/1/12
+
+[Volnova et al.2021]30465 Volnova A., Moskvitin A., Pozanenko A., Pankov N., Belkin S., IKI FuN G., 2021, GCN, 30465
+
+[Watson et al.2021]30436 Watson A. M., Troja E., Becerra R. L., Sánchez R., Thakur A., Dichiara S., Butler N., et al., 2021, GCN, 30436
+
+[Williams et al.2023]Williams2023 Williams M. A., Kennea J. A., Dichiara S., Kobayashi K., Iwakiri W. B., Beardmore A. P., Evans P. A., et al., 2023, arXiv, arXiv:2302.03642. doi:10.48550/arXiv.2302.03642
+
+[Wollaeger et al.2021]Wollaeger2021 Wollaeger R. T., Fryer C. L., Chase E. A., Fontes C. J., Ristic M., Hungerford A. L., Korobkin O., et al., 2021, ApJ, 918, 10. doi:10.3847/1538-4357/ac0d03
+
+[Woosley1993]Woosley1993 Woosley S. E., 1993, ApJ, 405, 273. doi:10.1086/172359
+
+[Woosley & Bloom2006]Woosley2006 Woosley S. E., Bloom J. S., 2006, ARA&A, 44, 507. doi:10.1146/annurev.astro.43.072103.150558
+
+[Yang et al.2022]Yang2022 Yang J., Ai S., Zhang B.-B., Zhang B., Liu Z.-K., Wang X. I., Yang Y.-H., et al., 2022, Natur, 612, 232. doi:10.1038/s41586-022-05403-8
+
+[Zemp, Ramirez-Ruiz, & Diemand2009]Zemp2009 Zemp M., Ramirez-Ruiz E., Diemand J., 2009, ApJL, 705, L186. doi:10.1088/0004-637X/705/2/L186
+
+[Zhang et al.2021]Zhang2021 Zhang B.-B., Liu Z.-K., Peng Z.-K., Li Y., Lü H.-J., Yang J., Yang Y.-S., et al., 2021, NatAs, 5, 911. doi:10.1038/s41550-021-01395-z
+
+
+
+
+[Greiner et al.2015]Greiner2015 Greiner J., Mazzali P. A., Kann D. A., Krühler T., Pian E., Prentice S., Olivares E. F., et al., 2015, Natur, 523, 189. doi:10.1038/nature14579
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

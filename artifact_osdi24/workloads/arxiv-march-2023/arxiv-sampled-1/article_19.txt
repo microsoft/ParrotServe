@@ -1,0 +1,1104 @@
+
+	
+	
+	
+	
+   
+
+
+
+    
+
+
+Provable Convergence of Tensor Decomposition-Based Neural Network Training
+    Chenyang Li, Bo Shen*
+
+Department of Mechanical and Industrial Engineering, New Jersey Institute of Technology
+Corresponding Author: mailto:bo.shen@njit.edubo.shen@njit.edu  
+    
+
+==================================================================================================================================================================================
+
+firstpage
+
+
+
+    Abstract
+
+
+Advanced tensor decomposition, such as tensor train (TT), has been widely studied for tensor decomposition-based neural network (NN) training, which is one of the most common model compression methods. However, training NN with tensor decomposition always suffers significant accuracy loss and convergence issues. In this paper, a holistic framework is proposed for tensor decomposition-based NN training by formulating TT decomposition-based NN training as a nonconvex optimization problem. This problem can be solved by the proposed tensor block coordinate descent (tenBCD) method, which is a gradient-free algorithm. The global convergence of tenBCD to a critical point at a rate of 𝒪(1/k) is established with the Kurdyka Łojasiewicz (KŁ) property, where k is the number of iterations. The theoretical results can be extended to the popular residual neural networks (ResNets). The effectiveness and efficiency of our proposed framework are verified through an image classification dataset, where our proposed method can converge efficiently in training and prevent overfitting. 
+ 
+
+
+
+§ KEYWORDS
+Model Compression, Tensor Train Decomposition, Global Convergence, Gradient-free Training.
+
+
+
+
+
+§ INTRODUCTION
+ 
+
+Neural network (NN) has revolutionized many facets of our modern society, such as image classification <cit.>, object detection <cit.>, speech recognition <cit.>, etc. These advances have become possible because of algorithmic advances, large amounts of available data, and modern hardware. Despite their widespread success and popularity, there still remains a significant challenge in executing NNs with many parameters on edge devices. For most embedded and Internet-of-Things (IoT) systems, the sizes of many state-of-the-art NN models are too large, thereby causing high storage and computational demands and severely hindering the practical deployment of NNs. For example, wearable robots <cit.>, such as exoskeletons, typically have limited processing power, memory, storage, and energy supply due to their small size and portability. In addition, these wearable devices rely on wireless communication with remote servers, as larger models would require more bandwidth and higher latency, leading to slower and less reliable performance. 
+
+To address this issue, numerous model compression techniques are proposed in the literature, which can be summarized into the following categories. (1) Pruning <cit.>: this technique involves removing unnecessary connections or neurons from a pre-trained model.  This can result in a smaller network with similar performance. (2) Quantization <cit.>: this involves reducing the number of bits required to represent the weights and activations in a neural network. For example, weights and activations may be represented using 8-bit integers instead of 32-bit floating-point numbers. (3) Structured sparsity <cit.>: this involves imposing a structured sparsity pattern on the weights of a model, such as by sparsifying entire rows or columns of weight matrices. (4) Knowledge distillation <cit.>: this involves training a smaller model to mimic the behavior of a larger, more complex model, using the outputs of the larger model as labels. (5) Low-rank approximation <cit.>: this technique involves approximating the weight matrices/tensors of a deep learning model with low-rank matrices/tensors.
+
+Among all model compression methods, low-rank approximation, especially tensor decomposition <cit.>, is an extremely attractive NN model compression technique since it can reduce the number of parameters in a model while maintaining a high level of accuracy. Specifically, tensor decomposition is a mathematical tool that explores the low tensor rank characteristics of large-scale tensor data, which stands out by offering an ultra-high compression ratio. By utilizing advanced tensor decomposition techniques like tensor train (TT) <cit.>, it is possible to achieve more than a 1,000× reduction in parameters for the input-to-hidden layers of neural network models <cit.>. Moreover, these compression methods can also enhance the classification accuracy in video recognition tasks significantly. Given such impressive compression performance, there has been a surge of interest in exploring the potential of tensor decomposition-based neural network models in prior research efforts <cit.>. Due to the benefits brought by the TT-based NN models, several TT-based NN hardware accelerators have been developed and implemented in different chip formats including digital CMOS ASIC <cit.>, memristor ASIC <cit.> and IoT board <cit.>.
+
+Although tensor decomposition shows strong compression performance, the training of tensor decomposition-based NN is a quite challenging task <cit.> because it involves tensor decomposition in NN training. In general, there are two ways to use tensor decomposition to obtain a compressed model: (1) Train from scratch in the decomposed format, and (2) Decompose a pre-trained uncompressed model and then retrain. In the first case, when the required tensor decomposition-based, e.g. TT-format model, is directly trained from scratch because the structure of the models is already pre-set to low tensor rank format before the training, the corresponding model capacity is typically limited as compared to the full-rank structure, thereby causing the training process being very sensitive to initialization and more challenging to achieve high accuracy. In the latter scenario, though the pre-trained uncompressed model provides a good initialization position, the straightforwardly decomposing full-rank uncompressed model into low tensor rank format causes inevitable and non-negligible approximation error, which is still very difficult to be recovered even after a long-time re-training period. 
+
+No matter which training strategy with tensor decomposition is adopted, the training of NN heavily relies on gradient-based methods, which make use of backpropagation <cit.> to compute gradients of network parameters. These gradient-based methods are based on the Stochastic Gradient Descent (SGD) method <cit.>. In recent years, a considerable amount of research has been dedicated to developing adaptive versions of the vanilla SGD algorithm. These adaptive variants include AdaGrad <cit.>, RMSProp <cit.>, Adam <cit.>, and AMSGrad <cit.>.  Despite the great success of these gradient-based methods, tensor decomposition always brings a linear increase in network depth, which implies training the tensor decomposition format NNs are typically more prone to the gradient vanishing problem <cit.> and hence being difficult to be trained well. 
+
+
+This paper aims to address the current limitations and fully unlock the potential of tensor decomposition-based NN training. To achieve this objective, a holistic framework for tensor decomposition-based NN training is proposed, which formulates tensor train decomposition-based NN training as a nonconvex optimization problem. This problem can be solved by the proposed tensor block coordinate descent (tenBCD) methods.   BCD is a gradient-free method that has been recently adapted to NN training <cit.>. The main reasons for the surge of attention of BCD algorithms are twofold. One reason is that they are gradient-free, and thus are able to deal with non-differentiable nonlinearities and potentially avoid the vanishing gradient issue. The other reason is that BCD can be easily implemented in a distributed and parallel manner, therefore in favor of distributed/federated scenarios. To summarize, the contributions of this paper are as follows:
+ 
+
+    
+  * A holistic framework is proposed for  tensor decomposition-based NN training, which involves a highly nonconvex optimization problem.
+    
+  * An efficient tensor BCD (tenBCD) algorithm is implemented to solve the proposed optimization problem;
+    
+  * Convergence of the iterative sequence generated by the tenBCD algorithm is analyzed, which is proved to be globally convergent to a critical point at a rate of 𝒪(1/k).
+
+
+
+
+§ BACKGROUND AND PRELIMINARIES
+
+
+In Section <ref>,   the notation and basics of multi-linear/tensor algebra used in this paper are reviewed. Then, tensor train decomposition <cit.> is reviewed briefly in Section <ref>. Afterward, the tensor train fully-connected layer <cit.> is reviewed in Section <ref>.
+
+
+ §.§ Notation and Tensor Basis
+ 
+
+Throughout this paper, scalars are denoted by lowercase letters, e.g., x; vectors are denoted by lowercase boldface letters, e.g., x; matrices are denoted by uppercase boldface, e.g., X; and tensors are denoted by calligraphic letters, e.g., X. The order of a tensor is the number of its modes or dimensions. A real-valued tensor of order-d is denoted by 𝒳∈ℝ^n_1× n_2×⋯× n_d and its entries by  𝒳(i_1, ⋯, i_d). The inner product of two same-sized tensors 𝒳 and 𝒴 is the sum of the products of their entries, namely,  ⟨𝒳,𝒴⟩ =∑_i_1 ⋯∑_i_d X (i_1,… ,i_d) ·𝒴(i_1,… ,i_d). Following  the definition of inner product, the Frobenius norm of a tensor 𝒳 is defined as 𝒳_F=√(⟨𝒳,𝒳⟩). 
+ 
+
+
+
+ §.§ Tensor Train (TT) Decomposition
+ 
+
+ Given a tensor 𝒜∈ℝ^n_1× n_2×⋯× n_d, it can be decomposed to a sort of 3-order tensors via Tensor Train Decomposition (TTD) <cit.> as follows:
+
+    𝒜(i_1, i_2, ⋯, i_d)     = 𝒢_1(:, i_1,:) 𝒢_2(:, i_2,:) ⋯𝒢_d(:, i_d,:)  
+        =∑_α_0, α_1⋯α_d^r_0, r_1, ⋯ r_d𝒢_1(α_0, i_1, α_1) 𝒢_2(α_1, i_2, α_2) ⋯𝒢_d(α_d-1, i_d, α_d),
+ where 𝒢_k∈ℝ^r_k-1× n_k× r_k are called TT-cores for k= 1,2, ⋯, d, and r=[r_0, r_1, ⋯, r_d], r_0=r_d=1 are called TT-ranks, which determine the storage complexity of TT-format tensor.  The representation of  𝒜 via the explicit enumeration of all its entries requires storing Π_k=1^d n_k numbers compared with ∑_k=1^d n_k r_k-1 r_k numbers if the tensor is stored in TT-format. 
+
+
+
+ §.§ Tensor Train Fully-Connected Layer
+
+
+Consider a simple fully-connected layer with weight matrix W∈ℝ^M × N and input x∈ℝ^N, where M=∏_k=1^d m_k and N=∏_k=1^d n_k, the output y∈ℝ^M is obtained by y=Wx. In order to transform this standard layer to TT fully-connected (TT-FC) layer,  the weight matrix W is first  tensorized to a d-order weight tensor 𝒲∈ℝ^(m_1× n_1) ×⋯×(m_d× n_d) by reshaping and order transposing. Then 𝒲 can be decomposed to TT-format:
+
+    𝒲((i_1, j_1), ⋯,(i_d, j_d))=𝒢_1(:, i_1, j_1,:) ⋯𝒢_d(:, i_d, j_d,:)
+  
+Here, each TT-core 𝒢_k∈ℝ^r_k-1× m_k× n_k× r_k is a 4-order tensor, which is one dimension more than the standard one (<ref>) since the output and input dimensions of W are divided separately. Hence, the forward propagation on the TT-FC layer can be expressed in the tensor format as follows (the bias term is ignored here):
+
+    𝒴(i_1, ⋯, i_d)=∑_j_1, ⋯, j_d𝒢_1(:, i_1, j_1,:) ⋯𝒢_d(:, i_d, j_d,:) 𝒳(j_1, ⋯, j_d)
+
+where 𝒳∈ℝ^m_1×⋯× m_d and 𝒴∈ℝ^n_1×⋯× n_d are the tensorized input and output corresponding to x and y, respectively. The details about the TT-FC layer are introduced in <cit.>. As the TT-FC layer and the corresponding forward propagation schemes are formulated, standard stochastic gradient descent (SGD) algorithm can be used to update the TT-cores with the rank set r, which determines the target compression ratio. The initialization of the TT-cores can be either
+randomly set or obtained from directly TT-decomposing a
+pre-trained uncompressed model.
+
+
+
+
+§ PROPOSED METHODOLOGY
+ 
+
+Consider N-layer feedforward neural networks with N-1 hidden layers of the neural networks. Particularly, let n_i ∈ℕ be the number of hidden units in the i-th hidden layer for i=1, …, N-1. Let n_0 and n_N be the number of units of input and output layers, respectively. Let W_i ∈ℝ^n_i × n_i-1 be the weight matrix between the (i-1)-th layer and the i-th layer for any i= 1, …, N. Let 𝒵:={(x_j, y_j)}_j=1^n ⊂ℝ^n_0×ℝ^n_N be n samples, where y_j's are the one-hot vectors of labels. Denote 𝒲{W_i}_i=1^N, X:=(x_1, x_2, …, x_n) ∈ℝ^n_0 × n and Y:=(y_1, y_2, …, y_n) ∈ℝ^n_N × n. 
+
+
+
+
+ §.§ Problem Formulation
+ 
+
+As shown in Figure <ref>, the weight in i-th layer, namely, W_i, can be transformed into a tensor 𝒲_i. The tensor can be further decomposed into TT-format.   Therefore, tensor train decomposition-based NN training problem can be formulated as the following empirical risk (i.e., training loss) minimization:
+
+    min_𝒲ℛ_n(Φ(X ; 𝒲), Y),   subject to 𝒲_i = TTD(r_i)   i=1, …, N
+
+where ℛ_n(Φ(X ; 𝒲), Y):=1/n∑_j=1^n ℓ(Φ(x_j ; 𝒲), y_j) with loss function ℓ: ℝ^n_N×ℝ^n_N→ℝ_+∪{0}, Φ(x_j ; 𝒲)=σ_N(W_N σ_N-1(W_N-1⋯W_2 σ_1(W_1 x_j))) is the neural network model with N layers. TTD(r_i) is the tensor train decomposition with rank r_i in (<ref>) for weight tensor 𝒲_i  and σ_i is the activation function of the i-th layer (generally, σ_N≡Id is the identity function). 
+
+
+
+Note that the NN training model (<ref>) is highly nonconvex as the variables are coupled via the NN architecture, which brings many challenges for the design of efficient training algorithms and also its theoretical analysis. To make Problem (<ref>) more computationally tractable, variable splitting is one of the most commonly used ways <cit.>. The main idea of variable splitting is to transform a complicated problem (where the variables are coupled nonlinearly) into a relatively simpler one (where the variables are coupled much looser) by introducing some additional variables.
+
+
+
+
+
+
+
+
+Considering general NN architectures, the regularized NN training model is applied here, which can reduce the original NN training model (<ref>). Specifically, the variable splitting model is: 
+    min _𝒲, 𝒱ℒ_0(𝒲, 𝒱)     :=ℛ_n(V_N ; Y)+∑_i=1^Nτ_i(W_i)+∑_i=1^N s_i(V_i) 
+     subject to   U_i   =W_iV_i-1,V_i =σ_i(U_i), 𝒲_i = TTD(r_i)   i=1, …, N,
+
+where ℛ_n(V_N ; Y):=1/n∑_j=1^nℓ((V_N)_: j, y_j) denotes the empirical risk, 𝒱:={V_i}_i=1^N,(V_N)_: j is the j-th column of V_N. In addition, τ_i and s_i are extended-real-valued, nonnegative functions revealing the priors of the weight variable W_i and the state variable V_i (or the constraints on W_i and V_i ) for each i=1, … N, and define V_0:=X. To solve the formulation in (<ref>), the following alternative minimization problem was considered:
+
+    min_𝒲, 𝒱,𝒰,𝒢   ℒ(𝒲, 𝒱,𝒰,𝒢):=  ℒ_0(𝒲, 𝒱)+γ/2∑_i=1^NV_i-σ_i(U_i)_F^2
+       +ρ/2∑_i=1^NU_i-W_iV_i-1_F^2+ τ/2∑_i=1^N𝒲_i - TTD(r_i)_F^2
+ 
+where γ,ρ,τ>0 are hyperparameters for different regularization terms, 𝒰:={U_i}_i=1^N, and 𝒢:={𝒢_i}_i=1^N is the set of TT-cores 𝒢_i from i-th layer. The NN training model (<ref>) can be very general, where: (a) ℓ can be the squared, logistic, hinge, cross-entropy or other commonly used loss functions; (b) σ_i can be ReLU, leaky ReLU, sigmoid, linear, polynomial, softplus or other commonly used activation functions; (c) τ_i can be the squared ℓ_2 norm, the ℓ_1 norm, the elastic net, the indicator function of some nonempty closed convex set (such as the nonnegative closed half-space or a closed interval [0,1]); (d) s_i can be the ℓ_1 norm, the indicator function of some convex set with simple projection. Particularly, if there is no regularizer or constraint on W_i (or V_i), then τ_i (or s_i) can be zero. The network architectures considered in this paper exhibit generality to various types of NNs, including but not limited to the fully (or sparse) connected MLPs, convolutional neural networks (CNN) and residual neural networks (ResNets) <cit.>. 
+
+ As mentioned before, an existing TT-format NN is either 1) trained from randomly initialized tensor cores; or 2) trained from a direct decomposition of a pre-trained model. For the first strategy, it does not utilize any information related to the high-accuracy uncompressed model; while other model compression methods, e.g. pruning and knowledge distillation, have shown that proper utilization of the pre-trained models is very critical for NN compression. For the second strategy, though the knowledge of the pre-trained model is indeed utilized, because the pre-trained model generally lacks low TT-rank property, after direct low-rank tensor decomposition the approximation error is too significant to be properly recovered even using long-time re-training. Such inherent limitations of the existing training strategies, consequently, cause significant accuracy loss for the compressed TT-format NN models. To overcome these limitations, it is to maximally retain the knowledge contained in the uncompressed model, or in other words, minimize the approximation error after tensor decomposition with given target tensor ranks. In our formulation (<ref>), ℒ_0(𝒲, 𝒱) is the loss function of the uncompressed model while the regularization term 𝒲_i - TTD(r_i)_F^2 can encourage the uncompressed DNN models to gradually exhibit low tensor rank properties.   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+
+
+     
+
+
+
+
+
+
+
+ §.§ Tensor BCD Algorithms
+ 
+
+Note that (<ref>) is a nonconvex optimization problem with multi-block variables. BCD  is a Gauss-Seidel type method for a minimization problem with multi-block variables to update all the variables cyclically while fixing the remaining blocks at their last updated values <cit.>.  A tensor BCD (tenBCD) algorithm is developed for solving (<ref>). In this paper, proximal terms are added to some sub-problems arising from the tenBCD algorithm for two major reasons: (1) To practically stabilize the training process; (2) To yield the desired “sufficient descrease” property for theoretical justification. At each iteration k, the tenBCD method with the backward order is considered for the updates of variables, i.e., the variables are updated from the output layer (layer N) to the input layer (layer 1). For each layer, the variables {V_i, U_i, W_i,𝒢_i} are updated cyclically for Problem (<ref>). Since σ_N≡Id, the output layer is paid special attention.  The tenBCD algorithms for (<ref>) can be summarized in Algorithm <ref>. 
+
+
+
+  §.§.§ Optimization over V_i
+
+At iteration k, V_N can be updated through the following optimization problem 
+
+    V_N^k=argmin_V_N{s_N(V_N)+ℛ_n(V_N ; Y)+γ/2V_N-U_N^k-1_F^2+α/2V_N-V_N^k-1_F^2},
+
+where s_N(V_N)+ℛ_n(V_N ; Y) is regarded as a new proximal function s̃_N(V_N).  When i<N, V_i can be updated through the following optimization problem 
+
+    V_i^k=argmin_V_i{s_i(V_i)+γ/2V_i-σ_i(U_i^k-1)_F^2+ρ/2U_i+1^k-W_i+1^kV_i_F^2 }.
+
+For subproblem (<ref>), α/2V_N-V_N^k-1_F^2 is the proximal term, where α>0 is the positive coefficient. 
+
+The above two problems (<ref>) and (<ref>) are simple proximal updates <cit.> (or just least squares problems), which usually have closed-form solutions to many commonly used NNs. For V_N^k-update,  s_N(V_N)+ℛ_n(V_N ; Y) is regarded as a new proximal function s̃_N(V_N). Some typical examples leading to the closed-form solutions include: (a) s_i are 0 (i.e., no regularization), or the squared ℓ_2 norm, or the indicator function of a nonempty closed convex set with a simple projection like the nonnegative closed half-space and the closed interval [0,1]; (b) the loss function ℓ is the squared loss or hinge loss.[The V_N-update with hinge loss and other smooth losses is provided in Appendix <ref>.]
+
+
+
+  §.§.§ Optimization over U_i
+
+At iteration k, U_N can be updated through the following optimization problem 
+
+    U_N^k=argmin_U_N{γ/2V_N^k-U_N_F^2+ρ/2U_N-W_N^k-1V_N-1^k-1_F^2 }
+
+U_i,i<N can be updated through the following optimization problem 
+
+    U_i^k=argmin_U_i{γ/2V_i^k-σ_i(U_i)_F^2+ρ/2U_i-W_i^k-1V_i-1^k-1_F^2  +α/2U_i-U_i^k-1_F^2}
+
+For subproblem (<ref>), α/2U_i-U_i^k-1_F^2 is the proximal term. The subproblem (<ref>) is a least-square optimization where the closed-form solution can be derived. The subproblem (<ref>)  is a nonlinear and nonsmooth optimization where  σ_i is ReLU or leaky ReLU. Accordingly,   the closed-form solution to solve the subproblem (<ref>) is provided in Appendix <ref>.
+
+
+
+  §.§.§ Optimization over W_i
+
+At iteration k, W_i,i=1,…,N can be updated through the following optimization problem 
+
+    W_i^k=argmin_W_i{τ_i(W_i)+ρ/2U_i^k-W_i V_i-1^k-1_F^2+τ/2𝒲_i - TTD(r_i)_F^2},
+
+ The closed-form solution to solve the above optimization problem can be obtained  when τ_i is 0 (i.e., no regularization), or the squared ℓ_2 norm (i.e., weight decay), or the indicator function of a nonempty closed convex set with a simple projection like the nonnegative closed half-space and the closed interval [0,1].
+
+
+
+  §.§.§ Optimization over 𝒢_i
+
+At iteration k, 𝒢_i,i=1,…,N can be updated through the following optimization problem
+
+    𝒢_i^k = argmin_𝒢_i{τ/2𝒲_i^k - TTD(r_i)_F^2 +α/2𝒢_i-𝒢_i^k-1_F^2}
+  where α/2𝒢_i-𝒢_i^k-1_F^2 is the proximal terms. 
+This subproblem is implemented in TensorLy package <cit.>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+
+
+     
+
+
+
+
+
+
+
+
+
+
+ §.§ Global Convergence Analysis of tenBCD
+
+
+In this section, the global convergence of Algorithm <ref> for Problem (<ref>) is established. Firstly, let h: ℝ^p→ℝ∪{+∞} be an extended-real-valued function, its graph is defined by
+Graph(h) :={(x, y) ∈ℝ^p×ℝ: y=h(x)}, and its domain by dom(h):={x∈ℝ^p: h(x)<+∞}. The subdifferential of a function is defined as follows. 
+
+
+
+ Assume that f: ℝ^p → (-∞,+∞) is a proper and lower semicontinuous function. 
+  
+
+	
+  * The domain of f is defined and denoted by domf{x∈ℝ^p:f(x)<+∞}
+	
+  * For a given x∈domf, the Fréchet subdifferential of f at x, written ∂̂f(x), is the set of all vectors u∈ℝ^p that satisfy
+
+    lim_y≠xinf_y→xf(y)-f(x) - ⟨u , y-x⟩/y-x≥ 0.
+
+
+  * The limiting-subdifferential, or simply the subdifferential, of f at x, written ∂ f(x) is defined through the following closure process
+
+    ∂ f(x):={u∈ℝ^p: ∃x^k →x,f(x^k) → f(x)  and u^k ∈∂̂f(x^k) →u as  k→∞}.
+
+	
+
+Now, our first main lemma about the sufficient decrease property of the iterative sequence  {𝒫^k:=({W_i^k}_i=1^N,{V_i^k}_i=1^N,{U_i^k}_i=1^N),{𝒢_i^k}_i=1^N}_k ∈ℕ from Algorithm <ref> is ready to be introduced.
+
+ 
+Given that α,γ,ρ,τ>0, {𝒫^k}_k ∈ℕ is the sequence generated by the tenBCD algorithm <ref>, then the sequence satisfies
+
+    ℒ(𝒫^k) ≤ℒ(𝒫^k-1)-λ𝒫^k-𝒫^k-1_F^2.
+
+For the case that V_N is updated via the proximal strategy,  λ:=min{α/2, γ+ρ/2,τ/2}. For the case that V_N is update via the prox-linear strategy, λ:=min{α/2, γ+ρ/2,τ/2, α+γ-L_R/2}, where ∇ℛ_n is Lipschitz continuous with a Lipschitz constant L_R and α>max{0, L_R-γ/2}.
+
+
+
+
+The inequality (<ref>) can be developed by considering the descent quantity along the update of each block variable, i.e., {V_i}_i=1^N, {U_i}_i=1^N, {W_i}_i=1^N, and {𝒢_i}_i=1^N. To begin with, the following notations are introduced. Specifically, 
+W_<i:=(W_1, W_2, …, W_i-1), W_>i:=(W_i+1, W_i+1, …, W_N), and V_<i, V_>i, U_<i, U_>i,𝒢_<i,𝒢_>i are defined similarly. We will consider each case separately. 
+
+
+
+  §.§.§ Optimization over V_i
+
+V_N^k-block: at iteration k,  there are two ways to update the variable: (1) proximal update with closed-form solution: the following inequality can be derived
+
+    ℒ({W_i^k-1}_i=1^N, V_i<N^k-1, V_N^k,{U_i^k-1}_i=1^N, {𝒢_i^k-1}_i=1^N)
+    ≤   ℒ({W_i^k-1}_i=1^N, V_i<N^k-1, V_N^k-1,{U_i^k-1}_i=1^N, {𝒢_i^k-1}_i=1^N)-α/2V_N^k-V_N^k-1_F^2.
+ 
+The above inequality (<ref>) is due to the fact that V_N^k is the optimal solution for subproblem (<ref>). (2) proximal-linear case: let h^k(V_N):=s_N(V_N)+ℛ_n(V_N ; Y)+γ/2V_N-U_N^k-1_F^2 and h̅^k(V_N):=s_N(V_N)+ℛ_n(V_N^k-1 ; Y)+⟨∇ℛ_n(V_N^k-1 ; Y), V_N-V_N^k-1⟩+α/2V_N-V_N^k-1_F^2 +γ/2V_N-U_N^k-1_F^2. By the optimality of V_N^k and the strong convexity[The function h is called a strongly convex function with parameter γ>0 if h(u) ≥ h(v)+⟨∇ h(v), u-v⟩+γ/2u-v^2.] of h̅^k(V_N) with modulus at least α +γ, the following holds
+
+    h̅^k(V_N^k) ≤h̅^k(V_N^k-1) -α+γ/2V_N^k-V_N^k-1_F^2,
+
+which implies 
+
+
+    h^k(V_N^k)    ≤  h^k(V_N^k-1) + ℛ_n(V_N^k ; Y)-ℛ_n(V_N^k-1 ; Y)-⟨∇ℛ_n(V_N^k-1 ; Y), V_N^k-V_N^k-1⟩
+       -(α+γ/2)V_N^k-V_N^k-1_F^2
+       ≤ h^k(V_N^k-1)-(α+γ-L_R/2)V_N^k-V_N^k-1_F^2,
+
+
+where inequality (<ref>) is due to the inequality (<ref>),  the relationship between h^k(V_N^k-1) and h̅^k(V_N^k-1),  and the relationship between h^k(V_N^k) and h̅^k(V_N^k). The inequality (<ref>) holds for the L_R-Lipschitz continuity of ∇ℛ_n, i.e., the following inequality by <cit.>
+
+    ℛ_n(V_N^k ; Y) ≤ℛ_n(V_N^k-1 ; Y)+⟨∇ℛ_n(V_N^k-1 ; Y), V_N^k-V_N^k-1⟩+L_R/2V_N^k-V_N^k-1_F^2.
+
+According to  the relationship between h^k(V_N) and ℒ({W_i^k-1}_i=1^N, V_i<N^k-1, V_N,{U_i^k-1}_i=1^N, {𝒢_i^k-1}_i=1^N), and the inequality (<ref>),
+
+    ℒ({W_i^k-1}_i=1^N, V_i<N^k-1, V_N^k,{U_i^k-1}_i=1^N, {𝒢_i^k-1}_i=1^N)
+    ≤   ℒ({W_i^k-1}_i=1^N, V_i<N^k-1, V_N^k-1,{U_i^k-1}_i=1^N, {𝒢_i^k-1}_i=1^N)-(α+γ-L_R/2)V_N^k-V_N^k-1_F^2.
+ 
+
+
+V_i^k-block (i<N): V_i^k is updated according to the following
+
+    V_i^k←V_iargmin{s_i(V_i)+γ/2V_i-σ_i(U_i^k-1)_F^2+ρ/2U_i+1^k-W_i+1^kV_i_F^2}.
+
+Let h^k(V_i)=s_i(V_i)+γ/2V_i-σ_i(U_i^k-1)_F^2+ρ/2U_i+1^k-W_i+1^kV_i_F^2. By the convexity of s_i, the function h^k(V_i) is a strongly convex function with modulus no less than γ. By the optimality of V_i^k, the following holds
+
+    h^k(V_i^k) ≤ h^k(V_i^k-1) - γ/2V_i^k-V_i^k-1_F^2.
+
+Based on the inequality (<ref>), it yields for 
+
+    ℒ(W_≤ i^k-1, W_>i^k, V_<i^k-1, V_i^k, V_>i^k, U_≤ i^k-1, U_>i^k, 𝒢_≤ i^k-1, 𝒢_>i^k)
+    ≤   ℒ(W_≤ i^k-1, W_>i^k, V_<i^k-1, V_i^k-1, V_>i^k, U_≤ i^k-1, U_>i^k, 𝒢_≤ i^k-1, 𝒢_>i^k) - γ/2V_i^k-V_i^k-1_F^2
+
+for i=1, …, N-1, where 
+
+    h^k(V_i^k) -  h^k(V_i^k-1)     = ℒ(W_≤ i^k-1, W_>i^k, V_<i^k-1, V_i^k, V_>i^k, U_≤ i^k-1, U_>i^k, 𝒢_≤ i^k-1, 𝒢_>i^k) 
+        - ℒ(W_≤ i^k-1, W_>i^k, V_<i^k-1, V_i^k-1, V_>i^k, U_≤ i^k-1, U_>i^k, 𝒢_≤ i^k-1, 𝒢_>i^k).
+
+
+
+
+  §.§.§ Optimization over U_i
+
+U_N^k-block: similar to the inequality (<ref>), the  descent quantity is established as follows
+
+    ℒ(W_≤ N^k-1, V_<N^k-1, V_N^k, U_<N^k-1, U_N^k, 𝒢_≤ N^k-1) 
+    ≤   ℒ(W_≤ N^k-1, V_<N^k-1, V_N^k, U_<N^k-1, U_N^k-1, 𝒢_≤ N^k-1) - γ+ρ/2U_N^k-U_N^k-1_F^2,
+
+where the above inequality is because the objective function in subproblem (<ref>) is a strongly convex function with modulus at least γ+ρ.
+
+U_i^k-block (i<N): the following can be obtained
+
+    ℒ(W_≤ i^k-1,  W_>i^k, V_<i^k-1, V_≥ i^k, U_<i^k-1, U_i^k, U_>i^k,𝒢_≤ i^k-1,  𝒢_>i^k) 
+    ≤   ℒ(W_≤ i^k-1,  W_>i^k, V_<i^k-1, V_≥ i^k, U_<i^k-1, U_i^k-1, U_>i^k,𝒢_≤ i^k-1,  𝒢_>i^k) - α/2U_i^k-U_i^k-1_F^2
+
+for i=1, …, N-1 since U_i^k is the optimal solution for subproblem (<ref>).
+
+
+
+
+
+
+  §.§.§ Optimization over W_i
+
+W_i^k-block (i≤ N): W_i^k is updated according to the following
+
+    W_i^k→W_iargmin{r_i(W_i)+ρ/2U_i^k-W_iV_i-1^k-1_F^2+τ/2𝒲_i - TTD(r_i)_F^2},
+
+where h^k(W_i)=r_i(W_i)+ρ/2U_i^k-W_iV_i-1^k-1_F^2+τ/2𝒲_i - TTD(r_i)_F^2 is  a strongly convex function with modulus at least τ. Accordingly, the following holds
+
+    ℒ(W_<i^k-1, W_i^k, W_>i^k, V_<i^k-1,  V_≥ i^k, U_<i^k-1,  U_≥ i^k, 𝒢_≤ i^k-1,  𝒢_> i^k) 
+    ≤   ℒ(W_<i^k-1, W_i^k-1, W_>i^k, V_<i^k-1,  V_≥ i^k, U_<i^k-1,  U_≥ i^k, 𝒢_≤ i^k-1,  𝒢_> i^k)-τ/2W_i^k-W_i^k-1_F^2,
+
+which is due to the relationship between h^k(W_i) and ℒ(W_<i^k-1, W_i, W_>i^k, V_<i^k-1,  V_≥ i^k, U_<i^k-1,  U_≥ i^k, 𝒢_≤ i^k-1,  𝒢_> i^k).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  §.§.§ Optimization over 𝒢_i
+
+𝒢_i-block (i≤ N): the descent quantity for 𝒢_i can be derived as follows
+
+    ℒ(W_<i^k-1, W_≥ i^k, V_<i^k-1,  V_≥ i^k, U_<i^k-1,  U_≥ i^k, 𝒢_< i^k-1,  𝒢_i^k, 𝒢_> i^k) 
+    ≤   ℒ(W_<i^k-1, W_≥ i^k, V_<i^k-1,  V_≥ i^k, U_<i^k-1,  U_≥ i^k, 𝒢_< i^k-1,  𝒢_i^k-1, 𝒢_> i^k)-α/2𝒢_i^k-𝒢_i^k-1_F^2,
+
+where the above inequality (<ref>) is due to the fact that 𝒢_i^k is the optimal solution for subproblem (<ref>).
+
+By summing up inequalities (<ref>) (or (<ref>)), (<ref>), (<ref>), (<ref>), and (<ref>), it yields the
+
+    ℒ(𝒫^k) ≤ℒ(𝒫^k-1)-λ𝒫^k-𝒫^k-1_F^2,
+
+where λ:=min{α/2, γ+ρ/2,τ/2} (or λ:=min{α/2, γ+ρ/2,τ/2, α+γ-L_R/2}). 
+
+
+
+
+
+
+
+
+
+
+From Lemma <ref>, the Lagrangian sequence {ℒ(𝒫^k)}__k ∈ℕ is monotonically decreasing, and the descent quantity of each iterate can be lower bounded by the discrepancy between the current iterate and its previous iterate. This lemma is crucial for the global convergence of a nonconvex algorithm. It tells at least the following four important items: (i) {ℒ(𝒫^k)}_k ∈ℕ is convergent if ℒ is lower bounded; (ii) {𝒫^k}_k ∈ℕ itself is bounded if ℒ is coercive and 𝒫^0 is finite; (iii) {𝒫^k}_k ∈ℕ is square summable, i.e., ∑_k=1^∞𝒫^k-𝒫^k-1_F^2<∞, implying its asymptotic regularity, i.e., 𝒫^k-𝒫^k-1_F→ 0 as k →∞; and (iv) 1/K∑_k=1^K𝒫^k-𝒫^k-1_F^2→ 0 at a rate of 𝒪(1 / K). Leveraging Lemma <ref>, we can establish the global convergence (i.e., the whole sequence convergence) of tenBCD algorithm <ref> in NN training settings. In contrast, <cit.> only establish the subsequence convergence of SGD in NN training settings. Such a gap between the subsequence convergence of SGD in <cit.>  and the whole sequence convergence of tenBCD algorithm <ref> in this paper exists mainly because SGD can only achieve the descent property but not the sufficient descent property.
+
+It can be noted from Lemma <ref> that neither multiconvexity and differentiability nor Lipschitz differentiability assumptions are imposed on the NN training models to yield this lemma, as required in the literature <cit.>. Instead, we mainly exploit the proximal strategy for all nonstrongly convex subproblems in Algorithm <ref> to establish this lemma.
+
+ Our second main lemma is about the subgradient lower bound.  
+ 
+    Under the same conditions of Lemma <ref>, let ℬ be an upper bound of 𝒫^k-1 and 𝒫^k for any positive integer k, L_ℬ be a uniform Lipschitz constant of σ_i on the bounded set {𝒫:𝒫_F≤ℬ}, and
+
+    δ:=max{γ, α+ρℬ, α+γ L_ℬ, 2 ρℬ+ 2ρℬ^2, α + √(N)τℬ^N-1}
+
+(or, for the prox-linear case, δ:=max{γ, L_R+α+ρℬ, α+γ L_ℬ, 2 ρℬ+ 2 ρℬ^2, α + √(N)τℬ^N-1}), then for any positive integer k, there holds,
+
+    dist(0, ∂ℒ (𝒫^k))    ≤δ∑_i=1^N[W_i^k-W_i^k-1_F+V_i^k-V_i^k-1_F+U_i^k-U_i^k-1_F+𝒢_i^k-𝒢_i^k-1_F] 
+       ≤δ̅𝒫^k-𝒫^k-1_F
+
+where δ̅:= δ√(4 N), dist(0, 𝒮):=inf _s∈𝒮s_F for a set 𝒮, and
+
+    ∂ℒ(𝒫^k):=({∂_W_iℒ}_i=1^N,{∂_V_iℒ}_i=1^N,{∂_U_iℒ}_i=1^N,{∂_𝒢_iℒ}_i=1^N)(𝒫^k).
+
+ 
+
+    The inequality (<ref>) is established via bounding each term of ∂ℒ(𝒫^k). Specifically, the following holds
+
+
+    0∈∂ s_N(V_N^k)+∂ℛ_n(V_N^k ; Y)+γ(V_N^k-U_N^k-1)+α(V_N^k-V_N^k-1), 
+       0∈∂ s_N(V_N^k)+∇ℛ_n(V_N^k-1 ; Y)+γ(V_N^k-U_N^k-1)+α(V_N^k-V_N^k-1),  (proximal-linear)
+       0=γ(U_N^k-V_N^k)+ρ(U_N^k-W_N^k-1V_N-1^k-1), 
+       0∈∂τ_N(W_N^k)+ρ(W_N^kV_N-1^k-1-U_N^k) V_N-1^k-1^⊤+τ(W_N^k-TTD^k-1(r_N)), 
+       0∈∂(τ/2𝒲_N^k - TTD^k(r_N)_F^2) +α(𝒢_N^k-𝒢_N^k-1),
+ 
+
+where (<ref>), (<ref>), (<ref>),  (<ref>), and  (<ref>) are  due to the optimality conditions of all updates in (<ref>), (<ref>), (<ref>), (<ref>), and (<ref>), respectively.
+
+For i=N-1, …, 1, the following holds
+
+
+    0∈∂ s_i(V_i^k)+γ(V_i^k-σ_i(U_i^k-1))+ρW_i+1^k^⊤(W_i+1^kV_i^k-U_i+1^k), 
+       0∈γ[(σ_i(U_i^k)-V_i^k) ⊙∂σ_i(U_i^k)]+ρ(U_i^k-W_i^k-1V_i-1^k-1)+α(U_i^k-U_i^k-1), 
+       0∈∂τ_i(W_i^k)+ρ(W_i^kV_i-1^k-1-U_i^k) V_i-1^k-1^⊤+τ(W_i^k-TTD^k-1(r_i)), 
+       0∈∂(τ/2𝒲_i^k - TTD^k(r_i)_F^2) +α(𝒢_i^k-𝒢_i^k-1),
+ 
+
+where (<ref>), (<ref>), (<ref>), and (<ref>) are due to the optimality conditions of all updates in (<ref>), (<ref>), (<ref>), and (<ref>), respectively. V_0^k≡V_0=X for all k, and ⊙ is the Hadamard product. Through the above relationship (<ref>), we have
+
+    -α(V_N^k-V_N^k-1)-γ(U_N^k-U_N^k-1) ∈∂ s_N(V_N^k)+∂ℛ_n(V_N^k ; Y)+γ(V_N^k-U_N^k)=∂_V_Nℒ(𝒫^k), 
+       (∇ℛ_n(V_N^k ; Y)-∇ℛ_n(V_N^k-1 ; Y))-α(V_N^k-V_N^k-1)-γ(U_N^k-U_N^k-1) ∈∂_V_Nℒ(𝒫^k),  (proximal-linear)
+        -ρ(W_N^k-W_N^k-1) V_N-1^k-ρW_N^k-1(V_N-1^k-V_N-1^k-1)=γ(U_N^k-V_N^k)+ρ(U_N^k-W_N^k V_N-1^k)=∂_U_Nℒ(𝒫^k), 
+       ρW_N^k[V_N-1^k(V_N-1^k-V_N-1^k-1)^⊤+(V_N-1^k-V_N-1^k-1) V_N-1^k-1^⊤]-ρU_N^k(V_N^k-V_N^k-1)^⊤+τ(TTD^k(r_N)-TTD^k-1(r_N)) 
+       ∈∂ r_N(W_N^k)+ρ(W_N^k V_N-1^k-U_N^k) V_N-1^k^⊤+τ(W_N^k-TTD^k(r_i))=∂_W_Nℒ(𝒫^k), 
+        -α(𝒢_N^k-𝒢_N^k-1) ∈∂_𝒢_Nℒ(𝒫^k).
+
+For i=N-1, …, 1, the relationship (<ref>) implies
+
+    -γ(σ_i(U_i^k)-σ_i(U_i^k-1)) ∈∂ s_i(V_i^k)+ρ(V_i^k-σ_i(U_i^k))+γW_i+1^k^⊤(W_i+1^k V_i^k-U_i+1^k)=∂_V_iℒ(𝒫^k), 
+        -ρW_i^k-1(V_i-1^k-V_i-1^k-1)-ρ(W_i^k-W_i^k-1) V_i-1^k-α(U_i^k-U_i^k-1) 
+       ∈γ[(σ_i(U_i^k)-V_i^k) ⊙∂σ_i(U_i^k)]+ρ(U_i^k-W_i^k V_i-1^k)=∂_U_iℒ(𝒫^k) , 
+       ρW_i^k[V_i-1^k(V_i-1^k-V_i-1^k-1)^⊤+(V_i-1^k-V_i-1^k-1) V_i-1^k-1]-ρU_i^k(V_i-1^k-V_i-1^k-1)^⊤+τ(TTD^k(r_i)-TTD^k-1(r_i)) 
+       ∈∂ r_i(W_i^k)+ρ(W_i^k V_i-1^k-U_i^k) V_i-1^k^⊤=∂_W_iℒ(𝒫^k),
+        -α(𝒢_i^k-𝒢_i^k-1) ∈∂_𝒢_iℒ(𝒫^k).
+
+Based on the above relationships, and by the Lipschitz continuity of the activation function on the bounded set {𝒫:𝒫_F≤ℬ} and the bounded assumption of both 𝒫^k-1 and 𝒫^k, we have
+
+    [                            ξ_V_N^k_F≤αV_N^k-V_N^k-1_F+γU_N^k-U_N^k-1_F,                                                    ξ_V_N^k∈∂_V_Nℒ(𝒫^k),; (or ξ_V_N^k_F≤(L_R+α)V_N^k-V_N^k-1_F+γU_N^k-U_N^k-1_F)  proximal-linear                                                                        ;                      ξ_U_N^k_F≤ρℬW_N^k-W_N^k-1_F+ρℬV_N-1^k-V_N-1^k-1_F,                                                    ξ_U_N^k∈∂_U_Nℒ(𝒫^k),;                  ξ_W_N^k_F≤ 2 ρℬ^2V_N-1^k-V_N-1^k-1_F+ρℬV_N^k-V_N^k-1_F                                                                        ;                                            +τTTD^k(r_N)-TTD^k-1(r_N)_F,                                                   ξ_W_N^k ∈∂_W_Nℒ(𝒫^k),;                                             ξ_𝒢_N^k_F≤α𝒢_N^k-𝒢_N^k-1_F,                                                   ξ_𝒢_N^k ∈∂_𝒢_Nℒ(𝒫^k), ]
+
+and for i=N-1, …, 1,
+
+    [                                     ξ_V_i^k_F≤γ L_ℬU_i^k-U_i^k-1_F,                                                ξ_V_i^k∈∂_V_iℒ(𝒫^k),; ξ_U_i^k_F≤ρℬV_i-1^k-V_i-1^k-1_F+ρℬW_i^k-W_i^k-1_F+αU_i^k-U_i^k-1_F,                                                ξ_U_i^k∈∂_U_iℒ(𝒫^k),; ξ_W_i^k_F≤(2ρℬ^2+ρℬ)V_i-1^k-V_i-1^k-1_F+τTTD^k(r_i)-TTD^k-1(r_i)_F,                                                𝒢_W_i^k∈∂_W_iℒ(𝒫^k),;                                         ξ_𝒢_i^k_F≤α𝒢_i^k-𝒢_i^k-1_F,                                               ξ_𝒢_i^k ∈∂_𝒢_iℒ(𝒫^k). ]
+
+In addition, we have the following bound
+
+    TTD^k(r_i)-TTD^k-1(r_i)_F≤√(N)ℬ^N-1𝒢_i^k-𝒢_i^k-1_F.
+
+Summing the above inequalities (<ref>),(<ref>), and (<ref>), the subgradient lower bound (<ref>) can be obtained for any positive integer k
+
+    dist(0, ∂ℒ (𝒫^k))    ≤δ∑_i=1^N[W_i^k-W_i^k-1_F+V_i^k-V_i^k-1_F+U_i^k-U_i^k-1_F+𝒢_i^k-𝒢_i^k-1_F] 
+       ≤δ̅𝒫^k-𝒫^k-1_F,
+
+where
+
+    δ:=max{γ, α+ρℬ, α+γ L_ℬ, 2 ρℬ+ 2ρℬ^2, α + √(N)τℬ^N-1},
+
+(or, for the prox-linear case, δ:=max{γ, L_R+α+ρℬ, α+γ L_ℬ, 2 ρℬ+ 2 ρℬ^2, α + √(N)τℬ^N-1}). 
+
+
+  A necessary condition for x to be a minimizer of a proper and lower semicontinuous (PLSC) function  f is that
+ 
+    0∈∂ f(x).
+
+ A point that satisfies (<ref>) is called limiting-critical or simply critical.
+
+
+ 
+Any iterative algorithm for solving an optimization problem over a set X, is said to be globally convergent if for any starting point x_0 ∈ X, the sequence generated by the algorithm always has an accumulation critical point.
+
+
+To build the global convergence of our iterative sequence  {𝒫^k}_k ∈ℕ from Algorithm <ref>, the function ℒ(𝒲, 𝒱,𝒰,𝒢) needs to have the Kurdyka Łojasiewicz (KŁ)  property as follows
+
+A real function f: ℝ^p → (-∞,+∞] has the  Kurdyka Łojasiewicz (KŁ) property, namely, for any point u̅∈ℝ^p, in a neighborhood N(u̅,σ), there exists a desingularizing function ϕ(s)=cs^1-θ for some c>0 and θ∈ [0,1) such that 
+
+    ϕ'(|f(u)-f(u̅)|)d(0,∂ f(u))≥ 1
+
+for any  u∈ N(u̅,σ) and  f(u)≠ f(u̅).
+    
+The real analytic and semi-algebraic functions, which are related to KŁ  property, are introduced below.
+
+    A function h with domain an open set U ⊂ℝ and range the set of either all real or complex numbers, is said to be real analytic at u if the function h may be represented by a convergent power series on some interval of positive radius centered at u, i.e., h(x)= ∑_j=0^∞α_j(x-u)^j, for some {α_j}⊂ℝ. The function is said to be real analytic on V ⊂ U if it is real analytic at each u ∈ V <cit.>. The real analytic function f over ℝ^p for some positive integer p>1 can be defined similarly.
+
+
+
+   
+A subset S of ℝ^p is a real semi-algebraic set if there exists  a finite number of real polynomial functions g_ij,h_ij:  ℝ^p →ℝ such that S=∪_j=1^q∩_i=1^m{u∈ℝ^p:g_ij(u)=0  and h_ij(u)<0 }. In addition, a function h:ℝ^p+1→ℝ∪+∞ is called 	semi-algebraic if its graph {(u, t)∈ℝ^p+1: h(u)=t } is a real semi-algebraic set.
+ 
+ 
+Based on the above definitions, the following lemma can be obtained.
+
+Most of the commonly used NN training models (<ref>) can be verified to satisfy the following 
+  
+
+    
+  * the loss function ℓ is a proper lower semicontinuous and nonnegative function. For example,  the squared, logistic, hinge, or cross-entropy losses.
+    
+  * the activation functions σ_i(i=1 …, N-1) are Lipschitz continuous on any bounded set. For example, ReLU, leaky ReLU, sigmoid, hyperbolic tangent, linear, polynomial, or softplus activations.
+    
+  * the regularizers τ_i and s_i(i=1, …, N) are nonegative lower semicontinuous convex functions. τ_i and s_i are the squared ℓ_2 norm, the ℓ_1 norm, the elastic net, the indicator function of some nonempty closed convex set (such as the nonnegative closed half-space, box set or a closed interval [0,1]), or 0 if no regularization.
+    
+  * all these functions ℓ, σ_i, τ_i and s_i(i=1, …, N) are either real analytic or semialgebraic, and continuous on their domains.
+
+Accordingly, the objective function ℒ(𝒲, 𝒱,𝒰,𝒢) in (<ref>) has Kurdyka Łojasiewicz (KŁ) property. 
+ 
+
+
+
+On the loss function ℓ: Since these losses are all nonnegative and continuous on their domains, they are proper lower semicontinuous and lower bounded by 0. In the following, we only verify that they are either real analytic or semialgebraic.
+  
+
+    
+  * If ℓ(t) is the squared (t^2) or exponential  (e^t) loss, then according to <cit.>, they are real analytic.
+    
+  * If ℓ(t) is the logistic loss (log (1+e^-t)), since it is a composition of logarithm and exponential functions which both are real analytic, thus according to <cit.>, the logistic loss is real analytic.
+    
+  * If ℓ(u ; y) is the cross-entropy loss, i.e., given y∈ℝ^d_N, ℓ(u ; y)=-1/d_N[⟨y, logy(u)⟩+⟨1-y, log (1-y(u))⟩], where log is performed elementwise and (y(u)_i)_1 ≤ i ≤ d_N:=((1+e^-u_i)^-1)_1 ≤ i ≤ d_N for any u∈ℝ^d_N, which can be viewed as a linear combination of logistic functions, then by (a2) and <cit.>, it is also analytic.
+    
+  * If ℓ is the hinge loss, i.e., given y∈ℝ^d_N, ℓ(u ; y):=max{0,1-⟨u, y⟩} for any u∈ℝ^d_N, by <cit.>, it is semialgebraic, because its graph is cl(𝒟), the closure of the set 𝒟, where 𝒟={(u, z): 1-⟨u, y⟩-z=0, 1-u≻ 0}∪{(u, z): z=0,⟨u, y⟩-1>0}.
+
+
+
+
+On the activation function σ_i: Since all the considered specific activations are continuous on their domains, they are Lipschitz continuous on any bounded set. In the following, we only need to check that they are either real analytic or semialgebraic.
+  
+
+    
+  * If σ_i is a linear or polynomial function, then according to <cit.> is real analytic.
+    
+  * If σ_i(t) is sigmoid, (1+e^-t)^-1, or hyperbolic tangent, tanh(t):=e^t-e^-t/e^t+e^-t, then the sigmoid function is a composition g ∘ h of these two functions where g(u)=1/1+u, u>0 and h(t)=e^-t (resp. g(u)=1-2/u+1, u>0 and h(t)=e^2 t in the hyperbolic tangent case). According to <cit.>, g and h in both cases are real analytic. Thus,  sigmoid and hyperbolic tangent functions are real analytic.
+    
+  * If σ_i is ReLU, i.e., σ_i(u):=max{0, u}, then we can show that ReLU is semialgebraic since its graph is cl( .𝒟), the closure of the set 𝒟, where 𝒟={(u, z): u-z=0, u>0}∪{(u, z): z=0,-u>0}.
+    
+  * Similar to the ReLU case, if σ_i is leaky ReLU, i.e., σ_i(u)=u if u>0, otherwise σ_i(u)=a u for some a>0, then we can similarly show that leaky ReLU is semialgebraic since its graph is cl(𝒟), the closure of the set 𝒟, where 𝒟={(u, z): u-z=0, u>0}∪{(u, z): a u-z=0,-u>0}.
+    
+  * If σ_i is polynomial, then according to <cit.>, it is real analytic.
+    
+  * If σ_i is softplus, i.e., σ_i(u)=1/tlog (1+e^t u) for some t>0, since it is a composition of two analytic functions 1/tlog (1+u) and e^t u, then according to <cit.>, it is real analytic.
+
+On τ_i(W_i), s_i(V_i): By the specific forms of these regularizers, they are nonnegative, lower semicontinuous and continuous on their domain. In the following, we only need to verify they are either real analytic and semialgebraic.
+  
+
+
+  * the squared ℓ_2 norm ·_2^2: According to <cit.>, the ℓ_2 norm is semialgebraic, so is its square where g(t)=t^2 and h(W)=W_2.
+
+
+  * the squared Frobenius norm ·_F^2: The squared Frobenius norm is semiaglebraic since it is a finite sum of several univariate squared functions.
+
+
+  * the elementwise 1-norm ·_1,1: Note that W_1,1=∑_i, j|W_i j| is the finite sum of absolute functions h(t)=|t|. According to <cit.>, the absolute value function is semialgebraic since its graph is the closure of the following semialgebraic set 𝒟={(t, s): t+s=0,-t>0}∪{(t, s): t-s=0, t>0}. Thus, the elementwise 1-norm is semialgebraic.
+
+
+  * the elastic net: Note that the elastic net is the sum of the elementwise 1-norm and the squared Frobenius norm. Thus, by (c2), (c3), and <cit.>, the elastic net is semialgebraic.
+
+
+  * If τ_i or s_i is the indicator function of nonnegative closed half-space or a closed interval (box constraints), by <cit.>, any polyhedral set is semialgebraic such as the nonnegative orthant ℝ_+^p × q={W∈ℝ^p × q, W_i j≥ 0, ∀ i, j}, and the closed interval. Thus, τ_i or s_i is semialgebraic in this case.
+
+
+We first verify the KŁ property of ℒ. From (<ref>), we have
+
+    ℒ(𝒲, 𝒱,𝒰,𝒢)
+            :=   ℛ_n(V_N ; Y)+∑_i=1^N r_i(W_i)+∑_i=1^N s_i(V_i)
+    
+            +   γ/2∑_i=1^NV_i-σ_i(U_i)_F^2+ρ/2∑_i=1^NU_i-W_iV_i-1_F^2+ τ/2∑_i=1^N𝒲_i - TTD(r_i)_F^2,
+
+which mainly includes the following types of functions, i.e.,
+
+    ℛ_n(V_N ; Y), τ_i(W_i), s_i(V_i),V_i-σ_i(U_i)_F^2,U_i-W_iV_i-1_F^2,∑_i=1^N𝒲_i - TTD(r_i)_F^2.
+
+To verify the KŁ property of the function ℒ, we consider the above functions one. 
+
+On ℛ_n(V_N ; Y): Note that given the output data Y, ℛ_n(V_N ; Y):=1/n∑_j=1^nℓ((V_N)_: j, y_j), where ℓ: ℝ^d_N×ℝ^d_N→ ℝ_+∪{0} is some loss function. If ℓ is real analytic (resp. semialgebraic), then ℛ_n(V_N ; Y) is real-analytic (resp. semialgebraic).
+
+On V_i-σ_i(U_i)_F^2 : Note that V_i-σ_i(U_i)_F^2 is a finite sum of simple functions of the form, |v-σ_i(u)|^2 for any u, v ∈ℝ. If σ_i is real analytic (resp. semialgebraic), then v-σ_i(u) is real analytic (resp. semialgebraic), and further |v-σ_i(u)|^2 is also real analytic (resp. semialgebraic) since |v-σ_i(u)|^2 can be viewed as the composition g ∘ h of these two functions where g(t)=t^2 and h(u, v)=v-σ_i(u).
+
+On U_i-W_iV_i-1_F^2: Note that the function U_i-W_iV_i-1_F^2 is a polynomial function with the variables U_i, W_i and V_i-1, and thus according to <cit.> and <cit.>, it is both real analytic and semialgebraic.
+
+On τ_i(W_i), s_i(V_i): All τ_i's and s_i's are real analytic or semialgebraic.
+
+On 𝒲_i - TTD(r_i)_F^2: Note that the function 𝒲_i - TTD(r_i)_F^2 is a polynomial function with the variables W_i, 𝒢_i.
+
+Since each part of the function ℒ is either real analytic or semialgebraic, ℒ is a subanalytic function <cit.>. Furthermore, by the continuity, ℒ is continuous in its domain. Therefore, ℒ is a KŁ function according to <cit.>.[Let h: ℝ^p→ℝ∪{+∞} be a subanalytic function with closed domain, and assume that h is continuous on its domain, then h is a KŁ function.]
+
+
+
+
+
+Based on Lemmas <ref>, <ref>, and <ref> and conclusions in <cit.>, the following main theorem can be obtained.
+
+
+
+
+
+
+
+
+ 
+Let {𝒫^k:=({W_i^k}_i=1^N,{V_i^k}_i=1^N,{U_i^k}_i=1^N),{𝒢_i^k}_i=1^N}_k ∈ℕ be the sequences generated from Algorithm <ref>.   Suppose that τ_i  and ℒ are coercive for any i=1, …, N. Then for any α,γ,ρ,τ>0 and any finite initialization 𝒫^0, the following hold
+  
+
+    
+  * {ℒ(𝒫^k)}_k ∈ℕ converges to ℒ^*.
+    
+  * {𝒫^k}_k ∈ℕ  converges to a critical point of ℒ.
+    
+  * If further the initialization 𝒫^0 is sufficiently close to some global minimum 𝒫^* of ℒ, then 𝒫^k  converges to 𝒫^*.
+    
+  * Let θ be the KŁ exponent of ℒ at 𝒫^*. There hold: (a) if θ=0, then {𝒫^k}_k ∈ℕ converges in a finite number of steps; (b) if θ∈(0, 1/2], then 𝒫^k-𝒫^*_F≤ C η^k for all k ≥ k_0, for certain k_0>0, C>0, η∈(0,1); and (c) if θ∈(1/2, 1), then 𝒫^k-𝒫^*_F≤ C k^-1-θ/2 θ-1 for k ≥ k_0, for certain k_0>0, C>0. 
+    
+  * 1/K∑_k=1^Kg^k_F^2→ 0 at the rate 𝒪(1 / K) where g^k∈ ∂ℒ(𝒫^k). 
+
+
+
+
+
+
+
+ Lispchitz differentiable property is a required for nonconvex optimizations with multi-block variables to build the convergence in the existing literature <cit.>. However, the NN training problem (<ref>) in this paper generally does not satisfy such a condition. For example, when ReLU activation is used. Theorem <ref> establishes the global convergence under a very mild condition that most NN models satisfy.
+ 
+Extension to ResNets <cit.>: the theoretical results in Theorem <ref> can be extended to ResNets by considering the following optimization problem
+
+    min _𝒲, 𝒱ℒ_0(𝒲, 𝒱)      subject to U_i=W_iV_i-1,V_i-V_i-1 =σ_i(U_i), 𝒲_i = TTD(r_i)   i=1, …, N,
+ 
+where the residual term V_i-V_i-1 is considered instead of V_i. The corresponding algorithm can be easily modified from Algorithm <ref>. 
+
+
+
+
+§ CASE STUDY
+ 
+
+
+
+
+
+
+
+
+
+
+
+In this experiment, to evaluate the effectiveness and efficiency of our proposed method, NN model (<ref>) training with different compression ratios (determined by TT-rank r_i) is conducted on the image classification task. In terms of the NN model, ReLU activation, the squared loss, and the network architecture being an MLP with ten hidden layers are considered here. The number of hidden units in each layer is 2^9=512. The neural network is trained on the MNIST dataset, which is a handwritten digits dataset. The size of each input image is d_0=28×28=784 and the output dimension is d_11=10.  The numbers of training and test samples are 60,000 and 10,000, respectively. For comparison, SGD is also considered as a benchmark method, where the learning rate is 0.001.
+
+
+
+For each experiment, the same mini-batch sizes (512) and initializations for all algorithms. All the experiments are repeated ten times to obtain the average performance.  Specifically, all the weights {W_i}_i=1^N are initialized from a Gaussian distribution with a standard deviation of 0.01. The auxiliary variables {U_i}_i=1^N, state variables {V_i}_i=1^N, TT-cores {𝒢_i}_i=1^N are initialized by a single forward pass <cit.>. Under these settings, the training loss, training accuracy, and test accuracy are shown in Table <ref>.  With a smaller CR (# of parameters after compression/# of parameters without compression), a higher training loss is observed. Our proposed method with CR<1 can outperform the uncompressed method and SGD. In addition, the curves of the training loss and test accuracy are plotted in Figure <ref>.  Figure <ref> shows that the proposed method converges with different compression rates.  The training loss of our proposed method also shows the monotone decreasing trend, which verified the statements in Theorem <ref>. Figure <ref> shows that, for different CR (<1), the test accuracy of our proposed method keeps increasing as the number of iterations increases. When CR=1 (the model without compression), the test accuracy increases first and then decreases. This result demonstrates that model compression can prevent overfitting. In addition, our proposed method with CR<1 can outperform SGD significantly in terms of test accuracy. 
+
+
+
+
+§ CONCLUSION
+ 
+
+In this paper, a holistic framework is proposed for tensor decomposition-based NN model compression by formulating TT decomposition-based NN training as a nonconvex optimization problem. The framework can be extended to other formats of tensor decomposition such as Tucker decomposition, and CP decomposition. For the first time in the literature on tensor decomposition-based NN model compression, global convergence is guaranteed for the proposed tensor BCD (tenBCD) algorithm. Specifically, tenBCD converges to a critical point at a rate of 𝒪(1/k), where k is the number of iterations.  The empirical experiment shows that the proposed method can converge and run efficiently in practice. Compared with SGD, the proposed method can maintain a high compression rate and high accuracy simultaneously. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+    
+
+
+
+
+§ SOLUTIONS OF SOME SUBPROBLEMS
+
+In this section, we provide the solution to subproblem (<ref>), closed-form solutions to the ReLU-involved subproblem.
+
+
+ §.§ Solutions to Subproblem (<ref>)
+
+Prox-linear algorithm to subproblem (<ref>): in the V_N-update of Algorithm <ref>, the empirical risk is involved in the optimization problems. It is generally hard to obtain its closed-form solution except for some special cases such as the case where the loss is the square loss. For other smooth losses such as the logistic, cross-entropy, and exponential losses, we suggest using the following prox-linear update strategies, that is, for some parameter α>0, the V_N-update in  Algorithm <ref> is
+
+    V_N^k=V_Nargmin{s_N(V_N)+⟨∇ℛ_n(V_N^k-1 ; Y), V_N-V_N^k-1⟩ +γ/2V_N-U_N^k-1_F^2+α/2V_N-V_N^k-1_F^2},
+
+This V_N-update can be implemented with explicit expressions. Therefore, the specific uses of these tenBCD methods are very flexible, mainly depending on users' understanding of their own problems.
+
+The closed-form of the proximal operator of hinge loss: consider the following optimization problem
+
+    u^*=uargmin g(u):=max{0,1-a · u}+γ/2(u-b)^2,
+
+where γ>0
+
+    The optimal solution to Problem (<ref>) is shown as follows
+    
+    hinge_γ(a, b)= b,     if  a=0, 
+     b+γ^-1 a,     if  a ≠ 0  and  a b ≤ 1-γ^-1 a^2, 
+     a^-1,     if  a ≠ 0  and  1-γ^-1 a^2<a b<1, 
+     b,     if  a ≠ 0  and  a b ≥ 1 .
+
+
+
+
+
+ §.§ The Closed-form Solution to Subproblem (<ref>)
+
+From Algorithm <ref>, when σ_i is ReLU, then the U_i^k-update actually reduces to the following one-dimensional minimization problem
+
+    u^*=uargmin f(u):=1/2(σ(u)-a)^2+γ/2(u-b)^2,
+
+where σ(u)=max{0, u} and γ>0. The solution to the above one-dimensional minimization problem can be presented in the following lemma.
+
+The optimal solution to Problem (<ref>) is shown as follows
+
+    prox_1/2 γ(σ(·)-a)^2(b)={[                      a+γ b/1+γ,           if  a+γ b ≥ 0, b ≥ 0,;                      a+γ b/1+γ,     if -(√(γ(γ+1))-γ) a ≤γ b<0,;                              b, if -a ≤γ b ≤-(√(γ(γ+1))-γ) a<0,;                      min{b, 0},                    if  a+γ b<0. ].
+
+
+
+
+
+
+§ KEY PROOF OF THEOREM <REF>
+
+Based on Lemma <ref> and under the hypothesis that ℒ is continuous on its domain and there exists a convergent subsequence, the continuity condition required in <cit.> holds naturally, i.e., there exists a subsequence {𝒫^k_j}_j ∈ℕ and 𝒫^* such that
+
+    𝒫^k_j→𝒫^*   and ℒ(𝒫^k_j) →ℒ(𝒫^*) , as  j →∞
+
+Based on Lemmas <ref>, <ref>, and <ref>, we can justify the global convergence of 𝒫^k stated in Theorem <ref>, following the proof idea of <cit.>. For the completeness of the proof, we still present the detailed proof as follows.
+
+Before presenting the main proof, we establish a local convergence result of 𝒫^k, i.e., the convergence of 𝒫^k when 𝒫^0 is sufficiently close to some point 𝒫^*. Specifically, let (φ, η, U) be the associated parameters of the KŁ property of ℒ at 𝒫^*, where φ is a continuous concave function, η is a positive constant, and U is a neighborhood of 𝒫^*. Let ρ be some constant such that 𝒩(𝒫^*, ρ):={𝒫:𝒫-𝒫^*_F≤ρ}⊂ U, ℬ:=ρ+𝒫^*_F, and L_ℬ be the uniform Lipschitz constant for σ_i, i=1, …, N-1, within 𝒩(𝒫^*, ρ). Assume that 𝒫^0 satisfies the following condition
+
+    δ̅/λφ(ℒ(𝒫^0)-ℒ(𝒫^*))+3 √(ℒ(𝒫^0)/λ)+𝒫^0-𝒫^*_F<ρ,
+
+where δ̅=δ√(4 N), λ and δ are defined in Lemmas <ref> and <ref>, respectively.
+
+     Under the conditions of Theorem 5, suppose that 𝒫^0 satisfies the condition (<ref>), and ℒ(𝒫^k)>ℒ(𝒫^*) for k ∈ℕ, then
+
+    
+    ∑_i=1^k𝒫^i-𝒫^i-1_F   ≤ 2 √(ℒ(𝒫^0)/λ)+δ̅/λφ(ℒ(𝒫^0)-ℒ(𝒫^*)), ∀ k ≥ 1 
+    𝒫^k   ∈𝒩(𝒫^*, ρ),   ∀ k ∈ℕ.
+
+
+As k goes to infinity, (<ref>) yields
+
+    ∑_i=1^∞𝒫^i-𝒫^i-1_F<∞,
+
+which implies the convergence of {𝒫^k}_k ∈ℕ.
+
+
+    We will prove 𝒫^k∈𝒩(𝒫^*, ρ) by induction on k. It is obvious that 𝒫^0∈𝒩(𝒫^*, ρ). Thus, (<ref>) holds for k=0. For k=1, we have from (<ref>) and the nonnegativeness of {ℒ(𝒫^k)}_k ∈ℕ that
+    
+    ℒ(𝒫^0) ≥ℒ(𝒫^0)-ℒ(𝒫^1) ≥ a𝒫^0-𝒫^1_F^2,
+
+which implies 𝒫^0-𝒫^1_F≤√(ℒ(𝒫^0)/λ). Therefore,
+
+    𝒫^1-𝒫^*_F≤𝒫^0-𝒫^1_F+𝒫^0-𝒫^*_F≤√(ℒ(𝒫^0)/λ)+𝒫^0-𝒫^*_F,
+
+which indicates 𝒫^1∈𝒩(𝒫^*, ρ).
+
+Suppose that 𝒫^k∈𝒩(𝒫^*, ρ) for 0 ≤ k ≤ K. We proceed to show that 𝒫^K+1∈𝒩(𝒫^*, ρ). Since 𝒫^k∈𝒩(𝒫^*, ρ) for 0 ≤ k ≤ K, it implies that 𝒫^k_F≤ℬ:=ρ+𝒫^* for 0 ≤ k ≤ K. Thus, by Lemma <ref>, for 1 ≤ k ≤ K,
+
+    dist(0, ∂ℒ(𝒫^k)) ≤δ̅𝒫^k-𝒫^k-1_F,
+
+which together with the KŁ inequality (<ref>) yields
+
+    1/φ^'(ℒ(𝒫^k)-ℒ(𝒫^*))≤δ̅𝒫^k-𝒫^k-1_F
+
+By inequality (<ref>), the above inequality and the concavity of φ, for k ≥ 2, the following holds
+
+    λ𝒫^k-𝒫^k-1_F^2   ≤ℒ(𝒫^k-1)-ℒ(𝒫^k)=(ℒ(𝒫^k-1)-ℒ(𝒫^*))-(ℒ(𝒫^k)-ℒ(𝒫^*)) 
+       ≤φ(ℒ(𝒫^k-1)-ℒ(𝒫^*))-φ(ℒ(𝒫^k)-ℒ(𝒫^*))/φ^'(ℒ(𝒫^k-1)-ℒ(𝒫^*))
+       ≤δ̅𝒫^k-1-𝒫^k-2_F·[φ(ℒ(𝒫^k-1)-ℒ(𝒫^*))-φ(ℒ(𝒫^k)-ℒ(𝒫^*))],
+
+which implies
+
+    𝒫^k-𝒫^k-1_F^2≤𝒫^k-1-𝒫^k-2_F·δ̅/λ[φ(ℒ(𝒫^k-1)-ℒ(𝒫^*))-φ(ℒ(𝒫^k)-ℒ(𝒫^*))].
+
+Taking the square root on both sides and using the inequality 2 √(αβ)≤α+β, the above inequality implies
+
+    2𝒫^k-𝒫^k-1_F≤𝒫^k-1-𝒫^k-2_F+δ̅/λ[φ(ℒ(𝒫^k-1)-ℒ(𝒫^*))-φ(ℒ(𝒫^k)-ℒ(𝒫^*))].
+
+Summing the above inequality over k from 2 to K and adding 𝒫^1-𝒫^0_F to both sides, it yields
+
+    𝒫^K-𝒫^K-1_F+∑_k=1^K𝒫^k-𝒫^k-1_F≤ 2𝒫^1-𝒫^0_F+δ̅/λ[φ(ℒ(𝒫^0)-ℒ(𝒫^*))-φ(ℒ(𝒫^K)-ℒ(𝒫^*))]
+
+which implies
+
+    ∑_k=1^K𝒫^k-𝒫^k-1_F≤ 2 √(ℒ(𝒫^0)/λ)+δ̅/λφ(ℒ(𝒫^0)-ℒ(𝒫^*)),
+
+and further,
+
+    𝒫^K+1-𝒫^*_F≤𝒫^K+1-𝒫^K_F+∑_k=1^K𝒫^k-𝒫^k-1_F+𝒫^0-𝒫^*_F
+       ≤√(ℒ(𝒫^K)-ℒ(𝒫^K+1)/λ)+2 √(ℒ(𝒫^0)/λ)+δ̅/λφ(ℒ(𝒫^0)-ℒ(𝒫^*))+𝒫^0-𝒫^*_F
+       ≤ 3 √(ℒ(𝒫^0)/λ)+δ̅/λφ(ℒ(𝒫^0)-ℒ(𝒫^*))+𝒫^0-𝒫^*_F<ρ,
+
+where the second inequality holds for (<ref>) and (<ref>), the third inequality holds for ℒ(𝒫^K)-ℒ(𝒫^K+1) ≤ℒ(𝒫^K) ≤ ℒ(𝒫^0). Thus, 𝒫^K+1∈𝒩(𝒫^*, ρ). Therefore, we prove this lemma.
+
+We prove the whole sequence convergence stated in Theorem <ref> according to the following two cases.
+
+Case 1: ℒ(𝒫^k_0)=ℒ(𝒫^*) at some k_0. In this case, by Lemma <ref>, 𝒫^k=𝒫^k_0=𝒫^* holds for all k ≥ k_0, which implies the convergence of 𝒫^k to a limit point 𝒫^*.
+
+Case 2: ℒ(𝒫^k)>ℒ(𝒫^*) for all k ∈ℕ. In this case, since 𝒫^* is a limit point and ℒ(𝒫^k) →ℒ(𝒫^*), by Theorem 4 , there must exist an integer k_0 such that 𝒫^k_0 is sufficiently close to 𝒫^* as required in Lemma <ref> (see the inequality (<ref>)). Therefore, the whole sequence {𝒫^k}_k ∈ℕ converges according to Lemma <ref>. Since 𝒫^* is a limit point of {𝒫^k}_k ∈ℕ, we have 𝒫^k→𝒫^*.
+
+Next, we show 𝒫^* is a critical point of ℒ. By  lim _k →∞𝒫^k-𝒫^k-1_F=0. Furthermore, by Lemma <ref>,
+
+    lim _k →∞dist(0, ∂ℒ(𝒫^k))=0,
+
+which implies that any limit point is a critical point. Therefore, we prove the global convergence of the sequence generated by Algorithm <ref>.
+
+The convergence to a global minimum is a straightforward variant of Lemma <ref>.
+
+The 𝒪(1 / k) rate of convergence is a direct claim according to the proof of Lemma <ref> and lim _k →∞𝒫^k-𝒫^k-1_F=0.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1349 @@
+
+Anyon condensation in the string-net models
+    Fiona J. Burnell
+    March 30, 2023
+===========================================
+
+
+
+
+The main purpose of this paper is to further study the structure, parameters and constructions of the recently introduced minimal codes in the sum-rank metric. These objects form a bridge between the classical minimal codes in the Hamming metric, the subject of intense research over the past three decades partly because of their cryptographic properties, and the more recent rank-metric minimal codes. We prove some bounds on their parameters, existence results, and, via a tool that we name geometric dual, we manage to construct minimal codes with few weights. A generalization of the celebrated Ashikhmin-Barg condition is proved and used to ensure minimality of certain constructions.
+
+
+Keywords: Sum-rank metric codes; minimal codes; geometric dual; bounds.
+
+Mathematics Subject Classification. Primary: 94B05, 51E20.  Secondary: 94B65, 94B27
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+Sum-rank metric constitutes a bridge between the more classical Hamming and rank metrics, which may be considered as its special cases. It has been used implicitely first in <cit.> and explicitely introduced in the context of network coding in <cit.>. One of the main reasons why this metric has been in the spotlight in recent years is the fact that sum-rank metric codes outperform the more classical ones in
+terms of the required field size to construct codes achieving the Singleton bound in the corresponding metric <cit.>. This is due to the existence of the so-called linearized Reed–Solomon codes, a family of maximum sum-rank distance (MSRD) codes with polynomial field sizes. 
+In the survey paper <cit.>, the interested reader may find a very
+detailed summary on properties and applications of sum-rank
+metric codes in distributed storage systems, network coding, and multi-antenna communication.
+
+The main purpose of this paper is to further study the structure, parameters and constructions of minimal codes in the sum-rank metric, recently introduced in <cit.>. Minimal codes are classical objects in the Hamming metric rich of connections with different areas of mathematics, such as cryptography <cit.>, finite geometry <cit.>, and combinatorics <cit.>. One of the main concerns about these objects is to find bounds on their parameters. In particular, one difficult problem is to know how short they can be and to construct short minimal codes. In <cit.> lower bounds on the length of minimal codes are proved, whereas in <cit.> the best known upper bounds on the length of the shortest minimal codes are presented. These last are implicit existence results. Some short constructions are illustrated in <cit.> and in the upcoming <cit.>. More recently, minimal codes in the rank metric have been introduced <cit.> together with some bounds and construction. In particular, their geometry is studied, in connection with linear sets. Such codes reveal to be useful in the construction of MRD codes <cit.> or for the covering problem in the rank metric
+<cit.>. Still a direct application to cryptography of these objects is missing from the party, even if rank-metric minimal codes may be used to construct minimal codes in the Hamming metric. We will show that the same holds for minimal sum-rank metric codes.
+
+
+After recalling some main definitions and results in the preliminary Section <ref>, we introduce the main object of the paper in Section <ref>: exploiting the geometry of sum-rank metric codes studied in <cit.>, we prove first that minimal sum-rank metric codes correspond to collections of linear sets whose union forms a strong blocking set, that is a set of points in the projective space whose intersection with every hyperplane spans the hyperplane. This allows to easily get a bound on the maximum weight of minimal sum-rank metric codes, together with a characterization of minimal MSRD codes. Standard equations allow us to prove some bounds on the parameters of minimal sum-rank metric codes (see Theorem <ref>) presented also in their asymptotic version. We then focus on some existence results of short minimal sum-rank metric codes, obtained by implicit counting arguments. Section <ref> is devoted to a tool that we call geometric dual: we make use of the dual of _q-subspaces of _q^m-vector spaces studied in <cit.> to build the dual of systems associated to sum-rank metric codes and we call geometric dual the code associated to these dual systems. We prove first that such object is well-defined and we show a sort of MacWilliams' relations between the generalized weight enumerators (see Theorem <ref>). Moreover, we prove that the geometric dual is involutory. In Section <ref>, we come back to the core of the paper, which are minimal codes in the sum-rank metric. By the correspondence between sum-rank metric codes and Hamming-metric ones, we first highlight a generalization of the celebrated Ashikhmin-Barg condition, which is a sufficient condition on the weight distribution for a code to be minimal (see Theoreom <ref>). All one-weight codes result to be minimal, but remarkably there are many more one-weight codes in the sum-rank metric than in the two more classical ones. After recalling three families of one-weight sum-rank metric codes introduced in <cit.>, we read the property of being one-weight in the geometric dual, which exchanges the role of hyperplanes and points. As a consequence, we get that partitions in scattered linear sets yield one-weight codes. Doubly extended linearized Reed-Solomon of dimension 2, which correspond partition of the projective line in scattered linear sets, are short minimal codes (that meet the bound in Theorem <ref>) whose geometric dual are one-weight which are short minimal codes for quadratic extensions. We use this partition of the projective line to construct a partition of higher dimension projective spaces, yielding other examples of one-weight codes. Another construction may be done with canonical subgeometries. Finally, we show that every sum-rank metric code can be extended to a one-weight code, showing that there are several examples of one-weight codes with different geometric structures. In the last part of the section, we study some two-weight codes: these can be easily obtained by considering proper subsets of mutually disjoint scattered linear sets and taking the geometric dual of the associated codes (see Theorem <ref>). Thanks to the Ashikhmin-Barg condition, we have that if the number of blocks is sufficiently large, then such codes are minimal  (see Theorem <ref>). We finally present some examples of minimal two-weight codes with two blocks and, quite remarkably, in dimension 3 we are able to prove the minimality  by direct geometric arguments for codes not satisfying the Ashikhmin-Barg condition (see Theorem <ref>). Let us point out that their associated Hamming metric codes have few weights and in some cases they are two-weights: this make them particularly interesting for several reasons including quantum codes and strongly regular graphs; see <cit.>.
+
+
+
+
+
+
+§ PRELIMINARIES
+
+
+In this section we will briefly recall the main results of the theory of sum-rank metric codes and linear sets, which we will use in the rest of the paper.
+
+
+
+
+
+ §.§ Basic notions on sum-rank metric codes
+
+
+Throughout the paper,
+𝐧=(n_1,…,n_t) ∈ℕ^t denotes an ordered tuples with n_1 ≥ n_2 ≥…≥ n_t and N = n_1+…+n_t. We use the following compact notations for the direct sum of vector spaces 
+
+    _q^m^=⊕_i=1^t_q^m^n_i.
+
+
+Let start by recalling that the rank of a vector v=(v_1,…,v_n) ∈_q^m^n is defined as (v)=_ (⟨ v_1,…, v_n⟩_) and the sum-rank weight of an element x=(x_1 ,…, x_t) ∈_q^m^ is 
+
+    w(x)=∑_i=1^t (x_i).
+
+
+
+    If t=1, then the sum-rank weight is simply the rank, whereas if n_1=…=n_t=1, the sum-rank weight coincides with the Hamming weight. The sum-rank metric constitues then a bridge between the rank and the Hamming metrics. 
+
+
+We also call rank-list of x=(x_1,…,x_t) ∈_q^m^ the vector
+
+    ((x_1),…,(x_t)).
+
+Hence, the sum-rank weight of a vector corresponds to the sum of the entries of its rank-list.
+
+
+A (linear) sum-rank metric code  is an _q^m-subspace of _q^m^ endowed with the sum-rank distance defined as
+
+    d(x,y)=w(x-y)=∑_i=1^t (x_i-y_i),
+
+where x=(x_1 , … , x_t), y=(y_1 , …, y_t) ∈_q^m^. 
+Let ⊆_q^m^ be a sum-rank metric code. We will write that  is an [,k,d]_q^m/q code (or [,k]_q^m/q code) if k is the _q^m-dimension of  and d is its minimum distance, that is 
+
+    d=d()=min{d(x,y)  x, y ∈, x ≠ y  }.
+    
+
+
+Let ⊆_q^m^𝐧 be a linear sum-rank metric code. Let G=(G_1|…| G_t) ∈_q^m^k × N be a generator matrix of , that is a matrix whose lines generate , with G_1,…,G_t ∈_q^m^k ×n_i. We define  to be nondegenerate if the columns of G_i are -linearly independent for i∈{1,…,t} (this is independent of the choice of G; see <cit.>).
+
+We will only consider nondegenerate codes in this paper and this is not a restriction since we can always embed a sum-rank metric code in a smaller space in which it results to be nondegenerate, preserving its metric properties.
+So, throughout this paper we will omit the term nondegenerate and all codes considered will be nondegenerate.
+
+
+
+For sum-rank metric codes the following Singleton-like bound holds; see also <cit.>.
+
+  
+     Let 𝒞 be an  code. Then 
+     
+    d ≤ N-k+1.
+
+
+
+
+An  code is called a Maximum Sum-Rank Distance code (or shortly MSRD code) if d=N-k+1.
+
+
+
+The next result classifies the -linear isometries of _q^m^ equipped with the sum-rank distance, cfr. <cit.> and <cit.>.
+Before stating it, we need the following notation. 
+Let ℓ:=|{n_1,…,n_t}| and let n_i_1,…,n_i_ℓ be the distinct elements of {n_1,…,n_t}.
+By λ(𝐧)∈^ℓ we will denote the vector whose entries are
+
+    λ_j:=|{k  n_k=n_i_j}|,     j∈{1,…,ℓ}.
+
+For a vector v=(v_1,…, v_ℓ)∈ℕ^ℓ, we define 
+    S_v=S_v_1×⋯× S_v_ℓ,
+
+where S_i is the symmetric group of order i and naturally acts on the blocks of length i. 
+Similarly, we denote by (v, _q) the direct product of the general linear groups of degree v_i over _q, i.e.
+
+    (𝐯, _q) = (v_1, _q)×…×(v_t, _q).
+
+
+
+The group of _q^m-linear isometries of the space (_q^m^,d)  is
+
+    ((_q^m^∗)^t×(, _q)) ⋊𝒮_λ(),
+
+which (right)-acts as 
+  
+    (x_1 , …, x_t)· (𝐚,A_1,…, A_t,π) ⟼ (a_1x_π(1)A_1 |…| a_tx_π(t) A_t).
+
+
+
+We use the -linear isometries of the whole ambient space to define the equivalence of sum-rank metric codes.
+
+ 
+Two  sum-rank metric codes _1, _2 are equivalent if there is an -linear isometry ϕ, such that ϕ(_1)=_2. The set of equivalence classes of  sum-rank metric codes is denoted by ℭ.
+
+
+
+
+
+
+ §.§ The geometry of sum-rank metric codes
+
+
+We will recall now some results from <cit.>, on the connections between sum-rank metric codes and some sets of subspaces.
+
+The following definition extends the notion of projective systems and q-systems; cfr. <cit.>.
+
+ 
+An [𝐧,k,d]_q^m/q-system (or simply an [𝐧,k]_q^m/q-system) U is an ordered set (U_1,⋯,U_t), where, for any i∈{1,…, t}, U_i is an _q-subspace of _q^m^k of dimension n_i, such that
+⟨ U_1, …, U_t ⟩__q^m=_q^m^k and 
+
+    d=N-max{∑_i=1^t__q(U_i∩ H) | H  is an _q^m-hyperplane of _q^m^k}.
+
+Moreover, two [𝐧,k,d]_q^m/q-systems (U_1,…,U_t) and (V_1,…, V_t) are equivalent if there exists  φ∈(k,_q^m) and  σ∈𝒮_t, such that
+
+    φ(U_i) = a_iV_σ(i),
+
+for every i∈{1,…,t}.
+
+
+We denote the set of equivalence classes of [𝐧,k,d]_q^m/q-systems by 𝔘[𝐧,k,d]_q^m/q.
+
+The following result allows us to establish a connection between systems and codes.
+
+ 
+Let  be an [,k,d]_q^m/q. Let G=(G_1|…| G_t) be a generator matrix of .
+Let U_i ⊆_q^m^k be the _q-span of the columns of G_i, for i∈{1,…,t}.
+The sum-rank weight of an element x G ∈, with x=(x_1,…,x_k) ∈_q^m^k is
+
+    w(x G) = N - ∑_i=1^t _(U_i ∩ x^⊥),
+
+where x^⊥={y=(y_1,…,y_k) ∈_q^m^k ∑_i=1^k x_iy_i=0}. In particular, the minimum distance of  reads as follows
+
+    d=N- max{∑_i=1^t _(U_i ∩ H)   H_q^m_q^m^k  }.
+
+So (U_1,…,U_t) in an [,k,d]_q^m/q-system. 
+
+
+
+Note that, as a consequence of (<ref>), the rank-list of a codeword x G of   is given by
+
+    (n_1-_(U_1 ∩ x^⊥),…,n_t-_(U_t ∩ x^⊥)).
+
+
+
+
+As in <cit.>, we can then observe that there is a one-to-one  correspondence  between  equivalence  classes  of  sum-rank nondegenerate [𝐧,k,d]_q^m/q code and equivalence classes of [𝐧,k,d]_q^m/q-systems via two maps
+
+    Ψ :  ℭ[𝐧,k,d]_q^m/q   →𝔘[𝐧,k,d]_q^m/q
+    Φ : 𝔘[𝐧,k,d]_q^m/q   →ℭ[𝐧,k,d]_q^m/q,
+
+that act as follows.
+For any []∈ℭ[𝐧,k,d]_q^m/q, let G=(G_1|…| G_t) be a generator matrix of . Then Ψ([]) is defined as the equivalence class of [𝐧,k,d]_q^m/q-systems [U], where U=(U_1,…,U_t) is defined as in Theorem <ref>. In this case U is also called a system associated with . Viceversa, given [(U_1,…,U_t)]∈𝔘[𝐧,k,d]_q^m/q, define G_i as the matrix whose columns are an _q-basis of U_i for any i. Then Φ([(U_1,…,U_t)]) is the equivalence class of the sum-rank metric code  generated by G=(G_1|…| G_t). In this case  is also called a code associated with U. See <cit.> for the proof that these maps are well-defined.
+
+
+
+
+
+ §.§ Supports
+
+
+We start by observing that a sum-rank metric code in _q^m^𝐧 can also be seen as an -subspace in ⊕_i=1^t _q^m_i × n_i.
+
+For every r ∈{1,…,t}, let Γ_r=(γ_1^(r),…,γ_m^(r)) be an ordered -basis of _q^m, and let Γ=(Γ_1,…,Γ_t). Given   x=(x_1, … ,x_t) ∈_q^m^, with x_i ∈_q^m^n_i, define the element 
+    Γ(x)=(Γ_1(x_1), …, Γ_t(x_t)) ∈Π,
+ where
+
+    x_r,i = ∑_j=1^m Γ_r (x_r)_ijγ_j^(r),      i ∈{1,…,n_r}.
+
+In other words, the r-th block of Γ(x) is the matrix expansion of the vector x_r with respect to the -basis Γ_r of _q^m and this also preserves its rank; cfr. <cit.>.
+
+
+Let x=(x_1,…, x_t)∈_q^m^𝐧 and  Γ=(Γ_1,…,Γ_t) as above.
+The sum-rank support of x is defined as the space
+
+    _𝐧(x)=(colsp(Γ_1(x_1)), …, colsp(Γ_t(x_t))) ⊆^,
+
+where colsp(A) is the -span of the columns of a matrix A.
+
+
+As proved in <cit.> for the rank-metric case, the support does not depend on the choice of Γ and we can talk about the support of a vector without mentioning Γ. For more details see <cit.>.
+
+
+
+
+
+ §.§ Generalized weights
+
+
+Generalized rank weights have been introduced several times with different definitions, see e.g. <cit.>, whereas the theory of sum-rank generalized weights is more recent and first introduced in <cit.>.
+
+In this paper we will deal with the definition given in <cit.> and more precisely to the geometric equivalent, which can be derived as for the rank metric in <cit.>. For more details we refer to <cit.>.
+
+
+Let  be an [𝐧,k,d]_q^m/q sum-rank metric code and let U=(U_1,…,U_t) be an  associated system.
+For any r ∈{1,…,k}, the r-th generalized sum-rank weight is
+
+    d_r()=N- max{∑_i=1^t _(U_i ∩ H)   H_q^m_q^m^kr  }.
+
+
+
+In order to keep track of the metric properties of the code, as done in <cit.>, we can define the generalized sum-rank weight enumerator of a code, which extend the classical weight enumerator of a code (up to the addition of X^N).
+
+
+Let  be an [𝐧,k,d]_q^m/q sum-rank metric code and let U=(U_1,…,U_t) be an associated system.
+For any r ∈{1,…,k}, the r-th generalized sum-rank weight enumerator is
+
+    W_^r(X,Y)=∑_w=0^N A_w^r X^N-wY^w,
+
+where A_w^r is the number of _q^m-subspace of _q^m^k of codimension r such that
+
+    w=N- ∑_i=1^t _(U_i ∩ H).
+
+
+
+Clearly, the first generalized sum-rank weight enumerator corresponds with the classical weight enumerator.
+
+
+
+
+
+ §.§ The associated Hamming-metric codes
+
+
+Every sum-rank metric code can also be regarded as an Hamming-metric code as shown in <cit.> (see also <cit.> for the rank-metric codes).
+
+For a collection of multisets (_1,m_1), …, (_t,m_t) of (k-1,q^m). We can define their disjoint union as
+
+    _i=1^t (_i,m_i)=(,m),
+
+where =_1∪…∪_t, and m(P)=m_1(P)+…+m_t(P) for every P∈(k-1,q^m).
+For every n-dimensional _q-subspace U of _q^m^k, it is possible to associate the multiset (L_U,m_U), where  L_U is the _q-linear set defined by U (see next subsection), that is
+
+    L_U={⟨ u⟩__q^m| u∈ U∖{ 0}}⊆(k-1,q^m),
+
+and 
+    m_U(⟨ v⟩__q^m)=q^w_L_U(⟨ v⟩__q^m)-1/q-1.
+
+This means that the multiset (L_U,m_U) of (k-1,q^m) has size (counted with multiplicity) q^n-1/q-1. 
+We can now apply this procedure to the elements of an [𝐧,k]_q^m/q system (U_1,…,U_t). In this way we can define the multiset 
+
+    (U_1,…,U_t)= _i=1^t (L_U_i,m_U_i).
+
+Then (U_1,…,U_t) is a multiset of points of size q^n_1+… +q^n_t-t/q-1 in (k-1,q^m).
+
+Hence, we can give the following definition.
+
+
+Let  be a linear sum-rank [𝐧,k]_q^m/q code. Let (U_1,…,U_t) be a system associated with . Any code ^H ∈Ψ((U_1,…,U_t)) is called an associated Hamming-metric code to .
+
+
+The weight distribution of the Hamming-metric code associated with a sum-rank-metric codes can be determined as follows.
+For x ∈𝔽_q^m^n denote by w_H(x) the Hamming weight of x, that is the number of its non-zero components. 
+
+
+ Let G=(G_1  | … |  G_t)∈^k× N be a generator matrix of an  code, and let v ∈^k ∖{0}. 
+ Denote by G_∈^k× M to be any generator matrix of a Hamming-metric code ^H in Ψ((U_1,…,U_t)), where M= q^n_1+…+q^n_t-t/q-1.
+ Then
+ 
+    w_(vG_)= ∑_i=1^tq^n_i-q^n_i-(vG_i)/q-1.
+
+In particular, the minimum distance of ^ is given by
+ 
+    d(^)= min_𝐫∈S(){∑_i=1^tq^n_i-q^n_i-r_i/q-1},
+
+ where S() is the set of rank-lists of . 
+
+
+
+
+
+
+ §.§ Linear sets
+
+
+Let V be a k-dimensional vector space over _q^m and consider Λ=(V,_q^m)=(k-1,q^m).
+Let U be an -subspace of V of dimension n. Then the point-set
+
+    L_U={ u_𝔽_q^m :  u∈ U∖{ 0}}⊆Λ
+
+is called an -linear set of rank n.
+Another important notion is the weight of a point.
+Let P=⟨ v⟩__q^m be a point in Λ. The weight of P in L_U is defined as 
+
+    w_L_U(P)=_(U∩⟨ v⟩__q^m).
+ 
+An upper bound on the number of points that a linear set contains is
+
+    |L_U| ≤q^n-1/q-1.
+
+Furthermore, L_U is called scattered (and U as well) if it has the maximum number q^n-1/q-1 of points, or equivalently, if all points of L_U have weight one. Blokhuis and Lavrauw provided the following bound on the rank of a scattered liner set.
+
+
+The rank of a scattered -linear set in (k-1,q^m) is at most mk/2.
+
+
+A scattered -linear set of rank km/2 in (k-1,q^m) is said to be maximum scattered and U is said to be a maximum scattered -subspace as well. 
+
+In the next result we summarize what is known on the existence of maximum scattered linear sets/subspaces.
+
+
+If mk is even, then there exist maximum scattered subspaces in _q^m^k.
+ 
+
+We refer to <cit.> for further details on linear sets and their connections.
+
+
+
+
+
+§ MINIMAL SUM-RANK METRIC CODES AND CUTTING SYSTEMS
+
+
+In this section we introduce the notion of sum-rank metric minimal codes and we investigate their parameters. The geometry of minimal codes have been important in order to construct and give bounds in both Hamming and rank metric (see <cit.>), via the so called strong blocking sets. These, introduced first in <cit.> in relation to saturating sets, are sets of points in the projective space such that the intersection with every hyperplane spans the hyperplane. In <cit.> strong blocking sets are referred to
+as generator sets and they are constructed as union of disjoint lines. They have gained very recently a renovated interest in coding theory, since <cit.>, in which they are named cutting blocking sets and they are used to construct minimal codes. Quite surprisingly, they have been shown to be the geometric counterparts of minimal codes in <cit.>.
+
+
+
+
+
+ §.§ Definition and first properties
+
+
+In this subsection we introduce minimal codes in the sum-rank metric and their geometry, together with some structure results.
+
+
+Let  be an [𝐧,k]_q^m/q sum-rank metric code. A codeword c ∈ is said minimal if for every c'∈ such that _𝐧(c')⊆_𝐧(c) then c'=λ c for some λ∈_q^m. We say that  is minimal if all of its codewords are minimal. 
+
+
+
+An [𝐧,k]_q^m/q system (U_1,…,U_t) is called cutting  if for any hyperplane H of 𝔽_q^m^k  
+
+    ⟨ U_1∩ H,…, U_t∩ H⟩_𝔽_q^m=H,
+
+that is, if L_U_1∪…∪ L_U_t is a strong blocking set in (k-1,q^m).
+
+
+The following is a generalization of the geometric characterization of minimal codes in the Hamming and in the rank metric <cit.>.
+
+ 
+A sum-rank metric code is minimal if and only if an associated system is cutting.
+
+
+Thanks to this correspondence, we can easily prove, as in <cit.>, a bound on the maximum weight of a minimal sum-rank metric code.
+
+
+Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code and denote by w() the maximum weight of the codewords in  . Then
+
+    w()≤ N-k+1.
+
+
+
+Let (U_1,…,U_t) be a system associated with . Since  is minimal, by Theorem <ref>, for any hyperplane H of 𝔽_q^m^k we have 
+
+    ⟨ U_1∩ H,…, U_t∩ H⟩_𝔽_q^m=H,
+
+which implies 
+
+    ∑_i=1^t _𝔽_q(U_i∩ H)≥ k-1.
+
+By Theorem <ref> the maximum weight of  is
+
+    w()=N-min{∑_i=1^t _𝔽_q(U_i∩ H)  H  is an 𝔽_q^m-hyperplane of 𝔽_q^m^k},
+
+and by (<ref>) the assertion follows.
+
+
+We can provide a characterization of MSRD codes which are minimal.
+
+
+An MSRD code with parameters [𝐧,k]_q^m/q is minimal if and only if it is a one-weight code with minimum distance N-k+1.
+
+
+Let  be an MSRD, that is its minimum distance is d=N-k+1. 
+By Theorem <ref>, we also know that w()≤ N-k+1, therefore d=w()= N-k+1. 
+The converse trivially holds. 
+
+
+We consider now the Standard Equations, extending <cit.>. Let us recall here that
+
+    N  K_q^m=∏_i=0^K-1q^N-q^i/q^K-q^i
+
+denotes the number of K-dimensional subspaces of _q^m^N and it is called the Gauss binomial coefficient.
+
+
+Let U=(U_1,…,U_t) an [𝐧,k]_q^m/q-system and let
+
+    Λ_r={ W  W  is an r-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k }.
+
+Then 
+
+    ∑_W ∈Λ_r, i ∈{1,…,t} |W ∩ U_i∖{0}| =(q^n_1+…+q^n_t-t)k-1  r-1_q^m.
+
+
+
+The assertion follows from the fact that for any i ∈{1,…,t}, <cit.> implies
+
+    ∑_W ∈Λ_r |W ∩ U_i∖{0}| =(q^n_i-1)k-1  r-1_q^m,
+
+and
+
+    ∑_W ∈Λ_r, i ∈{1,…,t} |W ∩ U_i∖{0}| = ∑_i ∈{1,…,t}(∑_W ∈Λ_r |W ∩ U_i∖{0}| ).
+
+
+
+
+
+
+
+ §.§ Bounds on the parameters of minimal sum-rank metric codes
+
+
+By extending a minimal sum-rank metric code by adding new columns and/or blocks we get a minimal code as well.
+
+
+Let  be a minimal sum-rank metric code with parameters [𝐧,k]_q^m/q. Let ' be the code generated by G', where G' is obtained by adding any columns or blocks to any generator matrix G of . Then ' is minimal.
+
+
+This is an immediate consequence of Theorem <ref>.
+
+
+In view of Proposition <ref>, it is natural to look for short minimal sum-rank metric codes, when the number of blocks is given. 
+
+The Standard Equations allow to prove the following bound on the parameters of minimal sum-rank metric codes.
+
+
+Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code.
+
+If t≥ k, then
+
+    (q^n_1+…+q^n_t-t)(q^m(k-1)-1)≥ (q-1)(k-1)(q^km-1)
+
+If t≤ k-1 then
+
+    (q^n_1+…+q^n_t-t)(q^m(k-1)-1)≥ t(q^⌊k-1/t⌋-1)(q^km-1).
+
+
+
+By Theorem <ref>, for any hyperplane
+
+    ∑_i ∈{1,…,t}_𝔽_q (H∩ U_i)≥ N-w()≥ k-1,
+
+therefore
+
+    ∑_i ∈{1,…,t} |H ∩ U_i∖{0}|≥  (q-1)(k-1).
+
+It follows that 
+
+    ∑_H ∈Λ_k-1,  i ∈{1,…,t} |H ∩ U_i∖{0}| ≥ (q-1)(k-1)k  1_q^m,
+
+so that, by Lemma <ref>,
+
+    (q^n_1+…+q^n_t-t)k-1  1_q^m≥ (q-1)(k-1)k  1_q^m,
+
+which is (<ref>).
+
+If t≤ k-1, then (<ref>) implies that 
+
+    _(U_i ∩ H)≥⌊k-1/t⌋,
+
+for any i ∈{1,…,t} and for any hyperplane H. Arguing as before we obtain (<ref>).
+
+
+
+Let  be an [𝐧,k]_q^m/q minimal sum-rank metric code.
+
+If t≥ k, then, for large q,
+
+    N ≥ t+m+⌈log_q(k)⌉,
+
+If t≤ k-1 then, for large q,
+
+    N≥⌊k-1/t⌋+m+⌈log_q(t)⌉+t-1.
+
+
+
+
+Noting that q^N-t+1+(t-1)q≥ q^n_1+…+q^n_t the asymptotic bounds follow.
+
+
+
+For t=N (Hamming-metric case), the bound (<ref>) becomes 
+
+    N≥⌈(q^m)^k-1/(q^m)^k-1-1· (k-1)⌉.
+
+This last is in general slightly weaker than the known lower bound on the length of minimal codes (see <cit.>), recently improved in <cit.> and <cit.> for large k. Note that for k=2, the above bound is sharp.
+
+For t=1 (rank-metric case), the bound (<ref>) reduces to 
+
+    N≥ m+k-1,
+ which is exactly the bound proved for rank-metric codes <cit.>, which is shown to be sharp for k=2 and for k=3, the last with some additional conditions on m (see <cit.> for the precise statement). 
+
+Bound (<ref>) is tight for every q, m, t=q+1 and k=2 as we will show in Remark <ref>.
+Moreover, for k=3 and q>2, consider a code  associated with the [𝐧,3]_q^m/q-system 
+
+    U=(U_1,…,U_t),
+
+where U_1 is a scattered -subspace of dimension m+2 (which exists under some conditions, see again <cit.>) and U_2,…,U_t any -subspaces of dimension one spanned by random nonzero vectors in _q^m^k.
+By <cit.> and Theorem <ref>,  is a minimal sum-rank metric code with N=m+2+t-1=m+t+1 which gives the equality in bounds (<ref>) (for t≥ 3) and (<ref>) (for t=2).
+
+
+
+
+
+
+ §.§ Existence of minimal codes
+
+
+A first result immediately follows from <cit.> on the existence of minimal codes in the rank metric.
+
+
+For any m,k≥ 2, t and n_2,…,n_t, there exists a minimal code of parameters [(2k+m-2,n_2,…,n_t),k]_q^m/q.
+
+
+<cit.> ensures the existence of a minimal _q^m-linear rank-metric code of length 2k+m-2 of dimension k. Then we can extend such a code to a minimal sum-rank metric code via Proposition <ref>.
+
+
+However, the codes described in Proposition <ref> are quite unbalanced, since we look only to the first block and we do not care of the rest. The following result will give a more general existence condition. We  follow the proof of <cit.> to give a condition on the parameters which ensures the existence of a minimal sum-rank metric code. The main difference with the proof of <cit.> consists in computing the size of the analog of the set denoted by 𝒫 in <cit.>.
+
+
+If n_i≥ m for any i ∈{1,…,t} and
+
+    (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1)-1/2∑_i_1,…,i_t=2^m1/q^m-1∏_r=1^tm  i_r_q ∏_j_r=0^i_r-1 (q^n_r-q^j_r) ( q^mi_r-1/q^m-1-1 )
+ 
+is positive, then there exists a linear sum-rank metric code with parameters [𝐧,k]_q^m/q which is minimal.
+
+
+Denote by 𝒬 a set of nonzero representatives of the one-dimensional _q^m-subspaces of _q^m^k. A non-minimal linear code in 𝔽_q^m^𝐧 is any sum-rank metric code containing an element of the following set
+
+    𝒫={ (x,y) ∈𝒬^2  x y, supp^srk(x)⊆supp^srk(y)  or supp^srk(y)⊆supp^srk(x) }.
+
+Therefore, the number of minimal sum-rank metric codes in 𝔽_q^m^𝐧 is at least
+
+    N  k_q^m- |𝒫| N-2  k-2_q^m=N-2  k-2_q^m( (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1) - |𝒫| ),
+
+and hence if we prove that (q^mN-1)(q^m(N-1)-1)/(q^mk-1)(q^m(k-1)-1) - |𝒫|>0, then we ensure the existence of a minimal sum-rank metric code.
+Finally we compute the size of 𝒫 as follows:
+
+    2 |𝒫|    =∑_i=1^tm |{ (x,y) ∈𝒬^2  x y, w(y)=i,  supp^srk(x)⊆supp^srk(y)  }|
+       = ∑_i_1,…,i_t=1^m∑_y ∈𝒬,  w(y)=i_1+…+i_t  |{ x ∈𝒬 x y, supp^srk(x)⊆supp^srk(y)  }|
+       = ∑_i_1,…,i_t=1^m∑_y ∈𝒬,  w(y)=i_1+…+i_t  |{ x ∈𝒬 x y, supp^rk(x_ℓ)⊆supp^rk(y_ℓ)  ∀ℓ∈{1,…,t}}|
+       =∑_i_1,…,i_t=2^m1/q^m-1∏_r=1^tm  i_r_q ∏_j_r=0^i_r-1 (q^n_r-q^j_r) ( q^mi_r-1/q^m-1-1 ).
+
+
+
+
+If n_i≥ m for any i ∈{1,…,t} and
+for sufficiently large q, if 
+    N≥ 2k+tm-(t+1),
+
+then there exists a linear sum-rank metric code with parameters [𝐧,k]_q^m/q which is minimal.
+
+
+
+As in the proof of <cit.> we have the 
+(<ref>) is greater than
+
+    q^2m(N-k)-1/2(q^m-1)^t+1∑_i_1,…,i_t=2^m∏_r=1^tm  i_r_q q^i_r(m+n_r),
+
+which is greater than (with the same arguments as in the proof of <cit.>)
+
+    q^2m(N-k)-f(q)^t/2(q^m-1)^t+1·∑_i_1,…,i_t=2^m
+    q^∑_r=1^t 2mi_r-i_r^2+n_ri_r,
+
+where 
+
+    f(q):=∏_i=1^∞q^i/q^i-1.
+
+Now, by simple analytic arguments, the largest exponent in the sum on the right is
+tm^2+mN, so that, for q large enough, we get
+
+    q^2m(N-k)-f(q)^t/2· q^tm^2+mN-mt-m.
+
+The thesis again follows by analytic arguments.
+
+
+
+
+
+
+
+§ THE GEOMETRIC DUAL OF SUM-RANK METRIC CODES
+
+
+In this section we define a new operation which take an element in ℭ[𝐧,k,d]_q^m/q and it associates to it an element in ℭ[𝐧',k,d]_q^m/q, where 𝐧=(n_1,…,n_t) and 𝐧'=(mk-n_1,…,mk-n_t). It involves systems and
+we call it geometric dual. We will show some of its properties and, in the next section, we will show how this object helps in constructing minimal sum-rank metric codes.
+
+
+
+
+
+ §.§ Dual of -subspaces of _q^m-vector spaces
+
+
+Let V be an _q^m-vector space of dimension k and let σ V × V →_q^m be any nondegenerate reflexive sesquilinear form of V and consider 
+    [                σ':              V × V                  ⟶                 _q;                                 (x,y)                  ⟼ Tr_q^m/q (σ(x,y)), ]
+ 
+where V is seen as an -vector space of dimension mk.
+So, σ' is a nondegenerate reflexive sesquilinear form on V seen as an -vector space of dimension km. Then we may consider ⊥ and ⊥' as the orthogonal complement maps defined by σ and σ', respectively. For an _q-subspace U of  V of dimension n, the _q-subspace U^⊥' is the dual (with respect to σ') of U, which has dimension km-n; see <cit.>.
+
+An important property that σ' satisfies is that the dual of an _q^m-subspace W of V is an _q^m-subspace as well and W^⊥'=W^⊥. Moreover, the following result will be widely used in the paper.
+
+
+Let U be an -subspace of V and W be an _q^m-subspace of V.
+Then 
+
+    _(U^⊥'∩ W^⊥)=_(U∩ W)+_(V)-_(U)-_(W).
+
+
+
+In <cit.>, it has been proved that if we replace σ by another form with the same properties, with this procedure we obtain an -subspace of V which turns out to be Γ L(k,q^m)-equivalent to U^⊥'.
+For this reason, from now on we will assume that σ is fixed and we will just write U^⊥', without mentioning the form σ used.
+
+
+
+
+
+ §.§ Geometric dual
+
+
+We are now ready to give the definition of geometric dual of an _q^m-linear sum-rank metric code, taking into account the dual described in Section <ref>.
+
+
+Let  be an [,k,d]_q^m/q and let U=(U_1,…,U_t) be an associated system to  with the property that U_1∩…∩ U_t does not contain a 1-dimensional _q^m-subspace.
+Then a geometric dual ^⊥_𝒢 of  (with respect to ⊥') is defined as ', where ' is any code associated with the system (U_1^⊥,…,U_t^⊥).
+
+
+
+In the above definition we need that U_1∩…∩ U_t does not contain a 1-dimensional _q^m-subspace, otherwise (U_1^⊥,…,U_t^⊥) would not be a system.
+Indeed, suppose that (U_1^⊥,…,U_t^⊥) is not a system, then 
+
+    ⟨ U_1^⊥',…, U_t^⊥'⟩__q^m⊆ H,
+
+where H is an _q^m-hyperplane of _q^m^k. This implies that 
+
+    U_1^⊥'+…+U_t^⊥'⊆ H,
+
+and by duality
+
+    U_1∩…∩ U_t⊇ H^⊥,
+
+a contradiction since __q^m(H^⊥)=1.
+
+
+We will now prove that the geometric dual of a linear sum-rank metric code is well-defined and we will give a relation on the weight distributions among the two codes.
+
+
+
+
+Let  be an [,k,d]_q^m/q sum-rank metric code, with =(n_1,…,n_t), and let U=(U_1,…,U_t) be an associated system to .
+Assume that U_1∩…∩ U_t does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k. 
+Then, up to equivalence, a geometric dual ^⊥_𝒢 of  does not depend on the choice of the associated system and on the choice of code in [], hence ⊥_𝒢 is well-defined.
+The parameters of ^⊥_𝒢 are [(km-n_1,…,km-n_t),k]_q^m/q.
+The generalized weight enumerators of  and ^⊥_𝒢 are related as follows
+
+    w_^k-r(X,Y)= X^tmk-trm-NY^trm-Nw_^⊥_𝒢^r(X,Y).
+
+In particular,
+
+    d_1()=d_k-1(^⊥_𝒢)+N-t(k-1)m.
+
+
+
+We now prove that ⊥_𝒢 is well-defined on the equivalence classes of linear sum-rank metric codes, that is, the geometric dual of equivalent codes are equivalent (note that this also implies that the geometric dual does not depend on the choice of the system).
+Let ' be a code equivalent to  and let U'=(U_1',…,U_t') be an associated system to '. Then U and U' are equivalent systems and hence there exist ρ∈𝒮_t, a_1,…,a_t ∈_q^m^* such that for every i ∈{1,…,t}
+
+    U_i'=a_i U_ρ(i).
+
+Note that this also implies that U_1'∩…∩ U_t' does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k, since the U_i's satisfy this condition.
+Then for every i ∈{1,…,t}
+
+    (U_i')^⊥'={v ∈𝔽_q^m^k σ'(v,a_i u)=0  ∀ u ∈ U_ρ(i)}=a_i^-1 U_ρ(i)^⊥',
+
+since σ'(v,a_i u)=Tr_q^m/q(a_iσ (v,u))=σ'(a_iv, u).
+
+This implies that the systems (U_1^⊥',…,U_t^⊥') and (U_1'^⊥',…,U_t'^⊥') are equivalent and hence ^⊥_𝒢 and '^⊥_𝒢 are equivalent as well.
+So, we proved that ⊥_𝒢 is well-defined.
+
+Now, observe that the code ^⊥_𝒢 has dimension k since ⊥' does not change the dimension of the ambient space of the U_i's. Since _(U_i^⊥')=mk-_(U_i) for any i, it follows that ^⊥_𝒢 has parameters [(km-n_1,…,km-n_t),k].
+To determine the r-th generalized sum-rank weight enumerator of  we need to compute
+
+    N-∑_i=1^t_(U_i∩ W),
+
+for any _q^m-subspace W of _q^m^k of dimension r, where N=n_1+…+n_t.
+By Proposition <ref>, we obtain that
+
+    N-∑_i=1^t_(U_i∩ W)=N-∑_i=1^t_(U_i^⊥'∩ W^⊥)+tmk-N-trm=
+
+
+    tmk-N -∑_i=1^t_(U_i^⊥'∩ W^⊥)+N-trm,
+
+which correspond to a weight appearing in the (k-r)-th generalized sum-rank weight enumerator of ^⊥_𝒢 plus N-trm.
+Therefore, if 
+
+    W_^k-r(X,Y)=∑_w=0^N A_w X^N-wY^w       W_^⊥_𝒢^r(X,Y)=∑_w=0^N B_w X^tmk-N-wY^w,
+
+we have that 
+
+    A_w=B_w-N+trm,
+
+for any w.
+Therefore,
+
+    W_^⊥_𝒢^r(X,Y)     =∑_w'=0^N B_w'X^tmk-N-w'Y^w'
+       =∑_w=0^N B_w-N+trm X^tmk-w-trmY^w-N+trm
+       = ∑_w=0^N A_w X^tmk-trm-wY^w-N+trm,
+ 
+that is the assertion.
+
+
+
+With the notation of Theorem <ref> and by denoting G a generator matrix of , by Remark <ref> we have that the rank list of the codeword xG is
+
+    (n_1-_(U_1∩ x^⊥),…,n_1-_(U_t∩ x^⊥)),
+
+which, by Proposition <ref>, is equal to
+
+    (m-_(U_1^⊥'∩⟨ x⟩__q^m),…,m-_(U_t^⊥'∩⟨ x⟩__q^m)).
+
+
+
+
+The geometric dual is involutory.
+
+
+This immediately follows by the definition of geometric dual and from the fact that ⊥' is involutory.
+
+
+
+The geometric dual operation can be applied to both Hamming and rank metric. In the first case, the geometric dual of a Hamming-metric code of length n and dimension k will give a sum-rank metric code with parameters [(mk-1,…,mk-1),k]_q^m/q, which is far from being an Hamming-metric code. For rank-metric codes with parameters [n,k]_q^m/q, the geometric dual gives a rank-metric code as well, with parameters [mk-n,k]_q^m/q.
+
+
+
+
+
+
+§ MINIMAL CODES WITH FEW WEIGHTS
+
+
+In this section we will mainly deal with explicit construction of minimal codes in the sum-rank metric. We will make extensive use of the geometric dual introduced above.
+
+As in the Hamming and in the rank metrics (see e.g. <cit.>), all the one-weight sum-rank metric codes are minimal.
+
+ 
+Let  be an [𝐧,k]_q^m/q sum-rank metric. If all the codewords of  have the same sum-rank metric weight then  is a minimal sum-rank metric code.
+
+
+The main difference is that in Hamming and rank metrics, simplex codes are essentially the only  one-weight codes; see <cit.>. In the sum-rank metric, we have more examples as we will see later on and as it has been proved in <cit.>.
+
+Another way to get examples, is to obtain information on minimal codes in sum-rank metric by looking at the associated Hamming-metric codes, cfr. Section <ref>.
+
+
+Let  be an [𝐧,k]_q^m/q sum-rank metric code. Then  is minimal if and only if any associated Hamming-metric code ^H is minimal.
+
+
+Thanks to the above proposition, we can use some conditions proved in the Hamming-metric to ensure that a Hamming-metric code is minimal. More precisely, we will now describe a generalization of the celebrated Ashikhmin-Barg condition (see <cit.>).
+
+
+Let  be an [𝐧,k]_q^m/q sum-rank metric code.
+Denote by
+
+    δ_max=max_r ∈ S(){q^n_i-q^n_i-r_i/q-1}
+
+and 
+
+    δ_min=min_r ∈ S(){q^n_i-q^n_i-r_i/q-1},
+
+where S() is the set of rank-lists of .
+If 
+
+    δ_max/δ_min< q^m/q^m-1,
+
+then the code  is minimal.
+
+
+Let ^H be an associated Hamming-metric code to .
+The minimum distance of ^H is δ_min and its maximum weight is δ_max.
+By <cit.> and because of the assumptions on δ_min and δ_max, the code ^H is minimal.
+Since the sum-rank metric code  is minimal if and only if ^H is a minimal code in the Hamming-metric, the assertion is proved.
+
+
+If a sum-rank metric code satisfies the assumption of Theorem <ref>, we say that it satisfies the AB-condition.
+
+
+
+In the following subsections, we will first see old and new constructions of one-weight sum-rank metric codes (proving that this is a very large family) and then we will show examples of minimal codes with few weights, where some of them satisfy the AB-condition and some of them do not.
+
+
+
+
+
+ §.§ Sum-rank one-weight codes
+
+
+Some constructions of one-weight codes have been given in <cit.>, which can be divided in three families:
+
+
+    
+  * orbital construction (extending the simplex code);
+    
+  * doubly extended linearized Reed-Solomon;
+    
+  * linear sets construction.
+
+
+In particular, the last two constructions give 2-dimensional one-weight codes in the sum-rank metric, whereas the first one give constructions of any dimension.
+In <cit.>, the authors also showed that the last two families cannot be obtained from the orbital construction. It is natural to ask whether or not there are examples of one-weight codes which cannot be obtained from the orbital constructions also for larger dimensions.
+
+We start by recalling the orbital construction.
+
+Let 𝒢 be a subgroup of (k,q^m) and consider the action ϕ_𝒢  of 𝒢 on _q^m^k∖{0}, that is
+
+    [           ϕ_𝒢 : 𝒢× (_q^m^k∖{0})               ⟶      _q^m^k∖{0};                           (A,v)               ⟼             vA. ]
+
+For any n and r such that r divides m, this action naturally induces an action also on the n-dimensional _q^r-subspaces of _q^m^k with kernel 𝒢∩𝔻_q^r, where 𝔻_q^r={α I_k α∈_q^r^*}. In order to get a shorter code, we can consider the action of the group 𝒢=𝒢/(𝒢∩𝔻_q^r) on the n-dimensional _q^r-subspaces of _q^m^k, that we denote by ϕ_𝒢^r,n. Finally, we say that 𝒢≤(k,q^m) is transitive if the action ϕ_𝒢^m,1 is transitive;
+see <cit.> for a more detailed discussion.
+
+[Orbital construction <cit.>]
+Let U be an _q-subspace of _q^m^k of dimension n over _q. Let 𝒢≤(k,q^m) be a transitive subgroup and let 𝒪=(ϕ_𝒢^1,n(A,U))_A ∈𝒢 be the orbit (counting possible repetition) of the action of ϕ_𝒢^1,n. When 𝒢 is the Singer subgroup of GL(k,q^m) we call the orbit 𝒪 an  n-simplex.
+A sum-rank metric code associated with the system 𝒪=(U_1,…,U_t) is an [(n,…,n),k]_q^m/q one-weight sum-rank metric code. 
+
+
+
+Let 𝒪 and 𝒪' two distinct orbits as in the above construction, the system obtained by plugging together 𝒪 and 𝒪' gives rise to a one-weight code and the considered system is union of orbits. So, in order to provide a construction of a sum-rank metric code  which is one-weight but does not arise from the orbital construction, we need to show that a system associated with  cannot be obtained as union of orbits.
+
+
+We now read the property of being one-weight in the geometric dual of the code.
+
+
+Let  be an [𝐧,k]_q^m/q sum-rank metric code and let (U_1,…,U_t) be an associated system. Assume that U_1∩…∩ U_t does not contain any 1-dimensional 𝔽_q^m-subspace of 𝔽_q^m^k. Then  is a one-weight code if and only if ^⊥_𝒢 is a one-weight code with respect to the generalized weights of order k-1, that is 
+
+    d_k-1(^⊥_𝒢)=N- ∑_i=1^t __q (U_i^⊥'∩⟨ w ⟩_𝔽_q^m),
+
+for any w ∈_q^m^k∖{0}.
+In particular, if d_1()  tm then
+
+    ⋃_i=1^t L_U_i^⊥'=(k-1,q^m).
+
+
+
+
+The code  is one-weight if and only if w_^1(X,Y) only presents one monomial, that is
+
+    w_^1(X,Y)= (||-1) X^N-d_1()Y^d_1().
+
+By Theorem <ref>, this happens if and only if w_^⊥_𝒢^k-1(X,Y) presents only one monomial, and hence the first part of the assertion. 
+For the last part, observe that if  is one-weight, by the first part of the assertion we have
+
+    ∑_i=1^t_(U_i^⊥'∩⟨ w⟩__q^m)=∑_i=1^t w_L_U_i^⊥'(⟨ w⟩__q^m)=tmk-N-d_k-1(^⊥_𝒢),
+
+for any w ∈_q^m^k∖{0}.
+Suppose that ⋃_i=1^t L_U_i^⊥'(k-1,q^m). Then, because of (<ref>), we can only have that  tmk-N=d_k-1(^⊥_𝒢).
+Theorem <ref> implies also that
+
+    d_1()=d_k-1(^⊥_𝒢)+N-t(k-1)m,
+
+and hence d_1()=tm, a contradiction.
+
+
+
+By Proposition <ref>, and more precisely from (<ref>), a partition in scattered linear set gives a one-weight code. Indeed, the construction of doubly extended linearized Reed-Solomon code with parameters [(m,…,m,1,1),2]_q^m/q can be read via an associated system (U_1,…,U_q+1) with the following properties:
+
+    
+  * _(U_i)=m for every i∈{1,…,q-1};
+    
+  * _(U_q)=_(U_q+1)=1;
+    
+  * U_i's are scattered -subspaces of _q^m^2.
+
+Since in _q^m^2 the hyperplanes coincide with the 1-dimensional _q^m-subspaces of _q^m^2 and since the code is MSRD, we have
+
+    ∑_i=1^q+1_(U_i∩⟨ w ⟩__q^m)=1,
+
+for any w ∈𝔽_q^m^2∖{0}.
+Therefore, these codes are one-weight codes and by Proposition <ref> they are also minimal codes.
+Moreover, they meet the lower bound (<ref>).
+By Proposition <ref>, the geometric dual of a doubly extended linearized Reed-Solomon code is a one-weight code with parameters 
+    [(m,…,m_q-1 times,2m-1,2m-1),2]_q^m/q.
+
+Note that for m=2, such code meets the lower bound (<ref>). We give its generator matrix in the next remark.
+
+In particular, a partition in scattered subspaces/linear sets gives via Proposition <ref> a
+one-weight code with nonzero weight equals to N-t(k-1)m+1. 
+
+
+
+We can determine a generator matrix for the geometric dual of a 2-dimensional doubly extended linearized Reed-Solomon code.
+Let α_1,…,α_q-1∈𝔽_q^m having pairwise distinct norm over  and define
+
+    U_i={(x,a_i x^q)  x ∈_q^m},
+
+for any i ∈{1,…,q-1}.
+Consider the following sesquilinear form
+
+    σ'  ((x,y),(z,t)) ∈𝔽_q^m^2 ↦Tr_q^m/q(xt-yz) ∈.
+
+Then
+
+    U_i^⊥'={ (y^q,a_i^q^n-1y)  y ∈_q^m}={ (y,a_i^q^n-1y^q^n-1)  y ∈_q^m},
+
+for any i, since 
+
+    σ'((x,a_i x^q),(y^q,a_i^q^n-1y))=Tr_q^m/q(a_i^q^n-1xy-a_ix^q y^q)=0,
+
+for every x,y ∈𝔽_q^m.
+By definition of σ' we also have that
+
+    ⟨ (1,0)⟩_^⊥'={ (α,β) α,β∈_q^m  and  Tr_q^m/q(β)=0 }
+
+and 
+
+    ⟨ (0,1)⟩_^⊥'={ (α,β) α,β∈_q^m  and  Tr_q^m/q(α)=0 }.
+
+Therefore, if B={b_1,…,b_m} is an -basis of  and C={c_1,…,c_m-1} is an -basis of (Tr_q^m/q), then a generator matrix for the geometric dual of a 2-dimensional linearized Reed-Solomon code is as follows:
+
+    
+  * the i-th blocks has as j-th column (b_j^q,a_i b_j), for i ∈{1,…,q-1} and j ∈{1,…,m};
+    
+  * the q-th block has as j-th column (b_j,0) if j ∈{1,…,m} and (0,c_j-m) if j ∈{m+1,…,2m-1};
+    
+  * the last block has as j-th column (0,b_j) if j ∈{1,…,m} and (c_j-m,0) if j ∈{m+1,…,2m-1}.
+
+
+
+In the Remark <ref>, we have seen that we can find q-1 maximum scattered -linear set in (1,q^m) which are pairwise disjoint and cover (1,q^m) except for two points (which can be arbitrarily chosen). 
+
+
+We can use this fact to construct partition in scattered -linear sets for higher dimensions. 
+
+[partition in scattered linear sets]
+We start with the plane: consider P=⟨ v⟩__q^m a point in (2,q^m) and a line ℓ=(W,_q^m) not passing through P.
+Denote by 
+
+    ℓ_1=(W_1,_q^m),…,ℓ_q^m+1=(W_q^m+1,_q^m)
+ the lines through P and denote by Q_i=ℓ∩ℓ_i=⟨ v_i⟩__q^m for any i ∈{1,…,q^m+1}.
+For any i ∈{1,…,q^m+1} consider
+
+    U_i,1,…,U_i,q-1
+
+maximum scattered -subspaces of W_i for which the associated linear sets form a partition of ℓ_i∖{P,Q_i}, which exists because of Remark <ref>.
+Consider 
+
+    U_q^m+2,1,…,U_q^m+2,q-1
+
+maximum scattered -subspaces of W for which the associated linear sets form a partition of ℓ∖{Q_1,Q_2}. 
+The -linear sets associated with U_i,j's together with ⟨ v ⟩_,  ⟨ v_1 ⟩_ and ⟨ v_2 ⟩_ give a partition in scattered -linear sets of (2,q^m).
+This gives a code of parameters
+
+    [(m,…,m_(q-1)(q^m+2) times,1,1,1),3]_q^m/q
+
+whose geometric dual has parameters
+
+    [(2m,…,2m_(q-1)(q^m+2) times,3m-1,3m-1,3m-1),3]_q^m/q.
+
+
+
+
+For larger dimension: suppose that we have U_1,…,U_r scattered -subspaces with the property that the associated linear sets cover a projective space of dimension k-1. 
+Consider a point P=⟨ v ⟩__q^m∈(k-1,q^m) and a hyperplane H not passing through P, then we can proceed to cover with scattered linear sets all of the lines through P, except for the point P and the intersection of the line with H. As we have done for the plane, adding the U_i's and ⟨ v ⟩__q to these subspaces, we obtain a family of scattered subspace covering the entire space.
+
+
+The above construction contains a large number of blocks. It is possible, under certain restrictions, to consider a smaller number of subspaces with the use of canonical subgeometries. 
+
+A canonical subgeometry of (k-1,q^m) is any (k-1,q) which is embedded in (k-1,q^m).
+The following result gives condition on k and m which allows us to construct a partition of (k-1,q^m) in canonical subgeometries.
+
+
+There exists a partition of (k-1,q^m) into canonical subgeometries if and only if (k,m)=1.
+
+
+
+Suppose that (k,m)=1 and let 
+
+    U_1,…,U_t
+
+be -subspaces of _q^m of dimension k such that L_U_1,…,L_U_t a partition of (k-1,q^m) into canonical subgeometries, with t=(q^mk-1)(q-1)/(q^m-1)(q^k-1). A code associated with (U_1,…,U_t) has parameters [(k,…,k),k,(t-1)k]_q^m/q and it is one-weight.
+Its geometric dual has parameters [(k(m-1),…,k(m-1)),k,t(k-1)]_q^m/q, via Theorem <ref>.
+
+
+
+
+
+
+  §.§.§ Lift construction
+
+
+In this section we describe a procedure to construct one-weight sum-rank metric codes starting from any sum-rank metric code, extending the construction described in <cit.>. 
+
+Let U_1,…,U_t be _q-subspaces in _q^m^k and define
+
+    M=max{∑_i=1^t w_L_U_i(P) |  P ∈(k-1,q^m)}.
+
+
+Define ℳ(U_1,…,U_t) the lift of U_1,…,U_t as a vector of -subspaces whose entries are
+
+    
+  * U_1,…,U_t;
+    
+  * c copies of ⟨ v ⟩__q^m and a d-dimensional subspace of ⟨ v ⟩__q^m, for any P=⟨ v ⟩__q^m∈(k-1,q^m), where M-∑_i=1^t w_L_U_i(P)=c · m+d with c,d ∈ℕ and d<m.
+
+
+Clearly, by construction
+
+    ∑_U ∈ℳ(U_1,…,U_t) w_L_U(P)=M,
+
+for every point P∈(k-1,q^m).
+
+So, consider ∈Φ ([ℳ(U_1,…,U_t)]) then by  applying Proposition <ref> we obtain that ^⊥_𝒢 is a linear one-weight sum-rank metric code of dimension k.
+Any code in Φ([ℳ(U_1,…,U_t)]) will be called the lifted code of U_1,…,U_t.
+
+In the next result we show that we can construct a one-weight sum-rank metric code starting from any sum-rank metric code.
+
+
+Every sum-rank metric code can be extended to a one-weight code.
+
+
+Let (U_1,…,U_t) an associated system to  and G=(G_1|…|G_t) a generator matrix of  such that the column span of G_i is U_i for any i. Consider the lift 
+    ℳ(U_1^⊥',…,U_t^⊥')=(U_1^⊥',…,U_t^⊥',W_t+1,…,W_s).
+
+Let 𝒟∈Φ([ℳ(U_1^⊥',…,U_t^⊥')]), then by duality U_1^⊥'∩…∩ U_t^⊥' does not contain any one-dimensional _q^m-subspace and hence by Theorem <ref> 𝒟^⊥_𝒢 is a one-weight code and a system associated with 𝒟^⊥_𝒢 is 
+
+    (U_1,…,U_t,W_t+1^⊥',…,W_s^⊥'),
+
+and hence it is an extension of , since a generator matrix of 𝒟^⊥_𝒢 has the following shape
+
+    (G_1|…|G_t|G_t+1|…|G_s),
+
+where the the column span of G_i is W_i^⊥' for any i ∈{t+1,…,s}.
+
+
+In the following result we prove that there are linear sum-rank metric codes which cannot be obtain from the orbital construction for any possible value of the dimension, already proved in <cit.> in the two-dimensional case.
+
+
+For every k, there are one-weight sum-rank metric codes which are not equivalent to a sum-rank metric code obtained from the orbital construction.
+
+
+Consider  a [n,k]_q^m/q sum-rank metric code (that is, a rank-metric code) with the property that n>m. 
+Let U be any system associated with  and consider ℳ(U) the lift of U and follow the proof of Theorem <ref> to construct a one-weight sum-rank metric code '.
+Since U is the only -subspace in ℳ(U) having dimension larger than m, then in ℳ(U) there cannot the an orbit of U and hence ' cannot be obtained as (union) of orbital constructions.
+
+
+
+In the proof of the above theorem, we started from a rank-metric code, but then we can start from any code whose associated systems do not form an orbit under a transitive group of an -subspace of dimension greater than m.
+
+
+
+In <cit.>, the author showed that in some cases extending an MSRD code by adding new blocks does not preserve the property of being MSRD.
+
+
+
+
+
+
+ §.§ Constructions of two-weight minimal sum-rank metric codes
+
+
+In this section we will give examples of minimal sum-rank metric codes with two weights, in some cases by using the AB-condition and some other by exploiting the geometry behind them.
+Let us start with the first construction.
+
+
+Consider t mutually disjoint scattered 𝔽_q-linear sets L_U_1,…,L_U_t in (k-1,q^m) of rank n_1, … , n_t, respectively, with n_1≥…≥ n_t. 
+Suppose also that L_U_1∪…∪ L_U_t≠(k-1,q^m).
+Denote by (U_1^⊥',…,U_t^⊥') the geometric dual of a code associated with (U_1,…,U_t).
+
+
+The metric properties of the above construction are described in the following result.
+
+
+Let  be as in Construction <ref>. Its parameters are [(mk-n_1,…,mk-n_t),k]_q^m/q and it has two distinct nonzero weights:
+
+    tm  and  tm-1.
+
+Moreover, its set of rank-lists is 
+
+    S()={ (m,…,m),(m-1,m,…,m),(m,m-1,…,m),…,(m,…,m,m-1) }.
+
+
+
+Let start by observing that (U_1^⊥',…,U_t^⊥') is a system with parameters [(mk-n_1,…,mk-n_t),k]_q^m/q. 
+By Theorem <ref>, the weights of (U_1^⊥',…,U_t^⊥') correspond to the possible values that the following expression can assume
+
+    tm- ∑_i=1^t _(U_i^⊥'∩⟨ w ⟩_𝔽_q^m),
+
+where w ∈𝔽_q^m^k∖{0}.
+Since the L_U_i's are scattered and disjoint, we have that _(U_i^⊥'∩⟨ w ⟩_𝔽_q^m)∈{0,1} and can be one at most for one i ∈{1,…,t} for every w, hence the weight distribution is determined.
+The possible rank-lists of the codewords of (U_1^⊥',…,U_t^⊥') (see Remark <ref>) correspond to determine 
+
+    (m-_𝔽_q(U_1∩⟨ w ⟩_𝔽_q^m),…, m-_𝔽_q(U_t∩⟨ w ⟩_𝔽_q^m)),
+
+because of the assumptions on the L_U_i's, we have that either _𝔽_q(U_1∩⟨ w ⟩_𝔽_q^m)=0 for any i or there exist j ∈{1,…,t} such that _𝔽_q(U_j∩⟨ w ⟩_𝔽_q^m)=1 and _𝔽_q(U_i∩⟨ w ⟩_𝔽_q^m)=0 for any the remaining values of i.
+
+
+The codes with the parameters as those in Construction <ref> all arise from Construction <ref>.
+
+
+If  is a sum-rank metric code with the parameters as in Construction <ref> then  can be obtain as in Construction <ref>.
+
+
+Assume that  is an [𝐧,k]_q^m/q sum-rank metric code with n=(mk-n_1,…,mk-n_t) and with two distinct weights tm and tm-1. Denote by N=n_1+…+n_t and let (U_1,…,U_t) any system associated with .
+By Theorem <ref>, we have that for any hyperplane of _q^m^k
+
+    ∑_i=1^t _(U_i ∩ H) ∈{ tm(k-1),tm(k-1)+1 },
+
+and applying Proposition <ref> we obtain
+
+    ∑_i=1^t _(U_i^⊥'∩⟨ w ⟩__q^m) ∈{ 0,1 },
+
+for any 1-dimensional _q^m-subspace of _q^m^k.
+Therefore, for any point P ∈(k-1,q^m) we have that
+
+    ∑_i=1^t w_L_U_i^⊥'(P)  ∈{ 0,1 },
+
+and so L_U_i^⊥''s are pairwise disjoint scattered _q-linear sets.
+
+
+Thanks to Theorem <ref>, we can determine the weight distribution of the Hamming metric codes associated with those in Construction <ref>.
+
+
+An associated Hamming metric code to the codes of Construction <ref> has length N=tkm-n_1…-n_t, dimension k and exactly |{n_1,…,n_t}|+1 nonzero distinct weights, which are
+
+    δ_max=∑_i=1^tq^mk-n_i-q^mk-n_i-m/q-1,
+
+
+    w_j=q^mk-n_j-q^mk-n_j-m+1/q-1 + ∑_i∈{1,…,t}∖{j}q^mk-n_i-q^mk-n_i-m/q-1,  j ∈{1,…,t},
+
+and 
+
+    δ_min=q^mk-n_t-q^mk-n_t-m+1/q-1 + ∑_i=1^t-1q^mk-n_i-q^mk-n_i-m/q-1.
+
+
+
+By taking into account the set of rank-lists of a code as in Construction <ref> determined in Theorem <ref>, by Proposition <ref> the possible weights of an associated  code is given by the following formula
+
+    q^mk-n_j-q^mk-n_j-m+1/q-1 + ∑_i∈{1,…,t}∖{j}q^mk-n_i-q^mk-n_i-m/q-1,
+
+for any j ∈{1,…,t} and by
+
+    ∑_i=1^tq^mk-n_i-q^mk-n_i-m/q-1.
+
+Therefore, the number of distinct weights is given by the number of the different n_i's plus one.
+
+
+
+In the case in which n_1=…=n_t=n, such  codes are two-weight Hamming metric codes, with weights
+
+    δ_max=t·q^mk-n-q^mk-n-m/q-1,
+
+and 
+
+    δ_min=q^mk-n-q^mk-n-m+1/q-1 + (t-1)·q^mk-n-q^mk-n-m/q-1.
+
+Note also that if the n_i's are not all equal, then from a two-weight code in the sum-rank metric we obtain an Hamming metric code with more than two weights. This is a remarkable difference with the rank metric.
+
+
+
+Let  be a code as in Construction <ref> with n_1=…=n_t=n.
+If 
+
+    t>(q-1)·q^m/q^m-1,
+
+then  is minimal  and it satisfies the AB-condition.
+
+
+We will prove the minimality of  with the aid of the AB-condition.
+To this aim
+
+    δ_max/δ_min= t(q^m-1)/q^m-q+(t-1)(q^m-1)=1+q-1/tq^m-q-t+1,
+
+since t>(q-1)q^m/(q^m-1) we have 
+
+    δ_max/δ_min < q^m/q^m-1
+
+and hence Theorem <ref> implies the assertion.
+
+
+
+Consider Construction <ref> by using more than (q-1)·q^m/q^m-1 mutually disjoint subgeometries (which exists for instance when (m,k)=1, see Theorem <ref>). The above theorem implies that  Construction <ref> gives minimal codes.
+
+
+Note that in the above result if we consider t=2 and q>2, then the AB-condition is not satisfied (it is indeed satisfied for q=2). In the next result, we show that when t=2, even if the AB-condition is not satisfied, Construction <ref> still gives minimal codes and the two rank-metric codes defined by the two blocks are not minimal.
+
+
+Let U_1 and U_2 be two trivially intersecting scattered _q-subspaces of dimension m contained respectively in W_1 and W_2, where W_1 and W_2 are two distinct 2-dimensional 𝔽_q^m-subspaces of _q^m^3. The geometric dual (U_1^⊥',U_2^⊥') of a code associated with (U_1,U_2) is a minimal sum-rank metric code, which satisfies the AB-condition if and only if q=2.
+Moreover, the codes associated with U_1^⊥' and U_2^⊥', respectively, are not minimal.
+
+
+Let start by computing the possible dimension of intersection between the U_i^⊥''s and the _q^m-subspaces of _q^m^3 with dimension either one or two with the aid of Proposition <ref>:
+
+    _𝔽_q(U_i^⊥'∩ W^⊥)=_𝔽_q(U_i∩ W)∈{0,1,m},
+
+for any 2-dimensional 𝔽_q^m-subspace W and _𝔽_q(U_i^⊥'∩ W^⊥)=m if and only if W=W_i, for any i ∈{1,2}, also
+
+    _𝔽_q(U_i^⊥'∩⟨ w⟩_𝔽_q^m^⊥)=_𝔽_q(U_i∩⟨ w⟩_𝔽_q^m)+m∈{m,m+1},
+
+for any 1-dimensional 𝔽_q^m-subspace ⟨ w⟩_𝔽_q^m. 
+In terms of linear sets, this means that 
+
+    w_L_U_i^⊥'(P) ∈{0,1,m}  and   w_L_U_i^⊥'(ℓ) ∈{m,m+1},
+
+for any point P and any line ℓ of (2,q^m).
+We now show that (U_1^⊥',U_2^⊥') is a cutting system (which is equivalent to show that (U_1^⊥',U_2^⊥') is minimal by Theorem <ref>), which is equivalent to show that any line ℓ of (2,q^m) meets L_U_1^⊥'∪ L_U_2^⊥' in at least two points.
+Note that since L_U_1^⊥' and L_U_2^⊥' have rank 2m, which is greater than m+1, then every line meet L_U_1^⊥' and L_U_2^⊥' in at least one point.
+Denote by P_1 and P_2 the points defined by W_1^⊥' and W_2^⊥', respectively. 
+Let ℓ be any line through P_1, since P_1 P_2 and P_1 ∉ L_U_2^⊥', then ℓ meets L_U_2^⊥' in at least another point. Therefore, |ℓ∩ (L_U_1^⊥'∪ L_U_2^⊥')|≥ 2. Similar arguments can be performed when considering lines through P_2, so assume that ℓ is a line not passing through neither P_1 nor to P_2. Since all the points different from P_1 and P_2 have weight either one or zero and the weight of ℓ is either m or m+1, then |ℓ∩ L_U_1^⊥'|≥ 2 and hence (U_1^⊥',U_2^⊥') is a cutting system.
+Finally, we show that U_1^⊥' and U_2^⊥' are not cutting. Indeed, by contradiction assume that U_1^⊥' is a cutting system. Any line ℓ through P_1 has weight m+1, since w_L_U_1^⊥'(P_1)=m and L_U_1^⊥'∩ℓ has at least two points. This implies that all the lines through P_1 are contained in L_U_1^⊥' and hence
+
+    |L_U_1^⊥'| ≥ (q^m+1)q^m+1,
+
+which is a contradiction to the fact that |L_U_1^⊥'| ≤q^2m-1/q-1 by (<ref>). 
+Now, let 
+
+    δ_max=2(q^(k-1)m-q^(k-2)m)/q-1
+
+and
+
+    δ_min=2q^(k-1)m-q^(k-2)m+1-q^(k-2)m/q-1.
+
+Then δ_max/δ_min<q^m/(q^m-1) if and only if
+
+    --3q^m+2+q^m+1/(-q^m+q-q^m+1)(q^m-1) <0
+
+and hence if and only if
+
+    -3q^m+2+q^m+1<0,
+
+and, since it can be rewritten as q^m(q-3)<-2, this happens if and only if q=2. Therefore, the assumption of Theorem <ref> are satisfied if and only if q=2.
+
+
+
+Let 
+
+    U_1={(x,x^q,0)  x ∈𝔽_q^m}  and   U_2={(0,x,x^q)  x ∈𝔽_q^m}.
+
+It is easy to see that they satisfy the assumptions of Theorem <ref>.
+Consider σ' as the following sesquilinear form
+
+    σ'  ((x,y,t),(x',y',z')) ∈𝔽_q^m^3 ↦Tr_q^m/q(xx'+yy'+zz') ∈_q.
+
+Then
+
+    U_1^⊥'= { (x^q^m-1,-x,y)  x,y ∈_q^m}
+
+and 
+
+    U_2^⊥'= { (y,x^q^m-1,-x)  x,y ∈_q^m}.
+
+Therefore, a generator matrix of 𝒞(U_1^⊥',U_2^⊥') is
+
+    G=( 
+    [ a_1^q^m-1         … a_m^q^m-1         0         …         0       a_1         …       a_m         0         …         0;      -a_1         …      -a_m         0         …         0         0         …         0 a_1^q^m-1         … a_m^q^m-1;         0         …         0       a_1         …       a_m         0         …         0      -a_1         …      -a_m ])∈_q^m^3× 4m,
+
+where {a_1,…,a_m} is an -basis of _q^m.
+
+
+
+In the above example, we may replace x^q with any scattered polynomial; see <cit.> and the references therein.
+
+
+In the next result we show that when t=2 in Construction <ref> with n_1 and n_2 having a distinct value, then the code obtained satisfies the AB-condition if n_1 and n_2 are enough close distinct numbers.
+
+
+Let U_1 and U_2 be two trivially intersecting scattered _q-subspaces of dimension n_1 and n_2=n_1-r with 1≤ r ≤ m, respectively. The geometric dual (U_1^⊥',U_2^⊥') of a code associated with (U_1,U_2) is a minimal sum-rank metric code which satisfies the AB-condition.
+
+
+As in the previous proof, we start by computing the possible dimension of intersection between the U_i^⊥''s and the _q^m-subspaces of _q^m^k with dimension k-1:
+
+    _𝔽_q(U_i^⊥'∩⟨ w⟩__q^m^⊥)=_𝔽_q(U_i∩⟨ w⟩__q^m)+(k-1)m-n_i∈{(k-1)m-n_i, (k-1)m-n_i+1},
+
+for any one-dimensional _q^m-subspace ⟨ w⟩__q^m in _q^m^k.
+Therefore, by Remark <ref> we have that the rank lists of the code (U_1^⊥',U_2^⊥') are 
+
+    (m,m), (m-1,m)   and   (m,m-1).
+
+Considering (U_1^⊥',U_2^⊥')^H we have
+
+    δ_max=q^km-n_1-q^(k-1)m-n_1+q^km-n_2-q^(k-1)m-n_2/q-1
+
+and
+
+    δ_min=q^km-n_1-q^(k-1)m-n_1+1+q^km-n_2-q^(k-1)m-n_2/q-1.
+
+Replacing n_1=n_2+r, δ_max/δ_min<q^m/q^m-1 is equivalent to 
+
+    --2q^m+1-q^r+m+q^r+q^m+1/(-q^m+q-q^r+m+q^r)(q^m-1) <0
+
+and hence
+
+    -2q^m+1-q^r+m+q^r+q^m+1<0,
+
+which holds true as m≥ r and r≥ 1. Therefore, the assertion follows by applying Theorem <ref>.
+
+
+
+
+
+
+§ ACKNOWLEDGMENTS
+
+The first author was partially supported by the ANR-21-CE39-0009 - BARRACUDA (French Agence Nationale de la Recherche). The second author was supported by the project “VALERE: VAnviteLli pEr la RicErca" of the University of Campania “Luigi Vanvitelli” and by the Italian National Group for Algebraic and Geometric Structures and their Applications (GNSAGA - INdAM). He is very grateful for the hospitality of the Université Paris 8, France, where he was a visiting researcher for two weeks during the development of this research. 
+
+
+
+abbrv
+
+

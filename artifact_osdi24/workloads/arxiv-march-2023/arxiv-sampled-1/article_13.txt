@@ -1,0 +1,884 @@
+
+
+[
+    Wenzheng Kuang
+    March 30, 2023
+==================
+
+
+Quadratic programs with box constraints involve minimizing a possibly nonconvex quadratic function subject to lower and upper bounds on each variable. This is a well-known NP-hard problem that frequently arises in various applications. We focus on two convex relaxations, namely the RLT (Reformulation-Linearization Technique) relaxation and the SDP-RLT relaxation obtained by adding semidefinite constraints to the RLT relaxation. Both relaxations yield lower bounds on the optimal value of a quadratic program with box constraints. We present complete algebraic descriptions of the set of instances that admit exact RLT relaxations as well as those that admit exact SDP-RLT relaxations. We show that our 
+descriptions can be converted into algorithms for efficiently constructing instances with exact or inexact relaxations.
+
+
+
+
+AMS Subject Classification: 90C20, 90C22, 90C26
+
+
+
+
+§ INTRODUCTION
+ 
+
+A quadratic program with box constraints is an optimization problem in which a possibly nonconvex quadratic function is minimized subject to lower and upper bounds on each variable:
+
+    (BoxQP)  ℓ^* = min_x ∈^n{q(x): x ∈ F},
+
+where 
+q: ^n → and F ⊆^n are respectively given by
+
+    q(x) = 1/2 x^T Q x + c^T x,    F = {x ∈^n: 0 ≤ x ≤ e }.
+
+Here, e ∈^n denotes the vector of all ones. The parameters of the problem are given by the pair (Q,c) ∈^n ×^n, where ^n denotes the set of n × n real symmetric matrices. The optimal value is denoted by ℓ^* ∈. Note that any quadratic program with finite lower and upper bounds on each variable can be easily transformed into the above form.  
+
+(BoxQP) is regarded as a “fundamental problem” in global optimization that appears in a multitude of applications (see, e.g., <cit.>). If Q is a positive semidefinite matrix, (BoxQP) can be solved in polynomial time <cit.>. However, if Q is an indefinite or negative semidefinite matrix, then (BoxQP) is an NP-hard problem <cit.>. In fact, it is even NP-hard to approximate a local minimizer of (BoxQP) <cit.>.
+
+
+
+ §.§ RLT and SDP-RLT Relaxations
+
+
+By using a simple “lifting” idea, (BoxQP) can be equivalently reformulated as 
+
+    (L-BoxQP)  ℓ^* = min_(x,X) ∈1/2⟨ Q, X ⟩ + c^T x,
+
+where ⟨ A, B ⟩ = trace(A^T B) = ∑_i=1^p ∑_j=1^q A_ij B_ij for any A ∈^p × q and B ∈^p × q, and 
+
+    = {(x,X) ∈^n ×^n: 0 ≤ x ≤ e,    X_ij = x_i x_j,    1 ≤ i ≤ j ≤ n}.
+
+Since (L-BoxQP) is an optimization problem with a linear objective function over a nonconvex feasible region, one can replace  by conv(), where conv(·) denotes the convex hull, without affecting the optimal value. Many convex relaxations of (BoxQP) arise from this reformulation by employing outer approximations of conv() using tractable convex sets. 
+
+A well-known relaxation of conv() is obtained by replacing the nonlinear equalities X_ij = x_i x_j by the so-called McCormick inequalities <cit.>, which gives rise to the RLT (Reformulation-Linearization Technique) relaxation of (BoxQP) (see, e.g., <cit.>):
+
+    (R)  ℓ^*_R = min_(x,X) ∈^n ×^n{1/2⟨ Q, X⟩ + c^T x: (x,X) ∈_R},
+
+where 
+
+    _R = {(x,X) ∈^n ×^n:[                              0                              ≤                              x                              ≤                              e;            max{x_i + x_j -1,0}                              ≤                           X_ij                              ≤ min{x_i,x_j},    1 ≤ i ≤ j ≤ n ]}.
+
+
+The RLT relaxation (R) of (BoxQP) can be further strengthened by adding tighter semidefinite constraints <cit.>, giving rise to the SDP-RLT relaxation:
+
+    (RS)  ℓ^*_RS = min_(x,X) ∈^n ×^n{1/2⟨ Q, X⟩ + c^T x: (x,X) ∈_RS},
+
+where 
+
+    _RS = {(x,X) ∈^n ×^n: (x,X) ∈_R,    X - x x^T ≽ 0}.
+
+
+The optimal value of each of the RLT and SDP-RLT relaxations, denoted by ℓ^*_R and ℓ^*_RS, respectively, yields a lower bound on the optimal value of (BoxQP). The SDP-RLT relaxation is clearly at least as tight as the RLT relaxation, i.e., 
+
+    ℓ^*_R ≤ℓ^*_RS≤ℓ^*.
+
+
+
+
+ §.§ Motivation and Contributions
+
+
+Convex relaxations play a fundamental role in the design of global solution methods for nonconvex optimization problems. In particular, one of the most prominent algorithmic approaches for globally solving nonconvex optimization problems is based on a branch-and-bound framework, in which the feasible region is systematically subdivided into smaller subregions and a sequence of subproblems is solved to obtain increasingly tighter lower and upper bounds on the optimal value in each subregion. The lower bounds in such a scheme are typically obtained by solving a convex relaxation. For instance, several well-known optimization solvers such as ANTIGONE <cit.>, BARON <cit.>, CPLEX <cit.>, and GUROBI <cit.> utilize convex relaxations for globally solving nonconvex quadratic programs.
+
+In this paper, our main goal is to describe the set of instances of (BoxQP) that admit exact RLT relaxations (i.e., ℓ_R^* = ℓ^*) as well as those that admit exact SDP-RLT relaxations (i.e., ℓ_RS^* = ℓ^*). Such descriptions shed light on easier subclasses of a difficult optimization problem. In addition, we aim to develop efficient algorithms for constructing an instance of (BoxQP) that admits an exact or inexact relaxation. Such algorithms can be quite useful in computational experiments for generating instances of (BoxQP) for which a particular relaxation will have a predetermined exactness or inexactness guarantee.
+
+Our contributions are as follows.
+
+
+    
+  * By utilizing the recently proposed perspective on convex underestimators induced by convex relaxations <cit.>, we  
+    establish several useful properties of each of the two convex underestimators associated with the RLT relaxation and the SDP-RLT relaxation. 
+    
+  * We present two equivalent algebraic descriptions of the set of instances of (BoxQP) that admit exact RLT relaxations. The first description arises from the analysis of the convex underestimator induced by the RLT relaxation, whereas the second description is obtained by using linear programming duality. 
+    
+  * By relying on the second description of the set of instances with an exact RLT relaxation, we propose an algorithm for efficiently constructing an instance of (BoxQP) that admits an exact RLT relaxation and another algorithm for constructing an instance with an inexact RLT relaxation.
+    
+  * We establish that strong duality holds and that primal and dual optimal solutions are attained for the SDP-RLT relaxation and its dual. By relying on this relation, we give an algebraic description of the set of instances of (BoxQP) that admit an exact SDP-RLT relaxation.
+    
+  * By utilizing this algebraic description, we propose an algorithm for constructing an instance of (BoxQP) that admits an exact SDP-RLT relaxation and another one for constructing an instance that admits an exact SDP-RLT relaxation but an inexact RLT relaxation.
+
+
+This paper is organized as follows. We briefly review the literature in Section <ref> and define our notation in Section <ref>. We review the optimality conditions in Section <ref>. We present several properties of the convex underestimators arising from the RLT and SDP-RLT relaxations in Section <ref>. Section <ref> focuses on the description of instances with exact RLT relaxations and presents two algorithms for constructing instances with exact and inexact RLT relaxations. SDP-RLT relaxations are treated in Section <ref>, which includes an algebraic description of instances with exact SDP-RLT relaxations and two algorithms for constructing instances with different exactness guarantees. We present several numerical examples and a brief discussion in Section <ref>. Finally, Section <ref> concludes the paper. 
+
+
+
+
+ §.§ Literature Review
+ 
+
+Quadratic programs with box constraints have been extensively studied in the literature. Since our focus is on convex relaxations in this paper, we will mainly restrict our review accordingly. 
+
+The set conv(), where  is given by (<ref>), has been investigated in several papers (see, e.g.,  <cit.>). This is a nonpolyhedral convex set even for n = 1. However, it turns out that conv() is closely related to the so-called Boolean quadric polytope <cit.> that arises in unconstrained binary quadratic programs, which can be formulated as an instance of (BoxQP) <cit.>, and is given by conv(^-), where
+
+    ^- = {(x,z) ∈^n ×^n  2: x_i ∈{0,1},     z_ij = x_i x_j,    1 ≤ i < j ≤ n}.
+
+The linear programming relaxation of conv(^-), denoted by _R^-, is given by
+
+    _R^- = {(x,z) ∈^n ×^n  2:[                              0                              ≤                              x                              ≤                              e;            max{x_i + x_j -1,0}                              ≤                           z_ij                              ≤ min{x_i,x_j},    1 ≤ i < j ≤ n ]},
+
+which is very similar to _R, except that McCormick inequalities are only applied to 1 ≤ i < j ≤ n. In particular, _R^- = conv(^-) for n = 2 <cit.>. Padberg <cit.> identifies several facets of conv(^-) and shows that the components of each vertex of _R^- are in the set {0,1/2,1}. Yajima and Fujie <cit.> show how to extend the valid inequalities for ^- in <cit.> to . Burer and Letchford <cit.> extend this result further by observing that conv(^-) is the projection of conv() onto the “common variables.” They also give a description of the set of extreme points of conv(). We refer the reader to <cit.> for further refinements and to <cit.> for a computational procedure based on such valid inequalities. 
+
+Anstreicher <cit.> reports computational results illustrating that the SDP-RLT relaxation significantly improves the RLT relaxation and gives a theoretical justification of the improvement by comparing _R and _RS for n = 2. Anstreicher and Burer <cit.> show that _RS = conv() if and only if n ≤ 2. In particular, this implies that the SDP-RLT relaxation of (BoxQP) is always exact for n ≤ 2.
+
+We next briefly review the literature on exact convex relaxations. Several papers have identified conditions under which a particular convex relaxation of a class of optimization problems is exact. For quadratically constrained quadratic programs, we refer the reader to <cit.> for various exactness conditions for second-order cone or semidefinite relaxations. Recently, a large family of convex relaxations of general quadratic programs was considered in a unified manner through induced convex underestimators and a general algorithmic procedure was proposed for constructing instances with inexact relaxations for various convex relaxations <cit.>.
+
+In this work, our focus is on algebraic descriptions and algorithmic constructions of instances of (BoxQP) that admit exact and inexact RLT and SDP-RLT relaxations. Therefore, our focus is similar to <cit.>, which presented descriptions of such instances of standard quadratic programs for RLT and SDP-RLT relaxations, respectively. 
+
+
+
+
+ §.§ Notation
+ 
+
+
+We use ^n, ^m × n, and ^n to denote the n-dimensional Euclidean space, the set of m × n real matrices, and the space of n × n real symmetric matrices, respectively.  We use 0 to denote the real number 0, the vector of all zeroes, as well as the matrix of all zeroes, which should always be clear from the context. We reserve e ∈^n for the vector of all ones. All inequalities on vectors or matrices are componentwise. For A ∈^n, we use A ≽ 0 (resp., A ≻ 0) to denote that A is positive semidefinite (resp., positive definite). For index sets 𝕁⊆{1,…,m}, 𝕂⊆{1,…,n}, x ∈^n, and B ∈^m × n, we denote by x_𝕂∈^|𝕂| the subvector of x restricted to the indices in 𝕂 and by B_𝕁𝕂∈^|𝕁|×|𝕂| the submatrix of B whose rows and columns are indexed by 𝕁 and 𝕂, respectively, where |·| denotes the cardinality of a finite set. We simply use x_j and Q_ij for singleton index sets. For any U ∈^m × n and V ∈^m × n, the trace inner product is denoted by 
+
+    ⟨ U, V ⟩ = trace(U^T V) = ∑_i=1^m ∑_j = 1^n U_ij V_ij.
+
+
+For an instance of (BoxQP) given by (Q,c) ∈^n ×^n, we define
+
+    q(x)     =    1/2 x^T Q x + c^T x, 
+    
+    F     =    {x ∈^n: 0 ≤ x ≤ e}, 
+    ℓ^*     =    min_x ∈^n{q(x): x ∈ F}, 
+    
+    V     =    {x ∈ F: x_j ∈{0,1},    j = 1, …, n}.
+
+
+For a given instance of (BoxQP), note that q(x), F, ℓ^*, and V denote the objective function, the feasible region, the optimal value, and the set of vertices, respectively. For x̂∈ F, we define the following index sets:
+
+    𝕃    =    𝕃(x̂) = {j ∈{1,…,n}: x̂_j = 0}, 
+    𝔹    =    𝔹(x̂) = {j ∈{1,…,n}: 0 < x̂_j < 1}, 
+    𝕌    =    𝕌(x̂) = {j ∈{1,…,n}: x̂_j = 1}.
+
+
+
+
+
+
+
+
+
+
+§ OPTIMALITY CONDITIONS
+ 
+
+
+
+In this section, we review first-order and second-order optimality conditions for (BoxQP). 
+
+Let x̂∈ F be a local minimizer of (BoxQP).
+By the first-order optimality conditions, there exists (û, v̂) ∈^n ×^n such that 
+
+    Q x̂ + c + û - v̂    =     0, 
+    û_𝕃∪𝔹    =     0, 
+    v̂_𝔹∪𝕌    =     0, 
+    û   ≥    0, 
+    v̂   ≥    0.
+
+Note that û∈^n and v̂∈^n are the Lagrange multipliers corresponding to the constraints x ≤ e and x ≥ 0 in (BoxQP), respectively. 
+
+For a local minimizer x̂∈ F of (BoxQP), the second-order optimality conditions are given by 
+
+    d^TQd ≥ 0,   ∀  d ∈ D(x̂),
+
+where D(x̂) is the set of feasible directions at x̂ at which the directional derivative of the objective function vanishes, i.e., 
+
+    D(x̂) := {d ∈^n: (Q x̂ + c)^T d = 0,    d_𝕃≥ 0,    d_𝕌≤ 0}.
+
+Note, in particular, that 
+
+    x̂∈ F is a local minimizer⇒ Q_𝔹𝔹≽ 0.
+
+In fact, x̂∈ F is a local minimizer of (BoxQP) if and only if the first-order and second-order optimality conditions given by (<ref>)–(<ref>) and (<ref>), respectively, are satisfied (see, e.g., <cit.>). 
+
+
+
+§ PROPERTIES OF RLT AND SDP-RLT RELAXATIONS
+ 
+
+Given an instance of (BoxQP), recall that the RLT relaxation is given by
+
+    (R)  ℓ^*_R = min_(x,X) ∈^n ×^n{1/2⟨ Q, X⟩ + c^T x: (x,X) ∈_R},
+
+where _R is given by (<ref>), and the SDP-RLT relaxation by 
+
+    (RS)  ℓ^*_RS = min_(x,X) ∈^n ×^n{1/2⟨ Q, X⟩ + c^T x: (x,X) ∈_RS},
+
+where _RS is given by (<ref>). 
+
+Every convex relaxation of a nonconvex quadratic program obtained through lifting induces a convex underestimator on the objective function over the feasible region <cit.>. In this section, we introduce the convex underestimators induced by RLT and SDP-RLT relaxations and establish several properties of these underestimators. 
+
+
+
+ §.§ Convex Underestimators
+ 
+
+In this section, we introduce the convex underestimators induced by the RLT and SDP-RLT relaxations. Let us first define the following sets parametrized by x̂∈ F:
+
+    _R(x̂)     =    {(x,X) ∈_R: x = x̂},   x̂∈ F, 
+    _RS(x̂)     =    {(x,X) ∈_RS: x = x̂},   x̂∈ F.
+
+
+For each x̂∈ F, we clearly have {(x̂,x̂x̂^T)}⊆_RS(x̂) ⊆_R(x̂) and 
+
+    ⋃_x̂∈ F_R(x̂) = _R,   ⋃_x̂∈ F_RS(x̂) = _RS.
+
+
+Next, we define the following functions:
+
+    ℓ_R(x̂)     =    min_x ∈^n,X ∈^n{1/2⟨ Q, X ⟩ + c^T x: (x,X) ∈_R(x̂)},   x̂∈ F, 
+    ℓ_RS(x̂)     =    min_x ∈^n,X ∈^n{1/2⟨ Q, X ⟩ + c^T x: (x,X) ∈_RS(x̂)},   x̂∈ F.
+
+Note that the functions ℓ_R(·) and ℓ_RS(·) return the best objective function value of the corresponding relaxation subject to the additional constraint that x = x̂. By <cit.>, each of ℓ_R(·) and ℓ_RS(·) is a convex function over F satisfying the relations 
+
+    ℓ_R(x̂) ≤ℓ_RS(x̂) ≤ q(x̂),   x̂∈ F,
+
+and 
+
+    (R1)  ℓ^*_R     =    min_x ∈ Fℓ_R(x), 
+    (RS1)  ℓ^*_RS    =    min_x ∈ Fℓ_RS(x).
+
+The convex underestimators ℓ_R(·) and ℓ_RS(·) allow us to view the RLT and SDP-RLT relaxations in the original space ^n of (BoxQP) by appropriately projecting out the lifted variables X ∈^n that appear in each of (R) and (RS). As such, (R1) and (RS1) can be viewed as “reduced” formulations of the RLT relaxation and the SDP-RLT relaxation, respectively. 
+In the remainder of this manuscript, we will alternate between the two equivalent formulations (R) and (R1) for the RLT relaxation as well as (RS) and (RS1) for the SDP-RLT relaxation.
+
+
+
+ §.§ Properties of Convex Underestimators
+
+
+In this section, we present several properties of the convex underestimators ℓ_R(·) and ℓ_RS(·) given by (<ref>) and (<ref>), respectively. 
+
+First, we start with the observation that ℓ_R(·) has a very specific structure with a simple closed-form expression.
+
+ 
+ℓ_R(·) is a piecewise linear convex function on F given by 
+
+    ℓ_R(x̂) = 1/2(∑_(i,j): Q_ij > 0 Q_ijmax{0, x̂_i + x̂_j - 1} + ∑_(i,j): Q_ij < 0 Q_ijmin{x̂_i,x̂_j}) + c^T x̂,   x̂∈ F.
+
+
+
+For each x̂∈ F, the relation (<ref>) follows from (<ref>) and (<ref>).
+It follows that ℓ_R(·) is a piecewise linear convex function on F since it is given by the sum of a finite number of piecewise linear convex functions.
+
+
+In contrast with ℓ_R(·) given by the optimal value of a simple linear programming problem with bound constraints, ℓ_RS(·) does not, in general, have a simple closed-form expression as it is given by the optimal value of a semidefinite programming problem. 
+
+The next result states a useful decomposition property regarding the sets _R(x̂) and _RS(x̂).
+
+ 
+For any x̂∈ F,
+(x̂, X̂) ∈_R(x̂) if and only if there exists M̂∈_R(x̂) such that X̂ = x̂x̂^T + M̂, where
+
+    _R(x̂) = {M ∈^n: [                                                         M_ij                                                            ≤      min{x̂_i - x̂_i x̂_j, x̂_j - x̂_i x̂_j},    i ∈𝔹, j ∈𝔹,;                                                         M_ij                                                            ≥ max{-x̂_i x̂_j, x̂_i + x̂_j - 1 - x̂_i x̂_j},    i ∈𝔹, j ∈𝔹,;                                                         M_ij                                                            =                                              0,   otherwise. ]},
+
+where 𝔹 is given by (<ref>). 
+Furthermore, (x̂, X̂) ∈_RS(x̂) if and only if M̂∈_RS(x̂), where 
+
+    _RS(x̂) = {M ∈^n: M ∈_R(x̂),    M ≽ 0}.
+
+
+
+Both assertions follow from (<ref>), (<ref>), (<ref>), (<ref>), and the decomposition X̂ = x̂x̂^T + M̂.     
+
+
+By Lemma <ref>, we remark that M_ij has a negative lower bound and a positive upper bound in (<ref>) if and only if i ∈𝔹 and j ∈𝔹. Therefore, for any x̂∈ and any (x̂,X̂) ∈_R (and hence any (x̂,X̂) ∈_RS), we obtain
+
+    X̂_ij = x̂_i x̂_j,    i ∉𝔹,  or  j ∉𝔹.
+
+This observation yields the following result.
+
+ 
+For any vertex v ∈ F, _R(v) = _RS(v) = {(v,vv^T)}.    
+
+
+The claim directly follows from (<ref>) since 𝔹 = ∅.   
+
+
+The decomposition in Lemma <ref> can be translated into the functions ℓ_R(·) and ℓ_RS(·).
+
+ 
+For each x̂∈ F,
+
+    ℓ_R(x̂)     =     q(x̂) + 1/2min_M ∈_R(x̂)⟨ Q, M ⟩, 
+    ℓ_RS(x̂)     =     q(x̂) + 1/2min_M ∈_RS(x̂)⟨ Q, M ⟩,
+
+where _R(x̂) and _RS(x̂) are given by (<ref>) and (<ref>), respectively. 
+
+
+The assertions directly follow from (<ref>), (<ref>), and Lemma <ref>.    
+
+
+By Lemma <ref>, we can easily establish the following properties.
+
+ 
+Let x̂∈ F and let 𝔹 = 𝔹(x̂), where 𝔹(x̂) is given by (<ref>). 
+
+    
+  (i) ℓ_R(x̂) = q(x̂) if and only if x̂ is a vertex of F or Q_𝔹𝔹 = 0.
+    
+  (ii) ℓ_RS(x̂) = q(x̂) if and only if x̂ is a vertex of F or Q_𝔹𝔹≽ 0.
+
+
+
+By Lemma <ref>, ℓ_R(x̂) = q(x̂) (resp., ℓ_RS(x̂) = q(x̂)) if and only if min_M ∈_R(x̂)⟨ Q, M ⟩ = 0 (resp., min_M ∈_RS(x̂)⟨ Q, M ⟩ = 0). The assertions now follow from Lemma <ref>.   
+
+
+
+
+Lemma <ref> immediately gives rise to the following results about the underestimator ℓ_RS(·).
+
+ 
+
+    
+  (i) If Q ≽ 0, then ℓ_RS(x̂) = q(x̂) for each x̂∈ F.
+    
+  (ii) For any local or global minimizer x̂∈ F of (BoxQP), we have ℓ_RS(x̂) = q(x̂). 
+
+
+
+If Q ≽ 0, then Q_𝔹𝔹≽ 0 for each 𝔹⊆{1,…,n}. Therefore, both assertions follow from Lemma <ref>(ii) since Q_𝔹𝔹≽ 0 at any local or global minimizer of (BoxQP) by (<ref>).  
+
+
+Corollary <ref>(i) in fact holds for SDP relaxations of general quadratic programs and a result similar to Corollary <ref>(ii) was established for general quadratic programs with a bounded feasible region <cit.>. We remark that Corollary <ref>(ii) presents a desirable property of the SDP-RLT relaxation, which is a necessary condition for its exactness by (<ref>) and (<ref>). However, this condition, in general, is not sufficient.
+
+
+
+§ EXACT AND INEXACT RLT RELAXATIONS
+ 
+
+In this section, we focus on instances of (BoxQP) that admit exact and inexact RLT relaxations. We first establish a useful property of the set of optimal solutions of RLT relaxations. Using this property, we present two equivalent but different algebraic descriptions of instances with exact RLT relaxations. By utilizing one of these descriptions, we present an algorithm for constructing instances of (BoxQP) with an exact RLT relaxation and another algorithm for constructing instances with an inexact RLT relaxation. 
+
+
+
+ §.§ Optimal Solutions of RLT Relaxations
+
+
+In this section, we present useful properties of the set of optimal solutions of RLT relaxations. Our first result establishes the existence of a minimizer of (R1) with a very specific structure. 
+
+ 
+For the RLT relaxation of any instance of (BoxQP), there exists an optimal solution x̂∈ F of (R1), where (R1) is given by (<ref>), such that  
+x̂_j ∈{0,1/2,1} for each j = 1,…,n.    
+
+
+Let x̂∈ F be an optimal solution of (R1), i.e.,  ℓ^*_R =ℓ_R(x̂). Suppose that there exists k ∈{1,…,n} such that x̂_k ∉{0,1/2,1}. We will show that one can construct another x̃∈ F such that ℓ_R(x̃) = ℓ_R(x̂) = ℓ^*_R and x̃_j ∈{0,1/2,1} for each j = 1,…,n. 
+
+Let α = min{x̂_k,1 - x̂_k}∈ (0,1/2) and let 
+
+    α_l     =    max{(max_j:min{x̂_j,1 - x̂_j}<αmin{x̂_j,1 - x̂_j}),0}, 
+    α_u     =    min{(min_j:min{x̂_j,1 - x̂_j}>αmin{x̂_j,1 - x̂_j}),1/2},
+
+with the usual conventions that the minimum and the maximum over the empty set are defined to be +∞ and -∞, respectively. Note that 0 ≤α_l < α < α_u ≤1/2. Let us define the following index sets:
+
+    𝕀_1     =    {j ∈{1,…,n}: x̂_j = α}, 
+    𝕀_2     =    {j ∈{1,…,n}: x̂_j = 1 - α}, 
+    𝕀_3     =    {j ∈{1,…,n}: x̂_j ∈ [0,α_l] ∪ [α_u,1 - α_u] ∪ [1 - α_l,1]}.
+
+Note that 𝕀_1, 𝕀_2, 𝕀_3
+is a partition of the index set by the definitions of α_l and α_u, and we have k ∈𝕀_1 ∪𝕀_2. 
+Let us define a direction d̂∈^n by 
+
+    d̂_j = {[      1, j ∈𝕀_1,;     -1, j ∈𝕀_2,;      0, j ∈𝕀_3. ].
+
+Consider x^β = x̂ + βd̂. It is easy to verify that x^β∈ F for each β∈ [α_l - α,α_u - α]. We claim that ℓ_R(x^β) is a linear function of β on this interval. By (<ref>), it suffices to show that each term is a linear function. 
+
+First, let us focus on the term given by max{0, x^β_i + x^β_j - 1} = 
+max{0, x̂_i + x̂_j - 1 + βd̂_i + βd̂_j}, where i = 1,…,n; j = 1,…,n. It suffices to show that the sign of x̂_i + x̂_j - 1 + βd̂_i + βd̂_j does not change for each β∈ [α_l - α,α_u - α] and for each i = 1,…,n; j = 1,…,n. Clearly, x̂_i + x̂_j - 1 + βd̂_i + βd̂_j = x̂_i + x̂_j - 1 if {i,j}⊆𝕀_3; or i ∈𝕀_1, j ∈𝕀_2; or i ∈𝕀_2, j ∈𝕀_1. For the remaining cases, it follows from the definitions of 𝕀_1, 𝕀_2, and 𝕀_3 that
+
+
+    x̂_i + x̂_j - 1 + βd̂_i + βd̂_j ∈{[                                    [2 α_l - 1, 2 α_u - 1],                                                 {i,j}⊆𝕀_1,;                                    [1 - 2 α_u, 1 - 2 α_l],                                                 {i,j}⊆𝕀_2,;     [α_l - 1,α_l + α_u - 1] ∪ [α_l + α_u - 1,0] ∪ [0,α_u],                        i ∈𝕀_1, j ∈𝕀_3;  or i ∈𝕀_3, j ∈𝕀_1,; [-α_u, 0] ∪ [0, 1 - α_l - α_u] ∪ [1 - α_l - α_u, 1 - α_l],                        i ∈𝕀_2, j ∈𝕀_3;  or i ∈𝕀_3, j ∈𝕀_2. ].
+
+
+Our claim now follows from 0 ≤α_l < α_u ≤1/2. Therefore, max{0, x̂_i + x̂_j - 1 + βd̂_i + βd̂_j} is a linear function on β∈ [α_l - α,α_u - α] for each i = 1,…,n;  j = 1,…,n.
+
+
+Let us now consider the term min{x^β_i,x^β_j} = min{x̂_i + βd̂_i,x̂_j + βd̂_j}. By the choice of d̂, it is easy to see that the order of the components of x^β remains unchanged for each β∈ [α_l - α,α_u - α], i.e., if x̂_i ≤x̂_j, then x̂_i + βd̂_i ≤x̂_j + βd̂_j for each i = 1,…,n;  j = 1,…,n. It follows that min{x̂_i + βd̂_i,x̂_j + βd̂_j} is a linear function on β∈ [α_l - α,α_u - α]. 
+
+Since the third term in (<ref>) is also a linear function on β∈ [α_l - α,α_u - α], it follows that ℓ_R(x^β) is a linear function on [α_l - α,α_u - α]. Therefore, by the optimality of x̂ in (R1), ℓ_R(x^β) is a constant function on this interval. If α_l = 0 and α_u = 1/2, then the alternate optimal solution at each end of this interval satisfies the desired property. Otherwise, by moving to the solution at one of the end points with α_l > 0 or α_u < 1/2, one can repeat the same procedure in an iterative manner to arrive at an alternate optimal solution with the desired property. Note that this procedure is finite since either α_l strictly decreases or α_u strictly increases at each iteration. 
+
+
+We can utilize Proposition <ref> to obtain the following result about the set of optimal solutions of (R).
+
+ 
+There exists an optimal solution (x̂,X̂) ∈^n ×^n of the RLT relaxation (R) such that x̂_j ∈{0,1/2,1} for each j = 1,…,n and X̂_ij∈{0,1/2,1} for each i = 1,…,n; j = 1,…,n such that 
+
+    [ X̂_𝕃𝕃 X̂_𝕃𝔹 X̂_𝕃𝕌; X̂_𝔹𝕃 X̂_𝔹𝔹 X̂_𝔹𝕌; X̂_𝕌𝕃 X̂_𝕌𝔹 X̂_𝕌𝕌 ] = [             0             0             0;             0         X̂_𝔹𝔹 1/2 e_𝔹 e_𝕌^T;             0 1/2 e_𝕌 e_𝔹^T     e_𝕌 e_𝕌^T ],   X̂_ij∈{0,1/2},    i ∈𝔹, j ∈𝔹.
+
+
+
+By Proposition <ref>, there exists x̂∈ F such that ℓ^*_R =ℓ_R(x̂) and x̂_j ∈{0,1/2,1} for each j = 1,…,n. Define X̂∈^n such that 
+
+    X̂_ij = {[ max{0,x̂_i + x̂_j - 1},            if Q_ij > 0,;         min{x̂_i,x̂_j},            if Q_ij < 0,;                      0,              otherwise. ].
+
+Note that (x̂,X̂) ∈_R by (<ref>) and ℓ_R(x̂) = 1/2⟨ Q, X̂⟩ + c^T x̂ by Lemma <ref>. Therefore, (x̂,X̂) is an optimal solution of (R) with the desired property.
+    
+
+The next result follows from Corollary <ref>.
+
+ 
+For each vertex (x̂,X̂) ∈_R, x̂_j ∈{0,1/2,1} for each j = 1,…,n and X̂_ij∈{0,1/2,1} for each i = 1,…,n; j = 1,…,n.
+
+
+Since _R is a polytope, (x̂,X̂) ∈_R is a vertex if and only if there exists a (Q,c) ∈^n ×^n such that (x̂,X̂) ∈_R is the unique optimal solution of (R). The assertion follows from Corollary <ref>.  
+
+
+We remark that Padberg <cit.> established a similar result for the set _R^- given by (<ref>). Corollary <ref> extends the same result to _R. In contrast with the proof of <cit.>, which relies on linearly independent active constraints, our proof uses a specific property of the set of optimal solutions of the reduced formulation (R1). 
+
+
+
+ §.§ First Description of Exact RLT Relaxations
+
+
+In this section, we present our first description of the set of instances of (BoxQP) with an exact RLT relaxation. We start with a useful property of such instances. 
+
+
+
+ 
+For any instance of (BoxQP), the RLT relaxation is exact, i.e., ℓ^*_R = ℓ^*, if and only if there exists a vertex v ∈ F such that v is an optimal solution of (R1), where (R1) is given by (<ref>).
+
+
+Suppose that ℓ^*_R = ℓ^*. Then, by (<ref>) and (<ref>), for any optimal solution x^* ∈ F of (BoxQP), we have q(x^*) = ℓ^* = ℓ^*_R ≤ℓ_R(x^*) ≤ q(x^*) = ℓ^*, which implies that ℓ^*_R = ℓ_R(x^*) = q(x^*).
+By Lemma <ref>(i), either x^* is a vertex of F, in which case, we are done, or Q_𝔹𝔹 = 0, where 𝔹 is given by (<ref>). In the latter case, since x̂^*_𝕃 = 0 and x̂^*_𝕌 = e_𝕌 by (<ref>) and (<ref>), respectively, 
+we obtain
+
+    ℓ^*_R = ℓ^* = q(x^*) = 1/2 e_𝕌^T Q_𝕌𝕌 e_𝕌 + (x^*_𝔹)^T Q_𝔹𝕌 e_𝕌 + c_𝕌^T e_𝕌 + c_𝔹^T x^*_𝔹 = 1/2 e_𝕌^T Q_𝕌𝕌 e_𝕌 + c_𝕌^T e_𝕌,
+
+where the last equality follows from the identity Q_𝔹𝕌 e_𝕌 + c_𝔹 = 0 by (<ref>)–(<ref>). Therefore, for the vertex v ∈ F given by v_j = 1 for each j ∈𝕌 and v_j = 0 for each j ∈𝕃∪𝔹 = 0, we obtain q(v) = ℓ^* = ℓ_R(v) by Lemma <ref>(i).
+
+Conversely, if there exists a vertex v ∈ F such that ℓ_R(v) = ℓ^*_R, then we have ℓ^* ≤ q(v) = ℓ_R(v) = ℓ^*_R by Lemma <ref>(i). The assertion follows from (<ref>).   
+
+
+Proposition <ref> presents an important property of the set of instances of (BoxQP) with exact RLT relaxations in terms of the set of optimal solutions and gives rise to the following corollary.
+
+ 
+For any instance of (BoxQP), the RLT relaxation is exact if and only if there exists a vertex v ∈ F such that (v,vv^T) is an optimal solution of (R). Furthermore, in this case, v is an optimal solution of (BoxQP).   
+
+
+The assertion directly follows from Proposition <ref>, Lemma <ref>(i), and Corollary <ref>.    
+
+
+By Corollary <ref>, if the set of optimal solutions of (BoxQP) does not contain a vertex, then the RLT relaxation is inexact. Note that if q(·) is a concave function, then the set of optimal solutions of (BoxQP) contains at least one vertex. However, this is an NP-hard problem (see, e.g., <cit.>), which implies that the RLT relaxation can be inexact even if the set of optimal solutions of (BoxQP) contains at least one vertex. The next example illustrates that the RLT relaxation can be inexact even if every optimal solution of (BoxQP) is a vertex.
+
+ 
+Consider an instance of (BoxQP) with
+
+    Q = [ -1 -2; -2  1 ],    c = [ 1; 1 ].
+
+Note that
+
+    q(x) = 1/2(-x_1^2 + x_2^2 - 4 x_1 x_2) + x_1 + x_2 = 1/2(x_2 - x_1)^2 + (x_1 + x_2) (1 - x_1),
+
+which implies that q(x) ≥ 0 for each x ∈ F and q(x) = 0 if and only if x ∈{0,e}. Therefore, ℓ^* = 0 and the set of optimal solution is given by {0,e}, which consists of two vertices of F. However, for x̂ = 1/2e ∈^2, it is easy to verify that ℓ_R(x̂) = -1/4 < ℓ^*. In fact, ℓ^*_R = ℓ_R(x̂) = -1/4 and ℓ_R(x) > ℓ_R(x̂) for each x ∈ F \{x̂}. Figure <ref> illustrates the functions q(·) and ℓ_R(·). 
+
+
+
+
+We next present our first description of the set of instances that admit an exact RLT relaxation. 
+To that end, let us define
+
+    _R = {(Q,c) ∈^n ×^n: ℓ^* = ℓ^*_R}.
+
+i.e., _R denotes the set of all instances of (BoxQP) that admit an exact RLT relaxation. 
+For a given x̂∈ F, let us define
+
+    _R(x̂) = {(Q,c) ∈^n ×^n: ℓ_R(x̂) = ℓ^*_R} = {(Q,c) ∈^n ×^n: ℓ_R(x̂) ≤ℓ_R(x),    x ∈ F},
+
+i.e., _R(x̂) denotes the set of instances of (BoxQP) such that x̂ is a minimizer of (R1), where (R1) is given by (<ref>). 
+By (<ref>), it is easy to see that _R(x̂) is a convex cone for each x̂∈ F. Our next result provides an algebraic description of the set _R.
+
+ 
+Let V ⊂ F denote the set of vertices of F given by (<ref>) and let V^+ = {x ∈ F: x_j ∈{0,1/2,1},    j = 1,…,n}. Then, _R defined as in (<ref>) is given by the union of a finite number of polyhedral cones and admits the following description:
+
+    _R = ⋃_v ∈ V_R(v) = ⋃_v ∈ V(⋂_x̂∈ V^+{(Q,c) ∈^n ×^n: ℓ_R(v) ≤ℓ_R(x̂)}).
+
+
+
+By Proposition <ref>, the RLT relaxation is exact if and only if there exists a vertex v ∈ F such that ℓ_R(v) = ℓ^*_R,  
+which, together with (<ref>), leads to the first equality in (<ref>). By Proposition <ref>, the set V_+ contains at least one minimizer of ℓ_R(·), 
+which implies the second equality in (<ref>). _R is the union of a finite number of polyhedral cones since ℓ_R(x) is a linear function of (Q,c) for each fixed x ∈ F by Lemma <ref> and V^+ is a finite set.
+
+
+For each v ∈ V, we remark that Proposition <ref> gives a description of _R(v) using 3^n linear inequalities since |V^+| = 3^n. In fact, for each v ∈ V, the convexity of ℓ_R(·) on F implies that it suffices to consider only those x̂∈ V_+ such that x̂_j ∈{0,1/2} for j ∈𝕃(v) and x̂_j ∈{1/2,1} for j ∈𝕌(v), where 𝕃(v) and 𝕌(v) are given by (<ref>) and (<ref>), respectively, which implies a simpler description  of _R with 2^n inequalities. Due to the exponential number of such inequalities, this description is not very useful for efficiently checking if a particular instance of (BoxQP) admits an exact RLT relaxation. Similarly, this description cannot be used easily for constructing such an instance of (BoxQP). In the next section, we present an alternative description of _R using linear programming duality, which gives rise to algorithms for efficiently constructing instances of (BoxQP) with exact or inexact RLT relaxations.
+
+
+
+ §.§ An Alternative Description of Exact RLT Relaxations
+ 
+
+
+
+In this section, our main goal is to present an alternative description of the set _R using duality. 
+
+Recall that the RLT relaxation is given by
+
+    (R)  ℓ^*_R = min_(x,X) ∈^n ×^n{1/2⟨ Q, X⟩ + c^T x: (x,X) ∈_R},
+
+where, _R given by (<ref>), can be expressed in the following form:
+
+    _R = {(x,X) ∈^n ×^n: [                      x                      ≤                      e;                      x                      ≥                      0; X - xe^T - ex^T + ee^T                      ≥                      0;              -X + ex^T                      ≥                      0;                      X                      ≥                      0 ]}.
+
+
+By defining dual variables (u,v,W,Y,Z) ∈^n ×^n ×^n ×^n × n×^n corresponding to each of the five constraints in (<ref>), respectively, the dual problem of (R) is given by
+
+    [                                  (R-D) max_(u,v,W,Y,Z) ∈^n ×^n ×^n ×^n × n×^n                   -e^T u - 1/2 e^T W e                                                                              ;                                                                          s.t.                                                                                                                     ;                                                                                                 -u + v - W e + Y^T e                                      =                                      c;                                                                                                      W - Y - Y^T + Z                                      =                                      Q;                                                                                                                    u                                      ≥                                      0;                                                                                                                    v                                      ≥                                      0;                                                                                                                    W                                      ≥                                      0;                                                                                                                    Y                                      ≥                                      0;                                                                                                                    Z                                      ≥                                     0. ]
+
+
+Note that the variables (W,Y,Z) ∈^n ×^n × n×^n in (R-D) are scaled by a factor of 1/2. First, we start with optimality conditions for (R) and (R-D). 
+
+ 
+(x̂, X̂) ∈_R is an optimal solution of (R) if and only if there exists (û,v̂,Ŵ,Ŷ,Ẑ) ∈^n ×^n ×^n ×^n × n×^n such that
+
+    Q     =    Ŵ - Ŷ - Ŷ^T + Ẑ
+    
+    c     =     -û + v̂ - Ŵ e + Ŷ^T e 
+    û^T (e - x̂)     =     0 
+    v̂^T x̂    =    0 
+    ⟨Ŵ, X̂ - x̂ e^T - e x̂^T + ee^T ⟩    =     0 
+    ⟨Ŷ, e x̂^T - X̂⟩    =     0 
+    ⟨Ẑ, X̂⟩    =     0 
+    û   ≥    0 
+    v̂   ≥    0 
+    Ŵ   ≥    0 
+    Ŷ   ≥    0 
+    Ẑ   ≥    0.
+
+
+
+The assertion follows from strong duality since each of (R) and (R-D) is a linear programming problem.
+
+
+Lemma <ref> gives rise to an alternative description of the set of instances of (BoxQP) that admit an exact RLT relaxation.
+
+
+
+ 
+(Q,c) ∈_R, where _R is defined as in (<ref>), if and only if there exists a vertex v ∈ F and there exists (û,v̂,Ŵ,Ŷ,Ẑ) ∈^n ×^n ×^n ×^n × n×^n such that the relations (<ref>)–(<ref>) hold, where (x̂,X̂) = (v,vv^T).    
+
+
+Note that (Q,c) ∈_R if and only if there exists a vertex v ∈ F such that (v,vv^T) is an optimal solution of (R) by Corollary <ref>. The assertion now follows from Lemma <ref>.   
+
+
+In the next section, we discuss how Corollary <ref> can be utilized to construct instances of (BoxQP) with exact and inexact RLT relaxations. 
+
+
+
+ §.§ Construction of Instances with Exact RLT Relaxations
+
+
+In this section, we describe an algorithm for constructing instances of (BoxQP) with an exact RLT relaxation. Algorithm <ref> is based on designating a vertex v ∈ F and constructing an appropriate dual feasible solution that satisfies optimality conditions together with (v,vv^T) ∈_R.
+
+
+
+The following result establishes the correctness of Algorithm <ref>.
+
+ 
+Algorithm <ref> returns (Q,c) ∈_R, where _R is defined as in (<ref>). Conversely, any (Q,c) ∈_R can be generated by Algorithm <ref> with appropriate choices of 𝕃⊆{1,…,n} and (û,v̂,Ŵ,Ŷ,Ẑ) ∈^n ×^n ×^n ×^n × n×^n.  
+
+
+Let 𝕃⊆{1,…,n} and define 𝕌 = {1,…,n}\𝕃. Let v ∈ F be the vertex given by v_j = 0, j ∈𝕃 and v_j = 1, j ∈𝕌. It is easy to verify that (û,v̂,Ŵ,Ŷ,Ẑ) ∈^n ×^n ×^n ×^n × n×^n and (x̂,X̂) = (v,vv^T) satisfy the hypotheses of Corollary <ref>, which establishes the first assertion. The second assertion also follows from Corollary <ref>.
+
+
+By considering all possible subsets 𝕃⊆{1,…,n}, Proposition <ref> yields an alternative characterization of _R given by the union of 2^n polyhedral cones (cf. Proposition <ref>). In contrast with the description in Proposition <ref>, this alternative description enables us to easily construct an instance of (BoxQP) with a known optimal vertex and an exact RLT relaxation (cf. Corollary <ref>). Note, however, that even the alternative description is not very useful for effectively checking if (Q,c) ∈_R due to the exponential number of polyhedral cones.
+
+
+
+ §.§ Construction of Instances with Inexact RLT Relaxations
+ 
+
+In this section, we propose an algorithm for constructing instances of (BoxQP) with an inexact RLT relaxation. Algorithm <ref> is based on constructing a dual optimal solution of (R-D) such that no feasible solution of the form (v, vv^T) ∈_R can be an optimal solution of (R), where v ∈ F is a vertex.
+
+
+
+The next result establishes that the output from Algorithm <ref> is an instance of (BoxQP) with an inexact RLT relaxation.
+
+ 
+Algorithm <ref> returns (Q,c) ∉_R, where _R is defined as in (<ref>).    
+
+
+Consider the partition (𝕃,𝔹,𝕌) of the index set {1,…,n} as defined in Algorithm <ref>, where 𝔹≠∅. Clearly, (û,v̂,Ŵ,Ŷ,Ẑ) ∈^n ×^n ×^n ×^n × n×^n is a feasible solution of (R-D). We will construct a feasible solution (x̂, X̂) ∈^n ×^n of (R) that satisfies the optimality conditions of Lemma <ref>. 
+
+Consider the following solution (x̂, X̂) ∈^n ×^n:
+
+    x̂_𝕃 = 0,   x̂_𝔹 = 1/2 e_𝔹  x̂_𝕌 = e_𝕌,
+
+and
+
+    [ X̂_𝕃𝕃 X̂_𝕃𝔹 X̂_𝕃𝕌; X̂_𝔹𝕃 X̂_𝔹𝔹 X̂_𝔹𝕌; X̂_𝕌𝕃 X̂_𝕌𝔹 X̂_𝕌𝕌 ] = [             0             0             0;             0             0 1/2 e_𝔹 e_𝕌^T;             0 1/2 e_𝕌 e_𝔹^T     e_𝕌 e_𝕌^T ].
+
+By Lemma <ref>, (x̂, X̂) ∈_R. By Steps 4, 5, 6, 7, and 8 of Algorithm <ref>, it is easy to verify that (<ref>), (<ref>), (<ref>), (<ref>), and (<ref>) are respectively satisfied. Therefore, by Lemma <ref>, we conclude that (x̂, X̂) is an optimal solution of (R) and (û,v̂,Ŵ,Ŷ,Ẑ) is an optimal solution of (R-D).
+
+We next argue that the RLT relaxation is inexact. Let (x̃, X̃) ∈_R be an arbitrary optimal solution of (R). By Lemma <ref>, (x̃, X̃) and (û,v̂,Ŵ,Ŷ,Ẑ) satisfy the conditions (<ref>), (<ref>), (<ref>), (<ref>), and (<ref>). 
+By (<ref>) and Step 8 of Algorithm <ref>, we obtain X̃_kk = 0 since Ẑ_kk > 0.  
+Since Ŵ_kk > 0 by Step 6 of Algorithm <ref>, the relation (<ref>) implies that X̃_kk - 2 x̃_k + 1 = 0, i.e., x̃_k = 1/2 since X̃_kk = 0. By Lemma <ref>, we conclude that x̃_k = 1/2 for each optimal solution (x̃, X̃) ∈_R of (R). By Corollary <ref>, we conclude that (Q,c) ∉_R.
+
+
+Algorithm <ref> can be used to generate an instance of (BoxQP) with an inexact RLT relaxation. 
+Note that Algorithm <ref> constructs an instance (Q,c) with the property that at least one component x̂_k is fractional at every optimal solution (x̂, X̂) of (R), which is sufficient for having an inexact RLT relaxation by Corollary <ref>. However, this condition may not be necessary for an inexact RLT relaxation. In particular, note that an instance generated by Algorithm <ref> cannot have a concave objective function since Q_kk = Ŵ_kk + Ẑ_kk > 0. On the other hand, for the specific instance (Q,c) ∈^3 ×^3 in <cit.> given by Q = 1/3ee^T - I, where I ∈^3 denotes the identity matrix, and c = 0, the objective function is concave and the optimal value is given by ℓ^* = -1/3, which is attained at any vertex that has exactly one component equal to 1. For x̂ = 1/2e ∈^3, we have ℓ_R(x̂) = -1/2 < -1/3 = ℓ^* by Lemma <ref>, which implies that the RLT relaxation is inexact on this instance. Therefore, in contrast with Algorithm <ref>, we conclude that Algorithm <ref> may not necessarily generate all possible instances (Q,c) ∉_R.
+
+
+
+§ EXACT AND INEXACT SDP-RLT RELAXATIONS
+ 
+
+In this section, we focus on the set of instances of (BoxQP) that admit exact and inexact SDP-RLT relaxations. We give a complete algebraic description of the set of instances of (BoxQP) that admit an exact SDP-RLT relaxation. In addition, we develop an algorithm for constructing such an instance of (BoxQP) as well as for constructing an instance of (BoxQP) with an exact SDP-RLT relaxation but an inexact RLT relaxation. 
+
+Similar to the RLT relaxation, let us define
+
+    _RS = {(Q,c) ∈^n ×^n: ℓ^* = ℓ_RS},
+
+i.e., _RS denotes the set of all instances of (BoxQP) that admit an exact SDP-RLT relaxation. 
+By (<ref>), the SDP-RLT relaxation of any instance of (BoxQP) is at least as tight as the RLT relaxation. It follows that 
+
+    _R ⊆_RS,
+
+where _R is given by (<ref>). 
+
+By Corollary <ref> and (<ref>), we clearly have (Q,c) ∈_RS whenever Q ≽ 0. Furthermore, the SDP-RLT relaxation is always exact (i.e., _RS = ^n ×^n) if and only if n ≤ 2 <cit.>.
+
+For the RLT relaxation, Proposition <ref> established the existence of an optimal solution of the RLT relaxation with a particularly simple structure. This observation enabled us to characterize the set of instances of (BoxQP) with an exact RLT relaxation as the union of a finite number polyhedral cones (see Proposition <ref>). In contrast, the next result shows that the set of optimal solutions of the SDP-RLT relaxation cannot have such a simple structure.
+
+ 
+ For any x̂∈ F, there exists an instance (Q,c) of (BoxQP) such that x̂ is the unique optimal solution of (RS1), where (RS1) is given by (<ref>), and (Q,c) ∈_RS. 
+
+
+ For any x̂∈ F, consider an instance of (BoxQP) with (Q,c) ∈^n ×^n, where Q ≻ 0 and c = -Q x̂. We obtain q(x) = 1/2((x - x̂)^T Q (x - x̂) - x̂^T Q x̂). Since Q ≻ 0, x̂ is the unique unconstrained minimizer of q(x). By Lemma <ref>, since Q ≻ 0, we have ℓ_RS(x) = q(x) for each x ∈ F, which implies that ℓ^* = q(x^*) = ℓ_RS(x^*) = ℓ^*_RS. It follows that (Q,c) ∈_RS. The uniqueness follows from the strict convexity of ℓ_RS(·) since ℓ_RS(x) = q(x) for each x ∈ F.   
+
+   
+In the next section, we rely on duality theory to obtain a description of the set _RS.
+
+
+
+ §.§ The Dual Problem
+
+
+In this section, we present the dual of the SDP-RLT relaxation given by (RS) and establish several useful properties. 
+
+Recall that the SDP-RLT relaxation is given by
+
+    (RS)  ℓ^*_RS = min_(x,X) ∈^n ×^n{1/2⟨ Q, X⟩ + c^T x: (x,X) ∈_RS},
+
+where _RS is given by (<ref>). 
+
+By the Schur complement property, we have
+
+    X - x x^T ≽ 0 ⟺[   1 x^T;   x   X ]≽ 0,
+
+which implies that (RS) can be formulated as a linear semidefinite programming problem. 
+
+By using the same set of dual variables (u,v,W,Y,Z) ∈^n ×^n ×^n ×^n × n×^n as in (R-D) corresponding to the common constraints in _R and _RS (see (<ref>)), and defining the dual variable 
+
+    [   β h^T;   h   H ]∈^n+1,
+
+where β∈, h ∈^n, and H ∈^n, corresponding to the additional semidefinite constraint in (<ref>), the dual problem of (RS) is given by 
+
+    [                                                (RS-D) max_(u,v,W,Y,Z,β,h,H) ∈^n ×^n ×^n ×^n × n×^n ××^n ×^n                           -e^T u - 1/2 e^T W e - 1/2β                                                                                                            ;                                                                                                        s.t.                                                                                                                                                                  ;                                                                                                                                          -u + v - W e + Y^T e + h                                                     =                                                     c;                                                                                                                                               W - Y - Y^T + Z + H                                                     =                                                     Q;                                                                                                                                                                 u                                                     ≥                                                     0;                                                                                                                                                                 v                                                     ≥                                                     0;                                                                                                                                                                 W                                                     ≥                                                     0;                                                                                                                                                                 Y                                                     ≥                                                     0;                                                                                                                                                                 Z                                                     ≥                                                     0;                                                                                                                                              [   β h^T;   h   H ]                                                     ≽                                                    0. ]
+
+
+In contrast with linear programming, stronger assumptions are needed to guarantee strong duality in semidefinite programming. We first establish that  (RS) and (RS-D) satisfy such assumptions.
+
+ 
+Strong duality holds between (RS) and (RS-D), and
+optimal solutions are attained in both (RS) and (RS-D).    
+
+
+Note that _RS is a nonempty and bounded set since 0 ≤ x_j ≤ 1 and X_jj≤ 1 for each j = 1,…,n. Therefore, the set of optimal solutions of (RS) is nonempty. Let x̂ = 1/2 e ∈^n and let X̂ = x̂x̂^T + ϵ I ∈^n, where ϵ∈ (0,1/4). By Lemma <ref>, (x̂, X̂) ∈_RS. Furthermore, it is a strictly feasible solution of (RS) since (x̂, X̂) satisfies all the constraints strictly. Strong duality and attainment in (RS-D) follow from conic duality.
+
+
+Lemma <ref> allows us to give a complete characterization of optimality conditions for the pair (RS) and (RS-D).
+
+ 
+ (x̂, X̂) ∈_RS is an optimal solution of (RS) if and only if there exists 
+ 
+    (û,v̂,Ŵ,Ŷ,Ẑ,β̂,ĥ,Ĥ) ∈^n ×^n ×^n ×^n × n×^n ××^n ×^n
+
+ such that
+ 
+    Q     =    Ŵ - Ŷ - Ŷ^T + Ẑ + Ĥ, 
+    
+    c     =     -û + v̂ - Ŵ e + Ŷ^T e + ĥ, 
+    [  β̂ ĥ^T;   ĥ   Ĥ ]   ≽    0 
+    ⟨[    1 x̂^T;   x̂   X̂ ] , [  β̂ ĥ^T;   ĥ   Ĥ ]⟩    =     0,
+
+ and (<ref>)–(<ref>) are satisfied.
+
+
+The claim follows from strong duality between (RS) and (RS-D), which holds by Lemma <ref>.   
+
+
+Using Lemma <ref>, we obtain the following description of the set of instances of (BoxQP) with an exact SDP-RLT relaxation.
+
+ 
+(Q,c) ∈_RS, where _RS is defined as in (<ref>), if and only if there exists x̂∈ F and there exists (û,v̂,Ŵ,Ŷ,Ẑ,β̂,ĥ,Ĥ) ∈^n ×^n ×^n ×^n × n×^n ××^n ×^n such that the conditions of Lemma <ref> are satisfied, where (x̂, X̂) = (x̂, x̂x̂^T). Furthermore, in this case, x̂ is an optimal solution of (BoxQP).
+
+
+Suppose that (Q,c) ∈_RS. Let x̂∈ F be an optimal solution of (BoxQP). By Corollary <ref>(ii), we obtain ℓ^*_RS = ℓ^* = q(x̂) = ℓ_RS(x̂). Therefore, x̂ is an optimal solution of (RS1) given by (<ref>). Let (x̂, X̂) = (x̂, x̂x̂^T) ∈_RS. We obtain 1/2⟨ Q, X̂⟩ + c^T x̂ = q(x̂) = ℓ^*_RS, which implies that (x̂, x̂x̂^T) is an optimal solution of (RS). The claim follows from Lemma <ref>. 
+
+For the reverse implication, note that (x̂, X̂) = (x̂, x̂x̂^T) is an optimal solution of (RS) by Lemma <ref>. By a similar argument and using (<ref>), we obtain ℓ^* ≤ q(x̂) = ℓ^*_RS≤ℓ^*, which implies that ℓ^*_RS = ℓ^*, or equivalently, that (Q,c) ∈_RS. 
+
+The second assertion follows directly from the previous arguments.
+
+
+In the next section, by relying on Proposition <ref>, we propose two algorithms to construct instances of (BoxQP) with different exactness guarantees. 
+
+
+
+ §.§ Construction of Instances with Exact SDP-RLT Relaxations
+
+
+In this section, we present an algorithm for constructing instances of (BoxQP) with an exact SDP-RLT relaxation. Similar to Algorithm <ref>, Algorithm <ref> is based on designating x̂∈ F and constructing an appropriate dual feasible solution that satisfies optimality conditions together with (x̂,x̂x̂^T) ∈_RS.
+
+
+
+The next proposition establishes the correctness of Algorithm <ref>.
+
+ 
+Algorithm <ref> returns (Q,c) ∈_RS, where _RS is defined as in (<ref>). Conversely, any (Q,c) ∈_RS can be generated by Algorithm <ref> with appropriate choices of x̂∈ F and (û,v̂,Ŵ,Ŷ,Ẑ,β̂,ĥ,Ĥ) ∈^n ×^n ×^n ×^n × n×^n ××^n ×^n.    
+
+
+Since Ĥ≽ 0, it follows from Steps 8 and 9 of Algorithm <ref> that 
+
+    [  β̂ ĥ^T;   ĥ   Ĥ ] = [ x̂^T;   -I ]Ĥ[ x̂^T;   -I ]^T ≽ 0.
+
+Therefore, (û,v̂,Ŵ,Ŷ,Ẑ,β̂,ĥ,Ĥ) ∈^n ×^n ×^n ×^n × n×^n ××^n ×^n is a feasible solution of (RS-D). Furthermore, the identity in (<ref>) also implies that
+
+    ⟨[      1   x̂^T;     x̂ x̂x̂^T ] , [  β̂ ĥ^T;   ĥ   Ĥ ]⟩ = [  1; x̂ ]^T [  β̂ ĥ^T;   ĥ   Ĥ ][  1; x̂ ] = 0.
+
+It is easy to verify that the conditions of Lemma <ref> are satisfied with (x̂, X̂) = (x̂,x̂x̂^T) ∈_RS. Both assertions follow from Proposition <ref>.
+
+
+By Proposition <ref>, we conclude that _RS is given by the union of infinitely many convex cones each of which can be represented by semidefinite and linear constraints.
+
+Similar to Algorithm <ref>, we remark that Algorithm <ref> can be utilized to generate an instance of (BoxQP) with an exact SDP-RLT relaxation such that any designated feasible solution x̂∈ F is an optimal solution of (BoxQP).
+
+
+
+ §.§ Construction of Instances with Exact SDP-RLT and Inexact RLT Relaxations
+
+
+Recall that the SDP-RLT relaxation of any instance of (BoxQP) is at least as tight as the RLT relaxation.  In this section, we present another algorithm for constructing instances of (BoxQP) that admit an exact SDP-RLT relaxation but an inexact RLT relaxation, i.e., an instance in _RS\_R (cf. (<ref>)). In particular, this algorithm can be used to construct instances of (BoxQP) such that the SDP-RLT relaxation not only strengthens the RLT relaxation, but also yields an exact lower bound. 
+
+Note that Algorithm <ref> is capable of constructing all instances of (BoxQP) in the set _RS. On the other hand, if one chooses x̂∈ V and Ĥ = 0 in Algorithm <ref>, which, in turn, would imply that ĥ = 0 and β̂= 0, it is easy to verify that the choices of the remaining parameters satisfy the conditions of Algorithm <ref>, which implies that the resulting instance would already have an exact RLT relaxation, i.e., (Q,c) ∈_R. 
+
+In this section, we present Algorithm <ref>, where we use a similar idea as in Algorithm <ref>, i.e., we aim to construct an instance of (BoxQP) such that (x̂,x̂x̂^T) is the unique optimal solution of (RS), where x̂∈ F \ V.
+
+
+
+Note that Algorithm <ref> and Algorithm <ref> are almost identical, except that, in Step 7, we require that Ĥ≻ 0 in Algorithm <ref> as opposed to Ĥ≽ 0 in Algorithm <ref>. The next result establishes that the output from Algorithm <ref> is an instance of (BoxQP) with an exact SDP-RLT but inexact RLT relaxation.
+
+ 
+Algorithm <ref> returns (Q,c) ∈_RS\_R, where _R and _RS are defined as in (<ref>) and (<ref>), respectively.  
+
+
+By the observation preceding the statement, it follows from Propositions <ref> and <ref> that (Q,c) ∈_RS and that (x̂,x̂x̂^T) is an optimal solution of (RS). First, we show that this is the unique optimal solution of (RS). Suppose, for a contradiction, that there exists another optimal solution (x̃, X̃) ∈_RS. Note that, for any A ≽ 0 and B ≽ 0, ⟨ A, B ⟩ = 0 holds if and only if AB = 0. Therefore, it follows from (<ref>) that ĥ - Ĥx̃ = 0. Since Ĥ≻ 0, we obtain x̃ = x̂ by Step 8. By (<ref>), we obtain
+
+    ⟨[    1 x̂^T;   x̂   X̃ ] , [  β̂ ĥ^T;   ĥ   Ĥ ]⟩ = ⟨[    1 x̂^T;   x̂   X̃ ] , [ x̂^T;   -I ]Ĥ[ x̂^T;   -I ]^T ⟩ = ⟨Ĥ, X̂ - x̂x̂^T ⟩ = 0.
+
+Since Ĥ≻ 0 by Step 7 and X̂ - x̂x̂^T ≽ 0, it follows that X̃ = x̂x̂^T, which contradicts our assumption. It follows that (x̂,x̂x̂^T) is the unique optimal solution of (RS), or equivalently, that x̂ is the unique optimal solution of (RS1) given by (<ref>). By Proposition <ref> and (<ref>), we conclude that (Q,c) ∈_RS and that x̂∈ F \ V is the unique optimal solution of (BoxQP). By Corollary <ref>, (Q,c) ∉_R, which completes the proof.
+
+
+Algorithm <ref> can be used to construct an instance in the set _R \_RS. In particular, it is worth noticing that the family of instances used in the proof of Lemma <ref> can be constructed by Algorithm <ref> by simply choosing (û, v̂, Ŵ, Ŷ, Ẑ) = (0,0,0,0,0). In particular, similar to Algorithm <ref>, it is worth noting that any instance constructed by Algorithm <ref> necessarily satisfies Q_kk > 0 for each k ∈𝔹. On the other hand, recall that the SDP-RLT relaxation is always exact for n ≤ 2. Therefore, similar to our discussion about Algorithm <ref>, we conclude that the set of instances that can be constructed by Algorithm <ref> may not necessarily encompass all instances in _R \_RS. 
+
+
+
+§ EXAMPLES AND DISCUSSION
+ 
+
+In this section, we present numerical examples generated by each of the four algorithms given by Algorithms <ref>–<ref>. 
+
+We then close the section with a brief discussion.
+
+
+
+ §.§ Examples
+
+
+In this section, we present instances of (BoxQP) generated by each of the four algorithms given by Algorithms <ref>–<ref>. Our main goal is to demonstrate that our algorithms are capable of generating nontrivial instances of (BoxQP) with predetermined exactness or inexactness guarantees. 
+
+ 
+Let n = 2, 𝕃 = {1}, and 𝕌 = {2} in Algorithm <ref>. Then, by Steps 2–6, we have
+
+    û = [ 0; α ],   v̂ = [ β; 0 ],   Ŵ = [ 0 γ; γ δ ],   Ŷ = [ θ 0; μ ρ ],   Ẑ = [ σ η; η 0 ],
+
+where each of α, β, γ, δ, θ, μ, ρ, σ, η is a nonnegative real number. By Steps 7 and 8, we obtain 
+
+    Q = [   σ - 2 θ γ + η - μ; γ + η - μ   δ - 2 ρ ],    c = [ β + θ + μ - γ;  ρ - α - γ -δ ].
+
+For instance, if we choose θ = ρ = γ = η = μ = 0, σ + δ > 0, α≥ 0, and β≥ 0, then Q ≽ 0, which implies that q(x) is a convex function. If we choose σ = δ = γ = η = μ = 0, θ + ρ > 0, α≥ 0, and β≥ 0, then -Q ≽ 0, which implies that q(x) is a concave function. Finally, if we choose θ = δ = γ = η = μ = 0, σ > 0, ρ > 0, α≥ 0, and β≥ 0, then Q is indefinite, which implies that q(x) is an indefinite quadratic function. For each of the three choices, the RLT relaxation is exact and x̂ = [ 0 1 ]^T is an optimal solution of the resulting instance of (BoxQP). Note that by setting Ĥ = 0 and ĥ = 0 in Algorithm <ref>, the same observations carry over.
+
+
+ 
+Let n = 3, 𝕃 = {1}, 𝔹 = {2}, and 𝕌 = {3} in Algorithm <ref>. Then, by Steps 3–8, we have k = 2 and 
+
+    û = [ 0; 0; α ],   v̂ = [ β; 0; 0 ],   Ŵ = [ 0 0 γ; 0 δ θ; γ θ μ ],   Ŷ = [ ρ 0 0; σ 0 0; η ϵ ζ ],   Ẑ = [ κ λ ν; λ τ 0; ν 0 0 ],
+
+where each of α, β, γ, θ, μ, ρ, σ, η, ϵ, ζ, κ, λ, ν is a nonnegative real number, δ > 0 and τ > 0. By Steps 9 and 10, we obtain
+
+    Q = [   κ - 2 ρ     λ - σ γ + ν - η;     λ - σ     δ + τ     θ - ϵ; γ + ν - η     θ - ϵ   μ - 2 ζ ],    c = [ β + ρ + σ + η - γ;         ϵ - δ - θ; ζ - γ - θ - μ - α ].
+
+If we set each of the parameters α, β, γ, θ, μ, ρ, σ, η, ϵ, ζ, κ, λ, ν to zero, and choose any δ > 0 and τ > 0, then Q ≽ 0, which implies that q(x) is a convex function. On the other hand, if we set each of the parameters α, β, γ, θ, μ, σ, η, ϵ, κ, λ, ν to zero, and choose any δ > 0, τ > 0 and ρ + ζ > 0, then Q is indefinite, which implies that q(x) is an indefinite quadratic function. For each of the two choices, the RLT relaxation is inexact. Recall that an instance generated by Algorithm <ref> cannot have a concave objective function since Q_kk = Ŵ_kk + Ẑ_kk > 0.  
+
+
+ 
+Let n = 3, 𝕃 = {1}, 𝔹 = {2}, and 𝕌 = {3} in Algorithm <ref>. Then, by Steps 2–6, we have 
+
+    û = [ 0; 0; α ],   v̂ = [ β; 0; 0 ],   Ŵ = [ 0 0 γ; 0 0 θ; γ θ μ ],   Ŷ = [ ρ 0 0; σ 0 0; η ϵ ζ ],   Ẑ = [ κ λ ν; λ 0 0; ν 0 0 ],
+
+where each of α, β, γ, θ, μ, ρ, σ, η, ϵ, ζ, κ, λ, ν is a nonnegative real number. By Step 7, Ĥ≻ 0 is arbitrarily chosen. By Step 8, we have ĥ = - Ĥx̂ and β̂= - ĥ^T x̂. By Steps 9 and 10, we therefore obtain
+
+    Q = [   κ - 2 ρ     λ - σ γ + ν - η;     λ - σ         0     θ - ϵ; γ + ν - η     θ - ϵ   μ - 2 ζ ] + Ĥ,    c = [ β + ρ + σ + η - γ;             ϵ - θ; ζ - γ - θ - μ - α ] + ĥ.
+
+If we set each of the parameters α, β, γ, θ, μ, ρ, σ, η, ϵ, ζ, κ, λ, ν to zero, then Q = Ĥ≻ 0, which implies that q(x) is a strictly convex function. On the other hand, if we set each of the parameters α, β, γ, θ, μ, σ, η, ϵ, κ, λ, ν to zero, and choose a sufficiently large ρ + ζ > 0, then Q is indefinite, which implies that q(x) is an indefinite quadratic function. For each of the two choices, x̂ is the unique optimal solution of the resulting instance of (BoxQP) and the SDP-RLT relaxation is exact whereas the RLT relaxation is inexact. Recall that an instance generated by Algorithm <ref> cannot have a concave objective function since Q_kk = Ĥ_kk > 0. Indeed, such an instance of (BoxQP) necessarily has an optimal solution at a vertex whereas Algorithm <ref> ensures that the resulting instance of (BoxQP) has a unique solution x̂∈ F \ V. 
+
+
+
+
+ §.§ Discussion
+
+
+We close this section with a discussion of the four algorithms given by Algorithms <ref>–<ref>. Note that all instances of (BoxQP) can be divided into the following four sets:
+
+    _1     =    {(Q,c) ∈^n ×^n: ℓ^*_R = ℓ^*_RS = ℓ^*}, 
+    _2     =    {(Q,c) ∈^n ×^n: ℓ^*_R <  ℓ^*_RS = ℓ^*}, 
+    _3     =    {(Q,c) ∈^n ×^n: ℓ^*_R =  ℓ^*_RS < ℓ^*}, 
+    _4     =    {(Q,c) ∈^n ×^n: ℓ^*_R <  ℓ^*_RS < ℓ^*}.
+
+
+We clearly have _1 = _R, and any such instance can be constructed by Algorithm <ref>. On the other hand, Algorithm <ref> returns an instance in _2 ∪_3 ∪_4. Any instance in _1 ∪_2 can be constructed by Algorithm <ref>. Finally, Algorithm <ref> outputs an instance in the set _2 = _RS\_R. 
+
+Note that one can generate a specific instance of (BoxQP) with an inexact SDP-RLT relaxation by extending the example in  Section <ref> <cit.>. Let n = 2k + 1 ≥ 3 and consider the instance (Q,c) ∈^n ×^n given by Q = 1/n ee^T - I, where I ∈^n denotes the identity matrix, and c = 0. Since Q is negative semidefinite, the optimal solution of (BoxQP) is attained at one of the vertices. It is easy to verify that any vertex v ∈ F with k (or k + 1) components equal to 1 and the remaining ones equal to zero is an optimal solution, which implies that ℓ^* = 1/2(k^2/n - k). Let x̂ = 1/2 e and 
+
+    X̂ = x̂x̂^T + M̂ = 1/4 ee^T + 1/4(n-1)(n I - ee^T ) = 1/4(1 + 1/n-1) I + 1/4(1 - 1/n-1) ee^T.
+
+
+It is easy to verify that (x̂, X̂) ∈_RS. Therefore, 
+
+    ℓ^*_RS≤1/2⟨ Q, X̂⟩ + c^T x̂ = -n/8.
+
+Using n = 2k + 1, we conclude that ℓ^*_RS < ℓ^*, i.e., the SDP-RLT relaxation is inexact. Finally, this example can be extended to an even dimension n = 2k ≥ 4 by simply constructing the same example corresponding to n = 2k - 1 and then adding a component of zero to each of x̂ and c, and adding a column and row of zeros to each of Q and X̂. 
+
+An interesting question is whether an algorithm can be developed for generating more general instances with inexact SDP-RLT relaxations, i.e., the set of instances given by _3 ∪_4. One possible approach is to use a similar idea as in Algorithms <ref> and <ref>, i.e., designate an optimal solution (x̂,X̂) ∈_RS, which is not in the form of (v,vv^T) for any vertex v ∈ F, and identify the conditions on the other parameters so as to guarantee that (x̂,X̂) is the unique optimal solution of the SDP-RLT relaxation (RS). Note that Lemma <ref> can be used to easily construct an instance of (BoxQP) such that any feasible solution (x̂,X̂) ∈_RS is an optimal solution of (RS). In particular, the condition (<ref>) can be satisfied by simply choosing an arbitrary matrix B ∈^k such that B ≽ 0, and by defining 
+
+    [  β̂ ĥ^T;   ĥ   Ĥ ] = P B P^T,
+
+where P ∈^(n+1) × k is a matrix whose columns form a basis for the nullspace of the matrix 
+
+    [    1 x̂^T;   x̂   X̂ ].
+
+For instance, the columns of P can be chosen to be the set of eigenvectors corresponding to zero eigenvalues. However, this procedure does not necessarily guarantee that (x̂,X̂) ∈_RS is the unique optimal solution of (RS). Therefore, a characterization of the extreme points and the facial structure of _RS may shed light on the algorithmic construction of such instances. We intend to investigate this direction in the near future. 
+
+
+
+§ CONCLUDING REMARKS
+ 
+
+In this paper, we considered RLT and SDP-RLT relaxations of quadratic programs with box constraints. We presented algebraic descriptions of instances of (BoxQP) that admit exact RLT relaxations as well as those that admit exact SDP-RLT relaxations. Using these descriptions, we proposed four algorithms for efficiently constructing an instance of (BoxQP) with predetermined exactness or inexactness guarantees. In particular, we remark that Algorithms <ref>, <ref>, and <ref> can be used to construct an instance of (BoxQP) with a known optimal solution, which may be of independent interest for computational purposes.
+
+In the near future, we intend to investigate the facial structure of the feasible region of the SDP-RLT relaxation and exploit it to develop algorithms for generating instances of (BoxQP) with an inexact SDP-RLT relaxation. 
+
+Another interesting direction is the computational complexity of determining whether, for a given instance of (BoxQP), the RLT or the SDP-RLT relaxation is exact. Our algebraic descriptions do not yield an efficient procedure for this problem. An efficient recognition algorithm may have significant implications for extending the reach of global solvers for (BoxQP).
+
+
+
+
+abbrv
+
+

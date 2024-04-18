@@ -1,0 +1,1145 @@
+
+	
+	
+	
+	
+	Department of Mathematical and Statistical Sciences, University of Alberta, Edmonton, Alberta, Canada T6G 2G1.
+	bhan@ualberta.ca
+	
+	
+	Department of Mathematics, Purdue University, West Lafayette, IN, USA 47907.
+	mmichell@purdue.edu
+	
+	Research supported in part by
+		Natural Sciences and Engineering Research Council (NSERC) of Canada under grant RGPIN-2019-04276, NSERC Postdoctoral Fellowship, and the Digital Research Alliance of Canada.
+	
+	addtoresetequationsection 
+	The Helmholtz equation is challenging to solve numerically due to the pollution effect, which often results in a huge ill-conditioned linear system. In this paper, we present a high order wavelet Galerkin method to numerically solve an electromagnetic scattering from a large cavity problem modeled by the 2D Helmholtz equation. The high approximation order and the sparse stable linear system offered by wavelets are useful in dealing with the pollution effect. By using the direct approach presented in our past work [B. Han and M. Michelle, Appl. Comp. Harmon. Anal., 53 (2021), 270-331], we present various optimized spline biorthogonal wavelets on a bounded interval. We provide a self-contained proof to show that the tensor product of such wavelets forms a 2D Riesz wavelet in the appropriate Sobolev space. Compared to the coefficient matrix of a standard Galerkin method, when an iterative scheme is applied to the coefficient matrix of our wavelet Galerkin method, much fewer iterations are needed for the relative residuals to be within a tolerance level. Furthermore, for a fixed wavenumber, the number of required iterations is practically independent of the size of the wavelet coefficient matrix. In contrast, when an iterative scheme is applied to the coefficient matrix of a standard Galerkin method, the number of required iterations doubles as the mesh size for each axis is halved. The implementation can also be done conveniently thanks to the simple structure, the refinability property, and the analytic expression of our wavelet bases.
+	
+	
+	[2020]35J05, 65T60, 42C40, 41A15
+	Wavelet Galerkin Method for an Electromagnetic Scattering Problem
+    Michelle Michelle
+    
+=================================================================
+
+arabic
+	
+	
+
+§ INTRODUCTION AND MOTIVATIONS
+
+	In this paper, we consider an electromagnetic scattering from a large cavity problem modeled by the following 2D Helmholtz equation
+	
+	
+		   Δu + ^2  u = f   in   Ω:=(0,1)^2,
+
+		   u=0   on   ∂Ω\Γ,
+
+		   ∂u/∂ = 𝒯(u) + g   on   Γ,
+	
+	where > 0 is a constant wavenumber, Γ:=(0,1) ×{1}, f ∈ L_2(Ω), g ∈ H^1/2(Γ),  is the unit outward normal, and
+
+	
+	𝒯(u):=/2 _0^1 1/|x-x'|H^(1)_1(|x-x'|) u(x',1) dx',
+	
+where  denotes the Hadamard finite part integral, and H^(1)_1 is the Hankel function of the first kind of degree 1. In practice, such a scattering problem is often encountered in stealth/tracking technology. The Radar Cross Section (RCS) measures the detectability of an object by a radar system. The RCS of cavities in an object (e.g., a jet engine’s inlet ducts, exhaust nozzles) contributes the most to the overall RCS of an object. Therefore, accurate measurements of the RCS of these cavities are important. This is where numerical methods for the scattering problem come into play.
+	
+	The Helmholtz equation is challenging to solve numerically due to its sign indefinite (non-coercive) standard weak formulation and the pollution effect. As the wavenumber increases, the solution becomes more oscillating and the mesh size requirement becomes exponentially demanding. Consequently, the linear system associated with the discretization is often huge and ill-conditioned. Iterative schemes are usually preferred over direct solvers due to the expensive computational cost of the latter. It has been shown that high order schemes are better in tackling the pollution effect (e.g, <cit.>). Various high order finite difference, Galerkin, and spectral methods have been proposed in <cit.>. In this paper, we are interested in using a wavelet basis to numerically solve (<ref>) due to the following advantages. Our wavelet bases have high approximation orders, which help in alleviating the pollution effect. They produce a sparse coefficient matrix, which is more stable than that of a standard Galerkin method. The sparsity aids in the efficient storage of the coefficient matrix, while the enhanced stability of the linear system results in a much fewer number of iterations needed for iterative schemes to be within a tolerance level.
+	
+	
+
+ §.§ Preliminaries on wavelets
+
+	Wavelets are sparse multiscale representation systems, which have been successfully used in various applications such as data science, image/signal processing, and numerical analysis. They have been used to characterize various function spaces such as Sobolev and Besov spaces. Wavelets are built from refinable functions, which are functions that can be expressed as scaled and shifted versions of themselves. A good example of refinable functions is the B-spline function of order m (i.e, B_m for m∈), where
+	
+	
+    B_1:=χ_(0,1]    
+    	B_m:=B_m-1*B_1=∫_0^1 B_m-1(·-x) dx.
+
+	
+	Note that B_m∈ C^m-2(), its support is [0,m], and B_m|_(k,k+1) is a nonnegative polynomial of degree at most m-1 for all k∈. Another example is the Hermite cubic splines. Next, we present some formal definitions. The Fourier transform is defined by f(ξ):=∫_ f(x) e^- xξ d x, ξ∈ for f∈1 and is naturally extended to square integrable functions in 2. Recall that the Sobolev space τ with τ∈ consists of all tempered distributions f on  such that ∫_ |f(ξ)|^2(1+|ξ|^2)^τ dξ<∞. If τ=0, then H^0()=L_2(). Let ϕ:={ϕ_1, …, ϕ_r}^𝖳 and ψ:={ψ_1, …, ψ_s}^𝖳 be in H^τ(ℝ) with τ∈. For J ∈, define the multiwavelet affine system in H^τ(ℝ) by
+	
+	
+    𝖠𝖲^τ_J(ϕ;ψ):=  {ϕ^ℓ,τ_J;k: k ∈ℤ,  ℓ =1,…,r }∪{ψ^ℓ,τ_j;k: j ≥ J, k ∈ℤ, ℓ=1,…, s },
+
+	
+	where ϕ^ℓ,τ_J;k:=2^J(1/2 - τ)ϕ_ℓ(2^J·-k) and ψ^ℓ,τ_j;k:=2^j(1/2 - τ)ψ_ℓ(2^j·-k). Let 𝖠𝖲_J(ϕ;ψ):=𝖠𝖲^0_J(ϕ;ψ). We say that {ϕ;ψ} is a Riesz multiwavelet in H^τ(ℝ) if 𝖠𝖲^τ_J(ϕ;ψ) is a Riesz basis for H^τ(ℝ). I.e.,
+	(1) the linear span of 𝖠𝖲^τ_J(ϕ;ψ) is dense in H^τ(ℝ), and (2) there exist C_1, C_2 >0 such that
+	
+	
+    C_1 ∑_η∈^τ_J(ϕ;ψ) |c_η|^2 ≤∑_η∈^τ_J(ϕ;ψ) c_ηη^2_H^τ()≤ C_2 ∑_η∈^τ_J(ϕ;ψ) |c_η|^2
+
+	
+	for all finitely supported sequences {c_η}_η∈^τ_J(ϕ;ψ). If r=1, we often refer to a Riesz multiwavelet as a scalar Riesz wavelet. Throughout this paper, we shall use wavelets to refer to both scalar wavelets and multiwavelets. Let ϕ̃:={ϕ̃_1, …, ϕ̃_r}^𝖳 and ψ̃:={ψ̃_1, …, ψ̃_s}^𝖳 be in H^-τ(ℝ) with τ∈. We call ({ϕ̃;ψ̃},{ϕ;ψ}) a biorthogonal multiwavelet in (H^-τ(),H^τ()) (e.g., see <cit.>) if (1) {ϕ̃;ψ̃} and {ϕ;ψ} are Riesz multiwavelets in H^-τ(ℝ) and H^τ(ℝ) respectively, and (2) ^-τ_J(ϕ̃;ψ̃) and ^τ_J(ϕ;ψ) are biorthogonal to each other; i.e.,
+	
+    ⟨ h,h̃⟩ =1   and  ⟨ h,g̃⟩ =0,   ∀ h, g ∈^τ_J(ϕ;ψ), h g,
+
+where g̃ is the unique element in ^-τ_J(ϕ̃; ψ̃)
+corresponding to a given element
+g∈^τ_J(ϕ;ψ) such that g,g̃=1.
+	Then the following wavelet representations hold
+	
+	
+    f = ∑_k ∈ℤ∑_ℓ=1^r⟨ f, ϕ̃^ℓ,-τ_J;k⟩ϕ^ℓ,τ_J;k + ∑_j=J^∞∑_k∈∑_ℓ =1^s⟨ f, ψ̃^ℓ,-τ_j;k⟩ψ^ℓ,τ_j;k,    f ∈ H^τ()
+
+	
+	with the above series converging unconditionally in H^τ(). For a compactly supported (vector) function ψ, we say that ψ has m vanishing moments if ∫_ x^j ψ(x)dx=0 for all j=0,…,m-1. Furthermore, we define (ψ):=m with m being the largest of such an integer.
+	
+	
+
+ §.§ Advantages of spline wavelets and literature on the construction of spline wavelets on an interval
+
+	We refer interested readers to <cit.> and references therein for a review of wavelet-based methods in solving numerical PDEs. One common approach to handle a multi-dimensional problem (e.g., the model problem in (<ref>)) is to form a 2D Riesz wavelet by taking the tensor product of 1D Riesz wavelets on a bounded interval. Some advantages of using spline wavelets in numerical PDEs are their analytic expressions and sparsity. In order to effectively solve a linear system with an N× N coefficient matrix A, where N ∈, using an iterative scheme, the coefficient matrix A should generally have the following two key properties:
+	
+		
+  (i) The condition numbers of the matrix A should be relatively small and uniformly bounded.
+		
+  (ii) The N × N matrices A have certain desirable/exploitable structures. 
+		
+	
+	To achieve item (i), Riesz wavelets on the interval [0,1] have been known to be able to theoretically achieve uniformly bounded condition numbers of their induced coefficient matrices A. However, to achieve practical condition numbers, we have to construct wavelets ψ as in <cit.> such that the condition numbers of _0(ϕ;ψ) are as small as possible, while it is also critical to construct as a few as possible boundary wavelets with simple structures such that the condition numbers of the induced Riesz wavelets on the interval [0,1] are not significantly larger than that of _0(ϕ;ψ) in a given Sobolev space. On the other hand, for general compactly supported Riesz wavelets on [0,1], one can only expect to achieve the suboptimal sparsity (N log N) for N × N matrices A. For item (ii), sparsity (i.e., the numbers of all nonzero entries of A are (N)) is one desirable feature, especially from the storage point of view. The sparsity can only be achieved by considering a spline refinable vector function ϕ such that ϕ is a piecewise polynomial of degree less than m and its derived wavelet ψ must have at least order m sum rules, i.e., (ψ)≥ m. This is  because the entries of the coefficient matrix A are often linear combinations of ψ^(j)_n;k,ψ^(j)_n';k' for j=0,…,J with n,n'∈ and k,k'∈, e.g., J=1 for the problem in (<ref>) which we consider in this paper. If ψ^(j)_n;k, restricted on the support of
+	ψ^(j)_n';k', is just one piece of some polynomial of degree less than m, then the condition (ψ)≥ m guarantees that ψ^(j)_n;k,ψ^(j)_n';k'=0 for a truly sparse coefficient matrix A in item (ii).
+	In this paper, we are particularly interested in constructing spline Riesz wavelets {ϕ;ψ} and adapting them to the interval [0,1] such that the spline refinable vector function ϕ is a piecewise polynomial of degree less than m and the wavelet ψ has at least order m vanishing moments.
+	
+	We briefly review some related key studies on the construction of spline wavelets on a bounded interval. For comprehensive discussions on existing constructions of wavelets on a bounded interval (not limited to splines), we refer interested readers to <cit.>. Compactly supported biorthogonal B-spline wavelets based on <cit.> were adapted to [0,1] in the pivotal study <cit.>. Subsequent studies were done to address the shortcomings (e.g., high condition numbers and many boundary elements) of the construction presented in <cit.> (see <cit.>). It is important to mention that some infinitely supported B-spline wavelets have also been constructed on [0,1] (see <cit.> and references therein). However, the present paper only focuses on compactly supported biorthogonal wavelets, since we want to utilize the general construction in <cit.>. To the best of our knowledge, a general construction for infinitely supported biorthogonal wavelets on a bounded interval is not yet available. An example of compactly supported biorthogonal spline multiwavelets was constructed on [0,1] in the key study <cit.>. For compactly supported biorthogonal spline multiwavelets with symmetry, we can employ the approach presented in <cit.> to construct wavelets on [0,1]. However, one drawback of the previous construction is that the boundary wavelets have reduced vanishing moments. The direct approach in <cit.>, on the other hand, yields boundary wavelets that have the same vanishing moments as the interior wavelets, which allows us to maximally preserve the sparsity of the system. More importantly, it gives us all possible compactly supported boundary wavelets with or without prescribed boundary conditions, and the calculation does not explicitly involve the duals.
+	
+	
+
+ §.§ Main contributions of this paper.
+ We present a high order wavelet Galerkin method to solve the model problem in (<ref>). First, we present several optimized B-spline scalar wavelets and spline multiwavelets on [0,1], which can be used to numerically solve various PDEs. All spline wavelets presented in this paper are constructed by using our direct approach in <cit.>, which allows us to find all possible biorthogonal multiwavelets in L_2([0,1]) from any compactly supported biorthogonal multiwavelets in L_2(). Many existing constructions (e.g., <cit.>) are special cases of <cit.>. Since all possible biorthogonal multiwavelets in L_2([0,1]) can be found, we can obtain an optimized wavelet on [0,1] with a simple structure that is well-conditioned through an optimization procedure. We emphasize that it is insufficient to only construct a 1D Riesz wavelet on an interval. It is essential that we optimize the boundary wavelets such that their structures remain simple and the coefficient matrix associated with the discretization of a problem is as stable as possible. 
+	
+	Second, we provide self-contained proofs showing that all the constructed wavelets on [0,1] form 1D Riesz wavelets in the appropriate Sobolev space; additionally, via the tensor product, they form 2D Riesz wavelets in the appropriate Sobolev space. In the literature (e.g. see <cit.>), the Riesz basis property is only guaranteed under the assumption that both the Jackson and Bernstein inequalities for the wavelet system hold, which may not be easy to establish (particularly the Bernstein inequality). Our proof does not involve the Jackson and Bernstein inequalities. We provide a direct and relatively simple proof, which does not require any unnecessary conditions on the wavelet systems. 
+	
+	Third, our experiments show that the coefficient matrix of our wavelet basis is much more stable than that of a standard Galerkin method. The smallest singular value of the wavelet coefficient matrix has a lower bound instead of becoming arbitrarily small as the matrix size increases. Compared to the standard Galerkin coefficient matrix, when an iterative scheme is applied to the wavelet coefficient matrix, much fewer iterations are needed for the relative residuals to be within a tolerance level. For a fixed wavenumber, the number of required iterations is practically independent of the size of the wavelet coefficient matrix; i.e, the number of iterations is bounded above. In contrast, the number of required iterations for the standard Galerkin coefficient matrix doubles as the mesh size for each axis is halved. Spline multiwavelets generally have shorter supports compared to B-splines wavelets. The former requires much fewer boundary wavelets and their structures are much simpler than those of B-spline wavelets. Consequently, the boundary optimization is done more easily in multiwavelets. 
+	
+	Thus, we tend to favour the use of spline multiwavelets over B-spline wavelets. Finally, the refinability structure of our wavelet basis makes the implementation of our wavelet Galerkin method efficient.
+	
+	
+
+ §.§ Organization of this paper.
+ In <ref>, we describe the derivation of the model problem in (<ref>). In <ref>, we present some optimized 1D Riesz wavelets on [0,1]. We also present a self-contained proof in <ref> showing that the wavelets on intervals constructed using our approach form a 2D Riesz basis in the appropriate Sobolev space through the tensor product. In <ref>, we discuss the implementation details of our wavelet Galerkin method. In <ref>, we present our numerical experiments showcasing the performance of our wavelets.
+	
+	
+
+§ MODEL DERIVATION
+
+	
+	We summarize the derivation of the model problem in (<ref>) as explained in <cit.>. Several simplifying physical assumptions are needed. We assume that the cavity is embedded in an infinite ground plane. The ground plane and cavity walls are perfect electric conductors (PECs). The medium is non-magnetic with a constant permeability, μ, and a constant permittivity, ε. Furthermore, we assume that no currents are present and the fields are source free. Let E and H respectively denote the total electric and magnetic fields. So far, our current setup can be modelled by the following Maxwell's equation with time dependence e^-ω t, where ω stands for the angular frequency
+	
+	
+		    ∇×E - ωμH =0,
+
+		    ∇×H + ωεE=0.
+	
+	Since we assume that the ground plane and cavity walls are PECs, we equip the above problem with the boundary condition × E=0 on the surface of PECs, where  is again the unit outward normal. We further assume that the medium and the cavity are invariant with respect to the z-axis. The cross-section of the cavity, denoted by Ω, is rectangular. 
+	
+	Meanwhile, 
+	Γ corresponds to the top of the cavity or the aperture. We restrict our attention to the transverse magnetic (TM) polarization. This means that the magnetic field is transverse/perpendicular to the z-axis; moreover, the total electric and magnetic fields take the form E=(0,0,u(x,y)) and H=(H_x,H_y,0) for some functions u(x,y), H_x, and H_y. Plugging these particular E,H into (<ref>) and recalling the boundary condition, we obtain the 2D homogeneous Helmholtz equation defined on the cavity and the upper half space with the homogeneous Dirichlet boundary condition at the surface of PECs, and the scattered field satisfying the Sommerfeld's radiation boundary condition at infinity. By using the half-space Green's function with homogeneous Dirichlet boundary condition or the Fourier transform, we can introduce a non-local boundary condition on Γ such that the previous unbounded problem is converted to a bounded problem. See <ref> for an illustration.
+	
+	For the standard scattering problem, we want to determine the scattered field u^s in the half space and the cavity given an incident plane wave u^inc=e^α x-β (y-1), where α=sin(θ), β=cos(θ), and the incident angle θ∈ (-π/2,π/2). In particular, u^s=u-u^inc+e^α x+β (y-1), where u is found by solving the following problem
+	
+    Δ u + ^2 ε_r u = 0   in  Ω,
+       u=0   on  ∂Ω\Γ,
+       ∂ u/∂ = 𝒯(u) - 2β e^α x  on  Γ,
+
+	where ε_r is the medium's relative permittivity and the non-local boundary operator 𝒯 is defined in (<ref>). In the model problem (<ref>), we assume that ε_r=1, and allow the source and boundary data to vary. For simplicity, we let Ω = (0,1)^2 in our model problem and numerical experiments. 
+	
+	
+	
+	
+	
+
+§ 1D LOCALLY SUPPORTED SPLINE RIESZ WAVELETS IN L_2([0,1])
+
+	
+	In this section, we construct Riesz wavelets ℬ^x and ℬ^y in L_2([0,1]) such that all elements in ℬ^x and ℬ^y satisfy the homogeneous Dirichlet boundary condition at the endpoint 0. All elements in ℬ^x also satisfy the homogeneous Dirichlet boundary condition at the other endpoint 1. Without loss of generality, we restrict our attention to the unit interval [0,1]. We denote the set of all finitely supported sequences u={u(k)}_k∈: →^r× s by 0rs. The Fourier series of u={u(k)}_k∈∈0rs is defined by
+	u(ξ):=∑_k∈ u(k) e^-  kξ for ξ∈, which is an r× s matrix of 2π-periodic trigonometric polynomials. In the literature, an element in 0rs is usually called a (matrix-valued) mask or filter. We recall a fundamental result of biorthogonal wavelets in L_2().
+	
+	  (<cit.> and <cit.>)
+		Let ϕ,ϕ̃ be r× 1 vectors of compactly supported distributions and ψ,ψ̃ be s× 1 vectors of compactly supported distributions on . Then ({ϕ̃;ψ̃},{ϕ;ψ}) is a biorthogonal wavelet in 2 if and only if the following are satisfied
+		
+			
+  (1) ϕ,ϕ̃∈ (2)^r and ϕ(0)^ϕ̃(0)=1.
+			
+  (2) ϕ and ϕ̃ are biorthogonal to each other: ϕ,ϕ̃(·-k)= (k) I_r for all k∈.
+			
+  (3) There exist low-pass filters a,ã∈0rr and high-pass filters
+			b,b̃∈0sr such that 
+			
+			
+    ϕ=2∑_k∈ a(k)ϕ(2·-k),    ψ=2∑_k∈ b(k)ϕ(2·-k), 
+    				
+       ϕ̃=2∑_k∈ã(k)
+    				 ϕ̃(2·-k),    ψ̃=2∑_k∈b̃(k)
+    				 ϕ̃(2·-k),
+
+			
+			and ({ã;b̃},{a;b}) is a biorthogonal wavelet filter bank, i.e., s=r and
+			
+			
+    [ ã(ξ)    ã(ξ+π)
+    b̃(ξ)    b̃(ξ+π)
+    			]
+    			[ a(ξ)^   b(ξ)^
+    a(ξ+π)^   b(ξ+π)^]
+    			=I_2r,     ξ∈.
+
+			
+			
+  (4) Both _0(ϕ;ψ) and _0(ϕ̃;ψ̃) are Bessel sequences in 2; i.e., there exists a positive constant C such that
+			
+    ∑_h∈_0(ϕ;ψ) | f, h|^2≤ Cf^2_2    ∑_h̃∈_0(ϕ̃;ψ̃) | f, h̃|^2≤ Cf^2_2,    ∀  f∈2.
+
+		
+	
+
+Because all ϕ, ψ and ϕ̃, ψ̃ are assumed to have compact support in <ref>, it is known (e.g., <cit.> and <cit.>) that item (4) of <ref> can be replaced by
+
+
+  (4') ψ(0)=0 and ψ̃(0)=0, i.e., every element in ψ and ψ̃ has at least one vanishing moment.
+
+
+If
+ã(ξ)a(ξ)^+
+ã(ξ+π)a(ξ+π)^=I_r, then ã is called a dual mask of a.
+A  filter a∈0rr has order m sum rules with a (moment) matching filter ∈01r if (0) 0 and
+	
+	
+    [(2·)a]^(j)(0)=^(j)(0)
+    	     [(2·)a(·+π)]^(j)(0)=0,    ∀  j=0,…,m-1.
+
+	
+	More specifically, we define (a)=m with m being the largest such nonnegative integer.
+For any finitely supported matrix mask a∈0rr and m∈, if the mask a has at least one finitely supported dual mask, then <cit.> guarantees that there exists a finitely supported dual mask ã of a such that (ã)≥ m and all such finitely supported dual masks ã∈0rr can be constructed via the coset-by-coset (CBC) algorithm in <cit.> (also see <cit.>). Consequently, we can construct a biorthogonal wavelet filter bank ({ã;b̃},{a;b}) such that (b)=(ã)≥ m.
+If ϕ is a refinable vector function with mask a∈0rr, then we often normalize a matching filter  by (0)ϕ(0)=1.
+
+	The main tool used to construct a 1D Riesz wavelet on [0,1] is <cit.>. We outline its main ideas here. We begin by constructing a 1D Riesz wavelet on [0,∞). Define _j(H):= span{f(2^j ·):f ∈ H}, j ∈ and H ⊆ L_2(), where the overhead bar denotes closure in L_2(). Suppose we are given a compactly supported biorthogonal multiwavelet ({ϕ̃;ψ̃},{ϕ;ψ}) in L_2(). We form the set Φ := {ϕ^L}∪{ϕ(· -k): k ≥ n_ϕ}, where ϕ^L is a compactly supported left boundary refinable function satisfying desired boundary conditions and n_ϕ is a known integer, which is picked such that we retain as many interior refinable functions as possible. Next, we form the set Ψ:={ψ^L}∪{ψ(·-k):k ≥ n_ψ}, where n_ψ is a known integer, which is picked such that we retain as many interior wavelets as possible and ψ^L is the left boundary wavelet to be constructed. We need to make sure the following conditions hold. First, ψ^L⊆{ϕ^L(2·)}∪{ϕ(2· -k):n_ϕ≤ k < m_ϕ} for some m_ϕ∈, and ψ^L satisfies desired vanishing moments and homogeneous boundary conditions. Second, ψ^L is a basis for the finite-dimensional quotient space _1(Φ)/_0(Φ∪{ψ(· -k):k ≥ n_ψ}). Third, {ϕ^L(2·)}∪{ϕ(2·-k) : n_ϕ≤ k < m_ϕ} are finite linear combinations of elements in Φ∪Ψ. Then, the following relation must hold: ϕ^L(2·) = Ã_L^ϕ^L + B̃_L^ψ^L, where the symbol ∘ on the top represents a new vector function that is formed by appending the first few interior ϕ to ϕ^L and the first few interior ψ to ψ^L, and Ã_L^, B̃_L^ are known matrices. As long as the spectral radius of Ã_L is less than 2^-1/2, then the dual left boundary elements are well-defined compactly supported functions in L_2([0,∞)), and
+	 _0(Φ̃;Ψ̃)_[0,∞) and _0(Φ;Ψ)_[0,∞) are biorthogonal Riesz bases of L_2([0,∞)), where Φ̃:= {ϕ̃^L}∪{ϕ̃(·-k):k≥ n_ϕ̃}, Ψ̃:= {ψ̃^L}∪{ψ̃(·-k):k≥ n_ψ̃}, and  n_ϕ̃,n_ψ̃ are known integers. We note that the dual refinable functions and wavelets are not explicitly involved in the actual construction. Thus, the computation is extremely convenient. The right boundary refinable function ϕ^R and wavelet ψ^R can be obtained by using the same procedure as above but applied to the reflected biorthogonal multiwavelet ({ϕ̃(-·);ψ̃(-·)},{ϕ(-·);ψ(-·)}). Afterwards, we can obtain a 1D Riesz wavelet in L_2([0,1]) by appealing to <cit.>.
+	 	
+	The previous procedure allows us to find all possible boundary wavelets, which serve as the basis of the finite dimensional quotient space mentioned earlier. For our wavelet basis on [0,1], we aim to keep the maximum number of interior elements, introduce the minimum number of boundary elements, and keep the support length of these boundary elements as short as possible. In order to improve the stability of the wavelet basis, we can find linear combinations of boundary wavelets by simultaneously minimizing the condition numbers of the matrices of inner products corresponding to our 1D wavelet basis and its first derivative. This optimization procedure is a heuristic way to make the coefficient matrix associated with the 2D wavelet basis (formed by the tensor product of 1D wavelet bases) is as stable as possible. At this moment, we do not know any systematic optimization procedure, which yields globally optimal linear combinations, and consequently the best possible wavelet basis on [0,1]. This warrants further investigation. There may also be other ways to further improve the stability of a wavelet basis (i.e., to reduce its condition number) such as orthonormalizing the coarsest, and introducing more boundary elements by keeping fewer interior elements. However, we do not pursue those directions in this paper. 
+	 	
+	In the following examples, we denote f_j;k:=2^j/2f(2^j·-k). Given a refinable function ϕ, define (ϕ):=sup{τ∈: ϕ∈ (H^τ())^r}. We include the technical quantity (a), whose definition can be found in <cit.>, and is closely related to the smoothness of a refinable vector function ϕ via the inequality (ϕ) ≥(a). We define fsupp(ϕ) to be the shortest interval with integer endpoints such that ϕ vanishes outside fsupp(ϕ). The superscript bc in the left boundary wavelet ψ^L,bc means ψ^L,bc satisfies the homogeneous Dirichlet boundary condition at the left endpoint 0; i.e., ψ^L,bc(0)=0. Since ψ^R,bc=ψ^L,bc(1-·), we have ψ^R,bc(1)=0. The same notation holds for ϕ^L,bc and ϕ^R,bc. 
+	
+	We do not include any information on the dual boundary refinable functions and wavelets in the following examples, since they do not play an explicit role in the Galerkin scheme. 
+	
+	
+
+ §.§ Scalar B-spline Wavelets on [0,1]
+
+	We present three B-spline wavelets on [0,1].
+	
+	Consider the scalar biorthogonal wavelet ({ϕ̃;ψ̃},{ϕ;ψ}) in <cit.> (see also <cit.>) with ϕ(0)=ϕ̃(0)=1 and a biorthogonal wavelet filter bank ({ã;b̃},{a;b})  given by
+	
+    a=   {14,12,14}_[-1,1],    b={-18,-14,34,-14,-18}_[-1,3],
+    ã=   {-18, 14, 34, 14, -18}_[-2,2],   b̃={-14, 12, -14}_[0,2].
+
+	The analytic expression of ϕ is ϕ:=(x+1)χ_[-1,0) + (1-x)χ_[0,1]. Note that fsupp(ϕ)=[-1,1], fsupp(ψ)=fsupp(ψ̃)=[-1,2], and fsupp(ϕ̃)=[-2,2]. Furthermore, (a)=1.5, (ã) ≈ 0.440765, and (a)=(ã)=2. Let ϕ^L:=ϕχ_[0,∞)=ϕ^L(2·) + 12ϕ(2·-1). The direct approach in <cit.> yields
+	
+    ψ^L = ϕ^L(2·) - 56ϕ(2·-1) + 13ϕ(2· -2)
+    	  and  ψ^L,bc =  12ϕ(2·-1) - ϕ(2·-2) + 12ϕ(2·-3).
+
+	For J_0 ≥ 2 and j ≥ J_0, define
+	
+    Φ^x_J_0 := {ϕ_J_0;k: 1≤ k ≤ 2^J_0-1},
+    	  Ψ^x_j := {ψ^L,bc_j;0}∪{ψ_j;k:1≤ k ≤ 2^j-2}∪{ψ^R,bc_j;2^j-1},
+
+	where ψ^R,bc=ψ^L,bc(1-·), and
+	
+    Φ^y_J_0 := Φ^x_J_0∪{ϕ^R_J_0;2^J_0-1},   Ψ^y_j := (Ψ^x_j\{ψ^R,bc_j;2^j-1}) ∪{ψ^R_j;2^j-1},
+
+	where ϕ^R=ϕ^L(1-·) and ψ^R=ψ^L(1-·). Then, ℬ^x:=Φ^x_J_0∪{Ψ_j^x : j≥ J_0} and ℬ^y:=Φ^y_J_0∪{Ψ_j^y : j≥ J_0} with J_0 ≥ 2 are Riesz wavelets in L_2([0,1]).
+	
+	
+	See <ref> for their generators. 
+		
+		
+	
+		
+ 	 
+ 	Consider a biorthogonal wavelet ({ϕ̃;ψ̃},{ϕ;ψ}) with ϕ(0) = ϕ̃(0) =1 in <cit.> and a biorthogonal wavelet filter bank ({ã;b̃},{a;b}) given by
+ 	
+ 	
+    a     = {18,38,38,18}_[-1,2],    b={364,964,-764,-4564,4564,764,-964,-364}_[-3,4],
+    ã    = {364,-964,-764,4564,4564,-764,-964,364}_[-3,4],   b̃ = {18,-38,38,-18}_[-1,2].
+
+ 	
+ 	The analytic expression of ϕ is ϕ:=12(x+1)^2 χ_[-1,0) + 12(-2x^2 +2x + 1) χ_[0,1) + 12(-2+x)^2 χ_[1,2]. Note that fsupp(ϕ) = [-1,2], fsupp(ψ)=fsupp(ψ̃)=[-2,3], and fsupp(ϕ̃)=[-3,4]. Furthermore, (a)=2.5, (ã) ≈ 0.175132, and (a)=(ã)=3. Let ϕ^L:=(ϕ(·+1) + ϕ)χ_[0,∞) = ϕ^L + 34ϕ(2· -1) + 14ϕ(2· -2) and ϕ^L,bc := 12(-ϕ(· + 1) +ϕ)χ_[0,∞) = 12ϕ^L,bc(2·) + 38ϕ(2· -1) + 18ϕ(2· -2). The direct approach in <cit.> yields
+ 	
+ 	
+    ψ^L    = ϕ^L(2·) - 114ϕ(2· -1) + 3112ϕ(2· -2) - 56ϕ(2· -3),
+    ψ^L,bc1    = 2ϕ^L,bc(2·) - 4730ϕ(2· -1) + 1310ϕ(2· -2) - 25ϕ(2· -3),
+    ψ^L,bc2    = 2ϕ(2· -1)  - 6 ϕ(2· -2) + 6 ϕ(2·-3) - 2ϕ(2·-4).
+
+	
+	
+	For J_0 ≥ 2 and j ≥ J_0, define
+	
+	
+    Φ^x_J_0 := {ϕ^L,bc_J_0;0}∪{ϕ_j;k:1≤ k ≤ 2^J_0-2}∪{ϕ^R,bc_J_0;2^J_0-1},   and
+       Ψ^x_j := {ψ^L,bc1_j;0,ψ^L,bc2_j;0}∪{ψ_j;k: 2≤ k ≤ 2^j-3}∪{ψ^R,bc1_j;2^j-1,ψ^R,bc2_j;2^j-1},
+
+	where ϕ^R,bc = ϕ^L,bc(1-·), ψ^R,bci = ψ^L,bci(1-·) for i=1,2, and
+	
+	
+    Φ^y_J_0 := Φ^x_J_0∪{ϕ^R_J_0;2^J_0-1},   Ψ^y_j := (Ψ^x_j \{ψ^R,bc2_j;2^j-1}) ∪{ψ^R_j;2^j-1},
+
+	
+    where ϕ^R = ϕ^L(1-·) and ψ^R = ψ^L(1-·). Then, ℬ^x:=Φ^x_J_0∪{Ψ_j^x : j≥ J_0} and
+    
+    ℬ^y:=Φ^y_J_0∪{Ψ_j^y : j≥ J_0} with J_0 ≥ 2 are Riesz wavelets in L_2([0,1]). 
+    
+    See <ref> for their generators.
+
+    
+		
+
+	
+
+	 
+		Consider a biorthogonal wavelet ({ϕ̃;ψ̃},{ϕ;ψ}) with ϕ(0) = ϕ̃(0) =1 and a biorthogonal wavelet filter bank ({ã;b̃},{a;b}) given by
+		
+		
+    a     = {116,14,38,14,116}_[-2,2],    b={-1128,-132,-1256,964,31256,-1132,-2364,3132,-2364,-1132,31256,964,-1256,-132,-1128}_[-6,8],
+    ã    ={1128,-132,1256,964,-31256,-1132,2364,3132,2364,-1132,-31256,964,1256,-132,1128}_[-7,7],   b̃ = {116,-14,38,-14,116}_[-1,3].
+
+		
+		The analytic expression of ϕ is ϕ:=16(x+2)^3χ_[-2,-1) + 16(-3x^3 - 6x^2 + 4)χ_[-1,0) + 16(3x^3 - 6x^2 + 4)χ_[0,1) - 16(-2+x)^3χ_[1,2]. Note that fsupp(ϕ)=[-2,2], fsupp(ψ)=fsupp(ψ̃)=[-4,5], and fsupp(ϕ̃)=[-7,7]. Furthermore, (a)=3.5, (ã)=0.858627, and (a) = (ã) = 4. Let ϕ^L = (ϕ(· + 1) + ϕ + ϕ(· -1)) χ_[0,∞), ϕ^L,bc1 = (-ϕ(· + 1) + ϕ(· -1)) χ_[0,∞), and ϕ^L,bc2=(23ϕ(· + 1) -13ϕ + 23ϕ(· -1)) χ_[0,∞). Also,
+		
+		
+    [ϕ^L,ϕ^L,bc1,ϕ^L,bc2]^    =diag(1,12,14)[ϕ^L(2·),ϕ^L,bc1(2·),ϕ^L,bc2(2·)]^ + [78,34,1124]^ϕ(2· -2)
+          + [12,12,13]^ϕ(2· -3) + [18,18,112]^ϕ(2· -4).
+
+	 	
+	 	The direct approach in <cit.> yields
+	 	
+	 	
+    ψ^L    :=ϕ^L(2·) - 52769ϕ^L,bc1(2·) + 27823ϕ^L,bc2(2·) -6169ϕ(2· - 2) + 2233943470ϕ(2· - 3) -47113173880ϕ(2· - 4)
+          + 383221735ϕ(2· -5) - 18509173880ϕ(2· -6) + 269ϕ(2· -7),
+    ψ^L,bc1    := 18ϕ(2· -3) - 12ϕ(2· -4) + 34ϕ(2· -5) - 12ϕ(2· -6) + 18ϕ(2· -7).
+    ψ^L,bc2    := 18ϕ(2· -2) - 12ϕ(2· -3) + 34ϕ(2· -4) - 12ϕ(2· -5) + 18ϕ(2· -6),
+    ψ^L,bc3    := -312500ϕ^L,bc1(2·) + 1475000ϕ^L,bc2(2·) - 38180000ϕ(2· -2) + 45173600000ϕ(2· -3) -1691800000ϕ(2· -4)
+          + 17571800000ϕ(2· -5) - 34933600000ϕ(2· -6) + 2180000ϕ(2· -7),
+    ψ^L,bc4    := 6125ϕ^L,bc1(2·) - 3072500ϕ^L,bc2(2·) + 186980000ϕ(2· -2) + 34532800000ϕ(2· -3) -661175000ϕ(2· -4)
+          - 86631400000ϕ(2· -5) -295212800000ϕ(2· -6) + 35116000ϕ(2· -7) -698000ϕ(2· -8),
+    ψ^L,bc5    := 111000ϕ^L,bc1(2·) - 4125ϕ^L,bc2(2·) + 695000ϕ(2· - 2) - 1361126000ϕ(2· - 3) - 69311260000ϕ(2· - 4)
+          + 12163630000ϕ(2· -5) - 9253630000ϕ(2· -6) + 195000ϕ(2· -7),
+    ψ^L,bc6    := 631000ϕ^L,bc1(2·) + 1291000ϕ^L,bc2(2·) -9932500ϕ(2· - 2) +1849770000ϕ(2· - 3) + 64081140000ϕ(2· - 4)
+          - 644114000ϕ(2· -5) - 1735135000ϕ(2· -6) + 19132500ϕ(2· -7) - 6412500ϕ(2· -8).
+
+ 		
+ 		
+ 		For J_0 ≥ 3 and j ≥ J_0, define
+ 		
+ 		
+    Φ^x_J_0 := {ϕ^L,bc1_J_0;0,ϕ^L,bc2_J_0;0}∪{ϕ_j;k:2≤ k ≤ 2^J_0-2}∪{ϕ^R,bc1_J_0;2^J_0-1,ϕ^R,bc2_J_0;2^J_0-1},   and
+       Ψ^x_j := {ψ^L,bc1_j;0,ψ^L,bc2_j;0,ψ^L,bc3_j;0,ψ^L,bc4_j;0}∪{ψ_j;k: 4≤ k ≤ 2^j-5}∪{ψ^R,bc1_j;2^j-1,ψ^R,bc2_j;2^j-1,ψ^R,bc3_j;2^j-1,ψ^R,bc4_j;2^j-1},
+
+ 		where ϕ^R,bc i = ϕ^L,bc i(1-·) for i=1,2, ψ^R,bc i = ψ^L,bc i(1-·) for i=1,…,4 , and
+ 		
+ 		
+    Φ^y_J_0 := Φ^x_J_0∪{ϕ^R_J_0;2^J_0-1},   Ψ^y_j := (Ψ^x_j \{ψ^R,bc2_j;2^j-1,ψ^R,bc3_j;2^j-1,ψ^R,bc4_j;2^j-1}) ∪{ψ^R,bc5_j;2^j-1,ψ^R,bc6_j;2^j-1,ψ^R_j;2^j-1},
+
+ 		
+ 		where ϕ^R = ϕ^L(1-·) and ψ^R,bci = ψ^L,bci(1-·) for i=5,6. Then, ℬ^x:=Φ^x_J_0∪{Ψ_j^x : j≥ J_0} 
+ 		
+ 		and ℬ^y:=Φ^y_J_0∪{Ψ_j^y : j≥ J_0} with J_0 ≥ 3
+ 		
+ 		are Riesz wavelets in L_2([0,1]). 
+ 		
+ 		See <ref> for their generators. 
+ 		
+ 		 
+ 	 	
+	
+	
+
+ §.§ Spline Multiwavelets on [0,1]
+ We present three spline multiwavelets on [0,1].
+		
+	 
+	Consider a biorthogonal wavelet ({ϕ̃;ψ̃},{ϕ;ψ}) with ϕ(0)=(13,23)^, ϕ̃(0)=(1,1)^, and a biorthogonal wavelet filter bank ({ã,b̃},{a,b}) given by
+	
+    a     ={[     0 -1/16;     0     0 ],
+    		[    0 3/16;    0    0 ],
+    		[  1/2 3/16;    0  3/8 ],
+    		[     0 -1/16;   1/2   3/8 ]}_[-2,1],
+    
+    		b     ={[     0 -1/32;     0  -1/8 ],
+    		[   3/8 -9/32;  -3/2  15/8 ],
+    		[   1/2 -9/32;     0 -15/8 ],
+    		[   3/8 -1/32;   3/2   1/8 ]}_[-2,1],
+    ã    ={[ 3/32 -1/8;    0    0 ],
+    		[ -3/16   3/8;     0     0 ],
+    		[ 11/16   3/8; -3/32   3/8 ],
+    		[ -3/16  -1/8;  7/16   3/8 ],
+    		[  3/32     0; -3/32     0 ]}_[-2,2],
+    b̃    ={[ -3/32   1/8; 3/128 -1/32 ],
+    		[  3/16  -3/8; -3/64  3/32 ],
+    		[  5/16  -3/8;     0 -3/32 ],
+    		[ 3/16  1/8; 3/64 1/32 ],
+    		[  -3/32      0; -3/128      0 ]}_[-2,2].
+
+	The analytic expression of ϕ=(ϕ^1,ϕ^2)^ is
+	
+    ϕ^1(x) = (2x^2 + 3x + 1) χ_[-1,0) + (2x^2 -3x +1)χ_[0,1]  and  ϕ^2(x) = (-4x^2 + 4x)χ_[0,1].
+
+	Note that fsupp(ϕ)=fsupp(ψ)=[-1,1] and fsupp(ϕ̃)=fsupp(ψ̃)=[-2,2]. Furthermore, (a)=(ã)=1.5 and (a)=(ã)=3, and its matching filters v,ṽ∈ (l_0())^1 × 2 with v(0)ϕ(0)=ṽ(0)ϕ̃(0)=1 are given by v(0)=(1,1), v'(0)= (0,12), v”(0)=(0,-14), ṽ(0)=(13,23), ṽ'(0)= (0,13), and ṽ”(0)=(130,-15). Let ϕ^L := ϕ^1χ_[0,∞) and ϕ^L,bc :=ϕ^2χ_[0,∞). Note that ϕ^L=ϕ^L(2·) + 38ϕ^2(2·) - 18ϕ^2(2·-1) and ϕ^L,bc=34ϕ^L,bc(2·) + [1,34] ϕ(2·-1). The direct approach in <cit.> yields
+	
+    ψ^L    := ϕ^L(2·) -916ϕ^L,bc(2·) + [34,- 116] ϕ(2·-1),
+    ψ^L,bc    :=ϕ^L,bc(2·) + [-2121512, 6574096] ϕ(2·-1) + [38771024, -40234096] ϕ(2·-2).
+
+	For J_0 ≥ 1 and j ≥ J_0, define
+	
+    Φ^x_J_0 := {ϕ^L,bc_J_0;0}∪{ϕ_J_0;k: 1≤ k ≤ 2^J_0-1},
+    	  Ψ^x_j := {ψ^L,bc_j;0}∪{ψ_j;k:1≤ k ≤ 2^j-1}∪{ψ^R,bc_j;2^j-1},
+
+	where ψ^R,bc=ψ^L,bc(1-·), and
+	
+    Φ^y_J_0 := Φ^x_J_0∪{ϕ^R_J_0;2^J_0-1},   Ψ^y_j := (Ψ^x_j\{ψ^R,bc_j;2^j-1}) ∪{ψ^R_j;2^j-1},
+
+	where ϕ^R=ϕ^L(1-·) and ψ^R=ψ^L(1-·). Then, ℬ^x:=Φ^x_J_0∪{Ψ_j^x : j≥ J_0} 
+	
+	and ℬ^y:=Φ^y_J_0∪{Ψ_j^y : j≥ J_0} 
+	
+	are Riesz wavelets in L_2([0,1]). See <ref> for their generators.
+	
+	
+	
+	
+	
+	Consider a biorthogonal wavelet ({ϕ̃;ψ̃},{ϕ;ψ}) with ϕ(0)=ϕ̃(0)=(1,0)^ and a biorthogonal wavelet filter bank ({ã;b̃},{a;b}) given by
+	
+	
+    a=   {[   14   38; -116 -116 ],
+    			[ 12  0;  0 14 ],
+    			[   14  -38;  116 -116 ]}_[-1,1],
+    
+    		b=   {[     0     0;   297 24679 ],
+    			[      -12     -154;   771164 29212761 ],
+    			[ 1 0; 0 1 ],
+    			[      -12      154;  -771164 29212761 ],
+    			[     0     0;  -297 24679 ]}_[-2,2],
+    
+    		ã=
+    		   {[  -132432 -9129184;     3152     7608 ],
+    			[ 392432 133648;  -9152   -176 ],
+    			[       -112 -169943776;    6791216  422514592 ],
+    			[   5692432  64710944; -19651216     -3796 ],
+    			[ 24713648        0;        0 72917296 ],.
+         .[   5692432 -64710944;  19651216     -3796 ],
+    			[      -112 169943776;  -6791216 422514592 ],
+    			[  392432 -133648;    9152    -176 ],
+    			[ -132432 9129184;   -3152    7608 ]}_[-4,4],
+    b̃=   {[  -14864 -758368;       0       0 ],
+    			[ 34864 17296;     0     0 ],
+    			[        124  216187552;   -6794864 -475358368 ],
+    			[  -6114864 -60521888;  20374864   6797296 ],
+    			[  12197296         0;         0 746929814 ],.
+         . [  -6114864  60521888; -20374864   6797296 ],
+    			[        124 -216187552;    6794864 -475358368 ],
+    			[  34864 -17296;      0      0 ],
+    			[ -14864 758368;      0      0 ]}_[-4,4].
+
+	
+	The analytic expression of the well-known Hermite cubic splines ϕ=(ϕ^1,ϕ^2)^ is
+	
+    ϕ^1  := (1-x)^2 (1+2x) χ_[0,1] + (1+x)^2 (1-2x) χ_[-1,0),   and  ϕ^2 := (1-x)^2x χ_[0,1] + (1+x)^2x χ_[-1,0).
+
+	Note that (ϕ)=[-1,1], (ψ)=[-2,2], and (ϕ̃)=(ψ̃)=[-4,4].
+	Then (a)=2.5, (ã)=0.281008,
+	(a)=(ã)=4,
+	and the matching filters , ∈012 with (0)ϕ(0)=(0)ϕ̃(0)=1 are given by
+	
+    (0,0)=(1,0),   '(0)=(0,),   ”(0)=”'(0)=(0,0),   and
+       (0)=(1,0),  '(0)=(0,115),  ”(0)=(-215,0),  ”'(0)=(0,-2105).
+
+	Let ϕ^L:=ϕ^1χ_[0,∞) and ϕ^L,bc:=ϕ^2χ_[0,∞). Note that ϕ^L=ϕ^L(2·) + [1/2,-3/4] ϕ(2· -1) and ϕ^L,bc=1/2ϕ^L,bc(2·) + [1/8,-1/8] ϕ(2· -1). The direct approach in <cit.> yields
+	
+	
+    ψ^L    := ϕ^L(2·) - 274ϕ^2(2·)
+    		+ [413926352,215144]ϕ(2· -1)
+    		- [6236588,1191098]ϕ(2·-2)
+    		+ [0,27122] ϕ(2·-3),
+    ψ^L,bc1    := -212ϕ^L,bc(2·) + [1724,-5847488]ϕ(2· -1) +
+    		 [115366,23361]ϕ(2· -2) +
+    		 [-961,0]ϕ(2·-3),
+    ψ^L,bc2    := 9316ϕ^L,bc(2·) +
+    		 [-2352112,303513904] ϕ(2· -1) +
+    		 [852732208,3571488]ϕ(2· -2) +
+    		 [-428671,19544]ϕ(2· -3),
+    ψ^L,bc3    := ϕ^L,bc(2·) - [41144,121488] ϕ(2· -1) + [3412196,-1987732] ϕ(2· -2) + [45976,0] ϕ(2·-3).
+
+	
+	For J_0 ≥ 2 and j ≥ J_0, define
+	
+    Φ^x_J_0    := {ϕ^L,bc_J_0;0}∪{ϕ_J_0;k: 1≤ k ≤ 2^J_0-1}∪{ϕ^R,bc_J_0;2^J_0-1},
+    Ψ^x_j    := {ψ^L,bc1_j;0,ψ^L,bc2_j;0,ψ^L,bc3_j;0}∪{ψ_j;k:2≤ k ≤ 2^j-2}∪{ψ^R,bc1_j;2^j-1,ψ^R,bc2_j;2^j-1,ψ^R,bc3_j;2^j-1},
+
+	where ϕ^R,bc = -ϕ^L,bc(1-·), ψ^R,bci=ψ^L,bci(1-·) for i=1,2,3, and
+	
+    Φ^y_J_0 := Φ^x_J_0∪{ϕ^R_J_0;2^J_0-1},   Ψ^y_j := (Ψ^x_j\{ψ^R,bc3_j;2^j-1}) ∪{ψ^R_j;2^j-1},
+
+	where ϕ^R=ϕ^L(1-·) and ψ^R=ψ^L(1-·). Then, ℬ^x:=Φ^x_J_0∪{Ψ_j^x : j≥ J_0} and 
+	
+	ℬ^y:=Φ^y_J_0∪{Ψ_j^y : j≥ J_0} with J_0 ≥ 2
+	are Riesz wavelets in L_2([0,1]). 
+	
+	See <ref> for their generators.
+	
+	
+	
+	
+	
+	Consider a biorthogonal wavelet ({ϕ̃;ψ̃},{ϕ;ψ}) with ϕ(0)=(25,35,35)^, ϕ̃(0)=(58,58,58)^, and a biorthogonal wavelet filter bank ({ã;b̃},{a;b}) given by
+	
+	
+    a=   {[   0 132   0;   0   0   0;   0   0   0 ],
+    			[ -132    0  532;    0    0    0;    0    0    0 ],
+    			[   12  532    0;    0 1532   12;    0 -532    0 ],
+    			[ -132    0  132;  932    0 -532;  932   12 1532 ]}_[-2,1],
+    
+    		b=   {[        0      164 -1256032;        0        0        0;        0        0        0 ],
+    			[  -433524128     3652262 -1345372384;         -14        1336       -1118;           0           0           0 ],
+    			[    27036032 -1345372384     3652262;           0        1118       -1336;           0         164          18 ],
+    			[ -433524128   -1256032        164;         14          0          0;      -2764         18        164 ]}_[-2,1],
+    ã=   {[       -33512        47512          764;       113392     -4710176       -71272;   1375461312 -58751383936   -875172992 ],
+    			[        -17256       -209512        259512;        175088      20910176     -25910176;      12540704  261251383936 -323751383936 ],
+    			[          85128         259512        -209512; -2113374151808 10326714151808   161873259488;   342111037952 -3714054151808  1932554151808 ],.
+         .
+    			[         -17256            764          47512;      277513568  1932554151808 -3714054151808;      277513568   161873259488 10326714151808 ],
+    			[         -33512              0              0;   342111037952  -323751383936   261251383936; -2113374151808      -25910176       20910176 ],
+    			[            0            0            0;     12540704   -875172992 -58751383936;       175088       -71272     -4710176 ], .
+         .
+    			[          0          0          0; 1375461312          0          0;     113392          0          0 ]}_[-2,4],
+    b̃=   {[    414757664 -17719172992   -263921624;        33901       -47901       -56901;            0            0            0 ],
+    		[      3775088  78793172992 -97643172992;          253       209901      -259901;            0            0            0 ],
+    		[   1621143248 -97643172992  78793172992;            0       259901      -209901;      -128477         2953         1253 ],.
+         .
+    		[      3775088   -263921624 -17719172992;         -253        56901        47901;      -482477         1253         2953 ],
+    		[ 414757664         0         0;    -33901         0         0;   -128477         0         0 ]}_[-2,2].
+
+	The analytic expression of ϕ = (ϕ^1,ϕ^2,ϕ^3)^ is
+	
+    ϕ^1    := (365x^3 + 725x^2 + 445x + 85) χ_[-1,0) + (-365x^3 + 725x^2 - 445x + 85)χ_[0,1],
+    ϕ^2    := (1085x^3 - 36x^2 + 725 x) χ_[0,1],   and  ϕ^3 := (-1085x^3 + 1445x^2 - 365x)χ_[0,1].
+
+	Note that fsupp(ϕ)=fsupp(ψ)=[-1,1], fsupp(ϕ̃)=[-2,4], and fsupp(ψ̃)=[-2,3]. Furthermore, (a)=1.5, (ã)=2.056062, (a)=(ã)=4, and its matching filters v,ṽ∈ (l_0())^1 × 2 with v(0)ϕ(0)=ṽ(0)ϕ̃(0)=1 are given by v(0)=(58,58,58), v'(0)=(0,524,512), v”(0)=(0,-572,-518), v”'(0)=(0,-5216,-527), ṽ(0)=(25,35,35), ṽ'(0)=(0,325,1225), ṽ”(0)=(-275,0,-925), and ṽ”'(0)=(0,6175,-48175). Let ϕ^L:=58ϕ^1χ_[0,∞), ϕ^L,bc1:=ϕ^2χ_[0,∞), and ϕ^L,bc2:=ϕ^3χ_[0,∞). Note that ϕ^L:=ϕ^L(2·) + 25128ϕ^2(2·) +  [-5128,0,5128]ϕ(2·-1), and
+	
+    [ ϕ^L,bc1; ϕ^L,bc2 ]
+    	= [ 1516    1; -516    0 ][ ϕ^L,bc1(2·); ϕ^L,bc2(2·) ]
+    	+ [  916    0 -516;  916    1 1516 ]ϕ(2·-1).
+
+	The direct approach in <cit.> yields
+	
+    ψ^L    := ϕ^L(2·) - [182143577558,13249577558] [ϕ^L,bc1(2·),ϕ^L,bc2(2·)]^ +
+    		 [32455134620464,-2020152762376264,-90080962376264] ϕ(2· -1),
+    ψ^L,bc    := [8193200000,-4028130800000][ϕ^L,bc1(2·),ϕ^L,bc2(2·)]^ +
+    		 [7033200000,11326992400000,58049147840000]ϕ(2· -1)
+          +
+    		 [-4770000,-2956250,6192475000]ϕ(2·-2).
+
+	
+	For J_0 ≥ 1 and j ≥ J_0, define
+	
+    Φ^x_J_0 := {ϕ^L,bc1_J_0;0,ϕ^L,bc2_J_0;0}∪{ϕ_J_0;k: 1≤ k ≤ 2^J_0-1},
+    	  Ψ^x_j := {ψ^L,bc_j;0}∪{ψ_j;k:1≤ k ≤ 2^j-1}∪{ψ^R,bc_j;2^j-1},
+
+	where ψ^R,bc=ψ^L,bc(1-·), and
+	
+    Φ^y_J_0 := Φ^x_J_0∪{ϕ^R_J_0;2^J_0-1},   Ψ^y_j := (Ψ^x_j\{ψ^R,bc_j;2^j-1}) ∪{ψ^R_j;2^j-1},
+
+	where ϕ^R=ϕ^L(1-·) and ψ^R=ψ^L(1-·). Then, ℬ^x:=Φ^x_J_0∪{Ψ_j^x : j≥ J_0} 
+	and ℬ^y:=Φ^y_J_0∪{Ψ_j^y : j≥ J_0} 
+	
+	are Riesz wavelets in L_2([0,1]). See <ref> for their generators.
+	
+	
+	
+	
+
+
+
+§ TENSOR PRODUCT RIESZ WAVELETS ON [0,1]^2 IN SOBOLEV SPACES
+
+
+Define ℋ:={u∈ H^1(Ω):u=0  on ∂Ω\Γ}.
+The weak formulation of the model problem in (<ref>) is to find u ∈ℋ such that
+
+a(u,v):=⟨∇u, ∇v⟩_Ω - ^2 ⟨u,v ⟩_Ω - ⟨𝒯(u), v ⟩_Γ = ⟨g, v ⟩_Γ - ⟨f, v⟩_Ω,   ∀v ∈ℋ.
+The existence and uniqueness of the solution to (<ref>) have been studied in <cit.>. Relevant wavenumber-explicit stability bounds have also been derived in <cit.>, and in <cit.> with the non-local boundary operator approximated by the first-order absorbing boundary condition.
+
+In this section, we provide a general theory for proving Riesz wavelets on [0,1] in the Sobolev space H^1([0,1]). Then we show that their tensor products form Riesz wavelets in the Sobolev space ℋ. These general results can be directly applied to all our spline Riesz wavelets in L_2([0,1]) in <ref>.
+
+Recall that f∈ H^1([0,1]) if both f and its weak derivative f' belong to L_2([0,1]). For f∈ H^1([0,1]), we define f_H^1([0,1])^2:=f^2_L_2([0,1])+
+f'^2_L_2([0,1]).
+For the sake of discussion, we define
+
+    H^1,x([0,1]):={ f∈ H^1([0,1]) 
+    f(0)=f(1)=0}    
+    H^1,y([0,1]):={ f∈ H^1([0,1]) 
+    f(0)=0}.
+
+
+To prove our main results, we need the following lemma.
+
+
+	Let η be a function supported inside [0,1]^d and η∈ H^(^d) for some >0. Then there exists a positive constant C such that
+	
+	
+	∑_j∈ |f,2^dj/2η(2^j·)|^2≤C f^2_L_2([0,1]^d),    ∀  f∈L_2([0,1]^d).
+	
+
+
+
+	Define g:=η-η(·+e_1), where e_1:=(1,0,…,0)^∈^d.
+	Note that η(·+e_1) is supported outside (0,1)^d.
+	Because η∈ H^(^d), we have g∈ H^(^d) and g is a compactly supported function satisfying ∫_^d g(x) dx=0. By <cit.>, there exists a positive constant C such that
+	
+	
+	∑_j∈ ∑_k∈ |f, g_j;k|^2 ≤Cf_L_2(^d)^2,    ∀  f∈L_2(^d),
+	
+	where g_j;k:=2^dj/2g(2^j·-k).
+	Taking f∈ L_2([0,1]^d) in (<ref>) and noting that f, g_j;0= f, η_j;0, we trivially deduce from (<ref>) that (<ref>) holds.
+	
+	For the convenience of the reader, we provide a self-contained proof here. Note that g(ξ)=(1-e^iξ· e_1)η(ξ) and hence
+	
+    |g(ξ)| ≤min(ξ, 2) |η(ξ)|≤θ(ξ) |η(ξ)| (1+ξ^2)^/2    θ(ξ):=min(ξ,2)(1+ξ^2)^-/2.
+
+	For f∈ L_2([0,1]^d), note that f, η(2^j·+e_1)=0 because η(2^j·+e_1) is supported outside (0,1)^d for all j∈.
+	For f∈ L_2([0,1]^d),
+	by Plancherel Theorem, we have
+	
+    f, 2^j/2η(2^j·)=
+    	 f, g_j;0=(2π)^-df,g_j;0.
+
+	Noting that g_j;0(ξ)=2^-dj/2g(2^-jξ) and using the Cauchy-Schwarz inequality,
+	we have
+	
+	
+    |f,g_j;0|^2
+    		≤
+    		2^-dj(∫_^d |f(ξ) θ(2^-jξ) η(2^-jξ)| (1+2^-jξ^2)^/2 dξ)^2 
+         ≤(2^-dj∫_^d
+    		|η(2^-jξ)|^2 (1+2^-jξ^2)^ dξ) (∫_^d
+    		|f(ξ)|^2 θ^2(2^-jξ) dξ)=C_1 ∫_^d
+    		|f(ξ)|^2 θ^2(2^-jξ) dξ,
+
+	
+	where C_1:=∫_^d |η(ξ)|^2 (1+ξ^2)^ dξ<∞ because η∈ H^(^d).
+	Therefore, for f∈ L_2([0,1]^d),
+	
+    ∑_j∈ | f,2^j/2η(2^j·)|^2
+    	≤ (2π)^-2d C_1 ∫_^d |f(ξ)|^2 ∑_j∈θ^2(2^-jξ)dξ≤ C_1 f_L_2([0,1]^d)^2
+    	∑_j∈θ^2(2^j·)_L_∞(^d).
+
+	For any ξ∈^d {0}, there is a unique integer J∈ such that 2^J<ξ≤ 2^J+1. Hence,
+	2^J+j<2^jξ≤ 2^J+j+1 for all j∈ and
+	
+    ∑_j∈θ^2(2^j ξ)
+    	=∑_j≤ -Jθ^2(2^jξ)+∑_j>-Jθ^2(2^jξ)
+    	≤∑_j≤ -J 2^2(j+J+1)
+    	+4∑_j>-J  2^-2(j+J)
+    	 =5+1/3+2^2-2/1-2^-2.
+
+	Consequently, we conclude that
+	(<ref>) holds with C:=C_1 (6+2^2-2/1-2^-2)<∞ by >0.
+
+
+
+Let ({ϕ̃;ψ̃},{ϕ;ψ}) be a compactly supported biorthogonal (multi)wavelet in 2 with a finitely supported biorthogonal wavelet filter bank ({ã;b̃},{a;b}), as constructed in <ref>. Assume that ϕ∈ (H^1())^r, that is, every entry of ϕ belongs to the Sobolev space H^1().
+Let (ℬ̃^x,ℬ^x) be a locally supported biorthogonal wavelet in L_2([0,1]), which is constructed 
+by the direct approach in <cit.>
+from the given biorthogonal wavelet ({ϕ̃;ψ̃},{ϕ;ψ}) in 2,
+such that ℬ^x ⊆ H^1,x([0,1]), where
+
+ℬ^x:=Φ_J_0 ∪∪_j=J_0^∞Ψ_j
+with J_0∈∪{0} and
+
+
+
+   Φ_J_0={ϕ^L_J_0;0}∪{ϕ_J_0;k n_l,ϕ ≤k≤2^J_0-n_h,ϕ}∪{ ϕ^R_J_0;2^J_0-1},
+
+   Ψ_j={ψ^L_j;0}∪{ψ_j;k n_l,ψ ≤k≤2^j-n_h,ψ}∪{ ψ^R_j;2^j-1},
+
+
+for all j≥ J_0, where all ϕ^L, ϕ^R, ψ^L, ψ^R are finite subsets/vectors of functions in H^1,x([0,1]).
+The set ℬ̃^x is defined similarly by adding ∼ to all the elements in ℬ^x.
+Then
+
+
+ℬ^1,x:=[2^-J_0 Φ_J_0]∪∪_j=0^∞[2^-jΨ_j]
+
+must be a Riesz basis of the Sobolev space H^1,x([0,1]), that is,
+there exist positive constants C_1 and C_2 such that every function f∈ H^1,x([0,1]) has a decomposition
+
+
+f=∑_α∈Φ_J_0 c_α2^-J_0 α+∑_j=J_0^∞∑_β_j∈Ψ_j c_β_j 2^-j β_j
+
+with the above series absolutely converging in H^1,x([0,1]), and the coefficients {c_α}_α∈Φ_J_0∪{c_β_j}_β_j∈Ψ_j, j≥ J_0 satisfy
+
+
+C_1 (∑_α∈Φ_J_0 |c_α|^2+∑_j=J_0^∞∑_β∈Ψ_j |c_β_j|^2)
+≤ f ^2_H^1([0,1])
+≤C_2 (∑_α∈Φ_J_0 |c_α|^2+∑_j=J_0^∞∑_β_j∈Ψ_j |c_β_j|^2),
+
+where f_H^1([0,1])^2:=f^2_L_2([0,1])+f'^2_L_2([0,1]).
+The same conclusion holds if the superscript x is replaced with y.
+
+
+Let us first point out a few key ingredients that we will use in our proof. First, we note that all the functions f in H^1,x([0,1]) and H^1,y([0,1]) satisfy f(0)=0. Our proof here only uses f(0)=0 and f(1) could be arbitrary.
+Hence, it suffices for us to prove the claim for H^1,x([0,1]) and the same proof can be applied to H^1,y([0,1]). Second, because ϕ is a compactly supported refinable vector function in H^1() with a finitely supported mask a∈0rr. By <cit.> (c.f. <cit.>), we must have (ϕ)>1 and hence (a)≥ 2 must hold. Hence, there exists >0 such that all [ϕ]', [ϕ^L]', [ϕ^R]', [ψ]', [ψ^L]', [ψ^R]' belong to H^() (see <cit.>).
+Because (a)≥ 2, the dual wavelet ψ̃ must have at least order two vanishing moments, i.e., (ψ̃)≥ 2. We define
+
+
+ψ̃(x):=
+∫_x^∞ψ̃(t) dt,    x∈.
+
+Because ψ̃ is compactly supported and (ψ̃)≥ 2, we conclude that the new function ψ̃ must be a compactly supported function and (ψ̃)≥ 1.
+Third, although all our constructed wavelets have vanishing moments, except the necessary condition (ψ̃)≥ 2, our proof does not assume that ψ^L, ψ^R, ψ, ψ̃^L, ψ̃^R have any order of vanishing moments at all.
+
+Let {c_α}_α∈Φ_J_0∪{c_β_j}_j≥ J_0, β_j∈Ψ_j be a finitely supported sequence. We define a function f as in
+(<ref>). Since the summation is finite, the function f is well defined and f∈ H^1,x([0,1]).
+Since (ℬ̃^x,ℬ^x) is a locally supported biorthogonal wavelet in L_2([0,1]) and H^1,x([0,1])⊆ L_2([0,1]),
+we have
+
+
+f:=∑_α∈Φ_J_0 c_α2^-J_0 α+∑_j=J_0^∞∑_β_j∈Ψ_j c_β_j 2^-j β_j=
+∑_α∈Φ_J_0 f, α̃α+∑_j=J_0^∞∑_β_j∈Ψ_j f, β̃_̃j̃β_j,
+
+because we deduce from the biorthogonality of (ℬ̃^x,ℬ^x) that
+
+
+    f, α̃=c_α 2^-J_0,     f, β̃_j=2^-j c_β_j,     j≥ J_0.
+
+
+Because (ℬ̃^x,ℬ^x) is a locally supported biorthogonal wavelet in L_2([0,1]), there must exist positive constants C_3 and C_4, independent of f and {c_α}_α∈Φ_J_0∪{c_β_j}_j≥ J_0, β_j∈Ψ_j, such that
+
+
+C_3 (∑_α∈Φ_J_0 2^-2J_0|c_α|^2+
+∑_j=J_0^∞∑_β_j ∈Ψ_j 2^-2j|c_β_j|^2)
+≤f^2_L_2([0,1])
+≤C_4 (∑_α∈Φ_J_0 2^-2J_0|c_α|^2+∑_j=J_0^∞∑_β_j∈Ψ_j 2^-2j|c_β_j|^2).
+
+We now prove (<ref>). From the definition ψ_j;k:=2^j/2ψ(2^j·-k), it is very important to notice that
+
+    [ψ_j;k]':=
+    [2^j/2ψ(2^j·-k)]'=
+    2^j 2^j/2ψ'(2^j·-k)=2^j [ψ']_j;k.
+
+Define
+
+    ℬ:={ g'  g∈ℬ^1,x}=Φ̆_J_0∪∪_j=J_0^∞Ψ̆_j,
+
+where
+
+
+
+   Φ̆_J_0:={[ϕ^L]'_J_0;0}∪{[ϕ]'_J_0;k n_l,ϕ ≤k≤2^J_0-n_h,ϕ}∪{ [ϕ^R]'_J_0;2^J_0-1},
+
+   Ψ̆_j={[ψ^L]'_j;0}∪{[ψ]'_j;k n_l,ψ ≤k≤2^j-n_h,ψ}∪{ [ψ^R]'_j;2^j-1}.
+
+
+That is, we obtain
+ℬ by replacing all the generators ϕ^L, ϕ, ϕ^R, ψ^R, ψ, ψ^R in ℬ^x by new generators
+[ϕ^L]', [ϕ]', [ϕ^R]', [ψ^R]', [ψ]', [ψ^R]', respectively.
+Note that all the elements in ℬ belongs to H^().
+From (<ref>), noting that {c_α}_α∈Φ_J_0∪{c_β_j}_j≥ J_0, β_j∈Ψ_j is finitely supported,
+we have
+
+    f'=∑_α∈Φ̆_J_0 c_αα+∑_j=J_0^∞∑_β_j∈Ψ̆_j c_β_jβ_j.
+
+Because every element in ℬ trivially has at least one vanishing moment due to derivatives, by <ref> with
+<cit.> or <cit.>, the system ℬ must be a Bessel sequence in L_2([0,1]) and thus there exists a positive constant C_5,  independent of f' and {c_α}_α∈Φ_J_0∪{c_β_j}_j≥ J_0, β_j∈Ψ_j, such that (e.g., see <cit.>)
+
+    f'^2_L_2([0,1])
+    =∑_α∈Φ̆_J_0 c_αα+∑_j=J_0^∞∑_β_j∈Ψ̆_j c_β_jβ_j^2_L_2([0,1])≤ C_5 (∑_α∈Φ_J_0 |c_α|^2+∑_j=J_0^∞∑_β_j∈Ψ_j |c_β_j|^2).
+
+Therefore, we conclude from the above inequality and (<ref>) that
+the upper bound in (<ref>) holds with C_2:=C_4+C_5<∞, where we also used J_0∈∪{0} so that 0≤ 2^-2j≤ 1 for all j≥ J_0.
+
+We now prove the lower bound of (<ref>).
+Define
+
+
+[η]^∘(x):=∫_x^1 η(t) dt,    x∈[0,1], η∈L_2([0,1]).
+
+Because f(0)=0 and [β̃_j]^∘(1):=∫_1^1 β̃_j(t)dt=0, we have
+
+    f, β̃_j=∫_0^1 f(t) β̃_j(t) dt=-∫_0^1 f(t) d [β̃_j]^∘(t)=
+    -f(t)[β̃_j]^∘(t)|_t=0^t=1
+    +∫_0^1 f'(t) [β̃_j]^∘(t)dt= f', [β̃_j]^∘.
+
+Similarly, we have f, α̃= f', [α̃]^∘. It is important to notice that all these identities hold true for any general function f∈ H^1,x([0,1]).
+Therefore,
+
+
+c_α=2^J_0f, α̃=f',2^J_0 [α̃]^∘    c_β_j=2^jf, β̃_j=
+f', 2^j [β̃_j]^∘.
+
+It is also very important to notice that if ψ̃_j,k is supported inside [0,1], then
+
+    2^j [ψ̃_j;k]^∘(x):=2^j ∫_x^1 2^j/2ψ̃(2^j t-k)dt=ψ̃_j;k(x),
+
+where the function ψ̃ is defined in (<ref>). Define
+
+    ℬ̆:=
+    2^J_0 [Φ̃_J_0]^∘∪∪_j=J_0^∞ 2^j [Ψ̃_j]^∘=
+    Φ̆̃̆_J_0∪∪_j=J_0^∞Ψ̆̃̆_j,
+
+where
+
+
+
+   Φ̆̃̆_J_0:={
+ϕ̃^L_J_0;0}∪{ϕ̃_J_0;k n_l,ϕ̃ ≤k≤2^J_0-n_h,ϕ̃}∪{ ϕ̃^R
+_J_0;2^J_0-1},
+
+   Ψ̆_j=
+{ψ̃^L
+_j;0}∪{ψ̃_j;k n_l,ψ̃ ≤k≤2^j-n_h,ψ̃}∪{ ψ̃^R_j;2^j-1}.
+
+
+That is, we obtain
+ℬ̆ by replacing the generators ϕ̃^L, ϕ̃, ϕ̃^R, ψ̃^R, ψ̃, ψ̃^R in ℬ̃^x by new generators
+ϕ̃^L, ϕ̃, ϕ̃^R, ψ̃^R, ψ̃, ψ̃^R, respectively. Note that all elements in ℬ̆ belong to H^1/2().
+As we discussed before, it is very important to notice that (ψ̃)≥ 2 and consequently, the new function ψ̃ has compact support and (ψ̃)≥ 1.
+
+
+Hence, combining <ref> with <cit.> for ψ̃, we conclude that the system ℬ̆ must be a Bessel sequence in L_2([0,1]) and therefore, there exists a positive constant C_6, independent of f' and {c_α}_α∈Φ_J_0∪{c_β_j}_j≥ J_0, β_j∈Ψ_j, such that
+
+
+∑_α∈Φ_J_0 |c_α|^2+∑_j=J_0^∞∑_β∈Ψ_j |c_β_j|^2
+=∑_α̃ ∈Φ̆̃̆_J_0 |f', α̃|^2
++∑_j=J_0^∞∑_β̃_j∈Ψ̆̃̆_j |f', β̃_j|^2≤C_6f'^2_L_2([0,1]),
+
+where we used the identities in (<ref>).
+Therefore, noting that f'^2_L_2([0,1])≤f^2_L_2([0,1])+f'^2_L_2([0,1])
+=f^2_H^1([0,1]) trivially holds,
+we conclude from the above inequality that
+the lower bound in (<ref>) holds with C_1:= 1/C_6 <∞.
+Therefore, we prove that (<ref>) holds with f defined in (<ref>) for all finitely supported sequences {c_α}_α∈Φ_J_0∪{c_β_j}_j≥ J_0, β_j∈Ψ_j.
+Now by the standard density argument,
+for any square summable sequence {c_α}_α∈Φ_J_0∪{c_β_j}_j≥ J_0, β_j∈Ψ_j satisfying
+
+
+∑_α∈Φ_J_0
+|c_α|^2+∑_j=J_0^∞∑_c_β_j∈Ψ_j
+|c_β_j|^2<∞,
+
+we conclude that
+(<ref>) holds and the series in (<ref>) absolutely converges in H^1,x([0,1]).
+
+Because (ℬ̃^x,ℬ^x) is a locally supported biorthogonal wavelet in L_2([0,1]) and H^1,x([0,1])⊆ L_2([0,1]),
+for any f∈ H^1,x([0,1]), we have
+
+
+f=∑_α∈Φ_J_0 c_α2^-J_0 α+∑_j=J_0^∞∑_β_j∈Ψ_j c_β_j 2^-j β_j
+    c_α:=2^J_0f, α̃,  c_β_j:=2^jf, β̃_j,  j≥J_0
+
+with the series converging in L_2([0,1]).
+Note that we already proved (<ref>) for any f∈ H^1,x([0,1]) and hence (<ref>) must hold true. In particular, we conclude from (<ref>) that the coefficients of f∈ H^1,x([0,1]) in (<ref>) must satisfy (<ref>). Consequently, by (<ref>), the series in (<ref>) must converge absolutely in H^1,x([0,1]).
+This proves that ℬ^1,x is a Riesz basis of H^1,x([0,1]).
+
+
+
+Next, we show that the tensor product of Riesz wavelets on [0,1] forms a Riesz basis in the Sobolev space ℋ.
+
+Define
+
+
+    ℬ_J_0,J:= (Φ^x_J_0⊗Φ^y_J_0) ∪{Φ^x_j ⊗Ψ^y_j ∪Ψ^x_j⊗Φ^y_j∪Ψ^x_j ⊗Ψ^y_j : J_0 ≤ j ≤ J-1},
+
+
+where Φ^x_J_0, Φ^y_J_0, Ψ^x_j, and Ψ^y_j with j≥ J_0 are defined in <ref>.
+
+Note that when J=J_0, ℬ_J_0,J_0=Φ^x_J_0⊗Φ^y_J_0.
+The 2D Riesz wavelet in ℋ we shall employ is a scaled version of ℬ_J_0:=ℬ_J_0,∞ for a given natural number J_0.
+
+Given one-dimensional functions f_1,f_2: →, the two-dimensional function f_1 ⊗ f_2 is defined by (f_1 ⊗ f_2) (x,y) := f_1(x)f_2(y), where x,y∈. Furthermore, if F_1,F_2 are sets containing one-dimensional functions, then F_1 ⊗ F_2 := {f_1 ⊗ f_2 : f_1 ∈ F_1, f_2 ∈ F_2}. Using the corresponding results in <cit.> on Bessel sequences in L_2(^2) and using almost identical arguments as in the proof of <ref>, we can obtain the following result.
+
+we can conclude that the two-dimensional wavelet system
+
+    ℬ^2D_J_0:=
+    { 2^-J_0Φ^x_J_0⊗Φ^y_J_0}∪{ 2^-jΦ^x_j ⊗Ψ^y_j,  2^-jΨ^x_j⊗Φ^y_j, 2^-jΨ^x_j ⊗Ψ^y_j}_j=J_0^∞
+
+must be a Riesz basis of the Sobolev space ℋ.
+
+
+
+
+	Let ({ϕ̃;ψ̃},{ϕ;ψ}) be a compactly supported biorthogonal (multi)wavelet in 2 with a finitely supported biorthogonal wavelet filter bank ({ã;b̃},{a;b}), as constructed in <ref>. Assume that ϕ∈ (H^1())^r, that is, every entry of ϕ belongs to the Sobolev space H^1().
+	Let (ℬ̃^x,ℬ^x) and (ℬ̃^y,ℬ^y) be locally supported biorthogonal wavelets in L_2([0,1]), which are constructed
+by the direct approach in <cit.> 
+from the given biorthogonal wavelet ({ϕ̃;ψ̃},{ϕ;ψ}) on the real line,
+	such that ℬ^x ⊆ H^1,x([0,1]), where ℬ^x is defined in (<ref>)-(<ref>)
+	with ϕ^R and ψ^R replaced by ϕ^R,x and ψ^R,x respectively. Define the set ℬ^y⊆ H^1,y([0,1]) similarly. Define ℬ̃^x and ℬ̃^y similarly by adding ∼ to all the elements in ℬ^x and ℬ^y respectively.
+	
+	Then,
+	
+	
+    ℬ^2D_J_0:=Φ^2D_J_0∪∪_j=J_0^∞Ψ^2D_j,
+
+	
+	where
+	
+	
+	Φ^2D_J_0:={ 2^-J_0 Φ^x_J_0 ⊗Φ^y_J_0}   and   Ψ^2D_j:= { 2^-j Φ^x_j ⊗Ψ^y_j,  2^-j Ψ^x_j  ⊗Φ^y_j, 2^-j Ψ^x_j ⊗Ψ^y_j},
+	
+	must be a Riesz basis of the Sobolev space ℋ, that is, there exist positive constants C_1 and C_2 such that every function f∈ℋ has a decomposition
+	
+	
+	f=∑_α∈Φ^2D_J_0 c_α2^-J_0 α+∑_j=J_0^∞∑_β_j∈Ψ^2D_j c_β_j 2^-j β_j,
+	
+	which converges absolutely in ℋ and whose coefficients {c_α}_α∈Φ^2D_J_0∪{c_β_j}_β_j∈Ψ^2D_j, j≥ J_0 satisfy
+	
+	
+    C_1 (∑_α∈Φ^2D_J_0 |c_α|^2+∑_j=J_0^∞∑_β_j∈Ψ^2D_j |c_β_j|^2)
+    	≤ f ^2_H^1([0,1]^2)≤ C_2 (∑_α∈Φ^2D_J_0 |c_α|^2+∑_j=J_0^∞∑_β_j∈Ψ^2D_j |c_β_j|^2),
+
+	where f^2_H^1([0,1]^2):=f^2_L_2([0,1]^2)+
+	∂∂ x f^2_L_2([0,1]^2)+∂∂ y f^2_L_2([0,1]^2).
+	
+
+Let {c_α}_α∈Φ^2D_J_0∪{c_β_j}_j≥ J_0, β_j∈Ψ_j^2D be a finitely supported sequence. We define a function f as in
+(<ref>). Since the summation is finite, the function f is well defined and f∈ℋ⊆ L_2([0,1]^2). Define ℬ̃^2D_J_0 by adding ∼ to all elements in ℬ^2D_J_0. Note that (ℬ̃^2D_J_0,ℬ^2D_J_0) is a biorthogonal wavelet in L_2([0,1]^2), because it is formed by taking the tensor product of two biorthogonal wavelets in L_2([0,1]). Hence,
+
+
+f:=∑_α∈Φ_J_0^2D c_α2^-J_0 α+∑_j=J_0^∞∑_β_j∈Ψ_j^2D c_β_j 2^-j β_j=
+∑_α∈Φ_J_0^2D f, α̃α+∑_j=J_0^∞∑_β_j∈Ψ_j^2D f, β̃_̃j̃β_j,
+
+because we deduce from the biorthogonality of (ℬ̃^2D_J_0,ℬ^2D_J_0) that
+
+
+    f, α̃=c_α 2^-J_0,     f, β̃_j=2^-j c_β_j,     j≥ J_0.
+
+
+Because (ℬ̃^2D_J_0,ℬ^2D_J_0) is a biorthogonal wavelet in L_2([0,1]^2), there must exist positive constants C_3 and C_4, independent of f and {c_α}_α∈Φ_J_0^2D∪{c_β_j}_j≥ J_0, β_j∈Ψ_j^2D, such that
+
+
+C_3 (∑_α∈Φ_J_0^2D 2^-2J_0|c_α|^2+
+∑_j=J_0^∞∑_β_j ∈Ψ_j^2D 2^-2j|c_β_j|^2)
+≤f^2_L_2([0,1]^2)
+≤C_4 (∑_α∈Φ_J_0^2D 2^-2J_0|c_α|^2+∑_j=J_0^∞∑_β_j∈Ψ_j^2D 2^-2j|c_β_j|^2).
+
+To prove (<ref>), it is enough to consider ∂∂ yf, since the argument used for ∂∂ xf is identical. From (<ref>), noting that {c_α}_α∈Φ_J_0^2D∪{c_β_j}_j≥ J_0, β_j∈Ψ_j^2D is finitely supported,
+we have
+
+
+    ∂∂ yf=∑_α∈Φ̆_J_0^2D,y c_αα+∑_j=J_0^∞∑_β_j∈Ψ̆_j^2D,y c_β_jβ_j,
+
+
+where
+
+
+    Φ̆^2D,y_J_0:={ 2^-J_0Φ^x_J_0⊗Φ̆^y_J_0}  and  Ψ̆^2D,y_j:= { 2^-jΦ^x_j ⊗Ψ̆^y_j,  2^-jΨ^x_j⊗Φ̆^y_j, 2^-jΨ^x_j ⊗Ψ̆^y_j},
+
+
+Φ̆^y_J_0 and Ψ̆^y_j for j ≥ J_0 are defined as in (<ref>) with ϕ^R and ψ^R replaced by ϕ^R,y and ψ^R,y respectively. Every element in Φ̆^y_J_0∪∪_j=J_0^∞Ψ̆^y_j has at least one vanishing moment and belongs to H^() for some >0. Hence, every element in Φ̆_J_0^2D,y∪∪_j=J_0^∞Ψ̆^2D,y_j has at least one vanishing moment and belongs to H^(^2) for some >0. By
+<ref> and
+<cit.>, the system Φ̆_J_0^2D,y∪∪_j=J_0^∞Ψ̆^2D,y_j must be a Bessel sequence in L_2([0,1]^2). That is, there exists a positive constant C_5, independent of ∂∂ y f and {c_α}_α∈Φ_J_0^2D∪{c_β_j}_j≥ J_0, β_j∈Ψ_j^2D, such that
+
+
+    ∂∂ yf^2_L_2([0,1]^2)
+    =∑_α∈Φ̆_J_0^2D,y c_αα+∑_j=J_0^∞∑_β_j∈Ψ̆_j^2D,y c_β_jβ_j^2_L_2([0,1]^2)≤ C_5 (∑_α∈Φ_J_0^2D |c_α|^2+∑_j=J_0^∞∑_β_j∈Ψ_j^2D |c_β_j|^2).
+
+
+The upper bound of (<ref>) is now proved by applying a similar argument to ∂∂ x f, and appealing to the above inequality and (<ref>).
+
+Next, we prove the lower bound of (<ref>). Similar to (<ref>),
+for functions in L_2([0,1]^2), we define
+
+
+    [η]^∘(x,y):= ∫_y^1 f(x,t) dt,    (x,y)∈ [0,1]^2, η∈ L_2([0,1]^2).
+
+
+Since f(x,0)=0 for all x ∈ [0,1], we have f, β̃_j  =  f, [β̃_j]^∘ and f, α̃_j  =  f, [α̃_j]^∘ by recalling the tensor product structure of β̃_j and α̃. Therefore,
+
+
+c_α=2^J_0f, α̃=∂∂yf,2^J_0 [α̃]^∘    c_β_j=2^jf, β̃_j=
+∂∂yf, 2^j [β̃_j]^∘.
+
+Define
+
+
+    Φ̆̃̆^2D,y_J_0:={ 2^-J_0Φ̃^x_J_0⊗Φ̆̃̆^y_J_0}  and  Ψ̆̃̆^2D,y_j:= { 2^-jΦ̃^x_j ⊗Ψ̆̃̆^y_j,  2^-jΨ̃^x_j⊗Φ̆̃̆^y_j, 2^-jΨ̃^x_j ⊗Ψ̆̃̆^y_j},
+
+
+where Φ̆̃̆^y_J_0 and Ψ̆̃̆^y_j for j ≥ J_0 are defined as in (<ref>) with ϕ̃^R and ψ̃^R replaced by ϕ̃^R,y and ψ̃^R,y respectively. Note that all elements in Φ̆̃̆^2D,y_J_0 and Ψ̆̃̆^2D,y_j must belong to H^(^2) for some >0.
+Applying <ref> and <cit.>,
+we have that the system Φ̆̃̆_J_0^2D,y∪∪_j=J_0^∞Ψ̆̃̆^2D,y_j is a Bessel sequence in L_2([0,1]^2) and therefore, there exists a positive constant C_6, independent of ∂∂ yf and {c_α}_α∈Φ_J_0^2D∪{c_β_j}_j≥ J_0, β_j∈Ψ_j^2D, such that
+
+
+∑_α∈Φ_J_0^2D |c_α|^2+∑_j=J_0^∞∑_β∈Ψ_j^2D |c_β_j|^2
+=∑_α̃ ∈Φ̆̃̆_J_0^2D,y |∂∂y f, α̃|^2
++∑_j=J_0^∞∑_β̃_j∈Ψ̆̃̆_j^2D,y |∂∂y f, β̃_j|^2≤C_6∂∂y f^2_L_2([0,1]^2),
+
+where we used the identities in (<ref>). The lower bound of (<ref>) is now proved with C_1:=1/C_6<∞ by the trivial inequality
+∂∂ y f^2_L_2([0,1]^2)≤f^2_H^1([0,1]^2).
+The remaining of this proof now follows the proof of <ref> with appropriate modifications for the 2D setting.
+
+
+§ IMPLEMENTATION
+
+	
+	
+	In this section, we discuss some implementation details of our wavelet Galerkin method. 
+	
+	By the refinability property, there exist well-defined matrices A^x_j,j', A_j,j', A_j,j'^R, B^x_j,j', B_j,j', and B_j,j'^R such that the following relations hold
+	
+	Φ^x_j = A^x_j,j'
+	Φ^x_j',   Ψ^x_j = B^x_j,j' Φ^x_j',   Φ^y_j = [   A_j,j'; A^R_j,j' ] Φ^y_j',   and
+	  Ψ^y_j = [   B_j,j'; B^R_j,j' ] Φ^y_j'
+	  ∀j < j'.
+	Note that A^x_j,j' and B^x_j,j' contain the filters of all refinable functions and wavelets satisfying the homogeneous Dirichlet boundary conditions at both endpoints. Meanwhile, A_j,j'^R and B_j,j'^R respectively contain the filters of right refinable functions and right wavelets satisfying no boundary conditions. For simplicity, we assume that ϕ^R(1)=ψ^R(1)=1. It follows that A_j,j' contains filters of left and interior refinable functions, and B_j,j' contains filters of left and interior wavelets. For J ≥ J_0, define
+	
+	ℬ_J_0,J:=Φ^2D_J_0 ∪∪_j=J_0^J-1 Ψ^2D_j,
+	where Φ^2D_J_0 and Ψ^2D_j are defined in (<ref>). In our wavelet Galerkin scheme, our approximated solution is of the form u_J=∑_η∈ℬ_J_0,J c_ηη. Let ⊗ denote the Kronecker product, 0_m × n denote an m× n zero matrix, rows(·) denote the number of rows of a given matrix, and vec(·) denote the standard vectorization operation. Plugging the approximated solution into the weak formulation (<ref>), using test functions in  ℬ_J_0,J, and recalling the relations in (<ref>), we obtain the linear system
+	
+	(R ([⟨v,w ⟩_(0,1) ]_v,w ∈2^-JΦ^x_J ⊗[⟨v,w ⟩_(0,1) ]_v,w ∈Φ^y_J) R^ - T) C=F,
+	where R:=[R_1^,⋯,R_2(J-J_0)+2^]^ with R_1:=
+	A^x_J_0,J⊗ A_J_0,J, R_J-J_0+2:=
+	A^x_J_0,J⊗ A_J_0,J^R,
+	
+    R_ℓ :=[ B^x_J_0+ℓ-2,J⊗ A_J_0+ℓ-2,J; A^x_J_0+ℓ-2,J⊗ B_J_0+ℓ-2,J; B^x_J_0+ℓ-2,J⊗ B_J_0+ℓ-2,J ],   
+    		R_J-J_0+ℓ+1 :=[ B^x_J_0+ℓ-2,J⊗ A^R_J_0+ℓ-2,J; A^x_J_0+ℓ-2,J⊗ B^R_J_0+ℓ-2,J; B^x_J_0+ℓ-2,J⊗ B^R_J_0+ℓ-2,J ],
+    			  
+    			2≤ℓ≤ J-J_0+1,
+    		
+        S:=[S_0^,…,S_J-J_0^]^  with   S_0:= 2^J_0/2A^x_J_0,J,   
+    		S_ℓ := 2^(J_0 + ℓ -1)/2[ B^x_J_0+ℓ-1,J; A^x_J_0+ℓ-1,J; B^x_J_0+ℓ-1,J ],   
+    		1 ≤ℓ≤ J-J_0,
+        T := [ 0_(rows(R)-rows(S)) × (rows(R)-rows(S))            0_(rows(R)-rows(S)) ×rows(S);           0_rows(S) × (rows(R)-rows(S))         S[ ⟨𝒯(η),ζ⟩_Γ]_η,ζ∈ 2^-JΦ^x_JS^ ],
+        F := [     0_(rows(R)-rows(S)) × 1; S [⟨ g,v ⟩_Γ]_v ∈ 2^-JΦ^x_J ]
+    		-R vec([⟨ f, v w ⟩_Ω]_w ∈Φ^y_J,v ∈ 2^-JΦ^x_J),
+
+	and C denotes the coefficients {c_η}_η∈ℬ_J_0,J properly arranged in a vector form.
+	
+	We make some important remarks regarding the assembly of the linear system. First, we further normalize each element in ℬ_J_0,J by |a(·,·)|^-1/2, where a(·,·) is defined in (<ref>). This makes the modulus of all diagonal entries of the coefficient matrix on the left-hand side of (<ref>) equal to 1. Second, we note that the assembly of the linear system can be done efficiently by exploiting the refinability structure. The inner products are computed only for the refinable functions at the highest scale level (i.e., elements of Φ^x_J and Φ^y_J). Third, following <cit.>, we rewrite the non-local boundary condition as
+	
+	𝒯(v) = ∫_0^1 ln(|x-x'|) q_0(x-x')v(x') dx' + ∫_0^1 q_1(x-x')v(x')dx' + 1/π _0^1 v(x')/|x-x'|^2 dx',
+	where
+	
+    q_0(s):= H^(1)_1(|s|)/2|s| +  J_1( |s|)/π |s|ln(|s|) - 1/π|s|^2,    q_1(s):=-  J_1( |s|)/π |s|,
+
+	and J_1 is the first order Bessel function of the first kind. Note that q_0(s) and q_1(s) are even analytic functions. The first integral in (<ref>) is only weakly singular. After properly partitioning this integral so that the weak singularity appears on an endpoint, we can use a combination of the Gauss-Legendre and double exponential quadratures to compute it. The second integral in (<ref>) can be handled by the Gauss-Legendre quadrature. Recall that if v ∈ C^1,α([c,d]) (i.e., the first derivative of v is α-Hölder continuous on the unit interval with 0 < α≤ 1), then
+	
+	_c^d v(x')/(x-x')^2 dx' := lim_ϵ→0 ( ∫_c^x-ϵ v(x')/(x-x')^2 dx' + ∫_x+ϵ^d v(x')/(x-x')^2 dx' - 2v(x)/ϵ ).
+	See <cit.>. Then, the third integral of (<ref>) can be exactly computed by (<ref>), since the Riesz wavelets we employ have analytic expressions.
+	
+	
+
+§ NUMERICAL EXPERIMENTS
+
+	
+	In what follows, we present several numerical experiments to compare the performance of our wavelet method, denoted by ℬ_J_0,J (see (<ref>)), and a standard Galerkin method, denoted by Φ^2D_J (see (<ref>)). We shall focus on the behaviour of the coefficient matrix coming from each scheme. The relative errors reported below are in terms of 2-norm. Assuming that the exact solution u exists, we define
+	
+    u-u_J_2^2:=2^-22∑_i=1^2^11∑_j=1^2^11 |u(x_i,y_j) - u_J(x_i,y_j)|^2,
+
+	where (x_i,y_j) for i,j=0,…,2^11, and x_i+1-x_i=y_j+1-y_j=2^-11 for all i,j=0,…,2^11-1. Note that the above error is just an approximation of the error in the L_2 norm. In each table below, we report the relative errors u-u_J_2/u_2 obtained by using a direct solver (the backslash command in MATLAB). Since span(ℬ_J_0,J)=span(Φ^2D_J) for all J≥ J_0 and a direct solver is used to solve the linear system, the errors obtained from our wavelet and standard Galerkin methods are practically identical. That is why we report  only a set of relative errors for a given wavelet basis and a wavenumber. We record the convergence rates (listed under `Order' and obtained by calculating log_2(u-u_J_2/u-u_J+1_2)). We also list the largest singular values σ_max, the smallest singular values σ_min, and the condition numbers (i.e., the ratio of the largest and smallest singular values) of the coefficient matrices coming from the wavelet and standard Galerkin methods. The `Iter' column lists the number of GMRES iterations (with zero as its initial value) needed so that the relative residual falls below 10^-8. Finally, the `Size' column lists the number of rows in a coefficient matrix, which is equal to the number of basis elements used in the numerical solution.
+	
+	We first apply our wavelet basis to solve a standard 2D Poisson equation to show that it produces a well-conditioned coefficient matrix. Our intention is to demonstrate the performance of our wavelet basis in solving a coercive PDE and compare it with its performance in solving our model problem in (<ref>), which is non-coercive.
+	
+	 
+		Consider the 2D Poisson equation Δ u = -8π^2 sin(2π x) sin(2 π y). The true solution is u=sin(2π x) sin(2π y). See <ref> for the numerical results.
+	
+	
+	
+	
+	 
+		Consider the model problem (<ref>), where 𝒯 is defined in (<ref>), and f and g are chosen such that u=exp(xy)sin( x)sin(( + π/2)y). Additionally, we let = 4π, 8π, 16π. See <ref> for the numerical results.
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		Consider the model problem (<ref>), where 𝒯 is defined in (<ref>), =32π, and f and g are chosen such that u=sin(π x)sin(√(^2-π^2) y ). See <ref> for the numerical results. To further improve the condition number of the coefficient matrix in our numerical experiments, we replace ϕ^L,bc1, ϕ^L,bc2, and ϕ^L in <ref> with ϕ^L,bc1 + 85100ϕ^L,bc2, -12ϕ^L,bc1+1110ϕ^L,bc2, and ϕ^L - 1314ϕ^L,bc1+814ϕ^L,bc2 respectively. That is, we replace ϕ^L,bc1, ϕ^L,bc2, and ϕ^L in <ref> with their linear combinations. Due to the large number of iterations and lengthy computation time for the standard Galerkin method, we only report the GMRES relative residuals for Φ^2D_J. More specifically, the `Tol' column associated with Φ_j^2D lists the relative residuals, when GMRES is used as an iterative solver with the maximum number of iterations listed in the `Iter' column associated with ℬ_J_0,J for J_0 ∈.
+		
+		
+
+	
+	
+	
+	
+	We now discuss the results of our numerical experiments observed in <ref>. First, we observe that the largest singular values of coefficient matrices of both wavelet and standard Galerkin method do not change much as the scale level J increases (or equivalently the mesh size decreases). Second, the smallest singular values of coefficient matrices of the wavelet Galerkin method have a lower bound. In particular, they seem to converge as the mesh size decreases. This is in sharp contrast to the smallest singular values of coefficient matrices of the standard Galerkin method, which seem to become arbitrarily small as the mesh size decreases. In particular, the smallest singular values are approximately a quarter of what they were before as we halve the grid size of each axis. Not surprisingly, the condition numbers of the coefficient matrices of the standard Galerkin method quadruple as we increase the scale level, while those of the wavelet Galerkin method plateau. When an iterative scheme is used (here, we used GMRES), we see two distinct behaviours. In the standard Galerkin method, the number of iterations needed for the GMRES relative residuals to fall below 10^-8 doubles as we increase the scale level, while fixing the wavenumber. On the other hand, in the wavelet Galerkin method, the number of iterations needed for the GMRES relative residuals to fall below 10^-8 is practically independent of the size of the coefficient matrix; moreover, we often see situations, where only a tenth (or even less) of the number of iterations is needed. In <ref>, we see that the GMRES relative residuals of the coefficient matrix of the standard Galerkin method fail to be within 10^-8 at the given maximum iterations in the `Iter' column, while those of the wavelet Galerkin method is within 10^-8. The convergence rates are in accordance with the approximation orders of the bases.
+	
+	
+	
+	99
+		
+		ABW02 H. Ammari, G. Bao, and A. W. Wood, Analysis of the electromagnetic scattering from a cavity. Japan J. Indust. Appl. Math. 19 (2002), 301-310.
+		
+		BL14 G. Bao and J. Lai, Radar cross section reduction of a cavity in the ground plane. Commun. Comput. Phys. 15 (2014), no. 4, 895-910.
+		
+		BS05 G. Bao and W. Sun, A fast algorithm for the electromagnetic scattering from a large cavity. SIAM J. Sci. Comput. 27 (2005), no. 2, 553-574.
+		
+		BY16 G. Bao and K. Yun, Stability for the electromagnetic scattering from large cavities. Arch. Rational Mech. Anal. 220 (2016), 1003-1044.
+		
+		BYZ12 G. Bao, K. Yun, and Z. Zou, Stability of the scattering from a large electromagnetic cavity in two dimensions. SIAM J. Math. Anal. 44 (2012), no.1, 383-404.
+		
+		cer19
+		D. Černá, Wavelets on the interval and their applications, Habilitation thesis at Masaryk University, (2019).
+		
+		CS12 N. Chegini and R. Stevenson, The adaptive tensor product wavelet scheme: sparse matrices and the application to singularly perturbed problems. IMA J. Numer. Anal. 32 (2012), no. 1, 75-104.
+		
+		cdf92 A. Cohen, I. Daubechies, and J. C. Feauveau, Biorthogonal bases of compactly supported wavelets. Comm. Pure Appl. Math.
+		45 (1992), 485–560.
+	
+		dhjk00
+		W. Dahmen, B. Han, R.-Q. Jia, and A. Kunoth, Biorthogonal multiwavelets on the interval: cubic Hermite splines. Constr. Approx. 16 (2000), 221–259.		
+		
+		dku99
+		W. Dahmen, A. Kunoth and K. Urban, Biorthogonal spline wavelets on the interval—stability and moment conditions. Appl. Comput. Harmon. Anal. 6 (1999), 132–196.
+		
+		DS10 T. J. Dijkema and R. Stevenson, A sparse Laplacian in tensor product wavelet coordinates. Numer. Math. 115 (2010), 433-449.
+		
+		DLS15 K. Du, B. Li, and W. Sun. A numerical study on the stability of a class of Helmholtz problems. J. Comput. Phys. 287 (2015), 46-59.
+		
+		DSZ13 K. Du, W. Sun, and X. Zhang, Arbitrary high-order C^0 tensor product Galerkin finite element methods for the electromagnetic scattering from a large cavity. J. Comput. Phys. 242 (2013), 181-195.
+		
+han01
+B. Han, Approximation properties and construction of Hermite interpolants and biorthogonal multiwavelets. J. Approx. Theory 110 (2001), 18–53.
+
+han03
+B. Han, Compactly supported tight wavelet frames and orthonormal wavelets of exponential decay with a general dilation matrix. J. Comput. Appl. Math. 155 (2003), 43–67.
+
+		han12
+		B. Han, Nonhomogeneous wavelet systems in high dimensions. Appl. Comput. Harmon. Anal. 32 (2012), 169–196.
+		
+		hanbook
+		B. Han, Framelets and wavelets: Algorithms, analysis, and applications. Applied and Numerical Harmonic Analysis. Birkhäuser/Springer, Cham, 2017. xxxiii + 724 pp.
+		
+		hm18
+		B. Han and M. Michelle, Construction of wavelets and framelets on a bounded interval. Anal. Appl. 16 (2018), 807–849.
+		
+		HM21a B. Han and M. Michelle, Wavelets on intervals derived from arbitrary compactly supported biorthogonal multiwavelets. Appl. Comp. Harmon. Anal. 53 (2021), 270-331.
+		
+		HMW21 B. Han, M. Michelle, and Y. S. Wong, Dirac assisted tree method for 1D heterogeneous Helmholtz equations with arbitrary variable  wave numbers. Comput. Math. Appl. 97 (2021), 416-438.
+
+		HM22 B. Han and M. Michelle, Sharp wavenumber-explicit stability bounds for 2D Helmholtz equations. SIAM J. Numer. Anal. 60 (2022), no. 4, 1985-2013.
+
+hs09
+B. Han and Z. Shen, Dual wavelet frames and Riesz bases in Sobolev spaces. Constr. Approx. 29 (2009), 369–406.
+ 		
+		HMS16 L. Hu, L. Ma, and J. Shen, Efficient spectral-Galerkin method and analysis for elliptic PDEs with non-local boundary conditions. J. Sci. Comput. 68 (2016), 417-437.
+		
+		LC13 B. Li and X. Chen, Wavelet-based numerical analysis: a review and classification. Finite Elem. Anal. Des. 81 (2014), 14-31.
+	
+		LMS13 H. Li, H. Ma, and W. Sun, Legendre spectral Galerkin method for electromagnetic scattering from large cavities. SIAM J. Numer. Anal. 51 (2013), no. 1, 353-376.
+		
+		LZ13 C. Li and J. Zou, A sixth-order fast algorithm for the electromagnetic scattering from large open cavities. Appl. Math. Comput. 219 (2013), no. 16, 8656-8666.
+		
+		MS11 J. M. Melenk and S. Sauter, Wavenumber explicit convergence analysis for Galerkin discretizations of the Helmholtz equation. SIAM J. Numer. Anal. 49 (2011), no. 3, 1210-1243.
+		
+		S09 R. Stevenson, Adaptive wavelet methods for solving operator equations: an overview. Multiscale, Nonlinear, and Adaptive Approximation. Springer, Berlin, Heidelberg, 2009, 543-597.
+		
+		U09 K. Urban, Wavelet methods for elliptic partial differential equations. Numerical Mathematics and Scientific Computation. Oxford University Press, Oxford, 2009. xxvii + 480 pp.
+		
+		WWLS08 J. Wu, Y. Wang, W. Li, and W. Sun, Toeplitz-type approximations to the Hadamard integral operator and their applications to electromagnetic cavity problems. Appl. Numer. Math. 58 (2008), 101-121.
+	
+	

@@ -1,0 +1,1007 @@
+
+
+
+
+
+Harish-Chandra Research Institute, A CI of Homi Bhabha National Institute, Chhatnag Road, Jhunsi, Prayagraj 211 019, India
+
+
+  We explore a small quantum refrigerator consisting of three qubits each of which are kept in contact with an environment. We consider
+  
+  two settings: one is when there is necessarily transient cooling and the other is when both steady-state and transient cooling prevail.
+  
+  We show that there can be
+  significant advantages than the Markovian environments case for both these settings in the transient regime and also in equilibrium if we replace the bath attached to the cold qubit by a non-Markovian reservoir. 
+  We also consider refrigeration with more than one non-Markovian bath of the three-qubit refrigerating device. Curiously, a steady temperature is reached only if there are at least two Markovian environments, although there are distinct envelopes of the temperature oscillations in all cases.
+  We compare the device connected to one or more non-Markovian reservoirs with the case of all Markovian environs, as also with two- and single-qubit self-sustained devices connected to one or more non-Markovian baths.
+  
+  
+  We propose a measure to quantify the amount of non-Markovianity in the systems. Finally, the refrigerator models are studied  in presence of Markovian noise,
+  and we analyse the response on the refrigeration of the noise strength. In particular, we find the noise strength until which refrigeration remains possible. 
+  
+
+
+
+     
+Improved refrigeration in presence of non-Markovian spin-environment
+    Aparajita Bhattacharyya, Ahana Ghoshal, Ujjwal Sen
+    March 30, 2023
+====================================================================
+
+
+
+§ INTRODUCTION
+
+
+The onset and flourishing of quantum thermodynamics <cit.>
+
+has sustained the arena of quantum thermal devices, which in turn has gained  utmost importance in the advancement of quantum technologies and in particular, for the miniaturisation of quantum circuits. In the last few decades, the achievement in designing quantum heat engines and quantum refrigerators <cit.>, quantum diodes <cit.>, quantum thermal transistors <cit.>, quantum batteries <cit.> has built the backbone of quantum technologies, which aims to enhance the efficiencies of quantum devices over their classical counterparts <cit.>. The confluence of quantum thermodynamics with many-body physics <cit.>, quantum information theory <cit.>, statistical and solid-state physics <cit.> have triggered the implementations of quantum devices in experiments using superconducting qubits <cit.>, mesoscopic substrates <cit.>, ionic systems <cit.>, nuclear magnetic resonance <cit.>, etc. The performance of such devices is evidently controlled by thermal baths or  environments connected to the machinery setup, and the dynamics of the device components are driven by the open quantum evolutions <cit.>. The thermal baths, that influence the efficiency of performance of the devices, can either be Markovian or non-Markovian depending on the validity of Born-Markov approximations <cit.>. In general, the efficiencies of quantum thermal devices immersed in Markovian <cit.> environments are computable and the dynamics of the machinery components 
+can be efficiently handled.
+
+
+Most of the thermal baths, however, reside in a non-Markovian family and therefore makes the realistic situations different from the ideal Markovian dynamics. There exists a significant body of work on quantum thermal machines operating under more than one thermal baths, which are either all Markovian <cit.> or all non-Markovian <cit.>.  
+
+
+
+
+The miniaturisation of technologies has acquired a considerable momentum with the introduction of the concept of quantum absorption refrigerators by Linden et al. in <cit.>. 
+
+
+The devices consist of a small number of qubits <cit.> and/or qudits <cit.> which are driven by local Markovian baths attached to the respective subsystems and a local cooling of one of the qubits, named as the cold qubit, can be attained. 
+The absorption refrigerators are self-contained refrigerators, that usually operate in the absorption region, where no external energy is required for the cooling process <cit.>. The dynamics of the device components is regulated to transfer thermal energy from a cold to a hot bath with the aid of a third heat bath, known as the work reservoir, both in the steady and in the transient regimes, in order to decrease the cold qubit's temperature with respect to its initial temperature. To put it in another way, maintaining the state of the cold qubit in the currently accessible ground state allows the cooling of the qubit which is achieved by lowering the system's local temperature. 
+
+
+Along with theoretical advancements, the implementation of quantum absorption refrigerators in quantum few-level systems have been devised by employing quantum dots <cit.>, atom-cavity systems <cit.> and circuit QED architectures <cit.>. Recently, three trapped ions <cit.> have also been used to construct a quantum absorption refrigerator. These refrigerators are anticipated to be helpful in instances where in-situ, on-demand cooling of systems as small as a qubit may be necessary without the need of external energy transfer and faster than the qubit's equilibriation time with a heat bath.
+
+The aforementioned works on quantum absorption refrigerators are mostly investigated in Markovian environments. Naturally, the efficiency of performance of the devices may be altered when connected with non-Markovian baths. In practical situations, most of the environments exhibit non-Markovian behaviour. In order to belong to the Markovian family, the thermal baths must be infinitely large and have a continuous energy spectrum <cit.>. The bosonic bath, consisting of an infinite number of harmonic oscillators, within certain constraints, behaves as a Markovian one. Most of the common baths, such as spin-baths <cit.>, are not Markovian. A few non-Markovian baths have Markovian limits, while for others, such as the spin star model, such a limit is evasive <cit.>. As Markovian nature of a thermal bath is, in general, far from the realistic scenario, it is important to study the effect of non-Markovianity on the refrigeration process. Sometimes, the situation may be more complex, in that while some of the thermal environments connected locally to the device components are Markovian, and the rest are not so. For such mixed local environments, the sub-systems of the machinery setup evolve under a combination of local Markovian and non-Markovian dynamics <cit.>. Such situations can arise, e.g. while considering hybrid systems like atom-photon arrangements.
+
+
+
+
+To discuss the non-Markovian effects on refrigeration, it is necessary to detect and quantify non-Markovianity of the system dynamics. There are a variety of non-Markovianity measures <cit.>, that are not all analogous. Two widely used measures were proposed by Breuer-Laine-Pillo (BLP) <cit.> and Rivas-Huelga-Plenio (RHP) <cit.>, that use non-monotonicity in time-evolution of state distinguishability and system-auxiliary entanglement respectively. 
+
+For more works on non-Markovianity measures, see e.g. <cit.>.
+
+
+
+
+In this paper, we consider a few-qubit refrigerator where each qubit is connected with a local reservoir, and look at the effect of substituting each Markovian reservoir by a non-Markovian one. The Markovian baths are considered to be bosonic in nature, interacting with the appropriate qubits via Markovian qubit-bath interactions. When the Markovian baths are replaced by non-Markovian spin-baths, the model is found to be advantageous over the complete Markovian scenario, which we call the “ideal" case.
+Along with three-qubit refrigerator models, with one or more non-Markovian reservoirs, producing advantages over the Markovian baths setting, 
+we also, for comparison and completeness, consider
+
+single- and two-qubit self-sustained thermal devices kept in contact with one or more spin-baths, which in certain situations also exhibit refrigeration.
+Subsequently, we propose a measure of non-Markovianity in these devices.
+
+Finally, since noise permeates all practical implementations of quantum machines, the three-qubit refrigerator is analysed in presence of several Markovian noise models. 
+
+The remainder of the paper is arranged as follows. The relevant information necessary to formulate the problem is discussed in Sec. <ref>. This includes establishing the system Hamiltonian, the initial state, and providing a formal definition of local temperature of the individual qubits.
+In Section <ref>, we analyse 
+
+the interaction of the system with the Markovian and non-Markovian baths with a detailed description of the system operators. 
+
+In Sec. <ref>, there is given a quantifier of non-Markovianity and its comparison with the well-known RHP measure. Sec. <ref> illustrates the operation of the refrigerator in presence of noise. Finally, the concluding remarks are presented in Sec. <ref>.
+
+
+
+§ QUANTUM ABSORPTION REFRIGERATOR
+
+
+A quantum absorption refrigerator usually comprises of three interacting qubits locally connected with three Markovian thermal baths B_1^M, B_2^M and B_3^M respectively, where the superscripts M stands for Markovian environments. The first qubit is the one to be cooled, often termed as the cold qubit, while the second and third qubits perform the refrigeration <cit.>. 
+
+The Hamiltonian of the three-qubit system is represented as H_S=H_loc+H_int, where H_loc represents the local Hamiltonian of the three individual qubits and H_int describes the  interaction between the qubits. The H_loc and H_int are respectively considered to be
+
+    H_loc=K/2∑_i=1^3 E_i σ_i^z,
+          H_int=Kg(|010⟩⟨101|+|101⟩⟨010|).
+
+Here |1⟩_i and |0⟩_i are the ground and excited states 
+
+of the i^th qubit, having energies -K E_i/2 and K E_i/2 respectively, where K is an arbitrary constant having the unit of energy.
+
+
+ 
+
+{E_i} are dimensionless quantities and g is the dimensionless interaction strength. σ_i^z stands for the z-component of the Pauli matrices, σ⃗_⃗i⃗(σ_i^x,σ_i^y,σ_i^z), for i^th qubit.
+The individual qubits are connected with local heat baths of temperatures τ_1, τ_2 and τ_3 respectively, where τ_1 ≤τ_2 ≤τ_3. 
+τ_2 is initially chosen to be at room temperature. Note that,  τ_1, τ_2 and τ_3 are dimensionless temperatures with the actual temperatures  τ̃_1, τ̃_2 and τ̃_3, defined as τ_1=k_Bτ̃_1/K, τ_2=k_Bτ̃_2/K and τ_3=k_Bτ̃_3/K respectively, where k_B is the Boltzmann constant.
+
+To construct a self-contained refrigerator, which can operate autonomously independent of any external source, 
+
+a special choice of the energy of the qubits, E_1+E_3=E_2, has to be taken <cit.>.
+Additionally, we also set the first qubit to remain at room temperature initially, i.e.,  τ_1=τ_2.
+
+At t=0, where t being the dimensionless time with the actual time t̃ representing as t=K t̃/ħ, we start with the situation where the three qubits are separately in thermal equilibrium with the three reservoirs locally connected to them.
+
+So, the initial state of the three-qubit system is 
+
+given by
+
+    ρ_0=ρ_0^1 ⊗ρ_0^2 ⊗ρ_0^3.
+
+Here ρ_0^i=Z_i^-1exp(-β_i E_i σ_i^z/2), where Z_i is the partition function for the i^th qubit represented by Z_i=Tr[exp(-β_i E_i σ_i^z/2)] and β_i is the corresponding dimensionless inverse temperature given by β_i=1/τ_i.
+
+After turning on the interaction between the qubits for t>0, the system undergoes a time evolution governed by the quantum master equation of the Lindblad  form <cit.>
+
+    ∂ρ_s(t)/∂ t =ℒ(ρ_s(t))= -i/K[H_S,ρ_s(t)] +∑_i=1^3 ħ/K𝒟_i(ρ_s(t)),
+
+where ρ_s(t) is the reduced state of the three-qubit system at time t and 𝒟_i(ρ_s(t)) comes from the decoherence effects of the i^th bath. The form of 𝒟_i(ρ_s(t)) solely depends on the type of the i^th bath connected to the systems and it may have different forms for Markovian and non-Markovian environments. 
+One point is to be borne in mind that, initially, the density matrices of the three reduced subsystems are diagonal 
+
+in the eigenbasis of H_loc. As the Markovian baths do not generate coherence, the  
+local subsystems ρ_i(t)=Tr_j,k(ρ_s(t)), j,k  i [i,j,k ∈{1,2,3}],  also remain diagonal at a later time t. This helps us to define a local temperature for the qubits. Let the reduced state of the first qubit after time development be 
+
+
+
+    ρ_1(t)=r_1(t) |0⟩⟨0| +[1-r_1(t)]|1⟩⟨1|,
+
+where r_1(t) is the population in the ground state at time t, given by r_1=Z_1^-1exp (-E_1/2 T_1(t)). T_1(t) being the dimensionless local temperature of the cold qubit at time t, with the actual temperature T̃_1(t) represented as
+
+    T_1(t)=k_B T̃_1(t)/K=E_1[ ln( 1-r_1(t)/r_1(t)) ]^-1.
+
+The temperatures of the remaining two qubits can also be defined in a similar fashion. The definition of local temperatures for any qubit is based on the population of ground and excited states of the system. Decrease in temperature is here manifested as an increase in the ground state population. In all further discussions, temperatures and time indicate the corresponding dimensionless temperature and time defined above.
+
+
+
+For proper refrigeration to occur, the local temperature of the cold qubit is to be sufficiently reduced than its initial temperature, i.e., T_1(t)<τ_1, during the evolution of the system in presence of the heat baths, until it attains a steady or canonical equilibrium state. If the temperature of the cold qubit in the steady state, T_1^S, is lower than τ_1, we say that a steady state cooling (SSC) has been achieved. Also, in the transient regime, cooling is attained at time scales shorter than the steady state, and a temperature much less than τ_1 may be achieved. Such a cooling may be referred to as transient cooling (TC) <cit.>. 
+
+
+Sometimes TC can be obtained without the occurrence of SSC.
+
+
+
+
+ §.§ Refrigeration in Markovian environment
+
+
+
+A local cooling of qubit-1 can be obtained by the three-qubit three-bath setup with the bath configuration {B_1^M,B_2^M,B_3^M}, which means all the three baths are Markovian. 
+
+We consider the Markovian baths to be bosonic baths consisting of infinite number of harmonic oscillators with a frequency range varying widely. The Hamiltonian of the baths is taken to be H_B^M=∑_i=1^3 H_B_i^M, where
+
+    H_B_i^M=
+        
+        ∫_0^Ωħω̃η_ω^i†η_ω^idω.
+
+Here ω̃ is an arbitrary constant having the unit of frequency and Ω is the cutoff frequency taken to be same for all the baths, which is very high such that the memory time,  Ω^-1, is negligibly small and we can safely incorporate the Markovian approximations <cit.>. η^i†_ω(η^i_ω), having the unit of 1/√(ω), represents the bosonic creation (anihilation) operators corresponding to the mode ω of i^th bath. The system-bath interaction Hamiltonian is taken as H_SB^M=∑_i H_SB_i^M, where
+
+
+    H_SB_i^M=∫_0^Ωħ√(ω̃)dω h_i(ω)σ_i^x⊗ (η_ω^i†+η^i_ω)
+
+describes the interaction between the i^th system and i^th bath. Here h_i(ω) is a dimensionless function of ω, which tunes the coupling of qubit-i and B_i^M. For harmonic oscillator baths, ω̃ h_i^2(ω)=J_i(ω), where J_i(ω) is the spectral density function of B_i^M. In this paper, we have taken J_i(ω) to be Ohmic spectral density function in the form J_i(ω)= α_i ωexp(-ω/Ω). α_i stands for the dimensionless qubit-bath interaction strengths.
+
+
+
+
+
+
+
+
+The dynamical equation of the system is given by the Gorini–Kossakowski–Sudarshan–Lindblad (GKSL) master equation
+
+presented by Eq. (<ref>) with the dissipative parts,
+
+
+    𝒟_i(ρ_s(t)) = ∑_ω^'γ_i(ω^') [L_i^ω^'ρ_s(t) L^ω^'†_i -1/2{ L_i^ω^'† L^ω^'_i, ρ_s(t) }].
+
+Here i=1,2,3. γ_i(ω^') is the decay rate having the unit of time^-1 and { L^ω^'_i } refers to the Lindblad operators corresponding to the possible transition energies ω^' of the system. 
+
+For the validation of Born-Markov approximations, we are residing in the weak coupling limit, max{γ̃_i(ω^')}≪min{E_i,g}, where γ̃_i(ω^')=ħγ_i(ω^')/K. 
+The explicit expressions of the Lindblad operators and the decay constants {γ_i(ω^')} are given in Appendix <ref>.
+
+
+It is already known that there are three operating regimes of an ideal quantum absorption refrigerator with the configuration {B_1^M,B_2^M,B_3^M}, depending on the qubit-bath interaction strengths, α_i for i=1,2,3, of the three-qubit three-bath model <cit.>. An example of these three scenarios is described below in a regime, where the coupling between the qubits are taken to be strong, i.e., g ≈ E_i.
+
+
+
+
+𝐒_1: TC without SSC. Fig. <ref>-(a) shows a refrigeration of the cold qubit in the regime where transient cooling occurs without the occurance of steady state cooling. 
+
+The minimum of the transient temperature is acquired for T_1^C ≈ 0.84. After a finite time, the temperature of the cold bath saturates at a value higher than the initial temperature τ_1=1, displaying a characteristic of steady state heating. 
+
+
+
+𝐒_2: TC better than SSC. From Fig. <ref>-(b) we can realise a situation where both the transient and steady state cooling occur, but the transient cooling is better than the steady state one. Comparing with Fig. <ref>-(a), it is noted that in the transient region, the behaviour of the system remains qualitatively same attaining a minimum temperature at T_1^' C≈ 0.84. Also, there is an additional feature of steady state cooling (T_1^' S≈ 0.88) which is completely non-existent in the previous case (𝐒_1).
+
+
+
+
+
+𝐒_3: SSC better than TC. Fig <ref>-(c) describes a operative region of the refrigerator where both the transient and steady state cooling occur, but the steady state cooling is better than the transient one.
+
+In all the three situations 𝐒_1, 𝐒_2 and 𝐒_3, we get a specific parameter region of {α_1,α_2,α_3} for the operation of the refrigerators. For the convenience of notation we will denote the specific regions as {α_1^S_i,α_2^S_i,α_3^S_i} for the corresponding situation 𝐒_𝐢 with i=1,2 and 3. 
+
+
+
+
+§ EFFECT OF NON-MARKOVIANITY ON THE REFRIGERATION
+
+
+
+
+A Markovian situation is a very special case having some strict restrictions on the thermal baths, whereas the existence of a non-Markovian bath in the nature is more likely. So, there may occur some erroneous tuning of the parameters of the thermal baths, and any of the three bath or all the three baths may show non-Markovianity. Hence, the effect of non-Markovian baths on the refrigeration is needed to be studied. Let us first discuss the case, where all the three baths in the three-qubit three-bath refrigerator setup are non-Markovian i.e., the configuration is {B_1^NM,B_2^NM,B_3^NM}. The NM in the superscripts stands for the non-Markovian baths. In this case, the system bath interaction is considered to form a “spin-star" configuration. There are N+1 number of spins, among which N are lying on the surface of a sphere with one single central spin at equal distance from the spins on the surface. The central spin comprises the open system and is supposed to belong to a two dimensional Hilbert space ℋ_A, while the surrounding spins constitute the environment associated with a Hilbert space ℋ_B whose dimension is an N-fold tensor product of two dimensional spaces. The local Hamiltonian of the i^th bath is taken as
+
+    H_B_i^NM=ħν_i J_i^+J_i^-,
+
+where
+
+    J_i^±=∑_i^Nσ_(i)^±  and  σ_i^±=σ_x^i ± iσ_y^i/2,
+
+with ν_i being the frequency of B_i^NM.
+The interaction between the central spin and neighbouring spins is taken to be of the form of the Heisenberg XY interaction <cit.>, given by
+
+    H_SB_i^NM=2 Kα_0 ( σ_i^+ J_i^- + σ_i^- J_i^+ ).
+
+
+Here, α_0 stands for the dimensionless interaction strength. For our entire analysis, we have chosen α_0=0.5. The time dynamics of the reduced three-qubit system after tracing out the baths is controlled by the following equation,
+
+    ρ_s(t) = Tr_B [e^-i(H_S+H_I)ρ(t) e^i(H_S+H_I)],
+
+where ρ(t) is the combined state of system-bath setup at time t.
+
+
+
+The effect of cooling of the first qubit, for the configuration {B_1^NM,B_2^NM,B_3^NM} is depicted in Fig. <ref>. The temperature T_1(t) oscillates between 0.8 and 0.96. So, the minimum transient temperature attained by qubit-1 is less than the minimum transient (≈ 0.84) and steady state temperatures (> 0.86) for the settings in  Figs.<ref>-(a) and (b), but is not better than the situation  depicted in Fig.<ref>-(c), attained for the ideal Markovian cases. Therefore, the transient cooling of the first qubit can be enhanced for certain choices of the bath parameters, once all the three baths attached to the system are made non-Markovian. An important point is to be noted that, although the rapidity of oscillation of T_1(t) reduces with the increase of time, but the steady state is not reached due to the non-Markovian nature of the system-bath interaction, or it may appear at a larger timescale. So, a steady state cooling may not be attainable for the situation where all the three baths are non-Markovian. 
+
+Since some baths (with some restrictions) can be considered as a member of a Markovian family and some non-Markovian baths have their Markovian limits, so it is justifiable to have a situation where among the three baths one or two will be Markovian and the remaining are not so. 
+
+
+
+
+
+The time evolution of the three-qubit system as a whole in presence of such a mixture of local Markovian and non-Markovian environments is given by the following equation <cit.>
+
+    ∂ρ̃_s(t)/∂ t =ℒ(ρ̃_s(t))= -i/K[H_S,ρ̃_s(t)]
+          + ħ/K∑_{i_m}𝒟_M_i_m(ρ̃_s(t))+ ħ/K∑_{i_n}𝒟_NM_i_n(ρ_sB_{i_n}^NM(t)).
+
+Here, each of i_m and i_n stands for the i^th qubit, connected to i^th bath which can be either m^th Markovian or n^th non-Markovian, with m and n are the total number of Markovian and non-Markovian baths respectively.  
+
+
+The reduced state of the system ρ̃_s(t) is given by ρ̃_s(t)=Tr_B_{i_n}(ρ_sB_{i_n}^NM(t)), where ρ_sB_{i_n}^NM(t) is the system state correlated with all the non-Markovian baths.  𝒟_M_i_m(ρ̃_s(t)) is the dissipative term coming from the interaction between i^th qubit and i^th bath, which is a Markovian bosonic one, having the form same as Eq. (<ref>). The Lindblad operators of this dissipative term corresponding to i_m=i can be presented as L_i^ω^' for i=1, 2 and 3 and has the same structure as in Eq. (<ref>). 𝒟_NM_i_n(ρ_sB_{i_n}^NM(t)) is the same coming from the i^th qubit-bath interaction, for which the bath is non-Markovian, given by
+
+    𝒟_NM_i_n(ρ_sB_{i_n}^NM(t)) = -i/ħTr_B_i_n^NM[ H_SB_i_n^NM,ρ_sB_{i_n}^NM(t) ].
+
+The choice of spin star model as a non-Markovian bath ensures that
+
+the reduced subsystem of 
+the first qubit is diagonal in the eigenbasis of the system Hamiltonian, hence curtailing any ambiguity regarding the definition of local temperature for the combination of local Markovian and non-Markovian evolution. We now replace the Markovian baths of the ideal absorption refrigerator by non-Markovian reservoirs successively and investigate the effect of a mixed set of local environments on the transient as well as the steady state cooling of the first qubit. We refer to the usual three-qubit three Markovian baths setup to be an “ideal" one and after replacing any of the Markovian bath with a non-Markovian one, we denote the situations as “altered" scenarios. In all the three altered setups, 𝐒_1, 𝐒_2 and 𝐒_3, the parameters of the Markovian baths, α_i for i=1,2 and 3, are same as in ideal 𝐒_1, 𝐒_2 and 𝐒_3 scenarios respectively, and all the parameters of the non-Markovian baths are same as in Fig. <ref>. In this paper, we have considered four altered scenarios by taking two situations with m=2 and n=1 in Eq. (<ref>) with the bath configurations: 𝒜_1^S_i≡{B_1^NM,B_2^M,B_3^M} and 𝒜_2^S_i≡{B_1^M,B_2^M,B_3^NM}, and two situations with m=1 and n=2 with the bath configurations: 𝒜_3^S_i≡{B_1^NM,B_2^M,B_3^NM} and 𝒜_4^S_i≡{B_1^M,B_2^NM,B_3^NM}. The superscripts, S_i, denote the corresponding ideal situations 𝐒_1, 𝐒_2 and 𝐒_3 respectively for i=1,2 and 3. Therefore the parameter spaces corresponding to these four scenarios 𝒜_1^S_i, 𝒜_2^S_i, 𝒜_3^S_i and 𝒜_4^S_i are respectively {α_0,α_2^S_i,α_3^S_i}, {α_1^S_i,α_2^S_i,α_0}, {α_0,α_2^S_i,α_0} and {α_1^S_i,α_0,α_0}. The situations 𝒜_1^S_1, 𝒜_3^S_1 and 𝒜_4^S_2 are same as 𝒜_1^S_2, 𝒜_3^S_2 and 𝒜_4^S_3 respectively, since α_1^S_2=α_1^S_3, α_2^S_3=α_2^S_2 and α_3^S_1=α_3^S_2.
+Further, we compare the three-qubit refrigerator model with one and two-qubit self-sustaining thermal devices kept in contact with spin-baths, which also exhibit refrigeration in certain situations.
+
+
+
+
+ §.§ Cooling of the cold qubit in the altered situation of 𝒜_1^S_i
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Let us first consider a situation where there is a single qubit attached to a spin-environment where the qubit-bath interaction is given by Eq. (<ref>). The system Hamiltonian is considered to be H^1=E_1^1σ_z/2. The initial state is taken as a product of the thermal states of the qubit and bath, each of which are at temperature T_1^1=1. After the evolution, the final state is also diagonal, and we can calculate the temperature corresponding to the final state. If we consider the environment to consist of only a single spin, i.e. N=1 in Eq. (<ref>), then the expression of the final temperature of the qubit, hence obtained, is given in Appendix <ref>. 
+ 
+ 
+ 
+ 
+ 
+It is noted that if E_1^1 < 1, then the temperature, T_1(t), oscillates uniformly between T_1(t)=1 and some T_1(t) < 1, but the envelope of temperature oscillations is linear and never converges to equilibrium. So there is an instance of transient refrigeration at certain times, although the maximum of the envelope never goes below unity(Fig. <ref>-(a)).
+
+Next let us consider a two-qubit thermal device comprising of the cold qubit and one of the other two qubits of the three-qubit absorption refrigerator. So the configuration is either 𝒬_1={B_1^NM,B_2^M} or 𝒬_2={B_1^NM,B_3^M}.  The interactions between the two qubits for the configurations 𝒬_1 and 𝒬_2 are H_1=|01⟩⟨10|+|10⟩⟨01| and H_2=|00⟩⟨11|+|11⟩⟨00| respectively.
+Let us first look at the case 𝒬_1. The local Hamiltonian is H^2=(E_1^2/2) σ_z^(1)+(E_2^2/2) σ_z^(2). The two eigenstates of H^2, |01⟩ and |10⟩, are degenerate if E_1^2=E_2^2, and therefore the swapping, |10⟩↔|01⟩, can be done without any input of external energy. 
+However under this condition, the initial temperature of the first qubit being T_1 and the second qubit being T_2, satisfying τ_1=T_1 ≤ T_2, one always obtains the final temperature T_1(t) > τ_1, and there is no refrigeration.
+On the other hand, for the configuration, 𝒬_2, the self-sustained condition is given by E_1^2=-E_2^2, where no external energy input is needed.
+Under this condition, keeping T_1 ≤ T_2, and E^2_1 < 1, there is an instance of refrigeration, and we depict the particular case of E^2_1 = 0.5 in Fig.<ref>-(b).
+So refrigeration is observed under certain conditions in the single and two-qubit scenarios, when the first qubit is attached to spin-bath, but in none of these situations steady state cooling is achieved.
+
+Let us now move to the three-qubit case. We consider a three-qubit ideal quantum absorption refrigerator operating in the parameter regime 𝐒_1. 
+We now replace the Markovian bath attached to the cold qubit by a non-Markovian one, which gives the configuration 𝒜_1^S_1, i.e., {B_1^NM,B_2^M,B_3^M}. The system-bath interaction is now governed by H̃_1=H_SB_1^NM+∑_i=2^3 H_SB_i^M. 
+
+
+In Fig. <ref>-(a) we depict the dynamics of the temperature of the first qubit in this scenario. We observe that the refrigeration of the refrigerator is present here. The transient temperature T_1(t) approaches a minimum > 0.75, which is less than the same of the corresponding ideal Markovian baths case T_1^C, and in course of time slowly attains a steady state temperature with temperature ≈ 0.7. So, in this altered situation we acquire both transient cooling (TC) and steady state cooling (SSC), while for the ideal Markovian case, the SSC was non-existent in 𝐒_1 (see Fig <ref>-(a)).
+If we consider the parameter regime, 𝐒_2, and substitute the first Markovian bath by a non-Markovian one, we get the configuration 𝒜_1^S_2. This configuration is qualitatively the same as in 𝒜_1^S_1, since α_2 and α_3 are equal in both these cases.
+
+We now look at the effect of combined local Markovian and non-Markovian evolution on the operation of an ideal absorption refrigerator with the bath combination {B_1^NM,B_2^M,B_3^M}, but in the parameter space 𝐒_3. 
+
+In this case, 
+the minimum of the transient temperature T^C_1_min<T_1^' C of the ideal case, and it approaches the steady state with temperature T_1^S<T'_1^S. So, here also, the refrigeration of the refrigerator is prevalent, and both TC and SSC is observed.
+
+
+In the case of 𝒜_1^S_3, we can attain a steady state cooling with a temperature of the first qubit  ≈ 0.7, while in the ideal case of S_3, the steady state temperature is ≈ 0.75. Hence, compared to Fig. <ref>-(c), an enhancement occurs both in the transient cooling and the steady state cooling when compared with the ideal scenario 𝐒_3. Therefore, we can infer that, a reduction of the temperature of cold qubit is clearly visible in the transient and steady state regime for this altered setup, 𝒜_1^S_i.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Therefore, the replacement of the Markovian bath attached to the cold qubit of an ideal absorption refrigerator in the operating regime 𝐒_1 (or 𝐒_2),  enhance the transient cooling by reducing the temperature of the cold qubit below the cooling obtained in the ideal Markovian case (< T_1^C). Moreover, the system equilibriates towards a steady state temperature in this altered situation of 𝐒_1 (or 𝐒_2).
+
+
+Similarly, substituting the first Markovian reservoir by a non-Markovian one for the setting  𝐒_3, one attains an improved refrigeration both in the transient state and steady state regimes.
+So, the results in this subsection depict that if we substitute the Markovian bath attached to the cold qubit by a spin-environment, both transient and steady state cooling can be achieved, which is better than the ideal Markovian case.
+Further, we compare the situation 𝒜_1^S_i with the single-qubit case. For the single-qubit, we find that refrigeration is non-existent unless E_1^1<1, while in the three-qubit scenario, we always consider E_1=E_3=1.  
+Also, unlike the case of 𝒜_1^S_i, the final temperature in the single-qubit situation does not attain a staedy state, although it periodically goes below its initial temperature, T_1^1 = 1  (compare Figs. <ref>-(a) and  <ref>).
+Now if we ompare 𝒜_1^S_i with the setting 𝒬_2, we see that
+refrigeration is present in both the settings, but again in the two-qubit case, E_1^2 has to be less than unity.
+Also, unlike 𝒜_1^S_i,  the oscillations in 𝒬_2 are persistent and steady state is not attained (compare Figs. <ref>-(b) and  <ref>).
+Thus attainment of steady state cooling is a distinct feature of the quantum absorption refrigerator consisting of three qubits and not less than that.
+
+
+
+
+ §.§ Cooling of the cold qubit in the altered situation of 𝒜_2^S_i
+
+
+
+We begin this subsection by considering the ideal three-qubit scenario where all the three baths are Markovian, and substitute the bath, which is not connected to the cold qubit, by a non-Markovian one.
+We consider the three parameter regimes of 𝐒_1, 𝐒_2 and 𝐒_3, and look at the effect of  replacing the bosonic bath attached to the third qubit of the “ideal" scenario into a non-Markovian one, i.e. {B_1^M,B_2^M,B_3^NM}.  The situation is qualitatively same for {B_1^M,B_2^NM,B_3^M} configuration also (not shown).
+If we substitute any one of the second or third bosonic baths with a non-Markovian one, say the third one, i.e., the configuration 𝒜_2^S_1 ({B_1^M,B_2^M,B_3^NM}), we  obtain only TC but do not obtain SSC as evident from Fig. <ref>-(a). In this situation, the minimum transient temperature is < 0.88, which at steady state regime converges to a value > 1.
+
+Similarly for the configuration  𝐒_2, if the third qubit is connected to the non-Markovian spin-bath while the others being Markovian, i.e., 𝒜_2^S_2,  transient cooling is evident but steady state cooling may not be obtained, and the refrigeration of the refrigerator is present in the transient region only. See Fig. <ref>-(b). Here the minimum transient temperature, < 0.88, and the steady state temperature, ≈ 0.98,  are greater than the corresponding minimum transient temperature and the equilibrium temperature of the final state in the corresponding ideal Markovian case. This feature is different from the 𝒜_1^S_i scenario, where there was an advantage over the corresponding ideal Markovian scenarios.
+
+Similarly, the configuration 𝒜_2^S_3 exhibits transient cooling of the first qubit as depicted in Fig.(<ref>-(c)). The minimum transient temperature lies beneath ≈ 0.88 and equilibriates to  a value ≈ 0.98.
+So in the setting, 𝒜_2^S_i, the action of the refrigerator in the transient regime still persists but without any advantage over the “ideal" Markovian case, and also showing instances of steady state heating.
+
+Hence, only TC is obtained but with no advanatge over the “ideal" Markovian scenario with the Markovian and non-Markovian bath ratio 2:1, if the first qubit is not kept in contact with the non-Markovian environment. Moreover, though the oscillations vary within a certain range of temperature in the transient region, the temperatures for all these three cases tend to attain an equilibrium at some large timescales. So attainability of steady state is also a feature noted in this situation.
+
+
+
+ §.§ Cooling of the cold qubit in the altered situation of 𝒜_3^S_i
+
+
+Here we consider an ideal three-qubit quantum refrigerator where all the three qubits are initially attached to Markovian baths, and  two of them, say first and third one, are replaced by a spin-environment.
+So, here we consider the setting 𝒜_3^S_i, i.e., {B_1^NM,B_2^M,B_3^NM}, where the system-bath interaction is governed by H̃_1=∑_i=2^3 H_SB_1^NM+ H_SB_i^M.
+The features obtained in this setting are qualitatively same for the configuration, {B_1^NM,B_2^NM,B_3^M} (not shown).
+Let us first look at the configuration 𝒜_3^S_1, as depicted in <ref>-(a). 
+
+The transient temperature T_1(t) oscillates rapidly between 0.75 and 1.0 with its magnitude never surpassing unity. The minima of T_1(t) varies around ≈ 0.75, which shows refrigeration along with an enhancement in cooling of the first qubit than the minimum transient temperature of the corresponding ideal Markovian case. Compare Figs. <ref>-(a) and <ref>-(a).
+ The setting 𝒜_3^S_2 is qualitatively same as the previous case, 𝒜_3^S_1 because of the choice of α_2. Moreover,the attainment of equilibrium is non-existent in this scenario in a sufficiently large time-scale.
+
+Next we consider the parameters corresponding to the configuration, 𝒜_3^S_3, where we observe similar features. The transient temperature, T_1(t), varies between ≈ 0.75 and 1.0, and the envelope of oscillations narrows down within the observed time. It may or may not reach equilibrium at large times. The refrigeration, however, is existent and the minimum transient temperature in this case(≈ 0.75) is less than the minimum transient temperature in the corresponding ideal Markovian case <ref>-(c), although not less than its steady state temperature.
+
+
+
+Therefore, substituting any two Markovian baths including the first one is beneficial as this enhance the transient cooling, but the increase of non-Markovianity restrict the attainability of the steady state cooling.
+
+
+One distinct nature of this m=1, n=2 cases is that, the oscillations in T_1(t) consistently persist with undiminished amplitudes and do not tend to saturate in a sufficiently large time-scale. This behaviour appears with the increase in the number of non-Markovian baths and qualitatively resembles the situation where all the three baths are non-Markovian. Compare with Fig. <ref>.
+
+
+
+Next we compare the results obtained using the configuration, 𝒜_3^S_i, with the single-qubit case. 
+In the single-qubit scenario, refrigeration effect is present with periodic oscillations under the condition E_1^1 < 1 and not with E_1^1=1. But in the three-qubit situation, we always consider E_1=E_3=1. 
+Moreover, in the single-qubit case, the envelope of oscilllations does not vary with time, a feature similar to 𝒜_3^S_1 (refer to figures <ref>-(a) and  <ref>-(a)). 
+While, for 𝒜_3^S_3, similar transient cooling is existent but the envelope narrows down with time (refer to Fig. <ref>-(b)). The non-attainment of equilibrium is also another feature noted in both these cases.
+
+We now compare the three-qubit quantum absorption refrigerator under the configuration, 𝒜_3^S_i, with the relevant two-qubit cases.
+We saw previously that the configuration 𝒬_1 does not provide a self-sustained two-qubit refrigerator. So we compare the two-qubit configuration,𝒬_2, with the three-qubit configuration, 𝒜_3^S_i.
+Again, in the two-qubit case, refrigeration is possible only when E_1^2<1 while in the three-qubit setup, cooling occurs when E_1=E_3=1.
+Both the cases depict a refrigeration effect without attaining equilibrium, although the envelope of the two plots are different. Compare Figs. <ref>-(b) and  <ref>-(b).
+
+ Next, we also consider a two-qubit situation where both the qubits are attached to spin-baths, i.e. the configuration is 𝒬_3={B^NM_1,B^NM_2}. The local Hamiltonian is H^2=(E_1^2/2) σ_z^(1)+(E_2^2/2) σ_z^(2). The two qubits interact via the interaction H_1=|01⟩⟨10|+|10⟩⟨01|, under the self-sustained condition, E_1^2=E_2^2. We measure the final temperature of the first qubit, which exhibits only transient cooling at certain times, and the final temperature of the first qubit, T_1(t), sometimes rises above its initial temperature.  Fig. <ref>, for example, depicts the case where E_1^2=0.1 and the spin-environment corresponds to N=1. Moreover, unlike the three-qubit case, cooling is not obtained here for E_1^2 ≥ 1.
+
+
+
+ §.§ Cooling of the cold qubit in the altered situation of 𝒜_4^S_i
+
+
+
+
+
+
+
+
+Let us now look into the case where the second and third qubits are connected to  non-Markovian spin-baths while the first one is Markovian, i.e., the setting 𝒜_4^S_i. Initially consider  the ideal scenario when all the three baths are Markovian within the parameter region of 𝐒_1. Now if we replace the baths attached with the second and third qubits to non-Markovian ones, it is observed that steady state cooling is not obtained, and the refrigeration of the refrigerator is almost destroyed. See Fig. <ref>-(a). In this case, the oscillations vary between temperatures 0.9 and 1.02, with the minimum transient temperature being ≈ 0.9. The envelope of the oscillations gradually narrows down to a value greater that the initial temperature of the first qubit. Like in the previous subsection, here also the oscillations do not converge to a steady state within the observation period. 
+
+
+
+
+We now take the altered situation of 𝐒_2, i.e. 𝒜_4^S_2. For this setting (same with 𝒜_4^S_3), 
+
+we observe that
+
+the transient temperature of the cold qubit T_1(t) begins to oscillate between 0.9 and < 1.02 without attaining a steady state. So here also, the envelope of temperature oscillations vary with time and no enhancement of the transient state cooling is achieved over the ideal Markovian situation compared to 𝐒_2. Compare Figs. <ref>-(b) and <ref>-(b). 
+
+
+
+
+
+An important feature to be noted here is that, like the situation of 𝒜_3^S_i with two of the baths made non-Markovian,
+
+here also for 𝒜_4^S_i, the steady state is not attainable within the observation time. 
+So, unattainability of steady state is a general feature of m=1 and n=2 configurations, and it does not solely depends on the parameter space of the Markovian bath, which is coupled to any of the qubits.
+
+
+
+
+
+Therefore, we can conclude from the last two subsections that replacement of any two Markovian baths including the first one is beneficial as this  enhance the transient cooling, but the increase of non-Markovianity restrict the attainability of the steady state cooling. On the other hand, replacing any of the second or third Markovian baths or both of them by a non-Markovian one by keeping the cold qubit attached with a Markovian bath, results in a deterioration of performance  of the usual absorption refrigerator. So, one can attain a sufficient cooling of qubit-1 whenever it is connected to a non-Markovian environment, whatever be the nature of the baths attached to the other two. 
+
+Finally, the analysis in this section infers that, the effect of non-Markovian baths on the quantum absorption refrigerator, results an enhancement in cooling attainable in transient as well as the steady state regime in some cases (if attainable), when the cold qubit is attached to a non-Markovian bath. We can call the quantum refrigerators with the beneficial altered setups as “non-Markovian quantum refrigerators". This reduction of temperature of the cold qubit with this non-Markovian setups owes its origin to the non-Markovianity incorporated to the bath attached to the first qubit. This leads to define a quantifier of non-Markovianity for a quantum absorption refrigerator discussed in the next section.
+
+
+§ A MEASURE OF NON-MARKOVIANITY
+
+
+
+
+
+
+
+
+
+
+
+We have already shown that the efficiency of a quantum absorption refrigerator can be enhanced if the cold qubit is attached with a non-Markovian spin-bath, instead of a Markovian bosonic one. While for ideal Markovian situations (among of the three cases of ideal 𝐒_1, 𝐒_2 and 𝐒_3), the transient and steady state temperatures attain ≈ 0.84 and ≈ 0.75 respectively, and a replacement of the Markovian bath attached to the cold qubit with a non-Markovian one, can reduce the respective transient and steady state temperatures to < 0.8 and ≈ 0.7. Let us try to find the origin of the decrease of temperature. As we concentrate on the temperature of qubit-1, from now on we will focus on the time dynamics of the first qubit only.
+
+
+
+
+Let us consider a two level system described by the Hamiltonian H=KE^'_0|0⟩⟨0|+KE^'_1|1⟩⟨1| and the initial state of the system, ρ^'(0), is taken to be diagonal in the eigenbasis of the 
+Hamiltonian. Now suppose, a non-Markovian channel N^t_NM is applied on the qubit for time t which results an evolution of the system, such that the density matrix of the state remains diagonal in the eigenbasis of the Hamiltonian. The corresponding density matrix is given by ρ^'_NM(t)=N^t_NM(ρ^'(0))=p(t)|0⟩⟨0|+(1-p(t))|1⟩⟨1|. Similarly, if the qubit evolves through a Markovian channel N^t_M, one can obtain the dynamical state as ρ^'_M(t)=N^t_M(ρ^'(0))=p^'(t)|0⟩⟨0|+(1-p^'(t))|1⟩⟨1|. The dynamical temperatures corresponding to the non-Markovian (T_NM^t) and Markovian (T_M^t) processes are defined through the following relations
+
+    ⟨0|ρ^'_NM(t)|0⟩ = e^-E'_0/ T_NM^t/e^-E'_0/ T_NM^t+e^-E'_1/T_NM^t= α_NM
+          ⟨0|ρ^'_M(t)|0⟩ = e^-E'_0/ T_M^t/e^-E'_0/T_M^t+e^-E'_1/T_M^t= α_M
+
+respectively.
+Inverting these equations, one arrives at 
+
+    T_NM^t-T_M^t=(E'_0-E'_1)[ 1/ln(1/α_NM -1) - 1/ln(1/α_M -1)].
+
+In this equation, the difference, T_NM^t-T_M^t, is a function of the parameters of the Markovian channel, α_1, α_2 and α_3. So the difference will vary with the choice of the channel parameters and may even give zero value corresponding to a particular choice of these three parameters. So we optimise over the channel parameters, α_1, α_2 and α_3, to give a generalized expression of the quantity in <ref>.
+Thus Eq. (<ref>), with an optimisation over α_M, can be visualized as a measure of non-Markovianity of an arbitrary quantum channel C which manifests the deviation from its Markovian counterpart.
+We therefore define the quantity,
+
+    M_C= |(E'_0-E'_1)[ 1/ln(1/α_C -1) - min_α_M1/ln(1/α_M -1)]|
+
+as a measure of non-Markovianity as this term quantifies the temperature difference of a system after passing through an arbitrary channel C, from the temperature obtained when passing through an optimal Markovian channel. 
+
+This quantifier M_C returns a positive value when the channel is non-Markovian, While for a Markovian channel, the quantifier is zero. 
+
+We now study the nature of the quantifier for 
+the configuration of bath, 𝒜_1^S_i, 
+
+with the parameter regions 𝒜_1^S_1=𝒜_1^S_2 and 𝒜_1^S_3
+
+as  quantum channels, say C_1, C_2
+
+respectively. The time dynamics of M_C_1 and M_C_2 are
+ presented in Fig. <ref>-(a) and Fig. <ref>-(b)  (the green curves) respectively. For clarity, the quantifier M_C is scaled by a factor δ=20 and plotted.
+
+Both M_C_1 and M_C_2 
+show similar features. 
+The two curves depict a small but positive value of the quantifier M_C when plotted against time. 
+It is thus evident that the system exhibits a non-Markovian behaviour within the observed timescale in the altered scenario, 𝒜_1^S_i. 
+
+
+
+
+
+
+
+
+It is a well established fact that the quantifiers of non-Markovianity are not all equivalent. So, here we consider a different measure of non-Markovianity, the Rivus-Huelga-Plenio (RHP) measure <cit.>, to comment on the equivalence between the measure, M_C, with a widely used quantifier of non-Markovianity.
+Suppose we can split a dynamical map from 0 to t+ϵ, with some intermediate time difference ϵ, as
+
+    ℰ_(t+ϵ,0)=ℰ_(t+ϵ,t)ℰ_(t,0),
+
+where ℰ_(t+ϵ,t) is a completely positive (CP) map, then the channel implemented by ℰ_(t+ϵ,0) is Markovian.
+
+The non-CP nature of ℰ_(t+ϵ,t) is given by
+
+    g_ℰ(t)=lim_ϵ→ 0^+f(t+ϵ,t)-1/ϵ,
+
+where
+f(t+ϵ,t)=||(ℰ_(t+ϵ,t)⊗𝐈)(|ϕ⟩⟨ϕ|)||_1 with ϵ > 0. Here ℰ_(t+ϵ,t) represents an arbitrary channel between times t and t+ϵ, and ||A||_1 is the trace norm defined by √(A^† A). The map, ℰ_(t+ϵ,0), is said to be Markovian if and only if g_ℰ(t)=0, otherwise  g_ℰ(t)>0. Therefore, for a process to be non-Markovian, 
+the quantity, g_ℰ(t)>0. Here |ϕ⟩ is a maximally entangled system-auxiliary state which is chosen to be 1/√(2)(|00⟩_SA+|11⟩_SA) in this paper. 
+The orange curves in Fig. <ref>-(a) and  <ref>-(b) 
+
+depict the behaviour of the RHP measure given in Eq. (<ref>) for the non-Markovian channel C.
+
+
+
+
+If the dynamics of a non-Markovian evolution be governed by dρ/dt=ℒ_t, then
+in the limit ϵ→ 0, Eq. (<ref>) reduces to 
+
+    g(t)=lim_ϵ→ 0^+||[I+(ℒ_t ⊗I)ϵ]|ϕ⟩⟨ϕ|||_1-1/ϵ,
+
+where ℰ_(t+ϵ,t)=e^ℒ_t ϵ.
+The orange curves in Fig. <ref> has been plotted using this Eq. (<ref>).
+The quantifier g_C(t) exhibits a positive value at a all times, which imply non-Markovianity in terms of the RHP measure at all timescales.
+
+
+
+
+Figures <ref>-(a) and (b),
+
+depict the non-Markovianity of the respective channels C_1 and C_2,
+
+as quantified by the new measure, M_C_i for i=1,2 (green curve), and the RHP measure (orange curve). 
+
+Comparing the green and orange curves in each of <ref>-(a) and (b), it is noted that in the observed times, both M_C_i and g_C_i are positive, which implies that non-Markovianity is key feature of the system which is depicted by both the measures. Our measure, therefore, captures the non-Markovianity present in the system which is also evident in terms of the RHP measure.
+
+
+
+
+
+
+§ IMPACT OF MARKOVIAN NOISE ON A NON-MARKOVIAN QUANTUM REFRIGERATOR
+
+
+We have already observed the enhancement in the efficiency of cooling of a quantum absorption refrigerator in some cases, while using non-Markovian baths instead of the Markovian ones for the ideal setups. Those altered situations, advantageous over the relevant Markovian cases,
+
+are idealistic, and environmental noise or fluctuations can have non-negligible effects on the efficiency of refrigeration, as noise is ubiquitous in nature. So, if we want to implement such an altered refrigerator model in reality, it is useful to look at the scenario in presence of decoherence noise. 
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Noise model-I
+
+
+A quantum absorption refrigerator is constructed by a three-qubit three-bath setup. In ideal situations, all the three baths are Markovian and in some altered cases, the bath attached to the cold qubit can be non-Markovian.  
+
+
+
+
+
+Here we consider a three-qubit refrigerator in which the cold qubit is kept in a spin-environment (altered situation), along with being
+ connected with a noisy Markovian environment, given by 𝒩_1(·), where the argument is the altered refrigerator setup. In this paper, we have considered the noisy scenario 
+
+𝒩_1(𝒜_1^S_3) 
+
+, where the cold qubit is coupled to a non-Markovian spin-bath taken in the previous discussions and also to a Markovian bosonic environment B^M_1. The other two qubits are connected to bosonic baths as before. 
+
+Therefore the configuration is {B_1^NM,N_1,B_2^M,B_3^M},
+and the interaction Hamiltonian of the cold qubit and the Markovian environment B^M_1 is given by 
+
+    H_SB^M_1=√(g_1)∫_0^Ωħ√(ω̃)  dω  h_M_1(ω)(σ_- η_ω^M_1†+σ_+η_ω^M_1).
+
+Here g_1 is the dimensionless noise strength. All the other quantities are defined previously.
+
+
+
+
+
+
+
+
+
+The modified GKSL master equation for this noisy scenario is same as Eq. (<ref>), with an extra dissipative term coming from the contribution of noisy Markovain environment. So, the GKSL master equation for this noisy scenario turns out to be
+
+    ∂ρ̃_s^𝒩_1(t)/∂ t=∂ρ̃_s(t)/∂ t+ ħ/Kg_1𝒟_M_1(ρ̃_s(t)).
+
+Taking this noisy environment into consideration, the additional system operators are given by
+
+    𝒜^E_1_1 = (|111⟩⟨011|+|100⟩⟨000|)√(2)
+          𝒜^E_1+g_1 = (|110⟩⟨+|+|-⟩⟨001|)   
+          𝒜^E_1-g_1 = (|+⟩⟨001|-|110⟩⟨-|).
+
+The respective operators for the reverse processes is given by 𝒜^-ω=𝒜^ω^†.
+
+If an isolated qubit interacts with a reservoir via the interaction given in Eq. (<ref>), then the time dynamics of the well-known amplitude damping channel is obtained for T_N_1=0.0, where T_N_1 is the temperature of the relevant bath.
+
+
+In this case, we see that the system attains a steady state, and the temperature of the cold qubit at steady state is higher than the corresponding equilibrium temperature without the Markovian noise. If g_1 is made smaller ≈ 0.0001, then the steady state temperature is almost equal to the one corresponding to Fig <ref>-(b), but is never less than that.
+So the Markovian noise deteriorates the operation of the refrigerator when compared with the non-Markovian case, though its behaviour as a refrigerator is still retained within a finite domain of g_1. It has been numerically examined that this noise model never gives advantage over the non-Markovian scenario if g_1 is non-zero, keeping the other parameters fixed in the previously mentioned values.
+
+Fig.<ref>-(a) depicts the scaling of the temperature difference between the cold qubit (T_1(t)) and the steady state temperature of Fig.(<ref>-(b)) (T_1^s) vs the noise strength g_1. The solid red curve is at time t=t_s=0.008 when the system is at equilibrium and the blue dashed line represents the nature at t=t_s/2. There is a finite gap between the two curves for small g_1, and the difference gradually reduces prior to when the system stops behaving as a refrigerator.
+
+
+
+ §.§ Noise model II
+
+
+In this subsection, we repeat the same formalism followed in the previous subsection but in presence of a different Markovian noise. Here we consider the configuration 𝒩_2(𝒜_1^S_3).
+So here, the first qubit is  kept in contact with a Markovian reservoir,  𝒩_2, in addition to the non-Markovian environment. Therefore the configuration is {B_1^NM,N_2,B_2^M,B_3^M}, and interaction between the system and the noisy bath, N_2, is given by
+H_SB^N_2 = g_2 ∑_i=1^3 A_i⊗ B_i, where
+
+    A_i⊗ B_i = σ_i ⊗∫_0^ω_maxħ√(ω̃) h_N_2(ω) (a_ω^†+a_ω) dω.
+
+Here σ_i represents the three Pauli matrices for i=1,2,3, and h_N_2(ω) is a dimensionless coupling parameter depending on ω, which tunes the coupling between the coupling of  H_SB^N_2 to the rest of the Hamiltonian. 
+All other quantities are as defined previously.
+
+
+
+
+The explicit expressions for the additional system operators due to the presence of the noise, 𝒩_2, is given in Appendix <ref>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The time dynamics of the well-known dephasing channel is restored if an isolated qubit interacts with a bath via H_SB^N_2, and the temperature of the bathT_N_2, is given by T_N_2→∞.   
+
+ In this situation also, the noise model does not improve the performance of the refrigerator when compared to the case where the first qubit is non-Markovian, but the refrigeration occurs within a range of the noise strength g_2. 
+ 
+The scaling of the temperature difference between the cold qubit T_1(t) in presence of the noise, 𝒩_2, and the steady state temperature (T_1^s) of Fig.<ref>-(b) is shown in Fig.<ref>-(a), where the difference is plotted against the dimensionless noise strength g_2.
+The steady state temperature at time t=t'_s=0.05 is depicted by the solid red curve whereas the blue dashed curve corresponds to the time t=t'_s/2. In contrast to the previous case, this graph has a trend that the difference between the red and blue curves gradually grows in magnitude with increasing g_2 until the value of g_2  crosses 0.009 where the model ceases to behave as a refrigerator.
+
+
+
+§ CONCLUSION
+
+
+In this paper, we inspected a quantum refrigerator comprising of a few qubits, each of which are connected separately to 
+
+local baths. We looked at situations where both TC and SSC coexist in  a quantum refrigerator system. We identified three domains, viz. where there is only TC, SSC better than TC, and TC better than SSC, considering different parameter regimes. 
+
+
+Along with
+three-qubit quantum absorption refrigerators we also considered, for comparison and completeness,  single- and two-qubit self-sustained thermal devices in presence of one or more spin-environments. In the single- and two-qubit cases, we note that although cooling is obtained under certain conditions, the oscillations in the final temperature are persistent throughout, and the envelopes never converge to a steady state value. Whereas, the three-qubit refrigerator attains a steady state when at most one of the bosonic baths is replaced by a spin-environment.
+
+We investigated the three-qubit absorption refrigerator for the three domains mentioned above, in presence of one or more spin-environments. We studied the system when the bath of a single qubit, two qubits or all the baths of the three qubits of the refrigerator are replaced by non-Markovian spin-baths.
+ The core objective of this paper is to show that replacing the Markovian bath attached to the cold qubit of a refrigerator with a non-Markovian reservoir, results in a considerable lowering of the temperature of the cold qubit, compared to the situation when all the three baths are Markovian. This advantage is apparent both in the transient and steady states. Connecting the other two qubits with non-Markovian baths, while keeping the cold qubit in a Markovian reservoir, does not provide advantage over the scenario where all the three baths are Markovian.
+ 
+In accordance with this result, we have also suggested a way to gauge how non-Markovian a channel is, by defining a measure of non-Markovianity by optimising over the channel parameters. Since noise permeates all physical processes, the refrigerator model has also been examined in the presence of Markovian noise in addition to the Markovian and non-Markovian baths.
+We identified the range of noise strength for which refrigeration still occurs.
+
+
+ We acknowledge computations performed using Armadillo <cit.>,
+
+
+
+ 
+ 
+ 
+  
+  
+   and QIClib <cit.>
+   
+   on the cluster computing facility of the Harish-Chandra Research Institute, India. We also acknowledge partial support from the Department of Science and Technology, Government of India through the QuEST grant (grant number DST/ICPS/QUST/Theme-3/2019/120).
+   
+
+
+§ COOLING OF A QUBIT IN A SINGLE-QUBIT SINGLE-BATH SETUP
+
+
+Final temperature of the qubit for a single qubit thermal device attached to a single non-Markovian spin-bath is given by
+
+ 
+    T_1(t)=E_1^1/log(-1+√(E_1^1^2+4)(e^1/T_1^1+1)/(e^-i √(E_1^1^2+4) t(e^1/T_1^1((E_1^1^2+2) e^i √(E_1^1^2+4) t+e^2 i √(E_1^1^2+4) t+1)-(-1+e^i √(E_1^1^2+4) t)^2 e^E_1^1/T_1^1)+E_1^1^2+4/√(E_1^1^2+4)(e^E_1^1/T_1^1+1))).
+
+ 
+The dimension of the spin-bath is taken to be N=1.
+ 
+
+
+§ LINBLAD OPERATORS FOR THE THREE-QUBIT QUNATUM ABSORPTION REFRIGERATOR
+
+
+The Lindblad operators corresponding to the GKSL equation given in Eq. (<ref>) with the dissipative term as in Eq. (<ref>) are expressed as
+
+    L^E_1_1    =   |111⟩⟨011|+|100⟩⟨000|
+    
+    L^E_1+g_1    =   1/√(2)(|110⟩⟨+|+|-⟩⟨001|)   
+    
+    L^E_1-g_1    =   1/√(2)(|+⟩⟨001|-|110⟩⟨-|)   
+    
+    L^E_2_2    =   |110⟩⟨100|+|011⟩⟨001|
+    
+    L^E_2+g_2    =   1/√(2)(|111⟩⟨+|-|-⟩⟨000|)   
+    
+    L^E_2-g_2    =   1/√(2)(|+⟩⟨000|+|111⟩⟨-|)   
+    
+    L^E_3_3    =   |111⟩⟨110|+|001⟩⟨000|
+    
+    L^E_3+g_3    =   1/√(2)(|011⟩⟨+|+|-⟩⟨100|)   
+    
+    L^E_3-g_3    =   1/√(2)(|+⟩⟨100|-|011⟩⟨-|)
+
+Here |+⟩=1/√(2)(|101⟩+|010⟩) and |-⟩=1/√(2)(|101⟩-|010⟩).
+The other nine non-zero operators for the corresponding opposite processes are evaluated using the relation 𝒜^-ω^'_i= 𝒜^ω^'†_i. In the Master equation corresponding to the Markovian qubit-bath interaction, the information of the reservoirs is contained in the incoherent transition rates {γ_i(ω^') } which can be evaluated from the equations
+
+    γ_i(ω^')    =    J_i(ω^') [1+f(ω^',β_i)]     ω^'>0 
+       =    J_i(|ω^'|) f(|ω^'|,β_i)       ω^'<0,
+
+where f(ω^',β_i)=[exp(βħω^')-1]^-1 is the Bose-Einstein distribution for the heat baths.
+
+
+
+§ LINDBLAD OPERATORS FOR THE NOISE MODEL II
+
+ 
+The Lindblad operators considering the configuration {B_1^NM,N_2,B_2^M,B_3^M}, and interaction of the system with the noisy bath, N_2, given by H_SB^N_2, is of the following form
+
+    𝒟_1(E_1)    =   |111⟩⟨011| + |100⟩⟨000|, 
+    𝒟_1(E_1+g)    =   1/√(2)(|-⟩⟨001|+|110⟩⟨+|), 
+    𝒟_1(E_1-g)    =   1/√(2)(|+⟩⟨001|-|110⟩⟨-|), 
+    𝒟_2(E_1)    =    i(|111⟩⟨011| + |100⟩⟨000|), 
+    𝒟_2(E_1+g)    =   i/√(2)(|-⟩⟨001|+|110⟩⟨+|), 
+    𝒟_2(E_1-g)    =   i/√(2)(|+⟩⟨001|-|110⟩⟨-|), 
+    𝒟_3(0)    =   |000⟩⟨000|+|001⟩⟨001|,  
+            +|011⟩⟨011| -|100⟩⟨100|,  
+           -|110⟩⟨110|-|111⟩⟨111|, 
+    𝒟_2g   =    -|-⟩⟨+|, 
+    𝒟_-2g   =    -|+⟩⟨-|.
+
+Also, 𝒟^-ω=𝒟^ω^† gives the corresponding operators for the opposite processes.
+ 
+100
+Allahverdyan A. E. Allahverdyan and T. M. Nieuwenhuizen, Extraction of Work from a Single Thermal Bath in the Quantum Regime, Phys. Rev. Lett. 85, 1799 (2000).
+Gemmer G. Gemmer, M. Michel,  and G. Mahler, Quantum Thermodynamics (Springer,  New York, 2004).
+Kosloff R. Kosloff, Quantum Thermodynamics: A Dynamical Viewpoint, Entropy 15, 2100 (2013).
+Brand F. Brandão, M. Horodecki, N. Ng, J. Oppenheim, and S. Wehner, The second laws of quantum thermodynamics, Proceedings of the National Academy of Sciences 112, 3275 (2015).
+Gardas B. Gardas and S. Deffner, Thermodynamic universality of quantum Carnot engines, Phys. Rev. E 92, 042126 (2015).
+Gelbwaser D. Gelbwaser-Klimovsky, W.  Niedenzu, and G. Kurizki, Thermodynamics of quantum systems under dynamical control, Adv. At. Mol. Opt. Phys. 64, 329 (2015).
+Misra A. Misra, U.  Singh,  M.  N.  Bera, and  A.  K.  Rajagopal,  Quantum Rényi relative entropies affirm universality of thermodynamics, Phys.  Rev.  E 92, 042161 (2015).
+Millen J. Millen and A. Xuereb, Perspective on quantum thermodynamics, New Journal of Physics 18, 011002 (2016).
+Vinjanampathy S.  Vinjanampathy  and  J.  Anders, Quantum thermodynamics, Contemporary  Physics 57, 545  (2016).
+Goold J.  Goold,  M.  Huber,  A.  Riera,  L.  del  Rio, and P. Skrzypczyk, The role of quantum information in thermodynamics—a topical review, Journal of Physics A: Mathematical and Theoretical 49, 143001 (2016).
+Benenti G. Benenti,  G. Casati,  K. Saito, and R. S. Whitney, Fundamental aspects of steady-state conversion of heat to work at the nanoscale, Phys. Rep. 694, 1 (2017).
+Binder F. Binder, L. A. Correa, C. Gogolin, J. Anders, and G. Adesso, Thermodynamics in the Quantum Regime:
+Fundamental Aspects and New Directions (Springer, 2018).
+Deffner S. Deffner and S. Campbell, Quantum Thermodynamics (Morganand Claypool Publishers, 2019).
+
+Palao J. P. Palao,  R. Kosloff, and J. M. Gordon, Quantum thermodynamic cooling cycle, Phys. Rev. E 64, 056130 (2001).
+Feldmann T. Feldmann and R. Kosloff, Quantum four-stroke heat engine: Thermodynamic observables in a model with intrinsic friction, Phys. Rev. E 68, 016101 (2003).
+Popescu N. Linden, S. Popescu, and P. Skrzypczyk, How Small Can Thermal Machines Be? The Smallest Possible Refrigerator
+Phys. Rev. Lett. 105, 130401 (2010).
+Levy1 A. Levy and R.  Kosloff,  Quantum Absorption Refrigerator, Phys.  Rev.  Lett. 108,  070604  (2012).
+Levy R.  Kosloff  and  A.  Levy,  Quantum Heat Engines and Refrigerators: Continuous Devices, Annual  Review  of  Physical  Chemistry 65,  365  (2014).
+Uzdin R.  Uzdin,  A.  Levy, and R. Kosloff, Equivalence of Quantum Heat Machines, and Quantum-Thermodynamic Signatures, Phys. Rev. X 5, 031044 (2015).
+Scarani S. Nimmrichter, A. Roulet and V. Scarani, “Quantum rotor engines,” in Thermodynamics in the Quantum Regime: Fundamental Aspects and New Directions, edited by
+F. Binder, L. A. Correa, C. Gogolin, J. Anders, and G. Adesso
+Springer International Publishing, 227–245, (2018).
+Clivaz F.  Clivaz, R. Silva,  G. Haack,  J. B. Brask,  N. Brunner, and M. Huber, Unifying Paradigms of Quantum Refrigeration: A Universal and Attainable Bound on Cooling, Phys. Rev. Lett. 123, 170605 (2019).
+Mitchison M. T. Mitchison, Quantum thermal absorption machines: refrigerators, engines and clocks, Contemporary Physics 60, 164 (2019).
+
+Yuan Q. Yuan, T. Wang, P. Yu, H. Zhang, H. Zhang, and W. Ji, A review on the electroluminescence properties of quantum-dot light-emitting diodes, Organic Electronics 90, 106086 (2021).
+
+Joulain K. Joulain, J. Drevillon, Y. Ezzahri, and J. Ordonez-Miranda, Quantum Thermal Transistor, Phys. Rev. Lett. 116, 200601 (2016).
+Zhang Y. Zhang, Z. Yang, X. Zhang, B. Lin, G. Lin, and J. Chen, Coulomb-coupled quantum-dot thermal transistors, Europhysics Letters 122 17002 (2018).
+Su S. Su, Y. Zhang, B. Andresen, and J. Chen, Quantum coherence thermal transistors, arXiv:1811.02400.
+Mandarino A. Mandarino, K. Joulain, M. D. Gómez, and B. Bellomo, Thermal transistor effect in quantum systems, Phys. Rev. Applied 16, 034026 (2021).
+
+
+
+
+
+
+
+
+
+
+
+
+
+Alicki_Fannes ] R. Alicki and M. Fannes, Entanglement boost for extractable work from ensembles of quantum batteries, Phys. Rev. E 87, 042123 (2013).
+Campaioli F. Campaioli, F. A. Pollock and S. Vinjanampathy, Quantum Batteries - Review Chapter, arXiv:1805.05507. 
+Dutta S. Bhattacharjee and A. Dutta, Quantum thermal machines and batteries, Eur. Phys. J. B 94, 239 (2021).
+
+Kosloff2 E. Geva and R. Kosloff , On the classical limit of quantum thermodynamics in finite time,
+J. Chem. Phys. 97, 4398 (1992).
+Kosloff1 T. Feldmann and R. Kosloff, Performance of discrete heat engines and heat pumps in finite time, Phys. Rev. E 61, 4774 (2000).
+Wehner_new N. H. Y. Ng, M. P. Woods, and S. Wehner, Surpassing the Carnot efficiency by extracting imperfect work, New Journal
+of Physics 19, 113005 (2017).
+Kurizki_new W. Niedenzu, V. Mukherjee,
+A. Ghosh, A. G. Kofman, and G. Kurizki, Quantum engine efficiency bound beyond the second law of thermodynamics, Nature Communications 9, 165 (2018).
+Chen_LiuY. Y. Xu, B. Chen, and J. Liu, Achieving the classical Carnot efficiency in a strongly coupled quantum heat engine, Phys. Rev. E 97, 022130 (2018).
+
+
+
+Dorner R. Dorner, J. Goold, C. Cormick, M. Paternostro, and V. Vedral, Emergent Thermodynamics in a Quenched Quantum Many-Body System, Phys. Rev. Lett. 109, 160601 (2012). 
+Mehboudi M Mehboudi, M Moreno-Cardoner, G De Chiara and A Sanpera, Thermometry precision in strongly correlated ultracold lattice gases, New J. Phys. 17, 055020 (2015).
+Reimann P. Reimann, Eigenstate thermalization: Deutsch's approach and beyond, New J. Phys. 17, 055025 (2015).
+Eisert J. Eisert, M. Friesdorf and C. Gogolin, Quantum many-body systems out of equilibrium, Nature Phys. 11, 124 (2015).
+Gogolin C. Gogolin and Jens Eisert, Equilibration, thermalisation, and the emergence of statistical mechanics in closed quantum systems, Rep. Prog. Phys. 79 056001 (2016).
+Skelt A. H. Skelt, K. Zawadzki and I. D'Amico, Many-body effects on the thermodynamics of closed quantum systems, J. Phys. A: Math. Theor. 52 485304 (2019).
+
+Gour G. Gour, M. P. Müller, V. Narasimhachar, R. W. Spekkens and
+N. Y. Halpern, The resource theory of informational nonequilibrium in thermodynamics, Phys. Rep. 583, 1 (2015).
+
+Fazio M. Campisi, J. Pekola, and R. Fazio, Nonequilibrium fluctuations in quantum heat engines: theory, example, and possible solid state experiments New Journal of Physics 17, 035012 (2015).
+Rigol L. D’Alessio, Y. Kafri, A. Polkovnikov, and M. Rigol, From Quantum Chaos and Eigenstate Thermalization to Statistical Mechanics and Thermodynamics, Advances in Physics 65, 239 (2016).
+
+Pekola2 B. Karimi and J. P. Pekola, Otto refrigerator based on a superconducting qubit: Classical and quantum performance, Phys. Rev. B 94, 184503 (2016).
+Aslan A. U. C. Hardal, N. Aslan, C. M. Wilson and O. E. Müstecaplıoğlu, Quantum heat engine with coupled superconducting resonators, Phys. Rev. E 96, 062120 (2017).
+Jordan S. K. Manikandan, F. Giazotto, and A. N. Jordan, Superconducting quantum refrigerator: Breaking and rejoining Cooper pairs with magnetic field cycles, Phys. Rev. Applied 11, 054034 (2019).
+
+Pekola F. Giazotto, T. T. Heikkilä, A. Luukanen, A. M. Savin and J. P.Pekola, Opportunities for mesoscopics in thermometry and refrigeration: Physics and applications, Rev. Mod. Phys. 78, 217 (2006).
+
+ionic1 O. Abah, J. Roßnagel, G. Jacob, S. Deffner, F. Schmidt-Kaler,
+K. Singer and E. Lutz, Single-Ion Heat Engine at Maximum Power, Phys. Rev. Lett. 109, 203006 (2012).
+ionic2 J. Roßnagel, S. T. Dawkins, K. N. Tolazzi, O. Abah, E. Lutz,
+F. Schmidt-Kaler and K. Singer, A single-atom heat engine, Science 352, 325 (2016).
+
+n_m_resonance J. P. S. Peterson, T. B. Batalhao, M. Herrera, A. M. Souza, R. S.
+Sarthour, I. S. Oliveira, and R. M. Serra, Experimental Characterization of a Spin Quantum Heat Engine, Phys. Rev. Lett. 123,
+240601 (2019).
+
+Petruccione H. P. Breuer and F. Petruccione, The Theory of Open Quantum Systems (Oxford University Press, Oxford, 2002).
+Alicki R. Alicki and K. Lendi, Quantum Dynamical
+Semigroups and Applications (Springer, Berlin Heidelberg 2007).
+Rivas A. Rivas and S. F. Huelga, Open Quantum Systems: An Introduction (Springer Briefs in Physics, Springer, Spain, 2012).
+Lidar D. A. Lidar, Lecture Notes on the Theory of Open Quantum Systems, arXiv:1902.00967.
+
+non-Markov P. A. Camati, J. F. G. Santos, and R. M. Serra, Employing non-Markovian effects to improve the performance of a quantum Otto refrigerator
+Phys. Rev. A 102, 012217 (2020).
+
+Kurizki D. Gelbwaser-Klimovsky, W. Niedenzu, G. Kurizki, Thermodynamics of quantum systems under dynamical control, Advances In Atomic, Molecular, and Optical Physics 64, 329 (2015).
+Uzdin1 R. Uzdin, A. Levy, R. Kosloff, Quantum heat machines equivalence and work extraction beyond Markovianity, and strong coupling via heat exchangers, Entropy 18, 124 (2016).
+Kato A. Kato, Y. Tanimura, Quantum Heat Current under Non-perturbative and Non-Markovian Conditions: Applications to Heat Machines, Journal of Chemical Physics 145, 224105 (2016).
+Chen H.-B. Chen, P.-Y. Chiu, Y.-N. Chen, Vibration-induced coherence enhancement of the performance of a biological quantum heat engine, Phys. Rev. E 94, 052101 (2016).
+Ostmann P. Ostmann, W. T. Strunz,Cooling and frequency shift of an impurity in a ultracold Bose gas using an open system approach, arXiv:1707.05257. 
+Arpan A. Das, V. Mukherjee, A quantum enhanced finite-time Otto cycle, Phys. Rev. Research 2, 033083 (2020).
+Shirai Y. Shirai, K. Hashimoto, R. Tezuka, C. Uchiyama, N. Hatano, Non-Markovian effect on quantum Otto engine: -Role of system–reservoir interaction, Phys. Rev. Research 3, 023078 (2021).
+Raja S. H. Raja, S. Maniscalco, G.-S. Paraoanu, J. P. Pekola, N. Lo Gullo, Finite-time quantum Stirling heat engine, New J. Phys 23, 033034 (2021).
+Chakraborty S. Chakraborty, A. Das, D. Chruściński, Strongly coupled quantum Otto cycle with single qubit bath, arXiv:2206.14751.
+Carrega M. Carrega, L. M. Cangemi, G. De Filippis, V. Cataudella, G. Benenti, M. Sassetti, Engineering dynamical couplings for quantum thermodynamic tasks, PRX quantum 3 010323 (2022).
+Koyanagi S. Koyanagi, Y. Tanimura, Numerically "exact" simulations of a quantum Carnot cycle: Analysis using thermodynamic work diagrams, J. Chem. Phys. 157, 084110 (2022).
+Filippis F. Cavaliere, M. Carrega, G. De Filippis, V. Cataudella, G. Benenti, M. Sassetti, Dynamical heat engines with non–Markovian reservoirs, Physical Review Research 4, 033233 (2022).
+Krzysztof K. Ptaszyński, Non-Markovian thermal operations boosting the performance of quantum heat engines, Phys. Rev. E 106, 014114 (2022).
+
+
+
+
+
+
+
+Popescu2 P. Skrzypczyk, N. Brunner, N. Linden and S. Popescu, The smallest refrigerators can reach maximal efficiency, Journal of Physics A: Mathematical and Theoretical 44, 492002 (2011).
+Popescu3 N. Brunner, N. Linden, S. Popescu, and P. Skrzypczyk, Virtual qubits, virtual temperatures, and the foundations of thermodynamics, Phys. Rev. E 85, 051117 (2012).
+Popescu4 N. Brunner, M. Huber, N. Linden, S. Popescu, R. Silva and P. Skrzypczyk, Entanglement enhances cooling in microscopic quantum refrigerators, Phys. Rev. E
+89, 032115 (2014).
+Brask J. B. Brask and N. Brunner, Small quantum absorption refrigerator in the transient regime: Time scales, enhanced cooling and entanglement, Phys. Rev. E 92, 062101 (2015).
+Palao2 L. A. Correa, J. P. Palao, G. Adesso and D. Alonso, Performance bound for quantum absorption refrigerators, Phys. Rev. E 87, 042131 (2013).
+Palao3 L. A. Correa, J. Palao, D. Alonso and G. Adesso, Quantum-enhanced absorption refrigerators, Scientific Reports 4, 3949 (2014).
+Silva R. Silva, P. Skrzypczyk and N. Brunner, Small quantum absorption refrigerator with reversed couplings, Phys. Rev. E 92, 012136 (2015).
+Woods M. T. Mitchison, M. P. Woods, J. Prior, and M. Huber, Coherence-assisted single-shot cooling by quantum absorption refrigerators, New Journal of Physics 17, 115013 (2015).
+Fazio2P. A. Erdman, B. Bhandari, R. Fazio, J. P. Pekola and
+F. Taddei, Absorption refrigerators based on Coulomb-coupled single-electron systems, Phys. Rev. B 98, 045433 (2018).
+Sreetama S. Das et al, Necessarily transient quantum refrigerator,
+ EPL 125, 20007 (2019).
+Naseem M. T. Naseem, A. Misra, and Özgür E Müstecaplıoğlu, Engineering entanglement between resonators by hot environment, Quantum Science and Technology 5, 035006 (2020).
+Chiara A. Hewgill, J. O. Gonzalez, J. P. Palao, D. Alonso, A. Ferraro and G. De Chiara, Three-qubit refrigerator with two-body interactions, Phys. Rev. E 101, 012109 (2020).
+Bhandari B.Bhandari and A.N.Jordan, Minimal two-body quantum absorption refrigerator,
+Phys. Rev. B 104, 075442 (2021).
+Ghoshal2 A.Ghoshal, S.Das, A.K.Pal, A.Sen(De), and U.Sen, Three qubits in less than three baths: Beyond two-body system-bath interactions in quantum refrigerators,
+Phys. Rev. A 104, 042208 (2021).
+
+ 
+ Tanoy1 T.K.Konar, S.Ghosh, A.K.Pal, and A.Sen(De), Designing robust quantum refrigerators in disordered spin models,
+Phys. Rev. A 105, 022214 (2022).
+Tanoy3 T.K.Konar, S.Ghosh, A.Sen De, Refrigeration via purification through repeated measurements, Phys. Rev. A 106, 022616 (2022).
+Damas G. G. Damas, R. J. de Assis, N. G. de Almeida, Cooling with fermionic reservoir, 	arXiv:2207.08862.
+Okane H. Okane, S. Kamimura, S. Kukita, Y. Kondo, Y. Matsuzaki, Quantum Thermodynamics applied for Quantum Refrigerators cooling down a qubit, arXiv:2210.02681.
+
+Man Z.-X. Man and Y.-J. Xia, Smallest quantum thermal machine: The effect of strong coupling and distributed thermal tasks, Phys. Rev. E 96, 012122 (2017).
+Segal H. M. Friedman and D. Segal, Cooling condition for multilevel quantum absorption refrigerators, Phys. Rev. E 100, 062112 (2019). 
+Wang J. Wang, Y. Lai, Z. Ye, J. He, Y. Ma, and Q. Liao, Efficiency at maximum power of a quantum heat engine based on two coupled oscillators, Phys. Rev. E 91, 050102 (2015).
+
+
+Tanoy2 T. K. Konar, S. Ghosh, A. K. Pal, A. Sen De, Beyond Qubits: Building Quantum Refrigerators in Higher Dimensions, arXiv:2112.13765.
+Cao H.-J. Cao, F. Li, S.-W. Li, Quantum refrigerator driven by nonclassical light, arXiv:2209.03674.
+
+
+
+
+
+
+
+
+Giovannetti  D. Venturelli, R. Fazio and V. Giovannetti, Minimal Self-Contained Quantum Refrigeration Machine Based on Four Quantum Dots, Phys. Rev. Lett. 110, 256801 (2013).
+Monsel J. Monsel, J. Schulenborg, T. Baquet, J. Splettstoesser, Geometric energy transport and refrigeration with driven quantum dots, arXiv:2202.12221.
+
+Plenio M. T. Mitchison, M. Huber, J. Prior, M. P. Woods and M. B.Plenio, Realising a quantum absorption refrigerator with an atom-cavity system, Quantum Science and Technology 1, 015001 (2016).
+Potts M. T. Mitchison and P. P. Potts, “Physical implementations of
+quantum absorption refrigerators,” in Thermodynamics in the
+Quantum Regime: Fundamental Aspects and New Directions, edited by F. Binder, L. A. Correa, C. Gogolin, J. Anders and G. Adesso  (Springer International Publishing, Cham, 2018) pp. 149–174.
+
+Brask2 P. P. Hofer, M. Perarnau-Llobet, J. B. Brask, R. Silva, M. Huber and N. Brunner, Autonomous quantum refrigerator in a circuit QED architecture based on a Josephson junction, Phys. Rev. B 94, 235420 (2016).
+
+Scarani2 G. Maslennikov, S. Ding, R. Hablützel, J. Gan, A. Roulet, S. Nimmrichter, J. Dai, V. Scarani and D. Matsukevich, Quantum absorption refrigerator with trapped ions, Nature Communications 10, 202 (2019).
+
+Misra_Pati S. Bhattacharya, A. Misra, C. Mukhopadhyay, and A. K. Pati,
+Exact master equation for a spin interacting with a spin bath:
+Non-Markovianity and negative entropy production rate, Phys. Rev. A 95, 012122 (2017).
+Prokofev N. Prokof́ev, P. Stamp, Theory of the spin bath, Rep. Prog.
+Phys. 63, 669 (2000).
+Fisher_Breuer J. Fischer and H.-P. Breuer, Correlated projection operator approach to non-Markovian dynamics in spin baths, Phys. Rev.
+A 76, 052119 (2007).
+Chitra S. Camalet and R. Chitra, Effect of random interactions in spin
+baths on decoherence, Phys. Rev. B 75, 094434 (2007).
+Majumdar S. Bhattacharya, B. Bhattacharya, and A. S. Majumdar, Thermodynamic utility of Non-Markovianity from the perspective
+of resource interconversion, arXiv:1902.05864.
+Breuer1 H.-P. Breuer, D. Burgarth, and F. Petruccione, Non-Markovian dynamics in a spin star system: Exact solution and approximation techniques, Phys. Rev. B 70, 045323 (2004).
+
+Ghoshal A. Ghoshal, U.Sen, Multiparty Spohn's theorem for mixed local Markovian and non-Markovian quantum dynamics, arXiv:2208.13026.
+
+
+
+
+
+
+
+
+
+
+
+RHP0 A Rivas, S. F. Huelga, and M. B. Plenio, Quantum Non-Markovianity: Characterization, Quantification and Detection, Rep. Prog. Phys. 77, 094001 (2014).
+BLP H.P. Breuer, E.-M. Laine, and J. Piilo, Measure for the Degree
+of Non-Markovian Behavior of Quantum Processes in Open
+Systems, Phys. Rev. Lett. 103, 210401 (2009).
+RHP A. Rivas, S. F. Huelga, and M. B. Plenio, Entanglement and Non-Markovianity of Quantum Evolutions, Phys. Rev. Lett. 105, 050403 (2010).
+Chrusci D. Chruściński, A. Kossakowski, Á. Rivas, On measures of ´
+non-Markovianity: divisibility vs. backflow of information,
+Phys. Rev. A. 83, 052128 (2011).
+Zheng H.-S. Zeng, N. Tang, Y.-P. Zheng, and G.-Y. Wang, Equivalence of the measures of non-Markovianty for open two-level
+systems, Phys. Rev. A. 84, 032118 (2011).
+Debarba T. Debarba and F. F. Fanchini, Non-Markovianity quantifier of
+an arbitrary quantum process, Phys. Rev. A 96, 062118 (2017).
+Strasberg P. Strasberg and M. Esposito, Response Functions as Quantifiers of Non-Markovianity, Phys. Rev. Lett. 121, 040601
+(2018).
+Das_Roy S. Das, S. S. Roy, S. Bhattacharya, and U. Sen, Nearly Markovian maps and entanglement-based bound on corresponding non-Markovianity, J. Phys. A: Math. Theor. 54, 395301
+(2021).
+Huang_Guo Z. Huang and X.-K. Guo, Quantifying non-Markovianity via
+conditional mutual information, Phys. Rev. A 104, 032212
+(2021).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sanderson  C. Sanderson and R. Curtin, Armadillo: a template-based C++ library for linear
+algebra, Journal of Open Source Software 1, 26 (2016).
+Sanderson1 C. Sanderson and R. Curtin, Lecture Notes in Computer Science (LNCS) 10931, 422 (2018).
+QIClib T. Chanda, QIClib, <https://titaschanda.github.io/QIClib>.
+

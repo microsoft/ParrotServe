@@ -1,0 +1,1970 @@
+
+
+
+
+
+
+  =0.1
+
+  1.6pt
+
+
+  0.4pt
+
+       
+       Thermal regulation in thin vascular systems:
+
+       A sensitivity analysis
+
+       0.4pt
+
+
+       1.6pt
+
+       An e-print of the paper is available on arXiv. 
+
+       Authored by 
+
+
+  K. B. Nakshatrala
+  Associate Professor, Department of Civil & Environmental Engineering 
+
+  University of Houston, Houston, Texas 77204. 
+
+  phone: +1-713-743-4418, e-mail: knakshatrala@uh.edu 
+
+  website: http://www.cive.uh.edu/faculty/nakshatrala
+
+  
+  K. Adhikari
+  Graduate Student, Department of Civil & Environmental Engineering 
+
+  University of Houston, Houston, Texas 77204. 
+
+  
+
+
+
+  
+  
+  2023 
+
+  Computational & Applied Mechanics Laboratory 
+
+
+
+
+
+One of the ways natural and synthetic systems regulate temperature is via circulating fluids through vasculatures embedded within their bodies. Because of the flexibility and availability of proven fabrication techniques, vascular-based thermal regulation is attractive for thin microvascular systems. Although preliminary designs and experiments demonstrate the feasibility of thermal modulation by pushing fluid through embedded micro-vasculatures, one has yet to optimize the performance before translating the concept into real-world applications. It will be beneficial to know how two vital design variables—host material’s thermal conductivity and fluid’s heat capacity rate—affect a thermal regulation system’s performance, quantified in terms of the mean surface temperature. This paper fills the remarked inadequacy by performing adjoint-based sensitivity analysis and unravels a surprising non-monotonic trend. Increasing thermal conductivity can either increase or decrease the mean surface temperature; the increase happens if countercurrent heat exchange—transfer of heat from one segment of the vasculature to another—is significant.
+In contrast, increasing the heat capacity rate will invariably lower the mean surface temperature, for which we provide mathematical proof. The reported results (a) dispose of some misunderstandings in the literature, especially on the effect of the host material’s thermal conductivity, (b) reveal the role of countercurrent heat exchange in altering the effects of design variables, and (c) guide designers to realize efficient microvascular active-cooling systems. The analysis and findings will advance the field of thermal regulation both on theoretical and practical fronts.
+
+
+[
+    [
+    March 30, 2023
+==================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ A LIST OF MATHEMATICAL SYMBOLS AND ABBREVIATIONS
+
+
+ll1cSymbol     1cDefinition 
+
+  
+  2cOperators 
+ ·     jump operator across the vasculature Σ 
+
+  ·     average operator across the vasculature Σ 
+
+  div[·]     spatial divergence operator 
+
+  grad[·]     spatial gradient operator 
+
+  
+  2cGeometry-related quantities 
+ Ω     domain (i.e., mid-surface of the body) 
+
+  ∂Ω     boundary of the domain  
+
+  Γ^ϑ     part of the boundary with prescribed temperature 
+
+  Γ^q     part of the boundary with prescribed heat flux 
+
+  Σ     curve representing the vasculature 
+
+  d     thickness of the body 
+ 
+  𝐧(𝐱)     unit outward normal vector to the boundary 
+
+  𝐧^±(𝐱)     unit outward normal vector on either sides of Σ 
+
+  s     normalized arc-length along Σ, measured from the inlet under forward flow 
+ 
+  𝐭(𝐱)     unit tangential vector along Σ 
+
+  𝐱     a spatial point 
+
+  
+  2cSolution fields 
+ ϑ(𝐱)     temperature (scalar) field 
+
+  ϑ^(f)(𝐱)     temperature field under forward flow conditions 
+
+  ϑ^(r)(𝐱)     temperature field under reverse flow conditions 
+
+  ϑ_outlet     outlet temperature 
+
+  𝐪(𝐱)     heat flux vector field 
+
+  
+  2cPrescribed quantities 
+ ϑ_amb     ambient temperature 
+ 
+  ϑ_inlet     inlet temperature 
+
+  f(𝐱)     power supplied by heat source 
+
+  f_0     a constant power by heat source 
+ 
+  Q     volumetric flow rate in the vasculature 
+
+  
+  2cMaterial and surface properties 
+ κ     host material's thermal conductivity 
+
+  ρ_f     fluid's density 
+
+  c_f     fluid's specific heat capacity 
+
+  h_T     (combined) heat transfer coefficient 
+
+  
+  2cOther symbols 
+ η     thermal efficiency 
+
+  ϑ     spatial mean of the temperature field (i.e., mean surface temperature) 
+
+  ϑ_HSS     spatial mean of hot steady-state temperature 
+
+  ṁ     mass flow rate in the vasculature, ṁ = ρ_f   Q 
+
+  χ     heat capacity rate of the fluid, χ = ṁ  c_f 
+
+  ξ(𝐱)     an arbitrary design field variable 
+ 
+  Φ[·]     objective functional 
+
+  DΦ[ξ(𝐱)]     Fréchet derivative of functional Φ with respect to ξ(𝐱) 
+ 
+  
+  2cAbbreviations 
+      hot steady-state 
+ 
+       mean surface temperature 
+
+       quantity of interest 
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ INTRODUCTION AND MOTIVATION
+
+
+
+Moving fluids through embedded vasculatures offers environmental-friendly solutions to many thermal regulation applications. For example, a geothermal system—a renewable energy source—comprises a network of pipes in the ground and thrusts a ct ofluid (typically water) to extract thermal energy from the subsurface to heat homes and appliances <cit.>. Another application, which is becoming popular, is using vascular-based thermal modulation to de-ice grounded aircraft instead of toxic anti-freeze chemicals, which pollute groundwater and soils if not correctly handled <cit.>. In separate developments, researchers avail fluid flow in embedded vesicles for controlling temperature fields to achieve other vital functionalities in synthetic composites, such as electromagnetic modulation <cit.>, in situ self-healing <cit.>, and reduced thermal stresses <cit.>. Given these and many other potential applications, recent progress across several scientific fields provides perfect opportunities to spur the growth of thermal regulation in microvascular composite and metal systems. These fields include experimental heat transfer (e.g., optical imaging <cit.>), fabrication techniques (e.g., 3D printing <cit.>, frontal polymerization <cit.>), modeling methods (e.g., reduced-order models <cit.>), numerical formulations (e.g., stabilized formulations for convection-dominated problems <cit.>), and design approaches (e.g., topology optimization <cit.>). Nevertheless, two aspects need a thorough examination in perfecting such microvascular systems. 
+
+First, one must identify suitable quantities of interest (QoIs) that can assess the system's performance; for example, thermal efficiency is a popular performance metric in heat transfer and thermodynamics studies. In mathematical optimization jargon, an objective function is a popular alternative to QoI; herein, we use these two terms interchangeably. Upon a selection, a designer's goal would be to “extremize" (maximize or minimize, depending on the choice) the chosen objective function. Selecting appropriate objective functions for thermal regulation—from either a design perspective or computational appeal—is still an unsettled question, certainly warranting an in-depth study; nonetheless, such an investigation is beyond this paper's scope. That said, studies involving thin members often aim to minimize the mean surface temperature (MST) <cit.>. Also, as this paper shows, minimizing MST is equivalent to maximizing cooling efficiency. Because of these two reasons, we take MST as the quantity of interest and defer exploring alternatives to a follow-up article. But a natural question arises: 
+
+    
+  * What are the ramifications of minimizing the mean surface temperature on other thermal characteristics? Said differently, what equivalent changes does it bring to the system?
+
+
+Second, one needs to identify an appropriate set of design variables: geometrical, material, and input parameters that a designer can vary to alter the system’s performance. Several studies have explored geometrical attributes, such as altering vasculature layout (e.g., spiral) and changing the spacing among branches <cit.>. However, prior studies have not adequately investigated the effects of the host material’s thermal conductivity and the fluid’s heat capacity rate (product of fluid's heat capacity, a material parameter, and volumetric flow rate, an input parameter). Further, a diligent look at the literature reveals an unresolved issue: studies have indicated that the host material’s conductivity does not significantly affect the mean surface temperature or thermal efficiency (e.g., see <cit.>). But a simple thought experiment conjectures the possibility of the opposite: A higher conductive host material will offer lower resistance to the heat flowing towards the sink—the coolant flowing in the vasculature. Thus, the flowing fluid will take out a higher percentage of supplied heat to the system—meaning a higher thermal efficiency and a lower MST. Ergo, there is a clear-cut dichotomy. Indeed, as we will show later in this paper, the situation is more intriguing than the discussion heretofore. Thus, a related key question is:
+
+
+  * How does altering the design variables—the fluid's heat capacity rate and the host material's thermal capacity—vary the mean surface temperature? 
+
+
+This paper comprehensively addresses the above-outlined two questions: We will use integral theorems to answer the first question, while a mathematical sensitivity analysis alongside finite element simulations will address the second. The workhorse for both integral theorems and sensitivity analysis is a reduced-order mathematical model for which <cit.> has recently provided a theoretical underpinning. In addition, we use the adjoint state method for the sensitivity analysis to assess how the design variables affect the quantity of interest. The adjoint state method—a powerful technique to calculate design sensitivities—is widely used in optimal control theory <cit.>, inverse problems <cit.>, PDE-constrained optimization <cit.>, tomography problems <cit.>, shape and topology optimization <cit.>, material design <cit.>, and dynamic check-pointing <cit.>, to name a few. The chief advantage of the adjoint state method is that it circumvents an explicit calculation of the solution field's sensitivity to a design variable. This circumvention is attractive to this study, as our primary intention is to assess the sign of the sensitivity (positive or negative): whether the design variable promotes or hinders the QoI. The adjoint state method allows us to do so without explicitly calculating the solution field. 
+
+The results presented in this paper provide a deeper understanding of active cooling and pave a systematic path for a mathematical-driven material design of thermal regulation systems. The plan for the rest of this article is as follows. We first present the governing equations for the direct problem: a reduced-order mathematical model describing vascular-based thermal regulation (<ref>). Using this model, we then deduce the ramifications of minimizing the mean surface temperature—a popular quantity of interest—on thermal efficiency and other thermal attributes of the system (<ref>). Next, using the adjoint state method, we calculate the sensitivity of the mean surface temperature to the fluid's heat capacity rate (<ref>). Following a similar procedure, we estimate the sensitivity of the same quantity of interest to the thermal conductivity of the host material (<ref>). After that, we verify the newfound theoretical results using numerical simulations (<ref>). Finally, we draw concluding remarks and put forth potential future works (<ref>).
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ MATHEMATICAL DESCRIPTION OF THE DIRECT PROBLEM
+
+
+
+Figure <ref> depicts a typical active-cooling setup: Consider a thin body whose thickness is much smaller than its other characteristic dimensions. The body contains a connected vasculature, with inlet and outlet openings on the lateral surface, which is otherwise insulated. A heat source supplies power to one of the transverse faces while the other is free to convect and radiate. A liquid flows through the vasculature, enabling active-cooling. We assume radiation is relatively minor, and, as commonly done, we lump its contribution to the convective component using the combined/overall heat transfer coefficient <cit.>. The lumping makes the resulting mathematical model linear, making the sensitivity analysis analytically tractable. Since the body is thin, a full three-dimensional model is inordinate. So, this paper avails a reduced-order model defined in a two-dimensional domain—the mid-surface of the slender body. Accordingly, we model the vasculature as a curve within this domain rather than resolving its cross-sectional area. 
+
+For mathematical description, Ω⊂ℝ^2 denotes the domain, ∂Ω the boundary, and d the body's thickness. For technical purposes, we assume Ω to be open and bounded and ∂Ω piece-wise smooth. A spatial point is denoted by 𝐱∈Ω∪∂Ω and the outward unit normal vector to the boundary by 𝐧(𝐱). The spatial divergence and gradient operators are denoted by div[·] and grad[·], respectively. We denote the temperature field in the domain by ϑ(𝐱) and the heat flux vector field by 𝐪(𝐱). ϑ_amb denotes the ambient temperature—the surrounding environment's temperature. The boundary is divided into two complementary parts: Γ^ϑ∪Γ^q = ∂Ω. Γ^ϑ is the part of the boundary on which temperature (i.e., Dirichlet boundary condition) is prescribed, while Γ^q is that part of the boundary on which heat flux (i.e., Neumann boundary condition) is prescribed. For mathematical well-posedness, we require Γ^ϑ∩Γ^q = ∅.
+
+
+
+
+
+
+Fluid passage through the vasculature enables active-cooling: heat transfers between the host solid and flowing fluid. ρ_f and c_f denote the fluid's density and specific heat capacity, respectively. Q represents the volumetric flow rate within the vasculature. Thus, the mass flow rate reads: 
+
+
+
+
+    ṁ = ρ_f  Q
+
+
+The heat capacity rate—one of the design variables considered in this paper—is then defined as:
+
+
+
+
+    χ = ṁ  c_f
+
+
+Note that χ is a product of fluid properties (ρ_f and c_f) and an input parameter (Q). 
+
+The curve representing the vasculature is denoted by Σ and is parameterized using the normalized arc-length s, with s = 0 at the inlet and s = 1 at the outlet. The unit tangent vector in the direction of increasing arc-length at a spatial point on this curve is denoted by 𝐭(𝐱). We denote the inlet and outlet temperatures by ϑ_inlet and ϑ_outlet, respectively. ϑ_inlet is a prescribed input, while ϑ_outlet is a part of the solution—generally unknown without solving the boundary value problem. Throughout this paper, we assume ϑ_inlet = ϑ_amb. 
+
+
+
+
+
+
+ §.§ Average and jump operators
+
+The fluid flow within the vasculature creates a jump in the heat flux across the curve Σ. On this account, we introduce the necessary notation to describe the remarked jumps mathematically. We denote the outward unit normals on either side of Σ by 𝐧^+(𝐱) and 𝐧^-(𝐱) (see Fig. <ref>). Assigning the signs to these normals can be arbitrary. For instance, label one of the outward normals as positive; the other—pointing in the opposite direction—will be negative. These two normals satisfy:
+
+
+
+
+    𝐧^+(𝐱) +     𝐧^-(𝐱) = 0  and  𝐧^±(𝐱) ∙𝐭(𝐱) = 0 
+        
+            ∀𝐱∈Σ
+
+
+where ∙ denotes the (Euclidean) dot product. 
+
+Given a field γ(𝐱), we denote the limiting values on either side of Σ by γ^+(𝐱) and γ^-(𝐱). Mathematically, 
+
+
+
+
+    γ^+(𝐱) := lim_ϵ→ 0 γ(𝐱 - |ϵ|  𝐧^+(𝐱)) 
+        
+          and  γ^-(𝐱) := lim_ϵ→ 0 γ(𝐱 - |ϵ|  𝐧^-(𝐱))
+
+
+We then define the average operator across Σ for a scalar field α(𝐱) and a vector field 𝐚(𝐱) as follows: 
+
+
+
+
+     
+    
+    α(𝐱)    = 1/2(α^+(𝐱) + α^-(𝐱) ) 
+    𝐚(𝐱)    = 1/2(𝐚^+(𝐱) + 𝐚^-(𝐱) )
+
+
+
+For these two fields, the jump operator across Σ is defined as follows: 
+
+
+
+ 
+     
+    
+    α(𝐱)  
+            = α^+(𝐱)  𝐧^+(𝐱) 
+            + α^-(𝐱)  𝐧^-(𝐱) 
+       𝐚(𝐱)  = 𝐚^+(𝐱)
+            ∙𝐧^+(𝐱) 
+            + 𝐚^-(𝐱) 
+            ∙𝐧^-(𝐱)
+
+
+
+Note that the jump operator acts on a scalar field to produce a vector field and vice versa.[There is an alternative definition used in the literature for the jump operator: a(𝐱)  = a^+(𝐱) - a^-(𝐱). For example, see <cit.>. The definition used in this paper (i.e., Eq. (<ref>)) is symmetric with respect to + and - sub-domains and is more convenient for writing Green's theorem and executing other calculations.] For scalar fields α(𝐱) and β(𝐱) and vector fields 𝐚(𝐱) and 𝐛(𝐱), the following identities (see Appendix for a derivation):
+
+
+
+
+    
+    
+    
+    α(𝐱)  𝐚(𝐱)  
+            = α(𝐱) ∙𝐚(𝐱) 
+            + α(𝐱)  𝐚(𝐱) 
+       𝐚(𝐱) ∙𝐛(𝐱)  
+            = 𝐚(𝐱) 𝐛(𝐱) 
+            + 𝐚(𝐱)  𝐛(𝐱)
+
+
+
+These identities will be used later in sensitivity analysis to derive the adjoint state problem. 
+
+
+
+
+
+
+ §.§ Reduced-order mathematical model
+
+The model considers three modes of heat transfer. Newton's law of cooling accounts for the convection on a free surface. A jump condition—an energy balance across the vasculature—models the heat transfer between the circulating fluid and the host solid. The Fourier model describes the conduction within the host solid: 
+
+
+
+
+    𝐪(𝐱) = - κ(𝐱)  grad[ϑ(𝐱)]
+
+
+where κ(𝐱) is the coefficient of thermal conductivity.
+
+The governing equations for the reduced-order model, describing thermal regulation, are 
+
+
+
+
+
+     
+    -   d   div[κ(𝐱)   
+    grad[ϑ(𝐱)]] 
+    = f(𝐱)
+    - h_T   (ϑ(𝐱) - ϑ_amb) 
+             in   Ω∖Σ
+
+    
+     
+    -   d   κ(𝐱)  
+    grad[ϑ(𝐱)]= χ   grad[ϑ(𝐱)] 
+    ∙𝐭(𝐱)          on   Σ
+
+    
+     
+       ϑ(𝐱)= 0  
+             on   Σ
+
+    
+     
+    -   d   𝐧(𝐱) ∙κ(𝐱) grad[ϑ(𝐱)] 
+    = 0 
+             on   ∂Ω
+
+    
+     
+       ϑ(𝐱)= ϑ_inlet 
+    = ϑ_amb 
+             at   s = 0   on   Σ
+
+
+where h_T is the combined heat transfer coefficient, and f(𝐱) is the power supplied by the heat source. For underlying assumptions and a thorough mathematical analysis of this reduced-order model, see <cit.>. Reduced-order models, similar to the one presented above, have been employed in prior active-cooling studies: for example, to establish invariants under flow reversal <cit.>, to get optimized vascular layouts using topology or shape optimization—or both <cit.>, to develop analysis numerical frameworks <cit.>, to name a few. However, these studies' focus has been different and not towards addressing the two questions central to this paper, outlined in the introduction. In the rest of the article, we will use mathematical analysis and sensitivity analysis on the reduced-order model to answer these questions. 
+
+In the parlance of sensitivity analysis and inverse problems, the above boundary value problem is often referred to as the direct problem.[In the literature, another popular name for the direct problem is the forward problem. As we will show later, the sensitivity analysis (under the adjoint state method) avails boundary value problems under forward and reverse flow conditions (i.e., swapping the inlet and outlet). To avoid a potential confusion, we do not adopt the forward problem terminology—but use the direct problem instead.] Two remarks are warranted to relate the form in which the governing equations are presented above to those used by other works. 
+
+
+
+
+
+
+
+In Eq. (<ref>), grad[ϑ]∙𝐭(𝐱) represents the tangential derivative of the temperature field along the vasculature. Equation (<ref>) implies that the temperature is continuous across Σ. Since the unit tangent vector 𝐭(𝐱) remains the same on either side of the vasculature, the tangential derivative grad[ϑ]∙𝐭(𝐱) will also be continuous across Σ. So, the average operator can be dropped on the right side of Eq. (<ref>); one can alternatively write it as 
+
+
+
+
+    -d  κ(𝐱) grad[ϑ] 
+        = χ grad[ϑ] ∙𝐭(𝐱) 
+          on Σ
+
+
+<cit.> has utilized the above alternative equation in their mathematical analysis to account for the heat transfer across the vasculature. But, for carrying out the sensitivity analysis using the adjoint method, Eq. (<ref>) is better suited than the above alternative. 
+
+
+
+
+
+
+
+
+
+Equation (<ref>) assigns the prescribed inlet temperature to ϑ(𝐱) at s = 0 on Σ; that is, the assignment is to the average of the temperatures on the either sides of the  vasculature at the inlet. Because of the continuity of the temperature field across the vasculature (i.e., Eq. (<ref>)), the average operator can be dropped in writing the initial condition: 
+
+
+
+
+    ϑ(𝐱) 
+        = ϑ_inlet = ϑ_amb  at  s = 0  on Σ
+
+
+Some works prefer the above equation, for example, see <cit.>. However, for our paper, Eq. (<ref>) is a better (equivalent) alternative, as it will simplify the derivations in the sensitivity analysis. 
+
+Also, since ϑ_inlet and ϑ_amb are constants and do not experience jumps across the vasculature, we rewrite Eq. (<ref>), in derivations in this paper, as: 
+
+
+
+
+    ϑ(𝐱) 
+        - ϑ_inlet 
+        = ϑ(𝐱) 
+        - ϑ_amb 
+        = 0  
+          at  s = 0  on Σ
+
+
+
+
+
+
+
+
+ §.§ Useful definitions
+
+The mean surface temperature is defined as 
+
+
+
+
+    ϑ 
+        := 1/meas(Ω)∫_Ωϑ(𝐱)  dΩ
+
+
+where meas(Ω) denotes the (set) measure of Ω. Since Ω is a surface, meas(Ω) is the area of Ω. The thermal efficiency—referred to as the cooling efficiency in the context of active-cooling—is defined as the ratio of the rate at which heat is carried away by the flowing fluid (within the vasculature) to the total power supplied by the heater. Mathematically, 
+
+
+
+
+    η 
+        := ( ∫_Ω f(𝐱)  dΩ)^-1χ  (ϑ_outlet - ϑ_inlet)
+
+
+If the applied heat supply is uniform over the entire domain (i.e., f(𝐱) = f_0), then we have:
+
+
+
+
+    η = χ  (ϑ_outlet - ϑ_inlet)/f_0  meas(Ω)
+
+
+We refer to the steady-state achieved without active-cooling as the hot steady-state (HSS) and denote the corresponding temperature field as ϑ_HSS(𝐱). That is, HSS occurs when χ = 0 and the temperature at the inlet is not prescribed. With this definition and by availing Eqs. (<ref>)–(<ref>), the mean hot steady-state temperature can be written as 
+
+
+
+
+    ϑ_HSS 
+        := 1/meas(Ω)∫_Ωϑ_HSS(𝐱)  dΩ 
+        = ϑ_amb + 1/h_T  meas(Ω)∫_Ω f(𝐱)  dΩ
+
+
+If f(𝐱) = f_0 (i.e., uniform power supplied by the heater), we have: 
+
+
+
+
+    ϑ_HSS 
+        = ϑ_amb + f_0/h_T
+
+
+As revealed by the above equation, for the chosen thermal regulation setup (see Fig. <ref>),  ϑ_HSS is independent of the host material's conductivity.
+
+
+
+
+
+
+ §.§ Forward and reverse flows
+
+
+Shown later, the sensitivity analysis avails a boundary value problem under reverse flow conditions: that is, the inlet and outlet locations are swapped, and hence, the fluid flows in the opposite direction within the vasculature. The solution under forward flow conditions will be denoted by ϑ^(f)(𝐱), which satisfies Eqs. (<ref>)–(<ref>). While ϑ^(r)(𝐱) denotes the solution under reverse flow conditions, satisfying the following boundary value problem:  
+
+
+
+
+    
+         
+        -   d   div[κ(𝐱)   
+        grad[ϑ^(r)(𝐱)]] 
+        = f(𝐱) 
+        - h_T   (ϑ^(r)(𝐱) - ϑ_amb) 
+                 in   Ω∖Σ
+
+        
+         
+        -   d   κ(𝐱)   grad[ϑ^(r)(𝐱)]= -χ   grad[ϑ^(r)(𝐱)] ∙𝐭(𝐱)          on   Σ
+
+        
+         
+           ϑ^(r)(𝐱)= 0  
+                 on   Σ
+
+        
+         
+        -   d   𝐧(𝐱) ∙κ(𝐱)   grad[ϑ^(r)(𝐱)] = 0 
+                 on   ∂Ω
+
+        
+         
+           ϑ^(r)(𝐱)= ϑ_inlet 
+        = ϑ_amb 
+                 at   s = 1   on   Σ
+
+
+Note that we have employed the same orientation for the arc-length (as the one used under the forward flow) in writing the governing equations under the reverse flow. Namely, the inlet location corresponds to s = 0 under the forward flow while to s = 1 under the reverse flow. Also, note the two main differences between the boundary value problems under forward and reverse flow conditions: the sign change on the right side of Eq. (<ref>) (cf. Eq. (<ref>)), and s = 1 in Eq. (<ref>) (instead of s = 0 in Eq. (<ref>)). 
+
+We will refer to the boundary value problems under the forward and reverse flow conditions as the forward and reverse flow problems, respectively. In general, ϑ^(f)(𝐱) differs from ϑ^(r)(𝐱). However, as shown recently by <cit.>, the mean surface temperature remains invariant under a reversal of flow when the applied heat source is uniform (i.e., f(𝐱) = f_0). Stated mathematically, 
+
+
+
+
+    1/meas(Ω)∫_Ωϑ^(f)(𝐱)  dΩ ≡ ϑ^(f)
+        = ϑ^(r) ≡ 1/meas(Ω)∫_Ωϑ^(r)(𝐱)  dΩ
+
+
+This invariance property will be used later in the mathematical analysis of design sensitivities. 
+
+
+
+
+
+
+
+
+
+
+
+
+§ RAMIFICATIONS OF MINIMIZING MEAN SURFACE TEMPERATURE
+
+
+
+This section addresses the first question outlined in the introduction. We show that minimizing the mean surface temperature is equivalent to: 
+
+
+
+
+    
+  * maximizing the difference between the outlet and inlet temperatures,  
+    
+  * maximizing the outlet temperature, 
+    
+  * maximizing the thermal (cooling) efficiency, 
+    
+  * maximizing the difference between ϑ_HSS - ϑ, and 
+    
+  * minimizing the difference between ϑ - ϑ_amb if applied heater power is uniform (i.e., f(𝐱) = f_0).
+
+
+Except for the last equivalence, the remaining ones hold for a general power source f(𝐱) ≥ 0.
+
+To establish the first equivalence, we integrate Eq. (<ref>) over the domain, apply the divergence theorem (<ref>), and use the rest of equations under the direct problem (<ref>)–(<ref>) to get: 
+
+
+
+
+    ϑ_outlet - ϑ_inlet = 1/χ(∫_Ω f(𝐱)  dΩ - meas(Ω)   h_T (ϑ - ϑ_amb) )
+
+
+In the above equation f_0, h_T, ϑ_amb, meas(Ω), and χ are all independent of ϑ. Noting the negative sign in the term containing h_T, we conclude that minimizing the mean surface temperature will maximize the difference  (ϑ_outlet - ϑ_inlet). Since the inlet temperature (which is equal to the ambient temperature) is a prescribed quantity and a constant, maximizing the difference (ϑ_outlet - ϑ_inlet) is the same as maximizing the outlet temperature, thereby establishing the second equivalence. The third equivalence is evident from the definition of thermal efficiency (<ref>), which is proportional to the difference between the outlet and inlet temperatures. 
+
+For the fourth equivalence, we start with the definition for ϑ_HSS (Eq. (<ref>)):
+
+
+
+
+    ϑ_HSS 
+        = ϑ_amb + 1/h_T  meas(Ω)∫_Ω f(𝐱)  dΩ
+
+
+Equation (<ref>) can be rearranged as follows:
+
+
+
+
+    ϑ
+        = ϑ_amb
+        + 1/h_T  meas(Ω)∫_Ω f(𝐱)  dΩ 
+        - χ/h_T  meas(Ω)(ϑ_outlet 
+        - ϑ_inlet)
+
+
+Subtracting Eq. (<ref>) from Eq. (<ref>), we get: 
+
+
+
+
+    ϑ_HSS - 
+        ϑ
+        = χ/h_T  meas(Ω)(ϑ_outlet 
+        - ϑ_inlet)
+
+
+Hence, maximizing the difference of outlet and inlet temperatures—equivalent to minimizing the mean surface temperature, from the first equivalence—implies maximizing the difference (ϑ_HSS - 
+    ϑ).
+    
+For the fifth equivalence, we use the maximum and minimum principles recently presented by <cit.>. For the case of f(𝐱) = f_0, the temperature field satisfies the following ordering: 
+
+
+
+
+    ϑ_amb≤ϑ(𝐱) ≤ϑ_HSS
+
+
+which further implies the mean surface temperature is bounded by 
+
+
+
+
+    ϑ_amb≤ϑ≤ϑ_HSS
+
+
+So, the above bounds implies that maximizing the difference ϑ_HSS - ϑ will minimize the difference ϑ - ϑ_amb. This observation, alongside the fourth equivalence, will establish the desired result.
+
+In the following two sections, we address the second question outlined in the introduction; we estimate the sensitivity of the quantity of interest (MST) to the two chosen design variables. To facilitate a pithy presentation, we avail functionals and their calculus. 
+
+
+
+
+
+
+ §.§ Functionals and their calculus
+
+A quantity of interest (in our case, the mean surface temperature) depends on the solution field, which changes upon altering the values of the design variables. However, a solution field is not an explicit function of design variables. Nevertheless, a sensitivity analysis should account for this solution field's non-explicit dependence. Ergo, for clarity and to ease the sensitivity analysis calculations, we introduce the “semi-colon" notation and avail calculus of functionals. We write ϑ(𝐱;ξ(𝐱)) to  mean that ϑ does not explicitly depend on the quantities to the right of the semi-colon, but ϑ changes upon altering them.
+
+In its simplest terms, a functional is a function of functions <cit.>. So, we write a quantity of interest Φ depending on a design variable ξ(𝐱) as a functional of the form Φ[ξ(𝐱)]. Functionals have their own rich, well-established calculus. However, all we need in our sensitivity analysis is the notion of Fréchet derivative. For a functional Φ[ξ(𝐱)], we denote its Fréchet derivative by DΦ[ξ(𝐱)] with definition <cit.>:
+
+
+
+
+    lim_Δξ(𝐱)→ 0 Φ[ξ(𝐱) + Δξ(𝐱)] - Φ[ξ(𝐱)] - DΦ[ξ(𝐱)] 
+        ∙Δξ(𝐱)/Δξ(𝐱) 
+        = 0
+
+
+where · is the Frobenius norm. If the functional is continuously differentiable, then Gâteaux variation furnishes an easier route—than the definition (<ref>)—to calculate the derivative:
+
+
+
+
+    [d/d ϵ Φ[ξ(𝐱) + ϵ Δξ(𝐱)] ]_ϵ=0 
+        = δΦ[ξ(𝐱)] ∙Δξ(𝐱) 
+        = DΦ[ξ(𝐱)] ∙Δξ(𝐱) 
+          ∀Δξ(𝐱)
+
+
+implying DΦ[ξ(𝐱)] = δΦ[ξ(𝐱)].
+
+For easy reference, we distinguish the sensitivities to the chosen two design variables. If ξ(𝐱) = χ (i.e., the design variable is the heat capacity rate), we denote the corresponding Fréchet derivative as 
+
+
+
+
+    Φ^#[χ] ≡ DΦ[χ]
+
+
+Likewise, if ξ(𝐱) = κ(𝐱), we use the notation:  
+
+
+
+
+    Φ^'[κ(𝐱)] ≡ DΦ[κ(𝐱)]
+
+
+For the scalar solution field ϑ(𝐱;ξ(𝐱)) (i.e., the temperature field satisfying the forward problem), we define D_1 ϑ and D_2ϑ as follows:
+
+
+
+
+    lim_Δ𝐱→ 0 ϑ(𝐱+Δ𝐱;ξ(𝐱)) 
+        - ϑ(𝐱;ξ(𝐱))
+        - D_1ϑ(𝐱;ξ(𝐱))
+        ∙Δ𝐱/Δ𝐱 
+        = 0 
+       lim_Δξ(𝐱)→ 0 ϑ(𝐱;ξ(𝐱)+ Δξ(𝐱)) 
+        - ϑ(𝐱;ξ(𝐱))
+        - D_2ϑ(𝐱;ξ(𝐱))
+        ∙Δξ(𝐱)/Δξ(𝐱) 
+        = 0
+
+
+Then the spatial derivative is related as follows: 
+
+
+
+
+    grad[ϑ(𝐱;ξ(𝐱))] = D_1ϑ(𝐱;ξ(𝐱))
+
+
+Similar to the notation used for the functional Φ, we use the following notation to represent the solution sensitivities:
+
+
+
+
+    ϑ^#(𝐱;χ) = D_2ϑ(𝐱;χ) 
+        
+          and  ϑ^'(𝐱;κ(𝐱)) = D_2ϑ(𝐱;κ(𝐱))
+
+
+In the next section, we mathematically investigate the sensitivity of the mean surface temperature to the fluid's heat capacity rate. 
+
+
+
+
+
+
+
+
+
+
+
+
+§ SENSITIVITY OF MST TO COOLANT'S HEAT CAPACITY RATE
+
+
+
+For this set of sensitivity analysis, we write the objective functional as follows:
+
+
+
+
+    Φ[χ] 
+        
+           = ∫_Ωϑ(𝐱;χ)  dΩ
+
+
+Since, in this case, Φ = meas(Ω)  ϑ and meas(Ω)—the area of the domain—is a constant, minimizing Φ is equivalent to minimizing the mean surface temperature. Our usage of this alternative (but equivalent) objective functional is for mathematical convenience: to avoid writing 1/meas(Ω) factor often.
+
+To find the associated design sensitivity, the task at hand is to calculate D Φ[χ]:
+
+
+
+
+    D Φ[χ] 
+        
+        = ∫_Ωϑ^#(𝐱;χ)  dΩ
+
+
+where a superscript # denotes the Fréchet derivative with respect to χ. Notice that the above expression for the design sensitivity contains solution sensitivity ϑ^#(𝐱;χ). But, the solution is unknown without solving the direct problem; the same situation even with the solution sensitivity. It will be ideal if we can estimate  DΦ[χ] without actually finding ϑ^#(𝐱;χ). The adjoint state method provides one such viable route, and we will avail it below.
+
+We augment Eq. (<ref>) with terms involving products of a Lagrange multiplier and derivatives with respect to χ of the residuals of state equations (i.e., governing equations of the direct problem). After augmenting these terms, the design sensitivity can be equivalently written as follows:
+
+
+
+
+    D Φ[χ] 
+        
+           = ∫_Ωϑ^#(𝐱;χ)  dΩ
+              +1/f_0∫_Ω∖Σ(μ(𝐱) - ϑ_amb)  (d  div[κ(𝐱)grad[ϑ(𝐱;χ)]] + f_0 - h_T(ϑ(𝐱;χ) - ϑ_amb)_Eq. (<ref>))^#dΩ
+              -1/f_0∫_Σμ(𝐱) -  ϑ_amb ( d  κ(𝐱) grad[ϑ(𝐱;χ)] + χ grad[ϑ(𝐱;χ)]∙𝐭(𝐱)_Eq. (<ref>))^#dΓ
+              +1/f_0∫_Σ d  κ(𝐱) grad[μ(𝐱)]∙(ϑ(𝐱;χ)_Eq. (<ref>))^# dΓ
+              +1/f_0∫_∂Ω(μ(𝐱) -  ϑ_amb)  (-d  κ(𝐱) grad[ϑ(𝐱;χ)] ∙𝐧(𝐱)_Eq. (<ref>))^# dΓ
+              -χ/f_0(μ(𝐱) - ϑ_amb)  (ϑ(𝐱;χ)  - ϑ_amb_Eq. (<ref>))^#|_s = 0    (inlet)
+
+
+where μ(𝐱) is the newly introduced Lagrange multiplier—also known as the adjoint variable. In the above equation, the factors introduced in the augmented terms are for getting an easy-to-work adjoint state problem, which will be apparent later in the derivation. 
+
+After applying Green's theorem twice, using identities (<ref>), and grouping the terms, Eq. (<ref>) can be rewritten as follows (see Appendix for a detailed derivation): 
+
+
+
+
+    D Φ[χ] 
+        
+           = - 1/f_0∫_Σ(μ(𝐱) - ϑ_amb)
+         grad[ϑ(𝐱;χ)] ∙𝐭(𝐱) 
+         dΓ
+            +  1/f_0∫_Ω∖Σϑ^#(𝐱;χ) 
+         {d  div[κ(𝐱)grad[μ(𝐱)]] + f_0 - h_T(μ(𝐱) - ϑ_amb)} dΩ
+            - 1/f_0∫_Σϑ^#(𝐱;χ)
+         { d  κ(𝐱) grad[μ(𝐱)]  
+        - χ grad[μ(𝐱)] ∙𝐭(𝐱) } dΓ
+            + 1/f_0∫_Σ d  κ(𝐱) grad[ϑ^#(𝐱;χ)]∙{μ(𝐱) - ϑ_amb} dΓ
+            + 1/f_0∫_∂Ωϑ^#(𝐱;χ)  {-d  κ(𝐱) grad[μ(𝐱)] 
+        ∙𝐧(𝐱) } dΓ
+            
+        - χ/f_0ϑ^#(𝐱;χ) 
+         {μ(𝐱) - ϑ_amb}|_s = 1
+
+
+Note that μ(𝐱) is arbitrary till now, and a prudent choice for it will simplify the design sensitivity expression. A heedful look at Eq. (<ref>) reveals that if we set all the terms in the curly brackets[We also marked these terms in purple for the reader's benefit—see an online version of this article.] to zero, the resulting expression for the design sensitivity will not contain ϑ^#(𝐱;χ). 
+
+Duly, we force the mentioned terms to vanish, giving rise to the following boundary value problem: 
+
+
+
+
+
+     
+    -   d   div[κ(𝐱)grad[μ(𝐱)]] = f_0
+    - h_T    (μ(𝐱) - ϑ_amb) 
+             in   Ω∖Σ
+
+    
+     
+    -   d   κ(𝐱) grad[μ(𝐱)]= -χ  grad[μ(𝐱)] ∙𝐭(𝐱)          on   Σ
+
+    
+     
+       μ(𝐱) = 0  
+             on   Σ
+
+    
+     
+    -   d   𝐧(𝐱) ∙κ(𝐱)grad[μ(𝐱)] = 0 
+             on   ∂Ω
+
+    
+     
+       μ(𝐱) = ϑ_amb 
+             at   s = 1   on   Σ
+
+
+The above boundary value problem is referred to as the adjoint state problem (or adjoint problem, for brevity). If μ(𝐱) satisfies the above adjoint state problem, the design sensitivity takes the following compact form:
+
+
+
+
+    DΦ[χ] 
+        = - 1/f_0∫_Σ(μ(𝐱) 
+        - ϑ_amb) grad[ϑ(𝐱;χ)] ∙𝐭(𝐱) 
+         dΓ
+
+
+
+
+
+Recalling the discussion in <ref>, we note that the above adjoint state problem is identical to the boundary value problem under reverse flow conditions (cf. Eqs. (<ref>)–(<ref>)), 
+which is s well-posed problem with a unique solution <cit.>. Thus, the solution to the adjoint variable is 
+
+
+
+
+    μ(𝐱) = ϑ^(r)(𝐱)
+
+
+With this identification, invoking the continuity of μ(𝐱) across the vasculature (<ref>), and noting Remark <ref>, the sensitivity of the mean surface temperature to the fluid's heat capacity rate amounts to
+
+
+
+
+    DΦ[χ] 
+        
+           = - 1/f_0∫_Σ(ϑ^(r)(𝐱) - ϑ_amb) grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+
+
+where ϑ^(f)(𝐱) is the solution of the boundary value problem under the forward flow conditions—the solution of the direct problem (i.e.,  Eqs. (<ref>)–(<ref>)). 
+
+The exact expressions for ϑ^(f)(𝐱) and ϑ^(r)(𝐱) are unknown a priori. One often solves the direct and adjoint boundary value problems to get these solutions using a numerical method or an analytical technique. Since we are interested only in the design sensitivity's sign, we do not attempt to solve these problems but avail mathematical analysis to assess the remarked sign instead.
+
+
+
+
+
+    
+    
+    Under uniform f(𝐱) = f_0, the sensitivity of the mean surface temperature to the heat capacity rate is non-positive. That is, 
+    
+    DΦ[χ] 
+            
+            = - 1/f_0∫_Σ(ϑ^(r)(𝐱) - ϑ_amb) grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ≤ 0
+
+ 
+
+
+
+
+By multiplying the first equation of the forward flow problem by (ϑ^(f)(𝐱) - ϑ_amb), applying Green's identity, and using the rest of the equations, we write  
+
+
+
+
+    ∫_Ω d  grad[ϑ^(f)(𝐱)] ∙κ(𝐱) grad[ϑ^(f)(𝐱)]  dΩ
+        
+        +∫_Σχ (ϑ^(f)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+    
+        
+        =∫_Ω f(𝐱) (ϑ^(f)(𝐱) - ϑ_amb) dΩ
+        
+        -∫_Ω h_T(ϑ^(f)(𝐱) - ϑ_amb)^2 dΩ
+
+
+Likewise, by multiplying the first equation of the reverse flow problem by (ϑ^(r)(𝐱) - ϑ_amb) and following similar steps as before, we get the following: 
+
+
+
+
+    ∫_Ω d  grad[ϑ^(r)(𝐱)] ∙κ(𝐱) grad[ϑ^(r)(𝐱)]  dΩ
+        
+        -∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(r)(𝐱)] ∙𝐭(𝐱)  dΓ
+    
+        
+        =∫_Ω f(𝐱) (ϑ^(r)(𝐱) - ϑ_amb) dΩ
+        
+        -∫_Ω h_T(ϑ^(r)(𝐱) - ϑ_amb)^2 dΩ
+
+
+Finally, by multiplying the first equation of the forward flow problem by (ϑ^(r)(𝐱) - ϑ_amb), we get the following:
+
+
+
+
+    ∫_Ω d  grad[ϑ^(r)(𝐱)] ∙κ(𝐱) grad[ϑ^(f)(𝐱)]  dΩ
+        
+        +∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+    
+        
+        =∫_Ω f(𝐱) (ϑ^(r)(𝐱) - ϑ_amb) dΩ
+        
+        -∫_Ω h_T(ϑ^(r)(𝐱) - ϑ_amb) 
+        (ϑ^(f)(𝐱) - ϑ_amb) dΩ
+
+
+We add Eqs. (<ref>) and (<ref>), and from this sum we subtract  twice Eq. (<ref>) (i.e., Eq. (<ref>) + Eq. (<ref>) – 2 × Eq. (<ref>)); this calculation amounts to
+
+
+
+
+    ∫_Ω d  grad[ϑ^(f)(𝐱) - ϑ^(r)(𝐱)] ∙κ(𝐱) grad[ϑ^(f)(𝐱) - ϑ^(r)(𝐱)]  dΩ
+        
+        +∫_Ω h_T(ϑ^(f)(𝐱) - 
+        ϑ^(r)(𝐱))^2dΩ
+                = ∫_Ω f(𝐱) (ϑ^(f)(𝐱) - ϑ^(r)(𝐱)) dΩ
+                    -∫_Σχ (ϑ^(f)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+                    +∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(r)(𝐱)] ∙𝐭(𝐱)  dΓ
+                    +2∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+
+
+The two integrals on the left side of the above equation are non-negative; note d > 0 and κ(𝐱) > 0. Therefore, we write
+
+
+
+
+    0 ≤∫_Ω f(𝐱) (ϑ^(f)(𝐱) - ϑ^(r)(𝐱)) 
+        dΩ
+                    -∫_Σχ (ϑ^(f)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+                    +∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(r)(𝐱)] ∙𝐭(𝐱)  dΓ
+                    
+        +2∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+
+
+By noting f(𝐱) is uniform and invoking the invariance of the mean surface temperature under flow reversal (i.e., Eq. (<ref>)), the first term on the right side of Eq. (<ref>) vanishes. We thus have the following inequality: 
+
+
+
+
+    ∫_Σχ (ϑ^(f)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ 
+        
+        -∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(r)(𝐱)] ∙𝐭(𝐱)  dΓ
+        ≤ 2∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+
+
+We will now consider the first term in Eq. (<ref>) and execute the integral along the vasculature:
+
+
+
+
+    ∫_Σχ (ϑ^(f)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ 
+        
+        = χ/2 (ϑ^(f)(𝐱) - ϑ_amb)^2 |_s = 0^s = 1
+
+
+Noting that, under forward flow conditions, ϑ^(f)(𝐱) = ϑ_amb at s = 0 and ϑ^(f)(𝐱) = ϑ^(f)_outlet at s = 1, we get
+
+
+
+
+    ∫_Σχ (ϑ^(f)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ 
+        
+        = χ/2 (ϑ^(f)_outlet - ϑ_amb)^2
+
+
+Carrying out similar steps for the second term in Eq. (<ref>), we write 
+
+
+
+
+    ∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(r)(𝐱)] ∙𝐭(𝐱)  dΓ   = χ/2 (ϑ^(r)(𝐱) - ϑ_amb)^2 |_s = 0^s = 1
+       = -χ/2 (ϑ^(r)_outlet - ϑ_amb)^2
+
+
+The minus sign arises because, under reverse flow conditions, ϑ^(r)(𝐱) = ϑ^(r)_outlet at s = 0 and ϑ^(f)(𝐱) = ϑ_amb at s = 1. Using Eqs. (<ref>) and (<ref>), inequality (<ref>) can be written as follows: 
+
+
+
+
+    χ/2(ϑ^(f)_outlet - ϑ_amb)^2
+        
+        +χ/2(ϑ^(r)_outlet - ϑ_amb)^2≤ 2∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+
+
+The left side of the above inequality is non-negative. Hence, we have 
+
+
+
+
+    0 ≤ 
+        
+        2∫_Σχ (ϑ^(r)(𝐱) - ϑ_amb)
+        grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ
+
+
+Noting that χ≥ 0 and f_0 > 0 are constants, the above inequality renders the desired result:
+
+
+
+
+    DΦ[χ] 
+        
+        = - 1/f_0∫_Σ(ϑ^(r)(𝐱) - ϑ_amb) grad[ϑ^(f)(𝐱)] ∙𝐭(𝐱)  dΓ≤ 0
+
+
+ 
+
+
+
+
+
+
+ §.§ Discussion
+ The above result is remarkable: We have mathematically shown that, regardless of the vasculature, the mean surface temperature always decreases upon increasing the heat capacity rate. Even if the segments of the vasculature are close by—which introduces countercurrent heat exchange: heat transfers from the coolant to the host solid—the remarked trend is unaltered. Given the heat capacity rate is a product of fluid properties (specific heat capacity, c_f, and density, ρ_f) and volumetric flow rate (Q), two scenarios are pertinent: one can alter the fluid or vary the flow rate.
+
+    
+  * For a fixed fluid, increasing the volumetric flow rate will decrease the mean surface temperature. 
+    
+  * For a fixed flow rate while altering the flowing fluid (coolant), the fluid with a higher heat capacity (i.e., product of the density and specific heat capacity: ρ_f  c_f) will have a lower mean surface temperature. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ SENSITIVITY OF MST TO THERMAL CONDUCTIVITY
+
+
+
+For estimating the sensitivity of the mean surface temperature to the host material's thermal conductivity field κ(𝐱), the task is to find D Φ[κ(𝐱)]. We again use the adjoint state method and start with the definition of DΦ[κ]: 
+
+
+
+
+    D Φ[κ(𝐱)] 
+        
+           = ∫_Ωϑ^'(𝐱;κ(𝐱))  dΩ
+
+
+where a superscript prime denotes the Fréchet derivative related to the  conductivity field. 
+
+Following the steps taken in the previous section, we augment Eq. (<ref>) with terms involving weighted integrals, containing the derivatives with respect to κ(𝐱) of the residuals of the forward problem's governing equations. λ(𝐱) will now denote the corresponding weight (i.e., the Lagrange multiplier or the adjoint variable). After augmenting these terms, the design sensitivity can be written as follows: 
+
+
+
+
+    D Φ[k(𝐱)] 
+    
+       = ∫_Ωϑ^'(𝐱;κ(𝐱))  dΩ
+              +1/f_0∫_Ω(λ(𝐱) - ϑ_amb)  (d  div[κ(𝐱)  grad[ϑ(𝐱;κ(𝐱))]] + f_0 - h_T (ϑ(𝐱;κ(𝐱)) - ϑ_amb)_Eq. (<ref>))^'dΩ
+              -1/f_0∫_Σλ(𝐱) -  ϑ_amb ( d  κ(𝐱) grad[ϑ(𝐱;κ(𝐱))] + χ grad[ϑ(𝐱;κ(𝐱))]∙𝐭(𝐱)_Eq. (<ref>))^'dΓ
+              +1/f_0∫_Σ d  κ(𝐱) grad[λ(𝐱)]∙(ϑ(𝐱;κ(𝐱))_Eq. (<ref>))^' dΓ
+              +1/f_0∫_∂Ω(λ(𝐱) -  ϑ_amb)  (-d  κ(𝐱) grad[ϑ(𝐱;κ(𝐱))] ∙𝐧(𝐱)_Eq. (<ref>))^' dΓ
+              -χ/f_0(λ(𝐱) - ϑ_amb)  (ϑ(𝐱;κ(𝐱)) - ϑ_amb_Eq. (<ref>))^'|_inlet
+
+
+Similar to the derivation provided in the previous section and appendix, the above expression can be rewritten as follows:
+
+
+
+
+    D Φ[k(𝐱)] 
+    
+       = -1/f_0∫_Ω d  grad[λ(𝐱)] ∙grad[ϑ(𝐱;κ(𝐱))]  dΩ
+            +  1/f_0∫_Ωϑ^'(𝐱;κ(𝐱)) 
+     {d  div[κ(𝐱)  grad[λ(𝐱)]] + f_0 - h_T (λ(𝐱) - ϑ_amb)} dΩ
+            - 1/f_0∫_Σϑ^'(𝐱;κ(𝐱)) { d  κ(𝐱) grad[λ(𝐱)]  
+    - χ grad[λ(𝐱)] ∙𝐭(𝐱) } dΓ
+            + 1/f_0∫_Σ d  κ(𝐱) grad[ϑ^'(𝐱;κ(𝐱))]∙{λ(𝐱) - λ_amb} dΓ
+            + 1/f_0∫_∂Ωϑ^'(𝐱;κ(𝐱))  {-d  κ(𝐱) grad[λ(𝐱)] 
+    ∙𝐧(𝐱) } dΓ
+            - χ/f_0ϑ^'(𝐱;κ(𝐱))  {λ(𝐱) 
+     - ϑ_amb} |_s = 1
+
+
+The corresponding adjoint state problem is obtained by forcing all the terms in parenthesis of Eq. (<ref>) to be zero: 
+
+
+
+
+
+     
+    -   d   div[κ(𝐱)grad[λ(𝐱)]] = f_0
+    - h_T (λ(𝐱) - ϑ_amb) 
+             in   Ω
+
+    
+     
+    -   d   κ(𝐱) grad[λ(𝐱)]= -χ   grad[λ(𝐱)] ∙𝐭(𝐱) 
+             on   Σ
+
+    
+     
+       λ(𝐱) = 0  
+             on   Σ
+
+    
+     
+    -   d   𝐧(𝐱) ∙κ(𝐱)grad[λ(𝐱)] = 0 
+             on   ∂Ω
+
+    
+     
+       λ(𝐱)= ϑ_amb 
+             at   s = 1   on   Σ
+
+
+If λ(𝐱) satisfies the adjoint problem, the sensitivity (<ref>) takes the following compact form:
+
+
+
+
+    DΦ[κ(𝐱)] 
+        
+           = - 1/f_0∫_Ω d  grad[λ(𝐱)] 
+        ∙grad[ϑ(𝐱;κ(𝐱))]  dΩ
+
+
+The solution to the adjoint variable is again 
+the temperature field under the reverse flow conditions: 
+
+
+
+
+    λ(𝐱) = ϑ^(r)(𝐱)
+
+
+Thus, the sensitivity of the mean surface temperature to the host's thermal conductivity is:
+
+
+
+
+    DΦ[κ(𝐱)] 
+        
+           = -1/f_0∫_Ω d  grad[ϑ^(r)(𝐱)] 
+        ∙grad[ϑ^(f)(𝐱)]  dΩ
+
+
+It is instructive to write the above equation in terms of the heat flux vector: 
+
+
+
+
+    DΦ[κ(𝐱)] 
+        
+           = -1/f_0∫_Ωd/κ^2(𝐱) 𝐪^(r)(𝐱) ∙𝐪^(f)(𝐱)  dΩ
+
+
+where the heat flux vector fields under the forward and reverse flow conditions take the following form: 
+
+
+
+
+    𝐪^(f)(𝐱) = - κ(𝐱) 
+         grad[ϑ^(f)(𝐱)]
+        
+         and 𝐪^(r)(𝐱) = - κ(𝐱) 
+         grad[ϑ^(r)(𝐱)]
+
+
+Expression (<ref>) suggests that DΦ[κ(𝐱)] can be positive or negative depending on whether 𝐪^(f)(𝐱) opposes 𝐪^(r)(𝐱), at least in a significant portion of the domain. This observation further indicates that the trend—variation of the sensitivity with thermal conductivity—might not be monotonic. Needless to say, the exact expressions for ϑ^(f)(𝐱) and ϑ^(r)(𝐱)—hence 𝐪^(f)(𝐱) and 𝐪^(r)(𝐱)—are not known a priori. We, therefore, resort to numerics for establishing the remarked trend. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ NUMERICAL VERIFICATION
+
+
+
+We now verify numerically the theoretical findings presented in the previous two sections. All numerical results are generated by implementing the single-field Galerkin formulation using the weak form capability in <cit.>. The Galerkin formulation corresponding to the boundary value problem (<ref>)–(<ref>) reads: Find ϑ(𝐱) ∈𝒰 such that we have 
+
+
+
+
+    ∫_Ω d  grad[δϑ(𝐱)] 
+        ∙κ(𝐱)  grad[ϑ(𝐱)] 
+         dΩ 
+        
+        + ∫_Ωδϑ(𝐱) 
+          h_T   (ϑ(𝐱) - ϑ_amb) 
+         dΩ
+    
+        
+        + ∫_Σδϑ(𝐱) 
+         χ grad[ϑ(𝐱)] ∙𝐭(𝐱)  dΓ 
+        
+        = ∫_Ωδϑ(𝐱) 
+          f(𝐱) 
+         dΩ  ∀δϑ(𝐱) 
+        ∈𝒲
+
+
+where the function spaces are defined as follows: 
+
+
+
+
+
+    𝒰   := {ϑ(𝐱) ∈ H^1(Ω)  | ϑ(𝐱) = ϑ_inlet = ϑ_amb at  s = 0  on Σ}
+    𝒲   := {δϑ(𝐱) ∈ H^1(Ω)  | δϑ(𝐱) = 0  at  s = 0  on Σ}
+
+
+
+In the above definitions, H^1(Ω) denotes the standard Sobolev space comprising all functions defined over Ω that are square-integrable alongside their derivatives <cit.>. We have used quadratic Lagrange triangular elements in all the numerical simulations reported in this paper. The chosen meshes were fine enough to resolve steep gradients across the vasculature.
+
+Table <ref> lists the simulation parameters. The values we have chosen for the dimensions and input parameters (e.g., ambient temperature, volumetric flow rate) are common and reported in several experimental active-cooling studies <cit.>. Also, we have shown results spanning three host material systems—glass fiber-reinforced plastic (GFRP) composite, carbon fiber-reinforced plastic (CFRP) composite, and Inconel (an additive manufacturing nickel-based alloy). These materials are popular among microvascular active-cooling applications. 
+
+
+
+
+
+
+ §.§ U-shaped vasculature
+
+Guided by Eq. (<ref>), we devise a problem that shows  DΦ[κ] can be positive or negative. The train of thought is: we choose a vasculature comprising two parallel segments. If the spacing between them is small, the heat transfers from one segment to the other—the flowing fluid in a part of the vasculature loses net heat. In such a case, swapping the inlet and outlet will make the heat flux vector under the reverse flow conditions oppose that under the forward flow conditions, making DΦ[κ] positive. A concomitant manifestation will be a non-monotonic temperature variation along the vasculature.
+
+Figure <ref> provides a pictorial description of one such problem. The corresponding heat flux vectors are shown in Fig. <ref>. Clearly, under the forward flow conditions with close spacing (l = 20  mm), the heat flows from the right vertical segment, connected to the outlet, to the left vertical segment (which is connected to the inlet). Further, the heat flux vectors under the two flow conditions oppose each other in the region between these two parallel segments, and the magnitude of the heat flux vector in this sandwiched region is large. Henceforward, we refer to the heat transfer from one segment to another along the vasculature as countercurrent heat exchange.
+
+Depending on the strength of the countercurrent heat exchange, increasing the host material's conductivity need not result in a monotonic variation of either the mean surface temperature or thermal efficiency, as conveyed in  Fig. <ref>. On the other hand,  Fig. <ref> shows that increasing the flow rate invariably decreases the mean surface temperature, despite countercurrent heat exchanges—verifying once more Theorem <ref>. Nonetheless, what factors—material, geometric and input parameters—promote or hinder countercurrent heat exchange is yet to be studied: worthy of a separate investigation. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Straight channel
+
+To verify further the role of countercurrent heat exchange, we consider a straight channeled vasculature, illustrated in Fig. <ref>. The lack of nearby segments implies there will be no countercurrent heat exchange. The heat flux vectors under the forward and reverse flow conditions align (more or less) in the same direction, as exhibited in Fig. <ref>. So, the mean surface temperature should decrease monotonically as the thermal conductivity increases, verified for various flow rates in Fig. <ref>. Figure <ref> verifies Theorem <ref>: Increasing the volumetric flow rate (keeping the fluid fixed) will decrease the mean surface temperature.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Serpentine vasculature
+
+Figure <ref> depicts the serpentine vasculature layout. Several studies have used this layout (e.g., <cit.>) because of its spatial spread, enabling cooling over the entire domain. Clearly, heat transfer under this layout is intricate along the vasculature because of many nearby segments, as portrayed in Fig. <ref>. On many portions of the vasculature, heat transfers from the host material to flowing fluid on one side and the opposite on the juxtaposed side. Due to this prominent countercurrent heat exchanges, the effect of the thermal conductivity on the mean surface temperature can be multifaceted and depends on the flow rate, as shown in  Fig. <ref>. Despite the complex heat transfer map, Fig. <ref> shows that the sensitivity of the mean surface temperature to the volumetric flow rate (for a fixed fluid) is always negative—in agreement with Theorem <ref>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ CLOSURE
+
+
+
+This paper addressed the individual effects of heat capacity rate (product of volumetric flow rate and heat capacity) and thermal conductivity 
+on the mean surface temperature (MST) and thermal efficiency. The study avails a reduced-order model for thermal regulation and conducts mathematical analysis based on the adjoint state method (a popular sensitivity analysis approach) and representative numerical simulations. The principal finding on the sensitivity analysis front is: the adjoint-state problem is the boundary value problem for the reverse flow conditions (i.e., swapping the inlet and outlet locations). The primary determinations on the physics front are: 
+
+
+  * Irrespective of the vasculature layout, an increase in the mass flow rate of the circulating fluid decreases MST—meaning that the thermal efficiency increases.
+
+  * However, MST variation is non-monotonic with the host material’s thermal conductivity.
+
+  * The sensitivity of MST to the conductivity is proportional to the weighted inner product of the heat flux vector fields under the forward and reverse flow conditions.
+
+  * When countercurrent heat exchange dominates, these two heat flux vectors oppose each other, thereby making the sensitivity of MST to thermal conductivity positive. The trend can be the opposite if the countercurrent heat exchange is absent or insignificant.
+
+
+A direct significance of this work is it settles an unresolved fundamental question related to thermal regulation in thin vascular systems: how does the host material's thermal conductivity affect MST? Also, the reported analysis and results (a) enhance our fundamental understanding of vascular-based thermal regulation and (b) provide a clear-cut path to pose material design problems. 
+
+As alluded to in <ref>, a logical sequel to this study is to address this principal question: what factors (material, geometric and input parameters) promote or hinder countercurrent heat exchange in microvascular active-cooling systems? Further, we envision scientific explorations on two fronts:
+
+
+  * An experimental program—validating the identified non-monotonic behavior of the sensitivity of thermal conductivity on the mean surface temperature—will benefit the field. Further, these experiments should realize countercurrent heat exchange and confirm its role in the sign change of this sensitivity.
+
+  * On the modeling front, a natural extension is to develop a material design framework and comprehend the resulting designs. Also, researchers should explore alternative objective functionals appropriate to thermal regulation (other than the mean surface temperature) and study the ramifications of such alternatives. The results from this paper provide the necessary impetus to undertake the remarked material design research. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ ALGEBRA AND CALCULUS OF JUMPS
+
+
+
+
+
+
+
+ §.§ Algebra
+
+
+
+Below we provide proof of identity (<ref>). Proof of the other equivalence (<ref>) follows a similar procedure. 
+
+
+
+
+    
+    
+    Given a scalar field α(𝐱) and a vector field 𝐚(𝐱), the following identity holds: 
+    
+    α(𝐱)  𝐚(𝐱) 
+             
+            = α(𝐱) ∙𝐚(𝐱)  
+            + α(𝐱) 
+             𝐚(𝐱)
+
+
+
+
+
+
+We use the definitions of the average and jump operators (i.e., Eqs. (<ref>) and (<ref>)) to expand the first term on the right side of the identity: 
+
+    α(𝐱) 
+        ∙𝐚(𝐱)    = (α^+(𝐱)  𝐧^+(𝐱)
+        + α^-(𝐱)  𝐧^-(𝐱)
+        ) ∙1/2(𝐚^+(𝐱) 
+        + 𝐚^-(𝐱) ) 
+       = 1/2α^+(𝐱)  𝐧^+(𝐱)
+        ∙𝐚^+(𝐱)
+        + 1/2α^+(𝐱)  𝐧^+(𝐱)
+        ∙𝐚^-(𝐱) 
+            +1/2α^-(𝐱)  𝐧^-(𝐱)
+        ∙𝐚^+(𝐱)
+        + 1/2α^-(𝐱)  𝐧^-(𝐱)
+        ∙𝐚^-(𝐱)
+
+
+Likewise, expanding the second term on the right side of the identity, we get:
+
+
+
+
+    α(𝐱) 
+         𝐚(𝐱)    = 1/2(α^+(𝐱) 
+        + α^-(𝐱) )  (𝐚^+(𝐱) ∙𝐧^+(𝐱)
+        + 𝐚^-(𝐱) ∙𝐧^-(𝐱)
+        ) 
+       = 1/2α^+(𝐱)  𝐚^+(𝐱)
+        ∙𝐧^+(𝐱)
+        + 1/2α^+(𝐱)  𝐚^-(𝐱)
+        ∙𝐧^-(𝐱) 
+            +1/2α^-(𝐱)  𝐚^+(𝐱)
+        ∙𝐧^+(𝐱)
+        + 1/2α^-(𝐱)  𝐚^-(𝐱)
+        ∙𝐧^-(𝐱)
+
+
+By adding the above two equations and noting the commutative property of the dot product, we get 
+
+
+
+
+    α(𝐱) 
+        ∙𝐚(𝐱) 
+        + 
+        α(𝐱) 
+         𝐚(𝐱)    = α^+(𝐱)  𝐚^+(𝐱)
+        ∙𝐧^+(𝐱)
+        
+        + α^-(𝐱)  𝐚^-(𝐱)
+        ∙𝐧^-(𝐱) 
+            + 1/2(α^+(𝐱)  𝐚^-(𝐱) 
+        + α^-(𝐱)  𝐚^+(𝐱)
+        ) 
+        ∙(𝐧^+(𝐱)  
+        + 𝐧^-(𝐱) 
+        )
+
+
+Noting that 𝐧^+(𝐱) + 𝐧^-(𝐱) = 0, we establish the desired result as follows: 
+
+
+
+
+    α(𝐱) 
+        ∙𝐚(𝐱) 
+        + 
+        α(𝐱) 
+         𝐚(𝐱)    = α^+(𝐱)  𝐚^+(𝐱)
+        ∙𝐧^+(𝐱)
+        
+        + α^-(𝐱)  𝐚^-(𝐱)
+        ∙𝐧^-(𝐱) 
+       = 
+        (α(𝐱)  𝐚(𝐱))^+∙𝐧^+(𝐱)
+        
+        + (α(𝐱)  𝐚(𝐱))^-∙𝐧^-(𝐱) 
+       = α(𝐱)  𝐚(𝐱)
+
+
+
+
+
+
+
+
+
+ §.§ Calculus
+
+
+
+The divergence theorem over Ω∖Σ takes the following form: 
+
+
+
+
+    ∫_Ω∖Σdiv[𝐚(𝐱)]  dΩ 
+        
+        = ∫_∂Ω𝐚(𝐱) ∙𝐧(𝐱) 
+         dΓ
+        
+        + ∫_Σ𝐚(𝐱) 
+         dΓ
+
+
+where 𝐚(𝐱) is a vector field. The Green's theorem over Ω∖Σ can be written as follows: 
+
+
+
+
+    ∫_Ω∖Σα(𝐱)  div[𝐚(𝐱)]  dΩ 
+        
+        = ∫_∂Ωα(𝐱)  𝐚(𝐱) 
+        ∙𝐧(𝐱) 
+         dΓ 
+        
+        + ∫_Σα(𝐱)  𝐚(𝐱) 
+         dΓ
+    
+        
+        - ∫_Ω∖Σgrad[α(𝐱)] 
+        ∙𝐚(𝐱)
+         dΩ
+
+
+where α(𝐱) is a scalar field. The above two expressions are valid even if the vasculature Σ comprises branches. The following result, an application of Green's theorem (<ref>), will be useful in deriving the adjoint state problem.
+
+
+
+
+   
+   
+   Let β(𝐱) and γ(𝐱) are two smooth scalar fields over Ω∖Σ. These fields satisfy 
+   
+    ∫_Ω∖Σγ(𝐱)  div[κ(𝐱)  grad[β(𝐱)]]  dΩ   = ∫_∂Ωγ(𝐱)  κ(𝐱)  grad[β(𝐱)]
+            ∙𝐧(𝐱) 
+             dΓ 
+            
+            -∫_∂Ωβ(𝐱)  κ(𝐱)  grad[γ(𝐱)]
+            ∙𝐧(𝐱) 
+             dΓ
+            + ∫_Σγ(𝐱) 
+              κ(𝐱) 
+              grad[β(𝐱)]
+             dΓ 
+            
+            - ∫_Σβ(𝐱) 
+              κ(𝐱) 
+              grad[γ(𝐱)]
+             dΓ
+            + ∫_Ω∖Σβ(𝐱)  div[ κ(𝐱)  grad[γ(𝐱)] ]
+             dΩ
+
+    
+    
+
+
+
+
+ 
+    Taking α(𝐱) = γ(𝐱) and 𝐚(𝐱) = κ(𝐱)  grad[β(𝐱)] in  Green's theorem (<ref>), we write:
+    
+    
+    
+    
+    ∫_Ω∖Σγ(𝐱)  div[κ(𝐱)  grad[β(𝐱)]]  dΩ   = ∫_∂Ωγ(𝐱)  κ(𝐱)  grad[β(𝐱)]
+            ∙𝐧(𝐱) 
+             dΓ
+            + ∫_Σγ(𝐱)  κ(𝐱)  grad[β(𝐱)]
+             dΓ
+            - ∫_Ω∖Σgrad[γ(𝐱)] 
+            ∙κ(𝐱)  grad[β(𝐱)]
+             dΩ
+
+    
+    Using the commutative property of the dot product and invoking Green's theorem (with α(𝐱) = β(𝐱) and 𝐚(𝐱) = κ(𝐱)  grad[γ(𝐱)]), the last integral (defined over Ω∖Σ) in the above equation is rewritten as follows: 
+    
+    
+    
+    
+    ∫_Ω∖Σgrad[γ(𝐱)] 
+            ∙κ(𝐱)  grad[β(𝐱)]
+             dΩ   = ∫_Ω∖Σgrad[β(𝐱)] 
+            ∙κ(𝐱)  grad[γ(𝐱)]
+             dΩ
+       = ∫_∂Ωβ(𝐱)  κ(𝐱)  grad[γ(𝐱)]
+            ∙𝐧(𝐱) 
+             dΓ
+            + ∫_Σβ(𝐱)  κ(𝐱)  grad[γ(𝐱)]
+             dΓ
+            - ∫_Ω∖Σgrad[β(𝐱)] 
+            ∙κ(𝐱)  grad[γ(𝐱)]
+             dΩ
+
+    
+    By subtracting Eq.  (<ref>) from Eq. (<ref>), we get the desired result:
+    
+    
+    
+    
+    ∫_Ω∖Σγ(𝐱)  div[κ(𝐱)  grad[β(𝐱)]]  dΩ   = ∫_∂Ωγ(𝐱)  κ(𝐱)  grad[β(𝐱)]
+            ∙𝐧(𝐱) 
+             dΓ
+            -
+            ∫_∂Ωβ(𝐱)  κ(𝐱)  grad[γ(𝐱)]
+            ∙𝐧(𝐱) 
+             dΓ
+            + ∫_Σγ(𝐱) 
+              κ(𝐱) 
+              grad[β(𝐱)]
+             dΓ
+            - ∫_Σβ(𝐱) 
+              κ(𝐱) 
+              grad[γ(𝐱)]
+             dΓ
+            + ∫_Ω∖Σβ(𝐱)  div[ κ(𝐱)  grad[γ(𝐱)] ]
+             dΩ
+
+    
+
+
+
+
+
+
+
+§ DERIVATION OF THE ADJOINT STATE PROBLEM
+
+
+
+To make the presentation concise in the main text, several intermediate steps were skipped in arriving at Eq. (<ref>) from Eq. (<ref>). Below we provide the missing details. 
+We start with  Eq. (<ref>) and record that a superscript # is the Fréchet derivative with respect to χ. Also, we note that the spatial derivatives (i.e., divergence and gradient operators) commute with the Fréchet derivative with respect to χ. Since ϑ_amb, f_0, d, h_T, and κ(𝐱) do not depend on χ, we rewrite Eq. (<ref>) as follows: 
+
+
+
+
+    D Φ[χ] 
+        
+           = ∫_Ωϑ^#(𝐱;χ)  dΩ
+              +1/f_0∫_Ω∖Σ(μ(𝐱) - ϑ_amb)  (d  div[κ(𝐱)  grad[ϑ^#(𝐱;χ)]] - h_T ϑ^#(𝐱;χ)) 
+         dΩ
+              -1/f_0∫_Σμ(𝐱) -  ϑ_amb ( d  κ(𝐱)  grad[ϑ^#(𝐱;χ)] + χ grad[ϑ^#(𝐱;χ)]∙𝐭(𝐱) 
+         + grad[ϑ(𝐱;χ)]∙𝐭(𝐱) )  dΓ
+              +1/f_0∫_Σ d  κ(𝐱) grad[μ(𝐱)]∙ϑ^#(𝐱;χ) dΓ
+              +1/f_0∫_∂Ω(μ(𝐱) -  ϑ_amb)  (-d  κ(𝐱)  grad[ϑ^#(𝐱;χ)] ∙𝐧(𝐱)) 
+         dΓ
+              -χ/f_0(μ(𝐱)  - ϑ_amb)
+         ϑ^#(𝐱;χ) 
+         |_s = 0    (inlet)
+
+
+The central aim for the rest of the derivation is to isolate ϑ^#(𝐱;κ(𝐱)) in each term of Eq. (<ref>).
+
+
+
+
+For convenience, we denote the second term by ℐ_2: 
+
+
+
+
+    ℐ_2   = 1/f_0∫_Ω∖Σ(μ(𝐱) - ϑ_amb)  (d  div[κ(𝐱)grad[ϑ^#(𝐱;χ)]] 
+        - h_T ϑ^#(𝐱;χ))  dΩ
+       = - 1/f_0∫_Ω∖Σϑ^#(𝐱;χ)
+          h_T  (μ(𝐱) - ϑ_amb) 
+         dΩ
+                + 1/f_0∫_Ω∖Σ(μ(𝐱) - ϑ_amb)   
+        d  div[κ(𝐱)grad[ϑ^#(𝐱;χ)]]  dΩ
+
+
+We now rewrite the integral ℐ_2 by moving the spatial derivatives on ϑ(𝐱;χ) to μ(𝐱). By invoking Proposition <ref> on the second integral in Eq. (<ref>), we get the following: 
+
+
+
+
+    ℐ_2 
+        
+           = - 1/f_0∫_Ω∖Σϑ^#(𝐱;χ)
+          h_T  (μ(𝐱) - ϑ_amb) 
+         dΩ
+            +
+        1/f_0∫_Ω∖Σϑ^#(𝐱;χ)  (
+        d  div[κ(𝐱)  grad[μ(𝐱)] ] )  dΩ
+            + 
+        1/f_0∫_∂Ω(μ(𝐱) - ϑ_amb)   d  κ(𝐱)grad[ϑ^#(𝐱;χ)] ∙𝐧(𝐱)  dΓ
+            +
+        1/f_0∫_Σ(μ(𝐱) - ϑ_amb) 
+        ∙ 
+        d  κ(𝐱)grad[ϑ^#(𝐱;χ)] 
+         dΓ
+            - 
+        1/f_0∫_∂Ωϑ^#(𝐱;χ)  (
+        d  κ(𝐱)  grad[μ(𝐱)] ∙𝐧(𝐱) )  dΓ
+            
+        - 1/f_0∫_Σϑ^#(𝐱;χ) 
+        ∙ 
+        d  κ(𝐱)  grad[μ(𝐱)] 
+         dΓ
+
+
+We now substitute the above expression into Eq. (<ref>) and group the resulting terms into three categories for further simplification. We thus write:
+
+
+
+
+    DΦ[χ] 
+        = 𝒥_1
+        + 𝒥_2
+        + 𝒥_3
+
+
+where 𝒥_1 contains all the terms comprising integrals over Ω∖Σ, 
+𝒥_2 over ∂Ω, and 𝒥_3 consists of all the terms pertaining to the vasculature (i.e., terms containing integrals over Σ, and terms defined at the inlet or outlet of Σ).
+
+The expression for 𝒥_1 reads: 
+
+
+
+
+    𝒥_1   = ∫_Ω∖Σϑ^#(𝐱;χ)  dΩ 
+        
+        - 1/f_0∫_Ω∖Σϑ^#(𝐱;χ)
+          h_T  (μ(𝐱) - ϑ_amb) 
+         dΩ
+                    +
+        1/f_0∫_Ω∖Σϑ^#(𝐱;χ)  (
+        d  div[κ(𝐱)  grad[μ(𝐱)] ] )  dΩ
+       = 1/f_0∫_Ω∖Σϑ^#(𝐱;χ)  (
+        d  div[κ(𝐱)  grad[μ(𝐱)] ] + f_0 - h_T  (μ(𝐱) - ϑ_amb) )  dΩ
+
+
+The expression for 𝒥_2 reads: 
+
+
+
+
+    𝒥_2   = 1/f_0∫_∂Ω(μ(𝐱) - ϑ_amb)   d  κ(𝐱)grad[ϑ^#(𝐱;χ)] ∙𝐧(𝐱)  dΓ
+                    -1/f_0∫_∂Ωϑ^#(𝐱;χ)  (
+        d  κ(𝐱)  grad[μ(𝐱)] ∙𝐧(𝐱) )  dΓ
+                    +
+        1/f_0∫_∂Ω(μ(𝐱) -  ϑ_amb)  (-d  κ(𝐱) grad[ϑ^#(𝐱;χ)] ∙𝐧(𝐱))  dΓ
+       =1/f_0∫_∂Ωϑ^#(𝐱;χ)  (-d  κ(𝐱)  grad[μ(𝐱)] ∙𝐧(𝐱) )  dΓ
+
+
+The expression for 𝒥_3 reads: 
+
+
+
+
+    𝒥_3    =
+        
+        -1/f_0∫_Σμ(𝐱) -  ϑ_amb grad[ϑ(𝐱;χ)] 
+        ∙𝐭(𝐱)
+         dΓ
+            +1/f_0∫_Σ( 
+        (μ(𝐱) - ϑ_amb) 
+        ∙ 
+        d  κ(𝐱)grad[ϑ^#(𝐱;χ)] 
+        
+        
+        -μ(𝐱) -  ϑ_amb  d  κ(𝐱)  grad[ϑ^#(𝐱;χ)]) dΓ
+            
+        - 1/f_0∫_Σ(ϑ^#(𝐱;χ) 
+        ∙ 
+        d  κ(𝐱)  grad[μ(𝐱)] 
+         
+        
+        -  d  κ(𝐱) grad[μ(𝐱)]∙ϑ^#(𝐱;χ))  dΓ
+            -1/f_0∫_Σμ(𝐱) -  ϑ_amb χ grad[ϑ^#(𝐱;χ)]∙𝐭(𝐱) 
+         dΓ
+            -χ/f_0(μ(𝐱) 
+         - ϑ_amb)  ϑ^#(𝐱;χ) 
+         |_s = 0    (inlet)
+
+
+We simplify further by invoking the jump identities (<ref>) the second and third terms of the above equation: 
+
+
+
+
+    𝒥_3    =
+        
+        -1/f_0∫_Σμ(𝐱) -  ϑ_amb grad[ϑ(𝐱;χ)] 
+        ∙𝐭(𝐱)
+         dΓ
+            +1/f_0∫_Σ d  κ(𝐱)  grad[ϑ^#(𝐱;χ)]
+        ∙μ(𝐱) -  ϑ_amb dΓ
+            
+        - 1/f_0∫_Σϑ^#(𝐱;χ) d  κ(𝐱) grad[μ(𝐱)] dΓ
+            -1/f_0∫_Σμ(𝐱) -  ϑ_amb χ grad[ϑ^#(𝐱;χ)]∙𝐭(𝐱) 
+         dΓ
+            -χ/f_0(μ(𝐱) - ϑ_amb)  ϑ^#(𝐱;χ) |_s = 0    (inlet)
+
+
+Noting that χ is independent of 𝐱 and invoking Green's identity on the integral (in fact, it will be integration by parts, as the integral is in one spatial variable, s), the penultimate term can be rewritten as follows: 
+
+
+
+
+    1/f_0∫_Σμ(𝐱) -  ϑ_amb χ grad[ϑ^#(𝐱;χ)]∙𝐭(𝐱) 
+         dΓ
+                = 1/f_0∫_0^1μ(𝐱) -  ϑ_amb χ d/dsϑ^#(𝐱;χ)
+         ds
+        
+                = χ/f_0( μ(𝐱) -  ϑ_amb ϑ^#(𝐱;χ)
+        )  |_s=0^s=1
+        
+        - 1/f_0∫_0^1χd/dsμ(𝐱) -  ϑ_amb ϑ^#(𝐱;χ)
+         ds
+        
+                = χ/f_0( μ(𝐱)  -  ϑ_amb)  ϑ^#(𝐱;χ)
+         |_s=1  (outlet)
+        
+        - χ/f_0( μ(𝐱) 
+         - 
+        ϑ_amb ) 
+        ϑ^#(𝐱;χ)
+         |_s=0  (inlet)
+                    - 1/f_0∫_Σϑ^#(𝐱;χ)
+        χ grad[μ(𝐱)] 
+        ∙𝐭(𝐱)  dΓ
+
+
+Using the above two equations, 𝒥_3 will be written as:
+
+
+
+
+    𝒥_3    =
+        
+        -1/f_0∫_Σμ(𝐱) -  ϑ_amb grad[ϑ(𝐱;χ)] 
+        ∙𝐭(𝐱)
+         dΓ
+            +1/f_0∫_Σ d  κ(𝐱)  grad[ϑ^#(𝐱;χ)]
+        ∙μ(𝐱) -  ϑ_amb dΓ
+            
+        - 1/f_0∫_Σϑ^#(𝐱;χ)( d  κ(𝐱) grad[μ(𝐱)]
+        - χ grad[ϑ^#(𝐱;χ)]∙𝐭(𝐱) 
+        )  dΓ
+            -χ/f_0ϑ^#(𝐱;χ)  (μ(𝐱) - ϑ_amb) 
+         |_s = 1    (outlet)
+
+
+Finally, by substituting the terms for 𝒥_1, 𝒥_2 and 𝒥_3—given by Eqs. (<ref>), (<ref>) and (<ref>)—into Eq. (<ref>), we get
+
+
+
+
+    DΦ[χ] 
+        
+           = -1/f_0∫_Σμ(𝐱) -  ϑ_amb grad[ϑ(𝐱;χ)] 
+        ∙𝐭(𝐱)
+         dΓ
+            + 1/f_0∫_Ω∖Σϑ^#(𝐱;χ)  {
+        d  div[κ(𝐱)  grad[μ(𝐱)] ] + f_0 - h_T  (μ(𝐱) - ϑ_amb) } dΩ
+            - 
+        1/f_0∫_Σϑ^#(𝐱;χ)( d  κ(𝐱) grad[μ(𝐱)]
+        - χ grad[ϑ^#(𝐱;χ)]∙𝐭(𝐱) 
+        )  dΓ
+            +1/f_0∫_Σ d  κ(𝐱)  grad[ϑ^#(𝐱;χ)]
+        ∙{μ(𝐱)  -  ϑ_amb} dΓ
+            +1/f_0∫_∂Ωϑ^#(𝐱;χ)  {-d  κ(𝐱)  grad[μ(𝐱)] ∙𝐧(𝐱) } dΓ
+            -χ/f_0ϑ^#(𝐱;χ)  {μ(𝐱) - ϑ_amb} |_s = 1    (outlet)
+
+
+which is same as Eq. (<ref>). 
+
+
+
+
+
+
+
+
+
+
+
+
+§ DATA AVAILABILITY
+
+The data that support the findings of this study are available from the corresponding author upon request.
+
+
+
+
+plainnat
+
+

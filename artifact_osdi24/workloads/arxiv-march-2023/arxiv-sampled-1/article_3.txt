@@ -1,0 +1,936 @@
+
+Better than square-root cancellation]Better than square-root cancellation for random multiplicative functions
+
+
+Department of Mathematics, Stanford University, Stanford, CA, USA
+maxxu@stanford.edu
+
+
+
+
+    We investigate when the better than square-root cancellation phenomenon exists for ∑_n≤ Na(n)f(n), where a(n)∈ℂ and f(n) is a random multiplicative function. We focus on the case where a(n) is the indicator function of R rough numbers. We prove that loglog R ≍ (loglog x)^1/2 is the threshold for the better than square-root cancellation phenomenon to disappear.
+
+[
+    Max Wenqiang Xu
+    
+===================
+
+
+
+
+
+§ INTRODUCTION
+
+
+The study of random multiplicative functions has attracted intensive attention. Historically, they were introduced to model arithmetic functions. A Steinhaus random multiplicative function f(n) is a completely multiplicative function defined on positive integers such that f(p) are independently and uniformly distributed on the complex unit circle for all primes p. One may view it as a random model for arithmetic functions like Dirichlet characters χ(n) or n^it. Another popular model is the Rademacher random multiplicative function f(n) which was first used by Wintner<cit.> as a random model for Möbius function μ(n). In this note, we focus on the Steinhaus case. The obvious dependence between random variables f(m) and f(n) whenever (m, n)≠ 1 makes the study of random multiplicative functions intriguing.
+
+
+Arguably the most striking result so far in the study of random multiplicative functions is Harper's <cit.> remarkable resolution of Helson's conjecture<cit.>, that is, the partial sums of random multiplicative functions enjoy better than square-root cancellation
+
+    [|∑_n≤ x f(n) |] ≍√(x)/(loglog x)^1/4,
+
+where f(n) are random multiplicative functions. 
+In particular, with the natural normalization √(x), the partial sums ∑_n≤ x f(n) do not converge in distribution to the standard complex normal distribution (see also <cit.>). Before Harper's result <cit.>, there was progress on proving good lower bounds close to √(x), e.g. <cit.>, and it was not clear that such better than square-root cancellation in (<ref>) would  appear until Harper's proof. See also recent companion work on analogous results in the character sums and zeta sums cases established by Harper <cit.>.
+It is known that the better than square-root cancellation phenomenon in random multiplicative functions is connected to the “critical multiplicative chaos" in the probability literature. We point out references <cit.> for related discussions.  
+
+A closely related important question in number theory is to understand the distribution of the Riemann zeta function over typical intervals of length 1 on the critical line 
+ℜ𝔢(s)=1/2. One may crudely see the connection by viewing ζ(s) as a sum of n^-1/2-it for a certain range of n and n^it behaves like a Steinhaus random multiplicative function for randomly chosen t. A conjecture of Fyodorov, Hiary, and Keating (see e.g. <cit.>) suggests that there is a subtle difference between the true order of local maximal of log|ζ(1/2+it)| and one's first guess based on Selberg's central limit theorem for log|ζ(1/2+it)|. The existence of this subtle difference and the appearance of the better than square-root cancellation for random multiplicative functions both show that the corresponding nontrivial dependence can not be ignored. We refer readers to <cit.> for related discussions about partial sums of random multiplicative functions and zeta values distribution.
+
+In this paper, we are interested in further exploring Harper's result (<ref>) and methods used there, by considering the problem in a more general context. 
+ Let a(n) be a sequence in . 
+When does the better than square-root cancellation phenomenon hold for ∑_n≤ N a(n)f(n), i.e.
+
+    [|∑_n≤ Na(n) f(n)|] = o(√(∑_n≤ N|a(n)|^2))̊?
+
+
+
+We first make some simple observations in the situations where a(n) is “typical" or a(n) has a rich multiplicative structure. Then we focus on a particular case where the coefficient a(n) is an indicator function of a multiplicative set. 
+
+
+ §.§ Typical coefficients
+
+If partial sums ∑_n≤ Na(n)f(n) with the square-root size normalization behave like the complex standard Gaussian variable, then there is just square-root cancellation. One may attempt to prove such a central limit theorem by computing the high moments, however, the moments usually blow up and such a strategy does not work here (see e.g. <cit.> for moments computation results). It turns out that for “typical" choices of a(n), such a central limit theorem does hold. It has been carried out in the concrete case where a(n)=e^2π i n θ for some fixed real θ without too good Diophantine approximation property (such θ has relative density 1 in , e.g. one can take θ=π) by Soundararajan and the author <cit.>, and also an average version of the result is proved by Benatar, Nishry and Rodgers <cit.>. The proof of the result in <cit.> is based on McLeish's martingale central limit theorem<cit.>, and the method was pioneered by Harper in <cit.>.  
+The proof reveals the connection between the existence of such a central limit theorem and a quantity called multiplicative energy of a:= {a(n): 1≤ n≤ N} 
+
+    E_×(𝐚): = ∑_m_1, n_1, m_2, n_2 ≤ N
+     m_1m_2=n_1n_2a(m_1)a(m_2) a(n_1)a(n_2).
+
+A special case of a(n) is an indicator function of a set , and the quantity E_×() is a popular object studied in additive combinatorics. It is now known <cit.> that a crucial condition for such a central limit theorem holds for ∑_n≤ Na(n)f(n) is that the set  has multiplicative energy ≤(2+ϵ)||^2. See <ref> for more discussions on a(n) being a “typical" choice.  We refer readers who are interested in seeing more examples of when a central limit theorem holds for partial (restricted) sums of random multiplicative functions to <cit.>.  
+
+
+
+ §.§ Large multiplicative energy and sparse sets
+ Let us focus on the case that a_n is an indicator function of a set . As we mentioned that if the set  has small multiplicative energy (among other conditions), then partial sums exhibit square-root cancellation. Suppose we purposely choose a set  with very large multiplicative energy, will it lead to better than square-root cancellation? One extreme example is = {p^n: 1≤ n ≤log_p N} being a geometric progression, where p is a fixed prime. A standard calculation gives that
+
+    [| ∑_n∈ f(n) |] =  ∫_0^1 |∑_n≤log_p Ne(θ n)| dθ≍loglog N,
+
+while [| ∑_n∈ f(n) |^2] 
+ = ||≍log N. 
+It shows that there is a great amount of cancellation in this particular example. One may also take  to be some generalized (multidimensional) geometric progression and get strong cancellation of this type. We note that the sets mentioned here with very rich multiplicative structures all have small sizes. 
+
+Based on the initial thoughts above, we may lean toward believing that better than square-root cancellation only appears when a(n) has some particular structure that is perhaps related to multiplicativity.  
+To fully answer Question <ref> seems hard. The majority of the paper is devoted to a special case, where a(n) is an indicator function of a set with multiplicative features. We focus on fairly large subsets.
+
+
+ §.§ Main results: multiplicative support
+
+Suppose now that a(n) is a multiplicative function with |a(n)|≤ 1. 
+The particular example we study in this paper is that a(n) is the indicator function of R-rough numbers, although the proof here may be adapted to other cases when a(n) is multiplicative.  
+We write 
+
+    _R(x): = {n≤ x: p|n  p≥ R}.
+
+
+By a standard sieve argument, for all 2≤ R≤ x/2 (the restriction R≤ x/2 is only needed for the lower bound), we have asymptotically 
+
+    |_R(x)| ≍x/log R.
+
+We expect the following threshold behavior to happen. If R is very small, the set _R(x) is close to [1,x] and better than square-root cancellation appears as in <cit.>. If R is sufficiently large, then weak dependence  may even lead to a central limit theorem. Indeed, an extreme case is that R> √(x), in which _R(x) is a set of primes and {f(n): n∈} is a set of independent random variables. It is natural to ask to what extent the appearance of small primes is needed to guarantee better than square-root cancellation.
+Our Theorem <ref> and Theorem <ref> answer the question. We show that loglog R ≈ (loglog x)^1/2 is the threshold.
+
+
+
+  Let f(n) be a Steinhaus random multiplicative function and x be large. Let _R(x) be the set of 
+  R rough numbers up to x. For any loglog R≪ (loglog x)^1/2, we have   
+  
+    [|∑_n∈_R(x) f(n) |] ≪√(|_R(x)|)· ( loglog R +  logloglog x/√(loglog x))^1/2 .
+
+ In particular, if loglog R = o((loglog x)^1/2), then  
+   
+    [|∑_n∈_R(x) f(n) |] =o ( √(|_R(x)|)).
+
+
+The term logloglog x is likely removable. But for the convenience of the proof, we state the above version. See Remark <ref> for more discussions.
+
+
+  Let f(n) be a Steinhaus random multiplicative function and x be large. Let _R(x) be the set of 
+  R rough numbers up to x. For any loglog R≫  (loglog x)^1/2, we have   
+  
+    [|∑_n∈_R(x) f(n) |] ≫√(|_R(x)|) .
+
+
+One probably can prove a lower bound of the shape √(||)·(loglog R / √(loglog x))^-1/2
+ when loglog R =o(√(loglog x)). We do not pursue this as we focus on finding the threshold value of R instead of caring about the quantification of the exact cancellation. 
+
+
+We note that one way to derive a lower bound on L^1 norm is by proving an upper bound on L^4 norm. A simple application of Hölder's inequality gives that
+
+    |_R(x)| = [|∑_n∈_R(x) f(n) |^2] ≤([|∑_n∈_R(x) f(n) |^4])^1/3([|∑_n∈_R(x) f(n) |])^2/3.
+
+The fourth moment  ≪||^2 would imply that L^1 norm ≫√(||). However, to achieve such a bound on the fourth moment, one needs log R ≫ (log x)^c for some constant c, and thus this approach would not give the optimal range as in Theorem <ref>.
+
+Another reason for studying  the fourth moment (multiplicative energy) is to understand the distribution. As mentioned before, this is the key quantity that needs to be understood in order to determine if random sums have Gaussian limiting distribution, via the criteria in <cit.>. One may establish a central limit theorem in the range R≫exp((log x)^c) for some small positive constant c[One trick to get a smaller c than by directly computing the fourth moment over the full sum is to take the anatomy of integers into account. We refer interested readers to <cit.> to see how this idea is connected to the correct exponent in extremal sum product conjecture of Elekes and Ruzsa <cit.>.]. Interested readers are suggested to adapt the proof of <cit.>. We do not pursue results along this direction in this note. 
+
+Theorem <ref> and Theorem <ref> are both proved by adapting Harper's robust method in <cit.>, with some modifications, simplifications and new observations, and we sketch the strategy with a focus on how we find the threshold. We also refer readers to a model problem in the function field case by Soundararajan and Zaman <cit.>.  The first step is to reduce the L^1 norm estimate to a certain average of the square of random Euler products. Basically, we prove that 
+
+    [|∑_n∈ f(n)|] ≈(x/log x)^1/2·[(∫_-1/2^1/2 |F^(R)(1/2 + it)|^2 dt  )^1/2 ],
+
+where F^(R)(1/2+it) := ∏_R≤ p≤ x (1-f(p)/p^1/2+it)^-1 is the random Euler product over primes R≤ p ≤ x. The challenging part is to give a sharp bound on the above expectation involving |F^(R)(1/2+it)|^2 for |t|≤ 1/2. 
+
+We first discuss the upper bound proof. If we directly apply Hölder's inequality (i.e. moving the expectation inside the integral in (<ref>)), then 
+we would only get the trivial upper bound  ≪√(||) as [|F^(R)(1/2+it)|^2]≈log x/log R. Harper's method starts with putting some “barrier events" on the growth rate of all random partial Euler products for all t. Roughly speaking, it requires that for all k,
+
+    ∏_x^e^-(k+1)≤ p ≤ x^e^-k |1-f(p)/p^1/2+it|^-1 “grows as expected" for all |t|≤ 1.
+
+Denote such good events by 𝒢 and write s=1/2+it. By splitting the probability space based on the event 𝒢 holding or not, and applying Cauchy–Schwarz inequality, we have 
+
+    [(∫_-1/2^1/2 |F^(R)(s)|^2 dt  )^1/2 ]
+       ≈[(∫_-1/2^1/21_𝒢 |F^(R)(s)|^2 dt  )^1/2] +  [(∫_-1/2^1/21_𝒢 fail |F^(R)(s)|^2 dt  )^1/2]  
+       ≪[(∫_-1/2^1/21_𝒢 |F^(R)(s)|^2 dt  )^1/2] + (1_𝒢 fail)^1/2 ([|F^(R)(s)|^2])^1/2 .
+
+According to the two terms above, there are two tasks that remain to be done. 
+
+    
+  * Task 1: Show that the expectation is small, conditioning on 1_𝒢.
+
+  * Task 2: Show that (1_𝒢 fail) is sufficiently small. 
+ 
+To accomplish task 1, Harper's method connects such an estimate to the “ballot problem" or say Gaussian random walks (see <ref>), which is used to estimate the probability of partial sums of independent Gaussian variables having a certain barrier in growth. Task 2 of estimating the probability of such good events 𝒢 happening can be done by using some concentration inequality, e.g. Chebyshev's inequality. 
+Our main innovation lies in setting up “barrier events" in (<ref>) properly which is not the same as in <cit.>. On one hand, it should give a strong enough restriction on the growth rate of the products so that [(∫_-1/2^1/21_𝒢 |F^(R)(s)|^2 dt  )^1/2] has a saving, compared to it without conditioning on 1_𝒢. On the other hand, one needs to show that such an event 𝒢 is indeed very likely to happen which requires that the designed “barrier" can not be too restrictive. To make the two goals simultaneously achieved, we need loglog R = o( √(loglog x)) and this is the limit that we can push to (see Remark <ref>).
+
+The lower bound proof in Theorem <ref> uses the same strategy as in <cit.> but is technically simpler. After the deduction step of reducing the problem to studying a certain average of the square of random Euler products (see (<ref>)), we only need to give a lower bound of the shape ≫ (log x / log R)^1/2 for the expectation on the right-hand side of (<ref>). Since the integrand |F^(R)(s)|^2 is positive, it suffices to prove such a lower bound when t is restricted to a random subset ℒ. We choose ℒ to be the set of t such that certain properly chosen “barrier events" hold.  The main difficulty is to give a strong upper bound on the restricted product [1_t_1, t_2∈ℒ|F^(R)(1/2+it_1)|^2|F^(R)(1/2+it_2)|^2] in the sense that the bound is as effective as in the ideal situation where the factors |F^(R)(1/2+it_1)|^2 and |F^(R)(1/2+it_2)|^2 are independent (see Proposition <ref>), and this is also the main reason that the condition loglog R ≫√(loglog x) is needed subject to our chosen “barrier events". Our proof of Theorem <ref> does not involve the “two-dimensional Girsanov calculation", which hopefully makes it easier for readers to follow.
+ 
+
+
+
+
+ §.§ Organization
+ We set up the proof outline of Theorem <ref> in Section <ref> and defer the proof of two propositions to Section <ref> and Section <ref> respectively. We put all probabilistic preparations in Section <ref> which will be used in the proof for both theorems. The proof of Theorem <ref> is done in Section <ref> and again we defer proofs of two key propositions to Section <ref> and Section <ref> respectively. Finally, we give more details about the “typical" choices of a(n) in Section <ref>, as well as mentioning some natural follow-up open problems. 
+
+
+
+ §.§ Acknowledgement
+
+We thank Adam Harper  for helpful discussions, corrections, and comments on earlier versions of the paper and for his encouragement. We also thank Kannan Soundararajan for the interesting discussions. The author is supported by the Cuthbert C. Hurd Graduate Fellowship in the Mathematical Sciences, Stanford. 
+
+
+
+§ PROOF OF THEOREM <REF>
+
+We follow the proof strategy of Harper in <cit.>.
+We establish Theorem <ref> in a stronger form that for 1/2≤ q ≤ 9/10 and R in the given range loglog R ≪ (loglog x)^1/2,  
+
+    [|∑_n∈_R(x) f(n) |^2q] ≪ |_R(x)|^q ( loglog R +  logloglog x/√(loglog x))^q.
+
+One should be able to push the range of q to 1 but for simplicity in notation, we omit it. Our interest is really about the case q=1/2.
+Note that in the given range of R, by (<ref>), it is the same as proving 
+
+    [|∑_n∈_R(x) f(n) |^2q] ≪(x/log R)^q ( loglog R +  logloglog x/√(loglog x))^q.
+
+
+The first step (Proposition <ref>) is to connect the L^1 norm of the random sums to a certain average of the square of random Euler products. We define for all s with ℜ𝔢(s)>0 and integers 0≤ k≤loglog x -loglog R, the random Euler products
+
+    F_ k^(R)(s) : = ∏_R≤ p≤ x^e^-(k+1) (1- f(p)/p^s)^-1 = ∑_n≥ 1 
+     p|n R≤  p≤ x^e^-(k+1)f(n)/n^s.
+
+We also write 
+
+    F^(R)(s): = ∏_R≤ p≤ x (1- f(p)/p^s)^-1 = ∑_n≥ 1 
+     p|n R≤  p≤ xf(n)/n^s.
+
+We use the notation X_2q: = ([|X|^2q])^1/2q for random variable X. 
+
+Let f(n) be a Steinhaus random multiplicative function and x be large. Let F_k^(R)(s) be defined as in (<ref>) and loglog R ≪ (loglog x)^1/2. Set 𝒦: =⌊logloglog x ⌋. Then uniformly for all 1/2 ≤ q≤ 9/10, we have 
+
+    ∑_n∈ f(n)_2q≤√(x/log x)∑_0≤ k ≤𝒦∫_-1/2^1/2 | F_ k^(R)(1/2 - k/log x+it)|^2dt_q^1/2 + √(x/log x).
+
+
+We remind the readers that the upper bound we aim for in Theorem <ref> is very close to √(x/log R). The second term in (<ref>) is harmless since log R is much smaller than log x. 
+
+
+
+The second step deals with the average of the square of random Euler products in (<ref>), which lies at the heart of the proof.  
+
+
+
+Let F_k^(R)(s) be defined as in (<ref>) and loglog R ≪ (loglog x)^1/2. Then for all 0≤ k ≤𝒦=⌊logloglog x ⌋, and uniformly for all 1/2≤ q≤ 9/10, we have 
+
+    [(∫_-1/2^1/2 |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊≪ e^-k/2·(log x/log R)̊^q ( loglog R + logloglog x/√(loglog x))^q .
+
+
+
+
+
+
+Apply Proposition <ref> and Proposition <ref> with q=1/2. Notice that when  loglog R ≪ (loglog x)^1/2, the term √(x/log x) in (<ref>) is negligible and we complete the proof. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ PROBABILISTIC PREPARATIONS
+
+In this section, we state some probabilistic results that we need to use later. The proof can be found in <cit.> (with at most very mild straightforward modification). 
+
+
+ §.§ Mean square calculation
+
+We first state results on mean square calculations.
+
+
+Let f be a Steinhaus random multiplicative function. Then for any 400<x≤ y and σ>-1/log y, we have
+
+    [∏_x<p≤ y |1-f(p)/p^1/2+σ|^-2] = exp( ∑_x<p≤ y1/p^1+2σ + O(1/√(x)log x) ).
+
+
+
+The proof is basically using the Taylor expansion and the orthogonality deduced from the definition of a Steinhaus random multiplicative function. See <cit.>. 
+
+
+We also quote the following result on two-dimensional mean square calculations. This will be used in proving the lower bound in Theorem <ref>. 
+
+   Let f be a Steinhaus random multiplicative function. Then for any 400<x≤ y and σ>-1/log y, we have
+ 
+    [∏_x<p≤ y |1-f(p)/p^1/2+σ|^-2 |1-f(p)/p^1/2+σ+it|^-2 ] = exp( ∑_x<p≤ y2+2cos(tlog p)/p^1+2σ + O(1/√(x)log x) )̊.
+  
+Moreover, if x>e^1/|t|, then we further have 
+
+    = exp( ∑_x<p≤ y2/p^1+2σ + O(1) ) .
+
+
+
+The proof of (<ref>) is in <cit.>. To deduce (<ref>), we only need to show the contribution involves cos(tlog p) terms are ≪ 1, which follows from a strong form of prime number theorem. See how it is done in <cit.> and <cit.>. 
+
+
+
+
+ §.§ Gaussian random walks and the ballot problem
+
+A key probabilistic result used in Harper's method is the following (modification of) a classical result about Gaussian random walks, which is connected to the “ballot problem". 
+
+
+    Let a ≥ 1. For any integer n > 1, let G_1, … , G_n be independent real
+Gaussian random variables, each having mean zero and variance between 1/
+20 and 20, say. Let
+h be a function such that |h(j)| ≤ 10 log j. Then
+
+    (∑_m=1^j G_m ≤ a + h(j),   ∀ 1≤ j≤ n) ≍min{1, a/√(n)}.
+
+
+Without the term h(j), it is a classical result and actually that is all we need in this paper. However, we state this stronger form as the h(j) term can be crucial if one wants to remove the logloglog x factor in Theorem <ref>. We expect the random sum is fluctuating on the order of √(j) (up to step j) and so the above result is expected to be true. The quantity h(j) is much smaller compared to √(j) so it is negligible in computing the probability. 
+
+We do not directly use the above lemma. We shall use an analogous version for random Euler products (Proposition <ref>). We do the 
+Girsanov-type calculation in our study. As in <cit.>, we introduce the probability measure (here x is large and |σ|≤ 1/100, say)
+
+    (A) : = [1_A ∏_p≤ x^1/e |1-f(p)/p^1/2+σ|^-2  ]/[∏_p≤ x^1/e |1-f(p)/p^1/2+σ|^-2] .
+
+For each ℓ∈ℕ∪{0}, we denote the ℓ-th increment of the Euler product 
+
+    I_ℓ(s):= ∏_x^e^-(ℓ+2)<p≤ x^e^-(ℓ+1) (1-f(p)/p^s)^-1.
+
+Since we are restricted to R-rough numbers n,  the parameter ℓ lies in the range 0≤ℓ≤loglog x - loglog R. All the rest setup is exactly the same as in <cit.>. 
+
+
+There is a large natural number B such that the following is true.
+Let n≤loglog x - loglog R - (B+1), and define the decreasing sequence (ℓ_j)_j=1^n of non-negative integers by ℓ_j = ⌊loglog x -loglog R ⌋ -(B+1) - j. Suppose that |σ|≤1/e^B+n+1, and
+that (t_j)_j=1^n is a sequence of real numbers satisfying |t_j|≤1/j^2/3 e^B+j+1 for all j.
+
+Then uniformly for any large a and any function h(n) satisfying |h(n)| ≤ 10 log n, and with I_ℓ(s) defined as in (<ref>), we have  
+
+    (-a -Bj ≤∑_m=1^jlog |I_ℓ_m (1/2+σ + it_m)| ≤ a + j + h(j),   ∀ j≤ n ) ≍min{1, a/√(n)} .
+
+
+One may view the above sum approximately as a sum of j independent random variables and each with mean ≈∑_x^e^-(ℓ+2)<p≤ x^e^-(ℓ+1)1/p≈ 1 and with constant variance between 1/20 and 20. This shows the connection to Lemma <ref>. The deduction of Proposition <ref> from Lemma <ref> can be found in the proof of <cit.>. The only modification is changing the upper bound restriction from n ≤loglog x -(B+1) to n ≤loglog x - loglog R -(B+1) and all conditions remaining satisfied. 
+
+
+
+
+§ PROOF OF PROPOSITION <REF>
+
+The proof follows closely to the proof of <cit.>. 
+For any integer 0≤ k ≤𝒦= ⌊logloglog x ⌋, let 
+
+    I_k: =(x_k+1, x_k] :=  (x^e^-(k+1) , x^e^-k].
+
+Let P(n) be the largest prime factor of n. For simplicity, we use _n to denote the sum where the variable n is R-rough.
+By using Minkowski's inequality (as 2q≥ 1), 
+
+    ∑_n∈ f(n)_2q≤∑_0≤ k ≤𝒦_n≤ x 
+     P(n)∈ I_k f(n)_2q + _n≤ x
+    P(n)≤ x^e^-(𝒦+1) f(n)_2q
+    .
+
+We first bound the last term by only using the smoothness condition and it is bounded by 
+≤Ψ (x, x^1/loglog x  )^1/2≪√(x) (log x)^-clogloglog  x, which is acceptable. 
+The main contribution to the upper bound in (<ref>) can be written as
+
+    = ∑_0≤ k ≤𝒦∑_m≤ x 
+     p|m  p ∈ I_kf(m) _n≤ x/m 
+     n is x_k+1-smooth f(n) _2q.
+
+We now condition on f(p) for p small but at least R. Write ^(k) to denote the expectation conditional on (f(p))_p≤ x_k+1. Then the above is
+
+    = ∑_0≤ k ≤𝒦 (^(k) [|∑_m≤ x
+     p|m  p ∈ I_k f(m) _n≤ x/m
+     n is x_k+1-smooth f(n)|^2q])^1/2q
+       ≤∑_0≤ k ≤𝒦 ([(^(k) [|∑_m≤ x
+     p|m  p ∈ I_kf(m) _n≤ x/m
+     n is x_k+1-smooth f(n)|^2])^q])^1/2q
+        = ∑_0≤ k ≤𝒦 ( [( ∑_m≤ x 
+     p|m  p∈ I_k  |_n≤ x/m
+     n is x_k+1-smooth f(n)|^2)^q] )^1/2q.
+
+Then we only need to show that for each expectation in the sum, it is bounded as in (<ref>). Replace the discrete mean value with a smooth version. Set X=e^√(log x), and we have the expectation involving primes in I_k is 
+
+    ≪[(∑_m≤ x 
+     p|m  p∈ I_kX/m∫_m^m(1+1/X) |_n≤ x/t
+     n is x_k+1-smooth f(n)|^2 dt )̊^q]̊
+        + [( ∑_m≤ x 
+     p|m  p∈ I_kX/m∫_m^m(1+1/X) |_x/t ≤ n≤ x/m
+    n is x_k+1-smooth f(n)|^2 dt )̊^q]̊.
+
+By using Hölder's inequality, we upper bound the second term in (<ref>) by the q-th power of
+
+    ∑_m≤ x 
+     p|m  p∈ I_kX/m∫_m^m(1+1/X) [|_x/t ≤ n≤ x/m
+    n is x_k+1-smooth f(n)|^2] dt .
+
+Do the mean square calculation (<ref>) and throw away the restriction on the R-rough numbers. Then (<ref>) is at most ≪  2^-e^k x/log x and thus the second term in (<ref>) is ≪(2^-e^k x/log x)^q. Summing over k≤𝒦, this is acceptable and thus we only need to focus on the first term in (<ref>). By swapping the summation, it is at most
+
+    [ ( ∫_x_k+1^x |_n≤ x/t 
+     n is x_k+1-smoothf(n) |^2∑_t/(1+1/X)≤ m ≤ t
+     p|m  p∈ I_k  X/m dt)̊^q]̊.
+
+We upper bound the sum over m by dropping the prime divisibility condition and using a simple sieve argument to derive that the above is at most 
+
+    [  ( ∫_x_k^x |_n≤ x/t 
+     n is x_k+1-smoothf(n) |^2dt/log t)̊^q]̊ = x^q[  ( ∫_1^x/x_k+1 |_n≤ z 
+     n is x_k+1-smoothf(n)|^2dz/z^2log(x/z))̊^q]̊,
+
+where in the equality above we used the substitution z: =x/t. 
+A simple calculation shows that we can replace log(x/z) by log x without much loss. Indeed, if z≤√(x) then log(x/z)≫log x; if √(x)≤ z ≤ x/x_k+1 then log (x/z) ≥ z^-2k/log xlog x.  Thus, we further have the bound
+
+    ≪(x/log x)̊^q[ ( ∫_1^x/x_k+1 |_n≤ z 
+     n is x_k+1-smoothf(n)|^2dz/z^2-2k/log x)̊^q]̊ .
+
+To this end, we apply the following version of Parseval's identity, and its proof can be found in <cit.>.
+
+
+    Let (a_n)_n=1^∞ be any sequence of complex numbers, and let A(s): = ∑_n=1^∞a_n/n^s denote the corresponding Dirichlet series, and σ_c denote its abscissa of convergence. Then for any σ> max{0, σ_c}, we have 
+    
+    ∫_0^∞|∑_n≤ xa_n|^2/x^1+2σdx = 1/2π∫_-∞^+∞|A(σ + it)/σ + it|^2 dt.
+
+
+Apply Lemma <ref> and the expectation in (<ref>) is
+
+    =
+    [  (∫_-∞^+∞|(1/2-k/log x +it)|^2/|1/2-k/log x +it|^2 dt)̊^q]̊≤∑_n∈[( ∫_n-1/2^n+1/2|(1/2-k/log x +it)|^2/|1/2-k/log x +it|^2 dt )̊^q]̊.
+
+Since f(m)m^it has the same law as f(m) for all m, for any fixed n we have
+
+    [(∫_n-1/2^n+1/2 |(1/2-k/log x +it)|^2 dt )̊^q]̊ = [ (∫_-1/2^1/2 |(1/2-k/log x +it)|^2 dt )̊^q]̊.
+
+For n-1/2≤ t≤ n+1/2, we have 
+1/|1/2-k/log x +it|^2≍ 1/n^2 which is summable over n. 
+We complete the proof by inserting the above estimates into (<ref>). 
+
+
+
+
+
+
+
+
+§ PROOF OF PROPOSITION <REF>
+
+
+This is the key part of the proof that reveals how loglog R ≈√(loglog x) could become the transition range. 
+We begin with a discretization process which is the same as in <cit.>.  For each |t|≤1/2, set t(-1)=t, and then iteratively for each 0≤ j ≤log(log x /log R) -2 define 
+
+    t(j): = max{u≤ t(j-1): u = n/((log x) /e^j+1)log ((log x) /e^j+1) for some n∈}.
+
+By the definition, we have <cit.>
+
+    |t-t(j)|≤2/((log x /e^j+1)log ((log x)/e^j+1).
+
+Given this notation, let B be the large fixed natural number from Proposition <ref>. Let 𝒢(k) denote the event that for all |t|≤1/2 and for all k≤ j ≤loglog x - loglog R -B -2, we have
+
+    (log x/e^j+1log R e^C(x)  )^-1≤∏_ℓ = j ^⌊loglog x -loglog R ⌋-B-2
+    |I_ℓ(1/2-k/log x +it(ℓ)) | ≤log x/e^j+1log R e^C(x),
+
+where notably, our C(x) is chosen as the 
+
+
+
+
+
+    C(x):=loglog R + 100 logloglog x.
+
+We shall establish the following two key propositions. The first proposition says that when we are restricted to the good event 𝒢(k), the q-th moment is small. 
+
+Let x be large and loglog R ≪ (loglog x)^1/2. Let 
+C(x) be defined as in (<ref>). Let F_k^(R) be defined as in (<ref>) and 𝒢(k) be defined as in (<ref>). For all 0≤ k ≤𝒦 = ⌊logloglog x⌋ and 1/2≤ q ≤ 9/10, we have 
+
+    [(∫_-1/2^1/21_𝒢(k) |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊≪( log x /e^klog R)̊^q ( C(x)/√(loglog x))^q.
+
+
+The second proposition is to show that indeed 1_𝒢(k) happens with high probability. 
+
+
+Let 𝒢(k) be defined as in (<ref>). For all 0≤ k ≤𝒦= ⌊logloglog x⌋ and uniformly for all 1/2≤ q ≤ 9/10 and
+C(x) defined in (<ref>), we have
+
+    (𝒢(k) fails) ≪ e^-C(x).
+ 
+
+The above two key propositions imply Proposition <ref>. 
+
+   According to the good event 𝒢(k) happening or not, we have 
+   
+    [(∫_-1/2^1/2  |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊
+       ≤[(∫_-1/2^1/21_𝒢(k) |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊ +   [(∫_-1/2^1/21_𝒢(k)fails |F_ k^(R)(1/2 - k/log x + it)|^2dt)̊^q]̊
+       ≤( log x /e^klog R)̊^q ( C(x)/√(loglog x))^q +   (∫_-1/2^1/2 [|F_ k^(R)(1/2 - k/log x + it)|^2]dt )̊^q(𝒢(k) fails)^1-q,
+
+  where in the first term we used Proposition <ref> and we applied Hölder's inequality with exponents 1/q, 1/1-q to get the second term. We next apply the mean square calculation (<ref>) to derive that the above is 
+    
+    ≪( log x /e^klog R)̊^q(  ( C(x)/√(loglog x))^q +  (𝒢(k) fails)^1-q)̊.
+
+  Plug in the definition of C(x) and use Proposition <ref> with 1-q ≥ 1/10 (and then the exceptional probability to the power 1/10 is negligible) to deduce that 
+  
+    ≪   e^-k/2( log x /log R)̊^q· ( C(x)/√(loglog x))^q,
+
+  which completes the proof. 
+
+
+
+We remark that in (<ref>), the quantity C(x)= loglog R +100 logloglog x is different from just being a constant C in <cit.>. The reason for our choice of C(x) is the following. Firstly, to keep the q-th moment in Proposition <ref> has a saving (i.e. to make ( C(x)/√(loglog x))^q small), we require that C(x)= o(√(loglog x)).  Secondly, it turns out that in order to make the exceptional probability in Proposition <ref> small enough, one has the constraint loglog R ≪ C(x). The combination of the above two aspects together leads to loglog R =o(√(loglog x)). 
+
+
+
+
+   In the deduction of Proposition <ref>, we did not use an iterative process as used in <cit.>. Instead, we added an extra term 100logloglog x for the purpose of getting strong enough bounds on (𝒢(k) fails). We simplified the proof by getting a slightly weaker upper bound in Theorem <ref> as compensation.
+
+
+
+
+
+ §.§ Proof of Proposition <ref>
+
+
+
+The proof of Proposition <ref> is a simple modification of the proof of Key Proposition 1 in <cit.>. We emphasize again the main difference is instead of using a large constant C as in <cit.> but replacing it with C(x) defined in (<ref>), and we do not need the extra help from the quantity h(j) which hopefully makes the proof conceptually easier.  
+
+By using Hölder's inequality, it suffices to prove that 
+
+    [∫_-1/2^1/2 |F_k^(R)(1/2-k/log x + it)|^2dt ]≪ e^-k·log x/log R·C(x)/√(loglog x) ,
+
+uniformly for 0≤ k ≤𝒦 = ⌊logloglog x ⌋ and 1/2 ≤ q≤ 9/10. 
+We can upper bound the left-hand side of (<ref>) by 
+
+    ≤∫_-1/2^1/2[ |F_k^(R)(1/2-k/log x + it)|^2] dt
+
+where  is the event that 
+
+    (log x/e^j+1log R e^C(x)  )^-1≤∏_ℓ = j ^⌊loglog x -loglog R ⌋-B-2
+    |I_ℓ(1/2-k/log x +it(ℓ)) | ≤log x/e^j+1log R e^C(x)
+
+for all k≤ j ≤loglog x -loglog R -B -2. This is an upper bound as  is the event of  holds for all |t|≤1/2. By the fact that f(n) has the same law as f(n)n^it, we have
+
+    ∫_-1/2^1/2[ |F_k^(R)(1/2-k/log x + it)|^2] dt = ∫_-1/2^1/2[ |F_k^(R)(1/2-k/log x )|^2 ]dt,
+
+where  denotes the event that 
+
+    (log x/e^j+1log R e^C(x)  )^-1≤∏_ℓ = j ^⌊loglog x -loglog R ⌋-B-2
+    |I_ℓ(1/2-k/log x +i(t(ℓ)-t)) | ≤log x/e^j+1log R e^C(x),
+
+for all k≤ j ≤loglog x- loglog R - B -2. 
+ We next apply Proposition <ref>. 
+
+
+
+
+
+
+It is clear that ℋ(k,t) is the event treated in Proposition <ref> with n=⌊loglog x- loglog R ⌋ -(B+1)-k; σ= k/log x and t_m = t(⌊loglog x- loglog R ⌋ -(B+1) -m)-t for all m; and 
+
+    a = C(x) + B+1,    h(j)=0.
+
+The parameters indeed satisfy |σ|≤1/e^B+n+1 and |t_m|≤1/m^2/3e^B+m+1
+for all m. Apply Proposition <ref> to derive
+
+    [ |F_k^(R)(1/2-k/log x)|^2]/[|F_k^(R)(1/2-k/log x)|^2] = (ℋ(k,t)) ≪min{ 1, a/√(n)}.
+
+A simple mean square calculation (see (<ref>)) gives that 
+
+    [|F_k^(R)(1/2-k/log x)|^2] = exp(∑_R≤ p ≤ x^e^-(k+1)1/p^1-2k/log x +O(1))̊≪log x/e^klog R.
+
+Combining the above two inequalities and the relation in (<ref>), we get the desired upper bound for the quantity in (<ref>). Thus, we complete the proof of (<ref>) and Proposition <ref>.  
+
+
+
+
+
+
+ §.§ Proof of Proposition <ref>
+
+In the proof, we will see why it is necessary to make C(x) large enough compared to loglog R. The proof starts with the union bound. We have 
+
+    (𝒢(k) fails) ≤_1 +_2,
+
+where
+
+    _1 = ∑_k≤ j ≤log (log x/log R) -B-2( ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x + i t(ℓ)) | >log x/e^j+1log R e^C(x) for some t)̊
+
+and 
+
+    _2 = ∑_k≤ j ≤log (log x/log R) -B-2( ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x +i t(ℓ)) |^-1 >log x/e^j+1log R e^C(x) for some t)̊,
+
+where |t|≤ 1/2. 
+We focus on bounding _1, and _2 can be estimated similarly. Replace the set of all |t|≤ 1/2 by the discrete set 
+
+    𝒯(x, j): = {n/((log x)/e^j+1) log ((log x)/e^j+1) : |n|≤ ((log x)/e^j+1) log ((log x)/e^j+1)  }̊,
+
+and apply the union bound to get 
+
+    _1 = ∑_k≤ j ≤log (log x/log R) -B-2
+     t(j) ∈𝒯(x,j)( ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x +it(ℓ)) | >log x/e^j+1log R e^C(x))̊.
+
+By using Chebyshev's inequality this is at most 
+
+    ≤∑_k≤ j ≤log (log x/log R) -B-2
+     t(j) ∈𝒯(x,j)1/(log x/e^j+1log R e^C(x))^2[ ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x +it(ℓ)) |^2  ].
+
+Since f(n) and f(n)n^it have the same law, the above is 
+
+    ≪∑_k≤ j ≤log (log x/log R) -B-2| 𝒯(x,j)|/(log x/e^j+1log R e^C(x))^2[ ∏_ℓ = j ^⌊log (log x/log R) ⌋-B-2
+    |I_ℓ(1/2-k/log x ) |^2  ].
+
+The expectation here is, again through a mean square calculation (<ref>), ≪log x/e^j+1log R. Note |𝒯(x, j)| ≤ ((log x)/e^j+1) log ((log x)/e^j+1). 
+We conclude that 
+
+    _1 ≪∑_k≤ j ≤log (log x/log R) -B-2e^loglog R-2C(x) + loglog ( log x / e^j+1)   ≪ e^-C(x),
+
+where in the last step we used that C(x)=   loglog R + 100 logloglog x. Thus we complete the proof of Proposition <ref>. 
+
+
+
+
+
+
+§ PROOF OF THEOREM <REF>
+
+ We first notice that if R>x^1/A for any fixed large constant A, then _R(x) is a set of elements with only O_A(1) number of prime factors. This would immediately imply that [|∑_n∈ f(n)|^4] ≪_A ||^2 and by (<ref>), the conclusion follows. From now on, we may assume that 
+
+    R≤ x^1/A.
+
+The proof strategy of Theorem <ref> again follows from <cit.>. The main differences lie in the design of the barrier events and taking advantage of R being large.  In particular, we do not need a “two-dimensional Girsanov-type" calculation which makes our proof less technical. 
+We first do the reduction step to reduce the problem to understanding certain averages of random Euler products, as in the upper bound proof. 
+
+There exists a large constant C such that the following is true. Let x be large and loglog R ≫√(loglog x). Let F^(R)(s) be defined as in (<ref>). Then,
+uniformly for all 1/2 ≤ q≤ 9/10 and any large V, we have ∑_n∈ f(n)  _2q
+
+    ≫√(x/log x)( ∫_-1/2^1/2 | F^(R)(1/2 +4V/log x + it)|^2 dt_q^1/2  - C/e^V∫_-1/2^1/2 | F^(R)(1/2 +2V/log x + it)|^2 dt_q^1/2 -C ).
+
+
+
+The remaining  tasks are to give a desired lower bound on F^(R)(1/2 +4V/log x + it)_q^1/2 and  an upper bound on F^(R)(1/2 +2V/log x + it)_q^1/2. 
+The upper bound part is simple. Indeed, simply apply Hölder's inequality and do a mean square calculation (<ref>) to get
+
+    [(∫_-1/2^1/2|F^(R)(1/2 +2V/log x + it)|^2  dt)^q] ≪(∫_-1/2^1/2[|F^(R)(1/2 +2V/log x + it)|^2]  dt )^q≪(log x/Vlog R)^q .
+
+
+We next focus on the main task, giving a good lower bound on F^(R)(1/2 +4V/log x + it)_q^1/2. For each t∈ℝ, 
+we use L(t) denote the event for all ⌊log V ⌋ +3 ≤ j ≤loglog x - loglog R -B -2, the following holds
+
+    (log x/e^j+1log R e^D(x)  )^-B≤∏_ℓ = j ^⌊loglog x -loglog R ⌋-B-2
+    |I_ℓ(1/2+4V/log x +it) | ≤log x/e^j+1log R e^D(x),
+
+where D(x):= c√(loglog x -loglog R) with 
+
+    c= 1/4min{loglog R/√(loglog x-loglog R) , 1 }≍ 1.
+
+We are now ready to define a random set 
+
+    ℒ: = {-1/2≤ t ≤ 1/2: L(t) defined by (<ref>) holds}.
+
+It is clear that
+
+    [(∫_-1/2^1/2|F^(R)(1/2 +4V/log x + it)|^2  dt)^q] ≥[(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^q].
+
+We use the following estimate and defer its proof to Section <ref>.
+
+Let x be large and loglog R ≫√(loglog x). Let F^(R)(s) be defined as in (<ref>) and V be a large constant. Let ℒ be the random set defined in (<ref>). Then uniformly for any 1/2≤ q≤ 9/10, we have
+
+    [(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^q] ≫(log x/Vlog R)^q .
+
+
+Plug (<ref>), (<ref>) and (<ref>) into Proposition <ref> with q=1/2
+(and choosing V to be a sufficiently large fixed constant so that C/e^V kills the implicit constant) to get that 
+ 
+    [|∑_n∈_R(x) f(n) |] ≫√(|_R(x)|) .
+
+This completes the proof of Theorem <ref>.
+
+
+
+
+§ PROOF OF PROPOSITION <REF>
+
+
+The proof proceeds the same as in <cit.> (see also <cit.>) and we provide a self-contained proof here and highlight some small modifications. 
+
+Let P(n) denote the largest prime factor of n as before. We have assumed that (<ref>) holds, e.g. R≤√(x) (This restriction is not crucial but makes the notation later easier). Let ϵ denote a Rademacher random variable independent of f(n), and recall that  indicates that the variable n under the summation is R rough. For 1/2≤ q≤ 9/10, we have 
+
+    [|_n≤ x
+     P(n)>√(x)f(n) |^2q]     = 1/2^2q[|_n≤ x
+     P(n)≤√(x)f(n) + _n≤ x
+     P(n)>√(x)f(n)+_n≤ x
+     P(n)>√(x)f(n)-_n≤ x
+     P(n)≤√(x)f(n)|^2q]
+       ≤[|_n≤ x
+     P(n)≤√(x)f(n) + _n≤ x
+     P(n)>√(x)f(n)|^2q] + [|_n≤ x
+     P(n)>√(x)f(n)-_n≤ x
+     P(n)≤√(x)f(n)|^2q]
+        = 2[|ϵ_n≤ x
+     P(n)>√(x)f(n) + _n≤ x
+     P(n)≤√(x)f(n)|^2q] = 2[|_n≤ x f(n)|^2q],
+
+where the last step we used the law of 
+    ϵ_n≤ x
+     P(n)>√(x)f(n)= ϵ∑_√(x)<p≤ x f(p) _m≤ x/p f(m)
+ conditional on (f(p))_R≤ p ≤√(x) is the same as the law of _n≤  x
+ P(n)>√(x)f(n). By the above deduction, it suffices to give a lower bound on _n≤ x
+ P(n)>√(x)f(n)_2q. 
+Do the decomposition
+
+    _n≤ x
+     P(n)>√(x)f(n) =∑_√(x)≤ p ≤ x f(p) _m≤ x/pf(m).
+
+The inner sum is determined by (f(p))_R≤ p≤√(x) and apply the Khintchine's inequality <cit.> to get
+
+    [|_n≤ x
+     P(n)>√(x)f(n)|^2q] ≫[(∑_√(x)< p ≤ x |_m≤ x/pf(m)|^2 )^q] ≥1/(log x)^q[(∑_√(x)< p ≤ xlog p·|_m≤ x/pf(m)|^2)^q].
+
+Next, do the smoothing step as we did in the upper bound case. Again set X = e^√(log x). 
+Write 
+
+    ∑_√(x)< p≤ xlog p · |_m≤ x/pf(m)|^2 = ∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_m≤ x/p f(m)|^2dt.
+
+One has |a+b|^2≥ a^2/4 - min{|b|^2, |a/2|^2}≥ 0 and thus the above is at least 
+
+    1/4∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_m≤ x/t f(m)|^2dt 
+        -∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X)min{|_x/t≤ m≤ x/p f(m)|^2, 1/4 |_m≤ x/t f(m)|^2}.
+
+It follows that the quantity we are interested in has the lower bound
+
+    [|_n≤ x
+     P(n)>√(x)f(n)|^2q] ≥   1/(log x)^q[(1/4∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_m≤ x/t f(m)|^2dt)^q] 
+        - 1/(log x)^q[(∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_ x/t<m≤ x/p f(m)|^2dt)^q].
+
+Use Hölder's inequality and throw away the R-rough condition to upper bound the subtracted term in (<ref>) by
+
+    ≤1/(log x)^q(∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X)[ |∑_ x/t<m≤ x/p f(m)|^2]dt)̊^q
+       ≪1/(log x)^q(∑_√(x)<p≤ x log p ·  (x/pX +1) )^q≪1/(log x)^q(xlog x/X +x)^q≪ (x/log x)^q.
+
+The first term in (<ref>) (without the factor 1/4(log x)^q) is 
+
+    [(∑_√(x)<p≤ xlog p ·X/p∫_p^p(1+1/X) |_m≤ x/t f(m)|^2dt)^q] 
+        = [(∫_√(x)^x_t/1+1/X <p≤ t log p ·X/p|_m≤ x/tf(m)|^2 dt )^q]
+       ≫ [(∫_√(x)^x|_m≤ x/tf(m)|^2dt )^q] = x^q[(∫_1^√(x)  |_m≤ z f(m) |^2dz/z^2)^q].
+
+To this end, we impose the smooth condition to invert the sums to Euler products. We have for any large V, 
+
+    [(∫_1^√(x)  |_m≤ z f(m) |^2dz/z^2)^q] ≥[(∫_1^√(x)  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+8V/log x)^q]
+       ≥[(∫_1^+∞  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+8V/log x)^q]- [(∫_√(x)^+∞  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+8V/log x)^q]
+       ≥[(∫_1^+∞  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+8V/log x)^q]- 1/e^2Vq[(∫_1^+∞  |_m≤ z
+     x-smooth f(m) |^2dz/z^2+4V/log x)^q].
+
+Apply Lemma <ref> to get that the first term is 
+
+    ≫[(∫_-1/2^1/2|F^(R)(1/2 + 4V/log x + it)|^2 dt )^q].
+
+For the second term, an application of Lemma <ref> gives
+
+    ≪ e^-2Vq[(∫_-∞^+∞|F^(R)(1/2 + 2V/log x + it)/|1/2 + 2V/log x + it|^2 dt )^q] ≪ e^-2Vq[(∫_-1/2^1/2 |F^(R)(1/2 + 2V/log x + it)|^2 )^q]
+
+where in the last step we used the fact that f(n)n^it has the same law as f(n) and ∑_n ≥ 1 n^-2 converges. Bounds in (<ref>) and (<ref>) together give the desired bound for the first term in (<ref>) and we complete the proof. 
+
+
+
+
+
+§ PROOF OF PROPOSITION <REF>
+
+In this section, 
+we prove Proposition <ref>. The proof significantly relies on the following proposition, which is a mean value estimate of the product of |F^(R)(σ + it_1)|^2
+and |F^(R)(σ + it_2)|^2. Our upper bound matches the guess if you pretend the two products are independent. 
+
+Let x be large and loglog R ≫√(loglog x). Let F^(R)(s) be defined as in (<ref>) and V be a large constant. Let ℒ be the random set defined in (<ref>). Then we have
+    
+    [(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^2]  ≪ (log x/Vlog R)^2.
+
+
+
+
+
+
+The proof starts with an application of Hölder's inequality. We have 
+
+    [(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^q] ≥([∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt])^2-q/([(∫_ℒ|F^(R)(1/2 +4V/log x + it)|^2  dt)^2])^1-q.
+
+Proposition <ref> gives a desired upper bound for the denominator. We next give a lower bound on the numerator. By using that f(n)n^it has the same law as f(n), the numerator is
+
+    (∫_-1/2^1/2 [1_L(t)|F^(R)(1/2 +4V/log x + it)|^2]  dt)^2-q= ([ 1_L(0)|F^(R)(1/2 +4V/log x )|^2] )^2-q .
+
+We next use Proposition <ref> by taking n=⌊loglog x - loglog R ⌋ - (B+1) - ⌊log V ⌋, a =D(x)=c√(loglog x -loglog R ) and h(j)=0 to conclude that (1_L(0))≫ 1. Combining with the mean square calculation (<ref>), we have
+
+    [1_L(0)|F^(R)(1/2 +4V/log x + it)|^2] ≫(1_L(0))· [|F^(R)(1/2 +4V/log x + it)|^2] ≫log x/V log R.
+
+We complete the proof by plugging (<ref>) and (<ref>) into (<ref>). 
+
+
+The proof of Proposition <ref> is a bit involved and its proof is inspired by <cit.> and <cit.>. We are not using the “two-dimensional Girsanov-type" computation as used in <cit.> which significantly simplified the proof. We do not expect any further savings when R is as large as stated in Proposition <ref> while for a smaller R, one might expect there could be further cancellation as in <cit.> which may be verified by adapting the “two-dimensional Girsanov-type" calculation. 
+
+
+
+    Expand the square and it equals
+    
+    [ ∫_-1/2^1/21_L(t_1) |F^(R)(1/2 +4V/log x + it_1)|^2 dt_1 ∫_-1/2
+        ^1/21_L(t_2)|F^(R)(1/2 +4V/log x + it_2)|^2 dt_2   ].
+
+   By using that f(n)n^it has the same law as f(n), we write the above as (t:= t_1-t_2)
+   
+    ∫_-1^1 [1_L(0) |F^(R)(1/2 +4V/log x )|^21_L(t)|F^(R)(1/2 +4V/log x + it)|^2 ] dt.
+
+For |t| large enough, the two factors behave independently, which is the easier case. Indeed,  if |t|>1/log R, drop the indicator functions and bound the corresponding integration by
+
+    ≪max_ 1/log R < |t|≤ 1 [  |F^(R)(1/2 +4V/log x)|^2· |F^(R)(1/2 +4V/log x + it)|^2   ]  .
+ 
+ Apply the two dimensional mean square calculation (<ref>) with (x, y)=(R, x)  to conclude that the above is 
+ 
+    ≪(log x/V log R)^2.
+
+ 
+We next focus on the case |t|≤ 1/log R. Since f(p) are independent of each other, we can decompose the Euler products into pieces and analyze their contributions to (<ref>) separately.
+Define the following three sets of primes based on the sizes of primes
+
+    𝒫_1: = {p prime: R≤ p < x^e^-(⌊loglog x -loglog R ⌋-B-2)},
+
+
+    𝒫_2: = {p prime:  x^e^-(⌊loglog x -loglog R ⌋-B-2)≤ p ≤ x^e^-(⌊log V ⌋ +3)},
+
+and 
+
+    𝒫_3: = {p prime: x^e^-(⌊log V ⌋ +3) < p ≤ x }.
+
+We proceed as follows. Note that the events L(0) and L(t) are irrelevant to f(p) for p∈𝒫_1 ∪𝒫_3. For partial products over primes p∈𝒫_1 ∪𝒫_3, we directly do mean square calculations.
+For partial products over primes p∈𝒫_2, we will crucially use the indicator functions 1_L(0) and 1_L(t) defined in (<ref>) with j= ⌊log V ⌋ +3. This separation gives that the integration in (<ref>) over |t|≤ 1/log R is
+
+    ∫_|t|≤1/log R[∏_p∈𝒫_1 ∪𝒫_3  |1-f(p)/p^1/2 +4V/log x|^-2 |1-f(p)/p^1/2 +4V/log x+it|^-2] 
+    ×[1_L(0)1_L(t)∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2 |1-f(p)/p^1/2 +4V/log x+it|^-2]  dt.
+
+We first upper bound the expectation over primes in 𝒫_1 ∪𝒫_3 uniformly over all t. By using independence between f(p) and (<ref>), we can bound it as 
+
+    ≪exp( ∑_p∈𝒫_14/p^1+8V/log x + ∑_p∈𝒫_34/p^1+8V/log x).
+
+By simply using the prime number theorem and the definition of 𝒫_1 and 𝒫_3, one has that both sums in (<ref>)  are ≪ 1 so that (<ref>) is ≪ 1, where we remind readers that B is a fixed constant. Now our task is reduced to establishing the following
+
+    ∫_|t|≤1/log R[1_L(0)1_L(t)∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2 |1-f(p)/p^1/2 +4V/log x+it|^-2]  dt ≪(log x/V log R)^2.
+
+
+Our strategy would be, roughly speaking, using the barrier event 1_L(t) to bound certain partial products involved with t directly and then use the mean square calculation to deal with the rest of the products. The exact partial products that we will apply barrier events would depend on the size of t.  
+
+We first do a simple case, which helps us get rid of the very small t, say |t|<V/log x. We use the the condition 1_L(t) and pull out the factors related to L(t) to get that the contribution from |t|<V/log x is at most 
+
+    ≪∫_|t|≤V/log x e^2c√(loglog x- loglog R)· (log x/V log R)^2·[1_L(0)∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2]  dt 
+       ≪V/log x·  e^2c√(loglog x- loglog R)·(log x/V log R)^2·[∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2] 
+       ≪(log x/V log R)^2,
+
+where in the second last step we dropped the 1_L(0) condition, and in the last step we applied (<ref>) together with log R ≥exp(4c  √(loglog x)) where c is defined in (<ref>). Thus we only need to establish the following 
+
+    ∫_V/log x≤ |t|≤1/log R[1_L(0)1_L(t)∏_p∈𝒫_2  |1-f(p)/p^1/2 +4V/log x|^-2 |1-f(p)/p^1/2 +4V/log x+it|^-2]  dt ≪(log x/V log R)^2 .
+
+
+We now enter the crucial part where we will apply the barrier events according to the size of |t|.
+We decompose the set 𝒫_2 into two parts according to |t|.
+For each fixed V/log x≤ |t| ≤ 1/log R, we write 
+
+    𝒫_2 = 𝒮(t) ∪ℳ(t),
+
+where 
+
+    𝒮(t):={p prime:  x^e^-(⌊loglog x -loglog R ⌋-B-2)≤ p ≤ e^V/|t|},
+
+and 
+
+    ℳ(t):= {p prime:  e^V/|t|≤ p ≤ x^e^-(⌊log V ⌋ +3)}.
+
+The set of primes 𝒮(t) would be those we will apply barrier events and ℳ(t) would be estimated by a mean square calculation. Note that for p∈ℳ(t), there is a nice decorrelation as we needed in (<ref>) due to that p≥ e^V/|t|. 
+Let us now see how such a decomposition of 𝒫_2 would help us. We use a local notation
+
+    G(p, t): = |1-f(p)/p^1/2 + 4V/log x+it|^-2.
+
+Then the quantity in (<ref>) is the same as 
+
+    ∫_V/log x≤ |t|≤1/log R[1_L(0)1_L(t)∏_p∈𝒫_2 G(p, 0) ∏_p∈𝒮(t) G(p, t) ∏_p∈ℳ(t) G(p, t)  ]  dt.
+
+We apply the barrier events condition 1_L(t) to bound the product over p∈𝒮(t) so that the above is at most 
+
+    ≪(V/log R)^2· e^2c√(loglog x - loglog R)·∫_V/log x≤ |t|≤1/log R1/t^2[1_L(0)∏_p∈𝒫_2 G(p, 0) ∏_p∈ℳ(t) G(p, t)  ]  dt.
+
+We next upper bound the expectation in (<ref>) uniformly for all V/log x≤ |t| ≤ 1/log R. We first drop the indicator function and rewrite the product based on the independence between f(p) to derive that
+
+    [1_L(0)∏_p∈𝒫_2 G(p, 0) ∏_p∈ℳ(t) G(p, t)]≤[ ∏_p∈𝒮(t) G(p, 0)] · [∏_p∈ℳ(t) G(p, 0)G(p, t)].
+
+ Use the mean square calculation results in (<ref>) and (<ref>) to further get an upper bound on the expectation
+ 
+    ≪V/|t|/log R·(tlog x/V^2)^2≪|t|(log x)^2/V^3log R .
+
+Now we plug the above bound to (<ref>) to get that (<ref>) is crudely bounded by 
+
+    (log x/log R)^2·e^2c√(loglog x- loglog R)/Vlog R·∫_V/log x≤ |t|≤1/log R1/|t| dt ≪(log x/log R)^2.
+
+In the last step we used that log R ≥exp(4c  √(loglog x)) where c is defined in (<ref>).  This completes the proof of (<ref>) and thus the proof of the proposition. 
+
+
+
+
+§ CONCLUDING REMARKS
+
+
+
+
+ §.§ Typical behavior and small perturbations
+
+We give a sketch of the situation when a(n) itself is independently and randomly chosen. 
+We write 
+
+    a(n) = r(n) X(n)
+
+where r(n)>0 is deterministic and X(n) are independently distributed with [|X(n)|^2]=1. We may naturally assume that there is some r such that
+
+    r(n) ≍ r(m) ≍ r
+
+for all n, m, i.e. no particular random variable would dominate the whole sum in size. One may also just assume r=1 throughout the discussion here. 
+We claim that for typical X(n), the random sums satisfy the sufficient condition established in <cit.> on having a Gaussian limiting distribution.
+
+The key condition one needs to verify is that almost surely (in terms of over X(n)), we have 
+
+    R_N(a) : =∑_ m_i, n_j≤ N 
+    
+     m_i≠ n_j 
+     m_1m_2=n_1n_2   a(n_1)a(n_2) a(m_1) a(m_2) = o(r^4N^2).
+
+The proof of (<ref>) is straightforward. By using the divisor bound, we know there are ≪ N^2+ϵ number of quadruples (m_1, m_2, n_1, n_2) under the summation. If we expect some square-root cancellation among a(n_1)a(n_2) a(m_1) a(m_2), then R_N(a) above should be around r^4N^1+ typically. 
+Indeed, by using the fact that all a(n) are independent, we have the L^2 bound 
+
+    [|R_N|^2] = [R_N R_N] ≪ r^8 N^2+.
+
+This leads to, 
+almost surely (in terms of over X(n)), that we have 
+
+    R_N(a) = o(r^4N^2).
+
+To this end, by using <cit.>, almost surely, we have a central limit theorem for the random partial sums of a Steinhaus random multiplicative function.
+See <cit.> for a closely related result where they used the method of moments.  
+
+
+
+
+In Question <ref>, we asked if it is possible to characterize the choices of a(n) that give better than square-root cancellation. On one hand, as discussed above, we know for typical a(n), there is just square-root cancellation. On the other hand, if a(n) is a deterministic multiplicative function taking values on the unit circle, then by the fact that a(n)f(n) has the same distribution as f(n) and the result established by Harper (<ref>), the partial sums ∑_n≤ N a(n)f(n) have better than square-root cancellation. Our main theorems study one particular example of multiplicative nature.  Combining these observations, 
+we believe that any small perturbation coming from a(n) that destroys the multiplicative structure would make the better than square-root cancellation in (<ref>) disappear. We ask the following question in a vague way as a sub-question of Question <ref>.
+
+Is it true that the only “essential choice" of a(n) leading to better than square-root cancellation is of multiplicative nature? 
+
+
+
+
+ §.§ Threshold in other settings and the limiting distribution
+
+The main theorems of this paper prove that there is square-root cancellation for loglog R ≫ (loglog x)^1/2. What is the limiting distribution then? We have remarked earlier that one may establish a central limit theorem when R≫exp((log x)^c) for some  constant c<1 by understanding the corresponding multiplicative energy. It becomes less clear for smaller R. 
+
+
+ What is the limiting distribution of  ∑_n∈_R(x) f(n) with “proper" normalization, for all ranges of R?   
+
+
+We finally comment that there is another family of partial sums that naturally has the threshold behavior for better than square-root cancellation. Let = [x, y] with y≤ x. We would like to know for what range of y, typically, 
+
+    ∑_x≤ n ≤ x+y f(n) = o(√(y)).
+
+We believe one can adapt the argument here to find that the threshold behavior is around log (x/y) ≈√(loglog x). It is certainly interesting to understand the limiting distribution for the short interval case thoroughly, beyond the previous result in <cit.>.  
+
+
+
+
+
+
+plain
+

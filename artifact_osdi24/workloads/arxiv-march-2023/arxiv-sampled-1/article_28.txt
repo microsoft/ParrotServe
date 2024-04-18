@@ -1,0 +1,723 @@
+
+
+
+
+
+School of Electronic Engineering and Computer Science, Queen Mary University of London, Mile End Road, London E1 4NS, United Kingdom
+
+School of Electronic Engineering and Computer Science, Queen Mary University of London, Mile End Road, London E1 4NS, United Kingdom
+
+f.castles@qmul.ac.uk
+School of Electronic Engineering and Computer Science, Queen Mary University of London, Mile End Road, London E1 4NS, United Kingdom
+
+
+
+
+
+
+
+
+
+For a long time, conventional wisdom held that the static electric susceptibility of all materials must be positive.  However, it is now believed that negative static electric susceptibility is likely to be possible in certain materials that are not in thermodynamic equilibrium (though conclusive experimental evidence of this remains to be reported).  Negative static electric susceptibility represents a qualitatively new parameter range of an important material property and it is thought that it may open up the possibility of new physical effects and technological capabilities.  With the recent introduction of active metamaterials composed of meta-atoms that appear to be capable, in principle, of exhibiting negative static polarizabilities of arbitrarily large magnitudes, it seems timely to investigate how the mutual interaction between dipolarizable entities with negative static polarizability affects the stability of such systems, and, in particular, to determine the lower bound on the static electric susceptibility that may be achieved in non-equilibrium materials.  Here we use a classical, microscopic model of point-like dipolarizable entities (a model that is standard in the case of positive polarizability) and investigate its behavior for simple cubic (sc), body-centered cubic (bcc), and face-centered cubic (fcc) crystals with one entity per primitive cell when the static polarizability of the entities is negative and the mutual interaction between the entities is taken into account.  We find that the static electric susceptibility is bounded below due to an instability towards self-polarization but the lower permissible bound is negative definite in each case, i.e., the concept of negative static electric susceptibility remains robust, according to the model, when mutual interactions are taken into account.  The usual Clausius-Mossotti relation between the static polarizability and the static electric susceptibility remains valid in the case of negative parameters, but only down to the lower permissible bound; the value of the bound depends on the crystal structure and is always unrelated to the asymptote of the Clausius-Mossotti curve.  The lower permissible bounds of the static electric susceptibility are found to be -0.906 for sc, and -1.00 for bcc and fcc.  These results confirm that, although the magnitude of the static electric susceptibility does not diverge in the negative case (as it can in the positive case), the magnitudes attainable in the negative case for condensed media may, nevertheless, be many orders of magnitude greater than those predicted previously for inverted vapors and gases.  This is a promising result in relation to the development of potential new technologies that exploit the phenomenon.
+
+
+
+
+
+
+
+
+
+Lower (negative) bounds on the static electric susceptibility of non-equilibrium cubic crystals
+    F. Castles
+    March 30, 2023
+===============================================================================================
+
+
+
+
+
+§ INTRODUCTION
+
+
+The discovery and development of materials with new or enhanced properties is an important driver of technological advance.  In the area of electrostatics and low-frequency electromagnetics, a key material property is static electric susceptibility χ^(0) (or, equivalently, static relative permittivity ε^(0), related via ε^(0)=χ^(0)+1).  The value of χ^(0) for a material can be crucial to the utility of the material in certain device applications; for example, its value is of crucial importance in capacitor dielectrics, where a large (positive) value is often desired to facilitate device miniaturization <cit.>.  Since the first measurements of Cavendish <cit.> and Faraday <cit.>, it was found that the presence of a material between two conductors always increased the static mutual capacitance of the conductors above the capacitance observed when no material was present, i.e., it became established empirically that ε^(0)>1 and, correspondingly, χ^(0)>0 for all materials [For completeness, we may note that, following Faraday, some relatively early researchers considered air, rather than vacuum, as the reference medium, even when measurement techniques became sufficiently precise to distinguish between the values obtained for various gases.  Therefore, values of ε^(0) (or the specific inductive capacity, as it was called initially) slightly less than unity have been reported for gases such as Hydrogen: see, e.g., Ref. <cit.>.  However, since it has been accepted subsequently that the more-appropriate reference is vacuum, the values of ε^(0) reported experimentally are greater than unity for all materials (but may be less than that of air for certain gases): see, e.g., Ref. <cit.>].  Although early researchers kept an open mind regarding whether, as-yet untested, materials may nevertheless be found subsequently to exhibit ε^(0) values less than unity (see, e.g., Ref. <cit.>), a theoretical argument was developed later that appeared to rule out this possibility; in 14 of Ref. <cit.>, Landau et al. conclude that “the permittivity of all bodies exceeds unity, and the dielectric susceptibility ... is therefore positive”.  (Note that Landau et al. are referring here to the static relative permittivity and electric susceptibility).  It has since been noted, however, that Landau et al.'s argument assumes that the bodies in question are in thermodynamic equilibrium, and, therefore, the conclusion does not necessarily hold for media that are not in thermodynamic equilibrium <cit.>.  Sanders discussed tentatively the possibility of a χ^(0)<0 state in media with inverted populations of energy levels produced by means similar to those used in maser and laser applications <cit.>, and Chiao et al. predicted unequivocally a χ^(0)<0 state in such systems <cit.>.  Apart from the unusual property of reducing, rather than increasing, the static mutual capacitance of two conductors if such a material were placed between them, the possibility of negative χ^(0)—a qualitatively new parameter range for this important material property—opens up the possibility of new physical effects and technological capabilities.
+
+For example, Sanders <cit.> and Chiao et al. <cit.> discussed theoretically how negative static electric susceptibility opens up the possibility of stable electrostatic levitation, which would be analogous in many respects to the magnetostatic levitation that is seen using diamagnetic or superconducting materials <cit.>.  In particular, Chiao et al. proposed explicitly that it should be possible to construct purely electrostatic charged particle traps, which would be very different in principle from Paul and Penning traps <cit.>.  However, Chiao et al. also went on to predict theoretically that for a specific, typical case of the types of systems they considered (ammonia gas at a temperature of 180 K and a pressure of 1 Torr with population inversion maintained by a carbon dioxide pump laser), the value of χ^(0) is expected to be ≈-3× 10^-4 <cit.>; based on this relatively-small magnitude they concluded that condensed media with much larger magnitudes of the negative static electric susceptibility would need to be developed before such levitation effects become readily observable <cit.>.  This is perhaps one reason why no attempts to observe experimentally the theoretically-predicted χ^(0)<0 state, or the associated levitation phenomenon, have been reported using the systems considered by Sanders and Chiao et al.
+
+More recently, it was proposed that negative static electric susceptibility may be achieved also in completely different systems: active metamaterials <cit.>.  Active metamaterials <cit.> utilize an internal source of power and, like the systems considered by Sanders and Chiao et al., are not subject to the equilibrium thermodynamical argument of Landau et al. concerning the restriction on the sign of χ^(0). In Ref. <cit.>, a design concept for active metamaterials with negative static electric susceptibility was proposed and preliminary experimental evidence in support of the general concept was reported.  Unlike the systems considered by Sanders and Chiao et al., such metamaterials are readily realized at room temperature and pressure.  Further, they constitute a form of condensed matter for which it appears very likely that negative static electric susceptibility values with magnitudes much greater than the systems of Sanders and of Chiao et al. are possible <cit.>.
+
+Given that: (1) the likely existence of negative static electric susceptibility in non-equilibrium materials raises the theoretical possibility of novel technological capabilities <cit.>, (2) the magnitude of the negative static electric susceptibility that is achievable in non-equilibrium materials is expected to be crucial to the practical realization of such technologies <cit.>, and (3) the practical development of condensed (meta)materials with negative static electric susceptibilities of relative large magnitudes is now well under way <cit.>, it appears timely to seek to determine rigorously just how negative can one expect the negative static electric susceptibility to be made in non-equilibrium condensed materials. 
+
+If Ref. <cit.> it was claimed—without full theoretical or experimental justification—that negative static electric susceptibility is possible throughout the range -1<χ^(0)<0; herein we present the theoretical basis on which this claim was made.
+
+
+
+
+
+ §.§ Scope
+ 
+
+We consider the basic, conventional interpretations of χ^(0) and ε^(0); that is, we consider the linear static electric susceptibility (polarization proportional to internal electric field) and linear static relative permittivity (electric displacement proportional to internal electric field) as they pertain to a nonrelativistic, macroscopic, and homogeneous sample of material under the action of a static electric field created by external test electrodes.  This interpretation corresponds, for example, to the original experiments of Cavendish <cit.> and Faraday <cit.>, to the meaning ascribed to the static electric susceptibility and permittivity in standard textbook accounts of the electrostatics of dielectrics (e.g., Chap. II of Ref. <cit.>), and to the definition of the permittivity according to recent ASTM standards <cit.>.
+
+It should be noted that there are a number of scenarios where negative static electric susceptibility has been discussed or implied in the literature in relation to phenomena that do not correspond to this conventional interpretation.  For example, Kirzhnits et al. have shown that static permittivity may be negative in the sense that, if spatial dispersion is taken into account, the longitudinal permittivity at zero frequency but nonzero wave vector 
+may exhibit negative values <cit.>.  However, this concerns the scenario where external sources of charge are located within the material itself, and, for the case of static fields and external test electrodes, i.e., the conventional case which corresponds to zero frequency and zero wave vector, Kirzhnits et al. reaffirm the conclusion of Landau et al. that the static permittivity of a material must exceed unity and hence the static electric susceptibility must be positive (if the body is in thermodynamic equilibrium).
+
+We emphasize that we are interested in the static electric susceptibility and permittivity; it is well known that the static magnetic susceptibility may be either positive or negative, regardless of whether the body is in thermodynamic equilibrium or not (see, e.g., Ref. <cit.>, p. 106).  We also emphasize that we are interested in the static electric susceptibility and permittivity; it is well known that the sign of the real part of the complex permittivity is subject to no theoretical restriction for nonzero frequencies, again, regardless of whether the body is in thermodynamic equilibrium or not (see, e.g., Ref. <cit.>, p. 274).
+
+Finally, we note that we consider herein only isotropic media such that the static electric susceptibility—which is, in general, a real symmetric second-rank tensor—reduces to a real scalar, which we denote as χ^(0).  Thus, `negative static electric susceptibility' means, straightforwardly, that χ^(0)<0 [Although we do not make use of the fact in what follows, a `negative static electric susceptibility' may be considered readily in the general, anisotropic, case to mean that one or more of the three principal components of the static electric susceptibility tensor are less than zero.].    We use superscript `(0)' to denote explicitly a static quantity.
+
+To study the static electric susceptibility, as interpreted conventionally in this way, we use a simple model of insulators that is standard in the normal case of χ^(0)>0.  To analyze the model we also use methods employed previously to a substantial extent in the case χ^(0)>0.  The main novelty of our work is that new results are obtained by applying a generalized version of the method to the unusual parameter range χ^(0)<0.
+
+
+
+
+ §.§ A known lower bound on the value of  for non-equilibrium materials
+
+
+As noted above, the theoretical argument of Landau et al. (14 of Ref. <cit.>) puts a lower bound of zero on the static electric susceptibility of materials that are in thermodynamic equilibrium.  A simple theoretical argument that puts a less stringent lower bound of -1 on the static electric susceptibility—but which applies manifestly to all materials, whether equilibrium or non-equilibrium—is provided by circuit theory, as follows [We are unaware of the origins of this type of argument to establish minimum bounds on ε^(0) and χ^(0), but such an approach was brought to our attention by Ref. <cit.>.].
+
+Consider an empty parallel plate capacitor of capacitance C_0 (>0) for which the plates are initially disconnected and a charge of ± q_0 is deposited on the plates.  Now fill the volume between the capacitor plates with a homogeneous and isotropic insulator with static relative permittivity ε^(0).  Suppose that the geometry of the capacitor is such that fringing fields are sufficiently small that they may be reasonably ignored.  By definition of ε^(0) <cit.>, the capacitance of the filled capacitor is C=ε^(0)C_0.  Now let the capacitor plates be connected at time t=0 across a resistor of resistance R (>0).  Suppose that the value of R is such that the time constant t_c=|RC| is large with respect to the time taken for polarization to be established in the material, and the resulting `quasi-static' behavior of the capacitor is dictated by ε^(0).  
+  Elementary circuit theory tells us that the charge on the capacitor as a function of time is q(t)=q_0exp[-t/(RC)].  For the normal case, ε^(0)>1 and therefore C>0, hence q(t) decays exponentially, i.e., the capacitor discharges through the resistor.  However, for the hypothetical case ε^(0)<0, C would be negative and an exponential, unbounded increase of q(t) would be predicted.  Since this indicates a system that is unstable, values ε^(0)<0, i.e., values χ^(0)<-1, must be unphysical.  We note that the argument does not rely, at any point, on the material being in thermodynamic equilibrium, so it should apply to all materials whether or not they are in thermodynamic equilibrium [An alternative, briefer argument is to observe that the energy of a capacitor is given by Q^2/(2C), which already indicates an instability for C<0, and hence for ε^(0)<0 and χ^(0)<-1.  However, we believe that such energy-based arguments should, in general, be applied with some care to non-equilibrium materials that may utilize a source of power to maintain an electrostatic state that is otherwise energetically unfavorable.].
+
+This circuit theory result is of relatively little interest in relation to equilibrium materials because, in this case, the argument of Landau et al. already provides a more stringent lower bound.  It is of much greater significance in relation to non-equilibrium materials because, in this case, it provides a lower bound where the argument of Landau et al. does not apply.  Importantly, the circuit theory argument rules out most negative values of χ^(0) (viz., all values <-1) in non-equilibrium materials, and it already tells us that one cannot hope to obtain negative values with the large magnitudes readily seen in the positive case for equilibrium materials, even if condensed media are employed (many typical solids have values χ^(0)∼ 10^0–10^3 <cit.> and values of χ^(0)∼ 10^4–10^5 may be observed just above the Curie point in materials that exhibit a ferroelectric phase <cit.>).  On the other hand, it is essential to bear in mind that the circuit theory argument does not imply that any values in the interval -1<χ^(0)<0 are necessarily possible for non-equilibrium materials. (Indeed, it is known, from Landau et al.'s result, that this would be an incorrect inference in the case of equilibrium materials, to which the circuit theory argument applies equally).
+
+To determine theoretically whether values in the interval -1<χ^(0)<0 are actually possible for non-equilibrium materials, i.e., to determine the lower permissible bound of χ^(0), it appears necessary to investigate a specific microscopic model of insulators.
+
+
+
+
+
+ §.§ Model
+ 
+
+As presently conceived, materials with negative static electric susceptibility are composed of discrete entities with negative static polarizability.  To begin to model condensed media consisting of such entities—be they atoms, molecules, or meta-atoms—we assume herein a set of identical, point-like, dipolarizable entities that are located at fixed positions and respond linearly and isotropically to the local electric field: in static equilibrium, the dipole moment 𝐩^(j) (∈ℝ^3) of the jth entity is given by 𝐩^(j)=α𝐄^(j), where α (∈ℝ) is the static polarizability of each entity and 𝐄^(j) (∈ℝ^3) is the (`microscopic') electric field at the point 𝐫^(j) due to all sources except the jth entity itself.  For a stable macroscopic medium composed of a cubic arrangement of such entities, the static electric susceptibility is also isotropic and described by scalar χ^(0) (∈ℝ) [It is, of course, also possible to obtain an isotropic electric susceptibility from entities with anisotropic static polarizability: for example, if the principal axes of the entities are randomly oriented.  However, for simplicity, we do not consider this case herein.].
+
+This model is, of course, precisely that which has been applied standardly, assuming α>0, to the study of normal dielectrics with χ^(0)>0, in which context it may be traced back to the work of Mossotti <cit.>, Faraday <cit.>, 
+ and Clausius <cit.> (though these authors envisioned small conducting inclusions of finite, nonzero, volume rather than dipolarizable entities that were assumed point-like from the outset).  The treatment of the usual case—i.e., the case α>0 and χ^(0)>0—that we believe is most relevant to our work is that of Allen <cit.>.  Our task is to investigate the behavior of the model when α<0.
+
+
+
+
+ §.§ The Drude formula and the Clausius-Mossotti equation for the case of negative static polarizability
+
+
+If materials composed of entities with α<0 are stable against self-polarization, then there is no reason to suppose that, in the weakly-interacting limit, the usual, basic expression χ^(0)=Nα/ε_0 would not be as valid for the case α<0 as it is for the case α>0.  Here, N (⩾ 0) is the number of entities per unit volume and ε_0 is the permittivity of free space.  This expression is sometimes referred to as the Drude formula for susceptibility (see, e.g., Ref. <cit.>) and it was assumed to be valid in the case of α<0 by Chiao et al. <cit.>; in particular, Chiao et al. used it to arrive at their theoretical prediction of the value of χ^(0)≈-3× 10^-4 for pumped ammonia gas in Refs. <cit.>.  
+
+The Drude formula reflects the obvious fact that, if one wishes to achieve a negative χ^(0) of larger magnitude, it is natural to seek to employ entities with negative α of larger magnitude and/or arrangements of entities that are more densely packed, i.e., larger N (hence the desire for condensed media).  Based on the work presented in Ref. <cit.>, it is clear that α can be negative and the combination Nα can be of large magnitude in metamaterial systems.  However, as |Nα| increases, the approximation that the entities may be treated as non-interacting—the assumption on which the derivation of the Drude formula is based—becomes increasingly inaccurate and mutual interactions between the entities must be taken into account.  Further, it must be borne in mind that, by applying the Drude formula to the α<0 case at all, one is assuming that the χ^(0)<0 state exists; that is, one is assuming that the mutual interactions between the entities do not, in fact, make the system unstable for all values α<0, no matter how small the value of |Nα|, in the macroscopic limit.  To our knowledge, there is no definitive way to justify this assumption theoretically without taking the mutual interactions into account explicitly and confirming whether the lower limit of stability is negative definite.
+
+Moving beyond the Drude formula, one arrives at the Clausius-Mossotti equation.  The Clausius-Mossotti equation accounts for the fact that the field at a given dipolarizable entity is not, in general, just the external field, but is the sum of the external field and the field due to the polarization of all the other entities in the material.  The assumptions of our model (discrete entities that are point-like, linearly-dipolarizable, at fixed positions, etc.), are exactly those often used in modern accounts of the derivation of the Clausius-Mossotti equation (see, e.g., Refs. <cit.>).  The equation states that, for media with certain symmetries (including cubic crystals with one entity per primitive cell, with which we are concerned herein) <cit.>, the static electric susceptibility is related to the static polarizability as
+
+    χ^(0)=4πα̃/1-4π/3α̃.
+
+Here, we have chosen to write the equation in terms of the dimensionless variable α̃=Nα/(4πε_0), which will be particularly convenient later.  A plot of χ^(0) as a function of α̃ according to Eq. (<ref>eq:cm_reduced) is included in Fig. <ref>fig:cm.  As α̃→3/4π from below, the Clausius-Mossotti equation predicts that χ^(0)→∞.  This is sometimes referred to as the “Lorentz 4π/3 catastrophe” and is associated with an instability towards self-polarization that has, for a long time, been considered a qualitative, if not precisely quantitative, model of the paraelectric to ferroelectric transition (see, e.g., Ref. <cit.>).  
+For α̃> 3/4π, the Clausius-Mossotti equation formally predicts negative values of χ^(0); however, this does not constitute a genuine prediction of a negative static electric susceptibility state.  Rather, the equation ceases to be valid in this case and a more sophisticated (nonlinear) model is required to describe the self-polarized state.  Accordingly, the conventional interval in which the Clausius-Mossotti equation is typically considered is 0≤α̃< 3/4π.
+
+
+Since the Clausius-Mossotti equation is a useful description of dielectrics in the standard case of 0≤α̃< 3/4π, it is natural for us to ask whether, and to what extent, it remains valid in the case of α̃<0.  It was noted as long ago as 1873 by Maxwell <cit.> that there is no step in the derivation of the Clausius-Mossotti equation that requires the static polarizability to be positive for the derivation to be valid.  Therefore, if our model consists of entities that may assume negative values of α̃ (as per the inverted media of Sanders <cit.> and Chiao et al. <cit.>, or the metamaterials of Ref. <cit.>), one would expect, naively, that the Clausius-Mossotti equation will still provide the appropriate expression for χ^(0) for the model, as per Eq. (<ref>eq:cm_reduced).  However, as we will now see, this is only partly true.
+
+
+
+
+  §.§.§ The limitation of the Clausius-Mossotti equation for the case of negative static polarizability
+
+
+Since, unlike the case of α̃>0, there is no divergence of the function χ^(0) for any α̃<0 according to Eq. (<ref>eq:cm_reduced), one would expect, naively, that Eq. (<ref>eq:cm_reduced) should be applicable for all α̃<0.  If this were the case, the minimum value of χ^(0) would be lim_α̃→ -∞χ^(0)(α̃)=-3 (the horizontal asymptote of the Clausius-Mossotti curve as it is presented in Fig. <ref>fig:cm).  However, this is clearly at odds with the circuit theory argument, discussed previously, which has shown that any value χ^(0)<-1 is unstable.
+
+To reconcile the fact that the naive result of the Clausius-Mossotti equation for α̃<0 is at odds with the circuit theory argument, one may look at the case of a sc crystal [When we talk herein of sc, bcc, or fcc crystals, we mean, in all cases, crystals with one entity per primitive cell.] of α̃>0 entities to remind us of a known limitation of the Clausius-Mossotti equation that exists even within the usual interval in which it is considered to be valid, i.e., within the interval 0≤α̃< 3/4π.  The derivation of the equation would appear to apply equally to sc, bcc, and fcc crystals, and, as discussed above, Eq. (<ref>eq:cm_reduced) predicts that χ^(0)→∞ as α̃→3/4π from below in all three cases.  However, although it is not discussed explicitly in typical textbook accounts of the Clausius-Mossotti equation, it is, nevertheless, well established that a more-sophisticated analysis of the same model shows that, upon increasing α̃ from zero, the sc case becomes unstable towards self polarization at a critical value α̃=α̃_c^+^ sc which is less than 3/4π [This has been articulated clearly by Allen in Refs. <cit.> and is related closely to the fact that, for a model consisting of entities with dipole moments of fixed magnitude that are free to rotate, an antiferroelectric configuration, as opposed to a ferroelectric configuration, can be energetically preferred in the sc case <cit.>.] (the numerical value of α̃_c^+^ sc will be considered in detail below).  What happens, more precisely, in the sc case is that, upon increasing α̃ from zero, Eq. (<ref>eq:cm_reduced) determines correctly the associated value of χ^(0), but only until the critical value α̃=α̃_c^+^ sc<3/4π is reached: for any value of α̃ that is greater than α̃_c^+^ sc the system is already unstable and the Clausius-Mossotti curve for the sc case is truncated (as shown in Fig. <ref>fig:cm).  Accordingly, in the sc case for α̃>0, the value of χ^(0) is not unbounded above, but has a finite upper bound determined by evaluating χ^(0) according to Eq. (<ref>eq:cm_reduced) at α̃=α̃_c^+^ sc.  Thus, there is clear precedent for the limited applicability of the Clausius-Mossotti equation within the normally-considered interval 0≤α̃<3/4π, and for a finite upper bound on χ^(0), for certain crystal structures.
+
+As is generally assumed, and we will end up essentially reaffirming in detail below, there is no such truncation of the Clausius-Mossotti curve for the bcc and fcc cases with α̃>0; within the model, the upper critical values for the static polarizability are α̃_c^+^ bcc=α̃_c^+^ fcc=3/4π and, therefore, χ^(0) does indeed diverge to infinity as α̃→3/4π from below.
+
+For convenience, we may refer to an instability that occurs with a divergence of χ^(0)—such as that which occurs for the bcc and fcc cases on increasing α̃ from zero—as a `Type-I' instability, and an instability that occurs without a divergence of χ^(0)—such as that which occurs for the sc case on increasing α̃ from zero—as a `Type-II' instability.  Accordingly, to reconcile the fact that the minimum value of χ^(0)=-3 that is naively predicted by the Clausius-Mossotti equation is at odds with the minimum value of χ^(0)=-1 predicted by the circuit argument, we may hypothesize that, upon decreasing α̃ from zero, there is always a Type-II instability that truncates the Clausius-Mossotti curve at or before χ^(0)(α̃=-3/8π)=-1.  Sections <ref>sec:method and <ref>sec:results of this paper amount, essentially, to a rigorous demonstration that this is indeed what happens, and to an accurate calculation of the values of α̃ and χ^(0) at which the truncations occur, for the sc, bcc, and fcc cases.  Our primary methodology is a generalization of one of the methods used by Allen—which was applied in Refs. <cit.> to the sc case with α>0—to include also the case of α<0.
+
+
+
+
+ §.§ The physical origin of the lower bound
+
+
+We believe that, in broad terms, the physical mechanism underlying the instability is the same for the α̃<0 case as for the α̃>0 case (which is essentially the same for Type I and Type II instabilities). That is, the physical mechanism of the instability in the α̃<0 case is essentially the same as the well-known Lorentz 4π/3 catastrophe model of the paraelectric to ferroelectric transition, which may be interpreted in the following way.  It is clear that, in the absence of external sources of electric fields, the state of the system where all of the entities are unpolarized, i.e., 𝐩^(j)=0 for all j, is a state of static equilibrium of the system; for, if the polarization of each entity is exactly zero, then, in the absence of external sources, there are no electric fields that may induce polarization.  The question is whether this state is a stable or unstable static equilibrium.  Loosely speaking, if the entities are arranged sufficiently close together or |α| is sufficiently large, then the system may be shown to be unstable;  in this case, any transient, non-zero, polarization of any of the entities would cause polarization of the other entities, which would, in turn, lead to further polarization which is, on average, of larger magnitude, etc., leading to a “runaway condition" where polarization increases, in theory, without bound.  (Using a more-sophisticated, nonlinear model the self-polarization can be bounded and describe a ferroelectric or antiferroelectric state.)  Conversely, if the entities are arranged sufficiently far apart or |α| is sufficiently small, then the system may be shown to be stable; in this case, any transient, non-zero polarization of any of the entities would lead to only finite oscillations of the 𝐩^(j), and these would die away to zero if any damping whatsoever were present in the system [This type of instability is already exhibited by a system containing only two entities.  In this case, if the value of α in relation to the distance between the entities d is such that α>2πε_0 d^3 then the system is unstable towards a self-polarized state.  For a pedagogical account of the two-entity system, and others, in the case α>0, see Ref. <cit.>.  The two-entity system with α>0 also appears, for example, as Problem 8 in Chapter 16 of Ref. <cit.>, where it is referred to as the “ferroelectric criterion for atoms”.].
+
+
+
+
+
+§ METHOD
+ 
+
+We will find that any set of two or more entities (assuming the entities are located at distinct positions) has an upper critical value of α̃, which we denote α̃_c^+, and a lower critical value of α̃, which we denote α̃_c^-, such that: if α̃_c^-<α̃<α̃_c^+ then the system is stable, and if α<α̃_c^- or α>α̃_c^+ then the system is unstable.  We seek to determine the values of α̃_c^+ and α̃_c^- as they pertain to infinite sc, bcc, and fcc crystals, then use Eq. (<ref>eq:cm_reduced) to determine the associated upper and lower bounds of χ^(0).
+
+To determine the values of α̃_c^+ and α̃_c^- as they pertain to infinite crystals, our primary methodology is to consider finite crystals of a systematic range of sizes and determine the infinite limit by extrapolation.  (We also summarize an alternative methodology in <ref>sec:alternative_method.)  This method has essentially been employed by Allen to investigate the sc case for α̃>0 (see, in particular, Fig. 1 of Ref. <cit.>).  As we will see, if the method is suitably generalized to deal also with the case α̃<0, and suitable care is taken to execute and analyze the extrapolation, it can lead to definitive results with well-defined accuracy for each of the sc, bcc, and fcc cases for both α̃>0 and α̃<0.
+
+
+
+
+ §.§ General method for entities located at arbitrary positions
+
+
+We begin by establishing the method of determining α̃_c^+ and α̃_c^- for a finite number of entities at arbitrary positions, and later consider positions that represent finite sc, bcc, and fcc crystals.  Consider a finite number n_tot⩾ 2 of entities located at fixed position vectors 𝐫^(j) (∈ℝ^3), j=1...n_tot.  For now, the 𝐫^(j) may be considered to be entirely arbitrary, save that no two entities are coincidentally positioned, i.e., 𝐫^(j)≠𝐫^(l) if j≠ l.  As per our model, in static equilibrium the dipole moment of the jth entity, 𝐩^(j), is given by 𝐩^(j)=α𝐄^(j), where α is the static polarizability of each entity and 𝐄^(j) is the electric field at the point 𝐫^(j) due to all sources except the jth entity itself.  In the absence of additional sources of electric fields external to the n_tot dipolarizable entities themselves (an external field being superfluous to the question of the intrinsic stability of the system of entities itself), we may write that, in static equilibrium,
+
+    𝐩^(j)=α∑_l≠ j𝐄^(j,l),
+
+where 𝐄^(j,l) (∈ℝ^3) is the field at 𝐫^(j) due to the polarization 𝐩^(l) of the lth entity and ∑_l≠ j denotes the sum over all l=1...n_tot except for the value j.  Using the standard expression for the electric field 𝐄 at a displacement 𝐫 from a point dipole 𝐩, viz., 𝐄 = [3(𝐩·𝐫)𝐫-r^2𝐩]/(4πε_0r^5), where r=|𝐫|, Eq. (<ref>eq:p_j) becomes
+
+    𝐩^(j) = α∑_l≠ j3[𝐩^(l)·𝐑^(j,l)]𝐑^(j,l)-[R^(j,l)]^2𝐩^(l)/4πε_0[R^(j,l)]^5.
+
+Here, 𝐑^(j,l)=𝐫^(j)-𝐫^(l) is the displacement of the jth entity with respect to the lth, and R^(j,l)=|𝐑^(j,l)|.  Expressing distances in multiples of a unit distance a>0 (later, a will be the length of the sc cell edge), such that 𝐫^(j)=a𝐫'^(j) and 𝐑^(j,l)=a𝐑'^(j,l), Eq. (<ref>eq:p_j_2) may be rewritten 
+
+    𝐩^(j) = α̃∑_l≠ j3[𝐩^(l)·𝐑'^(j,l)]𝐑'^(j,l)-[R'^(j,l)]^2𝐩^(l)/[R'^(j,l)]^5,
+
+where α̃=α/(4πε_0 a^3) is the reduced, dimensionless, static polarizability. 
+
+It is convenient to re-express the n_tot vector equations of dimension three that are given by Eq. (<ref>eq:p_j_R) as a single matrix equation of dimension 3n_tot:
+ 
+
+    𝖯   =α̃𝖬𝖯, 
+    or  (𝖨-α̃𝖬)𝖯   = 0.
+
+
+Here, 𝖨 is the 3n_tot× 3n_tot identity matrix, 0 is the 3n_tot× 1 zero column matrix, 𝖯 is a 3n_tot× 1 column matrix
+
+    𝖯=
+    [
+    [     p^(1)_1     p^(1)_2     p^(1)_3     p^(2)_1     p^(2)_2     p^(2)_3         ... p^(n_tot)_1 p^(n_tot)_2 p^(n_tot)_3 ]]^T
+
+where p^(j)_1, p^(j)_2, and p^(j)_3 are the Cartesian components of 𝐩^(j), and 𝖬 is a 3n_tot× 3n_tot matrix that may be most-conveniently specified in terms of 3× 3 sub-matrices 𝖬^(i,j),
+
+    𝖬=
+    [               0_3           𝖬^(1,2)           𝖬^(1,3)                 …                 …       𝖬^(1,n_tot);           𝖬^(2,1)               0_3           𝖬^(2,3)                 …                 …       𝖬^(2,n_tot);           𝖬^(3,1)           𝖬^(3,2)               0_3                 …                                   ⋮;                 ⋮                 ⋮                 ⋮                 ⋱                 ⋮                 ⋮;                 ⋮                 ⋮                                   …               0_3 𝖬^(n_tot-1,n_tot);       𝖬^(n_tot,1)       𝖬^(n_tot,2)                 …                 … 𝖬^(n_tot,n_tot-1)               0_3 ],
+
+where 0_3 is the 3× 3 zero matrix and
+
+    [𝖬^(j,l)]_βγ=3 R'^(j,l)_β R'^(j,l)_γ-[R'^(j,l)]^2δ_βγ/[R'^(j,l)]^5,  for  β,γ =1,2,3.
+
+Here, δ_βγ denotes Kronecker's delta, R'^(j,l)_1, R'^(j,l)_2, and R'^(j,l)_3 are the Cartesian components of 𝐑'^(j,l), and, in terms of the Cartesian components, R'^(j,l)=√([R'^(j,l)_1]^2+[R'^(j,l)_2]^2+[R'^(j,l)_3]^2).
+
+It is clear that the state 𝖯=0, i.e., the state where all of the entities are unpolarized, is always a solution of Eq. (<ref>eq:P) and hence always an equilibrium state of the system.  This solution may be stable or unstable depending on the values of α̃ and 𝖬, i.e., depending on the static polarizability and the relative positions of the entities.  The precise criterion for stability of the system is as follows: the system is stable if all the eigenvalues of matrix (𝖨-α̃𝖬) are positive [note that the eigenvalues are real because (𝖨-α̃𝖬) is a real-symmetric matrix], and the system is unstable if any of the eigenvalues of (𝖨-α̃𝖬) are negative. 
+
+That this is the precise criterion for stability of the system may be derived using a number of different arguments. Perhaps the simplest is to note that, although we are considering entities that may exploit a source of power to maintain an unnatural state of polarization, we can, nevertheless, consider the equilibrium condition, Eq. (<ref>eq:P), as arising formally from the minimization of an energy function U:ℝ^3n_tot→ℝ
+
+    U(𝖯)=1/2|α̃|𝖯^T(𝖨-α̃𝖬)𝖯,
+
+whereupon Eq. (<ref>eq:P) arises from the condition ∂ U/∂𝖯=0.  The matrix (𝖨-α̃𝖬) is thus identified as the Hessian matrix of the system and, according to standard results in mathematical analysis (see, e.g., Ref. <cit.>), the point 𝖯=0 is a minimum of U if (𝖨-α̃𝖬) is positive definite, i.e., if all its eigenvalues are positive.  If 𝖯=0 is a minimum of the energy then it is a stable configuration of the system.  Similarly, the point 𝖯=0 is a saddle or a maximum of U if any of the eigenvalues of (𝖨-α̃𝖬) are negative.  If 𝖯=0 is a saddle or a maximum of the energy, then the system is unstable along one or more directions in 𝖯-space.
+
+Since 𝖬 is a real, symmetric, traceless matrix (of dimension ⩾ 6 since we are considering n_tot⩾ 2) which is not equal to the 3n_tot× 3n_tot zero matrix, we know that it has at least one positive (definite) eigenvalue and at least one negative (definite) eigenvalue, and the condition for stability may be restated most simply as follows: the system is stable for values of α̃ such that α̃_c^-<α̃<α̃_c^+, where α̃_c^-=1/λ_min<0 and α̃_c^+=1/λ_max>0.  Here, λ_min and λ_max are the minimum and maximum eigenvalues of 𝖬 respectively.  Conversely, if α̃<α̃_c^- or α̃>α̃_c^+ then the system is unstable.
+
+Thus, the question of stability of a given system becomes essentially a question of constructing the matrix 𝖬 for that system (which depends only on the relative positions of the entities) and calculating its maximum and minimum eigenvalues.  This stability criterion is a generalization—to include also the α<0 case—of that presented, and derived by a somewhat similar argument, for the α>0 case in Refs. <cit.>.
+
+
+
+
+
+ §.§ Application to arrays forming finite sc, bcc, and fcc crystals
+
+
+Having established the stability criterion for entities located at arbitrary positions, we now proceed to specify explicitly the locations of the entities for sc, bcc, and fcc finite crystals used in the study.  At this stage, it is convenient to switch from labeling the entities with a single index j (with position vectors 𝐫^(j), etc.) to labeling them with an ordered triple of integers (u_1,u_2,u_3).  In this notation, finite crystals may be created via the usual approach <cit.> of locating entities at the sets of (reduced) position vectors S_n={𝐫̃^(u_1,u_2,u_3):u_1,u_2,u_3=0...n-1}, where 𝐫̃^(u_1,u_2,u_3)=u_1𝐚̃_1+u_2𝐚̃_2+u_3𝐚̃_3.  Here, 𝐚̃_1, 𝐚̃_2, and 𝐚̃_3 are the (reduced) primitive lattice vectors of the associated Bravais lattice.  For the sc case: 𝐚̃_1^sc=𝐱̂_1, 𝐚̃_2^sc=𝐱̂_2, and 𝐚̃_3^sc=𝐱̂_3, where 𝐱̂_1, 𝐱̂_2, and 𝐱̂_3 are the (dimensionless) unit vectors of a conventional Cartesian system. For the bcc case: 𝐚̃_1^bcc=(1/2^2/3)(-𝐱̂_1+𝐱̂_2+𝐱̂_3), 𝐚̃_2^bcc=(1/2^2/3)(𝐱̂_1-𝐱̂_2+𝐱̂_3), and 𝐚̃_3^bcc=(1/2^2/3)(𝐱̂_1+𝐱̂_2-𝐱̂_3).  For the fcc case: 𝐚̃_1^fcc=(1/2^1/3)(𝐱̂_2+𝐱̂_3), 𝐚̃_2^fcc=(1/2^1/3)(𝐱̂_3+𝐱̂_1), and 𝐚̃_3^fcc=(1/2^1/3)(𝐱̂_1+𝐱̂_2).  Each set S_n describes a finite crystal consisting of an n× n× n array of entities (total number of entities n_tot=n^3) with the overall shape of a rhombohedron (more specifically, a cube in the sc case).
+
+We have chosen normalization factors, 1/2^2/3 and 1/2^1/3 for the bcc and fcc cases respectively, such that the primitive cells (and not the conventional cells) are of unit volume.  This means that the number density is the same in each of the sc, bcc, and fcc cases and given by N=1/a^3, which is convenient for our purposes.  In particular, the expression for α̃ used in this section, α̃=α/(4πε_0 a^3), is consistent with the expression α̃=Nα/(4πε_0) used in Section <ref>sec:model and Eq. (<ref>eq:cm_reduced), and the resulting values of α̃_c^± for the sc, bcc, and fcc cases may be inserted into Eq. (<ref>eq:cm_reduced) and compared in a like-for-like fashion.
+
+We used Python to generate the 𝖬-matrices, calculate λ_min and λ_max, and hence determine the critical values of the static polarizability α̃_c^+, n and α̃_c^-, n for a given n× n× n crystal described by a given set S_n.  The Python code is included in the Supplemental Material <cit.>.  In each of the sc, bcc, and fcc cases, α̃_c^+, n and α̃_c^-, n were calculated for n=2,3,...,n_max, with n_max=27 (thus, the largest crystals contained 27^3=19,683 dipolarizable entities).  The value n_max=27 was used as it was found to be the largest value for which our code could be run on the system with 64 GB RAM that we had readily available and, as shown below, it already provides results that are sufficiently conclusive for our purposes.
+
+We may note that the method takes into account all interactions between every pair of entities in the crystal (and does not, for example, assume only nearest neighbor interactions).
+
+To determine the critical values of the static polarizability in the macroscopic limit, i.e., in the limit of infinite sc, bcc, and fcc crystals we calculate the limiting values α̃_c^+, ∞=lim_n→∞α̃_c^+, n and α̃_c^-, ∞=lim_n→∞α̃_c^-, n by extrapolation, as detailed below.
+
+
+
+
+
+§ RESULTS
+ 
+
+
+
+ §.§ Critical values of the reduced static polarizability and static electric susceptibility
+
+
+Raw data for the values of α̃_c^-, n and α̃_c^+, n in each of the sc, bcc, and fcc cases are given in Table S1 of the Supplemental Material <cit.>.  Plots of α̃_c^-, n and α̃_c^+, n for n=2,3,...,n_max are shown in Fig. <ref>fig:basic.
+
+It is seen from the plots that: (1) In each of the sc, bcc, and fcc cases, the values of α̃_c^+, n decrease with increasing n and the values of α̃_c^-, n increase with increasing n. (For the case of α̃^ sc_c^+, n, the decreasing behavior was essentially noted in <cit.>, although there it was characterized as an increase in the associated eigenvalue, which amounts to the same thing, since α̃_c^+=1/λ_max.)  Thus, the interval of stability of α̃ is reduced in both its positive and negative extents as n increases.  This makes intuitive physical sense; it would seem reasonable to expect that the addition of more dipolarizable entities can, loosely speaking, only serve to increase the overall amount of mutual interaction within the system, causing a greater tendency towards instability.  (2) In all cases, the sequences α̃_c^±, n, n=2,3,4,... appear to converge to finite, non-zero values. (We already know, by the very fact that the dielectric state exists for the case of positive static polarizability within this model, that the sequences α̃_c^+, n, n=2,3,4,... do not converge to zero for large n, and the qualitative behavior of the magnitude of sequences α̃_c^-, n, n=2,3,4,... appears to be very similar in this respect.) (3) In both the positive and negative cases, it appears that the values of α̃^ bcc_c, n and α̃^ fcc_c, n become increasingly coincident with each other as n increases, whereas the values of α̃^ sc_c, n remain significantly different.
+
+These aspects of the data are illuminated further by plots of the points (1/n^2,α̃_c^±, n), as shown in Fig. <ref>fig:extrap.  The plots indicate also how the limiting values α̃_c^±, ∞ may be determined by extrapolation.
+
+It can be seen that the plots are approximately linear in each case; this enables the best estimates for the values of α̃_c^±, ∞=lim_n→∞α̃_c^±, n to be determined as the vertical intercepts of linear fit lines. Since the data becomes linear to an increasing level of accuracy as n is increased, we use the two largest-n data points available, n=n_max-1=26 and n=n_max=27, to construct the extrapolation line and determine what we believe to be our best estimates of the limiting values using this method.  Explicitly, the formula for the extrapolated values is thus
+
+    α̃_c^±, ∞=n_max^2α̃_c^±, n_max-(n_max-1)^2α̃_c^±, n_max-1/2n_max-1.
+
+The values obtained by this method are listed in Table <ref>tab:data, where they are quoted to three significant figures.
+
+
+As discussed above, we expect the Clausius-Mossotti equation to remain valid for values of α̃ that are within the stable interval α̃_c^-<α̃<α̃_c^+.  Therefore, the critical values of the static electric susceptibility χ^(0)_c^± may be determined by inserting the values of α̃_c^±, ∞ into Eq. (<ref>eq:cm_reduced).  The values of χ^(0)_c^± thus obtained are listed also in Table <ref>tab:data to three significant figures.  The results of the study are summarized in Fig. <ref>fig:cm.
+
+
+
+
+
+ §.§ Accuracy of the numerically-determined critical values
+ 
+
+There are a number of ways by which we may consider the accuracy of the results determined via the above method. 
+
+
+
+  §.§.§ Accuracy via comparison against assumed exact values for the cases of bcc and fcc with 
+ 
+
+It appears reasonable to assume that the true model values (by which we mean the values predicted by the model, if we were able to solve it exactly as opposed to numerically) of α̃^ bcc_c^+, ∞ and α̃^ fcc_c^+, ∞ are exactly 3/4π, as per the vertical asymptote in the Clausius-Mossotti expression, Eq. (<ref>eq:cm_reduced); our numerical results for these values are α̃^ bcc_c^+, ∞=0.238752 and α̃^ fcc_c^+, ∞=0.238756 to six decimal places, which approximate 3/4π to an accuracy of 0.008 % and 0.010 % respectively.  Based on this, it appears reasonable to argue that, in general, the uncertainty in determining the values of α̃_c^±, ∞ via our method is probably 0.01 % to the nearest order of magnitude (when using n_max=27); that is, we may assume an uncertainty of the order 0.01 % also on our values of α̃^ sc_c^+, ∞, α̃^ sc_c^-, ∞, α̃^ bcc_c^-, ∞, and α̃^ fcc_c^-, ∞.  Using the standard method for propagation of uncertainties, uncertainties of the order 0.01 % on α̃^ sc_c^+, ∞, α̃^ sc_c^-, ∞, α̃^ bcc_c^-, ∞, and α̃^ fcc_c^-, ∞, lead, via Eq. (<ref>eq:cm_reduced), to uncertainties of the order of 0.01 % also on the values of χ^(0) sc_c^+, χ^(0) sc_c^-, χ^(0) bcc_c^-, and χ^(0) fcc_c^- (more precisely, an uncertainty of 0.01 % on α̃^ sc_c^+, ∞ would lead to an uncertainty of 0.05 % on χ^(0) sc_c^+, and uncertainties of 0.01 % on α̃^ sc_c^-, ∞, α̃^ bcc_c^-, ∞, and α̃^ fcc_c^-, ∞ would lead to uncertainties of 0.007 % on χ^(0) sc_c^-, χ^(0) bcc_c^-, and χ^(0) fcc_c^-).  Therefore, we may conclude that the values listed in Table <ref>tab:data are almost certainly accurate as-quoted to three significant figures, and, if desired, values quoted to a larger number of significant figures with uncertainties of the order of 0.01 % may be readily generated from the raw data (provided in the Supplemental Material <cit.>).  In particular: to a larger number of significant figures, we find χ^(0) bcc_c^-=-1.00009 and χ^(0) fcc_c^-=-1.00008.  Given the above-estimated uncertainty of the order of 0.01 %, these values are consistent with, and very suggestive of, the true model values for these quantities both being exactly -1.
+
+Working backwards at this point to cross check, if we believe that the true model values of χ^(0) bcc_c^- and χ^(0) fcc_c^- are both -1, then the true model values of α̃^ bcc_c^-, ∞, and α̃^ fcc_c^-, ∞ must, from Eq. (<ref>eq:cm_reduced), be exactly -3/8π.  Our numerical results for these values are α̃^ bcc_c^-, ∞=-0.119382 and α̃^ fcc_c^-, ∞=-0.119381 to six decimal places, which may be seen to approximate -3/8π to an accuracy of 0.013 % and 0.012 % respectively.  This appears consistent with our previous assumption that the uncertainty on all the numerical values of α̃_c^±, ∞ is of the order 0.01 %.
+
+
+
+
+
+  §.§.§ Accuracy via inductive reasoning
+
+
+An alternative way to assess the accuracy of our numerical results is as follows.  Noting, from Fig. <ref>fig:basic and the raw data tabulated in the Supplemental Material <cit.>, that the sequences α̃_c^+, n, n=2,3,4,...,27, decrease monotonically with increasing n in each of the sc, bcc, and fcc cases, and assuming that this trend continues for all n (i.e., applying `inductive reasoning'), then any particular value of α̃_c^+, n for a given crystal structure provides an upper bound on α̃_c^+, ∞ for that crystal structure (note that we are referring here to an upper bound on the numerically-determined value of α̃_c^+, ∞, which is itself an upper bound on the stable value of α̃).  Accordingly, the most stringent upper bounds on the values of α̃_c^+, ∞ that may be determined from the data in this way are given by α̃_c^+, ∞^ub=α̃_c^+, n_max (with, in our case, n_max=27).
+
+To determine lower bounds on the numerically-determined values of α̃_c^+, ∞, we first recall that our extrapolation to determine the best-estimate values of α̃_c^±, ∞, as per Fig. <ref>fig:extrap and Eq. (<ref>eq:extrap), used a straight line fit through the points (1/n^2,α̃_c^+, n).  Here, the exponent of two in 1/n^2 was chosen `by hand' to produce the most-linear plot.  If, instead of an exponent of two, we choose an exponent of one and, hence, plot instead the points (1/n,α̃_c^+, n), we may observe that the graph is increasing and convex in each of the sc, bcc, and fcc cases (see Fig. S1 of the Supplemental Material <cit.>).  The choice of an exponent of one is somewhat arbitrary; the requirement is simply that a convex graph is produced.  Again, assuming this trend remains true, i.e., the plot remains increasing and convex, not just for n=2...27 but for all n, then the vertical intercept of a straight line through any two data points provides a lower bound on α̃_c^+, ∞.  Accordingly, the most stringent lower bounds on the values of α̃_c^+, ∞ that may be determined in this way from the data available are given by the vertical intercepts of the straight lines through the points (1/n,α̃_c^+, n) with n=n_max-1=26 and n=n_max=27.  Explicitly, the formula for this procedure is thus
+
+    α̃_c^+, ∞^lb=n_maxα̃_c^+, n_max-(n_max-1)α̃_c^+, n_max-1.
+
+
+Similarly, with regard to α̃_c^-, ∞, we may observe that the sequence α̃_c^-, n, n=2,3,4,...,27 increases monotonically for each type of crystal structure and we may argue that lower bounds on the values of α̃_c^-, ∞ are given by α̃_c^-, ∞^lb=α̃_c^-, n_max in each case.  To determine upper bounds on the values of α̃_c^-, ∞, we observe that plots of the points (1/n,α̃_c^-, n) are decreasing and concave in each case, with the caveat that only points for which n⩾ 5 are included in the sc case (see Fig. S1 of the Supplemental Material <cit.>).  Therefore, we may argue, analogously to above, that the most stringent upper bounds on the values of α̃_c^-, ∞ that may be determined by this method from the data available are given by the vertical intercepts of the straight lines through the points (1/n,α̃_c^-, n) with n=n_max-1=26 and n=n_max=27.  Explicitly, the formula for this procedure is thus
+
+    α̃_c^-, ∞^ub=n_maxα̃_c^-, n_max-(n_max-1)α̃_c^-, n_max-1.
+
+
+In this way we find, to four significant figures:
+α̃^ sc_c^+, ∞=0.1868^(0.1876)_(0.1860),
+α̃^ sc_c^-, ∞=-0.1032^(-0.1026)_(-0.1039),
+α̃^ bcc_c^+, ∞=0.2388^(0.2395)_(0.2380),
+α̃^ bcc_c^-, ∞=-0.1194^(-0.1188)_(-0.1199),
+α̃^ fcc_c^+, ∞=0.2388^(0.2396)_(0.2379), and
+α̃^ fcc_c^-, ∞=-0.1194^(-0.1188)_(-0.1199), where superscripts denote upper bounds and subscripts denote lower bounds.  (Here, we have rounded away from zero for the upper bounds of α̃_c^+, ∞ and the lower bounds of α̃_c^-, ∞, and rounded towards zero for the lower bounds of α̃_c^+, ∞ and the upper bounds of α̃_c^-, ∞, to preserve, when rounded, the integrity of the values as bounds.)  It is seen that, in all cases, the upper and lower bounds lie within ± 0.6 % of the best-estimate values, hence we may summarize that the values of α̃_c^±, ∞ obtained by the above method (with n_max=27) are accurate to within ± 0.6 % for each crystal structure, according to this way of assessing the accuracy.  The values for the bcc and fcc cases are consistent with, and suggestive of, the true model values of α̃^ bcc_c^+, ∞ and α̃^ fcc_c^+, ∞ being exactly 3/4π (as assumed previously), and the true model values of α̃^ bcc_c^-, ∞ and α̃^ fcc_c^-, ∞ being exactly -3/8π (as deduced previously).
+
+Inserting the best-estimate, upper bound, and lower bound values of α̃_c^±, ∞ into Eq. (<ref>eq:cm_reduced), we find:
+χ^(0) sc_c^+=10.80^(10.99)_(10.60),
+χ^(0) sc_c^-=-0.9057^(-0.9020)_(-0.9093),
+χ^(0) bcc_c^-=-1.0001^(-0.9971)_(-1.0030),
+and χ^(0) fcc_c^-=-1.0001^(-0.9972)_(-1.0029).
+Again, the best-estimate values, and bounds, for χ^(0) bcc_c^- and χ^(0) fcc_c^- are consistent with, and suggestive of, true model values of exactly -1.  As percentages, the accuracy of χ^(0) sc_c^+ is within ± 1.8 % and the accuracies of χ^(0) sc_c^-, χ^(0) bcc_c^-, and χ^(0) fcc_c^- are all within ± 0.5 %.
+
+This way of assessing the accuracy has the advantage, compared to that presented in <ref>sec:acc_comp, that it does not require any of the values of α̃_c^±, ∞ to be assumed a priori for `calibration', and it does not require us to assume that the accuracy of the values of  α̃_c^±, ∞ are similar for each crystal structure (though it ends up confirming that this is the case).  In this regard, it may be considered somewhat more rigorous.  On the other hand, it leads to less-stringent specifications of the accuracy.
+
+
+
+
+
+ §.§ Study to rule out sample-shape dependence
+
+
+If our method is valid, it must be the case that the results obtained for α̃_c^±, ∞ and χ^(0)_c^± are independent of the overall shape of the crystals (assuming the crystals are macroscopic in all three dimensions, i.e., not 2D or 1D arrays).  We have carried out a study to confirm that this is the case <cit.>, which may be summarized as follows.
+
+In addition to the rhombohedral samples reported above, for each of the sc, bcc, and fcc cases, the following, alternatively-shaped, crystals were studied:
+
+	
+  * `Parallelepiped slabs', formed from entities at the sets of position vectors 
+	
+    S_n^ slab={𝐫̃^(u_1,u_2,u_3):u_1,u_2=0...n^2-1; u_3=0..n-1}.
+
+	(More specifically, slab-like square cuboids in the sc case.)
+	
+  * `Parallelepiped needles', formed from entities at the sets of position vectors
+	
+    S_n^ needle={𝐫̃^(u_1,u_2,u_3):u_1,u_2=0...n-1; u_3=0..n^2-1}.
+
+	(More specifically, needle-like square cuboids in the sc case.)
+	
+  * Spheres, formed from entities at the sets of position vectors
+	
+    S_n^ sphere={𝐫̃^(u_1,u_2,u_3):u_1,u_2,u_3∈ℤ; |𝐫̃^(u_1,u_2,u_3)|≤ n}.
+
+
+In each case, if the values of α̃_c^+, n and α̃_c^-, n for set S_n are calculated for a range of n, the limits α̃_c^±, ∞=lim_n→∞α̃_c^±, n are determined by extrapolation, and the accuracy is determined by one or other of the methods above—i.e., if the same process is carried out for these alternatively-shaped crystals as was carried out for the rhombohedral crystals above—then the same values of α̃^ sc_c^±, ∞, α̃^ fcc_c^±, ∞, and α̃^ bcc_c^±, ∞, and hence the same values of χ^(0) sc_c^±, χ^(0) fcc_c^±, and χ^(0) bcc_c^± are found, within the accuracy of the method (i.e., the same results as already reported in Table <ref>tab:data).
+
+Of course, this approach does not rule out the possibility that some other overall shape of crystals that we have not checked explicitly—say, ellipsoidal—may somehow give different values, but we nevertheless consider it appropriate to reasonably conclude that the method appears to provide results that are independent of the sample shape.
+
+
+
+
+
+
+ §.§ An alternative methodology (yields the same results)
+ 
+
+We may refer to the method employed hitherto in this paper as the `finite crystal method' since the macroscopic limit is considered by extrapolating the results for finite crystals of increasing size.  An alternative methodology involves assuming an infinite crystal from the outset, which we may refer to as the `infinite crystal method'.  Both methods were considered and applied by Allen to investigate the sc case with positive polarizability in Ref. <cit.>.  Each method has certain advantages and disadvantages, but we believe that, overall, the finite crystal method provides the most direct and rigorous route to determine the values of α̃_c^± with well-defined accuracy in the macroscopic limit, and hence it is the method we reported in detail above.  However, we have also carried out a detailed analysis of the infinite crystal method as applied to sc, bcc, and fcc crystals with emphasis on the negative static polarizability case <cit.>; in all cases, we find excellent agreement with the above-stated results, providing a useful cross-check and validation.
+
+One favorable feature of the infinite crystal method is that, once the location in reciprocal space of the extremal eigenvalues has been established for a given crystal structure, the values of α̃_c^± (which are, necessarily, the macroscopic values) may be expressed as infinite lattice sums.  For example, in the sc case we may write
+
+    α̃^ sc_c^+=[∑_𝗎'(-1)^u_2+u_3(2u_1^2-u_2^2-u_3^2)/(u_1^2+u_2^2+u_3^2)^5/2]^-1,
+
+and
+
+    α̃^ sc_c^-=[∑_𝗎'(-1)^u_1(2u_1^2-u_2^2-u_3^2)/(u_1^2+u_2^2+u_3^2)^5/2]^-1,
+
+where ∑_𝗎' denotes the sum over all triples of integers 𝗎=(u_1,u_2,u_3) except (0,0,0) (corresponding to the interaction of a given dipole with all other dipoles in the infinite crystal).  We are not aware of any closed form expressions for these two particular sums, but they are absolutely convergent and may be readily approximated either via brute force summation with u_1, u_2, u_3=-N_sum...N_sum for some large N_sum, by evaluating the sum for a range of N_sum and extrapolating N_sum→∞, or by using the Ewald summation method.  To three significant figures, the values of the sums are α̃^ sc_c^+=0.187 and α̃^ sc_c^-=-0.103, which agree with the results found previously for the finite crystal method recorded in Table <ref>tab:data.
+
+The reciprocal λ_max^sc=1/α̃^ sc_c^+=5.35 was considered explicitly by Allen and is identified as the maximum point of the graph in Fig. 3 of Ref. <cit.>.  The lower critical values were not of interest to Allen, but we may see that the reciprocal λ_min^sc=1/α̃^ sc_c^-=-9.69 is the minimum point of the graph in Fig. 3 of Ref. <cit.>.  (We are not aware of any general theorem that states the extremal eigenvalues must lie along the edges of the irreducible Brillouin zone, as Allen appears to assume, but our work <cit.> indicates that this is indeed true for the sc, bcc, and fcc cases we have considered.)
+
+The lattice sums of Eqs. (<ref>eq:lattice_sum_plus) and (<ref>eq:lattice_sum_minus) appear also in other physical systems and have, long ago, been evaluated in other contexts.  For example, they appear in the related problem of the preferred orientation of arrays of electric or magnetic dipoles with fixed magnitudes: in this context, the value of what we refer to as λ_max^sc, for example, appears in Ref. <cit.> (denoted as “f_5” and listed in Table II of that reference), and in Ref. <cit.> (the value of -2.7 quoted for the “Antiparallel `A' ” structure with “Lattice structure a” in Table I of Ref. <cit.> is essentially -λ_max^sc/2).  The value of what we refer to as λ_min^sc appears also in Ref. <cit.> (denoted as “f_2” and listed in Table II of Ref. <cit.>).
+
+
+
+
+
+§ CONCLUSIONS
+
+
+We have found that static electric susceptibility values are possible, according to the model, for non-equilibrium cubic crystals (with one dipolarizable entity per primitive cell) in the following intervals:
+	
+    -0.906    ≲χ^(0) sc≲ 10.8, 
+    
+    	-1.00   ≲χ^(0) bcc, 
+    
+    	-1.00   ≲χ^(0) fcc.
+
+The analysis of <ref>sec:accuracy indicates that the numerically-determined endpoints for the intervals are almost certainly accurate to the three significant figures stated and the lower endpoints for bcc and fcc are consistent with, and highly suggestive of, the true model values being exactly -1 in both cases.
+
+All values of χ^(0) within the intervals can, according to the model, be obtained via an appropriate value of α̃.  The value of α̃ necessary to produce a given value of χ^(0) may be obtained from the Clausius-Mossotti equation [by inverting the version of the equation presented in Eq. (<ref>eq:cm_reduced)].  Although we assume that α̃ may, in principle, take any (real) value, hypothetical values χ^(0) sc≳ 10.8, χ^(0) sc≲ -0.906, χ^(0) bcc≲ -1.00, and χ^(0) fcc≲ -1.00 are nevertheless impossible, within the model, because there is no value of α̃ that would result in a stable material with such a value of χ^(0).  We therefore refer to the intervals above as the permissible intervals of χ^(0) and the lower endpoints of the above intervals as the lower permissible bounds of χ^(0) for the given crystal structure [Note, however, that we make no comment on whether the system is stable for values of α̃ exactly equal to α̃_c^-, ∞ and, therefore, whether values of χ^(0) exactly equal to χ^(0)_c^- are possible.].  The lower permissible bounds are unrelated to the horizontal asymptote of the Clausius-Mossotti curve (as it is presented in Fig. <ref>fig:cm) and they require a more-sophisticated approach than the standard Clausius-Mossotti analysis to derive.
+
+Our initial motivation for carrying out the work presented herein was a concern that mutual interactions between entities with α<0 might, collectively, wipe out the possibility of χ^(0)<0 materials in the macroscopic limit: that is, we were concerned that, in the limit of large particle numbers, the lower critical value of α̃ would converge to zero and, accordingly, the lower permissible bound of χ^(0) would be zero in all cases.  (The experiments reported in Ref. <cit.> were not sophisticated enough to rule out this possibility.)  Perhaps most importantly, then, we have seen that this does not happen; the lower permissible bounds of χ^(0) are negative definite in each case.  Therefore, we conclude that negative static electric susceptibility values are indeed possible in non-equilibrium crystals, according to the model. (We note that this conclusion is very different from that of the circuit theory argument, which also showed that values χ^(0)<-1 are impossible whether the material is in equilibrium or not but did not imply that any values in the interval -1<χ^(0)<0 are necessarily possible.)
+
+We see that the lower permissible bound depends on the crystal structure: it is different for sc than for bcc and fcc.  Thus, the question of the lower permissible bound for a given crystal structure appears to be, in general, a highly non-trivial question which can probably only be addressed definitively by the type of methods considered herein.  In particular, we can assert that there is no structure-independent `short cut' derivation of the lower permissible bound.
+
+Although the value χ^(0) sc_c^-=-0.906 differs by only ≈10 % from the values χ^(0) bcc_c^-=χ^(0) fcc_c^-=-1.00, and the assumption of point-like dipolarizable entities means that the results of the study may be inaccurate in relation to any real system, our results suggest that, if one wishes to create an isotropic material with the lowest possible value of χ^(0), a bcc or fcc structure, as opposed to a sc structure, is likely to be preferable.
+
+It is clear that the case of χ^(0)<0 is very different from the usual case of χ^(0)>0.  Whereas the permissible value of χ^(0) may be unbounded above for certain crystal structures (e.g., bcc and fcc with one entity per primitive cell), it is always bounded below by the value -1 according to the circuit theory argument, and, as we have seen, may be even more limited in its negative extent in certain crystal structures (e.g., sc with one entity per primitive cell).  Nevertheless, in finding that the permissible interval may extend all the way down to the circuit theory limit of -1 for certain condensed media, we have confirmed that condensed media are, indeed, capable of exhibiting χ^(0)<0 values with magnitudes that are ∼ 10^3 times greater than those proposed initially in gaseous systems, even when mutual interactions between the dipolarizable entities are taken into account.  We believe that this increase is likely to be sufficient to enable the remarkable potentialities of χ^(0)<0 materials—such as new forms of charged particle traps—to become practically feasible.
+
+
+
+
+§ ACKNOWLEDGMENTS
+
+
+
+This work was funded by the Engineering and Physical Sciences Research Council UK (Grant No. EP/R035393/1).
+
+
+
+
+
+55
+fxundefined [1]
+ ifx#1
+
+fnum [1]
+ #1firstoftwo
+ secondoftwo
+ 
+fx [1]
+ #1firstoftwo
+ secondoftwo
+ 
+
+
+
+
+
+noop [0]secondoftwo
+
+ref[1]@startlink#1@href
+href[1]#1@endlink
+anitize@url [0]`
+12`$12`&12`#12`1̂2`_12`%12
+startlink[1]
+endlink[0]
+
+rl [1]href #1
+
+
+
+
+
+
+
+
+
+
+
+
+@bib@innerbibempty
+
+[von Hippel(1954a)]hippel_1954
+  editor A. R. von Hippel, ed.,  @noop  title Dielectric Materials and
+  Applications (publisher Wiley, address New
+  York, year 1954)NoStop
+[Reynolds III and Buchanan(2004)]reynolds_2004
+  author author T. G. Reynolds III and author R. C. Buchanan, title title Ceramic capacitor
+  materials, in @noop  booktitle Ceramic
+  Materials for Electronics, editor edited by editor R. C. Buchanan (publisher Taylor & Francis, address Boca Raton, year 2004) edition 3rd ed., Chap. chapter 3,
+  p. pages 141NoStop
+[Cavendish(1921)]cavendish_1921
+  author author H. Cavendish, in @noop  booktitle The
+  Scientific Papers of the Honourable Henry Cavendish, Vol. volume 1, editor edited by editor J. C. Maxwell and editor J. Larmor (publisher Cambridge University
+  Press, address Cambridge, year 1921)NoStop
+[Faraday(1838a)]faraday_ERE_11_series_phil_trans
+  author author M. Faraday, title title Experimental researches
+  in electricity—eleventh series, https://doi.org/10.1098/rstl.1838.0002 journal journal Philos. Trans. R. Soc. London volume
+  128, pages 1 (year
+  1838a)NoStop
+[Note1()]Note1
+  note For completeness, we may note that, following Faraday, some
+  relatively early researchers considered air, rather than vacuum, as the
+  reference medium, even when measurement techniques became sufficiently
+  precise to distinguish between the values obtained for various gases.
+  Therefore, values of ε ^(0) (or the specific inductive
+  capacity, as it was called initially) slightly less than unity have been
+  reported for gases such as Hydrogen: see, e.g., Ref. <cit.>.
+  However, since it has been accepted subsequently that the more-appropriate
+  reference is vacuum, the values of ε ^(0) reported
+  experimentally are greater than unity for all materials (but may be less than
+  that of air for certain gases): see, e.g., Ref. <cit.>NoStop
+[Maxwell(1873)]maxwell_1873_p_65
+  author author J. C. Maxwell, @noop  title A Treatise on
+  Electricity and Magnetism, edition 1st ed., Vol. volume 1 (publisher Clarendon Press, address
+  Oxford, year 1873) p. pages 65NoStop
+[Landau et al.(1984)Landau,
+  Lifshitz, and Pitaevskii]ll8
+  author author L. D. Landau, author E. M. Lifshitz, and author L. P. Pitaevskii, @noop  title Electrodynamics of
+  Continuous Media (Course of Theoretical Physics, Vol. 8), edition 2nd ed. (publisher Pergamon Press, address Oxford, year 1984)NoStop
+[Sanders(1986)]sanders_1986
+  author author T. M. Sanders, Jr., title title The
+  sign of the static susceptibility, @noop  journal
+  journal Bull. Am. Phys. Soc. volume
+  31, pages 868 (year 1986)NoStop
+[Sanders(1988)]sanders_1988
+  author author T. M. Sanders, Jr., title title On
+  the sign of the static susceptibility, https://doi.org/10.1119/1.15754 journal journal
+  Am. J. Phys. volume 56, pages 448
+  (year 1988)NoStop
+[Chiao and Boyce(1994)]chiao_1994
+  author author R. Y. Chiao and author J. Boyce,  title title Superluminality, parelectricity, and
+  Earnshaw's theorem in media with inverted populations, https://doi.org/10.1103/PhysRevLett.73.3383 journal journal Phys. Rev. Lett. volume 73, pages 3383 (year 1994)NoStop
+[Chiao et al.(1995a)Chiao, Bolda,
+  Bowie, Boyce, Garrison, and  Mitchell]chiao_1995_1
+  author author R. Y. Chiao, author E. Bolda,
+  author J. Bowie, author J. Boyce, author
+  J. C. Garrison, and author
+  M. W. Mitchell, title
+  title Superluminal and parelectric effects in rubidium vapour
+  and ammonia gas, https://doi.org/10.1088/1355-5111/7/3/007
+  journal journal Quantum Semiclass. Opt.  volume 7, pages 279 (year
+  1995a)NoStop
+[Chiao et al.(1995b)Chiao, Boyce,  and Mitchell]chiao_1995_2
+  author author R. Y. Chiao, author J. Boyce, and  author M. W. Mitchell,  title title Superluminality and parelectricity:
+  the ammonia maser revisited, https://doi.org/10.1007/BF01135871
+  journal journal Appl. Phys. B volume 60, pages 259 (year
+  1995b)NoStop
+[Chiao et al.(1995c)Chiao, Boyce,  and Garrison]chiao_1995_3
+  author author R. Y. Chiao, author J. Boyce, and  author J. C. Garrison,  title title Superluminal (but causal) effects in
+  quantum physics, https://doi.org/10.1111/j.1749-6632.1995.tb38983.x journal
+  journal Ann. N. Y. Acad. Sci. volume
+  755, pages 400 (year
+  1995c)NoStop
+[Chiao(1993)]chiao_1993
+  author author R. Y. Chiao, title title Superluminal (but causal)
+  propagation of wave packets in transparent media with inverted atomic
+  populations, https://doi.org/10.1103/PhysRevA.48.R34 journal journal Phys. Rev. A volume
+  48, pages R34 (year 1993)NoStop
+[Thomson(1847)]thomson_1847
+  author author W. Thomson, title title On the forces experienced
+  by small spheres under magnetic influence; and on some of the phenomena
+  presented by diamagnetic substances, @noop  journal
+  journal Cam. Dub. Math. J. volume 2,  pages 230 (year 1847)NoStop
+[Braunbek(1939a)]braunbek_1939_1
+  author author W. Braunbek, title title Freischwebende
+  Körper im elektrischen und magnetischen Feld, https://doi.org/10.1007/BF01339979 journal journal Z. Phys. volume 112, pages
+  753 (year 1939a)NoStop
+[Braunbek(1939b)]braunbek_1939_2
+  author author W. Braunbek, title title Freies Schweben
+  diamagnetischer Körper im Magnetfeld, https://doi.org/10.1007/BF01339980 journal journal Z. Phys. volume 112, pages
+  764 (year 1939b)NoStop
+[Arkadiev(1947)]arkadiev_1947
+  author author V. Arkadiev, title title A floating magnet,  https://doi.org/10.1038/160330a0 journal journal Nature volume 160, pages
+  330 (year 1947)NoStop
+[Castles et al.(2020)Castles, Fells, Isakov, Morris, Watt, and Grant]castles_2020
+  author author F. Castles, author J. A. J. Fells, author D. Isakov,
+  author S. M. Morris, author A. A. R. Watt, and author P. S. Grant, title
+  title Active metamaterials with negative static electric
+  susceptibility, https://doi.org/10.1002/adma.201904863 journal journal Adv. Mater. volume
+  32, pages 1904863 (year 2020)NoStop
+[Auzanneau and Ziolkowski(1999)]auzanneau_1999
+  author author F. Auzanneau and author R. W. Ziolkowski, title title Artificial composite
+  materials consisting of nonlinearly loaded electrically small antennas:
+  operational-amplifier-based circuits with applications to smart skins,  https://doi.org/10.1109/8.791952 journal journal IEEE Trans. Antennas Propag. volume 47,  pages 1330 (year 1999)NoStop
+[Tretyakov(2001)]tretyakov_2001
+  author author S. A. Tretyakov, title title Meta-materials with
+  wideband negative permittivity and permeability, https://doi.org/10.1002/mop.1387 journal journal
+  Microw. Opt. Technol. Lett. volume 31, pages 163 (year 2001)NoStop
+[Cummer(2015)]cummer_2015
+  author author S. A. Cummer, in @noop  booktitle Nonlinear,
+  Tunable and Active Metamaterials, editor edited by editor I. V. Shadrivov, editor
+  M. Lapine, and editor
+  Y. S. Kivshar (publisher
+  Springer, Cham, year 2015) p. pages
+  21NoStop
+[ASTM Standard D150-18(2022)]astm_d150_18_2022
+  author author ASTM Standard
+  D150-18, title Standard test methods for ac loss
+  characteristics and permittivity (dielectric constant) of solid electrical
+  insulation, in @noop  booktitle 2022 Annual
+  Book of ASTM Standards, Vol. volume 10.01 (publisher ASTM International, West Conshohocken, year
+  2022)NoStop
+[kir()]kirzhnits_1976
+  @noop  note D. A. Kirzhnits, Are the Kramers-Kronig
+  relations for the dielectric permittivity of a material always valid?
+  https://doi.org/10.3367/UFNr.0119.197606f.0357Usp. Fiz. Nauk
+  119, 357 (1976)
+  [https://doi.org/10.1070/PU1976v019n06ABEH005268Sov. Phys. Usp.
+  19, 530, (1976)]NoStop
+[Dolgov et al.(1981)Dolgov,
+  Kirzhnits, and Maksimov]dolgov_1981
+  author author O. V. Dolgov, author D. A. Kirzhnits, and author E. G. Maksimov, title title On an admissible sign of
+  the static dielectric function of matter, https://doi.org/10.1103/RevModPhys.53.81 journal journal Rev. Mod. Phys. volume 53, pages 81 (year 1981)NoStop
+[Kirzhnits()]kirzhnits_1987
+  author author D. A. Kirzhnits, @noop  note General properties of
+  electromagnetic response functions,
+  https://doi.org/10.3367/UFNr.0152.198707b.0399Usp. Fiz. Nauk
+  152, 399 (1987)
+  [https://doi.org/10.1070/PU1987v030n07ABEH002925Sov. Phys. Usp.
+  30, 575, (1987)]NoStop
+[Kirzhnitz(1989)]kirzhnitz_1989
+  author author D. A. Kirzhnitz, title title General properties of
+  electromagnetic response functions, in @noop  booktitle The Dielectric Function of Condensed Systems (Modern Problems in
+  Condensed Matter Sciences, Vol. 24), editor edited by  editor L. V. Keldysh, editor D. A. Kirzhnitz, and editor A. A. Maradudin (publisher Elsevier, address Amsterdam, year
+  1989) Chap. chapter 2, p. pages 41NoStop
+[Note2()]Note2
+  note Although we do not make use of the fact in what follows, a
+  `negative static electric susceptibility' may be considered readily in the
+  general, anisotropic, case to mean that one or more of the three principal
+  components of the static electric susceptibility tensor are less than
+  zero.Stop
+[Note3()]Note3
+  note We are unaware of the origins of this type of argument to
+  establish minimum bounds on ε ^(0) and χ ^(0), but such
+  an approach was brought to our attention by Ref. <cit.>.Stop
+[Note4()]Note4
+  note An alternative, briefer argument is to observe that the
+  energy of a capacitor is given by Q^2/ (2C ), which already
+  indicates an instability for C<0, and hence for ε ^(0)<0 and
+  χ ^(0)<-1. However, we believe that such energy-based arguments
+  should, in general, be applied with some care to non-equilibrium materials
+  that may utilize a source of power to maintain an electrostatic state that is
+  otherwise energetically unfavorable.Stop
+[Kaye and Laby(1973)]kaye_laby_1973
+  author author G. W. C.  Kaye and author T. H.  Laby, @noop  title Tables of
+  Physical and Chemical Constants, edition 14th ed.  (publisher Longman, address London, year 1973)NoStop
+[von Hippel et al.(1946)von
+  Hippel, Breckenridge, Chesley, and  Tisza]hippel_1946
+  author author A. von
+  Hippel, author R. G. Breckenridge, author F. G. Chesley, and author L. Tisza, title title High dielectric constant
+  ceramics, https://doi.org/10.1021/ie50443a009 journal journal Ind. Eng. Chem. volume
+  38, pages 1097 (year 1946)NoStop
+[von Hippel(1954b)]hippel_1954_2
+  author author A. R. von Hippel, @noop  title Dielectrics and
+  Waves (publisher Wiley, address New York,  year 1954)NoStop
+[Note5()]Note5
+  note It is, of course, also possible to obtain an isotropic
+  electric susceptibility from entities with anisotropic static polarizability:
+  for example, if the principal axes of the entities are randomly oriented.
+  However, for simplicity, we do not consider this case herein.Stop
+[Mossotti(1836)]mossotti_1836
+  author author O. F. Mossotti, @noop  title Sur les Forces qui
+  Régissent la Constitution Intérieure des Corps, Aperçu pour servir à la
+  Détermination de la Cause et des Lois de l'Action Moléculaire (publisher L'Imprimerie Royale, address Turin, year 1836)NoStop
+[Mossotti(1850)]mossotti_1850
+  author author O. F. Mossotti, title title Discussione analitica
+  sull'influenza che l'azione di un mezzo dielettrico ha sulla distribuzione
+  dell'elettricità alla superficie di più corpi elettrici disseminati in
+  esso, @noop  journal journal Memorie di
+  Matematica e di Fisica della Società Italiana delle Scienze Residente in
+  Modena volume 24(2), pages 49
+  (year 1850)NoStop
+[Faraday(1838b)]faraday_ERE_14_series_phil_trans
+  author author M. Faraday, title title Experimental researches
+  in electricity—fourteenth series, https://doi.org/10.1098/rstl.1838.0014 journal journal Philos. Trans. R. Soc. London volume
+  128, pages 265 (year
+  1838b)NoStop
+[Clausius(1879)]clausius_1879
+  author author R. Clausius, @noop  title Die Mechanische
+  Behandlung der Electricität (publisher Druck &
+  Verlag, address Braunschweig, year
+  1879)NoStop
+[Allen(2004a)]allen_2004
+  author author P. B. Allen, title title Dipole interactions and
+  electrical polarity in nanosystems: the Clausius-Mossotti and related
+  models, https://doi.org/10.1063/1.1630029 journal
+  journal J. Chem. Phys. volume 120,  pages 2951 (year 2004a)NoStop
+[Allen(2004b)]allen_2004_inbook
+  author author P. B. Allen, title title Dipole interactions in
+  nanosystems, in @noop  booktitle Molecular
+  Nanowires and Other Quantum Objects, editor edited by  editor A. S. Alexandrov,
+  editor J. Demsar, and editor I. K. Yanson (publisher Kluwer, address Dordrecht, year
+  2004) p. pages 29NoStop
+[Anderson(1951)]anderson_1951
+  author author P. W. Anderson, title title Theory of ferroelectric
+  behavior of barium titanate, @noop  journal journal Ceramic Age volume 57, pages 29 (year 1951), note [reprinted in P. W.
+  Anderson, A Career in Theoretical Physics, 2nd ed. (World Scientific
+  Publishing, Singapore, 2004) p. 21]NoStop
+[Kittel(2005)]kittel_book
+  author author C. Kittel, @noop  title Introduction to Solid
+  State Physics, edition 8th ed. (publisher
+  Wiley, address Hoboken, year 2005)NoStop
+[Aspnes(1982)]aspnes_1982
+  author author D. E. Aspnes, title title Local-field effects and
+  effective-medium theory: a microscopic perspective, https://doi.org/10.1119/1.12734 journal journal
+  Am. J. Phys. volume 50, pages 704
+  (year 1982)NoStop
+[Note6()]Note6
+  note When we talk herein of sc, bcc, or fcc crystals, we mean, in
+  all cases, crystals with one entity per primitive cell.Stop
+[Note7()]Note7
+  note This has been articulated clearly by Allen in Refs. <cit.> and is related closely to the fact that, for a
+  model consisting of entities with dipole moments of fixed
+  magnitude that are free to rotate, an antiferroelectric configuration, as
+  opposed to a ferroelectric configuration, can be energetically preferred in
+  the sc case <cit.>.Stop
+[Note8()]Note8
+  note This type of instability is already exhibited by a system
+  containing only two entities. In this case, if the value of α in
+  relation to the distance between the entities d is such that α >2πε _0 d^3 then the system is unstable towards a self-polarized
+  state. For a pedagogical account of the two-entity system, and others, in the
+  case α >0, see Ref. <cit.>. The two-entity system
+  with α >0 also appears, for example, as Problem 8 in Chapter 16 of
+  Ref. <cit.>, where it is referred to as the “ferroelectric
+  criterion for atoms”.Stop
+[Körner(2004)]korner_companion
+  author author T. W. Körner, @noop  title A Companion to
+  Analysis (publisher American Mathematical Society,  address Providence, year 2004) p. pages 151NoStop
+[Ashcroft and Mermin(1976)]ashcroft_mermin_p_66
+  author author N. W. Ashcroft and author N. D. Mermin, @noop  title Solid State Physics  (publisher Brooks/Cole, Cengage Learning, address
+  Belmont, year 1976) p. pages 66NoStop
+[sup()]supp_aip
+  @noop  note See Supplemental Material at [URL will be
+  inserted by publisher].Stop
+[Dutta and Castles()]dutta_castles_unpublished
+  author author R. Dutta and author F. Castles, note (unpublished)NoStop
+[Luttinger and Tisza(1946)]luttinger_1946
+  author author J. M. Luttinger and author L. Tisza, title title Theory of dipole
+  interactions in crystals, https://doi.org/10.1103/PhysRev.70.954
+  journal journal Phys. Rev. volume 70, pages 954 (year 1946)NoStop
+[Sauer(1940)]sauer_1940
+  author author J. A. Sauer, title title Magnetic energy constants
+  of dipolar lattices, https://doi.org/10.1103/PhysRev.57.142
+  journal journal Phys. Rev. volume 57, pages 142 (year 1940)NoStop
+[Note9()]Note9
+  note Note, however, that we make no comment on whether the system
+  is stable for values of α̃ exactly equal to α̃_c^-, ∞ and, therefore,
+  whether values of χ ^(0) exactly equal to χ ^(0)_c^- are possible.Stop
+[Thomson(1921)]thomson_jj_1921
+  author author J. J. Thomson, @noop  title Elements of the
+  Mathematical Theory of Electricity and Magnetism, edition
+  5th ed. (publisher Cambridge University Press, address Cambridge, year 1921) p. pages
+  89NoStop
+[Tretyakov and Maslovski(2007)]tretyakov_2007
+  author author S. A. Tretyakov and author S. I. Maslovski, title title Veselago materials:
+  what is possible and impossible about the dispersion of the constitutive
+  parameters, https://doi.org/10.1109/MAP.2007.370980 journal journal IEEE Antennas Propag. Mag. volume 49, pages 37 (year
+  2007)NoStop
+
+
+
+

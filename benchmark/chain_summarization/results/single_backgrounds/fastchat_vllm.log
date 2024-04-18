@@ -1,0 +1,80 @@
+file_name: article_0, request_rate: 1
+Time: 121.696833627 s
+file_name: article_0, request_rate: 2
+Time: 144.019205792 s
+file_name: article_0, request_rate: 3
+Time: 196.47238641 s
+file_name: article_1, request_rate: 1
+Time: 77.656954221 s
+file_name: article_1, request_rate: 2
+Time: 89.620841732 s
+file_name: article_1, request_rate: 3
+Time: 123.440839817 s
+file_name: article_2, request_rate: 1
+Time: 88.4036068 s
+file_name: article_2, request_rate: 2
+Time: 101.479987242 s
+file_name: article_2, request_rate: 3
+Time: 137.092008214 s
+file_name: article_3, request_rate: 1
+Time: 76.3705812 s
+file_name: article_3, request_rate: 2
+Time: 87.610413635 s
+file_name: article_3, request_rate: 3
+Time: 121.76585426 s
+file_name: article_4, request_rate: 1
+Time: 102.27389156 s
+file_name: article_4, request_rate: 2
+Time: 119.150950876 s
+file_name: article_4, request_rate: 3
+Time: 162.293490814 s
+file_name: article_5, request_rate: 1
+Time: 97.056468204 s
+file_name: article_5, request_rate: 2
+Time: 114.304044246 s
+file_name: article_5, request_rate: 3
+Time: 176.658236225 s
+file_name: article_6, request_rate: 1
+Time: 170.560387811 s
+file_name: article_6, request_rate: 2
+Time: 205.924602169 s
+file_name: article_6, request_rate: 3
+Time: 318.877132685 s
+file_name: article_7, request_rate: 1
+Time: 166.112286059 s
+file_name: article_7, request_rate: 2
+Time: 198.440682672 s
+file_name: article_7, request_rate: 3
+Time: 312.015606835 s
+file_name: article_8, request_rate: 1
+Time: 78.83585808 s
+file_name: article_8, request_rate: 2
+Time: 95.884655559 s
+file_name: article_8, request_rate: 3
+Time: 145.701338354 s
+file_name: article_9, request_rate: 1
+Time: 103.876887162 s
+file_name: article_9, request_rate: 2
+Time: 125.613174707 s
+file_name: article_9, request_rate: 3
+Time: 189.919218564 s
+file_name: article_0, request_rate: 3.5
+Time: 320.557354734 s
+file_name: article_1, request_rate: 3.5
+Time: 166.403785882 s
+file_name: article_2, request_rate: 3.5
+Time: 207.619706185 s
+file_name: article_3, request_rate: 3.5
+Time: 153.791197368 s
+file_name: article_4, request_rate: 3.5
+Time: 246.796895102 s
+file_name: article_5, request_rate: 3.5
+Time: 238.591003372 s
+file_name: article_6, request_rate: 3.5
+Time: 493.744202677 s
+file_name: article_7, request_rate: 3.5
+Time: 453.777469968 s
+file_name: article_8, request_rate: 3.5
+Time: 172.989541208 s
+file_name: article_9, request_rate: 3.5
+Time: 249.306754497 s

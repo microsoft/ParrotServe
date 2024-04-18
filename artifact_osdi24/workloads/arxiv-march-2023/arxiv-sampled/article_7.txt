@@ -1,0 +1,2382 @@
+
+
+
+
+
+
+
+3pt^1Jet Propulsion Laboratory, California Institute of Technology,
+
+4800 Oak Grove Drive, Pasadena, CA 91109-0899, USA
+
+3pt^2Ottawa, Ontario K1N 9H5, Canada
+
+
+
+             
+
+
+
+We investigate the evolution of the general relativistic phase of an electromagnetic (EM) wave as it propagates in a weak gravitational field. For that, we introduce coordinate systems used in the Earth's vicinity, the relevant coordinate transformations, and discuss the transformations between proper  and coordinate times. Then, by treating the source as an isolated, weakly aspherical gravitating body, we represent its external gravitational field using Cartesian symmetric trace-free (STF) mass multipole moments. The light propagation  equation is solvable along the trajectory of a light ray to all STF orders ℓ. We express the STF moments via spherical harmonic coefficients of various degree and order, C_ℓ k, S_ℓ k. Although we focus primarily on the quadrupole (ℓ=2), octupole (ℓ=3), and hexadecapole (ℓ=4) cases, our approach is valid to all orders. The result is the gravitational phase shift expressed in terms of the spherical harmonics. These results are new, useful, and important as increasingly accurate clocks are used for many practical and scientific applications, including space-based time and frequency transfers, relativistic geodesy, and navigation. We also consider tidal contributions and contributions due to the Earth's rotation. We estimate the characteristic numerical magnitudes of each term of the resulting overall gravitational phase shift.
+
+
+
+
+03.30.+p, 04.25.Nx, 04.80.-y, 06.30.Gv, 95.10.Eg, 95.10.Jk, 95.55.Pe
+
+
+
+Spherical harmonics representation of the gravitational phase shift
+    Slava G. Turyshev^1, Viktor T. Toth^2
+    March 30, 2023
+===================================================================
+
+
+
+
+
+§ INTRODUCTION
+
+
+
+The accuracy of time and frequency measurements improved significantly in the recent past. Presently, atomic frequency standards play a vital part in a growing number of technological and scientific endeavors. Atomic clocks based on microwave transitions currently define the Système Internationale (the International System of Units, or SI) second and are used extensively for network synchronization and satellite-based navigation systems, such as the Global Positioning System (GPS). Performance of the onboard clocks on global navigational satellite system (GNSS) satellites is improving.  The frequency stability of the current generation of GPS clocks is now better than 10^-14 <cit.>.
+
+Optical frequency references based on Doppler-free spectroscopy of molecular iodine are seen as a promising candidate for a future GNSS optical clock <cit.>. Compact and ruggedized setups have been developed, showing frequency instabilities at the 10^-15 level for averaging times between 1 s and 10^4 s. Optical atomic clocks have demonstrated stability of 4.8× 10^-17/√(τ), for an averaging time τ (in seconds). The ability to resolve frequency shifts below 10^-18 over such short timescales will affect a wide range of applications for clocks in quantum sensing and fundamental physics <cit.>.
+As a result, future generations of GNSS will benefit from optical technologies. Especially optical clocks could provide backup or completely replace the currently used microwave clocks, potentially improving GNSS position determination thanks to their greater frequency stability. Furthermore, optical clock technologies, in combination with
+optical intersatellite links, enable new GNSS architectures, e.g., by the synchronization of distant optical frequency references within the constellation using time and frequency transfer.
+
+As a result, future time and frequency transfer links based on the new generations of clocks will require a general relativistic description of the light propagation in the gravitational field of the extended Earth.  For practical reasons,  the description of the Earth external gravity field is given in terms of spherical harmonics. Until recently, it was sufficient to include the contribution of the gravitational mass monopole represented by the well-known Shapiro time delay. However, with the increased accuracy of modern measurements, accounting for the Earth's quadrupole moment,  J_2,  became important <cit.>. This was accomplished by treating the Earth as a rotating axisymmetric body characterized only by zonal harmonics of even order, yielding the quadrupole phase shift <cit.>.
+
+If greater accuracy is required, accounting for the quadrupole contribution is not sufficient <cit.>. It is necessary to account for additional spherical harmonics. For some applications, in addition to J_2, the tesseral harmonics of order ℓ=2 must also be considered, along with additional low-order zonal harmonics of the Earth's gravitational field. Accurate estimates of these quantities are available to high degree and order in the form of modern models of the Earth's gravitational field. For instance, the EGM2008 Earth gravitational model is complete to degree and order 2159 <cit.>. However, due to technical reasons, a description of gravitational phase shift in terms of spherical harmonics is not available. This represents an interesting challenge that must be addressed.
+
+Motivated by this challenge, in the present paper we develop a model for proper time to coordinate time transformations and the gravitational phase shift in terms of spherical harmonics that offer the advanced representation of the Earth gravitational field.  We focus on the formulation of a relativistic model for the gravitational phase delay, accurate to 1× 10^-16 in frequency stability and 1 picosecond (ps) in time resolution. We rely on a previously developed theory of relativistic proper reference frames for a system of extended gravitating bodies and the motion of light and test particles in the vicinity of an extended body <cit.>. We use methods and tools developed for the GRAIL, GRACE-FO and ACES missions <cit.> as well as the techniques that we recently developed for treating gravitational lensing phenomena by arbitrarily shaped weakly aspherical gravitating bodes <cit.>.
+
+This paper is organized as follows: In Sec. <ref> we introduce coordinate systems, coordinate transformations between various coordinates used for GPS and discuss the transformations between proper time and coordinate time. In Sec. <ref> we discuss light propagation in the vicinity of the extended Earth and derive a general relativistic solution for the phase of an EM wave. For that we represent the Earth's external gravitational field using as set of Cartesian symmetric trace-free (STF) mass multipole moments T^a_1...a_ℓ of various orders ℓ. In Sec. <ref>, we study the phase shift introduced by the lowest-order multipole moments, including quadrupole (ℓ=2), octupole (ℓ=3), and hexadecapole (ℓ=4).
+We also express the obtained results in terms of the spherical harmonics of the appropriate degree and order, C_ℓ k, S_ℓ k.  We conclude with a set of recommendations and an outlook in Sec. <ref>.
+
+For convenience, we put some additional details in appendices: In Appendix <ref> we discuss the correspondence between the STF mass moments, T^<ab>,  and spherical harmonics, {C_2k,S_2k}, and present a practical way to establish the correspondence between them. In Appendix <ref>, we compute useful relations for deriving contributions from low STF mass moments, including quadrupole, octupole, and hexadecapole. Finally, in Appendix <ref>, we derive gravitational phase shift for the same orders, but in the specific case of an axisymmetric gravitational field.
+
+
+
+§ COORDINATE SYSTEMS AND PROPER-TO-COORDINATE TIME TRANSFORMATIONS
+
+
+
+GPS relies on three standard coordinate systems: the GCRS, which is centered at the Earth's center of mass and is used to track orbits in the vicinity of the Earth; the Topocentric Coordinate Reference System (TCRS), which is used to provide the positions of objects on the surface of the Earth, such as DSN ground stations; and the Satellite Coordinate Reference System (SCRS), which is needed for proper-to-coordinate time transformations. Definition and properties of TCRS together with useful details on relativistic time-keeping in the solar system are given in <cit.>. The SCRS was discussed in <cit.> in the context of the GRAIL mission. Here we investigate a need for an update for the standard general relativistic models for spacetime coordinates and equations of motion <cit.>.
+
+We begin our discussion by describing the Geocentric Coordinate Reference System (GCRS), the reference system in which the gravitational field of the Earth is presented using measured spherical harmonic coefficients.
+
+
+
+ §.§ Geocentric Coordinate Reference System
+
+
+
+In the vicinity of the Earth, we utilize the standard non-rotating coordinate system known as the Geocentric Coordinate Reference System (GCRS). Centered at the Earth's center of mass, the GCRS is used to track orbits in the vicinity of the Earth <cit.>. It is also called the Earth-Centered Earth-Fixed (ECEF) coordinate system <cit.>. We denote the coordinates in this reference frame as {x^m_ E}≡(x^0=ct, x⃗) and present the metric tensor g^ E_mn in the following form[The notational conventions employed in this paper are those used in <cit.>. Letters from the second half of the Latin alphabet, m, n,...=0...3 denote spacetime indices. Greek letters α, β,...=1...3 denote spatial indices. The metric γ_mn is that of Minkowski spacetime with γ_mn= diag(+1,-1,-1,-1) in the Cartesian representation. We employ the Einstein summation convention with indices being lowered or raised using γ_mn. We use powers of G and negative powers of c as bookkeeping devices for order terms. Other notations are explained as they occur.]:
+
+
+    g^ E_00   =    1-2/c^2w_ E+2/c^4w^2_ E+O(c^-6),   
+    g^ E_0α= -γ_αλ4/c^3w^λ_ E+O(c^-5),  
+    g^ E_αβ= γ_αβ+γ_αβ2/c^2 w_ E+O(c^-4),
+
+where the scalar gravitational potential w_ E is formed as a linear superposition of the gravitational potential U_ E of the isolated Earth and the tidal potential u^ tidal_ E produced by all the solar system bodies (excluding the Earth itself), evaluated at the origin of the GCRS:
+
+    w_ E(x⃗)   =   U_ E(x⃗)+ u^ tidal_ E(x⃗)+ O(c^-3).
+
+
+The Earth's gravitational potential is well known and determined by the relativistic mass density inside the Earth, σ(t,x⃗') (see discussion in <cit.>). With  G being the universal gravitational constant this potential has the form
+
+
+    U_ E(x⃗)   =   G∫σ(t,x⃗')d^3x'/|x⃗-x⃗'|+ O(c^-4).
+
+
+Outside the Earth (r>R_⊕), the planet's gravitational potential U_ E may be expanded in terms of spherical harmonics. In this case, at a particular location with spherical coordinates (r≡|x⃗|,ϕ,θ) (where ϕ is the longitude and θ is the colatitude, which is 0 at the pole and π/2 at the equator) the Earth's potential U_ E in (<ref>) is given as
+
+
+    U_ E(x⃗)   =   GM_⊕/r{1+∑_ℓ=2^∞∑_k=0^+ℓ(R_⊕/r)^ℓ P_ℓ k(cosθ)(C_ℓ kcos kψ+S_ℓ ksin kψ)}=
+       =   GM_⊕/r_{1-∑_ℓ=2^∞(R_⊕/r_)^ℓ J_ℓ P_ℓ0(cosθ)+∑_ℓ=2^∞∑_k=1^+ℓ(R_⊕/r)^ℓ P_ℓ k(cosθ)(C_ℓ kcos kψ+S_ℓ ksin kψ)},
+
+where M_⊕ and R_⊕ are the Earth's mass and equatorial radius, respectively, while P_ℓ k are the associated Legendre-polynomials <cit.>. The values C_ℓ k and S_ℓ k are the spherical harmonic coefficients that characterize contributions of the gravitational field of the Earth beyond the monopole potential. Of these, J_ℓ=-C_ℓ 0 are the zonal harmonic coefficients. Largest among these is J_2=1.082635854× 10^-3, with all other spherical harmonic coefficients at least a factor of ∼10^3 times smaller <cit.> (see Table <ref> for details).
+
+
+
+Insofar as the tidal potential u^ tidal_ E is concerned, for GPS observables it is sufficient to keep only its Newtonian contribution (primarily due to the Sun and the Moon) which can be given as usual:
+
+
+    u^ tidal_ E(x⃗)   =   ∑_b≠ E(U_b(r⃗^_b E+x⃗)-U_b(r⃗^_b E) - x⃗·∇⃗ U_b (r⃗^_b E))≃∑_b≠ EGM_b/2r^3_b E(3(n⃗^_b E·x⃗)^2-x⃗^2)+
+     O(r^-4_b E,c^-2),
+
+where U_b is the Newtonian gravitational potential of body b, r⃗_b E is the vector connecting the center of mass of body b with that of the Earth, and ∇⃗U_b denotes the gradient of the potential. We present only the largest term in the tidal potential, which is of O(r^-3_b E); however, using the explicit form of this potential on the left side of  Eq. (<ref>), one can easily evaluate this expression to any order needed to solve a particular problem.
+
+Finally, the contribution of the Earth's rotation is captured by the vector harmonic  potential, w^α_ E, defined as:
+
+
+    w^α_ E(x⃗)
+       =   G∫σ^α(t,x⃗')d^3x'/|x⃗-x⃗'|+ O(c^-2)=-GM_ E/2r^3[x⃗×S⃗_⊕]^α+ O(r^-4, c^-2),
+
+where σ^α(t,x⃗') is the relativistic current density of the matter distribution inside the rotating Earth. Also, in (<ref>) we explicitly account only for the largest rotational moment,  S⃗_⊕, which is the Earth's spin moment (angular momentum per unit of mass),  S⃗_⊕≃ 9.8× 10^8  m^2/s. Contributions of other vector harmonics due to the rotating Earth are negligible (however, if needed, they may be easily incorporated using the approach developed in this paper).
+
+The metric tensor (<ref>) with the gravitational potentials (<ref>)–(<ref>) represents spacetime in the GCRS, which we choose to formulate the relativistic model for timing and frequency observables. Further technical details on the  formulation of the GCRS are in <cit.>.
+
+Refs. <cit.>, show that the proper time, τ, read by a clock in harmonic coordinates of the SCRS denoted here  by {y^m}={cy^0, y⃗}, and coordinates of GCRS {x^m}={ct, x⃗}, to sufficient accuracy, are  given by
+
+
+    dτ/dt   =    1-c^-2[1/2v⃗^2+
+    U_ E+u^ tidal_ E]+ O(c^-4),
+
+where v⃗ is the velocity of the transmitter (or receiver) in GCRS and U_ E is the Newtonian gravitational potential of the Earth (<ref>), evaluated at that location. Contribution of the tidal potential, u^ tidal_ E, varies depending on the distance from the Earth; it reaches the value above ∼ 1.71× 10^-15 for geostationary orbits. The c^-4 terms in Eq. (<ref>) are of O(v^4/c^4)≃ 10^-19 and are negligible for our purposes. For a complete post-Newtonian form of these transformations, including c^-4 terms, and their explicit derivation, consult Ref. <cit.>.
+
+The numerical applications made in here concern time and frequency transfer from between a GPS (designated here by `A') and LEO (designated here by `B') spacecraft orbiting the Earth at the altitudes h_ GPS = 20,200 km and h_ LEO = 200 km to a ground station located at `C'.  As mentioned earlier, we consider  experimental uncertainties 1 × 10^-16 for frequency transfer and  at the level of 1 ps for time transfer.
+
+
+
+ §.§ Topocentric Coordinate Reference System (TCRS): proper and coordinate times
+
+
+
+First, we consider a ground-based receiver located at GCRS coordinates
+{x^m_C}≡(cx^0_ C,x⃗_ C).
+The proper time τ_ C, kept by a clock located at the GCRS coordinate position R⃗_ C(t), and moving with the coordinate velocity v⃗_ C = dx⃗_ C/dt=[ω^_ E×R⃗_ C], where ω_ E is the angular rotational velocity of the Earth at C, is determined by
+
+
+    dτ_ C/dt= 1-1/c^2[1/2v⃗_ C^2+U_ E(x⃗_ C)+ ∑_b≠ EGM_b/2r^3_b E(3(n⃗_b E·x⃗_ C)^2-x⃗_ C^2)]+ O(x^3_ C,c^-4),
+
+where n⃗_b E is a unit spatial vector in the body-Earth direction, i.e., n⃗_b E=r⃗_b E/|r⃗_b E|, where r⃗_b E is the vector connecting body b with the Earth.
+
+The first two terms in (<ref>) are due to the  geocentric velocity of a ground station and the Newtonian potential at its location.
+Assuming a uniform diurnal rotation of the Earth, so that 1/2v⃗_ C^2=1/2ω_⊕^2 R^2_ C(θ)sin^2θ, we evaluate the magnitudes of the largest contributions produced by these terms, evaluated at the Earth's equator R_ C(π/2)=R_⊕:
+
+
+    c^-21/2v⃗_ C^2   =   1/2c^2ω_⊕^2 R^2_⊕≲
+    1.20 × 10^-12,
+        
+    c^-2U_ E = 1/c^2GM_⊕/R_⊕≲
+    6.95 × 10^-10.
+
+Thus, both of these terms are very large and must be kept in the model. In addition, as we will see below, one would have to account for several terms in the spherical harmonics expansion of the Earth gravity potential.
+
+The last term within the square brackets in Eq. (<ref>) is the sum of the Newtonian tides due to other bodies (mainly the Sun and the Moon) at the clock location x⃗_ C. These terms are small for the ground station, being of order
+
+
+    c^-2u^ tidal_ E⊙   ≃   GM_⊙ R_⊕^2/2  AU^3c^2(3(n⃗_⊙ E·n⃗_ C)^2-1)≲
+    1.79 × 10^-17,
+    
+    
+    c^-2u^ tidal_ E   ≃   Gm_ R_⊕^2/2 r^3_ -1pt  Ec^2(3(n⃗_ -1pt  E·n⃗_ C)^2-1)≲
+    4.90 × 10^-17,
+
+where for the Moon we used its distance from the Earth at the perigee[<https://en.wikipedia.org/wiki/Lunar_distance_(astronomy)>] of r_ -1pt  E=356,500 km.
+Thus, both largest tidal contributions are currently negligible as far as the  definition of the TCRS for GPS is concerned.
+
+Therefore, at the accuracy required for GPS, it is sufficient to keep only the first two terms in Eq. (<ref>) when defining the relationship between the proper time τ_ C and the coordinate time TCG=t (Temps-coordonnée géocentrique). In other words, Eq. (<ref>) yields the differential equation that relates the rate of the proper τ_ C time, as measured by an receiver's clock on the surface of the Earth, so that 1/2v⃗_ C^2=1/2ω_⊕^2 R^2_ C(θ)sin^2θ, to the time in GCRS, t.
+
+    dτ_ C/dt = 1 -1/c^2[
+    1/2v⃗_ C^2
+    + U_ E(x⃗_ C)]+ O(c^-4).
+
+At the level of accuracy required for GPS, it is important to account in Eq. (<ref>) for the oblateness (nonsphericity) of the Earth's Newtonian potential, which is given in the form of Eq. (<ref>). In fact, when we model the Earth's gravity potential, we need to take into account quadrupole and higher moments, time-dependent terms due to tides, as well as the tidal displacement of the ground-based receiver. Substituting in Eq. (<ref>) potential U_ E from (<ref>), evaluated at the Earth's equator r=R_ C(π/2)=R_⊕, we have:
+
+
+    dτ_ C/dt   =   
+    1-1/c^2[1/2ω_⊕^2 R^2_⊕+
+    GM_⊕/R_⊕(1-∑_ℓ=2^∞ J_ℓ P_ℓ0(0)+∑_ℓ=2^∞∑_k=1^+ℓP_ℓ k(0)(C_ℓ kcos kϕ+S_ℓ ksin kϕ))
+    ].
+
+
+The largest contribution to dτ_ C/dt, of course, comes from the velocity and mass monopole terms, which are estimated to produce an effect of the order of c^-2(1/2ω_⊕^2 R^2_⊕+G M_⊕/R_⊕)∼ 6.97× 10^-10. The quadrupole term produces a contribution of the order of c^-2G M_⊕ J_2/(2R_⊕)∼ 3.76× 10^-13.
+Contributions of other zonal harmonics ranging from -c^-23G M_⊕ J_4/(8R_⊕)∼ 4.22× 10^-16 (from J_4) to c^-25G M_⊕ J_6/(16R_⊕)∼ 1.04× 10^-16 (from J_6) and to c^-235G M_⊕ J_8/(128R_⊕)∼ 1.01× 10^-16 (from J_8).
+
+We also need to include contributions from the leading ℓ=2 coefficients C_22 and S_22, which are of order c^-2(G M_⊕ /R_⊕)P_22(0)C_22cos 2ϕ∼ 3.28× 10^-15cos 2ϕ and c^-2(G M_⊕ /R_⊕)P_22(0)S_22sin 2ϕ∼ 1.89× 10^-15cos 2ϕ. Some of the low-order tesseral harmonics, C_ℓ k and S_ℓ k, are also responsible for the terms of the order of ∼10^-16, and thus, they should also  be included, up to at least ℓ=8.
+Although individual contributions of these and other terms are quite small, their cumulative effect may be noticeable even at the level of up to 1× 10^-15. (This is especially important for the ACES mission on the ISS, which will operate clocks accurate to 1× 10^-16 in low Earth's orbit with altitude of ∼400 km.) However, the constant rate is typically absorbed for each clock during its  synchronization with the network of clocks, leaving only periodic terms, which are uncertain at the level of ∼10^-17. Therefore, keeping only the leading terms, Eq. (<ref>) takes the form:
+
+
+    dτ_ C/dt=
+    1-1/c^2[1/2ω_⊕^2 R^2_⊕   +   GM_⊕/R_⊕(1+1/2J_2-3/8J_4+5/16J_6-35/128J_8+P_22(0)(C_22cos 2ϕ+S_22sin 2ϕ)+
+       +   ∑_ℓ=3^8∑_k=1^+ℓP_ℓ k(0)(C_ℓ kcos kϕ+S_ℓ ksin kϕ))
+    ]+ O(5.83× 10^-17),
+
+where the error bound is set by the contribution from J_10 and some of the low-order tesseral harmonics. Keeping only the ℓ=2 terms, this expression can be truncated to
+
+
+    dτ_ C/dt   =   
+    1-1/c^2[1/2ω_⊕^2 R^2_⊕+
+    GM_⊕/R_⊕(1+1/2J_2+3(C_22cos 2ϕ+S_22sin 2ϕ))
+    ]+ O(2.28× 10^-15cosϕ),
+
+where the error bound is set by the contribution from C_31 coefficient (see Table <ref>).
+
+In the past, clock synchronization relied on a definition of Earth's geoid. In this case, for a clock situated on the surface of the Earth, the relativistic correction term appearing in Eq. (<ref>) is given at the needed precision by
+
+
+    v⃗^2_ C/2 + U_ E(x⃗_ C)= W_0-∫_0^h_ C -7pt g dh,
+
+where W_0 = 6.2636856× 10^7 m^2/s^2 is the Earth's potential at the reference geoid while g denotes the Earth's acceleration (gravitational plus centrifugal), and where h_ C is the clock's altitude above the reference geoid. However, as we mention above, this definition of terrestrial time is problematic when considering accuracies below 10^-17 because of the uncertainties in the realization of the geoid at this level.
+
+In practice, time measurements are based on averages of clock and frequency measurements on the Earth surface <cit.>. Therefore it was decided to dissociate the definition of TT from the geoid while maintaining continuity with the previous definition. For this purpose, the time coordinate called Terrestrial Time (TT) is defined. TT is related to TCG=t linearly by definition:
+
+    dt_ TT/dt=1-L_ G.
+
+IAU Resolution B1.9 (2000) turned L_G into a defining constant with its value fixed to L_ G=6.969290134× 10^-10.
+
+This definition accounts for the secular term due to the Earth's potential when converting between TCG and the time measured by an idealized clock on the Earth geoid <cit.>. Using Eq. (<ref>), we also have
+
+
+    dτ_ C/dt_ TT=dτ_ C/dtdt/dt_ TT=1+L_ G-1/c^2[1/2v⃗^2_ C
+    + U_ E(x⃗_ C)]+ O(c^-4).
+
+Clearly, if the target clock synchronization is of the order of  ∼ 10^-15, the definition (<ref>) is rather clean with just a few terms given by (<ref>). This expression quickly becomes rather messy if a more precise synchronization is desired.
+
+
+
+ §.§ Satellite Coordinate Reference System (SCRS)
+
+
+
+We can also determine the differential equation that relates the rate of the spacecraft proper τ_ A time, as measured by an on-board clock in Earth orbit with GCRS coordinates {y^m_ A}={cy^0_ A, y⃗_ A}, to the time in GCRS, TCG=t. Substituting in (<ref>) potential U_ E from (<ref>) and largest term for the tidael potential u^ tidal_ E from (<ref>), we have:
+
+
+    dτ_ A/dt=
+    1-1/c^2[1/2v⃗^2_ A   +   GM_ E/r_ A(1-∑_ℓ=2^∞(R_ E/r_ A)^ℓ J_ℓ P_ℓ0(cosθ) + ∑_ℓ=2^∞∑_k=1^+ℓ(R_ E/r_ A)^ℓ P_ℓ k(cosθ)(C_ℓ kcos kϕ+S_ℓ ksin kϕ))+
+       +   ∑_b≠ EGM_b/2r^3_b E(3(n⃗_b E·y⃗_ A)^2-y⃗_ A^2)]+ O(y^3_ A,c^-4).
+
+We will evaluate the magnitude of the terms in this equations for two different orbits - LEO with altitude 200 km and GPS with altitude 20,200 km. We will keep in mind the anticipated frequency stability of Δ f/f= 1× 10^-15. We will use these numbers to evaluate the terms in (<ref>).
+
+
+
+  §.§.§ LEO clock: proper-to-coordinate time transformation
+
+
+In the case of the LEO orbit with altitude of h_A=200 km, the largest contribution to (dτ_ A/dt)_ LEO, of course, comes from the velocity and mass monopole terms, which are estimated to produce an effect of the order of c^-2(1/2v⃗^2_ A+G M_ E/(R_⊕ +h_ LEO)=c^-23G M_ E/2(R_⊕ +h_ LEO)∼ 1.01× 10^-9. Because of the larger contribution, this term is 1.45 times larger than for a receiver on the ground (see estimated presented above, just after Eq. (<ref>).)
+
+For the chosen LEO orbit, the quadrupole term produces contribution of the order of
+
+    G M_⊕ R_⊕^2/c^2 (R_⊕+h_ LEO)^3J_2P_20(cosθ)≲ 6.86× 10^-13,
+
+which is large enough to be included in the model.
+Contributions of other zonal harmonics are estimated as
+
+
+    G M_⊕ R_⊕^3/c^2 (R_⊕+h_ LEO)^4J_3 P_30(cosθ)≲ 1.56× 10^-15,         G M_⊕ R_⊕^4/c^2 (R_⊕+h_ LEO)^5J_4P_40(cosθ)≲ 9.65× 10^-16, 
+    G M_⊕ R_⊕^5/c^2 (R_⊕+h_ LEO)^6J_5 P_50(cosθ)≲ 1.21× 10^-16,         G M_⊕ R_⊕^6/c^2 (R_⊕+h_ LEO)^7J_6P_40(cosθ)≲ 3.03× 10^-16,
+    G M_⊕ R_⊕^7/c^2 (R_⊕+h_ LEO)^8J_7 P_70(cosθ)≲ 2.71× 10^-16,         G M_⊕ R_⊕^8/c^2 (R_⊕+h_ LEO)^9J_8P_80(cosθ)≲ 1.51× 10^-16,
+    G M_⊕ R_⊕^9/c^2 (R_⊕+h_ LEO)^10J_9 P_90(cosθ)≲ 8.04× 10^-17,     G M_⊕ R_⊕^10/c^2 (R_⊕+h_ LEO)^11J_10P_10 0(cosθ)≲ 2.28× 10^-16.
+
+Note that to develop the estimates above we used approximated P_ℓ0 by their largest value at θ=0. In reality, these polynomials rarely take that value and thus P_ℓ0 are much less than 1. On the other hand, although the contributions from J_7,J_8,J_9,J_10 are all on the order of 1 to 2 parts in 10^-16, their cumulative effect may exceed the threshold of 10^-16. Nevertheless, we recommend keeping only the contributions from J_2,J_3 and J_4.
+
+The situation with tesseral harmonics is a bit more complicated as many of them produce contributions on the order of a few parts in 10^-16. The largest among these are those due to C_22 and S_22:
+
+
+    G M_⊕ R_⊕^2/c^2 (R_⊕+h_ LEO)^3P_22(cosθ){C_22cos 2ϕ, S_22sin 2ϕ}   ≲   {9.98× 10^-16cos 2ϕ,   5.73× 10^-16sin 2ϕ}.
+
+
+The contributions from the terms of ℓ=3 are
+
+
+    G M_⊕ R_⊕^3/c^2 (R_⊕+h_ LEO)^4P_31(cosθ){C_31cosϕ,  
+    S_31sinϕ}   ≲   {1.35× 10^-15cosϕ,   1.65× 10^-16sinϕ}, 
+    G M_⊕ R_⊕^3/c^2 (R_⊕+h_ LEO)^4P_32(cosθ){C_32cos 2ϕ, 
+    S_32sin 2ϕ}   ≲   {1.90× 10^-16cos2 ϕ,   1.30× 10^-16sin 2ϕ}, 
+    G M_⊕ R_⊕^3/c^2 (R_⊕+h_ LEO)^4P_33(cosθ){C_33cos 3ϕ, S_33sin 3ϕ}   ≲   {6.10× 10^-17cos 3ϕ,   1.21× 10^-16sin 3ϕ}.
+
+
+The contributions from the terms of ℓ=4 are
+
+
+    G M_⊕ R_⊕^4/c^2 (R_⊕+h_ LEO)^5P_41(cosθ){C_41cosϕ, S_41sinϕ}   ≲   {3.03× 10^-16cosϕ,   2.67× 10^-16sinϕ}, 
+    G M_⊕ R_⊕^4/c^2 (R_⊕+h_ LEO)^5P_42(cosθ){C_42cos 2ϕ,  S_42sin 2ϕ}   ≲   {4.66× 10^-17cos2 ϕ,   8.82× 10^-17sin 2ϕ}, 
+    G M_⊕ R_⊕^4/c^2 (R_⊕+h_ LEO)^5P_43(cosθ){C_43cos 3ϕ,  S_43sin 3ϕ}   ≲   {3.53× 10^-17cos 3ϕ,   7.16× 10^-18sin 3ϕ}, 
+    G M_⊕ R_⊕^4/c^2 (R_⊕+h_ LEO)^5P_44(cosθ){C_44cos 4ϕ, S_44sin 4ϕ}   ≲   {2.37× 10^-18cos 4ϕ,   3.88× 10^-18sin 4ϕ}.
+
+
+Although their individual contributions are quite small, the cumulative effect of these terms may easily reach the level of ϵ_ LEO0≈ 1.33× 10^-15. The constant rate ϵ_ LEO0 would likely be absorbed in other terms during clock synchronization. What is important is the variability in  the entire error term ϵ_ LEO(t)=ϵ_ LEO0+δϵ_ LEO(t), where the amplitude of the variable term δϵ_ LEO(t) is due to seasonal changes in the Earth hydrosphere, crust, etc. and is expected to be of the order of  δϵ_ LEO(t)∼ 3× 10^-17, resulting in the ultimate uncertainty in dτ_ A/dt at that level.
+
+The last term within the square brackets in Eq. (<ref>) is the sum of the Newtonian tides due to the Sun and the Moon at the location of a clock in an Earth orbit. For a chosen LEO orbit, these terms are small:
+
+
+    c^-2u^ tidal_ E⊙   ≃   GM_⊙ (R_⊕+h_ LEO)^2/2  AU^3c^2(3(n⃗_⊙ E·n⃗_ C)^2-1)≲
+    1.91 × 10^-17, 
+    
+    c^-2u^ tidal_ E   ≃   Gm_ (R_⊕+h_ LEO)^2/2 r^3_ -1pt  Ec^2(3(n⃗_ -1pt  E·n⃗_ C)^2-1)≲
+    5.21 × 10^-17,
+
+and, thus, may be neglected.
+
+Therefore, for LEO in equation (<ref>) we must keep the following terms:
+
+
+    dτ_ A/dt   =   
+    1-1/c^2[v⃗^2_ A/2+
+    GM_ E/r_ A(1-∑_ℓ=2^4(R_ E/r_ A)^ℓ J_ℓ P_ℓ0(cosθ)+
+    (R_ E/r_ A)^2 P_22(cosθ)(C_22cos 2ϕ+S_22sin 2ϕ)+
+           53pt + (R_ E/r_ A)^3 P_31(cosθ)(C_31cosϕ+S_31sinϕ)
+    )]+
+     O(3.03× 10^-16),
+
+where the size of the error term is set by J_6 and cumulative contribution of higher ℓ≥ 3 gravitational harmonics.
+
+Clearly, such a modeling accuracy is at the limit anticipated for the Deep Space Atomic Clocks (DSAC) with frequency stability at the level of 1× 10^-16 at 1 day (if DSAC is placed on a LEO). However, it is already insufficient for ESA's ACES mission on the International Space Station and DSAC, where clock accuracy is expected to be at the level of 1× 10^-16 at 1 day.  Furthermore, there are plans to fly an optical interferometer and highly-stable optical link as a part of the STE-QUEST mission <cit.> and also a Space Optical Clock (SOC) mission <cit.> with frequency stability below 1× 10^-17, for which a new and more detailed model may be required.
+
+
+
+  §.§.§ GPS clock: proper-to-coordinate time transformation
+
+
+Now we consider GPS orbit with h_ GPS=22,200 km and estimate the sizes of all the terms entering (<ref>). Clearly, the largest contribution to (dτ_ A/dt)_ GPS, of course, comes from the velocity and mass monopole terms, which are estimated to produce an effect of the order of
+
+
+    1/c^2(1/2v⃗^2_ GPS+G M_⊕/R_⊕+h_ GPS)=3G M_⊕/2c^2(R_⊕+h_ GPS)∼ 2.50× 10^-10,
+
+or almost 4 times smaller than for LEO, but still providing a rather large contribution.
+
+The quadrupole term produces contribution of the order of
+
+
+    G M_⊕ R_⊕^2/c^2 (R_⊕+h_ GPS)^3J_2 P_20(cosθ)   ≲    1.04× 10^-14,
+
+which is significant. Contributions of tesseral harmonics with ℓ=2 are estimated as
+
+
+    G M_⊕ R_⊕^2/c^2 (R_⊕+h_ GPS)^3P_22(cosθ){C_22cos 2ϕ , S_22sin 2ϕ}   ≲   {1.51× 10^-17cos 2ϕ,   8.69× 10^-18cos 2ϕ},
+
+and are small to provide a measurable contribution.
+Contributions of other zonal harmonics ranging from ≲ 5.85× 10^-18 (from J_3), to ≲ 9.08× 10^-19 (from J_4),
+to ≲ 2.79× 10^-20 (from J_5),
+ to ∼ 1.72× 10^-20 (from J_6), which are clearly negligible and may be omitted.
+
+Evaluating the contribution due to Newtonian tides in Eq. (<ref>) for a GPS orbit, we find the following
+
+
+    c^-2u^ tidal_ E⊙   ≃   GM_⊙ (R_⊕+h_ GPS)^2/2  AU^3c^2(3(n⃗_⊙ E·n⃗_ C)^2-1)≲
+    3.11 × 10^-16,
+    
+    
+    c^-2u^ tidal_ E    ≃   Gm_ (R_⊕+h_ GPS)^2/2 r^3_ -1pt  Ec^2(3(n⃗_ -1pt  E·n⃗_ C)^2-1)≲
+    8.50 × 10^-16,
+
+and, thus, these terms must be kept in any model that aims for to offer frequency stability of O(10^-16).
+
+Therefore, for the case of atomic clocks on GPS spacecraft in the (<ref>) we must keep only the quadrupole term as well as the two tidal terms:
+
+
+    dτ_ A/dt   =   
+    1-1/c^2[v⃗^2_ A/2+
+    GM_⊕/r_ A(1-J_2(R_ E/r_ A)^2
+    P_20(cosθ))+
+    ∑^ S, m_b≠ EGM_b/2r^3_b E(3(n⃗_b E·y⃗_ A)^2-y⃗_ A^2)]+ O(6.34× 10^-17),
+
+where the size of the error term is set by the magnitude of the next term in lunar tide, which is of the order of  (R_⊕+h_ GPS)/r_ -1pt  E∼ 0.075 times smaller compared to the first term of lunar tide <cit.>.  Also, we used a convenient notation for Legendre polynomial P_20(cosθ)=(3z^2_ A-r^2_ A)/2r^2_ A.
+
+As a result, the expression for proper to coordinate time transformation for LEO, (<ref>), and GPS, (<ref>), satellites explicitly includes the effects of the Earth's oblateness, J_2. The presence of this term in the equations of motion will lead to a perturbation of a Keplerian orbit. The effect of the quadrupole is large. Computing the perturbations to Keplerian orbital elements, we see that for the semi-major axis, r_ A=a, if the eccentricity is very small, the dominant contribution has a period twice the orbital period and has amplitude 3J_2 R^2_ Esin^2 i/(2a)≃ 1665 m, assuming an orbital inclination of i=55^∘. The effect of J_2 is significant and should be modeled for satellite clocks in low Earth orbit.
+
+
+
+  §.§.§ Accounting for orbital perturbations due to Earth's oblateness J_2
+
+
+The presence of the J_2 term in (<ref>) and (<ref>) may be accounted for within a perturbation theory. Perturbations of GPS orbits due to Earth's quadrupole mass distribution are a significant fraction of the change in semi-major axis associated with the corresponding orbit change. One needs to estimate the effect of Earth's quadrupole moment on
+the orbital elements of a Keplerian orbit and thence on the change in frequency induced by an orbit change.
+
+Accounting for the perturbation in Keplerian orbital elements including the semi-major axis, a, eccentric anomaly, E= M+esin E (with M being the mean anomaly), eccentricity, e, orbital radius, r=a(1-ecos E), we can compute perturbations to each of the terms v_ A^2,  in GM_ E/r_ A and the quadrupole term in (<ref>) and (<ref>), namely those is. The corresponding calculations are lengthy, but straightforward and are well-known. Here we present only the final relevant result:
+
+
+    -v⃗^2_ A/2c^2   -   GM_⊕/c^2r_ A(1-J_2[R_⊕/r_ A]^23z^2_ A-r^2_ A/2r^2_ A)=
+       =   3GM_⊕/2c^2a_0-2GM_⊕/c^2a_0e_0cos E_0-
+    7GM_⊕ R^2_⊕ J_2/2c^2a^3_0(1-3/2sin^2 i_0)-
+    GM_⊕ R^2_⊕ J_2sin^2 i_0/c^2a^3_0cos2(ω_0+u),
+
+where i_0 is the inclination, ω is the altitude of perigee and u is the true anomaly. Also, subscript ()_0 refers to an unperturbed quantity.
+
+The first term, when combined with the reference potential at Earth's geoid, gives rise to the “factory frequency offset” estimated to be 3GM_⊕/2c^2a_0∼ 2.50× 10^-10. The second term gives rise to the eccentricity effect. The third term is estimated to be
+
+
+    7G M_⊕ R_⊕^2 J_2/2c^2 (R_⊕+h_ GPS)^3(1-3/2sin^2 i_0)   ∼    2.37× 10^-16,
+
+and at the limit of the anticpated accuracy.
+This is for the nominal inclination of GPS orbits of i_0=55^∘ such that the factor (1 - 3/2sin^2 i_0)=-6.52× 10^-3. The near vanishing of this factor is pure coincidence in the GPS. The last term has an amplitude
+
+
+    GM_⊕ R^2_⊕ J_2sin^2 i_0/c^2a^3_0=6.98×10^-15,
+
+which may be large enough to consider when calculating frequency shifts produced by orbit changes. Therefore, this contribution may have to be considered  in the determination of the
+semi-major axis, but for now we neglect it.
+
+The last periodic term in Eq. (<ref>) is of a form similar to that which gives rise to the eccentricity correction, which is applied by GPS receivers. Considering only the last periodic term, the
+additional time elapsed on the orbiting clock will be given by
+
+
+    Δ t_J_2=-∫_ pathdt[
+    GM_⊕ R^2_⊕ J_2sin^2 i_0/c^2a^3_0cos2(ω_0+nt)],
+
+where to a sufficient approximation we have replaced the quantity u in the integrand by n=√(GM_⊕/a^3_0) is the approximate mean motion of GPS satellites. Integrating and dropping the constant of integration (assuming as usual that such constant time offsets are lumped with other contributions) gives the periodic relativistic effect on the elapsed time of a clock on a GPS spacecraft due to Earth's
+quadrupole moment:
+
+
+    Δ t_J_2=-√(GM_⊕/a^3_0)R^2_⊕ J_2sin^2 i_0/2c^2sin2(ω_0+nt).
+
+The phase of this effect is zero when the satellite passes through Earth's equatorial plane going northwards. If not accounted for, this effect on a LEO clock time has the magnitude of Δ t_J_2 LEO = 1.95× 10^-10 s, giving rise to a peak-to-peak periodic navigational error in position of approximately 2c×Δ t_J_2 LEO = 11.67 cm. The same effect on GPS clock has the magnitude of Δ t_J_2 GPS = 2.40× 10^-11 s and is responsible for a peak-to-peak periodic navigational error in position of about 2c×Δ t_J_2 GPS = 1.44 cm. Therefore, these effects must be included in the model for high-accuracy orbit determination, especially for supporting for DSAC, ACES, STE-QUEST, and SOC missions in the near future.
+
+
+
+  §.§.§ Accounting for tidal perturbations due to Sun and the Moon
+
+
+As we saw before, the tidal perturbations of the GPS orbit give rise of the sizable effects given by (<ref>)–(<ref>). We observe that (n⃗_⊙ E·n⃗_ C)=cos(ϕ_⊙ 0+(n_⊕ +n_ GPS)t), where n_⊕ and n_ GPS are the orbital frequency of the Earth's sidereal motion and GPS spacecraft in orbit about Earth, correspondingly. Similarly, (n⃗_ -1pt  E·n⃗_ C)=cos(ϕ_ -1pt 0+(n_ +n_ GPS)t), where n_ is the orbital frequency of the Moon around the Earth.
+With these defintions, we evaluate (<ref>) as
+
+
+    c^-2u^ tidal_ E⊙   ≃   GM_⊙ (R_⊕+h_ GPS)^2/4 c^2 AU^3(3cos[2ϕ_⊙ 0+2(n_⊕ +n_ GPS)t]+1).
+
+The constant term here has the magnitude
+
+
+    GM_⊙ (R_⊕+h_ GPS)^2/4 c^2 AU^3≃
+    7.79 × 10^-17,
+
+and may be neglected. Considering the periodic term in the expression (<ref>), the  additional time elapsed on the orbiting clock will be given by
+
+
+    Δ t^ tidal_⊙   =   -∫_ pathdt(
+    3GM_⊙ (R_⊕+h_ GPS)^2/4 c^2 AU^3cos[2ϕ_⊙ 0+2(n_⊕ +n_ GPS)t])=
+       =   -3GM_⊙ (R_⊕+h_ GPS)^2/8 c^2 AU^3(n_⊕ +n_ GPS)sin[
+    2ϕ_⊙ 0+2(n_⊕ +n_ GPS)t].
+
+If not accounted for, this effect on a GPS clock time has the magnitude of Δ t^ tidal_⊙ = 8.01× 10^-13 s, giving rise to a peak-to-peak periodic navigational error in position of approximately 2c×Δ t^ tidal_⊙ = 0.48 mm, which is negligible.
+
+Similarly, using (<ref>)  we evaluate the tidal contribution from the Moon:
+
+
+    c^-2u^ tidal_ E    ≃   Gm_ (R_⊕+h_ GPS)^2/4c^2r^3_ -1pt  E(3cos[2ϕ_ -1pt 0+2(n_ +n_ GPS)t]+1).
+
+
+The constant term here has the magnitude
+
+
+    Gm_ (R_⊕+h_ GPS)^2/4c^2r^3_ -1pt  E≃
+    2.13 × 10^-16,
+
+and is at the anticipated frequency stability limit. Considering the periodic term in  expression (<ref>), the
+additional time elapsed on the orbiting clock will be given by
+
+
+    Δ t^ tidal_   =   -∫_ pathdt(
+    3Gm_ (R_⊕+h_ GPS)^2/4c^2r^3_ -1pt  Ecos[2ϕ_ -1pt 0+2(n_ +n_ GPS)t])=
+       =   -3Gm_ (R_⊕+h_ GPS)^2/8c^2r^3_ -1pt  E(n_ +n_ GPS)sin[2ϕ_ -1pt 0+2(n_ +n_ GPS)t].
+
+If not accounted for, this effect on a GPS clock time has the magnitude of Δ t^ tidal_ = 2.14× 10^-12 s, giving rise to a peak-to-peak periodic navigational error in position of approximately 2c×Δ t^ tidal_= 1.29 mm, which is right at the limit of the anticipated GPS timing precision.
+
+
+
+  §.§.§ GPS clock: proper-to-coordinate time transformation: recommended formulation
+
+
+As a result of the analysis presented above, the recommended expression for the differential equation that relates the rate of the spacecraft proper τ_ A time, as measured by an on-board clock on a  GPS  spacecraft  to the time in GCRS, TCG=t that was derived as  (<ref>), should have only the quadrupole term as well as the lunar tidal terms:
+
+
+    dτ_ A/dt   =   
+    1-1/c^2[v⃗^2_ A/2+
+    GM_⊕/r_ A(1-J_2(R_ E/r_ A)^2
+    P_20(cosθ))+
+    Gm_/r^3_ -1pt  Er_ A^2 P_20(cosβ_ -1pt  GPS(t))
+    ]+ O(7.78× 10^-17),
+
+where β_ -1pt  GPS(t)=∠ (n⃗_ -1pt  E,n⃗_ GPS)=ϕ_ -1pt 0+(n_ +n_ GPS)t, and r_ A=|x⃗_ GPS|≃ R_⊕+h_ GPS, the orbital radius of the GPS spacecraft. The size of the error term in (<ref>) is set by the magnitude of the constant term due to the solar tide (<ref>).
+
+Near the surface of the Earth, the expression beyond the monopole term is dominated by the quadrupole moment characterized by J_2. At higher orbits, however, as the effect of J_2 diminishes, contributions due to lunar tides become more significant. For spacecraft going beyond geostationary orbits, e.g., spacecraft in lunar transfer orbits carrying accurate clocks, eventually it becomes necessary to switch to a more accurate representation of the lunar gravitational field, such as the representation in <cit.>.
+
+
+
+§ LIGHT PROPAGATION IN THE VICINITY OF THE EARTH 
+
+
+
+Key to our understanding of the problem of EM wave propagation in the vicinity of a gravitating body is the realization that the body's gravitational field is usually presented in a body-centric reference frame. In contrast, signal propagation is best analyzed in a signal-centric reference frame.
+
+
+
+ §.§ Gravitational phase shift of an EM wave
+
+
+
+The phase of an EM wave is a scalar function that is invariant under a set of general coordinate transformations. In the geometric optics approximation, the phase φ is found as a solution to the eikonal equation <cit.>,
+
+    g^mn∂_mφ∂_nφ=0,
+
+which is a direct consequence of Maxwell's equations. Its solution describes the wavefront of an EM wave propagating in curved spacetime. The solution's geometric properties are defined by the metric tensor g_mn, which is derived from Einstein's field equations. In the vicinity of the Earth, this tensor is given by Eqs. (<ref>)–(<ref>).
+
+To solve Eq. (<ref>), we introduce a covector of the electromagnetic wavefront in curved spacetime, K_m = ∂_mφ. We use λ to denote an affine parameter along the trajectory of a light ray, which is orthogonal to the wavefront φ. The vector K^m = dx^m/dλ = g^mn∂_nφ is tangent to the light ray. Equation (<ref>) states that K^m is null: g_mnK^mK^n = 0.
+
+To find a solution of Eq. (<ref>), we expand the eikonal φ with respect to the gravitational constant G, assuming that the unperturbed solution is a plane wave. The expansion may be given as
+
+    φ(t,x⃗) = φ_0+∫ k_m dx^m+φ_G (t,x⃗)+ O(G^2),
+
+where φ_0 is an integration constant and k_m = k(1, k⃗) is a constant (with respect to the Minkowski metric) null vector (i.e., γ_mnk^mk^n=0) along the direction of propagation of the unperturbed EM plane wave. The wave direction is given by the vector k⃗≡ k^ϵ, which is the unit vector along the ray's path, |k⃗|=1. Furthermore, k=ω/c, where ω is the constant angular frequency of the unperturbed wave, and φ_G is the perturbation of the eikonal of first order in G, which is yet to be determined. Also, as a consequence of Eq. (<ref>), the wave vector of an electromagnetic wave in curved spacetime, K^m(t,x⃗), admits a series expansion with respect to G in the form
+
+
+    K^m(t,x⃗)=dx^m/dλ= g^mn∂_nφ=k^m+k_G^m(t,x⃗)+ O(G^2),
+
+where k^m_G(t,x⃗)=γ^mn∂_nφ_G(t,x⃗) is the first order perturbation of the wave vector with respect to G.
+
+To solve Eqs. (<ref>) and (<ref>) for φ_G in the GCRS, we first substitute (<ref>) into (<ref>).
+Then, defining h^mn=g^mn-γ^mn and keeping only first order terms in G, we obtain an ordinary differential equation to determine φ_G:
+
+    dφ_G/dλ= -1/2h^mnk_mk_n + O(G^2),
+
+where dφ_G/dλ= k_m∂^mφ_G+ O(G^2).  (Note, that Eq. (<ref>) alternatively can also be obtained by integrating the null geodesic equation <cit.>).
+With g_mn given by (<ref>), the equation to determine the phase of the EM wave as it propagates in the vicinity of the Earth takes the following form:
+
+
+    dφ_G/dλ=
+    -k^2{2/c^2w_ E+2/c^2w^ tidal_ E+ 4/c^3(k_ϵ w^ϵ_ E)+ O(G^2)}.
+
+This equation describes the gravitational phase shift introduced by various contributions to the effective gravity field of the GCRS (<ref>) with the potentials (<ref>)–(<ref>).  Below, we will integrate it along the light ray's trajectory.
+
+
+
+ §.§ Parameterizing the light ray's trajectory
+
+
+
+To solve (<ref>), we need to present the geometry of the problem and introduce our basic notations. Following <cit.>, we represent the light ray's trajectory, correct to the Newtonian order, as
+
+
+    {x^m}≡(x^0=ct,   x⃗(t)≡r⃗(t)=r⃗_ 0+k⃗ c(t-t_0))+ O(G),
+
+where k⃗ is a unit vector in the incident direction of the light ray's propagation path and r⃗_0 represents the point of emission that may be expressed as k⃗=(r⃗-r⃗_0)/|r⃗-r⃗_0|. Next, we define the impact parameter of the unperturbed trajectory of the light ray parameter b⃗ as
+
+
+    b⃗=[[k⃗×r⃗_0]×k⃗].
+
+Next, we introduce the parameter τ=τ(t) along the path of the light ray (see details in Appendix B in <cit.>):
+
+
+    τ   =   (k⃗·r⃗)=(k⃗·r⃗_0)+c(t-t_0),
+
+which may be positive or negative. The parameter τ allows us to rewrite (<ref>) as
+
+
+    r⃗(τ)   =   b⃗+k⃗τ+ O(G),
+         with     r(τ) ≡ |x⃗(τ)|=√(b^2+τ^2)+ O(G).
+
+
+Using the result (<ref>) we determine that the following relations are valid to O (r_g):
+
+
+    r   =   √(b^2+τ^2),         r+(k⃗·r⃗) =√(b^2+τ^2) +τ.
+
+Based on these results, we present a useful relationship:
+
+
+    b^2=(r+(k⃗·r⃗))(r-(k⃗·r⃗)) + O(G).
+
+
+This representation allows us to express the Newtonian part of the wave vector K^m presented by Eq. (<ref>) as follows:
+k^m= dx^m/dλ =k(1, k⃗)+ O(G), where the wave number k is immediately derived as k=dτ/dλ+ O(G) and |k⃗|=1. Keeping in mind that k^m is constant, we establish an important relationship:
+
+    dλ= dτ/k^0+ O(G),
+
+which we use to integrate (<ref>). This expression allows including contributions from all multipoles of the Earth's mass distribution, as given in Eq. (<ref>).
+
+With these definitions, we may now present the  solution to (<ref>) (see relevant discussion in <cit.>). The gravitational phase shift, φ_G, that is acquired by the EM wave as it propagates along its geodesic path from the point of emission at τ_0  to the point of reception at τ on the background of the gravitational field (<ref>)–(<ref>) has the form:
+
+
+    φ_G(x⃗) =
+    -k∫^τ_τ_0{2/c^2(U_ E(τ')+ u^ tidal_ E(τ'))+ 4/c^3(k_ϵ w^ϵ_ E(τ'))
+    + O(G^2)
+    }dτ'
+    ≡φ_G^ E(x⃗)+φ_G^ tidal(x⃗)+φ_G^ S(x⃗)+ O(G^2).
+
+
+We may now integrate (<ref>) for each of the relativistic terms with the terms describing contributions from the Earth's gravitational potential, tidal gravity (primarily due to the Sun and the Moon), and Earth's rotation, correspondingly.
+
+
+
+ §.§ The STF representation of the  Earth's gravitational potential
+
+
+
+Although the form of the Earth gravitational potential (<ref>) is effective for many applications in geodesy, it is not technically convenient when light propagation in a gravitational field in concerned. No closed form expressions are known for the integral (<ref>) are known for a potential in the form (<ref>), expressed in terms of spherical harmonics; indeed, no useful semi-analytical approximations exist in the general case either. Thus, alternative representations of U(x⃗) are needed. In <cit.>, we considered the case of axisymmetric bodies. In <cit.>, we considered a generic potential, expanding U(x⃗) in terms of STF mass-moment tensors. Below, we discuss the the STF mass moment representation, which allows us to fully benefit from the spherical harmonics representation in the most general case. (In Appendix <ref>, we discuss the less general axisymmetric case, using it as a limiting case to verify our results.)
+
+Considering a generic case, it was discussed in <cit.> that the scalar gravitational potential (<ref>) may equivalently be given in terms of Cartesian spatial trace-free (STF) tensor moments in the following form:
+
+
+    U   =   GM{1/r+∑_ℓ=2^∞(-1)^ℓ/ℓ! T^<a_1...a_ℓ>∂^ℓ/∂ x^<a_1...∂ x^a_ℓ>(1/r)}+
+     O(c^-4),
+
+where r=|x⃗|, M is the mass  and T^<a_1...a_ℓ> are the STF mass multipole moments of the body, defined as
+
+
+    M   =   ∫_ V d^3x⃗ ρ(x⃗),     T^<a_1...a_ℓ>=1/M∫_ V d^3x⃗ ρ(x⃗)  x^<a_1...a_ℓ>,
+
+where x^<a_1...a_ℓ>=x^<a_1x^a_2...x^a_ℓ>, the angle  brackets <...> denote the STF operator, and V means the total volume of the isolated gravitating body under consideration. The dipole moment T^a is absent from this expansion (<ref>), by virtue of the fact that the origin of the coordinates is assumed to coincide with the body's barycenter.
+
+Using the identity <cit.>,
+
+
+    ∂^ℓ/∂ x^<a_1...∂ x^a_ℓ>(1/r)   =    (-1)^ℓ(2ℓ-1)!!n̂_<a_1...a_ℓ>/r^ℓ+1,
+
+the potential (<ref>) may be given in the following form:
+
+
+    U(r⃗)   =    GM∑_ℓ≥ 0(2ℓ-1)!!/ℓ ! T_Ln̂_L/r^ℓ+1.
+
+The first few terms of (<ref>) or, equivalently, (<ref>), are given as
+
+
+    U(r⃗)   =   GM{1/r+ 3 T^<ab>/2r^5x^ax^b +5 T^<abc>/2r^7x^ax^bx^c+35 T^<abcd>/8r^9x^ax^bx^cx^d+ O(r^-6)}.
+
+This Cartesian multipole expansion of the Newtonian gravitational potential is equivalent to expansion in terms of spherical harmonics (<ref>) <cit.>. In fact, this expression may be used to establish the correspondence between T^<a_1...a_ℓ> and C_ℓ k and S_ℓ k from (<ref>) (see Appending <ref> for details on how to establish this correspondence).
+
+
+
+ §.§ Expressing the gravitational phase shift via STF mass moments
+
+
+Using the representations (<ref>), (<ref>) or (<ref>), it is convenient to present  the U_ E-dependent term that yields φ_G^ E(x⃗) in the total gravitational phase shift in (<ref>) as
+
+
+    2U/c^2   =   
+    r_g{1/r+ ∑_ℓ=2^∞(-1)^ℓ/ℓ! T^<a_1...a_ℓ>∂^ℓ/∂ x^<a_1...∂ x^a_ℓ>(1/r)},
+
+where r_g=2GM/c^2 is the Schwarzschild radius of the body (in our case this is the Earth, but our discussion is generic.) As such, this form is valid for any deviation from spherical symmetry in the gravitational field.
+
+We may then generalize expression ∇⃗=∇_b+k⃗ d/dτ + O(r_g) and write
+
+
+    ∂^ℓ/∂ x^<a_1...∂ x^a_ℓ>   ≡   ∇⃗^<a_1....∇⃗^a_ℓ>=∑_p=0^ℓℓ!/p!(ℓ-p)!k_<a_1...k_a_p∂_a_p+1... ∂_a_ℓ>∂^p/∂τ^p+ O(r_g),
+
+where a new shorthand notation ∂_a≡∂/∂b⃗^a has been used and τ is defined by (<ref>).
+
+ Using this representation (<ref>), we can compute the relevant integral (with r=√(b^2+τ^2) and r_0=√(b^2+τ_0^2), as discussed in Sec. <ref>):
+ 
+
+    ∫^τ_τ_0∂^ℓ/∂ x^<a_1...∂ x^a_ℓ>(1/r) dτ'   =   ∑_p=0^ℓℓ!/p!(ℓ-p)!k_<a_1...k_a_p∂_a_p+1... ∂_a_ℓ>{∂^p/∂τ^pln(√(b^2+τ^2)+τ/b)
+    }|^τ_τ_0 =
+           -140pt =
+     ∂_<a_1... ∂_a_ℓ>ln√(b^2+τ^2)+τ/√(b^2+τ^2)+τ_0+
+      ∑_p=1^ℓℓ!/p!(ℓ-p)!k_<a_1...k_a_p∂_a_p+1... ∂_a_ℓ>{∂^p-1/∂τ^p-11/√(b^2+τ^2)-∂^p-1/∂τ_0^p-11/√(b^2+τ_0^2)}.
+
+
+As a result, the gravitational eikonal phase shift φ^ E_G from (<ref>) takes the form[Result (<ref>) was independently derived in  <cit.> where one can also find the phase contribution due to vector spherical harmonics. In the Earth's gravity field such harmonics are small, providing contributions below the expected level of the measurement accuracy (Sec. <ref>). Thus, beyond the spin term with ℓ=1 (<ref>), higher order contributions of the vector harmonics were not considered in this paper.]:
+
+
+    φ^ E_G(r⃗)
+       =    -kr_g{ln√(b^2+τ^2)+τ/√(b^2+τ_0^2)+τ_0+
+    ∑_ℓ=2^∞(-1)^ℓ/ℓ! T^<a_1...a_ℓ>{∂_<a_1... ∂_a_ℓ>ln√(b^2+τ^2)+τ/√(b^2+τ_0^2)+τ_0+
+           20pt +
+      ∑_p=1^ℓℓ!/p!(ℓ-p)!k_<a_1...k_a_p∂_a_p+1... ∂_a_ℓ>{∂^p-1/∂τ^p-11/√(b^2+τ^2)-∂^p-1/∂τ_0^p-11/√(b^2+τ_0^2)}}},
+
+or, equivalently, using (<ref>) we have
+
+
+    φ^ E_G(r⃗,r⃗_0)
+       =      -kr_g (ln[r+(k⃗·r⃗)/r_0+(k⃗·r⃗_0)]+∑_ℓ=2^∞(-1)^ℓ/ℓ! T^<a_1...a_ℓ> I_a_1... a_ℓ(r⃗,r⃗_0))+ O(r^2_g).
+
+
+The first term in this expression is the well-known Shapiro phase shift. The next term is the contribution to the gravitational phase delay from the STF gravitational multipoles to any order  ℓ. The quantity I_a_1... a_ℓ(r⃗,r⃗_0)= I_a_1... a_ℓ(r⃗)- I_a_1... a_ℓ(r⃗_0) is the projection operator of the ℓ-th order along the light ray's trajectory:
+
+
+    I_a_1... a_ℓ(r⃗,r⃗_0)
+       =   {∂_<a_1... ∂_a_ℓ>ln k(√(b^2+τ^2)+τ)+  ∑_p=1^ℓℓ!/p!(ℓ-p)!k_<a_1...k_a_p∂_a_p+1... ∂_a_ℓ>∂^p-1/∂τ^p-11/√(b^2+τ^2)}|^τ_τ_0.
+
+
+Expression (<ref>) together with (<ref>)  is a key result. It demonstrates that with the help of the STF tensor formalism, it is possible to evaluate contributions to the gravitational phase shift, to all orders beyond the Shapiro phase shift, due to the mass multipole moment contributions of the gravitating body.
+
+
+
+ §.§ Rotation to the STF moments to the light ray coordinate system
+
+
+
+The main objective of this manuscript is to develop the functional form of the gravitational phase shift φ^ E_G in terms of the spherical harmonics. As (<ref>) suggests, the total gravitational phase shift induced by all the multipoles ℓ≥2 is a sum of the individual shifts φ_ℓ inducted by multipoles at each particular order ℓ, where φ_ℓ have the form
+
+
+    φ_ℓ(r⃗, r⃗_0)
+        =      -kr_g (-1)^ℓ/ℓ! T ^<a_1...a_ℓ> I_a_1... a_ℓ(r⃗,r⃗_0).
+
+In what follows we will demonstrate how to compute individual terms in this sum.
+
+First, we recognize that the GCRS is defined by the unit basis vectors e⃗_x (the prime meridian) and e⃗_z≡s⃗ (the Earth's rotation axis), yielding the following set of base vectors:
+
+
+    e⃗_x,     e⃗_y=[e⃗_z×e⃗_x],     e⃗_z≡s⃗.
+
+Next, the propagation direction of the EM wave is defined by k⃗ and the relationship between the EM wave's trajectory and the Earth is given by the vector impact parameter b⃗ (introduced by (<ref>)):
+
+
+    k⃗=r⃗-r⃗_0/|r⃗-r⃗_0|,    b⃗=[[k⃗×r⃗_0]×k⃗]≡ b m⃗    ⇒    m⃗=[[k⃗×r⃗_0]×k⃗]/|[[k⃗×r⃗_0]×k⃗]|.
+
+Thus, once the GCRS positions of the emitter, r⃗_0, and receiver, r⃗,  are known,  everything else is computable.
+
+To simplify the computations, we introduce a coordinate system associated with the propagating ray of light. Reading off figure <ref>, with knowledge of k⃗, we obtain the unit vectors defining a coordinate system associated with the direction of transmission:
+
+    e⃗'_x    = [e⃗_z×e⃗'_z]/|[e⃗_z×e⃗'_z]|,
+        e⃗'_y= [e⃗'_z×e⃗'_x],
+         e⃗'_z ≡k⃗.
+
+
+Together, the vectors k⃗ and b⃗ allow us to define a rotated coordinate system, where the z-axis is aligned with the direction of propagation of the EM wave given by vector k⃗, while the xy-plane is perpendicular to it (see Fig. <ref>). In this coordinate system, the vectors k⃗', b⃗',
+are given as below
+
+
+    k⃗'   =   (0,0,1),
+        b⃗'=b(cosϕ_ξ,sinϕ_ξ,0)=b m⃗',
+
+where b=|b⃗| from (<ref>) and
+the orientation angle of the impact parameter, ϕ_ξ, is given by
+
+
+    cosϕ_ξ  = (m⃗·e⃗'_x),     sinϕ_ξ    = (m⃗·e⃗'_y).
+
+
+
+
+The two coordinate systems are related by a rotation where R_a^b is the rotation matrix, given as
+
+
+    R(θ,ψ)=R_3(ψ)R_1(θ)=
+    [  cosψ  sinψ     0; -sinψ  cosψ     0;     0     0     1 ][     1     0     0;     0  cosθ  sinθ;     0 -sinθ  cosθ ]
+    = R_a^b,
+
+where R_z(ψ) is a right-handed rotation by ψ around the z-axis (e⃗_z-axis), R_1(θ)  is a right-handed rotation by θ about the x-axis (e⃗'_x-axis) of a Cartesian coordinate frame; see Fig. <ref>. The angles θ and ψ are determined from the following equations:
+
+
+    cosθ  = (e⃗'_z·e⃗_z),     sinθ   = (e⃗'_y·e⃗_z),     cosψ  = (e⃗'_x·e⃗_x),    sinψ  = (e⃗'_x·e⃗_y).
+
+
+With the introduction of these rotation matrices (<ref>), the geometry of the problem is fully defined. Technically, it is easier to compute the components of the projection operator  in  (<ref>) in the primed coordinate system that is aligned with  the light ray, yielding I'_a_1... a_ℓ. Two representations of this operator, in the GCRS, I_a_1... a_ℓ, and its counterpart in the light ray coordinates, I'_a_1... a_ℓ, are related by a simple rotation with the rotation matrix  R_a^b from (<ref>):
+
+
+    I_<b_1...b_ℓ>= I'_<a_1...a_ℓ>R^a_1_b_1... R^a_ℓ_b_ℓ,
+
+where I_a_1... a_ℓ is expressed in terms of k⃗ and m⃗ defined in GCRS by (<ref>) and I'_a_1... a_ℓ depends on k⃗' and m⃗' defined in the light ray coordinate system that was introduced by (<ref>).
+
+Expression (<ref>) allows us to write the term with tensorial inner product  in (<ref>) as
+
+
+    T ^<a_1...a_ℓ> I_a_1... a_ℓ=
+     T^<a_1...a_ℓ> R^b_1_a_1... R^b_ℓ_a_ℓ  I'_b_1... b_ℓ≡ T '^<a_1...a_ℓ> I'_a_1... a_ℓ,
+
+where T'^<a_l...a_ℓ> are the components of the STF mass moment tensor projected on the light ray trajectory
+
+
+    T'^<a_1...a_ℓ>= T^<b_1...b_ℓ> R^a_1_b_1... R^a_ℓ_b_ℓ.
+
+
+Typically, the STF tensor mass moments T^<a_1...a_ℓ> are expressed in terms of the spherical harmonic coefficients that, in turn, are expressed using the Cartesian ECEF coordinates of the GCRS. Expression (<ref>) allows us to compute the components of I_a_1... a_ℓ in the rotated coordinate system that is aligned with the direction of propagation.
+
+Through this rotation procedure with matrix (<ref>) and angles (<ref>), we are able to express the STF mass moments with respect to a cylindrical coordinate system in which the z-axis coincides with the direction of signal propagation. Moreover, as a non-degenerate linear relationship exists between STF tensor components and spherical harmonic coefficients (see Appendix <ref>) for details), this procedure also allows us to directly compute spherical harmonic coefficients with respect to this new coordinate system in a three-step process:
+[1)]
+
+  * Convert spherical harmonics to the STF representation;
+
+  * Rotate the STF tensor using (<ref>),
+
+  * Invert the equation relating STF tensor components and spherical harmonics and solve for the latter.
+
+This procedure is powerful and straightforward, also computationally inexpensive, allowing us to express the multipole mass moments of the gravitating body in a coordinate reference frame of arbitrary orientation, including the orientation defined by the direction of signal transmission.
+
+
+
+§ PHASE SHIFT INTRODUCED BY THE LOWEST ORDER MULTIPOLE MOMENTS
+
+
+
+To demonstrate the practical utility of our results, we now compute several low-order terms in (<ref>), for ℓ=2,3,4. In Appendix <ref>, we compute the corresponding derivatives with respect to the vector impact parameter, which are present in (<ref>).  Below, we present the results for the eikonal phase shift for the quadrupole (ℓ=2), octupole (ℓ=3) and hexadecapole (ℓ=4) STF multipole moments.
+
+
+
+ §.§ Quadrupole moment
+
+
+
+
+
+  §.§.§ The structure of the quadrupole phase shift
+
+
+In the ℓ=2 quadrupole case, applying (<ref>) leads to the following expression for the gravitational eikonal phase shift  φ_2(r⃗,r⃗_0) induced by the quadrupole STF mass moment,  T^<ab>:
+
+
+    φ_2(r⃗,r⃗_0)
+       =   -1/2 kr_g
+     T^<ab> I_ab(r⃗,r⃗_0),
+
+where I_ab(r⃗,r⃗_0) is the ℓ=2 light ray trajectory projection operator given by (<ref>), that is,
+
+
+    I_ab(r⃗,r⃗_0)   =   -
+    {(2m_am_b+k_ak_b)
+    1/r(r+(k⃗·r⃗))
+    +
+    (k_ak_b-m_am_b)
+    (k⃗·r⃗)/r^3+
+    (k_am_b+k_bm_a)
+    b/r^3}|^r_r_0,
+
+where we used the derivatives (<ref>) and (<ref>) and k⃗ and m⃗ are defined by (<ref>). After some rearrangement,  expression (<ref>) may be presented  is the following equivalent form:
+
+
+    I_ab(r⃗,r⃗_0)   =   {(2m_am_b+k_ak_b)(
+    1/r(r+(k⃗·r⃗))-(k⃗·r⃗)/2r^3)
+    +
+    (k_am_b+k_bm_a)
+    b/r^3+
+    3/2k_ak_b
+    (k⃗·r⃗)/r^3}|^r_r_0.
+
+The convenience of the form (<ref>) is due to the fact that in the light ray's coordinate system that we use, k⃗ is a unit vector in the e'_z-axis direction, whereas m⃗ is a unit vector in the perpendicular e'_xe'_y-plane. This simplifies various inner products in (<ref>) which, relying on (<ref>)–(<ref>) with parameterization (<ref>) take the form:
+
+
+    T^<ab>(2m_am_b+k_ak_b)
+    = T'^<ab>(2m'_am'_b+k'_ak'_b)
+       =   ( T'_11- T'_22)cos2ϕ_ξ+2 T'_12sin2ϕ_ξ,
+
+where k⃗' and m⃗' are from (<ref>) and we specifically emphasized the use of (<ref>), a reminder to the reader that this scalar-valued tensor product is not dependent on the choice of coordinate system in which it is calculated, allowing us to express the product in this simple form, using the values of the STF tensor and the projection operator in the rotated light-ray coordinate system. Similarly,
+
+
+    T^<ab>(k_am_b+k_bm_a)   =   2 T'_13cosϕ_ξ+2 T'_23sinϕ_ξ,
+     T^<ab>
+    k_ak_b   =    T'_33,
+
+ where we relied on the trace-free nature of T^<ab>, valid in any representation, hence  T'_11+ T'_22+ T'_33=0.
+
+As a result, using these expressions (<ref>)–(<ref>) and representing m⃗ using from (<ref>), expression (<ref>)
+takes the form
+
+
+    φ_2(r⃗,r⃗_0)
+       =   1/2kr_g
+    {{( T'_11- T'_22)cos2ϕ_ξ+
+     2 T'_12sin2ϕ_ξ}(
+     1/r(r+(k⃗·r⃗))-(k⃗·r⃗)/2r^3)
+    +
+           14pt+ 
+    2{ T'_13 cosϕ_ξ+
+     T'_23 sinϕ_ξ}b/r^3+3 T'_33(k⃗·r⃗)/2r^3}|^r_r_0.
+
+Thus, as the light travels from a transmitter to a receiver, it samples the gravitational filed along its path. That field is represented by the STF mass moments T'^<ab> that  are related to their GCRS values via (<ref>) .
+
+
+
+  §.§.§ Rotating the quadrupole mass moment
+
+
+What is left is to express T'^<ab>  in accordance with (<ref>) for ℓ=2 that has the from
+
+
+    T'^<ab>   =    T^<ij>  R^a_i  R^b_j,
+
+where the relationship between T^<ab> and spherical harmonic coefficients expressed in the same coordinate reference frame are given by comparing (<ref>) against (<ref>). We work this out explicitly for ℓ=2 in Appendix <ref>, yielding the matrix components of T^<ab> in the GCRS reference frame in the form (<ref>):
+
+
+    T_11   =   (-1/3C_20+2C_22)R^2,      T_12=2S_22R^2, 
+     T_22   =   (-1/3C_20-2C_22)R^2,      T_13=C_21R^2,
+     T_33   =   2/3 C_20 R^2,                  T_23=S_21R^2,
+
+or, using the relations between T^<ab> and C_2k, S_2k from (<ref>), we may express T'^<ab> as
+
+
+    R^-2 T'_11   =    -1/3  C_20+2(C_22cos2ψ-S_22sin2ψ),
+    
+    R^-2 T'_22   =   1/3(3sin^2θ-1)  C_20-sin2θ(C_21sinψ+S_21cosψ)+2cos^2θ(S_22sin2ψ-C_22cos2ψ),
+    
+    R^-2 T'_33   =   1/3(3cos^2θ-1)C_20+sin2θ(C_21sinψ+S_21cosψ)+2sin^2θ(S_22sin2ψ-C_22cos2ψ),
+    
+    R^-2 T'_12   =    -
+    sinθ(C_21cosψ-S_21sinψ)+2cosθ(S_22cos2ψ+C_22sin2ψ),
+    
+    R^-2 T'_13   =   cosθ(C_21cosψ-S_21sinψ)+2sinθ(S_22cos2ψ+C_22sin2ψ),
+    
+    R^-2 T'_23   =    -
+    1/2sin2θ 
+    C_20+cos2θ(C_21sinψ+S_21cosψ)-sin2θ(C_22cos2ψ-S_22sin2ψ),
+
+where angles θ and ψ are fixed for each transmitter-receiver configuration and are given by (<ref>).
+
+We define the rotated spherical harmonic coefficients {C'_2k,S'_2k} by substituting primed in place of unprimed terms in (<ref>) and then solving the resulting system of equations. For ℓ=2, this results in the following relations between {C'_2k,S'_2k} and T'^<ab>:
+
+
+    C'_20 =  3/2 R^-2 T'_33,
+         C'_21   =    R^-2 T'_13,
+         C'_22 = 1/4 R^-2( T'_11- T'_22),
+        
+    S'_21 = R^-2 T'_23,
+         
+    S'_22 = 1/2 R^-2 T'_12.
+
+
+Due to the tensorial nature of (<ref>), both expressions (<ref>) and (<ref>) demonstrate the form invariance of the gravitational phase (<ref>)–(<ref>). The structure of the expression for the gravitational phase is the same in any new rotated coordinates, thus for any direction of signal propagation. Furthermore, the relationship between the STF tensor mass moments and  spherical harmonics, T^<ab>⇔{C_2k,S_2k}, given by (<ref>), is also the same in any new coordinates, T'^<ab>⇔{C'_2k,S'_2k}. This form invariance of the phase and relevant relations between the moments and harmonics exist at any STF order ℓ.  This property may be used to establish expressions for the spherical harmonics C'_ℓ k,S'_ℓ k at any order ℓ and will be demonstrated below for ℓ=2,3,4.
+
+
+
+  §.§.§ Quadrupole phase in terms of spherical harmonics
+
+
+Results (<ref>) and (<ref>) allow us to express (<ref>)
+ in terms of the rotated spherical harmonic coefficients C'_2k,S'_2k. Using n⃗=r⃗/r, this expression has the form
+
+
+    φ_2(r⃗,r⃗_0)
+       =    kr_g(R_⊕/b)^2 {2{C'_22cos2ϕ_ξ+ S'_22sin2ϕ_ξ}{
+     1-(k⃗·n⃗)(1+1/2b^2/r^2)}
+    +
+           51pt+ {C'_21cosϕ_ξ+
+    S'_21sinϕ_ξ}b^3/r^3+
+    1/2 C'_20b^2/r^2(k⃗·n⃗)}|^r_r_0,
+
+ where the relationship between the spherical harmonic coefficients in the GCRS reference frame vs. their value at the OCS which is associated with the light ray,
+yield the following form for C'_2k and S'_2k:
+
+
+    C'_20   =   1/4(1 + 3 cos 2 θ)C_20  +  3/2sin 2θ(C_21sinψ + S_21cosψ) - 3 sin^2θ(C_22cos2 ψ - S_22sin2 ψ),
+    
+    C'_21   =   cosθ(C_21cosψ - S_21sinψ) +  2 sinθ(S_22cos 2 ψ + C_22sin2 ψ),
+    
+    C'_22   =     -1/4sin^2θ  C_20  + 1/4sin2θ(C_21sinψ+S_21cosψ) + 1/4(3 + cos2 θ) (C_22cos2 ψ - S_22sin2 ψ),
+    
+    
+    S'_21   =     - 1/2sin2θ C_20+
+    cos2θ( C_21sinψ+S_21cosψ) - sin2θ(C_22cos2 ψ-S_22sin2 ψ),
+    
+    S'_22   =    -1/2sinθ(C_21cosψ-S_21sinψ) +  cosθ(S_22cos 2 ψ + C_22sin2 ψ).
+
+
+Equation (<ref>), together with (<ref>) is the most general form of eikonal phase shift induced by a mass quadrupole moment, ℓ=2. Following the same procedure, we can obtain similar expressions for higher orders of spherical harmonics with ℓ≥ 3. Some of the relevant expressions for the STF tensors and its relations to harmonic coefficients C_ℓ k, S_ℓ k in (<ref>) for orders ℓ=3,4 are given in <cit.>.  These results may be extended to arbitrary orders ℓ.
+
+Expressions (<ref>) relate the values of the spherical harmonics coefficients that are sampled by the propagating EM wave, C'_ℓ k, S'_ℓ k, to  those that are typically reported in in the standard GCRS coordinates, C_ℓ k, S_ℓ k. For that we performed the rotation of the standard harmonics onto the direction of the light propagation given by k⃗.
+
+We note that the change of spherical harmonics under a linear transformation of coordinates has been studied in the past, with a rich history (see, e.g., <cit.>). In our case, the transformation rules that correspond to rotating the north pole axis to coincide with k⃗ were accomplished with relative ease as an additional benefit of the use of the STF tensor formalism, which we invoked primarily in order to integrate the eikonal equation. The process, as we shall see below, is easily generalized to higher order harmonics.
+
+
+
+  §.§.§ The case of an axisymmetric body
+
+
+We know that, in the case of an axisymmetric gravitating body, all of the spherical harmonic coefficients accept for C_20 vanish, namely C_21=C_22=S_21=S_22=0. In this case, Eq. (<ref>), with the help of (<ref>), takes the familiar form:
+
+
+    φ_2(r⃗,r⃗_0)
+       =   1/2kr_gC_20R^2_⊕{-sin^2θcos2ϕ_ξ1/r(r+(k⃗·r⃗))+
+    
+           55pt+ (cos^2θ-
+    sin^2θsin^2ϕ_ξ)
+    (k⃗·r⃗)/r^3-
+    sin2θsinϕ_ξb/r^3}|^r_r_0.
+
+Alternatively, using J_2=-C_20 and relying on the definitions of the unit vectors b⃗, k⃗ and m⃗, we present (<ref>) as
+
+
+    φ^ E_2(r⃗,r⃗_0)
+    = -1/2kr_gJ_2R_⊕^2 {(2(s⃗·m⃗)^2+(s⃗·k⃗)^2-1)
+    1/r(r+(k⃗·r⃗))+
+    ((s⃗·k⃗)^2-(s⃗·m⃗)^2)(k⃗·r⃗)/r^3+
+    2(s⃗·m⃗) (s⃗·k⃗) b/r^3}|^r_r_0.
+
+
+
+
+ §.§ Octupole moment
+
+
+
+
+
+  §.§.§ The structure of the octupole phase shift
+
+
+Setting ℓ=3 in (<ref>) and (<ref>), we use the result for the two types of derivatives (<ref>) and (<ref>). We derive the eikonal phase shift, φ_3(r⃗,r⃗_0), introduced by the octupole STF mass moment, T^<abc>, which may be given as
+
+
+    φ_3(r⃗,r⃗_0)
+       =   1/6 kr_g
+     T^<abc> I_abc(r⃗,r⃗_0),
+
+where I_abc(r⃗,r⃗_0) is  light ray trajectory projection operator of the order of ℓ=3 that is given as
+
+
+    I_abc(r⃗,r⃗_0)   =   {(4m_am_bm_c+3k_ak_bm_c) 1/b(2/r(r+(k⃗·r⃗) )-(k⃗·r⃗)/r^3)+
+       +   3(3k_ak_bm_c-m_am_bm_c)b(k⃗·r⃗)/r^5+
+    3(3k_am_bm_c-k_ak_bk_c)b^2/r^5+
+    5k_ak_bk_c/r^3}|^r_r_0.
+
+Similarly to (<ref>), we re-arrange  (<ref>) to separate individual projection operators
+
+
+    I_abc(r⃗,r⃗_0)   =    2{(4m_am_bm_c+3k_ak_bm_c) {1/b(1/r(r+(k⃗·r⃗) )-(k⃗·r⃗)/2r^3)-
+    3/8b(k⃗·r⃗)/r^5}+
+       +   9/2(k_am_bm_c+1/2k_ak_bk_c)
+    b^2/r^5+45/8k_ak_bm_c b(k⃗·r⃗)/r^5+
+    5/2k_ak_bk_c1/r^3(1-3/2b^2/r^2)
+    }|^r_r_0,
+
+where, again, k⃗, m⃗ are given by (<ref>). Note that there is no need to explicitly STF this quantity as it will be acting on the STF tensor T^<abc> in (<ref>).
+
+Again, the form (<ref>) is convenient because it simplifies various inner products in (<ref>) when expressed in the light ray's coordinate system:
+
+
+    T^<abc>(4m_am_bm_c+3k_ak_bm_c)   =   ( T'_111-3 T'_122)cos3ϕ_ξ+(3 T'_112- T'_222)sin3ϕ_ξ,
+    
+     T^<abc>(k_am_bm_c+1/2k_ak_bk_c)   =   1/2( T'_113- T'_223)cos2ϕ_ξ+ T'_123sin2ϕ_ξ,
+    
+     T^<abc>k_ak_bm_c   =    T'_133cosϕ_ξ+ T'_233sinϕ_ξ,
+    
+     T^<abc> k_ak_bk_c   =    T'_333.
+
+
+ As a result, the octupole gravitational phase shift corresponding to ℓ=3 from (<ref>) takes the following  form:
+
+
+    φ_3(r⃗,r⃗_0)
+       =   1/3 kr_g
+    {{( T'_111-3 T'_122)cos3ϕ_ξ+(3 T'_112- T'_222)sin3ϕ_ξ}{1/b(1/r(r+(k⃗·r⃗) )-(k⃗·r⃗)/2r^3)-3/8 b(k⃗·r⃗)/r^5}+
+       +   9/4{( T'_113- T'_223)cos2ϕ_ξ+2 T'_123sin2ϕ_ξ}b^2/r^5+
+    45/8{ T'_133cosϕ_ξ+ T'_233sinϕ_ξ}b(k⃗·r⃗)/r^5
+    +
+       +   5/2 T'_3331/r^3(
+    1-3/2b^2/r^2)
+    }|^r_r_0.
+
+
+
+
+  §.§.§ Rotating the octupole mass moment
+
+
+The next step is to express T'^<abc> present in (<ref>) in terms of the spherical harmonics coefficients. For that, we  implement the rotation of T^<abc> in accordance with (<ref>):
+
+
+    T'^<abc>   =    T^<ijk>  R^a_i  R^b_j  R^c_k,
+
+ where T^<ijk> are the components of the Cartesian representation of the octupole mass tensor in the GCRS.  These components are known and are related to the  spherical harmonics C_3k,S_3k. In Appendix <ref>, we established the relationship between STF moments and spherical harmonics for ℓ=2. The same approach may be used for ℓ=3 to establish the  the correspondence between T^<abc> from (<ref>) and the spherical harmonics from (<ref>)  and (<ref>). The result given by
+
+
+    T_111   =   (3/5C_31-6C_33)R^3,       T_112=(1/5S_31-6S_33)R^3,
+           T_113=(-1/5C_30+2C_32)R^3,
+    
+     T_122   =   (1/5C_31+6C_33)R^3,       T_222=(3/5S_31+6S_33)R^3,
+           T_223=(-1/5C_30-2C_32)R^3,
+    
+     T_123   =   2S_32R^3,        T_133=-4/5C_31R^3,         T_233=-4/5S_31R^3,         T_333=2/5C_30R^3.
+
+It is easy to check that the rank-3 STF tensor T^<abc> has seven independent components; the values of the remaining 20 components are determined by its symmetries and vanishing trace. The system of equations (<ref>) is redundant, with only seven independent equations relating the components of T^<abc> to the seven spherical harmonic coefficients in the case ℓ=3.
+
+We can now implement the rotation (<ref>) that in accordance with (<ref>) and obtain the following components of the STF mass moments  T'^<abc> expressed via spherical harmonics of GCRS system:
+
+
+    R^-3 T'_111   =   3/5(C_31cosψ - S_31sinψ) +
+      6 (S_33sin3 ψ - C_33cos3 ψ),
+    
+    R^-3 T'_112   =   1/5sinθ C_30 +
+    1/5cosθ(S_31cosψ + C_31sinψ) +
+      2 sinθ(S_32sin2 ψ - C_32cos2 ψ) -  
+          - 
+      6 cosθ(S_33cos3 ψ + C_33sin3 ψ),   
+    
+    R^-3 T'_113   =    -1/5cosθ C_30 +
+     1/5sinθ(S_31cosψ + C_31sinψ) +
+      2 cosθ( C_32cos2 ψ - S_32sin2 ψ) -  
+          - 
+      6 sinθ(S_33cos3 ψ + C_33sin3 ψ),
+     
+    
+    R^-3 T'_122   =   4/5sin^2θ(S_31sinψ - C_31cosψ) - 2 sin2 θ(S_32cos2 ψ + C_32sin2 ψ) +
+      
+          + 1/5cos^2θ(C_31cosψ - S_31sinψ) +
+      6 cos^2θ(C_33cos3 ψ - S_33sin3 ψ),  
+    
+    R^-3 T'_222   =   1/10(1 + 5 cos2 θ) sinθ C_30 +  3/10(-3 + 5 cos2 θ) cosθ(S_31cosψ + C_31sinψ) + 
+          + 
+      3 cosθsin2 θ(C_32cos2 ψ - S_32sin2 ψ) +
+      6 cos^3θ( S_33cos3 ψ + C_33sin3 ψ), 
+    
+    R^-3 T'_223   =   1/10  C_30cosθ(3 - 5 cos2 θ) +
+     1/10(7 + 15 cos2 θ) sinθ (S_31cosψ + C_31sinψ) -
+    
+          - 1/2 (cosθ + 3 cos3 θ) (C_32cos2 ψ -
+         S_32sin2 ψ) +
+      6 cos^2θsinθ(S_33cos3 ψ + C_33sin3 ψ), 
+    
+    R^-3 T'_123   =   sinθcosθ(C_31cosψ -  S_31sinψ) +
+      2 cos2 θ(C_32sin2 ψ + S_32cos2 ψ) +
+      3 sin2 θ(C_33cos3 ψ - S_33sin3 ψ),
+      
+    
+    R^-3 T'_133   =   1/10(3 + 5 cos2 θ) (S_31sinψ - C_31cosψ) + 2 sin2 θ(S_32cos2 ψ + C_32sin2 ψ) + 
+          + 
+      6 sin^2θ(C_33cos3 ψ - S_33sin3 ψ),  
+    
+    R^-3 T'_233   =    -1/20  C_30(sinθ + 5 sin3 θ) +  1/10cosθ(7 - 15 cos2 θ) (S_31cosψ + C_31sinψ) -  
+          - (1 + 3 cos2 θ) sinθ(C_32cos2 ψ - S_32sin2 ψ) +
+      6 cosθsin^2θ(S_33cos3 ψ +  C_33sin3 ψ),
+      
+    
+    R^-3 T'_333   =   1/20 C_30 (3 cosθ + 5 cos 3 θ) -
+     3/10(3 + 5 cos2 θ) sinθ(S_31cosψ + C_31sinψ) - 
+          - 
+    6  cosθsin^2θ(C_32cos2 ψ - S_32sin2 ψ) +
+      6 sin^3θ(S_33cos3 ψ + C_33sin3 ψ).
+
+
+The relations between {C'_3k,S'_3k} and T'^<abc> have the same structure as in (<ref>) and thus are given as
+
+
+    C'_30   =   5/2 R^-3 T'_333,
+         C'_31 =  -5/4 R^-3 T'_133,
+         C'_32 = 1/4 R^-3( T'_113- T'_223),
+         C'_33 = 1/24 R^-3(3 T'_122- T'_111),
+    
+    
+    S'_31   =   -5/4 R^-3 T'_233,
+         
+    S'_32 = 1/2 R^-3 T'_123,
+           
+    S'_33 =  1/24 R^-3( T'_222-3 T'_112).
+
+
+
+
+  §.§.§ Octupole phase in terms of spherical harmonics
+
+
+The expressions developed in the precessing section allow us to write (<ref>) in terms of the spherical harmonic coefficients C'_3k,S'_3k as below
+
+
+    φ_3(r⃗,r⃗_0)
+       =   
+    -kr_g (R_⊕/b)^3 {8{
+    C'_33cos3ϕ_ξ+S'_33sin3ϕ_ξ}{1-
+    (k⃗·n⃗)(1+
+    1/2b^2/r^2+3/8b^4/r^4)}-
+       -   
+    3{C'_32cos2ϕ_ξ+S'_32sin2ϕ_ξ}b^5/r^5+
+    3/2{C'_31cosϕ_ξ+S'_31sinϕ_ξ}b^4/r^4(k⃗·n⃗)- 1/3 C'_30b^3/r^3(
+    1-3/2b^2/r^2)
+    }|^r_r_0,
+
+where, using (<ref>) and (<ref>), we find that C'_3 k and S'_3 k are related to their unrotated GCRS counterparts as
+
+
+    C'_30   =   1/8(3 cosθ + 5 cos3 θ) C_30 - 3/4(3 + 5 cos2 θ) sinθ(S_31cosψ +
+     C_31sinψ) - 
+          - 
+     15 cosθsin^2θ(C_32cos2 ψ -
+    S_32sin2 ψ) +
+    15 sin^3θ(S_33cos3 ψ + C_33sin3 ψ), 
+    
+    C'_31   =   1/8(3 + 5 cos2 θ) (C_31cosψ - S_31sinψ) -
+    5/2sin2 θ(S_32cos2 ψ + C_32sin2 ψ) - 
+          - 15/2sin^2θ(C_33cos3 ψ - S_33sin3 ψ), 
+    
+    C'_32   =    -1/4cosθsin^2θ  C_30 -
+      1/8(1 + 3 cos2 θ) sinθ(S_31cosψ +
+         C_31sinψ) + 
+          + 1/8(5 cosθ + 3 cos3 θ) (C_32cos2 ψ -
+         S_32sin2 ψ) -
+     3/8 (5 sinθ + sin3 θ) (C_33sin3 ψ+S_33cos3 ψ), 
+    
+    C'_33   =    -  1/8sin^2θ(C_31cosψ - S_31sinψ) - 1/4sin2 θ(C_32sin2 ψ+S_32cos2 ψ) + 
+          + 1/8(5 + 3 cos2 θ) (C_33cos3 ψ - S_33sin3 ψ), 
+    
+    S'_31   =   1/8sinθ(3 + 5cos2 θ)C_30 +
+      1/8cosθ(15 cos2 θ-7) (C_31sinψ+S_31cosψ) - 
+          - 5/8(sinθ - 3 sin3 θ) (C_32cos2 ψ -
+         S_32sin2 ψ) -
+      15/2cosθsin^2θ(S_33cos3 ψ +
+         C_33sin3 ψ), 
+    
+    S'_32   =   cos2 θ(C_32sin2 ψ+S_32cos2 ψ) +
+      1/4sin2 θ(C_31cosψ - S_31sinψ) +
+      3/2sin2 θ(C_33cos3 ψ - S_33sin3 ψ),
+      
+    
+    S'_33   =    - 1/24sin^3θ  C_30 -  1/8cosθsin^2θ(C_31sinψ+S_31cosψ) +  1/16(5 sinθ + sin3 θ) (C_32cos2 ψ -S_32sin2 ψ) + 
+          + 1/16(15 cosθ + cos3 θ) (C_33sin3 ψ+S_33cos3 ψ).
+
+
+
+
+  §.§.§ The case of an axisymmetric body
+
+
+We know that, in the case of an axisymmetric gravitating body, all the spherical harmonic coefficients except C_30 vanish: C_31=C_32=C_33=S_21=S_22=S_33=0. In this case, expression (<ref>) with (<ref>) takes the form
+
+
+    φ_3(r⃗,r⃗_0)
+       =   1/3 kr_g C_30R^3_⊕{
+    -sinθsinϕ_ξ(4sin^2θsin^2ϕ_ξ -3sin^2θ){1/b(1/r(r+(k⃗·r⃗) )-(k⃗·r⃗)/2r^3)}+
+          + 3/2sinθsinϕ_ξ(sin^2θsin^2ϕ_ξ-3cos^2θ)b(k⃗·r⃗)/r^5-
+          - 3/2cosθ(cos^2θ-3sin^2θsin^2ϕ_ξ)b^2/2r^5-
+    1/2cosθ(3-5cos^2θ)
+    1/r^3}|^r_r_0.
+
+Again, relying on the definitions of the unit vectors m⃗,k⃗,s⃗  and using J_3=-C_30, we present (<ref>) as
+
+
+    φ_3(r⃗,r⃗_0)
+       =    -1/3kr_gJ_3R_⊕^3{
+    (s⃗·m⃗)(4(s⃗·m⃗)^2+3(s⃗·k⃗)^2-3)
+    (1/b(1/r(r+(k⃗·r⃗))-(k⃗·r⃗)/2r^3)-
+    
+           -40pt - 3/2(s⃗·m⃗)
+    ((s⃗·m⃗)^2-3(s⃗·k⃗)^2)b(k⃗·r⃗)/r^5-
+    3/2(s⃗·k⃗)((s⃗·k⃗)^2-3(s⃗·m⃗)^2)b^2/r^5-1/2(s⃗·k⃗)(3-5(s⃗·k⃗)^2)1/r^3}|^r_r_0,
+
+which checks out nicely with the relevant J_3-part of (<ref>).
+
+
+
+ §.§ Hexadecapole moment
+
+
+
+
+
+  §.§.§ The structure of the hexadecapole phase shift
+
+
+In the case when ℓ=4, we use the derivatives (<ref>), (<ref>)  and derive the eikonal phase shift, φ_4(r⃗,r⃗_0) from (<ref>), introduced by the hexadecapole STF moment, T^<abcd>, in the form
+
+
+    φ_4(r⃗,r⃗_0)
+       =   -1/24 kr_g
+     T^<ijkl> I_abcd(r⃗,r⃗_0),
+
+where I_abcd(r⃗,r⃗_0) is the ℓ=4 ligh ray's trajectory projection operator that is given as
+
+
+    I_abcd(r⃗,r⃗_0)   =   
+    -3{(8m_am_bm_cm_d+8k_ak_bm_cm_d+k_ak_bk_ck_d)1/b^2(2/r(r+(k⃗·r⃗))-(k⃗·r⃗)/r^3)+
+           -60pt + 
+    2(4k_ak_bk_ck_d-3k_ak_bm_cm_d-3m_am_bm_cm_d) (k⃗·r⃗)/r^5+
+    5(6k_ak_bm_cm_d-k_ak_bk_ck_d-m_am_bm_cm_d) b^2(k⃗·r⃗)/r^7+
+       +   
+    20(k_am_bm_cm_d-k_ak_bk_cm_d)b^3/r^7 +28 k_ak_bk_cm_d b/r^5)
+    }|^r_r_0.
+
+As we did for (<ref>) and (<ref>), we identically re-arrange the terms in (<ref>) to make it more convenient for calculations
+
+
+    I_abcd(r⃗,r⃗_0)   =   
+    -6{(8m_am_bm_cm_d+8k_ak_bm_cm_d+k_ak_bk_ck_d)×
+           60pt × {1/b^2(1/r(r+(k⃗·r⃗))-(k⃗·r⃗)/2r^3)-3/8(k⃗·r⃗)/r^5-
+    5/16b^2(k⃗·r⃗)/r^7}+
+       +   
+    10(k_am_bm_cm_d+3/4 k_ak_bk_cm_d)b^3/r^7 +
+    35/2(k_ak_bm_cm_d +1/2 k_ak_bk_ck_d)b^2(k⃗·r⃗)/r^7+
+       +   
+    14 k_ak_bk_cm_d b/r^5(1-5/4b^2/r^2)+
+    35/8 k_ak_bk_ck_d (k⃗·r⃗)/r^5(1-
+    5/2b^2/r^2)
+    }|^r_r_0.
+
+Similarly to (<ref>),  there is no need to make I_abcd(r⃗,r⃗_0) to be an STF quantity as it will be acting on the STF tensor T^<abcd> in (<ref>), so that the presence of delta Kronecker symbols will not change the overall result.
+
+The form (<ref>) is convenient as it allows to express various inner products in (<ref>) in the light ray's system of coordinates and using (<ref>), yielding remarkably structured results:
+
+
+    T^<abcd>(8m_am_bm_cm_d+8k_ak_bm_cm_d+k_ak_bk_ck_d)   =   
+           -80pt = ( T'_1111+ T'_2222-6 T'_1122)cos4ϕ_ξ+4( T'_1112- T'_1222)sin4ϕ_ξ,
+    
+     T^<abcd>(k_am_bm_cm_d+3/4 k_ak_bk_cm_d)   =   1/4( T'_1113-3 T'_1223)cos3ϕ_ξ+
+    1/4(3 T'_1123- T'_2223)sin3ϕ_ξ,     
+     T^<abcd>(k_ak_bm_cm_d +1/2 k_ak_bk_ck_d)   =   1/2( T'_1133- T'_2233)cos2ϕ_ξ+
+     T'_1223sin2ϕ_ξ,
+    
+     T^<abcd> k_ak_bk_cm_d   =    T'_1333cosϕ_ξ+ T'_2333sinϕ_ξ,
+    
+     T^<abcd> k_ak_bk_ck_d   =    T'_3333.
+
+
+Using the expressions (<ref>)–(<ref>), as a result, we obtain the following compact form for the hexadecapole gravitational phase shift expressed via rotated ℓ=4 STM mass moments:
+
+
+    φ_4(r⃗,r⃗_0)
+       =   1/4 kr_g
+    {{( T'_1111+ T'_2222-6 T'_1122)cos4ϕ_ξ+
+    4( T'_1112- T'_1222)sin4ϕ_ξ}×
+           70pt
+    × {1/b^2(1/r(r+(k⃗·r⃗))-(k⃗·r⃗)/2r^3)-3/8(k⃗·r⃗)/r^5-5/16 b^2(k⃗·r⃗)/r^7}+
+           -60pt+ 5/2{( T'_1113-3 T'_1223)cos3ϕ_ξ+(3 T'_1123- T'_2223)sin3ϕ_ξ}b^3/r^7 -
+    35/2{1/2( T'_1133- T'_2233)cos2ϕ_ξ+
+     T'_1223sin2ϕ_ξ} b^2(k⃗·r⃗)/r^7+
+       +   
+    14 { T'_1333cosϕ_ξ+ T'_2333sinϕ_ξ}b/r^5(1-
+    5/4b^2/r^2)+
+    35/8 T'_3333(k⃗·r⃗)/r^5(1-5/2b^2/r^2)
+    }|^r_r_0.
+
+
+
+
+  §.§.§ Rotating the hexadecapole mass moment
+
+
+We now need to establish the relationships between T^<abcd> and the spherical harmonics, C_4k, S_k, k=0...4, that are given with respect to the GCRS.
+For that, as we did for the cases with ℓ=2,3, we establish a correspondence between T^<abcd> from (<ref>) and the spherical harmonics coefficients  for ℓ=4 that are present in (<ref>) (i.e., using the same procedure demonstrated in Appendix <ref>):
+
+
+    T_1111   =   (3/35C_40- 12/7C_42+24C_44)R^4,       T_2222=(3/35C_40+12/7C_42+24C_44)R^4,
+    
+     T_1112   =   (-6/7S_42+ 24S_44)R^4,         T_1113=(3/7C_41-60/7C_43)R^4,
+           T_2223=(3/7S_41+60/7S_43)R^4,
+    
+     T_1122   =   (1/35C_40- 24C_44)R^4,
+               T_1123=(1/7S_41-60/7S_43)R^4,
+             T_1133=(-4/35C_40+12/7C_42)R^4,
+    
+     T_2233   =   (-4/35C_40-12/7C_42)R^4,        T_1222=(-6/7S_42- 24S_44)R^4,
+          T_1223=(1/7C_41+60/7C_43)R^4,
+    
+     T_3333   =   8/35C_40R^4,        T_1233=12/7S_42R^4,         T_1333=-4/7C_41R^4,         T_2333=-4/7S_41R^4.
+
+As these quantities are the non-vanishing components of the hexadecapole  STF mass moment tensor, out of the fifteen terms T^<abcd> in (<ref>), only nine are independent.
+
+We can now rotate T^<abcd> and obtain T'^<abcd> in the light ray's system of coordinates, using in (<ref>):
+
+
+    T'^<abcd>   =    T^<ijkl>  R^a_i  R^b_j  R^c_k  R^d_l.
+
+This allows us to derive the following components of the STF mass moments in the rotated coordinate system:
+
+
+    R^-4 T'_1111   =   3/35
+     C_40 + 12/7(S_42sin2 ψ - C_42cos 2 ψ) +
+      24 (C_44cos4ψ - S_44sin4 ψ),
+    
+    R^-4 T'_1112   =   3/7sinθ(S_41sinψ - C_41cosψ) +
+    60/7sinθ(C_43cos 3 ψ - S_43sin3 ψ) -
+      6/7cosθ(C_42sin2 ψ + S_42cos 2 ψ) + 
+          + 
+      24 cosθ(S_44cos4ψ + C_44sin4 ψ), 
+    
+    R^-4 T'_1113   =   6/7cosθ(C_41cosψ - S_41sinψ) +
+     60/7cosθ(S_43sin3 ψ - C_43cos 3 ψ) -
+      6/7sinθ(C_42sin2 ψ + S_42cos 2 ψ) + 
+          + 
+      24 sinθ(S_44cos4ψ + C_44sin4 ψ),
+     
+    
+    R^-4 T'_1122   =   1/70 C_40(-3 + 5cos 2 θ) -
+      1/7sin2 θ(C_41sinψ + S_41cosψ) +
+      12/7sin^2θ(C_42cos 2 ψ - S_42sin2 ψ) + 
+          + 60/7sin2 θ(C_43sin3 ψ + S_43cos 3 ψ) -
+      24 cos^2θ(C_44cos4ψ - S_44sin4 ψ),
+    
+    
+    R^-4 T'_1123   =   1/7 C_40cosθsinθ+
+      1/7cos 2 θ(S_41cosψ + C_41sinψ) -
+      6/7sin2 θ(C_42cos 2 ψ - S_42sin2 ψ) - 
+          - 60/7cos 2 θ(S_43cos 3 ψ + C_43sin3 ψ) +
+      12 sin2 θ(-C_44cos4ψ + S_44sin4 ψ),
+      
+    
+    R^-4 T'_1133   =    -1/70 C_40(3 + 5cos 2 θ) +
+      1/7sin2 θ(S_41cosψ + C_41sinψ) +
+      12/7cos^2θ(C_42cos 2 ψ - S_42sin2 ψ) - 
+          - 60/7sin2 θ(S_43cos 3 ψ + C_43sin3 ψ) -
+      24 sin^2θ(C_44cos4ψ - S_44sin4 ψ),     
+    
+    R^-4 T'_2222   =   1/280 C_40(9 - 20cos 2 θ+ 35 cos 4 θ) +
+      1/14(2 sin2 θ- 7 sin4 θ) (S_41cosψ +
+         C_41sinψ) + 
+          + 6/7cos^2θ(-5 + 7cos 2 θ) (C_42cos 2 ψ -
+         S_42sin2 ψ) -
+      240/7cos^3θsinθ(S_43cos 3 ψ +
+         C_43sin3 ψ) + 
+          + 
+      24 cos^4θ(C_44cos4ψ - S_44sin4 ψ),
+     
+    
+    R^-4 T'_2223   =   1/56 C_40(-2 sin2 θ+ 7 sin4 θ) - 1/14(cos2 θ- 7 cos 4 θ) (S_41cosψ + C_41sinψ) +
+          + 3/14(2 sin2 θ+ 7 sin4 θ) (C_42cos 2 ψ -
+         S_42sin2 ψ) +   
+          + 60/7cos^2θ(-1 + 2cos 2 θ) (S_43cos 3 ψ +
+         C_43sin3 ψ) +
+      24 cosθ^3 sinθ(C_44cos4ψ -  S_44sin4 ψ),
+    
+    
+    R^-4 T'_2233   =   1/280 C_40(3 - 35 cos 4 θ) +
+      1/2sin4 θ(S_41cosψ + C_41sinψ) -   3/14(1 + 7 cos 4 θ) (C_42cos 2 ψ -  S_42sin2 ψ) + 
+          + 30/7sin4 θ(S_43cos 3 ψ + C_43sin3 ψ) +
+      6 sin^22 θ(C_44cos4ψ - S_44sin4 ψ),    
+    
+    R^-4 T'_1222   =   1/14(1- 7cos 2 θ) sinθ(C_41cosψ - S_41sinψ) +
+      3/14(3 cosθ - 7 cos3 θ) (S_42cos 2 ψ +
+         C_42sin2 ψ) - 
+          - 180/7cos^2θsinθ(C_43cos 3 ψ - S_43sin3 ψ) -
+      24 cos^3θ(S_44cos4ψ + C_44sin4 ψ),
+    
+    
+    R^-4 T'_1223   =   1/28(-3 cosθ + 7 cos3 θ) (C_41cosψ -
+         S_41sinψ) +
+      3/14(sinθ- 7 sin3 θ) (S_42cos 2 ψ +
+         C_42sin2 ψ) + 
+          + 15/7(cosθ + 3 cos3 θ) (C_43cos 3 ψ -
+         S_43sin3 ψ) -
+      24 cos^2θsinθ(S_44cos4ψ +   C_44sin4 ψ),     
+    
+    R^-4 T'_1233   =   1/28(3 sinθ+ 7 sin3 θ) (C_41cosψ -
+         S_41sinψ) +
+      3/14(cosθ + 7 cos3 θ) (S_42cos 2 ψ +
+         C_42sin2 ψ) - 
+          - 15/7(sinθ- 3 sin3 θ) (C_43cos 3 ψ -
+         S_43sin3 ψ) -
+      24 cosθsin^2θ(S_44cos4ψ + C_44sin4 ψ),
+    
+    
+    R^-4 T'_2333   =    -1/56 C_40 (2 sin2 θ+ 7 sin4 θ) -
+      1/14(cos2 θ+ 7 cos 4 θ)(S_41cosψ +
+         C_41sinψ) +
+         
+          + 3/14(2 sin2 θ- 7 sin4 θ) (C_42cos 2 ψ -
+         S_42sin2 ψ) +
+           
+          + 60/7(1 + 2cos 2 θ) sin^2θ(S_43cos 3 ψ +
+         C_43sin3 ψ) +
+      24 cosθsin^3θ(C_44cos4ψ -  S_44sin4 ψ),
+       
+    
+    R^-4 T'_1333   =    -1/14cosθ(1 + 7cos 2 θ) (C_41cosψ -
+         S_41sinψ) +
+      3/14(3 sinθ+ 7 sin3 θ) (S_42cos 2 ψ +
+         C_42sin2 ψ) + 
+          + 180/7cosθsin^2θ(C_43cos 3 ψ -
+         S_43sin3 ψ) -
+      24 sin^3θ(S_44cos4ψ + C_44sin4 ψ),
+        
+    
+    R^-4 T'_3333   =   1/280 C_40(9 + 20cos 2 θ+ 35 cos 4 θ) -
+      1/14(2 sin2 θ+ 7 sin4 θ) (C_41sinψ +
+         S_41cosψ) + 
+          + 6/7(5 + 7cos 2 θ) sin^2θ(S_42sin2 ψ - C_42cos 2 ψ) +
+      240/7cosθsin^3θ(C_43sin3 ψ +
+         S_43cos 3 ψ) +
+      
+          + 
+      24 sin^4θ(C_44cos4ψ - S_44sin4 ψ).
+
+
+As a result, the relations between
+{C'_4k,S'_4k} and T'^<abcd> are established to be
+
+
+    C'_40   =   35/8 T'_3333R^-4,
+         C'_41 = -7/4 T'_1333R^-4,
+         C'_42 = 7/48( T'_1133- T'_2233)R^-4, 
+    
+    C'_43   =     -7/240( T'_1113-3 T'_1223)R^-4,
+        
+    C'_44 = 1/96( T'_1111+ T'_2222-6 T'_1122)R^-4,
+        
+    S'_41 =-7/4 T'_2333R^-4
+    
+    S'_42   =   7/12 T'_1223R^-4,
+        
+    S'_43 =  -7/240(3 T'_1123- T'_2223)R^-4,
+        
+    S'_44 =   1/48( T'_1112- T'_1222)R^-4.
+
+
+
+
+  §.§.§ Hexadecapole phase in terms of spherical harmonics
+
+
+Relationships (<ref>)–(<ref>) allow us to express (<ref>) in terms of the spherical harmonics coefficients C'_4k,S'_4k as
+
+
+    φ_4(r⃗,r⃗_0)
+       =   kr_g(R_⊕/b)^4
+    {48{C'_44cos4ϕ_ξ+S'_44sin4ϕ_ξ}{1-(k⃗·n⃗)(1+1/2b^2/r^2+3/8b^4/r^4+5/16b^6/r^6)}-
+           25pt - 150/7{C'_43cos3ϕ_ξ+S'_43sin3ϕ_ξ}b^7/r^7 +
+    15/2{C'_42cos2ϕ_ξ+S'_42sin2ϕ_ξ}b^6/r^6-
+           34pt - 
+    2{ C'_41cosϕ_ξ+S'_41sinϕ_ξ}b^5/r^5(1-
+    5/4b^2/r^2)+1/4 C'_40b^4/r^4(k⃗·n⃗)(1-5/2b^2/r^2)
+    }|^r_r_0,
+
+where C'_4 k and S'_4 k in the rotated coordinate system using (<ref>) and (<ref>) are given by[Note that the form of Eq. (<ref>) may be generalized to any order ℓ. Here we present the result that captures the contribution of the sectoral spherical harmonics C'_ℓℓ,S'_ℓℓ that has the form:
+
+
+    φ_ℓ(r⃗,r⃗_0)
+       =   kr_g(R_⊕/b)^ℓ{(-1)^ℓ(2ℓ-2)!!{C'_ℓℓcosℓϕ_ξ+S'_ℓℓsinℓϕ_ξ}{1-(k⃗·n⃗)(∑_k=0^ℓ-1(2k)!/4^k(k!)^2(b/r)^2k)}}|^r_r_0,
+
+which extends our results from <cit.> (that were developed for the case when b≪ r) on the case with any relations between b and r. The relevant work is currently underway; results, when available, will be reported.
+]
+
+
+    C'_40   =   1/64(9 + 20 cos 2θ + 35 cos 4 θ)C_40  -
+      5/16(2 sin2θ + 7 sin4 θ) (C_41sinψ+S_41cosψ) - 
+          - 15/4(5 + 7 cos 2 θ) sin^2θ(C_42cos 2 ψ - S_42sin2 ψ) +
+      150 cosθsin^3θ(C_43sin3 ψ+S_43cos 3 ψ) + 
+          + 
+      105 sin^4θ(C_44cos 4 ψ - S_44sin4 ψ),
+    
+    
+    C'_41   =   1/8cosθ(1 + 7 cos 2 θ) (C_41cosψ -  S_41sinψ) -
+      3/8(3 sinθ + 7 sin3 θ) (C_42sin2 ψ+S_42cos 2 ψ) - 
+          -  45 cosθsin^2θ(C_43cos 3 ψ - S_43sin3 ψ) + 42 sin^3θ(C_44sin4 ψ+S_44cos 4 ψ),
+    
+    
+    C'_42   =    -1/48sin^2θ(5 + 7 cos 2 θ)  C_40 +
+      1/48(2 sin2θ - 7 sin4 θ) (C_41sinψ+S_41cosψ) + 
+          + 1/16(5 + 4 cos 2θ +
+         7 cos 4 θ) (C_42cos 2 ψ - S_42sin2 ψ) -
+      10 cos^3θsinθ(C_43sin3 ψ+S_43cos 3 ψ) - 
+          - 7/2(3 + cos 2 θ)sin^2θ(C_44cos 4 ψ - S_44sin4 ψ),
+    
+    
+    C'_43   =    -7/80cosθsin^2θ(C_41cosψ - S_41sinψ) -
+      7/80(1 + 3 cos 2 θ) sinθ(C_42sin2 ψ+S_42cos 2 ψ) + 
+          + 1/16(7 cosθ + 9 cos 3 θ) (C_43cos 3 ψ -
+         S_43sin3 ψ) -
+      7/40(7 sinθ + 3 sin3 θ) (C_44sin4 ψ+S_44cos 4 ψ),
+      
+    
+    C'_44   =   1/192sin^4θ C_40  +
+      1/48cosθsin^3θ(C_41sinψ+S_41cosψ) -
+      1/32(3 + cos 2 θ) sin^2θ(C_42cos 2 ψ - S_42sin2 ψ) - 
+          - 5/224(14 sin2θ + sin4 θ) (C_43sin3 ψ+S_43cos 3 ψ) +
+      1/64(35 + 28 cos 2θ + cos 4 θ) (C_44cos 4 ψ - S_44sin4 ψ),
+    
+    
+    S'_41   =   1/32(2 sin2θ + 7 sin4 θ)C_40  +
+      1/8(cos 2θ + 7 cos 4 θ)(C_41sinψ+S_41cosψ) - 
+          - 3/8(2 sin2θ - 7 sin4 θ) (C_42cos 2 ψ -
+         S_42sin2 ψ) -
+      15 (1 + 2 cos 2 θ) sin^2θ(C_43sin3 ψ+S_43cos 3 ψ) - 
+          - 
+      42 cosθsin^3θ(C_44cos 4 ψ - S_44sin4 ψ),
+        
+    
+    S'_42   =   1/48(3 sinθ + 7 sin3 θ) (C_41cosψ - S_41sinψ) +
+      1/8(cosθ + 7 cos 3 θ) (C_42sin2 ψ+S_42cos 2 ψ) - 
+          - 5/4(sinθ - 3 sin3 θ) (C_43cos 3 ψ - S_43sin3 ψ) -
+      14 cosθsin^2θ(C_44sin4 ψ+S_44cos 4 ψ),
+            
+    
+    S'_43   =   -7/240cosθsin^3θ  C_40  - 7/240(1 + 2 cos 2 θ) sin^2θ(C_41sinψ+S_41cosψ) + 
+          + 7/20cos^3θsinθ(C_42cos 2 ψ - S_42sin2 ψ) +
+       1/8(7 cos 2θ + cos 4 θ) (C_43sin3 ψ+S_43cos 3 ψ) + 
+          + 7/80(14 sin2θ + sin4 θ) (C_44cos 4 ψ -
+         S_44sin4 ψ),
+         
+    
+    S'_44   =    -1/48sin^3θ(C_41cosψ - S_41sinψ) -  1/8cosθsin^2θ(C_42sin2 ψ+S_42cos 2 ψ) + 
+          + 5/112(7 sinθ + 3 sin3 θ)(C_43cos 3 ψ - S_43sin3 ψ) + 1/8(7 cosθ + cos 3 θ) (C_44sin4 ψ+S_44cos 4 ψ).
+
+
+
+
+  §.§.§ The case of an axisymmetric body
+
+
+For an axisymmetric body, all the spherical harmonic coefficients except for C_40 vanish, namely: C_41=C_42=C_43=C_41=S_41=S_42=S_43=S_43=0. In this case, expressions (<ref>)–(<ref>) take the form
+
+
+    φ_4(r⃗,r⃗_0)
+       =   1/4 kr_gC_40R_⊕^4
+    {cos 4ϕ_ξsin^4θ{1/b^2(1/r(r+(k⃗·r⃗))-(k⃗·r⃗)/2r^3)-3/8(k⃗·r⃗)/r^5}-
+       -   5/2(
+    sin^4θsin^4 ϕ_ξ -6
+    sin^2θcos^2θsin^2 ϕ_ξ + cos^4 θ)
+    b^2(k⃗·r⃗)/r^7+
+    
+           -40pt + 
+    10sinθcosθsinϕ_ξ(cos^2θ-sin^2θsin^2ϕ_ξ)
+    b^3/r^7+
+    2sinθcosθsinϕ_ξ(3 - 7 cos^2 θ)b/r^5}|^r_r_0.
+
+Again, using J_4=-C_40 and relying on the definitions of the unit vectors m⃗,k⃗,s⃗, we present (<ref>) as
+
+
+    φ_4(r⃗,r⃗_0)
+       =   1/4kr_gJ_4R_⊕^4 {(8(s⃗·m⃗)^2((s⃗·m⃗)^2+(s⃗·k⃗)^2-1)+((s⃗·k⃗)^2-1)
+    ^2)1/b^2((k⃗·r⃗)/2r^3-1/r(r+(k⃗·r⃗)))+
+    
+       +   (3(s⃗·m⃗)^2
+    ((s⃗·m⃗)^2+(s⃗·k⃗)^2-1)+(s⃗·k⃗)^2
+    (3-4(s⃗·k⃗)^2))(k⃗·r⃗)/r^5+
+       +   5/2(((s⃗·m⃗)^2-(s⃗·k⃗)^2)^2-4(s⃗·m⃗)^2(s⃗·k⃗)^2)b^2(k⃗·r⃗)/r^7+
+       +   
+    10(s⃗·m⃗)(s⃗·k⃗)((s⃗·k⃗)^2-(s⃗·m⃗)^2)b^3/r^7+2(s⃗·m⃗)(s⃗·k⃗)(3-7(s⃗·k⃗)^2)b/r^5}|^r_r_0,
+
+which agrees with the relevant J_4-part of (<ref>).
+
+
+
+ §.§ Tidal and spin contributions
+
+
+Considering signal propagation in the vicinity of the Earth, we can now integrate the contributions to the total phase shift from the remaining two terms present in (<ref>), namely the tidal terms and the Earth's vector potential (<ref>), that are given by (<ref>) and (<ref>), correspondingly.  Integration of these terms along the light path is straightforward, yielding the following result for the tidal term:
+
+
+    φ_G^ tidal(x⃗)    =   
+    -k∫^τ_τ_02/c^2u^ tidal_ E(τ')dτ' ≃-
+    k ∑_b≠ EGM_b/c^2r^3_b E∫^τ_τ_0(3(n⃗^_b E·x⃗)^2-x⃗^2)
+    dτ'≃
+           -55pt ≃ 
+    k ∑_b≠ EGM_b/c^2r^3_b E{(3(n⃗^_b E·m⃗)^2-1)b^2(k⃗·r⃗)
+    +3(n⃗^_b E·m⃗)(n⃗^_b E·k⃗)b(k⃗·r⃗)^2+
+    1/3(3(n⃗^_b E·k⃗)^2-1)(k⃗·r⃗)^3}|^r_r_0≈
+           -55pt ≈ 
+    k ∑_b≠ EGM_b/c^2r^3_b E1/3(3(n⃗^_b E·k⃗)^2-1)((k⃗·r⃗)^3-(k⃗·r⃗_0)^3).
+
+Similarly, we integrate the phase term due to the Earth's rotation:
+
+
+    φ_G^ S(x⃗)    =   
+    -k∫^τ_τ_04/c^3(k_ϵ w^ϵ_ E(τ'))dτ' =-
+    k2GM_⊕/c^3
+    (S⃗_⊕·[k⃗×b⃗])∫^τ_τ_0dτ'/r^3 =
+    - k 2GM_⊕/c^3(S⃗_⊕·[k⃗×m⃗])/b(k⃗·(n⃗-n⃗_0)).
+
+
+We can now evaluate these terms for a typical GPS orbit with altitude of d_ GPS=20,000 km, so that r_0=R_⊕+d_ GPS. The tidal term from (<ref>) is
+
+
+    φ_G^ tidal(x⃗)    ≈   
+    k ∑_b≠ EGM_b/c^2r^3_b E1/3(3(n⃗^_b E·k⃗)^2-1)((k⃗·r⃗)^3-(k⃗·r⃗_0)^3)=
+           -50pt= 
+    k ∑_b≠ EGM_b/3c^2r^3_0/r^3_b E(3(n⃗^_b E·k⃗)^2-1)(r^3/r^3_0(k⃗·n⃗)^3-(k⃗·n⃗_0)^3)≈
+    kc(4.01× 10^-17  s+1.84× 10^-17  s),
+
+where the two numerical contributions are from the Moon and the Sun, respectively. Along similar lines, the phase contribution from the Earth's rotation (<ref>) may be at most
+
+
+    φ_G^ S(x⃗)    =   
+    - k 2GM_⊕/c^3(S⃗_⊕·[k⃗×m⃗])/b(k⃗·(n⃗-n⃗_0))
+    ≈ kc(R_⊕/b)(k⃗·(n⃗-n⃗_0))(1.52× 10^-17  s),
+
+which may be insignificant in many scenarios, though its magnitude can be non-negligible for vertical transmissions.
+
+
+
+ §.§ Evaluating the magnitudes of the various multipole terms
+
+
+Although we were able to develop analytical expressions for the gravitational phase shifts induced by the ℓ=2, 3, 4 spherical harmonics (<ref>), (<ref>) and (<ref>), correspondingly, we recognize that based on the values of the spherical harmonic coefficients shown in Table <ref>, their individual contributions will be  very different.
+
+The relative magnitudes of individual terms depend significantly on the location of the transmitter and receiver and the direction of transmission. The significance of these terms and their contributions to the phase shift is application-dependent. As a general observation, we note that the contributions of all but the quadrupole zonal harmonic C_20=-J_2 are small, with typical magnitudes of kc  O(10^-14  s) or less. Therefore, for many applications accounting only for J_2 and C_22, S_22 may be sufficient, ignoring most of the tesseral, sectoral, and higher-order terms.
+
+
+
+Evaluating the phase delay using a ground-based transmitter for a variety of scenarios yielded the results shown in Fig. <ref>. As expected, the largest contribution is due to the quadrupole moment, but it remains small, never exceeding ∼ 0.01 ps in magnitude. The contributions of the octupole and hexadecapole moments are much less, measured in hundredths of femtoseconds. For consistency, the cases depicted in Fig. <ref> all involve ground-based transmitters. To assess the delay between two distant stations in space, the phase delays shown in the top row of images of Fig. <ref> must be multiplied by two, to account for the incoming and outgoing leg of a transmission grazing the Earth's surface (similar to the situation discussed in <cit.>). For signal paths with a larger impact parameter, the phase delay decreases, so the curves in the top row of Fig. <ref> represent upper limits for such transmissions.
+
+We may wonder why even the quadrupole contribution remains small, perhaps surprisingly small, in all the cases considered. When we look at Eqs. (<ref>), (<ref>) and (<ref>), there are three competing factors at work, which are best understood if we recall that ultimately, all variable terms in these expressions, including the impact parameter b defined in (<ref>), are functions of the vector quantities r⃗_0 and r⃗, and that moreover, these expressions, developed by integrating the eikonal equation, are themselves differences of values evaluated at r⃗ and r⃗_0.
+
+To wit, when b is small, it implies a near vertical transmission. In these cases, terms with b in the numerator become insignificant, whereas k⃗·n⃗≃ 1. Looking at, e.g., (<ref>), we can see how as a result, all terms vanish, or nearly vanish from the result. Conversely, a large b implies transmission in the horizontal direction. Again looking at (<ref>), this implies that k⃗·n⃗≪ 1. Of the remaining terms, the coefficient 1 in the first term of (<ref>) does not depend on r⃗ so it is canceled when we compute the difference between r⃗ and r⃗_0. What remains, the namely the C'_21 and S'_21 terms, are small to begin with as these are the terms that include no contribution from the largest spherical harmonic coefficient C_20.
+As a result of this interplay between the value of b, the value of k⃗·n⃗, and the differencing between r⃗ and r⃗_0, the magnitude of Eq. (<ref>) remains small. Similar behavior is exhibited by the octupole and hexadecapole expressions (<ref>) and (<ref>).
+
+While these contributions are much too small to affect time synchronization with present-generation clocks, they will likely become significant in the near future, as clocks of even greater accuracy are deployed. Furthermore, while these phase shifts are insignificant for time synchronization, they represent a substantial contribution for phase-coherent transmissions and as such, they will have to be accounted for in any implementations or experiments that use phase coherent infrared or shorter wavelength signals. This includes experiments that rely on optical interferometry with signal paths in the gravitational field of the Earth.
+
+Although the formalism that we introduced on these pages is aimed primarily at estimating the gravitational phase delay in the vicinity of the Earth, the methods are generic and can be readily applied to other gravitating bodies. We looked, in particular, at the quadrupole contribution to the Shapiro delay for a signal grazing the Sun. We found that if such a signal travels in the solar equatorial plane, the maximum phase delay due to the solar quadrupole moment (which is very small, J_2≃ -2.3× 10^-7 only) is less than 1.1 ps. The Sun has no measured octupole moment (it is “north-south symmetric” in addition to axisymmetry) and its hexadecapole moment contributes even less, at the sub-femtosecond level.
+
+Finally, we looked at Jupiter, anticipating the possibility that future orbiters at Jupiter or one of its moons will utilize precision signals grazing the Jovian surface. Jupiter is not only massive but has substantial oblateness (J_2=-1.474× 10^-2) and although it, too, is “north-south symmetric”, its hexadecapole moment remains substantial as well. Indeed, we find that for a transmission grazing Jupiter's surface in its equatorial plane, the cumulative phase delay due to the planet's quadrupole moment can reach 70 ps, and even the hexadecapole moment can contribute more than 2 ps.
+
+Coming back to the Earth, we also assessed the magnitudes of contributions due to spin and solar and lunar tides. For realistic signal paths within the vicinity of the Earth, these contributions remain very small: tidal contributions are of O(0.01  ps), whereas the spin contribution is less than 0.1 femptoseconds (fs). Comparatively, tidal contributions are approximately of the same magnitude as the contribution of the Earth's quadrupole moment, whereas the spin contribution is on the level of the octupole or hexadecapole moments.
+
+
+
+ §.§ Relativistic gravitational phase shift
+
+
+
+Based on the analysis in the earlier sections, we can now write the post-Minkowskian expresison for the phase of an EM wave that propagates in the vicinity of the extended and rotating gravitating body, such as the Earth. In the body's proper reference frame (a formulation that accounts for the presence of the external gravity field produced by the external bodies of the N-body system <cit.>), collecting all the appropriate contributions  coming from the Earth's mass distribution φ^ E_G, Earth's rotation φ^ S_G, and external gravity φ^ tidal_G, the total phase Eq. (<ref>) has the form:
+
+
+    φ(t,x⃗) = φ_0+∫ k_m dx^m+φ^ E_G(t,x⃗)+φ^ S_G(t,x⃗)+φ^ tidal_G(t,x⃗)+ O(G^2).
+
+
+We now have the ability to evaluate this expression at previously unavailable levels of accuracy using expressions for the quadrupole term, φ^ E_2, from (<ref>)–(<ref>), for the octupole term φ_3, from (<ref>)–(<ref>),  for the hexadecapole term, φ_4, from (<ref>)–(<ref>), and expressions (<ref>) and (<ref>) for the tidal, φ^ tidal_G, and rotational, φ^ S_G, terms, correspondingly.  This level of accuracy, however, may be excessive in practical cases. For instance, if a time transfer accuracy of 10^-12 s, is acceptable, for some GPS applications, the result can be given as
+
+
+    φ(t,x⃗)    =   φ_0+k{c(t-t_0)-k⃗· (x⃗-x⃗_0)-r_gln[r+(k⃗·r⃗)/r_0+(k⃗·r⃗_0)]+
+       +   1/2r_g(R_⊕/b)^2
+    {cos2ϕ_ξ[C_20sin^2θ
+    +2(1+cos^2θ)(S_22sin2ψ-C_22cos2ψ)]-
+           42pt- 
+    4sin2ϕ_ξ[
+    cosθ(S_22cos2ψ+C_22sin2ψ)]}(k⃗·(n⃗-n⃗_0))}+
+    kc  O(≪ 0.01  ps).
+
+As discussed in Sec <ref>, the  angles θ, ψ and ϕ_ξ are uniquely defined  in terms of the GCRS positions of the transmitter, r⃗_0, and the receiver, r⃗. The order terms are due to the omitted quadrupole and higher-order multipole contributions.  We included the dominant quadrupole contribution but we note that it, too, is very small, O(0.01  ps), so if only picosecond accuracy is required, the quadrupole term can also be dropped.
+
+Eq. (<ref>) extends the well-known expression for relativistic delay. In addition to the classic Shapiro gravitational time delay due to a mass monopole (represented by the logarithmic term), it also includes contributions due to quadrupole moment of the extended Earth, C_20=-J_2 and C_22,S_22 spherical harmonics (see Table <ref>). Additional terms may be included from the preceding derivation if greater accuracy is required.
+
+
+
+§ CONCLUSIONS AND RECOMMENDATIONS
+
+
+
+Satellites in low-Earth orbit are affected by a broad spectrum of perturbations due to the Earth's gravity field. The largest of these perturbations are produced by the Earth's oblateness, J_2.  Beyond the oblateness, there exist much smaller undulations of higher order in the gravity field. These variations produce lesser, but certainly observable effects on low-Earth orbiters <cit.>. The same gravity perturbations affect clocks and light propagation in the Earth's vicinity. However, most of the models capture only relativistic corrections due to the Earth's monopole potential, such as the Shapiro phase delay term – the largest among the relevant gravitational effects. Beyond that, only the contribution of the Earth's oblateness, characterized by J_2=-C_20, was accounted for (e.g. <cit.>). No models capturing the contributions of other multipole moments present in the Earth's gravity potential were available.
+
+In this paper, we addressed this challenge with the aim to obtain results in terms of the spherical harmonics. We studied the transformation between proper and coordinate time and the propagation of an EM wave in the vicinity of a gravitating body with a gravitational potential that deviates from a perfect monopole, such as the Earth. We found that at the present level of accuracy, more and more terms from the Earth's gravitational potential must be included in the model formulations. In fact, the lower the orbit of a satellite, more terms are needed.  Also, for high orbits, tidal gravity from the moon (and soon, that of the Sun) becomes significant and needs to be accounted for.
+
+To study the light propagation in the vicinity fo the Earth, we represented the gravitational potential in terms of the symmetric trace-free (STF) Cartesian tensor mass multipole moments. The multipole expansion is one of the most useful tools of physics, but its use in general relativity is difficult because of the nonlinearity of the theory and the tensorial character of the gravitational interaction <cit.>.
+STF tensors offer a mathematically equivalent representation of the multipole mass moments of a gravitating body, but with significant practical advantages over spherical harmonics. First, the tensorial nature of the STF representation makes it possible to express relationships in a coordinate system independent fashion, leading to a remarkable form invariance that is preserved even in coordinate representations that are rotated relative to each other. Second, the relationship between the spherical harmonic coefficients and the STF tensor components expressed in a Cartesian coordinate system is linear and nondegenerate, which means it is always invertible. Finally, and perhaps most significantly, utilizing the STF tensor representation of the mass multipole moments allowed us to integrate the eikonal equation to all STF orders ℓ.
+
+With the solution of the eikonal equation at hand, we demonstrated a straightforward procedure to obtain the Cartesian STF components from spherical harmonic coefficients. We explicitly carried out this procedure in the cases of the quadrupole, octupole, and hexadecapole (ℓ=2,3,4) cases. In all these cases, the form invariance of the result made it possible to express the corresponding phase shift in a remarkably simple, elegant form in terms of rotated spherical harmonic coefficients. The mechanics of the rotation, in turn, can be carried out by first obtaining STF tensor components in the original coordinate system, performing the rotation next, and finally by solving a linear system of equations that has the same form in the unrotated and rotated coordinate frames. Clearly, the same approach may be used to extend our results to any order ℓ. The resulting equations are compact even for higher values of ℓ, and are directly actionable.
+
+Note that in this paper we dealt only with the STF mass moments that are used to represent the scalar external gravitational potential (<ref>) and the relevant scalar spherical harmonics. The same approach may be used to consider the contributions from the vector potential due to body's rotation (<ref>), and the relevant STF current moments and vector spherical harmonics.  As our objective was to consider measurements in the Earth's vicinity, any contribution from the Earth's vector potential is currently negligible, but may be addressed with the same tools presented here.
+
+The numerical magnitudes of these corrections are small. Considering present-generation clocks, only the quadrupole term offers a significant contribution and only insofar as proper time to coordinate time conversions are concerned. However, the gravitational phase delay due to the quadrupole and higher order terms may become relevant with next generation clocks. These terms can also be very significant for phase coherent signaling at infrared or shorter wavelengths. We also applied our formalism for signals traversing in the vicinity of the Sun and, especially, Jupiter, and found more significant contributions, which may in the foreseeable future become relevant for deep space precision navigation and observations in the solar system.
+
+The results presented here are new. They offer a comprehensive model for the gravitational phase shift of a EM wave as it propagates in the gravitational  field of the extended Earth.  As the performance of new generation of precision clocks increases, such results may have a wide range of practical applications, including clock synchronization, frequency transfer and interferometry. They may also lead to new uses including relativistic geodesy <cit.>.  These and other possibilities are currently being investigated. Results, when available, will be reported elsewhere.
+
+
+
+We thank Yoaz E. Bar-Sever and William I. Bertiger of JPL who provided us with motivation, encouragement, and valuable comments of various topics discussed in this document. The work described here, in part, was carried out at the Jet Propulsion Laboratory, California Institute of Technology, under a contract with the National Aeronautics and Space Administration. VTT acknowledges the generous support of Plamen Vasilev and other Patreon patrons.
+
+
+
+
+52
+natexlab#1#1bibnamefont#1#1bibfnamefont#1#1citenamefont#1#1url<#>1urlprefixURL 
+
+
+[Ai et al.(2021)Ai, Maciuk,
+  Lewinska, and Borowski]Ai-etal:2021
+authorQ. Ai,
+  authorK. Maciuk,
+  authorP. Lewinska,
+  and
+  authorL. Borowski,
+  journalSensors volume21,
+  pages2396 (year2021).
+
+[Chen et al.(2021)Chen, Zhao, Hu,
+  Ya, and Zhu]Chen-etal:2021
+authorJ. Chen,
+  authorX. Zhao,
+  authorH. Hu,
+  authorS. Ya, and
+  authorS. Zhu,
+  journalMeasurement Science and Technology
+  volume32, eid115021 (year2021).
+
+[Schuldt et al.(2021)Schuldt, Gohlke,
+  Oswald, Wüst, Blomberg, Döringshoff, Bawamia, Wicht, Lezius, Voss
+  et al.]Schuldt-etal:2021
+authorT. Schuldt,
+  authorM. Gohlke,
+  authorM. Oswald,
+  authorJ. Wüst,
+  authorT. Blomberg,
+  authorK. Döringshoff,
+  authorA. Bawamia,
+  authorA. Wicht,
+  authorM. Lezius,
+  authorK. Voss, et al.,
+  journalGPS Solut. volume25
+  (year2021).
+
+[Oelker et al.(2019)Oelker, Hutson,
+  Kennedy, Sonderhouse, Bothwell, Goban, Kedar, Sanner, Robinson,
+  Marti et al.]Oelker-etal:2019
+authorE. Oelker,
+  authorR. B. Hutson,
+  authorC. J. Kennedy,
+  authorL. Sonderhouse,
+  authorT. Bothwell,
+  authorA. Goban,
+  authorD. Kedar,
+  authorC. Sanner,
+  authorJ. M. Robinson,
+  authorG. E. Marti,
+  et al., journalNature Photonics
+  volume13, pages714 (year2019).
+
+[Schkolnik et al.(2023)Schkolnik,
+  Budker, Fartmann, Flambaum, Hollberg, Kalaydzhyan, Kolkowitz,
+  Krutzik, Ludlow, Newbury et al.]Schkolnik-etal:2023
+authorV. Schkolnik,
+  authorD. Budker,
+  authorO. Fartmann,
+  authorV. Flambaum,
+  authorL. Hollberg,
+  authorT. Kalaydzhyan,
+  authorS. Kolkowitz,
+  authorM. Krutzik,
+  authorA. Ludlow,
+  authorN. Newbury,
+  et al., journalQuant. Sci. Tech.
+  volume8, eid014003 (year2023).
+
+[Turyshev et al.(2014)Turyshev, Sazhin,
+  and Toth]Turyshev:2014dea
+authorS. G. Turyshev,
+  authorM. V. Sazhin,
+  and authorV. T. Toth,
+  journalPhys.Rev. volumeD89,
+  pages105029 (year2014), arXiv:1402.7111
+  [gr-qc].
+
+[Klioner(1991)]Klioner:1991SvA
+authorS. A. Klioner,
+  journalSov. Astron. volume35,
+  pages523 (year1991).
+
+[Turyshev et al.(2013)Turyshev, Toth, and
+  Sazhin]Turyshev:2012nw
+authorS. G. Turyshev,
+  authorV. T. Toth, and
+  authorM. V. Sazhin,
+  journalPhys. Rev. volumeD87,
+  pages024020 (year2013), arXiv:1212.0232
+  [gr-qc].
+
+[Pavlis et al.(2012)Pavlis, Holmes,
+  Kenyon, and Factor]Pavlis-etal:2012
+authorN. K. Pavlis,
+  authorS. A. Holmes,
+  authorS. C. Kenyon,
+  and authorJ. K.
+  Factor, journalJ. Geophys. Res.: Solid Earth
+  volume117 (year2012).
+
+[Turyshev and Toth(2015)]Turyshev-Toth:2013
+authorS. G. Turyshev and
+  authorV. T. Toth,
+  journalInt. J. Mod. Phys. D volume24,
+  pages1550039 (year2015), arXiv:1304.8122
+  [gr-qc].
+
+[Turyshev et al.(2016)Turyshev, Yu,
+  and Toth]Turyshev-Toth:2016
+authorS. G. Turyshev,
+  authorN. Yu, and
+  authorV. T. Toth,
+  journal volume93, eid045027
+  (year2016), arXiv:1512.09019 [gr-qc].
+
+[Turyshev and
+  Toth(2022)]Turyshev-Toth:2021-STF-moments
+authorS. G. Turyshev and
+  authorV. T. Toth,
+  journalPhys. Rev. D volume105,
+  pages024022 (year2022),
+  notearXiv:2107.13126 [gr-qc].
+
+[Turyshev and
+  Toth(2022)]Turyshev-Toth:2022-platonic
+authorS. G. Turyshev
+  and authorV. T.
+  Toth, journalMNRAS
+  volume513, pages5355 (year2022),
+  notearXiv:2108.07172 [gr-qc].
+
+[Turyshev et al.(2012)Turyshev,
+  Minazzoli, and Toth]Turyshev-etal:2012
+authorS. G. Turyshev,
+  authorO. L. Minazzoli,
+  and authorV. T. Toth,
+  journalJ. Math. Phys. volume53,
+  pages032501 (year2012), arXiv:1109.1796
+  [gr-qc].
+
+[Petit and Luzum (eds.)(2010)]Petit-Luzum:2010
+authorG. Petit and
+  authorB. Luzum (eds.),
+  titleIERS Technical Note #36 (publisher“IERS
+  Conventions (2010)”, Frankfurt am Main: Verlag des Bundesamts für
+  Kartographie und Geodäsie, 2010. 179 pp., ISBN 3-89888-989-6”,
+  year2010),
+  <http://www.iers.org/IERS/EN/Publications/TechnicalNotes/tn36.html>.
+
+[Ashby(2003)]Ashby-2003
+authorN. Ashby,
+  journalLiving Rev. Relativity volume6
+  (year2003),
+  <https://link.springer.com/article/10.12942/lrr-2003-1>.
+
+[Landau and Lifshitz(1988)]Landau-Lifshitz:1988
+authorL. D. Landau and
+  authorE. M. Lifshitz,
+  titleThe Classical Theory of Fields (in Russian)
+  (publisherNauka, Moscow, year1988),
+  edition7th ed.
+
+[Abramowitz and
+  Stegun(1965)]Abramovitz-Stegun:1965
+authorM. Abramowitz
+  and authorI. A.
+  Stegun, titleHandbook of Mathematical
+  Functions: with Formulas, Graphs, and Mathematical Tables.
+  (publisherDover Publications, New York; revised edition,
+  year1965).
+
+[Kozai(1966)]Kozai:1966
+authorY. Kozai,
+  journalSpace Sci. Rev. volume5,
+  pages818 (year1966).
+
+[Gasposchkin(1977)]Gasposchkin:1977
+authorE. Gasposchkin,
+  journalPhilos. Trans. Royal Soc. London. Ser. A, Math. Phys. Sci.
+  volume284, pages515 (year1977).
+
+[Lambeck(1988)]Lambeck:1988
+authorK. Lambeck,
+  titleGeophysical Geodesy: The Slow Deformations of the
+  Earth (publisherOxford University Press, New York,
+  year1988).
+
+[NASA/JPL, a project file
+  depository(2001)]JPL-EarthGrav:2021
+authorNASA/JPL, a project file depository
+  (year2001), noteSpherical Harmonic Representation of
+  the Gravity Field Potential,
+  <https://spsweb.fltops.jpl.nasa.gov/portaldataops/mpg/MPG_Docs/Source
+  Docs/gravity-SphericalHarmonics.pdf>.
+
+[Tapley et al.(1996)Tapley, Watkins,
+  Ries, Davis, Eanes, Poole, Rim, Schutz, Shum, Nerem et al.]Tapley-1996
+authorB. D. Tapley,
+  authorM. M. Watkins,
+  authorJ. C. Ries,
+  authorG. W. Davis,
+  authorR. J. Eanes,
+  authorS. R. Poole,
+  authorH. J. Rim,
+  authorB. E. Schutz,
+  authorC. K. Shum,
+  authorR. S. Nerem,
+  et al., journalJ. Geophys. Res.: Solid Earth
+  volume101, pages28029
+  (year1996).
+
+[Montenbruck and Gill(2012)]Montenbruck-Gill:2012
+authorO. Montenbruck and
+  authorE. Gill,
+  titleSatellite Orbits (publisherSpringer
+  Berlin, Heidelberg, year2012).
+
+[Soffel et al.(2003)Soffel,
+  Klioner, Petit, Wolf, Kopeikin, Bretagnon, Brumberg, Capitaine,
+  Damour, Fukushima et al.]Soffel:2003cr
+authorM. Soffel,
+  authorS. A. Klioner,
+  authorG. Petit,
+  authorP. Wolf,
+  authorS. M. Kopeikin,
+  authorP. Bretagnon,
+  authorV. A. Brumberg,
+  authorN. Capitaine,
+  authorT. Damour,
+  authorT. Fukushima,
+  et al., journalAstron. J.
+  volume126, pages2687 (year2003),
+  astro-ph/0303376.
+
+[Moyer(2003)]Moyer:2003
+authorT. D. Moyer,
+  titleFormulation for Observed and Computed Values of Deep
+  Space Network Data Types for Navigation, JPL Deep-Space Communications and
+  Navigation Series (publisherWiley-Interscience,
+  year2003).
+
+[Klioner(2008)]Klioner:2008
+authorS. A. Klioner,
+  journalAstron. Astrophys. volume478,
+  pages951 (year2008).
+
+[Klioner et al.(2010)Klioner, Capitaine,
+  Folkner, Guinot, Huang, Kopeikin, Petit, Pitjeva, Seidelmann, and
+  Soffel]Klioner-etal:2010
+authorS. A. Klioner,
+  authorN. Capitaine,
+  authorW. Folkner,
+  authorB. Guinot,
+  authorT. Y. Huang,
+  authorS. Kopeikin,
+  authorG. Petit,
+  authorE. Pitjeva,
+  authorP. K. Seidelmann,
+  and authorM. Soffel,
+  in booktitleRelativity in Fundamental Astronomy: Dynamics,
+  Reference Frames, and Data Analysis, edited by
+  editorS. Klioner,
+  editorP. K. Seidelmann,
+  and editorM. Soffel
+  (publisherCambridge University Press, year2010).
+
+[Kopeikin et al.(2011)Kopeikin,
+  Efroimsky, and Kaplan]Kopeikin-book-2011
+authorS. M. Kopeikin,
+  authorM. Efroimsky,
+  and authorG. Kaplan,
+  titleRelativistic Celestial Mechanics of the Solar
+  System (publisherWiley-VCH, year2011).
+
+[Ahlers et al.(2022)Ahlers,
+  Badurina, Bassi, Battelier, Beaufils, Bongs, Bouyer, Braxmaier,
+  Buchmueller, Carlesso et al.]Ahlers-etal:2022
+authorH. Ahlers,
+  authorL. Badurina,
+  authorA. Bassi,
+  authorB. Battelier,
+  authorQ. Beaufils,
+  authorK. Bongs,
+  authorP. Bouyer,
+  authorC. Braxmaier,
+  authorO. Buchmueller,
+  authorM. Carlesso,
+  et al. (year2022), notearXiv:2211.15412
+  [physics.space-ph].
+
+[Origlia et al.(2016)Origlia,
+  Schiller, Pramod, Smith, Singh, He, Viswam, Świerad,
+  Hughes, Bongs et al.]Origlia-etal:2016
+authorS. Origlia,
+  authorS. Schiller,
+  authorM. S. Pramod,
+  authorL. Smith,
+  authorY. Singh,
+  authorW. He,
+  authorS. Viswam,
+  authorD. Świerad,
+  authorJ. Hughes,
+  authorK. Bongs,
+  et al., in booktitleQuantum Optics, edited
+  by editorJ. Stuhler
+  and editorA. J.
+  Shields (year2016), vol. volume9900
+  of seriesSociety of Photo-Optical Instrumentation Engineers
+  (SPIE) Conference Series, p. pages990003,
+  notearXiv:1603.06062 [physics.atom-ph].
+
+[Kozai(1965)]Kozai:1965
+authorY. Kozai,
+  journalPub. Astron. Soc. Japan p. pages385
+  (year1965).
+
+[Fock(1959)]Fock-book:1959
+authorV. A. Fock,
+  titleThe Theory of Space, Time and Gravitation
+  (publisherFizmatgiz, addressMoscow (in Russian),
+  year1959), note[English translation, Pergamon Press
+  Ltd., Oxford (1964)].
+
+[Sazhin(1998)]Sazhin:1998
+authorM. V. Sazhin,
+  journalJ. Exp. Theor. Phys. volume86,
+  pages220 (year1998).
+
+[Kopeikin(2009)]Kopeikin:2009
+authorS. M. Kopeikin,
+  journalMon. Not. R. Astron. Soc. volume399,
+  pages1539 (year2009).
+
+[Turyshev and Toth(2017)]Turyshev-Toth:2017
+authorS. G. Turyshev
+  and authorV. T.
+  Toth, journalPhys. Rev. D
+  volume96, pages024008
+  (year2017), arXiv:1704.06824 [gr-qc].
+
+[Turyshev and
+  Toth(2021)]Turyshev-Toth:2021-multipoles
+authorS. G. Turyshev
+  and authorV. T.
+  Toth, journalPhys. Rev. D
+  volume103, pages064076
+  (year2021), notearXiv:2102.03891 [gr-qc].
+
+[Thorne(1980)]Thorne:1980
+authorK. S. Thorne,
+  journalRev. Mod. Phys. volume52,
+  pages299 (year1980).
+
+[Blanchet and Damour(1986)]Blanchet-Damour:1986
+authorL. Blanchet and
+  authorT. Damour,
+  journalPhilos. Trans. R. Soc. London Ser. A
+  volume320, pages379 (year1986).
+
+[Blanchet and Damour(1989)]Blanchet-Damour:1989
+authorL. Blanchet and
+  authorT. Damour,
+  journalAnn. Inst. Henri Poincaré volume50,
+  pages377 (year1989).
+
+[Kopeikin(1997)]Kopeikin:1997
+authorS. M. Kopeikin,
+  journalJ. Math. Phys. volume38,
+  pages2587 (year1997).
+
+[Poisson and Will(2014)]Poisson-Will:2014
+authorE. Poisson and
+  authorC. M. Will,
+  titleGravity: Newtonian, Post-Newtonian, Relativistic
+  (publisherCambridge University Press, year2014).
+
+[Soffel and Han(2019)]Soffel-Han:2019
+authorM. H. Soffel and
+  authorW.-B. Han,
+  titleApplied General Relativity: Theory and Applications in
+  Astronomy, Celestial Mechanics and Metrology (publisherSpringer,
+  Cham, Switzerland, year2019).
+
+[Mathis and Le
+  Poncin-Lafitte(2007)]Mathis-LePoncinLafitte:2007
+authorS. Mathis and
+  authorC. Le Poncin-Lafitte,
+  journalAstron. & Astrophys. volume497,
+  pages889 (year2007).
+
+[Schmidt(1899)]Schmidt1899
+authorA. Schmidt,
+  journalZeitschrift für Mathematik und Physik
+  volume44, pages327 (year1899).
+
+[Klioner and
+  Kopeikin(1992)]Klioner-Kopeikin:1992
+authorS. A. Klioner
+  and authorS. M.
+  Kopeikin, journalAstron. J.
+  volume104, pages897 (year1992).
+
+[Zschocke and
+  Klioner(2010)]Zschocke-Klioner:2010
+authorS. Zschocke and
+  authorS. A. Klioner,
+  journalCQG volume28, pages015009
+  (year2010).
+
+[Blanchet(2002)]Blanchet:2002
+authorL. Blanchet,
+  journalLiving Rev Relativ. volume5,
+  pages3 (year2002).
+
+[Svehla(2018)]Svehla-book:2018
+authorD. Svehla,
+  titleGeometrical Theory of Satellite Orbits and Gravity
+  Field (publisherSpringer, addressCham, Switzerland,
+  year2018).
+
+[Roxburgh(2001)]Roxburgh:2001
+authorI. W. Roxburgh,
+  journalAstron. Astrophys. volume377,
+  pages688 (year2001).
+
+[Le Poncin-Lafitte and
+  Teyssandier(2008)]LePoncinLafitte:2007tx
+authorC. Le Poncin-Lafitte
+  and
+  authorP. Teyssandier,
+  journalPhys.Rev. volumeD77,
+  pages044029 (year2008), 0711.4292.
+
+[Linet and Teyssandier(2002)]Linet_2002
+authorB. Linet and
+  authorP. Teyssandier,
+  journalPhys. Rev. D volume66,
+  pages024045 (year2002).
+
+
+
+
+
+
+
+§ CORRESPONDENCE BETWEEN THE STF MASS MOMENTS AND SPHERICAL HARMONICS
+
+
+
+For practical applications, the potential U(r⃗)  is typically expanded in terms of spherical harmonics:
+
+
+    U(r⃗)   =   GM/r(1+∑_ℓ=2^∞∑_k=0^+ℓ(R/r)^ℓ P_ℓ k(cosθ)(C_ℓ kcos kψ+S_ℓ ksin kψ))+
+     O(c^-4),
+
+where P_ℓ k are the associated Legendre polynomials <cit.>, while C_ℓ k and S_ℓ k are  the normalized spherical harmonic coefficients that characterize nonspherical contributions to the gravitational field.
+
+To derive the relations between the Cartesian and spherical quadrupole (ℓ = 2) moments explicitly, we can express the spherical harmonics in terms of Cartesian coordinates. For that we use (<ref>) and write
+
+
+    U^[2](r⃗)    =   G/r^3(P_20C_20 + P_21(C_21cosψ + S_21sinψ) + P_22(C_22cos 2ψ + S_22sin 2ψ)).
+
+Using a spherical coordinate system (x = r sinθcosψ, y = r sinθsinψ, z = r cosθ), we have
+r^2P_20 = (2z^2 -x^2 -y^2)/2,
+r^2P_21cosψ = 3xz,
+r^2P_21sinψ = 3yz,
+r^2P_22cos 2ψ = 3(x^2 - y^2),
+r^2P_22sin 2ψ = 6xy. Substituting these expressions in (<ref>), we get
+
+    U^[2](r⃗)    =   GM/r^5(C_201/2(2z^2 - x^2- y^2) + 3C_21 xz+ 3S_21yz + 3C_22(x^2-y^2)+6S_22 xy).
+
+
+From (<ref>), we have the same quantity expressed via the components of the STF quadrupole moment T_<ab>:
+
+
+    U^[2](r⃗)   =   GM 3 T^<ab>/2r^5x^ax^b=
+    GM 3/2r^5( T_11x^2+2 T_12xy+2 T_13xz+2 T_23yz+ T_22y^2+ T_33z^2).
+
+
+Equating the terms with the same powers of x,y,z  between the from of the potential in terms of spherical harmonics present in (<ref>) and that expressed via the STF mass quadrupole in (<ref>) yields the following relations:
+
+
+    T_11   =   (-1/3C_20+2C_22)R^2,      T_12=2S_22R^2, 
+     T_22   =   (-1/3C_20-2C_22)R^2,      T_13=C_21R^2,
+     T_33   =   2/3 C_20 R^2,                  T_23=S_21R^2.
+
+
+Following the same approach, we can establish the corresponding relationships between STF multipole moments at any order ℓ and the appropriate  spherical harmonics coefficients, see (<ref>), (<ref>), and the relevant discussion in <cit.>.
+
+
+
+§ USEFUL RELATIONS FOR SOME STF ORDERS
+
+
+
+We derive several low order terms in (<ref>). First, we recognize that with k⃗ being constant, the two-dimensional vector b⃗ and the one-dimensional quantity τ, from (<ref>)–(<ref>), may be treated as two independent variables, yielding dx^a=db^a+k^adτ and also ∂/∂ x^a=∂/∂ b^a+k^a ∂/∂τ, where differentiation with respect to b⃗ is carried out in two dimensions only, which is indicated by the hatted notation. Then, to compute the needed partial derivatives in (<ref>), with respect to the vector of the impact parameter, ∂̂_a≡∂/∂ b^a≡(∂/∂ b^x,∂/∂ b^y,0) in our chosen Cartesian coordinate system, we may formally write
+
+
+    ∂ x^a/∂ x^b= δ^a_b= {∂̂_b+k_b ∂/∂τ}{b^a+k^a τ + O(r_g)}=∂̂_b b^a+k^a k_b+ O(r_g).
+
+By re-arranging the terms in this identity, we obtain the following useful  expression (see also <cit.>):
+
+
+    ∂̂_b b^a   =   δ^a_b -k^a k_b.
+
+This result essentially is the projection operator onto the plane perpendicular to k⃗, namely P^ab=δ^ab-k^ak^b; this plane, given either GCRS (<ref>) or light ray (<ref>) parameterizations, is the plane of the impact parameter b⃗ and where b^a is the  a-th component of the vector impact parameter.
+
+To evaluate (<ref>), we need to compute the following sets of derivatives:
+
+
+    ∂_<a_1... ∂_a_ℓ>ln k(√(b^2+τ^2)+τ)
+         and   ∑_p=1^ℓℓ!/p!(ℓ-p)!k_<a_1...k_a_p∂_a_p+1... ∂_a_ℓ>{∂^p-1/∂τ^p-11/√(b^2+τ^2)}.
+
+
+The first type of the  derivatives needed to compute the terms with ℓ=1,2,3,4 are
+
+
+    ∂̂_a ln k(√(b^2+τ^2)+τ)   =   1/√(b^2+τ^2)+τb_a/√(b^2+τ^2),
+    
+    ∂̂^2_abln k(√(b^2+τ^2)+τ)   =   1/√(b^2+τ^2)+τ1/√(b^2+τ^2){P_ab-1/√(b^2+τ^2)(1/√(b^2+τ^2)+τ+1/√(b^2+τ^2))b_ab_b},
+    
+    ∂̂^3_abcln k(√(b^2+τ^2)+τ)   =    -P_abb_c+P_acb_b+P_bcb_a/(√(b^2+τ^2)+τ)(b^2+τ^2)/(1/√(b^2+τ^2)+τ+1/√(b^2+τ^2))+
+           -50pt + b_ab_bb_c/(√(b^2+τ^2)+τ)(b^2+τ^2)^3/2{2/(√(b^2+τ^2)+τ)^2+3/(√(b^2+τ^2)+τ)√(b^2+τ^2)+3/b^2+τ^2},
+    
+    ∂̂^4_abcdln k(√(b^2+τ^2)+τ)   =    -(P_abP_cd+P_acP_bd+P_adP_bc)/(√(b^2+τ^2)+τ)(b^2+τ^2)/(1/√(b^2+τ^2)+τ+1/√(b^2+τ^2))+
+           -100pt + (P_abb_cb_d+P_acb_bb_d+P_bcb_ab_d+P_adb_bb_c+P_bdb_ab_c+P_cdb_ab_b)×
+           -50pt × 1/(√(b^2+τ^2)+τ)(b^2+τ^2)^3/2{2/(√(b^2+τ^2)+τ)^2+3/(√(b^2+τ^2)+τ)√(b^2+τ^2)+3/b^2+τ^2}-
+           -100pt - b_ab_bb_cb_d/(√(b^2+τ^2)+τ)(b^2+τ^2)^2{6/(√(b^2+τ^2)+τ)^3+12/(√(b^2+τ^2)+τ)^2√(b^2+τ^2)+
+           20pt + 15/(√(b^2+τ^2)+τ)(b^2+τ^2)+
+    15/(b^2+τ^2)^3/2}.
+
+
+We also need the following derivatives for ℓ=2,3,4:
+-12pt
+
+    ∑_p=1^2 2!/p!(2-p)!k_<a_1...k_a_p∂̂_a_p+1... ∂̂_a_2>∂^p-1/∂τ^p-11/√(b^2+τ^2)   =   
+    -2k_ab_b+τ k_ak_b/(b^2+τ^2)^3/2,
+     
+    ∑_p=1^3 3!/p!(3-p)!k_<a_1...k_a_p∂̂_a_p+1... ∂̂_a_3>∂^p-1/∂τ^p-11/√(b^2+τ^2)   =   
+           -170pt = 
+    3k_a(3b_bb_c/(b^2+τ^2)^5/2-P_bc/(b^2+τ^2)^3/2)+9k_ak_bb_c  τ/(b^2+τ^2)^5/2+k_ak_bk_c(3τ^2/(b^2+τ^2)^5/2-1/(b^2+τ^2)^3/2),
+     
+    ∑_p=1^4 4!/p!(4-p)!k_<a_1...k_a_p∂̂_a_p+1... ∂̂_a_4>∂^p-1/∂τ^p-11/√(b^2+τ^2)   =   
+           -200pt = 
+    4k_a(3/(b^2+τ^2)^5/2(P_dcb_b+P_bdb_c+P_bcb_d)-15b_bb_cb_d/(b^2+τ^2)^7/2)+18k_ak_b  τ(P_cd/(b^2+τ^2)^5/2 -5b_cb_d/(b^2+τ^2)^7/2)+
+    
+           -170pt + 
+    4k_ak_bk_c(3b_d/(b^2+τ^2)^5/2-15τ^2  b_d/(b^2+τ^2)^7/2)+
+    k_ak_bk_ck_d(9τ/(b^2+τ^2)^5/2-15τ^3/(b^2+τ^2)^7/2).
+
+Clearly, the same expressions may be used to describe the terms that depend on τ_0.
+
+
+
+§ GRAVITATIONAL PHASE DELAY FOR AN AXISYMMETRIC BODY
+
+
+
+In the case of an axisymmetric body (i.e., the Sun), its external gravitational potential is reduced to the k=0 zonal harmonics, where we keep on the the terms of J_ℓ=-C_ℓ 0 with all other terms in the expression for the potential  (<ref>) vanish, i.e., C_ℓ k=S_ℓ k=0. As a result, the   gravitational potential of an axisymmetric body may be expressed in terms of the usual dimensionless multipole moments J_ℓ (see discussion in <cit.>):
+
+
+    U(x⃗)   =   GM/r{1-∑_ℓ=2^∞ J_ℓ(R/r)^ℓ P_ℓ(k⃗_3·x⃗/r)}+
+     O(c^-4),
+
+where k⃗_3 denotes the unit vector along the x^3-axis, P_ℓ are the Legendre polynomials. Furthermore, in the case of an axisymmetric and rotating body with “north-south symmetry”, the expression (<ref>) contains only the even moments or ℓ=2,4,6,8...  <cit.>. Below, we will not impose the “north-south symmetry” restriction and will keep the terms of all the orders ℓ.
+
+Following <cit.>, we take into account the identity
+
+
+    ∂^ℓ/∂ z^ℓ(1/r)   =   (-1)^ℓℓ!/r^1+ℓ P_ℓ(k⃗_3·x⃗/r),      z=x^3,
+
+and present  U as the following expansion in a series of derivatives of 1/r:
+
+
+    U(x⃗)   =   GM{1/r-∑_ℓ=2^∞(-1)^ℓ/ℓ! J_ℓ  R^ℓ∂^ℓ/∂ z^ℓ(1/r)}+
+     O(c^-4).
+
+As we shall see below, this form is much more convenient  for the computation of integrals involving  U.
+
+Here we develop an expression for the eikonal phase in the case of an axisymmetric body, with its potential given by (<ref>).
+In this case, the decomposition of the post-Newtonian potential takes the from
+
+
+    2U/c^2   =   
+    r_g{1/r-∑_ℓ=2^∞(-1)^ℓ/ℓ! J_ℓ  R^ℓ∂^ℓ/∂ s^ℓ(1/r)}+ O(r_g^2).
+
+
+Following the approach demonstrated in <cit.> (see Appendix therein), we compute the leading term of this expansion. For that, we define the vector s⃗ to be a unit vector in the direction of the axis of rotation. Remembering that r=√(b^2+τ^2)+ O(r_g) from (<ref>), we evaluate directional derivatives ∂/∂ s along  s⃗= k⃗_3, which have the form
+
+
+    ∂/∂ s=(s⃗·∇⃗)=(s⃗·∂/∂r⃗).
+
+This relation allows us to compute the relevant partial derivatives for the leading terms in (<ref>):
+
+
+    ∂/∂ s 1/r   =   -(s⃗·r⃗)/r^3,     ∂^2/∂ s^2 1/r=3(s⃗·r⃗)^2/r^5-1/r^3,
+        ∂^3/∂ s^3 1/r=-3(5(s⃗·r⃗)^3/r^7-3(s⃗·r⃗)/r^5),
+    
+    ∂^4/∂ s^4 1/r   =   3(35(s⃗·r⃗)^4/r^9-30(s⃗·r⃗)^2/r^7+3/r^5).
+
+
+Using these expressions in (<ref>) and defining r_g=2G M_⊕/c^2, we have
+
+
+    2U_ E(b⃗,τ)/c^2   =   
+    r_g {1/r-{J_2R^2_⊕1/2(3(s⃗·r⃗)^2/r^5-1/r^3)+
+    J_3R^3_⊕1/2(5(s⃗·r⃗)^3/r^7-3(s⃗·r⃗)/r^5)+
+       +   
+    J_4R^4_⊕1/8(35(s⃗·r⃗)^4/r^9-30(s⃗·r⃗)^2/r^7+3/r^5)+
+    ∑_ℓ=5^∞(-1)^ℓ/ℓ! J_ℓ  R^ℓ_⊕∂^ℓ/∂ s^ℓ(1/r)}}.
+
+
+This expression represents the gravitational potential in terms of the zonal harmonics projected on the trajectory of the photon propagation. We substitute (<ref>) into expression (<ref>) and integrate it. As a result, we have the following expression for the gravitational phase shift induced by the lowest order gravitational multipoles, i.e., ℓ=0, 2,3,4:
+
+
+    φ_G^ E(r⃗,r⃗_0)    =   
+    -k∫^τ_τ_02/c^2U_ E(τ')dτ' = -
+    kr_g {ln[r+(k⃗·r⃗)/r_0+(k⃗·r⃗_0)]+
+           -50pt + 1/2J_2R_⊕^2 {(2(s⃗·m⃗)^2+(s⃗·k⃗)^2-1)
+    (1/r(r+(k⃗·r⃗))-1/b^2)+
+    ((s⃗·k⃗)^2-(s⃗·m⃗)^2)(k⃗·r⃗)/r^3+
+    2(s⃗·m⃗) (s⃗·k⃗)b/r^3}|^r_r_0-
+           -50pt - 1/3J_3R_⊕^3 {
+    (s⃗·m⃗)(4(s⃗·m⃗)^2+3(s⃗·k⃗)^2-3)
+    (1/b^3-1/br(r+(k⃗·r⃗))+1/2b(k⃗·r⃗)/r^3)+
+    
+           -10pt + 3/2(s⃗·m⃗)
+    ((s⃗·m⃗)^2-3(s⃗·k⃗)^2)b(k⃗·r⃗)/r^5+
+    3/2(s⃗·k⃗)((s⃗·k⃗)^2-3(s⃗·m⃗)^2)b^2/r^5+1/2(s⃗·k⃗)(3-5(s⃗·k⃗)^2)1/r^3}|^r_r_0
+    -
+           -50pt - 1/4J_4R_⊕^4 {(8(s⃗·m⃗)^2((s⃗·m⃗)^2+(s⃗·k⃗)^2-1)+((s⃗·k⃗)^2-1)
+    ^2)(1/b^4-1/b^2r(r+(k⃗·r⃗))+1/2b^2(k⃗·r⃗)/r^3)+
+    
+           -10pt + (3(s⃗·m⃗)^2
+    ((s⃗·m⃗)^2+(s⃗·k⃗)^2-1)+(s⃗·k⃗)^2
+    (3-4(s⃗·k⃗)^2))(k⃗·r⃗)/r^5+
+           -10pt + 5/2(((s⃗·m⃗)^2-(s⃗·k⃗)^2)^2-4(s⃗·m⃗)^2(s⃗·k⃗)^2)b^2(k⃗·r⃗)/r^7+
+           -10pt + 
+    10(s⃗·m⃗)(s⃗·k⃗)((s⃗·k⃗)^2-(s⃗·m⃗)^2)b^3/r^7+2(s⃗·m⃗)(s⃗·k⃗)(3-7(s⃗·k⃗)^2)b/r^5}|^r_r_0
+    + O(J_5)  }.
+
+
+Note that a similar result for the quadrupole J_2 term  was obtained in <cit.>. Expression (<ref>) extends all the previous computations to the higher order terms including J_4. In fact, this result is new. It generalizes a similar result obtained in <cit.> (see Appendix therein) that was derived  for all orders of the zonal harmonics, ℓ, in the case when the transmitter and receiver are a very larger distance from the gravitating body, b≪ r.
+

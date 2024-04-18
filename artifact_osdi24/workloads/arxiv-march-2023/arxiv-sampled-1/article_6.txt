@@ -1,0 +1,643 @@
+
+
+Hybrid Kinetic/Fluid numerical method for the Vlasov-Poisson-BGK equation in the diffusive scaling
+    Tino Laidin 1 Thomas Rey1
+    March 30, 2023
+==================================================================================================
+
+
+
+
+Questionnaires in the behavioral and organizational sciences tend to be lengthy: survey measures comprising hundreds of items are the norm rather than the exception. However, recent literature suggests that the longer a questionnaire takes, the higher the probability that participants lose interest and start  responding carelessly. Consequently, in long surveys a large number of participants may engage in careless responding, posing a major threat to internal validity. We propose a novel method to identify the onset of careless responding (or an absence thereof) for each participant. 
+Specifically, our method is based on combined measurements of up to three dimensions in which carelessness may manifest (inconsistency, invariability, fast responding). Since a structural break in either dimension is potentially indicative of carelessness, our method searches for evidence for changepoints along the three dimensions. Our method is highly flexible, based on machine learning, and provides statistical guarantees on its performance. In simulation experiments, we find that it achieves high reliability in correctly identifying carelessness onset, discriminates well between careless and attentive respondents, and can capture a wide variety of careless response styles, even in datasets with an overwhelming presence of carelessness. In addition, we empirically validate our method on a Big 5 measurement. Furthermore, we provide freely available software in  to enhance accessibility and adoption by empirical researchers.
+
+
+Keywords: Survey Methodology, Careless Responding, Response Styles, Changepoint Detection, Machine Learning
+
+
+
+
+§ INTRODUCTION
+
+Research in the behavioral and organizational sciences often involves the administration of lengthy self-report questionnaires. For instance, common personality measures tend to consist of hundreds of items, such as the Revised NEO Personality Inventory <cit.> with 240 items or the Minnesota Multiphasic Personality Inventory-2 Restructured Form <cit.> with 338 items. Even if one does not use such extensive measures, the number of items can easily reach three digits by including several shorter measures. However, recent work suggests that questionnaire length can have a concerning adverse effect on measurement accuracy: Questionnaire participants may experience fatigue or boredom as they progress through a lengthy questionnaire, which can provoke careless responding <cit.>. We call such participants partially careless respondents as they initially provide accurate responses, but resort to careless responding after a certain item and remain careless for the remainder of the questionnaire.[Partially careless responding is similar to what <cit.> call “partial random responding”.]
+
+
+Careless responding has been identified as a major threat to the validity of research findings <cit.>, is suspected to be present in all survey data <cit.>, and already small proportions of careless respondents such as 5% can jeopardize validity <cit.>.  Questionnaire data should therefore be screened for respondents who engage in careless responding with the intention to exclude such respondents from primary analyses <cit.>.  Yet, in lengthy questionnaires, it is likely that many participants eventually starts to respond carelessly due to fatigue or boredom <cit.>. It follows that in sufficiently lengthy questionnaires, a possibly large proportion of all participants are partially careless respondents. Thus, screening for and excluding respondents who have engaged in careless responding may lead to the exclusion of an unacceptably large proportion of the sample. For instance, <cit.> stress that “in many cases, by doing so the available sample size may be decreased dramatically, by 50% or more.”
+
+
+Screening data for careless responding is typically viewed as a data preprocessing step. Notwithstanding, explicitly studying careless responding may reveal interesting insights about the study participants. Indeed, <cit.>, <cit.>, and <cit.> find evidence that careless responding is related to certain personality traits. 
+Hence, we stress that investigating partial carelessness is not only relevant as a methodological concern, but also as a valuable source of information that may help advance behavioral and organizational theory. For instance, if one views careless respondents as outliers, one may follow the guidelines of <cit.> for theory-building in organizational research. 
+
+In this paper, we introduce a novel method for identifying the item after which carelessness onsets in each questionnaire participant, or an absence thereof. Our method combines multiple dimensions of evidence in favor (or against) careless responding to construct a score that, for each item, measures if a given respondent has started responding carelessly by that item. More specifically, our score is a test statistic based on self-normalization, which is used for changepoint detection in multidimensional series <cit.>. We argue that the notion of a changepoint is intuitive when studying partial carelessness: Once a participant starts responding carelessly, we expect a structural break in their responses. In particular, such a respondent may abandon content-based responding and resort to careless response styles, while no such break occurs in the absence of carelessness. Our method is highly flexible as it does not assume a statistical model, nor does it predefine what types of careless response styles exist, and it is primarily intended for lengthy multi-scale surveys. We demonstrate the empirical power, reliability, and practical usefulness of our method by means of extensive simulation experiments as well as an empirical application. 
+
+To the best of our knowledge, our method is the first attempt to systematically detect the onset of careless responding and contributes to the literature by being able to segment the responses of each respondent into a segment of accurate responses and—if a changepoint was identified—a segment of careless responses. With this knowledge, researchers can restrict their primary analyses to the segments of accurate responses without having to discard all responses of a partially careless respondent. In addition, researchers can separately study the segments of careless responses 
+to build theory on and obtain better understanding of the nature of (partially) careless responding. Finally, we provide freely available software that implements our proposed method in  . As such, our novel method is a useful and accessible tool for any researcher who is concerned with survey fatigue or careless responding in general.
+
+
+
+§ CARELESS RESPONDING IN THE EMPIRICAL LITERATURE
+
+<cit.> define careless responding as “a response set in which the respondent answers a survey measure with low or little motivation to comply with survey instructions, correctly interpret item content, and provide accurate responses”.[In their definition, <cit.> referred to careless responding as insufficient effort responding. Other synonyms are participant inattention <cit.>, inconsistent responding <cit.>, protocol invalidity <cit.>, and random responding <cit.>. Notably, <cit.> point out that the latter—random responding—might be a misnomer since careless responding can also be characterized by some non-random pattern (e.g., a recurring sequence of 1-2-3-4-5).] There is a rich literature on theory and effects of careless responding, as well as the prevention and detection of careless respondents. We refer to <cit.>, <cit.>, and <cit.> for recent literature reviews and best practice recommendations. To briefly summarize the literature, careless responding is found to be widely prevalent <cit.> and the proportion of careless respondents in a sample is commonly estimated to be 10–15% <cit.>, although some estimates range from 3.5% <cit.> to 46% <cit.>. Even a small proportion of careless respondents of 5–10% can jeopardize the validity of a survey measure through a variety of psychometric issues <cit.>. For instance, careless responding can lead to lower scale reliability, produce spurious variability, deteriorate the fit of statistical models, and cause type I or type II errors in hypothesis testing  <cit.>. It is therefore recommended to carefully screen survey data for the presence of careless responding <cit.>. 
+
+
+Numerous methods have been proposed to identify participants who engage in careless responding, for instance consistency indicators such as psychometric synonyms <cit.>, longstring indices <cit.>, or multivariate outlier analyses <cit.>. More recently, <cit.> and <cit.> have proposed machine learning techniques. Another method for the detection of careless responding is the inclusion of detection items <cit.>. Such detection items are based on the presumption that an attentive respondent will respond in a specific way, while careless respondent may fail to do so.[For instance, it is expected that an attentive respondent would strongly disagree to so-called bogus items such as “I am paid biweekly by leprechauns” <cit.>. A careless respondent may accidentally “agree” to this item as a consequence of inattention. Alternative types of detection items are instructed items and self-report items <cit.>.] We discuss detection items and preventive measures against carelessness in detail in Section <ref>.
+
+Detailed overviews of common methods for the detection of careless responses along their individual strengths and weaknesses are provided in Table 1 in <cit.>, Table 1 in <cit.>, <cit.>, and <cit.>. In general, common detection methods are  designed to detect one careless response style. For instance, the longstring index of <cit.> counts the maximum number of consecutive identical responses, which is intended to capture straightlining behavior. Yet, careless responding may manifest in three distinct ways: inconsistency, invariability, and fast responses <cit.>, which allows one to classify a given detection method based on the type of careless responding it is designed to detect <cit.>. One may then combine multiple methods to capture different types of carelessness, which is a practice recommended by <cit.>,  <cit.>, <cit.>, and <cit.> to balance strengths and weaknesses of the individual methods. 
+
+
+However, <cit.> deem it rare that careless respondents respond carelessly from the beginning to the end of a survey. Instead, participants may begin a survey as attentive and truthful respondents, but may resort to careless responding due to fatigue or boredom as a lengthy survey progresses <cit.>. Indeed, there is substantial evidence that the probability that a participant becomes careless increases with the number of survey items <cit.>. It follows that there is a high likelihood that a large number of participants are partially careless respondents in lengthy surveys that may comprise hundreds of items. We therefore assume for the remainder of this paper that all participants begin a survey as attentive and accurate respondents, while some of them (possibly none or all) resort to careless responding from a certain item onward.[We discuss possible violations of this assumption in Section <ref>.] The item at which carelessness onsets may differ between participants. 
+
+Common methods for the detection of careless respondents are intended for detecting which participants have engaged in careless responding, but not when a given participant becomes careless (provided they become careless at all). To the best of our knowledge, our proposed method is the first one to explicitly aim at detecting the onset of careless responding for each participant (or an absence thereof). Our method is designed for long surveys that encompass hundreds of items, in which it is possible that a substantial proportion of the participants (or even all) are partially careless. The work that is perhaps closest to ours is that of <cit.>, which is also concerned with changepoints in item response data due to careless responding. However, our method differs to that <cit.> in three fundamental aspects. First, <cit.> aim at detecting changepoints in parameters of item response models, while we do not assume such models. Second, their method is is restricted to questionnaires measuring one single construct, while our method is designed for lengthy multi-construct questionnaires that are common in the behavioral and organizational sciences. Third, their focus is on detecting careless respondents instead of the onset of carelessness.
+
+
+
+
+
+§ METHODOLOGY
+
+We expect the onset of careless responding  to manifest in changes in a respondent's behavior. Specifically, we expect careless responding to result in a change in at least one of the  three dimensions that <cit.> identify as indicative of carelessness: First, internal consistency of the given responses; second, variability of the given responses; and third, response time. For each respondent's given responses and response times, our method searches for a joint changepoint along these three dimensions.
+
+We measure the first dimension, internal consistency, by means of reconstructions of observed responses. The reconstructions are generated by an auto-associative neural network (henceforth autoencoder; <cit.> that is designed to learn response patterns that characterize attentive responding. We expect that random content-independent responses cannot be learned well and are therefore poorly reconstructed by the autoencoder, leading to a changepoint in reconstruction performance. 
+
+We propose to measure the second dimension, response variability, by means of a novel algorithm that is inspired by the longstring index of <cit.>. Since long sequences of identical responses or constant response patterns are not expected in surveys that use positively and negatively coded items, we expect a changepoint in response variability once a respondent commences to respond carelessly through straightlining or pattern responding behavior.
+
+Finally, the third dimension, response time, measures the time a respondent has spent on each page of the survey or the time spent on each item. <cit.> find evidence that careless responding is associated with shorter per-page response times, meaning that we expect a changepoint in response time once carelessness onsets. 
+
+
+Overall, our method attempts to capture evidence for the onset of carelessness by combining three indicators that are potentially indicative of such an onset, where the different indicators are supposed to capture different manifestations of carelessness. Conversely, if a respondent never becomes careless, we do not expect a changepoint in either of the three dimensions. Combining multiple indicators is a generally recommended practice to capture various types of careless responding <cit.>.
+
+We provide a detailed description of our assumptions in Appendix <ref> and a technical definition of our method in Appendix <ref>. In the following, we describe in detail each of the three dimensions we consider.
+
+
+
+
+ §.§ Quantifying Internal Consistency With Autoencoders
+
+<cit.> describe internal consistency as patterns that are expected based on theoretical/logical grounds or trends in the data. For instance, items that are part of the same construct are expected to correlate highly in most participants, provided that participants are attentive. In contrast, inconsistent careless responding “generate[s] responses that fail to meet an expected level of consistency” <cit.>. Respondents may choose to engage in inconsistent careless responding if they attempt to conceal their carelessness, for instance by randomly choosing from all response options or randomly choosing responses near the scale midpoint <cit.>. For our purposes, we consider the defining characteristic of inconsistent careless responding to be content-independent responses that are randomly chosen from all response options, where the probability to choose a certain response option may differ between response options, such as preferring responses near the scale midpoint.
+
+In order to identify inconsistent careless responding, we propose to use the machine learning method of autoencoders <cit.>. Autoenocoders were originally developed to filter random noise in signal processing applications <cit.>. Since we consider the defining characteristic of inconsistent careless responding to be near-randomly chosen responses—which may be viewed as random noise—we expect autoencoders to perform well in filtering such responses. 
+
+An autoencoder is a neural network that attempts to reconstruct its input.[For excellent textbooks on neural networks, we refer the interested reader to <cit.> and <cit.>.] In other words, the output variables are equal to the input variables. The idea behind reconstructing input data is to learn the internal structures of the data by forcing the network to discern signal from random noise. Consequently, noisy data points that do not follow learned structures are expected to not be well-reconstructible. In this paper's context of careless responding in questionnaire data, noisy data points correspond to inconsistent careless responses, which are characterized by  content-independent randomness.
+
+To achieve the goal of learning the internal structures of a dataset, it is crucial to avoid that an autoencoder simply copies its input. Therefore, autoencoders are typically forced to learn to express the input data in terms of a representation of lower dimension than the input data (cf. , and Chapter 14.6 in ). When expressing data in a lower dimension, some information loss is inevitable. The rationale behind autoencoders is that the incurred information loss can be seen as filtered noise, while the retained information in the lower-dimensional representation is the signal contained in the input data. Hence, by compressing data in fewer dimensions, the autoencoder learns the internal structure of the input data (the signal), while filtering random noise. The autoencoder then uses the (primarily) noiseless lower-dimensional representation to reconstruct the input data. It follows that noiseless data points are expected to have a low reconstruction error—which is the difference between observed and reconstructed input—while data points that primarily consist of noise are likely to have a relatively high reconstruction error. Overall, autoencoders are characterized by  compressing and then reconstructing input data, which is referred to as compression-decompression structure. 
+It follows that an autoencoder can be seen as a dimension reduction technique due to the role of compressing information to a lower dimension. In fact, autoencoders are a nonlinear generalization of principal component analysis <cit.>.
+
+
+
+
+
+The compression-decompression structure is reflected in the autoencoder's architecture, for which Figure <ref> provides a schematic example. Concretely, an autoencoder is a fully connected network whose nodes are organized in five layers, namely an input, a mapping, a bottleneck, and an output layer. The input layer holds the data we wish to reconstruct and comprises as many nodes as the data have dimensions. The subsequent mapping layer is designed to be flexible by comprising many nodes and is intended to prepare the compression, which takes place in the successive bottleneck layer in the center of the network. The central bottleneck layer comprises less nodes than the dimension of the input data, resulting in the sought low-dimensional representation of the input. The following de-mapping layer is symmetric to the mapping layer and reconstructs the input data based on the low-dimensional representation. Finally, the output layer returns the reconstructed data, which are necessarily of the same dimension as the input data in the input layer.
+
+
+In this paper's context, the data we wish to reconstruct are participant responses to a rating-scale questionnaire. Correspondingly, the dimension of the data equals the number of items in the questionnaire. Typically, questionnaires comprise a number of constructs that the items are supposed to measure. The fact that a questionnaire measures multiple constructs gives rise to a lower-dimensional representation of the observed responses, which renders the application of an autoencoder natural for dimension reduction. We therefore recommend to specify the number of nodes in the bottleneck layer to be equal to the number of constructs the questionnaire at hand measures.[Choosing the number of nodes in the bottleneck layer is equivalent to choosing the number of retained principal components in PCA, since both actions govern the strength of information compression through dimension reduction.] Consider the following illustrative example: The Revised NEO Personality Inventory measure <cit.> contains 240 items and measures six subcategories (called facets) of each Big 5 personality trait, such as anxiety and modesty. Thus, it measures 6 × 5 = 30 underlying variables (the facets), which suggests that a lower-dimensional representation measures the 30 facets and is therefore of dimension 30. It follows that we would set the number of nodes in the autoencoder's bottleneck layers to 30. 
+
+Furthermore, our autoencoder can be extended to incorporate information on page membership of each item through so-called group lasso regularization (see Appendix <ref> for details). This information may be of value because careless responding behavior is possibly similar within each page, but may differ between pages. However, incorporating information on page membership is optional, and the method can be used without providing such information.
+
+Besides the number of nodes in the bottleneck layer and possibly page membership of items, there are numerous additional design choices in our autoencoder, such as the number of nodes in the mapping and de-mapping layer or the choice of transformation functions. We disuses these and provide practical recommendations for each choice in Appendix <ref>. Furthermore, Appendix <ref> provides a mathematical definition of autoencoders.  
+
+
+
+Suppose now that we have obtained autoencoder reconstructions of the responses of each questionnaire participant. To introduce some notation, let there be n participants and p items and denote by x_ij the observed rating-scale response of the i-th participant to the j-th item, i=1,…,n and j=1,…, p.  Denote by x_ij the autoencoder's reconstruction of the observed response x_ij. We define the reconstruction error _ij associated with participant i's response to item j to be the squared difference between reconstructed and observed response, scaled by the number of answer categories. Formally, for participants i=1,…,n, and items j=1,…,p,
+
+    _ij = (x_ij - x_ij/L_j)^2,
+
+where L_j denotes the number of answer categories of item j. Recall that we expect the reconstruction errors _ij to be low in the absence of careless responding and high in the presence of inconsistent careless responding. Hence, if participant i starts providing  inconsistent careless responses at item k∈{1,…,p}, we expect a changepoint  at position k in the participant's series of p reconstruction errors, as reconstruction errors are expected to be higher from item k onward. An example can be found in top plot in Figure <ref>.
+
+
+
+ §.§ Quantifying Invariability
+
+We propose to measure response invariability through a novel algorithm inspired by the longstring index of <cit.> that we call . Our proposed exploits that invariable careless responses are characterized by content-independent response patterns. A pattern sequence has the defining property that it consists of recurring occurrences of the same response pattern. Consider the following sequence of responses:
+
+    1-2-1-2-1-2.
+
+In this sequence, there are recurring occurrences of the pattern 1-2. This pattern is of length two since each individual occurrence thereof comprises two items. We denote by J the number of items an individual pattern comprises (that is, the pattern's length). In the previous example (<ref>), we have J=2. Analogously, a sequence 1-2-3-1-2-3  consists of recurring occurrences of a pattern 1-2-3 of length J=3, whereas a straightlining sequence 1-1-1-1 consists of recurring occurrences of “1”, which is a pattern of length J=1.
+
+
+For a pattern of length J,  assigns to each participant's response the number of consecutive items contained in the recurring pattern that the response is part of. Consider the following two illustrative examples. First, if J=2, the response sequence 1-2-1-2-1-4-3-5-4-5-4 will be assigned the  sequence 4-4-4-4-1-1-1-4-4-4-4 because the first four responses and last four responses comprise two occurrences of the distinct patterns 1-2 and 5-4, respectively, which are both of length J=2. The central three responses (1-4-3) are not part of any pattern of length J=2, hence they are each assigned the value “1”. It follows that high values of the  sequence are indicative of invariable careless responding characterized by patterns. Second, for a pattern comprising a single item, J=1 (i.e. consecutive identical responses), the response sequence 3-2-3-3-1-4-1-1-1 is assigned the  sequence 1-1-2-2-1-1-3-3-3, since the subsequences of consecutive identical responses 3-3 and 1-1-1 comprise two and three responses, respectively.[ generalizes the longstring index of <cit.>, which we recover by calculating  for J=1 and picking out its maximum value.] Both examples demonstrate that once invariable carelessness onsets, we can expect a changepoint in  sequences from relatively low to relatively high values.
+
+
+However, a  sequence crucially depends on the choice of pattern length J, which is restrictive since invariable careless respondents may choose widely different patterns. Consequently, a single choice of pattern length J is unlikely to capture all careless response patterns that may emerge. To tackle the issue of choosing an appropriate value for pattern length J, we propose to calculate a  sequence multiple times with varying choices of J, namely J=1,2,…,L_max, where L_max is the maximum number of answer categories an item in the survey can have. The rationale behind this choice is that we consider it unlikely that careless respondents choose complicated individual patterns whose length exceeds the number of answer categories. In addition, evaluating a  sequence for multiple pattern lengths is expected to capture a wide variety of careless response patterns instead of only capturing patterns associated with one single pattern length. Then, after calculating  sequences with various choices of J, we recommend for each response to retain the largest  sequence value that has been assigned to the response across the multiple computations of an  sequence. We call this adaptive procedure  and use its ensuing sequence as our final quantitative measure of invariable careless responding. For the same reason as for , we expect a changepoint in  once carelessness onsets. 
+
+We provide a detailed description of  and  in the Appendix (Algorithms <ref> and <ref>, respectively). An example of   can be found in the central plot of Figure <ref>.
+
+
+
+ §.§ Response Time
+
+The last dimension considered indicative of careless responding is response time. Response time is typically measured by the total time a participant spent on the questionnaire, time spent on each questionnaire page, or (less common) time spent on each questionnaire item. Following <cit.>, we propose to measure response time via the time a participant spends on each page of a questionnaire. Specifically, we assign to each participant's response the time (in seconds) they spent on the page on which the response is located, divided by the number of items on that page (e.g., bottom panel in Figure <ref>). Once careless responding onsets, we expect a changepoint in response time towards faster responses <cit.>. For instance, <cit.> and <cit.> propose to classify a response as careless if a participant has spent less than two seconds on it (calculated based on per-page response time divided by the number of items on each page). In contrast, our approach only requires a changepoint in response time and does not require specifying a threshold below which we classify a response time as being associated with carelessness. 
+
+
+
+ §.§ Identifying Carelessness Onset via Changepoint Detection
+
+
+
+
+
+For each participant, we can obtain up to three individual series of length equal to the survey's total number of items. Each individual series measures one of the three dimensions indicative of carelessness. Specifically, the three dimensions are the reconstruction errors in (<ref>), an  sequence, and response time. 
+It may be preferable to have all three dimensions available for each participant, but our proposed method can also be applied to single dimensions or two dimensions, for instance when response times cannot be measured. For now, we assume that all three dimensions can be measured and are collected in a three-dimensional series. 
+
+As motivated in the previous two sections, we expect changepoints in each dimension from the onset of careless responding (e.g., Figure <ref>), and no changepoint in the absence of carelessness. Therefore, we propose to use a statistical method designed for the detection of a single changepoint in a multidimensional series. Concretely, we propose to use the nonparametric cumulative sum self-normalization test of <cit.>, which searches for the location of a possible changepoint in a multivariate series and derives a corresponding statistical test. This test has attractive theoretical guarantees that are derived in <cit.> and <cit.>.
+
+The changepoint detection method of <cit.> calculates the value of a certain test statistic for each multidimensional element in a given series. If the maximum value of the test statistic exceeds a specific critical value, the method flags a changepoint located at the associated element. If the critical value is never exceeded, no changepoint is flagged. 
+The the critical value is implied by the choice of the significance level of the test. Following <cit.>, we recommend an extraordinarily low significance level of 0.1% so that the test becomes extremely conservative in flagging changepoints. Our extremely conservative approach is consonant with the literature, as there should be overwhelming evidence in favor of careless responding when labeling respondents as such <cit.>.
+
+
+We provide a detailed description of the method of <cit.> in Appendix <ref>. In practice, we apply this method to each participant's individual three-dimensional series to locate the onset of carelessness (or an absence thereof) for each participant. As an example, Figure <ref> shows a series of per-response test statistics associated with a three-dimensional series in Figure <ref>, and the corresponding (simulated) respondent  becomes careless after the 276th of 300 items (content-independent pattern responding). Indeed, the maximum test statistic occurs at the 276th item and the maximum value exceeds the critical value at significance level 0.1% so the test flags a changepoint at this item.
+
+
+
+
+§ SIMULATION EXPERIMENTS
+
+
+
+ §.§ Data Generation
+
+We demonstrate our proposed method on simulated data inspired by existing survey measures and empirical findings on careless responding. For this purpose, we generate rating-scale responses of n=500 respondents to p=300 items using the  package <cit.>. Each item has five Likert-type answer categories (anchored by 1 = “strongly disagree” and 5 = “strongly agree”) whose probability distribution can be found in Table <ref>. The p=300 items comprise 15 constructs, each of which are measured through 20 items (of which 10 are reverse-worded), resulting in the aforementioned 15× 20 = 300 items. We assume that there are 15 pages of 20 items each and that each participant is presented with the same randomly ordered set of p=300 items.  We simulate construct reliability by imposing that items from different constructs are mutually independent and items within a construct have a correlation coefficient of ± 0.7. Each construct has a Cronbach-α value of 0.979 on the population level and is therefore highly reliable in the absence of carelessness. 
+
+
+
+We simulate per-item response times (in seconds) of attentive respondents as draws from a Weibull distribution with scale and shape parameters equal to six and two, respectively. This results in an expected per-item response time of about 5.3 seconds, which is based on data in <cit.>. The blue line in Figure <ref> illustrates the distribution of these response times. We then calculate the total time a participant spends on each page of the simulated survey, divided by the number of items on each page, and use the ensuing per-page response times for the response time dimension.
+
+
+
+Of the n=500 respondents, we fix a (relative) prevalence of partially careless respondents of γ∈{0, 0.2, 0.4, 0.6, 0.8, 1}. For the selected partially careless respondents, we sample carelessness onset items, from which on all responses are careless. We sample onset items as draws—rounded to the nearest integer—from a three-parameter Weibull distribution with location, scale, and shape parameters equal to 240, 20, and 2.2, respectively. We visualize this distribution in Figure <ref>. For instance, this design postulates a probability of about 90% that carelessness onsets before having answered 90% of all items, which reflects estimates in Table 6 in <cit.> for ordinary surveys with 300 items.
+
+We introduce carelessness by replacing with careless responses all responses that come after the sampled carelessness onset item, including the onset item itself. We simulate the following four different types of careless responses that each reflect careless response styles.  First, random responding <cit.>, which is characterized by choosing answer categories completely at random. Second, straightlining, which is characterized by constantly choosing the same, randomly determined answer category. This response style is a special case of  aquiescence due to carelessness <cit.>. Third, pattern responding <cit.>, which is characterized by a fixed, randomly determined pattern, such as 1-2-3-1-2-3 or 5-4-5-4. Fourth, extreme responding due to carelessness <cit.>, which is characterized by randomly choosing between the two most extreme answer categories, regardless of item content.
+
+
+In addition to these four careless response styles, we also consider the case of fully attentive  responding. This reflects respondents who never becomes careless; we call such respondents attentive. Recall that we consider carelessness prevalence levels γ∈{0,0.2,…,1}, which implies that (1-γ)n respondents never become careless. In each dataset that includes careless responding, we ensure that all four careless response styles as well as fully attentive respondents are present. To achieve this, we assign to each of the γ n partially careless respondents one of the four careless response styles so that there are γ n / 4 partially careless respondents who adhere to that particular response style from their corresponding carelessness onset item onward. We determine at random which respondents are partially careless and which ones are attentive.
+
+Like the given responses, we introduce carelessness to the response times by replacing all per-item response times from the carelessness onset item onward with draws from a Weibull distribution of unit shape and scale equal two; see Figure <ref>. This distribution implies an average careless response time of two seconds per item, which is based on the “two-seconds-per-item” rule of <cit.> and <cit.>. We again calculate the per-page response times from the per-item times and use the per-page times for the response time dimension.
+
+We repeat the above described data generating process 100 times. Importantly, we keep the location of  carelessness onset of each participant constant across the 100 repetitions. This will be useful for performance assessment. We apply our proposed method to each dataset and report the estimated location of each flagged changepoint.
+
+We search for changepoints in all seven possible combinations of the three dimensions (reconstruction error, , per-page response time) via the changepoint detection method of <cit.>. We report the results of the following four cases that are of primary interest: all three dimensions, the two dimensions of reconstruction errors and  sequences that remain when excluding response time (since measuring time may not be feasible in pen-and-paper questionnaires), and the two separate individual dimensions thereof. This separation will help highlight the added value of combining different indicators of carelessness in the hope of capturing different manifestations thereof.
+
+
+
+ §.§ Performance Measures
+
+We wish to quantify the accuracy of the location of each flagged changepoint. For this purpose, we use the Adjusted Rand Index <cit.>. The ARI is a continuous measure of classification performance and takes value 0 for random classification and value 1 for perfect classification. In wake of this, we take the perspective of viewing the detection of carelessness onset as classification problem: For each item, a simulated respondent either responds attentively or carelessly. Using the true location of changepoints (the carelessness onset items), the ARI measures how well our method has estimated the location of carelessness onset of a given respondent. Specifically, the closer the ARI is to its maximum value 1, the better our method performs at accurately estimating carelessness onset. ARI values close to 0 indicate poor performance. If the respondent of interest is attentive and there are consequently no careless responses, then the ARI assumes value 0 if a changepoint is flagged. We provide a mathematical definition of the ARI in Appendix <ref>.
+
+We average the ARIs of multiple respondents (either all respondents or subgroups thereof) and report the resulting average. Note that when averaging over ARIs calculated on attentive respondents, we obtain the proportion of attentive respondents who are correctly identified as attentive.  If we deduct this number from 1, we obtain the proportion of attentive respondents that are incorrectly flagged as careless.
+
+
+
+
+ §.§ Results
+
+We start presenting the results of our proposed method for the three dimensions by means of a visual inspection. For a carelessness prevalence level of γ = 0.6,  Figure <ref> displays a heatmap holding the indices of the  participants in its rows and the item indices in its columns. For participant i ∈{1,…,n} and item j∈{1,…,p}, the color scale of the cell at position (i,j) measures the frequency across the 100 repetitions with which the response of participant i to item j has been flagged as changepoint: The darker the red scale, the more frequently the corresponding item was flagged as changepoint. The blue rectangles in Figure <ref> visualize the true location of the careless onset items; recall that those are fixed across the repetitions. The y-axis of the plot is rearranged so that the participant indices are ordered according to their respective carelessness onset. Since the carelessness onset items stay constant across the repetitions, a good detection performance is characterized by flagging cells that correspond to onset items. Indeed, we can see that there is a dark red band that closely follows the blue rectangles. This means that our method accurately estimated the location of carelessness onset of the participants. Note that the top 40% of the rows in Figure <ref> very rarely see flagged changepoints. Those are the respondents who never become careless. Based on this visual example, our method seems to not only accurately estimate the careless onset, but also discriminate well between partially careless respondents and fully attentive respondents. Results are similar for other carelessness prevalence levels, and we provide corresponding heatmaps in Appendix <ref>.
+
+
+
+
+
+
+Varying the prevalence of  careless responding, Figure <ref> visualizes the ARI averaged over all attentive respondents (left panel) and all partially careless respondents (right panel). In the left panel of Figure <ref>, each of the four specifications rarely flag changepoints in fully attentive respondents, even in samples where carelessness is extremely prominent (80% prevalence). For instance, for carelessness prevalence of up to 60%, the proportion of incorrectly flagged changepoints in attentive respondents is less than 0.01. Only when carelessness prevalence is extremely high at 80%, the proportion of false positives slightly increases to about 0.05 for each specification (except , which remains below 0.01). The right panel in Figure <ref> visualizes the ARI when averaged over partially careless respondents. The ARI of our proposed method with the three dimensions remains remarkably constant at about 0.95 throughout carelessness prevalence levels, mirroring an excellent performance of flagging changepoints in correct locations. Notably, excluding the time dimension results in only a relatively small decrease in ARI. This may be because in our data generation process, careless response times are faster for all types of careless responses.
+In contrast, when using solely autoencoder reconstruction errors or  sequences, we observe a drop in ARI values to about 0.5 in high carelessness prevalence levels. This drop in performance is expected due to different careless response styles being present: Reconstruction errors are designed to capture inconsistent carelessness such as random responses and may therefore miss invariant carelessness, while  sequences are designed for capturing invariant carelessness such as straightlining and may therefore miss inconsistent carelessness.
+
+To explore this further, Figure <ref> displays ARIs for each careless response style. As expected, using reconstruction errors to detect the onset of carelessness works well for inconsistent response styles such as random or extreme responding, resulting in ARI values of about 0.85–0.95 throughout all carelessness prevalence levels, but does not accurately capture invariable response styles (ARIs of less than 0.02). Conversely, using  sequences works well for detecting invariable careless response styles such as straightlining or pattern responding (ARI of consistently about 0.95), but does not work for inconsistent carelessness (ARI of about 0–0.1). However, when combining  and reconstruction errors (and possibly response time), we obtain high ARI values (0.85–0.99) throughout all considered careless response styles. We derive from this that our method succeeds in combining complimentary indicators for carelessness onset to capture different manifestations of careless responding.
+
+
+
+ §.§ Additional Simulations and Conclusions
+
+We have conducted a wide variety of additional simulation experiments, which are described and discussed in Appendix <ref>. They suggest that our proposed method consistently performs well, even in substantially more complex designs, for instance when there is a large degree of response heterogeneity. However, in highly complex designs with overwhelmingly many careless respondents (prevalence of ≥ 80%), our method sometimes identifies changepoints in too many attentive respondents (more than a significance level of 0.1% would suggest). Since this issue only arises in specific situations and for extremely high carelessness prevalence, we leave addressing it to further research. Overall, the findings presented in the main text are representative, meaning that they are robust across distinct simulation designs.
+ 
+We conclude from our simulation experiments that our proposed method seems to perform well for reliably detecting carelessness onset, while simultaneously successfully discriminating between partially careless respondents and fully attentive respondents. In addition, our simulations highlight the importance of using multiple indicators to capture different manifestations of carelessness <cit.>. 
+
+
+
+
+§ EMPIRICAL VALIDATION
+
+A major challenge in the empirical validation of our method is that the onset of potential carelessness is unknown in empirical data, but such knowledge is required to evaluate the accuracy of our method in locating carelessness onset (or a lack thereof). We therefore employ the following validation strategy. We use a rich empirical dataset of high quality, in the sense that all scales are reliably measured and careless responding is absent. Such a dataset allows us to artificially introduce partially careless responses by replacing given responses with simulated careless ones. In the ensuing hybrid dataset, we can evaluate the performance of our method in a realistic data configuration, as opposed to the stylized data configuration from the simulations.
+
+For empirical validation, we consider empirical data for the five factor model of personality <cit.>. This model assumes that variation in a measurement of personality can be explained by the five personality traits (“factors”) of neuroticism, extraversion, agreeableness, openness, and conscientiousness, which are commonly referred to as the “Big 5”. A popular way of measuring the Big 5 is the NEO-PI-R instrument of <cit.>, which comprises 240 items that collectively measure six subdomains (“facets”) for each of the Big 5 factors (e.g., depression and anxiety are facets of the neuroticism trait), resulting in a measurement of 5× 6 = 30 facets. Each facet is measured with eight items, each of which is answered on a five-point Likert scale. Overall, this instrument measures 30 constructs (the facets).
+
+We use a dataset of <cit.>, who administered a Dutch translation of the NEO-PI-R instrument <cit.> to 500 first year psychology students at the University of Amsterdam in The Netherlands. The items of the instruments were presented in a random, but identical order to all participants and the dataset is publicly available in the  package  <cit.>. Unfortunately, the data only contain the students' responses, but no response times, so we restrict our analysis of careless responding to the two dimensions of autoencoder reconstruction errors and  sequences. In addition, we do not have information on the page membership of each item, hence we do not include such information in the autoencoder architecture. Moreover, 175 of the 500× 240 = 120,000 total responses are not contained in the set of admissible answer categories {1,2,3,4,5} implied by five-point Likert scales, for instance values such as 3.31 or 4.03. Such inadmissible values may be due to prior imputation of missing responses or other data preprocessing. However, since there is no information on what kind of  preprocessing was performed for those observations, we drop all students that have at least one inadmissible response, resulting in a final sample of n=400 students.
+
+In general, the dataset of <cit.> as provided by <cit.> seems to be of high quality as it appears to be carefully cleaned and preprocessed, all five factors are measured very reliably (indicated by Cronbach-α estimates of 0.92, 0.88, 0.85, 0.88, and 0.90 for neuroticism, extraversion, openness, agreeableness, and conscientiousness, respectively), and factor loadings align well with theory <cit.>. We consequently do not expect careless responding to be an issue in this dataset. 
+Indeed, when applying our proposed method, a changepoint is only flagged in one of the 400 participants at a significance level of 0.1% (see Appendix <ref> for details). 
+
+For empirical validation, we take a fixed number of students and from a certain item onward replace their given responses by synthetically generated careless responses. This results in a   dataset comprising empirical attentive responses and synthetic careless responses. On this hybrid dataset, we can empirically validate our method since we have knowledge of the true onsets of careless responding. Concretely, of the n=400 students in the data of <cit.>, we fix the prevalence of to-be partially careless respondents to γ∈{0.2, 0.4, 0.6, 0.8, 1} and sample a carelessness onset item for each partially careless respondent. We replace the given responses from the onset item onward by synthetically generated careless responses. For each to-be careless respondent, we randomly sample the onset item to be between the 160th and 204th item, which respectively correspond to 66.7% and 85% of the 240 items. Like in the simulation setup of Section <ref>, we again consider the four careless response styles of random, extreme, pattern, and straightlining responding, each of which are set to be present in γ n/4 of all students. We again calculate the Adjusted Rand Index (ARI) of each student and average across the n students. We repeat this procedure 100 times, where we sample anew in each replication the to-be careless students, carelessness onsets, and careless respondents. We report the ARI averages across the repetitions.
+
+
+
+
+Figure <ref> visualizes the results at significance level 0.1%. Just like in the simulation experiments, almost no attentive respondents are incorrectly identified as careless. Conversely, for the careless respondents, using both dimensions of autoencoder reconstruction errors and  results in ARI values of about 0.8 across all considered carelessness prevalence levels. Plotting ARIs by careless response styles reveals that onsets of straightlining or pattern carelessness are very accurately estimated when using both dimensions, with ARI values of more than 0.95. Likewise, the ARIs of careless extreme responding are consistently at about 0.85. The ARIs for random careless responding amount to about 0.4–0.45. A quick inspection reveals that they are due about half of the random respondents not being identified as careless (i.e., no changepoints), which may be due to the extremely conservative significance level. Indeed, increasing the significance level to 0.5% elevates the ARIs of random respondents to about 0.6 without significantly increasing the number of attentive respondents being incorrectly identified as careless. Further improvements are possible by slightly increasing the significance levels (see Appendix <ref>). However, the overall performance across all careless response styles is excellent with an ARI of about 0.8, and almost no attentive respondents are incorrectly identified as careless.
+
+We conclude that our proposed method performs very well on empirical data. Nevertheless, at extremely conservative significance levels, some random respondents may not be identified as careless. While this smaller drawback can be alleviated by choosing significance levels to be slightly less conservative (such as 0.5%), we still recommend to follow the literature by requiring overwhelming evidence in favor of carelessness to label respondents as (partially) careless <cit.>, and therefore maintain our suggestion to opt for a significance level of 0.1%.
+
+
+
+
+§ ALTERNATIVES AND LIMITATIONS
+
+In this section, we discuss potential alternatives to our proposed method and its limitations.
+
+
+
+ §.§ Potential Alternatives to Our Method
+
+In general, one may argue that the onset of carelessness can be detected by a priori including detection items in the survey: A survey designer may follow a recommendation of <cit.> and include at most three bogus, instructed, or self-report items and space them every 50–100 items. One may treat it as evidence of the onset of carelessness if a participant fails a detection item by not providing the response that would be expected from an attentive respondent. However, there are a number of practical and theoretical disadvantages with this approach.[A detailed discussion on the caveats of detection items can be found in <cit.>.]
+First, the recommendation that one should not include more than three detection items <cit.> is fairly restrictive as carelessness may have onset at a much earlier item than the detection item, resulting in a failure to exclude a potentially large number of careless responses. Second, attentive respondents may ironically choose a “wrong” response to a bogus item because they find doing so humorous <cit.> or they misinterpret the item <cit.>.[For instance, <cit.> find that some respondents would agree to the popular bogus item “All my friends say I would make a great poodle” because they believe that they are loyal friends and they associate loyalty with dogs.] Third, a careless respondent may choose the “correct” response by mere chance or lie in self-report items <cit.>, resulting in overlooking this careless respondent. Fourth, it is unclear if a “somewhat disagree” response to a detection item to which “strongly disagree” is expected should be considered careless <cit.>. Fifth, it may not be possible to include detection items in the survey for legal or ethical reasons, or the survey analyst has no control over the survey design. 
+
+Moreover, the  packages  <cit.> and  <cit.> support the calculation of an intra-individual variance (IRV) across subsets of responses.[Specifically, this is implemented in the functions  in the package  and  in the package .] If sets of responses towards the end of a survey exhibit a sufficiently larger <cit.> or lower <cit.> variance than earlier sets of responses, there might evidence for an onset of partially careless responding. However, it would require the user to a priori know in which subsets of responses carelessness occurs in order to confirm the presence of partial carelessness in these subsets. In addition, it is unclear when a variance can be considered sufficiently low or high to infer carelessness: Determining cutoff values below or above which a participant is to be flagged as careless may depend on survey design and survey content.[For example, if 5-point scales are used a lower cutoff is necessary than for a 9-point scale, since IRVs will be very different for those scales.]
+
+Instead of detecting careless responding, one may attempt to prevent such behavior during  survey administration. Preventive measures against careless responding may entail promising rewards for responding accurately <cit.>, threatening with punishment for careless responding, and the presence of a proctor <cit.>. There is evidence that each of these three preventive measures can prevent or at least delay carelessness onset <cit.>. However, either of these three preventive measures can be undesirable or unethical in practice: Administering proctored questionnaires is often impractical and expensive, and is typically infeasible in online studies. <cit.> and <cit.> advise against using threats if one wishes to maintain a positive long-term relationship with questionnaire participants, such as when there is a professional relationship between researcher and participants. In addition, threats seem inappropriate in longitudinal studies or when the participants are members of a questionnaire panel (as is common in survey research) or when they are suspected to suffer from anxiety, trauma, or depression (as is common in psychological research). On the other hand, promising rewards may cross ethical boundaries in organizational surveys and in the context of employment-related decisions <cit.>.
+
+Notwithstanding, we stress that preventive methods against carelessness are complementary to detection methods (such as ours) for the overarching goal of improving the reliability of collected questionnaire data. If possible and ethical, we recommend that survey designers take preventive measures against careless responding, include detection items, and—after questionnaire administration—analyze the data for the presence of careless responding through detection methods. As a result, one minimizes the probability that the analyzed data are plagued by (undetected) careless responding, thereby enhancing data quality and reliability.
+
+
+
+
+ §.§ Limitations
+
+Throughout this paper, we have assumed that all participants start as truthful and accurate respondents, while some of them may begin to respond carelessly from a certain item onward. However, in certain scenarios, this assumption may not hold true. In the following, we discuss two such scenarios.
+
+First, there may be some participants who alternate between periods of accurate and careless responding <cit.>. In this case, our method may only flag one of the possibly multiple changepoints. Extending our method to this situation is an area of further research.
+
+Second, some respondents may respond carelessly throughout all survey items. Consequently, our method is unlikely to flag a changepoint since there is no change in behavior. This is clearly undesirable because we would like to identify all participants who have engaged in careless responding. Nevertheless, there is a plethora of established methods for detecting respondents who have been careless throughout the survey (see Section <ref>). In this sense, our method—which is intended for detecting partial carelessness—is complementary to existing methods that are intended for detecting respondents that have been careless throughout all items. Consequently, if one suspects that respondents who have been careless throughout all items are present, we recommend to apply established detection methods following the guidelines of <cit.> and <cit.>. Participants which are flagged as careless by these methods, but for which no changepoint was flagged by our method have likely been careless throughout the entire survey. 
+
+Response time is one of the three dimensions along which our proposed method may search for changepoints. However, in some series of response times, it is possible that there could be “natural” structural breaks due to survey design: For instance, items that naturally take longer to respond to due to higher complexity or length might be placed in the beginning or end of a questionnaire. If the structural break is very pronounced, it may happen that our method identifies a changepoint at this break despite an evidence of carelessness in other dimensions. Studying this issue is left to further research.
+
+Moreover, the changepoint detection procedure of <cit.> is based on asymptotic arguments when the number of items is large, hence our method is designed for lengthy questionnaires. It is likely that the statistical power to identify carelessness onset drops considerably in short questionnaires, but studying this is beyond the scope of this paper. However, partial careless responding due to fatigue may be less prevalent in short questionnaires <cit.>.
+
+
+
+§ COMPUTATIONAL DETAILS
+
+Throughout this paper, we have followed recent guidelines by <cit.> on the application of machine learning methods for the detection of careless responding. In particular, an implementation of our proposed method is publicly available from <https://github.com/mwelz/carelessonset>. We will develop this code into an  package to be submitted to the Comprehensive  Archive Network (<https://cran.r-project.org/>).
+
+
+
+
+§ DISCUSSION AND FUTURE RESEARCH
+
+In this paper, we have proposed a method to identify the onset of careless responding (or absence thereof) for each participant in a given survey. Our method is based on recent literature stressing that in lengthy surveys—which are common in the behavioral and organizational sciences—a large proportion of survey participants may respond partially carelessly due to fatigue or boredom. Our method combines three indicators for the potential onset of carelessness and simulation experiments highlight the importance of  evidence from multiple indicators that capture different manifestations of carelessness for obtaining reliable estimates for the onset.
+
+Due to our method's promising performance on empirical and synthetic data, we consider it a promising first step for research on partially careless responding. For instance, the  algorithm may need additional validation as a measurement of response invariability, which could be done in empirical follow-up work. Moreover, <cit.> envisage  “artificial intelligence and machine learning being used to detect careless responding and response distortion in real time in the foreseeable future." We believe that it is possible to train our autoencoder on responses from many different surveys so that it does not need to be re-fitted on every survey. With such a trained autoencoder, we could build reconstruction errors in real time and use them together with live measurements of response time and  to detect the onset of careless responding in real time. Nevertheless, detecting changepoints in real time may require the use of a different changepoint detection method that is designed to detect changepoints as soon as they happen. Such methods are called online changepoint detection methods; an overview of which is provided in <cit.> and references therein.
+
+Furthermore, <cit.> explicitly model careless responding via Item Response Theory. This approach assumes that careless responding is due to certain characteristics on the participant level. Nevertheless, fatigue in long surveys is likely to be an additional explanatory factor for careless responding <cit.>. We speculate that estimates of the onset of careless responding could be used to extend the model of  <cit.> to account for survey fatigue. 
+
+Overall, our proposed method could be a starting point for an exciting and fruitful new direction of research on careless responding, in which artificial intelligence and machine learning could play a key role <cit.>. 
+
+
+
+
+§ ACKNOWLEDGMENTS
+
+We thank Dennis Fok, Patrick Groenen, Christian Hennig, Erik Kole, Nick Koning, Robin Lumsdaine, Kevin ten Haaf, the participants of ICORS 2021 and 2022, SIPS 2022, the 2022 Meeting of the Dutch/Flemish Classification Society, the Econometrics Seminar at Erasmus School of Economics, and the Econometrics Seminar at the University of Maastricht for valuable comments and feedback. This work was supported by a grant from the Dutch Research Council (NWO), research program Vidi (Project No. VI.Vidi.195.141).
+
+
+
+   
+   
+
+
+ 
+   
+  
+    
+
+
+
+
+
+§ SETUP AND ASSUMPTIONS
+
+Throughout our paper, we consider the following setup. Let X be an n× p data matrix holding the rating-scale survey responses of n respondents to p items. We assume that all observations (i.e. all respondents whose responses the survey collects) are independently and identically distributed, which is a standard assumption in statistics and machine learning. Moreover, we do not know if and when careless responding occurs in X. We require four more assumptions, which are listed below.
+
+
+The responses in X admit an n × s lower-dimensional representation, , where s ≪ p. The dimension s is known and corresponds to the number of constructs the survey measures.
+
+
+
+The survey that generated X is reliable in the sense that if all participants responded accurately, X would accurately measure all constructs.
+
+
+
+All participants begin the survey as attentive respondents by providing accurate and truthful responses. As the survey progresses, some (possibly none or all) participants start responding carelessly and continue to do so for the remainder of the survey. 
+
+
+
+The onset of partial carelessness is characterized by a changepoint in either one, two, or all three of the following indicators: autoencoder reconstruction errors (<ref>),  sequences, and response times. 
+
+
+Assumption <ref> is very mild in survey data because surveys typically measure multiple constructs and the number of constructs is typically known. We refer to Section <ref> for a detailed discussion. In the example of the NEO-PI-R instrument <cit.>, there are p=240 items that measure s=30 constructs. 
+
+Assumption <ref> is also mild in survey data. There exist well-established and reliable survey measures for a large variety of variables. For instance, the International Personality Item Pool <cit.> is a pool of more than 250 personality scales. It is in general recommended to use well-established measures to ensure a highly reliable measurement <cit.>. The reliability of a measurement can be estimated in multiple ways, such as Cronbach's alpha, the omega coefficient and variations thereof, as well as the H coefficient; we refer to <cit.> for a description of these and other reliability measures. Hence, Assumption <ref> is satisfied when the survey data were collected with measures of high reliability,
+
+Assumption <ref> is discussed in Section <ref> and Assumption <ref> is motivated in detail in Section <ref>.
+
+
+
+§ DETAILS OF AUTOENCODERS
+
+
+
+ §.§ Network Architecture and Estimation
+
+ 
+   
+  
+Denote by x_ij the response of the i-th participant to the j-th survey item. Collect the responses of the i-th participant to all p items in a p-dimensional vector x_i = (x_i1, x_i2, …, x_ip)^⊤. Hence, the n× p data matrix X is given by X = (x_1, x_2, …,x_n)^⊤.
+
+An autoencoder is a network with the following architecture. The network consists of M layers, where the first layer holds the input data x_i (input layer) and the last layer (output layer) holds the reconstructed input data. Let the ℓ-th layer contain N^(ℓ) nodes. Since the first layer is the input layer, the last layer is the output layer, and an autoencoder attempts to reconstruct its input variables, we have that N^(1) = N^(M) = p. 
+
+Each node in a given layer contains an activation, which is a function of transformed activations from previous layers. Transformations in the ℓ-th layer are obtained through what is called an activation function g_ℓ (·). Formally, for participant i=1,…,n, the activation a_ij^(ℓ) of the j-th node, j=1,…, N^(ℓ), of the ℓ-th layer, ℓ=2,…, M, is given by
+
+    a_ij^(ℓ)   = g_ℓ(  z_ij^(ℓ)),     where
+    
+    	z_ij^(ℓ)   =		
+    	∑_k=1^N^(ℓ-1)ω_jk^(ℓ) a_ik^(ℓ-1) + b_j^(ℓ).
+
+The ω_jk^(ℓ) are fixed but unknown weights and the b_j^(ℓ) are intercept terms, which are also fixed and unknown. Observe that in the first layer, we have a_ij^(1) = x_ij. The activations of the last layer, a_ij^(M), hold the network's output, which correspond to the autoencoder's reconstruction of responses x_ij. 
+
+We jointly refer to the weights and intercept terms as the network's parameters.  Since the parameters are unknown in practice, they need to be estimated. We collect in a vector  all parameters that need to be estimated. To emphasize the dependence on the parameter vector , we define for a fixed  a prediction function _(·) of the network, which corresponds to the activations in the last layer:
+
+    _  (x_i) =
+    	( f_1,(x_i), f_2,(x_i), …, f_p,(x_i)  )^⊤ =
+        ( a_i1^(M), a_i2^(M), …, a_ip^(M))^⊤,
+
+for participants i = 1,…,n. The reconstruction of the input vector x_i is then given by x_i = _ (x_i). 
+
+Because of the fact that each node is a function of nodes from a previous layer, the nodes in adjacent layers are often visualized by connecting edges. For instance, Figure <ref> provides a schematic overview of an autoencoder neural network.
+
+
+
+To fit an autoencoder, we aim at minimizing its reconstruction error. For a prespecified loss function (·), we fit the neural network by finding the  that yields the best average reconstruction error,
+
+    = min_{1/n∑_i=1^n ∑_j=1^p
+    	 ( x_ij - f_j,(x_i) ) 
+    	 }.
+
+The prediction function of the fitted network is subsequently given by _(·). For the loss function in (<ref>), we choose the smooth and robust Pseudo-Huber loss, which is defined for a fixed δ >0 as
+
+    (z) 
+    	=
+    	δ^2( √(1 + (z/δ)^2) - 1 ).
+
+This choice results in quadratic loss for small values of z and linear loss for large values of z. Consequently, the Pseudo-Huber loss function avoids that large individual reconstruction errors strongly affect the fit, which would make it hard for the network to distinguish ordinary observations from irregular observations, as the latter typically lead to large prediction errors. To solve the optimization problem in (<ref>), we use stochastic gradient descent. We refer to Chapter 8.5 in <cit.> for details.
+
+The optimization problem (<ref>) can be generalized by adding a penalty term λΩ(·) to the optimization criterion, where λ≥ 0 is a prespecified tuning parameter. The penalized version of (<ref>) reads
+
+    ∈min_{1/n∑_i=1^n ∑_j=1^p
+    	 ( x_ij - f_j,(x_i) ) 
+    	 + λΩ(_ω) },
+
+where we use the following definition for a q-dimensional parameter _ω:
+
+    _ω = (θ_1ω,…θ_qω)^⊤,
+
+whose components are given by, for  j=1,…,q,
+
+    θ_jω
+    	=
+    	θ_j    if j-th parameter is a weight parameter,
+    
+    	0    if j-th parameter is an intercept parameter.
+
+Observe that we only penalize weight parameters, but not intercept parameters. For the penalty function Ω (·), we choose the group-lasso penalty, which is defined as follows. Let {G_j}_j=1^m be a disjoint and exhaustive partition of parameters {1,…, q} into m groups, that is, 
+
+    G_j ⊆{1,…,q}  for all  j=1,…,m,
+
+such that ⋃_j=1^m G_j = {1,…, q} and ⋂_j=1^m G_j = ∅. The group-lasso penalty is given by
+
+    Ω(_ω)
+    	=
+    	∑_j=1^m
+    	√(# G_j)√(∑_k∈ G_jθ_kω^2),
+
+where # A denotes the cardinality of some set A. All parameters in a given group G_j are either jointly shrunk to zero or are jointly nonzero <cit.>. In our context, each group G_j holds items on the same survey page such that the number of groups, m, corresponds to the number of survey pages. We apply the group-lasso penalty between the input layer and the mapping layer, which is supposed to let items from later pages (where careless responding is more likely) be routed through different nodes in the mapping layer than items from earlier pages. Figure <ref> provides a schematic example.
+
+
+
+
+
+
+ §.§ Modeling Choices
+
+Following <cit.>, we specify five layers, M=5, and a symmetric network architecture. That is, the number of nodes in input and output layer are equal and correspond to the number of items, p. In addition, the number of nodes and types of activation function are equal in the mapping an de-mapping layer (layers 2 and 4, respectively). Specifically, we set the number of nodes in both layers to ⌊ 1.5× p ⌋ because a relatively large number of nodes is expected to give the autoencoder flexibility to learn many different types of response behavior (attentive and careless). Based on Assumption <ref>, the number of nodes in the central bottleneck layer equals the number of scales in the questionnaire. 
+
+Concerning the activation functions, we again follow a recommendation in <cit.> and propose to use nonlinear activation functions in the mapping as well as de-mapping layers, and a linear activation function in the bottleneck layer. Specifically, we propose to use the hyperbolic tangent activation in the (de-)mapping layers and the identity mapping in the bottleneck layer. Definitions are given in Table <ref>, which summarizes our proposed autoencoder architecture.
+
+
+
+For fitting the autoencoder, we use the stochastic gradient descent algorithm with a batch size of 10, a learning rate of 0.0001, and 100 epochs. In the presudo-Huber loss (<ref>), we set constant δ = 1. We set the tuning parameter in the penalized loss function (<ref>) to λ = 0.01. 
+
+
+
+
+§ ALGORITHMS AND CHANGEPOINT DETECTION
+
+
+
+ §.§ Longstring Pattern Algorithms
+
+ 
+   
+  
+In Section <ref>, we have motivated and described algorithms to compute  and  sequences. Formal algorithms are provided in Algorithms <ref> and <ref>, respectively.
+
+
+
+
+
+
+
+
+ §.§ Details on Changepoint Detection
+
+In the following, we describe the cumulative sum self-normalization test of <cit.>, which tests for the presence and location of a single changepoint in a multivariate series.
+
+Let {Y_j}_j=1^p be a series of length p consisting of d-dimensional random variables Y_j.  Our goal is to estimate the location of a possible changepoint in the value of this series. Define by _a,b = (b-a+1)^-1∑_j=a^b Y_j the d-dimensional mean of the series calculated on the subset implied by  periods a ≤ b. For location k∈{1,2,…,p-1}, define the test statistic
+
+    T_p(k) = D_p(k)^⊤V_p(k)^-1D_p(k),
+
+where
+
+    D_p(k) 
+    	   =  k (p-k) /p^3/2(_1,k - _k+1,p),
+    	
+    V_p(k) 
+    	   =
+    	L_p(k) +  R_p(k),
+
+which are contained in ^d and ^d× d, respectively, with matrices
+
+    L_p(k)
+    	   =
+    	∑_i=1^k
+    	 i^2(k-i)^2 / p^2 k^2 ( _1,i - _i+1,k)
+    	( _1,i - _i+1,k)^⊤,
+    	
+    R_p(k)
+    	   =
+    	∑_i=k+1^p (p-i+1)^2(i-1-k)^2 / p^2k^2 ( _i,p - _k+1,i-1)
+    	( _i,p - _k+1,i-1)^⊤,
+
+which are both contained in ^d× d.
+
+Consider a prespecified threshold K_p > 0. Based on the test statistic in (<ref>), flag the single change-point detection location as
+
+    k
+    	=
+    	max_k=1,…,p-1 T_p(k)      if max_k=1,…,p-1 T_p(k) > K_p,
+    ∅   otherwise.
+
+
+<cit.> and <cit.> derive theoretical guarantees of this procedure and it turns out that an appropriate choice of K_p is directly implied by the desired significance level α∈ (0,0.5) and the dimension d of the series. Table 1 in <cit.> presents values of K_p for common choices of α and certain dimensions d, which we present in Table <ref>. In our case, we have dimension d=3 and level α = 0.001, so we choose threshold K_p = 246.8.
+
+
+
+It is worth to point out that this test can also test for a changepoint in statistics other than the mean, which was considered here. In addition, it can be extended to test for multiple changepoints. We refer the interested reader to <cit.> for details.
+
+In the context of our paper, we use the test statistics (<ref>) to test for changepoints in the three-dimensional series
+
+    Y_j = 
+    	[ _j; _j; _j ],
+    	     j = 1,…, p,
+
+where _j is the reconstruction error (<ref>) of a response to item j, _j is the value of the  sequence assigned to this response, and _j is the response time associated with the response. We obtain such a series for each of the n survey participants and subsequently test each of the n series for changepoints.
+
+As a final technical note, response times when measured on page-level and  sequences may exhibit low variation. Computing their variation over a relatively narrow interval—as required by the test statistics in (<ref>)—may result in a singular (and therefore not invertible) variation matrix V_p(k) such that (<ref>) cannot be computed anymore. To avoid this issue, we by default inject Gaussian noise of tiny magnitude to each _j and _j, j=1,…,p. Specifically, we inject draws from a normal distribution with mean zero and variance 0.01× 0.01. Doing so results in tiny but nonzero variation, which renders V_p(k) invertible.
+
+
+
+ §.§ Details on the Adjusted Rand Index
+
+In the following, we describe how the Adjusted Rand Index <cit.> is calculated for the p responses of a single respondent. The ARI is a continuous measure of classification performance and the respondent either responds attentively or carelessly to each item. Denote by n_11 the number of careless responses that are correctly identified as careless and by n_00 the number of attentive responses that are correctly identified as attentive. Conversely, denote by n_10 the number of careless responses that are incorrectly identified as attentive, and by n_01 the number of attentive responses that are incorrectly identified as careless. Intuitively, n_11 and n_00 measure correct classification, whereas n_01 and n_10 measure misclassification. With 
+
+    A    = n_112 + n_002 + n_102 + n_012,
+    	
+    
+    	B    = n_00 + n_012 + n_10 + n_112, 
+    	
+    
+    	C    = n_00 + n_102 + n_01 + n_112, 
+    	
+    
+    	D    = p2,
+
+the ARI for the respondent of interest is given by
+
+    ARI=
+    	
+    	1     if n_10=p or n_01=p or n_11=p or n_00=p,
+    	
+     A - BC/D /(B+C)/2 - BC/D    otherwise.
+ 
+Observe that the ARI assumes value 1 if there is no misclassification, which is the maximum value it can take. Hence, for accurate estimates of the carelessness onset item, the ARI will be close to value 1. For very inaccurate estimates of carelessness onset, the ARI will be close to 0, or sometimes even below that. It is unclear how to interpret negative ARI values, but such values only occur rarely. We refer to <cit.> for a detailed discussion of the ARI's properties.
+
+It can be shown that if a changepoint is flagged in an attentive respondent, the ARI takes value 0, and when no changepoint is flagged in an attentive respondent, the ARI takes value 1. Hence, when averaging ARIs of attentive respondents, the ensuing average can be interpreted as the proportion of attentive respondents who are correctly identified as attentive. Conversely, averages of ARIs calculated on partially careless respondents do not have a direct interpretation other than “the higher, the better”.
+
+
+
+
+§ ADDITIONAL RESULTS
+
+ 
+   
+  
+
+
+
+ §.§ Simulations
+
+
+
+  §.§.§ Heatmaps for Different Carelessness Prevalence
+
+In the simulation design of Section <ref>, Figures <ref>–<ref> visualize heatmaps akin to Figure <ref> (in which careless prevalence is 60%) for careless prevalence levels of 20%, 40%, 80%, and 100%. All figures use changepoint estimates obtained at significance level 0.1%.
+
+
+
+
+
+
+
+
+
+
+
+  §.§.§ Results at Less Conservative Level
+
+Consider again the simulation design of Section <ref>. Figure <ref> is equivalent to Figure <ref>, just with significance level 0.5% instead of 0.1%. The results are very similar to Figure <ref>, save for about 10% attentive respondents being incorrectly identified as careless when carelessness is extremely prevalent at 80%. We therefore do not recommend choosing a more liberal significance level that is higher than 0.1%.
+
+
+
+
+
+
+  §.§.§ Design with Strong Response Heterogeneity
+
+This simulation design is exactly the same as in Section <ref>, save for two key differences. First, a simulated dataset of responses measures 10 constructs, each of which is measured by 30 items. resulting in a total of 10× 30 = 300 items (as in Section <ref>). Second, we alter the response probability distributions of the five answer categories. Like in <cit.>, instead of the distribution in Table <ref>, we distinguish between four distinct types of distributions for the different constructs: centered about the midpoint, skewed towards agreeing, skewed towards disagreeing, and polarizing (likely to agree or to disagree). Table <ref> lists each distribution. All 10 items within a construct follow the same response probability distribution.  We use the “centered” and “polarizing” distributions in seven constructs each, and the “agreeing” and “disagreeing“ constructs in eight constructs each, resulting in the aforementioned 10× 2× (7+8)=300 items.
+
+
+
+This simulation design is supposed to be very challenging for the autoencoder because it must learn response behaviors for a variety of highly heterogeneous scales, where each of which is measured by only 10 items. Consequently, the autoencoder must learn more heterogeneous responses based on less items (compared to Section <ref>), thereby creating an interesting challenge for our proposed method. 
+
+In the following, we present and discuss results (averaged over 100 repetitions) at significance level 0.1%.
+
+
+
+Figure <ref> is analogous to Figure <ref>. We can see that our method identifies fewer careless onset items, but when it identifies changepoints, its estimates of onset location are highly accurate. Again, incorrectly detected changepoints in attentive respondents does not seem to be an issue at all.
+
+
+
+Figure <ref> shows ARIs for several subgroups and is analogous to Figure <ref>. Just like in Figure <ref>, our method barely ever incorrectly identifies changepoints in attentive respondents. Conversely, the ARI for careless respondents is again fairly constant across different carelessness prevalence levels with an ARI of about 0.85–0.9, which is an excellent performance, in particular when considering the difficulty of the experimental design. In addition, our method is again highly precise in accurately estimating changepoints in invariable careless respondents with near-perfect ARIs. In extreme careless responding, our method achieves an outstanding ARI of about 0.9). In random careless respondents, the ARIs are notably smaller, in particular if prevalence of carelessness is high (ARI of 0.5–0.63). This is primarily due to the extremely conservative significance level: Random carelessness behavior is arguably the hardest to detect, so our method needs to accrue high levels of evidence to identify such respondents. Combined with an extremely conservative significance level and an overall highly challenging design, our method sometimes does not identify a changepoint for some random careless respondents, which substantially drags down the ARI estimate (as such cases are awarded an ARI of zero). However, if our method estimates a changepoint in random careless respondents, its estimated location is reasonably precise. Note that it is possible to achieve substantially higher ARI values in random careless respondents by choosing a higher significance level (see Figure <ref>), but—just like in Section <ref>—we do not recommend doing so for the sake of staying conservative, at the cost of some undetected random careless respondents.
+
+Overall, with ARIs of 0.85–0.9 for careless respondents and almost no incorrectly flagged attentive respondents, our method performs very well at significance level 0.1% in this challenging simulation design.
+
+
+
+
+
+
+  §.§.§ Simulated NEO-PI-R Administration
+
+In this design, we adapt the design of Appendix <ref> to emulate an administration of the NEO-PI-R instrument <cit.>. In short, this instrument comprises 240 items that measure the 30 facets of the Big 5 personality traits (see Section <ref> for a detailed description). Each facet construct is measured with eight items on a five-point Likert scale. We assume that all eight items comprising a construct follow the same response probability distributions. Consider the distributions in Table <ref>. We use the  “centered” and polarizing distributions in seven constructs each, and the “agreeing” and “disagreeing” constructs in eight constructs each, resulting in the aforementioned 8× 2 × (7+8) = 240 items. Half of the items in a given construct are reverse-worded. We generate responses for 500 respondents and simulate 100 datasets. Akin to previous designs, we replace a fixed proportion of responses by (partially) careless responses. We randomly sample carelessness onset to be between the 160th and 204th item; these items respectively correspond to 66.7% and 85% of all items. 
+
+Just like in the design of Appendix <ref>, this design in supposed to be challenging  because there is strong heterogeneity between constructs, just like one would expect in an empirical administration of the NEO-PI-R. However, there is less heterogeneity than in Appendix <ref> due to the smaller number of (heterogeneous) constructs measured.
+
+
+
+
+
+
+
+Figures <ref> and <ref> visualize the results at significance level 0.1%, averaged across the 100 repetitions. Figure <ref> is analogous to Figure <ref>, just for significance level 0.5%.
+
+The conclusions remain similar to the previous designs: At 0.1% level, in rarely any attentive respondents a changepoint is identified, while invariant carelessness and extreme responding are detected exceptionally accurately. Pure random responding is also identified  accurately with ARIs of 0.75–0.8, but with decreasing accuracy when carelessness prevalence is high. Again, we can achieve substantially better ARIs for random responding by choosing the level to be 0.5% (see Figure <ref>), but advise against this choice.
+
+
+
+ §.§ Empirical Validation
+
+
+
+  §.§.§ Application on Original Data
+
+Figure <ref> shows the two dimensions of autoencoder reconstruction errors and  sequences, as well as test statistics associated with the single student in the data of <cit.> for whom our method identifies a changepoint at significance level 0.1%. When running our proposed method on both dimensions on the 400 students that have exclusively integer-valued responses, this student is the only participant in which a changepoint is identified at significance level 0.1%. The changepoint occurs at item 113, before which the reconstruction errors are strikingly larger than afterwards. There does not seem to be a structural break in the  sequences. Overall, this suggests that this student initially starts the questionnaire as inconsistent careless respondent (random-like responding), but switches to being attentive as they progress through the items.
+
+In addition to a visual analysis of reconstruction errors and  sequences, we analyze the observed responses of the student for whom a changepoint is flagged via the their intra-individual variance (IRV). There is some evidence that carelessness manifests in low values of IRV (, in case of invariable carelessness) and high values of IRV (, in case of inconsistent carelessness) when when compared to IRVs of attentive respondents. We therefore compute IRVs across the items prior to a flagged changepoint and IRVs across items from the flagged changepoint onward. We do so for the student for whom a changepoint is flagged and the remaining 399 seemingly attentive participants. Table <ref> contains the corresponding IRV values. 
+Recall from Figure <ref> that the student is suspected to start the questionnaire carelessly and that their high pre-changepoint reconstruction errors suggest inconsistent carelessness. Indeed, they have a substantially higher IRV value (1.65) in their  pre-changepoint responses than post-changepoint responses (1.33), which reflects larger response variation in their suspected periods of carelessness, possibly due to random-like responding.
+
+
+
+
+
+
+
+
+  §.§.§ Validation With Less Conservative Level
+
+In this subsection, we present our method's results when applied on the data of <cit.> in which we have included generated careless responses. The sole difference to Section <ref> is that we report results for the less conservative significance level 0.5% instead of 0.1%. Hence, Figure <ref> is equivalent to Figure <ref>, just when the less conservative level is used. As explained in the main text, choosing the less conservative level of 0.5% results in a noticeable improvement of the ARI for participants with random and extreme careless response styles, without a significant adverse effect of attentive respondents being incorrectly identified as careless.
+
+
+

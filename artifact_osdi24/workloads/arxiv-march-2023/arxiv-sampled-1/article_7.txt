@@ -1,0 +1,1457 @@
+
+
+theoremTheorem
+corCorollary
+exampleExample
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Distance Evaluation to the Set of Defective Matrices
+    
+Alexei Yu. Uteshev[The corresponding author], Elizaveta A. Kalinina, Marina V. Goncharova 
+
+
+
+1010
+
+St. Petersburg State University
+
+1010Faculty of Applied Mathematics 
+
+1010St. Petersburg, Russia
+
+99^1 {alexeiuteshev,ekalinina,marina.yashina}@gmail.com
+
+
+
+
+
+101099
+    March 30, 2023
+==============================================================================================================================================================================================================================================================================
+
+empty
+
+
+
+
+We treat the problem of the Frobenius distance evaluation from a given matrix A ∈ℝ^n× n with distinct eigenvalues to the manifold  of matrices with multiple eigenvalues. On restricting considerations to the  
+rank 1 real perturbation matrices, we prove that the distance in question equals √(z_∗) where 
+z_∗ is a  positive (generically, the least positive) zero of the algebraic equation
+
+    ℱ(z) = 0,   ℱ(z):= 𝒟_λ( 
+    [ (λ I - A)(λ I - A^⊤)-z I_n ] )/z^n
+
+and 𝒟_λ stands for the 
+discriminant of the polynomial treated with respect to λ. In the framework of this approach we also provide the procedure for finding the nearest to A matrix with multiple eigenvalue. Generalization of the problem to the case of complex perturbations is also discussed. Several examples are presented clarifying the computational aspects of the approach.
+
+
+
+
+Keywords: Wilkinson's problem, defective matrix, multiple eigenvalues, distance equation
+
+
+MSC 2010: 68W30, 15A18 , 12D10, 58C40
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+
+
+
+
+
+
+
+
+
+The origin of the problem of finding the distance from a matrix A ∈ℂ^n× n
+to the set 𝔻 of matrices with multiple eigenvalues can be traced back to Wilkinson <cit.> who posed it in relation to the sensitivity analysis of matrix eigenvalues. The desired distance  further will be treated  with respect to either the 2-norm or to the Frobenius norm in ℂ^n× n and will be 
+denoted d(A, 𝔻). It is usually referred to as the Wilkinson
+distance of A <cit.>. Alternatively, 
+d(A, 𝔻) can be defined as the 
+infA-B where B belongs to the subset of defective matrices, i.e. those possessing at least one eigenvalue 
+whose geometric multiplicity  is less than its algebraic multiplicity.
+
+
+
+
+
+Starting from  Wilkinson's works <cit.>, 
+the problem of evaluation of d(A, 𝔻) has been
+studied intensively in <cit.>. The most recent result is presented in the work <cit.>. 
+We briefly trace the developed approaches. Most of them are in the framework of singular value analysis of appropriate parameter dependent matrices.
+
+The following theorem gives the min-max representation of d(A,𝔻) obtained by Malyshev <cit.>.
+
+ Let A∈ℂ^n× n.
+Let the singular values of the matrix
+
+    [[ A-λ I_n   γ I_n;  𝕆_n× n A-λ I_n ]]
+
+be ordered like
+σ_1(λ,γ)≥σ_2(λ,γ)≥…≥σ_2n(λ,γ)
+≥ 0. Then the  2-norm distance  d(A,𝔻) can be evaluated as 
+
+    d(A,𝔻)=min_λ∈ℂmax_γ≥0σ_2n-1(λ,γ)  .
+
+
+
+The straight computation of this distance is quite difficult, so to find this distance, in many works the notion of pseudospectra <cit.> is used.
+
+Definition. For both the 2-norm and the Frobenius norm, the ε-pseudospectra of a matrix A
+is
+
+    Λ_ε(A)={σ_min<ε}
+
+where ε>0 and σ_min stands for the smallest
+singular value of the matrix A-zI.
+
+Equivalently,
+
+    Λ_ε(A)={ z∈ℂ | (A+E-zI)=0,  E∈ℂ^n× nE <ε}  .
+
+If Λ_ε has n components, then A+E has n
+distinct eigenvalues for all perturbations
+E∈ℂ^n× n and hence A+E is not defective.
+
+In subsequent papers, the pseudospectra approach is used to find the distance to the nearest defective matrix. 
+
+In <cit.>, a geometric solution to the problem of finding d(A,𝔻) in Frobenius norm is given. The nearest defective
+matrix is related to the critical points of 
+the minimal singular value σ_min(x,y) of the matrix A-(x+𝐢 y)I that could
+be obtained by examination of pseudospectra of A. For an
+approximation of a multiple eigenvalue of the nearest defective
+matrix, the averaging heuristic by Puiseux series is proposed. Also
+an iterative method for finding this eigenvalue
+together with the minimal perturbation is presented.
+
+In <cit.>, it is proposed to find the smallest
+perturbation E such that the components of the pseudospectra of
+A+E coalesce. The problem is reformulated as follows. One needs to
+find
+z∈ℂ,ε∈ℝ,ε>0 and U,V∈ℂ^n,such that[Hereinafter ^⊤ stands for the transpose while ^𝖧 stands for the Hermitian transpose.]
+
+    (A-zI)V-ε U=𝕆_n× 1,ε V-(A-zI)^𝖧 U=𝕆_n× 1,  U^𝖧 V=0   .
+
+The algorithm to solve the system of equations presented in this
+work is rather expensive because it requires the repeated
+calculation of pseudospectra. Also any condition of coalescence of
+two pseudospectral curves is necessary.
+
+In <cit.>, a new computational approach to approximating the nearest defective matrix by a variant of Newton's method is  suggested. 
+
+The Implicit Determinant Method based on standard Newton's method
+is used to solve the system (<ref>) in <cit.>.
+
+There are several works considering generalizations of Wilkinson's problem for the cases of prescribed eigenvalues or their  multiplicities  <cit.>,
+ and matrix pencils <cit.>.
+
+The approaches developed in the above cited papers could be characterized as related to the Numerical Linear Algebra. The present paper aims at solving the stated problem for the case of Frobenius norm within the framework of symbolic computation approach. Namely, we reduce the problem to that of the univariate polynomial equation solving. As a matter of fact, the manifold 𝔻 of  matrices with multiple eigenvalues in the ℝ^n^2 space of their entries is an algebraic one, i.e. it is represented by a multivariate polynomial equation. If we slightly modify  Wilkinson's problem to that of finding d^2(A,𝔻), then the constrained optimization problem becomes an algebraic one in the sense that both the objective function and the constraint be polynomials.  Application of the Lagrange multipliers method reduces the problem to that of system of algebraic equations solving. The latter can be resolved, at least in theory, via the analytical procedure of elimination of variables consisting in the multivariate resultant computation or the Gröbner basis construction. Application of these procedures to the system of equations of the treated problem, complemented with z-d^2(A,𝔻)=0, results in a univariate equation ℱ(z)=0 whose zero set contains all the  critical values of the squared distance function. This equation will be further referred to as the distance equation and its computation is the priority of the present paper. 
+
+This approach has been developed in <cit.>.
+Unfortunately, soon after that publication, a significant gap in reasoning was discovered. It was assumed that the value d(A, 𝔻) could be provided by only the rank 1 perturbation matrix E_∗ and that the nearest to A matrix B_∗=A+E_∗ in 𝔻 might possess only a double real eigenvalue.
+In Section <ref>, an example of the order 4 matrix A is given where the nearest  in 𝔻  matrix
+  possesses a pair of double complex-conjugate eigenvalues. 
+As yet we failed to manage this scenario for the general statement of the problem; neither do we able to claim that it is a zero probability event. 
+
+We confine ourselves here to considering the case where the critical values of d^2(A,𝔻) are provided only by the rank 1 perturbation matrices. For this case,  
+the practical implementations of the elimination of variables procedure mentioned above  can be reduced to just only two bivariate equations. 
+One of these equations follows quite naturally from the developed in <cit.> approach. This is 
+
+    Φ(λ,z)=0   Φ(λ,z):=
+    [ (λ I - A)(λ I - A^⊤)-z I_n ]
+       .
+
+The more difficulties causes the deduction of the second equation. It happens to be 
+    ∂Φ(λ,z)/ ∂λ =0   .
+
+To obtain the distance equation, it is then sufficient to eliminate the variable λ from the obtained system. This can be managed with the aid of discriminant computation, i.e. the function of the coefficients of a polynomial responsible for the existence of a multiple zero for this polynomial.
+We recall some basic features of this function in Section <ref>.
+
+In Section <ref>, we prove the main result of the paper, namely that the value d^2(A,𝔻) is in the set of non-negative zeros of the distance equation. If A ∉𝔻 then generically d^2(A,𝔻) equals the least positive zero z_∗ of this equation. We also detail here the structure of the matrix B_∗ nearest  to A in 𝔻. It appears that the multiple eigenvalue of  B_∗ coincide with the multiple zero of the polynomial Φ(λ,z_∗).
+
+In Section <ref>, computational aspects of the proposed approach are discussed via solving the  problem for the two families of matrices treated in  the literature. 
+
+In Section <ref>, we address to the generalization of Wilkinson's problem to the case of complex perturbations. Here the results are presented in a very concise manner with the potential intention of returning to them in future articles.
+
+Notation is kept to correlate with <cit.>. For a matrix A ∈ℝ^n× n,
+f_A(λ) denotes its characteristic polynomial,
+
+d(A, 𝔻) denotes the distance from A to the set 𝔻 of matrices possessing a multiple eigenvalue.  E_∗ and B_∗ = A+ E_∗ stand for, respectively, the (minimal) perturbation matrix and the nearest to A  matrix in 𝔻 (i.e. d(A,𝔻)=A- B_∗); we then term by λ_∗ the multiple eigenvalue of B_∗. I (or I_n) denotes the identity matrix (of the corresponding order). 𝒟 (or 𝒟_λ) denotes the discriminant of a polynomial (with subscript indicating the variable).
+
+Remark. All the computations were performed in CAS Maple 15.0 with those approximate done within the accuracy 10^-40. In the paper they are presented rounded to 10^-6.
+
+
+
+§ ALGEBRAIC PRELIMINARIES
+
+
+
+
+
+
+
+
+It is well-known that in the (N+1)-dimensional space of the polynomial 
+
+    F(x)=a_0x^N + a_1x^N-1 +…+a_N ∈ℂ[x],   a_0 0, N ≥ 2
+
+coefficients, the manifold of polynomials with multiple zeros 
+is given by the equation
+
+    D(a_0,a_1,…,a_N)=0    
+    D:=𝒟_x(F(x))
+
+denotes the discriminant of the polynomial. Discriminant is formally defined as a symmetric function of the zeros {λ_1,…, λ_N } of the polynomial F(x)
+
+    D_x(F(x))= a_0^2N-2∏_1≤ j < k ≤ N (λ_k - λ_j)^2   .
+
+This representation gives rise to further transformation of the discriminant into the homogeneous polynomial D(a_0,a_1,…,a_N) of the order 2N-2 with respect to the coefficients of F(x). Such a transformation  can be implemented through a preliminary representation of discriminant in an appropriate determinantal form. We will follow the approach based on the Hankel matrix formalism <cit.>.
+
+
+For this aim, find first the Newton sums s_0,s_1,…,s_2N-2 of the polynomial F(x) with the aid of recursive formulas
+
+    s_0=N, s_1=-a_1/a_0,
+
+
+    s_k={[ -(a_1s_k-1+a_2s_k-2+…+a_k-1s_1+a_kk)/a_0,                                    k≤ N ,;      -(a_1s_k-1+a_2s_k-2+…+a_Ns_k-N)/a_0,                                   k > N , ].
+
+and compose the Hankel matrix
+
+    S=[s_j+k]_j,k=0^N-1 =
+    [[    s_0    s_1    s_2      …  s_N-2  s_N-1;    s_1    s_2    s_3      …  s_N-1    s_N;    s_2    s_3    s_4      …    s_N  s_N+1;      …                    …;  s_N-1    s_N  s_N+1      … s_2N-3 s_2N-2 ]]_N× N .
+
+Denote by S_1,…, S_N= S its leading principal minors.
+
+   One has
+
+    𝒟(F)=a_0^2N-2 S_N   .
+
+The condition 
+
+    S_N=0, …, S_N-k+1=0, S_N-k 0
+
+is the necessary and sufficient for the polynomial F(x) to possess k 
+common zeros with F^' (x).
+In particular, if S_N=0, S_N-1 0, then F(x) possesses a unique multiple zero and the multiplicity of this zero equals 2. This zero can be computed via the formula
+
+    λ = 
+    s_1-1/S_N-1|
+    [    s_0    s_1      …  s_N-3  s_N-1;    s_1    s_2      …  s_N-2    s_N;      ⋮                           ⋮;  s_N-2  s_N-1      … s_2N-1 s_2N-3 ]|    .
+
+The determinant in the right-hand side is constructed by deleting the last row and the last but one column in 
+S.
+
+
+
+Consequently, the set 𝔻 of matrices with multiple eigenvalues is given by the equation
+
+    𝒟_λ( (λ I-B) ) =0   .
+
+
+For the case of polynomials with real coefficients, the sequence of leading principal minors of the matrix S permits one to establish the exact number of real zeros for F(x) <cit.>.
+
+ Let 
+
+    S_N=0, …, S_N-k+1=0, S_N-k 0,…,S_1  0
+
+Then the number of distinct pairs of complex-conjugate zeros for F(x) ∈ℝ[x] equals
+
+    𝒱(1,S_1,…, S_N-k)
+
+where 𝒱 denotes the number of variations of sign in the given sequence.
+
+
+In the space ℝ^N+1 of polynomials (<ref>) with real coefficients, the discriminant manifold (<ref>) separates the domains of vectors providing the coefficients of polynomials with the same number of real zeros. 
+
+The last comment of the present section relates to application of discriminant to one problem from Elimination Theory. Consider a bivariate polynomial F(x,y)∈ℝ[x,y],  F ≥ 2. The discriminant furnishes the tool for eliminating the variable x from the system of equations
+
+    F(x,y)=0, ∂ F(x,y)/ ∂ x=0   .
+    
+
+Namely, if (x_0,y_0) is a solution to the system (<ref>), then y_0  is necessarily a zero of the algebraic univariate equation
+
+    𝒴(y)=0   𝒴(y):=𝒟_x(F(x,y))   .
+
+The reverse statement is subject to an extra assumption. If y_1∈ℂ is a zero for 𝒴(y), then there exists a multiple zero for the polynomial F(x,y_1).  Under the assumption that y_1 is a simple zero for 𝒴(y),
+x_1 is a  unique multiple zero and its  multiplicity equals 2. Then it can be expressed as a rational function of y_1  using the result of Theorem <ref>. These considerations are valid for all the solutions of the system (<ref>) provided that 𝒟_y(𝒴(y)) 0.
+
+
+
+
+
+
+§ DISTANCE EQUATION
+
+
+
+
+
+
+
+
+
+
+In terms of the discriminant manifold referred to in the previous section, the problem of evaluation of d^2 (A,𝔻) is equivalent to that of constrained optimization
+
+    minB-A^2    𝒟_λ(f_B(λ))=0, B∈ℝ^n× n  .
+
+Here the constraint is an algebraic equation with respect to the entries of the matrix B.
+Traditional application of the Lagrange multipliers method reduces the problem to that of solving a system of n^2+1 nonlinear algebraic equations. Under the additional assumption the matrix B_∗∈ℝ^n× n providing a solution to this system possesses only one multiple eigenvalue and its multiplicity equals 2, it is possible to  reduce the number of variables in the constrained optimization approach. The following result is presented in <cit.>:
+
+
+
+The value d^2(A,𝔻) belongs to the set of critical values of the objective function
+
+    G(U):=U^⊤A A^⊤ U - ( U^⊤AU )^2
+
+for the constrained optimization problem under constraints 
+
+    U^⊤U=1, U ∈ℝ^n   .
+
+If U_∗ be the point providing d^2(A,𝔻), then the perturbation can be computed as
+
+    E_∗=U_∗ U_∗^⊤ (κ I-A)    κ:= U_∗^⊤ A U_∗  .
+
+
+
+The new optimization problem still have significant number of variables. We aim to eliminate all of them but introduce an extra one responsible for the critical values of the objective function. 
+
+Stationary points of the function
+(<ref>) under the constraints
+(<ref>) can be found via Lagrange  method applied to the function G(U)- μ (U^⊤U-1). This results into the system
+
+    AA^⊤U-(U^⊤ A U)(A+A^⊤)U-μ U = 𝕆_n× 1  .
+
+Denote
+
+    λ:=U^⊤ A U   .
+
+ Then the equation (<ref>) has a nontrivial solution with respect to  U if and only if
+ 
+    (AA^⊤-λ (A+A^⊤)-μ I)=0   .
+
+ Under this condition, multiplication of 
+  (<ref>) by U^⊤ yields
+ 
+    U^⊤AA^⊤U=2λ^2+μ  .
+
+ Wherefrom it follows that the critical values of the objective function
+  (<ref>) are given by 
+ 
+    z=λ^2+μ  .
+
+ Substitution this into (<ref>) results in the equation connecting  z and λ:
+
+    Φ(λ,z)=0
+
+ where
+
+    Φ(λ,z):=
+    [ A A^⊤- λ (A+A^⊤)+(λ^2-z) I ]
+
+
+    =[ (λ I - A)(λ I - A)^⊤-z I ]
+
+Zeros z_1,…, z_n of the polynomial Φ(λ,z)  with respect to the variable z are evidently real since they are the squares of the singular values for the matrix λ I-A.
+
+Our further task is to deduce an extra equation connecting 
+λ and z.
+
+ The value d^2(A,𝔻) belongs to the set of non-negative zeros of 
+the polynomial
+
+    ℱ(z)≡𝒟_λ(Φ(λ,z))/z^n   .
+
+
+
+
+Proof. Under the condition (<ref>), there exists  a nontrivial solution  for (<ref>) with respect to the column  U
+
+    (λ I-A)(λ I-A)^⊤U=z  U    .
+
+This equality means that U is the right 
+singular vector for the matrix λ I - A corresponding to the singular value √(z). The corresponding left singular vector for that matrix can be found from the equality
+
+    √(z)V:=(λ I - A)^⊤U   .
+
+Dual relationship is valid for U:
+
+    √(z)U=(λ I - A)V   .
+
+From the conditions (<ref>) and (<ref>)
+
+
+
+
+it follows that
+
+    U^⊤(λ I - A)U=0   .
+
+Multiply (<ref>) from the left by U^⊤. From (<ref>), it follows that
+
+    √(z)=U^⊤(λ I - A)V   .
+
+Multiply (<ref>) from the left by V^⊤ and utilize (<ref>):
+
+    √(z)V^⊤V=V^⊤(λ I - A)^⊤U=√(z)  .
+
+Wherefrom the two alternatives follow
+
+    V^⊤V=1     √(z)=0   .
+
+Similarly, multiplication of (<ref>) from the left by U^⊤ and further application of (<ref>) yields
+
+    √(z)U^⊤V=0   .
+
+This also leads to two alternatives:
+
+    U^⊤V=0     √(z)=0   .
+
+Ignore the case √(z)=0. 
+
+    V^⊤V=1,  U^⊤V=0   .
+
+Consider the equation (<ref>) as a definition of the √(z) as the function of λ. Differentiate this relation with respect to λ:
+
+    d √(z)/d λ=U^⊤V+d  U^⊤/d λ (λ I - A)V+U^⊤ 
+    (λ I - A)  d  V/d λ  .
+
+With the aid of (<ref>) and (<ref>) transform this into
+
+    U^⊤V+√(z)[ d  U^⊤/d λ U + V^⊤d  V/d λ]   .
+
+Due to (<ref>) and (<ref>), we arrive at 
+
+    d √(z)/d λ = 0   .
+
+
+Equation (<ref>) defines implicit function z(λ). Differentiation of the identity Φ(λ,z(λ))≡ 0 with respect to λ yields the identity
+
+    Φ^'_λ(λ,z)+Φ^'_z(λ,z) d  z/d λ≡ 0   .
+
+Under the condition (<ref>), the variables λ and z are linked by an extra relationship
+
+    Φ^'_λ(λ,z)=0   .
+
+Together with (<ref>),  the deduced condition composes the system of algebraic equations
+
+    Φ (λ,z)=0, Φ^'_λ(λ,z)=0    .
+
+According with the results of Section <ref>, elimination of λ from this system can be implemented with the aid of the discriminant computation, i.e. the variable z should  satisfy the equation
+
+    𝒟_λ (Φ (λ,z))=0   .
+
+To prove the validity of (<ref>), it is necessary to additionally confirm that the left-hand side of the last equation is divisible by z^n. This is indeed the case, since the polynomial Φ(λ,0) possesses n multiple zeros coinciding with the eigenvalues of the matrix A. 
+
+With ℱ(z) given by (<ref>), the distance equation ℱ(z) =0 is now well-defined and in Section <ref> we discuss some of related features and computational aspects. 
+
+To conclude the present section, we have to detail the properties of the λ-component for the solution of the system (<ref>).
+Let the polynomial ℱ(z) defined by (<ref>) possess a positive real zero z_0 and this zero be simple. Then the polynomial Φ (λ,z_0) has a unique multiple zero and multiplicity of this zero equals 2. We denote by λ_0. It is evidently real and can be expressed as a rational function of z_0 via, for instance, formula (<ref>). 
+
+The less evident conclusion is as follows: this multiple zero coincides with the multiple eigenvalue of the matrix in 𝔻 providing the critical value z_0 for the function d^2(A,𝔻). 
+
+
+ 
+For any real solution (λ_0,z_0) of the system (<ref>)  where
+z_0 0, there exists the rank 1 perturbation E_0 such that 
+E_0=√(z_0) and the matrix B_0=A+E_0 possesses the multiple eigenvalue 
+λ_0.
+
+
+Proof. The number √(z_0) is a singular value  for the matrix λ_0 I - A. We intend to prove that the matrix from the theorem statement is defined by the formula
+
+    E_0:=√(z_0)U_0 V_0^⊤  ,
+
+where U_0 and V_0 are respectively the left and the right singular vectors of the unit norm for the matrix
+ λ_0 I-A corresponding to √(z_0).
+
+Indeed, the matrix B_0=A+E_0  has λ_0 as the eigenvalue corresponding to the eigenvector V_0: 
+
+    B_0V_0=(A+E_0)V_0 
+    (<ref>)= 
+    AV_0+√(z_0)U_0
+    (<ref>)
+    =AV_0+(λ_0I-A)V_0=λ_0V_0   .
+
+If (B_0-λ_0 I)<n-1 then the theorem is proved. Assume that (B_0-λ_0 I)=n-1. Let us prove the existence of a column W such  that
+
+    (B_0-λ_0 I)W=V_0   .
+
+The necessary and sufficient condition for resolving this equation consists in the fulfillment of the equality
+
+    (B_0-λ_0I)(B-λ_0I)^+V_0=V_0
+
+where ^+ stands for the Moore-Penrose inverse of the matrix. It can be easily verified that
+
+    (B_0-λ_0I)(B_0-λ_0I)^+=I-U_0U_0^⊤
+
+(by assumption, (B_0-λ_0 I)=n-1), and the condition (<ref>) is fulfilled:
+
+    (B_0-λ_0I)(B_0-λ_0I)^+V_0=
+    (I-U_0U_0^⊤)V_0
+    (<ref>)=
+    V_0   .
+
+
+The columns V_0 and W are linearly independent. 
+Indeed, if
+
+    α V_0+ β W=𝕆_n × 1   {α, β}⊂ℝ
+
+then on multiplying this equality from the left by
+B_0-λ_0 I it follows that
+ β V_0 = 𝕆_n × 1, and thus β=0. But then α=0 since V_0 is a nonzero column. 
+ 
+Hence, 
+ 
+    (B_0-λ_0I)^2V_0=  𝕆,  (B_0-λ_0I)^2W=  𝕆
+
+ for the linear independent V_0 and W. Consequently,
+ (B_0-λ_0 I)^2≤ n-2 and this gives evidence that λ_0 should be a multiple eigenvalue for B_0. 
+If A ∉𝔻,  then
+
+    d(A,𝔻) = √(z_∗)  ,
+
+where z_∗ is the minimal positive zero of the polynomial (<ref>) provided that this zero is not a multiple one. Minimal perturbation is evaluated by the formula
+
+    E_∗=U_∗U_∗^⊤ (λ_∗I-A)   .
+
+Here λ_∗ is the multiple zero for the polynomial Φ(λ,z_∗) and U_∗∈ℝ^n, U_∗=1 is the left singular vector of the matrix λ_∗I-A corresponding to the singular value √(z_∗).
+
+
+The significance of condition for simplicity of the minimal positive zero z_∗ can be explained as follows. Since we are looking for only real perturbations, formula (<ref>) yields such a matrix if λ_∗ is real. For the matrices of the order n≥ 4, it might happen that the system (<ref>) possesses a solution (z_∗, λ_∗) with an imaginary λ_∗ (we give an example of such a matrix in Section <ref>). Then the system necessarily possesses the solution (z_∗,λ_∗). This implies (v. the last comment from Section <ref>) that  z_∗ should be a multiple zero for (<ref>). Therefore, the condition for simplicity of z_∗is sufficient to prevent such an occasion. Formal verification of this condition can be replaced by a more general one relating the discriminant of ℱ(z): 
+
+    𝒟_z(ℱ(z)) 0   .
+
+
+
+
+
+
+§ PROPERTIES OF THE DISTANCE EQUATION
+
+
+
+
+
+
+
+
+
+
+ The distance equation for the matrix A=[a_jk ]_j,k=1^2 is found in the form
+
+    ℱ(z):=16[ (a_11-a_22)^2+(a_12+a_21)^2 ]·{[4z- 𝒟 (f_A(λ)) ]^2-16(a_12-a_21)^2z }=0  .
+
+Polynomial in braces has only real zeros with respect to z since its discriminant equals
+
+    256(a_12-a_21)^2[(a_11-a_22)^2+ (a_12+a_21)^2 ] ≥ 0   .
+
+
+
+
+
+
+Some terms in the canonical representation of the polynomial (<ref>) can be explicitly expressed via the entries of the matrix A:
+
+    Φ(λ,z)≡λ^2n- 2 (A) λ^2n-1 +(-nz+ (AA^⊤)+p_2  )  λ^2n-2 +… +
+    (AA^⊤-zI)   .
+
+Here p_2 is the coefficient of λ^n-2 in the characteristic polynomial  f_A + A^⊤(λ):= (λ I - A-A^⊤). It happens that this polynomial is also responsible for the order of the distance equation.
+
+  One has 
+
+    ℱ(z)≡ 4^n [ 𝒟_λ (f_A+A^⊤(λ)) ]^2 z^n(n-1) +  z   .
+    
+
+
+Proof. Let {μ_1,…, μ_n } be the spectrum of the matrix A+A^⊤ while P∈ℝ^n× n be an orthogonal matrix reducing it to the diagonal form: 
+
+    P^⊤(A+A^⊤) P=  (μ_1,…, μ_n)    .
+
+Apply the same transformation to the determinant (<ref>):
+
+    Φ(λ,z) ≡[
+    P^⊤AA^⊤P +  (λ^2-μ_1 λ-z,…,
+    λ^2-μ_n λ-z)   .
+    ]
+
+The leading term  of the polynomial 𝒟_λ (Φ(λ,z)) with respect to z coincide with that of 
+
+    𝒟_λ(∏_j=1^n (λ^2-μ_j λ-z))   .
+
+The set of zeros of the polynomial under the discriminant sign is as follows
+
+    {1/2(μ_j ±√(μ_j^2+4z)) }_j=1^n   .
+
+Using the definition (<ref>) of the discriminant, one gets 
+
+    𝒟_λ(∏_j=1^n (λ^2-μ_j λ-z)) = 
+    ∏_j=1^n (4 z + μ_j^2) 
+    ∏_1≤ j < k ≤ n[ z^2 (μ_k-μ_j)^4]   .
+
+Coefficient of the monomial z^n^2 in the right-hand side can be recognized, via (<ref>),  as the square of the  discriminant of the characteristic polynomial of A+ A^⊤. 
+
+As for the determining the structure of the free term of ℱ(z), our successes are restricted to the following 
+
+Hypothesis. If computed symbolically with respect to  the entries of A, ℱ(0) has a factor [𝒟_λ (f_A(λ)) ]^2.
+
+According to Theorem <ref>, the polynomial ℱ(z) can be constructed in the form of determinant of a suitable Hankel matrix.
+For this aim, compute first the Newton sums {s_j(z)}_j=0^4n-2 for  the polynomial Φ(λ,z) treated with respect to λ. Direct utilization of the formulas (<ref>) requires the canonical representation (<ref>) for the polynomial Φ(λ,z) while initially we have just only its representation in the determinantal form (<ref>). Fortunately, the Newton sums can be computed in an alternative way. 
+Indeed, 
+
+    Φ(λ,z) ≡ (λ I_2n- W)    
+    W:=[ [      A^⊤ √(z) I_n; √(z) I_n        A ]]
+
+and it is known that the Newton sums of the characteristic polynomial of a matrix can be computed as the traces of matrix powers:
+
+    s_j(z) ≡(W^j)    j ∈{0,1,…}
+
+Thus, one has
+
+    s_2(z)=2 ((A^2)+nz), s_3(z)=2((A^3)+3  z (A)), …
+
+Compose the Hankel matrix
+
+    S(z):=[ s_j+k(z) ]_j,k=0^2n-1
+
+and compute the sequence of its leading principal minors S_1(z),…,S_2n(z). Due to 
+(<ref>) and (<ref>),  
+
+    S_2n(z)≡𝒟_λ(Φ(λ,z))≡ℱ(z) z^n   .
+
+Evidently, the polynomial Φ(λ,0) possesses only n double zeros, and they all are distinct provided that A ∉𝔻. Consequently, due to Theorem <ref>, one  has
+S_n+1(0)=0,…, S_2n(0)=0.
+
+
+ Polynomial ℱ(z) does not have negative zeros.
+The number of its positive zeros lying within the interval
+[0,z_0], z_0>0 is not less than 
+
+    | 𝒱(1,S_1(z_0),…,S_2n(z_0)) - 𝒱(1,S_1(0),…,S_n(0)) |   .
+ 
+
+
+
+
+Proof. The first claim of the theorem follows from the positive definiteness of the matrix (λ I - A)(λ I - A)^⊤-z I for z< 0.
+
+By Theorem <ref>, the number 𝒱(1,S_1(z_0),…,S_2n(z_0)) equals the number of complex-conjugate pairs of zeros for the polynomial Φ(λ,z_0). When the parameter z varies from 0 to z_0, the discriminant 𝒟_λ (Φ(λ,z)) vanishes at any value of z where a pair of real zeros of Φ(λ,z) transforms to a pair complex-conjugate ones or vice versa. The discriminant vanishes at these values. 
+
+Theorem <ref> claims that the degree of the distance equation generically equals n(n-1). One can immediately watch that for the skew-symmetric matrix A this estimation is not valid. Moreover, for this type of matrices, polynomial ℱ(z) vanishes identically. Some other types of matrices that permit explicit representation  
+for the polynomial Φ(λ,z), and, as a consequence, for the value d(A, 𝔻), in terms of the spectrum of A can be found in <cit.>. We summarize those results in the following 
+
+  Let all the eigenvalues λ_1,…,λ_n of A be distinct. One has:
+
+    Φ(λ,z)≡∏_j=1^n [(λ-c)^2-(λ_j-c)^2-z]    A= + cI_n  ,
+
+where c ∈ℝ is an arbitrary scalar;
+
+    Φ(λ,z)≡∏_j=1^n (λ^2-z+1-2λ(λ_j))    A   ;
+
+
+    Φ(λ,z)≡∏_j=1^n [(λ-λ_j)^2-z ]     A  .
+
+  
+  
+For the case (<ref>), Φ(λ,z) has a multiple zero if n≥ 2. For the case (<ref>), 
+ Φ(λ,z) has a multiple zero if n≥ 3. For the both cases, the distance d(A, 𝔻) is attained at the continuum of matrices in 𝔻 <cit.>.
+ 
+ Find d(A,𝔻) for the skew-symmetric matrix
+
+    A=[ [   0  -4   2  -1;   4   0   7   3;  -2  -7   0  11;   1  -3 -11   0 ]]   .
+
+
+
+Solution. Here
+
+    Φ(λ,z)≡( λ^4-2 λ^2z+200 λ^2+z^2-200
+     z+3249 )^2  ,
+
+and 𝒟_λ (Φ(λ,z)) ≡ 0. However, if we take 
+
+    𝒟_λ (√(Φ(λ,z)))=
+    𝒟_λ(λ^4-2 λ^2z+200 λ^2+z^2-200
+     z+3249)
+
+the result is the true distance equation
+
+    11667456256 z^2-2333491251200 z+37907565375744=0   .
+
+Its least positive zero equals 
+
+    100-√(6751) =1/4(√(314)-√(86))^2
+ 
+where ± 1/2 𝐢 (√(314)-√(86)) are the eigenvalues of A. 
+
+Remark. Similar trick works also for the case of orthogonal matrices.
+
+
+
+§ EXAMPLES AND COMPUTATIONAL ASPECTS
+
+
+
+
+
+
+
+
+
+
+Once the canonical form of the distance equation is computed, Wilkinson's problem is nearly solved.
+Indeed, for a univariate algebraic equation, the  exact number of real zeros, as well as their location, could be trustworthy determined via purely algebraic procedures. 
+
+Remark. Theorem <ref> claims that generically the degree of the distance equation equals n(n-1). The both examples below fall into this genericity. For instance,  one has ℱ(z)=870 
+for n=30.
+
+
+   Find d(F_n,𝔻) for  Frank's matrix <cit.>
+
+    F_n=[
+    [   n n-1 n-2   …   2   1; n-1 n-1 n-2   …   2   1;   0 n-2 n-2   …   2   1;   0   0 n-3   …   2   1;   ⋮   ⋮       ⋱   ⋮   ⋮;   0   0   0   …   1   1 ]]   .
+
+
+
+Solution. For n=3, one has
+
+    Φ(λ,z)=
+    λ^6-12 λ^5+ ( -3 z+48 ) λ^4
+    + ( 24 z-74 ) λ^3
+
+
+    + ( 3 z^2-73 z+48
+     ) λ^2+ ( -12 z^2+70 z-12 ) λ-
+    z^3+25 z^2-33 z+1
+
+and
+
+    ℱ(z)=
+    23839360000 z^6-476315200000 z^5+3522206312000 z^4-
+    11668368222400 z^3
+
+
+    +16297635326400 z^2-6895772352000 z+
+    230443315200   .
+
+Distance equation has only real zeros, namely
+
+    z_1 ≈ 0.036482,  z_2 ≈ 0.648383, z_3 ≈ 2.316991,  
+    z_4 ≈ 4.954165, z_5 ≈ 5.274176,  z_6 = 27/4=6.75   .
+
+Thus, d(F_3,𝔻)=√(z_1)≈ 0.191004. To find the corresponding perturbation via (<ref>), first evaluate the multiple zero for Φ(λ,z_1) via (<ref>):
+
+    λ_∗≈ 0.602966   .
+
+Then evaluate the unit left singular vector of the matrix λ_∗ I - A corresponding to √(z_1):
+
+    U_∗≈[0.639244,  -0.751157,  -0.164708]^⊤
+
+Finally, 
+
+    E_∗≈[[ -0.019161 -0.041159  0.113343;  0.022516  0.048365 -0.133186;  0.004937  0.010605 -0.029204 ]]   .
+
+The nearest to F_3 matrix in 𝔻 
+
+    B_∗=F_3+E_∗≈[[ 2.980838 1.958840 1.113343; 2.022516 2.048365 0.866813; 0.004937 1.010605 0.970795 ]]
+
+possesses the spectrum {λ_∗, λ_∗, 6-2λ_∗≈ 4.794067 }.
+
+  For n>3, the set of nonreal zeros for the distance equation becomes nonempty, and its cardinality, relative to that of real, increases fastly with n.
+
+
+
+
+n      d(F_n,𝔻)  ≈       coefficient size      number of real zeros     timing (s) 
+
+ 5     4.499950  × 10^-3     ∼ 10^50      12     - 
+
+ 10     3.925527 × 10^-8     ∼ 10^300     30     - 
+
+ 12     1.849890 × 10^-10     ∼ 10^480     34     0.13 
+
+  20     3.757912 × 10^-21     ∼ 10^1690     62       5 
+
+ 30     1.638008 × 10^-36     ∼ 10^4450     102       30 
+.
+
+
+The results for F_10 and F_12 confirm estimations d_10≈ 3.93·10^-8 and d_12≈ 1.85· 10^-10 given in <cit.>. 
+
+ Find d(K_n,𝔻) for Kahan's matrix <cit.>
+
+    K_n=[
+    [       1      -c      -c       …      -c      -c;       0       s     -sc       …     -sc     -sc;       0       0     s^2       …   -s^2c   -s^2c;                       ⋱       …                ;       0       0       0       ⋱   s^n-2 -s^n-2c;       0       0       0       …       0   s^n-1 ]]    s^2+c^2=1   .
+
+
+
+Solution. We present computational results for two specialization of parameter values. The first one is s= 3/5, c=4/5:
+
+
+
+
+
+n      d(K_n,𝔻)  ≈      
+coefficient size      number of real zeros 
+    timing (s) 
+
+ 5     1.370032 × 10^-3      ∼ 10^310      8     - 
+
+ 10     5.470834 × 10^-6     ∼ 10^2970     48     - 
+
+ 15     2.246949 × 10^-8      ∼ 10^10590      138     6.7 
+
+  20     9.245309 × 10^-11     ∼ 10^25730      288       145.4 
+
+ 25     3.984992× 10^-10     ∼ 10^52910       258       218.23  
+
+ 30     1.240748× 10^-11     ∼ 10^92460     464     937.66
+ 
+
+
+
+
+The second test series correspond to a specialization s^n-1=1/10 treated in <cit.>. For this case, an extra difficulty results from approximation of the entries of the matrix K_n as rational numbers. This results in increasing the length of the coefficients of the distance equation. Compared with the previous case, the timing increases drastically, i.e. more than 10^2 times for the same specializations of n.   
+
+
+
+
+
+n      d(K_n,𝔻)  ≈       number of real zeros  
+
+ 6     4.704940 × 10^-4     10  
+
+ 10     1.538157 × 10^-5     18  
+
+ 15     4.484974 × 10^-7      28  
+
+  20     1.904858 × 10^-8      38  
+
+
+
+
+
+The results for K_6,K_15 and K_20 confirm estimations  given in <cit.>. 
+
+It should be emphasized however that computation of the whole sets of real zeros for the distance equation is redundant for evaluation of d(A,𝔻). We need to find just only  the least positive zero of ℱ(z). For this aim, the determinantal representation (<ref>) for this polynomial might be sufficient for the real zero localization. According to Theorem <ref>, the lower estimate for the number of real zeros of ℱ(z) lying within the interval [0,z_0], z_0 >0 is given by the number (<ref>). If this number is not zero then at least one real zero for ℱ(z) lies in [0,z_0], and the next step in its localization might be the treatment of the matrix  S(z_0/2). 
+
+Experiments with the Frank's matrix (<ref>) demonstrate 
+the unambiguity of the zero isolation process. For the matrix F_10, one has
+𝒱(1,S_1(0),…,S_10(0))=0, i.e. all the eigenvalues of A are real. Then (<ref>) coincides with 
+
+    𝒱_z_0:= 𝒱(1,S_1(z_0),…,S_10(z_0),…, S_20(z_0))   .
+
+Some specializations for z_0
+
+
+
+z_0      10^-3       10^-9     2× 10^-15
+    10^-15 
+
+𝒱_z_0     5      3     1     0 
+
+
+
+demonstrate that the number of real zeros of ℱ(z) lying in any interval [0,z_0] happens to be equal to 𝒱_z_0. For instance, there are precisely 
+5 zeros within the interval [0,10^-3], namely
+
+    1.540976× 10^-15,  7.739368×  10^-15, 7.463686 × 10^-13,  1.403045 × 10^-9, 1.412301 × 10^-5  .
+
+However, for the case of the matrix
+
+    [ [  1  1 -2;  2  1  0; -3  1  1 ]]
+
+variations 𝒱_0.4=0,  𝒱_0.5=1,  𝒱_2.25=0 permit one to locate single zeros within the intervals [0.4, 0.5] and [0.5,2.25] but are unable to detect this number for [0.4, 2.25].
+
+
+
+
+§ COUNTEREXAMPLES
+
+
+
+
+
+
+
+
+
+We exemplify here two cases
+
+
+  (a)  The minimal positive zero of the distance equation not always provides the value d^2(A,𝔻) even if we restrict ourselves to the rank 1 perturbation matrices;
+
+  (b) The distance d(A,𝔻) is not always provided by the rank 1 perturbations.
+
+
+
+ For the matrix
+
+    A(ϵ)=
+    [ [  0  1  1  0; -1  0  0  1;  ϵ  0  0  1;  0  0 -1  0 ]]   ,
+
+find d(A(ϵ),𝔻) for ϵ >0.
+
+
+Solution. Distance equation is provided by the polynomial
+
+    ℱ(z)≡ 65536ϵ^8 [(ϵ+2)^4 z^2 -2ϵ(ϵ+8)(ϵ+2)^2 z + ϵ^2(ϵ-8)^2]^2
+    ·[(ϵ+1)z-3ϵ-1]^4
+
+
+    × (z^2-3 z+1)  
+    [z^2-( ϵ^2+3 ) z+(ϵ+1)^2]   .
+
+Its zeros are
+
+    z_1=ϵ(√(ϵ)-√(8))^2/(ϵ+2)^2, z_2=ϵ(√(ϵ)+√(8))^2/(ϵ+2)^2, z_3=3ϵ+1/ϵ+1,
+
+
+    z_4=3-√(5)/2≈ 0.381966,  z_5=3+√(5)/2≈ 2.618033   ,
+
+
+    z_6=1/2(ϵ^2+3-|ϵ-1| √(ϵ^2+2 ϵ^2+5)), z_7=
+    1/2(ϵ^2+3+|ϵ-1| √(ϵ^2+2 ϵ^2+5))
+
+are all real. Zero z_4 is simple, it coincides with the square of a singular value of the matrix A, and the polynomial Φ(λ,z_4) has the real double zero λ_4=0. The corresponding value of the distance function from A to 𝔻 does not depend on ϵ, it equals[Amazing coincidence with the reciprocal to the golden ratio!]
+
+    √(z_4)=√(5)-1/2≈ 0.618033   .
+
+The corresponding perturbation and matrix in 𝔻 are as follows:
+
+    E_4=1/10[[        0   √(5)-5 (3√(5)-5        0;        0        0        0        0;        0        0        0        0;        0  -2 √(5)   5-√(5)        0 ]], B_4=1/10[[       0  5+√(5) 5+3√(5)       0;     -10       0       0      10;     10ϵ       0       0      10;       0  -2√(5) -5-√(5)       0 ]]   .
+
+Double eigenvalue of B_4 is just 0.
+
+Next, we do not need to treat the zeros z_6, z_7 and z_3, since they are greater than z_4. Also z_2 >z_1, therefore, the two zeros that can compete for the distance value are z_1 and z_4.  It can be verified that 
+
+    z_1 ≤ z_4    ϵ≤ϵ_2  ϵ_2 = 2√(2)(√(5)+3)√(√(5)+2)+7√(5)+15≈ 61.133652   .
+
+It looks like d(A,𝔻)=√(z_1) for ϵ≤ϵ_2. However, this is not true for some subinterval in [0,ϵ_2]. Indeed, z_1 is a double zero for ℱ(z), and polynomial  Φ(λ,z_1) possesses two double zeros:
+
+    λ_1,2=±√(K(ϵ))/ϵ+2   K(ϵ):=√(2)(ϵ-√(2)√(ϵ)+2)(√(ϵ)+1/√(2))(√(ϵ)+√(5)+1/√(2))(√(ϵ)-√(5)-1/√(2))   .
+
+These zeros are real only for  
+
+    ϵ≥ϵ_1  ϵ_1:=3-√(5)≈ 0.763932   .
+ 
+For the values ϵ < ϵ_2, the minimal positive zero of the distance equation is not responsible for the distance from A to 𝔻.
+
+It seems that d(A,𝔻)=√(z_4) for ϵ < ϵ_2. However, this statement is also invalid for some subinterval of the parameter values. The matrix
+
+    E(ϵ):=
+    ϵ (8-ϵ)/(ϵ^2+16)^2[ [    0 -4 ϵ  ϵ^2    0; -4 ϵ    0    0  ϵ^2;  -16    0    0  4 ϵ;    0  -16  4 ϵ    0 ]]
+
+represents a rank 2 perturbation that provides for the matrix A(ϵ) + E(ϵ) a pair of double eigenvalues 
+
+    λ_1,2 =±1/ϵ^2+16√(( ϵ^2+4 ϵ-16 )  ( 3 ϵ^
+    2+4 ϵ+16 ))   .
+
+These eigenvalues are non-real for ϵ < 2(√(5)-1) ≈ 2.472136.  For these parameter values, one has
+
+    E(ϵ) =√(2)ϵ (8-ϵ)/ϵ^2+16
+
+and this value is lesser than √(z_1) for ϵ < ϵ_c where ϵ_c denotes the least positive zero of the polynomial 
+
+    ϵ^8-80 ϵ^7-368 ϵ^6-1024 ϵ
+    ^5+64 ϵ^4-9216 ϵ^3-16384 ϵ^2-
+    32768 ϵ+65536   ;
+
+i.e. ϵ_c ≈ 1.055249.
+
+
+
+[t]125mm
+
+
+    < g r a p h i c s >
+
+
+
+
+
+
+
+Figure 1.  
+
+
+
+
+Summarizing:
+
+    d(A(ϵ), 𝔻)=
+    {[  √(2)ϵ (8-ϵ)/(ϵ^2+16)           ϵ∈ [0, ϵ_c]; √(ϵ)|√(ϵ)-√(8)|/(ϵ+2)        ϵ∈ [ ϵ_c, ϵ_2];            (√(5)-1)/2               ϵ > ϵ_2 ].
+
+The plot is displayed in Fig. 1 (the first formula — red, the second one — blue, the third one — green). 
+
+Remark. As it is mentioned in Introduction, the case where d(A,𝔻) is achieved at the rank 2 matrix (i.e. the nearest in 𝔻 matrix possesses two double imaginary eigenvalues) is beyond our consideration. We are not able even to conjecture whether this is a zero probability event or not. 
+
+
+
+
+
+§ COMPLEX PERTURBATIONS
+
+
+
+
+
+
+
+
+
+The method proposed above can be extended to the case of complex perturbations. For a real matrix A, we are now looking for the distance to the nearest complex matrix B with multiple eigenvalue:
+
+    d_C(A,𝔻):=minB-A   𝒟_λ(f_B(λ))=0, B∈ℂ^n× n  .
+
+
+Warning. The present section should be considered as a draft of a separate publication to be prepared sometime afterwards. We skip here the details of algebraic backgrounds, proofs of theoretical results and do not bother ourselves with mentioning that the validity of some of the declared results is subject to several extra assumptions preventing the appearance of  
+troubles similar to those dealt with in the previous section.
+
+Consider the polynomial
+
+    Θ(a,b,z)=[((a+b 𝐢)I-A)((a-b𝐢)I-A^⊤)-zI]
+
+and generate the system of algebraic equations
+
+    Θ=0, ∂Θ /∂
+    a =0,  ∂Θ/ ∂ b=0   .
+
+We are looking for the real solutions to this system.
+Since 
+
+    Θ(a,0,z)  (<ref>)≡Φ(a,z)   ,
+ 
+this solution set includes that for the system (<ref>).
+
+
+  If the system (<ref>) possesses a solution (a_0,b_0,z_0) with b_0 0 then it has the solution 
+(a_0,-b_0,z_0).
+
+
+Proof. 
+Polynomial Θ(a,b,z) is even in b:
+
+    Θ(a,-b,z)=[ ((a+𝐢 b)I-A^⊤)((a-𝐢 b)I-A) - zI ]
+
+
+    =[ {((a+𝐢 b)I-A^⊤)((a-𝐢 b)I-A)}^⊤ - zI ]
+
+
+    =[((a-𝐢 b)I-A^⊤) ((a+𝐢 b)I-A)  - zI ]=Θ(a,b,z)   .
+
+Consequently Θ^'_a is even in b while Θ^'_b  is odd b. The latter becomes even on dividing by b. 
+
+Our aim is to eliminate the variables a and b from the system (<ref>), i.e. to find the bivariate discriminant 
+𝒟_a,b(Θ) for the polynomial Θ(a,b,z) treated with respect to these variables. 
+
+The discriminant 𝒟_x,y(F)  of a polynomial F(x,y,z) ∈ℂ[x,y,z] is formally defined as the result of elimination of variables x and y from the system of equations
+
+    F=0, ∂ F / ∂ x=0,  ∂ F / ∂ y=0   .
+
+This is a polynomial in z and its vanishment at z=z_0 ∈ℂ is the necessary and sufficient condition for the existence of solution (x_0,y_0,z_0) ∈ℂ^3 to the system (<ref>), or equivalently, for the existence of the multiple zero (x_0,y_0) for the polynomial F(x,y,z_0). Constructive computation of discriminant 
+can be implemented in several ways, and we will exemplify below the procedure based of the Bézout construction of the resultant <cit.>.
+
+
+ The discriminant 𝒟_a,b(Θ(a,b,z))  is factorized as follows:
+
+    𝒟_a,b(Θ(a,b,z))≡ z^n(n+1)/2ℱ(z) ℱ(z)     .
+
+Here  ℱ(z) is defined by (<ref>), while 
+
+    ℱ(z) ∈ℝ[z],  ℱ(z) =n(n-1)(n-2)/2   ,
+
+(For n=2 polynomial ℱ(z) is just a constant).
+
+
+According to Section <ref>, the distance equation ℱ(z)=0 is responsible for the rank 1 real perturbation that provides the distance d(A,𝔻).
+It turns out that the equation
+
+    ℱ(z) = 0
+ 
+ is responsible for the rank 1 imaginary perturbation. Its real zero z_0 corresponds to a pair of multiple zeros 
+of the polynomial Θ(a,b, z_0), and these zeros are either in the form  (a_0, ±β_0) or in the form
+(a_0, ±𝐢β_0) with real β_0. We are definitely interested only in the real solutions for the 
+system (<ref>).
+
+
+
+
+
+ Let the system (<ref>) possess a real solution (a_0,b_0,z_0) with z_0 >0,b_0 0.
+Denote U_0∈ℂ^n,  U_0=1 the left singular vector for the matrix 
+(a_0+𝐢 b_0)I-A corresponding to the singular value 
+√(z_0).
+Then  the rank 1 perturbation
+
+    E_0=U_0 U_0^𝖧 ((a_0+𝐢 b_0) I-A)
+
+is such that E_0= √(z_0) and the matrix B_0=A+E_0 ∈ℂ^n× n possesses the double eigenvalue a_0+𝐢 b_0.
+
+
+Remark. Evidently, the matrix E_0 provides for the matrix 
+B_0=A+E_0 the double
+eigenvalue a_0-𝐢 b_0.
+
+In view of Theorem <ref>, the distance d_C(A,𝔻) results from the competition between the least positive zero of ℱ(z) and that minimal positive zero of 
+ℱ(z) that corresponds to the real solution for the system (<ref>).
+
+
+Computation of the polynomial ℱ(z) can be simplified if we take into account Theorem <ref>. Substitute 
+
+    𝔟:=b^2
+ 
+in the polynomials of the system (<ref>) and denote
+
+    Ξ(a,𝔟,z):=Θ(a,b,z),  Ξ_a(a,𝔟,z):=Θ^'_a(a,b,z),  Ξ_𝔟(a,𝔟,z):=Θ^'_b(a,b,z)/b    .
+
+
+ The result of elimination of variables a and 𝔟 from the system
+
+    Ξ=0, Ξ_a=0, Ξ_𝔟=0
+
+is the equation 
+
+    z^n(n-1)/2ℱ(z)=0   .
+
+
+
+If z_0 is a positive zero of ℱ(z), the corresponding real solution to the system (<ref>) might have the 𝔟-component either positive or negative. We are interested only in the positive variant.
+
+ Find d_C(A,𝔻) for
+
+    A= [ [   0   1   0;   0   0   1; -91 -55 -13 ]]   .
+
+
+
+Solution. First compute the polynomial  ℱ(z) via (<ref>):
+
+    ℱ(z) := 33076090700402342058246544 z^6-377039198861306289080145178864  z^5
+
+
+    +937864902703881321034450183916 z^4-771868276098720970149792503999 z^3
+
+
+    +211070978787821517684022650624 z^2
+
+
+    -510584100140452518540394496 z+319295875259784560640000   .
+
+Its real zeros  are as follows
+
+    z_1≈ 0.739336,  0.765571, 0.980468,  11396.658548   .
+
+Next compose the polynomial Ξ(a,𝔟,z):
+
+    Ξ(a,𝔟,z)=-z^3+(3a^2+3𝔟+26a+11477)z^2
+
+
+    -(3 a^4+6 a^2𝔟+3 𝔟^2+52a^3+52a𝔟+11756a^2+11536𝔟+11466 a+19757)z
+
+
+    +( a^2+𝔟+14 a+49 )  ( (a^2+𝔟+6 a+13)^2-
+    16 𝔟)   .
+
+Now we trace briefly the procedure  of elimination of a and 𝔟 from the system (<ref>). Consider the monomial sequence
+
+    𝕄:={𝔪_j(a,𝔟)}={1,a,𝔟, 𝔟^2}  .
+
+It is possible to reduce the polynomial 𝔪_j  Ξ modulo Ξ_a and Ξ_𝔟, i.e. to 
+find the polynomials {β_jk(z) }_j,k=1^4 ⊂ℝ[z] and {p_11(a,𝔟,z), p_j2(a,𝔟,z)}_j=1^4 ⊂ℝ[a,𝔟,z] satisfying the identity
+
+    m_j  Ξ≡β_j1(z)+ β_j2(z) a + β_j3(z) 𝔟 + β_j4(z) 𝔟^2 +  p_j1Ξ_a  + p_j2Ξ_𝔟  j∈{1,2,3,4}  .
+
+For instance, 
+
+    β_11(z)= -17718805921 z^2+610367232 z+22937600,  β_12(z)= -39353600  z+5324800,
+
+
+    β_13(z)=146694400 z-512000, β_14(z)=-307200, …,
+
+
+    β_44(z)=
+    - 76550493273549926400 z^3+ 162810741053705011200 z^2- 1867736871075840000 z- 50331648000000  .
+
+Compose the Bézout matrix 
+
+    𝔅(z):= [ β_jk(z) ]_j,k=1^4   .
+
+Then
+
+    𝔅(z) ≡  z^3ℱ(z)
+
+where
+
+    ℱ(z) =  412324266119803814719539025 z^3+
+    33923334498676415590177600 z^2
+
+
+    +691077589890510378371072 z-
+    899669298077697638400   .
+
+For any zero z_0 of this polynomial, the corresponding a  and 𝔟 components of the solution to the system (<ref>) can be obtained in the following way. Denote by {𝔅_4j}_J=1^4 the cofactors of 
+𝔅 corresponding to the entries of the last row of the matrix 𝔅. Then the a-component of solution is connected with the z-component as
+
+    a=𝔅_42/𝔅_41= 43719663040898080379 z^2+2929017747573439808 z+
+    29336262189312000/2(624300876564482975 z^2-226254560538037856 z-3469512291865600)
+
+while the 𝔟-component as
+
+    𝔟=𝔅_43/𝔅_41=  3083432482762007609519 z^3+ 1101690698089389073600 z^2+ 67186386329988787456 z- 129087561954918400/16(624300876564482975 z^2-226254560538037856 z-3469512291865600)
+
+Polynomial ℱ(z) possesses a single real zero, namely[All the decimals in the following approximation are error-free.]
+
+    z_1 ≈ 0.0012268490707391199222512104943   ,
+
+and substitution of this value into the last formulas yields
+
+    a= a_1 ≈ -4.403922040624116177182912013601,  𝔟 = 𝔟_1 ≈  0.750705046015830894563798035515   .
+
+Since 𝔟_1>0, one may claim that  
+
+    d_C(A,𝔻)=√(z_1)≈ 0.035026405335676681771543151648   .
+
+The two  perturbations in ℂ^3× 3 providing this distance correspond to the solutions
+
+    (a_1,b_1,z_1)   (a_1,-b_1,z_1)    b_1=√(𝔟_1)≈ 0.866432366671415902596255690462   .
+
+of the system (<ref>). Let us compute via (<ref>) the one  corresponding to (a_1,-b_1,z_1). 
+The unit left singular vector of
+(a_1-𝐢 b_1)I-A corresponding to the singular value 
+√(z_1) is as follows 
+
+    U_1 ≈[ 
+     0.930609,  
+     0.360923+
+     0.039918 𝐢, 
+     0.045052+
+     0.008866 𝐢]^⊤
+
+and the minimal perturbation
+
+    E_1≈[[  0.001289-0.000442 𝐢 -0.007120+0.000832 𝐢  0.031666+0.002551 𝐢;  0.000519-0.000116 𝐢 -0.002797+0.000017 𝐢  0.012172+0.002348 𝐢;  0.000067-0.000009 𝐢 -0.000353-0.000028 𝐢  0.001509+0.000425 𝐢 ]]  .
+
+The spectrum of the matrix A+E_1 is 
+
+    { a_1-𝐢 b_1, a_1-𝐢 b_1 ,-13-2(a_1-𝐢 b_1) ≈ -4.192156-1.732865 𝐢}  .
+
+
+
+To test the performability of the algorithm sketched in the present section, we chose the next  matrix from the Matlab gallery('grcar',6).
+
+ Find d_C(A,𝔻)  for
+
+    A= [ [  1  1  1  1  0  0; -1  1  1  1  1  0;  0 -1  1  1  1  1;  0  0 -1  1  1  1;  0  0  0 -1  1  1;  0  0  0  0 -1  1 ]]   .
+
+
+
+Solution. Here the minimal zero of ℱ(z) equals
+z_1≈ 0.116565 
+and that of ℱ(z) equals
+
+    z_1 ≈ 0.04630491415327188209539627157   .
+
+The latter corresponds to the real solution for the system (<ref>):
+
+    (a_1,± b_1, z_1)   a_1 ≈ 
+     0.753316,  b_1 ≈ -1.591155   .
+
+Thus, one obtains
+
+    d_C(A,𝔻) = √(z_1)≈ 0.2151857666140395125353   .
+
+This confirms estimation d_C(A,𝔻) ≈ 0.21519
+from <cit.>. 
+
+For the solution (a_1,b_1, z_1), the spectrum of the nearest to A matrix in 𝔻 is as follows
+
+    { 0.361392-1.944783 𝐢,1.139422-1.239762 𝐢,1.502453-0.616966 𝐢,1.490100+0.619201 𝐢,a_1+𝐢 b_1, a_1+𝐢 b_1 }  .
+
+
+
+
+
+
+
+§ CONCLUSION
+
+
+
+We have investigated Wilkinson's problem for the distance evaluation from a given matrix to the set of matrices possessing multiple eigenvalues. The proposed approach consists in the construction of distance equation with the zero set containing the critical values of the squared distance function. This construction is realized in the ideology of symbolic computations, i.e. the procedure consists of a finite number of elementary algebraic operations on the entries of the matrix. 
+
+The representation of the distance equation with the aid of the discriminant function should not be taken as a complete surprise. Indeed, the Wilkinson's  problem is the one of evaluation the distance to the discriminant manifold in the space of matrix entries. Hence, in view of this circumstance, the appearance of the discriminant in a solution to the problem is somehow natural. The more astonishing is the emergence of the discriminant in nearly any problem of distance evaluation from a point to an algebraic manifold in a multidimensional space <cit.>.
+
+
+Direction for further research is clearly related the stuff of Section <ref>, i.e. the problem of existence the rank 2 minimal perturbation providing d(A,𝔻). 
+
+
+
+
+
+
+
+99
+
+
+AhmadAlam Ahmad, Sk.S., Alam, R.: On Wilkinson's problem for matrix pencils. ELA, 30, pp. 632–648 (2015)
+
+
+AkFrSp Akinola, R. O., Freitag, M. A., Spence A.: The calculation of the distance to a nearby defective matrix. Numerical Linear Algebra with Applications. 21:3, pp. 403–414 (2014) 
+
+AlamBora Alam, R., Bora, S.: On sensitivity of eigenvalues and
+eigendecompositions of matrices. Linear Algebra Appl. 396, pp. 273–301 (2005)
+
+AlamBoraByersOverton Alam, R., Bora, S., Byers, R., Overton, M. L.: Characterization and construction of the nearest defective matrix via coalescence of pseudospectral components. Linear Algebra Appl. 435, pp. 494–513 (2011)
+
+ArmGraVel Armentia, G., Gracia, J.-M., Velasco, F.-E.: Nearest matrix with a prescribed eigenvalue of bounded multiplicities. Linear Algebra Appl., 592, 188–209 (2020)
+
+BikkerUteshev Bikker P., Uteshev A.Yu.: On the Bézout construction of the resultant. J.Symbolic Comput., 1999, 28,  No 1. 45–88 (1999)
+
+Demmel Demmel, J.W.: Computing stable eigendecompositions of matrices. Linear Algebra Appl., 79, pp. 163–193 (1986)
+
+Demmel1 Demmel, J.W.: On condition numbers and the distance to the nearest ill-posed problem, Numer.Math. 51, pp. 251–289 (1987)
+
+Frank
+Frank, W.L.: Computing eigenvalues of complex matrices by determinant evaluation and by methods of Danilewski and Wielandt. J. Soc. Indust. Appl. Math. 6(4), pp. 378–392 (1958).
+
+Gantmacher Gantmacher, F.R.: The Theory of Matrices. 
+Chelsea, New York (1959)
+
+Gracia Gracia, J.-M.: Nearest matrix with two prescribed eigenvalues. Linear Algebra Appl. 401, pp. 277–294 (2005)
+
+Kahan Kahan, W.: Numerical linear algebra. Canad. Math. Bull. 9, pp. 757–801 (1966)
+
+Kalinina_Uteshev_CASC22 Kalinina, E., Uteshev, A.: Distance evaluation to the set of matrices with multiple eigenvalues.  LNCS, 13366. Springer, Cham, pp.206–224 (2022)
+
+
+
+KokLogKar
+Kokabifar, E., Loghmani, G.B., Karbassi, S.M.: Nearest matrix with prescribed eigenvalues and its applications. J. Comput. Appl. Math.
+298,  pp. 53–63 (2016)
+
+Lippert Lippert, R.A.: Fixing multiple eigenvalues by a minimal perturbation. Linear Algebra Appl. 432, pp. 1785–1817 (2010)
+
+LipEdel
+Lippert, R.A., Edelman, A.: The computation and sensitivity of double eigenvalues, in: Z. Chen, Y. Li, C.A. Micchelli, Y. Xu (Eds.), Advances in Computational Mathematics: Proc. Gaungzhou
+International Symposium, Dekker, New York, pp. 353–393 (1999)
+
+Malyshev Malyshev, A.: A formula for the 2-norm distance from a matrix to the set of matrices with multiple eigenvalues. Numer. Math. 83, pp. 443–454 (1999)
+
+Mengi Mengi, E.: Locating a nearest matrix with an eigenvalue of prespecified algebraic multiplicity. Numer. Math. 118, pp. 109–135 (2011) 
+
+Ruhe Ruhe, A.: Properties of a matrix with a very ill-conditioned eigenproblem. Numer. Math. 15, pp. 57–60 (1970)
+
+TrEmb Trefethen, L. N., Embree, M.: Spectra and Pseudospectra, Princeton University Press, Princeton, NJ (2005)
+
+
+UteshevCherkasov Uteshev, A.Yu., Cherkasov, T.M.:  The search for the maximum of a polynomial.J. Symbolic Comput. 25 (5). pp. 587–618 (1998) 
+
+UteshevYashina2015 Uteshev, A.Yu., Yashina M.V.: Metric problems for quadrics in multidimensional space. J.Symbolic Comput.,  68, Part I, pp. 287–315 (2015)
+
+
+Wilkinson Wilkinson, J.H.: The Algebraic Eigenvalue Problem, Oxford University Press, New York (1965)
+
+Wilkinson2 Wilkinson, J.H.: Note on matrices with a very ill-conditioned eigenproblem. Numer. Math. 19, 176–178 (1972)
+
+Wilkinson1 Wilkinson, J.H.: On neighbouring matrices with quadratic elementary divisors, Numer. Math. 44, 1–21 (1984)
+
+Wilkinson3 Wilkinson, J.H.: Sensitivity of eigenvalues, Util. Math. 25, 5–76 (1984)
+
+
+
+

@@ -1,0 +1,24 @@
+{
+    "model": "gpt-3.5-turbo",
+    "engine_name": "Fastchat-OpenAI-GPT-3.5-Turbo",
+    "host": "localhost",
+    "port": 9001,
+    "engine_type": "openai",
+    "random_seed": 0,
+    "threads_capacity": 64,
+    "instance": {
+        "api_key": "EMPTY",
+        "api_endpoint": "chat",
+        "base_url": "http://localhost:8000/v1",
+        "is_azure": false
+    },
+    "scheduler": {
+        "max_batch_size": 64,
+        "max_num_batched_tokens": 1,
+        "max_total_tokens": 1
+    },
+    "os": {
+        "host": "localhost",
+        "port": 9000
+    }
+}

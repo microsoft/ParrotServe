@@ -1,0 +1,12 @@
+[submodule "3rdparty/langchain"]
+	path = 3rdparty/langchain
+	url = git@github.com:langchain-ai/langchain.git
+[submodule "3rdparty/FastChat"]
+	path = 3rdparty/FastChat
+	url = git@github.com:lm-sys/FastChat.git
+[submodule "3rdparty/vllm"]
+	path = 3rdparty/vllm
+	url = git@github.com:vllm-project/vllm.git
+[submodule "benchmark/workloads/arxiv/Selective_Context"]
+	path = benchmark/workloads/arxiv/Selective_Context
+	url = https://github.com/liyucheng09/Selective_Context.git

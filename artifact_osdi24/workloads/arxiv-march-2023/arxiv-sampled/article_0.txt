@@ -1,0 +1,1674 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+    
+       
+            
+       
+       
+       
+      
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+observationObservation
+
+
+claimClaim
+
+factFact
+
+assumptionAssumption
+noteNote
+lieLie theory derivation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mycomment
+
+
+
+
+
+
+
+
+
+
+
+
+M>X<L>r<Bayes Complexity of Learners vs Overfitting]Bayes Complexity of Learners vs OverfittingGrzegorz Głuchgrzegorz.gluch@epfl.ch
+Ruediger Urbankeruediger.urbanke@epfl.ch
+ EPFL, Lausanne, Switzerland[
+    Hiroshi C. Watanabe
+    March 30, 2023
+=======================
+
+
+
+
+We introduce a new notion of complexity
+of functions and we show that it has the following properties: (i) it governs a PAC Bayes-like generalization bound, (ii) for neural networks it relates to natural notions of complexity of functions (such as the variation), and (iii) it explains the generalization gap between neural networks
+and linear schemes. While there is a large set of papers which describes bounds that 
+have each such property in isolation, and even some that have two, as far as we know, this is a first notion that satisfies all three of them. Moreover, in contrast to previous works, our notion naturally generalizes to neural networks with several layers. 
+
+Even though the computation of our complexity is nontrivial in general, an upper-bound is often easy to derive, even for higher number of layers and functions with structure, such as period functions. 
+An upper-bound we derive allows to show a separation in the number of samples needed for good generalization between 2 and 4-layer neural networks for periodic functions. 
+
+
+
+
+
+§ INTRODUCTION
+
+There is a large body of literature devoted to the question of generalization, both from a practical point of view as well as concerning our theoretical understanding, e.g., <cit.>, to mention just a few. We add to this discussion. In particular, we ask what role is played by the hypothesis class assuming a Bayesian point of view. Our main observation is that there is a striking theoretical difference between linear schemes and neural networks. In a nutshell, neural networks, when trained with appropriate gradient methods using a modest amount of training data, strongly prefer hypothesis that are “easy” to represent in the sense that there is a large parameter space that approximately represents this hypothesis. For linear schemes no such preference exists. This leads us to a notion of a complexity of a function with respect to a given hypothesis class and prior. We then show that (i) this complexity is the main component in a standard PAC-Bayes bound, and (ii) that the ordering implied by this complexity corresponds well to “natural” notions of complexity of functions that have previously been discussed in the literature. In words, neural networks learn “simple” functions and hence do not tend to overfit.
+
+For n ∈ we define [n] = {1,…,n}. Let  be the input space,  be the output space and := × be the sample space. Let ℋ_θ be the hypothesis class, parameterized by θ∈ℝ^m. We define the loss as a function ℓ: ℋ×→_+. We focus on the clipped to C version of the quadratic loss but our results can be generalized to other loss functions. We denote by _x a distribution on the input space , and by  a distribution on the sample space . Finally, we let ={z_1, ⋯ z_N} be the given sample set, where we assume that the individual samples are chosen iid according to the distribution 𝒟.
+
+
+
+ §.§ The PAC Bayes Bound
+
+Our starting point is a version of the well-known PAC-Bayes bound, see <cit.>.
+
+Let the loss function ℓ be bounded, i.e., ℓ: ℋ×𝒵→ [0, C]. 
+Let P be a prior on ℋ and Q be any other distribution on ℋ (possibly dependent on ). Then 
+
+    _[L_𝒟(Q)]  ≤_[ L_(Q) + C√(D(Q  P)/2N)],
+
+where
+
+    L_𝒟(Q)     = _z ∼𝒟; h ∼ Q[ℓ(h, z)],
+
+    L_(Q)     = _ h ∼ Q[1/N∑_n=1^Nℓ(h, z_i)],
+
+and the divergence D(Q  P) is defined as
+
+    D(Q P) = ∫ Q logQ/P.
+
+There is a large body of literature that discusses use cases, interpretations, and extensions of this bound. Let us just mention a few closely related works.
+
+A related prior notion is that of flat minima. These are minimizers in the parameter space that are surrounded by many functions with similarly small empirical error. The reason for this connection is straightforward. In order for Q to give a good bound two properties have to be fullfilled: (i) Q must be fairly broad so that D(Q  P) is not too large (afterall, P must be broad since we do not know the function a priori), and (ii) Q must give rise to a low expected empirical error. These properties are exactly the characteristics one expects from a flat minimum. The importance of such minima was recognized early on, see e.g., <cit.> and <cit.>. More recently <cit.> and <cit.> derive from this insight an algorithm for training discrete neural networks that explicitly drives the local search towards non-isolated solution. Using a Bayesian approach they argue that these minima have good generalization. Building on these ideas <cit.> give an algorithm with the aim to directly optimize (<ref>). They demonstrate empirically that the distributions Q's they find give non-vacuous generalization bounds. 
+
+To summarize, the bound (<ref>) can be used in various ways. In the simplest case, given a prior P and an algorithm that produces a “posterior”Q, (<ref>) gives a probabilistic upper bound on the average true risk if we sample the hypothesis according to Q. But (<ref>) can also be taken as the starting point of an optimization problem. Given a prior distribution P one can in principle look for the posterior Q that gives the best such bound. Further, one can split the available data and use one part to find a suitable prior P and the remaining part to define a that posterior Q distribution that minimizes this bound.  
+
+We take the PAC-Bayes bound as our starting point. We impose a Gaussian distribution on the weights of the model. This defines our prior P. In principle other priors can be used for our approach but a Gaussian is the most natural choice and it illustrates the main point of the paper in the cleanest fashion. Further, we postulate that the samples z_n=(x_n, y_n) are iid and, assuming that the true parameter is θ, come from the stochastic model
+
+
+    x_n ↦ y_n = f_θ(x_n) + η_n, η_n ∼𝒩(0,σ_e^2).
+
+In words, we assume that the actual underlying function is  realizable, that we receive noisy samples, and that the noise is Gaussian and independent from sample to sample.  
+
+This gives rise to the posterior distribution,
+
+    Q(θ) = P(θ) e^- 1/2 σ_y^2∑_n=1^N (y_n - f_θ(x_n))^2/∫ P(θ') e^- 1/2 σ_y^2∑_n=1^N (y_n - f_θ'(x_n))^2 d θ'.
+
+One valid criticism of this approach is that it is model dependent. But there is a significant payoff. First recall that this posterior can at least in principle be sampled by running the SG algorithm with Langevin dynamics. For the convenience of the reader we include in Section <ref> a short review. Most importantly, taking this point of view a fairly clear picture arises why neural networks tend not to overfit. In a nutshell, if we sample from this posterior distribution then we are more likely to sample “simple” functions. The same framework also shows that this is not the case for linear schemes.
+ 
+
+
+ §.§ Stochastic Gradient Langevin Dynamics
+
+We follow <cit.>. Assume that we are given the data set
+
+    = {z_1, ⋯, z_N} = {(x_1, y_1), ⋯, (x_N, y_N)},
+
+where the samples z_n=(x_n, y_n), n=1, ⋯, N, are chosen iid according to an unknown distribution . We model the relationship between x and y probabilistically in the parametrized form
+
+    y ∼ p(y | x, θ).
+
+We use the log-loss 
+
+    _θ(x, y) = - ln p(y | x, θ).
+
+Assume further that we use the  stochastic gradient Langevin descent (SGLD) algorithm:
+
+    θ^(t)   = θ^(t-1) - η_Z ∼[∇_θ_θ(X, Y) - 1/Nln P(θ) ] 
+       + √(2 η/N)𝒩(0, I),
+
+where t = 1, 2, ⋯;  η>0 is the learning rate, P(θ) is the density of the prior, and 𝒩(0, I) denotes a zero-mean Gaussian vector of dimension dim(θ) with iid components and variance 1 in each component.
+
+
+
+
+
+Note that due to the injected noise, the distribution of θ at time τ, call it π_τ(θ), converges to the posterior distribution of θ given the data, i.e., it converges to 
+
+    p(θ|{z_1, ⋯, z_N}) 
+    = p(θ, {z_1, ⋯, z_N})/p({z_1, ⋯, z_N})
+       =
+    P(θ) p({z_1, ⋯, z_N}|θ)/p({z_1, ⋯, z_N})
+        =P(θ) ∏_n=1^N p(y_n | x_n, θ)/∏_n=1^N p(y_n | x_n)∝ P(θ) ∏_n=1^N p(y_n | x_n, θ).
+
+This is shown in <cit.>. In the sequel we use the more common notation p_θ(y_n | x_n) instead of p(y_n | x_n, θ). This makes a clear distinction between the parameters of the model and the samples we received.
+
+A few remarks are in order. An obvious choice from a theoretical point of view is to use an iid Gaussian prior. In practice it is best not to use iid Gaussian prior in order to speed up the convergence. Indeed, the main point of <cit.> is to discuss suitable schemes. But for our current conceptual purpose we will ignore this (important) practical consideration. 
+
+
+
+§ THE PAC BAYES BOUND AND BAYES COMPLEXITY
+
+Let us now get back to the main point of this paper. We start by defining two notions of complexity. Both of them are “Bayes” complexities in the sense that both relate to the size of the parameter space (as measured by a prior) that approximately represents a given function. We will then see how this complexity enters the PAC-Bayes bound.
+
+
+
+  
+Contribution. Our main contribution is an introduction of a new notion of complexity of functions and we show that it has the following properties: (i) it governs a PAC Bayes-like generalization bound, (ii) for neural networks it relates to natural notions of complexity of functions, and (iii) it explains the generalization gap between neural networks and linear schemes in some regime. While there is a large set of papers which describes each such criterion, and even some that fulfill both (e.g., <cit.>), as far as we know, this is a first notion that satisfies all three of them. 
+
+
+For every > 0 we define the sharp complexity of a function g with respect to the hypothesis class ℋ_θ as
+
+    χ^#(ℋ_θ, g, _x, ^2)    := -log[ _θ{θ : _x ∼_x [(g(x) - f_θ(x))^2] ≤^2 }],
+
+where the probability _θ is taken wrt to the prior P.
+
+
+In words, we compute the probability, under prior P, of all these functions f_θ that are close to g under the quadratic loss and distribution _x.
+
+In general, it is difficult to compute χ^# for a given
+ϵ.  However, for realizable functions it is often possible to compute
+the limiting value of the sharp complexity, properly normalized, when ϵ
+tends to 0.
+
+We define the sharp complexity of a function g with respect to the hypothesis class
+
+    χ^#(ℋ_θ, g, _x)     := lim_ϵ→ 0log[_θ{θ: _x ∼_x[ (g(x) - f_θ(x))^2 ] ≤^2 }]/log().
+
+
+The above definitions of complexity implicitly depend on the hypothesis class ℋ_θ. If the hypothesis class (and/or _x) is clear from context we will omit it from notation, e.g. χ^#(g, ^2) = χ^#(g, _x, ^2) = χ^#(ℋ_θ, g, _x, ^2). 
+
+We now state the main theorem. It is a generalization bound, which crucially depends on the sharp complexity from Definition <ref>. The proof is deferred to Appendix <ref>.
+
+
+If L_(P) ≥ 2σ_e^2 and g ∈supp(P) then for every β∈ (0,1] there exists σ_alg^2 such that if we set σ_y^2 = σ_alg^2 then _∼^N[L_S(Q(σ_y^2))] = (1+β)σ_e^2 and
+
+    _∼^N[L_(Q(σ_y^2))]
+       ≤σ_e^2 + [ βσ_e^2 + C/√(2)√(χ^#(g, _x, βσ_e^2)/N)].
+
+
+  
+Discussion of Assumptions.
+Requiring that g ∈supp(P) is only natural as it indicates that g is realizable with prior P. It is also natural to assume that L_(P) ≥ 2σ_e^2 as the lowest possible error is attained by g and is equal σ_e^2. Thus we require that the expected loss over the prior is twice as big as the minimal one. As P should cover a general class of functions it is only natural that L_(P) ≥ 2σ_e^2.
+
+For a fixed β, σ_alg^2 from Theorem <ref> is, in general, not known. However, as proven in Appendix <ref>, we have
+lim_σ_y^2 → 0_∼^N[L_(Q(σ_y^2))]= σ_e^2,   lim_σ_y^2 →∞_∼^N[L_(Q(σ_y^2))]= 2σ_e^2.
+
+Moreover, _∼^N[L_(Q(σ_y^2))] is continuous in σ_y^2, which implies that σ_alg^2 can be found by a binary search-like procedure by holding out some part of  for estimating _∼^N[L_(Q(σ_y^2))] for different σ_y^2 values.
+
+
+
+  
+Bound (<ref>) in terms of limiting complexity.  Notice that (<ref>) is governed by 
+χ^#(g,_x,βσ_e^2). Aaccording to (<ref>), for small enough βσ_e^2, we have
+
+    χ^#(g,_x,βσ_e^2) ≈ -χ^#(g,_x)log(βσ_e^2).
+
+This means that for small enough noise level, where the exact regime for which the approximation holds depends on a specific problem, we have
+
+    _∼^N[L_(Q(σ_y^2))]
+    ⪅
+    (1 + β) σ_e^2 + C/√(2)√(-χ^#(g, _x)log(βσ_e^2)/N).
+
+We see that the generalization bound depends crucially on the limiting complexity. 
+
+
+
+
+  
+Main message. 
+Note that the smallest we can hope to get on the right hand side is σ_e^2 since this is the variance of the noise and this is achievable if we pick Q that puts all its mass on g.
+This means that βσ_e^2 plus the square root term from (<ref>) represents the expected excess generalization error. 
+
+This brings us to the punch line of this paper. In the subsequent sections we will see that
+(i) natural notions of complexity that have previously been discussed in the literature align with our new notion when we consider neural networks, whereas 
+(ii) for linear schemes our notion of complexity is essentially independent of the function (as long as it is realizable) and as a consequence is as high as for the most complex (in the natural sense) function in our hypothesis class.
+
+To the degree that we assume that reality prefers simple functions this explains why neural nets generalize significantly better than linear schemes.
+
+In Section <ref> we show that for neural networks and a piece-wise linear function g the limiting complexity is equal to the number of slope changes g. In light of (<ref>), this means that neural networks require the fewer samples (for a good generalization bound) the fewer slope changes g has.
+
+There is a further connection to a natural notion of complexity. In Section <ref> we show that sharp complexity is related to the variation of g, i.e. the integral of the second derivative of g. Thus, in the light of (<ref>), fewer samples are needed (for a good generalization) for g's with smaller variation.
+
+As we discussed above, sharp and limiting complexity are related via (<ref>) when βσ_e^2 is small. We can thus think of sharp complexity as a refinement of limiting complexity. This is reflected in the two cases discussed above – the number of slope changes can be seen as an approximation of the variation of a function.
+
+In Section <ref>, on the other hand, we show that for linear schemes the limiting complexity is virtually independent of the function and equal to the number of basis functions. This means that in this case the number of samples needed for a good generalization bound is the same for simple and complicated functions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ MODELS
+
+
+Although the basic idea applies to any parametric family, we will consider restricted types of families and demonstrate our concepts with two concrete examples, namely linear schemes and NNs. We will be interested in parametric families of functions from  to . More precisely families of the form ℋ_θ := {_θ : , θ∈^m },
+where θ is the vector of parameters. for a function g : → and a distribution _x we define the set of exact representations as A_g,ℋ,_x := {θ∈^m : f_θ≡_(_x) g }. If ℋ and _x are clear from context we will often write A_g. The 0 function will play an important role, thus we also define A_0 := {θ∈^m : f_θ≡_(_x) 0 }
+
+ §.§ Linear Schemes
+
+Consider the linear family _θ^(L, o)={f_θ(x): f_θ(x) = ∑_i=0^d-1_i b_i(x), x ∈ = [-1, 1]},
+i.e., the vector of parameters θ is equal to the vector of weights . We assume that the functions {b_i(x)} form an orthonormal basis.
+Although the exact basis that is used is not of importance one might think of b_i(x) as a polynomial of degree i or the first few Legendre polynomials. In this way the basis functions are naturally ordered by complexity. 
+
+
+
+
+ §.§ Neural Networks
+
+Consider the family ^NN represented by NNs with layers numbered from 0 (input) to K (output), containing d = d_0, d_1, …, and d_K = d_y neurons respectively. We will limit our attention to d_y = 1. The activation functions for the layers 1 to K are presumed to be σ_1, …, σ_K :. The weight matrices will be denoted by W^(1), W^(2), …, W^(K), respectively, where matrix  W^(k) connects layer k-1 to layer k. We define 
+
+    _θ(x) := σ_K (^(K) + W^(K)σ_K-1( …σ_1(^(1) + W^(1) x ))) .
+
+
+§ WHY NEURAL NETS GENERALIZE WELL
+
+We now get to the main point of this paper, namely why neural nets generalize much better than other schemes, in particular linear schemes.
+
+The basic idea is simple. We have seen in the previous sections that (i) a suitable version of SGD gives us a posterior of the form (<ref>), and (ii) this posterior gives rise to a an upper bound on the generalization error that depends mainly on the “complexity” of the underlying true hypothesis.
+
+This notion of complexity of a function depends on the underlying hypothesis class.
+To close the circle we will now discuss how this complexity behaves for interesting hypothesis classes. In particular, as we will see that there is a striking difference between linear schemes and neural networks. For linear schemes, every realizable function has essentially the same complexity. This in particular means that we do not expect to learn a “simple” function (e.g., think of a constant function) with fewer samples than a “complex” one (think of a highly variable one). For neural nets the complexity behaves entirely differently and there is a large dynamic range. As we will see, in a suitable limit the complexity is to first order determined by the number of degrees of freedom that have to be fixed in order to realize a function. Therefore, for neural nets, simple functions have a much lower complexity than complicated ones. 
+
+
+
+ §.§ Neural Networks with a Single Hidden Layer
+
+
+We start with analyzing our notion of complexity for the case of NN with a single hidden layer and 1-dimensional input. More precisely let x ∈ denote the input and y ∈ denote the output.  There are k nodes in the hidden layer. More precisely, the network represents the function
+ 
+    f_θ(x) 
+        = ∑_i=1^k _i^(2)σ( _i^(1) x + _i^(1))  + b^(2)
+        = ∑_i=1^k _i^(2)[ _i^(1) x + _i^(1)]_+ + b^(2),
+
+i.e., we use ReLU activation functions. 
+
+The _i^(1) denotes the bias of the i-th node, the _i^(2) represents the weight of the i-th output signal, and b^(2) is the global bias term of the output. We let θ = (θ_w, θ_b) = ((^(1), ^(2)), (^(1), b^(2))) denote the set of all parameters, where θ_w denotes the set of weights and θ_b denotes the set of bias terms.
+
+
+
+  
+Parametrization and prior. We will use the following non-standard parametrization of the network
+
+    f_θ(x) 
+       = ∑_i=1^k _i^(2)[_i^(1)(x - _i^(1)) ]_+ + b^(2)
+       = ∑_i=1^k _i^(2)·|_i^(1)| ·[sgn(_i^(1))( x - _i^(1))]_+ + b^(2),
+
+where in the last equality we used the fact that the ReLU activation function is 1-homogenous. Note that there are two kinds of ReLU functions (depending on the sign of w_i^(1)) they are either of the form [x -b]_+ or 0 at [-(x-b)]_+. If we restrict our attention to how f_θ behaves on a compact interval then considering just one of the kinds gives us the same expressive power as having both. This is why for the rest of this section we restrict our attention only to the case of [x-b]_+ as it simplifies the proofs considerably. Thus the final parametrization we consider is
+
+f_θ(x) = ∑_i=1^k _i^(2)·_i^(1)[x - _i^(1)]_+ + b^(2).
+
+
+We define the prior on θ as follows: each component of θ_w comes i.i.d. from 𝒩(0,σ_y^2), each component of ^(1) comes i.i.d. from U([0,M]), where M will be fixed later and b^(2) comes i.i.d. from 𝒩(0,σ_b^2)[The different parametrization and the uniform prior on the bias terms are non-standard choices that we make to simplify the proofs. These choices would not affect the spirit of our results but as always the details need to be verified.].
+
+We will argue that our notion of complexity (χ^#(_x,g,^2) 
+and χ^#(_x,g)) corresponds, in a case of NN, to natural notions of complexity of functions. 
+
+
+
+
+
+
+  
+Target function. We will be interested in target functions g that are representable with a single hidden layer networks. Let g : [0, 1] be continuous and piece-wise linear. I.e., there is a sequence of points 0=t_1 < t_2 < ⋯ < t_l+1=1 so that for x ∈ [t_i, t_i+1], 1 ≤ i < l+1,
+
+    g(x) = c_i + α_i (x-t_i),
+
+for some constants c_i and α_i, where c_i+1 = c_i + α_i (x_i+1-x_i). Then f can be written as a sum of ReLU functions, 
+
+    g(x) = b + ∑_i=1^l v_i [x-t_i]_+,
+
+where v_1=α_1 and v_i=α_i-α_i-1, i=2, ⋯, l. The terms in (<ref>) for which v_i = 0 can be dropped without changing the function. We call the number of nonzero v_i's in (<ref>) to be the number of changes of slope of g. 
+
+
+  *  Start with the fundamental questions of generalization and review various papers.
+
+  *  Say what the overall idea is, namely NNs with regularizer minimizes the sum of the  complexity of the function plus loss.
+    
+  *  Start with Srebo paper that says that for a one-hidden NN minimizing the loss plus the square of the norm is equal to finding a hypothesis so that the sum of the loss plus complexity are minimized.
+    
+    
+  *  We show that, suitably generalized, a similar picture emerges for the "general" case.
+    
+  *  We consider a general network.
+        
+  *  We consider the SGLD.
+        
+  *  We impose a Gaussian prior on the weights.
+    
+  *  We then show that the general measure of complexity is given by the "Bayesian" complexity of a function (need a better word). I.e., in general, the samples we get from the SGLD are such that they minimize the sum of two exponents, one coming from the approximation error and one from the complexity measure.
+    
+  *  The multiplicity complexity measure is naturally connected to several other perhaps more intuitive complexity measures. E.g., the initial scheme is one example but it would be nice to find at least one other example (perhaps the square functions)
+    
+  *  We show that if we apply the same framework to linear schemes the complexity measure does not behave in the same way, giving a strong indication why overfitting does not happen to the same degree for NNs.
+    
+  *  We show what happens if we add layers to a network.
+    
+  *  We explore the role of dropout (not so sure if we can do this; what does this mean for the dynamics?)
+
+
+  §.§.§ Complexity in the Asymptotic Case
+
+In this section we explore what is the limiting value of the sharp complexity for the case of NN.
+
+
+Assume that we are given a Gaussian vector  of length ,
+with mean , and with covariance matrix  that has full rank.  Let ∈^.  Let _1, c and _1, c denote the
+restrictions of  and  to the first c components and
+let _c+1, denote the restriction of  to the
+last -c components. Finally, let R ⊆^-c
+be a set of strictly positive Lebesgue measure.  Then
+
+    lim_ϵ→ 0log[{{: _c+1, ∈ R ∧_1, c-_1, c_2 ≤ϵ}]/log(ϵ) = c.
+
+Before we proceed to the proof let us quickly discuss how we will apply this observation. Assume that we can represent a given function g(x) exactly within a model _θ by fixing c of the components to a definite value and that the remaining -c components
+can be chosen within a range that does not depend on ϵ. This is e.g. the case for neural networks. Due to the non-linearity some parameters can range freely without changing the function. Assume further, that the model has a finite derivative with respect to each of the c fixed values.  For Gaussian prior we have by Lemma <ref> that the complexity of this function is c. In the above discussion we implicitly assumed that the function has a unique representation. But, as we will discuss in Section <ref> and in in the appendix, in general, realizable functions do have many representations. Besides the discrete symmetries inherent in many models there are also continuous symmetries that often arise. E.g., the output of a single ReLU can be exactly replicated by the sum of several ReLU functions. Nevertheless, even though the actual probability for a fixed ϵ can be significantly larger due to this multiplicity, the asymptotic limit remains the same Is it clear?.
+
+Let us start by assuming that the Gaussian distribution has iid components. In this case the probability factors into the probability that the last k-c components are contained in the region R, which by assumption is a strictly positive number, independent of ϵ and the probability that the first c components are contained in a ball of radius ϵ around a fixed point. Note that this second probability behaves like κϵ^c, where κ is strictly positive and does not depend on ϵ. The result follows by taking the log, dividing by log(ϵ) and letting ϵ tend to 0. 
+
+The general case is similar. Write 
+
+    {: _c+1, ∈ R ∧_1, c-_1, c_2 ≤ϵ}
+       = ∫__c+1, k∈ R∫__1, c-_1, c^*≤ϵ f(_1, c, _c+1, k) 
+        = ∫__c+1, k∈ R f(_c+1, k) ∫__1, c-_1, c^*≤ϵ  f(_1, c|_c+1, k).
+
+Now note that each value of _c+1, k the inner integral scales like ϵ^c, and hence this is also true once we integrate over all values of _c+1, k.
+[Function with c changes of slope]
+Imagine that d=1, that is g : → and assume that g is a piece-wise linear function with c changes of slope. We can represent this function by fixing c degrees freedom to definite values. For instance we can choose c nodes in the hidden layer and represent one change of slope with each of these neurons. If (_x) contains all x's for which the changes of slope occur then Lemma <ref> guarantees that χ^#(𝒟_x,g) = cIt's not super clear to me. What about for instance the fact that we can distribute the change of slope as √(a), √(a) and a^1/3, a^2/3?. Plugging this result in (<ref>) we get that for small  the true versus empirical loss gap behaves as
+
+    ≈√(c log(1/)/N + σ_y^2/N + /2σ^2_y + ln(N)/δ N).
+
+We see that in this case the generalization bound strongly depends on the complexity of g, which in this case is the number of changes of slope.
+
+
+It will turn out that the key object useful for computing χ^#(g) is a particular notion of dimension of A_g. 
+
+For A, S ⊆^m we define the Minkowski-Bouligand co-dimension of A w.r.t. S as
+_S(A) := lim_R →∞lim_→ 0log(( (A + B_) ∩ B_R ∩ S))/log() , 
+where  is the Lebesgue measure and + denotes the Minkowski sum. 
+
+Our definition is a variation of the standard Minkowski-Bouligand dimension. The first difference is that we measure the co-dimension instead of the dimension. Secondly,  we compute lim_R →∞. We do this because the sets we will be interested in are unbounded. We also define the co-dimension wrt to an auxilary set S, i.e., all volumes are computed only inside of S. One can view it as restricting the attention to a particular region. In our use cases this region will be equal to the support of the prior. We will sometimes use _P(A) to denote _(P)(A), when P is a distribution.
+
+Technically the notion is not well defined for all sets. Formally, one defines a lower and an upper co-dimension, corresponding to taking lim inf and lim sup. Sets A and S need also be measurable wrt to the Lebesgue measure. We will however assume that for all of our applications the limits are equal, sets are measurable and thus the co-dimension is well defined. This is the case because all sets we will be interested in are defined by polynomial equations.
+
+
+The first lemma relates sharp complexity and co-dimension.
+
+
+Let g(x) = b + ∑_i=1^c v_i [x - t_i]_+,
+where 0 < t_1 < … < t_c < 1, v_1,…,v_c ≠ 0 and c ≤ k. Then
+1/5_P(A_g) ≤χ^#(g, U([0,1])) ≤_P(A_g).
+
+Recall that A_g = {θ : f_θ≡_[0,1] g}.
+
+
+The next lemma computes the co-dimension of a function with c changes of slope.
+
+
+Let g(x) = b + ∑_i=1^c v_i [x - t_i]_+,
+where 0 < t_1 < … < t_c < 1, v_1,…,v_c ≠ 0 and c ≤ k. Then
+_P(A_g) = 2c+1.
+
+There exists a universal constant C such that for all In the general case there's also b^(2) but I guess it'll work.f_θ_0(x) = ∑_i=1^k _i[x - _i^(1)]_+, such that f_θ_0_2^2 = ^2, there exists θ_1 such that f_θ_1≡_[0,1] 0 and θ_0 - θ_1_2^2 ≤ O(^C).
+
+Let L(θ) := f_θ^2. Consider the following differential equation
+
+    θ̇ = - ∇ L(θ)/∇ L(θ)||_2,
+
+which can be understood as a normalized gradient flow. By definition
+
+    L̇ = (∇ L(θ))^T θ̇(<ref>)= - ∇ L(θ)_2.
+
+We will later show that 
+
+    ∇ L(θ)_2 ≥ L^0.8.
+
+Note that the solution to L̇ = - L^0.8 is of the form L(t) = c (C - t)^0.8. More precisely, with the initial condition L(0) = ^2 we get that C = (^2/c)^1/4/5. What follows is that L ((^2/c)^5/4) = 0. Using (<ref>) we get that there exists t^* < (^2/c)^5/4 such that L(t^*) = 0. Because the change of θ is normalized (see (<ref>)) we get that θ(0) - θ(t^*)_2^2 ≤(^2/c)^4/5 = O (^4/5/4). What is left is to show (<ref>).
+
+We start by computing derivatives of L wrt to θ. For every i ∈ [1,k]
+    ∂ L/∂_i^(1) = _i ∫__i^(1)^1 f_θ(x)  dx.
+
+    ∂ L/∂_i = ∫__i^(1)^1 f_θ(x)(x - _i^(1))  dx.
+
+We will show that there exists i ∈ [1,k] such that max{|∂ L/∂_i^(1)|,|∂ L/∂_i|} is large. 
+
+For a function f : [0,1] →, f(0) = 0, f'(0) = 0 (that one should understand as an abstraction of f_θ) consider the following expression (related to (<ref>))
+
+    f”(y) ∫_a^1 f(y)  dx.
+
+The following computation will be helpful
+
+    α(a,b)    := ∫_a^b f”(y) ∫_y^1 f(x)  dx  dy 
+       = [f'(y) ∫_y^1 f(x)  dx ]_a^b - ∫_a^b f'(y) · (- f(y))  dy       by parts
+       = f'(b)∫_b^1 f(x)  dx - f'(a) ∫_a^1 f(x)  dx + [1/2 f^2(x) ]_a^b 
+       = f^2(b)/2 + f'(b)∫_b^1 f(x)  dx - f^2(a)/2 - f'(a) ∫_a^1 f(x).
+
+Now note that
+
+    α(0,b) 
+       = f^2(b)/2 + f'(b)∫_b^1 f(x)  dx - f^2(0)/2 - f'(0) ∫_0^1 f(x) 
+       = f^2(b)/2 + f'(b)∫_b^1 f(x)  dx       As  f'(0) = f(0) = 0.
+
+Let M := max_x ∈ [0,1] |f(x)| and x^* ∈ f^-1(M). We claim that 
+
+    α(0,x^*) = M^2/2.
+
+To see that use (<ref>) and note that either x^* ∈ [0,1] and then f'(x^*) = 0 because it is an extremal point, or x^* = 0 and then f'(0)= by definition, or x^* = 1 and then ∫_1^1 f(x)  dx = 0. Using (<ref>) and the definition of α we get that there exists x_0 ∈ [0,x^*] such that
+
+    |f”(x_0) ∫_x_0^1 f(x)  dx | ≥M^2/2 x^*≥M^2/2.
+
+Now note that f_θ satisfies f_θ(0) = 0. It might not be true that f'_θ(0) = 0 but if we increase all the bias terms by a negligible amount then f'_θ(0) = 0 and the quantity of interest (<ref>) changes only negligibly I guess it's true. Moreover observe that for every i ∈ [1,k]f”_θ(_i^(1)) = ∑_j : _j^(1) = _i^(1)_j and for all x ∈ [0,1] ∖{_1^(1), …, _k^(1)} we have f”_θ(x) = 0. As the number of nodes is k we get from (<ref>) that there exists i ∈ [1,k] such that
+|_i ∫__i^(1)^1 f(x)  dx | ≥M^2/2 k^2. 
+
+If M ≥^0.9 then 
+|∂ L/∂_i^(1)| ≥^1.8/2 k^2≥1/2k^2(^2 )^0.9≥1/2k^2 L(θ)^0.9,
+which implies (<ref>) and ends the proof in this case. Thus we can assume for the rest of the proof that M < ^0.9.
+
+By Holder's inequality we have 
+
+    f_θ_1 ≥f_θ_2^2 / f_θ_∞≥^2 / ^0.9 = ^1.1.
+
+Let 0 = a_1 ≤ a_2 ≤…≤ a_k+2 = 1 be the ordering of {b_1^(1), …, b_k^(1)}∪{0,1}. Consider a generalization of (<ref>)∫_a^1 f(x) (x - a)  dx.
+
+Let I(a) := ∫_a^1 f_θ(x)  dx. Note that
+
+    d/d a∫_a^1 f(x) (x - a)  dx = ∫_a^1 f(x) = I(a).
+
+Let i ∈ [1,k] be such that it satisfies
+
+  * ∫_a_i^a_i+2 |f_θ(x)| _{sgn(f_θ(x)) = sgn(f_θ(a_i+1)) } dx ≥^1.1/k, 
+  * ∫_a_i^a_i+2 |f_θ(x)| _{sgn(f_θ(x)) = sgn(f_θ(a_i+1)) } dx ≥∫_a_i^a_i+2 |f_θ(x)| _{sgn(f_θ(x)) ≠sgn(f_θ(a_i+1)) } dx.  
+Such an i exists because of (<ref>) and the fact that f_θ crosses 0 at most k times Is it enough of a proof?. Assume without loss of generality that f_θ(a_i+1) > 0. By definition f_θ is two-piece linear on [a_i, a_i+2], because of that and the assumption that f_θ(a_i+1) > 0 we know that ∫_a^1 f_θ(x) first increases, then decreases and finally increases (the first and the third phase might not happen). By (<ref>) we know that I(a_i) ≥ I(a_i+2). Let a_max := _a I(a), a_min := _a I(a). By (<ref>) we know that I(a_max) - I(a_min) > ^1.1/k. Consider two cases:
+
+
+  
+Case 1: I(a_max) ≥I(a_max) - I(a_min)/2.
+
+  
+Case 2: I(a_max) < I(a_max) - I(a_min)/2.We need a bound on weights!!! Or do wee
+
+This brings us to the main result of this subsection
+
+[Function with c changes of slope - Bayes Complexity]
+Let g : [0,1] → and assume that g is a piece-wise linear function with c ≤ k changes of slope. Then
+2c+1/5≤χ^#(g, U([0,1])) ≤ 2c+1.
+
+
+We see that the limiting complexity is ≈ c, for c ≤ k. This means that the complexity depends strongly on the function and simpler - in a sense of fewer changes of slopes - functions have smaller complexity. In Section <ref> we will compute the limiting complexity for linear models. It will turn out, see Example <ref>, that in this case the complexity doesn't depend on the function and is equal to the number of basis functions used in the linear model.
+
+
+
+  §.§.§ The -Complexity Case
+
+
+We saw in the previous section that for the case of neural networks our notion of complexity corresponds (in the limit and up to constant factors) to the number of degrees of freedom that need to be fixed to represent a given function.
+When we evaluate the complexity at more refined scales it can be shown that it is closely related to another natural complexity measure. 
+
+[Function with ∫ |g”(x)| dx = a] Let
+
+    C(g) = max(∫ |g”(x)| dx, |g'(-∞) + g'(+∞)| ).
+
+In <cit.> it was shown that, for the case of a single hidden layer NN with 1-D input, for every g : → if we let the width of the network go to infinity Is θ_w defined? then
+
+    min_θ : f_θ = gθ_w^2 = C(g).
+
+This means that if we use an ℓ_2 regularizer for training a neural network
+
+    θ^* = _θ( L_S(f_θ) + λθ_w^2 ),
+
+then C(f_θ^*) = θ^*_w^2. In words, the function that is found via this scheme balances the empirical error and C(g).
+
+In the appendix we show that in some regimes C(g) ≈χ^#(_x, g, ). Plugging it in (<ref>) we get that the expected true versus empirical loss gap is
+
+    ≈√(O_σ_w^2,(C(g)/N) + σ_y^2/N + /2σ^2_y + ln(N)/δ N),
+
+where O_σ_w^2, drops terms dependent on σ_w^2,. See the appendix for details. We see that the gap crucially relies on C(g). This result can be seen as a quantitative version of Example <ref> as ∫ |g”(x)| dx can be seen as a more refined version of the number of changes of slope.
+
+
+
+  
+Variational Complexity
+Let us now introduce a complexity measure for a piece-wise linear function g. 
+We start by introducing a complexity measure for a particular choice of the network parameters. The complexity of the function will then be the minimum complexity of the network that represents this function. 
+We choose
+
+    C_k(θ) = 1/2θ_w^2 = 1/2( ^(1)^2 + ^(2)^2 ),
+
+i.e., it is half the squared Euclidean norm of the  weight parameters. 
+
+If we use the representation (<ref>) in its natural form, i.e.,  w^(2)_i =a_i and W^(1)_i = 1, then we have C_k(θ) = 1/2∑_i=1^k (a_i^2+1). But we can do better. Write
+
+    f(x) = c + ∑_i=1^k w^(2)_i [W^(1)_i(x-x_i)]_+,
+
+where w^(2)_i =a_i/√(|a_i|) and W^(1)_i = |w^(2)_i |. This gives us a complexity measure C_k(θ) = ∑_i=1^k |a_i| = ∑_i=1^k |α_i-α_i-1|, where α_0=0. Indeed, it is not very hard to see, and it is proved in <cit.>, that this is the best one can do even if we keep f(x) fixed and are allowed to let the number k of hidden nodes tend to infinity. In other words, for the function f described in (<ref>) we have
+
+    C(f) = inf_k ∈, θ: f_θ = f C_k(θ) = (f'),
+
+where (f') denotes the total variation of f', the derivative of f. Why total variation?
+Note that α_i denotes the derivative of the function so that |α_i-α_i-1| is the change in the derivative at the point x_i. Therefore, ∑_i=1^k |α_i-α_i-1| is the total variation associated to this derivative. 
+
+
+
+
+
+
+
+
+
+
+
+
+If we consider a general function f: [0, 1] then for every ϵ>0, f can be uniformly approximated by a piecewise linear function, see <cit.>. As ϵ tends to 0 for the best approximation the variation of the piece-wise linear function converges to the total variation of f'. This can equivalently be written as the integral of 
+|f”|.
+It is therefore not surprising that if we look at general functions f: and let the network width tend to infinity then the lowest cost representation has a complexity of
+
+    C(f) = max(∫ |f”(x)| dx, |f'(-∞) + f'(+∞)| ).
+
+As we previously mentioned, this concept of the complexity of a function was introduced in <cit.> and this paper also contains a rigorous proof of (<ref>). (Note: The second term in (<ref>) is needed
+when we go away from a function that is supported on a finite domain to . To see this consider the complexity of f(x) = α x. It is equal to 2α (f(x) = √(α) [√(α) x]_+ - √(α) [-√(α) x]_+) but ∫ |f”(x)| dx = 0.)
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+Sharp versus Variational Complexity. Now we explain how the notion of sharp complexity is, in some regimes, equivalent to the variational complexity. This gives a concrete example of our promise that sharp complexity aligns well with natural complexity measures.
+
+
+
+
+
+
+Assume at first that the target function is of the form g(x) = b + ∑_i=1^c v_i[x - t_i]_+
+and requires only a single change of the derivative. I.e., the piece-wise linear function consists of two pieces and we require only one term in the sum, g(x) = a[x - t]_+ + b Call this function g_1, where the 1 indicates that there is only a single change of the derivative and the change is of magnitude a. 
+
+
+
+
+We now ask what is the value of χ^#(g_1, _x, ^2), for _x = U([0,1]) - as this is what appears in (<ref>). We claim that for small , specific choices of M and σ_w^2, σ_b^2 and particular regimes of parameters we have
+
+    χ^#(g_1, U([0,1]), ^2) = Θ(a / σ_w^2) = Θ(C(g_1) / σ_w^2).
+
+This means that the sharp complexity is closely related to the variational complexity of g_1. The more formal version of (<ref>) of which a proof is in Appendix <ref> reads
+ 
+Let t,∈ (0,1), a,b∈. Define g_1(x) := b + a[x - t]_+. If k ≤ M ≤1/σ_w^2, σ_b^2 ≤1/σ_w^2 and Ω(^1/4),Ω(log(k/σ_w) σ_w^2) ≤ |a| < 2, Ω(^1/4) ≤  |b|, Ω(^1/2) ≤min(t,1-t) then
+|a|/3 σ_w^2≤χ^#(g_1, U([0,1]), ^2) ≤ 2(|a|/σ_w^2 + |b|/σ_b^2) + 11 - 3log().
+
+
+The above lemma is stated with the most general setting of parameters. To get more insight into the meaning of the lemma we give the following corollary.
+
+
+For every sufficiently small σ_e^2 and M = k, σ_w^2 = 1/k, σ_b^2 = 1, |b| = Θ(σ_e^1/2), Ω( σ_e^1/4), Ω(log(k)/k) ≤ |a| < 2 if we define g_1(x) := b + a[x-1/2]_+ then
+χ^#(g_1,U[0,1],σ_e^2) ≤ 3|a|k + 3 log(1/σ_e).
+
+One can easily verify that the assumptions of Lemma <ref> are satisfied. Applying the lemma we get
+
+    χ^#(g_1,U[0,1],σ_e^2) 
+       ≤ 2(|a|/σ_w^2 + |b|/σ_b^2) + 11 + 3log(1/σ_e)  
+       ≤ 2|a| k + Θ(σ_e^1/2) + 11 + 3log(1/σ_e) 
+       ≤ 3|a|k + 3 log(1/σ_e)       As Ω( log(k)/k) ≤ |a|.
+
+
+  
+Generalization bound. Now we want to understand what Example <ref> gives us for the generalization bound from Theorem <ref>. Setting β = 1 in Theorem <ref> and applying Example <ref>,  we can bound
+
+    _∼^N[L_(Q)] 
+       ≤
+    2σ_e^2 + C/√(2)√(χ^#(g_1, _x, σ_e^2)/N)
+       ≤ 2σ_e^2 + C/√(2)√(3|a|k + 3 log(1/σ_e)/N).
+
+
+Now we interpret (<ref>). First note that the setting of parameters in Example <ref> is natural. The choice of σ_w^2 = 1/k and σ_b^2 = 1 are among standard choices for initialization schemes. We pick |b| = Θ(σ_e^1/2) and t = 1/2 in order to analyze functions g_1(x)≈ a[x - 1/2]_+, where the bias term b is nonzero because of the assumptions of Lemma <ref>. Note that depending on the relation between k and σ_e^2 one of the terms dominates (<ref>): either 3|a|k or 3 log(1/σ_e). 
+
+If σ_e^2 ≪ k then 3 log(1/σ_e) dominates and the generalization bound depends mostly on the noise level σ_e^2[As a side note, notice that the 3 in 3 log(1/σ_e) corresponds to the 2c+1 bound on the limiting complexity in Example <ref>, as we consider a function with one change of slope and a very small ^2 for computing χ^#. This illustrates the relationship between sharp and limiting complexity.].
+
+If σ_e^2 ≫ k then 3|a|k dominates. In this case we get the promised dependence of the generalization bound on |a|, which we recall is equal to C(g_1). Note that there is a wide range of |a| for which the bound holds, i.e. Ω(log(k)/k) ≤ |a| ≤ 2. We see that the simpler g_1, measured in terms of C, the better a generalization bound we get. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ §.§ Neural Networks with Several Hidden Layers
+
+Consider now exactly the same set-up as before, except that now we have K=4, i.e., we have three hidden layers and still d = 1. We can still represent piece-wise linear functions (e.g., by using the first layer to represent the function and just a single node in the second layer to sum the output of the previous layers). But the asymptotic complexity of some functions is now different! 
+
+[Periodic function]
+Imagine that we want to represent a function g : [0,l] → that is periodic with period 1. That is g(x - 1) = g(x) for all x ∈ [1,l]. What we can do is to (i) represent g|_[0,1] in the output of a single neuron v in layer 2 (ii) represent shifted versions of g|_[0,1] (which are equal to g|_[1,2], g|_[2,3], … due to periodicity) in the outputs of neurons in layer 3 (iii) sum outputs of neurons from layer 3 in the single output neuron in layer 4. Assume moreover that g|_[0,1] has m changes of slope. Then observe that we implemented g fixing O(l+m) degrees of freedom. But g itself has m · l changes of slope over the whole domain. 
+
+This representation gives an upper-bound for limiting complexity as there might be other ways to represent the function. 
+
+But because of Example <ref> it is enough to arrive at a separation. Indeed if l ≈ m then the asymptotic complexity of g for NN with 4 layers is smaller than for 2 layers, which is in Ω(m l). In words, we obtain a quadratic gain in terms of the number of samples needed to get the same generalization bound. 
+
+
+
+We leave it for future work to explore this direction in more depth (no pun intended).
+
+
+§ WHY LINEAR SCHEMES GENERALIZE POORLY
+
+
+In Section <ref> we've seen that for NNs our notion of complexity aligns well with natural notions of complexity. This, in the light of the connections to the PAC-Bayes bound, partly explains their good generalization. In this section we will show that for the case of linear schemes the complexity is basically independent of a function.  
+
+We investigate  
+the linear model _θ^(L, o)={f_θ(x): f_θ(x) = ∑_i=0^d-1_i b_i(x), x ∈ = [-1, 1]}. Further let _x be the uniform distribution on [-1, 1]. We assume a prior on _i's to be iid Gaussians of mean 0 and variance σ_w^2.
+
+We will see that in this setting all realizable functions have the same complexity. This in the light of (<ref>) tells us that even if reality prefers simple functions the number of samples needed to get a non vacuous bound is as big as the one needed for the highest complexity function in the class.  In short: it is equally “easy” to represent a “complicated” function as it is to represent a “simple” one. Therefore, given some samples, there is no reason to expect that linear models will fit a simple function to the data. Indeed, to the contrary. If the data is noisy, then linear models will tend to overfit this noise.
+
+
+
+ §.§ Orthonormal Basis
+
+
+For simplicity assume that the basis functions are the Legendre polynomials. I.e., we start with the polynomials {1, x, x^2, ...} and then create from this an orthonormal set on [-1, 1] via the Gram-Schmidt process.
+
+[Constant Function]
+Let g(x)=1/√(2). This function is realizable. Indeed,
+it is equal to the basis function b_0(x).  Let us compute χ^#(^(L, o),g,
+ϵ^2).  If we pick all weights in f_(x) = ∑_i=0^d-1_i b_i(x) equal to 0 except _0 equal to 1 then we get
+g(x).  Hence, taking advantage of the fact that the basis functions
+are orthonormal, we have
+
+    _x ∼_x[(f_ - g(x))^2]  =
+    1/2∫_-1^1 (f_(x)-g(x))^2 dx  
+      
+    =    1/2∑_i=0^d-1 (_i-_{i=0})^2 ∫_-1^1 b_i(x)^2 dx  
+    = 1/2∑_i=0^d-1 (_i-_{i=0})^2.
+
+So we need to compute the probability 
+
+    [:  1/2∑_i=0^d-1 (_i-_{i=0})^2 ≤^2].
+
+Recall that our weights are iid Gaussians of mean 0 and variance σ_w^2. Hence
+
+    ∑_i=1^d-1_i^2  ∼Γ(d-1/2, 2 σ_w^2 ),
+
+where Γ(k, θ) denotes the Gamma distribution with shape
+k and scale θ.  It follows that the probability we are
+interested in can be expressed as [:  1/2∑_i=0^d-1 (_i-_{i=0})^2 ≤^2] = q(κ=1, σ_w, ϵ), where
+q(κ, σ_w, ϵ) =
+1/√(2 πσ_w^2)∫_0^ϵ F(ϵ^2-x^2; d-1/2, 2 σ_w^2) [e^-(κ+x)^2/2 σ_w^2+e^-(κ-x)^2/2 σ_w^2]dx.
+
+Here, F(x; k, θ) denotes the cdf of the Gamma distribution
+with shape k and scale θ. From the above expression we can compute χ^#(^(L, o), g(x) =
+1/√(2),ϵ^2), although there does not seem to be an elementary expression.
+
+
+For non-negative κ, σ_w, and ϵ∈ (0, 1] the function
+q(α, σ_w, ϵ) has the following properties:
+
+  *  Scaling: q(κ, σ_w, ϵ) = κ q(1, σ_w/κ, ϵ/κ)
+  *  Monotonicity in κ: q(κ, σ_w, ϵ) is non-increasing in κ
+  *  Monotonicity in σ_w: q(κ, σ_w, ϵ) is non-increasing in σ_w
+  *  Monotonicity in ϵ: q(κ, σ_w, ϵ) is non-decreasing in ϵ
+  *  Limit: lim_ϵ→ 0log(q(κ, σ_w, ϵ))/log(ϵ)=d
+
+If we are just interested in χ^#(^(L, o), g(x) = 1/√(2)),
+we can start from χ^#(^(L, o), g(x) = 1/√(2), ϵ^2)
+or we can make use of (v) of Lemma <ref> to get 
+
+    χ^#(^(L, o), g(x) = 1/√(2))=d.
+
+To see this result intuitively note that all weights
+have to be fixed to a definite value in order to realize g(x).
+[Basis Function]
+Although we assumed in the above derivation that g(x)=b_0(x) the
+calculation is identical for any g(x)=b_i(x), i=0, ⋯, d-1.
+We conclude that χ^#(^(L, o), b_i(x)) does not depend
+on i.  [Realizable Function of Norm 1]
+Assume that g(x)= ∑_i=0^d-1_i b_i(x) with
+∑_i=0^d-1_i^2=1. In other words, the function
+is realizable and has squared norm equal to 1.
+
+If we “rotate” (orthonormal transform) our basis {b_i(x)}_i=0^d
+into the new basis {b̃_i(x)}_i=0^d so that
+g(x)=b̃_0(x) then due to the rotational symmetry of our
+prior we are back to our first example.
+
+We conclude that for any realizable function g(x) of norm 1,
+χ^#(^(L, o), g(x), ϵ^2) = χ^#(^(L, o), b_0(x), ϵ^2).[Realizable Function]
+Assume that g(x)= ∑_i=0^d-1_i b_i(x) with
+∑_i=0^d-1_i^2=κ^2. In other words, the
+function is realizable and has norm equal to κ.
+
+Using the scaling property of Lemma <ref> we can write 
+
+    χ^#(_(σ_w)^(L, o), g(x), ϵ^2 ) 
+        = -log(q(κ, σ_w, ϵ)) 
+        = -log(κ q(1, σ_w/κ, ϵ/κ)) 
+        = -log(κ) + χ^#(_(σ_w/κ)^(L, o), b_0(x), ϵ^2/κ^2),
+
+where we wrote _(σ_w)^(L, o) to indicate that in the model
+each parameter's prior is a Gaussian with variance σ_w^2.
+
+This means that the complexity of a function changes depending on the norm of the vector of weights  that represent it. However if we are interested in the asymptotic complexity all functions (apart from the 0 function) have the same complexities as lim_→ 0log(κ) /log() = 0, which leads to the next example.
+[Limiting Sharp Complexity]
+Assume that g(x)= ∑_i=0^d-1_i b_i(x). Then
+χ^#(^(L, o), g(x))=d.
+
+
+Recall that we showed (Example <ref>) that for the case of 2-layer neural networks the limiting complexity depends strongly on the function and simpler functions - in a sense of number of changes of slope - have lower complexity. Here we see that for linear models basically all functions have the same complexity, which is equal to the number of basis functions in the model.
+
+[Unrealizable Function]
+Given any function g(x), we can represent it as
+g(x)=g_⊥(x)+g_(x), where the two components are orthogonal
+and where g_(x) represents the realizable part. We then have
+that χ^#(_(σ_w)^(L, o), g(x), ϵ^2) is equal to
+
+    ∞,    g_⊥(x)_2^2 > ϵ^2, 
+    
+    -log(q (1, σ_w, √(ϵ^2-g_⊥(x)_2^2)) ),    g_⊥(x)_2^2 < ϵ^2.
+
+
+ §.§ Non-Orthonormal Basis
+[Non-Orthogonal Basis]
+If the functions do not form an orthonormal basis but are independent, then we
+can transform them into such base. After the transform the probability distribution is
+still a Gaussian but no longer with independent components. Now the
+"equal simplicity" lines are ellipsoids.
+
+And if we have dependent components then we also still have Gaussians
+but we are in a lower dimensional space.
+
+
+ §.§ Summary
+
+We have seen that for the linear model the complexity of a function
+g(x) only depends on the norm of the signal. This complexity measure is therefore only
+weakly correlated with other natural complexity measures. E.g., if
+the basis consists of polynomials of increasing degrees and the reality is modeled by a function of low degree then the bound from (<ref>) is the same as when the reality is modeled by a high degree polynomial. It means that the number of samples needed for a good generalization bound is independent of g.
+
+
+
+
+
+
+
+
+
+
+
+§ GENERALIZATION BOUND
+
+
+To derive the bound from Theorem <ref> in terms of “sharp complexity” we first define a series of related notions that are helpful during the derivation.
+
+
+
+
+We define the  empirical complexity of a function g as 
+
+
+
+
+
+    χ^E(g, _x, _ϵ, σ_y^2) 
+       := -log[ ( ∫_θ P(θ) e^-1/2σ_y^2N∑_n=1^N (g(x_n) + η_n - f_θ(x_n))^2 d θ) ],
+
+where we denoted by _x the x's part of  and by _ the particular realization of noise used for generating , i.e. η's.
+
+In order to compute it, we integrate over the parameter space and weigh the prior P(θ) by an exponential factor which is the smaller the further the function f_θ is from g on the given sample _x plus noise _. Recall that noise samples _ϵ come from an iid Gaussian zero-mean sequence of variance σ_e^2. We then take the negative logarithm of this integral.
+
+The  true complexity with noise is defined as
+
+    χ^N(g, _x, σ_y^2, σ_^2) := 
+       -log[ ( ∫_θ P(θ) e^-1/2σ_y^2_x ∼_x, ∼𝒩(0,σ_e^2) [(g(x) +  - f_θ(x))^2] d θ) ],
+
+where the sum has been replaced by an expectation using the underlying distribution of the input.
+
+The  exponential complexity is
+
+    χ(g, _x, σ_y^2) := 
+       -log[ ( ∫_θ P(θ) e^-1/2σ_y^2_x ∼_x [(g(x) - f_θ(x))^2] d θ) ].
+
+Note that
+
+    χ(g, _x, σ_y^2) + σ_e^2/2 σ_y^2 = χ^N(g, _x, σ_y^2, σ_e^2).
+
+
+Finally, the  sharp complexity with noise is defined as
+
+    χ^#N(g, _x, σ_e^2, ^2) 
+       := -log[ _θ[ _x ∼_x, ∼𝒩(0,σ_e^2) [(g(x) +  - f_θ(x))^2] ≤^2] ].
+
+
+The following two lemmas establish some relationships between these notions of complexity.
+
+For every _x, every g : →, and ^2 > 0 we have:
+
+    χ^#N(g, _x, σ_e^2, ^2) = χ^#(g, _x, ^2 - σ_e^2).
+
+    χ^#N(g, _x, σ_e^2, ^2) 
+        = -log[ _θ[ _x ∼_x, ∼𝒩(0,σ_e^2) [(g(x) +  - f_θ(x))^2] ≤^2 ] ] 
+       = -log[ _θ[ _x ∼_x, ∼𝒩(0,σ_e^2) [(g(x) - f_θ(x))^2] ≤^2 - σ_e^2 ] ] 
+       = χ^#(g, _x, ^2 - σ_e^2),
+
+where in the second equality we write (g(x) + - f_θ(x))^2 as the sum of (g(x)-f_θ(x))^2, 2(g(x) - f_θ(x)) and ^2 and use the fact that [] = 0 and [^2] = σ_e^2.
+
+For every _x, every g : →, and σ_y^2, σ_e^2, ^2 > 0 we have:
+
+    χ^N(g, _x, σ_y^2, σ_e^2) ≤χ^#N(g, _x, σ_e^2, ^2) + ^2/2σ_y^2.
+
+    χ^#N(g, σ_e^2,^2) 
+       =
+    -log( ∫_θ P(θ) 1{_x ∼_x, ∼𝒩(0,σ_e^2) [(g(x) +  - f_θ(x))^2] ≤^2 } d θ) 
+       α>0= -log( ∫_θ P(θ) 1{α/2σ_y^2_x ∼_x, ∼𝒩(0,σ_e^2) [(g(x) +  - f_θ(x))^2] ≤α^2/2σ_y^2} d θ) 
+       e^ x≥1{x ≥ 0 }≥-log( ∫_θ P(θ) e^α^2/2σ_y^2 -α/2σ_y^2_x ∼_x, ∼𝒩(0,σ_e^2) [(g(x) +  - f_θ(x))^2] d θ) 
+       = χ^N(g, σ_y^2/α, σ_e^2) - α^2/2σ_y^2.
+
+
+The sharp complexity is very convenient to work with. Hence we will formulate our final bound in terms of the sharp complexity. The reason we call it  sharp complexity is that the region of θ we integrate over is defined by an indicator function whereas for the true complexity the “boundary” of integration is defined by a smooth function.
+
+Let us now look more closely at the divergence where we assume the data model (<ref>) and that the true hypothesis is g. We have
+
+    D(Q  P) 
+       = ∫P(θ) e^- 1/2 σ_y^2∑_n=1^N (y_n - f_θ(x_n))^2/∫ P(θ') e^- 1/2 σ_y^2∑_n=1^N (y_n - f_θ'(x_n))^2 d θ'·
+       ·log(
+     e^- 1/2 σ_y^2∑_n=1^N (y_n - f_θ(x_n))^2/∫ P(θ') e^- 1/2 σ_y^2∑_n=1^N (y_n - f_θ'(x_n))^2 d θ') d θ
+       ≤χ^E(g,_x, _ϵ,σ_y^2/N)- N/2σ_y^2 L_(Q),
+
+where in the last inequality we used the fact that we use a clipped version of a square loss.
+Therefore the expectation over S ∼^N of the square root term of the right-hand side of the PAC-Bayes bound (<ref>) can be upper-bounded as
+
+    _∼^N[C√(D(Q  P)/2 N)] 
+       By (<ref>)≤_∼^N[C √(χ^E(g, _x,_, σ^2_y/N) - N/2σ_y^2 L_(Q) /2 N)] 
+       √(·) concave≤C/√(2)√(_∼^N[χ^E(g, _x,_, σ^2_y/N) ]/N -L/2σ_y^2),
+
+where we denoted _∼^N[L_(Q)] by L̂. Before we proceed we state a helpful lemma.
+
+
+Let X and Y be independent random variables and f(X, Y) be a non-negative function. Then
+
+    _X [ ln( _Y [ e^-f(X, Y)] )  ]
+    ≥ln( _Y[e^-_X[f(X, Y)]]).
+
+We limit our proof to the simple case where the distributions are discrete and have a finite support, lets say from {1, ⋯, I}. We claim that for 1 ≤ j <I,
+
+    (∑_i=1^j p(X=x_i))
+    ln( _Y[e^-∑_i=1^jp(X=x_i) f(x_i, Y)/∑_i=1^j p(X=x_i) ]) + 
+    ∑_i=j+1^I p(X=x_i) [ ln( _Y [ e^-f(x_i, Y)] )  ] 
+    ≥   
+     (∑_i=1^j+1 p(X=x_i))
+    ln( _Y[e^-∑_i=1^j+1 p(X=x_i) f(x_i, Y)/∑_i=1^j+1 p(X=x_i) ]) +
+    ∑_i=j+2^I p(X=x_i) [ ln( _Y [ e^-f(x_i, Y)] )  ].
+
+This gives us a chain of inequalities. Note that the very first term in this chain is equal to the left-hand side of the desired inequality and the very last term is equal to the right-hand side of the inequality. 
+
+Consider the j-th such inequality. Cancelling common terms, it requires us to prove
+
+    (∑_i=1^j p(X=x_i))
+    ln( _Y[e^-(∑_i=1^jp(X=x_i) f(x_i, Y)/∑_i=1^j p(X=x_i) )]) + 
+     p(X=x_j+1) [ ln( _Y [ e^-f(x_j+1, Y)] )  ] 
+    ≥   
+     (∑_i=1^j+1 p(X=x_i))
+    ln( _Y[e^-(∑_i=1^j+1p(X=x_i) f(x_i, Y)/∑_i=1^j+1 p(X=x_i) )]).
+
+Taking the prefactors into the logs, combining the two log terms on the left-hand side, and finally cancelling the logs, the claimed inequality is true iff
+
+    _Y[e^-∑_i=1^j p(X=x_i) f(x_i, Y)/∑_i=1^j p(X=x_i) ]^∑_i=1^j p(X=x_i)/∑_i=1^j+1 p(X=x_i)_Y [ e^-f(x_j+1, Y)] ^p(X=x_j+1)/∑_i=1^j+1 p(X=x_i)≥   _Y [e^-∑_i=1^j+1 p(X=x_i) f(x_i, Y)/∑_i=1^j+1 p(X=x_i) ].
+
+But this statement is just an instance of the Hoelder inequality with 1/p+1/q=1, where 1/p=∑_i=1^j p(X=x_i)/∑_i=1^j+1 p(X=x_i) and 1/q=p(X=x_j+1)/∑_i=1^j+1 p(X=x_i).
+
+
+
+Now we bound the complexity term from (<ref>) further. We have for every ^2 > 0
+    _S ∼^N[χ^E(g, _x,_, σ_y^2/ N)] 
+       = -_S ∼^N[ log( ∫_θ P(θ) e^-1/2σ^2_y∑_n=1^N (g(x_n) + _n  - f_θ(x_n))^2 d θ)   ] 
+       Lem <ref>≤ -log( ∫_θ P(θ) e^-N/2σ^2_y_x ∼_x∼𝒩(0,σ_e^2) [(g(x) +  - f_θ(x))^2] d θ) 
+       = χ^N(g, _x, σ^2_y/N, σ_e^2)
+    Lem <ref>≤χ^#N(g, _x, σ_e^2, ^2) + ^2 N /2 σ^2_y
+       Lem <ref>=χ^#(g, _x, ^2 - σ_e^2) + ^2 N /2 σ^2_y.
+
+Hence by combining (<ref>) and (<ref>) we get that for every ^2 > 0 the expectation over S ∼^N of the PAC-Bayes bound can be bounded as
+
+    _∼^N[L_(Q) + C√(D(Q  P) /2 N)] 
+       ≤L + C/√(2)√(χ^#(g, _x, ^2 - σ_e^2)/N  + 1/2σ^2_y(^2 - L)).
+
+
+Let β∈ (0,1]. Recall that parameter σ_y^2 is chosen freely by the learning algorithm. By the assumption of the theorem we have 
+
+
+    L_(P) ≥ 2σ_e^2.
+
+Because g ∈supp(P), which in words means that g is realizable with prior P, then
+
+    lim_σ_y^2 → 0L   = lim_σ_y^2 → 0_∼^N [ L_(Q) ]  
+       = _∼^N[ lim_σ_y^2 → 0 L_(Q) ]  
+       ≤_∼^N L_(g) 
+       = σ_e^2 .
+
+
+
+
+
+
+where in the second equality we used Lebesgue dominated convergence theorem and in the inequality we used the fact that the smaller σ_y^2 gets the bigger the penalty on ∑_n (y_n - f_θ(x_n))^2 in Q, which means that, in the limit, L_(Q) is smaller than L_(h) for every fixed h ∈supp(P) and in particular for g. 
+
+On the other hand, by an analogous argument, we have
+
+    lim_σ_y^2 →∞L   = _∼^N[ L_(P) ] 
+       = _∼^N[  _θ∼ P[1/N∑_i=1^N ℓ(f_θ, y_n) ] ] 
+       =  _θ∼ P[ _∼^N[1/N∑_i=1^N ℓ(f_θ, y_n)  ] ] 
+       = L_(P)  
+       ≥ 2 σ_e^2,
+
+where we used the independence of P and  in the third equality and (<ref>) in the inequality.
+
+Equations (<ref>) and (<ref>) and the fact that L is a continuous function of σ_y^2 give us that there exists σ_alg^2 > 0 such that
+_∼^N[L_(Q(σ_alg^2)) ] = (1 + β) σ_e^2,
+
+where we wrote Q(σ_alg^2) to explicitly express the dependence of Q on σ_y^2. With this choice for σ_y^2 and setting ^2 = (1+β)σ_e^2 applied to (<ref>) we arrive at the statement of Theorem <ref>. Note that with this choice of parameters term 1/2σ_y^2(^2 - L) from (<ref>) is equal to 0.
+
+
+
+
+§ OMITTED PROOFS
+
+Let {x_i}_i=1^k be a set of real numbers. For i=1, ⋯, k, define the partial sums X_i=∑_j=1^i x_j. Then
+
+    ∑_i=1^k X_i^2 ≥1/8∑_i=1^k x_i^2.
+
+Define X_0=0. Note that for i=1, ⋯, k, X_i = X_i-1+x_i. Hence if |X_i-1| ≤1/2 |x_i| then |X_i|≥1/2 |x_i| so that X_i^2≥1/4 x_i^2. And if |X_i-1| ≥1/2 |x_i| then X_i-1^2≥1/4 x_i^2. Therefore, X_i-1^2+X_i^2 ≥1/4 x_i^2. Summing the last inequality over i=1, ⋯, k, and adding X_k^2 to the left hand side we get 2 ∑_i=1^k X_i^2 ≥1/4∑_i=1^k x_i^2.
+
+Let f(x)= ∑_i=1^k w_i [x-b_i]_+, where 0 ≤ b_1 ≤⋯≤ b_k ≤ 1 = b_k+1. For i=1, ⋯, k, define the partial sums W_i=∑_j=1^i w_j. Then 
+
+    f^2 ≥1/12∑_i=1^k W_i^2 (b_i+1 - b_i)^3.
+
+Note that there are k non-overlapping intervals, namely [b_1, b_2], ⋯, [b_k, 1], where the function is potentially non-zero. On the i-th interval the function is linear (or more precisely, affine) with a slope of W_i and, by assumption, the interval has length b_i+1-b_i. On this interval the integral of f(x)^2 must have a value of at least 1/12 W_i^2 (b_i+1-b_i)^3. The last statement follows by minimizing the integral of the square of an affine function with slope W_i over the choice of the parameters.
+
+Let f_θ(x)= ∑_i=1^k w_i [x-b_i]_+, where 0 ≤ b_1 ≤⋯≤ b_k < +∞.
+
+If f_θ^2 < 1/12(k+1)^5 then there exists θ^* such that f_θ^*≡_[0,1] 0 and
+
+    θ - θ^*^2 ≤ O ( k^13/5f_θ^4/5).
+
+Starting with the parameter θ that defines the function f_θ(x), we define a process of changing it until the resulting function is equal to the zero function on [0, 1]. Most importantly, this process does not change θ too much compared to the norm of f_θ(x). 
+
+Note that there are two ways of setting the function to 0 on a particular interval. Either, we can make the length of the interval to be 0. This requires to change one of the bias terms by the length of the interval. Or we set the slope of this interval to be 0 (assuming that the function is already 0 at the start of the interval. Our approach uses both of those mechanisms. Let θ^0 ←θ. The process has two phases. In the first phase we change the bias terms and in the second phase we change the weights. For x ∈ [0,1], define the partial sums W(x)=∑_j: b_j ≤ x w_j. 
+
+
+
+  
+First phase. Let 
+S := {[b_1,b_2], …, [b_k-1,b_k],[b_k,1]} and  S_b := {[l,r] ∈ S : r - l < |W(l)| }. Let {[l_0,r_0],[l_1,r_1], …, [l_i,r_i]}⊆ S_b be a maximal continuous subset of intervals in S_b. That is, for all j ∈ [i], r_j = l_j+1 and the intervals ending at l_0 and starting at r_i are not in S_b. Perform the following: for all b_j ∈ [l_0,r_i] set b_j ← r_i. We do this operation for all maximal, continuous subsets of S_b. This finishes the first phase. Call the resulting vector of parameters θ^1. We bound
+
+    θ^0 - θ^1^2 
+       ≤ k (∑_[l,r] ∈ S_b (r-l) )^2 
+       ≤ k^13/5(∑_[l,r] ∈ S_b (r-l)^5 )^2/5      By the Power Mean Inequality
+       ≤ k^13/5(∑_[l,r] ∈ S_b (r-l)^3 W(l)^2 )^2/5      By definition of  S_b 
+       ≤ k^13/5 (12 f_θ^2)^2/5      By Lemma <ref>
+
+
+  
+Second phase. Observe that f_θ^1 has the following properties. For every x ∈ [0,1] ∖⋃_[l,r] ∈ S_b [l,r) we have W^1(x) = W^0(x). It is enough to make W(l) = 0 for all [l,r] such that [l,r] ∈ S ∖ S_b.  Let i_1 < i_2 < … < i_p be all i_j's such that [b_i_j, b_i_j+1] ∈ S ∖ S_b. Applying Lemma <ref> to {W_i_1, W_i_2 - W_i_1, …, W_i_p - W_i_p-1} we get that
+
+    8∑_j=1^p W_i_j^2 ≥ W_i_1^2 + (W_i_2 - W_i_1)^2 + … (W_i_p - W_i_p-1)^2
+
+The RHS of (<ref>) gives an upper-bound on the ·^2 norm distance needed to change w_i's in θ^1 so that all W_i_j = 0. It is because we can change w_1, …, w_i_1 by at most W_i_1^2 to make W_i_1 = 0 and so on for i_2, …, i_p. Call the resulting vector of parameters θ^2. We bound the change in the second phase
+
+    θ^1 - θ^2^2
+       ≤ 8 ∑_j=1^p W_i_j^2       (<ref>)
+       ≤ 8k (1/k∑_j=1^p |W_i_j^5| )^2/5      Power Mean Inequality
+       = 8k^3/5( ∑_i : [b_i, b_i+1] ∈ S ∖ S_b  |W_i^5| )^2/5      By definition
+       ≤ 8k^3/5( ∑_i : [b_i, b_i+1] ∈ S ∖ S_b  (b_i+1 - b_i)^3 |W_i^2| )^2/5      By definition of  S_b 
+       ≤ 8 k^3/5(12 f_θ^2 )^2/5      By Lemma <ref>.
+
+We conclude by
+
+    θ^0 - θ^2^2 
+       ≤ 4 max(θ^0 - θ^1^2, θ^1 - θ^2^2 )       Triangle inequality
+       ≤ 96 k^13/5(f_θ^2 )^2/5      (<ref>) and (<ref>)
+
+Let S^0 = {[b_1, b_2], …, [b_k,1]} be the set of  active intervals at time t=0. I.e., initially all intervals are active. For t ≥ 0
+    if there exists an i such that  [b_i^t,b_i+1^t] ∈ S^t  and  b_i+1^t - b_i^t < |W^t(b_i^t)|
+
+then perform 
+
+    θ^t+1←θ^t, 
+       α← b_i^t,  β← b_i+1^t,
+       for every only rightendpoint j  such that  b_j^t = β set  b^t+1_j ←α, 
+       S^t+1← S^t ∖{[b^t_i, b^t_i+1] }.
+
+In each step of the process one interval is removed from S, hence the process terminates in at most t_max≤ k steps.
+The following properties hold for every t < t_max:
+
+  * θ^t+1 - θ^t^2≤ 2k · (b^t_i+1 - b^t_i)^2 < 2k (W^t(b_i^t))^2, as at most 2k bias terms were changed, 
+  *  for every x ∈ [0,1] ∖ [b_i^t, b_i+1^t) we have W^t+1(x) = W^t(x), i.e. in the t-th step the slope changes only at [b_i^t, b_i+1^t), 
+  *  for every x ∈ [b_i^t, b_i+1^t) we have W^t+1(x) = W^t(b_i+1^t). 
+Note that, by construction, for every [b_i^t_max, b_i+1^t_max] ∈ S^t_max we have 
+
+    b_i+1^t_max - b_i^t_max≥ |W^t_max(b_i^t_max)|.
+
+We bound
+
+    12 ∫_0^1 f(x)^2  dx  
+       ≥∑_i=1^k W_i^2 (b_i+1 - b_i)^3        Lemma <ref>
+       ≥∑_i : [b_i^t_max, b_i+1^t_max] ∈ S^t_max W_i^2 (b_i+1 - b_i)^3 + ∑_i : [b_i^t_max, b_i+1^t_max] ∉S^t_max W_i^2 (b_i+1 - b_i)^3 
+       = ∑_i : [b_i^t_max, b_i+1^t_max] ∈ S^t_max W^t_max(b_i^t_max)^2 (b_i+1^t_max - b_i^t_max)^3 
+          + ∑_t=1^t_max-1∑_i : [b_i^t-1, b_i+1^t-1] ∈ S^t-1∖ S^t  W^t-1(b^t-1_i)^2(b^t-1_i+1 - b^t-1_i)^3       By Property (<ref>)
+       ≥∑_i : [b_i^t_max, b_i+1^t_max] ∈ S^t_max |W^t_max(b_i^t_max)^5| + ∑_t=1^t_max-1∑_i : [b_i^t-1, b_i+1^t-1] ∈ S^t-1∖ S^t (b^t-1_i+1 - b^t-1_i)^5       By (<ref>) and (<ref>)
+       = ∑_i : [b_i, b_i+1] ∈ S^t_max |W_i^5| + ∑_i : [b_i^t_max, b_i+1^t_max] ∉S^t_max (b_i+1 - b_i)^5       By Property (<ref>)
+
+We bound the change in the first phase
+
+    θ - θ^t_max^2 
+       ≤(∑_t=1^t_maxθ^t-1 - θ^t)^2       Triangle inequality
+       ≤ 2( ∑_i : [b_i^t_max, b_i+1^t_max] ∉S^t_max k^1/2(b_i+1 - b_i) )^2       By Property (<ref>)
+       ≤ 2k^3 (1/k∑_i : [b_i^t_max, b_i+1^t_max] ∉S^t_max (b_i+1 - b_i)^5 )^2/5      Power Mean Inequality
+       ≤ 6k^13/5(∫_0^1 f_θ(x)^2  dx )^2/5      (<ref>)
+RUnow sure what we use above; what does 1 refer to? it seems that we have several 1s and 2s references around
+
+Now we show how to change the w_i's in θ^t_max to make the function the 0 function - this is the second phase. By Properties (<ref>) and (<ref>) it is enough to make W_i = 0 for all i such that [b_i, b_i+1] ∈ S^t_max. Let i_1 < i_2 < … < i_p be all i_j's such that [b_i_j, b_i_j+1] ∈ S^t_max. Applying Lemma <ref> to {W_i_1, W_i_2 - W_i_1, …, W_i_p - W_i_p-1} we get that
+
+    8∑_j=1^p W_i_j^2 ≥ W_i_1^2 + (W_i_2 - W_i_1)^2 + … (W_i_p - W_i_p-1)^2
+
+The RHS of (<ref>) gives an upper-bound on the ·^2 norm distance needed to change w_i's in θ^t_max so that all W_i_j = 0. It is because we can change w_1, …, w_i_1 by at most W_i_1^2 to make W_i_1 = 0 and so on for i_2, …, i_p. Call the resulting vector of parameters θ^*. We bound the change in the second phase
+
+    θ^t_max - θ^*^2
+       ≤ 8 ∑_j=1^p W_i_j^2       (<ref>)
+       ≤ 8k (1/k∑_j=1^p |W_i_j^5| )^2/5      Power Mean Inequality
+       = 8k^3/5( ∑_i : [b_i, b_i+1] ∈ S^t_max |W_i^5| )^2/5      By definition
+       ≤ 24 k^3/5(∫_0^1 f_θ(x)^2  dx )^2/5      (<ref>).
+
+We conclude by
+
+    θ - θ^*^2 
+       ≤ 4 max(θ - θ^t_max^2, θ^t_max - θ^*^2 )       Triangle inequality
+       ≤ 96 k^13/5(∫_0^1 f_θ(x)^2  dx )^2/5      (<ref>) and (<ref>)
+[Withb^(2)]
+Let R ∈_+, θ∈ B_R ∩(P) be such that f_θ(x)= b^(2) + ∑_i=1^k w_i [x-b_i]_+, where 0 ≤ b_1 ≤⋯≤ b_k < +∞. If f_θ^2 is small enough, where the bound depends only on R and k, then there exists θ^* such that f_θ^*≡_[0,1] 0 and
+
+    θ - θ^*^2 ≤ O ( k^5 R^4/5f_θ^2/5) .
+
+Let ^2 = f_θ^2. For x ∈, define the partial sums W(x)=∑_j: b_j ≤ x w_j. 
+
+
+
+
+Consider the following cases:
+
+
+  
+Case |b^(2)| ≤^1/2.  We perform θ' ←θ, b^(2)'← 0. By triangle inequality we can bound
+f_θ'||^2 ≤(  + |b^(2)| )^2 ≤ 4 . We apply Lemma <ref> to θ' to obtain θ^* such that f_θ^*≡_[0,1] 0 and θ' - θ^*^2 ≤ O(k^13/5f_θ'||^4/5) ≤ O(k^13/5^2/5). We conclude by noticing
+
+    θ - θ^*^2 
+       ≤(θ - θ' + θ' - θ^*)^2       Triangle inequality
+       ≤(^1/2 + O(k^13/10^1/5) )^2 
+       ≤ O(k^13/5f_θ^2/5)       As ^2 ≤ 1.
+
+
+  
+Case |b^(2)| > ^1/2.  Without loss of generality assume that b^(2)>0. There exists x_0 ∈ (0,/4), such that f_θ(x_0) = b^(2)/2, as otherwise 
+^2 ≥∫_0^/4 f_θ(x)^2  dx ≥∫_0^/4 (b^(2))^2 / 4  dx > ^2. By the mean value theorem there exists x_1 ∈ (0,x_0) ∖{b_1, …, b_k} such that 
+
+    f_θ(x_1) ∈ [b^(2)/2, b^(2)]  and  W(x_1) ≤f_θ(x_0) - f_θ(0)/x_0 - 0≤ -4b^(2)/2≤ -2^-1/2.
+
+We perform the following transformation
+
+    θ' ←θ, 
+       for every  i  such that  b_i < x_1  do  b'_i ← b_i - x_1 + f_θ(x_1)/W(x_1), 
+       i_0 ←_i b_i > x_1, 
+       b'_i_0← 0.
+
+Observe that we shifted all b_i's exactly so that f_θ'(0) = 0. Note also that b_i_0≤ 4 as otherwise by Lemma <ref>^2 ≥∫_x_1^b_i_0 f_θ(x)^2  dx ≥1/12 W(x_1)^2 (b_i_0 - x_1)^3 > 1/12 4^-1 (3)^3 ≥^2.
+
+By (<ref>) we can bound 
+
+    θ - θ'^2 
+    ≤ k (-x_1 + f_θ(x_1)/W(x_1))^2 + 16^2 ≤ O(k^2).
+f_θ is R-Lipshitz wrt to b_i's in B_R thus the triangle inequality and (<ref>) gives 
+
+    f_θ'^2
+    ≤  (f_θ + O(R k^3/2))^2 
+    ≤ O(R^2 k^5 ^2).
+
+We apply Lemma <ref> to f_θ', after we removed all b'_i < 0 and set w'_i_0←∑_j ≤ i_0 w_j. Lemma <ref> might require to change w'_i_0, which we can realize with the same cost by changing {w_j : j ≤ i_0}. Thus Lemma <ref> and (<ref>) gives us that there exists θ^* such that f_θ^*≡_[0,1] 0 and θ' - θ^*^2 ≤ O(k^13/5 k^2 R^4/5^4/5). We conclude by using the triangle inequality and (<ref>) to get
+θ - θ^*^2 ≤ O(k^23/5 R^4/5f_θ^4/5).
+Let R ∈_+, θ∈ B_R ∩(P) be such that f_θ(x)= b^(2) + ∑_i=1^k w_i [x-b_i]_+ and g(x) = b + ∑_i=1^c v_i [x - t_i]_+, where c ≤ k, 0 ≤ b_1 ≤⋯≤ b_k < +∞, 0 < t_1 < … < t_c < 1 and v_1,…,v_c ≠ 0. If g - f_θ^2 is small enough,  where the bound depends only on g,R and k, then there exists θ^* such that f_θ^*≡_[0,1] g and
+
+    θ - θ^*^2 ≤ O ( k^7 R^4/5g - f_θ^2/5) .
+
+Consider a model on c+k ≤ 2k neurons represented as
+
+    h_θ := (b^(2) - b) + ∑_i=1^k w_i [x-b_i]_+ - ∑_i=1^c v_i [x - t_i]_+,
+
+where, to distinguish it from θ, we denoted by  the set of parameters of h. Observe that h^2 = g - f_θ^2. By Lemma <ref> there exists ^* such that h_^*≡_[0,1] 0 and - ^*^2 ≤ O ( k^5 R^4/5g - f_θ^2/5). If  is small enough then the parameters in ^* corresponding to v_i's are all still all non-zero and the bias terms corresponding to t_i's are still all different. As h_^*≡_[0,1] 0 it implies that for every i ∈ [c] there is a set of bias terms corresponding to b_j's that are exactly at where t_i was moved. Let π : [c] → 2^[k] be the mapping from t_i's to subsets of b_i's certifying that. 
+
+We define θ^* such that f_θ^*≡_[0,1] g as the result of two steps. First, changing θ as its corresponding parameters were changed in the transition →^*. Second, changing the parameters as v_i's and t_i's are changed in ^* → under the map π. Observe that θ - θ^*^2 ≤ k^2  - ^*^2. It is because in the second step we move at most k bias terms for every parameter corresponding to t_i.     
+
+
+Proof of Lemma <ref>
+
+
+
+Let R ∈_+. Notice that f_θ is R^2-Lipschitz with respect to each of its parameters, when restricted to a ball B_R. This implies that for all > 0
+    (A_g + B_) ∩ B_R ⊆{θ : g - f_θ^2 ≤ R^4 ^2 }.
+
+On the other hand by Lemma <ref> we have that for small enough 
+    {θ : g - f_θ^2 ≤^2 }∩ B_R ∩(P) ⊆ A_g + B_O ( k^7/2 R^2/5^1/5) ⊆ A_g + B_C(k,R)^1/5,
+
+for some function C.
+
+Next we prove (<ref>). Let θ∈ B_R be such that g - f_θ^2 ≤^2. Let η(Δ, W) denotes the minimum ℓ_2 difference on [-Δ, Δ] between a linear function and a two-piece linear function that has a change of slope of W at 0, i.e.
+η(Δ,W) = min_a,b∫_-Δ^0 (ax + b)^2 dx + ∫_0^Δ (ax+b - W x)^2  dx. Solving the minimization problem we get
+
+    η(Δ, W) = Δ^3 W^2/24.
+
+ 
+We proceed by changing θ in phases to arrive at an exact representation of g while incurring only a small change to θ in the ·^2 norm. In phase 1 we make sure that f” roughly agrees with g” at t_1, …, t_c, then, in phase 2, we make sure that the agreement is exact and finally, in phase 3, we enforce agreement of f and g on whole [0,1].
+
+
+
+  
+Phase 1. 
+
+We perform the following transformation
+
+    θ' ←θ, 
+       for every  i ∈ [1,c]  such that  |v_i| ≥^1/2 do 
+              for every  j ∈ [1,k]  such that  |_j^(1) - t_i| ≤ 4^1/3 do 
+                     _j^(1)'← t_i,
+
+First note that every bias term is changed at most once because the intervals [t_i - 4^1/3,t_i + 4^1/3] don't intersect by assumption that = o(κ^3). After this transformation the following holds. For every i ∈ [1,c] we have |f”_θ' - v_i| ≤^1/2
+Observe that there exists _j^(1) such that |_j^(1) - t_i| ≤ 4^1/3 as otherwise the cost incurred to g - f_θ^2 on [t_i - 4^1/3, t_i + 4^1/3] is at least 64/24^2. Note that we implicitly assumed that < 1/4κ^3.
+
+If we perform θ' ←θ, _i^(1)'← t_i then θ - θ'^2 ≤ 16^2/3 and 
+
+    g - f_θ'^2 
+       ≤ (g - f_θ + f_θ - f_θ')^2 
+       ≤ ( + 4 R^2 ^1/3)^2       f is R^2-Lipschitz in B_R with respect to _i^(1)
+       ≤^2 + 8^4/3 R^2 + 16 R^4 ^2/3
+       ≤ 32 R^4 ^2/3.
+I think we need to be careful here. All operations should be done at the same time
+We can view the transformation θ→θ' as an operation after which we have a new target function g' = g - _i^(2)_i^(1) [x - t_i]_+ and a new model for f, where we drop the i-th node. We apply the operation for as long as possible. This process terminates because in each step we remove one node. After the process is finished, if we denote the resulting set of parameters by θ”, we have that for every i ∈ [1,c]
+|g”(t_i) - f_θ””(t_i)| < ^1/2.
+
+Moreover by an analogous argument to (<ref>) we have that g - f_θ”^2 ≤ O( k R^4 ^2/3 ). We also have θ - θ”^2 ≤ O( k ^2/3).
+
+
+
+  
+Phase 2. In this phase we change θ” further to obtain θ”' so that for every j ∈ [1,c]g”(t_j) = f_θ”'”(t_j). Let j ∈ [1,c] and let S_j := {i ∈ [1,c] : _i^(1)” = t_j}. Let i ∈ S_j. We can change each of w_i^(2)”, w_i^(1)” by at most ^1/2 in the ·^2 norm so that ∑_i ∈ S_j w_i^(2)”  w_i^(1)” = f_θ””(t_j) = g”(t_j). We apply such a transformation for every j ∈ [1,c] and call the result θ”'.  The result satisfies θ - θ”'^2 ≤ O(k ^2/3) + 2k ^1/2≤ O(k ^1/2), 
+    g - f_θ”'^2 
+       ≤ O( k R^4 ^2/3 ) + k(R + ^1/4)^4 ^1/2
+       ≤ O( k R^4 ^1/2 )       As ^1/4 < R,
+
+where in the first inequality we used the fact that f_θ is R-Lipshitz with respect to w_i^(2) in B_R. 
+
+
+
+  
+Phase 3. Let S := {i ∈ [1,k] : _i^(1)”'∈{t_1, …, t_c }}. Let θ^0 represent a model where the weights are equal to θ”' but all nodes in S are removed. We will change θ^0 so that it represents the 0 function. By definition
+
+    f_θ^0^2 ≤ O( k R^4 ^1/2 ).
+
+We would like to now use Lemma <ref>. But note that in this lemma we assumed that the model is b^(2) +∑_i=1^k w_i [x-b_i]_+ not ∑_i=1^k _i^(2)·_i^(1)[x - _i^(1)]_+ + b^(2). Let i ∈ [1,k]. If w_i was changed by δ^2 in the ·^2 norm then we can realize the same effective change in _i^(2)·_i^(1) by changing the weight with the smaller absolute value by at most δ +δ^2 in the ·^2 norm. Thus Lemma <ref> and (<ref>) give us that there exists θ^* such that f_θ^*≡_[0,1] 0 and
+θ - θ^*^2 ≤ O (k^5 R^4/5 k^1/5 R^4/5^1/10) ≤ O (k^6 R^8/5^1/10).
+
+To finish the proof we bound
+
+    χ^#(g, U([0,1])) 
+       = lim_ϵ→ 0log[_θ{θ: g - f_θ^2 ≤^2 }]/log()
+       (1)=lim_R →∞lim_ϵ→ 0log[_θ{θ: g - f_θ^2 ≤^2, θ_2 ≤ R }]/log()
+       (2)≥lim_R →∞lim_→ 0log(( (A + B_C(k,R) ^1/5) ∩ B_R ∩(P) ) max_θ∈ B_R P(θ) )/log()
+       (3)=lim_R →∞lim_→ 0log(( (A + B_C(k,R) ^1/5) ∩ B_R ∩(P)) )/log(C(k,R) ^1/5)·log(C(k,R) ^1/5)/log()
+       (4)=1/5lim_R →∞lim_→ 0log(( (A + B_C(k,R) ^1/5) ∩ B_R ∩(P)) )/log(C(k,R) ^1/5)
+       = 1/5_P(A_g),
+
+where in (1) we assumed that the two quantities are equal, in (2) we used (<ref>), in (3) we used  lim_→ 0max_θ∈ B_R P(θ)/log() = 0 and in (4) we used lim_→ 0log(C(k,R)^1/5)/log() = 1/5. The second bound reads
+
+    χ^#(g, U([0,1])) 
+       = lim_R →∞lim_ϵ→ 0log[_θ{θ: g - f_θ^2 ≤^2, θ_2 ≤ R }]/log()
+       (1)≤lim_R →∞lim_→ 0log(( (A + B_R^2 ) ∩ B_R ∩(P)) ·min_θ∈ B_R ∩(P) P(θ) )/log()
+       (2)=lim_R →∞lim_→ 0log(( (A + B_R^2 ) ∩ B_R ∩(P)))/log( R^2 )·log(R^2 )/log()
+       = _P(A_g),
+
+where in (1) we used (<ref>) and in (2) we used min_θ∈ B_R ∩(P) P(θ) > 0, which is true because B_R is compact.
+
+
+
+
+
+
+
+
+
+Proof of Lemma <ref>
+Let  and  denote the vectors of t_i's, and v_i's respectively. Note that if for i ∈ [1,c] we define  b_i^(1) := t_i, w_i^(2) := v_i/w_i^(1) and b^(2) := b then for every x ∈ [0,1]
+g(x) = ∑_i=1^c w_i^(2)· w_i^(1)[x - b_i^(1)]_+ + b^(2).
+
+Moreover if the neurons i ∈ [c+1,k] are inactive on [0,1], that is if b_i^(1) > 1 for all i > c, then g ≡_[0,1] f_θ, i.e. functions g an f_θ agree on [0,1]. If we denote by _[p,q] the restrictions of  to coordinates p,…,q, then for < max(t_1, t_2 -t_1, …, t_c, 1 - t_c) we can write
+
+    (A_g + B_) ∩ B_R ∩(P) 
+       ⊇{θ : _[1,c] - ^2 ≤^2/3, _[c+1,k]∈ [1,M]^k-c, ^(2)^(1) - ^2 ≤^2/3, (b^(2) - b)^2 ≤^2/3}∩ B_R.
+
+Now we will estimate ({ : ^(2)^(1) - ^2 ≤^2 }∩ B_R).
+
+
+
+
+
+If k=1 and R^2 > 5|v_1|:
+
+    ({w^(1),w^(2)∈ : (w^(2)w^(2) - v)^2 ≤^2 }∩ B_R ) 
+       ≥ 2∫_|v|^1/2^2|v|^1/22/w^(1) dw^(1)
+       = 4(log(2|v|^1/2) - log(|v|^1/2)) = 4log(2) .
+
+Bound from (<ref>) generalizes to higher dimensions. If R^2 > 5^2 then
+
+    ({ : ^(2)^(1) - ^2 ≤^2 }∩ B_R) ≥κ^c,
+
+where κ is independent of , κ depends only on the volume of balls in ^c and the constants 4log(2) from (<ref>). Now we can lower-bound the co-dimension
+
+    _P(A_g)    =
+    lim_R →∞lim_→ 0log(( (A_g + B_) ∩ B_R ∩(P)))/log()
+       ≤lim_→ 0log(κ' (/√(3))^c · (M-1)^k-c·κ (/√(3))^c ·2/√(3))/log()      By (<ref>) and (<ref>)
+       = 2c+1,
+
+where similarly as before κ' is a constant independent of .
+
+Now we will show an inequality in the other direction. Assume towards contradiction that (A_g) < 2c+1. This means that there exists θ∈int((P)), f_θ = g and u_1, …, u_3k+1-2c∈^3k+1 linearly independent such that θ + ConvHull(u_1, …, u_3k+1-2c) ⊆ A_g. Fix one such θ.
+
+Next observe that 
+
+    b^(2) = b.
+
+Moreover
+
+    {t_1, …, t_c}⊆{_1^(1),…, _k^(1)},
+
+because if there was t_i ∉{_1^(1),…, _k^(1)} then f”_θ(t_i) = 0 but g”(t_i) = v_i ≠ 0. For every i ∈ [1,k] define S_i := {j ∈ [1,k] : _j^(1) = _i^(1)}. Note that for every i ∈ [1,k] such that _i^(1) = t_j for some j ∈ [1,c] we have:
+
+    ∑_p ∈ S_i_p^(2)·_p^(1) =  
+                v_j    _i^(1) = t_j 
+     
+                0    _i^(1)∈ [0,1] ∖{t_1, …, t_c}
+
+If not then let i_0 be such that _i_0^(1) is the minimal one such that (<ref>) doesn't hold. Note that then g ≢_[_i_0^(1), _i_0^(1) + δ] f_θ, where δ > 0 is small enough so that {_1^(1),…, _k^(1)}∩ (_i_0^(1) , _i_0^(1) + δ) = ∅. 
+Now observe that (<ref>), (<ref>) and (<ref>) give us locally at least 2c+1 linearly independent equations around θ which contradicts with θ + ConvHull(u_1, …, u_3k+1-2c) ⊆ A_g. Thus (A_g) ≥ 2c+1. 
+
+
+Next we give a helpful fact.
+
+
+Let X,Y be two independent random variables distributed according to 𝒩(0,σ_w^2). Then for every a_0 ∈ we have that the density of XY at a_0 is equal to
+
+    f_XY(a_0) = 1/2πσ_w^2∫_-∞^+∞ e^-1/2σ_w^2(w^2 + a_0^2/w^2) dw = 1/√(2πσ_w^2)e^-|a_0|/σ_w^2.
+
+
+Proof of Lemma <ref>
+To prove the lemma we estimate the probability of f_θ's close to g_1. Without loss of generality assume that a > 0.
+
+
+
+  
+Upper bound. We can represent g_1 with a single node i by assigning √(a) to the outgoing weight (^(2)_i), √(a) to the incoming weight (^(1)_i) of this node, the bias term (^(1)_i) to t and b^(2) to b. The bias terms of all other nodes lie in (1,M], i.e. they are inactive in the interval [0,1].
+
+These are exact representations of the function but to compute a lower bound on the probability we should also consider functions that are close to g_1. We can change _i^(1), _i^(2), _i^(1) by a little bit and still have a function that satisfies g_1 - f_θ^2 ≤^2. We claim that the target probability is lower bounded by
+
+    ( /21/√(2πσ_w^2) e^-10 a/9 σ_w^2) ·(9/20 M a) ·( /401/√(2πσ_b^2) e^-(|b| + /40)^2/2σ_b^2) ·( M-1/M)^k-1.
+
+We arrive at this expression by noting the following facts. By (<ref>) and the assumption that a ≥ 20 the probability that _i^(2)_i^(1) = a ±/2 is lower bounded by /21/√(2πσ_w^2) e^-10 a/9 σ_w^2. The probability that _i^(1) = t ±9/20a is equal 9/20M a. The probability that b^(2) = b ±/40 is lower bounded by /401/√(2πσ_b^2) e^-(|b| + /40)^2/2σ_b^2. The last term is the probability that all other nodes have bias terms in [1,M]. Their weights can realm over the whole space and these nodes don't affect the function on [0,1]. We claim that all functions of this form satisfy g_1 - f_θ^2 ≤^2. We bound the pointwise difference of g_1 and f_θ in [0,1], i.e. for every x ∈ [0,1]
+    f_θ(x) = b + (_i^(2)_i^(1)±/2)[x - (_i^(1)±9/20a)]_+ ±/40
+       = b + _i^(2)_i^(1)[x - (_i^(1)±9/20a)]_+ ±/2[x - (_i^(1)±9/20a)]_+ ±/40
+       = b + _i^(2)_i^(1)[x - _i^(1)]_+ ±_i^(2)_i^(1)9/20a±/2(1 + 9/20a) ±/40
+       = b + _i^(2)_i^(1)[x - _i^(1)]_+ ±9/20±/2(21/20 + 9/20a)       As _i^(2)_i^(1) = a 
+       = b + _i^(2)_i^(1)[x - _i^(1)]_+ ±      As  a ≥ 20,
+
+which implies that for such representations g_1 - f_θ^2 ≤^2. From (<ref>) we get an upper bound on the sharp complexity 
+
+    χ^#( g_1, ^2) 
+       ≤ -log[ ( /21/√(2πσ_w^2) e^-10 a/9 σ_w^2) ·(9/20 M a) ·( /401/√(2πσ_b^2) e^-(|b| + /40)^2/2σ_b^2) ·( M-1/M)^k-1] 
+       ≤10/9(a/σ_w^2 + |b|/σ_b^2) + log(M a ) - (k-1) log(1 - 1/M) + log(2πσ_w σ_b) + 7 - 3 log()
+       ≤10/9(a/σ_w^2 + |b|/σ_b^2) + log(M a ) - (k-1) log(1 - 1/M) + 10 - 3 log().       As σ_b^2 ≤1/σ_w^2
+       ≤ 2(a/σ_w^2 + |b|/σ_b^2) + 11 - 3log(),
+
+where in the last inequality we used that log(x) < x/2,  log(1+x) < x for x> 0 and the assumption k ≤ M ≤1/σ_w^2.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Observe that according to Corollary <ref> we have that χ^#(g_1, _x) ≤ 3. Recall that χ^#(g_1, _x) = lim_→ 0 -χ^#(g_1, _x, ^2)/log(). This means that, at least approximately, if we took the bound from (<ref>), divided it by -log() we would get an upper bound on  χ^#(g_1, _x). This would yield for us χ^#(g_1, _x) ≤ 3, as all other terms go to 0 when → 0. 
+
+
+
+  
+Lower bound. There are other θ's that represent the function approximately. For example we could represent g_1 with more than 1 node, by spreading the change of slope a over many nodes. Another possibility is that a number of nodes with the same bias terms t ≠ b ∈ [0,1] effectively cancel out. These θ's contribute to the probability and decrease the complexity. 
+
+
+
+
+
+
+Let θ be such that g_1 - f_θ^2 ≤^2 and let S := {i ∈{1, …, k} : _i^(1)∈ [t - 9^1/2, t + 9^1/2] }. 
+
+
+
+
+Assume towards contradiction that ∑_i ∈ S |_i^(1)_i^(2)| < a -^1/4. This implies that either
+
+    ∑_i : _i^(1)∈ [t - 9^1/2,t] |_i^(1)_i^(2)| < f'_θ(t) - ^1/4/2
+
+or
+
+    ∑_i : _i^(1)∈ [t, t + 9^1/2] |_i^(1)_i^(2)| < a - f'_θ(t) -  ^1/4/2.
+
+Assume that (<ref>) holds. A similar argument covers (<ref>). Now consider two cases.
+
+
+
+  
+Case 1. For all x ∈ [t, t+ 3^1/2] we have f_θ(x) > a(x-t) + ^3/4. Then g_1 - f_θ^2 ≥ 3^1/2·^3/2 > ^2. 
+
+
+  
+Case 2. There exists x_0 ∈ [t,t+3^1/2] such that 
+    f_θ(x_0) < a(x_0-t) + ^3/4.
+
+By (<ref>) we know that for all x ∈ [t,t+9^1/2] we have f'_θ(x) < a - ^1/4/2. This means that f_θ(x) is below a linear function of slope a-^1/4/2 passing through (x_0,f_θ(x_0)). Now we lower bound the error using the fact that f_θ is below this line. 
+
+    g_1 - f_θ^2 
+       ≥∫_x_0^t+9^1/2[a(x-t) - (f(x_0) + (a - ^1/4/2)(x-x_0)) ]^2 1_{a(x-t) > f(x_0) + (a - ^1/4/2)(x-x_0)} dx
+
+Note that the function δ(x) := a(x-t) - (f(x_0) + (a - ^1/4/2)(x-x_0)) is increasing in x and moreover 
+
+    δ(7^1/2 + t) 
+       =  a(x_0-t) - f(x_0) + ^1/4/2(7^1/2 + t - x_0) 
+       ≥ -^3/4 + 2^3/4      By (<ref>) and  x_0 < t + 3^1/2
+       ≥^3/4.
+
+Combining (<ref>) and (<ref>) we get that
+g_1 - f_θ^2 ≥ 2^1/2·^6/4 > ^2,
+
+which is a contradiction .
+
+We arrived at a contradiction in both cases thus ∑_i ∈ S |_i^(1)_i^(2)| ≥ a -^1/4. We claim that for every such S the probability of ∑_i ∈ S |_i^(1)_i^(2)| ≥ a -^1/4 is at most
+
+    ( 18^1/2/M)^|S|∫_a - ^1/4^∞ x^(|S| - 1)2^|S|/|S|!·2/√(2πσ_w^2)e^-x/σ_w^2 dx.
+
+
+
+
+
+We arrive at this expression by noting that x^(|S| - 1)2^|S|/|S|! is the area of an ℓ_1 sphere of radius x in |S| dimensions; the density for _i's satisfying ∑_i ∈ S |_i^(1)_i^(2)| = x is, by Fact <ref>, 2/√(2πσ_w^2)e^-x/σ_w^2; the probability that a single bias term is equal to t ± 9^1/2 is 18^1/2/M.
+
+
+There has to exist S ⊆{1, …, k} such that ∑_i ∈ S_i^(1)_i^(2) = a  ± and for all i ∈ S we have _i^(1) = t  ±/√(a), i.e. there exists a subset of nodes whose slopes add up to approximately a and their bias terms are around t. For every such S the probability What about +1/-1? that ∑_i ∈ S_i^(1)_i^(2) = a  ± and _i^(1) = t  ±/√(a) is approximately
+
+    a^(|S| - 1)/22 π^|S|/2/Γ(|S|/2)··( /√(a)M)^|S|·√(2π)e^-a/σ_w^2.
+
+We arrive at this expression by noting that a^(|S| - 1)/22 π^|S|/2/Γ(|S|/2) is the area of a sphere of radius √(a) in |S| dimensions, multiplying it by thickness ; the density for _i's satisfying ∑_i ∈ S_i^(1)_i^(2) = a is by (<ref>)√(2π)e^-a/σ_w^2; the probability that a single bias term is equal to t ±/√(a) is /√(a)M.
+
+
+Now we upper bound the probability of all these functions by taking a union bound over sets S. We get 
+
+    _θ[g_1 - f_θ^2 ≤^2 ] 
+       ≤∑_S ⊆{1,…,n}∫_a - ^1/4^∞ x^(|S| - 1)2^|S|/|S|!·( 18^1/2/k)^|S|·√(2/πσ_w^2)e^-x/σ_w^2 dx       By (<ref>) and k ≤ M
+       ≤√(2/πσ_w^2)∑_i=1^k ∫_a - ^1/4^∞ki2^i/i!( 1/2k)^i· x^i - 1 e^-x/σ_w^2 dx        As  18^1/2≤1/2
+       ≤√(2/πσ_w^2)∑_i=1^k ∫_a/2^∞x^i-1/2^i-1 e^- x/σ_w^2 dx       As ki≤ k^i, i! ≥ 2^i-1, a ≥ 2^1/4
+
+For every i ∈ [1,k] we can upper bound 
+
+    ∫_a/2^∞x^i-1/2^i-1 e^-x/σ_w^2 dx 
+       ≤∫_a/2^2 e^-x/σ_w^2 dx + [-x^i/2^i-1 e^-x/σ_w^2]_2^∞      As (-x^i e^-x/σ_w^2)' ≥ x^i-1 e^-x/σ_w^2 for  x ≥ 2 
+       ≤[-σ_w^2 e^-x/σ_w^2]^2_a/2  + 2e^-2/σ_w^2
+       ≤σ_w^2 e^-a/2σ_w^2 + 2e^-2/σ_w^2
+       ≤ 3e^-a/2σ_w^2      As σ_w^2 ≤ 1, a ≤ 2
+
+Plugging (<ref>) back to (<ref>) we get 
+
+    _θ[g_1 - f_θ^2 ≤^2 ] ≤√(18/π)k/σ_w e^-a/2σ_w^2.
+
+With (<ref>) we can bound the sharp complexity
+
+    χ^#(_x, g_1, ^2) 
+       ≥a/2σ_w^2 - log(k/σ_w) + log(√(2π)) 
+       ≥a/3σ_w^2      As Ω(σ_w^2log(k/σ_w)) ≤ |a|.
+
+    _θ[g_1 - f_θ^2 ≤^2 ] 
+       ≤√(2π)∑_S ⊆{1,…,n} e^-ak a^(|S| - 1)/22 π^|S|/2/Γ(|S|/2)·( /√(a)k)^|S|      By (<ref>), k = M = 1/σ_w^2
+       ≤√(2π)∑_i=1^k e^-akki a^(|S| - 1)/22 π^|S|/2/Γ(|S|/2)·( /√(a)k)^|S|
+       ≤√(2π)∑_i=1^k e^-ak + ilog(k e/i) + i-1/2log(a) - i/2log(i/2π e) + i log(/√(a)k)       As ki≤(k e/i)^i  and Γ(x+1) ≈√(2π x)(x/e)^x 
+       ≤√(2π)∑_i=1^k e^-ak + ilog(  e √(2π e)/√(a) i^3/2) + i-1/2log(a)
+       ≤√(2π)∑_i=1^k e^-ak/2 + ilog(  e √(2π e)/√(a) i^3/2)      Because log(a) ≤ a  for  a > 0.
+
+Using the assumption  e √(2 π e)/√(a) < 1 we can upper bound it further
+
+    √(2π)e^-ak/2·∑_i=1^k (  e √(2π e)/√(a) i^3/2)^i 
+       ≤√(2π)e^-ak/2· 2       As ∑_i=1^k (1/i^3/2)^i ≤∑_i=1^k 2^-i≤ 2.
+
+Finally we get a lower bound for the complexity
+
+    χ^#(_x, g_1, ) 
+       ≥ak/2 -1/2log(2π) - log() - log(2) 
+       ≥ak/2 - log() - 3.

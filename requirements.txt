@@ -1,0 +1,26 @@
+# Related to HTTP server
+aiohttp
+requests
+fastapi
+uvicorn
+starlette
+
+# Huggingface & LLM related
+huggingface-hub
+sentencepiece
+tokenizers
+transformers
+openai
+
+# Machine Learning packages
+torch >= 2.1.0
+triton >= 2.1.0
+xformers >= 0.0.22.post7
+
+# Misc
+regex
+tqdm
+urllib3
+psutil
+pytest
+parse

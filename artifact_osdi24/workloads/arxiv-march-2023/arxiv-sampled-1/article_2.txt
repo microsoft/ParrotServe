@@ -1,0 +1,1340 @@
+
+
+
+
+    Bennett-Tennenhaus]Raphael Bennett-Tennenhaus
+        
+		Department of Mathematics
+
+		Aarhus University
+
+		
+		8000 Aarhus C
+
+		Denmark
+        raphaelbennetttennenhaus@gmail.com
+        
+    Haugland]Johanne Haugland
+        Department of Mathematical Sciences
+ 
+        NTNU
+ 
+        NO-7491 Trondheim
+ 
+        Norway
+        johanne.haugland@ntnu.no
+
+    Sandøy]Mads Hustad Sandøy
+        Department of Mathematical Sciences
+ 
+        NTNU
+ 
+        NO-7491 Trondheim
+ 
+        Norway
+        mads.sandoy@ntnu.no
+        
+    Shah]Amit Shah
+        
+		Department of Mathematics
+
+		Aarhus University
+
+		
+		8000 Aarhus C
+
+		Denmark
+        amit.shah@math.au.dk
+
+
+
+
+
+[2020]18E05, 18E10, 18G80, 18N10, 18G99
+
+1
+
+Building on previous work, we study the splitting of idempotents in the category of extensions 𝔼-Ext(𝒞) associated to an n-exangulated category (𝒞,𝔼,𝔰). In particular, we show that idempotents split in 𝔼-Ext(𝒞) whenever they do so in 𝒞, allowing us to prove that idempotent completions and extension categories are compatible constructions in a -theoretic sense. More precisely, we show that the exact category obtained by first taking the idempotent completion of (𝒞,𝔼,𝔰), in the sense of Klapproth–Msapato–Shah, and then considering its category of extensions is equivalent to the exact category obtained by first passing to the extension category and then taking the idempotent completion. These two different approaches yield a pair of 2-functors each taking small n-exangulated categories to small idempotent complete exact categories. The collection of equivalences that we provide constitutes a 2-natural transformation between these 2-functors. Similar results with no smallness assumptions and regarding weak idempotent completions are also proved.
+
+
+
+
+The category of extensions and idempotent completion
+    [
+    March 30, 2023
+====================================================
+
+
+
+
+
+
+
+
+1
+
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+
+An additive category is called idempotent complete given that every idempotent morphism splits (see <ref>), or equivalently if every idempotent admits a kernel (see e.g. <cit.>). The study of idempotent complete categories dates back to work by Karoubi <cit.>, in which it was shown that an additive category  can be naturally embedded into an idempotent complete category , often called its Karoubi envelope or its idempotent completion (see <ref> and <ref>).
+
+The splitting of idempotents plays an important role in contemporary algebraic geometry, homological algebra, representation theory and category theory. Indeed, it is intimately connected to the Krull–Remak–Schmidt property and Krull–Schmidt categories (see <cit.>, <cit.>).  Krull–Schmidt categories constitute a particularly nice class of examples of idempotent complete categories. In such a category, every object decomposes, essentially uniquely, into a finite direct sum of indecomposable objects with local endomorphism rings. Splitting of idempotents is often a crucial standing assumption when approaching representation theory of finite-dimensional algebras from a categorical or geometrical perspective (see e.g. <cit.>). Furthermore, a generalisation of the Krull–Remak–Schmidt property was given by Azumaya <cit.>, which has since been used in topological data analysis in the study of persistence homology (see e.g. <cit.>).
+
+Abelian, or more generally exact, and triangulated categories appear in various areas of mathematics, including functional analysis and mathematical physics, and are of fundamental interest in representation theory and related areas (see e.g. <cit.>). Recently, Nakaoka–Palu introduced  categories as a simultaneous generalisation of exact and triangulated  <cit.>, and showed that extension-closed subcategories of triangulated categories, which may fail to be triangulated subcategories, carry an extriangulated structure. Herschend–Liu–Nakaoka <cit.> then introduced  categories as a higher-dimensional analogue of extriangulated categories in the context of higher homological algebra. An n-exangulated category for an integer n ≥ 1 is a triplet (,,) consisting of an additive category , a biadditive functor ×→ (where  denotes the category of abelian groups), and a realisation  of . Note that a category is 1-exangulated if and only if it is extriangulated <cit.>. Important classes of examples of n-exangulated categories for higher n include n-exact categories <cit.> and (n+2)-angulated categories <cit.>. 
+
+Suppose that (,,) is an n-exangulated category. For each pair of objects A,C, elements of (C,A) are called -extensions. The category of extensions associated to (,,), denoted by , has all -extensions as its objects, and the morphisms are morphisms of -extensions; see Subsection <ref>. In a previous article, the authors showed that this category can be equipped with a natural exact structure , giving rise to an exact category (,); see <cit.>. Moreover, we demonstrated that  encodes important structural information. As an example, this perspective leads to a full characterisation of n-exangulated functors between n-exangulated categories; see <cit.>. In the present paper, we improve the understanding of the relationship between an n-exangulated category and its associated category of extensions by studying the splitting of idempotents. 
+
+Our first prominent result is <ref> below, which asserts that the splitting of idempotents in  is inherited from . This plays an important role in the paper as a key step towards <ref>.
+
+[See <ref>]
+ 
+If  is idempotent complete, then  is also idempotent complete.
+
+
+As a consequence of <ref>, we obtain that given certain assumptions on , the Krull–Remak–Schmidt property for  implies the same property for ; see <ref>, cf. <cit.>, <cit.>.
+
+It is shown in <cit.> that the idempotent completion  of  admits an n-exangulated structure, giving rise to an idempotent complete n-exangulated category (,,1mu); see <ref>. Our second main result, given as <ref> below, demonstrates that idempotent completions and extension categories are compatible constructions. More precisely, the category obtained by first taking the idempotent completion of an n-exangulated category and then considering its category of extensions is equivalent to first passing to the extension category and then taking the idempotent completion. 
+
+[See <ref>]
+ 
+The category  
+is equivalent to the idempotent completion of the category .
+
+
+<ref> and <ref> are both used in order to obtain the 2-category-theoretic result <ref>, which builds a bridge between the 2-categorical framework established in <cit.> and the results on the idempotent completion of an n-exangulated category from <cit.>. To discuss a 2-category of n-exangulated categories, we use notions of morphisms between n-exangulated categories and of morphisms between such morphisms. Structure-preserving functors between n-exangulated categories as introduced in <cit.> are known as n-exangulated functors. We viewed the theory of n-exangulated categories from a 2-categorical perspective in <cit.> by defining n-exangulated natural transformations between n-exangulated functors and establishing the 2-category n of small n-exangulated categories <cit.>. Furthermore, we constructed a 2-functor n→ to the category of small exact categories <cit.>, which sends a 0-cell (,,) in n to the 0-cell (,) in ; see <ref>. A consequence of <ref> is that  restricts to a 2-functor n→ from the 2-category of small idempotent complete n-exangulated categories to the 2-category of small idempotent complete exact categories. The last observation needed in order to state <ref> is that taking idempotent completions yields 2-functors → and n→n; see <ref> and <ref>, respectively. 
+
+[See <ref>]
+
+Consider the diagram  
+
+    nrd[swap]   d
+    nr
+
+of 2-categories and 2-functors.
+There is a 2-natural transformation 
+⇒ consisting of exact equivalences.
+
+
+Similar results as above hold also for weak idempotent completions; see <ref>. We remark that even though <ref> is an expected analogue of <ref> in this setup, the method of proof is different and relies on a previous result of the authors from <cit.>.
+
+
+
+We note that <ref> follows from a more general result, namely <ref>, in which no smallness assumption is required. In this article the term `category' does not require the collections of morphisms to form sets. In other words, the categories we consider need not be locally small. Just as explained in <cit.>, the reason for the restriction to small categories in <ref> (and indeed in this introduction entirely) is to be able to use the terminology of 2-categories and 2-functors in a way that is consistent with the existing literature. 
+
+
+
+
+
+
+
+ §.§ Structure of the paper
+
+In <ref> we recall the construction of the idempotent completion of an exact category and use this to establish the 2-functor  from <ref>. Analogously, the 2-functor  is defined in <ref> using the idempotent completion of an n-exangulated category in the sense of <cit.>. In <ref> we recall how to form the category of extensions associated to an n-exangulated category and prove <ref> and <ref>. In <ref> we present the definition of the 2-functor  from <cit.> and show how the main results of the previous sections culminate in <ref>. <ref> concerns the weak idempotent completion. 
+
+
+
+ §.§ Conventions and notation
+
+
+Throughout this paper, let n≥ 1 denote a positive integer. Given objects X and Y in a category , we write (X,Y) for the collection of morphisms from X to Y in . Functors are always assumed to be covariant. We let  denote the category of abelian groups. 
+
+
+
+
+
+
+§ IDEMPOTENT COMPLETION OF EXACT CATEGORIES YIELDS A 2-FUNCTOR
+
+
+
+The aim for this section is to explicitly relate the construction of the idempotent completion of an exact category to a 2-categorical framework, establishing the 2-functor  which is part of <ref> in <ref>. We start by following Bühler <cit.> in recalling the idempotent completion (or Karoubi envelope). We also refer to Borceux <cit.>. 
+
+Throughout the section, let  denote an additive category. An idempotent in  is a morphism e X→ X for some object X satisfying e^2 = e. Splitting of idempotents, as defined below, plays a central role in this article.
+
+ 
+ 
+(See <cit.>.) An idempotent e  X → X in  splits if there exist morphisms r  X → Y and s  Y → X such that sr=e and rs=𝕀Y. The category  is idempotent complete, or has split idempotents, if each idempotent in  splits. 
+
+
+Even though the additive category  need not have split idempotents, it can always be embedded into an idempotent complete category. This is due to Karoubi <cit.>. 
+
+
+
+(See <cit.>.) 
+Define a category  as follows. The objects of  are pairs (X,e) for each object X and each idempotent e(X). Given objects (X,X) and (Y,Y) in , the collection ((X,X),(Y,Y)) of morphisms from (X,X) to (Y,Y) consists of triplets (Y,f,X) such that f (X,Y) satisfies f X = f = Y f. The composition of (Y,f,X)((X,X), (Y,Y)) and (Z,g,Y)((Y,Y), (Z,Z)) is given by 
+
+    (Z,g,Y)∘(Y,f,X)  (Z, gf, X).
+
+It is clear that this composition is associative. The identity 𝕀(X,e) of (X,e) is the morphism (e,e,e). The category  is called the idempotent completion of . 
+
+
+The category  is additive with biproduct given by . It is also idempotent complete; see <cit.> for details. There is a canonical additive inclusion functor → defined by setting (X)  (X, 𝕀X) for X and  for f (X,Y). This functor is 2-universal among additive functors from  to idempotent complete categories; see <cit.>.
+
+Let →→ denote the category of composable morphisms in , and note that a functor → induces a functor →→→→→. Now suppose (,) is an exact category. In particular, the exact structure  is a collection of objects in →→. One can define an exact structure  on  by declaring an object in →→ to be in  if it is a direct summand of an object belonging to the image of  under the functor →→→→→ induced by →.
+
+
+
+(See <cit.>.) 
+The pair (,) forms an exact category, and (,) → (,) is a fully faithful exact functor that reflects exactness. 
+
+
+Let → be an additive functor. Following <cit.>, there is an induced additive functor → given by 
+
+    (X,e)  ( X,  e)
+    and(Y,f,X)  (Y,  f, X).
+
+We refer to  as the completion of . If (,) → (,) is an exact functor, then (,) → (,) is also exact; see the proof of <cit.>. 
+
+In order to view the constructions above in a 2-categorical framework, we recall some terminology. A 2-category is a collection of 0-cells, 1-cells and 2-cells satisfying certain axioms; see e.g. <cit.> or <cit.>. One should think of 0-cells, 1-cells and 2-cells as objects, morphisms between objects and morphisms between morphisms, respectively. A  has two notions of composition of 2-cells: vertical and horizontal. Using the setup below, we recall these notions in the case of natural transformations. We use the Hebrew letters  (beth) and  (daleth) for natural transformations of additive functors.
+
+
+ 
+For the rest of this section, we consider additive categories ,,, additive functors ,,→ and ,,→, and natural transformations ⇒, '⇒, ⇒ and '⇒ as indicated in the diagram
+
+    [Rightarrow,
+                shorten <= 6pt,
+                shorten >= 6pt,
+                yshift = -2pt
+                ]d
+                    [xshift=2pt, yshift=-1pt]      [Rightarrow,
+                shorten <= 10pt, 
+                shorten >= 12pt,
+                xshift=0pt,
+                yshift = -2pt
+                ]dd
+                    [xshift=1pt, yshift=-1pt]   
+    [bend left=50]rr
+                [description, xshift=0pt, yshift=0pt]rr
+                [description][bend right=50]rr
+                [description, xshift=0pt, yshift=0pt]   [Rightarrow,
+                shorten <= 3pt,
+                shorten >= 6pt,
+                yshift=4pt
+                ]d
+                    [xshift=2pt, yshift=3pt]'   [bend left=50]rr
+                [description, xshift=0pt, yshift=0pt]
+    
+        [bend right=50]rr
+                [description, xshift=0pt, yshift=0pt]   
+    
+    
+    
+    
+    
+    
+       .
+
+
+
+
+ 
+(See <cit.>.) 
+The vertical composition of  and '  is the natural transformation '⇒ given by *[](')_X*[]_X^'X for each X. The horizontal composition of  and  is the natural transformation ⇒ defined by (X X∘(X) for each X. 
+
+
+As described in <cit.>, the natural transformation ⇒ induces a natural transformation ⇒ as follows. Given (X,e), there are the morphisms (𝕀X,e,e) (X,e) → (X,𝕀X) and (e,e,𝕀X) (X,𝕀X) → (X,e). Put 
+
+    (X,e)(e,e,𝕀X)∘ (𝕀 X, X, 𝕀 X) ∘(𝕀X,e,e)
+    	= ( e,( e)X e, e)
+
+as indicated in the diagram
+
+    [column sep=3cm]
+    (X,e) 
+    	[dotted]r(X,e)d[swap](𝕀X,e,e)   (X,e) 
+    
+    ( X,𝕀 X)
+    	r[swap](𝕀 X, X, 𝕀 X)    ( X,𝕀 X).
+    	u[swap](e,e,𝕀X)
+
+It is straightforward to check that  is natural. We refer to  as the completion of .
+
+
+
+We write  for the collection of 0-cells, 1-cells and 2-cells consisting of exact categories, exact functors and natural transformations, respectively. For i{0,1,2}, we denote the collection of i-cells by i. Given 0-cells (,) and (,), there is a category ((,), (,)) with 1-cells of the form (,) → (,) as objects, and where morphisms and composition are given by 2-cells and vertical composition. Hence, there is a   determined by the 0-cells in  which are small categories. We furthermore write  and  when restricting to idempotent complete 0-cells in  and , respectively, and note that also  is a 2-category. 
+
+
+A 2-functor between two 2-categories is an assignment of i-cells in the domain category to i-cells in the codomain category for i{1,2,3}, satisfying some compatibility conditions; see e.g. <cit.> or <cit.>. We now begin to construct the 2-functor  used in <ref> in <ref>. 
+
+
+
+Let = (0,1,2) → be defined by the assignments ii→i, where:
+
+    0  (,)  
+         (,),
+    1  ()  
+        ,
+    2 (  ) 
+        .
+
+
+
+If one ignores the set-theoretic issue described in <ref>, then the theorem below should be interpreted as showing that → is a 2-functor.
+
+
+
+The following statements hold for the assignments
+0, 1 and 2.
+ 
+    
+  * 
+    The pair  
+    (0, 1) 
+    defines a functor 
+    →.
+    
+  *  
+    The pair 
+    (1, 2) 
+    defines a functor 
+	((,), (,)) →((,), (,))
+    whenever (,) and (,) are exact categories.
+    
+  *  
+    The assignment 2 preserves horizontal composition.
+
+In particular, restricting  to small categories yields a 2-functor →. 
+
+
+
+It follows from the discussions above that the assignments are well-defined. Checking functoriality in <ref> and <ref> is straightforward, while <ref> follows from <cit.>. 
+
+
+
+
+
+
+
+§ IDEMPOTENT COMPLETION OF N-EXANGULATED CATEGORIES YIELDS A 2-FUNCTOR
+
+
+
+In this section we describe how taking the idempotent completion of an n-exangulated category in the sense of <cit.> relates to a 2-categorical framework. This is done by constructing the 2-functor  from <ref> in <ref>. We start by giving an overview of relevant notions and constructions.
+
+Given an additive category  and a biadditive functor ×→, an element α(C,A) is called an -extension. A morphism of -extensions from α(C,A) to  is a pair (a,c) of morphisms a A→ B and c C→ D in  such that 
+
+    (C,a)(α)=(c,A)(β).
+
+ 
+Recall from <cit.> that an n-exangulated category (,,) consists of 
+
+	
+  * an additive category , 
+	
+  * a biadditive functor ×→, and 
+	
+  * an exact realisation  of  in the sense of <cit.>, 
+
+such that axioms (EA1), (EA2) and (EA*[]2^) stated in <cit.> are satisfied. 
+ 
+The realisation  associates to each -extension α(C,A) a certain homotopy class 
+
+    (α)
+        = []
+        = [0r   1r   ⋯r   n+1]
+
+of an (n+2)-term complex  in  with 0 = A and n+1 = C. The pair , α is then called a (distinguished) n-exangle. 
+
+A morphism , α→∙, β of n-exangles is given by a morphism (0,…, n+1)→∙ of complexes such that (0,n+1) α→β is a morphism of -extensions. In this case, the tuple (0,…, n+1) is said to be a lift of (0,n+1). 
+
+Suppose throughout this section that (,,) and (,,) are n-exangulated categories. An additive functor → induces a functor → between the associated categories of complexes. One can define a new biadditive functor , which we will denote by (-,-). 
+
+
+(See <cit.>.)
+Let → be an additive functor and suppose there is a natural transformation
+
+    Γ = 
+        {(C,A)(C,A)0.7×(-,-) ⟹(-,-).
+
+We call the pair (,Γ)  (,,) → (,,) an n-exangulated functor if, for all A,C and each α(C,A), we have that (α)=[] implies ((C,A)(α))=[].
+
+
+It was demonstrated in <cit.> that one can compose n-exangulated functors as follows. Suppose (, Γ) (,,) → (,,) and (, Φ) (,,) → (,,) are  functors between n-exangulated categories. The composite is the  functor (,Φ) ∘ (,Γ)(, ×Γ), where × is the natural transformation 
+
+    ×
+        = 
+        {( C, A)(C,A)0.7×(-,-) 
+            ⟹(-,-).
+ 
+
+For Γ as above and for α(C,A), we will usually write Γ(α) instead of (C,A)(α). Furthermore, we use the simplified notation α (resp. α) for the -extension (C,a)(α)(C,B) (resp. (d,A)(α)(D,A)) for morphisms a A→ B and d D→ C in .
+
+As proved in <cit.>, the idempotent completion  of an n-exangulated category (,,) admits a canonical n-exangulated structure. We use the notation (,,1mu) for the n-exangulated category obtained from this construction, and recall the definition of the biadditive functor ×→ and the realisation  of  below. In the case n=1, the construction was given by Msapato <cit.>. 
+
+
+ 
+(See <cit.>.) 
+For objects (A,A),(C,C), we let
+
+    ((C,C),(A,A))
+            (A, α, C) 
+            | 
+        α(C,A) 
+        and 
+        (Aα 
+            = α 
+            = (Cα.
+
+For morphisms (B, a, A) (A,A)→ (B,B) and (C,d,D) (D,D)→ (C,C) in  we put 
+
+    ((C,d,D) , (B, a, A)) 
+        ((C,C), (A,A)) 
+           ⟶((D, D), (B, B)) 
+     
+    (A, α, C) 
+           ⟼ (B, (d,a)(α), D).
+
+
+
+The set ((C,C),(A,A)) has an abelian group structure given by 
+
+    (A, α, C) + (A, α', C)
+         (A, α + α', C),
+
+and <ref> indeed gives a biadditive functor ×→; see <cit.>. 
+
+Given a complex  in  and an idempotent morphism ∙→ of complexes, we follow <cit.> and the discussion immediately thereafter in using the notation (, ∙) to denote the complex
+
+    [column sep=1.3cm, scale cd=0.9]
+    (X_0,0)
+        rr(1,10,0)       (1,1)
+        rr(2,21,1)      ⋯r    (n,n)
+        rr(n+1,n+1n,n)       (n+1,n+1)
+
+in , where the maps d_i X_i→ X_i+1 are the differentials of the complex . The realisation  of  is then defined as follows. 
+
+
+
+(See <cit.>.) 
+Let (A, α, C) ((C,C),(A,A)) be arbitrary. Since α(C,A), one may choose  so that 
+(α) 
+    = []
+    = [[column sep=0.6cm]
+        A r   1r   ⋯r   nr    C
+    ].
+One may also lift (A, C) α→α to an idempotent endomorphism ∙ of the n-exangle ⟨, α⟩ by <cit.>. Using this, we define  by setting (A, α, C)  [(, ∙)].
+
+
+To see that the assignment  from <ref> does not rely on the choices involved, see <cit.>. By <cit.>, the triplet (,,1mu) is an n-exangulated category and the inclusion (, ) (,,)→(,,1mu) is an n-exangulated functor, where the natural transformation (-,-)⇒(-,-) is given by α↦ (𝕀A, α, 𝕀C) for α(C,A). 
+
+Now suppose (,Γ) (,,)→ (,,) is an n-exangulated functor. Recall that there is an induced additive functor → as defined in (<ref>). Our next aim is to show that one obtains an n-exangulated functor 
+(,Γ)  
+(,,1mu)
+    → 
+(,,1mu) between the idempotent completions. We first need to define a natural transformation Γ(-,-)⇒(-,-).
+
+
+
+Set
+Γ((C,C),(A,A))((C,C),(A,A))×,
+where
+
+    ((C,C),(A,A))((C,C), (A,A)) 
+           ⟶((C, C), (A, A)) 
+     
+    (A, α, C) 
+           ⟼ (A, Γ(α), C).
+
+
+Note that (A,Γ(α),C) indeed lies in ((C,C),(A,A)), because naturality of Γ yields 
+(AΓ(α) 
+	= Γ((Aα)
+	= Γ(α)
+and
+(CΓ(α) 
+= Γ((Cα)
+	= Γ (α). 
+
+
+Since Γ(-,-)⇒(,-,-) is a natural transformation, one might wonder if the definition of Γ above agrees with the description of the completion of a natural transformation of additive functors from <ref>. However, the biadditive functors  and (-,-) are not necessarily additive functors ×→, so we cannot form the completions of them as in <ref>. Thus, when we use notation of the form Γ for a natural transformation of biadditive functors, it always refers to the construction from <ref>.
+
+
+
+
+The pair (,Γ) is an n-exangulated functor (,,1mu)→ (,,1mu).
+
+
+
+Given a pair of objects (A,A),(C,C), the map ((C,C),(A,A)) from <ref> is a homomorphism of abelian groups as (C,A) is one. It follows from the naturality of Γ that Γ is a natural transformation 
+(-,-)⇒(-,-).
+
+Consider now an -extension (A,α,C)((C,C),(A,A)). Following the definition of , we have  where (α) = [] and the idempotent ∙→ is a lift of (A, C) α→α. Notice that (Γ(α)) = [] as (,Γ) is n-exangulated. Moreover, the morphism ∙→ is an idempotent lifting (A, C)Γ(α)→Γ(α). We hence see that (Γ(A,α,C)) is given by the class
+
+    [[column sep=2.6cm, ampersand replacement=&]
+        ( A,A) 
+            r(1,10,A)& (1,1)
+            r(2,21,1)&⋯r(C,Cn,n)& ( C,C)
+            ],
+
+which is [(,∙)]. This finishes the proof. 
+
+
+To consider n-exangulated categories as 0-cells in a 2-category, we use the notion of a morphism between n-exangulated functors. This is captured by the following definition.
+
+
+
+(See <cit.>.) 
+Suppose that (,Γ), (,Λ)(,,)→(,,) are n-exangulated functors. An n-exangulated natural transformation (,Γ)⇒(,Λ) is a natural transformation ⇒ of additive functors such that, for all A,C and each α(C,A), the pair (A,C) satisfies 
+
+    (AΓ(α)
+        = (CΛ(α).
+
+
+
+Notice that equation (<ref>) means that (A,C) is a morphism Γ(α) →Λ(α) of -extensions.
+
+For a natural transformation ⇒ of additive functors ,→, recall that the completion ⇒ is given by (X,e) = ( e,( e)X e, e) for (X,e). The proposition below shows that the completion of an n-exangulated natural transformation is again n-exangulated. 
+
+
+
+Suppose (,Γ) ⇒ (,Λ) is n-exangulated. Then  is an n-exangulated natural transformation (,Γ) ⇒ (,Λ). 
+
+
+
+Consider an -extension (A,α,C)((C,C),(A,A)). Using that (Aα=α, we get (AΓ(α)=Γ(α) by the naturality of Γ. Similarly, we obtain Λ(α)=(CΛ(α). Since  is n-exangulated, we have (AΓ(α)=(CΛ(α), while naturality of  yields . Combining these observations gives
+
+    (A  (A  (AΓ(α)=
+    (A  (AΓ(α)=
+    (A  (CΛ(α)=
+    (C  (AΛ(α)
+    
+    
+    =
+    (CΛ(α)
+    =
+    (C  (CΛ(α)
+    =
+    (CCΛ(α)
+    =
+    (CC  (CΛ(α).
+
+Hence, we have that 
+
+    ((A,A)Γ(A,α,C)
+       
+    = 
+    (A,(A)AA,A
+    	(A,Γ(α),C)       (definitions of , Γ)
+       = (A,(A  (A  (AΓ(α),C)       (<ref>)
+       = (A,((C) CCΛ(α),C)      (as above)
+       = ((C,C) Λ(A,α,C)      (definitions of , Λ),
+
+as required.
+
+
+We now introduce n-exangulated analogues of the collections described in Notation <ref>.
+
+
+
+Following <cit.>, we write n for the collection of 0-cells, 1-cells and 2-cells consisting of n-exangulated categories, n-exangulated functors and n-exangulated natural transformations between these functors, respectively. Restricting 0-cells in n to small n-exangulated categories yields the 2-category n; see <cit.>. We furthermore write n and n when only considering idempotent complete 0-cells in n and n, respectively, and note that also n is a 2-category. As before, we use a subscript i {0,1,2} to denote i-cells in the collections described above. 
+
+
+We conclude this section by constructing the 2-functor  used in <ref> in <ref>. 
+
+
+
+Let = (0,1,2) n→n be defined by the assignments ini→ni, where:
+
+    0  (,,)  
+         (,,1mu),
+    1  (,Γ)  
+         (,Γ),
+    2 (  ) 
+        .
+
+
+
+The result below is an n-exangulated analogue of <ref>. 
+
+
+
+The following statements hold for the assignments 0, 1 and 2.
+
+ 
+    
+  * 
+    The pair (0, 1) defines a functor n→n.
+    
+  *  
+    The pair (1, 2) defines a functor 
+    
+    n((,,), (,,)) →n((,,1mu), (,,1mu))
+
+    whenever (,,) and (,,) are n-exangulated categories.
+    
+  *  
+    The assignment 2 preserves horizontal composition. 
+
+In particular, restricting  to small  categories yields a 2-functor n→n. 
+
+
+
+It follows from the discussion and results above, in particular Lemmas <ref> and <ref>, that the assignments are well-defined. Functoriality in <ref> is straightforward to check. For <ref>, notice first that n((,,), (,,)), and hence also n((,,1mu), (,,1mu)), is indeed a category by <cit.>. Moreover, for <ref>, note that n-exangulated natural transformations are closed under horizontal composition by <cit.>. As 2 is a restriction of 2, parts <ref> and <ref> follow from <ref><ref> and <ref>, respectively. 
+
+
+
+
+
+
+
+§ THE CATEGORY OF EXTENSIONS AND IDEMPOTENT COMPLETION
+
+
+
+For consistency with the rest of the paper, we assume throughout this section that (,,) is an n-exangulated category. We note, however, that the results of <ref> hold under more general assumptions; see <ref>. In Subsection <ref> we first recall the definition of the category of extensions associated to (,,), before proving <ref> from <ref>. Building on this result, our ultimate goal is to show that the category of extensions of the idempotent completion is equivalent to the idempotent completion of the category of extensions. These two categories are described explicitly in Subsection <ref> and Subsection <ref>, respectively, culminating in a proof of <ref> from <ref>. 
+
+
+
+
+
+
+ §.§ The category of extensions
+
+
+
+The category of extensions associated to (,,) is denoted by . The objects of  are -extensions, and the morphisms are morphisms of -extensions. Recall from <ref> that this means that an object is an element α(C,A) for some objects A,C, while a morphism from α(C,A) to β(D,B) is given by a pair (a,c) of morphisms a A→ B and c C→ D in  satisfying α = β. 
+
+As shown in <cit.>, one can define an exact structure  on   as follows. Let α(C,A), β(D,B) and γ(G,E) be objects in . A sequence 
+
+    αr(a,c)   βr(b,d)   γ
+
+of composable morphisms in  lies in the class  if and only if the morphisms a and c in  are both sections with b= a and d= c.
+
+By definition, a category is idempotent complete provided any idempotent endomorphism splits. Note also that a morphism of -extensions (A,C)α→α for α(C,A) is an idempotent in  if and only if both A A → A and C C → C are idempotents in . Hence, <ref> follows from <ref>. The authors are grateful to Dixy Msapato for pointing out <cit.>, which motivated the proof of the result below. 
+
+
+ 
+Let α(C,A) and  suppose (A,C)(α) is an idempotent. Then A and C split in  if and only if (A,C) splits in . 
+
+
+
+(⇒)  
+Assume that A and C split in . As A splits, there exist morphisms r  A → B and s  B → A such that sr=A and rs=𝕀B. Similarly, there exist u  C → D and v  D → C with vu=C and uv=𝕀D, because C splits. Consider the -extension α(D,B). We see that (s,v)α→α is a morphism in , as
+
+    (α) = (srα = (e_Aα = (e_Cα = (vuα = (vuvα = α.
+ 
+Analogously, one can show that (r,u)α→α is a morphism of -extensions. Notice that (s,v)∘(r,u) = (A,C) and (r,u)∘(s,v) = (𝕀B,𝕀D), which is the identity on α. This gives a  splitting of (A,C), as required.  
+
+(⇐)   
+If (A,C) splits, then there exist β(D,B) and  morphisms (r,u)α→β and (s,v)β→α in  such that (s,v)∘(r,u) = (A,C) and . These equations yield splittings of A and C in .
+
+
+We finish this subsection by deducing <ref>, showing that given certain assumptions on , the Krull–Remak–Schmidt property for  implies the same property for . In order to see this, we first recall some terminology.
+
+Let  be a commutative ring. The additive category  is said to be -linear if (X,Y) is an -module for all X,Y, and we have (λ g)f=λ (gf)=g(λ f) for all λ and all composable morphisms f and g in . When  is -linear, the bifunctor  is -bilinear provided that each abelian group (C,A) has the structure of an -module, and we have (λ c,a)=λ(c,a)=(c,λ a) for all λ and any morphisms a and c in . Recall that an -linear category  is called -finite (over ) if each -module (X,Y) has  finite length (see e.g. <cit.>).  
+
+
+   
+If  is -linear and  is -bilinear, then  is also -linear. If in addition  is -finite, then so is . 
+
+
+
+Fix objects α and β in , say where α(C,A) and β(D,B). Given a morphism (a,c)α→β in , we have 
+
+    (λ aα=
+    (𝕀C,λ a)(α)=
+    λ(𝕀C,a)(α)=
+    λ(c,𝕀A)(β)=
+    (λ c,𝕀A)(β)
+    =(λ cβ
+
+as  is -bilinear. This means that (λ a,λ c)α→β is a morphism in , and we take this to be the action of λ on (a,c). Using that  is -linear, it is straightforward to check that the -sets of  are -modules under this multiplication. Consider another morphism (b,d)β→γ in . Since  is -linear, we have
+
+    (b,d)(λ a,λ c)=(b(λ a),d(λ c))=(λ (ba),λ(dc))=((λ b)a,(λ d), c)=(λ b,λ d)(a,c),
+
+which is the action of λ on (b,d)∘ (a,c). This proves that  is -linear. 
+
+The arguments above show that the collection of morphisms α→β in  defines an -submodule of the direct sum (A,B)⊕(C,D). The length of this submodule is bounded above by the sum of the lengths of (A,B) and (C,D), proving the second assertion. 
+
+
+Recall that  is said to be a Krull–Schmidt category if every object decomposes into a finite direct sum of objects with local endomorphism rings. 
+
+
+
+Suppose that  is -linear, -finite and Krull–Schmidt, and that  is -bilinear. Then  is also -linear, -finite and Krull–Schmidt.
+
+
+
+Note that an R-linear -finite category  is Krull–Schmidt if and only if it is idempotent complete; see e.g. <cit.> or <cit.>. Using this, the result now follows by combining <ref> and <ref>.
+
+
+
+
+
+
+
+ §.§ The category of extensions of the idempotent completion
+
+
+
+As recalled in <ref>, the idempotent completion  admits an n-exangulated structure by <cit.>. The corresponding n-exangulated category is denoted by (,,1mu). Therefore, as in Subsection <ref>, we can consider the category  of extensions associated to (,,1mu). We give an explicit description of  and the exact structure  below.
+
+Objects: The objects of  are of the form (A,α,C)((C,C),(A,A)) for (C,C) and (A,A) in . In particular, the morphisms A A → A and C C → C in  are idempotents,  and α(C,A) is an -extension satisfying (Aα  = α = (Cα.
+
+Morphisms: A morphism (A,α, C) → (B,β, D) in  is a pair ((B,a,A),(D,c,C)), where (B,a,A) (A,A) → (B,B) and (D,c,C) (C,C) → (D,D) are morphisms in  and (B,a,Aα = (D,c,Bβ. In other words, this means that (a,c)α→β is a morphism of -extensions, aA = a = Ba and cC=c=Dc.
+
+Composition: Composition in  is defined component-wise. 
+Explicitly, the composition of ((B,a,A),(D,c,C)) and ((E,b,B),(G,d,D)) is ((E,ba,A),(G,dc,C)).
+
+Identity morphisms: The identity on (A,α,C) in  is ((A,A,A),(C,C,C)).
+
+Preadditivity: The addition of morphisms is component-wise. 
+Explicitly, the addition of ((B,a,A),(D,c,C)) and ((B,a',A),(D,c',C)) is ((B,a+a',A),(D,c+c',C)).
+
+Exact structure:
+The collection  consists of kernel-cokernel pairs
+
+    [column sep=3.7cm]
+    (A, α, C)
+    	r((B,a,A),(D,c,C))   (B, β, D)
+    	r((E,b,B),(G,d,D))   (E, γ, G)
+
+in  such that (B,a,A) and (D,c,C) are sections with (E,b,B) = (B,a,A) and (G,d,D) = (D,c,C). These conditions are equivalent to the sequences
+
+    [column sep=2cm,ampersand replacement=&]
+    		(A,A) 
+    			r(B,a,A)& (B,B) 
+    			r(E,b,B)& (E,E), 
+        
+    [column sep=2cm,ampersand replacement=&]
+    		(C,C) 
+    			r(D,c,C)& (D,D) 
+    			r(G,d,D)& (G,G),
+
+being split exact in .
+
+We have an immediate corollary of <ref>.
+
+
+ The exact category (, ) is idempotent complete.
+
+	
+
+
+
+
+
+ §.§ The idempotent completion of the category of extensions
+
+
+
+In contrast to what is done in Subsection <ref>, we may first consider the category of extensions associated to (,,), which forms part of an exact category (,). Then we may take the idempotent completion, resulting in an idempotent complete exact category that we denote by (,); see <ref>. We proceed with an explicit description of  and the exact structure .
+
+Objects: 
+The objects of  are of the form (α, (A,C)), where α(C,A) and (A,C)α→α is an idempotent morphism of -extensions. This means that e_A  A → A and C C → C are idempotents in  and that (Aα  = (Cα.
+
+Morphisms: A morphism (α, (A,C)) → (β, (B,D)) in  is given by a triple ((B,D),(a,c),(A,C)), where 
+(a,c) α→β is a morphism of -extensions and we have (a,c)(A,C) = (a,c) = (B,D)(a,c).
+
+Composition: 
+The composition of two composable morphisms ((B,D),(a,c),(A,C)) and ((E,G),(b,d),(B,D)) in  is ((E,G),(ba,dc),(A,C)).
+
+
+Identity morphisms: 
+The identity on (α, (A,C)) in  is ((A,C),(A,C),(A,C)).
+
+Preadditivity: 
+Let ((B,D),(a,c),(A,C)) and ((B,D),(a',c'),(A,C)) be morphisms from (α,(e_A,e_C)) to (β,(e_B,e_D)) in . The addition of these two morphisms is given by ((B,D),(a+a',c+c'),(A,C)).
+
+
+Exact structure:
+The elements in  are direct summands of images of elements in  under the functor →; see the discussion before <ref>. In other words, they are direct summands of kernel-cokernel pairs in  of the form 
+
+    [column sep=2cm]
+    (α, (𝕀A,𝕀C))
+    	rp    (β, (𝕀B,𝕀D))
+    	rq    (γ, (𝕀E,𝕀G)),
+
+where 
+
+    [ p  ((𝕀B,𝕀D),(a,c),(𝕀A,𝕀C)),  q  ((𝕀E,𝕀G),(b,d),(𝕀B,𝕀D)) ]
+
+and
+αr(a,c)   βr(b,d)   γ
+is an element of . 
+
+
+
+Even if (α,(A,C)) is an object in , the -extension α(C,A) does not necessarily satisfy (Aα = α or (Cα =α. For example, if α≠ 0, then (α,(0,0)) is an object in , but  α = α = 0  ≠α. In particular, this means that the objects of  are not canonically in one-to-one correspondence with those of .
+
+
+<ref> tells us that we cannot expect the categories  and  to be isomorphic in general. Despite this, we prove that they are always equivalent. In the following, we use the Hebrew letters  (mem),  (shin) and  (tsadi). Note that the functor (,,) that we define in the proof of <ref> below will be used to construct a natural transformation in <ref>, which is the reason for our choice of notation.
+
+
+
+The exact categories (, ) and (, ) are equivalent. 
+
+
+
+We establish an exact functor
+(,,) 
+        (, )
+            → 
+	(, )
+and an exact quasi-inverse 
+(,,) 
+	(, )
+		→ 
+	(, ).
+
+Define (,,) by
+
+    (,,)(A,α,C) 
+         (α,(A,C))
+
+on objects and 
+
+    (,,)((B,a,A),(D,c,C)) 
+    	 ((B,D),(a,c),(A,C))
+
+on morphisms. By our explicit description of  and  in Subsection <ref> and Subsection <ref>, respectively, we see that (,,) is a well-defined additive functor.
+
+Define (,,) by 
+
+    (,,) (α,(A,C)) 
+         (A,(Aα,C)
+
+on objects and 
+
+    (,,) ((B,D),(a,c),(A,C)) 
+         ((B,a,A),(D,c,C))
+ 
+on morphisms. Note that (,,) is well-defined on objects, since
+
+    (C  (Aα 
+        = (A  (Cα 
+        = (A  (Aα 
+        = (Aα.
+
+It is straightforward to check that (,,) is well-defined on morphisms, and that it is an additive functor.
+
+The composite (,,)∘(,,) is the identity functor 𝕀 of , as (Aα = α whenever (A,α,C). For each object (α,(A,C)) in , set
+
+    (α,(A,C)) ((A,C),(A,C),(A,C))
+    	 
+    	(α,(A,C))
+    		→ 
+    	((Aα,(A,C)).
+ 
+This is an isomorphism in . Checking that 
+
+    (α,(A,C))(α,(A,C))𝕀⟹(,,)∘(,,)
+
+is natural is straightforward. 
+
+It remains to show that (,,) and (,,) are exact functors. Recall that the direct sum of two objects (X,X) and (Y,Y) in  is given by 
+
+    (X,X)⊕ (Y,Y) = (X⊕ Y,X⊕Y) = (X⊕ Y,[ X 0; 0 Y ]).
+
+
+We first check that (,,) is exact. Let 
+    [column sep=4cm]
+    (A, α, C)
+    	r((B,a,A),(D,c,C))   (B, β, D)
+    	r((E,b,B),(G,d,D))   (E, γ, G)
+
+be an arbitrary element of . The underlying sequences of (<ref>) are split exact in , so we may without loss of generality assume that B = A⊕ E, B = A⊕E, D = C⊕ G, D = C⊕G, (a,c) = ([ A; 0 ], [ C; 0 ]) and (b,d) = ([ 0E ], [ 0 G ]). Applying (,,) to (<ref>) then yields the sequence
+
+    [column sep=1.5cm]
+    (α, (A,C))
+    	rr    (β, (A⊕E,C⊕G))
+    	rs    (γ, (E,G)),
+
+where 
+
+    r     (([ A 0; 0 E ],[ C 0; 0 G ]),([ A; 0 ],[ C; 0 ]),(A,C)),
+    
+    s     ((E,G),([ 0E ], [ 0 G ]),([ A 0; 0 E ],[ C 0; 0 G ])).
+
+We claim that (<ref>) is a direct summand of the sequence
+
+    [column sep=1.5cm]
+    (α, (𝕀A,𝕀C))
+    	rt    (β, (𝕀A⊕ E, 𝕀C⊕ G))
+    	ru    (γ, (𝕀E,𝕀G)),
+
+where 
+
+    t     ((𝕀A⊕ E, 𝕀C⊕ G),([ 𝕀A;  0 ], [ 𝕀C;  0 ]),(𝕀A,𝕀C)), 
+    
+    u     ( (𝕀E,𝕀G),([ 0 𝕀E ],[ 0 𝕀G ]),(𝕀A⊕ E, 𝕀C⊕ G) ) .
+
+Notice first that  ([ 𝕀A;  0 ], [ 𝕀C;  0 ]) is a morphism α→β of -extensions, since 
+
+    *[][ 𝕀A;  0 ]_α = *[][ 𝕀A;  0 ]_ (e_Aα = *[][ A; 0 ]_α = *[][ C; 0 ]^β = *[][ 𝕀C;  0 ]^*[][ C 0; 0 G ]^β = *[][ 𝕀C;  0 ]_β.
+
+Similarly, the pair  ([ 0 𝕀E ],[ 0 𝕀G ]) is a morphism β→γ in . In particular, this yields that (<ref>) is indeed a sequence in . To verify that (<ref>) is a direct summand of (<ref>), notice that there is a section induced by the morphisms ((𝕀A,𝕀C),(A,C),(A,C)),  and ((𝕀E, 𝕀G),(E,G),(E,G)).
+
+Thus, to finish the proof that (,,) is exact, it suffices to show that (<ref>) lies in . For this, it is in turn enough to verify that 
+
+    [column sep=3cm]
+    αr([ 𝕀A;  0 ], [ 𝕀C;  0 ])   βr([ 0 𝕀E ],[ 0 𝕀G ])   γ
+
+lies in . By the arguments above, we already know that (<ref>) is a sequence of morphisms in . As its underlying sequences are split exact in , we have that (<ref>) lies in .
+
+We now show that (,,) is exact. Let 
+
+    (α, (A,C))
+    	r    (β, (B,D))
+    	r    (γ, (E,G))
+
+be a conflation in . Consequently, we have that (<ref>) is a direct summand of a sequence 
+
+    (α', (𝕀A',𝕀C'))
+    	r    (β', (𝕀B',𝕀D'))
+    	r    (γ', (𝕀E',𝕀G')),
+
+which is the image under  of a kernel-cokernel pair 
+
+    [column sep=2cm]
+    α'
+    	r(a',c')   β'
+    	r(b',d')   γ'
+
+in . Apply (,,) to (<ref>) to obtain
+
+    (𝕀A',α',𝕀C')
+    	r    (𝕀B',β',𝕀D')
+    	r    (𝕀E',γ',𝕀G').
+
+We claim that (<ref>) lies in . Since (<ref>) belongs to , its underlying sequences are split exact in . As → is an additive functor, the sequences 
+
+    [column sep=3cm,ampersand replacement=&]
+    		(A', 𝕀A')
+    			r(𝕀B',a',𝕀A')&(B', 𝕀B')
+    			r(𝕀E',b',𝕀B')&(E', 𝕀E'),
+    		
+    [column sep=3cm,ampersand replacement=&]
+    		(C', 𝕀C')
+    			r(𝕀D',c',𝕀C')&(D', 𝕀D')
+    			r(𝕀G',d',𝕀D')&(G', 𝕀G'),
+
+are thus split exact in , and so (<ref>) lies in . 
+
+Since (<ref>) is a direct summand of (<ref>), we know that (,,)(<ref>) is a direct summand of (,,)(<ref>)=(<ref>). Thus, by <cit.>, we deduce that (,,)(<ref>) belongs to , and hence (,,) is an exact functor. 
+
+
+
+
+For consistency with the rest of the paper, in <ref> we have assumed that (,,) is an n-exangulated category. However, the results from this section work in a more general setting. We describe this setting in what follows, and leave it to the interested reader to reformulate the claims and their proofs.
+
+Let  and  be additive categories and consider a biadditive functor ×→. The category , is defined by letting objects be elements α(C,A) with C and A, while a morphism from α(C,A) to β(D,B) is a pair (a,c) with a(A,B), c(C,D) and (C,a)(α)=(c,B)(β). This definition generalises the construction of the category of extensions from Subsection <ref>.
+
+
+We finish this section by demonstrating the use of <ref> in a concrete example.
+
+
+
+Consider a commutative ring R. For integers m,n≥0, let m,n(R) denote the set of m× n matrices which, when m,n>0, have entries in R. Note that m,0(R) consists of a single empty column vector of length m. Likewise, the set 0,n(R) consists of an empty length n row. There is a unique way of extending matrix multiplication to define a function l,m(R)×m,n(R)→l,n(R) for any integers l,m,n≥ 0. 
+
+Let  be the category of rectangular matrices over R, defined as follows. Objects of  are rectangular matrices Xm,n(R) for m,n≥0, and a morphism from Xm,n(R) to Yp,q(R) is defined by a pair of matrices (A,B)q,n(R)×p,m(R) such that  BX=YA. Composition is defined by component-wise matrix multiplication. The identity of an object Xm,n(R) is the pair (*[]I_n,*[]I_m) of identity matrices. 
+
+The category  is preadditive, where the addition of morphisms is given by component-wise matrix addition. Furthermore,  is in fact additive, where the direct sum X⊕ Y of Xm,n(R) and Yp,q(R) is given by the block-diagonal matrix in m+p,n+q(R) formed by taking X and Y in the diagonal blocks and 0 elsewhere. The zero object of  is the unique element of 0,0(R).
+
+We now use <ref> to compute the idempotent completion . Consider first the category  of finitely generated free R-modules, and let ×→ be the biadditive functor given by the -bifunctor (-,-). Using that any finitely generated free R-module is isomorphic to *[]R^n for some n≥ 0, it is straightforward to check that  is equivalent to the category  of extensions. This uses the fact that commutative rings have an invariant basis number, meaning that the value of n is unique.
+
+Applying <ref> now gives ≃. Observing that = (-,-), it follows from <cit.> that  is equivalent to the arrow category ^→ of , i.e. the category whose objects and morphisms are given by morphisms and commutative squares in , respectively. It is well-known that the idempotent completion of  is the category  of finitely generated projective R-modules; see e.g. <cit.>. We can thus conclude that  is equivalent to the arrow category ^→.
+
+
+
+
+
+
+
+§ 2-CATEGORICAL COMPATIBILITY
+
+
+
+The aim of this section is to prove <ref> in <ref>, which asserts that the constructions and results we have exhibited so far are compatible in a 2-categorical framework. We start by recalling the definition of the 2-functor  from <cit.>.
+
+Given an n-exangulated functor (,Γ)(,,)→(,,), it follows from <cit.> that there is a corresponding exact functor
+
+    (,Γ) (,)→ (,).
+ 
+This functor is defined by (,Γ)(α) = Γ(α) on objects and by (,Γ)(a,c) = ( a, c) on morphisms. In addition, given an n-exangulated natural transformation (,Γ) ⇒ (,Λ) of n-exangulated functors (,Γ), (,Λ) (,,)→(,,), one can define a natural transformation (,Γ)⇒(,Λ) given by *[]_α  = (A,C) for α(C,A); see <cit.>.
+
+
+
+(See <cit.>.)
+Let = (0,1,2) n→ be defined by the assignments ini→i, 
+where:
+
+    0  (,,)  
+         (,),
+    1  (,Γ)  
+        (,Γ),
+    2 (  ) 
+        .
+
+
+
+It was shown in <cit.> that  defines a functor n→ that satisfies the properties of a 2-functor, and thus restricts to a genuine 2-functor . <ref> allow us to restrict  to idempotent complete categories. By abuse of notation, we write  for this restriction, where it should be noted that  is not the completion of the functor  in the sense of <ref> (see (<ref>)). We have 
+
+    =  (0,1,2)
+    	n→,
+
+where the assignment _i is defined as a restriction of i for i {0,1,2} and satisfies the same properties. Again, we obtain a 2-functor n→ when restricting 0-cells to small categories. Recall that the functors  and  were defined in Definitions <ref> and <ref>, respectively, while the exact equivalence 
+
+    (,,) 
+            (, )
+                → 
+    	(, )
+ 
+for (,,)n0
+was defined in the proof of . 
+
+
+ 
+The collection  of exact equivalences (,,) for (,,)n0 defines a natural transformation ⇒ as indicated in the diagram 
+
+    [column sep=1cm]
+    nd[swap]r   d
+    nr[swap][Rightarrow, 
+    			shorten <= 18pt,
+                shorten >= 20pt,yshift=-5pt, xshift=2pt]ur   .
+
+
+
+
+In order to demonstrate the naturality of , we must show that 
+
+    [column sep=2cm]
+    (,) 
+    	r(,,)d[swap](,Γ)    (,)  
+    	d(,Γ)
+    
+    (,) 
+    	r(,,)    (,)
+
+commutes in  for any n-exangulated functor (,Γ) (,,) → (,,). That is, we need to show that (,Γ)(,,) and (,,)(,Γ) are equal as functors →.
+
+To this end, let (A,α,C) be an object in . On the one hand, we have that
+
+    (,Γ)(,,)(A,α,C) 
+    	= (,Γ) (α,(A,C)) 
+    	= (Γ(α),(A,C)),
+
+while on the other hand
+
+    (,,)(,Γ) (A,α, C) 
+    	= (,,) (A,Γ(α), C) 
+    	= (Γ(α),(A,C)).
+
+Hence, the functors (,Γ)(,,) and (,,)(,Γ) agree on objects. Consider next a morphism ((B,a,A),(D,c,C)) (A,α, C) → (B,β, D) in . We have 
+
+    (,Γ)(,,)((B,a,A),(D,c,C))
+    	   = (,Γ) ((B,D),(a,c),(A,C))
+       = ((B,D),( a, c),(A,C)) 
+       = (,,) ((B, a,A),(D, c,C))
+       = (,,)(,Γ)  ((B,a,A),(D,c,C)),
+
+which completes the proof. 
+
+
+The next result says that  satisfies the defining property of a 2-natural transformation between 2-functors; see <cit.>. 
+
+
+
+Let (,Γ) ⇒ (,Λ) be an n-exangulated natural transformation between n-exangulated functors (,Γ), (,Λ) (,,)→(,,). Then the square 
+
+    ()(,Γ)∘(,,)[equal]r[Rightarrow]d[swap]()()𝕀(,,)   (,,)∘ ()(,Γ) 
+    	[Rightarrow]d[xshift=2pt, yshift=0pt]𝕀(,,)()()
+    
+    ()(,Λ)∘(,,)[equal]r   (,,)∘()(,Λ)
+
+commutes in ( , ).
+
+
+
+Note first that we have the horizontal equalities by <ref>. Consider an arbitrary object (A,α,C)((C,C),(A,A)) in = ()(,,). On the one hand,  
+
+    (()() 𝕀(,,)(A,α,C)   = ()((,,)(A,α,C) ∘ ()(,Γ)(𝕀(,,)(A,α,C)
+       = ()((α,(A,C))∘(,Γ)(𝕀(α,(A,C))) 
+       = ()((α,(A,C))
+       = ( ()(α,(A,C))
+       = *[]_(α,(A,C))
+       = ((,Λ) (A,C),(,Λ) (A,C)*[]_α(,Γ)(A,C),(,Γ) (A,C))
+       = ((A,C), 
+    		((A)AA, (C)CC),
+    		(A,C)).
+
+On the other hand, we have
+
+    (𝕀(,,)()()(A,α,C)   = (𝕀(,,)()(,Λ)(A,α,C)∘(,,)(()()(A,α,C)
+       = (,,)*[]_(A,α,C)
+       = (,,)
+    			( (A, (A)AA, A) , (C, (C)CC, C) )
+       = ((A,C), 
+    		((A)AA,(C)CC),
+    		(A,C)),
+
+which finishes the proof. 
+
+
+Restricting to small categories, <ref> and <ref> yield the following corollary, demonstrating that idempotent completions and extension categories are compatible constructions in a 2-category-theoretic sense.
+
+
+
+There is a 2-natural transformation 
+⇒
+of 2-functors from n to  consisting of exact equivalences.  
+
+
+
+
+
+
+
+§ THE WEAK IDEMPOTENT COMPLETION
+
+
+
+The aim of this section is to relate our main results to the setup of weak idempotent completions. Note that the definitions and results in <ref> rely on concepts and notation which should be recalled from previous sections. Many of the proofs in the weakly idempotent complete case are straightforward modifications of those for the idempotent completion. However, notice that our proof of the key result <ref> differs significantly from the proof of <ref> and relies on a result from <cit.>.
+
+Recall that an additive category  is said to be weakly idempotent complete if every retraction has a kernel or, equivalently, if every section has a cokernel; see <cit.>. Every idempotent complete category is weakly idempotent complete; see e.g.  and <cit.>. For more detail on weak idempotent completions, see e.g. <cit.>. 
+
+
+
+(See <cit.>.) 
+The weak idempotent completion  of  is the full subcategory of  that consists of all objects (X,e) for which 𝕀X-e splits in . 
+
+
+Note that  is an additive subcategory of  and that there is a canonical additive inclusion functor → defined by (X)  (X,𝕀X) for X and (f)  (𝕀Y,f,𝕀X) for f(X,Y). This functor is 2-universal among additive functors from  to weakly idempotent complete categories; see <cit.>. The functor → factors through  via the canonical inclusion functor →, which is the identity on objects and morphisms. In other words, there is a commutative diagram
+
+    rrdr[swap]      
+       ur[swap]
+
+of additive categories and functors.
+
+Suppose that (,) is an exact category. One defines an exact structure  on  as follows. An object of →→ is in  if it is a direct summand of an object in the image of  under the functor →→→→→ induced by →. In particular, a kernel-cokernel pair lies in  if and only if it is a kernel-cokernel pair in  in which all three terms lie in . 
+
+<ref> below shows that (,) is a fully exact subcategory of (,). This means that  is extension-closed in (,) and that  coincides with the inherited exact structure; see <cit.>.
+
+
+
+The pair (,) is a fully exact subcategory of (,). The inclusion (,) → (,) is a fully faithful exact functor that reflects exactness.
+
+
+
+Suppose that 
+[column sep=1.7cm]
+(A,A)
+    r(B, a, A)    (B,B)
+    r(C, b, B)    (C,C)
+is a conflation in (,) with (A,A),(C,C). By <cit.>, there is an object (D,D) and an isomorphism 
+
+    [column sep=1.7cm]
+    (A,A)
+        r(B, a, A)[equals]d    (B,B)
+        r(C, b, B)d(D, r, B)    (C,C)
+        [equals]d
+    
+    (A,A)
+        r(D, c, A)    (D,D)
+        r(C, d, D)    (C,C)
+
+in the category *[]𝐊^3_(;(A,A),(C,C)) defined in <cit.>. By <cit.>, the morphism (D, r, B) is an isomorphism in , so  is extension-closed. Since a sequence lies in  if and only if it lies in  and has all terms in , the inherited exact structure (see <cit.>) coincides with . This shows that (,) is a fully exact subcategory of (,).
+
+As a consequence, we observe that (,) → (,) from (<ref>) is an exact functor. One sees directly that (,) → (,) is fully faithful and exact. That it reflects exactness follows from (,) → (,) reflecting exactness (see <ref>) and the commutative diagram (<ref>).
+
+
+Suppose that (,) is also an exact category. Let , (,)→ (,) be exact functors and consider a natural transformation ⇒. The completions  and  restrict to give exact functors , (,)→ (,). Moreover   restricts to a natural transformation 
+
+    (X,e)(X,e)⇒.
+
+ 
+We write  and  for the restrictions to weakly idempotent complete 0-cells in  and , respectively, and note that  is a 2-category. 
+
+
+
+Let = (0,1,2) → be defined by the assignments
+ii→i, 
+where:
+
+    0  (,)  
+         (,),
+    1  ()  
+        ,
+    2 (  ) 
+        .
+
+
+
+These assignments are well-defined by the discussion above. As a consequence of <ref>, we see that  satisfies the properties of a 2-functor, because  and  are just restrictions of  and , respectively. Thus, one deduces an analogue of <ref>. 
+
+Throughout the rest of this section, suppose that (,,) is an n-exangulated category. The next result is an analogue of <ref>, but interestingly the proof is very different. 
+
+
+ 
+If  is weakly idempotent complete, then  is also weakly idempotent complete.
+
+
+
+Let (a,c)α→β be a morphism in  for α(C,A) and β(D,B). Suppose that this morphism is a section. Thus, there is a retraction (r,s)β→α in  satisfying (ra,sc) = (r,s)∘ (a,c) = 𝕀α = (𝕀A,𝕀C). In particular, this implies that a and c are sections in . Since  is weakly idempotent complete, these morphisms each admit a cokernel, which we denote by b =  a and d =  c. We have that (b,d) is a cokernel of (a,c) in  by , so  is weakly idempotent complete.
+
+
+It was shown in <cit.> that the weak idempotent completion  of  admits an  structure because it is an extension-closed subcategory of (,,1mu) in the sense of <cit.>. We denote the corresponding n-exangulated category by (,,3mu). We now recall how  and  are defined.
+
+
+
+(See <cit.>.)
+The biadditive functor ×→ is the restriction of  to ×. The exact realisation  of  is defined as follows. Suppose that (A,α,C)((C,C),(A,A)) is an -extension. Then (A,α,C) = [ ∙ ] for some  complex ∙ in  by <cit.>. 
+Thus, it is declared that (A,α,C) = [ ∙ ].
+
+
+<ref> has the following immediate corollary. 
+
+
+
+(, ) is a weakly idempotent complete exact category. 
+
+ 
+Recall from the proof of <ref> that we have an exact equivalence 
+
+    (,,) 
+            (, )
+                → 
+    	(, )
+ 
+with quasi-inverse (,,) for each n-exangulated category (,,). It follows from <ref> that (,,) restricts to a functor 
+
+    (,,)
+        (, )
+        → (, ).
+
+To see this, let (A,α,C)((C,C),(A,A)) and consider (,,)(A,α,C) 
+     = (α,(A,C)).
+Note that 𝕀α - (A,C)α→α is a morphism of -extensions since (A,C)(α). We must show that 
+ 𝕀α - (A,C)
+     = (𝕀A-A,𝕀C-C) 
+splits in . This follows from <ref>, as (A,A),(C,C) means that 𝕀A-A and 𝕀C-C split in .
+
+A similar argument as above shows that (,,) restricts to a functor 
+
+    (,,)
+        (, )
+        → 
+        (, ).
+
+Note that (,,) and (,,) are mutually quasi-inverse as they are restrictions of (,,) and (,,). Since it is straightforward to check that (,,) and (,,) preserve the exact structures, we have the following.
+
+
+
+There is an exact equivalence 
+(,,) (, )
+→ (, ) 
+given by the restriction of (,,). 
+
+
+Suppose that (,Γ) (,,)→ (,,) is an n-exangulated functor. One can define a natural transformation Γ(-,-) ⇒(-,-) by setting 
+
+    ((C,C),(A,A))(A, α, C) 
+          (A, Γ(α), C).
+
+Notice that Γ is just a restriction of Γ. We claim that the pair (,Γ) is an n-exangulated functor (,,3mu)→(,,3mu). To verify this, assume that (A,α,C) = [∙], which implies . This yields 
+, as (,Γ) is n-exangulated by <ref>. Since (∙) is a complex in , we obtain 
+
+    (Γ(A,α,C)) 
+        = [(∙)] 
+        = [(∙)]
+ 
+as required.
+
+Let (,Γ) ⇒ (,Λ) be an n-exangulated natural transformation between n-exangulated functors (,Γ),(,Λ)  (,,)→ (,,). Using that the completion (,Γ) ⇒ (,Λ) is an n-exangulated natural transformation by <ref>, the same holds for the restriction (,Γ)⇒ (,Λ). 
+
+We write n for the collections obtained by only considering weakly idempotent complete 0-cells in n. Based on the discussion above, we may thus define  
+
+    = (0,1,2) n→n
+
+using assignments
+, 
+where:
+
+    0  (,,)  
+         (,,3mu),
+    1  (,Γ)  
+         (,Γ),
+    2 (  ) 
+        .
+
+It is straightforward to check that the analogue of <ref> holds for .
+
+As an application of <ref>, we can restrict  to weakly idempotent complete categories. This restriction is denoted by
+
+    =  (0,1,2) n→,
+
+where i is the restriction of i for i {0,1,2} and satisfies the same properties. The proof of <ref> yields the next theorem. Similarly, analogues of <ref> and <ref> follow.
+
+
+ 
+The collection ' of exact equivalences (,,) for (,,)n0 defines a natural transformation ⇒. 
+
+
+By <cit.>, there is an n-exangulated functor (,) (,,) → (,,1mu), where (α) = (𝕀A,α,𝕀C) for α(C,A). Similarly, it is shown in <cit.> that (,) (,,) → (,,3mu) is n-exangulated, where (α) = (𝕀A,α,𝕀C). Diagram (<ref>) can be augmented to a commutative diagram 
+
+    (,,)
+        rr(,)dr[swap](,)       (,,1mu) 
+        (,,3mu)
+        ur[swap](,)
+
+in n, where (B,β,D)  (B,β,D) for (B,β,D)((D,D),(B,B)). Using the functor n→, the diagram (<ref>) induces the commutative diagram 
+
+    (,)
+        rr(,)dr[swap](,)       (,) 
+        (,)
+        ur[swap](,)
+
+in .
+
+Building on the work in <ref>, it is straightforward to check that we obtain <ref> below. We note that there is a similar commutative diagram involving the exact equivalence (,,) and its restriction (,,).
+
+
+The diagram
+
+    [column sep=2cm]
+        (, )
+            r(,)[equals]d    (, )
+            r(,)d(,,)[swap]≃    (, )
+            d(,,)[swap]≃
+    
+        (, )
+            r    (, )
+            r    (, )
+
+in  is commutative.
+
+
+
+
+
+
+
+1
+The authors are grateful to Dixy Msapato for directing them to a result in their paper <cit.>, which led to <ref>. 
+
+Parts of this work were carried out while the second author visited Aarhus University, and while the first and fourth author visited NTNU. The authors thank the project “Pure Mathematics in Norway” funded by the Trond Mohn Foundation for supporting these stays.
+
+The first author is grateful to have been supported during part of this work by the Alexander von Humboldt Foundation in the framework of an Alexander von Humboldt Professorship endowed by the German Federal Ministry of Education. 
+
+The third author is grateful to have been supported by Norwegian Research Council project 301375, “Applications of reduction techniques and computations in representation theory”.
+
+The fourth author is grateful to have been supported during part of this work by the Engineering and Physical Sciences Research Council (grant EP/P016014/1), and the London Mathematical Society with support from Heilbronn Institute for Mathematical Research (grant ECF-1920-57). 
+
+In addition, the first and fourth authors gratefully acknowledge support from: 
+the Danish National Research Foundation (grant DNRF156); 
+the Independent Research Fund Denmark (grant 1026-00050B); and 
+the Aarhus University Research Foundation (grant AUFF-F-2020-7-16). 
+
+
+
+
+1mybst
+

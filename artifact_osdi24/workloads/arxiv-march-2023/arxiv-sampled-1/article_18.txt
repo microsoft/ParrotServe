@@ -1,0 +1,1388 @@
+
+
+
+
+
+junfeng.qiao@epfl.ch
+Theory and Simulations of Materials (THEOS), and National Centre
+  for Computational Design and Discovery of Novel Materials (MARVEL), École
+  Polytechnique Fédérale de Lausanne, 1015 Lausanne, Switzerland
+
+Theory and Simulations of Materials
+  (THEOS), and National Centre for Computational Design and Discovery of Novel
+  Materials (MARVEL), École Polytechnique Fédérale de Lausanne, 1015 Lausanne,
+  Switzerland
+Laboratory for Materials Simulations (LMS), Paul
+  Scherrer Institut (PSI), CH-5232 Villigen PSI, Switzerland
+
+Theory and Simulations of Materials (THEOS), and National
+  Centre for Computational Design and Discovery of Novel Materials (MARVEL),
+  École Polytechnique Fédérale de Lausanne, 1015 Lausanne, Switzerland
+Laboratory for Materials Simulations (LMS), Paul Scherrer Institut
+  (PSI), CH-5232 Villigen PSI, Switzerland
+
+
+
+
+  Maximally-localized Wannier functions (MLWFs) are a powerful and broadly used
+    tool to characterize the electronic structure of materials, from chemical
+    bonding to dielectric response to topological properties.
+  Most generally, one can construct MLWFs that describe isolated band manifolds,
+    e.g. for the valence bands of insulators, or entangled band manifolds, e.g. in
+    metals or describing both the valence and the conduction manifolds in
+    insulators.
+  Obtaining MLWFs that describe a target manifold accurately and with the most
+    compact representation often requires chemical intuition and trial and error, a
+    challenging step even for experienced researchers and a roadblock for automated
+    high-throughput calculations.
+  Here, we present a very natural and powerful approach that provides
+    automatically MLWFs spanning the occupied bands and their natural complement
+    for the empty states, resulting in Wannier Hamiltonian models that provide a
+    tight-binding picture of optimized atomic orbitals in crystals.
+  Key to the success of the algorithm is the introduction of a projectability
+    measure for each Bloch state onto atomic orbitals (here, chosen from the
+    pseudopotential projectors) that determines if that state should be kept
+    identically, discarded, or mixed into a disentangling algorithm.
+  We showcase the accuracy of our method by comparing a reference test set of 200
+    materials against the selected-columns-of-the-density-matrix algorithm, and its
+    reliability by constructing Wannier Hamiltonians for 21737 materials from
+    the Materials Cloud.
+
+
+Projectability
+  disentanglement for accurate and automated electronic-structure Hamiltonians
+    Nicola Marzari
+    March 30, 2023
+=============================================================================================
+
+
+
+
+
+§ INTRODUCTION
+
+In periodic crystals, the electronic structure is usually described using
+  one-particle Bloch wavefunctions.
+While choosing a basis set that is also periodic to describe these
+  wavefunctions can often be beneficial, an alternative approach is to adopt
+  localized orbitals in real space.
+One such choice of orbitals are Wannier functions (WFs), that can be obtained
+  by Fourier transforming the periodic wavefunctions from reciprocal to real
+  space.
+WFs are not unique, as they depend on the choice of the gauge (i.e., the choice
+  of the phases of the wavefunctions) at each point in the Brillouin zone (BZ).
+Maximally-localized Wannier functions (MLWFs) <cit.> are obtained by a gauge choice that is optimized to
+  provide the most localized set of WFs, i.e., those that minimize the sum of
+  their quadratic spread in real space <cit.>.
+Having a very localized representation of the electronic structure not only
+  provides an insightful analysis of chemical bonding in solids, but also brings
+  a formal connection between the MLWF centers and the modern theory of electric
+  polarization <cit.>.
+Moreover, the real-space locality of MLWF allows for accurate and fast
+  interpolation of physical operators <cit.>, enabling calculations of
+  material properties that require dense samplings of the BZ, such as Fermi
+  surface, orbital magnetization <cit.>, anomalous Hall conductivity
+  <cit.>, and spin Hall conductivity <cit.>, to name
+  a few.
+Practically, one obtains MLWFs starting from a set of Bloch wavefunctions,
+  calculated e.g., from density-functional theory (DFT).
+Often, these Bloch states are projected onto some localized orbitals (usually
+  chosen by the user) to generate initial guesses for MLWFs.
+In an insulator, by minimizing the spread functional <cit.> which
+  measures localization, one can obtain a set of MLWFs, i.e., “Wannierize” a
+  material.
+The Wannierization contains an additional disentanglement step <cit.>
+  if the target Bloch states are not isolated from other band manifolds.
+For such entangled bands—metals or the conduction bands of insulators—one
+  needs to first identify the relevant Bloch states that will be used to
+  construct MLWFs, and then mix or “disentangle” these from all the Bloch
+  states <cit.>.
+Practically, the choices for the initial projections and states to be
+  disentangled substantially influence the shape and the quality of the final
+  MLWFs.
+
+In recent years, a lot of effort has been devoted to obtaining high-quality
+  MLWFs and automate the Wannierization procedure.
+Focus of the research can be categorized into the following classes:
+  [label=(*)] 
+  * Novel minimization
+  algorithms, such as: the symmetry-adapted WF method that adds constraints to
+  impose the symmetries of the resulting WFs <cit.>; the simultaneous
+  diagonalization algorithm that directly minimizes the spread functional for an
+  isolated (or “Γ-only”) system <cit.>; the partly-occupied WF
+  method, where the total spread is directly minimized in one step
+  <cit.>, rather than performing a two-step
+  minimization for its gauge-invariant and gauge-dependent parts as in the
+  standard procedure <cit.>; or the variational formulation, that
+  combines single-step optimization with manifold optimization to make the
+  minimization algorithm more robust <cit.>; 
+  * new forms for the
+  spread functional, such as the selectively localized WFs (SLWFs) for which only
+  a subset of WFs of interest are localized and a penalty term is added to
+  constrain the position of the WF centers <cit.>, or the
+  spread-balanced WF method, that adds a penalty term to distribute the spread as
+  uniformly as possible among all WFs <cit.>; 
+  * targeting a
+  subset of orbitals, e.g. SLWF for a subset of MLWFs <cit.> or the
+  optimized projection functions method where starting projections for the
+  Wannierization are generated from a larger group of initial ones
+  <cit.>; 
+  * matrix manifold algorithms instead of projection
+  methods to construct a smooth gauge in a non-iterative way
+  <cit.>; 
+  * basis-vector decomposition of the density
+  matrix, e.g. the selected columns of the density matrix (SCDM) algorithm
+  <cit.>, that starts from the density matrix of the system
+  and uses QR decomposition with column pivoting (QRCP) to automatically generate
+  an optimal set of basis vectors from the columns of the density matrix.
+
+
+At the same time, high-throughput (HT) calculations have become increasingly
+  popular for materials discovery and design.
+Calculations and results managed by workflow engines are collected into
+  databases of original calculations, such as the Materials Project
+  <cit.>, AFLOW <cit.>, OQMD <cit.>, CMR
+  <cit.>, and the Materials Cloud <cit.>, or aggregated, as in
+  NOMAD <cit.>.
+Thanks to recent research advances on Wannierization algorithms, it starts now
+  to be possible to run HT Wannierizations for many materials and generate
+  tight-binding (TB) models that reliably describe their physics.
+So far, several attempts have been made in this direction.
+<cit.> gathered 195
+Wannier TB Hamiltonians and applied post-processing symmetrization to study
+  strained III-V semiconductor materials.
+<cit.> implemented the SCDM algorithm and designed a
+protocol to determine automatically the remaining free parameters of the
+algorithm; this protocol, implemented into automated workflows, was verified to
+work well for band interpolations on a set of 200 structures (metals, or
+valence and conduction bands of insulators) and 81 insulators (valence bands
+only). <cit.> accumulated a Wannier TB Hamiltonian database of
+1771 materials using the standard hydrogenic orbital projections.
+However, there are still several challenges for an accurate and automated HT
+  Wannierization, some of which might be more relevant depending on the research
+  goal and the specific property to compute: MLWFs should be able to faithfully
+  represent the original band structure, often (e.g., for transport properties)
+  at least for those bands close to the Fermi energy; MLWFs should resemble the
+  physically intuitive atomic orbitals for solids that would enter into Bloch
+  sums; the algorithm should be fully and reliably automated and the
+  implementation should be efficient for HT calculations.
+
+To overcome the challenges mentioned above, in this paper we present a new
+  methodology for automated Wannierization.
+First, we choose physically-inspired orbitals as initial projectors for MLWFs,
+  that is, the pseudo-atomic orbitals (PAOs) from pseudopotentials
+  <cit.>.
+Then, for each state |n 𝐤⟩ (n is the band index, 𝐤
+  is the Bloch quasi-momentum) we decide if it should be dropped, kept
+  identically, or thrown into the disentanglement algorithm depending on the
+  value of its projectability onto the chosen set of PAOs, replacing the standard
+  disentanglement and frozen manifolds based only on energy windows.
+This approach naturally and powerfully targets the TB picture of atomic
+  orbitals in crystals, as it will also become apparent from our results.
+Moreover, we fully automate this approach and implement it in the form of
+  open-source <cit.> workflows.
+To assess its effectiveness and precision, we compare the quality of the band
+  interpolation and the locality of the Wannier Hamiltonians generated with the
+  present approach, which we name as projectability-disentangled Wannier
+  functions (PDWFs), with the results from the SCDM algorithm <cit.>.
+Statistics from 200 materials demonstrate that PDWFs are more localized and
+  more atomic-like, and the band interpolation is accurate at the meV scale.
+Furthermore, to demonstrate the reliability and automation of our method and
+  workflows, we carry out a large-scale high-throughput Wannierization of
+  21737 materials from the Materials Cloud<cit.>.
+
+To set the context for the following paragraphs, here we briefly summarize the
+  notations for WFs; a detailed description can be found in
+  Refs. <cit.>.
+WFs | w_n 𝐑⟩ are unitary transformations of Bloch
+  wavefunctions |ψ_m𝐤⟩, given by
+  
+    |w_n
+              𝐑⟩ = V/(2 π)^3∫_BZd𝐤e^-i𝐤·𝐑∑_m=1^J
+        or J_𝐤|ψ_m 𝐤⟩ U_m n
+            𝐤,
+
+  where 𝐤 and 𝐑 are the Bloch
+  quasi-momentum in the BZ and a real-space lattice vector, respectively; m is
+  the band index, and n is the Wannier-function index (running from 1 to the
+  number of WFs J).
+For an isolated group of bands, J is equal to the number of bands, and the
+  U_m n 𝐤 are unitary matrices; for entangled bands, the number of
+  bands considered at each k-point is J_𝐤≥ J, and the U_m n
+        𝐤 are semi-unitary rectangular matrices.
+MLWFs are the minimizers of the quadratic spread functional <cit.>
+  
+    Ω=∑_n=1^J[⟨ w_n
+            0|𝐫^2| w_n 0|-⟩|⟨ w_n
+            0|𝐫| w_n 0|⟩|^2].
+
+Since <ref> is a minimization problem with multiple local
+  minima, initial guesses for U_m n 𝐤 substantially influence the
+  optimization path and the final minimum obtained.
+In order to target the most localized and chemically appealing solution,
+  <cit.> used hydrogenic wavefunctions |g_n⟩ (i.e., analytic
+  solutions of the isolated hydrogenic Schrödinger equation) to provide a set
+  of sensible initial guesses |ϕ_n 𝐤⟩, after projection on
+  the space defined by the relevant Bloch states: 
+    |ϕ_n 𝐤⟩ = ∑_m=1^J
+      or J_𝐤|ψ_m 𝐤⟩⟨ψ_m
+          𝐤 | g_n|.⟩
+
+The projection matrices A_mn𝐤 = ⟨ψ_m 𝐤 |
+      g_n|$⟩, after Löwdin orthonormalization <cit.>, form the
+  initial guesses forU_m n 𝐤.
+We underline that while the gauge of Bloch wavefunctions|ψ_m
+        𝐤⟩is arbitrary (i.e.,|ψ_m 𝐤 ⟩ U_m n
+        𝐤are also solutions of the electronic structure problem),
+  <ref> is invariant to such gauge freedom since|ψ_m
+        𝐤⟩ ⟨ψ_m 𝐤 | g_n |=⟩ ∑_i |ψ_m
+        𝐤⟩ U_mi𝐤 U_im𝐤^†⟨ψ_m
+        𝐤 | g_n |$⟩ where U_𝐤 are arbitrary unitary matrices.
+For entangled bands, the “standard” disentanglement approach <cit.>
+  uses energy windows to choose the disentanglement and frozen manifolds: an
+  (outer) disentanglement window that specifies a larger space of Bloch states
+  that one could mix to obtain a smaller disentangled manifold to localize,
+  together with a manifold defined by an (inner) frozen window that is taken as
+  is.
+
+
+
+§ RESULTS AND DISCUSSIONS
+
+
+
+ §.§ Pseudo-atomic-orbital projections
+
+In addition to the hydrogenic orbitals discussed above, alternative starting
+  guesses for the Wannierization can be used.
+For instance, in pseudopotential plane-wave methods, PAOs are localized
+  orbitals originating from the pseudopotential generation procedure
+  <cit.>.
+In this procedure, for each element, atomic wavefunctions of an isolated atom
+  are pseudized to remove the radial nodes and are localized functions around the
+  atom; spherical harmonics with well-defined angular-momentum character (s,
+  p, d, or f) are chosen for their angular dependency.
+PAOs are commonly used for analyzing the orbital contributions to band
+  structures, as the basis set for non-iterative construction of TB Hamiltonians
+  <cit.>, or as projectors in DFT+Hubbard calculations
+  <cit.>.
+
+In order to understand the contribution of each orbital | g_n⟩ to a
+  Bloch state |ψ_m 𝐤⟩, we define a measure of
+  projectability as the square of the inner product between |ψ_m
+        𝐤⟩ and | g_n⟩:
+  
+    p_nm𝐤 = | ⟨ g_n | ψ_m 𝐤|⟩|^2;
+
+  the projectability of |ψ_m 𝐤⟩ onto all
+  PAOs is then defined as 
+    p_m𝐤 = ∑_n p_nm𝐤.
+
+If the projectors | g_n⟩ are complete for |ψ_m 𝐤⟩, then p_m𝐤 = 1.
+The band projectability is a very useful criterion to identify the orbital
+  character of the bands; this is exemplified in <ref>,
+  where we show the projectability of the bands of graphene onto 2s and 2p
+  PAOs for carbon.
+It is immediately apparent how one can easily identify states in the conduction
+  manifold that have a strong 2p and 2s component.
+
+
+
+Compared with the hydrogenic projections, which is the method used by default
+  in <cit.> and its interface code to <cit.>
+  (called ), PAOs are better adapted to each element since they come exactly
+  from the pseudopotential used in the actual solid-state calculation.
+Moreover, in pseudopotentials with semicore states, the PAOs for semicores are
+  nodeless and those for valence wavefunctions have at least one radial node (so
+  as to be orthogonal to the semicore states with same angular momentum); thus
+  band projectability can clearly differentiate semicore from valence, making
+  PAOs more convenient than the hydrogenic orbitals, for which the user would
+  need to manually set the correct radial functions for both semicore and valence
+  projectors.
+For these reasons, we use in this work the PAOs as initial and more accurate
+  projections.
+If needed, higher energy orbitals not included in the pseudopotential file can
+  be constructed, for example, using solutions of Schrödinger equation under
+  confinement potential <cit.> (see also discussion in
+  <ref>).
+
+
+
+ §.§ Projectability disentanglement
+
+As mentioned, the standard disentanglement approach selects the disentanglement
+  and frozen manifolds via two energy windows <cit.>.
+We refer to this as energy disentanglement (ED).
+However, since bands have dispersions across the BZ, a fixed window for all
+  k-points might not be an optimal choice.
+Taking the graphene band structure (<ref>) as an
+  example, the bands which have large projectability are mixed with many
+  free-electron bands (grey in the figure), which have zero projectability.
+In this case, one is faced with several options for the outer and inner energy
+  windows, each with different shortcomings:
+  [label=(*)] 
+  * If the inner window
+  includes free-electron bands, the final MLWFs are mixtures of 2s, 2p atomic
+  orbitals and free-electron bands, delocalizing the resulting MLWFs; 
+  * if
+  the outer window excludes both the free-electron bands and the atomic-orbital
+  states inside free-electron bands, the WFs lack the anti-bonding part of the
+  bonding/anti-bonding closure <cit.>, again degrading the
+  localization of WF; 
+  * if the upper bound of the inner window is set to its
+  maximal allowed value, i.e. the blue dashed line positioned at the minimum of
+  free-electron bands in <ref>, and all the DFT eigenstates
+  are included in the outer window, the disentanglement algorithm
+  <cit.> will extract an optimally smooth manifold, at the expense of
+  decreasing the chemical representability of the atomic-orbital bands in the
+  free-electron region; in other words, the MLWFs obtained lose the information
+  of the TB atomic orbitals in this chemical environment (see
+  <ref>).
+
+
+The graphene case highlights the limitations of the standard ED.
+Instead, we propose here to select the disentanglement and frozen manifolds
+  based on the projectability p_m𝐤 of each state on the chosen PAOs
+  (i.e., states are selected irrespective of their energy, but rather based on
+  their chemical representativeness).
+Specifically, we select states based on two thresholds and :
+  [label=(*)] 
+  * If p_m𝐤 <
+  , the state ψ_m𝐤 is discarded.
+
+  * If p_m𝐤≥ , the state ψ_m𝐤 is kept
+  identically.
+
+Crucially, all states for which ≤ p_m𝐤 < are thrown
+  in the disentanglement algorithm.
+Optimal numerical values for and are discussed later.
+In the case of graphene, identifies the fully atomic-orbital states
+  inside the free-electron bands, while removes the fully free-electron
+  bands from the disentanglement process, preventing the mixing of atomic and
+  free-electron states.
+The two thresholds and constitute the parameters of the
+  disentanglement process, replacing the four defining energy windows (the lower
+  and upper bounds of the outer and inner energy windows).
+
+Ideally, if PAOs were always a complete set to describe valence and
+  near-Fermi-energy conduction bands, the PD would select the most relevant Bloch
+  states and accurately interpolate these DFT bands.
+However, since the PAOs are fixed orbitals from isolated single-atom
+  calculations for each element, if the chemical environment in the crystal
+  structure is significantly different from that of pseudopotential generation,
+  then the total projectability p_m𝐤 might be smaller than 1 for
+  bands around the conduction band minimum (CBM) or even for valence bands.
+In such cases, one solution is to increase the number of PAOs, i.e., adding
+  more projectors with higher angular momentum, as we will discuss in
+  <ref>.
+However, since one almost always wants to correctly reproduce valence bands
+  (plus possibly the bottom of the conduction) but at the same time keep the
+  Wannier Hamiltonian small for computational reasons, we suggest to additionally
+  freeze all the states that sit below the Fermi energy in metals (or below the
+  CBM for insulators) and also those a few eV above (typically, 2eV
+  or so).
+Such a combination of PD+ED gives accurate interpolation of bands below and
+  around the Fermi energy (or band edges for insulators), as well as maximally
+  restoring the atomic-orbital picture.
+
+We stress here that, even if we call the resulting Wannier functions PDWFs for
+  clarity, our optimal suggestion is to always also freeze the states in the
+  energy window mentioned above, as we discuss in the next sections.
+
+
+
+ §.§ Comparison
+
+We choose four prototypical materials to discuss the present method: graphene,
+  silicon, copper, and strontium vanadate ().
+Graphene is a difficult case where atomic-orbital states highly mix with
+  free-electron bands; silicon tests the Wannierization of both valence and
+  conduction bands of an insulator; copper is a test on a metal; and represents the class of (metallic) perovskites.
+We compare the shapes, centers, and spreads of the resulting MLWFs using the
+  five methods mentioned earlier: hydrogenic projection with ED (i.e., the
+  standard approach), SCDM, PAO projection with ED, PAO projection with PD, and
+  PAO projection with PD+ED.
+
+
+
+  §.§.§ Graphene
+
+The original and interpolated band structures for the five methods discussed
+  are shown in
+  <ref>.
+The blue dashed lines in
+  <ref> indicate
+  the top of the inner energy window, which is set optimally (and manually) to
+  just below the free-electron bands, to freeze as much as possible the
+  atomic-orbital states but exclude any free-electron state.
+For PD and PD+ED, we choose = 0.85 and = 0.02 (we will discuss
+  later on the choice of these thresholds).
+Comparing <ref> and <ref>, one sees
+  that ED produces similar bands irrespective of using hydrogenic or PAO
+  projection.
+However, as shown in <ref> (first and third row), the
+  MLWFs for the two cases fall into slightly different minima: MLWFs from
+  hydrogenic projection with ED are p_z and hybridized s ± p orbitals
+  pointing towards the center of the hexagon, while MLWFs from PAO with ED are
+  p_z, p_x, and s ± p_y.
+Both the PAO with PD and PAO with PD+ED cases reach the same set of MLWFs,
+  p_z, p_x, and s ± p_y, but with larger spreads than the PAO with ED,
+  since the PD and PD+ED freeze more states, giving thus less freedom for maximal
+  localization.
+Nevertheless, the interpolated bands of the PAO with PD and PAO with PD+ED
+  cases can much better reproduce the atomic-orbital states inside the
+  free-electron bands.
+Finally, compared to other cases, SCDM includes some free-electron bands, some
+  of which can be even reproduced by the Wannier interpolation.
+However, in order to follow those free-electron bands, abrupt changes of
+  character and band derivative are needed in the conduction band.
+As required by Nyquist–Shannon sampling theorem<cit.>, this
+  results in a denser 𝐤-space sampling needed to obtain a good
+  interpolation quality.
+Moreover, the MLWFs are much more delocalized and do not resemble atomic
+  orbitals: as shown in <ref>, the last two MLWFs for SCDM
+  are floating away from the graphene 2D lattice, blurring the TB picture of
+  atomic orbitals in solids.
+
+
+
+
+
+  §.§.§ Silicon
+
+The SCDM method obtains four front-bonding and four back-bonding MLWFs, while
+  all other cases lead to atom-centered s and p MLWFs, as shown in
+  <ref>.
+While overall the SCDM bands (<ref>) seem to reproduce
+  relatively better the higher conduction bands, they fail to correctly reproduce
+  the bottom of the conduction band near the X point, induce more wiggles around
+  X and W, and have much larger spreads.
+Due to the low projectability of Bloch states around X (p_m𝐤
+  around 0.83), the CBM is not correctly reproduced in the PAO with PD, as these
+  are not frozen in PD with the current choice of = 0.95 and = 0.01.
+To explicitly freeze the CBM, would need to be lowered below 0.83.
+However, such kind of decrease will also result in freezing some high-energy
+  conduction bands, degrading the localization.
+PD+ED overcomes this by explicitly freezing the near-Fermi-energy and
+  low-projectability states at the CBM, but still only freezing those
+  atomic-orbital states in the high-energy conduction bands that possess high
+  projectability (see <ref>), thus improving band
+  interpolation.
+We note that adding d PAOs increases the CBM projectability (from 0.83 to
+  0.99) and restores a high-quality band-structure interpolation within the PD
+  method: as shown in <ref>, the low-energy conduction
+  bands are correctly reproduced once we regenerate a silicon pseudopotential
+  including 3d PAOs.
+Therefore, PD is sufficient to obtain an accurate band interpolation if enough
+  PAOs are included (we will also discuss this later in <ref>).
+For completeness, we show the SCDM interpolation using the regenerated
+  pseudopotential in <ref>: the added d PAOs help select a
+  larger manifold thanks to the increased projectability, enabling SCDM to
+  reproduce higher conduction bands, as well as fixing the wrong interpolation at
+  the W point.
+In general, adding more PAOs improves interpolation quality in cases where the
+  target bands have low projectability, at the price of increased computational
+  cost.
+PD+ED is a better option for reaching a good interpolation accuracy while
+  keeping the size of the corresponding TB model small.
+
+
+
+
+  §.§.§ Copper and 
+
+Results for copper and are only shown in the SI
+  (<ref>),
+  since the conclusions are the same: PD+ED consistently provides the best
+  interpolation quality among all methods we consider, while not requiring to
+  increase the size of the Hamiltonian model, and results in WFs that resemble
+  atomic orbitals or their hybridization.
+
+
+
+ §.§ High-throughput verification
+
+In this section we discuss the applicability of the present PDWF method to
+  obtain, in a fully automated way and without user input, WFs for any material.
+In order to assess quantitatively its performance, we compare it to SCDM, that
+  can also be fully automated (see Ref. <cit.>).
+
+In all results that follow, we exclude semicore orbitals in both methods, since
+  these low-energy states correspond to almost flat bands and do not play any
+  role in the chemistry of the materials.
+We compare quantitatively the band interpolation quality between the two
+  methods and the corresponding WF centers and spreads on the 200-structure set
+  used in Ref. <cit.> for both occupied and unoccupied bands,
+  totalling 6818 MLWFs for each method.
+In accordance with Refs. <cit.>, the band interpolation
+  quality is measured by the average band distance,
+  
+    η_ν = √(∑_n𝐤f̃_n𝐤 (ϵ_n𝐤^DFT -
+        ϵ_n𝐤^Wan)^2 /∑_n𝐤f̃_n𝐤),
+
+  and the max band distance,
+  
+    η_ν^max =
+        max_n𝐤( f̃_n𝐤|
+        ϵ_n𝐤^DFT - ϵ_n𝐤^Wan| ),
+
+  where f̃_n𝐤 =
+    √(f^DFT_n𝐤(E_F+ν, σ)
+      f^Wan_n𝐤(E_F+ν, σ)) and f(E_F+ν, σ) is
+  the Fermi-Dirac distribution.
+Here E_F+ν and σ are fictitious Fermi levels and smearing widths
+  which we choose for comparing a specific range of bands.
+Since the Wannier TB model describes the low-energy valence electrons, it is
+  expected that the band interpolation deviates from the original in the higher
+  conduction band region.
+Therefore, the higher ν is, the larger η_ν is expected to be.
+In the following paragraphs, we will use η_0 and η_2 to compare
+  bands below and + 2eV, respectively; σ is always fixed at
+  0.1eV.
+
+In the supplementary information <ref>, we provide
+  comparisons between the Wannier-interpolated bands and the DFT bands for both
+  PDWF and SCDM, their respective band distances, and the Hamiltonian decay plots
+  for each of the 200 materials.
+We discuss these properties in the following.
+
+
+
+  §.§.§ Projectability thresholds and automation
+
+For PDWF, we set the maximum of the inner window to the Fermi energy +
+  2eV for metals, or to the CBM + 2eV for insulators, to fully
+  reproduce states around Fermi energy or the band edges.
+We also specify the two additional parameters and .
+From our tests, in most cases = 0.95 and = 0.01 already produce
+  very good results.
+However, since chemical environments vary across different crystal structures,
+  the two parameters are not universal and influence the quality of band
+  interpolation.
+<Ref> shows the variation of band
+distances w.r.t. and for several materials.
+For (<ref>), η_0
+  and η_2 reach a minimum at two different sets of parameters, i.e. =
+  0.99, = 0.01 and = 0.97, = 0.01, respectively.
+In some cases, the variation of η w.r.t.
+and can be non-monotonic and display
+multiple local minima: For instance, in (<ref>) at = 0.01, η_2 decreases
+from = 0.90 to 0.95 but increases from = 0.95 to 0.98 and finally
+reaches a local minimum at = 0.99.
+In other cases, η can be quite stable and largely independent of the
+  parameters: E.g., for (<ref>),
+  η_2 reaches the same minimum for = 0.99 to 0.88.
+
+
+Therefore, we implement an iterative optimization workflow to automatically
+  find the optimal values for and , in order to fully automate the
+  Wannierization procedure.
+The workflow is released as part of the 
+  package <cit.>.
+First, we run a QE band structure workflow to get the reference DFT bands for
+  calculating η_2; in addition, the DFT bands are also used to calculate the
+  band gap of the material.
+Second, we run an optimization workflow with the following settings: The
+  maximum of the inner window is set to Fermi energy + 2eV for metals and
+  CBM + 2eV for insulators, respectively; and are set to the
+  defaults of 0.95 and 0.01, respectively.
+Third, if the average band distance η_2 is less than a threshold (set to
+  10meV here), the workflow stops; otherwise, the workflow iterates on a
+  mesh of and , i.e. decreasing from 0.99 to 0.80 with step size
+  -0.01, and = 0.01 or 0.02, until η_2 ≤ threshold.
+If η_2 is still larger than the threshold after exhausting all the
+  parameter combinations, the workflow will output the minimum-η_2
+  calculation.
+
+
+
+  §.§.§ Band distance
+
+To compare quantitatively the band interpolation quality of SCDM and PDWF, we
+  Wannierize the 200 structures mentioned earlier and calculate their band
+  distances with respect to the corresponding DFT bands.
+We choose η_2 and η_2^max to compare near-Fermi-energy bands.
+The histograms of the band distances for the 200 structures are shown in
+  <ref>.
+To directly compare SCDM and PDWF, the mean and median value of η of the
+  200 calculations are shown as vertical lines in each panel.
+For PDWF, the mean η_2 is 4.231meV, to be compared with
+  11.201meV for SCDM.
+For η_2^max (that is a more stringent test of the quality of
+  interpolation) the PDWF method also performs better, with a η_2^max =
+  36.743meV vs.
+84.011meV for SCDM.
+We can also observe this trend in <ref>: For η_2
+  and η_2^max, the PDWF histogram bins are much more clustered towards
+  η = 0.
+Note that in the cumulative histograms of η_2, at η = 20meV,
+  the PDWF cumulative count is closer to the total number of calculations (200).
+This indicates that the PDWF has a higher success rate in reducing the
+  interpolation error below 20meV.
+Similarly, for η_2^max, PDWF has a higher success rate in reducing the
+  interpolation error under 100meV (to get a better overview of η and
+  η^max, we further show the same histograms of η in a wider range
+  0100meV, and η^max in range 0500meV, in
+  <ref>).
+To reduce the effect of major outliers, we can also compare the interpolation
+  accuracy of successful calculations, i.e., excluding the outlier calculations
+  which have significantly large band distances.
+As shown in <ref>, the η_2^≤ 20, i.e.,
+  the average of all the calculations for which η_2 ≤ 20meV,
+  indicates that PDWF (2.922meV) is twice as good as SCDM
+  (5.280meV), and also has a higher success rate: for η_2^≤ 20,
+  193 / 200 = 96.5% of the structures have η_2 ≤ 20meV, while
+  for SCDM it is 183 / 200 = 91.5%.
+More details are listed in <ref>.
+
+
+In summary, PDWF provides more accurate and robust interpolations, especially
+  for bands around the Fermi energy or the band gap edges, which are the most
+  relevant bands for many applications.
+Last but not least, a higher energy range can be accurately interpolated by
+  increasing the number of PAOs (see <ref>).
+
+
+
+  §.§.§ MLWF centers
+
+Since we are aiming at restoring a tight-binding atomic-orbital picture with
+  PDWF, we compare the distance of the WF centers from the nearest-neighboring
+  (NN) and next-nearest-neighboring (NNN) atoms, again both for SCDM and PDWF.
+For each method, we compute d_NN and d_NNN, i.e., the
+  average distance of all the 6818 MLWFs from the respective NN and NNN
+  atoms.
+If d_NN is 0, then the atomic-orbital picture is strictly preserved.
+However, this is unlikely to happen since there is no constraint on the WF
+  centers during both the disentanglement and the localization, and the final
+  PDWFs, resembling atomic orbitals, are optimized according to the chemical
+  environment.
+Still, if a WF center is much closer to the NN atom than to the NNN atom, then
+  one can still assign it to the NN atom, preserving the atomic-orbital picture.
+<Ref> shows the histograms for d_NN and
+d_NNN for the two methods.
+The PDWF average d_NN = 0.43 is smaller than the
+  SCDM d_NN = 0.53, and correspondingly the PDWF
+  d_NNN = 2.19 is instead larger than the SCDM
+  d_NNN = 2.11.
+This can also be observed in <ref>: The overlap of
+  the d_NN and d_NNN histograms is smaller for PDWF than
+  for SCDM.
+To further understand the overlaps, we plot the histogram of the ratio
+  d_NN / d_NNN of each MLWF in the insets of
+  <ref>.
+For a MLWF, if d_NN / d_NNN = 1, then the MLWF is a bonding
+  orbital centered between two atoms; while if d_NN / d_NNN≪ 1, then it can be regarded as an (almost) atomic orbital.
+The histogram of the ratio of SCDM has a long tail extending towards 1.0, i.e.,
+  there are a large number of SCDM MLWFs sitting close to bond centers; on the
+  contrary, the vast majority of the PDWF MLWFs are closer to the NN atom.
+
+
+We can further compare the effect of maximal localization on the WF centers.
+The WFs from the projection matrices A_mn𝐤 are strictly
+  atom-centered, i.e. d_NN = 0.
+The inset of <ref> shows the histogram of the
+  initial WFs, i.e., after disentanglement and before maximal localization, and
+  the final MLWFs, i.e., after maximal localization, for PDWF.
+If one chooses d_NN≤ 0.1 as the criterion for
+  atom-centered MLWFs, then 5594/6818 = 82.0% of the initial WFs and
+  2045/6818 = 30.0% of the final MLWFs are atom-centered.
+The disentanglement and maximal localization improve the band interpolation,
+  but since there is no constraint on the WF center in the spread functional
+  <ref>, many of the final MLWF centers are not atom-centered.
+As a comparison, for SCDM, 955/6818 = 14.0% of the initial WFs and
+  1823/6818 = 26.7% of the final MLWFs are atom-centered.
+For completeness, the statistics and histograms of initial and final
+  d_NN, d_NNN, and d_NN / d_NNN are
+  shown in <ref> and <ref>.
+
+In summary, for PDWF, most of the initial WFs (after disentanglement and before
+  maximal localization) are atom-centered; many drift a bit away from atom
+  centers during the localization, but the MLWFs are still much closer to the NN
+  than to NNN atoms.
+For SCDM, most of the initial WFs are away from atom centers, and maximal
+  localization pushes some of the WFs back to atoms, but there is still a large
+  number of MLWFs for which an atom representing the WF center cannot be clearly
+  identified.
+To exactly fix the MLWFs to atomic positions, one needs to add constraints to
+  the spread functional <cit.>, at the cost of potentially having worse
+  interpolators.
+However, this is beyond the scope of the current work, and here we rely on the
+  atom-centered PAO projectors to guide the MLWFs towards the atomic positions,
+  so that the final MLWFs are optimally localized and atom-centered.
+
+
+
+  §.§.§ MLWF spreads
+
+Next, we investigate the spread distributions of SCDM and PDWF.
+Usually, we want localized MLWFs to restore the TB atomic orbitals.
+<Ref>
+shows the histograms of the spread distributions for the two methods.
+The SCDM spreads have a long tail extending over 10 ^2 in
+  <ref>, due to its inclusion of free-electron states in
+  the density matrix, thus resulting in more delocalized MLWFs as discussed
+  earlier (see e.g. <ref>).
+On the contrary, the PDWF selects and freezes atomic-orbital states from the
+  remaining bands, leading to much more localized MLWFs, thus much more clustered
+  in a narrow range of 04^2, and already at
+  5^2 the cumulative histogram almost reaches the total number of
+  MLWFs (see <ref>).
+This can be interpreted as follows: The PAO initial projections guide the
+  spread minimization toward the (local) minimum resembling spherical harmonics,
+  whereas the SCDM-decomposed basis vectors are designed to be mathematical
+  objects spanning as much as possible the density matrix, but result in WFs for
+  which it is harder to assign definite orbital characters.
+
+
+
+We can further compare the average initial (after disentanglement but before
+  maximal localization) and final (after disentanglement and maximal
+  localization) spreads between the two methods, as shown in
+  <ref> and corresponding histograms in
+  <ref>.
+Maximal localization is needed to bring SCDM spreads, from the initial
+  Ω^i = 30.82^2 to the final Ω^f =
+  3.54^2; For PDWF, the initial Ω^i =
+  2.72^2 is already excellent, and much better than the final
+  Ω^f for SCDM; localization then brings it to an optimal Ω^f =
+  1.41^2.
+
+
+
+  §.§.§ Hamiltonian decay
+
+
+Finally, we compare the decay length of the Wannier gauge Hamiltonian between
+  the two methods in <ref>.
+Thanks to the localization of MLWFs, the expectation values of quantum
+  mechanical operators in the MLWF basis, such as the Hamiltonian
+  H(𝐑), decay rapidly with respect to the lattice vector 𝐑
+  (exponentially in insulators<cit.> and properly
+  disentangled metals).
+To compare this decay for the Hamiltonian matrix elements, we approximate the
+  norm of the Hamiltonian as
+  
+    ‖
+        H(𝐑) ‖ = ‖ H(0) ‖exp(-
+        ‖𝐑‖/τ),
+
+  where
+  τ measures the decay length.
+Then τ is fitted by least squares to the calculated ‖
+    H(𝐑) ‖; as shown in <ref>, the
+  Hamiltonian of PDWF decays faster than SCDM for , which is selected
+  here to represent the general trend between PDWF and SCDM Hamiltonians.
+<ref> shows the histogram of τ for the 200 materials; the mean τ are
+2.266 for PDWF and 2.659 for SCDM,
+respectively, indicating that the PDWF Hamiltonian decays faster than SCDM, consistent with the better band interpolation
+of PDWF discussed in <ref>.
+
+
+
+
+
+ §.§ High-throughput Wannierization
+
+Based on the above verification, we run a HT Wannierization using PDWF for
+  21737 materials, selected from the non-magnetic materials of the MC3D
+  database <cit.>.
+<Ref> shows the band distance
+histograms for η_2 and η_2^max.
+Overall, the statistics follow the same trend as the 200 materials set in
+  <ref>: the average η_2 and average η_2^max
+  are  3.685 meV and  42.768 meV, respectively.
+Note in <ref> the η_2 is not truncated at
+  10meV, but rather due to the automated optimization workflow: results
+  that have η_2 larger than a threshold (10meV) are further optimized
+  with respect to and , thus improving the average band distance
+  η_2.
+In <ref> we show several other statistics for the band
+  distances.
+The excellent interpolation quality of PDWF can be assessed, for instance, from
+  the number of systems with η_2 ≤ 20meV, that are ≈ 97.8%
+  of all the calculations (21259 / 21737); the corresponding bands distance
+  calculated on these 21259 calculations is η_2^≤ 20 =
+  2.118meV.
+This remarkable result show how automated and reliable Wannierizations can now
+  be deployed automatically both for individual calculation and for HT
+  application.
+
+
+
+
+ §.§ Additional PAOs for high-energy high-accuracy interpolation
+
+Based on the HT Wannierization results, one can identify cases where the
+  interpolation quality can be further improved by increasing the number of PAOs.
+Typically, the number of PAOs is determined during pseudopotential generation,
+  and they are usually the orbitals describing low-energy valence electrons.
+In some cases, the bonding/anti-bonding combinations of these PAOs are not
+  sufficient to span the space of target conduction bands, leading to a loss of
+  interpolation quality.
+We use silicon as an example to illustrate the difficulties of accurately
+  describing its CBM <cit.>, which is not located at any high-symmetry
+  k-point, but along the Γ-X line.
+The common choice of one s and three p hydrogenic or PAOs projectors per
+  atom results in oscillations in the Wannier-interpolated bands at the meV
+  level.
+To remedy this, one can use a larger set of PAOs, e.g., by regenerating a
+  silicon pseudopotential including d PAOs as discussed in <ref>.
+However, generating a new pseudopotential requires extensive testing and
+  validation, therefore another solution could be using a set of PAOs different
+  from the pseudopotential ones.
+To compare this second approach, we test here also PAOs obtained from the code <cit.>, and Wannierize silicon using one s, three p, and
+  five d PAOs per atom using ED.
+This provides a much better description of the CBM, as shown in
+  <ref> Moreover, the additional d orbitals allow to
+  raise the inner energy window and better reproduce a larger number of
+  conduction bands, as shown in <ref>, which might be
+  beneficial for some applications. 
+For completeness, we also show the WF spreads and shapes of d orbitals in
+  <ref>.
+However, there are some caveats to this approach.
+When using external PAOs, ideally one should generate them using the same
+  pseudization scheme as the pseudopotentials used in the DFT calculations.
+The PAOs from are instead generated using a different scheme, resulting in
+  lower projectabilities (smaller than one even for the valence bands, as shown
+  in <ref>).
+In such case, PD cannot reproduce the original bands (see
+  <ref>), thus ED (with a higher
+  inner energy window) is needed to obtain accurate interpolation (see
+  <ref>).
+In comparison, the pseudopotential PAOs which we regenerated with 3d orbitals
+  (as discussed in <ref>) are better projectors for the
+  wavefunctions.
+Indeed, the first 12 bands have projectabilities almost equal to 1, and as a
+  consequence PD itself already provides accurate band interpolation (all the
+  low-energy conduction states are frozen since their projectabilities are high,
+  see <ref>).
+Moreover, we mention that when adding additional projectors one needs to make
+  sure that they have the correct number of radial nodes: e.g., the gold
+  pseudopotential from SSSP <cit.> contains 5s+5p semicore states,
+  and 6s+5d orbitals for valence electrons.
+If one wants to add an additional 6p orbital, it is important to ensure that
+  the 6p orbital has one radial node, such that it is orthogonal to the
+  nodeless 5p semicore state; Otherwise, the Bloch wavefunctions would project
+  onto the 5p semicore state, and PD would only disentangle the 5p semicore
+  states instead of the 6p orbitals contributing to bands above the Fermi
+  energy.
+In summary, including more projectors can further improve the interpolation
+  quality, but at the expense of increasing the number of orbitals in the model.
+The combination of PD and ED enables to improve the interpolation quality of
+  low-projectability states while keeping the TB model size small.
+Automatic checks could be implemented in the future in the workflows to
+  detect whether the projectability drops below a certain threshold, and in that
+  case either raise a warning or automatically add more projectors.
+
+
+
+§ CONCLUSIONS
+
+We present an automated method for the automated, robust, and reliable
+  construction of tight-binding models based on MLWFs.
+The approach applies equally well to metals, insulators and semiconductors,
+  providing in all cases atomic-like orbitals that span both the occupied states,
+  and the empty ones whose character remains orbital-like and and not
+  free-electron-like.
+The method is based on the band projectability onto pseudo-atomic orbitals to
+  select which states are kept identically, dropped, or passed on to the
+  established disentanglement procedure.
+We augment such projectability-based selection with an additional energy window
+  to guarantee that all states around the Fermi level or the conduction band edge
+  are well reproduced, showing that such a combination enables accurate
+  interpolation even when minimal sets of initial atomic orbitals are chosen.
+This results in compact Wannier tight-binding models that provide accurate band
+  interpolations while preserving the picture of atomic orbitals in crystals.
+We refer to the method collectively as projectability-disentangled Wannier
+  functions (PDWF).
+
+The Wannierization process is implemented as fully automated workflows.
+We compare PDWFs with the other method that is also fully automated, namely
+  SCDM.
+We show with a detailed study of 200 structures that PDWFs lead to more
+  accurate band interpolations (with errors with respect to the original bands at
+  the meV scale), and are more atom-centered and more localized than those
+  originating from SCDM.
+The high accuracy in band interpolations, the target atomic orbitals obtained,
+  and the low computational cost make PDWFs an ideal choice for automated or
+  high-throughput Wannierization, which we demonstrate by performing the
+  Wannierization of 21737 non-magnetic structures from the Materials Cloud
+  MC3D database.
+
+
+
+§ METHODS
+
+
+We implement the PAO projection in the  executable
+  inside (QE) <cit.>; the PD and PD+ED methods
+  are implemented on top of the code <cit.>.
+In terms of the practical implementation, computing PAO projections is more
+  efficient in both computational time and memory than the SCDM QR decomposition
+  with column pivoting (QRCP) algorithm, since the A_mn𝐤 matrices
+  (i.e., the inner products of Bloch wavefunctions with PAOs) can be evaluated in
+  the plane-wave G vector space, rather than requiring a Fourier transform and
+  decomposition of very large real-space wavefunction matrices.
+Furthermore, since the HT Wannierization can be computationally intensive, we
+  implement a “k-pool parallelization strategy” inside , similarly to
+  the main  code of QE, to efficiently utilize many-core
+  architectures by parallelizing over “pools” of processors for the almost
+  trivially-parallel computations at each k-point.
+Test results show that k-pool parallelization significantly improves the
+  efficiency of (benchmarks are shown in <ref>).
+
+The DFT calculations are carried out using QE, with the SSSP efficiency
+  (version 1.1, PBE functional) library <cit.> for pseudopotentials
+  and its recommended energy cutoffs.
+The HT calculations are managed with the infrastructure
+  <cit.> which submits QE and calculations to
+  remote clusters, parses, and stores the results into a database, while also
+  orchestrating all sequences of simulations and workflows.
+The automated workflows are open-source and hosted on 
+  <cit.>.
+The workflows accept a crystal structure as input and provide the
+  Wannier-interpolated band structure, the real-space MLWFs, and a number of
+  additional quantities as output.
+Semicore states from pseudopotentials are automatically detected and excluded
+  from the Wannierizations, except for a few cases where some semicore states
+  overlap with valence states; in such cases, all the semicore states are
+  Wannierized, otherwise the band interpolation quality would be degraded,
+  especially for SCDM.
+A regular k-point mesh is used for the Wannier calculations, with a k-point
+  spacing of 0.2, as selected by the protocol in
+  <cit.>.
+MLWFs are rendered with VESTA <cit.>.
+Figures are generated by  <cit.>.
+
+
+
+§ DATA AVAILABILITY
+
+All data generated for this work can be obtained from the Materials Cloud
+  Archive (<https://doi.org/10.24435/materialscloud:v4-e9>).
+
+
+
+§ CODE AVAILABILITY
+
+
+All codes used for this work are open-source; the latest stable versions can be
+  downloaded at <http://www.wannier.org/>,
+  <https://www.quantum-espresso.org/>, <https://www.aiida.net/>, and
+  <https://github.com/aiidateam/aiida-wannier90-workflows>.
+
+The modifications to the codes mentioned above implemented for this work will
+  become available in the next releases of () and .
+
+
+
+§ ACKNOWLEDGEMENTS
+
+We acknowledge financial support from the NCCR MARVEL (a National Centre of
+  Competence in Research, funded by the Swiss National Science Foundation, grant
+  No.
+205602), the Swiss National Science Foundation (SNSF) Project Funding
+(grant 200021E206190 “FISH4DIET”).
+The work is also supported by a pilot access grant from the Swiss National
+  Supercomputing Centre (CSCS) on the Swiss share of the LUMI system under
+  project ID “PILOT MC EPFL-NM 01”, a CHRONOS grant from the CSCS on the Swiss
+  share of the LUMI system under project ID “REGULAR MC EPFL-NM 02”, and a
+  grant from the CSCS under project ID s0178.
+
+
+
+§ AUTHOR CONTRIBUTIONS
+
+J.
+Q.
+implemented and tested the PDWF method on selected materials.
+G.
+P.
+and
+N.
+M.
+supervised the project.
+All authors analyzed the results and contributed to writing the manuscript.
+
+
+
+
+
+
+
+
+
+
+
+50
+fxundefined [1]
+ ifx#1
+
+fnum [1]
+ #1firstoftwo
+ secondoftwo
+ 
+fx [1]
+ #1firstoftwo
+ secondoftwo
+ 
+
+
+
+
+
+noop [0]secondoftwo
+
+ref[1]@startlink#1@href
+href[1]#1@endlink
+anitize@url [0]`
+12`$12`&12`#12`1̂2`_12`%12
+startlink[1]
+endlink[0]
+
+rl [1]href #1
+
+
+
+
+
+
+
+
+
+
+
+
+@bib@innerbibempty
+
+[Marzari and Vanderbilt(1997)]Marzari1997
+  author author N. Marzari and author D. Vanderbilt, title title Maximally localized
+  generalized Wannier functions for composite energy bands, https://doi.org/10.1103/physrevb.56.12847 journal journal Phys. Rev. B volume 56, pages 12847 (year 1997)NoStop
+[Souza et al.(2001)Souza,
+  Marzari, and Vanderbilt]Souza2001
+  author author I. Souza, author N. Marzari,  and author D. Vanderbilt,  title title Maximally localized Wannier functions
+  for entangled energy bands, https://doi.org/10.1103/physrevb.65.035109 journal journal Phys. Rev. B volume 65, pages 035109 (year 2001)NoStop
+[Marzari et al.(2012)Marzari, Mostofi, Yates, Souza, and Vanderbilt]Marzari2012
+  author author N. Marzari, author A. A. Mostofi, author J. R. Yates,
+  author I. Souza, and author D. Vanderbilt, title
+  title Maximally localized Wannier functions: Theory and
+  applications, https://doi.org/10.1103/revmodphys.84.1419
+  journal journal Rev. Mod. Phys. volume 84, pages 1419 (year
+  2012)NoStop
+[Pizzi et al.(2020)Pizzi,
+  Vitale, Arita, Blügel,
+  Freimuth, Géranton, Gibertini, Gresch, Johnson, Koretsune, Ibañez-Azpiroz, Lee,
+  Lihm, Marchand, Marrazzo,
+  Mokrousov, Mustafa, Nohara,
+  Nomura, Paulatto, Poncé, Ponweiser, Qiao, Thöle, Tsirkin, Wierzbowska, Marzari, Vanderbilt, Souza, Mostofi, and Yates]Pizzi2020
+  author author G. Pizzi, author V. Vitale,
+  author R. Arita, author S. Blügel, author
+  F. Freimuth, author
+  G. Géranton, author
+  M. Gibertini, author
+  D. Gresch, author C. Johnson, author T. Koretsune, author J. Ibañez-Azpiroz, author H. Lee, author J.-M.  Lihm, author D. Marchand, author A. Marrazzo,
+  author Y. Mokrousov, author J. I. Mustafa, author
+  Y. Nohara, author Y. Nomura, author L. Paulatto, author S. Poncé, author T. Ponweiser, author J. Qiao, author F. Thöle, author S. S. Tsirkin,
+  author M. Wierzbowska, author N. Marzari, author
+  D. Vanderbilt, author
+  I. Souza, author A. A. Mostofi, and author J. R. Yates, title title
+  Wannier90 as a community code: new features and applications, https://doi.org/10.1088/1361-648x/ab51ff journal journal J. Phys.: Condens. Matter volume 32,  pages 165902 (year 2020)NoStop
+[Resta and Vanderbilt(2007)]Resta2007
+  author author R. Resta and author D. Vanderbilt, title title Theory of
+  Polarization: A Modern Approach (publisher
+  Springer, year 2007) pp. pages
+  31–68NoStop
+[Lee et al.(2005)Lee,
+  Nardelli, and Marzari]Lee2005
+  author author Y.-S. Lee, author M. B. Nardelli,  and author N. Marzari,  title title Band structure and quantum conductance
+  of nanostructures from maximally localized wannier functions: The case of
+  functionalized carbon nanotubes, https://doi.org/10.1103/PhysRevLett.95.076804 journal
+  journal Phys. Rev. Lett. volume 95,  pages 076804 (year 2005)NoStop
+[Lopez et al.(2012)Lopez,
+  Vanderbilt, Thonhauser, and Souza]Lopez2012
+  author author M. G. Lopez, author D. Vanderbilt,
+  author T. Thonhauser, and  author I. Souza, title title Wannier-based calculation of the orbital
+  magnetization in crystals, https://doi.org/10.1103/physrevb.85.014435 journal journal Phys. Rev. B volume 85, pages 014435 (year 2012)NoStop
+[Wang et al.(2006)Wang,
+  Yates, Souza, and Vanderbilt]Wang2006
+  author author X. Wang, author J. R. Yates,
+  author I. Souza, and author D. Vanderbilt, title
+  title Ab initio calculation of the anomalous Hall conductivity
+  by Wannier interpolation, https://doi.org/10.1103/physrevb.74.195118 journal journal Phys. Rev. B volume 74, pages 195118 (year 2006)NoStop
+[Yates et al.(2007)Yates,
+  Wang, Vanderbilt, and Souza]Yates2007
+  author author J. R. Yates, author X. Wang,
+  author D. Vanderbilt, and  author I. Souza, title title Spectral and Fermi surface properties from
+  Wannier interpolation, https://doi.org/10.1103/physrevb.75.195121
+  journal journal Phys. Rev. B volume 75, pages 195121 (year
+  2007)NoStop
+[Qiao et al.(2018)Qiao,
+  Zhou, Yuan, and Zhao]Qiao2018
+  author author J. Qiao, author J. Zhou, author Z. Yuan, and author
+  W. Zhao, title title Calculation of intrinsic spin Hall conductivity by Wannier
+  interpolation, https://doi.org/10.1103/physrevb.98.214402
+  journal journal Phys. Rev. B volume 98, pages 214402 (year
+  2018)NoStop
+[Sakuma(2013)]Sakuma2013
+  author author R. Sakuma, title title Symmetry-adapted
+  Wannier functions in the maximal localization procedure, https://doi.org/10.1103/PhysRevB.87.235109 journal journal Phys. Rev. B volume 87, pages 235109 (year 2013)NoStop
+[Gygi et al.(2003)Gygi,
+  Fattebert, and Schwegler]Gygi2003
+  author author F. Gygi, author J.-L. Fattebert, and author E. Schwegler, title title Computation of
+  Maximally Localized Wannier Functions using a simultaneous diagonalization
+  algorithm, https://doi.org/10.1016/s0010-4655(03)00315-1
+  journal journal Comput. Phys. Commun. volume 155, pages 1 (year
+  2003)NoStop
+[Thygesen et al.(2005a)Thygesen, Hansen, and Jacobsen]Thygesen2005
+  author author K. S. Thygesen, author L. B. Hansen, and author K. W. Jacobsen, title title Partly Occupied Wannier
+  Functions, https://doi.org/10.1103/physrevlett.94.026405
+  journal journal Phys. Rev. Lett. volume 94, pages 026405 (year
+  2005a)NoStop
+[Thygesen et al.(2005b)Thygesen, Hansen, and Jacobsen]Thygesen2005a
+  author author K. S. Thygesen, author L. B. Hansen, and author K. W. Jacobsen, title title Partly occupied Wannier
+  functions: Construction and applications, https://doi.org/10.1103/physrevb.72.125119 journal journal Phys. Rev. B volume 72, pages 125119 (year 2005b)NoStop
+[Damle et al.(2019)Damle,
+  Levitt, and Lin]Damle2019
+  author author A. Damle, author A. Levitt, and  author L. Lin, title title Variational Formulation for Wannier Functions
+  with Entangled Band Structure, https://doi.org/10.1137/18m1167164
+  journal journal Multiscale Model. Simul.  volume 17, pages 167 (year
+  2019)NoStop
+[Wang et al.(2014)Wang,
+  Lazar, Park, Millis, and  Marianetti]Wang2014
+  author author R. Wang, author E. A. Lazar,
+  author H. Park, author
+  A. J. Millis, and author
+  C. A. Marianetti, title
+  title Selectively localized Wannier functions, https://doi.org/10.1103/physrevb.90.165125 journal journal Phys. Rev. B volume 90, pages 165125 (year 2014)NoStop
+[Fontana et al.(2021)Fontana, Larsen, Olsen, and Thygesen]Fontana2021
+  author author P. F. Fontana, author A. H. Larsen,
+  author T. Olsen, and author K. S. Thygesen, title title Spread-balanced Wannier functions: Robust and
+  automatable orbital localization, https://doi.org/10.1103/physrevb.104.125140 journal journal Phys. Rev. B volume 104, pages 125140 (year 2021)NoStop
+[Mustafa et al.(2015)Mustafa, Coh, Cohen, and Louie]Mustafa2015
+  author author J. I. Mustafa, author S. Coh,
+  author M. L. Cohen, and  author S. G. Louie, title title Automated construction of maximally localized
+  Wannier functions: Optimized projection functions method, https://doi.org/10.1103/physrevb.92.165134 journal journal Phys. Rev. B volume 92, pages 165134 (year 2015)NoStop
+[Cancès et al.(2017)Cancès, Levitt, Panati, and  Stoltz]Cances2017
+  author author É. Cancès, author A. Levitt, author G. Panati,  and author G. Stoltz,  title title Robust determination of maximally
+  localized Wannier functions, https://doi.org/10.1103/physrevb.95.075114 journal journal Phys. Rev. B volume 95, pages 075114 (year 2017)NoStop
+[Gontier et al.(2019)Gontier, Levitt, and Siraj-dine]Gontier2019
+  author author D. Gontier, author A. Levitt,  and author S. Siraj-dine,  title title Numerical construction of Wannier
+  functions through homotopy, https://doi.org/10.1063/1.5085753
+  journal journal J. Math. Phys. volume 60, pages 031901 (year
+  2019)NoStop
+[Damle et al.(2015)Damle,
+  Lin, and Ying]Damle2015
+  author author A. Damle, author L. Lin, and  author L. Ying, title title Compressed Representation of
+  Kohn–Sham Orbitals via Selected Columns of the Density Matrix,  https://doi.org/10.1021/ct500985f journal journal J. Chem. Theory Comput. volume 11,  pages 1463 (year 2015)NoStop
+[Damle and Lin(2018)]Damle2018
+  author author A. Damle and author L. Lin,  title title Disentanglement via Entanglement: A
+  Unified Method for Wannier Localization, https://doi.org/10.1137/17m1129696 journal journal Multiscale Model. Simul. volume 16,  pages 1392 (year 2018)NoStop
+[Jain et al.(2013)Jain,
+  Ong, Hautier, Chen,
+  Richards, Dacek, Cholia,
+  Gunter, Skinner, Ceder, and  Persson]Jain2013
+  author author A. Jain, author S. P. Ong,
+  author G. Hautier, author W. Chen, author
+  W. D. Richards, author
+  S. Dacek, author S. Cholia, author D. Gunter, author D. Skinner, author G. Ceder, and author K. A.  Persson, title title Commentary:
+  The Materials Project: A materials genome approach to accelerating
+  materials innovation, https://doi.org/10.1063/1.4812323
+  journal journal APL Mater. volume 1, pages 011002 (year
+  2013)NoStop
+[Curtarolo et al.(2012)Curtarolo, Setyawan, Hart, Jahnatek, Chepulskii, Taylor, Wang, Xue, Yang, Levy,
+  Mehl, Stokes, Demchenko,  and Morgan]Curtarolo2012
+  author author S. Curtarolo, author W. Setyawan,
+  author G. L. W. Hart, author M. Jahnatek, author
+  R. V. Chepulskii, author
+  R. H. Taylor, author
+  S. Wang, author J. Xue, author K. Yang, author O. Levy, author M. J. Mehl, author
+  H. T. Stokes, author
+  D. O. Demchenko, and author
+  D. Morgan, title title AFLOW: An automatic framework for high-throughput materials
+  discovery, https://doi.org/10.1016/j.commatsci.2012.02.005
+  journal journal Comput. Mater. Sci. volume 58, pages 218 (year
+  2012)NoStop
+[Saal et al.(2013)Saal,
+  Kirklin, Aykol, Meredig,  and Wolverton]Saal2013
+  author author J. E. Saal, author S. Kirklin,
+  author M. Aykol, author B. Meredig, and author
+  C. Wolverton, title title Materials Design and Discovery with High-Throughput
+  Density Functional Theory: The Open Quantum Materials
+  Database (OQMD), https://doi.org/10.1007/s11837-013-0755-4
+  journal journal JOM volume
+  65, pages 1501 (year 2013)NoStop
+[CMR()]CMR
+  @noop  title Computational Materials Repository,  howpublished <https://cmr.fysik.dtu.dk/>, note
+  [Online; accessed 2023-02-28]NoStop
+[Talirz et al.(2020)Talirz,
+  Kumbhar, Passaro, Yakutovich,
+  Granata, Gargiulo, Borelli,
+  Uhrin, Huber, Zoupanos,
+  Adorf, Andersen, Schütt,
+  Pignedoli, Passerone, VandeVondele, Schulthess, Smit,
+  Pizzi, and Marzari]Talirz2020
+  author author L. Talirz, author S. Kumbhar,
+  author E. Passaro, author A. V. Yakutovich, author V. Granata, author
+  F. Gargiulo, author
+  M. Borelli, author M. Uhrin, author S. P.  Huber, author S. Zoupanos, author C. S. Adorf,
+  author C. W. Andersen, author O. Schütt, author
+  C. A. Pignedoli, author
+  D. Passerone, author
+  J. VandeVondele, author
+  T. C. Schulthess, author
+  B. Smit, author G. Pizzi, and author N. Marzari, title title
+  Materials Cloud, a platform for open computational science, https://doi.org/10.1038/s41597-020-00637-5 journal journal Sci. Data volume 7, pages
+  299 (year 2020)NoStop
+[Draxl and Scheffler(2018)]Draxl2018
+  author author C. Draxl and author M. Scheffler, title title NOMAD: The FAIR
+  concept for big data-driven materials science, https://doi.org/10.1557/mrs.2018.208 journal journal MRS Bulletin volume 43, pages 676 (year 2018)NoStop
+[Gresch et al.(2018)Gresch,
+  Wu, Winkler, Häuselmann,
+  Troyer, and Soluyanov]Gresch2018
+  author author D. Gresch, author Q. Wu, author G. W. Winkler, author
+  R. Häuselmann, author
+  M. Troyer, and author
+  A. A. Soluyanov, title
+  title Automated construction of symmetrized Wannier-like
+  tight-binding models from ab initio calculations, https://doi.org/10.1103/physrevmaterials.2.103805 journal
+  journal Phys. Rev. Mater. volume 2,  pages 103805 (year 2018)NoStop
+[Vitale et al.(2020)Vitale,
+  Pizzi, Marrazzo, Yates,
+  Marzari, and Mostofi]Vitale2020
+  author author V. Vitale, author G. Pizzi,
+  author A. Marrazzo, author J. R. Yates, author
+  N. Marzari, and author
+  A. A. Mostofi, title
+  title Automated high-throughput Wannierisation, https://doi.org/10.1038/s41524-020-0312-y journal journal npj Comput. Mater. volume 6, pages 66 (year 2020)NoStop
+[Garrity and Choudhary(2021)]Garrity2021
+  author author K. F. Garrity and author K. Choudhary, title title Database of Wannier
+  tight-binding Hamiltonians using high-throughput density functional
+  theory, https://doi.org/10.1038/s41597-021-00885-z journal journal Sci. Data volume
+  8, pages 106 (year 2021)NoStop
+[Agapito et al.(2016)Agapito, Ismail-Beigi, Curtarolo,
+  Fornari, and Nardelli]Agapito2016
+  author author L. A. Agapito, author S. Ismail-Beigi, author S. Curtarolo, author M. Fornari,  and author M. B. Nardelli,  title title Accurate tight-binding Hamiltonian
+  matrices from ab initio calculations: Minimal basis sets, https://doi.org/10.1103/physrevb.93.035104 journal journal Phys. Rev. B volume 93, pages 035104 (year 2016)NoStop
+[Pizzi et al.(2016)Pizzi,
+  Cepellotti, Sabatini, Marzari, and Kozinsky]Pizzi2016
+  author author G. Pizzi, author A. Cepellotti,
+  author R. Sabatini, author N. Marzari, and author
+  B. Kozinsky, title title AiiDA: automated interactive infrastructure and database for
+  computational science, https://doi.org/10.1016/j.commatsci.2015.09.013 journal
+  journal Comput. Mater. Sci. volume
+  111, pages 218 (year 2016)NoStop
+[Huber et al.(2020)Huber,
+  Zoupanos, Uhrin, Talirz,
+  Kahle, Häuselmann, Gresch,
+  Müller, Yakutovich, Andersen, Ramirez, Adorf, Gargiulo, Kumbhar, Passaro, Johnston, Merkys, Cepellotti, Mounet, Marzari, Kozinsky, and  Pizzi]Huber2020
+  author author S. P. Huber, author S. Zoupanos,
+  author M. Uhrin, author L. Talirz, author
+  L. Kahle, author R. Häuselmann, author D. Gresch, author T. Müller, author A. V.  Yakutovich, author C. W.  Andersen, author F. F.  Ramirez, author C. S.  Adorf, author F. Gargiulo, author S. Kumbhar,
+  author E. Passaro, author C. Johnston, author
+  A. Merkys, author A. Cepellotti, author N. Mounet, author N. Marzari, author B. Kozinsky, and author G. Pizzi, title title AiiDA
+  1.0, a scalable computational infrastructure for automated reproducible
+  workflows and data provenance, https://doi.org/10.1038/s41597-020-00638-4 journal journal Sci. Data volume 7, pages
+  300 (year 2020)NoStop
+[Uhrin et al.(2021)Uhrin,
+  Huber, Yu, Marzari, and  Pizzi]Uhrin2021
+  author author M. Uhrin, author S. P. Huber,
+  author J. Yu, author
+  N. Marzari, and author
+  G. Pizzi, title title Workflows in AiiDA: Engineering a high-throughput, event-based
+  engine for robust and modular computational workflows, https://doi.org/10.1016/j.commatsci.2020.110086 journal
+  journal Comput. Mater. Sci. volume
+  187, pages 110086 (year 2021)NoStop
+[MC3()]MC3D
+  @noop  title Materials Cloud three-dimensional crystals
+  database (MC3D), howpublished
+  <https://www.materialscloud.org/discover/mc3d/dashboard/ptable>,  note [Online; accessed 2023-02-28]NoStop
+[Löwdin()]Loewdin1950
+  author author P.-O. Löwdin, title title On the non-orthogonality
+  problem connected with the use of atomic wave functions in the theory of
+  molecules and crystals, https://doi.org/10.1063/1.1747632
+  journal journal J. Chem. Phys. volume 18, pages 365NoStop
+[Mahajan et al.(2021)Mahajan, Timrov, Marzari, and  Kashyap]PhysRevMaterials.5.104402
+  author author R. Mahajan, author I. Timrov,
+  author N. Marzari, and author A. Kashyap, title
+  title Importance of intersite hubbard interactions in
+  MnO_2: A first-principles
+  DFT+U+V study, https://doi.org/10.1103/PhysRevMaterials.5.104402
+  journal journal Phys. Rev. Materials volume 5, pages 104402 (year
+  2021)NoStop
+[Giannozzi et al.(2020)Giannozzi, Baseggio, Bonfà,
+  Brunato, Car, Carnimeo,
+  Cavazzoni, de Gironcoli, Delugas, Ruffino, Ferretti, Marzari, Timrov, Urru, and Baroni]Giannozzi2020a
+  author author P. Giannozzi, author O. Baseggio,
+  author P. Bonfà, author D. Brunato, author
+  R. Car, author I. Carnimeo, author C. Cavazzoni, author S. de Gironcoli, author P. Delugas, author F. F.  Ruffino, author A. Ferretti, author N. Marzari,
+  author I. Timrov, author A. Urru, and author
+  S. Baroni, title title Quantum ESPRESSO toward the exascale, https://doi.org/10.1063/5.0005082 journal journal J. Chem. Phys. volume 152, pages 154105 (year 2020)NoStop
+[Ozaki(2003)]Ozaki2003
+  author author T. Ozaki, title title Variationally optimized
+  atomic orbitals for large-scale electronic structures, https://doi.org/10.1103/PhysRevB.67.155108 journal journal Phys. Rev. B volume 67, pages 155108 (year 2003)NoStop
+[Ozaki and Kino(2004)]Ozaki2004
+  author author T. Ozaki and author H. Kino,  title title Numerical atomic basis orbitals from
+  H to Kr, https://doi.org/10.1103/physrevb.69.195113 journal journal Phys. Rev. B volume
+  69, pages 195113 (year 2004)NoStop
+[Alan Oppenheim(1997)]Oppenheim1997
+  author author S. N. Alan Oppenheim, Alan Willsky, @noop  title Signals and Systems (publisher Prentice
+  Hall, year 1997) p. pages 957NoStop
+[Prandini et al.(2018)Prandini, Marrazzo, Castelli, Mounet, and Marzari]Prandini2018
+  author author G. Prandini, author A. Marrazzo,
+  author I. E. Castelli, author N. Mounet, and author
+  N. Marzari, title title Precision and efficiency in solid-state pseudopotential
+  calculations, https://doi.org/10.1038/s41524-018-0127-2
+  journal journal npj Comput. Mater. volume 4, pages 72 (year
+  2018)NoStop
+[aii()]aiidaW90
+  @noop  title aiida-wannier90-workflows: A collection of
+  advanced automated workflows to compute Wannier functions using AiiDA and the
+  Wannier90 code, howpublished
+  <https://github.com/aiidateam/aiida-wannier90-workflows>, note [Online; accessed 2023-02-28]NoStop
+[Brouder et al.(2007)Brouder, Panati, Calandra, Mourougane, and Marzari]Brouder2007
+  author author C. Brouder, author G. Panati,
+  author M. Calandra, author C. Mourougane, and author N. Marzari, title
+  title Exponential localization of wannier functions in
+  insulators, https://doi.org/10.1103/physrevlett.98.046402
+  journal journal Phys. Rev. Lett. volume 98, pages 046402 (year
+  2007)NoStop
+[Panati and Pisante(2013)]Panati2013
+  author author G. Panati and author A. Pisante, title title Bloch bundles,
+  marzari-vanderbilt functional and maximally localized wannier functions,  https://doi.org/10.1007/s00220-013-1741-y journal
+  journal Commun. Math. Phys. volume
+  322, pages 835 (year 2013)NoStop
+[Poncé et al.(2021)Poncé, Macheda, Margine,
+  Marzari, Bonini, and Giustino]Ponce2021
+  author author S. Poncé, author F. Macheda, author E. R. Margine, author N. Marzari,
+  author N. Bonini, and author F. Giustino, title
+  title First-principles predictions of Hall and drift mobilities
+  in semiconductors, https://doi.org/10.1103/physrevresearch.3.043022 journal
+  journal Phys. Rev. Res. volume 3,  pages 043022 (year 2021)NoStop
+[Giannozzi et al.(2009)Giannozzi, Baroni, Bonini, Calandra, Car, Cavazzoni, Ceresoli, Chiarotti, Cococcioni,
+  Dabo, Corso, de Gironcoli,
+  Fabris, Fratesi, Gebauer,
+  Gerstmann, Gougoussis, Kokalj, Lazzeri, Martin-Samos,
+  Marzari, Mauri, Mazzarello,
+  Paolini, Pasquarello, Paulatto, Sbraccia, Scandolo, Sclauzero, Seitsonen, Smogunov,
+  Umari, and Wentzcovitch]Giannozzi2009
+  author author P. Giannozzi, author S. Baroni,
+  author N. Bonini, author M. Calandra, author
+  R. Car, author C. Cavazzoni, author D. Ceresoli, author G. L.  Chiarotti, author M. Cococcioni, author I. Dabo,
+  author A. D. Corso, author S. de Gironcoli, author
+  S. Fabris, author G. Fratesi, author R. Gebauer, author U. Gerstmann, author C. Gougoussis, author A. Kokalj, author M. Lazzeri, author L. Martin-Samos, author N. Marzari, author F. Mauri, author R. Mazzarello, author S. Paolini, author A. Pasquarello, author L. Paulatto, author C. Sbraccia, author S. Scandolo, author G. Sclauzero, author A. P.  Seitsonen, author A. Smogunov, author P. Umari,  and author R. M. Wentzcovitch,  title title QUANTUM ESPRESSO: a modular and
+  open-source software project for quantum simulations of materials, https://doi.org/10.1088/0953-8984/21/39/395502 journal
+  journal J. Phys.: Condens. Matter volume
+  21, pages 395502 (year 2009)NoStop
+[Momma and Izumi(2011)]Momma2011
+  author author K. Momma and author F. Izumi,  title title VESTA 3 for three-dimensional
+  visualization of crystal, volumetric and morphology data, https://doi.org/10.1107/S0021889811038970 journal journal J. Appl. Crystallogr. volume 44,  pages 1272 (year 2011)NoStop
+[Hunter(2007)]Hunter2007
+  author author J. D. Hunter, title title Matplotlib: A 2D
+  Graphics Environment, https://doi.org/10.1109/MCSE.2007.55
+  journal journal Comput. Sci. Eng. volume 9, pages 90 (year
+  2007)NoStop
+
+
+
+
