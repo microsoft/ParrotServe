@@ -267,7 +267,7 @@ class ServeCoreContextManager:
             "Task should be scheduled before being freed context.",
         )
 
-        for context in task.contexts:
+        for context in reversed(task.contexts):
             self._free_context(context)
 
     def free_constant_prefix_contexts(self, var_id: str) -> None:

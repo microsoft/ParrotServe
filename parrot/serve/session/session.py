@@ -13,6 +13,8 @@ from parrot.exceptions import ParrotCoreUserError, parrot_assert
 from parrot.serve.graph import (
     ChunkedSemanticCallRequest,
     RequestChain,
+    get_performance_criteria,
+    activate_completion_chain,
 )
 
 from parrot.serve.backend_repr import Context
@@ -128,6 +130,13 @@ class Session:
 
         # Add the request to the executor.
         self.executor.add_request(request_chain=request_chain)
+
+        # If criteria is specified, activate it immediately.
+        if chunked_request.metadata.output_criteria:
+            criteria = get_performance_criteria(
+                chunked_request.metadata.output_criteria
+            )
+            activate_completion_chain(request_chain.comp_chains[-1], criteria)
 
         # It must be inserted. So we can get the mapping.
         placeholders_mapping = request_chain.get_placeholders_mapping()

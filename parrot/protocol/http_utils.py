@@ -61,12 +61,24 @@ async def async_send_http_request(
     http_addr: str,
     api_url: str,
     timeout=None,
+    method: Literal["GET", "POST", "DELETE"] = "POST",
     **kwargs,
 ) -> BaseResponse:
     url = http_addr + api_url
-    async with client_session.post(url, json=kwargs, timeout=timeout) as resp:
-        assert resp.ok, f"Send http request error: {resp.reason}"
-        return await async_make_response(response_cls, resp)
+    if method == "GET":
+        async with client_session.get(url, json=kwargs, timeout=timeout) as resp:
+            assert resp.ok, f"Send http request error: {resp.reason}"
+            return await async_make_response(response_cls, resp)
+    elif method == "POST":
+        async with client_session.post(url, json=kwargs, timeout=timeout) as resp:
+            assert resp.ok, f"Send http request error: {resp.reason}"
+            return await async_make_response(response_cls, resp)
+    elif method == "DELETE":
+        async with client_session.delete(url, json=kwargs, timeout=timeout) as resp:
+            assert resp.ok, f"Send http request error: {resp.reason}"
+            return await async_make_response(response_cls, resp)
+    else:
+        raise ValueError(f"Invalid http method: {method}")
 
 
 async def async_send_http_request_streaming(
@@ -76,6 +88,8 @@ async def async_send_http_request_streaming(
     **kwargs,
 ):
     url = http_addr + api_url
+    
+    # NOTE(chaofan): Only POST now
     async with client_session.post(url, json=kwargs) as reader:
         # assert resp.ok, "Send http request error."
         async for chunk in reader.content.iter_chunked(4):

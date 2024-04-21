@@ -51,6 +51,11 @@ def _traverse(
             chain_group.chains.add(next_chain)
             _traverse(next_chain, next_criteria, depth + 1)
 
+    if chain.first_node.has_edge_a_prev_node:
+        prev_gen = chain.first_node.get_edge_a_prev_node()
+        parrot_assert(prev_gen.is_gen, "The previous node is not a Gen node.")
+        _traverse(prev_gen.comp_chain, next_criteria, depth + 1)
+
     # Lastly, activate the chain.
     chain.activate(criteria, depth)
 

@@ -110,87 +110,151 @@ class EngineScheduler:
                 # Preempte all running Generation jobs.
                 self.waiting_jobs = self.running_jobs + self.waiting_jobs  # FIFO
                 self.running_jobs = fill_running_jobs
-                return fill_running_jobs.copy()
+                ret = fill_running_jobs.copy()
 
-        cur_num_jobs = len(self.running_jobs)
-        cur_num_batched_tokens = len(
-            self.running_jobs
-        )  # Note: running jobs must be all Gen jobs.
-
-        # print(
-        #     f"Scheduling: Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}"
-        # )
-
-        while self.waiting_jobs:
-            job = self.waiting_jobs[0]
-
-            job_num_tokens = (
-                1
-                if isinstance(job, Generate) or job.token_ids is None
-                else len(job.token_ids)
+            assert False  # TODO: fix
+        elif self.policy == "fifo_v1":
+            cur_num_jobs = len(self.running_jobs)
+            cur_num_batched_tokens = len(
+                self.running_jobs
+            )  # Note: running jobs must be all Gen jobs.
+            cur_total_tokens = sum(
+                [job.context.get_context_len() for job in self.running_jobs]
             )
-            # Constraints
-            if cur_num_jobs + 1 > self.max_batch_size:
-                break
-            if cur_num_batched_tokens + job_num_tokens > self.max_num_batched_tokens:
-                break
 
-            self.running_jobs.append(job)
-            if job.start_time == -1:
-                job.start_time = time_counter_in_nanoseconds()
-            self.waiting_jobs.pop(0)
+            # print(
+            #     f"Scheduling: Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}"
+            # )
 
-            # Update
-            cur_num_jobs += 1
-            cur_num_batched_tokens += job_num_tokens
+            while self.waiting_jobs:
+                job = self.waiting_jobs[0]
 
-        # Check total tokens constraint and do preemption
+                job_num_tokens = (
+                    1
+                    if isinstance(job, Generate) or job.token_ids is None
+                    else len(job.token_ids)
+                )
+                # NOTE(chaofan): In shared prefix mode, we should only count the prefix context once.
+                job_total_tokens = job.context.get_context_len()
 
-        # This is to avoid compute the same context multiple times.
-        # TODO(chaofan): Only do this in shared prefix mode.
-        # visited_context_ids = set()
-        # if ctx.context_id not in visited_context_ids:
-        #     cur_total_tokens += ctx.get_this_context_len()
-        #     visited_context_ids.add(ctx.context_id)
-        # parent_ctx = ctx.parent_context
-        # if parent_ctx and parent_ctx.context_id not in visited_context_ids:
-        #     cur_total_tokens += parent_ctx.get_this_context_len()
-        #     visited_context_ids.add(parent_ctx.context_id)
+                # Constraints
+                if cur_num_jobs + 1 > self.max_batch_size:
+                    break
+                if (
+                    cur_num_batched_tokens + job_num_tokens
+                    > self.max_num_batched_tokens
+                ):
+                    break
+                if cur_total_tokens + job_total_tokens > self.max_total_tokens:
+                    break
 
-        # For normal mode, we repeatly count prefix because it's repeated loaded.
+                self.running_jobs.append(job)
+                if job.start_time == -1:
+                    job.start_time = time_counter_in_nanoseconds()
+                self.waiting_jobs.pop(0)
 
-        self.running_jobs.sort(
-            key=lambda job: (
-                self.task_arrival_time[job.task_id],
-                self.job_arrival_time[job.context_id],
+                # Update
+                cur_num_jobs += 1
+                cur_num_batched_tokens += job_num_tokens
+                cur_total_tokens += job_total_tokens
+
+            # NOTE(chaofan): Use copy() to avoid list modification.
+            ret = self.running_jobs.copy()
+        else:
+            cur_num_jobs = len(self.running_jobs)
+            cur_num_batched_tokens = len(
+                self.running_jobs
+            )  # Note: running jobs must be all Gen jobs.
+            cur_total_tokens = sum(
+                [job.context.get_context_len() for job in self.running_jobs]
             )
+
+            # print(
+            #     f"Scheduling: Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}"
+            # )
+
+            while self.waiting_jobs:
+                job = self.waiting_jobs[0]
+
+                job_num_tokens = (
+                    1
+                    if isinstance(job, Generate) or job.token_ids is None
+                    else len(job.token_ids)
+                )
+                job_total_tokens = job_num_tokens + job.context.get_context_len()
+                # Constraints
+                if cur_num_jobs + 1 > self.max_batch_size:
+                    break
+                if (
+                    cur_num_batched_tokens + job_num_tokens
+                    > self.max_num_batched_tokens
+                ):
+                    continue
+                if cur_total_tokens + job_total_tokens > self.max_total_tokens:
+                    continue
+
+                self.running_jobs.append(job)
+                if job.start_time == -1:
+                    job.start_time = time_counter_in_nanoseconds()
+                self.waiting_jobs.pop(0)
+
+                # Update
+                cur_num_jobs += 1
+                cur_num_batched_tokens += job_num_tokens
+
+            # Check total tokens constraint and do preemption
+
+            # This is to avoid compute the same context multiple times.
+            # TODO(chaofan): Only do this in shared prefix mode.
+            # visited_context_ids = set()
+            # if ctx.context_id not in visited_context_ids:
+            #     cur_total_tokens += ctx.get_this_context_len()
+            #     visited_context_ids.add(ctx.context_id)
+            # parent_ctx = ctx.parent_context
+            # if parent_ctx and parent_ctx.context_id not in visited_context_ids:
+            #     cur_total_tokens += parent_ctx.get_this_context_len()
+            #     visited_context_ids.add(parent_ctx.context_id)
+
+            # For normal mode, we repeatly count prefix because it's repeated loaded.
+
+            self.running_jobs.sort(
+                key=lambda job: (
+                    self.task_arrival_time[job.task_id],
+                    self.job_arrival_time[job.context_id],
+                )
+            )
+
+            # print(f"Running jobs: {self.running_jobs}")
+            # print(self.thread_arrival_time)
+
+            new_running: List[PrimitiveJob] = []
+            cur_total_tokens = 0
+            preempted = False
+            for job in self.running_jobs:
+                if preempted:
+                    self._preempt(job)
+                    continue
+
+                # NOTE(chaofan): In shared prefix mode, we should only count the prefix context once.
+                job_tokens = job.context.get_context_len()
+                if cur_total_tokens + job_tokens > self.max_total_tokens:
+                    preempted = True
+                    self._preempt(job)
+                    continue
+
+                new_running.append(job)
+                cur_total_tokens += job_tokens
+
+            self.running_jobs = new_running
+
+            # NOTE(chaofan): Use copy() to avoid list modification.
+            ret = self.running_jobs.copy()
+
+        logger.debug(
+            f"Schedule {len(ret)} jobs. cur_num_jobs={cur_num_jobs}, cur_num_batched_tokens={cur_num_batched_tokens}, "
+            f"cur_total_tokens={cur_total_tokens}"
         )
 
-        # print(f"Running jobs: {self.running_jobs}")
-        # print(self.thread_arrival_time)
-
-        new_running: List[PrimitiveJob] = []
-        cur_total_tokens = 0
-        preempted = False
-        for job in self.running_jobs:
-            if preempted:
-                self._preempt(job)
-                continue
-
-            # NOTE(chaofan): In shared prefix mode, we should only count the prefix context once.
-            job_tokens = job.context.get_context_len()
-            if cur_total_tokens + job_tokens > self.max_total_tokens:
-                preempted = True
-                self._preempt(job)
-                continue
-
-            new_running.append(job)
-            cur_total_tokens += job_tokens
-
-        self.running_jobs = new_running
-
-        # NOTE(chaofan): Use copy() to avoid list modification.
-        ret = self.running_jobs.copy()
         return ret
 
     def _preempt(self, job) -> None:

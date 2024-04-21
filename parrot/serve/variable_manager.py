@@ -286,7 +286,7 @@ class SemanticVariableManager:
             request_chain: RequestChain. The request chain.
         """
 
-        constant_prefix_flag: bool = True
+        constant_prefix_flag: bool = request_chain.metadata.cache_prefix
         debug_info: str = ""
 
         # Create SVs for each node.

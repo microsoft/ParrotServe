@@ -14,7 +14,7 @@ class EngineContextManager:
     """Manage all low-level contexts in a single engine."""
 
     def __init__(self) -> None:
-        self.map: Dict[str, LowLevelContext] = {}
+        self.map: Dict[int, LowLevelContext] = {}
 
     def free_context(self, context_id: int) -> int:
         """Free the context and return the number of freed tokens.
@@ -28,6 +28,7 @@ class EngineContextManager:
             # Fill/Generation, but it is freed because of Exception in the frontend.
             # In this case, we should just return 0.
             return 0
+        
         context = self.map.pop(context_id)
         context_len = context.get_this_context_len()
         context.destruction()
@@ -42,6 +43,7 @@ class EngineContextManager:
                 parent_context = None
             else:
                 parent_context = self.map[job.parent_context_id]
+            
             self.map[job.context_id] = ctx_cls(
                 job.context_id,
                 parent_context,

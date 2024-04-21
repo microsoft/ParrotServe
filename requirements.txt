@@ -25,3 +25,7 @@ psutil
 pytest
 parse
 protobuf
+
+# AE
+pandas
+matplotlib

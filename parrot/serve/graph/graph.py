@@ -278,6 +278,8 @@ class RequestChain:
     ) -> "RequestChain":
         """Convert a ChunkedRequest into a RequestChain."""
 
+        prev_node: Optional[BaseNode] = None
+
         for i, chunk in enumerate(chunked_request.body):
             is_gen: bool = False
 
@@ -293,6 +295,11 @@ class RequestChain:
             else:
                 raise ParrotCoreUserError(ValueError("Unknown chunk type."))
 
+            # Link edge type A with previous node.
+            if prev_node is not None:
+                node.link_edge_a_with(prev_node)
+            prev_node = node
+
             # Record first node
             if i == 0:
                 request_chain = cls(
@@ -301,13 +308,7 @@ class RequestChain:
                     first_node=node,
                     metadata=chunked_request.metadata,
                 )
-                prev_node = node
                 completion_chain_first_node = node
-
-            # Link edge type A with previous node.
-            if prev_node is not None:
-                node.link_edge_a_with(prev_node)
-            prev_node = node
 
             # If current node is Gen, create a new CompletionChain.
             if is_gen:

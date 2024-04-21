@@ -2,24 +2,42 @@
 # Licensed under the MIT license.
 
 
-from typing import List
+from typing import List, Optional
 from collections import deque
+
+from parrot.exceptions import ParrotError
 
 
 class RecyclePool:
-    def __init__(self, pool_name: str = "pool"):
+    def __init__(
+        self,
+        pool_name: str = "pool",
+        pool_size: Optional[int] = None,
+        debug_mode: bool = False,
+    ) -> None:
+        """
+        debug_mode: If True, the pool will allocate ids in a fixed order for debugging.
+        """
+
         self.pool_name = pool_name
+        self.pool_size = pool_size
         self.allocated_num = 0
         self.cur_max_id = 0
         self.free_ids: deque[int] = deque()
         self.history_max = 0
+        self.debug_mode = debug_mode
 
     def allocate(self) -> int:
         """Fetch an id."""
 
+        if self.pool_size is not None and self.allocated_num >= self.pool_size:
+            raise ParrotError(
+                f"No free ids in Pool: {self.pool_name} (pool_size={self.pool_size})."
+            )
+
         self.allocated_num += 1
 
-        if len(self.free_ids) == 0:
+        if len(self.free_ids) == 0 or self.debug_mode:
             self.cur_max_id += 1
             return self.cur_max_id - 1
 

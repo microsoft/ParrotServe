@@ -239,7 +239,7 @@ async def aget_semantic_variable(
             )
     except BaseException as e:
         logger.error(
-            f"Get semantic variable {var_id} (session_id={session_id}) error in {http_addr}. Error: {e}"
+            f"AGet semantic variable {var_id} (session_id={session_id}) error in {http_addr}. Error: {e}"
         )
         raise e
 

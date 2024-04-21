@@ -127,11 +127,11 @@ class Worker:
         num_cpu_blocks = int(cpu_swap_space // cache_block_size)
         num_gpu_blocks = max(num_gpu_blocks, 0)
 
-        # HACK(chaofan): Latency-sensitive blocks constraint.
-        # num_gpu_blocks = 4096 // block_size
-
-        # HACK(chaofan): Throughput-sensitive blocks constraint.
-        num_gpu_blocks = 3313
+        # HACK(chaofan): Hack the capacity of vLLM.
+        vllm_cap = os.environ.get("VLLM_CAPACITY", None)
+        if vllm_cap is not None:
+            num_gpu_blocks = int(vllm_cap) // block_size
+            print(f"[vLLM debug] Set vLLM capacity to {vllm_cap} (block_num: {num_gpu_blocks})", flush=True)
 
         num_cpu_blocks = max(num_cpu_blocks, 0)
         torch.cuda.empty_cache()
@@ -316,25 +316,17 @@ class Worker:
 
         job_type = "Fill" if input_metadata.num_prompt_tokens > 0 else "Generate"
         job_num_seqs = len(seq_group_metadata_list)
+        request_ids = [sg_metadata.request_id for sg_metadata in seq_group_metadata_list]
         print(
-            f"Running {job_num_seqs} {job_type} Model execution time: {(ed - st) / 1e6:.2f} ms"
+            f"Running {job_num_seqs} {job_type} Model execution time: {(ed - st) / 1e6:.2f} ms. Requests: {request_ids}"
         )
 
         # HACK(chaofan): Get first token time
         if input_metadata.num_prompt_tokens > 0:
-            from transformers import AutoTokenizer
-            tokenizer = AutoTokenizer.from_pretrained("hf-internal-testing/llama-tokenizer")
             cur_time = time.perf_counter_ns()
             for sg_metadata in seq_group_metadata_list:
-                data = list(sg_metadata.seq_data.values())[0]
-                data_str = tokenizer.decode(data.get_token_ids())
-                if "lcf%" not in data_str:
-                    continue
-                l_pos = data_str.find("lcf%")
-                r_pos = data_str.rfind("lcf%")
-                assert l_pos != r_pos
-                req_no = int(data_str[l_pos + 4: r_pos])
-                print(f"hack ftt: {req_no}, {cur_time}", flush=True)
+                req_no = sg_metadata.request_id
+                print(f"[vLLM debug] Prefill finish timestamp. request_id={req_no}, t={cur_time}", flush=True)
 
         return output
 

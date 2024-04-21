@@ -133,7 +133,7 @@ class EngineConfig:
     tasks_capacity: int = 256
 
     # For non-builtin engines, it's useless.
-    tokens_capacity: int = 262144
+    tokens_capacity: int = 99999999999999999
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:

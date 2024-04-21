@@ -9,6 +9,7 @@ from typing import Optional
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from uvicorn import Config, Server
+import os
 
 from parrot.serve.core import ParrotServeCore, create_serve_core
 from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
@@ -37,7 +38,9 @@ release_mode = False
 
 
 @app.exception_handler(ParrotCoreUserError)
-async def parrot_os_internal_error_handler(request: Request, exc: ParrotCoreUserError):
+async def parrot_core_internal_error_handler(
+    request: Request, exc: ParrotCoreUserError
+):
     traceback_info = "" if release_mode else traceback.format_exc()
     return JSONResponse(
         status_code=500,
@@ -49,7 +52,7 @@ async def parrot_os_internal_error_handler(request: Request, exc: ParrotCoreUser
 
 
 @app.exception_handler(ParrotCoreInternalError)
-async def parrot_os_internal_error_handler(
+async def parrot_core_internal_error_handler(
     request: Request, exc: ParrotCoreInternalError
 ):
     raise exc
@@ -81,8 +84,28 @@ async def get_session_info(session_id: int, request: Request):
 
 @app.post(f"/{API_VERSION}/submit_semantic_call")
 async def submit_semantic_call(request: Request):
+    # Sleep simulate network latency
+    latency_open = os.environ.get("SIMULATE_NETWORK_LATENCY_PRT", None)
+    assert (
+        latency_open is not None
+    ), "Please specify the environment variable SIMULATE_NETWORK_LATENCY_PRT"
+    try:
+        latency_open = int(latency_open)
+        assert latency_open == 0 or latency_open == 1
+    except:
+        return ValueError("SIMULATE_NETWORK_LATENCY must 0/1.")
+
+    # RTT
+    if latency_open == 1:
+        latency = get_latency()
+        await asyncio.sleep(latency / 2)
+
     payload = await request.json()
     response = pcore.submit_semantic_call(payload)
+
+    if latency_open == 1:
+        await asyncio.sleep(latency / 2)
+
     return response
 
 

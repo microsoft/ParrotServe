@@ -86,7 +86,7 @@ class Generate(PrimitiveJob):
 
     def __repr__(self) -> str:
         return (
-            f"Generation(session_id={self.session_id}, "
+            f"Generate(session_id={self.session_id}, "
             f"task_id={self.task_id}, "
             f"context_id={self.context_id}, "
             f"parent_context_id={self.parent_context_id})"

@@ -20,7 +20,7 @@ class TaskCreator:
     """TaskCreator creates a CompletionTask object for the CompletionChain."""
 
     def __init__(self) -> None:
-        self._task_id_pool = RecyclePool("TaskIDPool")
+        self._task_id_pool = RecyclePool("TaskIDPool", debug_mode=True)
 
     def _lower_criteria(self, criteria: PerformanceCriteria) -> ScheduleAnnotation:
         if criteria == PerformanceCriteria.LATENCY:

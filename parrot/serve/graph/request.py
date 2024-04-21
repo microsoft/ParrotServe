@@ -80,11 +80,19 @@ class RequestPlaceholder:
 class SemanticCallMetadata:
     """SemanticCallMetadata contains metadata for a Request."""
 
-    REQUEST_METADATA_KEYS = ["models", "model_type", "remove_pure_fill"]
+    REQUEST_METADATA_KEYS = [
+        "models",
+        "model_type",
+        "remove_pure_fill",
+        "cache_prefix",
+        "output_criteria",
+    ]
 
     models: List[str]
     model_type: str
     remove_pure_fill: bool
+    cache_prefix: bool
+    output_criteria: Optional[str] = None
 
     @classmethod
     def get_default_dict(cls) -> Dict:
@@ -94,6 +102,7 @@ class SemanticCallMetadata:
             "models": [],
             "model_type": "token_id",
             "remove_pure_fill": True,
+            "cache_prefix": True,
         }
 
     @classmethod
