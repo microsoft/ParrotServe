@@ -2,7 +2,7 @@
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
 
-import parrot as P
+from parrot import P
 
 
 @P.semantic_function()

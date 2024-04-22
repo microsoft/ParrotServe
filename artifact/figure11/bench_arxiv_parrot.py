@@ -2,11 +2,10 @@
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
 import time
-import asyncio
+import sys
 from parrot import P
-import parse
 
-vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
+vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
 
 
 def get_chunks(file_name: str, chunk_size: int):
@@ -74,6 +73,7 @@ CONCISE SUMMARY:{{summary}}""",
             func_name=f"refine_func_{i}",
             func_body=refine_template,
             cache_prefix=True,
+            output_criteria="throughput",
             params=[
                 P.Parameter(name="existing_answer", typ=P.ParamType.INPUT_LOC),
                 P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
@@ -121,7 +121,7 @@ def main(file_name: str, chunk_size: int, output_len: int):
 def warmup():
     global vm
     test_func = vm.import_function(
-        "chain_sum_test", "benchmark.workloads.test_examples.chain_summarization"
+        "func_1i_1o_genlen_100", "artifact.workloads.test_examples.normal_functions"
     )
     with vm.running_scope():
         holder = test_func("Test " * 100)
@@ -131,12 +131,15 @@ def warmup():
 if __name__ == "__main__":
     warmup()
 
-    print("warmup done", flush=True)
+    arg = sys.argv[1]
 
-    # for i in range(10):
-    #     for ol in [25, 50, 75, 100]:
-    #         main(f"article_{i}", 1024, ol)
-
-    for i in range(8, 10):
-        for bs in [512, 1024, 1536, 2048]:
-            main(f"article_{i}", bs, 50)
+    if arg == "test":
+        main("article_8", 1024, 1)
+    elif arg == "exp1":
+        for i in range(10):
+            for ol in [25, 50, 75, 100]:
+                main(f"article_{i}", 1024, ol)
+    elif arg == "exp2":
+        for i in range(10):
+            for bs in [512, 1024, 1536, 2048]:
+                main(f"article_{i}", bs, 50)

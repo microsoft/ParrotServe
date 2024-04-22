@@ -35,6 +35,7 @@ ENGINE_TYPES = [
 ]
 
 # ---------- None Number ----------
+NONE_SEED = 1
 NONE_CONTEXT_ID = -1
 NONE_PROCESS_ID = -1
 UNKNOWN_DATA_FIELD = -1

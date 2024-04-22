@@ -3,12 +3,13 @@
 
 
 import uuid
-import time
 
 from typing import List, Optional, Dict
 
 from parrot.utils import RecyclePool, time_counter_in_nanoseconds, get_logger
 from parrot.exceptions import parrot_assert, ParrotCoreUserError
+
+from parrot.constants import NONE_SEED
 
 from parrot.serve.graph import (
     SemanticVariable,
@@ -67,7 +68,7 @@ class SemanticVariableNamespace:
         If the SV already exists, return the existing one. Otherwise, create a new one.
         """
 
-        seed = -1
+        seed = NONE_SEED
         hash_name = content
 
         var_id = self._get_hashed_var_id(hash_name)
@@ -111,7 +112,8 @@ class SemanticVariableNamespace:
 
         parrot_assert(sv.id in self.vars, "SV ID does not exist.")
 
-        self._seed_pool.free(sv.seed)
+        if sv.seed != NONE_SEED:
+            self._seed_pool.free(sv.seed)
         self.vars.pop(sv.id)
 
 

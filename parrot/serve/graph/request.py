@@ -8,6 +8,8 @@ import re
 from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.sampling_config import SamplingConfig
 
+from .perf_criteria import PerformanceCriteria
+
 
 # ------------------------ Semantic Call Request ------------------------
 
@@ -92,7 +94,7 @@ class SemanticCallMetadata:
     model_type: str
     remove_pure_fill: bool
     cache_prefix: bool
-    output_criteria: Optional[str] = None
+    output_criteria: Optional[Union[PerformanceCriteria, str]]
 
     @classmethod
     def get_default_dict(cls) -> Dict:
@@ -103,6 +105,7 @@ class SemanticCallMetadata:
             "model_type": "token_id",
             "remove_pure_fill": True,
             "cache_prefix": True,
+            "output_criteria": None,
         }
 
     @classmethod

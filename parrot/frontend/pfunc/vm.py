@@ -23,6 +23,8 @@ from parrot.protocol.public.apis import (
     aget_semantic_variable,
 )
 
+from parrot.utils import time_counter_in_nanoseconds
+
 from .semantic_variable import SemanticVariable
 from .perf_criteria import PerformanceCriteria, get_performance_criteria_str
 from .function import (
@@ -315,7 +317,7 @@ class VirtualMachine:
         self.set_global_env()
 
         if timeit:
-            st = time.perf_counter_ns()
+            st = time_counter_in_nanoseconds()
 
         try:
             yield
@@ -329,8 +331,8 @@ class VirtualMachine:
         else:
             self.unset_global_env()
             if timeit:
-                ed = time.perf_counter_ns()
-                self.stat_run_time = (ed - st) / 1e9
+                ed = time_counter_in_nanoseconds()
+                self.stat_run_time = (ed - st) / 1e9  # Convert to seconds
                 logger.info(
                     f"[Timeit] E2E Program Execution Time: {self.stat_run_time} (s)."
                 )

@@ -132,10 +132,10 @@ class Session:
         self.executor.add_request(request_chain=request_chain)
 
         # If criteria is specified, activate it immediately.
-        if chunked_request.metadata.output_criteria:
-            criteria = get_performance_criteria(
-                chunked_request.metadata.output_criteria
-            )
+        if chunked_request.metadata.output_criteria is not None:
+            criteria = chunked_request.metadata.output_criteria
+            if isinstance(criteria, str):
+                criteria = get_performance_criteria(criteria)
             activate_completion_chain(request_chain.comp_chains[-1], criteria)
 
         # It must be inserted. So we can get the mapping.

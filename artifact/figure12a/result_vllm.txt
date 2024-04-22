@@ -1,0 +1,3 @@
+file_name: article_0, request_rate: 0
+Time: 103.516333237 s
+file_name: article_0, request_rate: 1.0

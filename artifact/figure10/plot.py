@@ -14,7 +14,7 @@ colors = [
 plt.style.use("default")
 
 # read data file
-with open("result.log") as fp:
+with open("result.txt") as fp:
     lines = fp.readlines()
 df = []
 for line in lines:

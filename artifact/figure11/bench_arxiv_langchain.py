@@ -1,7 +1,7 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
-import importlib
+import sys
 import time
 
 
@@ -81,21 +81,25 @@ def main(file_name: str, chunk_size: int, output_len: int):
         time.sleep(3)
 
 
+def warmup():
+    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=5)
+    llm.invoke("hello")
+
+
 if __name__ == "__main__":
-    # Warmup
-    main("article_8", 1024, 1)
+    warmup()
 
-    # main("article_0", 2048, 50)
+    arg = sys.argv[1]
 
-    # for i in range(1, 10):
-    # for i in [0]:
-    #     for ol in [25, 50, 75, 100]:
-    #         main(f"article_{i}", 1024, ol)
-
-    # for i in [0]:
-    #     for bs in [512, 1024, 1536, 2048]:
-    #         main(f"article_{i}", bs, 50)
-
-    for i in range(0, 10):
-        for bs in [512, 1024, 1536, 2048]:
-            main(f"article_{i}", bs, 50)
+    if arg == "test":
+        main("article_8", 1024, 1)
+    elif arg == "exp1":
+        for i in range(10):
+            warmup()
+            for ol in [25, 50, 75, 100]:
+                main(f"article_{i}", 1024, ol)
+    elif arg == "exp2":
+        for i in range(10):
+            warmup()
+            for bs in [512, 1024, 1536, 2048]:
+                main(f"article_{i}", bs, 50)

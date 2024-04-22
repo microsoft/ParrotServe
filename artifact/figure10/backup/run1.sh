@@ -1,8 +1,10 @@
 #!/bin/sh
 
-# warn: rm result
 rm result.txt
 touch result.txt
+
+# install oldscheduler version
+pip install -e . --no-deps
 
 for reqs in {5..25..5}
 do
@@ -10,11 +12,10 @@ do
     do
     echo "Run with capacity: $capacity, reqs: $reqs"
     echo "capacity: $capacity, reqs: $reqs" >> result.txt
-    bash run_vllm.sh $capacity $reqs
-    python3 parse_log_vllm.py >> result.txt
+    bash run_bench.sh $capacity $reqs
+    python3 parse_log.py >> result.txt
     sleep 5
     done
 done
 
-# Plot the results
-python3 plot.py
+pip uninstall parrot_vllm_oldscheduler -y
