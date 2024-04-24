@@ -13,8 +13,7 @@ bash launch.sh $log_path core.log engine.log
 
 # Run benchmark
 cd ..
-python3 bench_hack_parrot.py > result_parrot.log # > log/program.log
-sleep 1
+python3 bench_hack_parrot.py > result_parrot.txt # > log/program.log
 
 # Kill cluster
 bash ../../scripts/kill_all_servers.sh

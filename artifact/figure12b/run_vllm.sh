@@ -1,6 +1,9 @@
 #!/bin/sh
 
 # Run vLLM benchmark
+
+export VLLM_CAPACITY=4096
+
 rm result_vllm.txt
 touch result_vllm.txt
 for i in 2 3 4 5

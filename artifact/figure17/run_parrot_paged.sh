@@ -8,13 +8,12 @@ log_path=$pwd/log/
 echo $log_path
 
 # Launch cluster
-cd cluster_1_vicuna_13b_ctx
+cd cluster_1_vicuna_13b_vllm
 bash launch.sh $log_path core.log engine.log
 
 # Run benchmark
 cd ..
-python3 bench_hack_parrot.py > result_parrot.log # > log/program.log
-sleep 1
+python3 bench_hack_parrot.py > result_parrot_paged.txt # > log/program.log
 
 # Kill cluster
 bash ../../scripts/kill_all_servers.sh

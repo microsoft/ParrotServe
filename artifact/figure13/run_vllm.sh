@@ -1,6 +1,9 @@
 #!/bin/sh
 
 # Run vLLM benchmark
+
+export VLLM_CAPACITY=4096
+
 rm result_vllm_olen.txt
 rm result_vllm_csize.txt
 touch result_vllm_olen.txt

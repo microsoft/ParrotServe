@@ -141,6 +141,7 @@ class GraphExecutor:
             # Wait for the context to be ready if the Context is started.
             if context.start_event.is_set():
                 await context.ready_event.wait()
+                continue
 
             # Set the start event to indicate the context is started.
             context.start_event.set()

@@ -93,7 +93,7 @@ def load_workloads(branches_num: int):
     return ret
 
 
-async def execute(vm: P.VirtualMachine, workloads, cache_prefix):
+async def execute(vm: P.VirtualMachine, workloads, share_prefix: bool):
     funcs = []
     for round_info in workloads:
         round_funcs = []
@@ -101,6 +101,8 @@ async def execute(vm: P.VirtualMachine, workloads, cache_prefix):
             func = vm.define_function(
                 func_name=None,
                 func_body="1" + info["shared_prompt"] + "{{input}}{{output}}",
+                try_register=False,
+                cache_prefix=False,
                 params=[
                     P.Parameter(name="input", typ=P.ParamType.INPUT_LOC),
                     P.Parameter(
@@ -112,7 +114,6 @@ async def execute(vm: P.VirtualMachine, workloads, cache_prefix):
                         ),
                     ),
                 ],
-                cache_prefix=cache_prefix,
             )
             round_funcs.append(func)
         funcs.append(round_funcs)
@@ -136,16 +137,14 @@ async def execute(vm: P.VirtualMachine, workloads, cache_prefix):
     # print(string)
 
 
-def main(branches_num: int, cache_prefix: bool = True):
+def main(branches_num: int, share_prefix: bool = True):
     print("branches_num: ", branches_num, flush=True)
     workloads = load_workloads(branches_num)
     vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
-    latency = vm.run(execute, args=[vm, workloads, cache_prefix], timeit=True)
-    latency -= 0.25 * 8 * 3  # Hack the communication overhead.
+    latency = vm.run(execute, args=[vm, workloads, share_prefix], timeit=True)
     print(f"Time: {latency} (s)", flush=True)
 
 
 if __name__ == "__main__":
     for bn in [4, 8, 12, 16]:
-        main(bn, True)
-        # time.sleep(10)
+        main(bn)
