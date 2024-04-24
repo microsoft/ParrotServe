@@ -16,7 +16,12 @@ from parrot.constants import (
 )
 from parrot.exceptions import parrot_assert
 
+from parrot.utils import get_logger
+
 from .model import LanguageModel, ModelType
+
+
+logger = get_logger("ExecutionEngine")
 
 
 class EngineStatus(Enum):
@@ -156,6 +161,8 @@ class ExecutionEngine:
 
         parrot_assert(task.is_scheduled, "The task is not scheduled.")
 
+        debug_str = ""
+
         self._serve_layer_runtime_info.num_tasks += 1
 
         tasks_num_upperbound = task.schedule_annotation.tasks_num_upperbound
@@ -166,6 +173,12 @@ class ExecutionEngine:
         if self.model_type == ModelType.TOKEN_ID:
             tokens_num = task.get_token_nums(self.tokenizer_name)
             self._serve_layer_runtime_info.tokens_num += tokens_num
+            debug_str = f" (Add {tokens_num} tokens, Total {self._serve_layer_runtime_info.tokens_num} tokens)"
+
+        # logger.debug(
+        #     f"Task(task_id={task.task_id}) is scheduled to Engine(engine_id={self.engine_id})."
+        #     + debug_str
+        # )
 
     def update_servelayer_runtime_info_remove_task(
         self, task: "CompletionTask"
@@ -174,12 +187,20 @@ class ExecutionEngine:
 
         parrot_assert(task.is_scheduled, "The task is not scheduled.")
 
+        debug_str = ""
+
         self._serve_layer_runtime_info.num_tasks -= 1
         self._serve_layer_runtime_info.tasks_num_upperbounds.pop(task.task_id)
 
         if self.model_type == ModelType.TOKEN_ID:
             tokens_num = task.get_token_nums(self.tokenizer_name)
             self._serve_layer_runtime_info.tokens_num -= tokens_num
+            debug_str = f" (Lose {tokens_num} tokens, Remaining {self._serve_layer_runtime_info.tokens_num} tokens)"
+
+        # logger.debug(
+        #     f"Task(task_id={task.task_id}) is removed from Engine(engine_id={self.engine_id})."
+        #     + debug_str
+        # )
 
     # ---------- For Profiling ----------
 

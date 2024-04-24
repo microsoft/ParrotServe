@@ -9,9 +9,10 @@ python3 -m fastchat.serve.vllm_worker \
      --model-names "gpt-3.5-turbo" \
      --limit-worker-concurrency 999999 \
      --tokenizer hf-internal-testing/llama-tokenizer \
+     --max-num-batched-tokens 8000 \
      --seed 0 &> worker_vllm_stdout.log &
 
-sleep 60
+sleep 20
 
 python3 -m fastchat.serve.openai_api_server --host localhost --port 8000 &> fschat_api_server_stdout.log &
 

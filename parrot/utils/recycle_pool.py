@@ -30,15 +30,14 @@ class RecyclePool:
     def allocate(self) -> int:
         """Fetch an id."""
 
-        if self.pool_size is not None and self.allocated_num >= self.pool_size:
-            raise ParrotError(
-                f"No free ids in Pool: {self.pool_name} (pool_size={self.pool_size})."
-            )
-
         self.allocated_num += 1
 
         if len(self.free_ids) == 0 or self.debug_mode:
             self.cur_max_id += 1
+            if self.pool_size is not None and self.cur_max_id >= self.pool_size:
+                raise ParrotError(
+                    f"No free ids in Pool: {self.pool_name} (pool_size={self.pool_size})."
+                )
             return self.cur_max_id - 1
 
         allocated_id = self.free_ids.popleft()  # Pop from left

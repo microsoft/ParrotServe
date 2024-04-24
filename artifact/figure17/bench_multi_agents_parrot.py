@@ -1,11 +1,9 @@
 import json
-import parrot as P
 import asyncio
 import time
 from transformers import AutoTokenizer
 
-# HACK VERSION.
-# TODO: Variable sharing between requests.
+from parrot import P
 
 
 def load_workloads(branches_num: int):
@@ -80,15 +78,7 @@ def load_workloads(branches_num: int):
 
         print("batch_sum: ", batch_sum, flush=True)
 
-        for info in round_info:
-            info["shared_prompt"] = shared_prompt
-            info["diverged_prompt"] = prompt[len(shared_prompt) :]
-            info["shared_prompt_len"] = len(
-                tokenizer.encode(shared_prompt, add_special_tokens=False)
-            )
-            info["diverged_prompt_len"] = len(
-                tokenizer.encode(info["diverged_prompt"], add_special_tokens=False)
-            )
+        print(len(round_info))
 
         ret.append(round_info)
 
@@ -143,13 +133,13 @@ async def execute(vm: P.VirtualMachine, workloads, cache_prefix):
 def main(branches_num: int, cache_prefix: bool = True):
     print("branches_num: ", branches_num, flush=True)
     workloads = load_workloads(branches_num)
-    vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
-    latency = vm.run(execute, args=[vm, workloads, cache_prefix], timeit=True)
-    latency -= 0.25 * 8 * 3  # Hack the communication overhead.
+    # vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
+    # latency = vm.run(execute, args=[vm, workloads, cache_prefix], timeit=True)
+    # latency -= 0.25 * 8 * 3  # Hack the communication overhead.
     print(f"Time: {latency} (s)", flush=True)
 
 
 if __name__ == "__main__":
     for bn in [4, 8, 12, 16]:
         main(bn, True)
-        time.sleep(10)
+        # time.sleep(10)

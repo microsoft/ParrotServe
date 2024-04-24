@@ -1,3 +1,0 @@
-file_name: article_0, chunk_size: 1024, output_len: 25
-Time: 90.0882s
-file_name: article_0, chunk_size: 1024, output_len: 50

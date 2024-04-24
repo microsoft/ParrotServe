@@ -261,6 +261,20 @@ class LLMEngine:
             assert prompt is not None
             prompt_token_ids = self.tokenizer.encode(prompt)
 
+        # HACK(chaofan): Pruning the length of the prompt to fit the VLLM capacity.
+        import os
+
+        vllm_cap = os.environ.get("VLLM_CAPACITY", None)
+        if vllm_cap is not None:
+            vllm_cap = int(vllm_cap)
+            pruned_length = vllm_cap - sampling_params.max_tokens - 100
+            if len(prompt_token_ids) > pruned_length:
+                print(
+                    f"Pruned the prompt to fit the VLLM capacity. {pruned_length}",
+                    flush=True,
+                )
+                prompt_token_ids = prompt_token_ids[:pruned_length]
+
         # Create the sequences.
         block_size = self.cache_config.block_size
         seqs: List[Sequence] = []
@@ -345,7 +359,10 @@ class LLMEngine:
                 cur_time = time.perf_counter_ns()
                 req_no = request_output.request_id
                 generated_len = len(request_output.outputs[0].token_ids)
-                print(f"[vLLM debug] Request exit timestamp. request_id={req_no}, t={cur_time}, generated_len={generated_len}", flush=True)
+                print(
+                    f"[vLLM debug] Request exit timestamp. request_id={req_no}, t={cur_time}, generated_len={generated_len}",
+                    flush=True,
+                )
 
         if self.log_stats:
             # Log the system stats.

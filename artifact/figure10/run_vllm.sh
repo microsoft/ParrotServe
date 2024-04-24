@@ -1,15 +1,22 @@
 #!/bin/sh
 
-rm vllm_server.log
-rm vllm_client.log
+# warn: rm result
+rm result.txt
+touch result.txt
 
-# Launch server
-bash start_vllm_server.sh $1 "vllm_server.log"
-sleep 60
+counter = 1
 
-# Run benchmark
-bash start_benchmark_vllm.sh $2 &> "vllm_client.log"
-sleep 1
+for reqs in {5..25..5}
+do
+    for capacity in {2048..12288..2048}
+    do
+    echo "Run with capacity: $capacity, reqs: $reqs [$counter / 30]"
+    echo "capacity: $capacity, reqs: $reqs" >> result.txt
+    bash start_vllm_single_dp.sh $capacity $reqs
+    python3 parse_log_vllm.py >> result.txt
+    counter=$((counter+1))
+    done
+done
 
-# Kill cluster
-bash ../../scripts/kill_all_vllm_servers.sh
+# Plot the results
+python3 plot.py

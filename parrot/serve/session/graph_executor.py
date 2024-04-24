@@ -91,7 +91,7 @@ class GraphExecutor:
         # Execute the task.
         await self.execute(task)
 
-        # Free the tas resources.
+        # Free the task resources.
         # TODO(chaofan): Current implementation has BUGS in stateful generation cases.
         self.task_creator.free_task(task)
         self.context_mgr.free_task_contexts(task)
@@ -192,7 +192,9 @@ class GraphExecutor:
                     node.sv.set(content=generated_text)
                 else:
                     if type_token_id_flag:
-                        token_ids = completion_task.tokenized_result[tokenizer_name][i]
+                        token_ids = completion_task.tokenized_result[tokenizer_name][
+                            i
+                        ].copy()
 
                         # NOTE(chaofan): Fuse Fill. We add all token_ids of the same context together.
                         # The next nodes won't be executed since the context is ready.

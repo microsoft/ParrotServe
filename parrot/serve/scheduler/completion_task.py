@@ -8,6 +8,8 @@ from asyncio import Event
 
 from parrot.exceptions import parrot_assert
 
+from parrot.utils import get_logger
+
 from parrot.serve.backend_repr import ExecutionEngine, Context
 from parrot.serve.graph import CompletionChain
 

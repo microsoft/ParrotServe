@@ -51,6 +51,7 @@ def prepare_docs(file_name: str, chunk_size: int):
         separator=" ",
     )
     split_docs = text_splitter.split_documents(docs)
+    # print("chunk_num: ", len(split_docs), flush=True)
     # for doc in split_docs:
     #     content = doc.page_content
     #     token_ids = tokenizer.tokenize(content)
@@ -60,6 +61,7 @@ def prepare_docs(file_name: str, chunk_size: int):
 
 async def amap(map_chain, doc: str):
     resp = await map_chain.arun(text=doc)
+    # print("Received resp", flush=True)
     return resp
 
 
@@ -69,9 +71,12 @@ async def run(map_chain, reduce_chain, split_docs):
         coros.append(amap(map_chain=map_chain, doc=doc.page_content))
 
     st = time.perf_counter_ns()
-    docs = await asyncio.gather(*coros)
+    try:
+        docs = await asyncio.gather(*coros, return_exceptions=True)
+    except Exception as e:
+        pass
     docs = "\n".join(docs)
-    resp = reduce_chain.run(docs=docs[:4000])  # This is to avoid stuck
+    resp = reduce_chain.run(docs=docs)
     ed = time.perf_counter_ns()
     latency = (ed - st) / 1e9
     print(f"Time: {latency:.4f}", flush=True)
@@ -87,8 +92,7 @@ def main(file_name: str, chunk_size: int, output_len: int):
 
     docs = prepare_docs(file_name, chunk_size)
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(run(map_chain, reduce_chain, docs))
+    asyncio.run(run(map_chain, reduce_chain, docs))
 
 
 def warmup():

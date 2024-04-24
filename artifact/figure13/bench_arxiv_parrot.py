@@ -94,6 +94,7 @@ CONCISE SUMMARY:{{summary}}""",
 def main(file_name: str, chunk_size: int, output_len: int):
     chunks = get_chunks(file_name, chunk_size)
     chunk_num = len(chunks)
+    # print(f"chunk_num: {chunk_num}", flush=True)
     map_func, reduce_func = get_map_reduce_functions(file_name, chunk_num, output_len)
 
     print(
@@ -143,7 +144,7 @@ if __name__ == "__main__":
     if arg == "test":
         main("article_0", 1024, 100)
     elif arg == "exp1":
-        for i in range(7, 10):
+        for i in range(10):
             for ol in [25, 50, 75, 100]:
                 main(f"article_{i}", 1024, ol)
     elif arg == "exp2":
