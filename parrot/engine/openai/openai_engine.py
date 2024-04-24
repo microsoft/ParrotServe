@@ -7,17 +7,17 @@ import openai
 import time
 import asyncio
 
-from parrot.utils import get_logger, create_task_in_loop, time_counter_in_nanoseconds
-from parrot.sampling_config import SamplingConfig
-from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
+from parrot.utils import get_logger, create_task_in_loop
+from parrot.protocol.sampling_config import SamplingConfig
+from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.constants import UNKNOWN_DATA_FIELD
 
 from .api_endpoint import Endpoint
 from ..context.text_context import TextContext
-from ...protocol.internal.runtime_info import EngineRuntimeInfo
-from ..context.context_manager import EngineContextManager
+from ...protocol.runtime_info import EngineRuntimeInfo
+from ..context.context_manager import ContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
-from ..engine_scheduler import EngineScheduler
+from ..scheduler import Scheduler
 from ..llm_engine import LLMEngine
 from ..config import OpenAIConfig, EngineConfig, SchedulerConfig
 from ..latency_analyzer import LatencyAnalyzer
@@ -28,21 +28,26 @@ logger = get_logger("OpenAIEngine")
 class OpenAIEngine(LLMEngine):
     """OpenAIEngine powered by OpenAI APIs."""
 
-    def __init__(self, engine_config: Dict, connect_to_core: bool = True):
-        super().__init__(engine_config, connect_to_core)
+    def __init__(self, engine_config: Dict, connect_to_os: bool = True):
+        super().__init__(engine_config, connect_to_os)
 
-        scheduler_config = SchedulerConfig(**engine_config["scheduler"])
+        scheduler_config = engine_config.pop("scheduler")
+        scheduler_config = SchedulerConfig(**scheduler_config)
         scheduler_config.max_batch_size = 9999999999999  # Unlimited
         scheduler_config.max_num_batched_tokens = 9999999999999  # Unlimited
         scheduler_config.max_total_tokens = 9999999999999  # Unlimited
 
         # ---------- Configs ----------
-        self.openai_config = OpenAIConfig(**engine_config["instance"])
-        self.engine_config = EngineConfig.from_dict(engine_config)
+        self.openai_config = OpenAIConfig(**engine_config.pop("instance"))
+        self.engine_config = EngineConfig(
+            dtype="unknown",
+            device="unknown",
+            **engine_config,
+        )
 
         # ---------- Components ----------
-        self.scheduler = EngineScheduler(scheduler_config)
-        self.context_manager = EngineContextManager()
+        self.scheduler = Scheduler(scheduler_config)
+        self.context_manager = ContextManager()
         # self.latency_analyzer = LatencyAnalyzer()
 
         # Create a OpenAI client
@@ -92,11 +97,10 @@ class OpenAIEngine(LLMEngine):
             # Generate text and append it to the text context.
 
             logger.debug("Generate job started. Submit request to OpenAI API...")
-            st = time_counter_in_nanoseconds()
+            st = time.perf_counter_ns()
 
             if self.openai_config.api_endpoint == Endpoint.COMPLETION:
                 prompt = job.context.get_whole_context_text()
-                logger.debug(f"Send messages: {prompt} to OpenAI API.")
                 completion = await self.client.completions.create(
                     prompt=prompt,
                     model=self.engine_config.model,
@@ -115,7 +119,7 @@ class OpenAIEngine(LLMEngine):
                 )
                 generated_result = chat_completion.choices[0].message.content
 
-            ed = time_counter_in_nanoseconds()
+            ed = time.perf_counter_ns()
             logger.debug(
                 f"Generate job done. Request E2E latency: {(ed - st) / 1e9:.3f} (s)."
             )
@@ -131,8 +135,8 @@ class OpenAIEngine(LLMEngine):
     # override
     async def fill(self, payload: Dict) -> Dict:
         fill_job = Fill(
-            session_id=payload["session_id"],
-            task_id=payload["task_id"],
+            pid=payload["pid"],
+            tid=payload["tid"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             text=payload["text"],
@@ -150,8 +154,8 @@ class OpenAIEngine(LLMEngine):
     # override
     async def generate(self, payload: Dict) -> Dict:
         generation_job = Generate(
-            session_id=payload["session_id"],
-            task_id=payload["task_id"],
+            pid=payload["pid"],
+            tid=payload["tid"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             sampling_config=SamplingConfig(**payload["sampling_config"]),
@@ -217,9 +221,9 @@ class OpenAIEngine(LLMEngine):
         self.scheduler.finish()
 
         # if len(coroutines) > 0:
-        # st = time_counter_in_nanoseconds()
+        # st = time.perf_counter_ns()
         # await asyncio.gather(*coroutines)
-        # ed = time_counter_in_nanoseconds()
+        # ed = time.perf_counter_ns()
         # iter_latency = ed - st
         # self.latency_analyzer.add_latency(iter_latency)
 
@@ -227,7 +231,7 @@ class OpenAIEngine(LLMEngine):
     async def engine_iter(self):
         """Get the jobs and execute them asynchronously."""
 
-        if self.scheduler.is_empty:
+        if self.scheduler.empty:
             return
 
         await self._execute_iter()

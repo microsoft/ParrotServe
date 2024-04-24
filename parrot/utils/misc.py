@@ -6,7 +6,6 @@ import inspect
 import sys
 import os
 import psutil
-import time
 
 
 def redirect_stdout_stderr_to_file(log_file_dir_path: str, file_name: str):
@@ -58,9 +57,3 @@ def get_cpu_memory_usage() -> float:
     # process = psutil.Process(os.getpid())
     # return process.memory_info().rss / 1024 / 1024
     return psutil.virtual_memory().used / 1024 / 1024
-
-
-def time_counter_in_nanoseconds() -> int:
-    """Get the current time counter in nanoseconds."""
-
-    return time.perf_counter_ns()

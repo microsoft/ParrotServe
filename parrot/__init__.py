@@ -2,9 +2,19 @@
 # Licensed under the MIT license.
 
 
-"""Parrot: Efficient Serving LLM-based Applications with Dependent Semantic Variables."""
+"""Parrot: Efficient Serving LLM-based Agents with Dependent Semantic Variables.
 
-__version__ = "0.01"
+(Scalable and Efficient Runtime System for Semantic Programming.)
+"""
 
-# Import PFunc frontend
-import parrot.frontend.pfunc as P
+try:
+    import mlc_chat  # Avoid MLC error because "torch" is imported before "mlc_chat"
+except ImportError:
+    print("Warning: MLC is not installed. Related functionalities will be disabled.")
+
+# Program Interface and Transforms
+from .program import *
+
+# Sampling config and annotations
+from .protocol.annotation import DispatchAnnotation
+from .protocol.sampling_config import SamplingConfig

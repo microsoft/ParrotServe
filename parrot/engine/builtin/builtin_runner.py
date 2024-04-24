@@ -8,14 +8,14 @@ import torch
 import time
 import psutil
 
-from parrot.utils import RecyclePool, get_logger, time_counter_in_nanoseconds
-from parrot.sampling_config import SamplingConfig
+from parrot.utils import RecyclePool, get_logger
+from parrot.protocol.sampling_config import SamplingConfig
 
 from .model_instantiation import instantiate_model
 from .mem import init_model_cache_storage
 from ..context.block_context import BlockContext
 from .iter_state import IterationState
-from ..context.context_manager import EngineContextManager
+from ..context.context_manager import ContextManager
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import BuiltinConfig
 
@@ -37,8 +37,10 @@ class BuiltinRunner:
 
     def __init__(self, model_name: str, config: BuiltinConfig):
         self.builtin_config = config
-        self.context_manager = EngineContextManager()
-        self.kv_cache_manager = RecyclePool("KVCache pool", pool_size=config.num_kv_cache_blocks)
+        self.context_manager = ContextManager()
+        self.kv_cache_manager = RecyclePool(
+            "KVCache pool", self.builtin_config.num_kv_cache_blocks
+        )
 
         # Init CUDA env
         if self.builtin_config.device_str.startswith("cuda:"):
@@ -70,7 +72,7 @@ class BuiltinRunner:
         logger.debug(f"Running {len(jobs)} jobs. ")
 
         # torch.cuda.synchronize()
-        st = time_counter_in_nanoseconds()
+        st = time.perf_counter_ns()
 
         # We should sort jobs such that Fill jobs are before Generation jobs.
         jobs.sort(key=lambda job: isinstance(job, Generate))
@@ -156,7 +158,7 @@ class BuiltinRunner:
         )
 
         torch.cuda.synchronize()
-        st_model = time_counter_in_nanoseconds()
+        st_model = time.perf_counter_ns()
 
         # Execute model
         fill_hidden_states, next_tokens = self.model(
@@ -166,7 +168,7 @@ class BuiltinRunner:
         next_tokens = next_tokens.cpu().tolist()
 
         torch.cuda.synchronize()
-        ed_model = time_counter_in_nanoseconds()
+        ed_model = time.perf_counter_ns()
 
         torch.cuda.empty_cache()  # Release unactivated GPU memory
 
@@ -186,7 +188,7 @@ class BuiltinRunner:
                 if job.check_stop():
                     job.finish_event.set()
 
-        ed = time_counter_in_nanoseconds()
+        ed = time.perf_counter_ns()
 
         e2e_time = ed - st
         logger.debug(

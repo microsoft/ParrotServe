@@ -18,8 +18,6 @@ import time
 import triton
 import triton.language as tl
 
-from parrot.utils import time_counter_in_nanoseconds
-
 
 # Grid: num_tokens
 @triton.jit
@@ -351,11 +349,11 @@ def test_discontinuous_move_tokens():
         discontinuous_move_tokens(src_storage, dest_storage, src_indices, dest_indices)
 
     torch.cuda.synchronize()
-    st = time_counter_in_nanoseconds()
+    st = time.perf_counter_ns()
     for i in range(100):
         discontinuous_move_tokens(src_storage, dest_storage, src_indices, dest_indices)
     torch.cuda.synchronize()
-    ed = time_counter_in_nanoseconds()
+    ed = time.perf_counter_ns()
 
     print(
         f"Move {batch_tokens * num_heads * head_dim * 2 / 1024 / 1024 / 1024} GB tokens. Time {(ed - st) / 100 / 1e9:.3f} s"
@@ -411,13 +409,13 @@ def test_move_tokens_from_blocked_k_cache():
         )
 
     torch.cuda.synchronize()
-    st = time_counter_in_nanoseconds()
+    st = time.perf_counter_ns()
     for i in range(100):
         move_tokens_from_blocked_k_cache(
             blocked_k_cache, dest_storage, src_slot_indices, dest_indices
         )
     torch.cuda.synchronize()
-    ed = time_counter_in_nanoseconds()
+    ed = time.perf_counter_ns()
 
     print(
         f"Move {batch_tokens * num_heads * head_dim * 2 / 1024 / 1024 / 1024} GB tokens. Time {(ed - st) / 100 / 1e9:.3f} s"
@@ -471,13 +469,13 @@ def test_move_tokens_from_blocked_v_cache():
         )
 
     torch.cuda.synchronize()
-    st = time_counter_in_nanoseconds()
+    st = time.perf_counter_ns()
     for i in range(100):
         move_tokens_from_blocked_v_cache(
             blocked_v_cache, dest_storage, src_slot_indices, dest_indices
         )
     torch.cuda.synchronize()
-    ed = time_counter_in_nanoseconds()
+    ed = time.perf_counter_ns()
 
     print(
         f"Move {batch_tokens * num_heads * head_dim * 2 / 1024 / 1024 / 1024} GB tokens. Time {(ed - st) / 100 / 1e9:.3f} s"

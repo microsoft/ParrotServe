@@ -5,15 +5,15 @@
 from typing import Dict, AsyncGenerator
 
 from parrot.utils import get_logger, MemTracker, get_cpu_memory_usage, cprofile
-from parrot.sampling_config import SamplingConfig
-from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
+from parrot.protocol.sampling_config import SamplingConfig
+from parrot.protocol.runtime_info import EngineRuntimeInfo
 from parrot.constants import UNKNOWN_DATA_FIELD
 
 from ..llm_engine import LLMEngine
 from .builtin_runner import BuiltinRunner
 from ..latency_analyzer import LatencyAnalyzer
 from ..context.block_context import BlockContext
-from ..engine_scheduler import EngineScheduler
+from ..scheduler import Scheduler
 from ..primitive_job import PrimitiveJob, Fill, Generate
 from ..config import BuiltinConfig, SchedulerConfig, EngineConfig
 
@@ -24,22 +24,24 @@ logger = get_logger("BuiltinEngine")
 class BuiltinEngine(LLMEngine):
     """Parrot built-in LLM Engine, supporting the most fine-grained level optimization."""
 
-    def __init__(self, engine_config: Dict, connect_to_core: bool = True):
-        super().__init__(engine_config, connect_to_core)
+    def __init__(self, engine_config: Dict, connect_to_os: bool = True):
+        super().__init__(engine_config, connect_to_os)
 
         # ---------- Configs ----------
-        builtin_config = BuiltinConfig(**engine_config["instance"])
-        scheduler_config = SchedulerConfig(**engine_config["scheduler"])
+        builtin_config = BuiltinConfig(**engine_config.pop("instance"))
+        scheduler_config = SchedulerConfig(**engine_config.pop("scheduler"))
+        self.engine_config = EngineConfig(
+            dtype=builtin_config.dtype_str,
+            device=builtin_config.device_str,
+            **engine_config,
+        )
         self.builtin_config = builtin_config
-        # Assign dtype and device to engine_config
-        self.engine_config.dtype = builtin_config.dtype_str
-        self.engine_config.device = builtin_config.device_str
 
         # ---------- Components ----------
         self.runner = BuiltinRunner(
             model_name=self.engine_config.model, config=builtin_config
         )
-        self.scheduler = EngineScheduler(scheduler_config)
+        self.scheduler = Scheduler(scheduler_config)
         self.latency_analyzer = LatencyAnalyzer()
         self.gpu_mem_tracker = MemTracker(device=self.runner.local_rank)
 
@@ -70,8 +72,8 @@ class BuiltinEngine(LLMEngine):
     # override
     async def fill(self, payload: Dict) -> Dict:
         fill_job = Fill(
-            session_id=payload["session_id"],
-            task_id=payload["task_id"],
+            pid=payload["pid"],
+            tid=payload["tid"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             end_flag=payload["end_flag"],
@@ -87,20 +89,20 @@ class BuiltinEngine(LLMEngine):
     # override
     async def generate(self, payload: Dict) -> Dict:
         generation_job = Generate(
-            session_id=payload["session_id"],
-            task_id=payload["task_id"],
+            pid=payload["pid"],
+            tid=payload["tid"],
             context_id=payload["context_id"],
             parent_context_id=payload["parent_context_id"],
             sampling_config=SamplingConfig(**payload["sampling_config"]),
             end_flag=payload["end_flag"],
         )
-
         self._add_job(generation_job)
+
         await generation_job.finish_event.wait()
 
         generated_token_ids = []
         while not generation_job.output_queue.empty():
-            generated_token_ids.append(await generation_job.output_queue.get())
+            generated_token_ids.append(generation_job.output_queue.get())
 
         return {
             "generated_text": "",
@@ -109,16 +111,16 @@ class BuiltinEngine(LLMEngine):
 
     # override
     def generate_stream(self, payload: Dict) -> AsyncGenerator:
-        session_id = payload["session_id"]
-        task_id = payload["task_id"]
+        pid = payload["pid"]
+        tid = payload["tid"]
         context_id = payload["context_id"]
         parent_context_id = payload["parent_context_id"]
         sampling_config = SamplingConfig(**payload["sampling_config"])
         end_flag = payload["end_flag"]
 
         generation_job = Generate(
-            session_id=session_id,
-            task_id=task_id,
+            pid=pid,
+            tid=tid,
             context_id=context_id,
             parent_context_id=parent_context_id,
             sampling_config=sampling_config,
@@ -152,6 +154,8 @@ class BuiltinEngine(LLMEngine):
         num_max_blocks = self.runner.kv_cache_manager.get_history_max_allocated_num()
         cache_mem = (
             num_cached_tokens
+            # TODO(chaofan): Currently this config must be OPTConfig.
+            # Support other configs in the future./
             * self.runner.hf_model_config.hidden_size
             * self.runner.hf_model_config.num_hidden_layers
             * 2
@@ -188,7 +192,7 @@ class BuiltinEngine(LLMEngine):
     # override
     async def engine_iter(self):
         # If there is no job, we don't need to run.
-        if self.scheduler.is_empty:
+        if self.scheduler.empty:
             return
 
         jobs = self.scheduler.schedule()

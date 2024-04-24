@@ -25,17 +25,13 @@ class BlockContext(LowLevelContext):
         # For blocked context
         self.block_size = block_size
         self.padded = False
-        self.padded_len = 0
 
         if self.parent_context is not None and not self.parent_context.padded:
-            # Get current length
             context_len = self.parent_context.get_this_context_len()
-
-            # Pad the length to the multiple of block size
-            total_len = (
+            padded_len = (
                 (context_len + self.block_size - 1) // self.block_size * self.block_size
             )
-            self.parent_context.pad_to(total_len)
+            self.parent_context.pad_to(padded_len)
 
         # KV blocks address
         # length = num_tokens. Each element is a block id.
@@ -73,10 +69,7 @@ class BlockContext(LowLevelContext):
         cur_len = self.get_this_context_len()
         assert length >= cur_len, "The length should be larger than the current length."
 
-        # Padded len = length - cur_len
-        self.padded_len = length - cur_len
-
-        for _ in range(self.padded_len):
+        for _ in range(length - cur_len):
             self._allocate_one()
 
         self.padded = True
@@ -85,13 +78,10 @@ class BlockContext(LowLevelContext):
     def destruction(self):
         super().destruction()
 
-        # Free every block in the manager
         for block_id in self.token_kv_block_ids[:: self.block_size]:
             self.kv_cache_manager.free(block_id)
 
     def allocate(self, length: int):
-        """Allocate a certain length of blocks."""
-
         for _ in range(length):
             self._allocate_one()
 

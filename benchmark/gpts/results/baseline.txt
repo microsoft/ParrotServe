@@ -1,8 +1,0 @@
-request_rate:  0.25
-Normalized latency: 47.05 ms
-request_rate:  0.5
-Normalized latency: 55.92 ms
-request_rate:  1.0
-Normalized latency: 206.74 ms
-request_rate:  2.0
-Normalized latency: 546.80 ms

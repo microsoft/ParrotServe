@@ -21,12 +21,13 @@ import time
 import numpy as np
 
 from parrot.engine.config import EngineConfig
+from parrot.os.engine import EngineRuntimeInfo
 from parrot.constants import (
     DEFAULT_SERVER_HOST,
     DEFAULT_ENGINE_SERVER_PORT,
+    ENGINE_HEARTBEAT_INTERVAL,
 )
-from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
-from parrot.protocol.internal.layer_apis import register_engine, engine_heartbeat
+from parrot.protocol.layer_apis import register_engine, engine_heartbeat
 from parrot.utils import get_logger, create_task_in_loop
 
 # ---------- Constants ----------
@@ -34,7 +35,6 @@ TESTING_RANDOM_SEED = 2333
 TESTING_SERVER_HOST = DEFAULT_SERVER_HOST
 TESTING_SERVER_PORT = DEFAULT_ENGINE_SERVER_PORT
 TESTING_SERVER_URL = f"http://{TESTING_SERVER_HOST}:{TESTING_SERVER_PORT}"
-TESTING_ENGINE_HEARTBEAT_INTERVAL = 5  # seconds
 TESTING_FILL_PERTOKEN_TIME = 0.1
 TESTING_DECODE_PERTOKEN_TIME = 0.1
 
@@ -47,7 +47,7 @@ logger = get_logger("Fake Engine Server")
 
 # Status Data
 
-context_len_map = {}  # Context_id -> context_length
+context = {}  # Context_id -> context_length
 num_cached_tokens = 0
 num_running_jobs = 0
 
@@ -83,7 +83,7 @@ def fake_engine_daemon():
             ),
         )
 
-        time.sleep(TESTING_ENGINE_HEARTBEAT_INTERVAL)
+        time.sleep(ENGINE_HEARTBEAT_INTERVAL)
 
 
 @app.post("/fill")
@@ -110,9 +110,9 @@ async def fill(request: Request):
 
     num_cached_tokens += length
     context_id = payload["context_id"]
-    if context_id not in context_len_map:
-        context_len_map[context_id] = 0
-    context_len_map[context_id] += length
+    if context_id not in context:
+        context[context_id] = 0
+    context[context_id] += length
 
     num_running_jobs -= 1
 
@@ -129,12 +129,7 @@ async def generate(request: Request):
     num_running_jobs += 1
     payload = await request.json()
 
-    gen_len = min(45, int(np.random.exponential(32) + 3))
-
-    context_id = payload["context_id"]
-    if context_id not in context_len_map:
-        context_len_map[context_id] = 0
-    context_len_map[context_id] += gen_len
+    gen_len = int(np.random.exponential(32) + 3)
 
     time.sleep(TESTING_DECODE_PERTOKEN_TIME * gen_len)
 
@@ -152,15 +147,15 @@ async def generate_stream(request: Request):
     num_running_jobs += 1
     payload = await request.json()
 
-    gen_len = min(45, int(np.random.exponential(32) + 3))
+    gen_len = int(np.random.exponential(32) + 3)
     # gen_len = 512
     gen_data = np.random.randint(10, 10000, size=(gen_len,)).tolist()
 
     num_cached_tokens += gen_len
     context_id = payload["context_id"]
-    if context_id not in context_len_map:
-        context_len_map[context_id] = 0
-    context_len_map[context_id] += gen_len
+    if context_id not in context:
+        context[context_id] = 0
+    context[context_id] += gen_len
 
     def generator():
         for data in gen_data:
@@ -182,9 +177,9 @@ async def free_context(request: Request):
 
     context_len = 0
 
-    if payload["context_id"] in context_len_map:
-        num_cached_tokens -= context_len_map[payload["context_id"]]
-        context_len = context_len_map[payload["context_id"]]
+    if payload["context_id"] in context:
+        num_cached_tokens -= context[payload["context_id"]]
+        context_len = context[payload["context_id"]]
 
     return {
         "context_len": context_len,

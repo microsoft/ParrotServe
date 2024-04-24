@@ -21,13 +21,11 @@ class LowLevelContext(ABC):
     ):
         self.context_id = context_id
         self.sub_context_ids: List[int] = []
-        self.depth = 0  # Depth in the tree. Root is 0.
 
         # Link with parent context
         self.parent_context = parent_context
         if self.parent_context is not None:
             parent_context.sub_context_ids.append(self.context_id)
-            self.depth = parent_context.depth + 1
 
     def destruction(self):
         """Destruct the context. If we call this function, the context obj should not be used

@@ -23,10 +23,8 @@ def create_task_in_loop(
 ):
     if loop is None:
         loop = asyncio.get_running_loop()
-
     # asyncio.run_coroutine_threadsafe(coro, loop)
     # asyncio.create_task(coro)
-
     task = loop.create_task(coro)
     if fail_fast:
         task.add_done_callback(_task_error_callback_fail_fast)

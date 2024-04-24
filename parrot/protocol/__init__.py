@@ -2,6 +2,4 @@
 # Licensed under the MIT license.
 
 
-"""
-The "protocol" package contains a set of APIs for communication between Parrot's three layers.
-"""
+"""Protocols and common components between layers."""

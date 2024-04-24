@@ -32,23 +32,21 @@ llm_engine: Optional[LLMEngine] = None
 @app.post("/fill")
 async def fill(request: Request):
     payload = await request.json()
-    logger.debug(f"Received fill request from session_id={payload['session_id']}")
+    logger.debug(f"Received fill request from pid={payload['pid']}")
     return await llm_engine.fill(payload)
 
 
 @app.post("/generate")
 async def generate(request: Request):
     payload = await request.json()
-    logger.debug(f"Received generate request from session_id={payload['session_id']}")
+    logger.debug(f"Received generate request from pid={payload['pid']}")
     return await llm_engine.generate(payload)
 
 
 @app.post("/generate_stream")
 async def generate_stream(request: Request):
     payload = await request.json()
-    logger.debug(
-        f"Received generate_stream request from session_id={payload['session_id']}"
-    )
+    logger.debug(f"Received generate_stream request from pid={payload['pid']}")
     return StreamingResponse(llm_engine.generate_stream(payload))
 
 
@@ -69,7 +67,7 @@ async def ping(request: Request):
 
 def start_server(
     engine_config_path: str,
-    connect_to_core: bool = True,
+    connect_to_os: bool = True,
     override_args: Dict = {},
 ):
     global llm_engine
@@ -77,7 +75,7 @@ def start_server(
 
     llm_engine = create_engine(
         engine_config_path=engine_config_path,
-        connect_to_core=connect_to_core,
+        connect_to_os=connect_to_os,
         override_args=override_args,
     )
 
@@ -131,9 +129,9 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--without_core",
+        "--without_os",
         action="store_true",
-        help="Whether to start the engine without connecting to Serve Core.",
+        help="Whether to start the engine without connecting to OS.",
     )
 
     parser.add_argument(
@@ -193,6 +191,6 @@ if __name__ == "__main__":
 
     start_server(
         engine_config_path=args.config_path,
-        connect_to_core=not args.without_core,
+        connect_to_os=not args.without_os,
         override_args=override_args,
     )

@@ -104,9 +104,6 @@ class EngineConfig:
     host: str = DEFAULT_SERVER_HOST
     port: int = DEFAULT_ENGINE_SERVER_PORT
 
-    # Heartbeat interval in seconds.
-    heartbeat_interval: int = 3
-
     # The name of engine.
     engine_name: str = "unknown"
 
@@ -130,10 +127,10 @@ class EngineConfig:
     device: str = "cuda"  # cpu, cuda, cuda:x
 
     # Max threads the engine can handle.
-    tasks_capacity: int = 256
+    threads_capacity: int = 256
 
     # For non-builtin engines, it's useless.
-    tokens_capacity: int = 99999999999999999
+    tokens_capacity: int = 262144
 
     @classmethod
     def verify_config(cls, config: Dict) -> bool:
@@ -154,11 +151,3 @@ class EngineConfig:
             return False
 
         return True
-
-    @classmethod
-    def from_dict(cls, config_dict: Dict) -> "EngineConfig":
-        config_dict = config_dict.copy()
-        config_dict.pop("instance")
-        config_dict.pop("scheduler")
-        config_dict.pop("serve_core")
-        return cls(**config_dict)
