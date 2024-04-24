@@ -10,6 +10,7 @@ def read_file(filename):
     data = {}
     for line in lines[1:]:
         tokens = line.strip().split(",")
+        print(tokens)
         method, bs, e2e, requests = tokens[0], int(tokens[1]), tokens[6], tokens[7]
         req_lat = [float(_) for _ in requests.split("+")]
         if "nan" in e2e:

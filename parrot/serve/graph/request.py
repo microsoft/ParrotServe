@@ -88,6 +88,7 @@ class SemanticCallMetadata:
         "remove_pure_fill",
         "cache_prefix",
         "output_criteria",
+        "fuse_fill",
     ]
 
     models: List[str]
@@ -95,6 +96,7 @@ class SemanticCallMetadata:
     remove_pure_fill: bool
     cache_prefix: bool
     output_criteria: Optional[Union[PerformanceCriteria, str]]
+    fuse_fill: bool
 
     @classmethod
     def get_default_dict(cls) -> Dict:
@@ -106,6 +108,7 @@ class SemanticCallMetadata:
             "remove_pure_fill": True,
             "cache_prefix": True,
             "output_criteria": None,
+            "fuse_fill": False,
         }
 
     @classmethod

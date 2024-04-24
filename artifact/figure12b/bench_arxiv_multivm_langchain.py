@@ -7,6 +7,8 @@ from numpy import mean
 from multiprocessing import Barrier
 from parrot.testing.multiproc_manager import MultiProcessManager
 
+from langchain.chat_models import ChatOpenAI
+
 
 def process(barrier: Barrier, file_name: str):
     chunk_size = 2048
@@ -15,7 +17,6 @@ def process(barrier: Barrier, file_name: str):
     ### Langchain part
 
     from langchain.chains.summarize import load_summarize_chain
-    from langchain.chat_models import ChatOpenAI
     from langchain.document_loaders import TextLoader
     from langchain.text_splitter import CharacterTextSplitter
     from langchain.prompts import PromptTemplate
@@ -77,6 +78,11 @@ def process(barrier: Barrier, file_name: str):
     return (ed - st) / 1e9
 
 
+def warmup():
+    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=5)
+    llm.invoke("hello")
+
+
 def main(clients_num: int):
     print("clients_num:", clients_num, flush=True)
     manager = MultiProcessManager()
@@ -91,9 +97,12 @@ def main(clients_num: int):
 
 
 if __name__ == "__main__":
+    warmup()
+
     # main(16)
     # main(20)
-    # main(8)
+    # main(25)
     for num in [10, 15, 20, 25]:
         main(num)
+        # main(10)
         time.sleep(10)

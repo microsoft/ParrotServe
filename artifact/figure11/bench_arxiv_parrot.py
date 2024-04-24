@@ -40,6 +40,7 @@ def get_refine_functions(file_name: str, chunk_num: int, output_len: int):
 {{text}}
 CONCISE SUMMARY:{{summary}}""",
         cache_prefix=False,
+        output_criteria="latency",
         params=[
             P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
             P.Parameter(
@@ -73,7 +74,7 @@ CONCISE SUMMARY:{{summary}}""",
             func_name=f"refine_func_{i}",
             func_body=refine_template,
             cache_prefix=True,
-            output_criteria="throughput",
+            output_criteria="latency",
             params=[
                 P.Parameter(name="existing_answer", typ=P.ParamType.INPUT_LOC),
                 P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
@@ -110,7 +111,7 @@ def main(file_name: str, chunk_size: int, output_len: int):
         for func, chunk in zip(funcs[1:], chunks[1:]):
             next_input = func(existing_answer=next_input, text=chunk)
 
-        next_input.get(P.PerformanceCriteria.THROUGHPUT)
+        next_input.get(P.PerformanceCriteria.LATENCY)
 
     for _ in range(1):
         latency = vm.run(_main, timeit=True)
@@ -124,7 +125,7 @@ def warmup():
         "func_1i_1o_genlen_100", "artifact.workloads.test_examples.normal_functions"
     )
     with vm.running_scope():
-        holder = test_func("Test " * 100)
+        holder = test_func("Test")
         holder.get(P.PerformanceCriteria.THROUGHPUT)
 
 

@@ -249,7 +249,10 @@ class RequestChain:
         )
 
         request_chain = cls(
-            request_id=0, session_id=0, first_node=nodes[0], metadata=metadata
+            request_id=0,  # Dummy value
+            session_id=0,  # Dummy value
+            first_node=nodes[0],
+            metadata=metadata,
         )
         prev_node = nodes[0]
         completion_chain_first_node = nodes[0]
@@ -303,8 +306,8 @@ class RequestChain:
             # Record first node
             if i == 0:
                 request_chain = cls(
-                    request_id=0,
-                    session_id=0,
+                    request_id=chunked_request.request_id,
+                    session_id=chunked_request.session_id,
                     first_node=node,
                     metadata=chunked_request.metadata,
                 )

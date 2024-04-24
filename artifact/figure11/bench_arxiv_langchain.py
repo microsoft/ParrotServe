@@ -90,16 +90,23 @@ if __name__ == "__main__":
     warmup()
 
     arg = sys.argv[1]
+    article_id = int(sys.argv[2])
 
     if arg == "test":
-        main("article_8", 1024, 1)
+        main("article_0", 1024, 100)
     elif arg == "exp1":
-        for i in range(10):
-            warmup()
+        if article_id == -1:
+            for i in range(10):
+                for ol in [25, 50, 75, 100]:
+                    main(f"article_{i}", 1024, ol)
+        else:
             for ol in [25, 50, 75, 100]:
-                main(f"article_{i}", 1024, ol)
+                main(f"article_{article_id}", 1024, ol)
     elif arg == "exp2":
-        for i in range(10):
-            warmup()
-            for bs in [512, 1024, 1536, 2048]:
-                main(f"article_{i}", bs, 50)
+        if article_id == -1:
+            for i in range(10):
+                for cs in [512, 1024, 1536, 2048]:
+                        main(f"article_{i}", cs, 50)
+        else:
+            for cs in [512, 1024, 1536, 2048]:
+                main(f"article_{article_id}", cs, 50)

@@ -81,7 +81,7 @@ class GlobalScheduler:
             # Check whether the engine has enough task capacity.
             if len(tasks) > engine.get_remain_tasks_capacity():
                 return False
-            
+
             if model_type == ModelType.TOKEN_ID:
                 total_tokens_num = 0
                 for task in tasks:
@@ -184,7 +184,8 @@ class GlobalScheduler:
 
         if self.config.app_fifo:
             # Sort the tasks by the order of depth
-            self.task_queue.sort(key=lambda x: x.chain.depth)
+            # The deeper the chain, the higher the priority
+            self.task_queue.sort(key=lambda x: -x.chain.depth)
 
         # NOTE(chaofan): The tasks are sorted by priority, by default.
         for i, task in enumerate(self.task_queue):

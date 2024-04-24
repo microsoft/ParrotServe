@@ -1,7 +1,7 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Licensed under the MIT license.
 
-from typing import Set
+from typing import Set, List
 
 from parrot.exceptions import parrot_assert
 
@@ -33,7 +33,8 @@ def _back_propagate_criteria(criteria: PerformanceCriteria) -> PerformanceCriter
 
 
 def _traverse(
-    chain: CompletionChain, criteria: PerformanceCriteria, depth: int
+    chain: CompletionChain,
+    criteria: PerformanceCriteria,
 ) -> None:
     if chain.is_activated:
         return
@@ -43,20 +44,29 @@ def _traverse(
     # Grouping chains.
     chain_group = CompChainGroup()
 
+    next_chains: List[CompletionChain] = []
+
     for node in chain.iter_fill():
         if node.sv.has_producer:
             producer: PlaceholderGen = node.sv.get_producer()
             next_chain: CompletionChain = producer.comp_chain
             next_chain.chain_groups.append(chain_group)
             chain_group.chains.add(next_chain)
-            _traverse(next_chain, next_criteria, depth + 1)
+            _traverse(next_chain, next_criteria)
+            next_chains.append(next_chain)
 
     if chain.first_node.has_edge_a_prev_node:
         prev_gen = chain.first_node.get_edge_a_prev_node()
         parrot_assert(prev_gen.is_gen, "The previous node is not a Gen node.")
-        _traverse(prev_gen.comp_chain, next_criteria, depth + 1)
+        next_chain = prev_gen.comp_chain
+        _traverse(next_chain, next_criteria)
+        next_chains.append(next_chain)
 
     # Lastly, activate the chain.
+    depth = 0
+    for next_chain in next_chains:
+        depth = max(depth, next_chain.depth + 1)
+
     chain.activate(criteria, depth)
 
 
@@ -72,4 +82,4 @@ def activate_completion_chain(
 
     parrot_assert(not chain.is_activated, "Chain is already activated.")
 
-    _traverse(chain=chain, criteria=criteria, depth=0)
+    _traverse(chain=chain, criteria=criteria)

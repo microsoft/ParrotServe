@@ -11,8 +11,8 @@ python3 -m parrot.engine.http_server \
     --config_path engine.json \
     --log_dir $1 \
     --log_filename $3 \
+    --release_mode \
     --port 9001 \
     --engine_name engine_server1 \
-    --release_mode \
     --device cuda &
 sleep 30

@@ -46,7 +46,7 @@ def proc1(barrier: mp.Barrier, file_name: str):
         st = time.perf_counter_ns()
         chain.run(split_docs)
         ed = time.perf_counter_ns()
-        print(f"Time: {(ed - st) / 1e9} s", flush=True)
+        print(f"Time: {(ed - st) / 1e9:.4f} s", flush=True)
         # time.sleep(3)
 
 
@@ -108,6 +108,6 @@ if __name__ == "__main__":
     warmup()
 
     for i in range(10):
-        for reqs in [0, 1.0, 2.0, 3.0, 3.5]:
+        for reqs in [0, 1, 2, 3, 3.5]:
             main(f"article_{i}", reqs)
             time.sleep(10)

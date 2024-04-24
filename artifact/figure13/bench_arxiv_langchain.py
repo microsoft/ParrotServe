@@ -3,6 +3,7 @@
 
 import asyncio
 import time
+import sys
 
 
 ### Langchain part
@@ -50,6 +51,10 @@ def prepare_docs(file_name: str, chunk_size: int):
         separator=" ",
     )
     split_docs = text_splitter.split_documents(docs)
+    # for doc in split_docs:
+    #     content = doc.page_content
+    #     token_ids = tokenizer.tokenize(content)
+    #     print(len(token_ids), flush=True)
     return split_docs
 
 
@@ -59,19 +64,17 @@ async def amap(map_chain, doc: str):
 
 
 async def run(map_chain, reduce_chain, split_docs):
-    for _ in range(3):
-        coros = []
-        for doc in split_docs:
-            coros.append(amap(map_chain=map_chain, doc=doc.page_content))
+    coros = []
+    for doc in split_docs:
+        coros.append(amap(map_chain=map_chain, doc=doc.page_content))
 
-        st = time.perf_counter_ns()
-        docs = await asyncio.gather(*coros)
-        docs = "\n".join(docs)
-        resp = reduce_chain.run(docs=docs[:4000])  # This is to avoid stuck
-        ed = time.perf_counter_ns()
-        latency = (ed - st) / 1e9
-        print(f"Time: {latency:.4f}", flush=True)
-        await asyncio.sleep(3)
+    st = time.perf_counter_ns()
+    docs = await asyncio.gather(*coros)
+    docs = "\n".join(docs)
+    resp = reduce_chain.run(docs=docs[:4000])  # This is to avoid stuck
+    ed = time.perf_counter_ns()
+    latency = (ed - st) / 1e9
+    print(f"Time: {latency:.4f}", flush=True)
 
 
 def main(file_name: str, chunk_size: int, output_len: int):
@@ -84,7 +87,8 @@ def main(file_name: str, chunk_size: int, output_len: int):
 
     docs = prepare_docs(file_name, chunk_size)
 
-    asyncio.run(run(map_chain, reduce_chain, docs))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run(map_chain, reduce_chain, docs))
 
 
 def warmup():
@@ -95,18 +99,19 @@ def warmup():
 if __name__ == "__main__":
     warmup()
 
-    print("warmup done", flush=True)
-
     # main("article_0", 1024, 75)
     # time.sleep(3)
     # main("article_0", 1024, 100)
     # 0 / 0
 
-    # for i in range(1, 10):
-    #     for ol in [25, 50, 75, 100]:
-    #         main(f"article_{i}", 1024, ol)
-    #         time.sleep(3)
+    arg = sys.argv[1]
+    article_id = int(sys.argv[2])
 
-    for i in range(10):
+    if arg == "test":
+        main("article_0", 1024, 100)
+    elif arg == "exp1":
+        for ol in [25, 50, 75, 100]:
+            main(f"article_{article_id}", 1024, ol)
+    elif arg == "exp2":
         for cs in [512, 1024, 1536, 2048]:
-            main(f"article_{i}", cs, 50)
+            main(f"article_{article_id}", cs, 50)

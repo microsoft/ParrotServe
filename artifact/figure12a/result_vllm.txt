@@ -1,3 +1,30 @@
-file_name: article_0, request_rate: 0
-Time: 103.516333237 s
-file_name: article_0, request_rate: 1.0
+file_name: article_7, request_rate: 0
+Time: 139.3197 s
+file_name: article_7, request_rate: 1.0
+Time: 167.4674 s
+file_name: article_7, request_rate: 2.0
+Time: 199.4049 s
+file_name: article_7, request_rate: 3.0
+Time: 306.0674 s
+file_name: article_7, request_rate: 3.5
+Time: 515.6347 s
+file_name: article_8, request_rate: 0
+Time: 154.7516 s
+file_name: article_8, request_rate: 1.0
+Time: 78.8199 s
+file_name: article_8, request_rate: 2.0
+Time: 97.7291 s
+file_name: article_8, request_rate: 3.0
+Time: 148.0351 s
+file_name: article_8, request_rate: 3.5
+Time: 324.5299 s
+file_name: article_9, request_rate: 0
+Time: 87.4294 s
+file_name: article_9, request_rate: 1.0
+Time: 104.1585 s
+file_name: article_9, request_rate: 2.0
+Time: 125.6457 s
+file_name: article_9, request_rate: 3.0
+Time: 181.3092 s
+file_name: article_9, request_rate: 3.5
+Time: 362.0691 s

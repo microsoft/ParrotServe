@@ -1,9 +1,0 @@
-file_name: article_5, chunk_size: 512, output_len: 50
-Time: 157.8082s
-file_name: article_5, chunk_size: 1024, output_len: 50
-Time: 81.5321s
-file_name: article_5, chunk_size: 1536, output_len: 50
-Time: 55.6384s
-file_name: article_5, chunk_size: 2048, output_len: 50
-Time: 43.9708s
-file_name: article_6, chunk_size: 512, output_len: 50

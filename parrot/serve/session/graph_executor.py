@@ -55,7 +55,7 @@ class GraphExecutor:
         self.context_mgr = context_mgr
         self.tokenizers_wrapper = tokenizers_wrapper
 
-        # ---------- Exception Handling ----------
+        # ---------- Runtime ----------
         self.bad_exception: Optional[Exception] = None
 
     async def _execute_coroutine(self, completion_chain: CompletionChain) -> None:
@@ -193,6 +193,20 @@ class GraphExecutor:
                 else:
                     if type_token_id_flag:
                         token_ids = completion_task.tokenized_result[tokenizer_name][i]
+
+                        # NOTE(chaofan): Fuse Fill. We add all token_ids of the same context together.
+                        # The next nodes won't be executed since the context is ready.
+                        j = i + 1
+                        while (
+                            j < len(completion_task.contexts) - 1
+                            and completion_task.contexts[j].context_id
+                            == context.context_id
+                        ):
+                            token_ids += completion_task.tokenized_result[
+                                tokenizer_name
+                            ][j]
+                            j += 1
+
                         primitive = Fill(
                             session_id=self.session_id,
                             task_id=completion_task.task_id,
@@ -223,6 +237,7 @@ class GraphExecutor:
                         resp = await primitive.apost(engine.http_address)
 
                 context.ready_event.set()
+                logger.debug(f"Context (context_id={context.context_id}) is ready.")
                 completion_task.status = TaskStatus.FINISHED
 
             except Exception as e:

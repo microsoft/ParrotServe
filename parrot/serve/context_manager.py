@@ -125,7 +125,7 @@ class ServeCoreContextManager:
         self.contexts[context_id] = context
         self._add_ref_counter(context)
 
-        logger.debug(f"Context created: {context_id}")
+        logger.debug(f"Context (context_id={context_id}) created.")
         return context
 
     def _fork_context(self, parent_context: Context) -> Context:
@@ -145,7 +145,7 @@ class ServeCoreContextManager:
         self._add_ref_counter(context)
 
         logger.debug(
-            f"Context created: {context_id} (Fork from {parent_context.context_id})"
+            f"Context (context_id={context_id}) created (Fork from context_id={parent_context.context_id})"
         )
         return context
 
@@ -167,12 +167,12 @@ class ServeCoreContextManager:
             )
         except BaseException as e:
             logger.error(
-                f"Context: {context_id} did not free correctly: {type(e)}, {e}."
+                f"Context (context_id={context_id}) did not free correctly: {type(e)}, {e}."
             )
             raise ParrotCoreInternalError(e)
         else:
             logger.debug(
-                f"Context: {context_id} freed. Freed tokens: {resp.context_len}"
+                f"Context (context_id={context_id}) freed. Freed tokens: {resp.context_len}"
             )
 
         # Remove context from the PrefixCache.
@@ -250,9 +250,14 @@ class ServeCoreContextManager:
                     )
                     self.constant_prefix_contexts[node.sv.id].append(context)
                     self._add_ref_counter(context)
-            # If the node is not the first node in the chain, fork the context.
+            # If the node is not the first node in the chain.
             else:
-                context = self._fork_context(task.contexts[-1])
+                # If "fuse_fill" and current node is a Fill, use the previous context.
+                if task.chain.metadata.fuse_fill and not node.is_gen:
+                    context = task.contexts[-1]
+                else:
+                    # Fork and create a new context for the node.
+                    context = self._fork_context(task.contexts[-1])
 
             task.contexts.append(context)
             # Cache the context, if it's the prefix.
@@ -267,8 +272,12 @@ class ServeCoreContextManager:
             "Task should be scheduled before being freed context.",
         )
 
+        visited_contexts = set()
         for context in reversed(task.contexts):
+            if context.context_id in visited_contexts:
+                continue
             self._free_context(context)
+            visited_contexts.add(context.context_id)
 
     def free_constant_prefix_contexts(self, var_id: str) -> None:
         """Free the contexts of a constant prefix variable."""

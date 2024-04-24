@@ -9,3 +9,6 @@ do
         python3 bench_shared_prompt_e2e.py -m $mode -b $batch_size --use-sample --log-path $log_path
     done
 done
+
+# Plot the results
+python3 plot.py

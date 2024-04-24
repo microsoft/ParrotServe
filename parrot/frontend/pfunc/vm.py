@@ -10,6 +10,7 @@ import importlib
 import inspect
 from typing import Callable, Optional, Literal, Dict, List, Any, Generator
 
+from parrot.constants import NONE_SESSION_ID
 
 from parrot.protocol.public.apis import (
     register_session,
@@ -57,9 +58,8 @@ class VirtualMachine:
         self.core_http_addr = core_http_addr
 
         # Register session and get session_id
-        resp = register_session(http_addr=self.core_http_addr, api_key="1")
-        self.session_id = resp.session_id
-        self._session_auth = resp.session_auth
+        self.session_id = NONE_SESSION_ID
+        self._session_auth = ""
 
         # Function registry
         self._function_registry: Dict[str, BasicFunction] = {}
@@ -74,15 +74,8 @@ class VirtualMachine:
             logging.disable(logging.DEBUG)
             logging.disable(logging.INFO)
 
-        logger.info(f"VM (session_id={self.session_id}) is launched.")
-
-    def __del__(self) -> None:
-        remove_session(
-            http_addr=self.core_http_addr,
-            session_id=self.session_id,
-            session_auth=self._session_auth,
-        )
-        logger.info(f"VM (session_id={self.session_id}) is destructed.")
+    def _get_session_id_str(self) -> str:
+        return "NONE" if self.session_id == NONE_SESSION_ID else f"{self.session_id}"
 
     # ----------Methods for Program Interface ----------
 
@@ -106,7 +99,7 @@ class VirtualMachine:
         var_id = resp.var_id
 
         logger.info(
-            f"VM (session_id={self.session_id}) registers SemanticVariable: {var_name} (id={var_id})"
+            f"VM (session_id={self._get_session_id_str()}) registers SemanticVariable: {var_name} (id={var_id})"
         )
 
         return var_id
@@ -181,7 +174,7 @@ class VirtualMachine:
 
         self._function_registry[func.name] = func
         logger.info(
-            f"VM (session_id={self.session_id}) registers function: {func.name}"
+            f"VM (session_id={self._get_session_id_str()}) registers function: {func.name}"
         )
 
     def submit_semantic_call_handler(self, call: SemanticCall) -> List:
@@ -195,7 +188,7 @@ class VirtualMachine:
         """
 
         logger.info(
-            f"VM (session_id={self.session_id}) submits SemanticCall: {call.func.name}"
+            f"VM (session_id={self._get_session_id_str()}) submits SemanticCall: {call.func.name}"
         )
 
         resp = submit_semantic_call(
@@ -218,7 +211,7 @@ class VirtualMachine:
         """
 
         logger.info(
-            f"VM (session_id={self.session_id}) submits SemanticCall: {call.func.name}"
+            f"VM (session_id={self._get_session_id_str()}) submits SemanticCall: {call.func.name}"
         )
 
         resp = await asubmit_semantic_call(
@@ -231,6 +224,39 @@ class VirtualMachine:
         return resp.placeholders_mapping
 
     # ---------- Public Methods ----------
+
+    @property
+    def session_registered(self) -> bool:
+        return self.session_id != NONE_SESSION_ID
+
+    def register_session(self) -> None:
+        """Register a session to the ServeCore."""
+
+        resp = register_session(http_addr=self.core_http_addr, api_key="1")
+        self.session_id = resp.session_id
+        self._session_auth = resp.session_auth
+
+        logger.info(
+            f"VM registered a Session (session_id={self._get_session_id_str()})."
+        )
+
+    def unregister_session(self) -> None:
+        """Unregister the session from the ServeCore."""
+
+        if not self.session_registered:
+            return
+
+        remove_session(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+        )
+
+        logger.info(
+            f"VM unregistered its Session (session_id={self._get_session_id_str()})."
+        )
+        self.session_id = NONE_SESSION_ID
+        self._session_auth = ""
 
     def define_function(
         self,
@@ -297,6 +323,8 @@ class VirtualMachine:
         # SharedContext._controller = self.controller
         # SharedContext._tokenized_storage = self.tokenizer
 
+        self.register_session()
+
     def unset_global_env(self) -> None:
         """Unset the global environment for current Python process."""
 
@@ -304,6 +332,8 @@ class VirtualMachine:
         SemanticVariable._virtual_machine_env = self
         # SharedContext._controller = None
         # SharedContext._tokenized_storage = None
+
+        self.unregister_session()
 
     @contextlib.contextmanager
     def running_scope(self, timeit: bool = False) -> Generator[Any, Any, Any]:
@@ -328,6 +358,7 @@ class VirtualMachine:
             # In this case, we can only see a SystemExit error
             print("Error happens when executing Parrot program: ", type(e), repr(e))
             print("Traceback: ", traceback.format_exc())
+            self.unset_global_env()
         else:
             self.unset_global_env()
             if timeit:
@@ -354,7 +385,7 @@ class VirtualMachine:
         """
 
         logger.info(
-            f"VM (session_id={self.session_id}) runs program: {program.__name__}"
+            f"VM (session_id={self._get_session_id_str()}) runs program: {program.__name__}"
         )
 
         if inspect.iscoroutinefunction(program):

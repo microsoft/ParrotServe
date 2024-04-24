@@ -50,6 +50,7 @@ def test_context_manager():
             ),
         ]
     )
+    # request_chain.metadata.fuse_fill = True
     var_mgr.create_vars_for_request(session_id, request_chain)
 
     task = CompletionTask(task_id=0, chain=request_chain.comp_chains[0])

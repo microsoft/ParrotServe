@@ -50,7 +50,7 @@ args = parser.parse_args()
 
 
 MODEL_NAME = "lmsys/vicuna-7b-v1.3"
-DATA_PATH = "benchmark/workloads/bingchat/bing_chat_dataset.jsonl"
+DATA_PATH = "../workloads/bingchat/bing_chat_dataset.jsonl"
 MAX_BLOCK_NUM = 6800
 SAMPLED_TOKEN_NUMS = [
     (6014, 619),

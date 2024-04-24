@@ -42,7 +42,7 @@ class SessionManager:
         session.free_session_resources()
         self._session_id_pool.free(session_id)
 
-        logger.debug(f"Session {session_id} is removed.")
+        logger.debug(f"Session (session_id={session_id}) is removed.")
 
     # ---------- Methods for Core ----------
 
@@ -61,7 +61,7 @@ class SessionManager:
         self.sessions[session_id] = session
         self._session_last_access_time[session_id] = time_counter_in_nanoseconds()
 
-        logger.debug(f"Session (id={session_id}) registered.")
+        logger.debug(f"Session (session_id={session_id}) registered.")
         return session_id
 
     def remove_session(self, session_id: int) -> None:
@@ -73,7 +73,7 @@ class SessionManager:
 
         parrot_assert(
             session_id in self.sessions,
-            f"Session {session_id} not found.",
+            f"Session (session_id={session_id}) not found.",
         )
         self._remove_session(session_id)
 
@@ -89,7 +89,7 @@ class SessionManager:
 
         parrot_assert(
             session_id in self.sessions,
-            f"Session {session_id} not found.",
+            f"Session (session_id={session_id}) not found.",
         )
         return self.sessions[session_id]
 
@@ -102,7 +102,7 @@ class SessionManager:
 
         parrot_assert(
             session_id in self.sessions,
-            f"Session {session_id} not found.",
+            f"Session (session_id={session_id}) not found.",
         )
         self._session_last_access_time[session_id] = time_counter_in_nanoseconds()
 
@@ -114,12 +114,14 @@ class SessionManager:
         """
 
         if session_id not in self.sessions:
-            raise ParrotCoreUserError(RuntimeError(f"Session {session_id} not found."))
+            raise ParrotCoreUserError(
+                RuntimeError(f"Session (session_id={session_id}) not found.")
+            )
 
         session = self.sessions[session_id]
         if session.status != SessionStatus.RUNNING:
             raise ParrotCoreUserError(
-                RuntimeError(f"Session {session_id} is not valid.")
+                RuntimeError(f"Session (session_id={session_id}) is not valid.")
             )
 
     def check_running_sessions(self) -> None:
@@ -136,11 +138,11 @@ class SessionManager:
 
             if current_time - last_access_time > session.life_span * 1_000_000_000:
                 session.status = SessionStatus.DEAD
-                logger.debug(f"Session {session_id} is expired.")
+                logger.debug(f"Session (session_id={session_id}) is expired.")
             elif session.executor.bad_exception is not None:
                 session.status = SessionStatus.BAD
                 logger.debug(
-                    f"Session {session_id} is bad. Exception: {session.executor.bad_exception.args[0]}"
+                    f"Session (session_id={session_id}) is bad. Exception: {session.executor.bad_exception.args[0]}"
                 )
 
     def sweep_not_running_sessions(self) -> None:

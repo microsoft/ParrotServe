@@ -460,7 +460,7 @@ def test_ctx_aware():
 if __name__ == "__main__":
     # test_default_policy_throughput()
     # test_default_policy_latency()
-    # test_app_fifo()
+    test_app_fifo()
     # test_graph_group()
     # test_ctx_group()
-    test_ctx_aware()
+    # test_ctx_aware()

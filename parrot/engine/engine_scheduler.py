@@ -165,9 +165,6 @@ class EngineScheduler:
             cur_num_batched_tokens = len(
                 self.running_jobs
             )  # Note: running jobs must be all Gen jobs.
-            cur_total_tokens = sum(
-                [job.context.get_context_len() for job in self.running_jobs]
-            )
 
             # print(
             #     f"Scheduling: Waiting: {len(self.waiting_jobs)} Running: {len(self.running_jobs)}"
@@ -181,7 +178,6 @@ class EngineScheduler:
                     if isinstance(job, Generate) or job.token_ids is None
                     else len(job.token_ids)
                 )
-                job_total_tokens = job_num_tokens + job.context.get_context_len()
                 # Constraints
                 if cur_num_jobs + 1 > self.max_batch_size:
                     break
@@ -189,13 +185,11 @@ class EngineScheduler:
                     cur_num_batched_tokens + job_num_tokens
                     > self.max_num_batched_tokens
                 ):
-                    continue
-                if cur_total_tokens + job_total_tokens > self.max_total_tokens:
-                    continue
+                    break
 
                 self.running_jobs.append(job)
                 if job.start_time == -1:
-                    job.start_time = time_counter_in_nanoseconds()
+                    job.start_time = time.perf_counter_ns()
                 self.waiting_jobs.pop(0)
 
                 # Update
@@ -225,7 +219,6 @@ class EngineScheduler:
             )
 
             # print(f"Running jobs: {self.running_jobs}")
-            # print(self.thread_arrival_time)
 
             new_running: List[PrimitiveJob] = []
             cur_total_tokens = 0

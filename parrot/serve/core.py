@@ -160,7 +160,7 @@ class ParrotServeCore:
         """
 
         self.session_mgr.check_session_status(session_id)
-        self.session_mgr._remove_session(session_id)
+        self.session_mgr.remove_session(session_id)
 
         return {}
 

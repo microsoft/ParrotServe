@@ -17,3 +17,6 @@ for max_gen_length in 100 200 300 400 480
         python3 ../figure14/bench_shared_prompt_e2e.py -b 64 -m $mode -l $max_gen_length --log-path ./result_64.txt
     done
 done
+
+# Plot the results
+python3 plot.py

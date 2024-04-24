@@ -30,10 +30,10 @@ def read_file(filename):
     return averages
 
 
-vllm = read_file("result_vllm.txt")
-parrot = read_file("result_parrot.txt")
-
 # Draw output len
+vllm = read_file("result_vllm_olen.txt")
+parrot = read_file("result_parrot_olen.txt")
+
 output_lengths = ["25", "50", "75", "100"]
 systems = ["parrot", "vllm"]
 hatches = ["", "\\", "/"]
@@ -124,6 +124,10 @@ plt.savefig("fig13_a.pdf")
 
 
 # Draw chunk size
+
+vllm = read_file("result_vllm_csize.txt")
+parrot = read_file("result_parrot_csize.txt")
+
 chunk_sizes = ["512", "1024", "1536", "2048"]
 systems = ["parrot", "vllm"]
 hatches = ["", "\\", "/"]

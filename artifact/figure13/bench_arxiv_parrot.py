@@ -4,6 +4,7 @@
 import time
 import asyncio
 import parse
+import sys
 
 from parrot import P
 
@@ -40,6 +41,7 @@ def get_map_reduce_functions(file_name: str, chunk_num: int, output_len: int):
 {{text}}
 CONCISE SUMMARY:{{summary}}""",
         cache_prefix=False,
+        try_register=False,
         params=[
             P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
             P.Parameter(
@@ -81,6 +83,8 @@ CONCISE SUMMARY:{{summary}}""",
         func_name="reduce_func",
         func_body=reduce_template,
         cache_prefix=False,
+        try_register=False,
+        fuse_fill=True,
         params=input_params + [output_param],
     )
 
@@ -98,18 +102,21 @@ def main(file_name: str, chunk_size: int, output_len: int):
     )
 
     async def _main():
-        docs = []
+        tasks = []
         for chunk in chunks:
-            summary = map_func(text=chunk)
-            docs.append(summary)
-
+            tasks.append(map_func.ainvoke(text=chunk))
+        docs = await asyncio.gather(*tasks)
+        # docs = []
+        # for chunk in chunks:
+        #     output = map_func(text=chunk)
+        #     docs.append(output)
         output = reduce_func(*docs)
         output.get(P.PerformanceCriteria.LATENCY)
 
-    for _ in range(3):
+    for _ in range(1):
         latency = vm.run(_main, timeit=True)
         print(f"Time: {latency:.4f}", flush=True)
-        time.sleep(10)
+        # time.sleep(10)
 
 
 def warmup():
@@ -118,7 +125,7 @@ def warmup():
         "func_1i_1o_genlen_100", "artifact.workloads.test_examples.normal_functions"
     )
     with vm.running_scope():
-        holder = test_func("Test " * 100)
+        holder = test_func("Test")
         holder.get(P.PerformanceCriteria.THROUGHPUT)
 
 
@@ -131,10 +138,15 @@ if __name__ == "__main__":
 
     # main("article_6", 1024, 75)
 
-    # for i in range(6, 10):
-    #     for ol in [25, 50, 75, 100]:
-    #         main(f"article_{i}", 1024, ol)
+    arg = sys.argv[1]
 
-    # for i in range(6, 10):
-    #     for cs in [512, 1024, 1536, 2048]:
-    #         main(f"article_{i}", cs, 50)
+    if arg == "test":
+        main("article_0", 1024, 100)
+    elif arg == "exp1":
+        for i in range(7, 10):
+            for ol in [25, 50, 75, 100]:
+                main(f"article_{i}", 1024, ol)
+    elif arg == "exp2":
+        for i in range(10):
+            for cs in [512, 1024, 1536, 2048]:
+                main(f"article_{i}", cs, 50)

@@ -1,0 +1,80 @@
+file_name: article_0, chunk_size: 512, output_len: 50
+Time: 26.1871
+file_name: article_0, chunk_size: 1024, output_len: 50
+Time: 21.3841
+file_name: article_0, chunk_size: 1536, output_len: 50
+Time: 20.4104
+file_name: article_0, chunk_size: 2048, output_len: 50
+Time: 20.0110
+file_name: article_1, chunk_size: 512, output_len: 50
+Time: 16.7814
+file_name: article_1, chunk_size: 1024, output_len: 50
+Time: 14.0051
+file_name: article_1, chunk_size: 1536, output_len: 50
+Time: 13.7123
+file_name: article_1, chunk_size: 2048, output_len: 50
+Time: 13.2239
+file_name: article_2, chunk_size: 512, output_len: 50
+Time: 20.4694
+file_name: article_2, chunk_size: 1024, output_len: 50
+Time: 17.0008
+file_name: article_2, chunk_size: 1536, output_len: 50
+Time: 16.4053
+file_name: article_2, chunk_size: 2048, output_len: 50
+Time: 15.1794
+file_name: article_3, chunk_size: 512, output_len: 50
+Time: 16.4423
+file_name: article_3, chunk_size: 1024, output_len: 50
+Time: 13.4118
+file_name: article_3, chunk_size: 1536, output_len: 50
+Time: 11.9170
+file_name: article_3, chunk_size: 2048, output_len: 50
+Time: 11.7198
+file_name: article_4, chunk_size: 512, output_len: 50
+Time: 22.1499
+file_name: article_4, chunk_size: 1024, output_len: 50
+Time: 17.4794
+file_name: article_4, chunk_size: 1536, output_len: 50
+Time: 16.7756
+file_name: article_4, chunk_size: 2048, output_len: 50
+Time: 16.6437
+file_name: article_5, chunk_size: 512, output_len: 50
+Time: 20.6518
+file_name: article_5, chunk_size: 1024, output_len: 50
+Time: 17.2758
+file_name: article_5, chunk_size: 1536, output_len: 50
+Time: 15.4079
+file_name: article_5, chunk_size: 2048, output_len: 50
+Time: 16.4097
+file_name: article_6, chunk_size: 512, output_len: 50
+Time: 35.6933
+file_name: article_6, chunk_size: 1024, output_len: 50
+Time: 29.8730
+file_name: article_6, chunk_size: 1536, output_len: 50
+Time: 28.0646
+file_name: article_6, chunk_size: 2048, output_len: 50
+Time: 27.7760
+file_name: article_7, chunk_size: 512, output_len: 50
+Time: 36.9831
+file_name: article_7, chunk_size: 1024, output_len: 50
+Time: 31.1453
+file_name: article_7, chunk_size: 1536, output_len: 50
+Time: 28.8396
+file_name: article_7, chunk_size: 2048, output_len: 50
+Time: 29.0648
+file_name: article_8, chunk_size: 512, output_len: 50
+Time: 18.2020
+file_name: article_8, chunk_size: 1024, output_len: 50
+Time: 14.3877
+file_name: article_8, chunk_size: 1536, output_len: 50
+Time: 13.6403
+file_name: article_8, chunk_size: 2048, output_len: 50
+Time: 13.4445
+file_name: article_9, chunk_size: 512, output_len: 50
+Time: 24.0890
+file_name: article_9, chunk_size: 1024, output_len: 50
+Time: 20.4459
+file_name: article_9, chunk_size: 1536, output_len: 50
+Time: 20.0544
+file_name: article_9, chunk_size: 2048, output_len: 50
+Time: 20.2648
