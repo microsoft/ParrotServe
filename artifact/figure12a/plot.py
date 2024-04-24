@@ -6,7 +6,7 @@ import numpy as np
 
 def read_file(filename):
     # Regex pattern to match experiment header and time
-    header_pattern = r"file_name: (\w+), request_rate: (\d+(\.5)?)"
+    header_pattern = r"file_name: (\w+), request_rate: (\d+\.?\d*)"
     time_pattern = r"Time: (\d+\.\d+)"
 
     experiments = defaultdict(list)
@@ -19,7 +19,7 @@ def read_file(filename):
     for line in lines:
         header_match = re.match(header_pattern, line)
         if header_match:
-            experiment_key = header_match.groups()[:2]
+            experiment_key = header_match.groups()
         else:
             time_match = re.match(time_pattern, line)
             if time_match:

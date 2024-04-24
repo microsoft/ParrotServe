@@ -6,6 +6,7 @@ import time
 import multiprocessing as mp
 import numpy as np
 import asyncio
+import sys
 
 
 ### Langchain part
@@ -107,7 +108,7 @@ if __name__ == "__main__":
 
     warmup()
 
-    for i in range(10):
-        for reqs in [0, 1, 2, 3, 3.5]:
-            main(f"article_{i}", reqs)
-            time.sleep(10)
+    article_id = int(sys.argv[1])
+
+    for reqs in [0, 1, 2, 3, 3.5]:
+        main(f"article_{article_id}", reqs)

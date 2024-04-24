@@ -3,6 +3,7 @@
 
 import importlib
 import time
+import sys
 from numpy import mean
 from multiprocessing import Barrier
 from parrot.testing.multiproc_manager import MultiProcessManager
@@ -99,10 +100,6 @@ def main(clients_num: int):
 if __name__ == "__main__":
     warmup()
 
-    # main(16)
-    # main(20)
-    # main(25)
-    for num in [10, 15, 20, 25]:
-        main(num)
-        # main(10)
-        time.sleep(10)
+    arg = int(sys.argv[1])
+
+    main(arg)

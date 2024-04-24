@@ -9,7 +9,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from parrot.engine.builtin.builtin_runner import BuiltinRunner
 from parrot.engine.config import BuiltinConfig
 from parrot.engine.primitive_job import PrimitiveJob, Fill, Generate
-from parrot.protocol.sampling_config import SamplingConfig
+from parrot.sampling_config import SamplingConfig
 from parrot.utils import torch_profile, cprofile
 from parrot.engine.builtin.mem import get_k_cache, get_v_cache
 
@@ -49,8 +49,8 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-MODEL_NAME = "/models/vicuna/vicuna-7b-v1.3"
-DATA_PATH = "./bing_chat_dataset.jsonl"
+MODEL_NAME = "lmsys/vicuna-7b-v1.3"
+DATA_PATH = "../workloads/bingchat/bing_chat_dataset.jsonl"
 MAX_BLOCK_NUM = 6800
 SAMPLED_TOKEN_NUMS = [
     (6014, 619),
@@ -138,8 +138,8 @@ class FIFOContextPool(object):
     def push(self, prompt_token_ids: list[int], parent_context_id: int, gen_limit: int):
         context_idx = self._jobs.index(None)
         self._jobs[context_idx] = Fill(
-            pid=0,
-            tid=0,
+            session_id=0,
+            task_id=0,
             context_id=context_idx,
             parent_context_id=parent_context_id,
             token_ids=prompt_token_ids,
@@ -158,8 +158,8 @@ class FIFOContextPool(object):
             else:
                 if isinstance(job, Fill):
                     self._jobs[context_idx] = Generate(
-                        pid=0,
-                        tid=0,
+                        session_id=0,
+                        task_id=0,
                         context_id=job.context_id,
                         parent_context_id=job.parent_context_id,
                         sampling_config=self._sampling_config,
@@ -198,7 +198,7 @@ def profile_bing_chat(
     runner = BuiltinRunner(MODEL_NAME, config=config)
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
-    with open("./bing_chat_dataset.jsonl", encoding="utf8") as f:
+    with open(DATA_PATH, encoding="utf8") as f:
         prompt_token_ids = [
             tokenizer.encode(json.loads(line)["prompt"]) for line in f.readlines()
         ]
@@ -225,8 +225,8 @@ def profile_bing_chat(
 
     if shared:
         shared_fill = Fill(
-            pid=0,
-            tid=0,
+            session_id=0,
+            task_id=0,
             context_id=batch_size,
             parent_context_id=-1,
             token_ids=prompt_token_ids[0][:shared_ids],

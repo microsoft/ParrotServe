@@ -7,7 +7,7 @@
     "global_scheduler": {
         "app_fifo": false,
         "graph_group": true,
-        "ctx_group": false,
+        "ctx_group": true,
         "ctx_aware": false,
         "max_queue_size": 2048
     }

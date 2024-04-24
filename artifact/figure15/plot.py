@@ -95,6 +95,7 @@ plt.savefig("fig15_a.pdf")
 
 
 # Draw 64
+olens = [100, 200, 300, 400, 480]
 x = np.arange(len(olens))
 width = 0.25
 

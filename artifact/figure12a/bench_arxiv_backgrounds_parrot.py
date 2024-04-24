@@ -151,7 +151,7 @@ def proc2(barrier: mp.Barrier, request_rate: float):
             time.sleep(interval)
 
 
-def main(file_name: str, request_rate: int):
+def main(file_name: str, request_rate: float):
     print(f"file_name: {file_name}, request_rate: {request_rate}", flush=True)
 
     barrier = mp.Barrier(2)

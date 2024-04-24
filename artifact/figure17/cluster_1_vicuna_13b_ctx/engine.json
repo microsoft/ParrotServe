@@ -8,7 +8,7 @@
     "tokenizer": "hf-internal-testing/llama-tokenizer",
     "fill_chunk_size": -1,
     "tasks_capacity": 256,
-    "tokens_capacity": 45000,
+    "tokens_capacity": 12800000,
     "instance": {
         "block_size": 16,
         "num_kv_cache_blocks": 4000,
@@ -18,7 +18,7 @@
     "scheduler": {
         "max_batch_size": 256,
         "max_num_batched_tokens": 12288,
-        "max_total_tokens": 45000,
+        "max_total_tokens": 12800000,
         "policy": "fifo"
     },
     "serve_core": {
