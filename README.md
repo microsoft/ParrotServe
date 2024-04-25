@@ -1,4 +1,4 @@
-## Overview
+# Artifact of Parrot
 
 This branch is for the OSDI'24 artifact evaluation of paper "Parrot: Efficient Serving of LLM-based Applications with Semantic Variable".
 
@@ -40,7 +40,7 @@ cd ParrotServe
 
 For installing Parrot, there are two alternatives.
 
-#### Choice 1: Use Docker Image (Recommended)
+### Choice 1: Use Docker Image (Recommended)
 
 **Launch the docker image.** To make the reproducing easier, we provide a docker image that contains all dependencies and baselines. First, build the docker image.
 ```bash
@@ -51,13 +51,13 @@ Then start a docker instance.
 TODO
 ```
 
-#### Choice 2: Manual Setup
+### Choice 2: Manual Setup
 
 Following the instructions in [INSTALL.md](INSTALL.md) to install the dependencies and Parrot.
 
 ## Reproduce the Results
 
-#### Artifact Overview
+### 1. Artifact Overview
 
 We put all scripts, configurations and datasets in the `artifact` folder. The `artifact` folder contains the following subfolders:
 ```
@@ -66,7 +66,7 @@ figureX/           # Scripts to generate Figure X in the paper
 workloads/         # Datasets used in the experiments
 ```
 
-#### Reproduce Step
+### 2. Reproduce Step
 
 **Using One-click Script.** Each `figureX` folder contains a one-click script `run.sh` to reproduce the corresponding figure in the paper. For example, to reproduce `Figure 14`, you can run the following command:
 ```bash
@@ -90,7 +90,7 @@ python3 plot.py
 ```
 You can manually run each step sequentially and the results of each step will be stored. Once all steps are finished, you can run the `plot.py` script to generate the final figure.
 
-#### Experiment Details
+### 3. Experiment Details
 
 This artifact aims to reproduce the main results presented in our paper, from `Figure 10` to `Figure 18`. The following table shows the detailed information of each experiment.
 
