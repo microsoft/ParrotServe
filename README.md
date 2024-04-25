@@ -1,8 +1,11 @@
-# Artifact of Parrot
+# Artifact of Parrot [OSDI'24]
 
 This branch is for the OSDI'24 artifact evaluation of paper "Parrot: Efficient Serving of LLM-based Applications with Semantic Variable".
 
-## Requirements
+Parrot is a serving system for LLM-based Applications. It is designed as a distributed system where there is a central manager (called `os` in the code) that manages engines (which run the LLM models). Hence to launch 
+Parrot, we need to start an `os_server` and multiple `engine_server`s, where they communicate with each other through localhost HTTP requests.
+
+## 0. Requirements
 
 **Hardware Requirements.**
 - NVIDIA A100 (80GB) GPU x 1.
@@ -17,7 +20,7 @@ This branch is for the OSDI'24 artifact evaluation of paper "Parrot: Efficient S
 For detailed dependencies, please refer to the `requirements.txt` file or directly use the Docker image.
 
 
-## Evaluation Setup
+## 1. Evaluation Setup
 
 * Artifacts Available:
 The source code of Parrot is available at: https://github.com/microsoft/ParrotServe/tree/artifact
@@ -30,46 +33,62 @@ To reproduce the main results presented in our paper, we provide a Docker image 
 
 
 
-## Environment Setup
+## 2. Environment Setup
 
-**Clone the source code.** The source code of Parrot contains some 3rd party libraries which are organized as submodules, so remember to initialize the submodules.
+### 2.1. Clone the Source Code.
+The source code of Parrot contains some 3rd party libraries which are organized as submodules, so remember to initialize the submodules.
 ```bash
 git clone -b artifact git@github.com:microsoft/ParrotServe.git --recursive
 cd ParrotServe
 ```
 
-For installing Parrot, there are two alternatives.
+### 2.2. Install Parrot Library.
 
-### Choice 1: Use Docker Image (Recommended)
+Parrot has been wrapped as a Python library. For installing Parrot, there are two alternatives.
 
-**Launch the docker image.** To make the reproducing easier, we provide a docker image that contains all dependencies and baselines. First, build the docker image. The building procedure usually takes 8~10 minutes.
+* Choice 1: Use Docker Image (Recommended). To make the reproducing easier, we provide a docker image that contains all dependencies and baselines. First, build the docker image. The building procedure usually takes 8~10 minutes.
+    ```bash
+    sudo docker build . -t parrot
+    ```
+
+    Then start a docker instance.
+    ```bash
+    TODO
+    ```
+
+* Choice 2: Manual Setup. Following the instructions in [INSTALL.md](INSTALL.md) to install the dependencies and Parrot.
+
+### 2.3. Preparing the Dataset. 
+
+Most of our datasets are already included in the repository (in the `artifact/workloads/` folder). The ShareGPT dataset (For benchmarking chat applications) needs to be downloaded manually due to its large size. 
 ```bash
-sudo docker build . -t parrot
+cd artifact/workloads/sharegpt
+wget https://huggingface.co/datasets/anon8231489123/ShareGPT_Vicuna_unfiltered/resolve/main/ShareGPT_V3_unfiltered_cleaned_split.json
 ```
 
-Then start a docker instance.
+### 2.4. Set the Environment Variables.
+
+Before running the experiments, remember to set the necessary environment variables (like on/off simulated network latency).
 ```bash
-TODO
+source artifact/eval_env.sh
 ```
 
-### Choice 2: Manual Setup
+## 3. Reproduce the Results
 
-Following the instructions in [INSTALL.md](INSTALL.md) to install the dependencies and Parrot.
+This artifact aims to reproduce the main results presented in our paper, from `Figure 11` to `Figure 18`, to demonstrate the claims in our paper that Parrot can efficiently optimize LLM-based applications serving by adopting Semantic Variable to uncover correlations between different LLM requests.
 
-## Reproduce the Results
+### 3.1. Artifact Overview
 
-### 1. Artifact Overview
-
-We put all scripts, configurations and datasets in the `artifact` folder. The `artifact` folder contains the following subfolders:
+We put all scripts, configurations and datasets in the `artifact/` folder. The `artifact/` folder contains the following subfolders:
 ```
 fastchat_scripts/  # Scripts to run FastChat baseline
 figureX/           # Scripts to generate Figure X in the paper
 workloads/         # Datasets used in the experiments
 ```
 
-### 2. Reproduce Step
+### 3.2. Reproduce Step
 
-**Using One-click Script.** Each `figureX` folder contains a one-click script `run.sh` to reproduce the corresponding figure in the paper. For example, to reproduce `Figure 14`, you can run the following command:
+**Using One-click Script.** Each `figureX` folder contains a one-click script `run.sh` to reproduce the corresponding figure in the paper. For example, to reproduce `Figure 14`, you can run the following command (in the root directory of this repo):
 ```bash
 cd artifact/figure14
 bash run.sh
@@ -91,11 +110,11 @@ python3 plot.py
 ```
 You can manually run each step sequentially and the results of each step will be stored. Once all steps are finished, you can run the `plot.py` script to generate the final figure.
 
-### 3. Experiment Details
+### 3.3. Experiment Details
 
-This artifact aims to reproduce the main results presented in our paper, from `Figure 11` to `Figure 18`. The following table shows the detailed information of each experiment.
+The following table shows the detailed information of each experiment.
 
-| Figure No. | Folder | Description | Approximate Running Time | Hardware | Raw Data File(s) | Generated Figure File(s) |
+| Figure No. | Folder | Description | Expected Running Time | Hardware | Raw Data File(s) | Generated Figure File(s) |
 |------------|-------------|--------------------------|--------------------------|----------|----------------|---------------------------|
 | Figure 11 | `figure11/` | Average latency of single chain summary application with varying output lengths and chunk sizes. | **7 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_hf_olen.txt`, `result_hf_csize.txt`, `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig11_a.pdf`, `fig11_a.pdf` |
 | Figure 12A | `figure12a/` | Average latency of chain summary applications with background requests. | **2 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_vllm.txt`, `result_parrot.txt` | `fig12_a.pdf` |
@@ -106,4 +125,5 @@ This artifact aims to reproduce the main results presented in our paper, from `F
 | Figure 16 | `figure16/` | Normalized latency of serving multiple GPTs applications. | 1 hour 15 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm.txt`, `result_parrot_paged.txt`, `result_parrot.txt` | `fig16.pdf` |
 | Figure 17 | `figure17/` | Average latency and memory usage for multi-agent programming, with varying number of files to program. | **3 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot_paged.txt`, `result_parrot_no_share.txt`, `result_parrot.txt` | `fig17_a.pdf`, `fig17_b.pdf` |
 | Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | 15 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot.txt` | `fig18.pdf` |
+
 
