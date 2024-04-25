@@ -151,19 +151,16 @@ def main(branches_num: int, cache_prefix: bool = True):
     print(f"Time: {latency} (s)", flush=True)
 
     # Browse the log to get the max allocated memory.
-    if branches_num >= 12 and not cache_prefix:
-        max_num_tokens = 4000 * 16  # must be full
-    else:
-        max_num_tokens = 0
-        with open("log/engine.log", "r") as f:
-            lines = f.readlines()
-            for line in lines:
-                result = parse.parse(
-                    "{pre}num_cached_tokens: {num_tokens}",
-                    line,
-                )
-                if result is not None:
-                    max_num_tokens = max(max_num_tokens, int(result["num_tokens"]))
+    max_num_tokens = 0
+    with open("log/engine.log", "r") as f:
+        lines = f.readlines()
+        for line in lines:
+            result = parse.parse(
+                "{pre}num_cached_tokens: {num_tokens}",
+                line,
+            )
+            if result is not None:
+                max_num_tokens = max(max_num_tokens, int(result["num_tokens"]))
     print(f"blocks_num:  {max_num_tokens // 16}", flush=True)
 
 

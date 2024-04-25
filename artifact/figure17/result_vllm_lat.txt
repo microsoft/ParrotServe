@@ -33,3 +33,16 @@ batch_sum:  63333
 batch_sum:  72326
 batch_sum:  63333
 batch_sum:  72326
+Time: 1488.9346
+branches_num:  16
+batch_sum:  17824
+batch_sum:  67308
+batch_sum:  84474
+batch_sum:  95876
+batch_sum:  84474
+batch_sum:  95876
+batch_sum:  84474
+batch_sum:  95876
+batch_sum:  84474
+batch_sum:  95876
+Time: 1902.5672

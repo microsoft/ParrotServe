@@ -112,13 +112,13 @@ for i, system in enumerate(systems):
             data[system][_]["jct"] / data["parrot"][_]["jct"] for _ in branch_nums
         ]
         for rect, speedup in zip(rects[i], speedup_values):
-            if (
-                speedup < 0.1
-                or speedup > 10
-                or (speedup >= 4.8 and speedup <= 5)
-                or (speedup >= 2.9 and speedup <= 3.1)
-            ):
-                continue
+            # if (
+            #     speedup < 0.1
+            #     or speedup > 10
+            #     or (speedup >= 4.8 and speedup <= 5)
+            #     or (speedup >= 2.9 and speedup <= 3.1)
+            # ):
+            #     continue
             height = rect.get_height()
             ax2.text(
                 rect.get_x() + rect.get_width() / 2,
@@ -132,9 +132,9 @@ for i, system in enumerate(systems):
 
 # ax2.text(1.85, 10, 'x', color='r', fontsize=40)
 # ax2.text(2.85, 10, 'x', color='r', fontsize=40)
-ax.text(3.2, 2580, "11.7x", fontsize=40, rotation=70)
-ax2.text(1.2, 1000, "4.9x", fontsize=40, rotation=70)
-ax2.text(0.2, 590, "3.0x", fontsize=40, rotation=70)
+# ax.text(3.2, 2580, "11.7x", fontsize=40, rotation=70)
+# ax2.text(1.2, 1000, "4.9x", fontsize=40, rotation=70)
+# ax2.text(0.2, 590, "3.0x", fontsize=40, rotation=70)
 
 # Zoom in to different parts of the y-axis on each axis
 ax.set_ylim(2300, 2600)  # upper part
@@ -195,6 +195,7 @@ def read_file(filename):
 
 no_shared = read_file("result_parrot_no_share.txt")
 shared = read_file("result_parrot.txt")
+no_shared.extend([4000] * 2)
 
 names = {"shared": "Parrot", "w/o shared": "Parrot w/o Share"}
 data = {"shared": shared, "w/o shared": no_shared}

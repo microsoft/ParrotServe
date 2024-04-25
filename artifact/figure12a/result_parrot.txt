@@ -1,108 +1,100 @@
 file_name: article_0, request_rate: 0
-Time: 88.0791
-file_name: article_0, request_rate: 1
-Time: 103.6102
-file_name: article_0, request_rate: 2
-Time: 109.2101
-file_name: article_0, request_rate: 3
-Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12a/bench_arxiv_backgrounds_parrot.py", line 150, in proc2
-    output = test_func()
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 280, in __call__
-    return self._call_func(None, *args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 325, in _call_func
-    BasicFunction._virtual_machine_env.submit_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 178, in submit_call_handler
-    resp = submit_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 78, in submit_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 67, in submit_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
-    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
-    return self._sock.recv_into(b)
-KeyboardInterrupt
-
-Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
-    self.run_forever()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
-    self._run_once()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
-    handle._run()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
-    self._context.run(self._callback, *self._args)
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12a/bench_arxiv_backgrounds_parrot.py", line 110, in main_async
-    outputs[-1].get()
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
-    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
-    resp = placeholder_fetch(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
-    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
-    return self._sock.recv_into(b)
-KeyboardInterrupt
-
-Time: 0.0000
+Time: 86.4902
+file_name: article_0, request_rate: 1.0
+Time: 107.2663
+file_name: article_0, request_rate: 2.0
+Time: 113.6943
+file_name: article_0, request_rate: 3.0
+Time: 117.8910
+file_name: article_0, request_rate: 3.5
+Time: 118.7667
+file_name: article_1, request_rate: 0
+Time: 53.8761
+file_name: article_1, request_rate: 1.0
+Time: 67.3712
+file_name: article_1, request_rate: 2.0
+Time: 71.2629
+file_name: article_1, request_rate: 3.0
+Time: 74.0818
+file_name: article_1, request_rate: 3.5
+Time: 74.8516
+file_name: article_2, request_rate: 0
+Time: 61.1719
+file_name: article_2, request_rate: 1.0
+Time: 75.1944
+file_name: article_2, request_rate: 2.0
+Time: 80.3007
+file_name: article_2, request_rate: 3.0
+Time: 84.1880
+file_name: article_2, request_rate: 3.5
+Time: 84.9991
+file_name: article_3, request_rate: 0
+Time: 52.3576
+file_name: article_3, request_rate: 1.0
+Time: 64.7045
+file_name: article_3, request_rate: 2.0
+Time: 68.6770
+file_name: article_3, request_rate: 3.0
+Time: 72.4226
+file_name: article_3, request_rate: 3.5
+Time: 72.9059
+file_name: article_4, request_rate: 0
+Time: 71.3218
+file_name: article_4, request_rate: 1.0
+Time: 88.2065
+file_name: article_4, request_rate: 2.0
+Time: 93.7164
+file_name: article_4, request_rate: 3.0
+Time: 97.3010
+file_name: article_4, request_rate: 3.5
+Time: 97.4400
+file_name: article_5, request_rate: 0
+Time: 67.5318
+file_name: article_5, request_rate: 1.0
+Time: 83.7083
+file_name: article_5, request_rate: 2.0
+Time: 89.1385
+file_name: article_5, request_rate: 3.0
+Time: 92.1775
+file_name: article_5, request_rate: 3.5
+Time: 93.2596
+file_name: article_6, request_rate: 0
+Time: 119.5184
+file_name: article_6, request_rate: 1.0
+Time: 147.5588
+file_name: article_6, request_rate: 2.0
+Time: 158.7528
+file_name: article_6, request_rate: 3.0
+Time: 163.1319
+file_name: article_6, request_rate: 3.5
+Time: 164.8637
+file_name: article_7, request_rate: 0
+Time: 115.9792
+file_name: article_7, request_rate: 1.0
+Time: 142.9158
+file_name: article_7, request_rate: 2.0
+Time: 153.1079
+file_name: article_7, request_rate: 3.0
+Time: 158.8605
+file_name: article_7, request_rate: 3.5
+Time: 161.0476
+file_name: article_8, request_rate: 0
+Time: 56.1838
+file_name: article_8, request_rate: 1.0
+Time: 70.1240
+file_name: article_8, request_rate: 2.0
+Time: 74.6034
+file_name: article_8, request_rate: 3.0
+Time: 76.8629
+file_name: article_8, request_rate: 3.5
+Time: 77.8824
+file_name: article_9, request_rate: 0
+Time: 73.3024
+file_name: article_9, request_rate: 1.0
+Time: 91.3394
+file_name: article_9, request_rate: 2.0
+Time: 96.7395
+file_name: article_9, request_rate: 3.0
+Time: 99.7704
+file_name: article_9, request_rate: 3.5
+Time: 101.0249

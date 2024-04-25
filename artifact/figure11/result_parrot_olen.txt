@@ -1,467 +1,80 @@
 file_name: article_0, chunk_size: 1024, output_len: 25
-Time: 47.6981
+Time: 47.5397
 file_name: article_0, chunk_size: 1024, output_len: 50
-Time: 87.3712
+Time: 86.6481
 file_name: article_0, chunk_size: 1024, output_len: 75
-Time: 126.9599
+Time: 126.1534
 file_name: article_0, chunk_size: 1024, output_len: 100
-Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
-    self.run_forever()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
-    self._run_once()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
-    handle._run()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
-    self._context.run(self._callback, *self._args)
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure11/bench_arxiv_parrot.py", line 111, in _main
-    next_input.get()
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
-    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
-    resp = placeholder_fetch(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
-    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
-    return self._sock.recv_into(b)
-KeyboardInterrupt
-
-Time: 126.9599
+Time: 165.9703
 file_name: article_1, chunk_size: 1024, output_len: 25
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(MaxRetryError("HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356a470>: Failed to establish a new connection: [Errno 111] Connection refused'))"))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 198, in _new_conn
-    sock = connection.create_connection(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 85, in create_connection
-    raise err
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 73, in create_connection
-    sock.connect(sa)
-ConnectionRefusedError: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 496, in _make_request
-    conn.request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 400, in request
-    self.endheaders()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1278, in endheaders
-    self._send_output(message_body, encode_chunked=encode_chunked)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1038, in _send_output
-    self.send(msg)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 976, in send
-    self.connect()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 238, in connect
-    self.sock = self._new_conn()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 213, in _new_conn
-    raise NewConnectionError(
-urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x76891356a470>: Failed to establish a new connection: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 515, in increment
-    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
-urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356a470>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure11/bench_arxiv_parrot.py", line 106, in _main
-    next_input = funcs[0](text=chunks[0])
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 280, in __call__
-    return self._call_func(None, *args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 325, in _call_func
-    BasicFunction._virtual_machine_env.submit_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 178, in submit_call_handler
-    resp = submit_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 78, in submit_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 67, in submit_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 519, in send
-    raise ConnectionError(e, request=request)
-requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356a470>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-Time: 126.9599
+Time: 29.7425
 file_name: article_1, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(MaxRetryError("HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7689135c72e0>: Failed to establish a new connection: [Errno 111] Connection refused'))"))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 198, in _new_conn
-    sock = connection.create_connection(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 85, in create_connection
-    raise err
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 73, in create_connection
-    sock.connect(sa)
-ConnectionRefusedError: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 496, in _make_request
-    conn.request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 400, in request
-    self.endheaders()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1278, in endheaders
-    self._send_output(message_body, encode_chunked=encode_chunked)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1038, in _send_output
-    self.send(msg)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 976, in send
-    self.connect()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 238, in connect
-    self.sock = self._new_conn()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 213, in _new_conn
-    raise NewConnectionError(
-urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x7689135c72e0>: Failed to establish a new connection: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 515, in increment
-    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
-urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7689135c72e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure11/bench_arxiv_parrot.py", line 106, in _main
-    next_input = funcs[0](text=chunks[0])
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 280, in __call__
-    return self._call_func(None, *args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 325, in _call_func
-    BasicFunction._virtual_machine_env.submit_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 178, in submit_call_handler
-    resp = submit_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 78, in submit_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 67, in submit_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 519, in send
-    raise ConnectionError(e, request=request)
-requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7689135c72e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-Time: 126.9599
+Time: 54.4436
 file_name: article_1, chunk_size: 1024, output_len: 75
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(MaxRetryError("HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356b130>: Failed to establish a new connection: [Errno 111] Connection refused'))"))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 198, in _new_conn
-    sock = connection.create_connection(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 85, in create_connection
-    raise err
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 73, in create_connection
-    sock.connect(sa)
-ConnectionRefusedError: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 496, in _make_request
-    conn.request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 400, in request
-    self.endheaders()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1278, in endheaders
-    self._send_output(message_body, encode_chunked=encode_chunked)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1038, in _send_output
-    self.send(msg)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 976, in send
-    self.connect()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 238, in connect
-    self.sock = self._new_conn()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 213, in _new_conn
-    raise NewConnectionError(
-urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x76891356b130>: Failed to establish a new connection: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 515, in increment
-    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
-urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356b130>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure11/bench_arxiv_parrot.py", line 106, in _main
-    next_input = funcs[0](text=chunks[0])
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 280, in __call__
-    return self._call_func(None, *args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 325, in _call_func
-    BasicFunction._virtual_machine_env.submit_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 178, in submit_call_handler
-    resp = submit_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 78, in submit_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 67, in submit_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 519, in send
-    raise ConnectionError(e, request=request)
-requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356b130>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-Time: 126.9599
+Time: 79.1363
 file_name: article_1, chunk_size: 1024, output_len: 100
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(MaxRetryError("HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356bb50>: Failed to establish a new connection: [Errno 111] Connection refused'))"))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 198, in _new_conn
-    sock = connection.create_connection(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 85, in create_connection
-    raise err
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 73, in create_connection
-    sock.connect(sa)
-ConnectionRefusedError: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 496, in _make_request
-    conn.request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 400, in request
-    self.endheaders()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1278, in endheaders
-    self._send_output(message_body, encode_chunked=encode_chunked)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1038, in _send_output
-    self.send(msg)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 976, in send
-    self.connect()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 238, in connect
-    self.sock = self._new_conn()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 213, in _new_conn
-    raise NewConnectionError(
-urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x76891356bb50>: Failed to establish a new connection: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 515, in increment
-    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
-urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356bb50>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure11/bench_arxiv_parrot.py", line 106, in _main
-    next_input = funcs[0](text=chunks[0])
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 280, in __call__
-    return self._call_func(None, *args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 325, in _call_func
-    BasicFunction._virtual_machine_env.submit_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 178, in submit_call_handler
-    resp = submit_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 78, in submit_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 67, in submit_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 519, in send
-    raise ConnectionError(e, request=request)
-requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x76891356bb50>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-Time: 126.9599
+Time: 104.0468
 file_name: article_2, chunk_size: 1024, output_len: 25
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(MaxRetryError("HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x768912662860>: Failed to establish a new connection: [Errno 111] Connection refused'))"))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 198, in _new_conn
-    sock = connection.create_connection(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 85, in create_connection
-    raise err
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/connection.py", line 73, in create_connection
-    sock.connect(sa)
-ConnectionRefusedError: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 496, in _make_request
-    conn.request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 400, in request
-    self.endheaders()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1278, in endheaders
-    self._send_output(message_body, encode_chunked=encode_chunked)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1038, in _send_output
-    self.send(msg)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 976, in send
-    self.connect()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 238, in connect
-    self.sock = self._new_conn()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 213, in _new_conn
-    raise NewConnectionError(
-urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x768912662860>: Failed to establish a new connection: [Errno 111] Connection refused
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 515, in increment
-    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
-urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x768912662860>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure11/bench_arxiv_parrot.py", line 106, in _main
-    next_input = funcs[0](text=chunks[0])
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 280, in __call__
-    return self._call_func(None, *args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/function.py", line 325, in _call_func
-    BasicFunction._virtual_machine_env.submit_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 178, in submit_call_handler
-    resp = submit_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 78, in submit_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 67, in submit_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 519, in send
-    raise ConnectionError(e, request=request)
-requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=9000): Max retries exceeded with url: /submit_call (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x768912662860>: Failed to establish a new connection: [Errno 111] Connection refused'))
-
-Time: 126.9599
+Time: 33.9546
+file_name: article_2, chunk_size: 1024, output_len: 50
+Time: 61.7737
+file_name: article_2, chunk_size: 1024, output_len: 75
+Time: 89.6898
+file_name: article_2, chunk_size: 1024, output_len: 100
+Time: 117.9649
+file_name: article_3, chunk_size: 1024, output_len: 25
+Time: 28.8756
+file_name: article_3, chunk_size: 1024, output_len: 50
+Time: 52.9467
+file_name: article_3, chunk_size: 1024, output_len: 75
+Time: 77.0906
+file_name: article_3, chunk_size: 1024, output_len: 100
+Time: 101.4998
+file_name: article_4, chunk_size: 1024, output_len: 25
+Time: 39.1534
+file_name: article_4, chunk_size: 1024, output_len: 50
+Time: 71.6695
+file_name: article_4, chunk_size: 1024, output_len: 75
+Time: 104.2058
+file_name: article_4, chunk_size: 1024, output_len: 100
+Time: 137.1102
+file_name: article_5, chunk_size: 1024, output_len: 25
+Time: 37.2710
+file_name: article_5, chunk_size: 1024, output_len: 50
+Time: 68.2210
+file_name: article_5, chunk_size: 1024, output_len: 75
+Time: 99.3560
+file_name: article_5, chunk_size: 1024, output_len: 100
+Time: 130.8552
+file_name: article_6, chunk_size: 1024, output_len: 25
+Time: 65.8807
+file_name: article_6, chunk_size: 1024, output_len: 50
+Time: 120.0738
+file_name: article_6, chunk_size: 1024, output_len: 75
+Time: 174.7084
+file_name: article_6, chunk_size: 1024, output_len: 100
+Time: 229.7982
+file_name: article_7, chunk_size: 1024, output_len: 25
+Time: 63.7217
+file_name: article_7, chunk_size: 1024, output_len: 50
+Time: 116.2327
+file_name: article_7, chunk_size: 1024, output_len: 75
+Time: 168.9557
+file_name: article_7, chunk_size: 1024, output_len: 100
+Time: 222.0382
+file_name: article_8, chunk_size: 1024, output_len: 25
+Time: 30.8170
+file_name: article_8, chunk_size: 1024, output_len: 50
+Time: 56.5037
+file_name: article_8, chunk_size: 1024, output_len: 75
+Time: 82.3173
+file_name: article_8, chunk_size: 1024, output_len: 100
+Time: 108.1230
+file_name: article_9, chunk_size: 1024, output_len: 25
+Time: 40.4413
+file_name: article_9, chunk_size: 1024, output_len: 50
+Time: 73.5991
+file_name: article_9, chunk_size: 1024, output_len: 75
+Time: 106.7238
+file_name: article_9, chunk_size: 1024, output_len: 100
+Time: 140.3447
