@@ -45,4 +45,4 @@ batch_sum:  84474
 batch_sum:  95876
 batch_sum:  84474
 batch_sum:  95876
-Time: 1902.5672
+Time: 2220.0190
