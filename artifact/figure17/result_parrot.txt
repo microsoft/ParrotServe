@@ -9,8 +9,8 @@ batch_sum:  21096
 batch_sum:  24388
 batch_sum:  21096
 batch_sum:  24388
-Time: 183.925382212 (s)
-blocks_num:  1008
+Time: 184.593702839 (s)
+blocks_num:  1002
 branches_num:  8
 batch_sum:  8912
 batch_sum:  33654
@@ -22,8 +22,8 @@ batch_sum:  42237
 batch_sum:  47938
 batch_sum:  42237
 batch_sum:  47938
-Time: 195.359617001 (s)
-blocks_num:  1258
+Time: 195.663629168 (s)
+blocks_num:  1260
 branches_num:  12
 batch_sum:  13368
 batch_sum:  50993
@@ -35,8 +35,8 @@ batch_sum:  63333
 batch_sum:  72326
 batch_sum:  63333
 batch_sum:  72326
-Time: 205.353553434 (s)
-blocks_num:  1470
+Time: 206.45217645 (s)
+blocks_num:  1458
 branches_num:  16
 batch_sum:  17824
 batch_sum:  67308
@@ -48,5 +48,5 @@ batch_sum:  84474
 batch_sum:  95876
 batch_sum:  84474
 batch_sum:  95876
-Time: 213.843762289 (s)
-blocks_num:  1741
+Time: 215.652879101 (s)
+blocks_num:  1703
