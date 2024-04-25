@@ -120,7 +120,9 @@ def warmup():
 
 
 if __name__ == "__main__":
-    warmup()
+    # warmup()
 
-    for bn in [4, 8, 12, 16]:
-        main(bn, True)
+    main(16, True)
+
+    # for bn in [4, 8, 12, 16]:
+    #     main(bn, True)

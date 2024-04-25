@@ -1,0 +1,26 @@
+branches_num:  4
+batch_sum:  4456
+batch_sum:  17339
+batch_sum:  21096
+batch_sum:  24388
+batch_sum:  21096
+batch_sum:  24388
+batch_sum:  21096
+batch_sum:  24388
+batch_sum:  21096
+batch_sum:  24388
+Time: 229.328958458 (s)
+blocks_num:  1455
+branches_num:  8
+batch_sum:  8912
+batch_sum:  33654
+batch_sum:  42237
+batch_sum:  47938
+batch_sum:  42237
+batch_sum:  47938
+batch_sum:  42237
+batch_sum:  47938
+batch_sum:  42237
+batch_sum:  47938
+Time: 316.553658079 (s)
+blocks_num:  2844

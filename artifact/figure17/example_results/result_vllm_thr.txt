@@ -9,7 +9,7 @@ batch_sum:  21096
 batch_sum:  24388
 batch_sum:  21096
 batch_sum:  24388
-Time: 543.0402
+Time: 234.0156
 branches_num:  8
 batch_sum:  8912
 batch_sum:  33654
@@ -21,7 +21,7 @@ batch_sum:  42237
 batch_sum:  47938
 batch_sum:  42237
 batch_sum:  47938
-Time: 956.7060
+Time: 307.8814
 branches_num:  12
 batch_sum:  13368
 batch_sum:  50993
@@ -33,7 +33,7 @@ batch_sum:  63333
 batch_sum:  72326
 batch_sum:  63333
 batch_sum:  72326
-Time: 1488.9346
+Time: 422.2352
 branches_num:  16
 batch_sum:  17824
 batch_sum:  67308
@@ -45,4 +45,4 @@ batch_sum:  84474
 batch_sum:  95876
 batch_sum:  84474
 batch_sum:  95876
-Time: 1902.5672
+Time: 519.4633
