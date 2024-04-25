@@ -1,46 +1,50 @@
 import re
 
+
 def parse_req_mapping(file_path):
-    pattern = r'Req mapping:\s*(\d+),\s*(\d+)'
+    pattern = r"Req mapping:\s*(\d+),\s*(\d+)"
 
     req_mapping = {}
 
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         for line in file:
             match = re.search(pattern, line)
             if match:
-                key = int(match.group(1)) # req no
-                value = int(match.group(2)) # tid
+                key = int(match.group(1))  # req no
+                value = int(match.group(2))  # tid
                 req_mapping[key] = value
 
-    return req_mapping # req no -> tid
+    return req_mapping  # req no -> tid
+
 
 def extract_tid_if_pid_zero(file_path):
     ret = {}
 
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         for line in file:
-            match = re.search(r'Generate stream latency: ([0-9.]+) ms\. pid=(\d+), tid=(\d+)', line)   
+            match = re.search(
+                r"Generate stream latency: ([0-9.]+) ms\. pid=(\d+), tid=(\d+)", line
+            )
             if match:
                 latency = float(match.group(1))
                 pid = int(match.group(2))
                 tid = int(match.group(3))
                 if pid == 1:
                     ret[tid] = latency
-    
+
     return ret
 
 
-req_mapping = parse_req_mapping('log/os_stdout.out')
+req_mapping = parse_req_mapping("log/os_stdout.out")
 # print(req_mapping)
-gen_latencies = extract_tid_if_pid_zero('log/os.log')
+gen_latencies = extract_tid_if_pid_zero("log/os.log")
 # print(gen_latencies)
 
 e2e_latency = {}
 output_lens = {}
 
 pattern = re.compile(r"Request (\d+): latency=([\d.]+) ms, output_len=(\d+)")
-with open("1.log", "r") as file:
+with open("parrot_chat.log", "r") as file:
     for line in file:
         match = pattern.search(line)
         if match:
@@ -66,12 +70,12 @@ for i in range(total_req_num):
     avg_normlat += normlat
     avg_decode += per_decode_time
 
-print("Average Normlat: ", avg_normlat / total_req_num, " ms")
-print("Average decode time: ", avg_decode / total_req_num)
+print(f"Average Normlat: {avg_normlat / total_req_num:.4f} ms")
+print(f"Average decode time: {avg_decode / total_req_num:.4f} ms")
 
-with open("3.log", "r") as fp:
+with open("parrot_mr.log", "r") as fp:
     for line in fp:
         match = re.search(r"Average latency: ([\d.]+) ms", line)
         if match:
             latency = float(match.group(1))
-            print("MR JCT: ", latency, " ms")
+            print(f"MR JCT: {latency:.4f} ms")

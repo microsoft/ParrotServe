@@ -1,6 +1,6 @@
 #!/bin/sh
 
-python3 -m fastchat.serve.controller &
+python3 -m fastchat.serve.controller &> fschat_controller_stdout.log &
 
 sleep 1
 
@@ -52,5 +52,5 @@ CUDA_VISIBLE_DEVICES=3 python3 -m fastchat.serve.vllm_worker \
 
 sleep 30
 
-python3 -m fastchat.serve.openai_api_server --host localhost --port 8000 &
+python3 -m fastchat.serve.openai_api_server --host localhost --port 8000 &> fschat_api_server_stdout.log &
 

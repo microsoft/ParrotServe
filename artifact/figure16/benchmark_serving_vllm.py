@@ -19,6 +19,7 @@ from langchain.chat_models import ChatOpenAI
 # (prompt len, output len, latency)
 REQUEST_LATENCY: List[Tuple[int, int, float]] = []
 
+
 def get_func(prompt: str, output_len: int):
     async def invoke_chain(query: str):
         llm = ChatOpenAI(
@@ -27,6 +28,7 @@ def get_func(prompt: str, output_len: int):
             max_tokens=output_len,
         )
         await llm.ainvoke(prompt + query)
+
     return invoke_chain
 
 
@@ -36,7 +38,7 @@ def define_functions(workload_info_path: str):
         workload_info = json.load(f)
 
     funcs = {}
-    
+
     # Define the functions.
     for app_info in workload_info:
         app_name = app_info["app_name"]
@@ -46,7 +48,7 @@ def define_functions(workload_info_path: str):
         prompt = " ".join(["Test"] * prompt_length)
 
         funcs[app_name] = get_func(prompt, output_length)
-    
+
     return funcs
 
 
@@ -57,12 +59,14 @@ def sample_requests(
     # Load the dataset.
     with open(workload_info_path) as f:
         workload_info = json.load(f)
-    
+
     dataset = []
     total_requests = 10000
     for app_info in workload_info:
         # total_requests * app_info["percentage"]
-        app_num_reqs = total_requests / len(workload_info) # 1:1:1:1 instead of percentage
+        app_num_reqs = total_requests / len(
+            workload_info
+        )  # 1:1:1:1 instead of percentage
         for _ in range(int(app_num_reqs)):
             app_name = app_info["app_name"]
             query_length = app_info["query_length"]
@@ -133,7 +137,7 @@ async def benchmark(
 
 def main(args: argparse.Namespace):
     # print(args)
-    print("request_rate: ", args.request_rate)
+    print("request_rate: ", args.request_rate, flush=True)
     random.seed(args.seed)
     np.random.seed(args.seed)
 
@@ -164,7 +168,7 @@ def main(args: argparse.Namespace):
     avg_per_output_token_latency = np.mean(
         [latency / output_len for _, output_len, latency in REQUEST_LATENCY]
     )
-    print("Normalized latency: " f"{avg_per_output_token_latency:.2f} ms")
+    print("Normalized latency: " f"{avg_per_output_token_latency:.2f} ms", flush=True)
 
     # for key in funcs.keys():
     #     print("App name: ", key)

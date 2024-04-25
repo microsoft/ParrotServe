@@ -96,11 +96,13 @@ async def get_request(
             continue
         # Sample the request interval from the exponential distribution.
         # interval = np.random.exponential(1.0 / request_rate)
-        interval = 1.0 / request_rate # uniform
+        interval = 1.0 / request_rate  # uniform
         # The next request will be sent after the interval.
         await asyncio.sleep(interval)
 
+
 req_counter = 0
+
 
 async def send_request(
     prompt: str,
@@ -119,7 +121,7 @@ async def send_request(
     )
 
     request_start_time = time.perf_counter_ns()
-    resp = await llm.ainvoke(f"lcf%{req_no}lcf%" + prompt)
+    resp = await llm.ainvoke(f"chaos#%{req_no}chaos#%" + prompt)
     request_end_time = time.perf_counter_ns()
 
     request_latency = (request_end_time - request_start_time) / 1e6
@@ -152,7 +154,7 @@ def main(args: argparse.Namespace):
 
     tokenizer = get_tokenizer(args.tokenizer, trust_remote_code=args.trust_remote_code)
     input_requests = sample_requests(args.dataset, args.num_prompts, tokenizer)
-    
+
     benchmark_start_time = time.perf_counter_ns()
 
     asyncio.run(
@@ -171,7 +173,9 @@ def main(args: argparse.Namespace):
 
     # Compute the latency statistics.
     for req_no, prompt_len, output_len, request_latency in REQUEST_LATENCY:
-        print(f"Request {req_no}: latency={request_latency:.2f} ms, output_len={output_len}")
+        print(
+            f"Request {req_no}: latency={request_latency:.2f} ms, output_len={output_len}"
+        )
 
 
 if __name__ == "__main__":

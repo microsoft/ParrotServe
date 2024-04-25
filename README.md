@@ -104,7 +104,7 @@ This artifact aims to reproduce the main results presented in our paper, from `F
 | Figure 13 | `figure13/` | Average latency of single map reduce summary application. | 30 min | NVIDIA A100 (80GB) GPU x 1 | `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig13_a.pdf`, `fig13_b.pdf` |
 | Figure 14 | `figure14/` | Average latency of BingCopilot applications with different batch sizes. | 20 min | NVIDIA A100 (80GB) GPU x 1 | `result.txt` | `fig14.pdf` |
 | Figure 15 | `figure15/` | Latency per token of BingCopilot applications with different output lengths. | 40 min | NVIDIA A100 (80GB) GPU x 1 | `result_32.txt`, `result_64.txt` | `fig15_a.pdf`, `fig15_b.pdf` |
-| Figure 16 | `figure16/` | Normalized latency of serving multiple GPTs applications. | ? | NVIDIA A6000 (48GB) GPUs x 4 | result_fig16.txt | `fig16.pdf` |
-| Figure 17 | `figure17/` | Average latency and memory usage for multi-agent programming, with varying number of files to program. | **2.5 hours** | NVIDIA A100 (80GB) GPU x 1 | result_fig17.txt | `fig17_a.pdf`, `fig17_b.pdf` |
-| Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | ? | NVIDIA A6000 (48GB) GPUs x 4 | result_fig18.txt | `fig18.pdf` |
+| Figure 16 | `figure16/` | Normalized latency of serving multiple GPTs applications. | 1 hour 15 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm.txt`, `result_parrot_paged.txt`, `result_parrot.txt` | `fig16.pdf` |
+| Figure 17 | `figure17/` | Average latency and memory usage for multi-agent programming, with varying number of files to program. | **3 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot_paged.txt`, `result_parrot_no_share.txt`, `result_parrot.txt` | `fig17_a.pdf`, `fig17_b.pdf` |
+| Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | 10 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot.txt` | `fig18.pdf` |
 

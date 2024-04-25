@@ -30,7 +30,7 @@ def define_functions(
         workload_info = json.load(f)
 
     funcs = {}
-    
+
     # Define the functions.
     for app_info in workload_info:
         app_name = app_info["app_name"]
@@ -44,16 +44,20 @@ def define_functions(
             func_body=f"[{app_name}]" + prompt + "{{query}}{{output}}",
             params=[
                 P.Parameter("query", P.ParamType.INPUT_LOC),
-                P.Parameter("output", P.ParamType.OUTPUT_LOC, sampling_config=P.SamplingConfig(
-                    max_gen_length=output_length,
-                    ignore_tokenizer_eos=True,
-                )),
+                P.Parameter(
+                    "output",
+                    P.ParamType.OUTPUT_LOC,
+                    sampling_config=P.SamplingConfig(
+                        max_gen_length=output_length,
+                        ignore_tokenizer_eos=True,
+                    ),
+                ),
             ],
             cache_prefix=True,
         )
 
         funcs[app_name] = func
-    
+
     return funcs
 
 
@@ -64,12 +68,14 @@ def sample_requests(
     # Load the dataset.
     with open(workload_info_path) as f:
         workload_info = json.load(f)
-    
+
     dataset = []
     total_requests = 10000
     for app_info in workload_info:
         # total_requests * app_info["percentage"]
-        app_num_reqs = total_requests / len(workload_info) # 1:1:1:1 instead of percentage
+        app_num_reqs = total_requests / len(
+            workload_info
+        )  # 1:1:1:1 instead of percentage
         for _ in range(int(app_num_reqs)):
             app_name = app_info["app_name"]
             query_length = app_info["query_length"]
@@ -141,7 +147,7 @@ async def benchmark(
 
 def main(args: argparse.Namespace):
     # print(args)
-    print("request_rate: ", args.request_rate)
+    print("request_rate: ", args.request_rate, flush=True)
     random.seed(args.seed)
     np.random.seed(args.seed)
 
@@ -175,13 +181,17 @@ def main(args: argparse.Namespace):
     avg_per_output_token_latency = np.mean(
         [latency / output_len for _, output_len, latency in REQUEST_LATENCY]
     )
-    print("Normalized latency: " f"{avg_per_output_token_latency:.2f} ms")
+    print("Normalized latency: " f"{avg_per_output_token_latency:.2f} ms", flush=True)
 
     # for key in funcs.keys():
     #     print("App name: ", key)
     #     print(f"Number of requests: {len([x for x in REQUEST_LATENCY if x[0] == key])}")
-    #     print(f"Average latency: {np.mean([x[2] for x in REQUEST_LATENCY if x[0] == key]):.2f} ms")
-    #     print(f"Average latency per output token: {np.mean([x[2] / x[1] for x in REQUEST_LATENCY if x[0] == key]):.2f} ms")
+    #     print(
+    #         f"Average latency: {np.mean([x[2] for x in REQUEST_LATENCY if x[0] == key]):.2f} ms"
+    #     )
+    #     print(
+    #         f"Average latency per output token: {np.mean([x[2] / x[1] for x in REQUEST_LATENCY if x[0] == key]):.2f} ms"
+    #     )
 
 
 if __name__ == "__main__":

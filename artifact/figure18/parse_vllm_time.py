@@ -8,26 +8,26 @@ ftt_points = {}
 e2e_latency = {}
 output_lens = {}
 
-for filename in os.listdir('.'):
-    if filename.startswith('model_worker'):
-        with open(filename, 'r') as file:
+for filename in os.listdir("."):
+    if filename.startswith("model_worker"):
+        with open(filename, "r") as file:
             for line in file:
-                match = re.search(r'hack ftt: (\d+), ([\d\-: ]+)', line)
+                match = re.search(r"hack ftt: (\d+), ([\d\-: ]+)", line)
                 if match:
                     req_no = match.group(1)
                     cur_time = match.group(2)
                     ftt_points[req_no] = cur_time
-        
-        with open(filename, 'r') as file:
+
+        with open(filename, "r") as file:
             for line in file:
-                match = re.search(r'hack request exit: (\d+), (\d+)', line)
+                match = re.search(r"hack request exit: (\d+), (\d+)", line)
                 if match:
                     req_no = match.group(1)
                     cur_time = match.group(2)
                     exit_points[req_no] = cur_time
 
 pattern = re.compile(r"Request (\d+): latency=([\d.]+) ms, output_len=(\d+)")
-with open("2.log", "r") as file:
+with open("vllm_chat.log", "r") as file:
     for line in file:
         match = pattern.search(line)
         if match:
@@ -53,10 +53,9 @@ for i in range(total_req_num):
 print("Average Normlat: ", avg_normlat / total_req_num, " ms")
 print("Average decode time: ", avg_decode / total_req_num, " ms")
 
-with open("4.log", "r") as fp:
+with open("vllm_mr.log", "r") as fp:
     for line in fp:
         match = re.search(r"Average latency: ([\d.]+) ms", line)
         if match:
             latency = float(match.group(1))
             print("MR JCT: ", latency, " ms")
-                    

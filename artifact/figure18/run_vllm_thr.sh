@@ -1,18 +1,24 @@
 #!/bin/sh
 
-# rm *.log -rf
-rm model_worker_* -rf
-rm tmp/*.txt
+rm result_vllm_thr.txt
+touch result_vllm_thr.txt
 
-bash fastchat/launch_vllm.sh
+for i in {1..5}
+do
+    echo "Test Mixed Serving: vLLM (Throughput) [$i / 5]"
 
-export OPENAI_API_BASE=http://localhost:8000/v1
-export OPENAI_API_KEY=EMPTY
+    # rm *.log -rf
+    rm model_worker_* -rf
 
-sleep 1
+    bash ../fastchat_scripts/launch_vllm_multi.sh
 
-python3 start_benchmark_vllm.py &> 6.log
+    export OPENAI_API_BASE=http://localhost:8000/v1
+    export OPENAI_API_KEY=EMPTY
 
-sleep 1
+    python3 start_benchmark_vllm.py &> vllm_client.log
 
-bash ../../scripts/kill_all_fastchat_servers.sh
+    # Parse results
+    python3 parse_vllm_time.py >> result_vllm_thr.txt
+
+    bash ../../scripts/kill_all_fastchat_servers.sh
+done

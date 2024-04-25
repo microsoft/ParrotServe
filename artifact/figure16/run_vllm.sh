@@ -3,6 +3,8 @@
 rm result_vllm.txt
 touch result_vllm.txt
 
+counter=1
+
 for r in 0.25 0.5 1.0 1.25 2.0
 do
     rm *.log -rf
@@ -12,8 +14,22 @@ do
     export OPENAI_API_BASE=http://localhost:8000/v1
     export OPENAI_API_KEY=EMPTY
 
+    echo "Test GPTs Serving: vLLM (request rate: $r) [$counter / 5]"
+
+    if [ $counter -eq 1 ]; then
+        num_prompts=100
+    elif [ $counter -eq 2 ]; then
+        num_prompts=200
+    elif [ $counter -eq 5 ]; then
+        num_prompts=500
+    else
+        num_prompts=400
+    fi
+
+    counter=$(($counter+1))
+
     python3 benchmark_serving_vllm.py --workload-info "../workloads/gpts/top4.json" \
-        --num-prompts 500 \
+        --num-prompts $num_prompts \
         --request-rate $r \
         >> result_vllm.txt
 

@@ -6,7 +6,7 @@ import time
 def start_chat_benchmark(barrier: Barrier, requests_num: int, request_rate: float):
     barrier.wait()
     os.system(
-        f"""python3 benchmark_chat_serving.py \
+        f"""python3 benchmark_chat_serving_parrot.py \
         --num-prompts {requests_num} \
         --tokenizer hf-internal-testing/llama-tokenizer \
         --dataset ../workloads/sharegpt/ShareGPT_V3_unfiltered_cleaned_split.json \
@@ -22,7 +22,7 @@ def start_mr_benchmark(barrier: Barrier, app_num: int, app_rate: float):
     time.sleep(15)
 
     os.system(
-        f"""python3 benchmark_mr_serving.py \
+        f"""python3 benchmark_mr_serving_parrot.py \
         --num-apps {app_num} \
         --app-rate {app_rate} \
         > parrot_mr.log"""
