@@ -93,11 +93,10 @@ You can manually run each step sequentially and the results of each step will be
 
 ### 3. Experiment Details
 
-This artifact aims to reproduce the main results presented in our paper, from `Figure 10` to `Figure 18`. The following table shows the detailed information of each experiment.
+This artifact aims to reproduce the main results presented in our paper, from `Figure 11` to `Figure 18`. The following table shows the detailed information of each experiment.
 
 | Figure No. | Folder | Description | Approximate Running Time | Hardware | Raw Data File(s) | Generated Figure File(s) |
 |------------|-------------|--------------------------|--------------------------|----------|----------------|---------------------------|
-| Figure 10 | `figure10/` | Per-Decode-Latency of vLLM with varying token capacities and request rates. (Background Setting) | 40 min | NVIDIA A100 (80GB) GPU x 1 | `result.txt` | `fig10_a.pdf`, `fig10_b.pdf` |
 | Figure 11 | `figure11/` | Average latency of single chain summary application with varying output lengths and chunk sizes. | **7 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_hf_olen.txt`, `result_hf_csize.txt`, `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig11_a.pdf`, `fig11_a.pdf` |
 | Figure 12A | `figure12a/` | Average latency of chain summary applications with background requests. | **2 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_vllm.txt`, `result_parrot.txt` | `fig12_a.pdf` |
 | Figure 12B | `figure12b/` | Average latency of multiple simultaneous chain summary applications. | 30 min | NVIDIA A100 (80GB) GPU x 1 | `result_vllm.txt`, `result_parrot.txt` | `fig12_b.pdf` |
@@ -106,5 +105,5 @@ This artifact aims to reproduce the main results presented in our paper, from `F
 | Figure 15 | `figure15/` | Latency per token of BingCopilot applications with different output lengths. | 40 min | NVIDIA A100 (80GB) GPU x 1 | `result_32.txt`, `result_64.txt` | `fig15_a.pdf`, `fig15_b.pdf` |
 | Figure 16 | `figure16/` | Normalized latency of serving multiple GPTs applications. | 1 hour 15 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm.txt`, `result_parrot_paged.txt`, `result_parrot.txt` | `fig16.pdf` |
 | Figure 17 | `figure17/` | Average latency and memory usage for multi-agent programming, with varying number of files to program. | **3 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot_paged.txt`, `result_parrot_no_share.txt`, `result_parrot.txt` | `fig17_a.pdf`, `fig17_b.pdf` |
-| Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | 10 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot.txt` | `fig18.pdf` |
+| Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | 15 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot.txt` | `fig18.pdf` |
 
