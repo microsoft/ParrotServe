@@ -168,7 +168,7 @@ def main(branches_num: int, cache_prefix: bool = True):
 
 
 def warmup():
-    global vm
+    vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
     test_func = vm.import_function(
         "func_1i_1o_genlen_100", "artifact.workloads.test_examples.normal_functions"
     )

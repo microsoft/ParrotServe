@@ -33,6 +33,11 @@ parrot_with_paged = read_file("result_parrot_paged.txt")
 vllm_lat = read_file("result_vllm_lat.txt")
 vllm_thr = read_file("result_vllm_thr.txt")
 
+# print(parrot_ours)
+# print(parrot_with_paged)
+# print(vllm_lat)
+# print(vllm_thr)
+
 branch_nums = [4, 8, 12, 16]
 systems = ["parrot", "parrot w/ paged", "vllm_thr", "vllm_lat"]
 hatches = ["", "\\", "/", "x"]
