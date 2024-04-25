@@ -5,8 +5,8 @@ This branch is for the OSDI'24 artifact evaluation of paper "Parrot: Efficient S
 ## Requirements
 
 **Hardware Requirements.**
-- 1x A100 80GB GPU.
-- 4x A6000 48GB GPU.
+- NVIDIA A100 (80GB) GPU x 1.
+- NVIDIA A6000 (48GB) GPUs x 4.
 - Both machines should have at least 50GB of free disk space to store a copy of Llama 7B weights (~13G) and a Llama 13B weights (~25G). 
 
 **Software Requirements.**
@@ -42,10 +42,11 @@ For installing Parrot, there are two alternatives.
 
 ### Choice 1: Use Docker Image (Recommended)
 
-**Launch the docker image.** To make the reproducing easier, we provide a docker image that contains all dependencies and baselines. First, build the docker image.
+**Launch the docker image.** To make the reproducing easier, we provide a docker image that contains all dependencies and baselines. First, build the docker image. The building procedure usually takes 8~10 minutes.
 ```bash
 sudo docker build . -t parrot
 ```
+
 Then start a docker instance.
 ```bash
 TODO
@@ -96,14 +97,14 @@ This artifact aims to reproduce the main results presented in our paper, from `F
 
 | Figure No. | Folder | Description | Approximate Running Time | Hardware | Raw Data File(s) | Generated Figure File(s) |
 |------------|-------------|--------------------------|--------------------------|----------|----------------|---------------------------|
-| Figure 10 | `figure10/` | Per-Decode-Latency of vLLM with varying token capacities and request rates. (Background Setting) | 1 hour | 1x A100 80GB GPU | result_fig10.txt | fig10.pdf |
-| Figure 11 | `figure11/` | Average latency of single chain summary application with varying output lengths and chunk sizes. | 1 hour | 1x A100 80GB GPU | result_fig11.txt | fig11.pdf |
-| Figure 12A | `figure12a/` | Average latency of chain summary applications with background requests. | 1 hour | 1x A100 80GB GPU | result_fig12.txt | fig12.pdf |
-| Figure 12B | `figure12b/` | Average latency of multiple simultaneous chain summary applications. | 1 hour | 1x A100 80GB GPU | result_fig12.txt | fig12.pdf |
-| Figure 13 | `figure13/` | Average latency of single map reduce summary application. | 1 hour | 1x A100 80GB GPU | result_fig13.txt | fig13.pdf |
-| Figure 14 | `figure14/` | Average latency of BingCopilot applications with different batch sizes. | 1 hour | 1x A100 80GB GPU | result_fig14.txt | fig14.pdf |
-| Figure 15 | `figure15/` | Latency per token of BingCopilot applications with different output lengths. | 1 hour | 1x A100 80GB GPU | result_fig15.txt | fig15.pdf |
-| Figure 16 | `figure16/` | Normalized latency of serving multiple GPTs applications. | 1 hour | 1x A100 80GB GPU | result_fig16.txt | fig16.pdf |
-| Figure 17 | `figure17/` | Average latency and memory usage for multi-agent programming, with varying number of files to program. | 1 hour | 1x A100 80GB GPU | result_fig17.txt | fig17.pdf |
-| Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | 1 hour | 1x A100 80GB GPU | result_fig18.txt | fig18.pdf |
+| Figure 10 | `figure10/` | Per-Decode-Latency of vLLM with varying token capacities and request rates. (Background Setting) | 40 min | NVIDIA A100 (80GB) GPU x 1 | `result.txt` | `fig10_a.pdf`, `fig10_b.pdf` |
+| Figure 11 | `figure11/` | Average latency of single chain summary application with varying output lengths and chunk sizes. | **7 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_hf_olen.txt`, `result_hf_csize.txt`, `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig11_a.pdf`, `fig11_a.pdf` |
+| Figure 12A | `figure12a/` | Average latency of chain summary applications with background requests. | **2 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_vllm.txt`, `result_parrot.txt` | `fig12_a.pdf` |
+| Figure 12B | `figure12b/` | Average latency of multiple simultaneous chain summary applications. | 30 min | NVIDIA A100 (80GB) GPU x 1 | `result_vllm.txt`, `result_parrot.txt` | `fig12_b.pdf` |
+| Figure 13 | `figure13/` | Average latency of single map reduce summary application. | 30 min | NVIDIA A100 (80GB) GPU x 1 | `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig13_a.pdf`, `fig13_b.pdf` |
+| Figure 14 | `figure14/` | Average latency of BingCopilot applications with different batch sizes. | 20 min | NVIDIA A100 (80GB) GPU x 1 | `result.txt` | `fig14.pdf` |
+| Figure 15 | `figure15/` | Latency per token of BingCopilot applications with different output lengths. | 40 min | NVIDIA A100 (80GB) GPU x 1 | `result_32.txt`, `result_64.txt` | `fig15_a.pdf`, `fig15_b.pdf` |
+| Figure 16 | `figure16/` | Normalized latency of serving multiple GPTs applications. | ? | NVIDIA A6000 (48GB) GPUs x 4 | result_fig16.txt | `fig16.pdf` |
+| Figure 17 | `figure17/` | Average latency and memory usage for multi-agent programming, with varying number of files to program. | **2.5 hours** | NVIDIA A100 (80GB) GPU x 1 | result_fig17.txt | `fig17_a.pdf`, `fig17_b.pdf` |
+| Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | ? | NVIDIA A6000 (48GB) GPUs x 4 | result_fig18.txt | `fig18.pdf` |
 
