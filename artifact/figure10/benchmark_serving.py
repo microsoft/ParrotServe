@@ -35,7 +35,7 @@ REQUEST_LATENCY: List[Tuple[int, int, float]] = []
 
 
 # Parrot VM
-import parrot_vllm_oldscheduler as P
+import parrot as P
 
 vm: Optional[P.VirtualMachine] = None
 

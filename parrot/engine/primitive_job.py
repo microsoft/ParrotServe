@@ -86,7 +86,7 @@ class Generate(PrimitiveJob):
 
     def __repr__(self) -> str:
         return (
-            f"Generation(pid={self.pid}, "
+            f"Generate(pid={self.pid}, "
             f"tid={self.tid}, "
             f"context_id={self.context_id}, "
             f"parent_context_id={self.parent_context_id})"

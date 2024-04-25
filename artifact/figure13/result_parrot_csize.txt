@@ -1,80 +1,197 @@
-file_name: article_0, chunk_size: 512, output_len: 50
-Time: 12.8892
 file_name: article_0, chunk_size: 1024, output_len: 50
-Time: 10.2649
+Time: 10.9124
+file_name: article_0, chunk_size: 512, output_len: 50
+Time: 13.5594
+file_name: article_0, chunk_size: 1024, output_len: 50
+Time: 10.0557
 file_name: article_0, chunk_size: 1536, output_len: 50
-Time: 9.4604
+Time: 9.3196
 file_name: article_0, chunk_size: 2048, output_len: 50
-Time: 9.2859
+Time: 9.0168
 file_name: article_1, chunk_size: 512, output_len: 50
-Time: 8.7306
+Time: 8.4352
 file_name: article_1, chunk_size: 1024, output_len: 50
-Time: 7.4654
+Time: 7.0827
 file_name: article_1, chunk_size: 1536, output_len: 50
-Time: 6.9983
+Time: 6.6867
 file_name: article_1, chunk_size: 2048, output_len: 50
-Time: 6.6981
+Time: 6.4923
 file_name: article_2, chunk_size: 512, output_len: 50
-Time: 9.8954
+Time: 9.6347
 file_name: article_2, chunk_size: 1024, output_len: 50
-Time: 8.3776
+Time: 8.0556
 file_name: article_2, chunk_size: 1536, output_len: 50
-Time: 8.0046
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure13/bench_arxiv_parrot.py", line 106, in _main
+    output.get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Time: 8.0556
 file_name: article_2, chunk_size: 2048, output_len: 50
-Time: 7.7457
+Error happens when executing Parrot program:  <class 'aiohttp.client_exceptions.ClientConnectorError'> ClientConnectorError(ConnectionKey(host='localhost', port=9000, is_ssl=False, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None), ConnectionRefusedError(111, "Connect call failed ('127.0.0.1', 9000)"))
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/aiohttp/connector.py", line 1025, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1076, in create_connection
+    raise exceptions[0]
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1060, in create_connection
+    sock = await self._connect_sock(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 969, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/selector_events.py", line 501, in sock_connect
+    return await fut
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/selector_events.py", line 541, in _sock_connect_cb
+    raise OSError(err, f'Connect call failed {address}')
+ConnectionRefusedError: [Errno 111] Connect call failed ('127.0.0.1', 9000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
+    await vm.submit_batch()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 58, in async_send_http_request
+    async with client_session.post(url, json=kwargs, timeout=timeout) as resp:
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/aiohttp/client.py", line 1197, in __aenter__
+    self._resp = await self._coro
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/aiohttp/client.py", line 581, in _request
+    conn = await self._connector.connect(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/aiohttp/connector.py", line 544, in connect
+    proto = await self._create_connection(req, traces, timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/aiohttp/connector.py", line 944, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/aiohttp/connector.py", line 1257, in _create_direct_connection
+    raise last_exc
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/aiohttp/connector.py", line 1226, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/aiohttp/connector.py", line 1033, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host localhost:9000 ssl:default [Connect call failed ('127.0.0.1', 9000)]
+
+Time: 8.0556
 file_name: article_3, chunk_size: 512, output_len: 50
-Time: 8.4876
+Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
+    await vm.submit_batch()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+RuntimeError: cannot reuse already awaited coroutine
+
+Time: 8.0556
 file_name: article_3, chunk_size: 1024, output_len: 50
-Time: 7.1130
+Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
+    await vm.submit_batch()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+RuntimeError: cannot reuse already awaited coroutine
+
+Time: 8.0556
 file_name: article_3, chunk_size: 1536, output_len: 50
-Time: 6.7300
+Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
+    await vm.submit_batch()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+RuntimeError: cannot reuse already awaited coroutine
+
+Time: 8.0556
 file_name: article_3, chunk_size: 2048, output_len: 50
-Time: 6.5105
-file_name: article_4, chunk_size: 512, output_len: 50
-Time: 10.9472
-file_name: article_4, chunk_size: 1024, output_len: 50
-Time: 8.9003
-file_name: article_4, chunk_size: 1536, output_len: 50
-Time: 8.3509
-file_name: article_4, chunk_size: 2048, output_len: 50
-Time: 8.1516
-file_name: article_5, chunk_size: 512, output_len: 50
-Time: 10.3593
-file_name: article_5, chunk_size: 1024, output_len: 50
-Time: 8.6415
-file_name: article_5, chunk_size: 1536, output_len: 50
-Time: 8.1241
-file_name: article_5, chunk_size: 2048, output_len: 50
-Time: 7.8695
-file_name: article_6, chunk_size: 512, output_len: 50
-Time: 19.0252
-file_name: article_6, chunk_size: 1024, output_len: 50
-Time: 14.4966
-file_name: article_6, chunk_size: 1536, output_len: 50
-Time: 13.5472
-file_name: article_6, chunk_size: 2048, output_len: 50
-Time: 13.2940
-file_name: article_7, chunk_size: 512, output_len: 50
-Time: 19.2612
-file_name: article_7, chunk_size: 1024, output_len: 50
-Time: 15.9483
-file_name: article_7, chunk_size: 1536, output_len: 50
-Time: 14.1347
-file_name: article_7, chunk_size: 2048, output_len: 50
-Time: 13.8918
-file_name: article_8, chunk_size: 512, output_len: 50
-Time: 9.0970
-file_name: article_8, chunk_size: 1024, output_len: 50
-Time: 7.7436
-file_name: article_8, chunk_size: 1536, output_len: 50
-Time: 7.2217
-file_name: article_8, chunk_size: 2048, output_len: 50
-Time: 7.0742
-file_name: article_9, chunk_size: 512, output_len: 50
-Time: 11.8002
-file_name: article_9, chunk_size: 1024, output_len: 50
-Time: 9.9206
-file_name: article_9, chunk_size: 1536, output_len: 50
-Time: 9.4066
-file_name: article_9, chunk_size: 2048, output_len: 50
-Time: 9.2071
+Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
+    await vm.submit_batch()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+RuntimeError: cannot reuse already awaited coroutine
+
+Time: 8.0556

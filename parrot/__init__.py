@@ -10,7 +10,8 @@
 try:
     import mlc_chat  # Avoid MLC error because "torch" is imported before "mlc_chat"
 except ImportError:
-    print("Warning: MLC is not installed. Related functionalities will be disabled.")
+    # print("Warning: MLC is not installed. Related functionalities will be disabled.")
+    pass
 
 # Program Interface and Transforms
 from .program import *

@@ -9,7 +9,7 @@ log_path=$pwd/log/
 echo $log_path
 
 cd cluster_1_vicuna_13b/
-bash launch.sh $log_path core.log engine.log
+bash launch.sh $log_path os.log engine.log
 cd ..
 echo "Run Parrot benchmark ... [All]"
 python3 bench_arxiv_parrot.py exp1 > result_parrot_olen.txt

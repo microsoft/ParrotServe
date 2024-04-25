@@ -2,10 +2,10 @@
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
 
-from parrot import P
+import parrot as P
 
 
-@P.semantic_function(cache_prefix=False, try_register=False)
+@P.semantic_function(cache_prefix=False)
 def func_1i_1o_genlen_100(
     input1: P.Input,
     output1: P.Output(P.SamplingConfig(ignore_tokenizer_eos=True, max_gen_length=100)),
@@ -24,7 +24,7 @@ def func_1i_1o_genlen_100(
     {{output1}}"""
 
 
-@P.semantic_function(cache_prefix=False, try_register=False)
+@P.semantic_function(cache_prefix=False)
 def func_3i_2o_genlen_100(
     input1: P.Input,
     input2: P.Input,

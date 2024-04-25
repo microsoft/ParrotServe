@@ -4,10 +4,9 @@
 import time
 import asyncio
 import multiprocessing as mp
+import parrot as P
 from parrot.utils import cprofile
 import numpy as np
-
-from parrot import P
 
 
 def get_chunks(file_name: str, chunk_size: int):
@@ -38,7 +37,6 @@ def get_functions(vm: P.VirtualMachine, output_len: int):
 {{text}}
 CONCISE SUMMARY:{{summary}}""",
         cache_prefix=False,
-        output_criteria="latency",
         params=[
             P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
             P.Parameter(
@@ -68,8 +66,7 @@ CONCISE SUMMARY:{{summary}}""",
     func = vm.define_function(
         func_name=f"refine_func",
         func_body=refine_template,
-        cache_prefix=True,
-        output_criteria="latency",
+        cache_prefix=False,
         params=[
             P.Parameter(name="existing_answer", typ=P.ParamType.INPUT_LOC),
             P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
@@ -91,19 +88,26 @@ def proc1(barrier: mp.Barrier, file_name: str):
     chunk_size = 1024
     output_len = 50
 
-    vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
+    vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
     chunks = get_chunks(file_name, chunk_size)
     chunk_num = len(chunks)
     func1, func2 = get_functions(vm, output_len)
 
     async def main_async():
+        outputs = [P.variable(name=f"output_{i}") for i in range(chunk_num)]
+        vm.set_batch()
         for i in range(chunk_num):
             if i == 0:
-                output = func1(text=chunks[0])
+                func1(text=chunks[0], summary=outputs[i])
             else:
-                output = func2(existing_answer=output, text=chunks[i])
-        await output.aget(P.PerformanceCriteria.LATENCY)
+                func2(
+                    existing_answer=outputs[i - 1],
+                    text=chunks[i],
+                    summary=outputs[i],
+                )
+        await vm.submit_batch()
+        outputs[-1].get()
 
     barrier.wait()
 
@@ -113,7 +117,7 @@ def proc1(barrier: mp.Barrier, file_name: str):
     for _ in range(1):
         latency = vm.run(main_async, timeit=True)
         print(f"Time: {latency:.4f}", flush=True)
-        time.sleep(3)
+        # time.sleep(3)
 
 
 def proc2(barrier: mp.Barrier, request_rate: float):
@@ -121,13 +125,11 @@ def proc2(barrier: mp.Barrier, request_rate: float):
         barrier.wait()
         return
 
-    vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
+    vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
     test_func = vm.define_function(
         func_name="test_func",
         func_body="Test " * 512 + "{{output}}",
-        cache_prefix=False,
-        output_criteria="latency",
         params=[
             P.Parameter(
                 name="output",
@@ -151,7 +153,7 @@ def proc2(barrier: mp.Barrier, request_rate: float):
             time.sleep(interval)
 
 
-def main(file_name: str, request_rate: float):
+def main(file_name: str, request_rate: int):
     print(f"file_name: {file_name}, request_rate: {request_rate}", flush=True)
 
     barrier = mp.Barrier(2)
@@ -175,26 +177,18 @@ def main(file_name: str, request_rate: float):
 
 
 def warmup():
-    vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
+    vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
     test_func = vm.import_function(
         "func_1i_1o_genlen_100", "artifact.workloads.test_examples.normal_functions"
     )
     with vm.running_scope():
         holder = test_func("Test")
-        holder.get(P.PerformanceCriteria.THROUGHPUT)
+        holder.get()
 
 
 if __name__ == "__main__":
     warmup()
 
-    # print("warmup done", flush=True)
-
-    # for i in range(10):
-    #     for reqs in [1, 2, 3]:
-    #         main(f"article_{i}", reqs)
-    #         time.sleep(10)
-
     for i in range(10):
         for reqs in [0, 1, 2, 3, 3.5]:
             main(f"article_{i}", reqs)
-            time.sleep(10)

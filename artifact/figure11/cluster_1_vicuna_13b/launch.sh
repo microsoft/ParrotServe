@@ -1,6 +1,6 @@
 #!/bin/sh
-python3 -m parrot.serve.http_server \
-    --config_path core.json \
+python3 -m parrot.os.http_server \
+    --config_path os.json \
     --log_dir $1 \
     --release_mode \
     --log_filename $2 &

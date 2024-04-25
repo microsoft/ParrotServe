@@ -4,7 +4,7 @@
 rm result.txt
 touch result.txt
 
-counter = 1
+counter=1
 
 for reqs in {5..25..5}
 do

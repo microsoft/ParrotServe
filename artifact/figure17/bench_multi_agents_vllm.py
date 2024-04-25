@@ -114,7 +114,13 @@ def main(branches_num: int, cache_prefix: bool = True):
     print(f"Time: {latency:.4f}", flush=True)
 
 
+def warmup():
+    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=5)
+    llm.invoke("hello")
+
+
 if __name__ == "__main__":
+    warmup()
+
     for bn in [4, 8, 12, 16]:
         main(bn, True)
-        time.sleep(10)

@@ -1,812 +1,1087 @@
 clients_num: 10
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-Error happens when executing Parrot program:  <class 'requests.exceptions.ConnectionError'> ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
-Traceback:  Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
-    resp = conn.urlopen(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/retry.py", line 470, in increment
-    raise reraise(type(error), error, _stacktrace)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
-    response = conn.getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
-    httplib_response = super().getresponse()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
-    response.begin()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
-    version, status, reason = self._read_status()
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 287, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 353, in running_scope
-    yield
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 402, in run
-    loop.run_until_complete(coroutine)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 112, in main_async
-    output = func2(existing_answer=output, text=chunks[i])
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 328, in __call__
-    return self._call_func(*args, **kwargs)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 355, in _call_func
-    placeholders_mapping = self._submit_semantic_call(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/function.py", line 277, in _submit_semantic_call
-    return BasicFunction._virtual_machine_env.submit_semantic_call_handler(call)
-  File "/home/v-chaofanlin/ParrotServe/parrot/frontend/pfunc/vm.py", line 194, in submit_semantic_call_handler
-    resp = submit_semantic_call(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 136, in submit_semantic_call
-    raise e
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/public/apis.py", line 124, in submit_semantic_call
-    return send_http_request(
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 55, in send_http_request
-    raise error
-  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/http_utils.py", line 34, in send_http_request
-    resp = requests.post(url, json=kwargs, timeout=timeout)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
-    return request("post", url, data=data, json=json, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
-    resp = self.send(prep, **send_kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
-    r = adapter.send(request, **kwargs)
-  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-{}
-Avg. JCT nan (s)
+{1: 56.73225499, 2: 56.976008465, 0: 66.009193119, 3: 72.493130499, 4: 92.653634534, 5: 94.725489976, 6: 109.25722108, 7: 111.032681513, 8: 123.764932569, 9: 125.145524696}
+Avg. JCT 90.88 (s)
 clients_num: 15
-{}
-Avg. JCT nan (s)
+{1: 61.911621236, 0: 70.929137834, 3: 75.651842366, 4: 84.901304372, 2: 95.467448777, 5: 95.614073476, 6: 121.148851835, 7: 125.850793833, 8: 132.744109745, 9: 143.086420367, 10: 151.479707909, 11: 159.874560848, 12: 172.233474069, 13: 184.416015749, 14: 188.419059227}
+Avg. JCT 124.25 (s)
 clients_num: 20
-{}
-Avg. JCT nan (s)
-clients_num: 25
-{}
-Avg. JCT nan (s)
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+Error happens when executing Parrot program:  <class 'KeyboardInterrupt'> KeyboardInterrupt()
+Traceback:  Traceback (most recent call last):
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/v-chaofanlin/ParrotServe/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 117, in main_async
+    outputs[-1].get()
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/semantic_variable.py", line 97, in get
+    content = self._virtual_machine_env.placeholder_fetch_handler(self.id)
+  File "/home/v-chaofanlin/ParrotServe/parrot/program/vm.py", line 139, in placeholder_fetch_handler
+    resp = placeholder_fetch(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 131, in placeholder_fetch
+    raise e
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/layer_apis.py", line 121, in placeholder_fetch
+    return send_http_request(
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 46, in send_http_request
+    raise error
+  File "/home/v-chaofanlin/ParrotServe/parrot/protocol/common.py", line 30, in send_http_request
+    resp = requests.post(url, json=kwargs, timeout=timeout)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 1375, in getresponse
+    response.begin()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/v-chaofanlin/miniconda3/envs/parrot/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+

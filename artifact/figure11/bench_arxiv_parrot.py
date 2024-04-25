@@ -1,11 +1,10 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
-import time
 import sys
-from parrot import P
+import parrot as P
 
-vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
+vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
 
 def get_chunks(file_name: str, chunk_size: int):
@@ -40,7 +39,6 @@ def get_refine_functions(file_name: str, chunk_num: int, output_len: int):
 {{text}}
 CONCISE SUMMARY:{{summary}}""",
         cache_prefix=False,
-        output_criteria="latency",
         params=[
             P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
             P.Parameter(
@@ -74,7 +72,6 @@ CONCISE SUMMARY:{{summary}}""",
             func_name=f"refine_func_{i}",
             func_body=refine_template,
             cache_prefix=True,
-            output_criteria="latency",
             params=[
                 P.Parameter(name="existing_answer", typ=P.ParamType.INPUT_LOC),
                 P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
@@ -111,12 +108,11 @@ def main(file_name: str, chunk_size: int, output_len: int):
         for func, chunk in zip(funcs[1:], chunks[1:]):
             next_input = func(existing_answer=next_input, text=chunk)
 
-        next_input.get(P.PerformanceCriteria.LATENCY)
+        next_input.get()
 
     for _ in range(1):
         latency = vm.run(_main, timeit=True)
         print(f"Time: {latency:.4f}", flush=True)
-        time.sleep(3)
 
 
 def warmup():
@@ -126,7 +122,7 @@ def warmup():
     )
     with vm.running_scope():
         holder = test_func("Test")
-        holder.get(P.PerformanceCriteria.THROUGHPUT)
+        holder.get()
 
 
 if __name__ == "__main__":

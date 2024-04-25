@@ -1,0 +1,12 @@
+{
+    "host": "localhost",
+    "port": 9000,
+    "max_proc_num": 2048,
+    "max_engines_num": 2048,
+    "dispatcher": {
+        "dag_aware": false,
+        "app_fifo": false,
+        "ctx_aware": true,
+        "max_queue_size": 2048
+    }
+}

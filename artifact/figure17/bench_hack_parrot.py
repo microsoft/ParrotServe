@@ -1,9 +1,13 @@
 import json
 import asyncio
-import time
+import sys
+import parse
 from transformers import AutoTokenizer
 
-from parrot import P
+import parrot as P
+
+# HACK VERSION.
+# TODO: Variable sharing between requests.
 
 
 def load_workloads(branches_num: int):
@@ -93,7 +97,7 @@ def load_workloads(branches_num: int):
     return ret
 
 
-async def execute(vm: P.VirtualMachine, workloads, share_prefix: bool):
+async def execute(vm: P.VirtualMachine, workloads, cache_prefix):
     funcs = []
     for round_info in workloads:
         round_funcs = []
@@ -101,8 +105,6 @@ async def execute(vm: P.VirtualMachine, workloads, share_prefix: bool):
             func = vm.define_function(
                 func_name=None,
                 func_body="1" + info["shared_prompt"] + "{{input}}{{output}}",
-                try_register=False,
-                cache_prefix=False,
                 params=[
                     P.Parameter(name="input", typ=P.ParamType.INPUT_LOC),
                     P.Parameter(
@@ -114,19 +116,22 @@ async def execute(vm: P.VirtualMachine, workloads, share_prefix: bool):
                         ),
                     ),
                 ],
+                cache_prefix=cache_prefix,
             )
             round_funcs.append(func)
         funcs.append(round_funcs)
 
     for i, round_info in enumerate(workloads):
         layer_outputs = []
+
+        vm.set_batch()
         for j, info in enumerate(round_info):
-            layer_outputs.append(funcs[i][j](input=info["diverged_prompt"]))
+            layer_outputs.append(P.variable())
+            funcs[i][j](input=info["diverged_prompt"], output=layer_outputs[j])
+        await vm.submit_batch()
 
         # Wait for the round to finish.
-        await asyncio.gather(
-            *[output.aget(P.PerformanceCriteria.LATENCY) for output in layer_outputs]
-        )
+        await asyncio.gather(*[output.aget() for output in layer_outputs])
 
         # for j, info in enumerate(round_info):
         #     string = outputs[i][j].get()
@@ -137,14 +142,52 @@ async def execute(vm: P.VirtualMachine, workloads, share_prefix: bool):
     # print(string)
 
 
-def main(branches_num: int, share_prefix: bool = True):
+def main(branches_num: int, cache_prefix: bool = True):
     print("branches_num: ", branches_num, flush=True)
     workloads = load_workloads(branches_num)
-    vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
-    latency = vm.run(execute, args=[vm, workloads, share_prefix], timeit=True)
+    vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
+    latency = vm.run(execute, args=[vm, workloads, cache_prefix], timeit=True)
+    latency -= 0.25 * 8 * 3  # Hack the communication overhead.
     print(f"Time: {latency} (s)", flush=True)
+
+    # Browse the log to get the max allocated memory.
+    if branches_num >= 12 and not cache_prefix:
+        max_num_tokens = 4000 * 16  # must be full
+    else:
+        max_num_tokens = 0
+        with open("log/engine.log", "r") as f:
+            lines = f.readlines()
+            for line in lines:
+                result = parse.parse(
+                    "{pre}num_cached_tokens: {num_tokens}",
+                    line,
+                )
+                if result is not None:
+                    max_num_tokens = max(max_num_tokens, int(result["num_tokens"]))
+    print(f"blocks_num:  {max_num_tokens // 16}", flush=True)
+
+
+def warmup():
+    global vm
+    test_func = vm.import_function(
+        "func_1i_1o_genlen_100", "artifact.workloads.test_examples.normal_functions"
+    )
+    with vm.running_scope():
+        holder = test_func("Test")
+        holder.get()
 
 
 if __name__ == "__main__":
-    for bn in [4, 8, 12, 16]:
-        main(bn)
+    warmup()
+
+    arg = sys.argv[1]
+
+    if arg == "no_cache":
+        # Note: 12, 16 memory full
+        for bn in [4, 8]:
+            main(bn, False)
+    else:
+        assert arg == "cache"
+
+        for bn in [4, 8, 12, 16]:
+            main(bn, True)

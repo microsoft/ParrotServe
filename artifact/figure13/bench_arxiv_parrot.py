@@ -1,14 +1,10 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Author: Chaofan Lin (v-chaofanlin@microsoft.com)
 
-import time
-import asyncio
-import parse
 import sys
+import parrot as P
 
-from parrot import P
-
-vm = P.VirtualMachine(core_http_addr="http://localhost:9000")
+vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
 
 
 def get_chunks(file_name: str, chunk_size: int):
@@ -36,12 +32,11 @@ def get_map_reduce_functions(file_name: str, chunk_num: int, output_len: int):
     global vm
 
     map_func = vm.define_function(
-        func_name="map_func",
+        func_name=None,
         func_body="""Write an one-sentence summary (AS SHORT AS POSSIBLE) of the following:
 {{text}}
 CONCISE SUMMARY:{{summary}}""",
         cache_prefix=False,
-        try_register=False,
         params=[
             P.Parameter(name="text", typ=P.ParamType.INPUT_LOC),
             P.Parameter(
@@ -80,11 +75,9 @@ CONCISE SUMMARY:{{summary}}""",
     )
 
     reduce_func = vm.define_function(
-        func_name="reduce_func",
+        func_name=None,
         func_body=reduce_template,
         cache_prefix=False,
-        try_register=False,
-        fuse_fill=True,
         params=input_params + [output_param],
     )
 
@@ -94,7 +87,6 @@ CONCISE SUMMARY:{{summary}}""",
 def main(file_name: str, chunk_size: int, output_len: int):
     chunks = get_chunks(file_name, chunk_size)
     chunk_num = len(chunks)
-    # print(f"chunk_num: {chunk_num}", flush=True)
     map_func, reduce_func = get_map_reduce_functions(file_name, chunk_num, output_len)
 
     print(
@@ -103,16 +95,15 @@ def main(file_name: str, chunk_size: int, output_len: int):
     )
 
     async def _main():
-        tasks = []
-        for chunk in chunks:
-            tasks.append(map_func.ainvoke(text=chunk))
-        docs = await asyncio.gather(*tasks)
-        # docs = []
-        # for chunk in chunks:
-        #     output = map_func(text=chunk)
-        #     docs.append(output)
+        vm.set_batch()
+
+        docs = [P.variable(name=f"output_{i}") for i in range(chunk_num)]
+        for i, chunk in enumerate(chunks):
+            map_func(text=chunk, summary=docs[i])
+
+        await vm.submit_batch()
         output = reduce_func(*docs)
-        output.get(P.PerformanceCriteria.LATENCY)
+        output.get()
 
     for _ in range(1):
         latency = vm.run(_main, timeit=True)
@@ -127,11 +118,11 @@ def warmup():
     )
     with vm.running_scope():
         holder = test_func("Test")
-        holder.get(P.PerformanceCriteria.THROUGHPUT)
+        holder.get()
 
 
 if __name__ == "__main__":
-    warmup()
+    # warmup()
 
     # main("article_0", 1024, 25)
 

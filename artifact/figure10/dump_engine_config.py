@@ -12,7 +12,7 @@ config = {
     "random_seed": 0,
     "tokenizer": "hf-internal-testing/llama-tokenizer",
     "fill_chunk_size": -1,
-    "max_threads_num": 256,
+    "threads_capacity": 256,
     "instance": {
         "block_size": 16,
         "num_kv_cache_blocks": 3800,
@@ -22,7 +22,7 @@ config = {
         "max_batch_size": 256,
         "max_num_batched_tokens": 2560,
         "max_total_tokens": cap,
-        "policy": "fifo",
+        "policy": "fifo_v1",
     },
     "os": {"host": "localhost", "port": 9000},
 }
