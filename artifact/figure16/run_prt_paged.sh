@@ -17,9 +17,9 @@ do
     echo "Test GPTs Serving: Parrot w/ PagedAttention (request rate: $r) [$counter / 6]"
     
     if [ $counter -eq 1 ]; then
-        num_prompts=200
+        num_prompts=100
     elif [ $counter -eq 2 ]; then
-        num_prompts=300
+        num_prompts=200
     else
         num_prompts=500
     fi

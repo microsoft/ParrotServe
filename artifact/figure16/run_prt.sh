@@ -5,7 +5,7 @@ touch result_parrot.txt
 
 counter=1
 
-for r in 16.0
+for r in 1.0 2.0 4.0 8.0 16.0 32.0
 do
     rm -rf log
 
@@ -16,20 +16,12 @@ do
 
     echo "Test GPTs Serving: Parrot (request rate: $r) [$counter / 6]"
     
-    # if [ $counter -eq 1 ]; then
-    #     num_prompts=100
-    # elif [ $counter -eq 2 ]; then
-    #     num_prompts=200
-    # elif [ $counter -eq 3 ]; then
-    #     num_prompts=300
-    # elif [ $counter -eq 4 ]; then
-    #     num_prompts=300
-    # elif [ $counter -eq 5 ]; then
-    #     num_prompts=2000
-    # elif [ $counter -eq 6 ]; then
-    #     num_prompts=4000
-    # fi
-    num_prompts=500
+    if [ $counter -eq 1 ]; then
+        num_prompts=300
+    else
+        num_prompts=500
+    fi
+    # num_prompts=500
     
     
     counter=$((counter+1))

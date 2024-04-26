@@ -137,7 +137,7 @@ async def benchmark(
 
 def main(args: argparse.Namespace):
     # print(args)
-    print("request_rate: ", args.request_rate, flush=True)
+    print("request_rate: ", args.request_rate)
     random.seed(args.seed)
     np.random.seed(args.seed)
 
@@ -168,7 +168,7 @@ def main(args: argparse.Namespace):
     avg_per_output_token_latency = np.mean(
         [latency / output_len for _, output_len, latency in REQUEST_LATENCY]
     )
-    print("Normalized latency: " f"{avg_per_output_token_latency:.2f} ms", flush=True)
+    print("Normalized latency: " f"{avg_per_output_token_latency:.2f} ms")
 
     # for key in funcs.keys():
     #     print("App name: ", key)

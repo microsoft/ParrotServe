@@ -5,7 +5,7 @@ touch result_vllm.txt
 
 counter=1
 
-for r in 0.25 0.5 1.0 1.25 2.0
+for r in 0.25 0.5 1.25 2.0
 do
     rm *.log -rf
 
@@ -17,13 +17,15 @@ do
     echo "Test GPTs Serving: vLLM (request rate: $r) [$counter / 5]"
 
     if [ $counter -eq 1 ]; then
-        num_prompts=100
+        num_prompts=50
     elif [ $counter -eq 2 ]; then
+        num_prompts=100
+    elif [ $counter -eq 3 ]; then
         num_prompts=200
-    elif [ $counter -eq 5 ]; then
-        num_prompts=500
+    elif [ $counter -eq 4 ]; then
+        num_prompts=200
     else
-        num_prompts=400
+        num_prompts=500
     fi
 
     counter=$(($counter+1))
