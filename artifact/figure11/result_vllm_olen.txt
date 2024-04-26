@@ -1,80 +1,160 @@
 file_name: article_0, chunk_size: 1024, output_len: 25
-Time: 64.2390s
+Time: 64.9029s
+Time: 64.0425s
+Time: 64.1044s
 file_name: article_0, chunk_size: 1024, output_len: 50
-Time: 103.6126s
+Time: 103.4539s
+Time: 103.3518s
+Time: 103.3584s
 file_name: article_0, chunk_size: 1024, output_len: 75
-Time: 143.5639s
+Time: 142.8649s
+Time: 142.5896s
+Time: 142.9796s
 file_name: article_0, chunk_size: 1024, output_len: 100
-Time: 183.6529s
+Time: 183.0187s
+Time: 182.5972s
+Time: 183.2958s
 file_name: article_1, chunk_size: 1024, output_len: 25
-Time: 40.3683s
+Time: 39.8690s
+Time: 40.0654s
+Time: 40.4323s
 file_name: article_1, chunk_size: 1024, output_len: 50
-Time: 65.1656s
+Time: 64.7503s
+Time: 64.8623s
+Time: 64.7777s
 file_name: article_1, chunk_size: 1024, output_len: 75
-Time: 90.2205s
+Time: 89.6061s
+Time: 89.7172s
+Time: 89.8174s
 file_name: article_1, chunk_size: 1024, output_len: 100
-Time: 115.2922s
+Time: 114.5539s
+Time: 114.6162s
+Time: 114.3775s
 file_name: article_2, chunk_size: 1024, output_len: 25
-Time: 45.8487s
+Time: 45.6841s
+Time: 45.3324s
+Time: 45.4743s
 file_name: article_2, chunk_size: 1024, output_len: 50
-Time: 74.3561s
+Time: 73.1971s
+Time: 73.2486s
+Time: 73.5950s
 file_name: article_2, chunk_size: 1024, output_len: 75
-Time: 101.9194s
+Time: 101.1732s
+Time: 101.2266s
+Time: 100.9839s
 file_name: article_2, chunk_size: 1024, output_len: 100
-Time: 130.7663s
+Time: 129.7064s
+Time: 129.4606s
+Time: 129.2850s
 file_name: article_3, chunk_size: 1024, output_len: 25
-Time: 38.8871s
+Time: 39.0146s
+Time: 39.2552s
+Time: 38.7418s
 file_name: article_3, chunk_size: 1024, output_len: 50
-Time: 63.2206s
+Time: 62.9682s
+Time: 62.9393s
+Time: 62.7195s
 file_name: article_3, chunk_size: 1024, output_len: 75
-Time: 87.6487s
+Time: 87.0624s
+Time: 87.1236s
+Time: 87.3750s
 file_name: article_3, chunk_size: 1024, output_len: 100
-Time: 112.3201s
+Time: 111.5632s
+Time: 111.4300s
+Time: 112.9322s
 file_name: article_4, chunk_size: 1024, output_len: 25
-Time: 52.9895s
+Time: 53.9600s
+Time: 53.0199s
+Time: 52.7304s
 file_name: article_4, chunk_size: 1024, output_len: 50
-Time: 86.0992s
+Time: 85.9523s
+Time: 85.5593s
+Time: 85.5546s
 file_name: article_4, chunk_size: 1024, output_len: 75
-Time: 118.6873s
+Time: 118.2914s
+Time: 118.3776s
+Time: 118.7025s
 file_name: article_4, chunk_size: 1024, output_len: 100
-Time: 152.3294s
+Time: 151.4945s
+Time: 151.9888s
+Time: 151.4822s
 file_name: article_5, chunk_size: 1024, output_len: 25
-Time: 50.4517s
+Time: 50.3051s
+Time: 50.3454s
+Time: 50.3310s
 file_name: article_5, chunk_size: 1024, output_len: 50
-Time: 82.0004s
+Time: 81.4000s
+Time: 81.4655s
+Time: 81.3356s
 file_name: article_5, chunk_size: 1024, output_len: 75
-Time: 113.1040s
+Time: 113.7186s
+Time: 112.7961s
+Time: 112.5262s
 file_name: article_5, chunk_size: 1024, output_len: 100
-Time: 144.8358s
+Time: 143.8260s
+Time: 143.8370s
+Time: 143.8059s
 file_name: article_6, chunk_size: 1024, output_len: 25
-Time: 89.3108s
+Time: 90.1680s
+Time: 89.0407s
+Time: 89.2451s
 file_name: article_6, chunk_size: 1024, output_len: 50
-Time: 144.5147s
+Time: 143.9070s
+Time: 144.3727s
+Time: 144.4390s
 file_name: article_6, chunk_size: 1024, output_len: 75
-Time: 199.1611s
+Time: 199.6807s
+Time: 199.0287s
+Time: 199.4276s
 file_name: article_6, chunk_size: 1024, output_len: 100
-Time: 254.7037s
+Time: 254.4375s
+Time: 254.4211s
+Time: 253.8505s
 file_name: article_7, chunk_size: 1024, output_len: 25
-Time: 87.0710s
+Time: 86.6710s
+Time: 86.1113s
+Time: 86.5812s
 file_name: article_7, chunk_size: 1024, output_len: 50
-Time: 140.3354s
+Time: 139.0220s
+Time: 138.6457s
+Time: 139.0752s
 file_name: article_7, chunk_size: 1024, output_len: 75
-Time: 193.0668s
+Time: 191.9092s
+Time: 191.9471s
+Time: 191.4913s
 file_name: article_7, chunk_size: 1024, output_len: 100
-Time: 246.3743s
+Time: 245.2587s
+Time: 245.0830s
+Time: 245.3836s
 file_name: article_8, chunk_size: 1024, output_len: 25
-Time: 42.0410s
+Time: 43.1034s
+Time: 41.7431s
+Time: 41.7593s
 file_name: article_8, chunk_size: 1024, output_len: 50
-Time: 67.9867s
+Time: 67.6615s
+Time: 67.7133s
+Time: 67.5023s
 file_name: article_8, chunk_size: 1024, output_len: 75
-Time: 93.9256s
+Time: 93.2664s
+Time: 93.8146s
+Time: 93.8822s
 file_name: article_8, chunk_size: 1024, output_len: 100
-Time: 120.2845s
+Time: 119.9483s
+Time: 119.3075s
+Time: 119.3802s
 file_name: article_9, chunk_size: 1024, output_len: 25
-Time: 54.7656s
+Time: 54.5038s
+Time: 54.4186s
+Time: 54.7364s
 file_name: article_9, chunk_size: 1024, output_len: 50
-Time: 88.4482s
+Time: 87.9454s
+Time: 88.1593s
+Time: 87.8626s
 file_name: article_9, chunk_size: 1024, output_len: 75
-Time: 121.5830s
+Time: 121.1436s
+Time: 121.5752s
+Time: 121.2327s
 file_name: article_9, chunk_size: 1024, output_len: 100
-Time: 155.4406s
+Time: 154.8415s
+Time: 154.9507s
+Time: 156.0216s

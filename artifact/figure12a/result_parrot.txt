@@ -1,100 +1,82 @@
-file_name: article_0, request_rate: 0
-Time: 86.4902
+Warning: MLC is not installed. Related functionalities will be disabled.
+warmup done
 file_name: article_0, request_rate: 1.0
-Time: 107.2663
+Time: 103.7568
 file_name: article_0, request_rate: 2.0
-Time: 113.6943
+Time: 112.9028
 file_name: article_0, request_rate: 3.0
-Time: 117.8910
-file_name: article_0, request_rate: 3.5
-Time: 118.7667
-file_name: article_1, request_rate: 0
-Time: 53.8761
+Time: 120.7937
 file_name: article_1, request_rate: 1.0
-Time: 67.3712
+Time: 65.5388
 file_name: article_1, request_rate: 2.0
-Time: 71.2629
+Time: 69.4170
 file_name: article_1, request_rate: 3.0
-Time: 74.0818
-file_name: article_1, request_rate: 3.5
-Time: 74.8516
-file_name: article_2, request_rate: 0
-Time: 61.1719
+Time: 75.9151
 file_name: article_2, request_rate: 1.0
-Time: 75.1944
+Time: 74.0630
 file_name: article_2, request_rate: 2.0
-Time: 80.3007
+Time: 78.9084
 file_name: article_2, request_rate: 3.0
-Time: 84.1880
-file_name: article_2, request_rate: 3.5
-Time: 84.9991
-file_name: article_3, request_rate: 0
-Time: 52.3576
+Time: 85.0282
 file_name: article_3, request_rate: 1.0
-Time: 64.7045
+Time: 62.8451
 file_name: article_3, request_rate: 2.0
-Time: 68.6770
+Time: 67.3949
 file_name: article_3, request_rate: 3.0
-Time: 72.4226
-file_name: article_3, request_rate: 3.5
-Time: 72.9059
-file_name: article_4, request_rate: 0
-Time: 71.3218
+Time: 72.6352
 file_name: article_4, request_rate: 1.0
-Time: 88.2065
+Time: 85.2832
 file_name: article_4, request_rate: 2.0
-Time: 93.7164
+Time: 92.4229
 file_name: article_4, request_rate: 3.0
-Time: 97.3010
-file_name: article_4, request_rate: 3.5
-Time: 97.4400
-file_name: article_5, request_rate: 0
-Time: 67.5318
+Time: 97.6440
 file_name: article_5, request_rate: 1.0
-Time: 83.7083
+Time: 80.7118
 file_name: article_5, request_rate: 2.0
-Time: 89.1385
+Time: 87.0961
 file_name: article_5, request_rate: 3.0
-Time: 92.1775
-file_name: article_5, request_rate: 3.5
-Time: 93.2596
-file_name: article_6, request_rate: 0
-Time: 119.5184
+Time: 94.0723
 file_name: article_6, request_rate: 1.0
-Time: 147.5588
+Time: 143.8237
 file_name: article_6, request_rate: 2.0
-Time: 158.7528
+Time: 154.9838
 file_name: article_6, request_rate: 3.0
-Time: 163.1319
-file_name: article_6, request_rate: 3.5
-Time: 164.8637
-file_name: article_7, request_rate: 0
-Time: 115.9792
+Time: 164.4677
 file_name: article_7, request_rate: 1.0
-Time: 142.9158
+Time: 139.0326
 file_name: article_7, request_rate: 2.0
-Time: 153.1079
+Time: 150.6210
 file_name: article_7, request_rate: 3.0
-Time: 158.8605
-file_name: article_7, request_rate: 3.5
-Time: 161.0476
-file_name: article_8, request_rate: 0
-Time: 56.1838
+Time: 161.7902
 file_name: article_8, request_rate: 1.0
-Time: 70.1240
+Time: 67.2698
 file_name: article_8, request_rate: 2.0
-Time: 74.6034
+Time: 72.8654
 file_name: article_8, request_rate: 3.0
-Time: 76.8629
-file_name: article_8, request_rate: 3.5
-Time: 77.8824
-file_name: article_9, request_rate: 0
-Time: 73.3024
+Time: 77.1788
 file_name: article_9, request_rate: 1.0
-Time: 91.3394
+Time: 87.7278
 file_name: article_9, request_rate: 2.0
-Time: 96.7395
+Time: 95.5339
 file_name: article_9, request_rate: 3.0
-Time: 99.7704
+Time: 102.1942
+file_name: article_0, request_rate: 3.5
+Time: 124.3613
+file_name: article_1, request_rate: 3.5
+Time: 77.5331
+file_name: article_2, request_rate: 3.5
+Time: 90.2338
+file_name: article_3, request_rate: 3.5
+Time: 74.9267
+file_name: article_4, request_rate: 3.5
+Time: 103.2025
+file_name: article_5, request_rate: 3.5
+Time: 97.9696
+file_name: article_6, request_rate: 3.5
+Time: 189.3362
+file_name: article_7, request_rate: 3.5
+Time: 187.5125
+file_name: article_8, request_rate: 3.5
+Time: 81.3003
 file_name: article_9, request_rate: 3.5
-Time: 101.0249
+Time: 108.6491

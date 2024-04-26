@@ -50,7 +50,7 @@ args = parser.parse_args()
 
 
 MODEL_NAME = "lmsys/vicuna-7b-v1.3"
-DATA_PATH = "../workloads/bingchat/bing_chat_dataset.jsonl"
+DATA_PATH = "../workloads/bingchat/bing_chat_dataset_prompt_len.txt"
 MAX_BLOCK_NUM = 6800
 SAMPLED_TOKEN_NUMS = [
     (6014, 619),
@@ -199,15 +199,18 @@ def profile_bing_chat(
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
     with open(DATA_PATH, encoding="utf8") as f:
-        prompt_token_ids = [
-            tokenizer.encode(json.loads(line)["prompt"]) for line in f.readlines()
-        ]
+        # prompt_token_ids = [
+        #     tokenizer.encode(json.loads(line)["prompt"]) for line in f.readlines()
+        # ]
+        lines = f.read().splitlines()
+        prompt_token_ids = [[666] * int(line) for line in lines]  # dummy token id
 
     shared_ids = 0
     if shared:
         parent_context_id = batch_size
-        while len(set([prompt[shared_ids] for prompt in prompt_token_ids])) == 1:
-            shared_ids += 1
+        # while len(set([prompt[shared_ids] for prompt in prompt_token_ids])) == 1:
+        #     shared_ids += 1
+        shared_ids = 5107
     else:
         parent_context_id = -1
     print(f"Shared token num: {shared_ids}")

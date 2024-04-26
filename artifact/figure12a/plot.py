@@ -113,7 +113,7 @@ plt.legend(
 ax.tick_params(axis="y", labelsize=20, direction="in")
 ax.tick_params(axis="x", labelsize=20, direction="in")
 ax.set_xlabel("Request Rate (reqs/s)", fontsize=26)
-ax.set_ylabel("Average Latency (ms)", fontsize=26)
+ax.set_ylabel("Average Latency (s)", fontsize=26)
 # ax.set_xticks([_+0.1 for _ in x])
 # ax.set_xticklabels(request_rates)
 plt.xlim([-0.1, 3.8])
