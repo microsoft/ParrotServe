@@ -278,7 +278,7 @@ class PCore:
             l_pos = prompt.find("chaos#%")
             r_pos = prompt.rfind("chaos#%")
             assert l_pos != r_pos
-            req_no = int(prompt[l_pos + 4 : r_pos])
+            req_no = int(prompt[l_pos + 7 : r_pos])
             print(f"Req mapping: {req_no}, {thread.tid}", flush=True)
 
     async def placeholder_set(self, pid: int, placeholder_id: int, content: str):
