@@ -1,648 +1,80 @@
 file_name: article_0, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-  File "/install/parrot/program/vm.py", line 113, in _submit_call
-    await asubmit_call(
-  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
-    raise e
-  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
-    return await async_send_http_request(
-  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
-    assert resp.ok, f"Send http request error: {resp.reason}"
-AssertionError: Send http request error: Internal Server Error
-
-Time: 0.0000
+Time: 13.8787
 file_name: article_0, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 10.0895
 file_name: article_0, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 9.3096
 file_name: article_0, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 9.0494
 file_name: article_1, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 8.5563
 file_name: article_1, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 7.0997
 file_name: article_1, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 6.6797
 file_name: article_1, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 6.5247
 file_name: article_2, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 9.8165
 file_name: article_2, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 8.0592
 file_name: article_2, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 7.6841
 file_name: article_2, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 7.4881
 file_name: article_3, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 8.1025
 file_name: article_3, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 6.7682
 file_name: article_3, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 6.3891
 file_name: article_3, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 6.1926
 file_name: article_4, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 10.9347
 file_name: article_4, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 8.5490
 file_name: article_4, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 8.0784
 file_name: article_4, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 7.8509
 file_name: article_5, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 10.0260
 file_name: article_5, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 8.5676
 file_name: article_5, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 7.8002
 file_name: article_5, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 7.5755
 file_name: article_6, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 17.9961
 file_name: article_6, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 14.9319
 file_name: article_6, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 13.6506
 file_name: article_6, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 13.1459
 file_name: article_7, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 18.6849
 file_name: article_7, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 15.0807
 file_name: article_7, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 14.0785
 file_name: article_7, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 13.7182
 file_name: article_8, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 8.8192
 file_name: article_8, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 7.2819
 file_name: article_8, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 6.9398
 file_name: article_8, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 6.7019
 file_name: article_9, chunk_size: 512, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 11.7840
 file_name: article_9, chunk_size: 1024, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 9.6661
 file_name: article_9, chunk_size: 1536, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 9.0996
 file_name: article_9, chunk_size: 2048, output_len: 50
-Error happens when executing Parrot program:  <class 'RuntimeError'> RuntimeError('cannot reuse already awaited coroutine')
-Traceback:  Traceback (most recent call last):
-  File "/install/parrot/program/vm.py", line 313, in running_scope
-    yield
-  File "/install/parrot/program/vm.py", line 359, in run
-    loop.run_until_complete(coroutine)
-  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/app/artifact/figure13/bench_arxiv_parrot.py", line 104, in _main
-    await vm.submit_batch()
-  File "/install/parrot/program/vm.py", line 217, in submit_batch
-    await asyncio.gather(*self._batch)
-RuntimeError: cannot reuse already awaited coroutine
-
-Time: 0.0000
+Time: 8.8326

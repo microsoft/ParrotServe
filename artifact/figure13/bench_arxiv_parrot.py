@@ -32,7 +32,7 @@ def get_map_reduce_functions(file_name: str, chunk_num: int, output_len: int):
     global vm
 
     map_func = vm.define_function(
-        func_name=None,
+        func_name="map_func",
         func_body="""Write an one-sentence summary (AS SHORT AS POSSIBLE) of the following:
 {{text}}
 CONCISE SUMMARY:{{summary}}""",
@@ -75,7 +75,7 @@ CONCISE SUMMARY:{{summary}}""",
     )
 
     reduce_func = vm.define_function(
-        func_name=None,
+        func_name="reduce_func",
         func_body=reduce_template,
         cache_prefix=False,
         params=input_params + [output_param],
@@ -122,7 +122,7 @@ def warmup():
 
 
 if __name__ == "__main__":
-    # warmup()
+    warmup()
 
     # main("article_0", 1024, 25)
 
