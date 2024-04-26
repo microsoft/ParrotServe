@@ -53,7 +53,7 @@ Parrot has been wrapped as a Python library. For installing Parrot, there are tw
 
     Then start a docker instance (Run the following command in the root directory of this repo).
     ```bash
-    docker run --gpus all -itd -v $PWD/../ParrotServe:/app --name parrot parrot /bin/bash
+    docker run --gpus all --shm-size=50gb -itd -v $PWD/../ParrotServe:/app --name parrot parrot /bin/bash
     docker exec -it parrot /bin/bash
     ```
 
