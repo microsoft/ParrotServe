@@ -2,8 +2,6 @@
 
 This project is a research prototype for now. Being eargerly iterated.
 
-![](assets/layers_arch.png)
-
 
 ## Install
 
