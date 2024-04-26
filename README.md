@@ -35,14 +35,14 @@ To reproduce the main results presented in our paper, we provide a Docker image 
 
 ## 2. Environment Setup
 
-### 2.1. Clone the Source Code.
+### 2.1. Clone the Source Code
 The source code of Parrot contains some 3rd party libraries which are organized as submodules, so remember to initialize the submodules.
 ```bash
 git clone -b artifact git@github.com:microsoft/ParrotServe.git --recursive
 cd ParrotServe
 ```
 
-### 2.2. Install Parrot Library.
+### 2.2. Install Parrot Library
 
 Parrot has been wrapped as a Python library. For installing Parrot, there are two alternatives.
 
@@ -51,14 +51,15 @@ Parrot has been wrapped as a Python library. For installing Parrot, there are tw
     sudo docker build . -t parrot
     ```
 
-    Then start a docker instance.
+    Then start a docker instance (Run the following command in the root directory of this repo).
     ```bash
-    TODO
+    docker run --gpus all -itd -v $PWD/../ParrotServe:/app --name parrot parrot /bin/bash
+    docker exec -it parrot /bin/bash
     ```
 
 * Choice 2: Manual Setup. Following the instructions in [INSTALL.md](INSTALL.md) to install the dependencies and Parrot.
 
-### 2.3. Preparing the Dataset. 
+### 2.3. Preparing the Dataset 
 
 Most of our datasets are already included in the repository (in the `artifact/workloads/` folder). The ShareGPT dataset (For benchmarking chat applications) needs to be downloaded manually due to its large size. 
 ```bash
@@ -66,7 +67,7 @@ cd artifact/workloads/sharegpt
 wget https://huggingface.co/datasets/anon8231489123/ShareGPT_Vicuna_unfiltered/resolve/main/ShareGPT_V3_unfiltered_cleaned_split.json
 ```
 
-### 2.4. Set the Environment Variables.
+### 2.4. Set the Environment Variables
 
 Before running the experiments, remember to set the necessary environment variables (like on/off simulated network latency).
 ```bash
@@ -75,7 +76,7 @@ source artifact/eval_env.sh
 
 ## 3. Reproduce the Results
 
-This artifact aims to reproduce the main results presented in our paper, from `Figure 11` to `Figure 18`, to demonstrate the claims in our paper that Parrot can efficiently optimize LLM-based applications serving by adopting Semantic Variable to uncover correlations between different LLM requests.
+This artifact will validate the evaluation results in the paper draft (`Figure11` - `Figure18`), including Parrot and baseline's performance on Data Analytics on Long Documents, Serving Popular LLM Applications, Multi-agent Applications, and Scheduling of Mixed Workloads, to demonstrate the claims in our paper that Parrot can efficiently optimize LLM-based applications serving by adopting Semantic Variable to uncover correlations between different LLM requests.
 
 ### 3.1. Artifact Overview
 

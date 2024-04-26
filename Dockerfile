@@ -15,3 +15,4 @@ RUN cd /install && pip install -e .
 
 RUN apt-get update
 RUN apt-get install vim -y
+RUN apt-get install wget -y
