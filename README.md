@@ -59,7 +59,7 @@ Parrot has been wrapped as a Python library. For installing Parrot, there are tw
 
 * Choice 2: Manual Setup. Following the instructions in [INSTALL.md](INSTALL.md) to install the dependencies and Parrot.
 
-### 2.3. Preparing the Dataset 
+### 2.3. Prepare the Dataset 
 
 Most of our datasets are already included in the repository (in the `artifact/workloads/` folder). The ShareGPT dataset (For benchmarking chat applications) needs to be downloaded manually due to its large size. 
 ```bash
@@ -67,7 +67,17 @@ cd artifact/workloads/sharegpt
 wget https://huggingface.co/datasets/anon8231489123/ShareGPT_Vicuna_unfiltered/resolve/main/ShareGPT_V3_unfiltered_cleaned_split.json
 ```
 
-### 2.4. Set the Environment Variables
+### 2.4. Prepare the Models
+
+Our experiments use two LLM models: Llama 7B and Llama 13B. The weights of these models are not included in the repository due to their large size. We provide a script to download the weights of these models.
+```bash
+cd artifact
+bash load_models.sh 7b # load Llama 7B weights
+bash load_models.sh 13b # load Llama 13B weights
+```
+For A6000*4 experiments, we only need to load Llama 7B weights.
+
+### 2.5. Set the Environment Variables
 
 Before running the experiments, remember to set the necessary environment variables (like on/off simulated network latency).
 ```bash
@@ -115,16 +125,16 @@ You can manually run each step sequentially and the results of each step will be
 
 The following table shows the detailed information of each experiment.
 
-| Figure No. | Folder | Description | Expected Running Time | Hardware | Raw Data File(s) | Generated Figure File(s) |
-|------------|-------------|--------------------------|--------------------------|----------|----------------|---------------------------|
-| Figure 11 | `figure11/` | Average latency of single chain summary application with varying output lengths and chunk sizes. | **7 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_hf_olen.txt`, `result_hf_csize.txt`, `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig11_a.pdf`, `fig11_a.pdf` |
-| Figure 12A | `figure12a/` | Average latency of chain summary applications with background requests. | **2 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_vllm.txt`, `result_parrot.txt` | `fig12_a.pdf` |
-| Figure 12B | `figure12b/` | Average latency of multiple simultaneous chain summary applications. | 30 min | NVIDIA A100 (80GB) GPU x 1 | `result_vllm.txt`, `result_parrot.txt` | `fig12_b.pdf` |
-| Figure 13 | `figure13/` | Average latency of single map reduce summary application. | 30 min | NVIDIA A100 (80GB) GPU x 1 | `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig13_a.pdf`, `fig13_b.pdf` |
-| Figure 14 | `figure14/` | Average latency of BingCopilot applications with different batch sizes. | 20 min | NVIDIA A100 (80GB) GPU x 1 | `result.txt` | `fig14.pdf` |
-| Figure 15 | `figure15/` | Latency per token of BingCopilot applications with different output lengths. | 40 min | NVIDIA A100 (80GB) GPU x 1 | `result_32.txt`, `result_64.txt` | `fig15_a.pdf`, `fig15_b.pdf` |
-| Figure 16 | `figure16/` | Normalized latency of serving multiple GPTs applications. | 1 hour 15 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm.txt`, `result_parrot_paged.txt`, `result_parrot.txt` | `fig16.pdf` |
-| Figure 17 | `figure17/` | Average latency and memory usage for multi-agent programming, with varying number of files to program. | **3 hours** | NVIDIA A100 (80GB) GPU x 1 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot_paged.txt`, `result_parrot_no_share.txt`, `result_parrot.txt` | `fig17_a.pdf`, `fig17_b.pdf` |
-| Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | 15 min | NVIDIA A6000 (48GB) GPUs x 4 | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot.txt` | `fig18.pdf` |
+| Figure No. | Folder | Description | Expected Running Time | Hardware | Models | Raw Data File(s) | Generated Figure File(s) |
+|------------|-------------|--------------------------|--------------------------|----------|----------|----------------|---------------------------|
+| Figure 11 | `figure11/` | Average latency of single chain summary application with varying output lengths and chunk sizes. | **7 hours** | NVIDIA A100 (80GB) GPU x 1 | Llama 13B | `result_hf_olen.txt`, `result_hf_csize.txt`, `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig11_a.pdf`, `fig11_a.pdf` |
+| Figure 12A | `figure12a/` | Average latency of chain summary applications with background requests. | **2 hours** | NVIDIA A100 (80GB) GPU x 1 | Llama 13B | `result_vllm.txt`, `result_parrot.txt` | `fig12_a.pdf` |
+| Figure 12B | `figure12b/` | Average latency of multiple simultaneous chain summary applications. | 30 min | NVIDIA A100 (80GB) GPU x 1 | Llama 13B | `result_vllm.txt`, `result_parrot.txt` | `fig12_b.pdf` |
+| Figure 13 | `figure13/` | Average latency of single map reduce summary application. | 30 min | NVIDIA A100 (80GB) GPU x 1 | Llama 13B | `result_vllm_olen.txt`, `result_vllm_csize.txt`, `result_parrot_olen.txt`, `result_parrot_csize.txt` | `fig13_a.pdf`, `fig13_b.pdf` |
+| Figure 14 | `figure14/` | Average latency of BingCopilot applications with different batch sizes. | 20 min | NVIDIA A100 (80GB) GPU x 1 | Llama 7B | `result.txt` | `fig14.pdf` |
+| Figure 15 | `figure15/` | Latency per token of BingCopilot applications with different output lengths. | 40 min | NVIDIA A100 (80GB) GPU x 1 | Llama 7B | `result_32.txt`, `result_64.txt` | `fig15_a.pdf`, `fig15_b.pdf` |
+| Figure 16 | `figure16/` | Normalized latency of serving multiple GPTs applications. | 1 hour 15 min | NVIDIA A6000 (48GB) GPUs x 4 | Llama 7B | `result_vllm.txt`, `result_parrot_paged.txt`, `result_parrot.txt` | `fig16.pdf` |
+| Figure 17 | `figure17/` | Average latency and memory usage for multi-agent programming, with varying number of files to program. | **3 hours** | NVIDIA A100 (80GB) GPU x 1 | Llama 13B | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot_paged.txt`, `result_parrot_no_share.txt`, `result_parrot.txt` | `fig17_a.pdf`, `fig17_b.pdf` |
+| Figure 18 | `figure18/` | Average chat latency, map-reduce latency and chat per-decode latency in the mixed serving scenario. | 15 min | NVIDIA A6000 (48GB) GPUs x 4 | Llama 7B | `result_vllm_lat.txt`, `result_vllm_thr.txt`, `result_parrot.txt` | `fig18.pdf` |
 
 

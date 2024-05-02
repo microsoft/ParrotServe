@@ -1,80 +1,80 @@
 file_name: article_0, chunk_size: 512, output_len: 50
-Time: 13.8787
+Time: 13.4439
 file_name: article_0, chunk_size: 1024, output_len: 50
-Time: 10.0895
+Time: 10.0620
 file_name: article_0, chunk_size: 1536, output_len: 50
-Time: 9.3096
+Time: 9.3450
 file_name: article_0, chunk_size: 2048, output_len: 50
-Time: 9.0494
+Time: 8.9969
 file_name: article_1, chunk_size: 512, output_len: 50
-Time: 8.5563
+Time: 8.5755
 file_name: article_1, chunk_size: 1024, output_len: 50
-Time: 7.0997
+Time: 7.0414
 file_name: article_1, chunk_size: 1536, output_len: 50
-Time: 6.6797
+Time: 6.7024
 file_name: article_1, chunk_size: 2048, output_len: 50
-Time: 6.5247
+Time: 6.5616
 file_name: article_2, chunk_size: 512, output_len: 50
-Time: 9.8165
+Time: 9.8514
 file_name: article_2, chunk_size: 1024, output_len: 50
-Time: 8.0592
+Time: 8.0878
 file_name: article_2, chunk_size: 1536, output_len: 50
-Time: 7.6841
+Time: 7.6933
 file_name: article_2, chunk_size: 2048, output_len: 50
-Time: 7.4881
+Time: 7.4944
 file_name: article_3, chunk_size: 512, output_len: 50
-Time: 8.1025
+Time: 8.2049
 file_name: article_3, chunk_size: 1024, output_len: 50
-Time: 6.7682
+Time: 6.8073
 file_name: article_3, chunk_size: 1536, output_len: 50
-Time: 6.3891
+Time: 6.4360
 file_name: article_3, chunk_size: 2048, output_len: 50
-Time: 6.1926
+Time: 6.2517
 file_name: article_4, chunk_size: 512, output_len: 50
-Time: 10.9347
+Time: 10.9614
 file_name: article_4, chunk_size: 1024, output_len: 50
-Time: 8.5490
+Time: 8.6551
 file_name: article_4, chunk_size: 1536, output_len: 50
-Time: 8.0784
+Time: 8.0843
 file_name: article_4, chunk_size: 2048, output_len: 50
-Time: 7.8509
+Time: 7.9157
 file_name: article_5, chunk_size: 512, output_len: 50
-Time: 10.0260
+Time: 10.0717
 file_name: article_5, chunk_size: 1024, output_len: 50
-Time: 8.5676
+Time: 8.6062
 file_name: article_5, chunk_size: 1536, output_len: 50
-Time: 7.8002
+Time: 7.8163
 file_name: article_5, chunk_size: 2048, output_len: 50
-Time: 7.5755
+Time: 7.6200
 file_name: article_6, chunk_size: 512, output_len: 50
-Time: 17.9961
+Time: 18.1493
 file_name: article_6, chunk_size: 1024, output_len: 50
-Time: 14.9319
+Time: 14.8755
 file_name: article_6, chunk_size: 1536, output_len: 50
-Time: 13.6506
+Time: 13.6456
 file_name: article_6, chunk_size: 2048, output_len: 50
-Time: 13.1459
+Time: 13.0717
 file_name: article_7, chunk_size: 512, output_len: 50
-Time: 18.6849
+Time: 18.7271
 file_name: article_7, chunk_size: 1024, output_len: 50
-Time: 15.0807
+Time: 15.1903
 file_name: article_7, chunk_size: 1536, output_len: 50
-Time: 14.0785
+Time: 14.2316
 file_name: article_7, chunk_size: 2048, output_len: 50
-Time: 13.7182
+Time: 13.7797
 file_name: article_8, chunk_size: 512, output_len: 50
-Time: 8.8192
+Time: 8.7306
 file_name: article_8, chunk_size: 1024, output_len: 50
-Time: 7.2819
+Time: 7.2575
 file_name: article_8, chunk_size: 1536, output_len: 50
-Time: 6.9398
+Time: 6.9062
 file_name: article_8, chunk_size: 2048, output_len: 50
-Time: 6.7019
+Time: 6.7698
 file_name: article_9, chunk_size: 512, output_len: 50
-Time: 11.7840
+Time: 11.8015
 file_name: article_9, chunk_size: 1024, output_len: 50
-Time: 9.6661
+Time: 9.5762
 file_name: article_9, chunk_size: 1536, output_len: 50
-Time: 9.0996
+Time: 9.0775
 file_name: article_9, chunk_size: 2048, output_len: 50
-Time: 8.8326
+Time: 8.9196
