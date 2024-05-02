@@ -11,6 +11,8 @@ do
     rm model_worker_* -rf
 
     export VLLM_CAPACITY=4096
+    export VLLM_REQ_TRACK=1
+    
     bash ../fastchat_scripts/launch_vllm_multi.sh
 
     export OPENAI_API_BASE=http://localhost:8000/v1

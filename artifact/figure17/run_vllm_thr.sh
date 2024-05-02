@@ -2,6 +2,8 @@
 
 rm *.log -rf
 
+export VLLM_REQ_TRACK=1
+
 # Guarantee VLLM_CAPACITY is unset
 bash ../fastchat_scripts/launch_vllm.sh
 

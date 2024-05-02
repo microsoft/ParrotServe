@@ -8,6 +8,8 @@ counter=1
 for r in 0.25 0.5 1.25 2.0
 do
     rm *.log -rf
+    
+    export VLLM_REQ_TRACK=1
 
     bash ../fastchat_scripts/launch_vllm_multi.sh
 

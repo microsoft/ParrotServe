@@ -355,13 +355,26 @@ class LLMEngine:
             request_outputs.append(request_output)
 
             # HACK(chaofan): Get the exit time of the request.
-            if request_output.finished and "chaos#%" in request_output.prompt:
-                cur_time = time.perf_counter_ns()
-                l_pos = request_output.prompt.find("chaos#%")
-                r_pos = request_output.prompt.rfind("chaos#%")
-                assert l_pos != r_pos
-                req_no = int(request_output.prompt[l_pos + 7 : r_pos])
-                print(f"hack request exit: {req_no}, {cur_time}", flush=True)
+            import os
+
+            vllm_req_track = os.environ.get("VLLM_REQ_TRACK", None)
+            if vllm_req_track is None:
+                if request_output.finished:
+                    cur_time = time.perf_counter_ns()
+                    req_no = request_output.request_id
+                    generated_len = len(request_output.outputs[0].token_ids)
+                    print(
+                        f"[vLLM debug] Request exit timestamp. request_id={req_no}, t={cur_time}, generated_len={generated_len}",
+                        flush=True,
+                    )
+            else:
+                if request_output.finished and "chaos#%" in request_output.prompt:
+                    cur_time = time.perf_counter_ns()
+                    l_pos = request_output.prompt.find("chaos#%")
+                    r_pos = request_output.prompt.rfind("chaos#%")
+                    assert l_pos != r_pos
+                    req_no = int(request_output.prompt[l_pos + 7 : r_pos])
+                    print(f"hack request exit: {req_no}, {cur_time}", flush=True)
 
         if self.log_stats:
             # Log the system stats.

@@ -329,24 +329,33 @@ class Worker:
 
         # HACK(chaofan): Get first token time
         if input_metadata.num_prompt_tokens > 0:
-            from transformers import AutoTokenizer
-
-            tokenizer = AutoTokenizer.from_pretrained(
-                "hf-internal-testing/llama-tokenizer"
-            )
             cur_time = time.perf_counter_ns()
-            for sg_metadata in seq_group_metadata_list:
-                data = list(sg_metadata.seq_data.values())[0]
-                data_str = tokenizer.decode(data.get_token_ids())
-                if "chaos#%" not in data_str:
-                    continue
-                l_pos = data_str.find("chaos#%")
-                r_pos = data_str.rfind("chaos#%")
-                assert l_pos != r_pos
-                assert l_pos != -1
-                assert r_pos != -1
-                req_no = int(data_str[l_pos + 7 : r_pos])
-                print(f"hack ftt: {req_no}, {cur_time}", flush=True)
+            vllm_req_track = os.environ.get("VLLM_REQ_TRACK", None)
+            if vllm_req_track is None:
+                for sg_metadata in seq_group_metadata_list:
+                    req_no = sg_metadata.request_id
+                    print(
+                        f"[vLLM debug] Prefill finish timestamp. request_id={req_no}, t={cur_time}",
+                        flush=True,
+                    )
+            else:
+                from transformers import AutoTokenizer
+
+                tokenizer = AutoTokenizer.from_pretrained(
+                    "hf-internal-testing/llama-tokenizer"
+                )
+                for sg_metadata in seq_group_metadata_list:
+                    data = list(sg_metadata.seq_data.values())[0]
+                    data_str = tokenizer.decode(data.get_token_ids())
+                    if "chaos#%" not in data_str:
+                        continue
+                    l_pos = data_str.find("chaos#%")
+                    r_pos = data_str.rfind("chaos#%")
+                    assert l_pos != r_pos
+                    assert l_pos != -1
+                    assert r_pos != -1
+                    req_no = int(data_str[l_pos + 7 : r_pos])
+                    print(f"hack ftt: {req_no}, {cur_time}", flush=True)
         return output
 
 

@@ -1,5 +1,9 @@
 file_name: article_0, request_rate: 0
-Time: 115.1492 s
+Time: 103.8426 s
 file_name: article_0, request_rate: 1
-Time: 152.4188 s
+Time: 122.9060 s
 file_name: article_0, request_rate: 2
+Time: 144.4164 s
+file_name: article_0, request_rate: 3
+Time: 186.6046 s
+file_name: article_0, request_rate: 3.5

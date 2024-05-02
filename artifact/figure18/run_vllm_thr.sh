@@ -9,6 +9,8 @@ do
 
     # rm *.log -rf
     rm model_worker_* -rf
+    
+    export VLLM_REQ_TRACK=1
 
     bash ../fastchat_scripts/launch_vllm_multi.sh
 
