@@ -1,12 +1,1587 @@
+Error happens when executing Parrot program:  <class 'requests.exceptions.JSONDecodeError'> JSONDecodeError('Expecting value: line 1 column 1 (char 0)')
+Traceback:  Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/opt/conda/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/opt/conda/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/opt/conda/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 150, in warmup
+    holder = test_func("Test")
+  File "/install/parrot/program/function.py", line 280, in __call__
+    return self._call_func(None, *args, **kwargs)
+  File "/install/parrot/program/function.py", line 325, in _call_func
+    BasicFunction._virtual_machine_env.submit_call_handler(call)
+  File "/install/parrot/program/vm.py", line 178, in submit_call_handler
+    resp = submit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 78, in submit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 67, in submit_call
+    return send_http_request(
+  File "/install/parrot/protocol/common.py", line 39, in send_http_request
+    resp_data = error_resp.json()
+  File "/opt/conda/lib/python3.10/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
 clients_num: 10
-{7: 43.016702581, 2: 52.250128112, 1: 54.213300955, 8: 59.869722996, 9: 78.847318325, 3: 82.44473745, 0: 102.151336609, 5: 112.298328418, 4: 115.365287372, 6: 116.547983562}
-Avg. JCT 81.70 (s)
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+{0: 0.0, 6: 0.0, 4: 0.0, 5: 0.0, 1: 0.0, 9: 0.0, 2: 0.0, 3: 0.0, 7: 0.0, 8: 0.0}
+Avg. JCT 0.00 (s)
 clients_num: 15
-{8: 54.461720275, 10: 56.271312851, 3: 59.923620799, 2: 61.692735947, 9: 78.738360351, 5: 86.326824184, 11: 86.324925213, 14: 112.273861695, 0: 139.499647621, 4: 147.125268668, 13: 148.908822751, 6: 163.985112848, 1: 165.547476719, 12: 165.545955947, 7: 173.17274875}
-Avg. JCT 113.32 (s)
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+{6: 0.0, 13: 0.0, 0: 0.0, 14: 0.0, 8: 0.0, 5: 0.0, 4: 0.0, 2: 0.0, 12: 0.0, 9: 0.0, 1: 0.0, 11: 0.0, 10: 0.0, 3: 0.0, 7: 0.0}
+Avg. JCT 0.00 (s)
 clients_num: 20
-{12: 46.653996906, 14: 58.008281311, 1: 63.573077989, 13: 68.956662112, 18: 89.869760662, 9: 95.693783019, 16: 103.105517247, 3: 114.586259627, 17: 135.363209313, 19: 143.113726531, 0: 150.411804383, 11: 152.141194686, 5: 168.466431752, 8: 189.594801683, 10: 191.397670904, 2: 206.097552708, 6: 213.512895722, 4: 223.988876552, 15: 225.505682133, 7: 234.367809992}
-Avg. JCT 143.72 (s)
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+{13: 0.0, 0: 0.0, 8: 0.0, 10: 0.0, 6: 0.0, 14: 0.0, 11: 0.0, 19: 0.0, 15: 0.0, 5: 0.0, 4: 0.0, 17: 0.0, 1: 0.0, 9: 0.0, 3: 0.0, 18: 0.0, 7: 0.0, 2: 0.0, 12: 0.0, 16: 0.0}
+Avg. JCT 0.00 (s)
 clients_num: 25
-{5: 50.209211049, 4: 65.559412675, 9: 65.559925647, 3: 65.563293487, 21: 82.528859879, 16: 92.278568635, 24: 105.304003973, 19: 116.540080011, 2: 129.476732629, 15: 146.067407282, 6: 164.911125125, 11: 168.856038539, 22: 176.29629943, 1: 179.99988596, 7: 189.039760968, 18: 209.469566253, 8: 224.530010314, 0: 231.93129236, 17: 239.600527581, 10: 251.71736893, 23: 261.514403419, 12: 276.467058304, 20: 281.447930338, 14: 295.339317915, 13: 295.345754685}
-Avg. JCT 174.62 (s)
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+Error happens when executing Parrot program:  <class 'AssertionError'> AssertionError('Send http request error: Internal Server Error')
+Traceback:  Traceback (most recent call last):
+  File "/install/parrot/program/vm.py", line 313, in running_scope
+    yield
+  File "/install/parrot/program/vm.py", line 359, in run
+    loop.run_until_complete(coroutine)
+  File "/opt/conda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/app/artifact/figure12b/bench_arxiv_multivm_parrot.py", line 116, in main_async
+    await vm.submit_batch()
+  File "/install/parrot/program/vm.py", line 217, in submit_batch
+    await asyncio.gather(*self._batch)
+  File "/install/parrot/program/vm.py", line 113, in _submit_call
+    await asubmit_call(
+  File "/install/parrot/protocol/layer_apis.py", line 98, in asubmit_call
+    raise e
+  File "/install/parrot/protocol/layer_apis.py", line 86, in asubmit_call
+    return await async_send_http_request(
+  File "/install/parrot/protocol/common.py", line 59, in async_send_http_request
+    assert resp.ok, f"Send http request error: {resp.reason}"
+AssertionError: Send http request error: Internal Server Error
+
+{1: 0.0, 12: 0.0, 16: 0.0, 4: 0.0, 9: 0.0, 8: 0.0, 22: 0.0, 15: 0.0, 5: 0.0, 18: 0.0, 20: 0.0, 19: 0.0, 2: 0.0, 10: 0.0, 14: 0.0, 7: 0.0, 13: 0.0, 6: 0.0, 3: 0.0, 17: 0.0, 24: 0.0, 21: 0.0, 23: 0.0, 0: 0.0, 11: 0.0}
+Avg. JCT 0.00 (s)

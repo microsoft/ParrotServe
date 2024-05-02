@@ -13,6 +13,6 @@ do
     export OPENAI_API_BASE=http://localhost:8000/v1
     export OPENAI_API_KEY=EMPTY
     echo "Run vLLM benchmark ... [$(($i-1)) / 4]"
-    python3 bench_arxiv_backgrounds_langchain.py $(($i*5)) >> result_vllm.txt
+    python3 bench_arxiv_multivm_langchain.py $(($i*5)) >> result_vllm.txt
     bash ../../scripts/kill_all_fastchat_servers.sh
 done
