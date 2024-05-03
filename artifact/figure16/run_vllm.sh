@@ -23,9 +23,7 @@ do
     elif [ $counter -eq 2 ]; then
         num_prompts=100
     elif [ $counter -eq 3 ]; then
-        num_prompts=200
-    elif [ $counter -eq 4 ]; then
-        num_prompts=200
+        num_prompts=500
     else
         num_prompts=500
     fi

@@ -1,15 +1,15 @@
-Average Normlat:  1038.6566212810803  ms
-Average decode time:  39.05025950292695  ms
-MR JCT:  86032.15  ms
-Average Normlat:  942.9030611530452  ms
-Average decode time:  38.28823931768483  ms
-MR JCT:  91713.44  ms
-Average Normlat:  989.4032854510397  ms
-Average decode time:  38.012034693845855  ms
-MR JCT:  93480.55  ms
-Average Normlat:  1012.7317357630851  ms
-Average decode time:  41.78174506372094  ms
-MR JCT:  86595.41  ms
-Average Normlat:  957.2015925416135  ms
-Average decode time:  37.680283717242226  ms
-MR JCT:  84036.57  ms
+Average Normlat:  872.3331993161186  ms
+Average decode time:  42.41671353434914  ms
+MR JCT:  72874.3  ms
+Average Normlat:  974.6648064760157  ms
+Average decode time:  40.54210541487529  ms
+MR JCT:  83787.84  ms
+Average Normlat:  1044.5987924789974  ms
+Average decode time:  40.95553799802538  ms
+MR JCT:  86252.45  ms
+Average Normlat:  897.7618869729602  ms
+Average decode time:  43.41875353699274  ms
+MR JCT:  71958.28  ms
+Average Normlat:  953.1649435284296  ms
+Average decode time:  41.29220795297189  ms
+MR JCT:  84757.34  ms

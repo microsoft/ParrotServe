@@ -61,7 +61,8 @@ def sample_requests(
         workload_info = json.load(f)
 
     dataset = []
-    total_requests = 10000
+    # total_requests = 10000
+    total_requests = num_requests
     for app_info in workload_info:
         # total_requests * app_info["percentage"]
         app_num_reqs = total_requests / len(
@@ -74,7 +75,9 @@ def sample_requests(
             dataset.append((app_name, query_length, output_length))
 
     # Sample the requests.
-    sampled_requests = random.sample(dataset, num_requests)
+    # sampled_requests = random.sample(dataset, num_requests)
+    random.shuffle(dataset)
+    sampled_requests = dataset
     return sampled_requests
 
 
