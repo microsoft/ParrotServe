@@ -1,82 +1,100 @@
-Warning: MLC is not installed. Related functionalities will be disabled.
-warmup done
-file_name: article_0, request_rate: 1.0
-Time: 103.7568
-file_name: article_0, request_rate: 2.0
-Time: 112.9028
-file_name: article_0, request_rate: 3.0
-Time: 120.7937
-file_name: article_1, request_rate: 1.0
-Time: 65.5388
-file_name: article_1, request_rate: 2.0
-Time: 69.4170
-file_name: article_1, request_rate: 3.0
-Time: 75.9151
-file_name: article_2, request_rate: 1.0
-Time: 74.0630
-file_name: article_2, request_rate: 2.0
-Time: 78.9084
-file_name: article_2, request_rate: 3.0
-Time: 85.0282
-file_name: article_3, request_rate: 1.0
-Time: 62.8451
-file_name: article_3, request_rate: 2.0
-Time: 67.3949
-file_name: article_3, request_rate: 3.0
-Time: 72.6352
-file_name: article_4, request_rate: 1.0
-Time: 85.2832
-file_name: article_4, request_rate: 2.0
-Time: 92.4229
-file_name: article_4, request_rate: 3.0
-Time: 97.6440
-file_name: article_5, request_rate: 1.0
-Time: 80.7118
-file_name: article_5, request_rate: 2.0
-Time: 87.0961
-file_name: article_5, request_rate: 3.0
-Time: 94.0723
-file_name: article_6, request_rate: 1.0
-Time: 143.8237
-file_name: article_6, request_rate: 2.0
-Time: 154.9838
-file_name: article_6, request_rate: 3.0
-Time: 164.4677
-file_name: article_7, request_rate: 1.0
-Time: 139.0326
-file_name: article_7, request_rate: 2.0
-Time: 150.6210
-file_name: article_7, request_rate: 3.0
-Time: 161.7902
-file_name: article_8, request_rate: 1.0
-Time: 67.2698
-file_name: article_8, request_rate: 2.0
-Time: 72.8654
-file_name: article_8, request_rate: 3.0
-Time: 77.1788
-file_name: article_9, request_rate: 1.0
-Time: 87.7278
-file_name: article_9, request_rate: 2.0
-Time: 95.5339
-file_name: article_9, request_rate: 3.0
-Time: 102.1942
+file_name: article_0, request_rate: 0
+Time: 87.6725
+file_name: article_0, request_rate: 1
+Time: 101.5710
+file_name: article_0, request_rate: 2
+Time: 108.0682
+file_name: article_0, request_rate: 3
+Time: 110.6733
 file_name: article_0, request_rate: 3.5
-Time: 124.3613
+Time: 111.1474
+file_name: article_1, request_rate: 0
+Time: 54.7310
+file_name: article_1, request_rate: 1
+Time: 64.8574
+file_name: article_1, request_rate: 2
+Time: 67.8820
+file_name: article_1, request_rate: 3
+Time: 69.4100
 file_name: article_1, request_rate: 3.5
-Time: 77.5331
+Time: 69.8076
+file_name: article_2, request_rate: 0
+Time: 62.2833
+file_name: article_2, request_rate: 1
+Time: 72.6993
+file_name: article_2, request_rate: 2
+Time: 75.5399
+file_name: article_2, request_rate: 3
+Time: 78.8978
 file_name: article_2, request_rate: 3.5
-Time: 90.2338
+Time: 79.1847
+file_name: article_3, request_rate: 0
+Time: 53.3193
+file_name: article_3, request_rate: 1
+Time: 62.9507
+file_name: article_3, request_rate: 2
+Time: 65.1421
+file_name: article_3, request_rate: 3
+Time: 67.8298
 file_name: article_3, request_rate: 3.5
-Time: 74.9267
+Time: 68.2824
+file_name: article_4, request_rate: 0
+Time: 72.2053
+file_name: article_4, request_rate: 1
+Time: 84.4883
+file_name: article_4, request_rate: 2
+Time: 89.4793
+file_name: article_4, request_rate: 3
+Time: 91.7943
 file_name: article_4, request_rate: 3.5
-Time: 103.2025
+Time: 91.4183
+file_name: article_5, request_rate: 0
+Time: 68.7822
+file_name: article_5, request_rate: 1
+Time: 80.5711
+file_name: article_5, request_rate: 2
+Time: 84.6462
+file_name: article_5, request_rate: 3
+Time: 86.9374
 file_name: article_5, request_rate: 3.5
-Time: 97.9696
+Time: 87.0290
+file_name: article_6, request_rate: 0
+Time: 121.7016
+file_name: article_6, request_rate: 1
+Time: 140.9150
+file_name: article_6, request_rate: 2
+Time: 149.3570
+file_name: article_6, request_rate: 3
+Time: 153.6380
 file_name: article_6, request_rate: 3.5
-Time: 189.3362
+Time: 153.7572
+file_name: article_7, request_rate: 0
+Time: 118.4998
+file_name: article_7, request_rate: 1
+Time: 137.4906
+file_name: article_7, request_rate: 2
+Time: 144.6501
+file_name: article_7, request_rate: 3
+Time: 148.8796
 file_name: article_7, request_rate: 3.5
-Time: 187.5125
+Time: 149.2630
+file_name: article_8, request_rate: 0
+Time: 57.3583
+file_name: article_8, request_rate: 1
+Time: 67.3960
+file_name: article_8, request_rate: 2
+Time: 70.6745
+file_name: article_8, request_rate: 3
+Time: 72.7139
 file_name: article_8, request_rate: 3.5
-Time: 81.3003
+Time: 73.7412
+file_name: article_9, request_rate: 0
+Time: 74.9424
+file_name: article_9, request_rate: 1
+Time: 87.2141
+file_name: article_9, request_rate: 2
+Time: 92.3421
+file_name: article_9, request_rate: 3
+Time: 94.3473
 file_name: article_9, request_rate: 3.5
-Time: 108.6491
+Time: 94.9086

@@ -20,6 +20,7 @@ def read_file(filename):
         header_match = re.match(header_pattern, line)
         if header_match:
             experiment_key = header_match.groups()
+            # print(experiment_key)
         else:
             time_match = re.match(time_pattern, line)
             if time_match:
@@ -36,7 +37,7 @@ vllm = read_file("result_vllm.txt")
 # print(parrot)
 # print(vllm)
 
-request_rates = ["0", "1.0", "2.0", "3.0", "3.5"]
+request_rates = ["0", "1", "2", "3", "3.5"]
 systems = ["parrot", "vllm"]
 hatches = ["", "\\", "/"]
 symbols = ["o", "v"]
