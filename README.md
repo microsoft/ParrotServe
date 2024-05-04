@@ -35,6 +35,8 @@ To reproduce the main results presented in our paper, we provide a Docker image 
 
 ## 2. Environment Setup
 
+> **NOTE:** For OSDI'24 artifact evaluation committee, please directly go to Section 3 to reproduce the results on our provided servers. Note that for a newly connected shell, 2.5 may still need to be executed.
+
 ### 2.1. Clone the Source Code
 The source code of Parrot contains some 3rd party libraries which are organized as submodules, so remember to initialize the submodules.
 ```bash
@@ -94,6 +96,7 @@ We put all scripts, configurations and datasets in the `artifact/` folder. The `
 ```
 fastchat_scripts/  # Scripts to run FastChat baseline
 figureX/           # Scripts to generate Figure X in the paper
+model_loader_scripts/  # Scripts to download LLMs
 workloads/         # Datasets used in the experiments
 ```
 
