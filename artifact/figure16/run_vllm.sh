@@ -5,11 +5,12 @@ touch result_vllm.txt
 
 counter=1
 
-for r in 0.25 0.5 1.25 2.0
+for r in 0.25 0.5 1.0 2.0
 do
     rm *.log -rf
     
     export VLLM_REQ_TRACK=1
+    export VLLM_CAPACITY=30000
 
     bash ../fastchat_scripts/launch_vllm_multi.sh
 
@@ -23,7 +24,7 @@ do
     elif [ $counter -eq 2 ]; then
         num_prompts=100
     elif [ $counter -eq 3 ]; then
-        num_prompts=500
+        num_prompts=300
     else
         num_prompts=500
     fi

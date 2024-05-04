@@ -4,14 +4,14 @@
         "prompt_length": 7437,
         "query_length": 7,
         "output_length": 704,
-        "percentage": 0.4
+        "percentage": 0.19
     },
     {
         "app_name": "Image Generation",
         "prompt_length": 1116,
         "query_length": 8,
         "output_length": 89,
-        "percentage": 0.19
+        "percentage": 0.4
     },
     {
         "app_name": "Programming",

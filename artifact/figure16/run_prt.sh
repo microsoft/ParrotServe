@@ -5,7 +5,7 @@ touch result_parrot.txt
 
 counter=1
 
-for r in 1.0 2.0 4.0 8.0 16.0 32.0
+for r in 1.0 2.0 4.0 6.0 8.0 16.0 32.0
 do
     rm -rf log
 

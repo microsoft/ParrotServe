@@ -62,7 +62,7 @@ def sample_requests(
 
     dataset = []
     # total_requests = 10000
-    total_requests = num_requests
+    total_requests = num_requests  # for stable reproduction
     for app_info in workload_info:
         # total_requests * app_info["percentage"]
         app_num_reqs = total_requests / len(
