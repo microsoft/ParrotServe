@@ -460,6 +460,5 @@ artifact/workloads/*/*.jsonl
 !artifact/workloads/metagpt/*.jsonl
 
 # Evaluation data
-!benchmark/*/results/*/*.log
-!benchmark/*/results/*.log
-.ipynb_checkpoints/
+artifact/*/result_*.txt
+artifact/*/*.pdf
