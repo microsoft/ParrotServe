@@ -119,7 +119,7 @@ bash xxx
 # Plot the results
 python3 plot.py
 ```
-You can manually run each step sequentially and the results of each step will be stored. Once all steps are finished, you can run the `plot.py` script to generate the final figure.
+You can manually run each step sequentially and the result of each step will be stored. Once all steps are finished, you can run the `plot.py` script to generate the final figure.
 
 ### 3.3. Experiment Details
 

@@ -148,7 +148,7 @@ def main(branches_num: int, cache_prefix: bool = True):
     vm = P.VirtualMachine(os_http_addr="http://localhost:9000")
     latency = vm.run(execute, args=[vm, workloads, cache_prefix], timeit=True)
     latency -= 0.25 * 8 * 3  # Hack the communication overhead.
-    print(f"Time: {latency} (s)", flush=True)
+    print(f"Time: {latency:.4f} (s)", flush=True)
 
     # Browse the log to get the max allocated memory.
     max_num_tokens = 0

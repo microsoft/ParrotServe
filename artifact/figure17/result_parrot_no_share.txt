@@ -9,8 +9,8 @@ batch_sum:  21096
 batch_sum:  24388
 batch_sum:  21096
 batch_sum:  24388
-Time: 229.336286692 (s)
-blocks_num:  1453
+Time: 229.0737 (s)
+blocks_num:  1447
 branches_num:  8
 batch_sum:  8912
 batch_sum:  33654
@@ -22,5 +22,5 @@ batch_sum:  42237
 batch_sum:  47938
 batch_sum:  42237
 batch_sum:  47938
-Time: 316.847170225 (s)
-blocks_num:  2853
+Time: 300.9945 (s)
+blocks_num:  2849

@@ -2,6 +2,8 @@
 
 rm -rf log
 
+echo "Test Multi Agents: Parrot w/ PagedAttention"
+
 pwd=$PWD
 log_path=$pwd/log/
 

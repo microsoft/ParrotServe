@@ -2,6 +2,8 @@
 
 rm *.log -rf
 
+echo "Test Multi Agents: vLLM (Latency)"
+
 export VLLM_REQ_TRACK=1
 export VLLM_CAPACITY=7096
 bash ../fastchat_scripts/launch_vllm.sh

@@ -2,6 +2,8 @@
 
 rm -rf log
 
+echo "Run benchmark: Parrot"
+
 pwd=$PWD
 log_path=$pwd/log/
 

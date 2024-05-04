@@ -2,6 +2,8 @@
 
 rm *.log -rf
 
+echo "Test Multi Agents: vLLM (Throughput)"
+
 export VLLM_REQ_TRACK=1
 
 # Guarantee VLLM_CAPACITY is unset
