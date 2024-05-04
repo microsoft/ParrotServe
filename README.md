@@ -50,13 +50,13 @@ Parrot has been wrapped as a Python library. For installing Parrot, there are tw
 
 * Choice 1: Use Docker Image (Recommended). To make the reproducing easier, we provide a docker image that contains all dependencies and baselines. First, build the docker image. The building procedure usually takes 8~10 minutes.
     ```bash
-    sudo docker build . -t parrot
+    sudo docker build . -t parrot_artifact
     ```
 
     Then start a docker instance (Run the following command in the root directory of this repo).
     ```bash
-    docker run --gpus all --shm-size=50gb -itd -v $PWD/../ParrotServe:/app --name parrot parrot /bin/bash
-    docker exec -it parrot /bin/bash
+    docker run --gpus all --shm-size=50gb -itd -v $PWD/../ParrotServe:/app --name parrot_artifact parrot_artifact /bin/bash
+    docker exec -it parrot_artifact /bin/bash
     ```
 
 * Choice 2: Manual Setup. Following the instructions in [INSTALL.md](INSTALL.md) to install the dependencies and Parrot.
