@@ -462,3 +462,6 @@ artifact/workloads/*/*.jsonl
 # Evaluation data
 artifact/*/result_*.txt
 artifact/*/*.pdf
+
+# VSCode
+code
