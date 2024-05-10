@@ -45,6 +45,11 @@ class BuiltinConfig:
         self.device = torch.device(self.device)
 
         # Replace attn func
+        if self.attn_func not in ATTN_FUNC_LAYOUT_MAP:
+            raise ValueError(
+                f"Unknown attn func name: {self.attn_func}. "
+                f"Supported attn func names: {list(ATTN_FUNC_LAYOUT_MAP.keys())}"
+            )
         self.mem_layout = ATTN_FUNC_LAYOUT_MAP[self.attn_func]  # Set mem layout
         self.attn_func_name = self.attn_func
         self.attn_func = self._get_attn_func(self.attn_func)
