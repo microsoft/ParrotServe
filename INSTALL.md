@@ -15,7 +15,13 @@ pip install torch==2.1.0 --upgrade --index-url https://download.pytorch.org/whl/
 ### Clone the Project
 
 ```bash
-git clone --recursive https://github.com/SiriusNEO/LLMOS-Parrot.git
+git clone --recursive https://github.com/microsoft/ParrotServe.git
+```
+
+### Configure the Environment
+
+```bash
+source .env
 ```
 
 ### Install dependencies

@@ -23,7 +23,9 @@ import torch
 
 import triton
 import triton.language as tl
-from vllm import attention_ops, cache_ops
+from vllm import cache_ops
+
+from parrot import attention_ops
 
 
 ### Paged Flash Attention Begin ###

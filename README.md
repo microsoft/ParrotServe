@@ -1,4 +1,4 @@
-# Parrot: Efficient Serving of LLM-based Application with Semantic Variables
+# Parrot: Efficient Serving of LLM-based Application with Semantic Variable
 
 This project is a research prototype for now. Being eargerly iterated.
 
