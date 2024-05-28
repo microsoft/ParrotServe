@@ -68,15 +68,15 @@ def bench_decode(
 if __name__ == "__main__":
     # bench_decode(
     #     attn_func="xformers_fill_vllm_paged_attention_generate",
-    #     batch_size=64,
+    #     batch_size=128,
     #     shared_len=8192,
     #     diverged_len=10,
     #     output_len=10,
     # )
     bench_decode(
         attn_func="xformers_fill_shared_prompts_generate",
-        batch_size=64,
-        shared_len=8192,
+        batch_size=128,
+        shared_len=1024,
         diverged_len=10,
         output_len=10,
     )
