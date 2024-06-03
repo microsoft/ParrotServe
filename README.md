@@ -1,7 +1,12 @@
 # Parrot: Efficient Serving of LLM-based Application with Semantic Variable
 
-This project is a research prototype for now. Being eargerly iterated.
+[[Paper](https://arxiv.org/abs/2405.19888)]
 
+> This project is a research prototype for now. Being eargerly iterated.
+
+Parrot is a distributed serving system for LLM-based Applications. The Parrot API w/ Semantic Variable is served by a centralized cluster manager called `ServeCore`, which manages many `Engine` instances. Each Parrot `Engine` runs a single LLM model and communicates with `ServeCore` by contextual Fill/Gen APIs. Note that each `Engine` is capable of providing language model services independently, therefore the system is horizontally scalable and many types of `Engine`s can be integrated into Parrot (e.g., vLLM, FasterTransformer, etc.).
+
+![](assets/systemarch.pdf)
 
 ## Install
 
@@ -35,6 +40,22 @@ You can separately start an engine server. If you choose to connect to the Serve
 
 ```bash
 python3 -m parrot.engine.http_server --config_path <config_path>
+```
+
+## Reference
+
+If you find Parrot useful or relevant to your research, please cite our paper as below:
+
+```
+@inproceedings{parrot,
+    author = {Chaofan Lin and Zhenhua Han and Chengruidong Zhang and Yuqing Yang and Fan Yang and Chen Chen and Lili Qiu},
+    title = {Parrot: Efficient Serving of LLM-based Applications with Semantic Variable},
+    booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
+    year = {2024},
+    address = {Santa Clara, CA},
+    publisher = {USENIX Association},
+    month = jul
+}
 ```
 
 ## Contributing
