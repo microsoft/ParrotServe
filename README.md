@@ -6,7 +6,7 @@
 
 Parrot is a distributed serving system for LLM-based Applications. The Parrot API w/ Semantic Variable is served by a centralized cluster manager called `ServeCore`, which manages many `Engine` instances. Each Parrot `Engine` runs a single LLM model and communicates with `ServeCore` by contextual Fill/Gen APIs. Note that each `Engine` is capable of providing language model services independently, therefore the system is horizontally scalable and many types of `Engine`s can be integrated into Parrot (e.g., vLLM, FasterTransformer, etc.).
 
-![](assets/systemarch.pdf)
+![](assets/arch_paper_ver.png)
 
 ## Install
 
