@@ -52,12 +52,19 @@ You can separately start an engine server. If you choose to connect to the Serve
 python3 -m parrot.engine.http_server --config_path <config_path>
 ```
 
+## Acknowledgement
+
+We learned a lot from the following projects when developing Parrot.
+- [vLLM](https://github.com/vllm-project/vllm)
+- [LightLLM](https://github.com/ModelTC/lightllm)
+- [Flash Attention](https://github.com/Dao-AILab/flash-attention)
+
 ## Reference
 
 If you find Parrot useful or relevant to your research, please cite our paper as below:
 
 ```
-@inproceedings{parrot,
+@inproceedings{lin2024parrot,
     author = {Chaofan Lin and Zhenhua Han and Chengruidong Zhang and Yuqing Yang and Fan Yang and Chen Chen and Lili Qiu},
     title = {Parrot: Efficient Serving of LLM-based Applications with Semantic Variable},
     booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
@@ -85,8 +92,8 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
+trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
