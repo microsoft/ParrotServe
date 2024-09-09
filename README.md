@@ -1,21 +1,23 @@
-# Parrot: Efficient Serving of LLM-based Application with Semantic Variable
+# 🦜 Parrot: Efficient Serving of LLM-based Application with Semantic Variable
 
-[[Paper](https://arxiv.org/abs/2405.19888)]
+[Paper](https://arxiv.org/abs/2405.19888) | [Documentation]() | [Blog (Chinese)](https://me.tric.space/2024/06/22/parrot-osdi24/) | [Wechat Post (Chinese)](https://mp.weixin.qq.com/s/3wAgV9ehbqgk_gVhSGYARQ)
 
 > This project is a research prototype for now. Being eargerly iterated.
 
 Parrot is a distributed serving system for LLM-based Applications. The Parrot API w/ Semantic Variable is served by a centralized cluster manager called `ServeCore`, which manages many `Engine` instances. Each Parrot `Engine` runs a single LLM model and communicates with `ServeCore` by contextual Fill/Gen APIs. Note that each `Engine` is capable of providing language model services independently, therefore the system is horizontally scalable and many types of `Engine`s can be integrated into Parrot (e.g., vLLM, FasterTransformer, etc.).
 
 <div align="center">
-  <img src="assets/arch_paper_ver.png" width="500px" />
+  <img src="docs/assets/arch_paper_ver.png" width="500px" />
 </div>
 
-## LLM Applications
+## What's LLM Applications?
 
-The powerful language understanding capability of large language models (LLMs) has enabled a new application paradigm, where one or multiple application entities, known as AI agents or co-pilots, communicate with LLMs via natural language, known as “prompts”, to accomplish a task collaboratively. Parrot is designed to serve these LLM-based applications efficiently by adding `Semantic Variable` in current OpenAI-style API, exposing richer application-level knowledge to backend systems and engines for better optimization.
+The powerful language understanding capability of large language models (LLMs) has enabled a new application paradigm, where one or multiple application entities, known as AI agents or co-pilots, communicate with LLMs via natural language, known as “prompts”, to accomplish a task collaboratively. 
+
+Parrot is designed to serve these LLM-based applications efficiently by adding `Semantic Variable` in current OpenAI-style API, exposing richer application-level knowledge to backend systems and engines for better optimization.
 
 <div align="center">
-  <img src="assets/app_examples.png" width="500px" />
+  <img src="docs/assets/app_examples.png" width="500px" />
 </div>
 
 ## Install
