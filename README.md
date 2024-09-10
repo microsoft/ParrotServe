@@ -34,10 +34,10 @@ See [INSTALL](docs/get_started/installation.md) for installation instructions.
 
 ## Documentations
 
-- [Get Started](get_started/): In this chapter, you will learn how to install Parrot and run your first application using Parrot.
-- [Documentation for Users](user_docs/): User documentation of Parrot. It contains the API specification of Parrot's OpenAI-like API, and the grammar of Parrot's frontend `pfunc`.
-- [Parrot System Design](sys_design/): If you want to hack/modify Parrot, it's what you need. This chapter offers an overview of Parrot's system architecture and provides detailed explanation of Parrot's internal code organization and implementation.  
-- [Version Drafts](version_drafts/): Learn about the refactor history and some of our brainstorm ideas when developing Parrot from these drafts.
+- [Get Started](docs/get_started/): In this chapter, you will learn how to install Parrot and run your first application using Parrot.
+- [Documentation for Users](docs/user_docs/): User documentation of Parrot. It contains the API specification of Parrot's OpenAI-like API, and the grammar of Parrot's frontend `pfunc`.
+- [Parrot System Design](docs/sys_design/): If you want to hack/modify Parrot, it's what you need. This chapter offers an overview of Parrot's system architecture and provides detailed explanation of Parrot's internal code organization and implementation.  
+- [Version Drafts](docs/version_drafts/): Learn about the refactor history and some of our brainstorm ideas when developing Parrot from these drafts.
 
 ## Acknowledgement
 
