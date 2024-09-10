@@ -1,14 +1,13 @@
 # 🦜 Parrot: Efficient Serving of LLM-based Application with Semantic Variable
 
-[Paper](https://arxiv.org/abs/2405.19888) | [Documentation](docs/) | [Blog (Chinese)](https://me.tric.space/2024/06/22/parrot-osdi24/) | [Wechat Post (Chinese)](https://mp.weixin.qq.com/s/3wAgV9ehbqgk_gVhSGYARQ)
+[Paper](https://arxiv.org/abs/2405.19888) | [Documentation](docs/) | [Slides](assets/Parrot-OSDI24.pdf) | [Poster](assets/Parrot_Poster_OSDI_24.pdf)
 
-> This project is a research prototype for now. Being eargerly iterated.
+> This repo is current a research prototype. Please open issue or contact the authors when you need help.
 
-Parrot is a distributed serving system for LLM-based Applications. The Parrot API w/ Semantic Variable is served by a centralized cluster manager called `ServeCore`, which manages many `Engine` instances. Each Parrot `Engine` runs a single LLM model and communicates with `ServeCore` by contextual Fill/Gen APIs. Note that each `Engine` is capable of providing language model services independently, therefore the system is horizontally scalable and many types of `Engine`s can be integrated into Parrot (e.g., vLLM, FasterTransformer, etc.).
-
-<div align="center">
-  <img src="docs/assets/arch_paper_ver.png" width="500px" />
-</div>
+Parrot is a distributed serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the information of LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
+- Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.
+- Performance objective deduction and DAG-aware scheduling.
+- Sharing common prompt prefix between requests with optimized attention kernel, Context-aware scheduling.
 
 ## What's LLM Applications?
 
@@ -17,42 +16,28 @@ The powerful language understanding capability of large language models (LLMs) h
 Parrot is designed to serve these LLM-based applications efficiently by adding `Semantic Variable` in current OpenAI-style API, exposing richer application-level knowledge to backend systems and engines for better optimization.
 
 <div align="center">
-  <img src="docs/assets/app_examples.png" width="500px" />
+  <img src="docs/images/app_examples.png" width="500px" />
 </div>
+
+## 🚀 News
+
+- [2024/08] A [Post](https://mp.weixin.qq.com/s/3wAgV9ehbqgk_gVhSGYARQ) about Parrot is published in the WeChat account of MSRA (Microsoft Research Asia)!
+- [2024/07] Parrot is published and presented in OSDI'24. Please find the paper and presentation [Here](https://www.usenix.org/conference/osdi24/presentation/lin-chaofan) if you are interested!
+- [2024/06] Write a blog about the technical details behind Parrot and receive many likes! See [Blog (Chinese)](https://me.tric.space/2024/06/22/parrot-osdi24/) or [Blog Zhihu (Chinese)](https://zhuanlan.zhihu.com/p/704330977).
+- [2024/04] Release Parrot as a Microsoft open source project.
+- [2024/03] Parrot has been accepted to **OSDI'24**!
+
 
 ## Install
 
-See [INSTALL.md](INSTALL.md) for installation instructions.
+See [INSTALL](docs/get_started/installation.md) for installation instructions.
 
-## Run Parrot
+## Documentations
 
-**Run the Compose Script in a Single Machine**
-
-We provide some one-click scripts to run Parrot in a single machine with sample configs. You can check them in the `sample_configs/launch` folder.
-
-```bash
-bash sample_configs/launch/launch_single_vicuna_13b.sh
-```
-
-<!-- **Run Docker Compose in a Cluster**
-
-TODO -->
-
-**Start a ServeCore Server**
-
-You can separately start a ServeCore server.
-
-```bash
-python3 -m parrot.serve.http_server --config_path <config_path>
-```
-
-**Start an Engine Server**
-
-You can separately start an engine server. If you choose to connect to the ServeCore server, you need to start the ServeCore server first and specify the ServeCore server address in the config file.
-
-```bash
-python3 -m parrot.engine.http_server --config_path <config_path>
-```
+- [Get Started](get_started/): In this chapter, you will learn how to install Parrot and run your first application using Parrot.
+- [Documentation for Users](user_docs/): User documentation of Parrot. It contains the API specification of Parrot's OpenAI-like API, and the grammar of Parrot's frontend `pfunc`.
+- [Parrot System Design](sys_design/): If you want to hack/modify Parrot, it's what you need. This chapter offers an overview of Parrot's system architecture and provides detailed explanation of Parrot's internal code organization and implementation.  
+- [Version Drafts](version_drafts/): Learn about the refactor history and some of our brainstorm ideas when developing Parrot from these drafts.
 
 ## Acknowledgement
 

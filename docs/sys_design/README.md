@@ -23,5 +23,5 @@ Note that each `Engine` is capable of providing language model services independ
 The following picture illustrates the overview architecture of Parrot. Please refer our OSDI'24 paper [Parrot: Efficient Serving of LLM-based Applications with Semantic Variable](https://www.usenix.org/system/files/osdi24-lin-chaofan.pdf) for more details.
 
 <div align="center">
-  <img src="../assets/arch_paper_ver.png" width="500px" />
+  <img src="../images/arch_paper_ver.png" width="500px" />
 </div>

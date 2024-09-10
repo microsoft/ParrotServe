@@ -6,7 +6,7 @@ Semantic Variable is the core of Parrot system as it's mentioned in our paper. T
 
 ## Introduction
 
-![](../../assets/sv_graph_1.png)
+![](../../images/sv_graph_1.png)
 
 In [PFunc introduction](pfunc.md), we have defined a LLM request as a semantic function. Hence we name "things that connect these functions, i.e., serve as their inputs/outputs" as semantic variable for the sake of naming consistency.
 
