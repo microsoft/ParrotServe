@@ -1,4 +1,4 @@
-# Quick Start: Launch a Parrot Server
+# Launch a Parrot Server
 
 This document will guide you to launch a Parrot Server and have a basic understanding of how to configure your server.
 
@@ -15,10 +15,17 @@ Hence, the recommended launch process of a Parrot Server is:
 
 ## Launch the `ServeCore`
 
-You can start a `ServeCore` server through the following command:
+You can start a `ServeCore` server through the following command.
 
 ```bash
-python3 -m parrot.serve.http_server --config_path <config_path>
+python3 -m parrot.serve.http_server --config_path <config_path> \
+    --log_dir <log_dir> \
+    --log_filename <log_filename>
+```
+
+For other command line arguments, run
+```bash
+python3 -m parrot.serve.http_server --help
 ```
 
 ## Launch an `Engine`
@@ -26,7 +33,14 @@ python3 -m parrot.serve.http_server --config_path <config_path>
 You can separately start an `Engine` server. If you choose to connect to the `ServeCore` server, you need to start the `ServeCore` server first and specify the `ServeCore` server address in the config file.
 
 ```bash
-python3 -m parrot.engine.http_server --config_path <config_path>
+python3 -m parrot.engine.http_server --config_path <config_path> \
+    --log_dir <log_dir> \
+    --log_filename <log_filename>
+```
+
+For other command line arguments, run
+```bash
+python3 -m parrot.engine.http_server --help
 ```
 
 ## Config Files Specification

@@ -1,6 +1,6 @@
 # Version Drafts of Parrot
 
-**NOTE: Documentations under this directory are just drafts. They are not aim to be a user guide nor a reference for developing.**
+> **NOTE: Documentations under this directory are just drafts. They are not aim to be a user guide nor a reference for developing.**
 
 Parrot, as a project, went through many refactors and modifications. Majorly, there are three versions since Parrot was originally developed. We put some of our design drafts of each version here so that you can have a short glance of our line of thought when designing / developing Parrot.
 
