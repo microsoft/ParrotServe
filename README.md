@@ -1,6 +1,6 @@
 # 🦜 Parrot: Efficient Serving of LLM-based Application with Semantic Variable
 
-[Paper](https://arxiv.org/abs/2405.19888) | [Documentation]() | [Blog (Chinese)](https://me.tric.space/2024/06/22/parrot-osdi24/) | [Wechat Post (Chinese)](https://mp.weixin.qq.com/s/3wAgV9ehbqgk_gVhSGYARQ)
+[Paper](https://arxiv.org/abs/2405.19888) | [Documentation](docs/) | [Blog (Chinese)](https://me.tric.space/2024/06/22/parrot-osdi24/) | [Wechat Post (Chinese)](https://mp.weixin.qq.com/s/3wAgV9ehbqgk_gVhSGYARQ)
 
 > This project is a research prototype for now. Being eargerly iterated.
 
