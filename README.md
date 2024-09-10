@@ -4,7 +4,7 @@
 
 > This repo is current a research prototype. Please open issue or contact the authors when you need help.
 
-Parrot is a distributed serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the information of LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
+Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the information of LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
 - Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.
 - Performance objective deduction and DAG-aware scheduling.
 - Sharing common prompt prefix between requests with optimized attention kernel, Context-aware scheduling.
