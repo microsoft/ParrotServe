@@ -51,7 +51,7 @@ We use `.json` as the format of our configuration file.
 
 **`ServeCore` Config**
 
-For detailed features of global scheduler, please refer to [Global Scheduler]().
+For detailed features of global scheduler, please refer to [Global Scheduler](../sys_design/serve_layer/global_scheduler.md).
 
 ```json
 {

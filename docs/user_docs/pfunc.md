@@ -27,12 +27,12 @@ def tell_me_a_joke(
     """
 
 async def main():
-		# Add a function call to the executor, create a session.
+    # Add a function call to the executor, create a session.
     joke, explanation = tell_me_a_joke(topic="Food", topic2="Cheese")
 
     # This will get the text from the "SemanticVariable".
     joke_content = await joke.get()
-		explanation_content = await explanation.get()
+    explanation_content = await explanation.get()
 ```
 
 A semantic function is defined using a `@P.function(...)` decorator. Developers can pass some necessary metadata in this decorator.

@@ -39,7 +39,7 @@ class SessionStatus(Enum):
 
 class Session:
     """
-    A session is an abstraction of a program interacting with the OS: When a program connected to the OS,
+    A session is an abstraction of a program interacting with the ServeCore: When a program connected to the ServeCore,
     a session will be created for it. The session will be removed when the program is disconnected/timed out.
 
     A session has its own ComputeGraph and GraphExecutor.

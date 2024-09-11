@@ -12,10 +12,10 @@ Request body:
 
 ```json
 {
-	"api_key": "xxx" // User's API Key
-	"apps": [
-		{"app_id": "xxx"},
-	],
+    "api_key": "xxx" // User's API Key
+    "apps": [
+        {"app_id": "xxx"},
+    ],
 }
 ```
 
@@ -23,8 +23,8 @@ Response  body:
 
 ```json
 {
-	"session_id": "xxx",
-	"session_auth": "yyy"
+    "session_id": "xxx",
+    "session_auth": "yyy"
 }
 ```
 
@@ -34,8 +34,8 @@ Request body:
 
 ```json
 {
-	"session_id": "xxx",
-	"session_auth": "yyy"
+    "session_id": "xxx",
+    "session_auth": "yyy"
 }
 ```
 
@@ -57,23 +57,23 @@ Request body:
 
 ```json
 {
-	"template": "This is a test {{a}} function. {{b}}",
-	"placeholders": [
-		{
-			"name": "a",
-			"is_output": false / true,
-			"var_id": "bbb", // Optional
-			"sampling_config": {
-	      "temperature": "xxx",
-	      "top_p": "xxx",
-	    }
-		},
-	],
-	"session_id": "xxx",
-	"session_auth": "yyy",
+    "template": "This is a test {{a}} function. {{b}}",
+    "placeholders": [
+        {
+            "name": "a",
+            "is_output": false / true,
+            "var_id": "bbb", // Optional
+            "sampling_config": {
+            "temperature": "xxx",
+            "top_p": "xxx",
+        }
+        },
+    ],
+    "session_id": "xxx",
+    "session_auth": "yyy",
   "models": ["model1", "model2", ...] // Optional. If specified, the request will be scheduled only to these models. By default ([]) it can be scheduled to any model.
-	"model_type": "token_id / text",
-	"remove_pure_fill": true / false,
+    "model_type": "token_id / text",
+    "remove_pure_fill": true / false,
 }
 ```
 
@@ -81,18 +81,18 @@ Response body:
 
 ```json
 {
-	"request_id": "xxx",
-	"session_id": "yyy",
-	"created_vars": [
-			{
-					"placeholder_name": "fff",
-					"is_output": true / false,
-			    "var_name": "ddd",
-			    "var_id": "ccc",
-			    "var_desc": "The first output of request xxx",
-					"var_scope": "eeee",
-			}
-	]
+    "request_id": "xxx",
+    "session_id": "yyy",
+    "created_vars": [
+            {
+                    "placeholder_name": "fff",
+                    "is_output": true / false,
+                "var_name": "ddd",
+                "var_id": "ccc",
+                "var_desc": "The first output of request xxx",
+                    "var_scope": "eeee",
+            }
+    ]
 }
 ```
 
@@ -110,8 +110,8 @@ Request body:
 
 ```json
 {
-	"func_name": "xxx",
-	... // (the detailed args are dependent to the native function called)
+    "func_name": "xxx",
+    ... // (the detailed args are dependent to the native function called)
 }
 ```
 
@@ -122,10 +122,10 @@ The semantic variable object.
 
 ```json
 {
-	"var_id": "ccc",
+    "var_id": "ccc",
   "var_name": "ddd",
   "var_desc": "The first output of request xxx",
-	"var_scope": "eeee",
+    "var_scope": "eeee",
 }
 ```
 
@@ -137,8 +137,8 @@ Request body:
 
 ```json
 {
-	"session_id": "xxx",
-	"session_auth": "yyy",
+    "session_id": "xxx",
+    "session_auth": "yyy",
 }
 ```
 
@@ -146,15 +146,15 @@ Response body: Returns a list of vars.
 
 ```json
 {
-	"vars": [
-		{
-			"var_id": "ccc",
-			"var_name": "ddd",
-			"var_desc": "The first output of request xxx",
-			"var_scope": "eeee",
-		},
-		...
-	]
+    "vars": [
+        {
+            "var_id": "ccc",
+            "var_name": "ddd",
+            "var_desc": "The first output of request xxx",
+            "var_scope": "eeee",
+        },
+        ...
+    ]
 }
 ```
 
@@ -166,9 +166,9 @@ Request body:
 
 ```json
 {
-	"session_id": "xxx",
-	"session_auth": "yyy",
-	"criteria": "zzz"
+    "session_id": "xxx",
+    "session_auth": "yyy",
+    "criteria": "zzz"
 }
 ```
 
@@ -176,7 +176,7 @@ Response body:
 
 ```json
 {
-	"content": "zzz"
+    "content": "zzz"
 }
 ```
 
@@ -186,9 +186,9 @@ Request body:
 
 ```json
 {
-	"session_id": "xxx",
-	"session_auth": "yyy",
-	"content": "zzz",
+    "session_id": "xxx",
+    "session_auth": "yyy",
+    "content": "zzz",
 }
 ```
 
@@ -208,8 +208,8 @@ Request body:
 
 ```json
 {
-	"session_id": "xxx",
-	"session_auth": "yyy",
+    "session_id": "xxx",
+    "session_auth": "yyy",
 }
 ```
 
@@ -217,11 +217,11 @@ Response body:
 
 ```json
 {
-	"models": [
-		{
-			"model_name": "xxx",
-			"tokenizer_name": "yyy"
-		}
-	]
+    "models": [
+        {
+            "model_name": "xxx",
+            "tokenizer_name": "yyy"
+        }
+    ]
 }
 ```

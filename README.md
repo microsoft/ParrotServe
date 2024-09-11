@@ -1,10 +1,10 @@
 # 🦜 Parrot: Efficient Serving of LLM-based Application with Semantic Variable
 
-[Paper](https://arxiv.org/abs/2405.19888) | [Documentation](docs/) | [Slides](assets/Parrot-OSDI24.pdf) | [Poster](assets/Parrot_Poster_OSDI_24.pdf)
+[Paper](https://www.usenix.org/system/files/osdi24-lin-chaofan.pdf) | [Documentation](docs/) | [Slides](assets/Parrot-OSDI24.pdf) | [Poster](assets/Parrot_Poster_OSDI_24.pdf)
 
 > This repo is current a research prototype. Please open issue or contact the authors when you need help.
 
-Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the information of LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
+Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the **app-level information** like LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
 - Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.
 - Performance objective deduction and DAG-aware scheduling.
 - Sharing common prompt prefix between requests with optimized attention kernel, Context-aware scheduling.
@@ -18,6 +18,8 @@ Parrot is designed to serve these LLM-based applications efficiently by adding `
 <div align="center">
   <img src="docs/images/app_examples.png" width="500px" />
 </div>
+
+For more background knowledge and our motivation, please refer our OSDI'24 paper [Parrot: Efficient Serving of LLM-based Applications with Semantic Variable](https://www.usenix.org/system/files/osdi24-lin-chaofan.pdf).
 
 ## 🚀 News
 
