@@ -25,7 +25,7 @@ For more background knowledge and our motivation, please refer our OSDI'24 paper
 
 - [2024/08] A [Post](https://mp.weixin.qq.com/s/3wAgV9ehbqgk_gVhSGYARQ) about Parrot is published in the WeChat account of MSRA (Microsoft Research Asia)!
 - [2024/07] Parrot is published and presented in OSDI'24. Please find the paper and presentation [Here](https://www.usenix.org/conference/osdi24/presentation/lin-chaofan) if you are interested!
-- [2024/06] Write a blog about the technical details behind Parrot and receive many likes! See [Blog (Chinese)](https://me.tric.space/2024/06/22/parrot-osdi24/) or [Blog Zhihu (Chinese)](https://zhuanlan.zhihu.com/p/704330977).
+- [2024/06] Blogs about the technical details behind Parrot: [Blog (Chinese)](https://me.tric.space/2024/06/22/parrot-osdi24/) or [Blog Zhihu (Chinese)](https://zhuanlan.zhihu.com/p/704330977).
 - [2024/04] Release Parrot as a Microsoft open source project.
 - [2024/03] Parrot has been accepted to **OSDI'24**!
 
@@ -34,7 +34,7 @@ For more background knowledge and our motivation, please refer our OSDI'24 paper
 
 See [INSTALL](docs/get_started/installation.md) for installation instructions.
 
-## Documentations
+## [Documentations](docs/)
 
 - [Get Started](docs/get_started/): In this chapter, you will learn how to install Parrot and run your first application using Parrot.
 - [Documentation for Users](docs/user_docs/): User documentation of Parrot. It contains the API specification of Parrot's OpenAI-like API, and the grammar of Parrot's frontend `pfunc`.
