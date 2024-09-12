@@ -1,5 +1,7 @@
 # Install
 
+Parrot can be installed as a Python library from the github repository.
+
 ### Environment Settings
 
 - OS: Linux, Ubuntu 20.04
@@ -24,7 +26,7 @@ git clone --recursive https://github.com/microsoft/ParrotServe.git
 source .env
 ```
 
-### Install dependencies
+### Install Dependencies
 
 - Step 1: Install basic requirements.
 
@@ -57,7 +59,7 @@ pip install -e .
 
 If you used MLC-LLM engines, Follow the official guide of [MLC-LLM](https://github.com/mlc-ai/mlc-llm) to install it, including the pre-compiled library and weights. The recommended commit refers to `3rdparty` folder. -->
 
-- **! Important Notes**:
+**! Important Notes**:
 
 Triton 2.0.0 has some bugs in Kernel memory issues. So we enforce the version to be 2.1.0 here. You will see some dependencies warnings, but it will not affect the common usages. (The similar error also happens in [LightLLM](https://github.com/ModelTC/lightllm) kernels.)
 
@@ -71,4 +73,10 @@ pip install triton==2.1.0
 
 ```bash
 pip install -e .
+```
+
+When installing is done, check your installation by
+
+```python
+import parrot
 ```

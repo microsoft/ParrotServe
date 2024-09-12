@@ -441,6 +441,9 @@ data
 *.so
 *.pdf
 
+# Exclude pdf in assets
+!assets/*.pdf
+
 
 # We do not public our OpenAI API-Key
 sample_configs/engine/azure-openai*

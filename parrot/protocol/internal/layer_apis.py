@@ -63,7 +63,7 @@ class GenerateResponse(BaseResponse):
     generated_ids: List[int]
 
 
-# ---------- OS Layer to Engine Layer APIs ----------
+# ---------- Serve Layer to Engine Layer APIs ----------
 
 
 def free_context(http_addr: str, context_id: int) -> FreeContextResponse:
@@ -93,7 +93,7 @@ def ping_engine(http_addr: str) -> PingEngineResponse:
         return PingEngineResponse(pong=False)
 
 
-# ---------- Engine Layer to OS Layer APIs ----------
+# ---------- Engine Layer to Serve Layer APIs ----------
 
 
 def register_engine(
