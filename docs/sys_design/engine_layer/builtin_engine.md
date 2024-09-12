@@ -1,14 +1,14 @@
 # Builtin Engine
 
-The Builtin Engine offers several efficient implementations of popular LLMs (such as OPT and LLaMA) using PyTorch, CUDA, and Triton, including a special [customized kernel](shared_attention_kernel.md) for our scenarios.
+The Builtin Engine offers several efficient implementations of popular LLMs (such as OPT and LLaMA) using PyTorch, CUDA, and Triton, including a special [customized kernel](shared_attention_kernel.md) tailored for our specific use cases.
 
 ## Server
 
-Each Builtin Engine has a HTTP server to serve the [internal APIs](engine_apis.md) between Engine Layer and Serve Layer. The engine serve has a `engine_loop` which runs forever. In each iteration, the engine will execute a batching inference of the LLM.
+Each Builtin Engine operates an HTTP server to handle the [internal APIs](engine_apis.md) between the Engine Layer and the Serve Layer. The engine server runs a perpetual `engine_loop`, where each iteration performs batch inference using the LLM.
 
 ## Runner
 
-The Runner inside the engine provides a minimal interface to run the LLM: `run_iter(jobs: List[PrimitiveJob])`. The runner itself does not maintain any immediate states. Instead, it just runs a batch of jobs (primitive requests) and the updates will be recorded in the `PrimitiveJob` objects.
+The Runner inside the engine provides a minimal interface to run the LLM via the method `run_iter(jobs: List[PrimitiveJob])`. The runner itself does not maintain any internal state; instead, it processes batches of jobs (primitive requests), and updates are recorded within the `PrimitiveJob` objects.
 
 ## Memory
 
@@ -23,4 +23,4 @@ Parrot Builtin Engine employs [PagedAttention](https://arxiv.org/abs/2309.06180)
 
 ### Cos/Sin Cache
 
-For some models with RoPE (e.g. LLaMA), there is a special cache we can maintain: Cos/Sin Cache. For a given `max_seq_len` of the model, we can pre-compute the value of cos/sin in the RoPE algorithm and reuse them in every subsequent forward pass.
+For models that use RoPE (e.g., LLaMA), there is an optional cache for storing cosine and sine values. For a given `max_seq_len`, these values can be precomputed according to the RoPE algorithm and reused in all subsequent forward passes.

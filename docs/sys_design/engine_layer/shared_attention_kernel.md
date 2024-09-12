@@ -10,4 +10,4 @@ In Parrot's SharedAttention, we calculate the Attention in two steps. For exampl
 
 Note 1: There are two orders of this algorithm: first Flash then Paged, or first Paged then Flash. Our experiment shows the impact of these two orders on performance is negligible.
 
-Note 2: Actually we can parallelize the Flash part and the Paged part, followed by a separate step (which could be called “Merge”) to complete the operation.
+Note 2: Actually we can parallelize the Flash part and the Paged part, followed by a separate step (which could be called "Merge") to complete the operation.
