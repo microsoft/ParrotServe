@@ -8,6 +8,7 @@ Parrot is a distributed serving system for LLM-based Applications. It can be div
     - [ServeCore](serve_layer/core.md), a.k.a. Parrot Manager.
     - [Global Scheduler](serve_layer/global_scheduler.md).
     - [Parrot's Graph Representation](serve_layer/graph.md).
+    - [Parrot's Graph Executor](serve_layer/executor.md), read how Parrot efficiently executes a DAG of requests.
     - [Context](serve_layer/context.md), read the cluster-level memory management of Parrot.
     - [Engines](serve_layer/engines.md), read the management of engines.
     - [Sessions](serve_layer/sessions.md), read the management of sessions.
