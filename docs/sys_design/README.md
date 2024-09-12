@@ -12,12 +12,12 @@ Parrot is a distributed serving system for LLM-based Applications. It can be div
     - [Context](serve_layer/context.md), read the cluster-level memory management of Parrot.
     - [Engines](serve_layer/engines.md), read the management of engines.
     - [Sessions](serve_layer/sessions.md), read the management of sessions.
-    - [Semantic Variable Manager](serve_layer/sv_manager.md), read the management of Semantic Variable.
+    - [Semantic Variable Manager](serve_layer/sv_manage.md), read the management of Semantic Variable.
 - [Engine Layer](engine_layer/):
     - [Internal APIs](engine_layer/engine_apis.md) between `ServeCore` and `Engine`.
     - [Builtin Engine](engine_layer/builtin_engine.md).
     - [OpenAI Engine](engine_layer/openai_engine.md).
-    - [Shared Attention Kernel](engine_layer/shared_attention_kernel.md)
+    - [Shared Attention Kernel](engine_layer/shared_attention_kernel.md).
 
 ## Overview
 
