@@ -82,8 +82,8 @@ def _test_single_engine_simple_serving(config):
 
 TEST_CONFIGS_LIST = [
     # ("builtin", "opt-125m.json"),
-    # ("builtin", "vicuna-7b-v1.3.json"),
-    ("openai", "azure-openai-gpt-3.5-turbo.json"),
+    ("builtin", "vicuna-7b-v1.3.json"),
+    # ("openai", "azure-openai-gpt-3.5-turbo.json"),
 ]
 
 

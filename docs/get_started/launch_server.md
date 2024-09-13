@@ -43,6 +43,18 @@ For other command line arguments, run
 python3 -m parrot.engine.http_server --help
 ```
 
+## One-Click Launching Scripts
+
+We provide some scripts for users to conveniently launch a Parrot cluster with just one-click in `scripts/launch/`.
+
+**Notice: You need to run them in the root directory of Parrot's repo, or some path problems will happen.**
+
+Example Usage:
+
+```bash
+bash scripts/launch/launch_single_vicuna_7b.sh
+```
+
 ## Config Files Specification
 
 We put some sample config files under `sample_configs/core/` (For `ServeCore`) and `sample_configs/engine/` (For `Engine`).
