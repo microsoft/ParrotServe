@@ -30,7 +30,7 @@ from .semantic_variable import SemanticVariable
 from .perf_criteria import PerformanceCriteria, get_performance_criteria_str
 from .function import (
     BasicFunction,
-    NativeFunction,
+    PyNativeFunction,
     SemanticFunction,
     SemanticCall,
     ParamType,

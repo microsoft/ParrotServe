@@ -22,7 +22,8 @@ def bench_decode(
         ignore_tokenizer_eos=True,
     )
 
-    runner = BuiltinRunner("lmsys/vicuna-13b-v1.3", config=config)
+    model_path = "lmsys/vicuna-13b-v1.3"
+    runner = BuiltinRunner(model_name=model_path, config=config)
     tokenizer = AutoTokenizer.from_pretrained("hf-internal-testing/llama-tokenizer")
 
     context_len = shared_len + diverged_len

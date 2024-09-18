@@ -116,7 +116,9 @@ class SemanticVariable:
         self.content = content
         return
 
-    def get(self, criteria: PerformanceCriteria) -> str:
+    def get(
+        self, criteria: PerformanceCriteria = PerformanceCriteria.THROUGHPUT
+    ) -> str:
         """(Blocking) Get the content of the variable."""
 
         assert (self.is_registered, "The variable must be registered before getting.")

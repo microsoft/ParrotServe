@@ -2,15 +2,19 @@
 # Licensed under the MIT license.
 
 
-from typing import Tuple
+import marshal
 from abc import ABC
-from typing import List, Dict, Type, Optional, Any, Set, Union
+import types
+from typing import Tuple, Callable, List, Dict, Type, Optional, Any, Set, Union
 import regex as re
 from dataclasses import dataclass, asdict
 
 from parrot.utils import get_logger
 
-from parrot.serve.graph.request import SemanticCallMetadata as SemanticFuncMetadata
+from parrot.serve.graph.request import (
+    SemanticCallMetadata as SemanticFuncMetadata,
+    NativeCallMetadata as NativeFuncMetadata,
+)
 
 from .function_body import FuncBodyPiece, Constant, Parameter, ParamType, ParameterLoc
 from .semantic_variable import SemanticVariable
@@ -117,31 +121,120 @@ class BasicCall(ABC):
         bindings[param.name] = value
 
 
-# ---------- Native Function ----------
+# ---------- Python Native Function ----------
 
 
-@dataclass
-class NativeFuncMetadata:
-    """Metadata of a native function."""
-
-    timeout: float
-
-
-class NativeFunction(BasicFunction):
-    """A native function.
+class PyNativeFunction(BasicFunction):
+    """Python native function.
 
     It should be defined by a Python function, with inputs and outputs as strings.
     """
 
-    pass
+    def __init__(
+        self,
+        name,
+        pyfunc: Callable,
+        params: List[Parameter],
+        try_register: bool = True,
+        **metadata_kwargs,
+    ):
+        super().__init__(name, params)
+
+        self.pyfunc_code_dumped = marshal.dumps(pyfunc.__code__)
+        metadata_dict = NativeFuncMetadata.get_default_dict()
+        metadata_dict.update(**metadata_kwargs)
+        self.metadata = NativeFuncMetadata(**metadata_dict)
+
+        if try_register:
+            # This will generate a register warning if the VM environment is not set.
+            self._register_function()
+
+    def __call__(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
+        """Call to a native function."""
+
+        return self._call_func(*args, **kwargs)
+
+    def invoke(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
+        """Same as __call__."""
+
+        return self._call_func(*args, **kwargs)
+
+    async def ainvoke(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
+        """Async call."""
+
+        return await self._acall_func(*args, **kwargs)
+
+    def _call_func(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
+        call = PyNativeCall(self, *args, **kwargs)
+        if BasicFunction._virtual_machine_env is not None:
+            BasicFunction._virtual_machine_env.submit_call_handler(call)
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+            return call
+
+        # Unpack the output SemanticVariables
+        if len(call.output_vars) == 1:
+            return call.output_vars[0]
+        return tuple(call.output_vars)
+
+    async def _acall_func(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
+        call = PyNativeCall(self, *args, **kwargs)
+        if BasicFunction._virtual_machine_env is not None:
+            # Different from _call_func, we use asubmit_call_handler here.
+            await BasicFunction._virtual_machine_env.asubmit_call_handler(call)
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+            return call
+
+        # Unpack the output SemanticVariables
+        if len(call.output_vars) == 1:
+            return call.output_vars[0]
+        return tuple(call.output_vars)
+
+    def display_signature(self) -> str:
+        """Display the function signature."""
+        return f"{self.name}({', '.join([f'{param.name}: {param.typ}' for param in self.params])})"
+
+    def get_pyfunc(self) -> Callable:
+        code_decoded = marshal.loads(self.pyfunc_code_dumped)
+
+        # Here for the scope Dict, we pass {} because we don't want to pollute the scope.
+        # Hence the pyfunc we get is just a temporary one.
+        return types.FunctionType(code_decoded, {}, self.name)
 
 
-class NativeCall(BasicCall):
+class PyNativeCall(BasicCall):
     """A call to a native function."""
 
     def __init__(
         self,
-        func: "NativeFunction",
+        func: "PyNativeFunction",
         *args: List[Any],
         **kwargs: Dict[str, Any],
     ):

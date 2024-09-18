@@ -280,3 +280,26 @@ class ChunkedSemanticCallRequest:
 
 
 # ------------------------ Native Call Request ------------------------
+
+
+@dataclass
+class NativeCallMetadata:
+    """Metadata of a native function."""
+
+    timeout: (
+        float  # If the function execution surpass this timeout, it will be terminated.
+    )
+
+    @classmethod
+    def get_default_dict(cls) -> Dict:
+        """Get the default metadata for a Request in dict format."""
+
+        return {
+            "timeout": 999999,
+        }
+
+    @classmethod
+    def get_default(cls) -> "SemanticCallMetadata":
+        """Get the default metadata for a Request."""
+
+        return NativeCallMetadata(**cls.get_default_dict())

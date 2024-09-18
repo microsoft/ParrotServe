@@ -10,15 +10,14 @@ from parrot.utils import get_logger
 
 from ..config import BuiltinConfig
 from .models import MODEL_ARCH_MAP
+from .models.weight_utils import initialize_dummy_weights
 
 
 logger = get_logger("Model Instantiation")
 
 
 @contextlib.contextmanager
-def model_instantiation_context(
-    model_name: str, builtin_config: BuiltinConfig, dummy_weight_init: bool
-):
+def model_instantiation_context(model_name: str, builtin_config: BuiltinConfig):
     """Provide a context for instantiating models.
 
     Including:
@@ -32,19 +31,16 @@ def model_instantiation_context(
 
     original_dtype = torch.get_default_dtype()
     torch.set_default_dtype(builtin_config.dtype)
-    if not dummy_weight_init:
-        original_reset_parameters = torch.nn.Linear.reset_parameters
-        torch.nn.Linear.reset_parameters = (
-            lambda self: None
-        )  # This is a very hacky way to disable weight initialization
+
+    original_reset_parameters = torch.nn.Linear.reset_parameters
+    torch.nn.Linear.reset_parameters = (
+        lambda self: None
+    )  # This is a very hacky way to disable weight initialization
 
     yield
 
-    torch.set_default_dtype(original_dtype)
-    if not dummy_weight_init:
-        torch.nn.Linear.reset_parameters = original_reset_parameters
-
-    logger.info(f"Model {model_name} instantiated. Weights loaded.")
+    torch.set_default_dtype(original_dtype)  # set back to original
+    torch.nn.Linear.reset_parameters = original_reset_parameters  # set back to original
 
 
 @torch.no_grad()
@@ -65,12 +61,22 @@ def instantiate_model(
             f"Supported models: {MODEL_ARCH_MAP.keys()}"
         )
 
-    with model_instantiation_context(model_name, builtin_config, False):
+    with model_instantiation_context(model_name, builtin_config):
         model = model_arch_cls(hf_config, builtin_config)
-        model.load_weights(model_name)
 
-        # Move model to device
-        model = model.to(builtin_config.device)
+        if builtin_config.use_dummy_weights:
+            # If using dummy weights, move model first.
+            model = model.to(builtin_config.device)
+
+            logger.info(f"Start using dummy weights to initialize model ...")
+            initialize_dummy_weights(model)
+            logger.info(f"Model {model_name} instantiated using dummy weights.")
+        else:
+            # Load weights first if not using dummy weights, then move model.
+            logger.info(f"Start loading weights ...")
+            model.load_weights(model_name)
+            model = model.to(builtin_config.device)
+            logger.info(f"Model {model_name} instantiated. Weights loaded.")
 
         # Use compiled model if specified
         # model = torch.compile(

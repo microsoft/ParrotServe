@@ -1,24 +1,22 @@
-# TODO(chaofan): Refactor native function
+import pytest
+import inspect
+from parrot import P
 
-# import pytest
-# import inspect
-# import parrot as P
-
-# from parrot.pfunc.function import NativeCall
+from parrot.frontend.pfunc.function import PyNativeCall
 
 
-# def test_parse_native_function():
-#     @P.native_function()
-#     def add(a: P.Input, b: P.Input) -> P.Output:
-#         return str(int(a) + int(b))
+def test_parse_native_function():
+    @P.native_function()
+    def add(a: P.Input, b: P.Input) -> P.Output:
+        return str(int(a) + int(b))
 
-#     def add_pyfunc(a: str, b: str) -> str:
-#         return str(int(a) + int(b))
+    def add_pyfunc(a: str, b: str) -> str:
+        return str(int(a) + int(b))
 
-#     print(add.display_signature())
-#     print(add.inputs)
-#     print(add.outputs)
-#     print(inspect.signature(add_pyfunc))
+    print(add.display_signature())
+    print(add.inputs)
+    print(add.outputs)
+    print(inspect.signature(add_pyfunc))
 
 
 # def test_parse_native_function_two_rets():
@@ -35,17 +33,17 @@
 #     print(inspect.signature(add_pyfunc))
 
 
-# def test_call_function():
-#     @P.native_function()
-#     def add(a: P.Input, b: P.Input) -> P.Output:
-#         return str(int(a) + int(b))
+def test_call_function():
+    @P.native_function()
+    def add(a: P.Input, b: P.Input) -> P.Output:
+        return str(int(a) + int(b))
 
-#     call = add("1", b="2")
-#     print(call)
+    call = add("1", b="2")
+    print(call)
 
-#     pyfunc = add.get_pyfunc()
-#     result = pyfunc("1", b="2")
-#     print(result)
+    pyfunc = add.get_pyfunc()
+    result = pyfunc("1", b="2")
+    print(result)
 
 
 # def test_serialize_call():
@@ -79,8 +77,8 @@
 #     print(ret)
 
 
-# if __name__ == "__main__":
-#     test_parse_native_function()
-#     test_parse_native_function_two_rets()
-#     test_call_function()
-#     test_serialize_call()
+if __name__ == "__main__":
+    # test_parse_native_function()
+    # test_parse_native_function_two_rets()
+    test_call_function()
+    # test_serialize_call()

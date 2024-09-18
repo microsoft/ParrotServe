@@ -10,7 +10,7 @@ from parrot.sampling_config import SamplingConfig
 from parrot.utils import get_logger, change_signature
 
 from .semantic_variable import SemanticVariable
-from .function import SemanticFunction, NativeFunction, ParamType, Parameter
+from .function import SemanticFunction, PyNativeFunction, ParamType, Parameter
 from .transforms.prompt_formatter import standard_formatter, Sequential, FuncMutator
 
 
@@ -174,7 +174,7 @@ def native_function(
 
         change_signature(f, new_params_anotations, new_return_annotations)
 
-        native_func = NativeFunction(
+        native_func = PyNativeFunction(
             name=func_name,
             pyfunc=f,
             params=func_params,
