@@ -184,7 +184,7 @@ class VirtualMachine:
             call: SemanticCall. The call to be submitted.
 
         Returns:
-            Dict. The placeholders mapping returned by the ServeCore.
+            Dict. The "created vars" returned by the ServeCore.
         """
 
         logger.info(
@@ -198,7 +198,7 @@ class VirtualMachine:
             payload=call.to_request_payload(),
         )
 
-        return resp.placeholders_mapping
+        return resp.created_vars
 
     async def asubmit_semantic_call_handler(self, call: SemanticCall) -> List:
         """Submit a call to the ServeCore.
@@ -207,7 +207,7 @@ class VirtualMachine:
             call: SemanticCall. The call to be submitted.
 
         Returns:
-            Dict. The placeholders mapping returned by the ServeCore.
+            Dict. The "created vars" returned by the ServeCore.
         """
 
         logger.info(
@@ -221,7 +221,7 @@ class VirtualMachine:
             payload=call.to_request_payload(),
         )
 
-        return resp.placeholders_mapping
+        return resp.created_vars
 
     # ---------- Public Methods ----------
 

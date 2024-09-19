@@ -15,29 +15,32 @@ from .perf_criteria import PerformanceCriteria
 
 
 @dataclass
-class RequestBodyChunk:
+class SemanticCallRequestBodyChunk:
     """Base class of all chunks in the request body."""
 
     pos_id: int  # The position id of the chunk in the request. (0, 1, 2, ...)
 
 
 @dataclass
-class TextChunk(RequestBodyChunk):
+class TextChunk(SemanticCallRequestBodyChunk):
     """A text chunk in the request body."""
 
     text: str  # The text of the chunk.
 
 
 @dataclass
-class PlaceholderNameChunk(RequestBodyChunk):
+class PlaceholderChunk(SemanticCallRequestBodyChunk):
     """A placeholder in the request body."""
 
-    name: str  # The name of the placeholder.
+    name: str  # The name of the corresponding parameter.
 
 
 @dataclass
-class RequestPlaceholder:
-    """Detailed information of a placeholder in the request."""
+class SemanticFunctionParameter:
+    """Detailed information of a parameter in the function of the semantic call request.
+    
+    In semantic function, a parameter can also be considered as a "placeholder" in the prompt.
+    """
 
     name: str
     is_output: bool
@@ -52,27 +55,27 @@ class RequestPlaceholder:
         # Check input/output arguments.
         if self.is_output:
             if self.var_id is not None:
-                raise ValueError("Output placeholder should not have var_id.")
+                raise ValueError("Output parameter should not have var_id.")
 
-            # Default sampling_config for output placeholder.
+            # Default sampling_config for output parameter.
             if self.sampling_config is None:
                 self.sampling_config = SamplingConfig()
         else:
             if self.sampling_config is not None:
-                raise ValueError("Input placeholder should not have sampling_config.")
+                raise ValueError("Input parameter should not have sampling_config.")
 
     @property
     def has_var(self) -> bool:
-        """Return whether the placeholder has an existing semantic variable."""
+        """Return whether the parameter has an existing semantic variable."""
 
         return self.var_id is not None
 
     @property
     def should_create(self) -> bool:
-        """Return whether we should created a new SV for this placeholder.
+        """Return whether we should created a new SV for this parameter.
 
-        Case 1: The placeholder is an output placeholder.
-        Case 2: The placeholder is an input placeholder and has no value.
+        Case 1: The parameter is an output parameter.
+        Case 2: The parameter is an input parameter and has no value.
         """
 
         return self.is_output or not self.has_var
@@ -138,15 +141,15 @@ class ChunkedSemanticCallRequest:
         self.metadata = metadata
 
         # Body: the parsed prompt.
-        self.body: List[RequestBodyChunk] = []
+        self.body: List[SemanticCallRequestBodyChunk] = []
 
-        # Placeholder map: map from placeholder name to placeholder.
-        self.placeholders_map: Dict[str, RequestPlaceholder] = {}
+        # Parameters map: map from parameter name to parameter.
+        self.parameters_map: Dict[str, SemanticFunctionParameter] = {}
 
-    def push_chunk(self, chunk_type: Type[RequestBodyChunk], info: str) -> None:
+    def push_chunk(self, chunk_type: Type[SemanticCallRequestBodyChunk], info: str) -> None:
         """Push a chunk into the body queue."""
 
-        # Tricky here: both TextChunk and PlaceholderNameChunk are initialized using the same
+        # Tricky here: both TextChunk and parameterNameChunk are initialized using the same
         # function signature.
 
         pos_id = len(self.body)
@@ -176,7 +179,7 @@ class ChunkedSemanticCallRequest:
         return (
             f"metadata: {self.metadata}, "
             f"body: {self.body}, "
-            f"placeholders_map: {self.placeholders_map}"
+            f"parameters_map: {self.parameters_map}"
         )
 
     @staticmethod
@@ -186,7 +189,7 @@ class ChunkedSemanticCallRequest:
         # Check format.
         parrot_assert("template" in payload, "Missing field 'template' in request.")
         parrot_assert(
-            "placeholders" in payload, "Missing field 'placeholders' in request."
+            "parameters" in payload, "Missing field 'parameters' in request."
         )
 
         processed_payload = payload.copy()
@@ -218,32 +221,33 @@ class ChunkedSemanticCallRequest:
 
         # Get arguments from payload packet.
         template: str = payload["template"]
-        placeholders: Dict = payload["placeholders"]
+        parameters: Dict = payload["parameters"]
 
         # Step 1. Packing metadata.
-        metadata_dict = {}
+        metadata_dict = SemanticCallMetadata.get_default_dict()
         for key in SemanticCallMetadata.REQUEST_METADATA_KEYS:
-            metadata_dict[key] = payload[key]
+            if key in payload:
+                metadata_dict[key] = payload[key]
         metadata = SemanticCallMetadata(**metadata_dict)
 
         chunked_request = cls(request_id, session_id, metadata)
 
-        # Step 2. Extract the "placeholders" field and create placeholders dict.
-        for placeholder in placeholders:
-            # Format check included in initialization. (See RequestPlaceholder.__post_init__.)
+        # Step 2. Extract the "parameters" field and create parameters dict.
+        for parameter in parameters:
+            # Format check included in initialization. (See FunctionParameter.__post_init__.)
             try:
-                parsed_placeholder = RequestPlaceholder(**placeholder)
+                parsed_parameter = SemanticFunctionParameter(**parameter)
             except BaseException as e:
                 raise ParrotCoreUserError(e)
 
-            placeholder_name = parsed_placeholder.name
+            parameter_name = parsed_parameter.name
 
-            # No duplicate placeholder name in "placeholders" field.
+            # No duplicate parameter name in "parameters" field.
             parrot_assert(
-                placeholder_name not in chunked_request.placeholders_map,
-                "Duplicate placeholder name.",
+                parameter_name not in chunked_request.parameters_map,
+                "Duplicate parameter name.",
             )
-            chunked_request.placeholders_map[placeholder_name] = parsed_placeholder
+            chunked_request.parameters_map[parameter_name] = parsed_parameter
 
         # Step 3. Parse prompt body.
 
@@ -265,8 +269,8 @@ class ChunkedSemanticCallRequest:
                 chunked_request.push_chunk(TextChunk, prev_text_chunk)
 
             # Placeholder
-            placeholder_name = template[matched.start() + 2 : matched.end() - 2]
-            chunked_request.push_chunk(PlaceholderNameChunk, placeholder_name)
+            parameter_name = template[matched.start() + 2 : matched.end() - 2]
+            chunked_request.push_chunk(PlaceholderChunk, parameter_name)
 
             # Update last_pos for the next iteration.
             last_pos = matched.end()

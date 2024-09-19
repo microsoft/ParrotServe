@@ -19,7 +19,7 @@ from parrot.serve.graph import (
     activate_completion_chain,
     SemanticVariable,
 )
-from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
+from parrot.serve.graph.call_request import SemanticCallMetadata, SemanticFunctionParameter
 from parrot.engine.config import EngineConfig
 from parrot.serve.engine_manager import EngineManager
 from parrot.serve.graph.visualize_utils import view_graph
@@ -65,7 +65,7 @@ def test_default_policy_throughput():
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
@@ -122,7 +122,7 @@ def test_default_policy_latency():
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
@@ -184,7 +184,7 @@ def test_app_fifo():
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
@@ -197,14 +197,14 @@ def test_app_fifo():
         request_chain2 = RequestChain.from_nodes(
             nodes=[
                 PlaceholderFill(
-                    placeholder=RequestPlaceholder(
+                    parameter=SemanticFunctionParameter(
                         name="a",
                         var_id=out_vars[i].id,
                         is_output=False,
                     )
                 ),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="b", is_output=True)
+                    parameter=SemanticFunctionParameter(name="b", is_output=True)
                 ),
             ]
         )
@@ -289,7 +289,7 @@ def test_graph_group():
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
@@ -304,7 +304,7 @@ def test_graph_group():
     request_chain = RequestChain.from_nodes(
         nodes=[
             PlaceholderFill(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name=f"a_{i}",
                     var_id=out_vars[i].id,
                     is_output=False,
@@ -313,7 +313,7 @@ def test_graph_group():
             for i in range(16)
         ]
         + [
-            PlaceholderGen(placeholder=RequestPlaceholder(name="b", is_output=True)),
+            PlaceholderGen(parameter=SemanticFunctionParameter(name="b", is_output=True)),
         ]
     )
     var_mgr.create_vars_for_request(session_id, request_chain)
@@ -374,7 +374,7 @@ def test_ctx_group():
             nodes=[
                 ConstantFill(prompts[i % 4]),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
@@ -433,7 +433,7 @@ def test_ctx_aware():
             nodes=[
                 ConstantFill(prompts[i % 4]),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )

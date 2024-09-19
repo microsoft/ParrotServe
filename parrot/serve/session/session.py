@@ -139,9 +139,9 @@ class Session:
             activate_completion_chain(request_chain.comp_chains[-1], criteria)
 
         # It must be inserted. So we can get the mapping.
-        placeholders_mapping = request_chain.get_placeholders_mapping()
+        created_vars = request_chain.get_created_vars()
 
-        return request_id, placeholders_mapping
+        return request_id, created_vars
 
     # def execute_native_call(self, call: NativeCall):
     #     async def _execute_body(func, *args):

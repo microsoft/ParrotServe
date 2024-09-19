@@ -9,10 +9,10 @@ from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.utils import RecyclePool
 
 from .perf_criteria import PerformanceCriteria
-from .request import (
+from .call_request import (
     TextChunk,
-    PlaceholderNameChunk,
-    RequestPlaceholder,
+    PlaceholderChunk,
+    SemanticFunctionParameter,
     SemanticCallMetadata,
     ChunkedSemanticCallRequest,
 )
@@ -201,7 +201,7 @@ class RequestChain:
         self.comp_chains: List[CompletionChain] = []
 
         # Only valid after inserted into a graph.
-        self._placeholders_mapping: List[Dict] = []
+        self._created_vars: List[Dict] = []
 
         # Assign request chain to nodes
         # for node in self.iter():
@@ -288,13 +288,13 @@ class RequestChain:
 
             if isinstance(chunk, TextChunk):
                 node = ConstantFill(constant_text=chunk.text)
-            elif isinstance(chunk, PlaceholderNameChunk):
-                placeholder = chunked_request.placeholders_map[chunk.name]
-                if placeholder.is_output:
-                    node = PlaceholderGen(placeholder=placeholder)
+            elif isinstance(chunk, PlaceholderChunk):
+                parameter = chunked_request.parameters_map[chunk.name]
+                if parameter.is_output:
+                    node = PlaceholderGen(parameter=parameter)
                     is_gen = True
                 else:
-                    node = PlaceholderFill(placeholder=placeholder)
+                    node = PlaceholderFill(parameter=parameter)
             else:
                 raise ParrotCoreUserError(ValueError("Unknown chunk type."))
 
@@ -328,18 +328,18 @@ class RequestChain:
 
         return request_chain
 
-    def get_placeholders_mapping(self) -> List[Dict]:
-        """Get the placeholder mapping after inserted into a graph.
+    def get_created_vars(self) -> List[Dict]:
+        """Get the created vars after inserted into a graph.
 
         Returns:
-            List[Dict]: Placeholder mapping.
+            List[Dict]: created vars.
         """
 
         parrot_assert(
             self.is_inserted,
-            "Get placeholder mapping failed: RequestChain has not been inserted into a graph.",
+            "Get created vars failed: RequestChain has not been inserted into a graph.",
         )
-        return self._placeholders_mapping
+        return self._created_vars
 
 
 class ComputeGraph:
@@ -374,8 +374,9 @@ class ComputeGraph:
     def insert_and_update_request_chain(self, request_chain: RequestChain) -> None:
         """Insert a RequestChain into the graph, and update its info.
 
-        After inserted, placeholder mapping can be fetched from this object. Placeholder mapping
-        records the mapping between placeholders and the corresponding semantic variables.
+        After inserted, "created vars" can be fetched from this object. 
+        "Created vars" records the information of newly created semantic variables in this process, 
+        including their corresponding parameters' names.
         """
 
         parrot_assert(
@@ -393,14 +394,14 @@ class ComputeGraph:
 
             parrot_assert(node.sv is not None, "Insert failed: SV is not created.")
             if node.has_placeholder:
-                placeholder: RequestPlaceholder = node.placeholder
+                parameter: SemanticFunctionParameter = node.placeholder_param
 
-                # Maintain the placeholder mapping
+                # Maintain the created vars
                 # HACK: Access the private member directly
-                request_chain._placeholders_mapping.append(
+                request_chain._created_vars.append(
                     {
-                        "placeholder_name": placeholder.name,
-                        "is_output": placeholder.is_output,
+                        "parameter_name": parameter.name,
+                        "is_output": parameter.is_output,
                         "var_name": node.sv_name,
                         "var_id": node.var_id,
                     }

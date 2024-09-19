@@ -9,7 +9,7 @@ from parrot.serve.graph import (
     PlaceholderGen,
     PlaceholderFill,
 )
-from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
+from parrot.serve.graph.call_request import SemanticCallMetadata, SemanticFunctionParameter
 
 
 TESTING_PROMPT_TEXT = (
@@ -66,13 +66,13 @@ def test_tokenize_request():
         nodes=[
             ConstantFill("Test1"),
             PlaceholderFill(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name="a", var_id=var0.id, is_output=False
                 )
             ),
             ConstantFill("Test2"),
             PlaceholderGen(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name="b", is_output=True, sampling_config=SamplingConfig()
                 )
             ),

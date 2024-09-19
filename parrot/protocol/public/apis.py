@@ -49,7 +49,12 @@ class RemoveSessionResponse(BaseResponse):
 
 class SubmitSemanticCallResponse(BaseResponse):
     request_id: int
-    placeholders_mapping: List
+    created_vars: List
+
+
+class SubmitPyNativeCallResponse(BaseResponse):
+    request_id: int
+    created_vars: List
 
 
 class RegisterSemanticVariableResponse(BaseResponse):
@@ -131,7 +136,7 @@ def submit_semantic_call(
         )
     except BaseException as e:
         logger.error(
-            f"Submit call (session_id={session_id}) error in {http_addr}. Error: {e}"
+            f"Submit semantic call (session_id={session_id}) error in {http_addr}. Error: {e}"
         )
         raise e
 
@@ -152,7 +157,47 @@ async def asubmit_semantic_call(
             )
     except BaseException as e:
         logger.error(
-            f"Submit call (session_id={session_id}) error in {http_addr}. Error: {e}"
+            f"Submit semantic call (session_id={session_id}) error in {http_addr}. Error: {e}"
+        )
+        raise e
+
+
+def submit_py_native_call(
+    http_addr: str, session_id: int, session_auth: str, payload: Dict
+) -> SubmitPyNativeCallResponse:
+    try:
+        return send_http_request(
+            SubmitPyNativeCallResponse,
+            http_addr,
+            f"/{API_VERSION}/submit_py_native_call",
+            retry_times=1,
+            session_id=session_id,
+            **payload,
+        )
+    except BaseException as e:
+        logger.error(
+            f"Submit Python native call (session_id={session_id}) error in {http_addr}. Error: {e}"
+        )
+        raise e
+
+
+async def asubmit_py_native_call(
+    http_addr: str, session_id: int, session_auth: str, payload: Dict
+) -> SubmitPyNativeCallResponse:
+    try:
+        async with aiohttp.ClientSession() as client_session:
+            return await async_send_http_request(
+                client_session,
+                SubmitPyNativeCallResponse,
+                http_addr,
+                f"/{API_VERSION}/submit_py_native_call",
+                retry_times=1,
+                session_id=session_id,
+                **payload,
+            )
+    except BaseException as e:
+        logger.error(
+            f"Submit Python native call (session_id={session_id}) error in {http_addr}. Error: {e}"
         )
         raise e
 

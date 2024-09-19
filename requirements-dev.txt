@@ -28,3 +28,6 @@ protobuf
 
 # Lint
 black
+
+# Dev
+matplotlib

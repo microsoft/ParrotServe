@@ -1,4 +1,4 @@
-from parrot.serve.graph.request import ChunkedSemanticCallRequest
+from parrot.serve.graph.call_request import ChunkedSemanticCallRequest
 from parrot.serve.variable_manager import SemanticVariableManager
 from parrot.serve.graph import (
     RequestChain,
@@ -9,14 +9,14 @@ from parrot.serve.graph import (
     PerformanceCriteria,
     activate_completion_chain,
 )
-from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
+from parrot.serve.graph.call_request import SemanticCallMetadata, SemanticFunctionParameter
 from parrot.serve.graph.visualize_utils import view_graph
 
 
 def test_request_parse():
     payload = {
         "template": "This is a test {{a}} function. {{b}}",
-        "placeholders": [
+        "parameters": [
             {
                 "name": "a",
                 "is_output": False,
@@ -45,7 +45,7 @@ def test_request_parse():
 def test_split_prefix():
     payload = {
         "template": "This is a test {{a}} function. {{b}}",
-        "placeholders": [
+        "parameters": [
             {
                 "name": "a",
                 "is_output": False,
@@ -76,7 +76,7 @@ def test_request_chain_print():
     request_chain = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
+            PlaceholderGen(parameter=SemanticFunctionParameter(name="a", is_output=True)),
         ],
     )
 
@@ -86,7 +86,7 @@ def test_request_chain_print():
 def test_chunked_request_to_chain():
     payload = {
         "template": "This is a test {{a}} function. {{b}}",
-        "placeholders": [
+        "parameters": [
             {
                 "name": "a",
                 "is_output": False,
@@ -118,7 +118,7 @@ def test_graph_remove():
     request_chain = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
+            PlaceholderGen(parameter=SemanticFunctionParameter(name="a", is_output=True)),
         ],
     )
 
@@ -143,7 +143,7 @@ def test_view_graph():
     request_chain = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
+            PlaceholderGen(parameter=SemanticFunctionParameter(name="a", is_output=True)),
         ]
     )
 
@@ -169,7 +169,7 @@ def test_graph_traverse():
     request1 = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
+            PlaceholderGen(parameter=SemanticFunctionParameter(name="a", is_output=True)),
         ]
     )
 
@@ -180,11 +180,11 @@ def test_graph_traverse():
     request2 = RequestChain.from_nodes(
         nodes=[
             PlaceholderFill(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name="a", var_id=out_var0.id, is_output=False
                 )
             ),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="b", is_output=True)),
+            PlaceholderGen(parameter=SemanticFunctionParameter(name="b", is_output=True)),
         ]
     )
 
@@ -195,11 +195,11 @@ def test_graph_traverse():
     request3 = RequestChain.from_nodes(
         nodes=[
             PlaceholderFill(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name="b", var_id=out_var1.id, is_output=False
                 )
             ),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="c", is_output=True)),
+            PlaceholderGen(parameter=SemanticFunctionParameter(name="c", is_output=True)),
         ]
     )
 

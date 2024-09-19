@@ -7,7 +7,7 @@ from typing import List, Optional, Dict
 from parrot.sampling_config import SamplingConfig
 from parrot.exceptions import parrot_assert
 
-from .request import RequestPlaceholder
+from .call_request import SemanticFunctionParameter
 from .semantic_variable import SemanticVariable
 
 
@@ -214,44 +214,44 @@ class ConstantFill(BaseNode):
 class PlaceholderFill(BaseNode):
     """Represent a fill node (placeholder) in the graph."""
 
-    def __init__(self, placeholder: RequestPlaceholder):
+    def __init__(self, parameter: SemanticFunctionParameter):
         super().__init__()
-        self.placeholder = placeholder
+        self.placeholder_param = parameter # The referred parameter of this placeholder
 
     def _get_display_elements(self) -> Dict:
         return {
             "sv_name": self.sv_name,
             "var_id": self.var_id,
-            "placeholder_name": self.placeholder.name,
+            "parameter_name": self.placeholder_param.name,
         }
 
     def short_repr(self) -> str:
         return self._short_repr_add_graph_id(
-            f"PlaceholderFill({self.placeholder.name})"
+            f"PlaceholderFill({self.placeholder_param.name})"
         )
 
 
 class PlaceholderGen(BaseNode):
     """Represent a gen node (placeholder, actually it must be) in the graph."""
 
-    def __init__(self, placeholder: RequestPlaceholder):
+    def __init__(self, parameter: SemanticFunctionParameter):
         super().__init__()
-        self.placeholder = placeholder
+        self.placeholder_param = parameter # The referred parameter of this placeholder
 
     @property
     def sampling_config(self) -> SamplingConfig:
-        return self.placeholder.sampling_config
+        return self.placeholder_param.sampling_config
 
     def _get_display_elements(self) -> Dict:
         return {
             "sv_name": self.sv_name,
             "var_id": self.var_id,
-            "placeholder_name": self.placeholder.name,
+            "parameter_name": self.placeholder_param.name,
             "sampling_config": self.sampling_config,
         }
 
     def short_repr(self) -> str:
-        return self._short_repr_add_graph_id(f"PlaceholderGen({self.placeholder.name})")
+        return self._short_repr_add_graph_id(f"PlaceholderGen({self.placeholder_param.name})")
 
     # async def wait_ready(self):
     #     """NOTE(chaofan): We don't need to wait Gen to be ready."""

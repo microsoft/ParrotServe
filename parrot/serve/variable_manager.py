@@ -312,18 +312,18 @@ class SemanticVariableManager:
                             content=node.constant_text,
                         )
                     )
-            # For PlaceholderFill, we create/get a local variable by placeholder name.
+            # For PlaceholderFill, we create/get a local variable by the name of the placeholder's parameter.
             # (By name: always create a new variable)
             elif isinstance(node, PlaceholderFill):
-                if node.placeholder.should_create:
+                if node.placeholder_param.should_create:
                     lvar = self._create_local_var_by_name(
                         session_id=session_id,
-                        var_name=node.placeholder.name,
+                        var_name=node.placeholder_param.name,
                     )
                 else:
                     lvar = self._get_local_var_by_id(
                         session_id=session_id,
-                        var_id=node.placeholder.var_id,
+                        var_id=node.placeholder_param.var_id,
                     )
                 node.set_sv(lvar)
             # For PlaceholderGen, always create a new local variable.
@@ -331,7 +331,7 @@ class SemanticVariableManager:
                 node.set_sv(
                     self._create_local_var_by_name(
                         session_id=session_id,
-                        var_name=node.placeholder.name,
+                        var_name=node.placeholder_param.name,
                     )
                 )
             else:

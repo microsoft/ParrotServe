@@ -7,7 +7,6 @@ from parrot.engine.config import EngineConfig
 from parrot.serve.backend_repr import ExecutionEngine, LanguageModel
 from parrot.serve.tokenizer_wrapper import TokenizersWrapper
 from parrot.serve.backend_repr.context import Context
-from parrot.constants import NONE_THREAD_ID
 
 from parrot.protocol.public.apis import (
     register_session,

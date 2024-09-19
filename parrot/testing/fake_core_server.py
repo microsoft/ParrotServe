@@ -70,7 +70,7 @@ async def submit_semantic_call(request: Request):
     )
     return {
         "request_id": request_id,
-        "placeholders_mapping": [],
+        "created_vars": [],
     }
 
 

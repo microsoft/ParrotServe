@@ -39,8 +39,8 @@ A semantic function is defined using a `@P.function(...)` decorator. Developers 
 
 The syntax is just like the conventional definition of Python function. But there are a few differences:
 
-- The arguments annotated by a `P.Input`, `P.Output` are considered as **placeholders**. Arguments with other annotations or no annotation are considered as `PyObject`.
-- The docstring is the function definition! Plain text in the docstring are considered as the constant part. And using `{{}}` to reference function arguments.
-- When we call a semantic function, we should pass all arguments which are `P.Input` or `PyObject`. The value type of the `P.Input` argument must be [`str` , an `awaitable` ] or [a `SemanticVariable` ].
-- The return value of the function is a List of `SemanticVariable` , corresponding to all `P.Output` in the function declaration.
-- Because the asynchronous design, the return values may not be immediately ready. So they are `SemanticVariable` . If we need their contents (The content is just a string), we should use `await xx.get()` .
+- The arguments annotated by a `P.Input`, `P.Output` are considered as the `SemanticParameter`. Arguments with other annotations or no annotation are considered as `PyObject`.
+- The docstring is the function definition! Plain text in the docstring are considered as the constant part. And using `{{}}` to reference function parameters, which is considered as *Placeholders*.
+- When we call a semantic function, we should pass all arguments which are `P.Input` or `PyObject`. The value type of the `P.Input` argument must be a `SemanticVariable`.
+- The return value of the function is a List of `SemanticVariable`s, corresponding to all `P.Output`s in the function declaration.
+- Because the asynchronous design, the return values may not be immediately ready. So they are `SemanticVariable`s . If we need their contents (The content is just a string), we should use `await xx.get()` .

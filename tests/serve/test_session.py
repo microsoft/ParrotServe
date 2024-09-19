@@ -26,7 +26,7 @@ from parrot.serve.graph import (
     PerformanceCriteria,
     activate_completion_chain,
 )
-from parrot.serve.graph.request import RequestPlaceholder
+from parrot.serve.graph.call_request import SemanticFunctionParameter
 
 
 def test_session_manager():
@@ -99,11 +99,11 @@ def test_graph_executor():
         nodes=[
             ConstantFill("Hello world, I'm a prefix."),
             PlaceholderFill(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name="a", var_id=in_var.id, is_output=False
                 )
             ),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="b", is_output=True)),
+            PlaceholderGen(parameter=SemanticFunctionParameter(name="b", is_output=True)),
         ]
     )
 
