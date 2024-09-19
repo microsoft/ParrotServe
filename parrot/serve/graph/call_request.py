@@ -307,3 +307,24 @@ class NativeCallMetadata:
         """Get the default metadata for a Request."""
 
         return NativeCallMetadata(**cls.get_default_dict())
+
+
+class PyNativeCallRequest:
+    """Python native call request."""
+
+    def __init__(
+        self,
+        request_id: int,
+        session_id: int,
+        metadata: NativeCallMetadata = NativeCallMetadata.get_default(),
+    ) -> None:
+        self.request_id = request_id
+        self.session_id = session_id
+
+        # Metadata: additional information of the request.
+        self.metadata = metadata
+
+        # Body: the parsed prompt.
+
+        # Parameters map: map from parameter name to parameter.
+        self.parameters_map: Dict[str, SemanticFunctionParameter] = {}

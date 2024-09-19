@@ -1,6 +1,6 @@
 # Parrot Documentation
 
-> This repo is current a research prototype. Please open issue or contact the authors when you need help.
+> This repo is currently a research prototype. Please open issue or contact the authors when you need help.
 
 The documentation of Parrot, currently organized as a set of Markdown files.
 

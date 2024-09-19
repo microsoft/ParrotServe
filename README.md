@@ -2,7 +2,7 @@
 
 [Paper](https://www.usenix.org/system/files/osdi24-lin-chaofan.pdf) | [Documentation](docs/) | [Slides](assets/Parrot-OSDI24.pdf) | [Poster](assets/Parrot_Poster_OSDI_24.pdf)
 
-> This repo is current a research prototype and is not actively maintained. Please open issue or contact the authors when you need help.
+> This repo is currently a research prototype and is not actively maintained. Please open issue or contact the authors when you need help.
 
 Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the **app-level information** like LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
 - Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.
