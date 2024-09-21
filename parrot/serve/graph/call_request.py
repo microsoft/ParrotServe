@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 from dataclasses import dataclass
-from typing import Union, Dict, Optional, List, Type
+from typing import Union, Dict, Optional, List, Type, Any
 from types import CodeType, FunctionType
 import re
 
@@ -299,6 +299,7 @@ class NativeCallMetadata:
     timeout: (
         float  # If the function execution surpass this timeout, it will be terminated.
     )
+    output_criteria: Optional[Union[PerformanceCriteria, str]]
 
     @classmethod
     def get_default_dict(cls) -> Dict:
@@ -306,6 +307,7 @@ class NativeCallMetadata:
 
         return {
             "timeout": 999999,
+            "output_criteria": None,
         }
 
     @classmethod
@@ -322,6 +324,7 @@ class NativeFunctionParameter:
     name: str
     is_output: bool
     var_id: Optional[str] = None
+    value: Optional[Any] = None
 
     def __post_init__(self) -> None:
         # Check input/output arguments.
@@ -329,11 +332,23 @@ class NativeFunctionParameter:
             if self.var_id is not None:
                 raise ValueError("Output parameter should not have var_id.")
 
+        if self.var_id is not None and self.value is not None:
+            raise ValueError("Parameter should not have both var_id and value.")
+
+        if self.var_id is None and self.value is None:
+            raise ValueError("Parameter should have either var_id or value.")
+
     @property
     def has_var(self) -> bool:
         """Return whether the parameter has an existing semantic variable."""
 
         return self.var_id is not None
+
+    @property
+    def has_value(self) -> bool:
+        """Return whether the parameter has a value."""
+
+        return self.value is not None
 
     @property
     def should_create(self) -> bool:

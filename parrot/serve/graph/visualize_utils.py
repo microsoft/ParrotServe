@@ -15,7 +15,7 @@ from matplotlib import pyplot as plt
 # from parrot.utils import get_logger
 
 from .semantic_variable import SemanticVariable
-from .nodes import (
+from .node import (
     SemanticNode,
     ConstantFill,
     PlaceholderFill,

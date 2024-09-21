@@ -446,11 +446,11 @@ class SemanticFunction(BasicFunction):
     ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         call = SemanticCall(self, *args, **kwargs)
 
-        created_vars = self._submit_semantic_call(call)
+        param_info = self._submit_semantic_call(call)
         if not self._has_vm_env():
             return call
         else:
-            call.update_var_ids(created_vars)
+            call.update_var_ids(param_info)
 
         # Unpack the output SemanticVariables
         if len(call.output_vars) == 1:
@@ -464,11 +464,11 @@ class SemanticFunction(BasicFunction):
     ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
         call = SemanticCall(self, *args, **kwargs)
 
-        created_vars = await self._asubmit_semantic_call(call)
+        param_info = await self._asubmit_semantic_call(call)
         if not self._has_vm_env():
             return call
         else:
-            call.update_var_ids(created_vars)
+            call.update_var_ids(param_info)
 
         # Unpack the output SemanticVariables
         if len(call.output_vars) == 1:
@@ -501,8 +501,8 @@ class SemanticCall(BasicCall):
     ):
         super().__init__(func, *args, **kwargs)
 
-    def update_var_ids(self, created_vars: List[Dict]) -> None:
-        for mapping in created_vars:
+    def update_var_ids(self, param_info: List[Dict]) -> None:
+        for mapping in param_info:
             param_name = mapping["parameter_name"]
             var_id = mapping["var_id"]
             var = self.bindings[param_name]

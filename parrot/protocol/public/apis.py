@@ -49,12 +49,12 @@ class RemoveSessionResponse(BaseResponse):
 
 class SubmitSemanticCallResponse(BaseResponse):
     request_id: int
-    created_vars: List
+    param_info: List
 
 
 class SubmitPyNativeCallResponse(BaseResponse):
     request_id: int
-    created_vars: List
+    param_info: List
 
 
 class RegisterSemanticVariableResponse(BaseResponse):

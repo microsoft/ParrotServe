@@ -115,7 +115,7 @@ def test_graph_executor():
 
     async def main():
         executor.add_request(request)
-        activate_producer(request.comp_chains[0], PerformanceCriteria.LATENCY)
+        activate_producer(request.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
         await asyncio.sleep(1)
         in_var.set("This is a test value.")
         await asyncio.sleep(0.1)

@@ -28,6 +28,7 @@ from ..engine_manager import EngineManager
 from ..tokenizer_wrapper import TokenizersWrapper
 from ..context_manager import ServeCoreContextManager
 from .graph_executor import GraphExecutor
+from .native_executor import PyNativeExecutor
 
 
 logger = get_logger("Session")
@@ -77,6 +78,9 @@ class Session:
             context_mgr=context_mgr,
             tokenizers_wrapper=tokenizers_wrapper,
         )
+        self.native_executor = PyNativeExecutor(
+            session_id=session_id, graph=self.executor.graph
+        )
 
         # ---------- Runtime Status ----------
         self.status = SessionStatus.RUNNING
@@ -122,12 +126,12 @@ class Session:
             criteria = chunked_request.metadata.output_criteria
             if isinstance(criteria, str):
                 criteria = get_performance_criteria(criteria)
-            activate_producer(request_chain.comp_chains[-1], criteria)
+            activate_producer(request_chain.comp_chains[-1].gen_node, criteria)
 
         # It must be inserted. So we can get the mapping.
-        created_vars = request_chain.get_created_vars()
+        param_info = request_chain.get_param_info()
 
-        return created_vars
+        return param_info
 
     def _add_py_native_request(self, request_id: int, request_payload: Dict) -> List:
         # Convert the request to a PyNativeCallRequest.
@@ -144,19 +148,19 @@ class Session:
         self.var_mgr.create_vars_for_pynative_func(func_node)
 
         # Add the request to the executor.
-        self.executor.add_request(request_chain=request_chain)
+        self.native_executor.add_native_func(func_node)
 
         # If criteria is specified, activate it immediately.
-        if chunked_request.metadata.output_criteria is not None:
-            criteria = chunked_request.metadata.output_criteria
+        if request.metadata.output_criteria is not None:
+            criteria = request.metadata.output_criteria
             if isinstance(criteria, str):
                 criteria = get_performance_criteria(criteria)
-            activate_producer(request_chain.comp_chains[-1], criteria)
+            activate_producer(func_node, criteria)
 
         # It must be inserted. So we can get the mapping.
-        created_vars = request_chain.get_created_vars()
+        param_info = request_chain.get_param_info()
 
-        return created_vars
+        return param_info
 
     # ---------- Interfaces to ServeCore ----------
 
@@ -168,7 +172,7 @@ class Session:
 
         Returns:
             int: The request id.
-            List: The created vars.
+            List: The param info.
         """
 
         # Get the request id.
@@ -176,47 +180,11 @@ class Session:
         self._request_id_counter += 1
 
         if is_native:
-            created_vars = self._add_py_native_request(request_id, request_payload)
+            param_info = self._add_py_native_request(request_id, request_payload)
         else:
-            created_vars = self._add_semantic_request(request_id, request_payload)
+            param_info = self._add_semantic_request(request_id, request_payload)
 
-        return request_id, created_vars
-
-    # def execute_native_call(self, call: NativeCall):
-    #     async def _execute_body(func, *args):
-    #         return func(*args)
-
-    #     async def _execute_main():
-    #         try:
-    #             # Mark all placeholders as start
-    #             for _, value in call.bindings.items():
-    #                 if isinstance(value, SVPlaceholder):
-    #                     value.start_event.set()
-
-    #             # Wait all inputs to be ready
-    #             args = []
-    #             for name, value in call.bindings.items():
-    #                 if call.func.params_map[name].is_output:
-    #                     continue
-    #                 elif isinstance(value, SVPlaceholder):
-    #                     args.append(await value.get())  # Maybe block here
-    #                     continue
-    #                 else:
-    #                     args.append(value)
-
-    #             # Execute the native call
-    #             native_pyfunc = call.func.get_pyfunc()
-    #             result = await asyncio.wait_for(
-    #                 _execute_body(native_pyfunc, *args),
-    #                 call.func.metadata.timeout,
-    #             )
-
-    #             # Set the output
-    #             call.output_vars[0].set(result)
-    #         except BaseException as e:
-    #             self.exception_interrupt(e)
-
-    #     create_task_in_loop(_execute_main(), fail_fast=False)
+        return request_id, param_info
 
     def _register_session_resources(self) -> None:
         self.context_mgr.register_session_contexts(session_id=self.session_id)

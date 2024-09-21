@@ -16,7 +16,7 @@ from .call_request import (
     SemanticCallMetadata,
     ChunkedSemanticCallRequest,
 )
-from .nodes import (
+from .node import (
     BaseNode,
     SemanticNode,
     ConstantFill,
@@ -208,7 +208,7 @@ class RequestChain:
         self.comp_chains: List[CompletionChain] = []
 
         # Only valid after inserted into a graph.
-        self._created_vars: List[Dict] = []
+        self._param_info: List[Dict] = []
 
         # Assign request chain to nodes
         # for node in self.iter():
@@ -335,18 +335,18 @@ class RequestChain:
 
         return request_chain
 
-    def get_created_vars(self) -> List[Dict]:
-        """Get the created vars after inserted into a graph.
+    def get_param_info(self) -> List[Dict]:
+        """Get the param info after inserted into a graph.
 
         Returns:
-            List[Dict]: created vars.
+            List[Dict]: param info.
         """
 
         parrot_assert(
             self.is_inserted,
-            "Get created vars failed: RequestChain has not been inserted into a graph.",
+            "Get param_info failed: RequestChain has not been inserted into a graph.",
         )
-        return self._created_vars
+        return self._param_info
 
 
 class ComputeGraph:
@@ -382,9 +382,8 @@ class ComputeGraph:
     def insert_and_update_request_chain(self, request_chain: RequestChain) -> None:
         """Insert a RequestChain into the graph, and update its info.
 
-        After inserted, "created vars" can be fetched from this object.
-        "Created vars" records the information of newly created semantic variables in this process,
-        including their corresponding parameters' names.
+        After inserted, "param info" (Parameter Information) can be fetched from this object.
+        "param info" records the information of each parameter with its corresponding Semantic Variable.
         """
 
         parrot_assert(
@@ -404,9 +403,9 @@ class ComputeGraph:
             if node.has_placeholder:
                 parameter: SemanticFunctionParameter = node.placeholder_param
 
-                # Maintain the created vars
+                # Maintain the param info
                 # HACK: Access the private member directly
-                request_chain._created_vars.append(
+                request_chain._param_info.append(
                     {
                         "parameter_name": parameter.name,
                         "is_output": parameter.is_output,
@@ -420,6 +419,28 @@ class ComputeGraph:
         """Insert a NativeFuncNode into the graph."""
 
         self._insert_node(native_func_node)
+
+        request = native_func_node.native_func
+
+        for key, param in request.parameters_map.items():
+            if param.has_value:
+                continue
+
+            if param.is_output:
+                sv = native_func_node.output_vars[key]
+            else:
+                sv = native_func_node.input_vars[key]
+
+            # Maintain the param info
+            # HACK: Access the private member directly
+            request._param_info.append(
+                {
+                    "parameter_name": param.name,
+                    "is_output": param.is_output,
+                    "var_name": sv.sv_name,
+                    "var_id": sv.var_id,
+                }
+            )
 
     def remove_completion_chain(self, completion_chain: CompletionChain) -> None:
         """Remove a CompletionChain from the graph. This is called when the task is finished."""

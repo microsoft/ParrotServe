@@ -199,10 +199,10 @@ def test_graph_traverse():
     graph.insert_and_update_request_chain(request3)
 
     # view_graph(graph)
-    activate_producer(request1.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_producer(request2.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_producer(request3.comp_chains[0], PerformanceCriteria.LATENCY)
-    # activate_producer(request3.comp_chains[0], PerformanceCriteria.LATENCY)
+    activate_producer(request1.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
+    activate_producer(request2.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
+    activate_producer(request3.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
+    # activate_producer(request3.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
 
     # Expected results: A: depth 2, B: depth 1, C: depth 0
     requests = [request1, request2, request3]

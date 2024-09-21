@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any, Union, Type
 
 from parrot.sampling_config import SamplingConfig
 from parrot.exceptions import parrot_assert
@@ -288,7 +288,29 @@ class NativeFuncNode(BaseNode):
 
         self.native_func = native_func
         self.input_vars: Dict[str, SemanticVariable] = {}
+        self.input_values: Dict[str, Any] = {}
         self.output_vars: Dict[str, SemanticVariable] = {}
+
+        # Only valid after inserted into a graph.
+        self._param_info: List[Dict] = []
+
+        # Add values
+        for key, param in native_func.parameters_map.items():
+            if param.has_value:
+                self.input_values[key] = param.value
+
+    def get_param_info(self) -> List[Dict]:
+        """Get the param info after inserted into a graph.
+
+        Returns:
+            List[Dict]: param info.
+        """
+
+        parrot_assert(
+            self.is_inserted,
+            "Get param info failed: RequestChain has not been inserted into a graph.",
+        )
+        return self._param_info
 
     def get_prev_producers(self) -> List[BaseNode]:
         """Get the previous producers of this node."""
@@ -340,3 +362,16 @@ class NativeFuncNode(BaseNode):
         node.input_vars = input_vars
         node.output_vars = output_vars
         return node
+
+    # ---------- Polling ----------
+
+    async def wait_ready(self) -> None:
+        """Wait until all inputs are ready."""
+
+        for sv in self.input_vars.values():
+            await sv.wait_ready()
+
+
+# Types
+
+SVProducer = Union[PlaceholderGen, NativeFuncNode]

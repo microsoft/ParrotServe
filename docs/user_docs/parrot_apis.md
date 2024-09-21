@@ -83,7 +83,7 @@ Response body:
 {
     "request_id": "xxx",
     "session_id": "yyy",
-    "created_vars": [
+    "param_info": [
         {
             "placeholder_name": "fff",
             "is_output": true / false,
@@ -129,6 +129,23 @@ Request body:
 }
 ```
 
+Response body:
+```json
+{
+	"request_id": "xxx",
+	"session_id": "yyy",
+	"param_info": [
+        {
+            "placeholder_name": "fff",
+            "is_output": true / false,
+            "var_name": "ddd",
+            "var_id": "ccc",
+            "var_desc": "The first output of request xxx",
+            "var_scope": "eeee",
+        }
+	]
+}
+```
 
 ## Semantic Variable
 

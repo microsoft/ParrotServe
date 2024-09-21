@@ -13,7 +13,7 @@ from parrot.engine.config import EngineConfig
 from parrot.exceptions import ParrotCoreInternalError
 
 from parrot.serve.graph import (
-    PlaceholderGen,
+    SVProducer,
     get_performance_criteria,
     activate_producer,
 )
@@ -217,11 +217,11 @@ class ParrotServeCore:
 
         # Add the request to the session.
         session = self.session_mgr.get_session(session_id)
-        request_id, created_vars = session.add_request(payload)
+        request_id, param_info = session.add_request(payload)
 
         return {
             "request_id": request_id,
-            "created_vars": created_vars,
+            "param_info": param_info,
         }
 
     # ---------- Semantic Variable ----------
@@ -295,12 +295,10 @@ class ParrotServeCore:
 
         var = self.var_mgr.get_var(session_id, var_id)
         if var.has_producer:
-            producer: PlaceholderGen = var.get_producer()
+            producer: SVProducer = var.get_producer()
             if not producer.comp_chain.is_activated:
                 # Activate the chain and propagate the performance criteria
-                activate_producer(
-                    producer.comp_chain, get_performance_criteria(criteria)
-                )
+                activate_producer(producer, get_performance_criteria(criteria))
 
         await var.wait_ready()
         content = var.get()

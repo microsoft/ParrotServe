@@ -1,16 +1,13 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Licensed under the MIT license.
 
-from typing import List, Optional, Union, Type
+from typing import List, Optional
 from asyncio import Event
 
 from parrot.exceptions import parrot_assert
 
 
 # ---------- SemanticVariable ----------
-
-
-SVProducer: Type = Union["PlaceholderGen", "NativeFuncNode"]
 
 
 class SemanticVariable:
@@ -57,7 +54,7 @@ class SemanticVariable:
         self._ready_event: Event = Event()  # Ready event means the content is ready.
 
         # Producer of this SV. It must be a PlaceholderGen node or a NativeFuncNode.
-        self._producer: Optional[SVProducer] = None
+        self._producer: Optional["SVProducer"] = None
 
         # Consumers of this SV. It must be Fill nodes.
         self._consumers: List["PlaceholderFill"] = []
@@ -101,7 +98,7 @@ class SemanticVariable:
     def has_producer(self) -> bool:
         return self._producer is not None
 
-    def get_producer(self) -> Optional[SVProducer]:
+    def get_producer(self) -> Optional["SVProducer"]:
         return self._producer
 
     def get_consumers(self) -> List["PlaceholderFill"]:

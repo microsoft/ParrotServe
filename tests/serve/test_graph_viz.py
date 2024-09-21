@@ -93,9 +93,9 @@ def test_view_graph_complex():
     graph.insert_and_update_request_chain(request3)
 
     view_graph(graph)
-    activate_producer(request1.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_producer(request2.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_producer(request3.comp_chains[0], PerformanceCriteria.LATENCY)
+    activate_producer(request1.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
+    activate_producer(request2.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
+    activate_producer(request3.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
 
 
 def test_view_graph_with_native():
@@ -158,8 +158,8 @@ def test_view_graph_with_native():
     graph.insert_and_update_request_chain(request3)
 
     view_graph(graph)
-    activate_producer(request1.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_producer(request2.comp_chains[0], PerformanceCriteria.LATENCY)
+    activate_producer(request1.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
+    activate_producer(request2.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
     activate_producer
 
 

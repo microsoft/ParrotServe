@@ -6,9 +6,8 @@ from typing import Set, List
 from parrot.exceptions import parrot_assert
 
 from .graph import CompletionChain, CompChainGroup
-from .nodes import PlaceholderGen, NativeFuncNode
+from .node import PlaceholderGen, NativeFuncNode, SVProducer
 from .perf_criteria import PerformanceCriteria
-from .semantic_variable import SVProducer
 
 
 """Traverses the graph backward, activates related CompletionChains and propagates important 
@@ -109,3 +108,7 @@ def activate_producer(producer: SVProducer, criteria: PerformanceCriteria) -> No
         chain = producer.comp_chain
         parrot_assert(not chain.is_activated, "Chain is already activated.")
         _traverse(chain=chain, criteria=criteria)
+    else:
+        next_chains = _traverse_native_func(producer)
+        for chain in next_chains:
+            _traverse(chain=chain, criteria=criteria)

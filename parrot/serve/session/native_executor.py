@@ -1,9 +1,11 @@
 # Copyright (c) 2023 by Microsoft Corporation.
 # Licensed under the MIT license.
 
-from typing import Optional, Dict
+import asyncio
+from typing import Optional, Dict, Any
+from types import FunctionType
 
-from parrot.utils import get_logger
+from parrot.utils import get_logger, create_task_in_loop
 from parrot.exceptions import parrot_assert
 from parrot.serve.graph import NativeFuncNode, ComputeGraph
 
@@ -37,42 +39,29 @@ class PyNativeExecutor:
         self.session_id = session_id
         self.graph = graph
 
+        # ---------- Execution ----------
+        self.func_name: Dict[str, FunctionType] = {}
+
         # ---------- Runtime ----------
         self.bad_exception: Optional[Exception] = None
 
-    async def _execute_coroutine(self, func: NativeFuncNode) -> None:
+    async def _execute_coroutine(self, func_node: NativeFuncNode) -> None:
         """Coroutine for executing a PyNativeCallRequest."""
 
+        # Block until all inputs are ready.
+        await func_node.wait_ready()
+        native_request = func_node.native_func
+
         try:
-            # Block until all inputs are ready.
-            for parameter in request.parameters_map.values():
-                if parameter.has_var:
-                    parrot_assert(
-                        parameter.var_set,
-                        f"Variable is not set for Parameter {parameter.name}.",
-                    )
-                    await parameter.var.wait_ready()
-
-            # Execute the native function.
-            pyfunc = request.executable_func
-
+            await asyncio.wait_for(
+                self.execute(func_node),
+                native_request.metadata.timeout,
+            )
         except Exception as e:
             logger.error(
-                f"Error when executing Python native function. (func_name={request.func_name}, session_id={self.session_id}): {e}"
+                f"Error when executing Python native function. (func_name={func_node.native_func.func_name}, session_id={self.session_id}): {e}"
             )
             self.exception_interrupt(e)
-            return
-
-        # The task is scheduled. Assign contexts to the task.
-        self.context_mgr.set_task_contexts(task)
-
-        # Execute the task.
-        await self.execute(task)
-
-        # Free the task resources.
-        # TODO(chaofan): Current implementation has BUGS in stateful generation cases.
-        self.task_creator.free_task(task)
-        self.context_mgr.free_task_contexts(task)
 
     def exception_interrupt(self, exception: BaseException):
         self.bad_exception = exception
@@ -85,147 +74,44 @@ class PyNativeExecutor:
         )
 
         # Insert the request chain into the graph.
-        self.graph.insert_and_update_request_chain(request_chain)
+        self.graph.insert_native_func_node(func_node)
 
         # Create execution coroutines for the request chain.
-        for completion_chain in request_chain.comp_chains:
-            create_task_in_loop(self._execute_coroutine(completion_chain))
+        create_task_in_loop(self._execute_coroutine(func_node))
 
-    async def execute(self, func: NativeFuncNode) -> None:
+    async def execute(self, func_node: NativeFuncNode) -> None:
         """Execute a NativeFunc."""
 
-        parrot_assert(completion_task.is_scheduled, "Task is not scheduled.")
+        pystring_proxies: Dict[str, MutablePyStringProxy] = {}
 
-        completion_task.status = TaskStatus.EXECUTING
+        kwargs: Dict[str, Any] = {}
 
-        type_token_id_flag = completion_task.engine.model_type == ModelType.TOKEN_ID
-        if type_token_id_flag:
-            parrot_assert(
-                completion_task.is_tokenized, "Tokenized result is not available."
-            )
-            tokenizer_name = completion_task.engine.tokenizer_name
-            eos_token_id = self.tokenizers_wrapper.get_tokenizer(
-                tokenizer_name
-            ).eos_token_id
+        # Preparing parameters
+        for key, var in func_node.input_vars.items():
+            parrot_assert(var.is_ready(), f"Input var {var} is not ready.")
+            content = var.get()
+            pystring_proxies[key] = MutablePyStringProxy(content)
+            kwargs[key] = pystring_proxies[key]
 
-        for i, node in enumerate(completion_task.chain.iter()):
-            context = completion_task.contexts[i]
-            engine = context.engine
+        for key, value in func_node.input_values.items():
+            kwargs[key] = value
 
-            # Skip the node if the context is ready.
-            if context.ready_event.is_set():
-                continue
+        for key, var in func_node.output_vars.items():
+            pystring_proxies[key] = MutablePyStringProxy()
+            kwargs[key] = pystring_proxies[key]
 
-            # Wait for the context to be ready if the Context is started.
-            if context.start_event.is_set():
-                await context.ready_event.wait()
-                continue
-
-            # Set the start event to indicate the context is started.
-            context.start_event.set()
-
-            try:
-                if node.is_gen:
-                    # TODO(chaofan): Add streaming generation support.
-                    if type_token_id_flag:
-                        # If not ignore_tokenizer_eos, we should add eos_token_id to stop_token_ids
-                        if not node.sampling_config.ignore_tokenizer_eos:
-                            node.sampling_config.stop_token_ids.append(eos_token_id)
-
-                    primitive = Generate(
-                        session_id=self.session_id,
-                        task_id=completion_task.task_id,
-                        context_id=context.context_id,
-                        parent_context_id=context.parent_context_id,
-                        end_flag=False,
-                        sampling_config=node.sampling_config,
-                    )
-
-                    logger.debug(
-                        f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
-                        f"submit Generate primitive. (sampling_config={node.sampling_config})"
-                    )
-
-                    resp = await primitive.apost(engine.http_address)
-
-                    if type_token_id_flag:
-                        generated_ids = resp.generated_ids
-                        logger.debug(
-                            f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
-                            f"receive Generate primitive's result. (generated_tokens_num={len(generated_ids)})"
-                        )
-
-                        generated_text = self.tokenizers_wrapper.detokenize(
-                            token_ids=generated_ids,
-                            tokenizer_name=tokenizer_name,
-                        )
-                    else:
-                        generated_text = resp.generated_text
-
-                        logger.debug(
-                            f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
-                            f"receive Generate primitive's result. (generated_text_len={len(generated_text)})"
-                        )
-
-                    # Set the content of the node.
-                    node.sv.set(content=generated_text)
-                else:
-                    if type_token_id_flag:
-                        token_ids = completion_task.tokenized_result[tokenizer_name][
-                            i
-                        ].copy()
-
-                        # NOTE(chaofan): Fuse Fill. We add all token_ids of the same context together.
-                        # The next nodes won't be executed since the context is ready.
-                        j = i + 1
-                        while (
-                            j < len(completion_task.contexts) - 1
-                            and completion_task.contexts[j].context_id
-                            == context.context_id
-                        ):
-                            token_ids += completion_task.tokenized_result[
-                                tokenizer_name
-                            ][j]
-                            j += 1
-
-                        primitive = Fill(
-                            session_id=self.session_id,
-                            task_id=completion_task.task_id,
-                            context_id=context.context_id,
-                            parent_context_id=context.parent_context_id,
-                            end_flag=False,
-                            token_ids=token_ids,
-                        )
-                        logger.debug(
-                            f"Task (task_id={completion_task.task_id}, session_id={self.session_id}) "
-                            f"submit Fill primitive. (tokens_num={len(token_ids)})"
-                        )
-                        resp = await primitive.apost(engine.http_address)
-                    else:
-                        text = node.get()
-                        primitive = Fill(
-                            session_id=self.session_id,
-                            task_id=completion_task.task_id,
-                            context_id=context.context_id,
-                            parent_context_id=context.parent_context_id,
-                            end_flag=False,
-                            text=text,
-                        )
-                        logger.debug(
-                            f"Task (task={completion_task.task_id}, session_id={self.session_id}) "
-                            f"submit Fill primitive. (text_len={len(text)})"
-                        )
-                        resp = await primitive.apost(engine.http_address)
-
-                context.ready_event.set()
-                logger.debug(f"Context (context_id={context.context_id}) is ready.")
-                completion_task.status = TaskStatus.FINISHED
-
-            except Exception as e:
-                logger.error(
-                    f"Error when executing node {node}. (session_id={self.session_id}): {e}"
+        # Execute the native function
+        if func_node.executable_func is not None:
+            func_node.executable_func(**kwargs)
+            self.func_cache[func_node.native_func.func_name] = func_node.executable_func
+        else:
+            func = self.func_cache.get(func_node.native_func.func_name)
+            if func is None:
+                raise ValueError(
+                    f"Function {func_node.native_func.func_name} not found in Cache."
                 )
-                self.engine_mgr.raise_exception(engine_id=engine.engine_id, exception=e)
-                self.exception_interrupt(e)
-                completion_task.status = TaskStatus.ERROR
-                break
+            func(**kwargs)
+
+        # Write back the output
+        for key, var in func_node.output_vars.items():
+            var.set(pystring_proxies[key].content)
