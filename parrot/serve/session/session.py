@@ -12,9 +12,11 @@ from parrot.exceptions import ParrotCoreUserError, parrot_assert
 
 from parrot.serve.graph import (
     ChunkedSemanticCallRequest,
+    PyNativeCallRequest,
     RequestChain,
+    NativeFuncNode,
     get_performance_criteria,
-    activate_completion_chain,
+    activate_producer,
 )
 
 from parrot.serve.backend_repr import Context
@@ -94,23 +96,7 @@ class Session:
     def is_running(self) -> bool:
         return self.status == SessionStatus.RUNNING
 
-    # ---------- Interfaces to ServeCore ----------
-
-    def add_request(self, request_payload: Dict) -> (int, List):
-        """Add a request to the session and assign a coroutine to the request.
-
-        Args:
-            request_payload (Dict): The request payload.
-
-        Returns:
-            int: The request id.
-            List: The placeholder mapping.
-        """
-
-        # Get the request id.
-        request_id = self._request_id_counter
-        self._request_id_counter += 1
-
+    def _add_semantic_request(self, request_id: int, request_payload: Dict) -> List:
         # Convert the request to a ChunkedRequest.
         chunked_request = ChunkedSemanticCallRequest.parse_from_payload(
             request_id=request_id,
@@ -124,7 +110,7 @@ class Session:
         request_chain = RequestChain.from_chunked_request(chunked_request)
 
         # Assign Semantic Variables to the RequestChain.
-        self.var_mgr.create_vars_for_request(
+        self.var_mgr.create_vars_for_semantic_request_chain(
             session_id=self.session_id, request_chain=request_chain
         )
 
@@ -136,10 +122,63 @@ class Session:
             criteria = chunked_request.metadata.output_criteria
             if isinstance(criteria, str):
                 criteria = get_performance_criteria(criteria)
-            activate_completion_chain(request_chain.comp_chains[-1], criteria)
+            activate_producer(request_chain.comp_chains[-1], criteria)
 
         # It must be inserted. So we can get the mapping.
         created_vars = request_chain.get_created_vars()
+
+        return created_vars
+
+    def _add_py_native_request(self, request_id: int, request_payload: Dict) -> List:
+        # Convert the request to a PyNativeCallRequest.
+        request = PyNativeCallRequest.parse_from_payload(
+            request_id=request_id,
+            session_id=self.session_id,
+            payload=request_payload,
+        )
+
+        # Convert the PyNativeCallRequest to a FuncNode.
+        func_node = NativeFuncNode(native_func=request)
+
+        # Assign Semantic Variables to the Func Node.
+        self.var_mgr.create_vars_for_pynative_func(func_node)
+
+        # Add the request to the executor.
+        self.executor.add_request(request_chain=request_chain)
+
+        # If criteria is specified, activate it immediately.
+        if chunked_request.metadata.output_criteria is not None:
+            criteria = chunked_request.metadata.output_criteria
+            if isinstance(criteria, str):
+                criteria = get_performance_criteria(criteria)
+            activate_producer(request_chain.comp_chains[-1], criteria)
+
+        # It must be inserted. So we can get the mapping.
+        created_vars = request_chain.get_created_vars()
+
+        return created_vars
+
+    # ---------- Interfaces to ServeCore ----------
+
+    def add_request(self, request_payload: Dict, is_native: bool) -> (int, List):
+        """Add a request to the session and assign a coroutine to the request.
+
+        Args:
+            request_payload (Dict): The request payload.
+
+        Returns:
+            int: The request id.
+            List: The created vars.
+        """
+
+        # Get the request id.
+        request_id = self._request_id_counter
+        self._request_id_counter += 1
+
+        if is_native:
+            created_vars = self._add_py_native_request(request_id, request_payload)
+        else:
+            created_vars = self._add_semantic_request(request_id, request_payload)
 
         return request_id, created_vars
 

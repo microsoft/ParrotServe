@@ -16,10 +16,13 @@ from parrot.serve.graph import (
     PlaceholderGen,
     ComputeGraph,
     PerformanceCriteria,
-    activate_completion_chain,
+    activate_producer,
     SemanticVariable,
 )
-from parrot.serve.graph.call_request import SemanticCallMetadata, SemanticFunctionParameter
+from parrot.serve.graph.call_request import (
+    SemanticCallMetadata,
+    SemanticFunctionParameter,
+)
 from parrot.engine.config import EngineConfig
 from parrot.serve.engine_manager import EngineManager
 from parrot.serve.graph.visualize_utils import view_graph
@@ -69,10 +72,10 @@ def test_default_policy_throughput():
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_completion_chain(comp_chain, PerformanceCriteria.THROUGHPUT)
+        activate_producer(comp_chain, PerformanceCriteria.THROUGHPUT)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -126,10 +129,10 @@ def test_default_policy_latency():
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+        activate_producer(comp_chain, PerformanceCriteria.LATENCY)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -189,7 +192,7 @@ def test_app_fifo():
             ]
         )
 
-        var_mgr.create_vars_for_request(session_id, request_chain1)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain1)
         graph.insert_and_update_request_chain(request_chain1)
         comp_chain1 = request_chain1.comp_chains[0]
         out_vars.append(comp_chain1.gen_node.sv)
@@ -209,10 +212,10 @@ def test_app_fifo():
             ]
         )
 
-        var_mgr.create_vars_for_request(session_id, request_chain2)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain2)
         graph.insert_and_update_request_chain(request_chain2)
         comp_chain2 = request_chain2.comp_chains[0]
-        activate_completion_chain(comp_chain2, PerformanceCriteria.LATENCY)
+        activate_producer(comp_chain2, PerformanceCriteria.LATENCY)
 
         task1 = task_creator.create_task(comp_chain1)
         task1.tokenize_chain(tokenizers_wrapper)
@@ -294,7 +297,7 @@ def test_graph_group():
             ]
         )
 
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
         out_vars.append(comp_chain.gen_node.sv)
@@ -313,13 +316,15 @@ def test_graph_group():
             for i in range(16)
         ]
         + [
-            PlaceholderGen(parameter=SemanticFunctionParameter(name="b", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="b", is_output=True)
+            ),
         ]
     )
-    var_mgr.create_vars_for_request(session_id, request_chain)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
     graph.insert_and_update_request_chain(request_chain)
     comp_chain = request_chain.comp_chains[0]
-    activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+    activate_producer(comp_chain, PerformanceCriteria.LATENCY)
 
     # view_graph(graph)
 
@@ -378,10 +383,10 @@ def test_ctx_group():
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+        activate_producer(comp_chain, PerformanceCriteria.LATENCY)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -437,11 +442,11 @@ def test_ctx_aware():
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
         first_vars.append(comp_chain.first_node.sv)
-        activate_completion_chain(comp_chain, PerformanceCriteria.THROUGHPUT)
+        activate_producer(comp_chain, PerformanceCriteria.THROUGHPUT)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)

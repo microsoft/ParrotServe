@@ -3,11 +3,15 @@
 
 from dataclasses import dataclass
 from typing import Union, Dict, Optional, List, Type
+from types import CodeType, FunctionType
 import re
+
 
 from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.sampling_config import SamplingConfig
+from parrot.utils import deserialize_func_code
 
+from .semantic_variable import SemanticVariable
 from .perf_criteria import PerformanceCriteria
 
 
@@ -38,7 +42,7 @@ class PlaceholderChunk(SemanticCallRequestBodyChunk):
 @dataclass
 class SemanticFunctionParameter:
     """Detailed information of a parameter in the function of the semantic call request.
-    
+
     In semantic function, a parameter can also be considered as a "placeholder" in the prompt.
     """
 
@@ -146,7 +150,9 @@ class ChunkedSemanticCallRequest:
         # Parameters map: map from parameter name to parameter.
         self.parameters_map: Dict[str, SemanticFunctionParameter] = {}
 
-    def push_chunk(self, chunk_type: Type[SemanticCallRequestBodyChunk], info: str) -> None:
+    def push_chunk(
+        self, chunk_type: Type[SemanticCallRequestBodyChunk], info: str
+    ) -> None:
         """Push a chunk into the body queue."""
 
         # Tricky here: both TextChunk and parameterNameChunk are initialized using the same
@@ -188,16 +194,16 @@ class ChunkedSemanticCallRequest:
 
         # Check format.
         parrot_assert("template" in payload, "Missing field 'template' in request.")
-        parrot_assert(
-            "parameters" in payload, "Missing field 'parameters' in request."
-        )
+        parrot_assert("parameters" in payload, "Missing field 'parameters' in request.")
 
         processed_payload = payload.copy()
 
         # Assign default values.
-        processed_payload.setdefault("models", [])
-        processed_payload.setdefault("model_type", "token_id")
-        processed_payload.setdefault("remove_pure_fill", True)
+
+        # For metadata fields, this will do in parse_from_payload.
+        # processed_payload.setdefault("models", [])
+        # processed_payload.setdefault("model_type", "token_id")
+        # processed_payload.setdefault("remove_pure_fill", True)
 
         return processed_payload
 
@@ -309,6 +315,37 @@ class NativeCallMetadata:
         return NativeCallMetadata(**cls.get_default_dict())
 
 
+@dataclass
+class NativeFunctionParameter:
+    """Detailed information of a parameter in the function of the native call request."""
+
+    name: str
+    is_output: bool
+    var_id: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        # Check input/output arguments.
+        if self.is_output:
+            if self.var_id is not None:
+                raise ValueError("Output parameter should not have var_id.")
+
+    @property
+    def has_var(self) -> bool:
+        """Return whether the parameter has an existing semantic variable."""
+
+        return self.var_id is not None
+
+    @property
+    def should_create(self) -> bool:
+        """Return whether we should created a new SV for this parameter.
+
+        Case 1: The parameter is an output parameter.
+        Case 2: The parameter is an input parameter and has no value.
+        """
+
+        return self.is_output or not self.has_var
+
+
 class PyNativeCallRequest:
     """Python native call request."""
 
@@ -316,15 +353,96 @@ class PyNativeCallRequest:
         self,
         request_id: int,
         session_id: int,
+        func_name: str,
+        func_code: Optional[CodeType],
         metadata: NativeCallMetadata = NativeCallMetadata.get_default(),
     ) -> None:
         self.request_id = request_id
         self.session_id = session_id
+        self.func_name = func_name
+
+        # Construct the function.
+        # Here for the scope Dict, we pass {} because we don't want to pollute the scope.
+        # Hence the executable_func we get is just a temporary one.
+        self.executable_func: Optional[FunctionType] = None
+        if func_code is not None:
+            self.executable_func = FunctionType(func_code, {}, func_name)
 
         # Metadata: additional information of the request.
         self.metadata = metadata
 
-        # Body: the parsed prompt.
-
         # Parameters map: map from parameter name to parameter.
-        self.parameters_map: Dict[str, SemanticFunctionParameter] = {}
+        self.parameters_map: Dict[str, NativeFunctionParameter] = {}
+
+    @staticmethod
+    def _preprocess(payload: Dict) -> Dict:
+        """Preprocess the payload packet. This will do the format check and assign default values."""
+
+        # Check format.
+        parrot_assert("func_name" in payload, "Missing field 'func_name' in request.")
+        parrot_assert("parameters" in payload, "Missing field 'parameters' in request.")
+
+        processed_payload = payload.copy()
+
+        # Assign default values.
+
+        return processed_payload
+
+    @classmethod
+    def parse_from_payload(
+        cls, request_id: int, session_id: int, payload: Dict
+    ) -> "PyNativeCallRequest":
+        """Parse the payload of Python native call request into this class.
+
+        Args:
+            payload: The payload of the HTTP packet.
+
+        Returns:
+            The parsed request.
+        """
+
+        payload = cls._preprocess(payload)
+
+        # Get arguments from payload packet.
+        template: str = payload["template"]
+        parameters: Dict = payload["parameters"]
+
+        # Step 1. Packing metadata.
+        metadata_dict = PyNativeCallRequest.get_default_dict()
+        for key in PyNativeCallRequest.REQUEST_METADATA_KEYS:
+            if key in payload:
+                metadata_dict[key] = payload[key]
+        metadata = PyNativeCallRequest(**metadata_dict)
+
+        # Step 2. Extract the name and the code.
+        func_name = payload["func_name"]
+        func_code_serialized = payload.get("func_code", None)
+        if func_code_serialized is not None:
+            func_code = deserialize_func_code(func_code_serialized)
+
+        pynative_request = cls(
+            request_id=request_id,
+            session_id=session_id,
+            func_name=func_name,
+            func_code=func_code,
+            metadata=metadata,
+        )
+
+        # Step 3. Extract the "parameters" field and create parameters dict.
+        for parameter in parameters:
+            # Format check included in initialization.
+            try:
+                parsed_parameter = NativeFunctionParameter(**parameter)
+            except BaseException as e:
+                raise ParrotCoreUserError(e)
+
+            parameter_name = parsed_parameter.name
+
+            # No duplicate parameter name in "parameters" field.
+            parrot_assert(
+                parameter_name not in pynative_request.parameters_map,
+                "Duplicate parameter name.",
+            )
+            pynative_request.parameters_map[parameter_name] = parsed_parameter
+
+        return pynative_request

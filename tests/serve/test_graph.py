@@ -7,10 +7,12 @@ from parrot.serve.graph import (
     PlaceholderFill,
     PlaceholderGen,
     PerformanceCriteria,
-    activate_completion_chain,
+    activate_producer,
 )
-from parrot.serve.graph.call_request import SemanticCallMetadata, SemanticFunctionParameter
-from parrot.serve.graph.visualize_utils import view_graph
+from parrot.serve.graph.call_request import (
+    SemanticCallMetadata,
+    SemanticFunctionParameter,
+)
 
 
 def test_request_parse():
@@ -76,7 +78,9 @@ def test_request_chain_print():
     request_chain = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(parameter=SemanticFunctionParameter(name="a", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="a", is_output=True)
+            ),
         ],
     )
 
@@ -118,14 +122,16 @@ def test_graph_remove():
     request_chain = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(parameter=SemanticFunctionParameter(name="a", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="a", is_output=True)
+            ),
         ],
     )
 
     var_mgr = SemanticVariableManager(666)
     session_id = 0
     var_mgr.register_local_var_space(session_id)
-    var_mgr.create_vars_for_request(session_id, request_chain)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
 
     graph.insert_and_update_request_chain(request_chain)
 
@@ -135,26 +141,6 @@ def test_graph_remove():
     graph.remove_completion_chain(request_chain.comp_chains[0])
 
     print(graph.nodes, graph.chains)
-
-
-def test_view_graph():
-    graph = ComputeGraph()
-
-    request_chain = RequestChain.from_nodes(
-        nodes=[
-            ConstantFill("This is a test "),
-            PlaceholderGen(parameter=SemanticFunctionParameter(name="a", is_output=True)),
-        ]
-    )
-
-    var_mgr = SemanticVariableManager(666)
-    session_id = 0
-    var_mgr.register_local_var_space(session_id)
-    var_mgr.create_vars_for_request(session_id, request_chain)
-
-    graph.insert_and_update_request_chain(request_chain)
-
-    view_graph(graph)
 
 
 def test_graph_traverse():
@@ -169,11 +155,13 @@ def test_graph_traverse():
     request1 = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(parameter=SemanticFunctionParameter(name="a", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="a", is_output=True)
+            ),
         ]
     )
 
-    var_mgr.create_vars_for_request(session_id, request1)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request1)
     graph.insert_and_update_request_chain(request1)
     out_var0 = request1.comp_chains[0].gen_node.sv
 
@@ -184,11 +172,13 @@ def test_graph_traverse():
                     name="a", var_id=out_var0.id, is_output=False
                 )
             ),
-            PlaceholderGen(parameter=SemanticFunctionParameter(name="b", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="b", is_output=True)
+            ),
         ]
     )
 
-    var_mgr.create_vars_for_request(session_id, request2)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request2)
     graph.insert_and_update_request_chain(request2)
     out_var1 = request2.comp_chains[0].gen_node.sv
 
@@ -199,18 +189,20 @@ def test_graph_traverse():
                     name="b", var_id=out_var1.id, is_output=False
                 )
             ),
-            PlaceholderGen(parameter=SemanticFunctionParameter(name="c", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="c", is_output=True)
+            ),
         ]
     )
 
-    var_mgr.create_vars_for_request(session_id, request3)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request3)
     graph.insert_and_update_request_chain(request3)
 
     # view_graph(graph)
-    activate_completion_chain(request1.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_completion_chain(request2.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_completion_chain(request3.comp_chains[0], PerformanceCriteria.LATENCY)
-    # activate_completion_chain(request3.comp_chains[0], PerformanceCriteria.LATENCY)
+    activate_producer(request1.comp_chains[0], PerformanceCriteria.LATENCY)
+    activate_producer(request2.comp_chains[0], PerformanceCriteria.LATENCY)
+    activate_producer(request3.comp_chains[0], PerformanceCriteria.LATENCY)
+    # activate_producer(request3.comp_chains[0], PerformanceCriteria.LATENCY)
 
     # Expected results: A: depth 2, B: depth 1, C: depth 0
     requests = [request1, request2, request3]

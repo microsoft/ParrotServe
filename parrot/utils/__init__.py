@@ -11,7 +11,12 @@ from .recycle_pool import RecyclePool
 
 from .profile import cprofile, torch_profile
 
-from .serialize_utils import bytes_to_encoded_b64str, encoded_b64str_to_bytes
+from .serialize_utils import (
+    bytes_to_encoded_b64str,
+    encoded_b64str_to_bytes,
+    serialize_func_code,
+    deserialize_func_code,
+)
 
 from .misc import (
     set_random_seed,

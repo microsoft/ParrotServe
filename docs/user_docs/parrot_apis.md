@@ -2,7 +2,7 @@
 
 Parrot provides OpenAI-like APIs with the extension of Semantic Variables. As [Semantic Variables Design](../sys_design/app_layer/semantic_variable.md)
 
-### Session
+## Session
 
 Endpoint: `/{api_version}/session`
 
@@ -47,7 +47,7 @@ Response body:
 
 NOTE: A session will expire in 12H (Charging user according to time?).
 
-### Submit Semantic Function Call
+## Submit Semantic Function Call
 
 Endpoint: `/{api_version}/semantic_call`
 
@@ -58,7 +58,7 @@ Request body:
 ```json
 {
     "template": "This is a test {{a}} function. {{b}}",
-    "placeholders": [
+    "parameters": [
         {
             "name": "a",
             "is_output": false / true,
@@ -84,39 +84,53 @@ Response body:
     "request_id": "xxx",
     "session_id": "yyy",
     "created_vars": [
-            {
-                    "placeholder_name": "fff",
-                    "is_output": true / false,
-                "var_name": "ddd",
-                "var_id": "ccc",
-                "var_desc": "The first output of request xxx",
-                    "var_scope": "eeee",
-            }
+        {
+            "placeholder_name": "fff",
+            "is_output": true / false,
+            "var_name": "ddd",
+            "var_id": "ccc",
+            "var_desc": "The first output of request xxx",
+            "var_scope": "eeee",
+        }
     ]
 }
 ```
 
-### Submit Native Function Call
+## Submit Native Function Call
 
-> NOTE: This API is not stable
+> NOTE: This API is expiermental
 
 We have some built-in native functions. We don’t allow user to submit their customized code because it may introduce safety problems.
 
-Endpoint: `/{api_version}/native_call`
+Endpoint: `/{api_version}/py_native_call`
 
-- Submit a native call [POST].
+- Submit a python native function call [POST].
+
+PS: The `"func_code"` must be a string dumped from a Python binary code, encoded by `base64`.
+- We recommend using `marshal` to dump a Python code (`func.__code__`) to bytes. See `parrot/utils/serialize_utils.py`, `serialize_func_code` function.
+- For encoding a bytes using `base64` (For safe transport via HTTP), see `parrot/utils/serialize_utils.py`, `bytes_to_encoded_b64str` function.
 
 Request body:
 
 ```json
 {
-    "func_name": "xxx",
-    ... // (the detailed args are dependent to the native function called)
+    "session_id": "xxx",
+    "session_auth": "yyy",
+    "func_name": "xxx", // Function name.
+    "func_code": "some code bytes", // Bytecode of the function. If the function is cached, you can omit this field.
+    "parameters": [
+        {
+            "name": "a",
+            "is_output": false / true,
+            "var_id": "bbb", // Optional if it is output
+        },
+        ...
+    ],
 }
 ```
 
 
-### Semantic Variable
+## Semantic Variable
 
 The semantic variable object.
 
@@ -198,7 +212,7 @@ Response body:
 {}
 ```
 
-### Models
+## Models
 
 Endpoint: `/{api_version}/models`
 

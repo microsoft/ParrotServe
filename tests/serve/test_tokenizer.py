@@ -9,7 +9,10 @@ from parrot.serve.graph import (
     PlaceholderGen,
     PlaceholderFill,
 )
-from parrot.serve.graph.call_request import SemanticCallMetadata, SemanticFunctionParameter
+from parrot.serve.graph.call_request import (
+    SemanticCallMetadata,
+    SemanticFunctionParameter,
+)
 
 
 TESTING_PROMPT_TEXT = (
@@ -88,7 +91,7 @@ def test_tokenize_request():
     tokenizers_wrapper.register_tokenizer(tokenizer_name2)
 
     var0.set("Content0")
-    var_mgr.create_vars_for_request(session_id, request_chain)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
     task.tokenize_chain(tokenizers_wrapper)
 
     print(task.tokenized_result)

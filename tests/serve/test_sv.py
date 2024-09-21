@@ -4,7 +4,10 @@ from parrot.serve.graph import (
     PlaceholderFill,
     PlaceholderGen,
 )
-from parrot.serve.graph.call_request import SemanticCallMetadata, SemanticFunctionParameter
+from parrot.serve.graph.call_request import (
+    SemanticCallMetadata,
+    SemanticFunctionParameter,
+)
 from parrot.serve.variable_manager import SemanticVariableManager
 from parrot.sampling_config import SamplingConfig
 
@@ -25,7 +28,9 @@ def test_request_chain_hash():
     request_chain1 = RequestChain.from_nodes(
         nodes=[
             ConstantFill("Test1"),
-            PlaceholderFill(parameter=SemanticFunctionParameter(name="a", is_output=False)),
+            PlaceholderFill(
+                parameter=SemanticFunctionParameter(name="a", is_output=False)
+            ),
             ConstantFill("Test2"),
             PlaceholderGen(
                 parameter=SemanticFunctionParameter(
@@ -37,7 +42,9 @@ def test_request_chain_hash():
     request_chain2 = RequestChain.from_nodes(
         nodes=[
             ConstantFill("Test1"),
-            PlaceholderFill(parameter=SemanticFunctionParameter(name="a", is_output=False)),
+            PlaceholderFill(
+                parameter=SemanticFunctionParameter(name="a", is_output=False)
+            ),
             ConstantFill("Test2"),
             PlaceholderGen(
                 parameter=SemanticFunctionParameter(
@@ -49,8 +56,8 @@ def test_request_chain_hash():
 
     session_id = 0
     var_mgr.register_local_var_space(session_id)
-    var_mgr.create_vars_for_request(session_id, request_chain1)
-    var_mgr.create_vars_for_request(session_id, request_chain2)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain1)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain2)
 
     # Check the first chain
     print(request_chain1.pretty_print())

@@ -24,7 +24,7 @@ from parrot.serve.graph import (
     PlaceholderFill,
     PlaceholderGen,
     PerformanceCriteria,
-    activate_completion_chain,
+    activate_producer,
 )
 from parrot.serve.graph.call_request import SemanticFunctionParameter
 
@@ -103,17 +103,19 @@ def test_graph_executor():
                     name="a", var_id=in_var.id, is_output=False
                 )
             ),
-            PlaceholderGen(parameter=SemanticFunctionParameter(name="b", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="b", is_output=True)
+            ),
         ]
     )
 
-    var_mgr.create_vars_for_request(session_id, request)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request)
 
     engine_mgr.register_engine(engine_config)
 
     async def main():
         executor.add_request(request)
-        activate_completion_chain(request.comp_chains[0], PerformanceCriteria.LATENCY)
+        activate_producer(request.comp_chains[0], PerformanceCriteria.LATENCY)
         await asyncio.sleep(1)
         in_var.set("This is a test value.")
         await asyncio.sleep(0.1)

@@ -15,7 +15,7 @@ from parrot.exceptions import ParrotCoreInternalError
 from parrot.serve.graph import (
     PlaceholderGen,
     get_performance_criteria,
-    activate_completion_chain,
+    activate_producer,
 )
 from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig, TaskCreator
 
@@ -298,7 +298,7 @@ class ParrotServeCore:
             producer: PlaceholderGen = var.get_producer()
             if not producer.comp_chain.is_activated:
                 # Activate the chain and propagate the performance criteria
-                activate_completion_chain(
+                activate_producer(
                     producer.comp_chain, get_performance_criteria(criteria)
                 )
 

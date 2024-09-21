@@ -9,7 +9,7 @@ from typing import Tuple, Callable, List, Dict, Type, Optional, Any, Set, Union
 import regex as re
 from dataclasses import dataclass, asdict
 
-from parrot.utils import get_logger
+from parrot.utils import get_logger, serialize_func_code, deserialize_func_code
 
 from parrot.serve.graph.call_request import (
     SemanticCallMetadata as SemanticFuncMetadata,
@@ -140,7 +140,7 @@ class PyNativeFunction(BasicFunction):
     ):
         super().__init__(name, params)
 
-        self.pyfunc_code_dumped = marshal.dumps(pyfunc.__code__)
+        self.pyfunc_code_dumped = serialize_func_code(pyfunc.__code__)
         metadata_dict = NativeFuncMetadata.get_default_dict()
         metadata_dict.update(**metadata_kwargs)
         self.metadata = NativeFuncMetadata(**metadata_dict)
@@ -222,11 +222,11 @@ class PyNativeFunction(BasicFunction):
         return f"{self.name}({', '.join([f'{param.name}: {param.typ}' for param in self.params])})"
 
     def get_pyfunc(self) -> Callable:
-        code_decoded = marshal.loads(self.pyfunc_code_dumped)
+        code_deserialized = deserialize_func_code(self.pyfunc_code_dumped)
 
         # Here for the scope Dict, we pass {} because we don't want to pollute the scope.
         # Hence the pyfunc we get is just a temporary one.
-        return types.FunctionType(code_decoded, {}, self.name)
+        return types.FunctionType(code_deserialized, {}, self.name)
 
 
 class PyNativeCall(BasicCall):
@@ -245,6 +245,7 @@ class PyNativeCall(BasicCall):
 # ---------- Semantic Function ----------
 
 
+# Move to serve/graph/call_request.py
 # @dataclass
 # class SemanticFuncMetadata:
 #     """Metadata of a semantic function."""

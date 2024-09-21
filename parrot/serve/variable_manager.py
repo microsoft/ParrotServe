@@ -14,6 +14,7 @@ from parrot.constants import NONE_SEED
 from parrot.serve.graph import (
     SemanticVariable,
     RequestChain,
+    NativeFuncNode,
     ConstantFill,
     PlaceholderFill,
     PlaceholderGen,
@@ -278,7 +279,7 @@ class SemanticVariableManager:
 
         return var
 
-    def create_vars_for_request(
+    def create_vars_for_semantic_request_chain(
         self, session_id: int, request_chain: RequestChain
     ) -> None:
         """Create all the Semantic Variables in the request chain.
@@ -344,5 +345,45 @@ class SemanticVariableManager:
 
         logger.debug(
             f"SVs created for RequestChain(request_id={request_chain.request_id}):"
+            + debug_info
+        )
+
+    def create_vars_for_pynative_func(
+        self,
+        session_id: int,
+        native_func_node: NativeFuncNode,
+    ) -> None:
+        """Create all the Semantic Variables in the native func node.
+
+        Args:
+            session_id: int. The session ID.
+            native_func: NativeFuncNode. The native function node.
+        """
+
+        debug_info: str = ""
+
+        native_request = native_func_node.native_func
+
+        for key, value in native_request.parameters_map.items():
+            if value.should_create:
+                lvar = self._create_local_var_by_name(
+                    session_id=session_id,
+                    var_name=key,
+                )
+            else:
+                lvar = self._get_local_var_by_id(
+                    session_id=session_id,
+                    var_name=key,
+                )
+
+            if value.is_output:
+                native_func_node.output_vars[key] = lvar
+            else:
+                native_func_node.input_vars[key] = lvar
+
+            debug_info += f"\n\tParameter {key} -> {lvar.id}"
+
+        logger.debug(
+            f"SVs created for PyNativeCall(func_name={native_request.func_name}, request_id={native_request.request_id}):"
             + debug_info
         )

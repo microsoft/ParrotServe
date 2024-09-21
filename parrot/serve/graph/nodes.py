@@ -7,7 +7,7 @@ from typing import List, Optional, Dict
 from parrot.sampling_config import SamplingConfig
 from parrot.exceptions import parrot_assert
 
-from .call_request import SemanticFunctionParameter
+from .call_request import SemanticFunctionParameter, PyNativeCallRequest
 from .semantic_variable import SemanticVariable
 
 
@@ -15,44 +15,7 @@ class BaseNode:
     """Represent a computational node in the graph."""
 
     def __init__(self):
-        self._sv: Optional[SemanticVariable] = None
         self._id_in_graph: Optional[int] = None
-        self._completion_chain: Optional["CompletionChain"] = None
-        # self.request_chain: Optional["RequestChain"] = None
-
-        # Edge type A: Fill -> Fill -> Fill -> Gen -> Fill -> Fill -> Gen -> ...
-        self._edge_a_prev_node: Optional["BaseNode"] = None
-        self._edge_a_next_node: Optional["BaseNode"] = None
-
-    # ---------- SV ----------
-
-    @property
-    def has_sv(self) -> bool:
-        """Whether the node has a SV."""
-
-        return self._sv is not None
-
-    @property
-    def sv(self) -> SemanticVariable:
-        parrot_assert(self.has_sv, "This node has no SV.")
-        return self._sv
-
-    def set_sv(self, sv: SemanticVariable) -> None:
-        self._sv = sv
-
-    # ---------- Node Properties ----------
-
-    @property
-    def is_gen(self) -> bool:
-        """Whether the node is a Gen node."""
-
-        return isinstance(self, PlaceholderGen)
-
-    @property
-    def has_placeholder(self) -> bool:
-        """Whether the node has a placeholder."""
-
-        return not isinstance(self, ConstantFill)
 
     # ---------- Graph ----------
 
@@ -70,7 +33,108 @@ class BaseNode:
     def set_id_in_graph(self, id_in_graph: int) -> None:
         self._id_in_graph = id_in_graph
 
-    def link_edge_a_with(self, prev_node: "BaseNode") -> None:
+    # ---------- Polling ----------
+
+    async def wait_ready(self) -> None:
+        """Wait until the node is ready."""
+
+        raise NotImplementedError
+
+    # ---------- Display ----------
+
+    def _get_display_elements(self) -> Dict:
+        raise NotImplementedError
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            + ", ".join([f"{k}={v}" for k, v in self._get_display_elements().items()])
+            + ")"
+        )
+
+    def pretty_print(self) -> str:
+        """Pretty print the node."""
+
+        ret = self.__class__.__name__ + ":\n"
+        for k, v in self._get_display_elements().items():
+            ret += f"\t{k}: {v}\n"
+        return ret
+
+    def _short_repr_add_graph_id(self, repr: str) -> str:
+        if self.is_inserted:
+            return f"{self._id_in_graph}: " + repr
+        return repr
+
+    def short_repr(self) -> str:
+        """Short representation of the node."""
+
+        return self._short_repr_add_graph_id("BaseNode")
+
+
+class SemanticNode(BaseNode):
+    """Represent a semantic computational node in the graph."""
+
+    def __init__(self):
+        super().__init__()
+
+        self._sv: Optional[SemanticVariable] = None
+        self._completion_chain: Optional["CompletionChain"] = None
+        # self.request_chain: Optional["RequestChain"] = None
+
+        # Edge type A: Fill -> Fill -> Fill -> Gen -> Fill -> Fill -> Gen -> ...
+        self._edge_a_prev_node: Optional["SemanticNode"] = None
+        self._edge_a_next_node: Optional["SemanticNode"] = None
+
+    @property
+    def is_gen(self) -> bool:
+        """Whether the node is a Gen node."""
+
+        return isinstance(self, PlaceholderGen)
+
+    @property
+    def has_placeholder(self) -> bool:
+        """Whether the node has a placeholder."""
+
+        return not isinstance(self, ConstantFill)
+
+    # ---------- SV ----------
+
+    @property
+    def has_sv(self) -> bool:
+        """Whether the node has a SV."""
+
+        return self._sv is not None
+
+    @property
+    def sv(self) -> SemanticVariable:
+        parrot_assert(self.has_sv, "This node has no SV.")
+        return self._sv
+
+    def set_sv(self, sv: SemanticVariable) -> None:
+        self._sv = sv
+
+    @property
+    def sv_name(self) -> str:
+        # parrot_assert(self.has_var, "This node has no SV.")
+        if not self.has_sv:
+            return "(no SV)"
+        return self.sv.name
+
+    @property
+    def var_id(self) -> str:
+        # parrot_assert(self.has_var, "This node has no SV.")
+        if not self.has_sv:
+            return "(no SV)"
+        return self.sv.id
+
+    def get(self) -> str:
+        """Get the content of the node."""
+
+        return self.sv.get()
+
+    # ---------- Graph ----------
+
+    def link_edge_a_with(self, prev_node: "SemanticNode") -> None:
         """Link the node with its predecessor in edge type A."""
 
         self._edge_a_prev_node = prev_node
@@ -84,23 +148,23 @@ class BaseNode:
     def has_edge_a_next_node(self) -> bool:
         return self._edge_a_next_node is not None
 
-    def get_edge_a_prev_node(self) -> Optional["BaseNode"]:
+    def get_edge_a_prev_node(self) -> Optional["SemanticNode"]:
         return self._edge_a_prev_node
 
-    def get_edge_a_next_node(self) -> Optional["BaseNode"]:
+    def get_edge_a_next_node(self) -> Optional["SemanticNode"]:
         return self._edge_a_next_node
 
     @property
     def has_edge_b_prev_node(self) -> bool:
         return self.sv.has_producer
 
-    def get_edge_b_prev_node(self) -> Optional["BaseNode"]:
+    def get_edge_b_prev_node(self) -> Optional["SemanticNode"]:
         """Edge type B: prev node. 0 or 1."""
 
         parrot_assert(self.is_inserted, "Should be inserted before get DAG info.")
         return self.sv.get_producer()
 
-    def get_edge_b_next_nodes(self) -> List["BaseNode"]:
+    def get_edge_b_next_nodes(self) -> List["SemanticNode"]:
         """Edge type B: next node. Only Gen node has multiple next nodes."""
 
         parrot_assert(self.is_inserted, "Should be inserted before get DAG info.")
@@ -139,55 +203,8 @@ class BaseNode:
 
         await self.sv.wait_ready()
 
-    @property
-    def sv_name(self) -> str:
-        # parrot_assert(self.has_var, "This node has no SV.")
-        if not self.has_sv:
-            return "(no SV)"
-        return self.sv.name
 
-    @property
-    def var_id(self) -> str:
-        # parrot_assert(self.has_var, "This node has no SV.")
-        if not self.has_sv:
-            return "(no SV)"
-        return self.sv.id
-
-    def get(self) -> str:
-        """Get the content of the node."""
-
-        return self.sv.get()
-
-    def _get_display_elements(self) -> Dict:
-        raise NotImplementedError
-
-    def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}("
-            + ", ".join([f"{k}={v}" for k, v in self._get_display_elements().items()])
-            + ")"
-        )
-
-    def pretty_print(self) -> str:
-        """Pretty print the node."""
-
-        ret = self.__class__.__name__ + ":\n"
-        for k, v in self._get_display_elements().items():
-            ret += f"\t{k}: {v}\n"
-        return ret
-
-    def _short_repr_add_graph_id(self, repr: str) -> str:
-        if self.is_inserted:
-            return f"{self._id_in_graph}: " + repr
-        return repr
-
-    def short_repr(self) -> str:
-        """Short representation of the node."""
-
-        return self._short_repr_add_graph_id("BaseNode")
-
-
-class ConstantFill(BaseNode):
+class ConstantFill(SemanticNode):
     """Represent a fill node (constant) in the graph."""
 
     def __init__(self, constant_text: str):
@@ -211,12 +228,12 @@ class ConstantFill(BaseNode):
         return self._short_repr_add_graph_id("ConstantFill(" + short_text + ")")
 
 
-class PlaceholderFill(BaseNode):
+class PlaceholderFill(SemanticNode):
     """Represent a fill node (placeholder) in the graph."""
 
     def __init__(self, parameter: SemanticFunctionParameter):
         super().__init__()
-        self.placeholder_param = parameter # The referred parameter of this placeholder
+        self.placeholder_param = parameter  # The referred parameter of this placeholder
 
     def _get_display_elements(self) -> Dict:
         return {
@@ -231,12 +248,12 @@ class PlaceholderFill(BaseNode):
         )
 
 
-class PlaceholderGen(BaseNode):
+class PlaceholderGen(SemanticNode):
     """Represent a gen node (placeholder, actually it must be) in the graph."""
 
     def __init__(self, parameter: SemanticFunctionParameter):
         super().__init__()
-        self.placeholder_param = parameter # The referred parameter of this placeholder
+        self.placeholder_param = parameter  # The referred parameter of this placeholder
 
     @property
     def sampling_config(self) -> SamplingConfig:
@@ -251,8 +268,75 @@ class PlaceholderGen(BaseNode):
         }
 
     def short_repr(self) -> str:
-        return self._short_repr_add_graph_id(f"PlaceholderGen({self.placeholder_param.name})")
+        return self._short_repr_add_graph_id(
+            f"PlaceholderGen({self.placeholder_param.name})"
+        )
 
     # async def wait_ready(self):
     #     """NOTE(chaofan): We don't need to wait Gen to be ready."""
     #     pass
+
+
+class NativeFuncNode(BaseNode):
+    """Represent a native function in the graph."
+
+    For simplicity, we represent the entire native function as a big node in the graph.
+    """
+
+    def __init__(self, native_func: PyNativeCallRequest):
+        super().__init__()
+
+        self.native_func = native_func
+        self.input_vars: Dict[str, SemanticVariable] = {}
+        self.output_vars: Dict[str, SemanticVariable] = {}
+
+    def get_prev_producers(self) -> List[BaseNode]:
+        """Get the previous producers of this node."""
+
+        prev_producers = []
+        for sv in self.input_vars.values():
+            producer = sv.get_producer()
+            if producer is not None:
+                prev_producers.append(producer)
+        return prev_producers
+
+    def get_next_consumers(self) -> List[BaseNode]:
+        """Get the next consumers of this node."""
+
+        next_consumers = []
+        for sv in self.output_vars.values():
+            consumers = sv.get_consumers()
+            next_consumers.extend(consumers)
+        return next_consumers
+
+    def _get_display_elements(self) -> Dict:
+        return {
+            "sv_name": self.sv_name,
+            "var_id": self.var_id,
+            "func_name": self.native_func.func_name,
+        }
+
+    def short_repr(self) -> str:
+        return self._short_repr_add_graph_id(
+            f"NativeFuncNode({self.native_func.func_name})"
+        )
+
+    @classmethod
+    def from_variables(
+        cls,
+        func_name: str,
+        input_vars: Dict[str, SemanticVariable],
+        output_vars: Dict[str, SemanticVariable],
+    ) -> "NativeFuncNode":
+        """Create a NativeFuncNode from input and output SVs.
+
+        Only for displaying.
+        """
+
+        pseudo_native_func = PyNativeCallRequest(
+            request_id=0, session_id=0, func_name=func_name, func_code=None
+        )
+        node = cls(pseudo_native_func)
+        node.input_vars = input_vars
+        node.output_vars = output_vars
+        return node

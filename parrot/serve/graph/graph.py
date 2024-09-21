@@ -16,7 +16,14 @@ from .call_request import (
     SemanticCallMetadata,
     ChunkedSemanticCallRequest,
 )
-from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
+from .nodes import (
+    BaseNode,
+    SemanticNode,
+    ConstantFill,
+    PlaceholderFill,
+    PlaceholderGen,
+    NativeFuncNode,
+)
 
 
 """Data structures for a set of nodes in Graph."""
@@ -24,13 +31,13 @@ from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
 
 class _CompletionChainIterator:
 
-    def __init__(self, first_node: BaseNode) -> None:
+    def __init__(self, first_node: SemanticNode) -> None:
         self._cur_node = first_node
 
     def __iter__(self) -> "_CompletionChainIterator":
         return self
 
-    def __next__(self) -> BaseNode:
+    def __next__(self) -> SemanticNode:
         if self._cur_node is None or (
             self._cur_node.has_edge_a_prev_node
             and self._cur_node.get_edge_a_prev_node().is_gen
@@ -44,7 +51,7 @@ class _CompletionChainIterator:
 
 class _CompletionChainFillIterator:
 
-    def __init__(self, first_node: BaseNode) -> None:
+    def __init__(self, first_node: SemanticNode) -> None:
         self._cur_node = first_node
 
     def __iter__(self) -> "_CompletionChainFillIterator":
@@ -77,7 +84,7 @@ class CompletionChain:
     def __init__(
         self,
         request_chain: "RequestChain",
-        first_node: BaseNode,
+        first_node: SemanticNode,
         gen_node: Optional[PlaceholderGen],
     ) -> None:
         self._request_chain = request_chain
@@ -163,13 +170,13 @@ class CompletionChain:
 
 class _RequestChainIterator:
 
-    def __init__(self, first_node: BaseNode) -> None:
+    def __init__(self, first_node: SemanticNode) -> None:
         self._cur_node = first_node
 
     def __iter__(self) -> "_RequestChainIterator":
         return self
 
-    def __next__(self) -> BaseNode:
+    def __next__(self) -> SemanticNode:
         if self._cur_node is None:
             raise StopIteration
         else:
@@ -191,7 +198,7 @@ class RequestChain:
         self,
         request_id: int,
         session_id: int,
-        first_node: BaseNode,
+        first_node: SemanticNode,
         metadata: SemanticCallMetadata,
     ) -> None:
         self.request_id = request_id
@@ -235,7 +242,7 @@ class RequestChain:
     @classmethod
     def from_nodes(
         cls,
-        nodes: List[BaseNode],
+        nodes: List[SemanticNode],
         metadata: SemanticCallMetadata = SemanticCallMetadata.get_default(),
     ) -> "RequestChain":
         """Convert a list of nodes into a RequestChain.
@@ -281,7 +288,7 @@ class RequestChain:
     ) -> "RequestChain":
         """Convert a ChunkedRequest into a RequestChain."""
 
-        prev_node: Optional[BaseNode] = None
+        prev_node: Optional[SemanticNode] = None
 
         for i, chunk in enumerate(chunked_request.body):
             is_gen: bool = False
@@ -365,17 +372,18 @@ class ComputeGraph:
         id_in_graph = self._node_id_pool.allocate()
         node.set_id_in_graph(id_in_graph)
 
-        # Link edge type B
-        if node.is_gen:
-            node.sv.assign_producer(node)
-        else:
-            node.sv.add_consumer(node)
+        if isinstance(node, SemanticNode):
+            # Link edge type B
+            if node.is_gen:
+                node.sv.assign_producer(node)
+            else:
+                node.sv.add_consumer(node)
 
     def insert_and_update_request_chain(self, request_chain: RequestChain) -> None:
         """Insert a RequestChain into the graph, and update its info.
 
-        After inserted, "created vars" can be fetched from this object. 
-        "Created vars" records the information of newly created semantic variables in this process, 
+        After inserted, "created vars" can be fetched from this object.
+        "Created vars" records the information of newly created semantic variables in this process,
         including their corresponding parameters' names.
         """
 
@@ -407,6 +415,11 @@ class ComputeGraph:
                     }
                 )
         self.chains.extend(request_chain.comp_chains)
+
+    def insert_native_func_node(self, native_func_node: NativeFuncNode) -> None:
+        """Insert a NativeFuncNode into the graph."""
+
+        self._insert_node(native_func_node)
 
     def remove_completion_chain(self, completion_chain: CompletionChain) -> None:
         """Remove a CompletionChain from the graph. This is called when the task is finished."""

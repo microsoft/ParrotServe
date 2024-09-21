@@ -54,8 +54,8 @@ The syntax is just like the conventional definition of Python function. But ther
 from parrot import P # 'P' is the alias of pfunc lang.
 
 @P.native_function() # Here we can add some arguments
-def str_concat(a: P.Input, b: P.Input):
-    return a + b # Directly use the string grammar in Semantic Variable
+def str_concat(a: P.Input, b: P.Input, c: P.Output):
+    c = a + b # Directly use the string grammar in Semantic Variable
 
 async def main():
     # Create two SVs
@@ -67,5 +67,5 @@ async def main():
 ```
 
 - Native functions are cached: If you call the same Native Function a second time (based on the function name), you can omit the code part of the function. Parrot will automatically use the cached function code.
-- Currently we only support single ret value. (Future improvement: support `P.Output` in the parameter list)
+- Don't use `return` in the function body because we include return values (outputs) in the parameter list.
 - Currently there is no sandbox / execution environment in the server side. So it's easy to inject malicious code into the system through native functions.

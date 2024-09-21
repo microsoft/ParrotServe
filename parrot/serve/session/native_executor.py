@@ -5,50 +5,60 @@ from typing import Optional, Dict
 
 from parrot.utils import get_logger
 from parrot.exceptions import parrot_assert
+from parrot.serve.graph import NativeFuncNode, ComputeGraph
 
 
 logger = get_logger("NativeExecutor")
 
 
-class NativeExecutor:
+class MutablePyStringProxy:
     """
-    NativeExecutor in a session directly executes a native function in the
-    server side.
+    A wrapper for Python strings to make them mutable.
     """
 
-    def __init__(
-        self,
-        session_id: int
-    ):
+    def __init__(self, content: Optional[str] = None) -> None:
+        self.content = ""
+        if content is not None:
+            self.content = content
+
+    def __getattr__(self, name):
+        # Proxy to the content.
+        target_attr = getattr(self.content, name)
+        return target_attr
+
+
+class PyNativeExecutor:
+    """
+    PyNativeExecutor in a session directly executes a Python native function in the server side.
+    """
+
+    def __init__(self, session_id: int, graph: ComputeGraph) -> None:
         # ---------- Basic Info ----------
         self.session_id = session_id
-        
+        self.graph = graph
+
         # ---------- Runtime ----------
         self.bad_exception: Optional[Exception] = None
 
-    async def _execute_coroutine(self, completion_chain: CompletionChain) -> None:
-        """Coroutine for executing a CompletionChain."""
+    async def _execute_coroutine(self, func: NativeFuncNode) -> None:
+        """Coroutine for executing a PyNativeCallRequest."""
 
         try:
-            # Block until it's activated by a GET.
-            await completion_chain.wait_activated()
-
-            # Create a task object for the completion chain.
-            task = self.task_creator.create_task(completion_chain)
-
             # Block until all inputs are ready.
-            for node in completion_chain.iter_fill():
-                await node.wait_ready()
+            for parameter in request.parameters_map.values():
+                if parameter.has_var:
+                    parrot_assert(
+                        parameter.var_set,
+                        f"Variable is not set for Parameter {parameter.name}.",
+                    )
+                    await parameter.var.wait_ready()
 
-            # Tokenize the task.
-            task.tokenize_chain(self.tokenizers_wrapper)
+            # Execute the native function.
+            pyfunc = request.executable_func
 
-            # Submit the task to the scheduler and wait for the task to be scheduled.
-            self.scheduler.submit_task(task)
-            await task.wait_scheduled()
         except Exception as e:
             logger.error(
-                f"Error when scheduling chain. (session_id={self.session_id}): {e}"
+                f"Error when executing Python native function. (func_name={request.func_name}, session_id={self.session_id}): {e}"
             )
             self.exception_interrupt(e)
             return
@@ -67,11 +77,11 @@ class NativeExecutor:
     def exception_interrupt(self, exception: BaseException):
         self.bad_exception = exception
 
-    def add_request(self, request_chain: RequestChain) -> None:
-        """Add a request to the graph and assign a coroutine to the request."""
+    def add_native_func(self, func_node: NativeFuncNode) -> None:
+        """Add a native function to the graph and assign a coroutine to the request."""
 
         logger.debug(
-            f"Add Request(request_id={request_chain.request_id}) to executor of Session(session_id={self.session_id})."
+            f"Add NativeFunc(request_id={func_node.native_func.request_id}) to executor of Session(session_id={self.session_id})."
         )
 
         # Insert the request chain into the graph.
@@ -81,8 +91,8 @@ class NativeExecutor:
         for completion_chain in request_chain.comp_chains:
             create_task_in_loop(self._execute_coroutine(completion_chain))
 
-    async def execute(self, completion_task: CompletionTask) -> None:
-        """Execute a CompletionTask."""
+    async def execute(self, func: NativeFuncNode) -> None:
+        """Execute a NativeFunc."""
 
         parrot_assert(completion_task.is_scheduled, "Task is not scheduled.")
 
