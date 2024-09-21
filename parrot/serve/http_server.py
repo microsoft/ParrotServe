@@ -82,7 +82,7 @@ async def get_session_info(session_id: int, request: Request):
     raise NotImplementedError("Not implemented yet.")
 
 
-@app.post(f"/{API_VERSION}/submit_semantic_call")
+@app.post(f"/{API_VERSION}/semantic_call")
 async def submit_semantic_call(request: Request):
     # Sleep simulate network latency
     latency_open = os.environ.get("SIMULATE_NETWORK_LATENCY_PRT", None)

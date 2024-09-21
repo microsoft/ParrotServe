@@ -185,7 +185,7 @@ class GlobalScheduler:
         if self.config.app_fifo:
             # Sort the tasks by the order of depth
             # The deeper the chain, the higher the priority
-            self.task_queue.sort(key=lambda x: -x.chain.depth)
+            self.task_queue.sort(key=lambda x: -x.chain.gen_node.sv.depth)
 
         # NOTE(chaofan): The tasks are sorted by priority, by default.
         for i, task in enumerate(self.task_queue):

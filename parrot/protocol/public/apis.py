@@ -21,8 +21,8 @@ Session (RESTful):
     - remove_session POST (`/session/{session_id}`, DELETE)
 
 Function Call:
-    - submit_semantic_call POST
-    - submit_native_call POST (TODO)
+    - semantic_call/ POST
+    - py_native_call/ POST
 
 Semantic Variable (RESTful):
     - register_semantic_variable (`/semantic_var/`, POST)
@@ -129,7 +129,7 @@ def submit_semantic_call(
         return send_http_request(
             SubmitSemanticCallResponse,
             http_addr,
-            f"/{API_VERSION}/submit_semantic_call",
+            f"/{API_VERSION}/semantic_call",
             retry_times=1,
             session_id=session_id,
             **payload,
@@ -150,7 +150,7 @@ async def asubmit_semantic_call(
                 client_session,
                 SubmitSemanticCallResponse,
                 http_addr,
-                f"/{API_VERSION}/submit_semantic_call",
+                f"/{API_VERSION}/semantic_call",
                 retry_times=1,
                 session_id=session_id,
                 **payload,
@@ -169,7 +169,7 @@ def submit_py_native_call(
         return send_http_request(
             SubmitPyNativeCallResponse,
             http_addr,
-            f"/{API_VERSION}/submit_py_native_call",
+            f"/{API_VERSION}/py_native_call",
             retry_times=1,
             session_id=session_id,
             **payload,

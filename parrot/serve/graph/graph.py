@@ -5,7 +5,11 @@
 from asyncio import Event
 from typing import List, Dict, Set, Optional, Union
 
-from parrot.exceptions import parrot_assert, ParrotCoreUserError
+from parrot.exceptions import (
+    parrot_assert,
+    ParrotCoreUserError,
+    ParrotCoreInternalError,
+)
 from parrot.utils import RecyclePool
 
 from .perf_criteria import PerformanceCriteria
@@ -96,13 +100,6 @@ class CompletionChain:
         for node in self.iter():
             node.set_comp_chain(self)
 
-        # Activate
-        self._activated_event: Event = Event()
-        # Performance criteria of "get" to the GenNode.
-        self._criteria: Optional[PerformanceCriteria] = None
-        # Distance to "get" node.
-        self._depth: int = 99999
-
         # Groups this chain belongs to.
         self.chain_groups: List[CompChainGroup] = []
 
@@ -113,10 +110,6 @@ class CompletionChain:
     @property
     def session_id(self) -> int:
         return self._request_chain.session_id
-
-    @property
-    def is_activated(self) -> bool:
-        return self._activated_event.is_set()
 
     @property
     def sv_created(self) -> bool:
@@ -136,30 +129,6 @@ class CompletionChain:
         # ret += "Metadata: \n" + str(self.metadata) + "\n"
 
         return ret
-
-    def activate(self, criteria: PerformanceCriteria, depth: int) -> None:
-        """Activate the CompletionChain with a given PerformanceCriteria."""
-
-        parrot_assert(
-            not self.is_activated,
-            "CompletionChain has been activated.",
-        )
-        self._criteria = criteria
-        self._depth = depth
-        self._activated_event.set()
-
-    async def wait_activated(self) -> None:
-        await self._activated_event.wait()
-
-    @property
-    def criteria(self) -> PerformanceCriteria:
-        parrot_assert(self.is_activated, "CompletionChain has not been activated.")
-        return self._criteria
-
-    @property
-    def depth(self) -> int:
-        parrot_assert(self.is_activated, "CompletionChain has not been activated.")
-        return self._depth
 
     def iter(self) -> _CompletionChainIterator:
         return _CompletionChainIterator(self.first_node)
@@ -303,7 +272,7 @@ class RequestChain:
                 else:
                     node = PlaceholderFill(parameter=parameter)
             else:
-                raise ParrotCoreUserError(ValueError("Unknown chunk type."))
+                raise ParrotCoreInternalError(ValueError("Unknown chunk type."))
 
             # Link edge type A with previous node.
             if prev_node is not None:
@@ -378,6 +347,15 @@ class ComputeGraph:
                 node.sv.assign_producer(node)
             else:
                 node.sv.add_consumer(node)
+        elif isinstance(node, NativeFuncNode):
+            # NativeFuncNode
+            for var in node.input_vars.values():
+                var.add_consumer(node)
+
+            for var in node.output_vars.values():
+                var.assign_producer(node)
+        else:
+            raise ParrotCoreInternalError(ValueError("Unknown node type."))
 
     def insert_and_update_request_chain(self, request_chain: RequestChain) -> None:
         """Insert a RequestChain into the graph, and update its info.
@@ -433,12 +411,12 @@ class ComputeGraph:
 
             # Maintain the param info
             # HACK: Access the private member directly
-            request._param_info.append(
+            native_func_node._param_info.append(
                 {
                     "parameter_name": param.name,
                     "is_output": param.is_output,
-                    "var_name": sv.sv_name,
-                    "var_id": sv.var_id,
+                    "var_name": sv.name,
+                    "var_id": sv.id,
                 }
             )
 

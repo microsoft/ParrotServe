@@ -5,6 +5,7 @@ from typing import List, Optional
 from asyncio import Event
 
 from parrot.exceptions import parrot_assert
+from .perf_criteria import PerformanceCriteria
 
 
 # ---------- SemanticVariable ----------
@@ -59,6 +60,13 @@ class SemanticVariable:
         # Consumers of this SV. It must be Fill nodes.
         self._consumers: List["PlaceholderFill"] = []
 
+        # Activate
+        self._activated_event: Event = Event()
+        # Performance criteria of "get" to this SV.
+        self._criteria: Optional[PerformanceCriteria] = None
+        # Distance to "get" node.
+        self._depth: int = 99999
+
     def is_ready(self) -> bool:
         return self._ready_event.is_set()
 
@@ -83,7 +91,7 @@ class SemanticVariable:
 
         await self._ready_event.wait()
 
-    def assign_producer(self, producer: "PlaceholderGen") -> None:
+    def assign_producer(self, producer: "SVProducer") -> None:
         """Assign the producer of this SV. This will add some edges in the graph."""
 
         parrot_assert(self._producer is None, "This SV already has a producer")
@@ -103,3 +111,31 @@ class SemanticVariable:
 
     def get_consumers(self) -> List["PlaceholderFill"]:
         return self._consumers
+
+    def activate(self, criteria: PerformanceCriteria, depth: int) -> None:
+        """Activate the Semantic Variable with a given PerformanceCriteria."""
+
+        parrot_assert(
+            not self.is_activated,
+            "Semantic Variable has been activated.",
+        )
+        self._criteria = criteria
+        self._depth = depth
+        self._activated_event.set()
+
+    @property
+    def is_activated(self) -> bool:
+        return self._activated_event.is_set()
+
+    async def wait_activated(self) -> None:
+        await self._activated_event.wait()
+
+    @property
+    def criteria(self) -> PerformanceCriteria:
+        parrot_assert(self.is_activated, "Semantic Variable has not been activated.")
+        return self._criteria
+
+    @property
+    def depth(self) -> int:
+        parrot_assert(self.is_activated, "Semantic Variable has not been activated.")
+        return self._depth

@@ -9,7 +9,7 @@ import re
 
 from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.sampling_config import SamplingConfig
-from parrot.utils import deserialize_func_code
+from parrot.utils import deserialize_func_code, encoded_b64str_to_bytes
 
 from .semantic_variable import SemanticVariable
 from .perf_criteria import PerformanceCriteria
@@ -49,6 +49,7 @@ class SemanticFunctionParameter:
     name: str
     is_output: bool
     var_id: Optional[str] = None
+    value: Optional[Any] = None
     sampling_config: Optional[Union[Dict, SamplingConfig]] = None
 
     def __post_init__(self) -> None:
@@ -68,6 +69,12 @@ class SemanticFunctionParameter:
             if self.sampling_config is not None:
                 raise ValueError("Input parameter should not have sampling_config.")
 
+        if self.var_id is not None and self.value is not None:
+            raise ValueError("Parameter should not have both var_id and value.")
+
+        if not self.is_output and self.var_id is None and self.value is None:
+            raise ValueError("Input parameter should have either var_id or value.")
+
     @property
     def has_var(self) -> bool:
         """Return whether the parameter has an existing semantic variable."""
@@ -75,11 +82,17 @@ class SemanticFunctionParameter:
         return self.var_id is not None
 
     @property
+    def has_value(self) -> bool:
+        """Return whether the parameter has a value."""
+
+        return self.value is not None
+
+    @property
     def should_create(self) -> bool:
         """Return whether we should created a new SV for this parameter.
 
         Case 1: The parameter is an output parameter.
-        Case 2: The parameter is an input parameter and has no value.
+        Case 2: The parameter is an input parameter and has init value (hence, no var).
         """
 
         return self.is_output or not self.has_var
@@ -296,6 +309,11 @@ class ChunkedSemanticCallRequest:
 class NativeCallMetadata:
     """Metadata of a native function."""
 
+    REQUEST_METADATA_KEYS = [
+        "timeout",
+        "output_criteria",
+    ]
+
     timeout: (
         float  # If the function execution surpass this timeout, it will be terminated.
     )
@@ -306,7 +324,7 @@ class NativeCallMetadata:
         """Get the default metadata for a Request in dict format."""
 
         return {
-            "timeout": 999999,
+            "timeout": 1.0,
             "output_criteria": None,
         }
 
@@ -335,8 +353,8 @@ class NativeFunctionParameter:
         if self.var_id is not None and self.value is not None:
             raise ValueError("Parameter should not have both var_id and value.")
 
-        if self.var_id is None and self.value is None:
-            raise ValueError("Parameter should have either var_id or value.")
+        if not self.is_output and self.var_id is None and self.value is None:
+            raise ValueError("Input parameter should have either var_id or value.")
 
     @property
     def has_var(self) -> bool:
@@ -355,7 +373,7 @@ class NativeFunctionParameter:
         """Return whether we should created a new SV for this parameter.
 
         Case 1: The parameter is an output parameter.
-        Case 2: The parameter is an input parameter and has no value.
+        Case 2: The parameter is an input parameter and has init value (hence, no var).
         """
 
         return self.is_output or not self.has_var
@@ -419,20 +437,20 @@ class PyNativeCallRequest:
         payload = cls._preprocess(payload)
 
         # Get arguments from payload packet.
-        template: str = payload["template"]
         parameters: Dict = payload["parameters"]
 
         # Step 1. Packing metadata.
-        metadata_dict = PyNativeCallRequest.get_default_dict()
-        for key in PyNativeCallRequest.REQUEST_METADATA_KEYS:
+        metadata_dict = NativeCallMetadata.get_default_dict()
+        for key in NativeCallMetadata.REQUEST_METADATA_KEYS:
             if key in payload:
                 metadata_dict[key] = payload[key]
-        metadata = PyNativeCallRequest(**metadata_dict)
+        metadata = NativeCallMetadata(**metadata_dict)
 
         # Step 2. Extract the name and the code.
         func_name = payload["func_name"]
         func_code_serialized = payload.get("func_code", None)
         if func_code_serialized is not None:
+            func_code_serialized = encoded_b64str_to_bytes(func_code_serialized)
             func_code = deserialize_func_code(func_code_serialized)
 
         pynative_request = cls(

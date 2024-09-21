@@ -9,7 +9,12 @@ from typing import Tuple, Callable, List, Dict, Type, Optional, Any, Set, Union
 import regex as re
 from dataclasses import dataclass, asdict
 
-from parrot.utils import get_logger, serialize_func_code, deserialize_func_code
+from parrot.utils import (
+    get_logger,
+    serialize_func_code,
+    deserialize_func_code,
+    bytes_to_encoded_b64str,
+)
 
 from parrot.serve.graph.call_request import (
     SemanticCallMetadata as SemanticFuncMetadata,
@@ -97,6 +102,7 @@ class BasicCall(ABC):
             #     raise ValueError(
             #         f"Argument {name} is an output parameter hence cannot be set."
             #     )
+            # Can only be keyword arguments for Outputs.
             self._set_value(param, arg_value, self.bindings)
 
         # Create output variables.
@@ -108,138 +114,37 @@ class BasicCall(ABC):
                 self._set_value(param, out_var, self.bindings)
 
     @staticmethod
-    def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]):
-        if param.typ != ParamType.INPUT_PYOBJ:
-            if not isinstance(value, str) and not isinstance(value, SemanticVariable):
+    def _set_value(param: Parameter, value: Any, bindings: Dict[str, Any]) -> None:
+        # Python object
+        if param.typ == ParamType.INPUT_PYOBJ:
+            bindings[param.name] = value
+        elif param.typ == ParamType.INPUT_LOC:
+            if not isinstance(value, SemanticVariable):
+                # For Python object, we use __str__ instead of __repr__ to serialize it.
+                value = str(value)
+
+                # Create a new SemanticVariable for this type of input.
+                in_var = SemanticVariable(name=param.name, register=False)
+                in_var.set(value)  # It has initial value.
+                bindings[param.name] = in_var
+            else:
+                # Referring existing SemanticVariable.
+                bindings[param.name] = value
+        else:
+            if not isinstance(value, SemanticVariable):
                 raise TypeError(
-                    f"Argument {param.name} in an input loc should be a str or a SemanticVariable, "
+                    f"Value of argument {param.name} in an output loc should be a SemanticVariable, "
                     f"but got {type(value)}: {value}"
                 )
-        else:
-            # For Python object, we use __str__ instead of __repr__ to serialize it.
-            value = str(value)
-        bindings[param.name] = value
+            bindings[param.name] = value
 
-
-# ---------- Python Native Function ----------
-
-
-class PyNativeFunction(BasicFunction):
-    """Python native function.
-
-    It should be defined by a Python function, with inputs and outputs as strings.
-    """
-
-    def __init__(
-        self,
-        name,
-        pyfunc: Callable,
-        params: List[Parameter],
-        try_register: bool = True,
-        **metadata_kwargs,
-    ):
-        super().__init__(name, params)
-
-        self.pyfunc_code_dumped = serialize_func_code(pyfunc.__code__)
-        metadata_dict = NativeFuncMetadata.get_default_dict()
-        metadata_dict.update(**metadata_kwargs)
-        self.metadata = NativeFuncMetadata(**metadata_dict)
-
-        if try_register:
-            # This will generate a register warning if the VM environment is not set.
-            self._register_function()
-
-    def __call__(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
-        """Call to a native function."""
-
-        return self._call_func(*args, **kwargs)
-
-    def invoke(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
-        """Same as __call__."""
-
-        return self._call_func(*args, **kwargs)
-
-    async def ainvoke(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
-        """Async call."""
-
-        return await self._acall_func(*args, **kwargs)
-
-    def _call_func(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
-        call = PyNativeCall(self, *args, **kwargs)
-        if BasicFunction._virtual_machine_env is not None:
-            BasicFunction._virtual_machine_env.submit_call_handler(call)
-        else:
-            logger.warning(
-                "VM environment is not set. Not submit the Call. Return Call instead. "
-                "(Please run a Parrot function under a VM context.)"
-            )
-            return call
-
-        # Unpack the output SemanticVariables
-        if len(call.output_vars) == 1:
-            return call.output_vars[0]
-        return tuple(call.output_vars)
-
-    async def _acall_func(
-        self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
-        call = PyNativeCall(self, *args, **kwargs)
-        if BasicFunction._virtual_machine_env is not None:
-            # Different from _call_func, we use asubmit_call_handler here.
-            await BasicFunction._virtual_machine_env.asubmit_call_handler(call)
-        else:
-            logger.warning(
-                "VM environment is not set. Not submit the Call. Return Call instead. "
-                "(Please run a Parrot function under a VM context.)"
-            )
-            return call
-
-        # Unpack the output SemanticVariables
-        if len(call.output_vars) == 1:
-            return call.output_vars[0]
-        return tuple(call.output_vars)
-
-    def display_signature(self) -> str:
-        """Display the function signature."""
-        return f"{self.name}({', '.join([f'{param.name}: {param.typ}' for param in self.params])})"
-
-    def get_pyfunc(self) -> Callable:
-        code_deserialized = deserialize_func_code(self.pyfunc_code_dumped)
-
-        # Here for the scope Dict, we pass {} because we don't want to pollute the scope.
-        # Hence the pyfunc we get is just a temporary one.
-        return types.FunctionType(code_deserialized, {}, self.name)
-
-
-class PyNativeCall(BasicCall):
-    """A call to a native function."""
-
-    def __init__(
-        self,
-        func: "PyNativeFunction",
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
-    ):
-        # ---------- Basic Info ----------
-        super().__init__(func, *args, **kwargs)
+    def update_var_ids(self, param_info: List[Dict]) -> None:
+        for mapping in param_info:
+            param_name = mapping["parameter_name"]
+            var_id = mapping["var_id"]
+            var = self.bindings[param_name]
+            assert isinstance(var, SemanticVariable), f"Unexpected var type: {var}"
+            var.assign_id(var_id)
 
 
 # ---------- Semantic Function ----------
@@ -501,14 +406,6 @@ class SemanticCall(BasicCall):
     ):
         super().__init__(func, *args, **kwargs)
 
-    def update_var_ids(self, param_info: List[Dict]) -> None:
-        for mapping in param_info:
-            param_name = mapping["parameter_name"]
-            var_id = mapping["var_id"]
-            var = self.bindings[param_name]
-            assert isinstance(var, SemanticVariable), f"Unexpected var type: {var}"
-            var.assign_id(var_id)
-
     def to_request_payload(self) -> Dict:
         """Convert the call to a request payload."""
 
@@ -532,19 +429,182 @@ class SemanticCall(BasicCall):
                 param_dict["sampling_config"] = asdict(param.sampling_config)
 
             if isinstance(param_value, SemanticVariable):
+                # For P.Input or P.Output
                 if param_value.is_registered:
                     param_dict["var_id"] = param_value.id
-            elif isinstance(param_value, str):
+                elif not param.is_output:  # For input, add initial value.
+                    param_dict["value"] = param_value.get()
+                parameters.append(param_dict)
+            else:
+                # Directly render the Python object to the template string.
+                # For Python object, we use __str__ instead of __repr__ to serialize it.
+                param_value = str(param_value)
                 param_str = param.get_param_str()
                 template_str = template_str.replace(
                     param_str, param_value
                 )  # Render the template string
-            else:
-                raise ValueError(f"Unexpected param value: {param_value}")
 
-            parameters.append(param_dict)
+            # else:
+            #     raise ValueError(f"Unexpected param value: {param_value}")
 
         payload["template"] = template_str
         payload["parameters"] = parameters
+        payload["func_name"] = self.func.name
+
+        return payload
+
+
+# ---------- Python Native Function ----------
+
+
+class PyNativeFunction(BasicFunction):
+    """Python native function.
+
+    It should be defined by a Python function, with inputs and outputs as strings.
+    """
+
+    def __init__(
+        self,
+        name,
+        pyfunc: Callable,
+        params: List[Parameter],
+        try_register: bool = True,
+        **metadata_kwargs,
+    ):
+        super().__init__(name, params)
+
+        self.pyfunc_code_dumped = serialize_func_code(pyfunc.__code__)
+        metadata_dict = NativeFuncMetadata.get_default_dict()
+        metadata_dict.update(**metadata_kwargs)
+        self.metadata = NativeFuncMetadata(**metadata_dict)
+
+        if try_register:
+            # This will generate a register warning if the VM environment is not set.
+            self._register_function()
+
+    def __call__(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
+        """Call to a native function."""
+
+        return self._call_func(*args, **kwargs)
+
+    def invoke(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
+        """Same as __call__."""
+
+        return self._call_func(*args, **kwargs)
+
+    async def ainvoke(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
+        """Async call."""
+
+        return await self._acall_func(*args, **kwargs)
+
+    def _call_func(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
+        call = PyNativeCall(self, *args, **kwargs)
+
+        if BasicFunction._virtual_machine_env is not None:
+            BasicFunction._virtual_machine_env.submit_call_handler(call)
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+            return call
+
+        # Unpack the output SemanticVariables
+        if len(call.output_vars) == 1:
+            return call.output_vars[0]
+        return tuple(call.output_vars)
+
+    async def _acall_func(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
+        call = PyNativeCall(self, *args, **kwargs)
+
+        if BasicFunction._virtual_machine_env is not None:
+            # Different from _call_func, we use asubmit_call_handler here.
+            await BasicFunction._virtual_machine_env.asubmit_call_handler(call)
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+            return call
+
+        # Unpack the output SemanticVariables
+        if len(call.output_vars) == 1:
+            return call.output_vars[0]
+        return tuple(call.output_vars)
+
+    def display_signature(self) -> str:
+        """Display the function signature."""
+        return f"{self.name}({', '.join([f'{param.name}: {param.typ}' for param in self.params])})"
+
+    def get_pyfunc(self) -> Callable:
+        code_deserialized = deserialize_func_code(self.pyfunc_code_dumped)
+
+        # Here for the scope Dict, we pass {} because we don't want to pollute the scope.
+        # Hence the pyfunc we get is just a temporary one.
+        return types.FunctionType(code_deserialized, {}, self.name)
+
+
+class PyNativeCall(BasicCall):
+    """A call to a native function."""
+
+    def __init__(
+        self,
+        func: "PyNativeFunction",
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ):
+        # ---------- Basic Info ----------
+        super().__init__(func, *args, **kwargs)
+
+    def to_request_payload(self, with_code: bool = True) -> Dict:
+        """Convert the call to a request payload."""
+
+        payload = asdict(self.func.metadata)
+
+        parameters = []
+
+        for param in self.func.params:
+            param_value = self.bindings[param.name]
+
+            param_dict = {
+                "name": param.name,
+                "is_output": param.is_output,
+            }
+
+            if isinstance(param_value, SemanticVariable):
+                if param_value.is_registered:
+                    param_dict["var_id"] = param_value.id
+                elif not param.is_output:  # For input, add initial value.
+                    param_dict["value"] = param_value.get()
+            else:
+                param_dict["value"] = param_value
+
+            parameters.append(param_dict)
+
+        payload["parameters"] = parameters
+        payload["func_name"] = self.func.name
+
+        if with_code:
+            payload["func_code"] = bytes_to_encoded_b64str(self.func.pyfunc_code_dumped)
 
         return payload

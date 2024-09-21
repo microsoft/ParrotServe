@@ -321,6 +321,12 @@ class SemanticVariableManager:
                         session_id=session_id,
                         var_name=node.placeholder_param.name,
                     )
+                    # Assign initial value if it is provided.
+                    parrot_assert(
+                        node.placeholder_param.has_value,
+                        "No initial value when creating SV for PlaceholderFill.",
+                    )
+                    lvar.set(node.placeholder_param.value)
                 else:
                     lvar = self._get_local_var_by_id(
                         session_id=session_id,
@@ -364,19 +370,21 @@ class SemanticVariableManager:
 
         native_request = native_func_node.native_func
 
-        for key, value in native_request.parameters_map.items():
-            if value.should_create:
+        for key, param in native_request.parameters_map.items():
+            if param.should_create:
                 lvar = self._create_local_var_by_name(
                     session_id=session_id,
                     var_name=key,
                 )
+                if param.has_value:
+                    lvar.set(param.value)
             else:
                 lvar = self._get_local_var_by_id(
                     session_id=session_id,
                     var_name=key,
                 )
 
-            if value.is_output:
+            if param.is_output:
                 native_func_node.output_vars[key] = lvar
             else:
                 native_func_node.input_vars[key] = lvar

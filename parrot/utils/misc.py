@@ -7,6 +7,7 @@ import sys
 import os
 import psutil
 import time
+from typing import Optional
 
 
 def redirect_stdout_stderr_to_file(log_file_dir_path: str, file_name: str):
@@ -64,3 +65,20 @@ def time_counter_in_nanoseconds() -> int:
     """Get the current time counter in nanoseconds."""
 
     return time.perf_counter_ns()
+
+
+class MutablePyString:
+    """
+    A wrapper for Python strings to make them mutable.
+    """
+
+    def __init__(self, content: Optional[str] = None) -> None:
+        self.content = ""
+        if content is not None:
+            self.content = content
+
+    def __getattr__(self, name):
+        return getattr(self.content, name)
+
+    def __add__(self, other):
+        return self.content + other

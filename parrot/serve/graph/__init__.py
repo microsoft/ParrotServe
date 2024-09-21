@@ -18,4 +18,4 @@ from .node import (
     SVProducer,
 )
 from .graph import CompletionChain, RequestChain, ComputeGraph
-from .graph_traverse import activate_producer
+from .graph_traverse import activate_sv

@@ -7,7 +7,7 @@ Parrot's Graph is the core information we capture from the application, which de
 
 To help readers have a vertical understanding of our system, we first explain our data pipeline in the Serve Layer, starting from a request coming from the Parrot API.
 
-- Step 1: The request comes to the `semantic_call/` API route and the core call `submit_semantic_call`.
+- Step 1: The request comes to the `semantic_call/` API route and the core calls `submit_semantic_call`.
 - Step 2: The core finds the corresponding `Session` and calls its `add_request` method.
 - Step 3: The session parses the request payload to the class `ChunkedSemanticCallRequest`.
 - Step 4: Convert the `ChunkedSemanticCallRequest` into `RequestChain`, which consists of several `CompletionChain`.

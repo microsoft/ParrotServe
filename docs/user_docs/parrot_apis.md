@@ -57,6 +57,7 @@ Request body:
 
 ```json
 {
+    "func_name": "xxx", // Function name. (Not very important)
     "template": "This is a test {{a}} function. {{b}}",
     "parameters": [
         {

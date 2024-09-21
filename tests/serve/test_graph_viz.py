@@ -7,7 +7,7 @@ from parrot.serve.graph import (
     PlaceholderFill,
     PlaceholderGen,
     PerformanceCriteria,
-    activate_producer,
+    activate_sv,
     NativeFuncNode,
 )
 from parrot.serve.graph.call_request import (
@@ -91,11 +91,12 @@ def test_view_graph_complex():
 
     var_mgr.create_vars_for_semantic_request_chain(session_id, request3)
     graph.insert_and_update_request_chain(request3)
+    out_var2 = request3.comp_chains[0].gen_node.sv
 
     view_graph(graph)
-    activate_producer(request1.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
-    activate_producer(request2.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
-    activate_producer(request3.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
+    activate_sv(out_var0, PerformanceCriteria.LATENCY)
+    activate_sv(out_var1, PerformanceCriteria.LATENCY)
+    activate_sv(out_var2, PerformanceCriteria.LATENCY)
 
 
 def test_view_graph_with_native():
@@ -158,9 +159,12 @@ def test_view_graph_with_native():
     graph.insert_and_update_request_chain(request3)
 
     view_graph(graph)
-    activate_producer(request1.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
-    activate_producer(request2.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
-    activate_producer
+    # activate_sv(out_var0, PerformanceCriteria.LATENCY)
+    # activate_sv(out_var1, PerformanceCriteria.LATENCY)
+    activate_sv(out_var2, PerformanceCriteria.LATENCY)
+
+    # for var in [out_var0, out_var1, out_var2]:
+    #     print(var.is_activated)
 
 
 if __name__ == "__main__":

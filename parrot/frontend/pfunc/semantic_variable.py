@@ -112,7 +112,7 @@ class SemanticVariable:
 
         assert (not self.is_ready, "The variable can't be set repeatedly.")
 
-        self._set_semantic_variable(self.id, content)
+        self._set_semantic_variable(content)
         self.content = content
         return
 

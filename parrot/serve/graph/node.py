@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 
+import asyncio
 from typing import List, Optional, Dict, Any, Union, Type
 
 from parrot.sampling_config import SamplingConfig
@@ -333,8 +334,6 @@ class NativeFuncNode(BaseNode):
 
     def _get_display_elements(self) -> Dict:
         return {
-            "sv_name": self.sv_name,
-            "var_id": self.var_id,
             "func_name": self.native_func.func_name,
         }
 
@@ -370,6 +369,12 @@ class NativeFuncNode(BaseNode):
 
         for sv in self.input_vars.values():
             await sv.wait_ready()
+
+    async def wait_activated(self) -> None:
+        """Wait until the node is activated."""
+
+        coros = [sv.wait_activated() for sv in self.output_vars.values()]
+        await asyncio.wait(coros, return_when=asyncio.FIRST_COMPLETED)
 
 
 # Types

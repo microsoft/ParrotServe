@@ -7,7 +7,7 @@ from parrot.serve.graph import (
     PlaceholderFill,
     PlaceholderGen,
     PerformanceCriteria,
-    activate_producer,
+    activate_sv,
 )
 from parrot.serve.graph.call_request import (
     SemanticCallMetadata,
@@ -197,19 +197,20 @@ def test_graph_traverse():
 
     var_mgr.create_vars_for_semantic_request_chain(session_id, request3)
     graph.insert_and_update_request_chain(request3)
+    out_var2 = request3.comp_chains[0].gen_node.sv
 
     # view_graph(graph)
-    activate_producer(request1.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
-    activate_producer(request2.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
-    activate_producer(request3.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
-    # activate_producer(request3.comp_chains[0].gen_node, PerformanceCriteria.LATENCY)
+    activate_sv(out_var0, PerformanceCriteria.LATENCY)
+    activate_sv(out_var1, PerformanceCriteria.LATENCY)
+    activate_sv(out_var2, PerformanceCriteria.LATENCY)
 
     # Expected results: A: depth 2, B: depth 1, C: depth 0
     requests = [request1, request2, request3]
     for req in requests:
-        assert req.comp_chains[0].is_activated
-        assert req.comp_chains[0].criteria == PerformanceCriteria.LATENCY
-        print(req.comp_chains[0].depth)
+        sv = req.comp_chains[0].gen_node.sv
+        assert sv.is_activated
+        assert sv.criteria == PerformanceCriteria.LATENCY
+        print(sv.depth)
 
 
 if __name__ == "__main__":

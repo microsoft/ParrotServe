@@ -62,8 +62,9 @@ class GraphExecutor:
         """Coroutine for executing a CompletionChain."""
 
         try:
-            # Block until it's activated by a GET.
-            await completion_chain.wait_activated()
+            # Block until it's activated.
+            if completion_chain.gen_node is not None:
+                await completion_chain.gen_node.sv.wait_ready()
 
             # Create a task object for the completion chain.
             task = self.task_creator.create_task(completion_chain)

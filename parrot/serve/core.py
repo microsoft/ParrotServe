@@ -15,7 +15,7 @@ from parrot.exceptions import ParrotCoreInternalError
 from parrot.serve.graph import (
     SVProducer,
     get_performance_criteria,
-    activate_producer,
+    activate_sv,
 )
 from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig, TaskCreator
 
@@ -294,11 +294,9 @@ class ParrotServeCore:
         self.session_mgr.session_access_update(session_id)
 
         var = self.var_mgr.get_var(session_id, var_id)
-        if var.has_producer:
-            producer: SVProducer = var.get_producer()
-            if not producer.comp_chain.is_activated:
-                # Activate the chain and propagate the performance criteria
-                activate_producer(producer, get_performance_criteria(criteria))
+        if var.has_producer and not var.is_activated:
+            # Activate the chain and propagate the performance criteria
+            activate_sv(var, get_performance_criteria(criteria))
 
         await var.wait_ready()
         content = var.get()

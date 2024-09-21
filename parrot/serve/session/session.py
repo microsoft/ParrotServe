@@ -16,7 +16,7 @@ from parrot.serve.graph import (
     RequestChain,
     NativeFuncNode,
     get_performance_criteria,
-    activate_producer,
+    activate_sv,
 )
 
 from parrot.serve.backend_repr import Context
@@ -126,7 +126,7 @@ class Session:
             criteria = chunked_request.metadata.output_criteria
             if isinstance(criteria, str):
                 criteria = get_performance_criteria(criteria)
-            activate_producer(request_chain.comp_chains[-1].gen_node, criteria)
+            activate_sv(request_chain.comp_chains[-1].gen_node.sv, criteria)
 
         # It must be inserted. So we can get the mapping.
         param_info = request_chain.get_param_info()
@@ -155,10 +155,11 @@ class Session:
             criteria = request.metadata.output_criteria
             if isinstance(criteria, str):
                 criteria = get_performance_criteria(criteria)
-            activate_producer(func_node, criteria)
+            for out_var in func_node.output_vars.values():
+                activate_sv(out_var, criteria)
 
         # It must be inserted. So we can get the mapping.
-        param_info = request_chain.get_param_info()
+        param_info = func_node.get_param_info()
 
         return param_info
 

@@ -55,7 +55,7 @@ async def remove_session(session_id: int, request: Request):
 _request_counter = 0
 
 
-@app.post(f"/{API_VERSION}/submit_semantic_call")
+@app.post(f"/{API_VERSION}/semantic_call")
 async def submit_semantic_call(request: Request):
     global _request_counter
 

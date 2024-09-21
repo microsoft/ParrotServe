@@ -29,7 +29,9 @@ def test_request_chain_hash():
         nodes=[
             ConstantFill("Test1"),
             PlaceholderFill(
-                parameter=SemanticFunctionParameter(name="a", is_output=False)
+                parameter=SemanticFunctionParameter(
+                    name="a", is_output=False, value="test"
+                )
             ),
             ConstantFill("Test2"),
             PlaceholderGen(
@@ -43,7 +45,9 @@ def test_request_chain_hash():
         nodes=[
             ConstantFill("Test1"),
             PlaceholderFill(
-                parameter=SemanticFunctionParameter(name="a", is_output=False)
+                parameter=SemanticFunctionParameter(
+                    name="a", is_output=False, value="test"
+                )
             ),
             ConstantFill("Test2"),
             PlaceholderGen(

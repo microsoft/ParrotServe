@@ -1,4 +1,8 @@
-from parrot.utils import RecyclePool, bytes_to_encoded_b64str, encoded_b64str_to_bytes
+from parrot.utils import (
+    RecyclePool,
+    bytes_to_encoded_b64str,
+    encoded_b64str_to_bytes,
+)
 
 
 def test_recycle_pool():
@@ -35,7 +39,6 @@ def test_serialize_tools():
     encoded = bytes_to_encoded_b64str(data)
     decoded = encoded_b64str_to_bytes(encoded)
     assert data == decoded
-
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ from parrot.serve.graph import (
     PlaceholderGen,
     ComputeGraph,
     PerformanceCriteria,
-    activate_producer,
+    activate_sv,
     SemanticVariable,
 )
 from parrot.serve.graph.call_request import (
@@ -75,7 +75,7 @@ def test_default_policy_throughput():
         var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_producer(comp_chain.gen_node, PerformanceCriteria.THROUGHPUT)
+        activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.THROUGHPUT)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -132,7 +132,7 @@ def test_default_policy_latency():
         var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_producer(comp_chain.gen_node, PerformanceCriteria.LATENCY)
+        activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.LATENCY)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -215,7 +215,7 @@ def test_app_fifo():
         var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain2)
         graph.insert_and_update_request_chain(request_chain2)
         comp_chain2 = request_chain2.comp_chains[0]
-        activate_producer(comp_chain2.gen_node, PerformanceCriteria.LATENCY)
+        activate_sv(comp_chain2.gen_node.sv, PerformanceCriteria.LATENCY)
 
         task1 = task_creator.create_task(comp_chain1)
         task1.tokenize_chain(tokenizers_wrapper)
@@ -324,7 +324,7 @@ def test_graph_group():
     var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
     graph.insert_and_update_request_chain(request_chain)
     comp_chain = request_chain.comp_chains[0]
-    activate_producer(comp_chain.gen_node, PerformanceCriteria.LATENCY)
+    activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.LATENCY)
 
     # view_graph(graph)
 
@@ -386,7 +386,7 @@ def test_ctx_group():
         var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_producer(comp_chain.gen_node, PerformanceCriteria.LATENCY)
+        activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.LATENCY)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -446,7 +446,7 @@ def test_ctx_aware():
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
         first_vars.append(comp_chain.first_node.sv)
-        activate_producer(comp_chain.gen_node, PerformanceCriteria.THROUGHPUT)
+        activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.THROUGHPUT)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -465,7 +465,7 @@ def test_ctx_aware():
 if __name__ == "__main__":
     # test_default_policy_throughput()
     # test_default_policy_latency()
-    test_app_fifo()
-    # test_graph_group()
+    # test_app_fifo()
+    test_graph_group()
     # test_ctx_group()
     # test_ctx_aware()

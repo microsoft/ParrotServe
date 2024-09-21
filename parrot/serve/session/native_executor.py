@@ -13,20 +13,13 @@ from parrot.serve.graph import NativeFuncNode, ComputeGraph
 logger = get_logger("NativeExecutor")
 
 
-class MutablePyStringProxy:
-    """
-    A wrapper for Python strings to make them mutable.
-    """
+class OutputProxy:
 
-    def __init__(self, content: Optional[str] = None) -> None:
-        self.content = ""
-        if content is not None:
-            self.content = content
+    def __init__(self) -> None:
+        self.content: Optional[str] = None
 
-    def __getattr__(self, name):
-        # Proxy to the content.
-        target_attr = getattr(self.content, name)
-        return target_attr
+    def set(self, content: str) -> None:
+        self.content = content
 
 
 class PyNativeExecutor:
@@ -40,13 +33,16 @@ class PyNativeExecutor:
         self.graph = graph
 
         # ---------- Execution ----------
-        self.func_name: Dict[str, FunctionType] = {}
+        self.func_cache: Dict[str, FunctionType] = {}
 
         # ---------- Runtime ----------
         self.bad_exception: Optional[Exception] = None
 
     async def _execute_coroutine(self, func_node: NativeFuncNode) -> None:
         """Coroutine for executing a PyNativeCallRequest."""
+
+        # Block until it's activated by at least 1 SV.
+        await func_node.wait_activated()
 
         # Block until all inputs are ready.
         await func_node.wait_ready()
@@ -82,28 +78,29 @@ class PyNativeExecutor:
     async def execute(self, func_node: NativeFuncNode) -> None:
         """Execute a NativeFunc."""
 
-        pystring_proxies: Dict[str, MutablePyStringProxy] = {}
-
         kwargs: Dict[str, Any] = {}
 
         # Preparing parameters
         for key, var in func_node.input_vars.items():
             parrot_assert(var.is_ready(), f"Input var {var} is not ready.")
             content = var.get()
-            pystring_proxies[key] = MutablePyStringProxy(content)
-            kwargs[key] = pystring_proxies[key]
+            kwargs[key] = content
 
         for key, value in func_node.input_values.items():
             kwargs[key] = value
 
+        # Create output proxies
+        pystring_proxies: Dict[str, OutputProxy] = {}
         for key, var in func_node.output_vars.items():
-            pystring_proxies[key] = MutablePyStringProxy()
+            pystring_proxies[key] = OutputProxy()
             kwargs[key] = pystring_proxies[key]
 
         # Execute the native function
-        if func_node.executable_func is not None:
-            func_node.executable_func(**kwargs)
-            self.func_cache[func_node.native_func.func_name] = func_node.executable_func
+        if func_node.native_func.executable_func is not None:
+            func_node.native_func.executable_func(**kwargs)
+            self.func_cache[func_node.native_func.func_name] = (
+                func_node.native_func.executable_func
+            )
         else:
             func = self.func_cache.get(func_node.native_func.func_name)
             if func is None:
