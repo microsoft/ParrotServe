@@ -107,6 +107,8 @@ async def set_semantic_variable(var_id: str, request: Request):
 @app.get(f"/{API_VERSION}" + "/semantic_var/{var_id}")
 async def get_semantic_variable(var_id: str, request: Request):
     payload = await request.json()
+    if var_id not in _semantic_vars:
+        return {"content": "none_content"}
     content = _semantic_vars[var_id]
     logger.debug(f"Get semantic variable {var_id}. Content: {content}.")
     return {"content": content}

@@ -109,6 +109,13 @@ async def submit_semantic_call(request: Request):
     return response
 
 
+@app.post(f"/{API_VERSION}/py_native_call")
+async def submit_py_native_call(request: Request):
+    payload = await request.json()
+    response = pcore.submit_py_native_call(payload)
+    return response
+
+
 @app.post(f"/{API_VERSION}/semantic_var")
 async def register_semantic_variable(request: Request):
     payload = await request.json()

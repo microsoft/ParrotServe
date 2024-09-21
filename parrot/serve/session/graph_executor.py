@@ -64,7 +64,7 @@ class GraphExecutor:
         try:
             # Block until it's activated.
             if completion_chain.gen_node is not None:
-                await completion_chain.gen_node.sv.wait_ready()
+                await completion_chain.gen_node.sv.wait_activated()
 
             # Create a task object for the completion chain.
             task = self.task_creator.create_task(completion_chain)

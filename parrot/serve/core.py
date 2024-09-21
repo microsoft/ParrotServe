@@ -217,7 +217,32 @@ class ParrotServeCore:
 
         # Add the request to the session.
         session = self.session_mgr.get_session(session_id)
-        request_id, param_info = session.add_request(payload)
+        request_id, param_info = session.add_request(payload, is_native=False)
+
+        return {
+            "request_id": request_id,
+            "param_info": param_info,
+        }
+
+    def submit_py_native_call(self, payload: Dict) -> Dict:
+        """Submit a Python native call in a session to the ServeCore.
+
+        Args:
+            payload: Dict. The request payload.
+
+        Returns:
+            Dict. The response.
+        """
+
+        session_id = payload["session_id"]
+
+        # Update session last access time
+        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.session_access_update(session_id)
+
+        # Add the request to the session.
+        session = self.session_mgr.get_session(session_id)
+        request_id, param_info = session.add_request(payload, is_native=True)
 
         return {
             "request_id": request_id,

@@ -125,7 +125,8 @@ class BasicCall(ABC):
 
                 # Create a new SemanticVariable for this type of input.
                 in_var = SemanticVariable(name=param.name, register=False)
-                in_var.set(value)  # It has initial value.
+                # in_var.set(value)
+                in_var.content = value  # It has initial value.
                 bindings[param.name] = in_var
             else:
                 # Referring existing SemanticVariable.
