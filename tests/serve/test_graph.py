@@ -1,4 +1,4 @@
-from parrot.serve.graph.request import ChunkedSemanticCallRequest
+from parrot.serve.graph.call_request import ChunkedSemanticCallRequest
 from parrot.serve.variable_manager import SemanticVariableManager
 from parrot.serve.graph import (
     RequestChain,
@@ -7,16 +7,18 @@ from parrot.serve.graph import (
     PlaceholderFill,
     PlaceholderGen,
     PerformanceCriteria,
-    activate_completion_chain,
+    activate_sv,
 )
-from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
-from parrot.serve.graph.visualize_utils import view_graph
+from parrot.serve.graph.call_request import (
+    SemanticCallMetadata,
+    SemanticFunctionParameter,
+)
 
 
 def test_request_parse():
     payload = {
         "template": "This is a test {{a}} function. {{b}}",
-        "placeholders": [
+        "parameters": [
             {
                 "name": "a",
                 "is_output": False,
@@ -45,7 +47,7 @@ def test_request_parse():
 def test_split_prefix():
     payload = {
         "template": "This is a test {{a}} function. {{b}}",
-        "placeholders": [
+        "parameters": [
             {
                 "name": "a",
                 "is_output": False,
@@ -76,7 +78,9 @@ def test_request_chain_print():
     request_chain = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="a", is_output=True)
+            ),
         ],
     )
 
@@ -86,7 +90,7 @@ def test_request_chain_print():
 def test_chunked_request_to_chain():
     payload = {
         "template": "This is a test {{a}} function. {{b}}",
-        "placeholders": [
+        "parameters": [
             {
                 "name": "a",
                 "is_output": False,
@@ -118,14 +122,16 @@ def test_graph_remove():
     request_chain = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="a", is_output=True)
+            ),
         ],
     )
 
     var_mgr = SemanticVariableManager(666)
     session_id = 0
     var_mgr.register_local_var_space(session_id)
-    var_mgr.create_vars_for_request(session_id, request_chain)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
 
     graph.insert_and_update_request_chain(request_chain)
 
@@ -135,26 +141,6 @@ def test_graph_remove():
     graph.remove_completion_chain(request_chain.comp_chains[0])
 
     print(graph.nodes, graph.chains)
-
-
-def test_view_graph():
-    graph = ComputeGraph()
-
-    request_chain = RequestChain.from_nodes(
-        nodes=[
-            ConstantFill("This is a test "),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
-        ]
-    )
-
-    var_mgr = SemanticVariableManager(666)
-    session_id = 0
-    var_mgr.register_local_var_space(session_id)
-    var_mgr.create_vars_for_request(session_id, request_chain)
-
-    graph.insert_and_update_request_chain(request_chain)
-
-    view_graph(graph)
 
 
 def test_graph_traverse():
@@ -169,55 +155,62 @@ def test_graph_traverse():
     request1 = RequestChain.from_nodes(
         nodes=[
             ConstantFill("This is a test "),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="a", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="a", is_output=True)
+            ),
         ]
     )
 
-    var_mgr.create_vars_for_request(session_id, request1)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request1)
     graph.insert_and_update_request_chain(request1)
     out_var0 = request1.comp_chains[0].gen_node.sv
 
     request2 = RequestChain.from_nodes(
         nodes=[
             PlaceholderFill(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name="a", var_id=out_var0.id, is_output=False
                 )
             ),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="b", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="b", is_output=True)
+            ),
         ]
     )
 
-    var_mgr.create_vars_for_request(session_id, request2)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request2)
     graph.insert_and_update_request_chain(request2)
     out_var1 = request2.comp_chains[0].gen_node.sv
 
     request3 = RequestChain.from_nodes(
         nodes=[
             PlaceholderFill(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name="b", var_id=out_var1.id, is_output=False
                 )
             ),
-            PlaceholderGen(placeholder=RequestPlaceholder(name="c", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="c", is_output=True)
+            ),
         ]
     )
 
-    var_mgr.create_vars_for_request(session_id, request3)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request3)
     graph.insert_and_update_request_chain(request3)
+    out_var2 = request3.comp_chains[0].gen_node.sv
 
     # view_graph(graph)
-    activate_completion_chain(request1.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_completion_chain(request2.comp_chains[0], PerformanceCriteria.LATENCY)
-    activate_completion_chain(request3.comp_chains[0], PerformanceCriteria.LATENCY)
-    # activate_completion_chain(request3.comp_chains[0], PerformanceCriteria.LATENCY)
+    activate_sv(out_var0, PerformanceCriteria.LATENCY)
+    activate_sv(out_var1, PerformanceCriteria.LATENCY)
+    activate_sv(out_var2, PerformanceCriteria.LATENCY)
 
     # Expected results: A: depth 2, B: depth 1, C: depth 0
     requests = [request1, request2, request3]
     for req in requests:
-        assert req.comp_chains[0].is_activated
-        assert req.comp_chains[0].criteria == PerformanceCriteria.LATENCY
-        print(req.comp_chains[0].depth)
+        sv = req.comp_chains[0].gen_node.sv
+        assert sv.is_activated
+        assert sv.criteria == PerformanceCriteria.LATENCY
+        print(sv.depth)
 
 
 if __name__ == "__main__":

@@ -16,10 +16,13 @@ from parrot.serve.graph import (
     PlaceholderGen,
     ComputeGraph,
     PerformanceCriteria,
-    activate_completion_chain,
+    activate_sv,
     SemanticVariable,
 )
-from parrot.serve.graph.request import SemanticCallMetadata, RequestPlaceholder
+from parrot.serve.graph.call_request import (
+    SemanticCallMetadata,
+    SemanticFunctionParameter,
+)
 from parrot.engine.config import EngineConfig
 from parrot.serve.engine_manager import EngineManager
 from parrot.serve.graph.visualize_utils import view_graph
@@ -65,14 +68,14 @@ def test_default_policy_throughput():
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_completion_chain(comp_chain, PerformanceCriteria.THROUGHPUT)
+        activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.THROUGHPUT)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -122,14 +125,14 @@ def test_default_policy_latency():
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+        activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.LATENCY)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -184,12 +187,12 @@ def test_app_fifo():
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
 
-        var_mgr.create_vars_for_request(session_id, request_chain1)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain1)
         graph.insert_and_update_request_chain(request_chain1)
         comp_chain1 = request_chain1.comp_chains[0]
         out_vars.append(comp_chain1.gen_node.sv)
@@ -197,22 +200,22 @@ def test_app_fifo():
         request_chain2 = RequestChain.from_nodes(
             nodes=[
                 PlaceholderFill(
-                    placeholder=RequestPlaceholder(
+                    parameter=SemanticFunctionParameter(
                         name="a",
                         var_id=out_vars[i].id,
                         is_output=False,
                     )
                 ),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="b", is_output=True)
+                    parameter=SemanticFunctionParameter(name="b", is_output=True)
                 ),
             ]
         )
 
-        var_mgr.create_vars_for_request(session_id, request_chain2)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain2)
         graph.insert_and_update_request_chain(request_chain2)
         comp_chain2 = request_chain2.comp_chains[0]
-        activate_completion_chain(comp_chain2, PerformanceCriteria.LATENCY)
+        activate_sv(comp_chain2.gen_node.sv, PerformanceCriteria.LATENCY)
 
         task1 = task_creator.create_task(comp_chain1)
         task1.tokenize_chain(tokenizers_wrapper)
@@ -289,12 +292,12 @@ def test_graph_group():
             nodes=[
                 ConstantFill("This is a test "),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
 
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
         out_vars.append(comp_chain.gen_node.sv)
@@ -304,7 +307,7 @@ def test_graph_group():
     request_chain = RequestChain.from_nodes(
         nodes=[
             PlaceholderFill(
-                placeholder=RequestPlaceholder(
+                parameter=SemanticFunctionParameter(
                     name=f"a_{i}",
                     var_id=out_vars[i].id,
                     is_output=False,
@@ -313,13 +316,15 @@ def test_graph_group():
             for i in range(16)
         ]
         + [
-            PlaceholderGen(placeholder=RequestPlaceholder(name="b", is_output=True)),
+            PlaceholderGen(
+                parameter=SemanticFunctionParameter(name="b", is_output=True)
+            ),
         ]
     )
-    var_mgr.create_vars_for_request(session_id, request_chain)
+    var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
     graph.insert_and_update_request_chain(request_chain)
     comp_chain = request_chain.comp_chains[0]
-    activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+    activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.LATENCY)
 
     # view_graph(graph)
 
@@ -374,14 +379,14 @@ def test_ctx_group():
             nodes=[
                 ConstantFill(prompts[i % 4]),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
-        activate_completion_chain(comp_chain, PerformanceCriteria.LATENCY)
+        activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.LATENCY)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -433,15 +438,15 @@ def test_ctx_aware():
             nodes=[
                 ConstantFill(prompts[i % 4]),
                 PlaceholderGen(
-                    placeholder=RequestPlaceholder(name="a", is_output=True)
+                    parameter=SemanticFunctionParameter(name="a", is_output=True)
                 ),
             ]
         )
-        var_mgr.create_vars_for_request(session_id, request_chain)
+        var_mgr.create_vars_for_semantic_request_chain(session_id, request_chain)
         graph.insert_and_update_request_chain(request_chain)
         comp_chain = request_chain.comp_chains[0]
         first_vars.append(comp_chain.first_node.sv)
-        activate_completion_chain(comp_chain, PerformanceCriteria.THROUGHPUT)
+        activate_sv(comp_chain.gen_node.sv, PerformanceCriteria.THROUGHPUT)
         task = task_creator.create_task(comp_chain)
         task.tokenize_chain(tokenizers_wrapper)
         scheduler.submit_task(task)
@@ -460,7 +465,7 @@ def test_ctx_aware():
 if __name__ == "__main__":
     # test_default_policy_throughput()
     # test_default_policy_latency()
-    test_app_fifo()
-    # test_graph_group()
+    # test_app_fifo()
+    test_graph_group()
     # test_ctx_group()
     # test_ctx_aware()

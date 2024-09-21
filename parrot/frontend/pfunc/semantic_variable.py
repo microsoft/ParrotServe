@@ -112,11 +112,13 @@ class SemanticVariable:
 
         assert (not self.is_ready, "The variable can't be set repeatedly.")
 
-        self._set_semantic_variable(self.id, content)
+        self._set_semantic_variable(content)
         self.content = content
         return
 
-    def get(self, criteria: PerformanceCriteria) -> str:
+    def get(
+        self, criteria: PerformanceCriteria = PerformanceCriteria.THROUGHPUT
+    ) -> str:
         """(Blocking) Get the content of the variable."""
 
         assert (self.is_registered, "The variable must be registered before getting.")

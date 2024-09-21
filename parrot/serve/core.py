@@ -13,9 +13,9 @@ from parrot.engine.config import EngineConfig
 from parrot.exceptions import ParrotCoreInternalError
 
 from parrot.serve.graph import (
-    PlaceholderGen,
+    SVProducer,
     get_performance_criteria,
-    activate_completion_chain,
+    activate_sv,
 )
 from parrot.serve.scheduler import GlobalScheduler, GlobalSchedulerConfig, TaskCreator
 
@@ -217,11 +217,36 @@ class ParrotServeCore:
 
         # Add the request to the session.
         session = self.session_mgr.get_session(session_id)
-        request_id, placeholders_mapping = session.add_request(payload)
+        request_id, param_info = session.add_request(payload, is_native=False)
 
         return {
             "request_id": request_id,
-            "placeholders_mapping": placeholders_mapping,
+            "param_info": param_info,
+        }
+
+    def submit_py_native_call(self, payload: Dict) -> Dict:
+        """Submit a Python native call in a session to the ServeCore.
+
+        Args:
+            payload: Dict. The request payload.
+
+        Returns:
+            Dict. The response.
+        """
+
+        session_id = payload["session_id"]
+
+        # Update session last access time
+        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.session_access_update(session_id)
+
+        # Add the request to the session.
+        session = self.session_mgr.get_session(session_id)
+        request_id, param_info = session.add_request(payload, is_native=True)
+
+        return {
+            "request_id": request_id,
+            "param_info": param_info,
         }
 
     # ---------- Semantic Variable ----------
@@ -294,13 +319,9 @@ class ParrotServeCore:
         self.session_mgr.session_access_update(session_id)
 
         var = self.var_mgr.get_var(session_id, var_id)
-        if var.has_producer:
-            producer: PlaceholderGen = var.get_producer()
-            if not producer.comp_chain.is_activated:
-                # Activate the chain and propagate the performance criteria
-                activate_completion_chain(
-                    producer.comp_chain, get_performance_criteria(criteria)
-                )
+        if var.has_producer and not var.is_activated:
+            # Activate the chain and propagate the performance criteria
+            activate_sv(var, get_performance_criteria(criteria))
 
         await var.wait_ready()
         content = var.get()

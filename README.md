@@ -2,12 +2,33 @@
 
 [Paper](https://www.usenix.org/system/files/osdi24-lin-chaofan.pdf) | [Documentation](docs/) | [Slides](assets/Parrot-OSDI24.pdf) | [Poster](assets/Parrot_Poster_OSDI_24.pdf)
 
-> This repo is current a research prototype and is not actively maintained. Please open issue or contact the authors when you need help.
+> This repo is currently a research prototype and is not actively maintained. Please open issue or contact the authors when you need help.
 
 Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the **app-level information** like LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
 - Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.
 - Performance objective deduction and DAG-aware scheduling.
 - Sharing common prompt prefix between requests with optimized attention kernel, Context-aware scheduling.
+
+We also provide a Python friendly frontend for users to program:
+
+```python
+from parrot import P # 'P' is the alias of pfunc lang.
+
+@P.semantic_function()
+def tell_me_a_joke(topic: P.Input, joke: P.Output):
+    """Tell the me a joke about {{topic}}: {{joke}}."""
+
+@P.native_function()
+def format_joke(joke: P.Input, formatted_joke: P.Output):
+    ret = "Here is the joke for you\n---\n" + joke # Directly use string built-in methods
+    formatted_joke.set(ret) # Use `set` to assign value to output
+
+def main(): # Orchestrator function
+    joke = tell_me_a_joke(topic="chicken")
+    joke1 = format_joke(joke)
+    joke_str = joke1.get()
+    print(joke_str)
+```
 
 ## What's LLM Applications?
 

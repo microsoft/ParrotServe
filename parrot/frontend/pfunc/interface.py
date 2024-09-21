@@ -10,7 +10,7 @@ from parrot.sampling_config import SamplingConfig
 from parrot.utils import get_logger, change_signature
 
 from .semantic_variable import SemanticVariable
-from .function import SemanticFunction, NativeFunction, ParamType, Parameter
+from .function import SemanticFunction, PyNativeFunction, ParamType, Parameter
 from .transforms.prompt_formatter import standard_formatter, Sequential, FuncMutator
 
 
@@ -29,8 +29,9 @@ class Output:
 
     def __init__(
         self,
-        sampling_config: SamplingConfig = SamplingConfig(),
+        sampling_config: Optional[SamplingConfig] = None,
     ) -> None:
+        # kw arguments for semantic functions
         self.sampling_config = sampling_config
 
 
@@ -50,6 +51,7 @@ def semantic_function(
 
         # Parse the function signature (parameters)
         func_sig = inspect.signature(f)
+        return_annotations = func_sig.return_annotation
         func_params = []
         for param in func_sig.parameters.values():
             # assert param.annotation in (
@@ -77,6 +79,9 @@ def semantic_function(
                 param_typ = ParamType.INPUT_PYOBJ
             func_params.append(Parameter(name=param.name, typ=param_typ, **kwargs))
 
+        if return_annotations != inspect.Signature.empty:
+            raise ValueError("Semantic function can't not have return annotations.")
+
         semantic_func = SemanticFunction(
             name=func_name,
             params=func_params,
@@ -101,7 +106,7 @@ def semantic_function(
 
 
 def native_function(
-    timeout: float = 0.1,
+    **native_func_metadata,
 ):
     """A decorator for users to define parrot functions."""
 
@@ -113,73 +118,28 @@ def native_function(
         return_annotations = func_sig.return_annotation
         func_params = []
 
-        # Update annotations for the pyfunc
-        new_params_anotations = []
-        new_return_annotations = []
-
         for param in func_sig.parameters.values():
             if param.annotation == Input:
                 param_typ = ParamType.INPUT_LOC
-                new_params_anotations.append(
-                    inspect.Parameter(
-                        param.name,
-                        param.kind,
-                        default=param.default,
-                        annotation=str,
-                    )
-                )
             elif param.annotation == Output:
-                raise ValueError(
-                    "Please put Output annotation in the return type in native function."
-                )
+                # Default output loc
+                param_typ = ParamType.OUTPUT_LOC
             elif param.annotation.__class__ == Output:
-                raise ValueError(
-                    "Please put Output annotation in the return type in native function."
-                )
+                # Output loc
+                param_typ = ParamType.OUTPUT_LOC
             else:
                 param_typ = ParamType.INPUT_PYOBJ
-                new_params_anotations.append(
-                    inspect.Parameter(
-                        param.name,
-                        param.kind,
-                        default=param.default,
-                        annotatioin=param.annotation,
-                    )
-                )
             func_params.append(Parameter(name=param.name, typ=param_typ))
 
-        if return_annotations == inspect.Signature.empty:
-            raise ValueError("Native function must return at least one P.Output.")
-        elif not isinstance(return_annotations, collections.abc.Iterable):
-            return_annotations = [
-                return_annotations,
-            ]
-            # raise ValueError("Native function can only return one P.Output.")
+        if return_annotations != inspect.Signature.empty:
+            raise ValueError("Native function can't not have return annotations.")
 
-        ret_counter = 0
-        for annotation in return_annotations:
-            if annotation == Output:
-                func_params.append(
-                    Parameter(name=f"ret_{ret_counter}", typ=ParamType.OUTPUT_LOC)
-                )
-                ret_counter += 1
-                new_return_annotations.append(str)
-            elif annotation.__class__ == Output:
-                # Output loc with sampling config
-                raise ValueError(
-                    "Native function does not support annotate Output variables."
-                )
-            else:
-                raise ValueError("Native function can only return P.Output")
-
-        change_signature(f, new_params_anotations, new_return_annotations)
-
-        native_func = NativeFunction(
+        native_func = PyNativeFunction(
             name=func_name,
             pyfunc=f,
             params=func_params,
             # Func Metadata
-            timeout=timeout,
+            **native_func_metadata,
         )
 
         return native_func

@@ -21,8 +21,8 @@ Session (RESTful):
     - remove_session POST (`/session/{session_id}`, DELETE)
 
 Function Call:
-    - submit_semantic_call POST
-    - submit_native_call POST (TODO)
+    - semantic_call/ POST
+    - py_native_call/ POST
 
 Semantic Variable (RESTful):
     - register_semantic_variable (`/semantic_var/`, POST)
@@ -49,7 +49,12 @@ class RemoveSessionResponse(BaseResponse):
 
 class SubmitSemanticCallResponse(BaseResponse):
     request_id: int
-    placeholders_mapping: List
+    param_info: List
+
+
+class SubmitPyNativeCallResponse(BaseResponse):
+    request_id: int
+    param_info: List
 
 
 class RegisterSemanticVariableResponse(BaseResponse):
@@ -124,14 +129,14 @@ def submit_semantic_call(
         return send_http_request(
             SubmitSemanticCallResponse,
             http_addr,
-            f"/{API_VERSION}/submit_semantic_call",
+            f"/{API_VERSION}/semantic_call",
             retry_times=1,
             session_id=session_id,
             **payload,
         )
     except BaseException as e:
         logger.error(
-            f"Submit call (session_id={session_id}) error in {http_addr}. Error: {e}"
+            f"Submit semantic call (session_id={session_id}) error in {http_addr}. Error: {e}"
         )
         raise e
 
@@ -145,14 +150,54 @@ async def asubmit_semantic_call(
                 client_session,
                 SubmitSemanticCallResponse,
                 http_addr,
-                f"/{API_VERSION}/submit_semantic_call",
+                f"/{API_VERSION}/semantic_call",
                 retry_times=1,
                 session_id=session_id,
                 **payload,
             )
     except BaseException as e:
         logger.error(
-            f"Submit call (session_id={session_id}) error in {http_addr}. Error: {e}"
+            f"Submit semantic call (session_id={session_id}) error in {http_addr}. Error: {e}"
+        )
+        raise e
+
+
+def submit_py_native_call(
+    http_addr: str, session_id: int, session_auth: str, payload: Dict
+) -> SubmitPyNativeCallResponse:
+    try:
+        return send_http_request(
+            SubmitPyNativeCallResponse,
+            http_addr,
+            f"/{API_VERSION}/py_native_call",
+            retry_times=1,
+            session_id=session_id,
+            **payload,
+        )
+    except BaseException as e:
+        logger.error(
+            f"Submit Python native call (session_id={session_id}) error in {http_addr}. Error: {e}"
+        )
+        raise e
+
+
+async def asubmit_py_native_call(
+    http_addr: str, session_id: int, session_auth: str, payload: Dict
+) -> SubmitPyNativeCallResponse:
+    try:
+        async with aiohttp.ClientSession() as client_session:
+            return await async_send_http_request(
+                client_session,
+                SubmitPyNativeCallResponse,
+                http_addr,
+                f"/{API_VERSION}/submit_py_native_call",
+                retry_times=1,
+                session_id=session_id,
+                **payload,
+            )
+    except BaseException as e:
+        logger.error(
+            f"Submit Python native call (session_id={session_id}) error in {http_addr}. Error: {e}"
         )
         raise e
 

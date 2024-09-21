@@ -48,11 +48,17 @@ class TaskCreator:
             CompletionTask. The Task object created for the CompletionChain.
         """
 
-        parrot_assert(completion_chain.is_activated, "The chain is not activated.")
+        parrot_assert(
+            completion_chain.gen_node is not None,
+            "The CompletionChain does not have a GenNode.",
+        )
+
+        var = completion_chain.gen_node.sv
+        parrot_assert(var.is_activated, "The chain is not activated.")
 
         # Create a new Task
         task_id = self._task_id_pool.allocate()
-        schedule_annotation = self._lower_criteria(completion_chain.criteria)
+        schedule_annotation = self._lower_criteria(var.criteria)
 
         logger.debug(
             f"Create Task(task_id={task_id}) for CompletionChain(request_id={completion_chain.request_id},"

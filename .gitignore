@@ -441,6 +441,9 @@ data
 *.so
 *.pdf
 
+# Test cache
+tests/*.png
+
 # Exclude pdf in assets
 !assets/*.pdf
 

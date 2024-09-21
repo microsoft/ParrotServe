@@ -36,6 +36,7 @@ class BuiltinConfig:
     attn_func_name: Optional[str] = None
     mem_layout: Optional["MemLayout"] = None
     model_arch: Optional[str] = None
+    use_dummy_weights: bool = False
 
     def __post_init__(self):
         # Replace dtype and device

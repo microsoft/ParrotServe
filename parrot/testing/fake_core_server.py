@@ -55,7 +55,7 @@ async def remove_session(session_id: int, request: Request):
 _request_counter = 0
 
 
-@app.post(f"/{API_VERSION}/submit_semantic_call")
+@app.post(f"/{API_VERSION}/semantic_call")
 async def submit_semantic_call(request: Request):
     global _request_counter
 
@@ -70,7 +70,7 @@ async def submit_semantic_call(request: Request):
     )
     return {
         "request_id": request_id,
-        "placeholders_mapping": [],
+        "param_info": [],
     }
 
 
@@ -107,6 +107,8 @@ async def set_semantic_variable(var_id: str, request: Request):
 @app.get(f"/{API_VERSION}" + "/semantic_var/{var_id}")
 async def get_semantic_variable(var_id: str, request: Request):
     payload = await request.json()
+    if var_id not in _semantic_vars:
+        return {"content": "none_content"}
     content = _semantic_vars[var_id]
     logger.debug(f"Get semantic variable {var_id}. Content: {content}.")
     return {"content": content}

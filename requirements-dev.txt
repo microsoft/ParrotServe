@@ -25,3 +25,9 @@ psutil
 pytest
 parse
 protobuf
+
+# Lint
+black
+
+# Dev
+matplotlib

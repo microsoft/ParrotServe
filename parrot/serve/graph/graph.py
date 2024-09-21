@@ -5,18 +5,29 @@
 from asyncio import Event
 from typing import List, Dict, Set, Optional, Union
 
-from parrot.exceptions import parrot_assert, ParrotCoreUserError
+from parrot.exceptions import (
+    parrot_assert,
+    ParrotCoreUserError,
+    ParrotCoreInternalError,
+)
 from parrot.utils import RecyclePool
 
 from .perf_criteria import PerformanceCriteria
-from .request import (
+from .call_request import (
     TextChunk,
-    PlaceholderNameChunk,
-    RequestPlaceholder,
+    PlaceholderChunk,
+    SemanticFunctionParameter,
     SemanticCallMetadata,
     ChunkedSemanticCallRequest,
 )
-from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
+from .node import (
+    BaseNode,
+    SemanticNode,
+    ConstantFill,
+    PlaceholderFill,
+    PlaceholderGen,
+    NativeFuncNode,
+)
 
 
 """Data structures for a set of nodes in Graph."""
@@ -24,13 +35,13 @@ from .nodes import BaseNode, ConstantFill, PlaceholderFill, PlaceholderGen
 
 class _CompletionChainIterator:
 
-    def __init__(self, first_node: BaseNode) -> None:
+    def __init__(self, first_node: SemanticNode) -> None:
         self._cur_node = first_node
 
     def __iter__(self) -> "_CompletionChainIterator":
         return self
 
-    def __next__(self) -> BaseNode:
+    def __next__(self) -> SemanticNode:
         if self._cur_node is None or (
             self._cur_node.has_edge_a_prev_node
             and self._cur_node.get_edge_a_prev_node().is_gen
@@ -44,7 +55,7 @@ class _CompletionChainIterator:
 
 class _CompletionChainFillIterator:
 
-    def __init__(self, first_node: BaseNode) -> None:
+    def __init__(self, first_node: SemanticNode) -> None:
         self._cur_node = first_node
 
     def __iter__(self) -> "_CompletionChainFillIterator":
@@ -77,7 +88,7 @@ class CompletionChain:
     def __init__(
         self,
         request_chain: "RequestChain",
-        first_node: BaseNode,
+        first_node: SemanticNode,
         gen_node: Optional[PlaceholderGen],
     ) -> None:
         self._request_chain = request_chain
@@ -89,13 +100,6 @@ class CompletionChain:
         for node in self.iter():
             node.set_comp_chain(self)
 
-        # Activate
-        self._activated_event: Event = Event()
-        # Performance criteria of "get" to the GenNode.
-        self._criteria: Optional[PerformanceCriteria] = None
-        # Distance to "get" node.
-        self._depth: int = 99999
-
         # Groups this chain belongs to.
         self.chain_groups: List[CompChainGroup] = []
 
@@ -106,10 +110,6 @@ class CompletionChain:
     @property
     def session_id(self) -> int:
         return self._request_chain.session_id
-
-    @property
-    def is_activated(self) -> bool:
-        return self._activated_event.is_set()
 
     @property
     def sv_created(self) -> bool:
@@ -130,30 +130,6 @@ class CompletionChain:
 
         return ret
 
-    def activate(self, criteria: PerformanceCriteria, depth: int) -> None:
-        """Activate the CompletionChain with a given PerformanceCriteria."""
-
-        parrot_assert(
-            not self.is_activated,
-            "CompletionChain has been activated.",
-        )
-        self._criteria = criteria
-        self._depth = depth
-        self._activated_event.set()
-
-    async def wait_activated(self) -> None:
-        await self._activated_event.wait()
-
-    @property
-    def criteria(self) -> PerformanceCriteria:
-        parrot_assert(self.is_activated, "CompletionChain has not been activated.")
-        return self._criteria
-
-    @property
-    def depth(self) -> int:
-        parrot_assert(self.is_activated, "CompletionChain has not been activated.")
-        return self._depth
-
     def iter(self) -> _CompletionChainIterator:
         return _CompletionChainIterator(self.first_node)
 
@@ -163,13 +139,13 @@ class CompletionChain:
 
 class _RequestChainIterator:
 
-    def __init__(self, first_node: BaseNode) -> None:
+    def __init__(self, first_node: SemanticNode) -> None:
         self._cur_node = first_node
 
     def __iter__(self) -> "_RequestChainIterator":
         return self
 
-    def __next__(self) -> BaseNode:
+    def __next__(self) -> SemanticNode:
         if self._cur_node is None:
             raise StopIteration
         else:
@@ -191,7 +167,7 @@ class RequestChain:
         self,
         request_id: int,
         session_id: int,
-        first_node: BaseNode,
+        first_node: SemanticNode,
         metadata: SemanticCallMetadata,
     ) -> None:
         self.request_id = request_id
@@ -201,7 +177,7 @@ class RequestChain:
         self.comp_chains: List[CompletionChain] = []
 
         # Only valid after inserted into a graph.
-        self._placeholders_mapping: List[Dict] = []
+        self._param_info: List[Dict] = []
 
         # Assign request chain to nodes
         # for node in self.iter():
@@ -235,7 +211,7 @@ class RequestChain:
     @classmethod
     def from_nodes(
         cls,
-        nodes: List[BaseNode],
+        nodes: List[SemanticNode],
         metadata: SemanticCallMetadata = SemanticCallMetadata.get_default(),
     ) -> "RequestChain":
         """Convert a list of nodes into a RequestChain.
@@ -281,22 +257,22 @@ class RequestChain:
     ) -> "RequestChain":
         """Convert a ChunkedRequest into a RequestChain."""
 
-        prev_node: Optional[BaseNode] = None
+        prev_node: Optional[SemanticNode] = None
 
         for i, chunk in enumerate(chunked_request.body):
             is_gen: bool = False
 
             if isinstance(chunk, TextChunk):
                 node = ConstantFill(constant_text=chunk.text)
-            elif isinstance(chunk, PlaceholderNameChunk):
-                placeholder = chunked_request.placeholders_map[chunk.name]
-                if placeholder.is_output:
-                    node = PlaceholderGen(placeholder=placeholder)
+            elif isinstance(chunk, PlaceholderChunk):
+                parameter = chunked_request.parameters_map[chunk.name]
+                if parameter.is_output:
+                    node = PlaceholderGen(parameter=parameter)
                     is_gen = True
                 else:
-                    node = PlaceholderFill(placeholder=placeholder)
+                    node = PlaceholderFill(parameter=parameter)
             else:
-                raise ParrotCoreUserError(ValueError("Unknown chunk type."))
+                raise ParrotCoreInternalError(ValueError("Unknown chunk type."))
 
             # Link edge type A with previous node.
             if prev_node is not None:
@@ -328,18 +304,18 @@ class RequestChain:
 
         return request_chain
 
-    def get_placeholders_mapping(self) -> List[Dict]:
-        """Get the placeholder mapping after inserted into a graph.
+    def get_param_info(self) -> List[Dict]:
+        """Get the param info after inserted into a graph.
 
         Returns:
-            List[Dict]: Placeholder mapping.
+            List[Dict]: param info.
         """
 
         parrot_assert(
             self.is_inserted,
-            "Get placeholder mapping failed: RequestChain has not been inserted into a graph.",
+            "Get param_info failed: RequestChain has not been inserted into a graph.",
         )
-        return self._placeholders_mapping
+        return self._param_info
 
 
 class ComputeGraph:
@@ -365,17 +341,27 @@ class ComputeGraph:
         id_in_graph = self._node_id_pool.allocate()
         node.set_id_in_graph(id_in_graph)
 
-        # Link edge type B
-        if node.is_gen:
-            node.sv.assign_producer(node)
+        if isinstance(node, SemanticNode):
+            # Link edge type B
+            if node.is_gen:
+                node.sv.assign_producer(node)
+            else:
+                node.sv.add_consumer(node)
+        elif isinstance(node, NativeFuncNode):
+            # NativeFuncNode
+            for var in node.input_vars.values():
+                var.add_consumer(node)
+
+            for var in node.output_vars.values():
+                var.assign_producer(node)
         else:
-            node.sv.add_consumer(node)
+            raise ParrotCoreInternalError(ValueError("Unknown node type."))
 
     def insert_and_update_request_chain(self, request_chain: RequestChain) -> None:
         """Insert a RequestChain into the graph, and update its info.
 
-        After inserted, placeholder mapping can be fetched from this object. Placeholder mapping
-        records the mapping between placeholders and the corresponding semantic variables.
+        After inserted, "param info" (Parameter Information) can be fetched from this object.
+        "param info" records the information of each parameter with its corresponding Semantic Variable.
         """
 
         parrot_assert(
@@ -393,19 +379,46 @@ class ComputeGraph:
 
             parrot_assert(node.sv is not None, "Insert failed: SV is not created.")
             if node.has_placeholder:
-                placeholder: RequestPlaceholder = node.placeholder
+                parameter: SemanticFunctionParameter = node.placeholder_param
 
-                # Maintain the placeholder mapping
+                # Maintain the param info
                 # HACK: Access the private member directly
-                request_chain._placeholders_mapping.append(
+                request_chain._param_info.append(
                     {
-                        "placeholder_name": placeholder.name,
-                        "is_output": placeholder.is_output,
+                        "parameter_name": parameter.name,
+                        "is_output": parameter.is_output,
                         "var_name": node.sv_name,
                         "var_id": node.var_id,
                     }
                 )
         self.chains.extend(request_chain.comp_chains)
+
+    def insert_native_func_node(self, native_func_node: NativeFuncNode) -> None:
+        """Insert a NativeFuncNode into the graph."""
+
+        self._insert_node(native_func_node)
+
+        request = native_func_node.native_func
+
+        for key, param in request.parameters_map.items():
+            if param.has_value:
+                continue
+
+            if param.is_output:
+                sv = native_func_node.output_vars[key]
+            else:
+                sv = native_func_node.input_vars[key]
+
+            # Maintain the param info
+            # HACK: Access the private member directly
+            native_func_node._param_info.append(
+                {
+                    "parameter_name": param.name,
+                    "is_output": param.is_output,
+                    "var_name": sv.name,
+                    "var_id": sv.id,
+                }
+            )
 
     def remove_completion_chain(self, completion_chain: CompletionChain) -> None:
         """Remove a CompletionChain from the graph. This is called when the task is finished."""

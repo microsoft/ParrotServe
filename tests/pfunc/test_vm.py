@@ -47,6 +47,6 @@ def test_define_func():
 
 
 if __name__ == "__main__":
-    # test_e2e()
+    test_e2e()
     # test_vm_import()
-    test_define_func()
+    # test_define_func()
