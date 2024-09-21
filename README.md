@@ -9,6 +9,27 @@ Parrot is a distributed, multi-tenant serving system for **LLM-based Application
 - Performance objective deduction and DAG-aware scheduling.
 - Sharing common prompt prefix between requests with optimized attention kernel, Context-aware scheduling.
 
+We also provide a Python friendly frontend for users to program:
+
+```python
+from parrot import P # 'P' is the alias of pfunc lang.
+
+@P.semantic_function()
+def tell_me_a_joke(topic: P.Input, joke: P.Output):
+    """Tell the me a joke about {{topic}}: {{joke}}."""
+
+@P.native_function()
+def format_joke(joke: P.Input, formatted_joke: P.Output):
+    ret = "Here is the joke for you\n---\n" + joke # Directly use string built-in methods
+    formatted_joke.set(ret) # Use `set` to assign value to output
+
+def main(): # Orchestrator function
+    joke = tell_me_a_joke(topic="chicken")
+    joke1 = format_joke(joke)
+    joke_str = joke1.get()
+    print(joke_str)
+```
+
 ## What's LLM Applications?
 
 The powerful language understanding capability of large language models (LLMs) has enabled a new application paradigm, where one or multiple application entities, known as AI agents or co-pilots, communicate with LLMs via natural language, known as “prompts”, to accomplish a task collaboratively. 

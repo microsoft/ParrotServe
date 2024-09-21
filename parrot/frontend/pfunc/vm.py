@@ -18,6 +18,8 @@ from parrot.protocol.public.apis import (
     remove_session,
     submit_semantic_call,
     asubmit_semantic_call,
+    submit_py_native_call,
+    asubmit_py_native_call,
     register_semantic_variable,
     set_semantic_variable,
     get_semantic_variable,
@@ -31,6 +33,7 @@ from .perf_criteria import PerformanceCriteria, get_performance_criteria_str
 from .function import (
     BasicFunction,
     PyNativeFunction,
+    PyNativeCall,
     SemanticFunction,
     SemanticCall,
     ParamType,
@@ -201,7 +204,7 @@ class VirtualMachine:
         return resp.param_info
 
     async def asubmit_semantic_call_handler(self, call: SemanticCall) -> List:
-        """Submit a call to the ServeCore.
+        """(Async) Submit a SemanticCall to the ServeCore.
 
         Args:
             call: SemanticCall. The call to be submitted.
@@ -215,6 +218,52 @@ class VirtualMachine:
         )
 
         resp = await asubmit_semantic_call(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+            payload=call.to_request_payload(),
+        )
+
+        return resp.param_info
+
+    def submit_py_native_call_handler(self, call: PyNativeCall) -> List:
+        """Submit a PyNativeCall to the ServeCore.
+
+        Args:
+            call: PyNativeCall. The call to be submitted.
+
+        Returns:
+            Dict. The "param info" returned by the ServeCore.
+        """
+
+        logger.info(
+            f"VM (session_id={self._get_session_id_str()}) submits PyNativeCall: {call.func.name}"
+        )
+
+        resp = submit_py_native_call(
+            http_addr=self.core_http_addr,
+            session_id=self.session_id,
+            session_auth=self._session_auth,
+            payload=call.to_request_payload(),
+        )
+
+        return resp.param_info
+
+    async def asubmit_py_native_call_handler(self, call: PyNativeCall) -> List:
+        """(Async) Submit a PyNativeCall to the ServeCore.
+
+        Args:
+            call: PyNativeCall. The call to be submitted.
+
+        Returns:
+            Dict. The "param info" returned by the ServeCore.
+        """
+
+        logger.info(
+            f"VM (session_id={self._get_session_id_str()}) submits PyNativeCall: {call.func.name}"
+        )
+
+        resp = await asubmit_py_native_call(
             http_addr=self.core_http_addr,
             session_id=self.session_id,
             session_auth=self._session_auth,

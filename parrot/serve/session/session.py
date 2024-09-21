@@ -145,7 +145,9 @@ class Session:
         func_node = NativeFuncNode(native_func=request)
 
         # Assign Semantic Variables to the Func Node.
-        self.var_mgr.create_vars_for_pynative_func(func_node)
+        self.var_mgr.create_vars_for_pynative_func(
+            session_id=self.session_id, native_func_node=func_node
+        )
 
         # Add the request to the executor.
         self.native_executor.add_native_func(func_node)

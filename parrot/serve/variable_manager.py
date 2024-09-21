@@ -381,7 +381,7 @@ class SemanticVariableManager:
             else:
                 lvar = self._get_local_var_by_id(
                     session_id=session_id,
-                    var_name=key,
+                    var_id=param.var_id,
                 )
 
             if param.is_output:

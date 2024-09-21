@@ -55,7 +55,8 @@ from parrot import P # 'P' is the alias of pfunc lang.
 
 @P.native_function() # Here we can add some arguments
 def str_concat(a: P.Input, b: P.Input, c: P.Output):
-    c = a + b # Directly use the string grammar in Semantic Variable
+    c_str = a + b # Directly use the string grammar in Semantic Variable
+    c.set(c_str) # Use `set` method to assign value
 
 async def main():
     # Create two SVs
@@ -67,5 +68,5 @@ async def main():
 ```
 
 - Native functions are cached: If you call the same Native Function a second time (based on the function name), you can omit the code part of the function. Parrot will automatically use the cached function code.
-- Don't use `return` in the function body because we include return values (outputs) in the parameter list.
+- Don't use `return` in the function body because we include return values (outputs) in the parameter list. Use `set` to assign values to outputs.
 - Currently there is no sandbox / execution environment in the server side. So it's easy to inject malicious code into the system through native functions.

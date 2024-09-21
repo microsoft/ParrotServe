@@ -280,7 +280,7 @@ class SemanticFunction(BasicFunction):
                 "VM environment is not set. Not submit the Call. Return Call instead. "
                 "(Please run a Parrot function under a VM context.)"
             )
-            return {}
+            return []
 
     async def _asubmit_semantic_call(self, call: "SemanticCall") -> List:
         if self._has_vm_env():
@@ -294,7 +294,7 @@ class SemanticFunction(BasicFunction):
                 "VM environment is not set. Not submit the Call. Return Call instead. "
                 "(Please run a Parrot function under a VM context.)"
             )
-            return {}
+            return []
 
     # ---------- Call Methods ----------
 
@@ -483,6 +483,34 @@ class PyNativeFunction(BasicFunction):
             # This will generate a register warning if the VM environment is not set.
             self._register_function()
 
+    # ---------- VM Env Methods ----------
+
+    def _submit_native_call(self, call: "PyNativeCall") -> List:
+        if self._has_vm_env():
+            return BasicFunction._virtual_machine_env.submit_py_native_call_handler(
+                call
+            )
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+            return []
+
+    async def _asubmit_native_call(self, call: "PyNativeCall") -> List:
+        if self._has_vm_env():
+            return (
+                await BasicFunction._virtual_machine_env.asubmit_py_native_call_handler(
+                    call
+                )
+            )
+        else:
+            logger.warning(
+                "VM environment is not set. Not submit the Call. Return Call instead. "
+                "(Please run a Parrot function under a VM context.)"
+            )
+            return []
+
     def __call__(
         self,
         *args: List[Any],
@@ -517,14 +545,11 @@ class PyNativeFunction(BasicFunction):
     ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
         call = PyNativeCall(self, *args, **kwargs)
 
-        if BasicFunction._virtual_machine_env is not None:
-            BasicFunction._virtual_machine_env.submit_call_handler(call)
-        else:
-            logger.warning(
-                "VM environment is not set. Not submit the Call. Return Call instead. "
-                "(Please run a Parrot function under a VM context.)"
-            )
+        param_info = self._submit_native_call(call)
+        if not self._has_vm_env():
             return call
+        else:
+            call.update_var_ids(param_info)
 
         # Unpack the output SemanticVariables
         if len(call.output_vars) == 1:
@@ -535,18 +560,14 @@ class PyNativeFunction(BasicFunction):
         self,
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "SemanticCall"]:
+    ) -> Union[SemanticVariable, Tuple[SemanticVariable, ...], "PyNativeCall"]:
         call = PyNativeCall(self, *args, **kwargs)
 
-        if BasicFunction._virtual_machine_env is not None:
-            # Different from _call_func, we use asubmit_call_handler here.
-            await BasicFunction._virtual_machine_env.asubmit_call_handler(call)
-        else:
-            logger.warning(
-                "VM environment is not set. Not submit the Call. Return Call instead. "
-                "(Please run a Parrot function under a VM context.)"
-            )
+        param_info = self._submit_native_call(call)
+        if not self._has_vm_env():
             return call
+        else:
+            call.update_var_ids(param_info)
 
         # Unpack the output SemanticVariables
         if len(call.output_vars) == 1:
