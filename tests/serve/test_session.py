@@ -59,17 +59,20 @@ def test_session_manager():
     )
 
     # Test session registration
-    session_id = session_mgr.register_session()
+    session_id, session_auth = session_mgr.register_session()
 
     session = session_mgr.get_session(session_id)
     assert session.session_id == session_id
+    with pytest.raises(ParrotCoreUserError):
+        session_mgr.check_session_status(session_id, "wrong-session-auth")
+    session_mgr.check_session_status(session_id, session_auth)
 
     # Test session expiration
     time.sleep(11)
     session_mgr.check_running_sessions()
 
     with pytest.raises(ParrotCoreUserError):
-        session_mgr.check_session_status(session_id)
+        session_mgr.check_session_status(session_id, session_auth)
 
 
 def test_graph_executor():

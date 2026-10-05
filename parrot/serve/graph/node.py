@@ -355,7 +355,7 @@ class NativeFuncNode(BaseNode):
         """
 
         pseudo_native_func = PyNativeCallRequest(
-            request_id=0, session_id=0, func_name=func_name, func_code=None
+            request_id=0, session_id=0, func_name=func_name
         )
         node = cls(pseudo_native_func)
         node.input_vars = input_vars

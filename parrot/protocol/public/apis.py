@@ -132,6 +132,7 @@ def submit_semantic_call(
             f"/{API_VERSION}/semantic_call",
             retry_times=1,
             session_id=session_id,
+            session_auth=session_auth,
             **payload,
         )
     except BaseException as e:
@@ -153,6 +154,7 @@ async def asubmit_semantic_call(
                 f"/{API_VERSION}/semantic_call",
                 retry_times=1,
                 session_id=session_id,
+                session_auth=session_auth,
                 **payload,
             )
     except BaseException as e:
@@ -172,6 +174,7 @@ def submit_py_native_call(
             f"/{API_VERSION}/py_native_call",
             retry_times=1,
             session_id=session_id,
+            session_auth=session_auth,
             **payload,
         )
     except BaseException as e:
@@ -193,6 +196,7 @@ async def asubmit_py_native_call(
                 f"/{API_VERSION}/submit_py_native_call",
                 retry_times=1,
                 session_id=session_id,
+                session_auth=session_auth,
                 **payload,
             )
     except BaseException as e:

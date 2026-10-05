@@ -99,54 +99,14 @@ Response body:
 
 ## Submit Native Function Call
 
-> NOTE: This API is expiermental
-
-We have some built-in native functions. We don’t allow user to submit their customized code because it may introduce safety problems.
+> **Disabled by the security hotfix.**
 
 Endpoint: `/{api_version}/py_native_call`
 
-- Submit a python native function call [POST].
-
-PS: The `"func_code"` must be a string dumped from a Python binary code, encoded by `base64`.
-- We recommend using `marshal` to dump a Python code (`func.__code__`) to bytes. See `parrot/utils/serialize_utils.py`, `serialize_func_code` function.
-- For encoding a bytes using `base64` (For safe transport via HTTP), see `parrot/utils/serialize_utils.py`, `bytes_to_encoded_b64str` function.
-
-Request body:
-
-```json
-{
-    "session_id": "xxx",
-    "session_auth": "yyy",
-    "func_name": "xxx", // Function name.
-    "func_code": "some code bytes", // Bytecode of the function. If the function is cached, you can omit this field.
-    "parameters": [
-        {
-            "name": "a",
-            "is_output": false / true,
-            "var_id": "bbb", // Optional if it is output
-        },
-        ...
-    ],
-}
-```
-
-Response body:
-```json
-{
-	"request_id": "xxx",
-	"session_id": "yyy",
-	"param_info": [
-        {
-            "placeholder_name": "fff",
-            "is_output": true / false,
-            "var_name": "ddd",
-            "var_id": "ccc",
-            "var_desc": "The first output of request xxx",
-            "var_scope": "eeee",
-        }
-	]
-}
-```
+- The endpoint returns `410 Gone`.
+- Client-supplied Python bytecode is not accepted, deserialized, or executed.
+- The former `func_code` request format is available only in the known-vulnerable
+  legacy revision documented in the repository README.
 
 ## Semantic Variable
 

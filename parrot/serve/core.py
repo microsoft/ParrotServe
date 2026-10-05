@@ -3,14 +3,14 @@
 
 
 import json
+import os
+import secrets
 from typing import Dict
 import asyncio
 
 from parrot.utils import get_logger
 from parrot.constants import CORE_LOOP_INTERVAL
-from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
-from parrot.engine.config import EngineConfig
-from parrot.exceptions import ParrotCoreInternalError
+from parrot.exceptions import ParrotCoreInternalError, ParrotCoreUserError
 
 from parrot.serve.graph import (
     SVProducer,
@@ -94,43 +94,6 @@ class ParrotServeCore:
             )
         )
 
-    # ---------- APIs to Engine Layer ----------
-
-    def register_engine(self, payload: Dict) -> Dict:
-        """Register a new engine in the OS.
-
-        Args:
-            config: EngineConfig. The engine config.
-
-        Returns:
-            Dict. The response.
-        """
-
-        logger.debug(f"Register engine received.")
-        engine_config = EngineConfig(**payload["engine_config"])
-        engine_id = self.engine_mgr.register_engine(engine_config)
-        return {"engine_id": engine_id}
-
-    def engine_heartbeat(self, payload: Dict) -> Dict:
-        """Update the last seen time of an engine and other engine info.
-
-        Args:
-            engine_id: int. The engine ID.
-            engine_runtime_info: EngineRuntimeInfo. The engine runtime info.
-
-        Returns:
-            Dict. The response.
-        """
-
-        engine_id = payload["engine_id"]
-        engine_name = payload["engine_name"]
-        logger.debug(f"Engine {engine_name} (id={engine_id}) heartbeat received.")
-        engine_info = EngineRuntimeInfo(**payload["runtime_info"])
-
-        self.engine_mgr.engine_heartbeat(engine_id, engine_info)
-
-        return {}
-
     # ---------- Public Serving APIs ----------
 
     # ---------- Session Management ----------
@@ -145,8 +108,22 @@ class ParrotServeCore:
             Dict. The response.
         """
 
-        session_id = self.session_mgr.register_session()
-        return {"session_id": session_id, "session_auth": "1"}
+        expected_api_key = os.environ.get("PARROT_API_KEY")
+        supplied_api_key = payload.get("api_key")
+        if (
+            not expected_api_key
+            or not isinstance(supplied_api_key, str)
+            or not secrets.compare_digest(
+                supplied_api_key.encode("utf-8"),
+                expected_api_key.encode("utf-8"),
+            )
+        ):
+            raise ParrotCoreUserError(
+                RuntimeError("A valid API key is required to create a session.")
+            )
+
+        session_id, session_auth = self.session_mgr.register_session()
+        return {"session_id": session_id, "session_auth": session_auth}
 
     def remove_session(self, session_id: int, payload: Dict) -> Dict:
         """Remove a session in Serve Core.
@@ -159,7 +136,7 @@ class ParrotServeCore:
             Dict. The response.
         """
 
-        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.check_session_status(session_id, payload.get("session_auth"))
         self.session_mgr.remove_session(session_id)
 
         return {}
@@ -175,7 +152,8 @@ class ParrotServeCore:
             Dict. The response.
         """
 
-        return {}
+        self.session_mgr.check_session_status(session_id, payload.get("session_auth"))
+        return {"session_id": session_id}
 
     # ---------- Function Call ----------
 
@@ -212,37 +190,14 @@ class ParrotServeCore:
         # This is for get the partial DAG and do optimized scheduling.
 
         # Update session last access time
-        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.check_session_status(
+            session_id, payload.get("session_auth")
+        )
         self.session_mgr.session_access_update(session_id)
 
         # Add the request to the session.
         session = self.session_mgr.get_session(session_id)
         request_id, param_info = session.add_request(payload, is_native=False)
-
-        return {
-            "request_id": request_id,
-            "param_info": param_info,
-        }
-
-    def submit_py_native_call(self, payload: Dict) -> Dict:
-        """Submit a Python native call in a session to the ServeCore.
-
-        Args:
-            payload: Dict. The request payload.
-
-        Returns:
-            Dict. The response.
-        """
-
-        session_id = payload["session_id"]
-
-        # Update session last access time
-        self.session_mgr.check_session_status(session_id)
-        self.session_mgr.session_access_update(session_id)
-
-        # Add the request to the session.
-        session = self.session_mgr.get_session(session_id)
-        request_id, param_info = session.add_request(payload, is_native=True)
 
         return {
             "request_id": request_id,
@@ -264,7 +219,9 @@ class ParrotServeCore:
         session_id = payload["session_id"]
         name = payload["var_name"]
 
-        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.check_session_status(
+            session_id, payload.get("session_auth")
+        )
         self.session_mgr.session_access_update(session_id)
 
         var = self.var_mgr.create_var(session_id, name)
@@ -288,7 +245,9 @@ class ParrotServeCore:
         session_id = payload["session_id"]
         content = payload["content"]
 
-        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.check_session_status(
+            session_id, payload.get("session_auth")
+        )
         self.session_mgr.session_access_update(session_id)
 
         var = self.var_mgr.get_var(session_id, var_id)
@@ -315,7 +274,9 @@ class ParrotServeCore:
         session_id = payload["session_id"]
         criteria = payload["criteria"]
 
-        self.session_mgr.check_session_status(session_id)
+        self.session_mgr.check_session_status(
+            session_id, payload.get("session_auth")
+        )
         self.session_mgr.session_access_update(session_id)
 
         var = self.var_mgr.get_var(session_id, var_id)

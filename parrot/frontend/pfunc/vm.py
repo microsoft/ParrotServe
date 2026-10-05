@@ -8,6 +8,7 @@ import time
 import traceback
 import importlib
 import inspect
+import os
 from typing import Callable, Optional, Literal, Dict, List, Any, Generator
 
 from parrot.constants import NONE_SESSION_ID
@@ -281,7 +282,12 @@ class VirtualMachine:
     def register_session(self) -> None:
         """Register a session to the ServeCore."""
 
-        resp = register_session(http_addr=self.core_http_addr, api_key="1")
+        api_key = os.environ.get("PARROT_API_KEY")
+        if not api_key:
+            raise RuntimeError(
+                "PARROT_API_KEY must be set before registering a session."
+            )
+        resp = register_session(http_addr=self.core_http_addr, api_key=api_key)
         self.session_id = resp.session_id
         self._session_auth = resp.session_auth
 

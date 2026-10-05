@@ -4,6 +4,38 @@
 
 > This repo is currently a research prototype and is not actively maintained. Please open issue or contact the authors when you need help.
 
+## Security hotfix notice
+
+The current branch disables several prototype features that were unsafe when
+exposed to untrusted clients:
+
+- Python native calls no longer accept or execute client-supplied code.
+- Dynamic Parrot engine registration and heartbeat endpoints are disabled.
+- Dynamic registration in the vendored FastChat controller is disabled.
+- ServeCore requires a bearer token for every HTTP endpoint. Set
+  `PARROT_API_KEY` to a strong random value in both ServeCore and trusted client
+  processes before starting the service.
+
+These changes intentionally break the affected APIs and have received only
+targeted security regression testing. Each session now receives a
+cryptographically random credential that is checked on every session, call, and
+semantic-variable operation. This research prototype should still not be
+exposed directly to an untrusted network.
+
+The pre-hotfix source remains available at commit
+[`2e1825e`](https://github.com/microsoft/ParrotServe/commit/2e1825ee2bc38cb783bab9d8ec3e5ae99a93ba46)
+for isolated historical reproduction only. That revision contains known
+arbitrary-code-execution, unauthenticated-access, and
+server-side-request-forgery vulnerabilities. It is unsupported and must not be
+deployed on an untrusted network.
+
+To clone the preserved legacy tag into an isolated security environment:
+
+```bash
+git clone --branch legacy-unsafe-pre-security-hotfix --single-branch \
+  https://github.com/microsoft/ParrotServe.git ParrotServe-legacy-unsafe
+```
+
 Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the **app-level information** like LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
 - Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.
 - Performance objective deduction and DAG-aware scheduling.

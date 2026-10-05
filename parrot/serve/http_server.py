@@ -4,37 +4,62 @@
 
 import argparse
 import asyncio
+import logging
+import secrets
 import traceback
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from uvicorn import Config, Server
 import os
 
-from parrot.serve.core import ParrotServeCore, create_serve_core
-from parrot.protocol.internal.runtime_info import EngineRuntimeInfo
 from parrot.protocol.public.api_version import API_VERSION
-from parrot.engine.config import EngineConfig
-from parrot.utils import (
-    get_logger,
-    create_task_in_loop,
-    set_log_output_file,
-    redirect_stdout_stderr_to_file,
-)
 from parrot.exceptions import ParrotCoreUserError, ParrotCoreInternalError
-from parrot.testing.latency_simulator import get_latency
+
+if TYPE_CHECKING:
+    from parrot.serve.core import ParrotServeCore
 
 
-logger = get_logger("Parrot ServeCore Server")
+logger = logging.getLogger("Parrot ServeCore Server")
 
 # FastAPI app
 app = FastAPI()
 
 # Core
-pcore: Optional[ParrotServeCore] = None
+pcore: Optional["ParrotServeCore"] = None
 
 # Mode
 release_mode = False
+
+AUTH_TOKEN_ENV = "PARROT_API_KEY"
+
+
+def _error_response(status_code: int, message: str) -> JSONResponse:
+    return JSONResponse(
+        status_code=status_code,
+        content={"error": message, "traceback": ""},
+    )
+
+
+@app.middleware("http")
+async def require_api_key(request: Request, call_next):
+    expected_token = os.environ.get(AUTH_TOKEN_ENV)
+    if not expected_token:
+        return _error_response(
+            503,
+            f"ServeCore is locked because {AUTH_TOKEN_ENV} is not configured.",
+        )
+
+    authorization = request.headers.get("Authorization", "")
+    scheme, _, supplied_token = authorization.partition(" ")
+    if scheme.lower() != "bearer" or not secrets.compare_digest(
+        supplied_token.encode("utf-8"), expected_token.encode("utf-8")
+    ):
+        response = _error_response(401, "Missing or invalid bearer token.")
+        response.headers["WWW-Authenticate"] = "Bearer"
+        return response
+
+    return await call_next(request)
 
 
 @app.exception_handler(ParrotCoreUserError)
@@ -79,7 +104,8 @@ async def remove_session(session_id: int, request: Request):
 
 @app.get(f"/{API_VERSION}" + "/session/{session_id}")
 async def get_session_info(session_id: int, request: Request):
-    raise NotImplementedError("Not implemented yet.")
+    payload = await request.json()
+    return pcore.get_session_info(session_id, payload)
 
 
 @app.post(f"/{API_VERSION}/semantic_call")
@@ -97,6 +123,8 @@ async def submit_semantic_call(request: Request):
 
     # RTT
     if latency_open == 1:
+        from parrot.testing.latency_simulator import get_latency
+
         latency = get_latency()
         await asyncio.sleep(latency / 2)
 
@@ -111,9 +139,10 @@ async def submit_semantic_call(request: Request):
 
 @app.post(f"/{API_VERSION}/py_native_call")
 async def submit_py_native_call(request: Request):
-    payload = await request.json()
-    response = pcore.submit_py_native_call(payload)
-    return response
+    return _error_response(
+        410,
+        "Python native calls are disabled because they execute client-supplied code.",
+    )
 
 
 @app.post(f"/{API_VERSION}/semantic_var")
@@ -149,16 +178,18 @@ Internal APIs.
 
 @app.post("/engine_heartbeat")
 async def engine_heartbeat(request: Request):
-    payload = await request.json()
-    response = pcore.engine_heartbeat(payload)
-    return response
+    return _error_response(
+        403,
+        "Dynamic engine registration and heartbeats are disabled by this hotfix.",
+    )
 
 
 @app.post("/register_engine")
 async def register_engine(request: Request):
-    payload = await request.json()
-    response = pcore.register_engine(payload)
-    return response
+    return _error_response(
+        403,
+        "Dynamic engine registration and heartbeats are disabled by this hotfix.",
+    )
 
 
 def start_server(
@@ -168,6 +199,14 @@ def start_server(
 ):
     global pcore
     global app
+
+    if not os.environ.get(AUTH_TOKEN_ENV):
+        raise RuntimeError(
+            f"{AUTH_TOKEN_ENV} must be set before starting ServeCore."
+        )
+
+    from parrot.serve.core import create_serve_core
+    from parrot.utils.async_utils import create_task_in_loop
 
     # Create ServeCore
     pcore = create_serve_core(
@@ -239,14 +278,15 @@ if __name__ == "__main__":
 
     if release_mode:
         # Disable logging
-        import logging
-
         # We don't disable the error log
         logging.disable(logging.DEBUG)
         logging.disable(logging.INFO)
 
     # Set log output file
     if args.log_dir is not None:
+        from parrot.utils.logging import set_log_output_file
+        from parrot.utils.misc import redirect_stdout_stderr_to_file
+
         set_log_output_file(
             log_file_dir_path=args.log_dir,
             log_file_name=args.log_filename,
