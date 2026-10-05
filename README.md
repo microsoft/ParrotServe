@@ -33,7 +33,7 @@ To clone the preserved legacy tag into an isolated security environment:
 
 ```bash
 git clone --branch legacy-unsafe-pre-security-hotfix --single-branch \
-  https://github.com/mydmdm/ParrotServe.git ParrotServe-legacy-unsafe
+  https://github.com/microsoft/ParrotServe.git ParrotServe-legacy-unsafe
 ```
 
 Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the **app-level information** like LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
