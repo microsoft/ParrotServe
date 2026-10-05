@@ -22,11 +22,12 @@ be exposed directly to an untrusted network. A shared bearer token is suitable
 only for a single trust domain and does not provide multi-tenant session
 isolation.
 
-The pre-hotfix source is preserved at the
-`legacy-unsafe-pre-security-hotfix` tag for isolated historical reproduction
-only. That tag contains known arbitrary-code-execution, unauthenticated-access,
-and server-side-request-forgery vulnerabilities. It is unsupported and must not
-be deployed on an untrusted network.
+The pre-hotfix source remains available at commit
+[`2e1825e`](https://github.com/microsoft/ParrotServe/commit/2e1825ee2bc38cb783bab9d8ec3e5ae99a93ba46)
+for isolated historical reproduction only. That revision contains known
+arbitrary-code-execution, unauthenticated-access, and
+server-side-request-forgery vulnerabilities. It is unsupported and must not be
+deployed on an untrusted network.
 
 Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the **app-level information** like LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
 - Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.
