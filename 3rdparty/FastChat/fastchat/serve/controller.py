@@ -14,14 +14,12 @@ from typing import List, Union
 import threading
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse
 import numpy as np
-import requests
 import uvicorn
 
 from fastchat.constants import (
     CONTROLLER_HEART_BEAT_EXPIRATION,
-    WORKER_API_TIMEOUT,
     ErrorCode,
     SERVER_ERROR_MSG,
 )
@@ -74,39 +72,8 @@ class Controller:
     def register_worker(
         self, worker_name: str, check_heart_beat: bool, worker_status: dict
     ):
-        if worker_name not in self.worker_info:
-            logger.info(f"Register a new worker: {worker_name}")
-        else:
-            logger.info(f"Register an existing worker: {worker_name}")
-
-        if not worker_status:
-            worker_status = self.get_worker_status(worker_name)
-        if not worker_status:
-            return False
-
-        self.worker_info[worker_name] = WorkerInfo(
-            worker_status["model_names"],
-            worker_status["speed"],
-            worker_status["queue_length"],
-            check_heart_beat,
-            time.time(),
-        )
-
-        logger.info(f"Register done: {worker_name}, {worker_status}")
-        return True
-
-    def get_worker_status(self, worker_name: str):
-        try:
-            r = requests.post(worker_name + "/worker_get_status", timeout=5)
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Get status fails: {worker_name}, {e}")
-            return None
-
-        if r.status_code != 200:
-            logger.error(f"Get status fails: {worker_name}, {r}")
-            return None
-
-        return r.json()
+        logger.warning("Dynamic worker registration is disabled.")
+        return False
 
     def remove_worker(self, worker_name: str):
         del self.worker_info[worker_name]
@@ -145,22 +112,6 @@ class Controller:
                 worker_name = worker_names[pt]
                 return worker_name
 
-            # Check status before returning
-            while True:
-                pt = np.random.choice(np.arange(len(worker_names)), p=worker_speeds)
-                worker_name = worker_names[pt]
-
-                if self.get_worker_status(worker_name):
-                    break
-                else:
-                    self.remove_worker(worker_name)
-                    worker_speeds[pt] = 0
-                    norm = np.sum(worker_speeds)
-                    if norm < 1e-4:
-                        return ""
-                    worker_speeds = worker_speeds / norm
-                    continue
-            return worker_name
         elif self.dispatch_method == DispatchMethod.SHORTEST_QUEUE:
             worker_names = []
             worker_qlen = []
@@ -223,12 +174,10 @@ class Controller:
         speed = 0
         queue_length = 0
 
-        for w_name in self.worker_info:
-            worker_status = self.get_worker_status(w_name)
-            if worker_status is not None:
-                model_names.update(worker_status["model_names"])
-                speed += worker_status["speed"]
-                queue_length += worker_status["queue_length"]
+        for worker_status in self.worker_info.values():
+            model_names.update(worker_status.model_names)
+            speed += worker_status.speed
+            queue_length += worker_status.queue_length
 
         model_names = sorted(list(model_names))
         return {
@@ -236,25 +185,6 @@ class Controller:
             "speed": speed,
             "queue_length": queue_length,
         }
-
-    def worker_api_generate_stream(self, params):
-        worker_addr = self.get_worker_address(params["model"])
-        if not worker_addr:
-            yield self.handle_no_worker(params)
-
-        try:
-            response = requests.post(
-                worker_addr + "/worker_generate_stream",
-                json=params,
-                stream=True,
-                timeout=WORKER_API_TIMEOUT,
-            )
-            for chunk in response.iter_lines(decode_unicode=False, delimiter=b"\0"):
-                if chunk:
-                    yield chunk + b"\0"
-        except requests.exceptions.RequestException as e:
-            yield self.handle_worker_timeout(worker_addr)
-
 
 app = FastAPI()
 
@@ -296,9 +226,12 @@ async def receive_heart_beat(request: Request):
 
 @app.post("/worker_generate_stream")
 async def worker_api_generate_stream(request: Request):
-    params = await request.json()
-    generator = controller.worker_api_generate_stream(params)
-    return StreamingResponse(generator)
+    return JSONResponse(
+        status_code=403,
+        content={
+            "error": "Worker proxying is disabled by the Parrot security hotfix."
+        },
+    )
 
 
 @app.post("/worker_get_status")

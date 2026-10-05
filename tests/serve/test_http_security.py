@@ -9,6 +9,7 @@ from parrot.serve.http_server import (
     require_api_key,
     submit_py_native_call,
 )
+from parrot.serve.session_auth import create_session_auth, verify_session_auth
 
 
 def _request(authorization=None):
@@ -68,3 +69,14 @@ def test_dynamic_engine_registration_is_disabled():
 
     assert register_response.status_code == 403
     assert heartbeat_response.status_code == 403
+
+
+def test_session_credentials_are_unique_and_unpredictable():
+    first = create_session_auth()
+    second = create_session_auth()
+
+    assert first != second
+    assert len(first) >= 32
+    assert verify_session_auth(first, first)
+    assert not verify_session_auth(second, first)
+    assert not verify_session_auth(None, first)

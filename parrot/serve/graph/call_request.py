@@ -3,13 +3,11 @@
 
 from dataclasses import dataclass
 from typing import Union, Dict, Optional, List, Type, Any
-from types import CodeType, FunctionType
 import re
 
 
 from parrot.exceptions import parrot_assert, ParrotCoreUserError
 from parrot.sampling_config import SamplingConfig
-from parrot.utils import deserialize_func_code, encoded_b64str_to_bytes
 
 from .semantic_variable import SemanticVariable
 from .perf_criteria import PerformanceCriteria
@@ -387,19 +385,13 @@ class PyNativeCallRequest:
         request_id: int,
         session_id: int,
         func_name: str,
-        func_code: Optional[CodeType],
         metadata: NativeCallMetadata = NativeCallMetadata.get_default(),
     ) -> None:
         self.request_id = request_id
         self.session_id = session_id
         self.func_name = func_name
 
-        # Construct the function.
-        # Here for the scope Dict, we pass {} because we don't want to pollute the scope.
-        # Hence the executable_func we get is just a temporary one.
-        self.executable_func: Optional[FunctionType] = None
-        if func_code is not None:
-            self.executable_func = FunctionType(func_code, {}, func_name)
+        self.executable_func = None
 
         # Metadata: additional information of the request.
         self.metadata = metadata
@@ -414,6 +406,10 @@ class PyNativeCallRequest:
         # Check format.
         parrot_assert("func_name" in payload, "Missing field 'func_name' in request.")
         parrot_assert("parameters" in payload, "Missing field 'parameters' in request.")
+        parrot_assert(
+            "func_code" not in payload,
+            "Client-supplied Python code is not supported.",
+        )
 
         processed_payload = payload.copy()
 
@@ -446,18 +442,13 @@ class PyNativeCallRequest:
                 metadata_dict[key] = payload[key]
         metadata = NativeCallMetadata(**metadata_dict)
 
-        # Step 2. Extract the name and the code.
+        # Step 2. Extract the name.
         func_name = payload["func_name"]
-        func_code_serialized = payload.get("func_code", None)
-        if func_code_serialized is not None:
-            func_code_serialized = encoded_b64str_to_bytes(func_code_serialized)
-            func_code = deserialize_func_code(func_code_serialized)
 
         pynative_request = cls(
             request_id=request_id,
             session_id=session_id,
             func_name=func_name,
-            func_code=func_code,
             metadata=metadata,
         )
 

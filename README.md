@@ -17,10 +17,10 @@ exposed to untrusted clients:
   processes before starting the service.
 
 These changes intentionally break the affected APIs and have received only
-targeted security regression testing. This research prototype should still not
-be exposed directly to an untrusted network. A shared bearer token is suitable
-only for a single trust domain and does not provide multi-tenant session
-isolation.
+targeted security regression testing. Each session now receives a
+cryptographically random credential that is checked on every session, call, and
+semantic-variable operation. This research prototype should still not be
+exposed directly to an untrusted network.
 
 The pre-hotfix source remains available at commit
 [`2e1825e`](https://github.com/microsoft/ParrotServe/commit/2e1825ee2bc38cb783bab9d8ec3e5ae99a93ba46)
@@ -28,6 +28,13 @@ for isolated historical reproduction only. That revision contains known
 arbitrary-code-execution, unauthenticated-access, and
 server-side-request-forgery vulnerabilities. It is unsupported and must not be
 deployed on an untrusted network.
+
+To clone the preserved legacy tag into an isolated security environment:
+
+```bash
+git clone --branch legacy-unsafe-pre-security-hotfix --single-branch \
+  https://github.com/mydmdm/ParrotServe.git ParrotServe-legacy-unsafe
+```
 
 Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the **app-level information** like LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
 - Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.

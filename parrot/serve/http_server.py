@@ -104,7 +104,8 @@ async def remove_session(session_id: int, request: Request):
 
 @app.get(f"/{API_VERSION}" + "/session/{session_id}")
 async def get_session_info(session_id: int, request: Request):
-    raise NotImplementedError("Not implemented yet.")
+    payload = await request.json()
+    return pcore.get_session_info(session_id, payload)
 
 
 @app.post(f"/{API_VERSION}/semantic_call")

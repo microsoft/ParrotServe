@@ -8,6 +8,7 @@ from parrot.exceptions import ParrotCoreUserError, parrot_assert
 from parrot.utils import RecyclePool, get_logger, time_counter_in_nanoseconds
 
 from .session.session import Session, SessionStatus
+from .session_auth import create_session_auth, verify_session_auth
 
 from .scheduler.global_scheduler import GlobalScheduler
 from .variable_manager import SemanticVariableManager
@@ -32,6 +33,7 @@ class SessionManager:
 
         # session_id -> last_access_time (nanoseconds)
         self._session_last_access_time: Dict[int, int] = {}
+        self._session_auth: Dict[int, str] = {}
 
         # ---------- Arguments for Creating Session ----------
         self._session_create_kwargs = session_create_kwargs
@@ -39,6 +41,7 @@ class SessionManager:
     def _remove_session(self, session_id: int) -> None:
         session = self.sessions.pop(session_id)
         self._session_last_access_time.pop(session_id)
+        self._session_auth.pop(session_id)
         session.free_session_resources()
         self._session_id_pool.free(session_id)
 
@@ -46,11 +49,11 @@ class SessionManager:
 
     # ---------- Methods for Core ----------
 
-    def register_session(self) -> int:
+    def register_session(self) -> Tuple[int, str]:
         """Create a new session.
 
         Returns:
-            int: The session ID.
+            Tuple[int, str]: The session ID and its authentication credential.
         """
 
         # Create session object
@@ -60,9 +63,11 @@ class SessionManager:
         # Maintain session info
         self.sessions[session_id] = session
         self._session_last_access_time[session_id] = time_counter_in_nanoseconds()
+        session_auth = create_session_auth()
+        self._session_auth[session_id] = session_auth
 
         logger.debug(f"Session (session_id={session_id}) registered.")
-        return session_id
+        return session_id, session_auth
 
     def remove_session(self, session_id: int) -> None:
         """Remove a session.
@@ -106,7 +111,9 @@ class SessionManager:
         )
         self._session_last_access_time[session_id] = time_counter_in_nanoseconds()
 
-    def check_session_status(self, session_id: int) -> None:
+    def check_session_status(
+        self, session_id: int, session_auth: Optional[str]
+    ) -> None:
         """Check the status of the session.
 
         Args:
@@ -116,6 +123,14 @@ class SessionManager:
         if session_id not in self.sessions:
             raise ParrotCoreUserError(
                 RuntimeError(f"Session (session_id={session_id}) not found.")
+            )
+
+        expected_auth = self._session_auth[session_id]
+        if not verify_session_auth(session_auth, expected_auth):
+            raise ParrotCoreUserError(
+                RuntimeError(
+                    f"Session credential for session_id={session_id} is invalid."
+                )
             )
 
         session = self.sessions[session_id]

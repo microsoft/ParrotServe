@@ -2,18 +2,13 @@
 # Licensed under the MIT license.
 
 
-import marshal
 from abc import ABC
-import types
 from typing import Tuple, Callable, List, Dict, Type, Optional, Any, Set, Union
 import regex as re
 from dataclasses import dataclass, asdict
 
 from parrot.utils import (
     get_logger,
-    serialize_func_code,
-    deserialize_func_code,
-    bytes_to_encoded_b64str,
 )
 
 from parrot.serve.graph.call_request import (
@@ -474,7 +469,7 @@ class PyNativeFunction(BasicFunction):
     ):
         super().__init__(name, params)
 
-        self.pyfunc_code_dumped = serialize_func_code(pyfunc.__code__)
+        self.pyfunc = pyfunc
         metadata_dict = NativeFuncMetadata.get_default_dict()
         metadata_dict.update(**metadata_kwargs)
         self.metadata = NativeFuncMetadata(**metadata_dict)
@@ -579,11 +574,7 @@ class PyNativeFunction(BasicFunction):
         return f"{self.name}({', '.join([f'{param.name}: {param.typ}' for param in self.params])})"
 
     def get_pyfunc(self) -> Callable:
-        code_deserialized = deserialize_func_code(self.pyfunc_code_dumped)
-
-        # Here for the scope Dict, we pass {} because we don't want to pollute the scope.
-        # Hence the pyfunc we get is just a temporary one.
-        return types.FunctionType(code_deserialized, {}, self.name)
+        return self.pyfunc
 
 
 class PyNativeCall(BasicCall):
@@ -625,8 +616,5 @@ class PyNativeCall(BasicCall):
 
         payload["parameters"] = parameters
         payload["func_name"] = self.func.name
-
-        if with_code:
-            payload["func_code"] = bytes_to_encoded_b64str(self.func.pyfunc_code_dumped)
 
         return payload
