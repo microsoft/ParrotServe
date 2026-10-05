@@ -14,7 +14,7 @@ from typing import List, Union
 import threading
 
 from fastapi import FastAPI, Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import numpy as np
 import requests
 import uvicorn
@@ -261,9 +261,11 @@ app = FastAPI()
 
 @app.post("/register_worker")
 async def register_worker(request: Request):
-    data = await request.json()
-    controller.register_worker(
-        data["worker_name"], data["check_heart_beat"], data.get("worker_status", None)
+    return JSONResponse(
+        status_code=403,
+        content={
+            "error": "Dynamic worker registration is disabled by the Parrot security hotfix."
+        },
     )
 
 

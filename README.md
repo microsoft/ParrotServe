@@ -4,6 +4,30 @@
 
 > This repo is currently a research prototype and is not actively maintained. Please open issue or contact the authors when you need help.
 
+## Security hotfix notice
+
+The current branch disables several prototype features that were unsafe when
+exposed to untrusted clients:
+
+- Python native calls no longer accept or execute client-supplied code.
+- Dynamic Parrot engine registration and heartbeat endpoints are disabled.
+- Dynamic registration in the vendored FastChat controller is disabled.
+- ServeCore requires a bearer token for every HTTP endpoint. Set
+  `PARROT_API_KEY` to a strong random value in both ServeCore and trusted client
+  processes before starting the service.
+
+These changes intentionally break the affected APIs and have received only
+targeted security regression testing. This research prototype should still not
+be exposed directly to an untrusted network. A shared bearer token is suitable
+only for a single trust domain and does not provide multi-tenant session
+isolation.
+
+The pre-hotfix source is preserved at the
+`legacy-unsafe-pre-security-hotfix` tag for isolated historical reproduction
+only. That tag contains known arbitrary-code-execution, unauthenticated-access,
+and server-side-request-forgery vulnerabilities. It is unsupported and must not
+be deployed on an untrusted network.
+
 Parrot is a distributed, multi-tenant serving system for **LLM-based Applications**. With the Semantic Variable abstraction, Parrot can easily grasp the **app-level information** like LLM computation graph (DAG) or the prompt structure, which enables many interesting features like:
 - Automatically parallelize and batch LLM requests in complex LLM applications. Asynchronous communication between dependent requests.
 - Performance objective deduction and DAG-aware scheduling.

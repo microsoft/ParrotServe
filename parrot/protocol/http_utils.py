@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 
+import os
 from typing import Type, Optional, Literal
 import requests
 import aiohttp
@@ -12,6 +13,13 @@ from .base_response import BaseResponse, make_response, async_make_response
 
 
 logger = get_logger("API")
+
+AUTH_TOKEN_ENV = "PARROT_API_KEY"
+
+
+def _authorization_headers():
+    token = os.environ.get(AUTH_TOKEN_ENV)
+    return {"Authorization": f"Bearer {token}"} if token else {}
 
 
 def send_http_request(
@@ -29,11 +37,26 @@ def send_http_request(
     for _ in range(retry_times):
         try:
             if method == "GET":
-                resp = requests.get(url, json=kwargs, timeout=timeout)
+                resp = requests.get(
+                    url,
+                    json=kwargs,
+                    headers=_authorization_headers(),
+                    timeout=timeout,
+                )
             elif method == "POST":
-                resp = requests.post(url, json=kwargs, timeout=timeout)
+                resp = requests.post(
+                    url,
+                    json=kwargs,
+                    headers=_authorization_headers(),
+                    timeout=timeout,
+                )
             elif method == "DELETE":
-                resp = requests.delete(url, json=kwargs, timeout=timeout)
+                resp = requests.delete(
+                    url,
+                    json=kwargs,
+                    headers=_authorization_headers(),
+                    timeout=timeout,
+                )
             else:
                 raise ValueError(f"Invalid http method: {method}")
 
@@ -66,15 +89,30 @@ async def async_send_http_request(
 ) -> BaseResponse:
     url = http_addr + api_url
     if method == "GET":
-        async with client_session.get(url, json=kwargs, timeout=timeout) as resp:
+        async with client_session.get(
+            url,
+            json=kwargs,
+            headers=_authorization_headers(),
+            timeout=timeout,
+        ) as resp:
             assert resp.ok, f"Send http request error: {resp.reason}"
             return await async_make_response(response_cls, resp)
     elif method == "POST":
-        async with client_session.post(url, json=kwargs, timeout=timeout) as resp:
+        async with client_session.post(
+            url,
+            json=kwargs,
+            headers=_authorization_headers(),
+            timeout=timeout,
+        ) as resp:
             assert resp.ok, f"Send http request error: {resp.reason}"
             return await async_make_response(response_cls, resp)
     elif method == "DELETE":
-        async with client_session.delete(url, json=kwargs, timeout=timeout) as resp:
+        async with client_session.delete(
+            url,
+            json=kwargs,
+            headers=_authorization_headers(),
+            timeout=timeout,
+        ) as resp:
             assert resp.ok, f"Send http request error: {resp.reason}"
             return await async_make_response(response_cls, resp)
     else:
@@ -90,7 +128,9 @@ async def async_send_http_request_streaming(
     url = http_addr + api_url
     
     # NOTE(chaofan): Only POST now
-    async with client_session.post(url, json=kwargs) as reader:
+    async with client_session.post(
+        url, json=kwargs, headers=_authorization_headers()
+    ) as reader:
         # assert resp.ok, "Send http request error."
         async for chunk in reader.content.iter_chunked(4):
             yield int().from_bytes(chunk, "big")
