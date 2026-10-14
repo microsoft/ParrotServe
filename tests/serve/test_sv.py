@@ -1,3 +1,6 @@
+import pytest
+
+from parrot.exceptions import ParrotCoreUserError
 from parrot.serve.graph import (
     RequestChain,
     ConstantFill,
@@ -20,6 +23,21 @@ def test_content_hash():
     var1 = var_mgr._get_local_var_by_content(session_id, sv_content)
     var2 = var_mgr._get_local_var_by_content(session_id, sv_content)
     assert var1 == var2
+
+
+def test_constant_prefix_is_not_exposed_through_session_lookup():
+    var_mgr = SemanticVariableManager(constant_prefix_var_timeout=10)
+    owner_session_id = 0
+    other_session_id = 1
+    var_mgr.register_local_var_space(owner_session_id)
+    var_mgr.register_local_var_space(other_session_id)
+
+    prefix_var = var_mgr._get_constant_prefix_var("private system prompt")
+
+    with pytest.raises(ParrotCoreUserError):
+        var_mgr.get_var(owner_session_id, prefix_var.id)
+    with pytest.raises(ParrotCoreUserError):
+        var_mgr.get_var(other_session_id, prefix_var.id)
 
 
 def test_request_chain_hash():
