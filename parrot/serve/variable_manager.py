@@ -253,16 +253,12 @@ class SemanticVariableManager:
         )
 
     def get_var(self, session_id: int, var_id: str) -> SemanticVariable:
-        """Get a Semantic Variable by ID.
+        """Get a session-local Semantic Variable by ID.
 
         Args:
             session_id: int. The session ID.
             var_id: str. The Semantic Variable ID.
         """
-
-        cp_var = self.constant_prefix_namespace.get_var_by_id(var_id)
-        if cp_var is not None:
-            return cp_var
 
         parrot_assert(
             session_id in self.session_namespaces,
